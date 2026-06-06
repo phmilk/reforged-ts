@@ -214,7 +214,7 @@ export class Group extends Handle<group> {
   public getUnits(): Unit[] {
     const units: Unit[] = [];
     this.for(() => {
-      const u = Unit.fromFilter();
+      const u = Unit.fromEnum();
       if (u) {
         units.push(u);
       }
