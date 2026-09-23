@@ -1,0 +1,20 @@
+{
+  // PROTOTYPE tsconfig: type-check only, never emits, never compiles to Lua.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "types": [
+      "@typescript-to-lua/language-extensions",
+      "lua-types/5.3",
+      "war3-types-strict/1.33.0"
+    ]
+  },
+  "include": ["./**/*.ts", "../../handles/**/*.ts", "../../hooks/**/*.ts", "../../globals/**/*.ts"]
+}
