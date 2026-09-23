@@ -16,6 +16,10 @@ _Avoid_: object, pointer, id
 The TypeScript declarations (`.d.ts`) that describe the Natives of one game Patch.
 _Avoid_: types, definitions, common.j
 
+**Overlay**:
+Hand-curated facts about the Natives (nullability, deprecation, notes) merged over the Typings at generation time; never edited in the generated file.
+_Avoid_: patch file, fixups, manual types
+
 **Wrapper**:
 A library class that owns one Handle and exposes its Natives as typed members (`Unit`, `Timer`, `Frame`).
 _Avoid_: handle class, model, entity
