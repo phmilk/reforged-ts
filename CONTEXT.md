@@ -52,6 +52,10 @@ _Avoid_: consumer, user code, game project
 The starter repository a Map project is generated from.
 _Avoid_: boilerplate, starter kit, example map
 
+**Reference consumer**:
+The Template in its role as the Map project every library release must build, with the packed packages, before it is published.
+_Avoid_: example project, demo map, integration test
+
 **Toolchain**:
 The tools that turn a Map project's TypeScript into a Lua map script: TypeScript, typescript-to-lua, lint and build.
 _Avoid_: build system, pipeline, stack
