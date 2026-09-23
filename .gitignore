@@ -104,3 +104,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Claude Code agent worktrees and local state
+.claude/
