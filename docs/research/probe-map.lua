@@ -1,40 +1,47 @@
 -- reforged-ts probe map script (wayfinder ticket #9).
 -- Paste this whole file into the map's Custom Script Code (World Editor 3.0,
 -- map script language set to Lua), save, Test Map. It writes
---   Documents\Warcraft III\CustomMapData\reforged-probe.txt
+--   Documents/Warcraft III/CustomMapData/reforged-probe.txt
 -- and prints the same lines on screen. Every check runs under pcall, so a
 -- missing library reports "ERROR: ..." instead of killing the script.
 -- Run it twice: the "pairs order" and "tostring({})" lines are compared
 -- between runs to see whether table iteration order is stable per process.
+--
+-- This file deliberately contains no percent character: the World Editor has
+-- crashed on save when the custom script contains one. Format strings are
+-- built at run time with string.char(37).
 
 do
   local lines = {}
+  local PCT = string.char(37) -- the percent sign
+  local DQ = string.char(34) -- double quote
+  local SQ = string.char(39) -- single quote
 
-  local function add(fmt, ...)
-    local ok, s = pcall(string.format, fmt, ...)
-    lines[#lines + 1] = ok and s or ("format error: " .. tostring(s))
+  local function add(s)
+    lines[#lines + 1] = tostring(s)
   end
 
   local function try(label, fn)
     local ok, res = pcall(fn)
-    add("%s = %s", label, ok and tostring(res) or ("ERROR: " .. tostring(res)))
-  end
-
-  local function typeOf(name)
-    return type(_G[name])
+    if ok then
+      add(label .. " = " .. tostring(res))
+    else
+      add(label .. " = ERROR: " .. tostring(res))
+    end
   end
 
   -------------------------------------------------------------------- root
   local function collectRoot()
     add("== reforged-ts probe, root chunk ==")
-    add("_VERSION = %s", tostring(_VERSION))
-    for _, n in ipairs({
+    add("_VERSION = " .. tostring(_VERSION))
+    local names = {
       "debug", "require", "package", "load", "loadstring", "dofile", "loadfile",
       "os", "io", "collectgarbage", "utf8", "coroutine", "warn", "rawlen",
       "setmetatable", "getmetatable", "select", "next", "pairs", "ipairs",
       "math", "string", "table", "print", "FourCC", "__jarray", "TypeDefine",
-    }) do
-      add("type(%s) = %s", n, typeOf(n))
+    }
+    for _, n in ipairs(names) do
+      add("type(" .. n .. ") = " .. type(_G[n]))
     end
 
     -- Lua 5.3 vs 5.4 fingerprints
@@ -49,7 +56,7 @@ do
     try("math.tointeger(3.0)", function() return math.tointeger(3.0) end)
     try("type(math.ult)", function() return type(math.ult) end)
     try("utf8.char(0x263A)", function() return utf8.char(0x263A) end)
-    try("string.format('%d', 1.5)", function() return string.format("%d", 1.5) end)
+    try("string.format(pct..d, 1.5)", function() return string.format(PCT .. "d", 1.5) end)
     try("type(coroutine.close) [5.4 only]", function() return type(coroutine.close) end)
     try("<const> syntax [5.4 only]", function()
       local f, err = load("local x <const> = 1 return x")
@@ -67,11 +74,11 @@ do
     try("type(io.open)", function() return type(io.open) end)
     try("type(debug.traceback)", function() return type(debug.traceback) end)
     try("type(debug.getinfo)", function() return type(debug.getinfo) end)
-    try("collectgarbage('count')", function() return collectgarbage("count") end)
+    try("collectgarbage(count)", function() return collectgarbage("count") end)
     try("type(package.loaded)", function() return type(package.loaded) end)
     try("package.path", function() return package.path end)
-    try("require('nonexistent')", function() return require("nonexistent") end)
-    try("load('return 1+1')()", function() return load("return 1+1")() end)
+    try("require(nonexistent)", function() return require("nonexistent") end)
+    try("load(return 1+1)()", function() return load("return 1+1")() end)
 
     -- iteration order
     try("pairs order, first table", function()
@@ -89,10 +96,11 @@ do
     try("tostring({})", function() return tostring({}) end)
 
     -- map script entry points as seen from the custom-code position
-    for _, n in ipairs({
+    local entry = {
       "main", "config", "InitGlobals", "InitCustomTriggers",
       "RunInitializationTriggers", "MarkGameStarted", "InitBlizzard",
-    }) do
+    }
+    for _, n in ipairs(entry) do
       try("type(" .. n .. ") at root", function() return type(_G[n]) end)
     end
   end
@@ -106,28 +114,36 @@ do
       PreloadGenClear()
       PreloadGenStart()
       for _, l in ipairs(lines) do
-        Preload((l:gsub('"', "'")))
+        Preload((l:gsub(DQ, SQ)))
       end
       PreloadGenEnd("reforged-probe.txt")
     end)
-    print(ok and "reforged-probe.txt written to CustomMapData" or ("Preload failed: " .. tostring(err)))
+    if ok then
+      print("reforged-probe.txt written to CustomMapData")
+    else
+      print("Preload failed: " .. tostring(err))
+    end
     for _, l in ipairs(lines) do print(l) end
   end
 
   local function collectMain()
     add("== probe, after main ==")
-    for _, n in ipairs({
+    local entry = {
       "main", "config", "InitGlobals", "InitCustomTriggers",
       "RunInitializationTriggers", "MarkGameStarted", "InitBlizzard",
-    }) do
+    }
+    for _, n in ipairs(entry) do
       try("type(" .. n .. ") after main", function() return type(_G[n]) end)
     end
     try("tostring(GetLocalPlayer())", function() return tostring(GetLocalPlayer()) end)
     try("tostring(CreateTimer())", function() return tostring(CreateTimer()) end)
     try("GetHandleId recycle: create, destroy, create", function()
-      local a = CreateTimer(); local ida = GetHandleId(a); DestroyTimer(a)
-      local b = CreateTimer(); local idb = GetHandleId(b)
-      return string.format("first=%d second=%d same=%s", ida, idb, tostring(ida == idb))
+      local a = CreateTimer()
+      local ida = GetHandleId(a)
+      DestroyTimer(a)
+      local b = CreateTimer()
+      local idb = GetHandleId(b)
+      return "first=" .. tostring(ida) .. " second=" .. tostring(idb) .. " same=" .. tostring(ida == idb)
     end)
     try("same handle from two natives compares equal", function()
       local t = CreateTimer()
@@ -135,15 +151,15 @@ do
       tbl[t] = "yes"
       TimerStart(t, 0.0, false, function()
         local e = GetExpiredTimer()
-        roundTrip = string.format("tbl[GetExpiredTimer()]=%s, e==t is %s", tostring(tbl[e]), tostring(e == t))
+        roundTrip = "tbl[GetExpiredTimer()]=" .. tostring(tbl[e]) .. ", e==t is " .. tostring(e == t)
       end)
       return "scheduled"
     end)
-    try("string.format('%.2f', os.clock())", function() return string.format("%.2f", os.clock()) end)
+    try("string.format(pct...2f, os.clock())", function() return string.format(PCT .. ".2f", os.clock()) end)
 
     -- give the 0-second timer time to fire, then write everything
     TimerStart(CreateTimer(), 0.5, false, function()
-      add("handle as table key across natives = %s", roundTrip)
+      add("handle as table key across natives = " .. roundTrip)
       writeFile()
     end)
   end
@@ -158,7 +174,7 @@ do
       if k == "main" and type(v) == "function" then
         rawset(t, k, function()
           v()
-          add("config ran before main = %s", configRan)
+          add("config ran before main = " .. configRan)
           collectMain()
         end)
       elseif k == "config" and type(v) == "function" then
