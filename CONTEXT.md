@@ -29,8 +29,20 @@ A library utility that owns no Handle of its own (`sync`, `file`, `base64`, `gam
 _Avoid_: helper, module, util
 
 **Hook**:
-A callback the library runs before or after the map script's `main` or `config` entry point.
+A callback the library runs at an Init stage. `addScriptHook` (before/after `main` or `config`) is the deprecated alias.
 _Avoid_: lifecycle hook, init hook, plugin
+
+**Event descriptor**:
+A value that knows how to register one game event on a Trigger and how to read that event's payload from the trigger context.
+_Avoid_: event type, event enum, listener spec
+
+**Subscription**:
+The Trigger that `on()` creates for one handler and one Event descriptor; owned by the caller and ended with `destroy()`.
+_Avoid_: listener, binding, registration
+
+**Init stage**:
+One of the four points of a map's initialization (globals, triggers, init triggers, game start) where library and Map project callbacks run, each under `pcall`.
+_Avoid_: hook, lifecycle event, main/config
 
 **Map project**:
 A repository that consumes the library to produce a playable map, normally generated from the Template.
