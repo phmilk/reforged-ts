@@ -30,7 +30,11 @@ catalogs:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.1(@types/node@24.13.6)(vite@8.3.0(@types/node@24.13.6))
 
   packages/reforged-test:
     dependencies:
@@ -59,12 +63,18 @@ importers:
 
   packages/reforged-ts:
     devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.6
       '@typescript-to-lua/language-extensions':
         specifier: 'catalog:'
         version: 1.19.0
       lua-types:
         specifier: 'catalog:'
         version: 2.14.1
+      reforged-test:
+        specifier: workspace:*
+        version: link:../reforged-test
       reforged-types:
         specifier: workspace:*
         version: link:../reforged-types
@@ -74,6 +84,9 @@ importers:
       typescript-to-lua:
         specifier: 'catalog:'
         version: 1.37.1(typescript@6.0.2)
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.1(@types/node@24.13.6)(vite@8.3.0(@types/node@24.13.6))
 
   packages/reforged-types:
     dependencies:

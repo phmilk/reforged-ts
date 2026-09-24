@@ -28,6 +28,22 @@ describe("the baseline stub on a fresh state", () => {
   });
 });
 
+describe("the shipped stub families on a fresh state", () => {
+  const families = runLuaTestFiles({ outDir: outDir("families") });
+  const tests = families.flatMap((file) => file.tests);
+
+  it.each(
+    tests.map((test) => [`${test.suite.join(" > ")} > ${test.name}`, test]),
+  )("%s", (_, test) => {
+    expect(test).toMatchObject({ status: "pass" });
+  });
+
+  it("runs all its checks", () => {
+    expect(families.map((file) => file.error)).toEqual([undefined]);
+    expect(tests).toHaveLength(5);
+  });
+});
+
 // The game has none of these; a stub that used one would pass here and
 // describe nothing the game can run.
 const FORBIDDEN: [string, RegExp][] = [

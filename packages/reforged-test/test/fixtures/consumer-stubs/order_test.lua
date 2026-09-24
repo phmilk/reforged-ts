@@ -9,6 +9,6 @@ it("loads consumer stubs after the shipped ones, in the listed order", function(
 end)
 
 it("calls a Native a consumer stub defines", function()
-  expect(GetLocalPlayer()).toBe(Player(0))
-  expect(runner.stubCalls()).toContainCall("GetLocalPlayer()")
+  expect(BlzGetLocale()).toEqual("enUS")
+  expect(runner.stubCalls()).toContainCall("BlzGetLocale()")
 end)
