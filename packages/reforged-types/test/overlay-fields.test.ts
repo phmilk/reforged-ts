@@ -296,7 +296,7 @@ describe("generate: Overlay field validation", () => {
 
   async function invalid(json: unknown) {
     return run({ "common.j": jass }, [], {
-      rawOverlay: { "common.j/A.json": JSON.stringify(json) },
+      rawOverlay: { "common.j/functions/A.json": JSON.stringify(json) },
     });
   }
 
@@ -308,9 +308,9 @@ describe("generate: Overlay field validation", () => {
       {
         severity: "error",
         kind: "overlay-invalid",
-        file: "common.j/A.json",
+        file: "common.j/functions/A.json",
         name: "A",
-        message: 'common.j/A.json: unknown field "asnyc"',
+        message: 'common.j/functions/A.json: unknown field "asnyc"',
       },
     ]);
   });
@@ -324,7 +324,7 @@ describe("generate: Overlay field validation", () => {
 
     expect(result.ok).toBe(false);
     expect(result.diagnostics[0]?.message).toBe(
-      'common.j/A.json: unknown field "params[0].typ"'
+      'common.j/functions/A.json: unknown field "params[0].typ"'
     );
   });
 
@@ -344,9 +344,9 @@ describe("generate: Overlay field validation", () => {
     expect(result.diagnostics[0]).toMatchObject({
       severity: "error",
       kind: "overlay-invalid",
-      file: "common.j/A.json",
+      file: "common.j/functions/A.json",
     });
-    expect(result.diagnostics[0]?.message).toContain(`common.j/A.json: ${text}`);
+    expect(result.diagnostics[0]?.message).toContain(`common.j/functions/A.json: ${text}`);
   });
 
   it("fails on an empty or non-string parameter type override", async () => {
@@ -358,7 +358,7 @@ describe("generate: Overlay field validation", () => {
       });
 
       expect(result.diagnostics[0]?.message).toContain(
-        "common.j/A.json: params[0].type must be"
+        "common.j/functions/A.json: params[0].type must be"
       );
     }
   });

@@ -1,3 +1,6 @@
+import { access, mkdtemp, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { generate } from "../src/index.js";
@@ -7,6 +10,20 @@ import {
   typeEntry,
   writeFixture,
 } from "./support/fixture.js";
+
+/** Whether the temporary folder fixtures live in ignores case in names. */
+async function caseInsensitiveTemp(): Promise<boolean> {
+  const folder = await mkdtemp(join(tmpdir(), "reforged-types-case-"));
+  await writeFile(join(folder, "probe"), "");
+  try {
+    await access(join(folder, "PROBE"));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+const caseInsensitive = await caseInsensitiveTemp();
 
 async function run(...args: Parameters<typeof writeFixture>) {
   return generate(await writeFixture(...args));
@@ -304,7 +321,7 @@ describe("generate: missing and invalid global entries", () => {
         file: "blizzard.j",
         line,
         name,
-        message: `blizzard.j: no Overlay entry for global ${declaration}`,
+        message: `blizzard.j: no Overlay entry for global ${declaration}; expected blizzard.j/globals/${name}.json`,
       }))
     );
   });
@@ -312,13 +329,13 @@ describe("generate: missing and invalid global entries", () => {
   it("warns about an orphan global or type entry", async () => {
     const result = await run({ "common.j": "type unit extends handle\n" }, [
       globalEntry("common.j", "GONE"),
-      typeEntry("common.j", "oldhandle", { notes: "x" }),
+      typeEntry("common.j", "gone", { notes: "x" }),
     ]);
 
     expect(result.ok).toBe(true);
     expect(result.diagnostics.map((d) => [d.kind, d.file])).toEqual([
-      ["orphan", "common.j/GONE.json"],
-      ["orphan", "common.j/oldhandle.json"],
+      ["orphan", "common.j/globals/GONE.json"],
+      ["orphan", "common.j/types/gone.json"],
     ]);
   });
 
@@ -338,7 +355,7 @@ describe("generate: missing and invalid global entries", () => {
       const result = await run(
         { "common.j": "globals\ninteger A = 0\nendglobals\n" },
         [],
-        { rawOverlay: { "common.j/A.json": JSON.stringify(json) } }
+        { rawOverlay: { "common.j/globals/A.json": JSON.stringify(json) } }
       );
 
       expect(result.ok).toBe(false);
@@ -346,10 +363,10 @@ describe("generate: missing and invalid global entries", () => {
       expect(result.diagnostics[0]).toMatchObject({
         severity: "error",
         kind: "overlay-invalid",
-        file: "common.j/A.json",
+        file: "common.j/globals/A.json",
       });
       expect(result.diagnostics[0]?.message).toContain(
-        `common.j/A.json: ${problem}`
+        `common.j/globals/A.json: ${problem}`
       );
     }
   );
@@ -357,28 +374,34 @@ describe("generate: missing and invalid global entries", () => {
   it.each([
     ["since", { since: "3.0.0.24268" }],
     ["nullable", { nullable: true }],
+    ["async", { async: true }],
   ])("fails on a type entry carrying %s", async (field, patch) => {
     const json = { ...typeEntry("common.j", "unit"), ...patch };
     const result = await run({ "common.j": "type unit extends handle\n" }, [], {
-      rawOverlay: { "common.j/unit.json": JSON.stringify(json) },
+      rawOverlay: { "common.j/types/unit.json": JSON.stringify(json) },
     });
 
     expect(result.ok).toBe(false);
-    expect(result.diagnostics).toHaveLength(1);
-    expect(result.diagnostics[0]).toMatchObject({
-      kind: "overlay-invalid",
-      file: "common.j/unit.json",
-    });
-    expect(result.diagnostics[0]?.message).toContain(field);
+    expect(result.diagnostics).toEqual([
+      {
+        severity: "error",
+        kind: "overlay-invalid",
+        file: "common.j/types/unit.json",
+        name: "unit",
+        message: `common.j/types/unit.json: unknown field "${field}"`,
+      },
+    ]);
   });
 
-  it("fails when a global's entry is shaped like a function's, and the reverse", async () => {
+  it("reads an entry by its folder: a function entry in globals is rejected", async () => {
     const result = await run(
+      { "common.j": "globals\ninteger A = 0\nendglobals\n" },
+      [],
       {
-        "common.j":
-          "globals\ninteger A = 0\nendglobals\nnative F takes nothing returns nothing\n",
-      },
-      [entry("common.j", "A"), globalEntry("common.j", "F")]
+        rawOverlay: {
+          "common.j/globals/A.json": JSON.stringify(entry("common.j", "A")),
+        },
+      }
     );
 
     expect(result.ok).toBe(false);
@@ -386,19 +409,119 @@ describe("generate: missing and invalid global entries", () => {
       {
         severity: "error",
         kind: "overlay-invalid",
-        file: "common.j/A.json",
+        file: "common.j/globals/A.json",
         name: "A",
-        message:
-          "common.j/A.json: A is a global (integer A = 0); its entry must carry nullable, not returns and params",
+        message: 'common.j/globals/A.json: unknown field "returns"',
       },
+    ]);
+  });
+
+  it("does not match an entry in another kind's folder", async () => {
+    const result = await run(
+      {
+        "common.j":
+          "globals\ninteger A = 0\nendglobals\nnative F takes nothing returns nothing\n",
+      },
+      [entry("common.j", "F")],
+      {
+        rawOverlay: {
+          "common.j/functions/A.json": JSON.stringify(entry("common.j", "A")),
+        },
+      }
+    );
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics.map((d) => [d.kind, d.file])).toEqual([
+      ["missing-entry", "common.j"],
+      ["orphan", "common.j/functions/A.json"],
+    ]);
+    expect(result.diagnostics[0]?.message).toBe(
+      "common.j: no Overlay entry for global integer A = 0; expected common.j/globals/A.json"
+    );
+  });
+});
+
+describe("generate: Overlay layout", () => {
+  it("keeps names that differ only by case apart when their kinds differ", async () => {
+    const commonAi = [
+      "globals",
+      "    constant integer SLEEP = 1",
+      "endglobals",
+      "native Sleep takes real seconds returns nothing",
+    ].join("\n");
+    const commonJ = [
+      "type location extends handle",
+      "native Location takes real x, real y returns location",
+    ].join("\n");
+
+    const result = await generateOk({ "common.ai": commonAi, "common.j": commonJ }, [
+      globalEntry("common.ai", "SLEEP"),
+      entry("common.ai", "Sleep", ["seconds"]),
+      typeEntry("common.j", "location", { notes: "A point." }),
+      entry("common.j", "Location", ["x", "y"]),
+    ]);
+
+    expect(result.files.get("3.0.0/common.ai.d.ts")).toContain(
+      "declare const SLEEP: number;"
+    );
+    expect(result.files.get("3.0.0/common.ai.d.ts")).toContain(
+      "declare function Sleep(seconds: number): void;"
+    );
+    expect(result.files.get("3.0.0/common.j.d.ts")).toContain(
+      " * @remarks A point.\n */\ndeclare interface location extends handle"
+    );
+  });
+
+  // Such a pair can only exist on a case-sensitive file system (Linux CI).
+  it.skipIf(caseInsensitive)(
+    "fails on entry files in one folder whose names differ only by case",
+    async () => {
+    const json = (name: string) =>
+      JSON.stringify(globalEntry("common.ai", name));
+    const result = await run(
+      {
+        "common.ai":
+          "globals\ninteger Sleep = 0\ninteger SLEEP = 0\nendglobals\n",
+      },
+      [],
+      {
+        rawOverlay: {
+          "common.ai/globals/SLEEP.json": json("SLEEP"),
+          "common.ai/globals/Sleep.json": json("Sleep"),
+        },
+      }
+    );
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics).toEqual([
       {
         severity: "error",
         kind: "overlay-invalid",
-        file: "common.j/F.json",
-        name: "F",
+        file: "common.ai/globals/SLEEP.json",
         message:
-          "common.j/F.json: F is a native (native F takes nothing returns nothing); its entry must carry returns and params, not nullable",
+          "common.ai/globals/SLEEP.json, common.ai/globals/Sleep.json: entry file names differ only by case, which a case-insensitive file system cannot hold",
       },
+    ]);
+    }
+  );
+
+  it("fails on a JSON file or folder outside the kind folders", async () => {
+    const result = await run(
+      { "common.j": "native A takes nothing returns nothing\n" },
+      [entry("common.j", "A")],
+      {
+        rawOverlay: {
+          "common.j/B.json": "{}",
+          "common.j/natives/C.json": "{}",
+          "common.j/README.txt": "notes",
+        },
+      }
+    );
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics.map((d) => d.message)).toEqual([
+      "common.j/B.json: not an entry location; entries live in common.j/functions, common.j/globals, common.j/types",
+      "common.j/natives/: not an entry location; entries live in common.j/functions, common.j/globals, common.j/types",
     ]);
   });
 });
@@ -507,7 +630,8 @@ describe("generate: the vendored Patch files", () => {
     expect(result.diagnostics).toContainEqual(
       expect.objectContaining({
         name: "bj_FORCE_PLAYER",
-        message: "blizzard.j: no Overlay entry for global force array bj_FORCE_PLAYER",
+        message:
+          "blizzard.j: no Overlay entry for global force array bj_FORCE_PLAYER; expected blizzard.j/globals/bj_FORCE_PLAYER.json",
       })
     );
   });

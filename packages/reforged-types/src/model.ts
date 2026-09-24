@@ -79,8 +79,3 @@ export function jassSignature(fn: FunctionDeclaration): string {
   const keyword = fn.constant ? `constant ${fn.kind}` : fn.kind;
   return `${keyword} ${fn.name} takes ${takes} returns ${fn.returns}`;
 }
-
-/** The Jass line of a type declaration. */
-export function jassType(type: TypeDeclaration): string {
-  return `type ${type.name} extends ${type.parent}`;
-}

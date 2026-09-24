@@ -1,6 +1,6 @@
 import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 
 /** The Jass files of a fixture Patch; a file left out is written empty. */
 export interface PatchFiles {
@@ -127,16 +127,26 @@ export async function writeFixture(
     );
   }
   for (const item of overlay) {
-    await mkdir(join(overlayDir, item.source), { recursive: true });
+    const folder = join(overlayDir, item.source, kindFolder(item));
+    await mkdir(folder, { recursive: true });
     await writeFile(
-      join(overlayDir, item.source, `${item.name}.json`),
+      join(folder, `${item.name}.json`),
       JSON.stringify(item, null, 2) + "\n"
     );
   }
   for (const [path, text] of Object.entries(options.rawOverlay ?? {})) {
-    const [folder] = path.split("/");
-    await mkdir(join(overlayDir, folder!), { recursive: true });
+    await mkdir(dirname(join(overlayDir, path)), { recursive: true });
     await writeFile(join(overlayDir, path), text);
   }
   return { patchDir, overlayDir };
+}
+
+/**
+ * The kind folder an entry built by the helpers above belongs in. Only the
+ * fixture infers it; the generator takes the kind from the folder. Use
+ * `rawOverlay` to put a file anywhere else.
+ */
+function kindFolder(item: AnyEntryFixture): string {
+  if ("returns" in item || "params" in item) return "functions";
+  return "nullable" in item ? "globals" : "types";
 }
