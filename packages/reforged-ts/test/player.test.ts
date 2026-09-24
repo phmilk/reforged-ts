@@ -4,11 +4,19 @@
 // a lookup, except `fromLocal`, the documented non-null path (the Native
 // never returns nothing, and the member throws should it ever do).
 
+// Keep this import ahead of the library's: the library wraps the entry
+// points when it loads, and this file defines them.
+import "./support/bundle-position";
 import { describe, expect, it } from "reforged-test/lua";
 import { MapPlayer, tsGlobals } from "../src/index";
 import { defined } from "./support/defined";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
+
+declare const InitGlobals: () => void;
+
+// `Players` is filled at the `globals` stage: run it, as `main` would.
+InitGlobals();
 
 /** A Map project's own player model, extending the library's Wrapper. */
 class Contestant extends MapPlayer {
