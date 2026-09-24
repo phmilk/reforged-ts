@@ -27,12 +27,27 @@ type Initialising<C> = { -readonly [K in keyof C]: C[K] };
  * creation throws, lookup returns undefined.
  *
  * A Wrapper declares no public constructor. The base's protected constructor
- * takes the Handle and only stores it; a Wrapper that adds fields declares a
- * protected constructor taking the Handle and calling `super(handle)`,
- * otherwise none. Its lookups return `this.fromHandle(Native(...))`, typed
- * `X | undefined`; its creation members return
- * `this.expect(Native(...), detail)`, typed `X`. It never overrides
- * `fromHandle`, except `Frame`, whose "not found" frame has handle id 0.
+ * takes the Handle and only stores it. A field set from a creation argument
+ * (`Effect.attachWidget`, `GameCache.filename`) is a `readonly` field filled
+ * through `expect`'s `init`, with no constructor; a Wrapper declares a
+ * protected constructor taking the Handle and calling `super(handle)` only
+ * for fields that need initialisers or other constructor work.
+ *
+ * Its lookups return `this.fromHandle(Native(...))`, typed `X | undefined`;
+ * its creation members return `this.expect(Native(...), detail)`, typed `X`.
+ * A member whose Native allocates another Wrapper's Handle calls that
+ * Wrapper's protected `expect`: `return Point.expect(GetUnitLoc(this.handle))`.
+ * Two exceptions to "lookups go through `fromHandle`":
+ *
+ * - The documented non-null path: `unit.getOwner()` and
+ *   `MapPlayer.fromLocal()` read an existing Handle but assert an invariant
+ *   the Typings cannot express (a live unit has an owner, `GetLocalPlayer`
+ *   never returns nothing) through `expect`, so they are typed non-null and,
+ *   should the game break the invariant, throw the standard message
+ *   (`reforged-ts: failed to create MapPlayer`). Each says why in its doc
+ *   comment; no other lookup does this.
+ * - `Frame` overrides `fromHandle`, because the game's "not found" frame has
+ *   handle id 0.
  *
  * Naming rule: a Wrapper class is named after its Native type, capitalised
  * (`timer` is `Timer`, `unit` is `Unit`), unless that name collides with a
