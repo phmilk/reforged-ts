@@ -21,3 +21,9 @@ typescript-to-lua 1.37 pins TypeScript to exactly 6.0.2 while TypeScript 7 is al
 - A spike ticket verifies `bundler` resolution, the Lua harness and the ESLint 10 stack before the migration starts; if `bundler` fails, the fallback is `nodenext` plus a `.js`-stripping tstl plugin.
 
 Decision record: https://github.com/phmilk/reforged-ts/issues/11
+
+## Amendment (2026-09-24)
+
+The rule of `moduleResolution: bundler` with Lua as the only build target applies to the packages that compile to Lua. The `reforged-types` generator is a Node tool and never runs in a map. It compiles to ESM with `module` and `moduleResolution: nodenext` and runs on Node 22.13 or later. The Typings it generates are still type-checked under `bundler`, as a Map project sees them.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/39

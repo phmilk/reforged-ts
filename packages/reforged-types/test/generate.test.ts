@@ -81,7 +81,7 @@ describe("generate: declaration file shape", () => {
     expect(result.diagnostics).toEqual([]);
   });
 
-  it("emits one file per source, each with the banner, in the game-version folder", async () => {
+  it("emits one file per source, each with the banner, in the Game version folder", async () => {
     const result = await generateOk({
       "common.j": "type agent extends handle\n",
     });

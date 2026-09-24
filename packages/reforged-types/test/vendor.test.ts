@@ -3,12 +3,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { runVerify } from "../src/cli/verify.js";
+import { parseProvenance } from "../src/provenance.js";
 import {
   type Fetcher,
   JASS_HISTORY,
-  parseProvenance,
   patchFromTag,
-  runVerify,
   vendorTag,
   verifyPatchDir,
 } from "../src/vendor/index.js";
@@ -62,7 +62,7 @@ afterEach(async () => {
 });
 
 describe("patchFromTag", () => {
-  it("reads the Patch build out of a jass-history tag", () => {
+  it("reads the Build out of a jass-history tag", () => {
     expect(patchFromTag("Reforged-v3.0.0.24268-w3-3a9d8f2")).toBe("3.0.0.24268");
     expect(patchFromTag("Reforged-v3.0.0.24277-w3t-e38e03b")).toBe("3.0.0.24277");
   });
@@ -177,7 +177,7 @@ describe("vendorTag", () => {
 });
 
 describe("verify", () => {
-  const silent = { log: () => {}, error: () => {} };
+  const silent = { stdout: () => {}, stderr: () => {} };
 
   async function vendored(): Promise<string> {
     return (await vendorTag({ tag: TAG, vendorRoot, fetcher: archiveFetcher(), now: NOW })).patchDir;

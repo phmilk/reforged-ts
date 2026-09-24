@@ -1,14 +1,9 @@
 /**
  * What a newer vendored Patch declares that the one before it does not: the
  * list a maintainer reads to set `since` on the new Overlay entries. Patches
- * are ordered by build, component by component.
+ * come in oldest first, as `compareBuilds` orders them.
  */
-import {
-  jassGlobal,
-  jassSignature,
-  type Declaration,
-  type SourceName,
-} from "./model.js";
+import { jassDeclaration, type Declaration, type SourceName } from "./model.js";
 
 /** A declaration of the newer Patch that the older one lacks. */
 export interface Added {
@@ -25,17 +20,6 @@ export interface Additions {
   patch: string;
   previous: string;
   declarations: Added[];
-}
-
-/** Orders two four-part builds (`3.0.0.24268`) numerically. */
-export function compareBuilds(a: string, b: string): number {
-  const left = a.split(".").map(Number);
-  const right = b.split(".").map(Number);
-  for (let i = 0; i < Math.max(left.length, right.length); i++) {
-    const difference = (left[i] ?? 0) - (right[i] ?? 0);
-    if (difference !== 0 && !Number.isNaN(difference)) return difference;
-  }
-  return a < b ? -1 : a > b ? 1 : 0;
 }
 
 /**
@@ -61,7 +45,7 @@ export function additions(
           source: declaration.source,
           line: declaration.line,
           name: declaration.name,
-          jass: jass(declaration),
+          jass: jassDeclaration(declaration),
         })),
     });
   }
@@ -71,15 +55,4 @@ export function additions(
 function identity(declaration: Declaration): string {
   const kind = declaration.kind === "native" ? "function" : declaration.kind;
   return `${declaration.source}/${kind}/${declaration.name}`;
-}
-
-function jass(declaration: Declaration): string {
-  switch (declaration.kind) {
-    case "type":
-      return `type ${declaration.name} extends ${declaration.parent}`;
-    case "global":
-      return `global ${jassGlobal(declaration)}`;
-    default:
-      return jassSignature(declaration);
-  }
 }

@@ -6,9 +6,16 @@
  * that no vendored Patch declares is an orphan warning, not an error, because
  * the Overlay is shared by all vendored Patches.
  */
+import { patchList } from "./build.js";
 import type { Diagnostic } from "./diagnostics.js";
+import type {
+  BaseEntry,
+  FunctionEntry,
+  GlobalEntry,
+  TypeEntry,
+} from "./entry.js";
 import {
-  jassGlobal,
+  jassDeclaration,
   jassSignature,
   type Declaration,
   type FunctionDeclaration,
@@ -17,17 +24,15 @@ import {
 } from "./model.js";
 import {
   entryPath,
+  KIND_FOLDERS,
+  kindFolder,
   overlayKey,
-  type GlobalEntry,
   type Overlay,
-  type OverlayEntry,
-  type TypeEntry,
 } from "./overlay.js";
-import { patchList } from "./provenance.js";
 
 /** A function with the Overlay facts that shape its declaration. */
 export interface ResolvedFunction extends FunctionDeclaration {
-  overlay: OverlayEntry;
+  overlay: FunctionEntry;
 }
 
 /** A global with its mandatory Overlay entry. */
@@ -74,7 +79,7 @@ export function resolve(
       }
       continue;
     }
-    const entry = overlay.entries.get(key);
+    const entry = overlay.functions.get(key);
     if (!entry) {
       // An invalid entry file is already reported; do not report it twice.
       if (!overlay.rejected.has(expectedPath(declaration))) {
@@ -95,42 +100,33 @@ export function resolve(
 /**
  * The orphan warnings: every entry that no declaration of any vendored Patch
  * matches by source, kind and name. `declarations` holds the declarations of
- * all vendored Patches, `patches` their builds, oldest first.
+ * all vendored Patches, `patches` their Builds, oldest first.
  */
 export function orphans(
   declarations: readonly Declaration[],
   overlay: Overlay,
   patches: readonly string[]
 ): Diagnostic[] {
-  const declared = {
-    entries: new Set<string>(),
-    globals: new Set<string>(),
-    types: new Set<string>(),
-  };
-  for (const declaration of declarations) {
-    const key = overlayKey(declaration.source, declaration.name);
-    if (declaration.kind === "type") declared.types.add(key);
-    else if (declaration.kind === "global") declared.globals.add(key);
-    else declared.entries.add(key);
-  }
+  const declared = new Set(declarations.map(expectedPath));
   const diagnostics: Diagnostic[] = [];
-  for (const kind of ["entries", "globals", "types"] as const) {
-    for (const [key, entry] of overlay[kind]) {
-      if (!declared[kind].has(key)) diagnostics.push(orphan(entry, patches));
+  for (const folder of KIND_FOLDERS) {
+    for (const entry of overlay[folder].values()) {
+      if (!declared.has(entry.file)) diagnostics.push(orphan(entry, patches));
     }
   }
   return diagnostics;
 }
 
-/** The entry file a function or global needs. */
-function expectedPath(
-  declaration: FunctionDeclaration | GlobalDeclaration
-): string {
-  const folder = declaration.kind === "global" ? "globals" : "functions";
-  return entryPath(declaration.source, folder, declaration.name);
+/** The entry file that would hold a declaration's entry. */
+function expectedPath(declaration: Declaration): string {
+  const { source, name } = declaration;
+  return entryPath(source, kindFolder(declaration), name);
 }
 
-function sameParameters(fn: FunctionDeclaration, entry: OverlayEntry): boolean {
+function sameParameters(
+  fn: FunctionDeclaration,
+  entry: FunctionEntry
+): boolean {
   return (
     fn.params.length === entry.params.length &&
     fn.params.every((param, index) => param.name === entry.params[index]!.name)
@@ -141,10 +137,7 @@ function sameParameters(fn: FunctionDeclaration, entry: OverlayEntry): boolean {
 function missing(
   declaration: FunctionDeclaration | GlobalDeclaration
 ): Diagnostic {
-  const jass =
-    declaration.kind === "global"
-      ? `global ${jassGlobal(declaration)}`
-      : jassSignature(declaration);
+  const jass = jassDeclaration(declaration);
   return {
     severity: "error",
     kind: "missing-entry",
@@ -157,7 +150,7 @@ function missing(
   };
 }
 
-function mismatch(fn: FunctionDeclaration, entry: OverlayEntry): Diagnostic {
+function mismatch(fn: FunctionDeclaration, entry: FunctionEntry): Diagnostic {
   const overlayParams = entry.params.map((p) => p.name).join(", ");
   return {
     severity: "error",
@@ -170,10 +163,7 @@ function mismatch(fn: FunctionDeclaration, entry: OverlayEntry): Diagnostic {
   };
 }
 
-function orphan(
-  entry: Pick<OverlayEntry, "file" | "name" | "source">,
-  patches: readonly string[]
-): Diagnostic {
+function orphan(entry: BaseEntry, patches: readonly string[]): Diagnostic {
   return {
     severity: "warning",
     kind: "orphan",

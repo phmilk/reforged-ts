@@ -1,24 +1,57 @@
-// Usage: node build/cli/vendor.js <jass-history tag>
-// Downloads common.j, blizzard.j and common.ai at the tag into vendor/<patch>/ with provenance.json.
-import { fileURLToPath } from "node:url";
-import { relative } from "node:path";
-import { httpFetcher, vendorTag } from "../vendor/index.js";
+/**
+ * `vendor <tag>`: vendors a jass-history tag without generating. Downloads
+ * `common.j`, `blizzard.j` and `common.ai` at the tag into the package's
+ * `vendor/<Build>/` with their provenance file, and prints the size and
+ * sha256 of each. Exit codes: 0 vendored, 1 on a failed download, 2 on usage.
+ */
+import { join, relative } from "node:path";
+import { httpFetcher, vendorTag, type Fetcher } from "../vendor/index.js";
+import {
+  invokedDirectly,
+  packageRoot,
+  PROCESS_OUTPUT,
+  type Output,
+} from "./common.js";
 
-const VENDOR_ROOT = fileURLToPath(new URL("../../vendor/", import.meta.url));
+const USAGE =
+  "Usage: vendor <jass-history tag>\n" +
+  "  e.g. vendor Reforged-v3.0.0.24268-w3-3a9d8f2\n";
 
-const tag = process.argv[2];
-if (!tag || process.argv.length > 3) {
-  console.error("usage: vendor <jass-history tag>   e.g. vendor Reforged-v3.0.0.24268-w3-3a9d8f2");
-  process.exit(2);
+export async function main(
+  args: readonly string[],
+  output: Output,
+  fetcher: Fetcher = httpFetcher
+): Promise<number> {
+  const [tag] = args;
+  if (!tag || args.length > 1) {
+    output.stderr(USAGE);
+    return 2;
+  }
+  try {
+    const { patchDir, provenance } = await vendorTag({
+      tag,
+      vendorRoot: join(packageRoot, "vendor"),
+      fetcher,
+    });
+    const { tag: vendored, commit } = provenance;
+    const where = relative(process.cwd(), patchDir);
+    output.stdout(
+      `vendored ${vendored} (commit ${commit}) into ${where}\n` +
+        Object.entries(provenance.files)
+          .map(
+            ([name, file]) =>
+              `  ${name.padEnd(10)} ${String(file.bytes).padStart(8)} bytes` +
+              `  sha256 ${file.sha256}\n`
+          )
+          .join("")
+    );
+  } catch (error) {
+    output.stderr(`vendor failed: ${(error as Error).message}\n`);
+    return 1;
+  }
+  return 0;
 }
 
-try {
-  const { patchDir, provenance } = await vendorTag({ tag, vendorRoot: VENDOR_ROOT, fetcher: httpFetcher });
-  console.log(`vendored ${provenance.tag} (commit ${provenance.commit}) into ${relative(process.cwd(), patchDir)}`);
-  for (const [name, file] of Object.entries(provenance.files)) {
-    console.log(`  ${name.padEnd(10)} ${String(file.bytes).padStart(8)} bytes  sha256 ${file.sha256}`);
-  }
-} catch (error) {
-  console.error(`vendor failed: ${(error as Error).message}`);
-  process.exit(1);
+if (invokedDirectly(import.meta.url)) {
+  process.exitCode = await main(process.argv.slice(2), PROCESS_OUTPUT);
 }

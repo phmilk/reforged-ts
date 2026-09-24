@@ -1,8 +1,10 @@
 /**
  * One-off import that seeded the Overlay from war3-types-strict (MIT,
  * Copyright (c) 2021 Nikolaj Mariager, https://github.com/TinkerWorX/war3-types-strict).
- * Kept for provenance; it is not part of the build and the generator never
- * runs it.
+ * Kept for provenance; the build type-checks it (`tsconfig.scripts.json`)
+ * but neither the build nor the generator runs it. It imports only the
+ * modules of `src/` that load under `--experimental-strip-types`: those
+ * without a relative runtime import.
  *
  * Usage (Node 22.13 or later, from the package folder):
  *
@@ -34,12 +36,14 @@ import { execFileSync } from "node:child_process";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { SEED_ORIGIN } from "../src/entry.ts";
 import {
   SOURCES,
   type Declaration,
   type FunctionDeclaration,
   type SourceName,
 } from "../src/model.ts";
+import { byCodePoint } from "../src/order.ts";
 import { parseJass } from "../src/parser.ts";
 
 export const UPSTREAM = "https://github.com/TinkerWorX/war3-types-strict";
@@ -49,8 +53,6 @@ export const LAYERS = ["1.29.2", "1.32.10", "1.33.0"] as const;
 
 /** Record folders read from each layer; `types` records carry no fact to seed. */
 const RECORD_FOLDERS = ["natives", "functions", "globals"] as const;
-
-const ORIGIN = "war3-types-strict";
 
 /**
  * The 56 Natives jassdoc tags `@async` (commit
@@ -209,14 +211,14 @@ export async function seed(input: SeedInput): Promise<SeedReport> {
           nullable: takes[index]!.isNullable,
         })),
         ...(asyncNames.has(fn.name) ? { async: true } : {}),
-        origin: ORIGIN,
+        origin: SEED_ORIGIN,
       };
     } else {
       entry = {
         name: declaration.name,
         source: declaration.source,
         nullable: record.isNullable,
-        origin: ORIGIN,
+        origin: SEED_ORIGIN,
       };
     }
     const file = join(input.overlayDir, declaration.source, kind, `${declaration.name}.json`);
@@ -317,11 +319,7 @@ async function handWritten(file: string): Promise<boolean> {
   } catch {
     return false;
   }
-  return JSON.parse(text).origin !== ORIGIN;
-}
-
-function byCodePoint(a: string, b: string): number {
-  return a < b ? -1 : a > b ? 1 : 0;
+  return JSON.parse(text).origin !== SEED_ORIGIN;
 }
 
 const packageRoot = fileURLToPath(new URL("../", import.meta.url));

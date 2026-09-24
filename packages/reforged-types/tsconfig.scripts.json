@@ -1,0 +1,14 @@
+{
+  // The build's type-check of the one-off seed script, which Node runs
+  // with --experimental-strip-types: nothing is emitted, and the script is
+  // never part of the build output. erasableSyntaxOnly holds it, and the
+  // src/ modules it imports, to what type stripping can run.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true
+  },
+  "include": ["scripts"]
+}

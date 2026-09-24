@@ -1,6 +1,6 @@
 {
   // The build's type-check of the generated Typings, as a Map project sees
-  // them: the entry of each game version (which references lua-types/5.3 and
+  // them: the entry of each Game version (which references lua-types/5.3 and
   // the Lua runtime file) and its opt-in common.ai output. Declaration files
   // are the whole program, so skipLibCheck must stay off.
   "compilerOptions": {

@@ -14,14 +14,14 @@ import {
   type PatchFiles,
 } from "./support/fixture.js";
 
-/** The provenance of a fixture Patch of build `patch`. */
+/** The provenance of a fixture Patch of Build `patch`. */
 const provenanceOf = (patch: string) => ({
   ...provenance,
   patch,
   tag: `Reforged-v${patch}-w3-fixture`,
 });
 
-/** Vendors each Patch in its build folder and runs Seam 1 over all of them. */
+/** Vendors each Patch in its Build folder and runs Seam 1 over all of them. */
 async function generateVendored(
   patches: Record<string, PatchFiles>,
   overlay: AnyEntryFixture[]
@@ -78,7 +78,7 @@ const OVERLAY = [
 
 describe("generate: two vendored Patches", () => {
   it("reports the declarations only the newer Patch has, with source, line and Jass text", async () => {
-    // Given in newest-first order: Seam 1 orders Patches by build.
+    // Given in newest-first order: Seam 1 orders Patches by Build.
     const result = await generateVendored(
       { "3.1.0.25000": NEWER, "3.0.0.24268": OLDER },
       OVERLAY
@@ -118,7 +118,7 @@ describe("generate: two vendored Patches", () => {
     ]);
   });
 
-  it("orders builds numerically, not as text", async () => {
+  it("orders Builds numerically, not as text", async () => {
     const result = await generateVendored(
       { "3.0.0.9999": OLDER, "3.0.0.24268": NEWER },
       OVERLAY
@@ -170,7 +170,7 @@ describe("generate: two vendored Patches", () => {
     ]);
   });
 
-  it("generates one folder and one entry per game version, and one async-natives.json for all", async () => {
+  it("generates one folder and one entry per Game version, and one async-natives.json for all", async () => {
     const result = await generateVendored(
       { "3.0.0.24268": OLDER, "3.1.0.25000": NEWER },
       OVERLAY.map((e) =>
@@ -211,10 +211,10 @@ describe("generate: two vendored Patches", () => {
     );
   });
 
-  it("generates a game version from its newest vendored build and only compares against the older one", async () => {
+  it("generates a Game version from its newest vendored Build and only compares against the older one", async () => {
     const result = await generateVendored(
       { "3.0.0.24268": OLDER, "3.0.0.24277": NEWER },
-      // The older build's own declarations need no entry.
+      // The older Build's own declarations need no entry.
       OVERLAY.filter((e) => e.name !== "RequestExtraBooleanData")
     );
 

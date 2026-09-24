@@ -1,7 +1,7 @@
 /**
  * `typings:generate [tag] [--vendor <dir>] [--overlay <dir>] [--out <dir>]`:
  * with a jass-history tag, vendors it first (downloads its three Patch files
- * into `<vendor>/<build>/` with their provenance); then runs Seam 1 over
+ * into `<vendor>/<Build>/` with their provenance); then runs Seam 1 over
  * every vendored Patch and the Overlay, writes the files under `--out`,
  * prints the declarations each Patch adds over the one before it and the
  * diagnostics as a checklist, and exits non-zero on any error, zero with
@@ -9,8 +9,8 @@
  * folders and the package root.
  */
 import type { Additions } from "../additions.js";
+import { patchList } from "../build.js";
 import { generate } from "../generate.js";
-import { patchList } from "../provenance.js";
 import { httpFetcher, vendorTag, type Fetcher } from "../vendor/index.js";
 import { countDiagnostics, formatChecklist } from "./checklist.js";
 import {
@@ -92,7 +92,7 @@ export async function main(
 /**
  * Per pair of consecutive vendored Patches, the declarations only the newer
  * one has, each with its Patch file and line; the Overlay entries of these
- * functions and globals take `since` set to the newer build.
+ * functions and globals take `since` set to the newer Build.
  */
 export function formatAdditions(additions: readonly Additions[]): string {
   return additions

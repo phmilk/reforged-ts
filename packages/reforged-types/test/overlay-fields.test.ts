@@ -332,7 +332,7 @@ describe("generate: Overlay field validation", () => {
     ["a non-boolean async", { async: "yes" }, "async must be a boolean"],
     ["an empty deprecated text", { deprecated: "" }, "deprecated must be"],
     ["a non-string notes", { notes: 3 }, "notes must be"],
-    ["a since that is not a Patch build", { since: "3.0" }, "since must be"],
+    ["a since that is not a Build", { since: "3.0" }, "since must be"],
     ["an unknown origin", { origin: "jassdoc" }, "origin must be"],
     ["a notes text that closes the comment", { notes: "a */ b" }, "notes must not"],
     ["a notes text with a TSDoc tag", { notes: "see @note" }, "notes must not"],

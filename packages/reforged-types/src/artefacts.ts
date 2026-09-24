@@ -1,12 +1,13 @@
 /**
  * The files a generation writes besides the three declaration files: the
- * entry of the game version, `async-natives.json` and the manifest of the
+ * entry of the Game version, `async-natives.json` and the manifest of the
  * Patch. Deterministic like the declaration files: LF, no timestamps, one
  * trailing newline.
  */
+import { gameVersion } from "./build.js";
 import { REGENERATE_COMMAND } from "./emit.js";
-import { byCodePoint } from "./overlay.js";
-import { gameVersion, type PatchIdentity } from "./provenance.js";
+import { byCodePoint } from "./order.js";
+import type { PatchIdentity } from "./provenance.js";
 import type {
   Resolved,
   ResolvedFunction,
@@ -24,7 +25,7 @@ export const ASYNC_NATIVES_FILE = "async-natives.json";
 export const MANIFEST_FILE = "manifest.json";
 
 /**
- * The entry of the game version: references the Lua standard library, the
+ * The entry of the Game version: references the Lua standard library, the
  * Lua runtime file and the common.j and blizzard.j outputs. The common.ai
  * output is opt-in by its own path and never referenced here.
  */

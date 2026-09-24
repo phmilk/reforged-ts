@@ -11,10 +11,10 @@
 import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, posix } from "node:path";
+import { patchList } from "../build.js";
 import { REGENERATE_COMMAND } from "../emit.js";
 import { generate } from "../generate.js";
-import { byCodePoint } from "../overlay.js";
-import { patchList } from "../provenance.js";
+import { byCodePoint } from "../order.js";
 import { countDiagnostics, formatChecklist } from "./checklist.js";
 import {
   FOLDER_OPTIONS,

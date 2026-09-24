@@ -2,8 +2,8 @@
  * A throwaway Map project that consumes reforged-types the way an installed
  * dependency is consumed: the package is packed with pnpm (so the `files`
  * list decides what ships) and unpacked into the project's node_modules. Its
- * own dependencies and the consumer's other `types` entry are linked in from
- * this package's installation.
+ * own dependencies and the Map project's other `types` entry are linked in
+ * from this package's installation.
  */
 import { execFileSync, execSync } from "node:child_process";
 import { cp, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from "node:fs/promises";
@@ -24,13 +24,13 @@ export const TEMPLATE_TYPES = [
 ];
 export const AI_TYPES = [...TEMPLATE_TYPES, "reforged-types/3.0.0/common.ai"];
 
-/** Packages the consumer gets besides reforged-types (its dependency, and a Template dev dependency). */
+/** Packages the Map project gets besides reforged-types (its dependency, and a Template dev dependency). */
 const LINKED_PACKAGES = ["lua-types", "@typescript-to-lua/language-extensions"];
 
 export interface Workspace {
   /** The temporary folder holding node_modules and the fixture projects. */
   root: string;
-  /** The unpacked package, as the consumer's node_modules holds it. */
+  /** The unpacked package, as the Map project's node_modules holds it. */
   installed: string;
   dispose(): Promise<void>;
 }

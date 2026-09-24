@@ -4,14 +4,14 @@
  * declarations each Patch adds over the one before it out, or a typed failure
  * carrying the diagnostics when any of them is an error.
  *
- * Every vendored Patch generates one game-version folder and one entry. When
- * two builds of the same game version are vendored, the newest generates it
+ * Every vendored Patch generates one Game version folder and one entry. When
+ * two Builds of the same Game version are vendored, the newest generates it
  * and the older one is only compared against. The Overlay is shared: an entry
  * is an orphan only when no vendored Patch declares it.
  */
 import { readFile } from "node:fs/promises";
 import { basename, join } from "node:path";
-import { additions, compareBuilds, type Additions } from "./additions.js";
+import { additions, type Additions } from "./additions.js";
 import {
   ASYNC_NATIVES_FILE,
   emitAsyncNatives,
@@ -19,17 +19,14 @@ import {
   emitManifest,
   MANIFEST_FILE,
 } from "./artefacts.js";
+import { compareBuilds, gameVersion } from "./build.js";
 import { hasErrors, type Diagnostic } from "./diagnostics.js";
 import { emitFile } from "./emit.js";
 import { SOURCES, type Declaration } from "./model.js";
 import { checkNames } from "./names.js";
 import { loadOverlay } from "./overlay.js";
 import { parseJass } from "./parser.js";
-import {
-  gameVersion,
-  readPatchIdentity,
-  type PatchIdentity,
-} from "./provenance.js";
+import { readPatchIdentity, type PatchIdentity } from "./provenance.js";
 import { orphans, resolve, type Resolved } from "./resolve.js";
 
 /**
@@ -51,14 +48,14 @@ export type GenerateInput = { overlayDir: string } & (
 
 export interface GenerateSuccess {
   ok: true;
-  /** Full build of the newest Patch generated. */
+  /** Build of the newest Patch generated. */
   patch: string;
-  /** Full build of every Patch generated, oldest first. */
+  /** Build of every Patch generated, oldest first. */
   patches: string[];
   /**
    * File text by output path, `/`-separated and relative to the package
    * root: per Patch generated, oldest first, the three declaration files and
-   * the manifest in the game-version folder and the entry of the game
+   * the manifest in the Game version folder and the entry of the Game
    * version; then `async-natives.json`.
    */
   files: Map<string, string>;
@@ -80,7 +77,7 @@ export type GenerateResult = GenerateSuccess | GenerateFailure;
 
 /** One vendored Patch as read: its identity, declarations and problems. */
 interface VendoredPatch {
-  /** Full build, or the folder name when the provenance file is invalid. */
+  /** Build, or the folder name when the provenance file is invalid. */
   patch: string;
   identity?: PatchIdentity;
   declarations: Declaration[];
@@ -113,7 +110,7 @@ export async function generate(input: GenerateInput): Promise<GenerateResult> {
   const overlay = await loadOverlay(input.overlayDir);
   diagnostics.push(...overlay.diagnostics);
 
-  // The newest build of each game version generates its folder.
+  // The newest Build of each Game version generates its folder.
   const generated = patches.filter(
     (p, i) => gameVersion(patches[i + 1]?.patch ?? "") !== gameVersion(p.patch)
   );
@@ -215,7 +212,7 @@ async function readPatch(
   };
 }
 
-/** A build vendored in two folders (one's provenance names the other's). */
+/** A Build vendored in two folders (one's provenance names the other's). */
 function duplicateBuilds(patches: readonly VendoredPatch[]): Diagnostic[] {
   const builds = patches.map((p) => p.patch);
   const duplicates = new Set(builds.filter((b, i) => builds.indexOf(b) !== i));

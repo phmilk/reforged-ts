@@ -1,6 +1,16 @@
+/**
+ * Checks a vendored Patch folder against its provenance file: every Patch
+ * file present, with the recorded sha256 and size.
+ */
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { PATCH_FILES, PROVENANCE_FILE, parseProvenance, sha256, type Provenance } from "./provenance.js";
+import { SOURCES } from "../model.js";
+import {
+  parseProvenance,
+  PROVENANCE_FILE,
+  sha256,
+  type Provenance,
+} from "../provenance.js";
 
 export interface VerifyResult {
   patchDir: string;
@@ -16,9 +26,12 @@ export interface VerifyResult {
  */
 export async function verifyPatchDir(patchDir: string): Promise<VerifyResult> {
   const provenancePath = join(patchDir, PROVENANCE_FILE);
-  const provenance = parseProvenance(await readFile(provenancePath, "utf8"), provenancePath);
+  const provenance = parseProvenance(
+    await readFile(provenancePath, "utf8"),
+    provenancePath
+  );
   const problems: string[] = [];
-  for (const name of PATCH_FILES) {
+  for (const name of SOURCES) {
     const expected = provenance.files[name];
     let bytes: Uint8Array;
     try {
@@ -29,48 +42,15 @@ export async function verifyPatchDir(patchDir: string): Promise<VerifyResult> {
     }
     const actual = sha256(bytes);
     if (actual !== expected.sha256) {
-      problems.push(`${name}: sha256 ${actual} does not match recorded ${expected.sha256}`);
+      problems.push(
+        `${name}: sha256 ${actual} does not match recorded ${expected.sha256}`
+      );
     }
     if (bytes.byteLength !== expected.bytes) {
-      problems.push(`${name}: ${bytes.byteLength} bytes, recorded ${expected.bytes}`);
+      problems.push(
+        `${name}: ${bytes.byteLength} bytes, recorded ${expected.bytes}`
+      );
     }
   }
   return { patchDir, provenance, problems };
-}
-
-export interface VerifyOutput {
-  log(line: string): void;
-  error(line: string): void;
-}
-
-/**
- * The verify command: verifies each Patch folder, reports one line per folder
- * (plus one per problem) and returns the process exit code, 0 when every
- * folder verifies and 1 otherwise.
- */
-export async function runVerify(patchDirs: readonly string[], out: VerifyOutput = console): Promise<number> {
-  if (patchDirs.length === 0) {
-    out.error("verify: no vendored Patch folder to verify");
-    return 1;
-  }
-  let exitCode = 0;
-  for (const dir of patchDirs) {
-    let result: VerifyResult;
-    try {
-      result = await verifyPatchDir(dir);
-    } catch (error) {
-      out.error(`FAIL ${dir}: ${(error as Error).message}`);
-      exitCode = 1;
-      continue;
-    }
-    const { provenance, problems } = result;
-    if (problems.length === 0) {
-      out.log(`ok   ${provenance.patch} (${provenance.tag}, commit ${provenance.commit})`);
-    } else {
-      exitCode = 1;
-      out.error(`FAIL ${provenance.patch} (${provenance.tag})`);
-      for (const problem of problems) out.error(`  ${problem}`);
-    }
-  }
-  return exitCode;
 }
