@@ -5,7 +5,12 @@
  */
 import { describe, expect, it } from "vitest";
 import { generate } from "../src/index.js";
-import { entry, globalEntry, writeFixture } from "./support/fixture.js";
+import {
+  entry,
+  globalEntry,
+  writeFixture,
+  generatedFile,
+} from "./support/fixture.js";
 
 async function generateOk(...args: Parameters<typeof writeFixture>) {
   const result = await generate(await writeFixture(...args));
@@ -161,7 +166,7 @@ describe("generate: the manifest of the Patch", () => {
     const result = await generateOk({
       "common.j": "type agent extends handle\n",
     });
-    const text = result.files.get("3.0.0/manifest.json")!;
+    const text = generatedFile(result, "3.0.0/manifest.json");
 
     expect(JSON.parse(text)).toEqual({ patch: "3.0.0.24268", entries: [] });
     expect(text).toBe('{\n  "patch": "3.0.0.24268",\n  "entries": []\n}\n');

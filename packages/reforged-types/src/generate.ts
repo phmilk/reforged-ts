@@ -143,8 +143,10 @@ export async function generate(input: GenerateInput): Promise<GenerateResult> {
 
   const files = new Map<string, string>();
   for (const patch of generated) {
-    const identity = patch.identity!;
-    const declarations = resolved.get(patch)!;
+    // Every generated Patch has an identity and a resolution (see above).
+    const { identity } = patch;
+    if (identity === undefined) continue;
+    const declarations = resolved.get(patch) ?? [];
     const folder = gameVersion(identity.patch);
     for (const source of SOURCES) {
       const ofSource = declarations.filter((d) => d.source === source);
@@ -165,7 +167,7 @@ export async function generate(input: GenerateInput): Promise<GenerateResult> {
   );
   return {
     ok: true,
-    patch: generated.at(-1)!.patch,
+    patch: generated[generated.length - 1].patch,
     patches: generated.map((p) => p.patch),
     files,
     diagnostics,

@@ -16,7 +16,9 @@ export function jassHistoryFetcher(
 ): Fetcher {
   return async (url) => {
     if (url.startsWith(API)) {
-      const tag = tags[decodeURIComponent(url.slice(API.length))];
+      const tag = (tags as Partial<typeof tags>)[
+        decodeURIComponent(url.slice(API.length))
+      ];
       if (!tag) throw new Error(`GET ${url} failed: 422 Unprocessable Entity`);
       return new TextEncoder().encode(tag.commit);
     }

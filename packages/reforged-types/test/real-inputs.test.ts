@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { beforeAll, describe, expect, it } from "vitest";
 import { generate, type GenerateSuccess } from "../src/index.js";
+import { generatedFile } from "./support/fixture.js";
 
 const packageRoot = fileURLToPath(new URL("../", import.meta.url));
 const patchDir = join(packageRoot, "vendor", "3.0.0.24268");
@@ -22,9 +23,9 @@ beforeAll(async () => {
     throw new Error(generated.diagnostics.map((d) => d.message).join("\n"));
   }
   result = generated;
-  commonJ = result.files.get("3.0.0/common.j.d.ts")!;
-  blizzardJ = result.files.get("3.0.0/blizzard.j.d.ts")!;
-  commonAi = result.files.get("3.0.0/common.ai.d.ts")!;
+  commonJ = generatedFile(result, "3.0.0/common.j.d.ts");
+  blizzardJ = generatedFile(result, "3.0.0/blizzard.j.d.ts");
+  commonAi = generatedFile(result, "3.0.0/common.ai.d.ts");
 }, 60_000);
 
 /** Occurrences of a line pattern in a generated file. */
@@ -137,9 +138,9 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
   });
 
   it("references the common.j and blizzard.j outputs from the 3.0.0 entry, never common.ai", () => {
-    const references = result.files
-      .get("3.0.0.d.ts")!
-      .match(/^\/\/\/ <reference .*\/>$/gm);
+    const references = generatedFile(result, "3.0.0.d.ts").match(
+      /^\/\/\/ <reference .*\/>$/gm,
+    );
     expect(references).toEqual([
       '/// <reference types="lua-types/5.3" resolution-mode="require" />',
       '/// <reference path="./lua-runtime.d.ts" />',
@@ -149,7 +150,9 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
   });
 
   it("lists the 56 async Natives in async-natives.json, sorted", () => {
-    const names: string[] = JSON.parse(result.files.get("async-natives.json")!);
+    const names = JSON.parse(
+      generatedFile(result, "async-natives.json"),
+    ) as string[];
     expect(names).toHaveLength(56);
     expect(names).toContain("GetLocalPlayer");
     expect(names).toEqual([...names].sort());
@@ -160,7 +163,9 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
   });
 
   it("lists every function and global in the manifest", () => {
-    const manifest = JSON.parse(result.files.get("3.0.0/manifest.json")!);
+    const manifest = JSON.parse(
+      generatedFile(result, "3.0.0/manifest.json"),
+    ) as { patch: string; entries: { name: string; async?: boolean }[] };
     const declared = [commonJ, blizzardJ, commonAi].reduce(
       (sum, text) => sum + count(text, FUNCTION) + count(text, GLOBAL),
       0,

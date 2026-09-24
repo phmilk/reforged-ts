@@ -103,7 +103,7 @@ export function checkNames(declarations: readonly Declaration[]): Diagnostic[] {
 
   for (const declaration of declarations) {
     const { name, source, line, kind } = declaration;
-    const where = `${source}:${line}`;
+    const where = `${source}:${String(line)}`;
     const location = { file: source, line, name };
 
     const reserved = kind === "type" ? RESERVED_TYPE_NAMES : RESERVED_WORDS;

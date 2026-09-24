@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { generate } from "../src/index.js";
-import { entry, writeFixture } from "./support/fixture.js";
+import { entry, writeFixture, generatedFile } from "./support/fixture.js";
 
 async function run(...args: Parameters<typeof writeFixture>) {
   return generate(await writeFixture(...args));
@@ -19,7 +19,7 @@ describe("generate: reserved words", () => {
     );
 
     expect(result.ok).toBe(true);
-    const text = result.ok ? result.files.get("3.0.0/common.j.d.ts")! : "";
+    const text = result.ok ? generatedFile(result, "3.0.0/common.j.d.ts") : "";
     expect(text).toContain(
       [
         " * @param delete - unit",

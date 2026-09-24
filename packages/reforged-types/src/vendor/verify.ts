@@ -48,7 +48,7 @@ export async function verifyPatchDir(patchDir: string): Promise<VerifyResult> {
     }
     if (bytes.byteLength !== expected.bytes) {
       problems.push(
-        `${name}: ${bytes.byteLength} bytes, recorded ${expected.bytes}`,
+        `${name}: ${String(bytes.byteLength)} bytes, recorded ${String(expected.bytes)}`,
       );
     }
   }

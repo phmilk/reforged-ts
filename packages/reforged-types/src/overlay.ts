@@ -235,7 +235,7 @@ const FIELDS = {
     if (!Array.isArray(value)) return new Problem("params must be an array");
     const params: OverlayParam[] = [];
     for (const [index, param] of value.entries()) {
-      const field = `params[${index}]`;
+      const field = `params[${String(index)}]`;
       if (!isObject(param) || typeof param.name !== "string") {
         return new Problem(`${field}.name must be a string`);
       }

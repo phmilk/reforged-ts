@@ -45,7 +45,7 @@ export async function main(
     return 2;
   }
   const { vendorDir, overlayDir, outDir } = parsed.folders;
-  const [tag] = parsed.positional;
+  const tag = parsed.positional.at(0);
 
   let report = "";
   if (tag !== undefined) {
@@ -80,7 +80,7 @@ export async function main(
   }
 
   await writeFiles(outDir, result.files);
-  report += `Generated ${result.files.size} files for ${patchList(result.patches)}.\n`;
+  report += `Generated ${String(result.files.size)} files for ${patchList(result.patches)}.\n`;
   output.stdout(
     result.diagnostics.length === 0
       ? report
@@ -98,9 +98,9 @@ export function formatAdditions(additions: readonly Additions[]): string {
   return additions
     .map(
       ({ patch, previous, declarations }) =>
-        `In Patch ${patch} and not in Patch ${previous} (${declarations.length}):\n` +
+        `In Patch ${patch} and not in Patch ${previous} (${String(declarations.length)}):\n` +
         declarations
-          .map((d) => `- ${d.source}:${d.line}: ${d.jass}\n`)
+          .map((d) => `- ${d.source}:${String(d.line)}: ${d.jass}\n`)
           .join("") +
         "\n",
     )

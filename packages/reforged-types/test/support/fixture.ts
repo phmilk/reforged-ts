@@ -22,6 +22,25 @@ export interface OverlayEntryFixture {
   origin?: string;
 }
 
+/**
+ * A value the test cannot go on without: fails the test, naming `what`, when
+ * it is missing.
+ */
+export function required<T>(value: T | null | undefined, what: string): T {
+  if (value === undefined || value === null) {
+    throw new Error(`${what} is missing`);
+  }
+  return value;
+}
+
+/** The text of a file the generator wrote; fails the test when it did not. */
+export function generatedFile(
+  result: { files: ReadonlyMap<string, string> },
+  path: string,
+): string {
+  return required(result.files.get(path), `generated file ${path}`);
+}
+
 export const provenance = {
   patch: "3.0.0.24268",
   tag: "Reforged-v3.0.0.24268-w3-3a9d8f2",

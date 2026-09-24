@@ -41,7 +41,6 @@ import {
   SOURCES,
   type Declaration,
   type FunctionDeclaration,
-  type SourceName,
 } from "../src/model.ts";
 import { byCodePoint } from "../src/order.ts";
 import { parseJass } from "../src/parser.ts";
@@ -200,7 +199,7 @@ export async function seed(input: SeedInput): Promise<SeedReport> {
       const takes = (record as FunctionRecord).takes;
       if (takes.length !== fn.params.length) {
         skip(
-          `the record has ${takes.length} parameters, the Patch ${fn.params.length}`,
+          `the record has ${String(takes.length)} parameters, the Patch ${String(fn.params.length)}`,
         );
         continue;
       }
@@ -277,7 +276,8 @@ async function readLayers(checkout: string): Promise<Map<string, Merged>> {
         continue; // A layer holds only the folders it changes.
       }
       for (const file of files.sort(byCodePoint)) {
-        const record = JSON.parse(await readFile(join(path, file), "utf8"));
+        const record = JSON.parse(await readFile(join(path, file), "utf8")) as
+          FunctionRecord | GlobalRecord;
         const name = file.slice(0, -".json".length);
         if (record.name !== name) {
           throw new Error(
@@ -329,7 +329,7 @@ async function handWritten(file: string): Promise<boolean> {
   } catch {
     return false;
   }
-  return JSON.parse(text).origin !== SEED_ORIGIN;
+  return (JSON.parse(text) as { origin?: unknown }).origin !== SEED_ORIGIN;
 }
 
 const packageRoot = fileURLToPath(new URL("../", import.meta.url));
@@ -359,7 +359,7 @@ async function main(args: readonly string[]): Promise<number> {
   }
   const manifest = JSON.parse(
     await readFile(join(packageRoot, "package.json"), "utf8"),
-  );
+  ) as { reforged: { patch: string } };
   const report = await seed({
     checkout,
     commit,
@@ -372,7 +372,7 @@ async function main(args: readonly string[]): Promise<number> {
   for (const [group, count] of Object.entries(report.written)) {
     console.log(`wrote ${String(count).padStart(5)} ${group}`);
   }
-  console.log(`skipped ${report.skipped.length}:`);
+  console.log(`skipped ${String(report.skipped.length)}:`);
   for (const s of report.skipped) {
     console.log(`  ${s.source}/${s.kind}/${s.name}: ${s.reason}`);
   }
@@ -384,9 +384,10 @@ async function main(args: readonly string[]): Promise<number> {
   return 0;
 }
 
+const script = process.argv.at(1);
 if (
-  process.argv[1] !== undefined &&
-  pathToFileURL(resolve(process.argv[1])).href === import.meta.url
+  script !== undefined &&
+  pathToFileURL(resolve(script)).href === import.meta.url
 ) {
   process.exitCode = await main(process.argv.slice(2));
 }

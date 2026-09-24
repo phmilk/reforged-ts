@@ -6,8 +6,8 @@
  */
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import ts from "typescript";
-import tstl from "typescript-to-lua";
+import * as ts from "typescript";
+import * as tstl from "typescript-to-lua";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
   AI_TYPES,
@@ -22,6 +22,7 @@ import {
   type MapProject,
   type Workspace,
 } from "./support/map-project.js";
+import { required } from "./support/fixture.js";
 
 let workspace: Workspace;
 
@@ -30,7 +31,7 @@ beforeAll(async () => {
 }, 60_000);
 
 afterAll(async () => {
-  await workspace?.dispose();
+  await (workspace as Workspace | undefined)?.dispose();
 });
 
 describe("a Map project with the Template's types", () => {
@@ -133,7 +134,7 @@ describe("a Map project compiled with typescript-to-lua for Lua 5.3", () => {
     expect(emittedLua).toBeDefined();
     // One space for every run of whitespace: the assertions below do not
     // depend on how typescript-to-lua breaks long calls over lines.
-    lua = emittedLua!.replace(/\s+/g, " ");
+    lua = required(emittedLua, "callbacks.lua").replace(/\s+/g, " ");
   }, 60_000);
 
   it("compiles a fixture that has no @noSelfInFile of its own", () => {

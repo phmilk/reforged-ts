@@ -4,6 +4,7 @@ import {
   entry,
   writeFixture,
   type OverlayEntryFixture,
+  generatedFile,
 } from "./support/fixture.js";
 
 async function run(...args: Parameters<typeof writeFixture>) {
@@ -24,7 +25,7 @@ async function generateOk(...args: Parameters<typeof writeFixture>) {
 /** The common.j output of a fixture with one Native and one Overlay entry. */
 async function commonJ(jass: string, overlay: OverlayEntryFixture) {
   const result = await generateOk({ "common.j": jass }, [overlay]);
-  return result.files.get("3.0.0/common.j.d.ts")!;
+  return generatedFile(result, "3.0.0/common.j.d.ts");
 }
 
 const getLocalPlayer = [
@@ -253,7 +254,7 @@ describe("generate: boolean callback alias", () => {
       ],
     );
 
-    const text = result.files.get("3.0.0/common.j.d.ts")!;
+    const text = generatedFile(result, "3.0.0/common.j.d.ts");
     expect(text).toContain(
       [
         "declare interface handle { __handle: never }",

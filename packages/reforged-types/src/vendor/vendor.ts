@@ -91,7 +91,7 @@ export const httpFetcher: Fetcher = async (url, options) => {
   });
   if (!response.ok) {
     throw new Error(
-      `GET ${url} failed: ${response.status} ${response.statusText}`,
+      `GET ${url} failed: ${String(response.status)} ${response.statusText}`,
     );
   }
   return new Uint8Array(await response.arrayBuffer());
@@ -142,10 +142,10 @@ export async function vendorTag(options: VendorOptions): Promise<VendorResult> {
     );
   }
 
-  const contents = new Map<SourceName, Uint8Array>();
+  const contents: (readonly [SourceName, Uint8Array])[] = [];
   for (const name of SOURCES) {
     const url = rawFileUrl(upstream, commit, name);
-    contents.set(name, await options.fetcher(url));
+    contents.push([name, await options.fetcher(url)]);
   }
 
   const provenance: Provenance = {
@@ -156,7 +156,7 @@ export async function vendorTag(options: VendorOptions): Promise<VendorResult> {
     path: upstream.path,
     downloaded: (options.now ?? new Date()).toISOString().slice(0, 10),
     files: Object.fromEntries(
-      SOURCES.map((name) => [name, fileRecord(contents.get(name)!)]),
+      contents.map(([name, bytes]) => [name, fileRecord(bytes)]),
     ) as Provenance["files"],
   };
 
@@ -168,8 +168,8 @@ export async function vendorTag(options: VendorOptions): Promise<VendorResult> {
       serializeProvenance(provenance);
   if (unchanged) provenance.downloaded = previous.downloaded;
   await mkdir(patchDir, { recursive: true });
-  for (const name of SOURCES) {
-    await writeFile(join(patchDir, name), contents.get(name)!);
+  for (const [name, bytes] of contents) {
+    await writeFile(join(patchDir, name), bytes);
   }
   await writeFile(
     join(patchDir, PROVENANCE_FILE),

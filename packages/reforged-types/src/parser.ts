@@ -145,7 +145,7 @@ function topLevel(context: Context, code: string, line: number): void {
     if (params) {
       context.declarations.push({
         kind: "native",
-        constant: native[1] !== undefined,
+        constant: native.at(1) !== undefined,
         name: native[2],
         params,
         returns: native[4],
@@ -182,7 +182,7 @@ function topLevel(context: Context, code: string, line: number): void {
       report(
         context,
         line,
-        `a second globals block (the first is at line ${context.globalsLine})`,
+        `a second globals block (the first is at line ${String(context.globalsLine)})`,
       );
     }
     context.region = { kind: "globals", line };
@@ -226,12 +226,12 @@ function parseGlobal(code: string): GlobalForm | undefined {
   let match: RegExpExecArray | null;
   if ((match = CONSTANT_GLOBAL.exec(code))) {
     form = { constant: true, array: false, type: match[1], name: match[2] };
-    form.initializer = match[3]!;
+    form.initializer = match[3];
   } else if ((match = ARRAY_GLOBAL.exec(code))) {
     form = { constant: false, array: true, type: match[1], name: match[2] };
   } else if ((match = INITIALIZED_GLOBAL.exec(code))) {
     form = { constant: false, array: false, type: match[1], name: match[2] };
-    form.initializer = match[3]!;
+    form.initializer = match[3];
   } else if ((match = PLAIN_GLOBAL.exec(code))) {
     form = { constant: false, array: false, type: match[1], name: match[2] };
   }
@@ -286,6 +286,6 @@ function report(context: Context, line: number, text: string): void {
     kind: "parse",
     file: context.source,
     line,
-    message: `${context.source}:${line}: ${text}`,
+    message: `${context.source}:${String(line)}: ${text}`,
   });
 }

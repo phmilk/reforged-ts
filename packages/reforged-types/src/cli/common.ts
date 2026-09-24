@@ -58,8 +58,10 @@ export function parseArgs(
       positional.push(arg);
       continue;
     }
-    const key = FLAGS[arg as keyof typeof FLAGS];
-    const value = args[i + 1];
+    const key = (
+      FLAGS as Partial<Record<string, (typeof FLAGS)[keyof typeof FLAGS]>>
+    )[arg];
+    const value = args.at(i + 1);
     if (key === undefined || value === undefined) return undefined;
     folders[key] = value;
     i++;
@@ -98,7 +100,7 @@ export async function writeFiles(
 
 /** Whether the module at `moduleUrl` is the script Node was started with. */
 export function invokedDirectly(moduleUrl: string): boolean {
-  const script = process.argv[1];
+  const script = process.argv.at(1);
   return (
     script !== undefined && pathToFileURL(resolve(script)).href === moduleUrl
   );

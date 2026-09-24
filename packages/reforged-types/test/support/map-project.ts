@@ -21,7 +21,8 @@ import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gunzipSync } from "node:zlib";
-import ts from "typescript";
+import * as ts from "typescript";
+import { required } from "./fixture.js";
 
 export const packageRoot = fileURLToPath(new URL("../../", import.meta.url));
 const fixturesRoot = join(packageRoot, "test", "fixtures", "map-project");
@@ -159,18 +160,21 @@ export function typecheck(project: MapProject): {
   program: ts.Program;
   diagnostics: ts.Diagnostic[];
 } {
-  const config = ts.getParsedCommandLineOfConfigFile(
-    project.tsconfig,
-    { noEmit: true },
-    {
-      ...ts.sys,
-      onUnRecoverableConfigFileDiagnostic: (diagnostic) => {
-        throw new Error(
-          ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"),
-        );
+  const config = required(
+    ts.getParsedCommandLineOfConfigFile(
+      project.tsconfig,
+      { noEmit: true },
+      {
+        ...ts.sys,
+        onUnRecoverableConfigFileDiagnostic: (diagnostic) => {
+          throw new Error(
+            ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"),
+          );
+        },
       },
-    },
-  )!;
+    ),
+    "the parsed tsconfig",
+  );
   const program = ts.createProgram({
     rootNames: config.fileNames,
     options: config.options,
@@ -183,7 +187,7 @@ export function typecheck(project: MapProject): {
 
 /** `src/<file>:<line> TS<code>`, with `/` separators on every platform. */
 export function locate(project: MapProject, diagnostic: ts.Diagnostic): string {
-  const code = `TS${diagnostic.code}`;
+  const code = `TS${String(diagnostic.code)}`;
   if (diagnostic.file === undefined || diagnostic.start === undefined) {
     return `${code} ${ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")}`;
   }
@@ -194,7 +198,7 @@ export function locate(project: MapProject, diagnostic: ts.Diagnostic): string {
   const { line } = diagnostic.file.getLineAndCharacterOfPosition(
     diagnostic.start,
   );
-  return `${file}:${line + 1} ${code}`;
+  return `${file}:${String(line + 1)} ${code}`;
 }
 
 /** Slash-separated, lower-cased: for prefix checks on any platform. */

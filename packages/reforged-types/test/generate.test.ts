@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { generate } from "../src/index.js";
-import { entry, writeFixture } from "./support/fixture.js";
+import { entry, writeFixture, generatedFile } from "./support/fixture.js";
 
 const banner = (source: string) =>
   [
@@ -136,7 +136,7 @@ describe("generate: declaration file shape", () => {
       entry("blizzard.j", "Second", ["count", "label"]),
     ]);
 
-    const text = result.files.get("3.0.0/blizzard.j.d.ts")!;
+    const text = generatedFile(result, "3.0.0/blizzard.j.d.ts");
     expect(text).toContain("declare function First(): void;");
     expect(text).toContain(
       "declare function Second(count: number, label: string): boolean;",
@@ -162,7 +162,7 @@ describe("generate: declaration file shape", () => {
       entry("common.j", "Handle", ["h", "s"]),
     ]);
 
-    const text = result.files.get("3.0.0/common.j.d.ts")!;
+    const text = generatedFile(result, "3.0.0/common.j.d.ts");
     expect(text).toContain(
       "declare function TimerStart(whichTimer: timer, timeout: number, periodic: boolean, handlerFunc: code): void;",
     );

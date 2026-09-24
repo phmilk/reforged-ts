@@ -9,6 +9,7 @@ import {
   globalEntry,
   typeEntry,
   writeFixture,
+  generatedFile,
 } from "./support/fixture.js";
 
 /** Whether the temporary folder fixtures live in ignores case in names. */
@@ -118,7 +119,7 @@ describe("generate: the four global forms", () => {
       ),
     );
 
-    const text = result.files.get("3.0.0/common.j.d.ts")!;
+    const text = generatedFile(result, "3.0.0/common.j.d.ts");
     expect(text).toContain("declare const TRUE_FLAG: boolean;");
     expect(text).toContain("declare const LABEL: string;");
     expect(text).toContain("declare const RAW: number;");
@@ -160,7 +161,7 @@ describe("generate: global Overlay facts", () => {
       globalEntry("common.j", "NONE", true),
     ]);
 
-    const text = result.files.get("3.0.0/common.j.d.ts")!;
+    const text = generatedFile(result, "3.0.0/common.j.d.ts");
     expect(text).toContain("declare let LAST: unit | undefined;");
     expect(text).toContain(
       "declare let GHOULS: Record<number, unit | undefined>;",
@@ -175,7 +176,7 @@ describe("generate: global Overlay facts", () => {
       globalEntry("common.j", "NONE"),
     ]);
 
-    const text = result.files.get("3.0.0/common.j.d.ts")!;
+    const text = generatedFile(result, "3.0.0/common.j.d.ts");
     expect(text).toContain("declare let LAST: unit;");
     expect(text).toContain("declare let GHOULS: Record<number, unit>;");
     expect(text).toContain("declare const NONE: unit;");
@@ -282,7 +283,7 @@ describe("generate: a file mixing every declaration kind", () => {
       entry("common.ai", "Main"),
     ]);
 
-    const text = result.files.get("3.0.0/common.ai.d.ts")!;
+    const text = generatedFile(result, "3.0.0/common.ai.d.ts");
     const order = [
       "declare interface unit extends handle",
       "declare const GOLD: number;",
@@ -321,7 +322,7 @@ describe("generate: missing and invalid global entries", () => {
         file: "blizzard.j",
         line,
         name,
-        message: `blizzard.j: no Overlay entry for global ${declaration}; expected blizzard.j/globals/${name}.json`,
+        message: `blizzard.j: no Overlay entry for global ${String(declaration)}; expected blizzard.j/globals/${String(name)}.json`,
       })),
     );
   });

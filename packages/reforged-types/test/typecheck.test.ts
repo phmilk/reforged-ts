@@ -7,8 +7,9 @@
 import { readFile } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import ts from "typescript";
+import * as ts from "typescript";
 import { describe, expect, it } from "vitest";
+import { required } from "./support/fixture.js";
 
 const packageRoot = fileURLToPath(new URL("../", import.meta.url));
 const TYPINGS_CONFIG = join(packageRoot, "tsconfig.typings.json");
@@ -18,11 +19,14 @@ const TYPINGS_CONFIG = join(packageRoot, "tsconfig.typings.json");
  * text of some files (by path relative to the package root).
  */
 function typecheck(replace: Record<string, string> = {}): ts.Diagnostic[] {
-  const config = ts.getParsedCommandLineOfConfigFile(
-    TYPINGS_CONFIG,
-    {},
-    { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => {} },
-  )!;
+  const config = required(
+    ts.getParsedCommandLineOfConfigFile(
+      TYPINGS_CONFIG,
+      {},
+      { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => undefined },
+    ),
+    "the parsed tsconfig",
+  );
   expect(config.errors).toEqual([]);
   const replaced = new Map(
     Object.entries(replace).map(([path, text]) => [
@@ -56,11 +60,14 @@ function format(diagnostics: readonly ts.Diagnostic[]): string {
 
 describe("the typings type-check", () => {
   it("checks the entry and the common.ai output, not skipping declaration files", () => {
-    const config = ts.getParsedCommandLineOfConfigFile(
-      TYPINGS_CONFIG,
-      {},
-      { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => {} },
-    )!;
+    const config = required(
+      ts.getParsedCommandLineOfConfigFile(
+        TYPINGS_CONFIG,
+        {},
+        { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => undefined },
+      ),
+      "the parsed tsconfig",
+    );
 
     expect(
       config.fileNames.map((name) =>
@@ -86,7 +93,7 @@ describe("the typings type-check", () => {
     });
 
     expect(diagnostics.map((d) => d.code)).toEqual([2304]);
-    expect(diagnostics[0].file!.fileName).toMatch(/3\.0\.0\/common\.j\.d\.ts$/);
+    expect(diagnostics[0].file?.fileName).toMatch(/3\.0\.0\/common\.j\.d\.ts$/);
   }, 60_000);
 });
 

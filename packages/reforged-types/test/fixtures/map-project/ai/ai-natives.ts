@@ -2,7 +2,7 @@
 // alongside the common.j and Blizzard.j declarations.
 StartThread(() => {
   if (CaptainAtGoal() && GetMinesOwned() > 0) {
-    DisplayTextToPlayer(GetLocalPlayer(), 0, 0, "gold: " + GetGold());
+    DisplayTextToPlayer(GetLocalPlayer(), 0, 0, "gold: " + String(GetGold()));
   }
 });
 

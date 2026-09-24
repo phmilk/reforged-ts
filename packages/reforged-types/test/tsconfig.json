@@ -2,11 +2,15 @@
   // The tests and the vitest configuration, under the package's compiler
   // options. Named tsconfig.json so the lint's project service finds it from
   // any test file; vitest itself runs the tests from source. The Map project
-  // fixtures are another program, with a tsconfig of their own.
+  // fixtures are another program, with a tsconfig of their own. The seed
+  // test imports the seed script by its .ts path, as Node runs it; vitest's
+  // own declarations need the DOM lib, so library files are not checked.
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "rootDir": "..",
-    "noEmit": true
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "skipLibCheck": true
   },
   "include": [".", "../vitest.config.ts"],
   "exclude": ["fixtures"]

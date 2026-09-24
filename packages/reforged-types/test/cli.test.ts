@@ -10,14 +10,13 @@ import {
   globalEntry,
   writeFixture,
   writeOverlay,
+  required,
 } from "./support/fixture.js";
 
 const fixture = fileURLToPath(new URL("./fixtures/cli/", import.meta.url));
 
 const NO_NETWORK: Network = {
-  fetcher: async (url) => {
-    throw new Error(`no fetch expected, got ${url}`);
-  },
+  fetcher: (url) => Promise.reject(new Error(`no fetch expected, got ${url}`)),
 };
 
 async function runCli(args: string[], network = NO_NETWORK) {
@@ -161,10 +160,12 @@ describe("typings:generate", () => {
     // (kind, name, parameters, return type or global type and initializer)
     // and the entry file to create, so an entry is drafted from the line.
     for (const item of items) {
-      const [, source, name, path] =
+      const [, source, name, path] = required(
         /^- \[ \] ([\w.]+): no Overlay entry for (?:.* )?(\w+)(?: takes .*| = .*); expected (.+)$/.exec(
           item,
-        )!;
+        ),
+        `the checklist item ${item}`,
+      );
       expect(path).toBe(`${source}/${path.split("/")[1]}/${name}.json`);
       expect(["functions", "globals"]).toContain(path.split("/")[1]);
     }
@@ -315,7 +316,7 @@ describe("typings:generate on the vendored 3.0.0.24268 tag", () => {
   it("vendors the same bytes again and regenerates the committed output unchanged", async () => {
     const provenance = JSON.parse(
       await readFile(join(committed, "provenance.json"), "utf8"),
-    );
+    ) as { tag: string; commit: string };
     const vendorDir = await tempDir("vendor");
     const outDir = await tempDir("out");
     await cp(committed, join(vendorDir, "3.0.0.24268"), { recursive: true });

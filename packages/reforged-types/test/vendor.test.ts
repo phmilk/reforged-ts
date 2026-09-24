@@ -228,8 +228,8 @@ describe("vendorTag", () => {
   });
 
   it("fails when the tag does not resolve to a commit sha", async () => {
-    const fetcher: Fetcher = async () =>
-      new TextEncoder().encode('{"message":"Not Found"}');
+    const fetcher: Fetcher = () =>
+      Promise.resolve(new TextEncoder().encode('{"message":"Not Found"}'));
     await expect(
       vendorTag({ tag: TAG, vendorRoot, fetcher, now: NOW }),
     ).rejects.toThrow(/did not resolve to a commit sha/);
@@ -246,7 +246,7 @@ describe("vendorTag", () => {
 });
 
 describe("verify", () => {
-  const silent = { stdout: () => {}, stderr: () => {} };
+  const silent = { stdout: () => undefined, stderr: () => undefined };
 
   async function vendored(): Promise<string> {
     return (

@@ -56,7 +56,7 @@ export async function main(
     const drift = await compare([...result.files.keys()], tempDir, outDir);
     if (drift.length > 0) {
       output.stderr(
-        `Typings drift: ${drift.length} ${
+        `Typings drift: ${String(drift.length)} ${
           drift.length === 1 ? "file does" : "files do"
         } not match what the sources and the Overlay generate. ` +
           `Run \`${REGENERATE_COMMAND}\` and commit the result.\n\n` +
@@ -68,7 +68,7 @@ export async function main(
     await rm(tempDir, { recursive: true, force: true });
   }
   output.stdout(
-    `Typings match: ${result.files.size} files of ${patchList(result.patches)} ` +
+    `Typings match: ${String(result.files.size)} files of ${patchList(result.patches)} ` +
       "are exactly what the sources and the Overlay generate.\n",
   );
   return 0;
@@ -89,9 +89,7 @@ async function compare(
     const committed = await readBytes(join(committedDir, path));
     if (committed === undefined) {
       drift.set(path, `${path}: generated but not committed`);
-    } else if (
-      !committed.equals((await readBytes(join(generatedDir, path)))!)
-    ) {
+    } else if (!committed.equals(await readFile(join(generatedDir, path)))) {
       drift.set(path, `${path}: differs from the generated file`);
     }
   }
@@ -107,7 +105,9 @@ async function compare(
       }
     }
   }
-  return [...drift.keys()].sort(byCodePoint).map((path) => drift.get(path)!);
+  return [...drift]
+    .sort(([a], [b]) => byCodePoint(a, b))
+    .map(([, line]) => line);
 }
 
 async function readBytes(path: string): Promise<Buffer | undefined> {
