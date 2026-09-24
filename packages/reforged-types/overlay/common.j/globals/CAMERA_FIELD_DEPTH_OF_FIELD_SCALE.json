@@ -1,0 +1,6 @@
+{
+  "name": "CAMERA_FIELD_DEPTH_OF_FIELD_SCALE",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.0.24268"
+}

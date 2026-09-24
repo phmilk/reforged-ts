@@ -1,0 +1,34 @@
+{
+  "name": "SetDoodadColor",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "doodadID",
+      "nullable": false
+    },
+    {
+      "name": "nearestOnly",
+      "nullable": false
+    },
+    {
+      "name": "whichColor",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

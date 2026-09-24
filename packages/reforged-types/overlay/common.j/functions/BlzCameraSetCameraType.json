@@ -1,0 +1,14 @@
+{
+  "name": "BlzCameraSetCameraType",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "cameraType",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

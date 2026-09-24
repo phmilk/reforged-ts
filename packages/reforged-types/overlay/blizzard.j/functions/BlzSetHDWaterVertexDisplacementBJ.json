@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetHDWaterVertexDisplacementBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "vertexDisplacement",
+      "nullable": false
+    }
+  ]
+}

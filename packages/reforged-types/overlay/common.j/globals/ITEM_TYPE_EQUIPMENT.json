@@ -1,0 +1,7 @@
+{
+  "name": "ITEM_TYPE_EQUIPMENT",
+  "source": "common.j",
+  "nullable": false,
+  "notes": "Inserted at value 7 in Patch 3.0.0.24268, which moved ITEM_TYPE_UNKNOWN from 7 to 8 and ITEM_TYPE_ANY from 8 to 9; code that hard-codes ConvertItemType(7) or (8) changed meaning.",
+  "since": "3.0.0.24268"
+}

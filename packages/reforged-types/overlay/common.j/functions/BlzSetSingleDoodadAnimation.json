@@ -1,0 +1,22 @@
+{
+  "name": "BlzSetSingleDoodadAnimation",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "index",
+      "nullable": false
+    },
+    {
+      "name": "animName",
+      "nullable": false
+    },
+    {
+      "name": "animRandom",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

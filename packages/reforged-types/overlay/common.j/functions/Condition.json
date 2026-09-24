@@ -7,7 +7,8 @@
   "params": [
     {
       "name": "func",
-      "nullable": false
+      "nullable": false,
+      "type": "boolcode"
     }
   ],
   "origin": "war3-types-strict"

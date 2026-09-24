@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetTerrainFogLinearStartBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "linearStart",
+      "nullable": false
+    }
+  ]
+}

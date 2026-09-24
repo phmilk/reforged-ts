@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetTerrainFogZEndBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "zEnd",
+      "nullable": false
+    }
+  ]
+}

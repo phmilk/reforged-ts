@@ -1,0 +1,17 @@
+{
+  "name": "DestroyEffectAfterTimeBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichEffect",
+      "nullable": false
+    },
+    {
+      "name": "time",
+      "nullable": false
+    }
+  ]
+}

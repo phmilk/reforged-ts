@@ -1,0 +1,14 @@
+{
+  "name": "BlzSetTerrainFogZStart",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "zStart",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

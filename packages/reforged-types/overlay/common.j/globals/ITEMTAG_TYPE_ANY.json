@@ -1,0 +1,6 @@
+{
+  "name": "ITEMTAG_TYPE_ANY",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.0.24268"
+}

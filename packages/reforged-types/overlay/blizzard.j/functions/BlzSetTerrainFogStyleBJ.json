@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetTerrainFogStyleBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "style",
+      "nullable": false
+    }
+  ]
+}

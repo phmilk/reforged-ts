@@ -1,0 +1,14 @@
+{
+  "name": "BlzSetMinShadowCastingPointLightCount",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "count",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

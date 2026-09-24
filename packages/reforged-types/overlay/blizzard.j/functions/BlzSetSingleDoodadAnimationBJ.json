@@ -1,0 +1,17 @@
+{
+  "name": "BlzSetSingleDoodadAnimationBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "animName",
+      "nullable": false
+    },
+    {
+      "name": "index",
+      "nullable": false
+    }
+  ]
+}

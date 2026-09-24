@@ -1,0 +1,6 @@
+{
+  "name": "EVENT_PLAYER_UNIT_EQUIP_ITEM",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.0.24268"
+}

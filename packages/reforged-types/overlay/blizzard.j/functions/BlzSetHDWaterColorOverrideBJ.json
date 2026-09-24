@@ -1,0 +1,8 @@
+{
+  "name": "BlzSetHDWaterColorOverrideBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": []
+}

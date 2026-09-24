@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetHDWaterEmissivityBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "emissivity",
+      "nullable": false
+    }
+  ]
+}

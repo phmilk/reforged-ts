@@ -1,0 +1,54 @@
+{
+  "name": "SetHDWaterParams",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "red",
+      "nullable": false
+    },
+    {
+      "name": "green",
+      "nullable": false
+    },
+    {
+      "name": "blue",
+      "nullable": false
+    },
+    {
+      "name": "useColor",
+      "nullable": false
+    },
+    {
+      "name": "vertexDisplacement",
+      "nullable": false
+    },
+    {
+      "name": "minOpacity",
+      "nullable": false
+    },
+    {
+      "name": "maxOpacity",
+      "nullable": false
+    },
+    {
+      "name": "reflectivity",
+      "nullable": false
+    },
+    {
+      "name": "emissivity",
+      "nullable": false
+    },
+    {
+      "name": "edgeSoftness",
+      "nullable": false
+    },
+    {
+      "name": "waveStrength",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

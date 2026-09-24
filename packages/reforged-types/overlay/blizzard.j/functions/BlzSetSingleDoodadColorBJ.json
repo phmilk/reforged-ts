@@ -1,0 +1,17 @@
+{
+  "name": "BlzSetSingleDoodadColorBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "color",
+      "nullable": false
+    },
+    {
+      "name": "index",
+      "nullable": false
+    }
+  ]
+}

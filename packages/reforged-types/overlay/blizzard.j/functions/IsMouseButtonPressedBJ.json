@@ -1,0 +1,13 @@
+{
+  "name": "IsMouseButtonPressedBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "mouseButtonType",
+      "nullable": false
+    }
+  ]
+}

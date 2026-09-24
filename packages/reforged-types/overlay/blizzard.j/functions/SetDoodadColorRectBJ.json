@@ -1,0 +1,21 @@
+{
+  "name": "SetDoodadColorRectBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "color",
+      "nullable": false
+    },
+    {
+      "name": "doodadID",
+      "nullable": false
+    },
+    {
+      "name": "r",
+      "nullable": false
+    }
+  ]
+}

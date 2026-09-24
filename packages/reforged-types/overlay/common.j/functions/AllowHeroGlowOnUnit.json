@@ -1,0 +1,14 @@
+{
+  "name": "AllowHeroGlowOnUnit",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

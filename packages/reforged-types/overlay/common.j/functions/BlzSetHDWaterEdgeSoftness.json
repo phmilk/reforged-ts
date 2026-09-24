@@ -1,0 +1,14 @@
+{
+  "name": "BlzSetHDWaterEdgeSoftness",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "edgeSoftness",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

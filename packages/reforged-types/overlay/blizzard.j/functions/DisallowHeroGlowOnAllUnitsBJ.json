@@ -1,0 +1,8 @@
+{
+  "name": "DisallowHeroGlowOnAllUnitsBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": []
+}

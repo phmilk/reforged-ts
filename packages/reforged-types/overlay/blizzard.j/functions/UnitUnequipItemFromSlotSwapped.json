@@ -1,0 +1,17 @@
+{
+  "name": "UnitUnequipItemFromSlotSwapped",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichHero",
+      "nullable": false
+    },
+    {
+      "name": "slot",
+      "nullable": false
+    }
+  ]
+}

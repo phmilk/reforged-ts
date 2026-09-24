@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetHDWaterEnvMapStrengthBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "envMapStrengthy",
+      "nullable": false
+    }
+  ]
+}

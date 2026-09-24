@@ -1,0 +1,21 @@
+{
+  "name": "SetCameraBlockerForPlayerBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "r",
+      "nullable": false
+    },
+    {
+      "name": "flag",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    }
+  ]
+}

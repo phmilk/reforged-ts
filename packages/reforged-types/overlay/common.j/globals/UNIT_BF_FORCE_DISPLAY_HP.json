@@ -1,0 +1,6 @@
+{
+  "name": "UNIT_BF_FORCE_DISPLAY_HP",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.0.24268"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "ChooseRandomItemExWithFilterBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "level",
+      "nullable": false
+    },
+    {
+      "name": "whichType",
+      "nullable": false
+    },
+    {
+      "name": "whichEquipmentType",
+      "nullable": false
+    },
+    {
+      "name": "whichTag",
+      "nullable": false
+    }
+  ]
+}
