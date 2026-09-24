@@ -1,6 +1,6 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { expectWrapper, HandleBase } from "./handle";
 import { Point } from "./point";
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class -- Camera is a static namespace by design; step 7 (#54) settles that shape together with Input
@@ -87,15 +87,15 @@ export class Camera {
   /**
    * Return-value for the local players camera only.
    */
-  public static get eyePoint() {
-    return Point.fromHandle(GetCameraEyePositionLoc());
+  public static get eyePoint(): Point {
+    return expectWrapper(Point, GetCameraEyePositionLoc());
   }
 
   /**
    * Return-value for the local players camera only.
    */
-  public static get targetPoint() {
-    return Point.fromHandle(GetCameraTargetPositionLoc());
+  public static get targetPoint(): Point {
+    return expectWrapper(Point, GetCameraTargetPositionLoc());
   }
 
   /**
@@ -318,47 +318,19 @@ export class Camera {
   }
 }
 
-export class CameraSetup extends Handle<camerasetup> {
-  /**
-   * @deprecated use `CameraSetup.create` instead.
-   */
-  constructor() {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-
-    const handle = CreateCameraSetup();
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
-    if (handle === undefined) {
-      error("w3ts failed to create camerasetup handle.", 3);
-    }
-
-    super(handle);
-  }
-
+export class CameraSetup extends HandleBase<camerasetup> {
   /**
    * Creates a new CameraSetup object.
    */
-  public static create(): CameraSetup | undefined {
-    const handle = CreateCameraSetup();
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
-    if (handle) {
-      const obj = this.getObject(handle) as CameraSetup;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+  public static create(): CameraSetup {
+    return this.expect(CreateCameraSetup());
   }
 
   /**
    * Returns the target Point of a CameraSetup.
    */
-  public get destPoint() {
-    return Point.fromHandle(CameraSetupGetDestPositionLoc(this.handle));
+  public get destPoint(): Point {
+    return Point.expect(CameraSetupGetDestPositionLoc(this.handle));
   }
 
   /**
@@ -503,12 +475,5 @@ export class CameraSetup extends Handle<camerasetup> {
    */
   public setField(whichField: camerafield, value: number, duration: number) {
     CameraSetupSetField(this.handle, whichField, value, duration);
-  }
-
-  public static fromHandle(
-    handle: camerasetup | undefined,
-  ): CameraSetup | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }

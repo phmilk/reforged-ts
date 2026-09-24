@@ -1,33 +1,11 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { HandleBase } from "./handle";
 import { Unit } from "./unit";
 
-export class TextTag extends Handle<texttag> {
-  /** @deprecated use `TextTag.create` instead. */
-  constructor() {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = CreateTextTag();
-    if (handle === undefined) {
-      error("w3ts failed to create texttag handle.", 3);
-    }
-    super(handle);
-  }
-
-  public static create(): TextTag | undefined {
-    const handle = CreateTextTag();
-    if (handle) {
-      const obj = this.getObject(handle) as TextTag;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+export class TextTag extends HandleBase<texttag> {
+  public static create(): TextTag {
+    return this.expect(CreateTextTag());
   }
 
   public destroy() {
@@ -87,10 +65,5 @@ export class TextTag extends Handle<texttag> {
 
   public setVisible(flag: boolean) {
     SetTextTagVisibility(this.handle, flag);
-  }
-
-  public static fromHandle(handle: texttag | undefined): TextTag | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }

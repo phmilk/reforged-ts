@@ -1,6 +1,6 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { HandleBase } from "./handle";
 
 export enum ImageType {
   /**
@@ -21,47 +21,7 @@ export enum ImageType {
   Ubersplat = 4,
 }
 
-export class Image extends Handle<image> {
-  /**
-   * @deprecated use `Image.create` instead.
-   */
-  constructor(
-    file: string,
-    sizeX: number,
-    sizeY: number,
-    sizeZ: number,
-    posX: number,
-    posY: number,
-    posZ: number,
-    originX: number,
-    originY: number,
-    originZ: number,
-    imageType: ImageType,
-  ) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = CreateImage(
-      file,
-      sizeX,
-      sizeY,
-      sizeZ,
-      posX,
-      posY,
-      posZ,
-      originX,
-      originY,
-      originZ,
-      imageType,
-    );
-
-    if (handle === undefined) {
-      error("w3ts failed to create image handle.", 3);
-    }
-    super(handle);
-  }
-
+export class Image extends HandleBase<image> {
   /**
    * Creates a new image, the first ID given being 0 and then counting upwards (0, 1, 2, 3, ...).
    * Multiple images with the same type are drawn in their order of creation,
@@ -91,29 +51,23 @@ export class Image extends Handle<image> {
     originY: number,
     originZ: number,
     imageType: ImageType,
-  ): Image | undefined {
-    const handle = CreateImage(
+  ): Image {
+    return this.expect(
+      CreateImage(
+        file,
+        sizeX,
+        sizeY,
+        sizeZ,
+        posX,
+        posY,
+        posZ,
+        originX,
+        originY,
+        originZ,
+        imageType,
+      ),
       file,
-      sizeX,
-      sizeY,
-      sizeZ,
-      posX,
-      posY,
-      posZ,
-      originX,
-      originY,
-      originZ,
-      imageType,
     );
-    if (handle) {
-      const obj = this.getObject(handle) as Image;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
   }
 
   /**
@@ -181,10 +135,5 @@ export class Image extends Handle<image> {
    */
   public show(flag: boolean) {
     ShowImage(this.handle, flag);
-  }
-
-  public static fromHandle(handle: image | undefined): Image | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }

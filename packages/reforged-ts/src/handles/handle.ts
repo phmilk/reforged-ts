@@ -108,14 +108,49 @@ export abstract class HandleBase<T extends handle> extends Handle<T> {
     detail = "",
     init?: (wrapper: Initialising<C>) => void,
   ): C {
-    if (handle === undefined) {
-      const suffix = detail === "" ? "" : ` (${detail})`;
-      error(`reforged-ts: failed to create ${this.name}${suffix}`, 2);
-    }
-    const wrapper = wrap(this, handle);
-    init?.(wrapper);
-    return wrapper;
+    return created(this, handle, detail, init);
   }
+}
+
+/**
+ * The creation helper for library code that is not a Wrapper and so cannot
+ * call the protected `expect`: `Camera`, a static namespace, whose
+ * `eyePoint` and `targetPoint` allocate a location. Same message, same
+ * error level, same tail-position rule as `expect`:
+ * `return expectWrapper(Point, GetCameraEyePositionLoc())`.
+ *
+ * Package-internal: `handles/index.ts` re-exports only `Handle` and
+ * `HandleBase` from this module, so the library's entry file does not
+ * reach it.
+ */
+export function expectWrapper<C extends HandleBase<handle>>(
+  cls: WrapperClass<C>,
+  handle: C["handle"] | undefined,
+  detail = "",
+): C {
+  return created(cls, handle, detail);
+}
+
+/**
+ * Creation, the one place its error is raised: the Wrapper for `handle`, or
+ * the error naming `cls` and `detail` when `handle` is undefined. Reached
+ * only through tail calls (from `expect` or `expectWrapper`, themselves
+ * tail-called by the creation member), so level 2 names the frame that
+ * called the creation member.
+ */
+function created<C extends HandleBase<handle>>(
+  cls: WrapperClass<C>,
+  handle: C["handle"] | undefined,
+  detail: string,
+  init?: (wrapper: Initialising<C>) => void,
+): C {
+  if (handle === undefined) {
+    const suffix = detail === "" ? "" : ` (${detail})`;
+    error(`reforged-ts: failed to create ${cls.name}${suffix}`, 2);
+  }
+  const wrapper = wrap(cls, handle);
+  init?.(wrapper);
+  return wrapper;
 }
 
 /**

@@ -1,41 +1,8 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { HandleBase } from "./handle";
 
-export class Ubersplat extends Handle<ubersplat> {
-  /** @deprecated use `Ubersplat.create` instead. */
-  constructor(
-    x: number,
-    y: number,
-    name: string,
-    red: number,
-    green: number,
-    blue: number,
-    alpha: number,
-    forcePaused: boolean,
-    noBirthTime: boolean,
-  ) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = CreateUbersplat(
-      x,
-      y,
-      name,
-      red,
-      green,
-      blue,
-      alpha,
-      forcePaused,
-      noBirthTime,
-    );
-    if (handle === undefined) {
-      error("w3ts failed to create ubersplat handle.", 3);
-    }
-    super(handle);
-  }
-
+export class Ubersplat extends HandleBase<ubersplat> {
   public static create(
     x: number,
     y: number,
@@ -46,27 +13,21 @@ export class Ubersplat extends Handle<ubersplat> {
     alpha: number,
     forcePaused: boolean,
     noBirthTime: boolean,
-  ): Ubersplat | undefined {
-    const handle = CreateUbersplat(
-      x,
-      y,
+  ): Ubersplat {
+    return this.expect(
+      CreateUbersplat(
+        x,
+        y,
+        name,
+        red,
+        green,
+        blue,
+        alpha,
+        forcePaused,
+        noBirthTime,
+      ),
       name,
-      red,
-      green,
-      blue,
-      alpha,
-      forcePaused,
-      noBirthTime,
     );
-    if (handle) {
-      const obj = this.getObject(handle) as Ubersplat;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
   }
 
   public destroy() {
@@ -97,12 +58,5 @@ export class Ubersplat extends Handle<ubersplat> {
 
   public show(flag: boolean) {
     ShowUbersplat(this.handle, flag);
-  }
-
-  public static fromHandle(
-    handle: ubersplat | undefined,
-  ): Ubersplat | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }
