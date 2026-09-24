@@ -14,7 +14,7 @@ export const RUNNER_MODULE = "lua_modules.reforged-test.lua.index";
 const fixtures = fileURLToPath(new URL("../fixtures/", import.meta.url));
 const runner = fileURLToPath(new URL("../../lua/index.lua", import.meta.url));
 
-/** The path of a fixture file (a consumer stub, for instance). */
+/** The path of a fixture file (an extra stub file, for instance). */
 export function fixturePath(...parts: string[]): string {
   return join(fixtures, ...parts);
 }

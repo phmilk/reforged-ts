@@ -1,10 +1,10 @@
 /** @noSelfInFile */
 
-// The hooks module replaces `main` and `config` with functions that run the
-// added hooks around the originals (entry-point interception).
+// The library's Hook code replaces `main` and `config` with functions that
+// run the added Hooks around the originals.
 
-// Keep this import ahead of the library's: the hooks module captures `main`
-// and `config` when it loads, and this module defines them.
+// Keep this import ahead of the library's: the Hook code captures `main` and
+// `config` when it loads, and this file defines them.
 import { entryPointLog } from "./support/entry-points";
 import { describe, expect, it } from "reforged-test/lua";
 import { addScriptHook, W3TS_HOOK } from "../src/hooks/index";
@@ -12,7 +12,7 @@ import { addScriptHook, W3TS_HOOK } from "../src/hooks/index";
 declare const main: () => void;
 declare const config: () => void;
 
-/** What ran at the entry points after the mark. */
+/** What ran in `main` and `config` after the mark. */
 function logSince(mark: number): string[] {
   return entryPointLog.slice(mark);
 }
@@ -38,7 +38,7 @@ describe("addScriptHook", () => {
     expect(logSince(mark)).toEqual(["before 1", "before 2", "main", "after"]);
   });
 
-  it("refuses an entry point it does not know", () => {
+  it("refuses a hook name it does not know", () => {
     expect(
       addScriptHook("main::during" as W3TS_HOOK, () => {
         entryPointLog.push("never");
@@ -46,7 +46,7 @@ describe("addScriptHook", () => {
     ).toBeFalsy();
   });
 
-  it("stops the entry point when a hook throws", () => {
+  it("stops config when a hook throws", () => {
     addScriptHook(W3TS_HOOK.CONFIG_BEFORE, () => {
       throw new Error("config hook failed");
     });

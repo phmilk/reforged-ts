@@ -49,6 +49,8 @@
     "lua-wasm-bindings": "catalog:"
   },
   "peerDependencies": {
+    "typescript": "catalog:",
+    "typescript-to-lua": "catalog:",
     "vitest": "catalog:"
   },
   "devDependencies": {

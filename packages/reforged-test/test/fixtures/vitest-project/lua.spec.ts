@@ -1,4 +1,4 @@
-// The vitest file a consumer writes: one call to the glue. The outer test
+// The vitest file a Map project writes: one call to the glue. The outer test
 // (test/map.test.ts) runs vitest on this project and provides the outDir.
 
 import { inject } from "vitest";

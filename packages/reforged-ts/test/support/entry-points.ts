@@ -1,8 +1,8 @@
 /** @noSelfInFile */
 
-// The map script's entry points, stubbed. The game defines `main` and
-// `config` before any map module loads, and the hooks module captures both
-// when it loads, so a test imports this module ahead of the library. The
+// The map script's `main` and `config`, stubbed. The game defines both
+// before any map code loads, and the library's Hook code captures them when
+// it loads, so a test imports this file ahead of the library. The
 // shipped stubs leave them nil (see the reforged-test README), so only the
 // hooks test defines them.
 
@@ -11,7 +11,7 @@ declare global {
   let config: (() => void) | undefined;
 }
 
-/** What ran at the entry points, in order: the stubs log their own names. */
+/** What ran in `main` and `config`, in order: the stubs log their own names. */
 export const entryPointLog: string[] = [];
 
 main = () => {

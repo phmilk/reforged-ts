@@ -5,8 +5,7 @@
 
 import { rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { DiagnosticCategory, formatDiagnostics } from "typescript";
-import { transpileProject } from "typescript-to-lua";
+import { compileLuaProject } from "reforged-test";
 import type { TestProject } from "vitest/node";
 
 declare module "vitest" {
@@ -30,15 +29,7 @@ const outDir = fileURLToPath(new URL("../../dist-test/", import.meta.url));
  */
 function compile(): string {
   rmSync(outDir, { recursive: true, force: true });
-  const { diagnostics } = transpileProject(tsconfig);
-  const errors = diagnostics.filter(
-    (diagnostic) => diagnostic.category === DiagnosticCategory.Error,
-  );
-  return formatDiagnostics(errors, {
-    getCanonicalFileName: (name) => name,
-    getCurrentDirectory: () => process.cwd(),
-    getNewLine: () => "\n",
-  });
+  return compileLuaProject(tsconfig);
 }
 
 export default function setup(project: TestProject): void {

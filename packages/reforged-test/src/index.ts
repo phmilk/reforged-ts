@@ -12,6 +12,8 @@ import {
   type LuaModule,
 } from "./lua-state.js";
 
+export { compileLuaProject } from "./compile.js";
+
 export interface LuaTestOptions {
   /** The folder typescript-to-lua emitted the tests and their modules to. */
   readonly outDir: string;
@@ -38,9 +40,9 @@ export interface LuaTestResult {
 /** One compiled test module, run in its own Lua state. */
 export interface LuaTestFile {
   /** The Lua module name (`handles.unit_test`). */
-  readonly module: string;
+  readonly moduleName: string;
   /** The TypeScript file it was compiled from (`handles/unit.test.ts`). */
-  readonly name: string;
+  readonly testFile: string;
   readonly tests: readonly LuaTestResult[];
   /** Set when the module failed before its tests ran (load error). */
   readonly error?: string;
@@ -82,7 +84,7 @@ export function runLuaTestFiles(options: LuaTestOptions): LuaTestFile[] {
 export function runLuaTests(options: LuaTestOptions): void {
   const harness = new Harness(options);
   for (const module of harness.testModules()) {
-    describe(module.name, () => {
+    describe(module.testFile, () => {
       const file = harness.run(module);
       if (file.error === undefined) {
         register(suiteTree(file.tests));
@@ -97,8 +99,8 @@ export function runLuaTests(options: LuaTestOptions): void {
 }
 
 interface TestModule {
-  readonly module: string;
-  readonly name: string;
+  readonly moduleName: string;
+  readonly testFile: string;
 }
 
 class Harness {
@@ -113,37 +115,34 @@ class Harness {
     ];
     this.#modules = luaFiles(outDir).map((path) => {
       const name = relative(outDir, path).split(sep).join("/");
-      return {
-        moduleName: name.slice(0, -".lua".length).split("/").join("."),
-        chunk: readChunk(path, name),
-      };
+      return { moduleName: moduleNameOf(name), chunk: readChunk(path, name) };
     });
   }
 
+  /** The test modules, sorted by path; their module names are the preloaded ones. */
   testModules(): TestModule[] {
     return this.#modules
-      .map((module) => module.chunk.name)
       .filter(
-        (name) =>
-          name.endsWith(TEST_SUFFIX) &&
-          !name.startsWith(`${DEPENDENCIES_DIR}/`),
+        ({ chunk }) =>
+          chunk.name.endsWith(TEST_SUFFIX) &&
+          !chunk.name.startsWith(`${DEPENDENCIES_DIR}/`),
       )
-      .sort()
-      .map((name) => ({
-        module: name.slice(0, -".lua".length).split("/").join("."),
-        name: `${name.slice(0, -TEST_SUFFIX.length)}.test.ts`,
+      .sort((a, b) => compare(a.chunk.name, b.chunk.name))
+      .map(({ moduleName, chunk }) => ({
+        moduleName,
+        testFile: `${chunk.name.slice(0, -TEST_SUFFIX.length)}.test.ts`,
       }));
   }
 
-  run({ module, name }: TestModule): LuaTestFile {
+  run({ moduleName, testFile }: TestModule): LuaTestFile {
     let json: string;
     try {
-      json = runTestModule(this.#stubs, this.#modules, module);
+      json = runTestModule(this.#stubs, this.#modules, moduleName);
     } catch (error) {
       if (!(error instanceof LuaError)) throw error;
-      return { module, name, tests: [], error: rewrite(error.message) };
+      return { moduleName, testFile, tests: [], error: rewrite(error.message) };
     }
-    return { module, name, tests: parseResults(json, module) };
+    return { moduleName, testFile, tests: parseResults(json, moduleName) };
   }
 }
 
@@ -154,6 +153,16 @@ function shippedStubs(): Chunk[] {
   return [BASE_STUB, ...others].map((file) =>
     readChunk(join(STUBS_DIR, file), `reforged-test/stubs/${file}`),
   );
+}
+
+/** A path relative to outDir, `/`-separated, as `require` names it: `handles/unit.lua` is `handles.unit`. */
+function moduleNameOf(path: string): string {
+  return path.slice(0, -".lua".length).split("/").join(".");
+}
+
+/** The order of Array.prototype.sort without a comparator (UTF-16 code units). */
+function compare(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
 }
 
 function readChunk(path: string, name: string): Chunk {
@@ -176,9 +185,9 @@ function rewrite(message: string): string {
 
 const STATUSES: readonly string[] = ["pass", "fail", "error"];
 
-function parseResults(json: string, module: string): LuaTestResult[] {
+function parseResults(json: string, moduleName: string): LuaTestResult[] {
   const malformed = (why: string) =>
-    new Error(`${module}: malformed runner results (${why}): ${json}`);
+    new Error(`${moduleName}: malformed runner results (${why}): ${json}`);
   let parsed: unknown;
   try {
     parsed = JSON.parse(json);
@@ -242,12 +251,12 @@ function suiteTree(tests: readonly LuaTestResult[]): SuiteNode["children"] {
 
 function register(children: SuiteNode["children"], inSuite32 = false): void {
   for (const child of children) {
+    const marked = inSuite32 || child.name.includes(MARKER_32_BIT);
     if ("children" in child) {
-      const marked = inSuite32 || child.name.includes(MARKER_32_BIT);
       describe(child.name, () => {
         register(child.children, marked);
       });
-    } else if (inSuite32 || child.name.includes(MARKER_32_BIT)) {
+    } else if (marked) {
       test.skip(child.name, () => undefined);
     } else {
       test(child.name, () => {

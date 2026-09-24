@@ -2,7 +2,7 @@
 
 The Typings of each supported Patch, generated from the Patch files vendored under `vendor/<Build>/` and the hand-curated Overlay under `overlay/`. Generated files (`<Game version>/`, `<Game version>.d.ts`, `async-natives.json`) are output: change them by curating the Overlay or the generator, then regenerating.
 
-Run every command from the repository root as `pnpm --filter reforged-types <script>`. The root `package.json` belongs to the library and carries no Typings script.
+Run every command from the repository root. The root `package.json` is the private workspace package: `typings:generate` and `typings:check` are root scripts (`pnpm typings:generate`, `pnpm typings:check`), and the package's other scripts run as `pnpm --filter reforged-types <script>`.
 
 ## New Patch loop
 

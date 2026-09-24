@@ -89,7 +89,8 @@ A fresh state costs a few milliseconds: about 9 ms with the whole reforged-ts li
 
 Other exports of the glue:
 
-- `runLuaTestFiles(options)`: runs the same files and returns their results without registering anything with vitest.
+- `runLuaTestFiles(options)`: runs the same files and returns their results without registering anything with vitest. Each result carries the Lua `moduleName` (`handles.unit_test`), the `testFile` it was compiled from (`handles/unit.test.ts`), its `tests` and, when the module failed to load, its `error`.
+- `compileLuaProject(tsconfigPath)`: compiles a typescript-to-lua project and returns its errors as text, or `""` when it compiled. A Map project's vitest global setup calls it to build the tests before they run. `typescript` and `typescript-to-lua` are peer dependencies for it.
 - `MARKER_32_BIT`: the `[32-bit]` marker described under the integer width policy.
 - `LOAD_TEST_NAME`: the name of the one failing test that stands for a file that failed to load, for example on a Native called at module load that no stub defines. The other files still run.
 - The types `LuaTestOptions`, `LuaTestFile`, `LuaTestResult` and `LuaTestStatus`.
@@ -145,7 +146,7 @@ The runner writes it with its own encoder, with keys sorted, because the game's 
 - the Natives `Player`, `GetPlayerId`, `GetHandleId` and `CreateTrigger`;
 - `FourCC`, a Lua helper of the game rather than a Native.
 
-`main` and `config` stay nil, because the hooks module reads them before the game would define them. For the same reason the glue does not make undefined globals an error.
+`main` and `config` stay nil, because the library's Hook code (`hooks/index.ts`) reads them before the game would define them. For the same reason the glue does not make undefined globals an error.
 
 It also holds the shared machinery the other stub files use:
 
@@ -175,7 +176,7 @@ A timer or trigger never fires on its own: a test fires it with the helper. The 
 - Handles are tables carrying a kind and a sequential id from a fixed base, so ids are deterministic. Use `__stub_new_handle`.
 - A stub that holds a callback exposes a manual firing helper (`__stub_fire_timer`, `__stub_fire_trigger`) instead of any scheduler.
 - A stub never simulates game logic beyond storing what it was given.
-- There is one stub file per Native family: players, timers, triggers, units, frames, as they are needed. The glue loads the shipped set plus any extra files the consumer lists.
+- There is one stub file per Native family: players, timers, triggers, units, frames, as they are needed. The glue loads the shipped set, then the extra stub files a Map project lists in the `stubs` option.
 
 ## Integer width policy
 
