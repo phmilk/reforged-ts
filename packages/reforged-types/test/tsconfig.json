@@ -1,0 +1,13 @@
+{
+  // The tests and the vitest configuration, under the package's compiler
+  // options. Named tsconfig.json so the lint's project service finds it from
+  // any test file; vitest itself runs the tests from source. The Map project
+  // fixtures are another program, with a tsconfig of their own.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "noEmit": true
+  },
+  "include": [".", "../vitest.config.ts"],
+  "exclude": ["fixtures"]
+}

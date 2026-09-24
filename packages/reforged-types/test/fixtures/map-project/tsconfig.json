@@ -1,0 +1,26 @@
+{
+  // The Map project fixtures as the editor and the lint see them: sources of a
+  // Map project that consumes the Typings, not of this package. The tests copy
+  // each fixture folder into a temporary Map project with the Template's
+  // tsconfig and the `types` under test; this file is not copied. It lists
+  // the AI opt-in so every fixture's Natives resolve; the negative fixtures'
+  // type errors are what the tests assert, so this program is never built.
+  // The hand-written Lua runtime file is listed although the entry references
+  // it: the project service attributes a file only to a program that names
+  // it, and the typings type-check cannot (a test pins its file list).
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["@typescript-to-lua/language-extensions"],
+    "strict": true,
+    "noEmit": true
+  },
+  "files": [
+    "../../../3.0.0.d.ts",
+    "../../../3.0.0/common.ai.d.ts",
+    "../../../lua-runtime.d.ts"
+  ],
+  "include": ["."]
+}
