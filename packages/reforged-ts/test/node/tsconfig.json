@@ -1,0 +1,25 @@
+{
+  // The library's Node-side tests: vitest runs them in Node from source, so
+  // this program is type-checked only. The fixtures under fixtures/ are Map
+  // project sources, another program with a tsconfig of their own.
+  // typescript-to-lua never sees this folder (../tsconfig.json excludes it).
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "noEmit": true,
+    "strict": true,
+    "verbatimModuleSyntax": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "newLine": "lf",
+    // vitest's declarations pull in tinybench's, which name DOM types a Node
+    // program does not have.
+    "skipLibCheck": true
+  },
+  "include": ["."],
+  "exclude": ["fixtures"]
+}

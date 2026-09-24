@@ -1,0 +1,50 @@
+# The library's tests
+
+Two kinds of test live here, and `pnpm test` at the root runs both in one vitest run (projects `reforged-ts` and `reforged-ts-node` of the root `vitest.config.ts`).
+
+| Folder     | What                                                      | Compiled by                                   | Runs on                   |
+| ---------- | --------------------------------------------------------- | --------------------------------------------- | ------------------------- |
+| `.` (this) | Lua tests, `*.test.ts`, and their helpers in `support/`   | typescript-to-lua (`tsconfig.json`)           | the reforged-test harness |
+| `harness/` | The global setup that compiles the Lua tests and the spec | vitest, from source (`harness/tsconfig.json`) | Node                      |
+| `node/`    | Node tests of the package, `*.test.ts`                    | vitest, from source (`node/tsconfig.json`)    | Node                      |
+
+`tsconfig.json` here excludes `harness/` and `node/`, so typescript-to-lua never compiles a Node file. A new Lua test is a `*.test.ts` file in this folder (or a subfolder other than those two); a new Node test is a `*.test.ts` file under `node/`. Each folder's `tsconfig.json` is the one the editor and the lint's project service find for its files.
+
+## Lua tests
+
+Written as the [reforged-test README](../../reforged-test/README.md) describes: `/** @noSelfInFile */`, the runner from `reforged-test/lua`, the library through relative imports into `../src`. The helpers in `support/` are compiled with them:
+
+- `defined(value, what)`: the value of a factory or lookup that may return undefined, or an error naming it.
+- `handleRef(kind, handle)`: a handle as the call log renders it, `timer#1048578`.
+- `withNative(name, replacement, body)`: the per-test Native override (below).
+
+Stub helpers the tests call (`__stub_fire_timer`, `__stub_record`) are declared in `stubs.d.ts`.
+
+### Overriding a Native for one test
+
+`withNative` replaces one Native global for the length of `body` and puts back what was there before (the stub, or nil), also when `body` throws. It returns what `body` returns. The replacement's calls are recorded in the call log like any stub's, so `toContainCall` still sees them, and it may return nil even where the Typings say the Native never does:
+
+```ts
+const unit = withNative(
+  "CreateUnit",
+  () => undefined,
+  () => Unit.create(owner, footman, 30, 40, 180),
+);
+expect(unit).toBeUndefined();
+expect(stubCalls()).toContainCall(
+  `CreateUnit(${ownerRef}, 1751543663, 30, 40, 180)`,
+);
+```
+
+Use it instead of editing the shipped stub files when one test needs a Native to fail or to return a handle it controls.
+
+## Node tests
+
+### Declaration fixtures
+
+`node/declarations.test.ts` emits the library's declarations from the sources, installs them with the package's `package.json` in a temporary Map project (with `reforged-types/3.0.0` and the typescript-to-lua language extensions in `types`) and type-checks every file under `node/fixtures/declarations/` there with the workspace TypeScript.
+
+- A file in `positive/` must produce no diagnostic.
+- A file in `negative/` states each error it expects with a trailing comment on the offending line, `// error TS2322` (several codes separated by spaces), and must produce exactly those: a diagnostic not stated fails the test, and so does a stated one that does not occur.
+
+A fixture imports the library as a Map project does, `import { Unit } from "reforged-ts"`, and is a module (it has an `export`). In the editor and the lint, `node/fixtures/declarations/tsconfig.json` maps `reforged-ts` to the sources.
