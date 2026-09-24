@@ -44,6 +44,14 @@ _Avoid_: listener, binding, registration
 One of the four points of a map's initialization (globals, triggers, init triggers, game start) where library and Map project callbacks run, each under `pcall`.
 _Avoid_: hook, lifecycle event, main/config
 
+**Guard**:
+A check that catches a known Warcraft III scripting pitfall (desync, crash, leak) before it reaches players: at the type level, in the lint plugin, or at run time in Dev mode.
+_Avoid_: safety check, validation, sanity check
+
+**Dev mode**:
+The library state set by `Reforged.configure({ devMode: true })` in which runtime Guards are active; off by default and in release builds.
+_Avoid_: debug mode, development build, test mode
+
 **Map project**:
 A repository that consumes the library to produce a playable map, normally generated from the Template.
 _Avoid_: consumer, user code, game project
