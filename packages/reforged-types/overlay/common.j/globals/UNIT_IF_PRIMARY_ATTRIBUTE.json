@@ -1,0 +1,6 @@
+{
+  "name": "UNIT_IF_PRIMARY_ATTRIBUTE",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

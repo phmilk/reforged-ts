@@ -1,0 +1,6 @@
+{
+  "name": "bj_FORCE_ALL_PLAYERS",
+  "source": "blizzard.j",
+  "nullable": true,
+  "origin": "war3-types-strict"
+}

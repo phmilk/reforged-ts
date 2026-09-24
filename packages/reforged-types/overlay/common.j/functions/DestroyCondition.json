@@ -1,0 +1,14 @@
+{
+  "name": "DestroyCondition",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "c",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

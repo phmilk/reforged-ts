@@ -1,0 +1,18 @@
+{
+  "name": "PauseTimerBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "pause",
+      "nullable": false
+    },
+    {
+      "name": "whichTimer",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

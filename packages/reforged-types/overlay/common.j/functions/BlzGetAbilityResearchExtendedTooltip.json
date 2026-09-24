@@ -1,0 +1,19 @@
+{
+  "name": "BlzGetAbilityResearchExtendedTooltip",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "abilCode",
+      "nullable": false
+    },
+    {
+      "name": "level",
+      "nullable": false
+    }
+  ],
+  "async": true,
+  "origin": "war3-types-strict"
+}

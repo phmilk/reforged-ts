@@ -1,0 +1,6 @@
+{
+  "name": "METAKEY_SHIFT",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.0.24268"
+}

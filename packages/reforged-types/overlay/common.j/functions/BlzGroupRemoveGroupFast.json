@@ -1,0 +1,18 @@
+{
+  "name": "BlzGroupRemoveGroupFast",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichGroup",
+      "nullable": false
+    },
+    {
+      "name": "removeGroup",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "UNIT_RF_MAXIMUM_ROLL_ANGLE_DEGREES",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "bj_MAX_ITEM_LEVEL",
+  "source": "blizzard.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

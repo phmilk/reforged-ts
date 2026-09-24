@@ -1,0 +1,22 @@
+{
+  "name": "CreateMultiboardBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "cols",
+      "nullable": false
+    },
+    {
+      "name": "rows",
+      "nullable": false
+    },
+    {
+      "name": "title",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

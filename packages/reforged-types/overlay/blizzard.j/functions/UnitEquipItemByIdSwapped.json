@@ -1,0 +1,17 @@
+{
+  "name": "UnitEquipItemByIdSwapped",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "itemId",
+      "nullable": false
+    },
+    {
+      "name": "whichHero",
+      "nullable": false
+    }
+  ]
+}

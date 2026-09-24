@@ -1,0 +1,18 @@
+{
+  "name": "AddWeatherEffect",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "where",
+      "nullable": false
+    },
+    {
+      "name": "effectID",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

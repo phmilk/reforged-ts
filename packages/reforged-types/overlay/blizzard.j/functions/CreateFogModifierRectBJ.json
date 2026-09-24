@@ -1,0 +1,26 @@
+{
+  "name": "CreateFogModifierRectBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "enabled",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "whichFogState",
+      "nullable": false
+    },
+    {
+      "name": "r",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

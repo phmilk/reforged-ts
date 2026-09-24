@@ -1,0 +1,18 @@
+{
+  "name": "CreateLeaderboardBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "toForce",
+      "nullable": false
+    },
+    {
+      "name": "label",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

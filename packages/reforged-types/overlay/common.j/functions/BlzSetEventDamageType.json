@@ -1,0 +1,14 @@
+{
+  "name": "BlzSetEventDamageType",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "damageType",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

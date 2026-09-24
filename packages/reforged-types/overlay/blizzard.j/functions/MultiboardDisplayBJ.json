@@ -1,0 +1,18 @@
+{
+  "name": "MultiboardDisplayBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "show",
+      "nullable": false
+    },
+    {
+      "name": "mb",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

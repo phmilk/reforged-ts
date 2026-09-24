@@ -1,0 +1,57 @@
+{
+  "name": "reforged-types",
+  "version": "1.0.0",
+  "description": "TypeScript declarations for the Warcraft III Reforged natives, generated from the game's Patch files.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "warcraft",
+    "wc3",
+    "reforged",
+    "typescript-to-lua"
+  ],
+  "homepage": "https://phmilk.github.io/reforged-ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phmilk/reforged-ts.git",
+    "directory": "packages/reforged-types"
+  },
+  "bugs": {
+    "url": "https://github.com/phmilk/reforged-ts/issues"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "reforged": {
+    "patch": "3.0.0.24268"
+  },
+  "files": [
+    "/[0-9]*.d.ts",
+    "/[0-9]*/*.d.ts",
+    "/lua-runtime.d.ts",
+    "/async-natives.json",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && pnpm run typings:typecheck && pnpm run scripts:typecheck",
+    "typings:typecheck": "tsc -p tsconfig.typings.json",
+    "scripts:typecheck": "tsc -p tsconfig.scripts.json",
+    "test": "vitest run && pnpm run typings:check",
+    "vendor": "node build/cli/vendor.js",
+    "verify": "node build/cli/verify.js",
+    "typings:generate": "tsc -p tsconfig.json && node build/cli/generate.js",
+    "typings:check": "tsc -p tsconfig.json && node build/cli/check.js",
+    "seed:war3-types-strict": "node --experimental-strip-types scripts/seed-from-war3-types-strict.ts"
+  },
+  "dependencies": {
+    "lua-types": "catalog:"
+  },
+  "devDependencies": {
+    "@typescript-to-lua/language-extensions": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "typescript-to-lua": "catalog:",
+    "vitest": "catalog:"
+  }
+}

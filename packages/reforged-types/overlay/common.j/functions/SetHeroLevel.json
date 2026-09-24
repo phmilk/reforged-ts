@@ -1,0 +1,22 @@
+{
+  "name": "SetHeroLevel",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichHero",
+      "nullable": false
+    },
+    {
+      "name": "level",
+      "nullable": false
+    },
+    {
+      "name": "showEyeCandy",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

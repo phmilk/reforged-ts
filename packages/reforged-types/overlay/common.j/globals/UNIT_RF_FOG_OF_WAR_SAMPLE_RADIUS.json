@@ -1,0 +1,6 @@
+{
+  "name": "UNIT_RF_FOG_OF_WAR_SAMPLE_RADIUS",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

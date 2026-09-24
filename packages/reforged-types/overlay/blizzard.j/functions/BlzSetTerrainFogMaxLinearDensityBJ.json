@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetTerrainFogMaxLinearDensityBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "maxLinearDensity",
+      "nullable": false
+    }
+  ]
+}

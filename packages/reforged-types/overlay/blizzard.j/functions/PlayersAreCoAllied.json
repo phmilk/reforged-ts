@@ -1,0 +1,18 @@
+{
+  "name": "PlayersAreCoAllied",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "playerA",
+      "nullable": false
+    },
+    {
+      "name": "playerB",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

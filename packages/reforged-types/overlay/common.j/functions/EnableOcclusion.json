@@ -1,0 +1,14 @@
+{
+  "name": "EnableOcclusion",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "flag",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

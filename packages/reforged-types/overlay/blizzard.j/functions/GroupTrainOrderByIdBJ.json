@@ -1,0 +1,18 @@
+{
+  "name": "GroupTrainOrderByIdBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "g",
+      "nullable": false
+    },
+    {
+      "name": "unitId",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

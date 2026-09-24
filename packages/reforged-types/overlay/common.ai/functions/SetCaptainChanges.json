@@ -1,0 +1,14 @@
+{
+  "name": "SetCaptainChanges",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "allow",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

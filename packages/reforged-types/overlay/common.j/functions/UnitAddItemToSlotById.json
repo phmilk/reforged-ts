@@ -1,0 +1,22 @@
+{
+  "name": "UnitAddItemToSlotById",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "itemId",
+      "nullable": false
+    },
+    {
+      "name": "itemSlot",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

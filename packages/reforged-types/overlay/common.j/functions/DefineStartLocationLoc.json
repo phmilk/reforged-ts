@@ -1,0 +1,18 @@
+{
+  "name": "DefineStartLocationLoc",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichStartLoc",
+      "nullable": false
+    },
+    {
+      "name": "whichLocation",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

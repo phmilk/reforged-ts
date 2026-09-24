@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetTerrainFogDrawOverSkyBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "drawOverSky",
+      "nullable": false
+    }
+  ]
+}

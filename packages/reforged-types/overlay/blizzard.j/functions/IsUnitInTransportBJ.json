@@ -1,0 +1,18 @@
+{
+  "name": "IsUnitInTransportBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "whichTransport",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

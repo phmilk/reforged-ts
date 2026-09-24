@@ -1,0 +1,26 @@
+{
+  "name": "CreateUnitAtLocByName",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "id",
+      "nullable": false
+    },
+    {
+      "name": "unitname",
+      "nullable": false
+    },
+    {
+      "name": "whichLocation",
+      "nullable": false
+    },
+    {
+      "name": "face",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

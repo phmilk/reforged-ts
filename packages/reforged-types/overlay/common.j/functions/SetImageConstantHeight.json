@@ -1,0 +1,22 @@
+{
+  "name": "SetImageConstantHeight",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichImage",
+      "nullable": false
+    },
+    {
+      "name": "flag",
+      "nullable": false
+    },
+    {
+      "name": "height",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_BLF_EXCLUDE_ITEM_DAMAGE",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

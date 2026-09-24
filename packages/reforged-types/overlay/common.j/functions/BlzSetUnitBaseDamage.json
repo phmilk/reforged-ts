@@ -1,0 +1,22 @@
+{
+  "name": "BlzSetUnitBaseDamage",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "baseDamage",
+      "nullable": false
+    },
+    {
+      "name": "weaponIndex",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

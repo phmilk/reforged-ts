@@ -1,0 +1,22 @@
+{
+  "name": "LoadLeaderboardHandle",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "table",
+      "nullable": false
+    },
+    {
+      "name": "parentKey",
+      "nullable": false
+    },
+    {
+      "name": "childKey",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

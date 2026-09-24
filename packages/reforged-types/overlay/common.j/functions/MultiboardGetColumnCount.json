@@ -1,0 +1,14 @@
+{
+  "name": "MultiboardGetColumnCount",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "lb",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

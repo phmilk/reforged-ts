@@ -1,0 +1,22 @@
+{
+  "name": "MeleeGetNearestValueWithin",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "val",
+      "nullable": false
+    },
+    {
+      "name": "minVal",
+      "nullable": false
+    },
+    {
+      "name": "maxVal",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

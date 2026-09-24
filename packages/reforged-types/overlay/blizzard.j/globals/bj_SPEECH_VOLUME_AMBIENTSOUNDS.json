@@ -1,0 +1,6 @@
+{
+  "name": "bj_SPEECH_VOLUME_AMBIENTSOUNDS",
+  "source": "blizzard.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

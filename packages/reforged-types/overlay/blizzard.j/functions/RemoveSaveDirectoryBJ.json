@@ -1,0 +1,14 @@
+{
+  "name": "RemoveSaveDirectoryBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "sourceDirName",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

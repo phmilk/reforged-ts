@@ -1,0 +1,13 @@
+{
+  "name": "ToggleHeroGlowOnAllUnitsBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "allow",
+      "nullable": false
+    }
+  ]
+}

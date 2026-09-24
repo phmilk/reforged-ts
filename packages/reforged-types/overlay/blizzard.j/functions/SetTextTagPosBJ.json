@@ -1,0 +1,22 @@
+{
+  "name": "SetTextTagPosBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "tt",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    },
+    {
+      "name": "zOffset",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

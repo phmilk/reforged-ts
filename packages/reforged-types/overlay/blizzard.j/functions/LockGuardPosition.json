@@ -1,0 +1,14 @@
+{
+  "name": "LockGuardPosition",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "targ",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

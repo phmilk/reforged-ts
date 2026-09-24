@@ -1,0 +1,22 @@
+{
+  "name": "DestructableRestoreLife",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "d",
+      "nullable": false
+    },
+    {
+      "name": "life",
+      "nullable": false
+    },
+    {
+      "name": "birth",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

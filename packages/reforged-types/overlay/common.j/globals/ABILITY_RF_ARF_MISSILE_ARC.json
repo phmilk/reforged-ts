@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RF_ARF_MISSILE_ARC",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

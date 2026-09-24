@@ -1,0 +1,14 @@
+{
+  "name": "FlushGameCache",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "cache",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

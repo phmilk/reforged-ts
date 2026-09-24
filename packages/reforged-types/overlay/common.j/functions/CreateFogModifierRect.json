@@ -1,0 +1,30 @@
+{
+  "name": "CreateFogModifierRect",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "forWhichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "whichState",
+      "nullable": false
+    },
+    {
+      "name": "where",
+      "nullable": false
+    },
+    {
+      "name": "useSharedVision",
+      "nullable": false
+    },
+    {
+      "name": "afterUnits",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "GroupRemoveUnitSimple",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "whichGroup",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

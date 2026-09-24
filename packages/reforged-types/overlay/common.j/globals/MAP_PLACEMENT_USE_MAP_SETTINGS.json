@@ -1,0 +1,6 @@
+{
+  "name": "MAP_PLACEMENT_USE_MAP_SETTINGS",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

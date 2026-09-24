@@ -1,0 +1,14 @@
+{
+  "name": "BlzSetHDWaterVertexDisplacement",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "vertexDisplacement",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "SetMapMusic",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "musicName",
+      "nullable": false
+    },
+    {
+      "name": "random",
+      "nullable": false
+    },
+    {
+      "name": "index",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

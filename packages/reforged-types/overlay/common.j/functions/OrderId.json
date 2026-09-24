@@ -1,0 +1,14 @@
+{
+  "name": "OrderId",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "orderIdString",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

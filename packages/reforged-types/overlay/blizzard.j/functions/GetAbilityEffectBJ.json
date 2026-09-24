@@ -1,0 +1,22 @@
+{
+  "name": "GetAbilityEffectBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "abilcode",
+      "nullable": false
+    },
+    {
+      "name": "t",
+      "nullable": false
+    },
+    {
+      "name": "index",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

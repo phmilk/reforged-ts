@@ -1,0 +1,2 @@
+// common.ai fixture, CRLF on purpose: vendoring keeps bytes unchanged
+native DebugS takes string str returns nothing

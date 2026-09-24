@@ -1,0 +1,34 @@
+{
+  "name": "BlzFrameSetPoint",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "frame",
+      "nullable": false
+    },
+    {
+      "name": "point",
+      "nullable": false
+    },
+    {
+      "name": "relative",
+      "nullable": false
+    },
+    {
+      "name": "relativePoint",
+      "nullable": false
+    },
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

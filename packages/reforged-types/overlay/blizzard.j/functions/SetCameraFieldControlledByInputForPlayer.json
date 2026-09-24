@@ -1,0 +1,21 @@
+{
+  "name": "SetCameraFieldControlledByInputForPlayer",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "whichField",
+      "nullable": false
+    },
+    {
+      "name": "controlled",
+      "nullable": false
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "GetUnitsInRangeOfLocAll",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "whichLocation",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

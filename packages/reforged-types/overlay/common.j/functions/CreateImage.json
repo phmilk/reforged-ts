@@ -1,0 +1,54 @@
+{
+  "name": "CreateImage",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "file",
+      "nullable": false
+    },
+    {
+      "name": "sizeX",
+      "nullable": false
+    },
+    {
+      "name": "sizeY",
+      "nullable": false
+    },
+    {
+      "name": "sizeZ",
+      "nullable": false
+    },
+    {
+      "name": "posX",
+      "nullable": false
+    },
+    {
+      "name": "posY",
+      "nullable": false
+    },
+    {
+      "name": "posZ",
+      "nullable": false
+    },
+    {
+      "name": "originX",
+      "nullable": false
+    },
+    {
+      "name": "originY",
+      "nullable": false
+    },
+    {
+      "name": "originZ",
+      "nullable": false
+    },
+    {
+      "name": "imageType",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

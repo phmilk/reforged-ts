@@ -1,0 +1,26 @@
+{
+  "name": "AddSpellEffectTargetById",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "abilityId",
+      "nullable": false
+    },
+    {
+      "name": "t",
+      "nullable": false
+    },
+    {
+      "name": "targetWidget",
+      "nullable": false
+    },
+    {
+      "name": "attachPoint",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

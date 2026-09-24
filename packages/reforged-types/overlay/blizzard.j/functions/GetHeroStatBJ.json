@@ -1,0 +1,22 @@
+{
+  "name": "GetHeroStatBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichStat",
+      "nullable": false
+    },
+    {
+      "name": "whichHero",
+      "nullable": false
+    },
+    {
+      "name": "includeBonuses",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

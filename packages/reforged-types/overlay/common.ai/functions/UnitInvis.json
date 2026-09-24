@@ -1,0 +1,14 @@
+{
+  "name": "UnitInvis",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "id",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "SetBlight",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "addBlight",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

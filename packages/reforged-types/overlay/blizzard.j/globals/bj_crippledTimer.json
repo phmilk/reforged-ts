@@ -1,0 +1,6 @@
+{
+  "name": "bj_crippledTimer",
+  "source": "blizzard.j",
+  "nullable": true,
+  "origin": "war3-types-strict"
+}

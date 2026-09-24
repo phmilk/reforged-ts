@@ -1,0 +1,22 @@
+{
+  "name": "BlzSetHDWaterColor",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "red",
+      "nullable": false
+    },
+    {
+      "name": "green",
+      "nullable": false
+    },
+    {
+      "name": "blue",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

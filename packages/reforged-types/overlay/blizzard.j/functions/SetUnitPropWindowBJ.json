@@ -1,0 +1,18 @@
+{
+  "name": "SetUnitPropWindowBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "propWindow",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

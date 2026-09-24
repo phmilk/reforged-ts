@@ -1,0 +1,18 @@
+{
+  "name": "QueueUnitAnimationBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "whichAnimation",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

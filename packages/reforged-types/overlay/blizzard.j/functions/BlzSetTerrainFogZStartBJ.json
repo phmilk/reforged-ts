@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetTerrainFogZStartBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "zStart",
+      "nullable": false
+    }
+  ]
+}

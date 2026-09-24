@@ -1,0 +1,22 @@
+{
+  "name": "SetPlayerAbilityAvailableBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "avail",
+      "nullable": false
+    },
+    {
+      "name": "abilid",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

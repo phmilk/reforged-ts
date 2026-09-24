@@ -1,0 +1,14 @@
+{
+  "name": "BlzIsMouseButtonPressed",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "mouseButtonType",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

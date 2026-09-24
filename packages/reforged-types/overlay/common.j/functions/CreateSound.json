@@ -1,0 +1,38 @@
+{
+  "name": "CreateSound",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "fileName",
+      "nullable": false
+    },
+    {
+      "name": "looping",
+      "nullable": false
+    },
+    {
+      "name": "is3D",
+      "nullable": false
+    },
+    {
+      "name": "stopwhenoutofrange",
+      "nullable": false
+    },
+    {
+      "name": "fadeInRate",
+      "nullable": false
+    },
+    {
+      "name": "fadeOutRate",
+      "nullable": false
+    },
+    {
+      "name": "eaxSetting",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_ILF_GOLD_COST_PER_STRUCTURE",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

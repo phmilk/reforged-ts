@@ -1,0 +1,18 @@
+{
+  "name": "MultiboardSetItemValue",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "mbi",
+      "nullable": false
+    },
+    {
+      "name": "val",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

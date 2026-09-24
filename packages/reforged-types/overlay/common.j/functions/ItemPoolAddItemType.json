@@ -1,0 +1,22 @@
+{
+  "name": "ItemPoolAddItemType",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichItemPool",
+      "nullable": false
+    },
+    {
+      "name": "itemId",
+      "nullable": false
+    },
+    {
+      "name": "weight",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

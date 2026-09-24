@@ -1,0 +1,22 @@
+{
+  "name": "BlzIsTerrainPathableEx",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "t",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

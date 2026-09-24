@@ -1,0 +1,22 @@
+{
+  "name": "SetHeroLevelBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichHero",
+      "nullable": false
+    },
+    {
+      "name": "newLevel",
+      "nullable": false
+    },
+    {
+      "name": "showEyeCandy",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

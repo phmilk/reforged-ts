@@ -1,0 +1,9 @@
+{
+  "name": "GetExpansionPeon",
+  "source": "common.ai",
+  "returns": {
+    "nullable": true
+  },
+  "params": [],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "GetTerrainVarianceBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "where",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

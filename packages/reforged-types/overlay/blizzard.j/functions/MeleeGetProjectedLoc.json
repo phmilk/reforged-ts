@@ -1,0 +1,26 @@
+{
+  "name": "MeleeGetProjectedLoc",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "src",
+      "nullable": false
+    },
+    {
+      "name": "targ",
+      "nullable": false
+    },
+    {
+      "name": "distance",
+      "nullable": false
+    },
+    {
+      "name": "deltaAngle",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "BJDebugMsg",
+  "source": "blizzard.j",
+  "returns": { "nullable": false },
+  "params": [{ "name": "msg", "nullable": false }]
+}

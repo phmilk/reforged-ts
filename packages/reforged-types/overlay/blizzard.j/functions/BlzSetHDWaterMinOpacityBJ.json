@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetHDWaterMinOpacityBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "minOpacity",
+      "nullable": false
+    }
+  ]
+}

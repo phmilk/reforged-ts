@@ -1,0 +1,26 @@
+{
+  "name": "TimerStart",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichTimer",
+      "nullable": false
+    },
+    {
+      "name": "timeout",
+      "nullable": false
+    },
+    {
+      "name": "periodic",
+      "nullable": false
+    },
+    {
+      "name": "handlerFunc",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

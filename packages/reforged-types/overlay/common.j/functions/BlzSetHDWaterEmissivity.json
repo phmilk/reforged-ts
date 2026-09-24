@@ -1,0 +1,14 @@
+{
+  "name": "BlzSetHDWaterEmissivity",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "emissivity",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "CameraSetFocalDistance",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "distance",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

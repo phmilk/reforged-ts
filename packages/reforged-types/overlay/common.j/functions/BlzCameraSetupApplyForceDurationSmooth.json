@@ -1,0 +1,34 @@
+{
+  "name": "BlzCameraSetupApplyForceDurationSmooth",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichSetup",
+      "nullable": false
+    },
+    {
+      "name": "doPan",
+      "nullable": false
+    },
+    {
+      "name": "forcedDuration",
+      "nullable": false
+    },
+    {
+      "name": "easeInDuration",
+      "nullable": false
+    },
+    {
+      "name": "easeOutDuration",
+      "nullable": false
+    },
+    {
+      "name": "smoothFactor",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

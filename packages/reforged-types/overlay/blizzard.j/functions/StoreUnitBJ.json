@@ -1,0 +1,26 @@
+{
+  "name": "StoreUnitBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "key",
+      "nullable": false
+    },
+    {
+      "name": "missionKey",
+      "nullable": false
+    },
+    {
+      "name": "cache",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

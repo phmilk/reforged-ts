@@ -1,0 +1,6 @@
+{
+  "name": "bj_victoryDialogSound",
+  "source": "blizzard.j",
+  "nullable": true,
+  "origin": "war3-types-strict"
+}

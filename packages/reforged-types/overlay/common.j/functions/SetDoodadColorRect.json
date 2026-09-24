@@ -1,0 +1,22 @@
+{
+  "name": "SetDoodadColorRect",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "r",
+      "nullable": false
+    },
+    {
+      "name": "doodadID",
+      "nullable": false
+    },
+    {
+      "name": "whichColor",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

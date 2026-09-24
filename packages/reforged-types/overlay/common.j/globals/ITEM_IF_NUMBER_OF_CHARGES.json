@@ -1,0 +1,6 @@
+{
+  "name": "ITEM_IF_NUMBER_OF_CHARGES",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

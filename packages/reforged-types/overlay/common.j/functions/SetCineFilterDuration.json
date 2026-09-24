@@ -1,0 +1,14 @@
+{
+  "name": "SetCineFilterDuration",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "duration",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

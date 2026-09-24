@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_SF_EFFECT_SOUND",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

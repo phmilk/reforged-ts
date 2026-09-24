@@ -1,0 +1,14 @@
+{
+  "name": "DestroyFogModifier",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichFogModifier",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

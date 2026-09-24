@@ -1,0 +1,54 @@
+{
+  "name": "UnitDamagePoint",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "delay",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "amount",
+      "nullable": false
+    },
+    {
+      "name": "attack",
+      "nullable": false
+    },
+    {
+      "name": "ranged",
+      "nullable": false
+    },
+    {
+      "name": "attackType",
+      "nullable": false
+    },
+    {
+      "name": "damageType",
+      "nullable": false
+    },
+    {
+      "name": "weaponType",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

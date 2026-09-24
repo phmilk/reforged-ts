@@ -1,0 +1,6 @@
+{
+  "name": "PLAYER_COLOR_LIGHT_BLUE",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

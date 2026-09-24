@@ -1,0 +1,14 @@
+{
+  "name": "PlayCinematic",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "movieName",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "UNIT_WEAPON_BF_ATTACKS_ENABLED",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetHDWaterWaveStrengthBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "waveStrength",
+      "nullable": false
+    }
+  ]
+}

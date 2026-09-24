@@ -1,0 +1,14 @@
+{
+  "name": "TeamInitPlayerSlots",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "teamCount",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

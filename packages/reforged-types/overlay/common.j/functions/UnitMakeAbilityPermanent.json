@@ -1,0 +1,22 @@
+{
+  "name": "UnitMakeAbilityPermanent",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "permanent",
+      "nullable": false
+    },
+    {
+      "name": "abilityId",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "BlzFrameSetTextAlignment",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "frame",
+      "nullable": false
+    },
+    {
+      "name": "vert",
+      "nullable": false
+    },
+    {
+      "name": "horz",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

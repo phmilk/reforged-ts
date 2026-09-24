@@ -1,0 +1,22 @@
+{
+  "name": "GetUnitStatePercent",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "whichState",
+      "nullable": false
+    },
+    {
+      "name": "whichMaxState",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

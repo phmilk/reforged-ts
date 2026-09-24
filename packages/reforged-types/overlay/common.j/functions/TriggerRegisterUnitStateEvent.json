@@ -1,0 +1,30 @@
+{
+  "name": "TriggerRegisterUnitStateEvent",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichTrigger",
+      "nullable": false
+    },
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "whichState",
+      "nullable": false
+    },
+    {
+      "name": "opcode",
+      "nullable": false
+    },
+    {
+      "name": "limitval",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

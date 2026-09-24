@@ -1,0 +1,26 @@
+{
+  "name": "SetUnitScalePercent",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "percentScaleX",
+      "nullable": false
+    },
+    {
+      "name": "percentScaleY",
+      "nullable": false
+    },
+    {
+      "name": "percentScaleZ",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

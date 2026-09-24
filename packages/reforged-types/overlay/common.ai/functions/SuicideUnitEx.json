@@ -1,0 +1,22 @@
+{
+  "name": "SuicideUnitEx",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "ct",
+      "nullable": false
+    },
+    {
+      "name": "uid",
+      "nullable": false
+    },
+    {
+      "name": "pid",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "SetTerrainFog",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "a",
+      "nullable": false
+    },
+    {
+      "name": "b",
+      "nullable": false
+    },
+    {
+      "name": "c",
+      "nullable": false
+    },
+    {
+      "name": "d",
+      "nullable": false
+    },
+    {
+      "name": "e",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

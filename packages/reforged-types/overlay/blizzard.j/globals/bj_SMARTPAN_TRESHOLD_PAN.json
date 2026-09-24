@@ -1,0 +1,6 @@
+{
+  "name": "bj_SMARTPAN_TRESHOLD_PAN",
+  "source": "blizzard.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

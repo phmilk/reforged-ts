@@ -1,0 +1,14 @@
+{
+  "name": "BlzTriggerInterrupt",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichTrigger",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

@@ -1,0 +1,26 @@
+{
+  "name": "AddUnitToStockBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "unitId",
+      "nullable": false
+    },
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "currentStock",
+      "nullable": false
+    },
+    {
+      "name": "stockMax",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

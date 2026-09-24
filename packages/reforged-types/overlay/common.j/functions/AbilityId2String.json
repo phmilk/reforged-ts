@@ -1,0 +1,14 @@
+{
+  "name": "AbilityId2String",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "abilityId",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

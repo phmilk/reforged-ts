@@ -1,0 +1,22 @@
+{
+  "name": "PolarProjectionBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "source",
+      "nullable": false
+    },
+    {
+      "name": "dist",
+      "nullable": false
+    },
+    {
+      "name": "angle",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

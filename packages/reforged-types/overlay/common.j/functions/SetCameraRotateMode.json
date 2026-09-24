@@ -1,0 +1,26 @@
+{
+  "name": "SetCameraRotateMode",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "radiansToSweep",
+      "nullable": false
+    },
+    {
+      "name": "duration",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

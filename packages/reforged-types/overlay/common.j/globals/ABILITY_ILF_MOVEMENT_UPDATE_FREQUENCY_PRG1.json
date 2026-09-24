@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_ILF_MOVEMENT_UPDATE_FREQUENCY_PRG1",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "QueuedTriggerAddBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "trig",
+      "nullable": false
+    },
+    {
+      "name": "checkConditions",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

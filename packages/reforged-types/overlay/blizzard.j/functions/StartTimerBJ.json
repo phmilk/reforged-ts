@@ -1,0 +1,22 @@
+{
+  "name": "StartTimerBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "t",
+      "nullable": false
+    },
+    {
+      "name": "periodic",
+      "nullable": false
+    },
+    {
+      "name": "timeout",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

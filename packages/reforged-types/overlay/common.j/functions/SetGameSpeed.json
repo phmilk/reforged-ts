@@ -1,0 +1,14 @@
+{
+  "name": "SetGameSpeed",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichspeed",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

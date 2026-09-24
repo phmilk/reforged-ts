@@ -1,0 +1,26 @@
+{
+  "name": "CreateFogModifierRectSimple",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "whichFogState",
+      "nullable": false
+    },
+    {
+      "name": "r",
+      "nullable": false
+    },
+    {
+      "name": "afterUnits",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

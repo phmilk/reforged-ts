@@ -1,0 +1,38 @@
+{
+  "name": "SetDoodadAnimation",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "doodadID",
+      "nullable": false
+    },
+    {
+      "name": "nearestOnly",
+      "nullable": false
+    },
+    {
+      "name": "animName",
+      "nullable": false
+    },
+    {
+      "name": "animRandom",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

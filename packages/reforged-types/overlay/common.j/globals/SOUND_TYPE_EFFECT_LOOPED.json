@@ -1,0 +1,6 @@
+{
+  "name": "SOUND_TYPE_EFFECT_LOOPED",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

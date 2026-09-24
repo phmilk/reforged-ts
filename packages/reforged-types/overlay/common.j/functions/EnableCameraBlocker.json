@@ -1,0 +1,18 @@
+{
+  "name": "EnableCameraBlocker",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "r",
+      "nullable": false
+    },
+    {
+      "name": "flag",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

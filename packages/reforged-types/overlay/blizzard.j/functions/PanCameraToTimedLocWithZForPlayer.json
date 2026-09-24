@@ -1,0 +1,26 @@
+{
+  "name": "PanCameraToTimedLocWithZForPlayer",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    },
+    {
+      "name": "zOffset",
+      "nullable": false
+    },
+    {
+      "name": "duration",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

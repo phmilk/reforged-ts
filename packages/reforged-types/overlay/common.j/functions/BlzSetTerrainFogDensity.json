@@ -1,0 +1,14 @@
+{
+  "name": "BlzSetTerrainFogDensity",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "density",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

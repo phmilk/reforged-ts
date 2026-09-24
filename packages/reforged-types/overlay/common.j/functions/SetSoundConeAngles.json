@@ -1,0 +1,26 @@
+{
+  "name": "SetSoundConeAngles",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "soundHandle",
+      "nullable": false
+    },
+    {
+      "name": "inside",
+      "nullable": false
+    },
+    {
+      "name": "outside",
+      "nullable": false
+    },
+    {
+      "name": "outsideVolume",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

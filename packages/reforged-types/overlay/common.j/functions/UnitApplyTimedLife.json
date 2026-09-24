@@ -1,0 +1,22 @@
+{
+  "name": "UnitApplyTimedLife",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "buffId",
+      "nullable": false
+    },
+    {
+      "name": "duration",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

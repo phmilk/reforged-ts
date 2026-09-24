@@ -1,0 +1,38 @@
+{
+  "name": "TerrainDeformRandom",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "minDelta",
+      "nullable": false
+    },
+    {
+      "name": "maxDelta",
+      "nullable": false
+    },
+    {
+      "name": "duration",
+      "nullable": false
+    },
+    {
+      "name": "updateInterval",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

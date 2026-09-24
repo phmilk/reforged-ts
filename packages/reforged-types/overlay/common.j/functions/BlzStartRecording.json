@@ -1,0 +1,14 @@
+{
+  "name": "BlzStartRecording",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "fps",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

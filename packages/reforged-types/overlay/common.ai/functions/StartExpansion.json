@@ -1,0 +1,18 @@
+{
+  "name": "StartExpansion",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "qty",
+      "nullable": false
+    },
+    {
+      "name": "hall",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

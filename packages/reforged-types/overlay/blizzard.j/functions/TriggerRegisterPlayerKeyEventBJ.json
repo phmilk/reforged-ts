@@ -1,0 +1,26 @@
+{
+  "name": "TriggerRegisterPlayerKeyEventBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "trig",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "keType",
+      "nullable": false
+    },
+    {
+      "name": "keKey",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

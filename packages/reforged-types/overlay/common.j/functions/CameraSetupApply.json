@@ -1,0 +1,22 @@
+{
+  "name": "CameraSetupApply",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichSetup",
+      "nullable": false
+    },
+    {
+      "name": "doPan",
+      "nullable": false
+    },
+    {
+      "name": "panTimed",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

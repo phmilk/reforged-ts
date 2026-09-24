@@ -1,0 +1,26 @@
+{
+  "name": "MeleeStartingUnitsForPlayer",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichRace",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    },
+    {
+      "name": "doHeroes",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

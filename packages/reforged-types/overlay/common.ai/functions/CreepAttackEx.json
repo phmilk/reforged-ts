@@ -1,0 +1,9 @@
+{
+  "name": "CreepAttackEx",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [],
+  "origin": "war3-types-strict"
+}

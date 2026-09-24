@@ -1,0 +1,14 @@
+{
+  "name": "Deg2Rad",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "degrees",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

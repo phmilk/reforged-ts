@@ -1,0 +1,22 @@
+{
+  "name": "SetDoodadAnimationRectBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "animName",
+      "nullable": false
+    },
+    {
+      "name": "doodadID",
+      "nullable": false
+    },
+    {
+      "name": "r",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

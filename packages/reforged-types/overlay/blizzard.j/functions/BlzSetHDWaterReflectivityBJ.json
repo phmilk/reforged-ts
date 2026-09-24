@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetHDWaterReflectivityBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "reflectivity",
+      "nullable": false
+    }
+  ]
+}

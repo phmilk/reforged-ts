@@ -1,0 +1,6 @@
+{
+  "name": "MAP_SPEED_FASTEST",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

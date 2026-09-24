@@ -1,0 +1,50 @@
+{
+  "name": "TerrainDeformWave",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "dirX",
+      "nullable": false
+    },
+    {
+      "name": "dirY",
+      "nullable": false
+    },
+    {
+      "name": "distance",
+      "nullable": false
+    },
+    {
+      "name": "speed",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "depth",
+      "nullable": false
+    },
+    {
+      "name": "trailTime",
+      "nullable": false
+    },
+    {
+      "name": "count",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

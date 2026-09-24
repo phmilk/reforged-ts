@@ -1,0 +1,18 @@
+{
+  "name": "TriggerWaitOnSleeps",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichTrigger",
+      "nullable": false
+    },
+    {
+      "name": "flag",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

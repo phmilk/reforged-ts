@@ -1,0 +1,14 @@
+{
+  "name": "DestroyCommandButtonEffect",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichEffect",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

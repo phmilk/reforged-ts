@@ -1,0 +1,18 @@
+{
+  "name": "TriggerWaitForSound",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "s",
+      "nullable": false
+    },
+    {
+      "name": "offset",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

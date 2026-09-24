@@ -1,0 +1,6 @@
+{
+  "name": "PATHING_FLAG_UNFLOATABLE",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "SuicideUnitB",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "unitid",
+      "nullable": false
+    },
+    {
+      "name": "playerid",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

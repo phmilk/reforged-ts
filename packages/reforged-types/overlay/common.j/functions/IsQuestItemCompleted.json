@@ -1,0 +1,14 @@
+{
+  "name": "IsQuestItemCompleted",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichQuestItem",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

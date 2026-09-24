@@ -1,0 +1,22 @@
+{
+  "name": "UnitRemoveBuffs",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "removePositive",
+      "nullable": false
+    },
+    {
+      "name": "removeNegative",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

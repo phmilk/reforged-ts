@@ -1,0 +1,18 @@
+{
+  "name": "GroupRemoveUnit",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichGroup",
+      "nullable": false
+    },
+    {
+      "name": "whichUnit",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

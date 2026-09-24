@@ -1,0 +1,54 @@
+{
+  "name": "SuicideUnitsEx",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "playerid",
+      "nullable": false
+    },
+    {
+      "name": "u1",
+      "nullable": false
+    },
+    {
+      "name": "u2",
+      "nullable": false
+    },
+    {
+      "name": "u3",
+      "nullable": false
+    },
+    {
+      "name": "u4",
+      "nullable": false
+    },
+    {
+      "name": "u5",
+      "nullable": false
+    },
+    {
+      "name": "u6",
+      "nullable": false
+    },
+    {
+      "name": "u7",
+      "nullable": false
+    },
+    {
+      "name": "u8",
+      "nullable": false
+    },
+    {
+      "name": "u9",
+      "nullable": false
+    },
+    {
+      "name": "uA",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

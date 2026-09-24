@@ -1,0 +1,18 @@
+{
+  "name": "LeaderboardDisplayBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "show",
+      "nullable": false
+    },
+    {
+      "name": "lb",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

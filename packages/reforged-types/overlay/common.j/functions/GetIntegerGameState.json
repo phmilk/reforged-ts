@@ -1,0 +1,14 @@
+{
+  "name": "GetIntegerGameState",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichIntegerGameState",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

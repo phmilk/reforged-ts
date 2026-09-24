@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_MANA_LOSS_PER_UNIT_DTN1",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

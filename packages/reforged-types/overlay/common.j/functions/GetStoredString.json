@@ -1,0 +1,22 @@
+{
+  "name": "GetStoredString",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "cache",
+      "nullable": false
+    },
+    {
+      "name": "missionKey",
+      "nullable": false
+    },
+    {
+      "name": "key",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

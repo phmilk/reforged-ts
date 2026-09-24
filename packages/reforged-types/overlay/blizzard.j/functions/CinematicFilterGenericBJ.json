@@ -1,0 +1,54 @@
+{
+  "name": "CinematicFilterGenericBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "duration",
+      "nullable": false
+    },
+    {
+      "name": "bmode",
+      "nullable": false
+    },
+    {
+      "name": "tex",
+      "nullable": false
+    },
+    {
+      "name": "red0",
+      "nullable": false
+    },
+    {
+      "name": "green0",
+      "nullable": false
+    },
+    {
+      "name": "blue0",
+      "nullable": false
+    },
+    {
+      "name": "trans0",
+      "nullable": false
+    },
+    {
+      "name": "red1",
+      "nullable": false
+    },
+    {
+      "name": "green1",
+      "nullable": false
+    },
+    {
+      "name": "blue1",
+      "nullable": false
+    },
+    {
+      "name": "trans1",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

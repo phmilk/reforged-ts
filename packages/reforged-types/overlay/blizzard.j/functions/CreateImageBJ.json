@@ -1,0 +1,30 @@
+{
+  "name": "CreateImageBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "file",
+      "nullable": false
+    },
+    {
+      "name": "size",
+      "nullable": false
+    },
+    {
+      "name": "where",
+      "nullable": false
+    },
+    {
+      "name": "zOffset",
+      "nullable": false
+    },
+    {
+      "name": "imageType",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

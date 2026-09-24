@@ -1,0 +1,50 @@
+{
+  "name": "TerrainDeformRipple",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "depth",
+      "nullable": false
+    },
+    {
+      "name": "duration",
+      "nullable": false
+    },
+    {
+      "name": "count",
+      "nullable": false
+    },
+    {
+      "name": "spaceWaves",
+      "nullable": false
+    },
+    {
+      "name": "timeWaves",
+      "nullable": false
+    },
+    {
+      "name": "radiusStartPct",
+      "nullable": false
+    },
+    {
+      "name": "limitNeg",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

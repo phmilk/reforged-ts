@@ -1,0 +1,14 @@
+{
+  "name": "StringHash",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "s",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

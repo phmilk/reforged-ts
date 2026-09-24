@@ -1,0 +1,13 @@
+packages:
+  - packages/*
+
+catalog:
+  # typescript-to-lua pins its TypeScript peer exactly; move both together (ADR 0002).
+  typescript: 6.0.2
+  typescript-to-lua: ^1.37.1
+  lua-types: ^2.14.1
+  # Globals lua-types relies on (LuaMultiReturn and friends); a Map project lists it in `types` (#11).
+  "@typescript-to-lua/language-extensions": ^1.19.0
+  vitest: ^5.0.1
+  # Node built-ins for the generator (fs, path); major follows .node-version.
+  "@types/node": ^24.0.0

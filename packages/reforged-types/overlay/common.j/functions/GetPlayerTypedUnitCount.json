@@ -1,0 +1,26 @@
+{
+  "name": "GetPlayerTypedUnitCount",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "unitName",
+      "nullable": false
+    },
+    {
+      "name": "includeIncomplete",
+      "nullable": false
+    },
+    {
+      "name": "includeUpgrades",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

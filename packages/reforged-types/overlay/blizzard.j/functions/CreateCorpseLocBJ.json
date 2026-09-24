@@ -1,0 +1,22 @@
+{
+  "name": "CreateCorpseLocBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "unitid",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

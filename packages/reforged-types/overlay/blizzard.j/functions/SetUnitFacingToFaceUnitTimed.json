@@ -1,0 +1,22 @@
+{
+  "name": "SetUnitFacingToFaceUnitTimed",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "target",
+      "nullable": false
+    },
+    {
+      "name": "duration",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}
