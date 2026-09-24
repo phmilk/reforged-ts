@@ -1,7 +1,8 @@
 // The rename map, migration/renames.json: the facts the migration guide and
 // the legacy-names lint rule read. It must parse against its schema, target
 // this step's version pair, name only replacements that exist in the
-// library's emitted declarations and cover every member step 3 removes.
+// library's emitted declarations and cover every member step 3 removes and
+// every entry point, enum and helper step 4 removes or replaces.
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
@@ -69,6 +70,26 @@ const REMOVED_IN_STEP_3: [old: string, kind: RenameEntry["kind"]][] = [
   ["Handle.initFromHandle", "member"],
 ];
 
+/**
+ * What build step 4 (#49) removes from the public API or replaces with an
+ * Init stage, with its kind: the four entry points of the deprecated alias,
+ * its enum (still exported this release, removed in 2.0) and the old Hook
+ * code's helpers.
+ */
+const REMOVED_IN_STEP_4: [old: string, kind: RenameEntry["kind"]][] = [
+  ["main::before", "entryPoint"],
+  ["main::after", "entryPoint"],
+  ["config::before", "entryPoint"],
+  ["config::after", "entryPoint"],
+  ["W3TS_HOOK", "type"],
+  ["hookedMain", "function"],
+  ["hookedConfig", "function"],
+  ["executeHooksMainBefore", "function"],
+  ["executeHooksMainAfter", "function"],
+  ["executeHooksConfigBefore", "function"],
+  ["executeHooksConfigAfter", "function"],
+];
+
 const valid: RenameEntry = {
   old: "Group.getEnumUnit",
   new: "Unit.fromEnum",
@@ -83,6 +104,17 @@ describe("the rename map's loader", () => {
     expect(parseRenames(JSON.stringify([valid]))).toEqual([valid]);
   });
 
+  it("accepts an entry point of the deprecated alias as an old symbol", () => {
+    const entryPoint: RenameEntry = {
+      ...valid,
+      old: "main::after",
+      new: "Init.onInitTriggers",
+      kind: "entryPoint",
+      oneToOne: false,
+    };
+    expect(parseRenames(JSON.stringify([entryPoint]))).toEqual([entryPoint]);
+  });
+
   it.each<[string, unknown]>([
     ["is not an array", valid],
     ["has an entry without a note", [{ ...valid, note: undefined }]],
@@ -95,6 +127,18 @@ describe("the rename map's loader", () => {
     [
       "has an old symbol that is not a symbol",
       [{ ...valid, old: "Group getEnumUnit" }],
+    ],
+    [
+      "has an entry point with a single colon",
+      [{ ...valid, old: "main:before", kind: "entryPoint" }],
+    ],
+    [
+      "has an entry point qualified by a class",
+      [{ ...valid, old: "Init.main::before", kind: "entryPoint" }],
+    ],
+    [
+      "has an entry point written as a call",
+      [{ ...valid, old: "main::before(...)", kind: "entryPoint" }],
     ],
     [
       "has a one-to-one entry with two replacements",
@@ -167,6 +211,14 @@ describe("migration/renames.json", () => {
     ).toEqual([]);
   });
 
+  it("has an entry for every entry point, enum and helper step 4 removes or replaces, of its kind", async () => {
+    const entries = await loadRenames();
+    const kinds = new Map(entries.map((entry) => [entry.old, entry.kind]));
+    expect(
+      REMOVED_IN_STEP_4.filter(([old, kind]) => kinds.get(old) !== kind),
+    ).toEqual([]);
+  });
+
   it("names both halves of an accessor's get/set pair", async () => {
     const entries = await loadRenames();
     expect(
@@ -192,6 +244,13 @@ describe("migration/renames.json", () => {
     // Private in w3ts 3.x and deleted by step 3: never a replacement.
     expect(api.has(parseSymbol("MapPlayer.create"))).toBe(false);
     expect(api.has(parseSymbol("Handle.fromHandle"))).toBe(true);
+    // A value export whose type has the member: the Init stages and the
+    // library's entry point are const instances, not classes.
+    expect(api.has(parseSymbol("Init.onGlobals"))).toBe(true);
+    expect(api.has(parseSymbol("Init.noSuchStage"))).toBe(false);
+    expect(api.has(parseSymbol("Reforged.configure"))).toBe(true);
+    // An exported type is not a value an author can write a member of.
+    expect(api.has(parseSymbol("InitStages.onGlobals"))).toBe(false);
   });
 });
 
