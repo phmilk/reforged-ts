@@ -1,0 +1,9 @@
+packages:
+  - packages/*
+
+catalog:
+  # typescript-to-lua pins its TypeScript peer exactly; move both together (ADR 0002).
+  typescript: 6.0.2
+  typescript-to-lua: ^1.37.1
+  lua-types: ^2.14.1
+  vitest: ^5.0.1
