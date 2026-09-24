@@ -54,6 +54,49 @@ export function entry(
   };
 }
 
+/** A global's Overlay entry exactly as its JSON file holds it. */
+export interface GlobalEntryFixture {
+  name: string;
+  source: string;
+  nullable: boolean;
+  deprecated?: string;
+  notes?: string;
+  since?: string;
+  origin?: string;
+}
+
+/** A global's Overlay entry; `facts` adds the optional fields. */
+export function globalEntry(
+  source: string,
+  name: string,
+  nullable = false,
+  facts: Omit<GlobalEntryFixture, "name" | "source" | "nullable"> = {}
+): GlobalEntryFixture {
+  return { name, source, nullable, ...facts };
+}
+
+/** A type's optional Overlay entry exactly as its JSON file holds it. */
+export interface TypeEntryFixture {
+  name: string;
+  source: string;
+  deprecated?: string;
+  notes?: string;
+}
+
+export function typeEntry(
+  source: string,
+  name: string,
+  facts: Omit<TypeEntryFixture, "name" | "source"> = {}
+): TypeEntryFixture {
+  return { name, source, ...facts };
+}
+
+/** Any Overlay entry: every entry file has a name and a source. */
+export type AnyEntryFixture =
+  | OverlayEntryFixture
+  | GlobalEntryFixture
+  | TypeEntryFixture;
+
 export interface FixtureOptions {
   /** Raw Overlay files, by path relative to the Overlay folder. */
   rawOverlay?: Record<string, string>;
@@ -64,7 +107,7 @@ export interface FixtureOptions {
 /** Writes a Patch folder and an Overlay folder to a fresh temporary directory. */
 export async function writeFixture(
   patch: PatchFiles,
-  overlay: OverlayEntryFixture[] = [],
+  overlay: AnyEntryFixture[] = [],
   options: FixtureOptions = {}
 ): Promise<{ patchDir: string; overlayDir: string }> {
   const root = await mkdtemp(join(tmpdir(), "reforged-types-"));

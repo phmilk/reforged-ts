@@ -11,6 +11,7 @@ import type { Diagnostic } from "./diagnostics.js";
 import type {
   Declaration,
   FunctionDeclaration,
+  GlobalDeclaration,
   Parameter,
   SourceName,
 } from "./model.js";
@@ -30,6 +31,8 @@ interface Context {
   declarations: Declaration[];
   diagnostics: Diagnostic[];
   region: Region;
+  /** Line of the file's `globals` block, once seen; a file has at most one. */
+  globalsLine?: number;
 }
 
 const IDENT = "[A-Za-z_][A-Za-z0-9_]*";
@@ -41,6 +44,48 @@ const FUNCTION = new RegExp(
   `^function\\s+(${IDENT})\\s+takes\\s+(.+?)\\s+returns\\s+(${IDENT})$`
 );
 const PARAMETER = new RegExp(`^(${IDENT})\\s+(${IDENT})$`);
+
+// The four forms of a `globals` block line.
+const CONSTANT_GLOBAL = new RegExp(
+  `^constant\\s+(${IDENT})\\s+(${IDENT})\\s*=\\s*(.+)$`
+);
+const INITIALIZED_GLOBAL = new RegExp(`^(${IDENT})\\s+(${IDENT})\\s*=\\s*(.+)$`);
+const PLAIN_GLOBAL = new RegExp(`^(${IDENT})\\s+(${IDENT})$`);
+const ARRAY_GLOBAL = new RegExp(`^(${IDENT})\\s+array\\s+(${IDENT})$`);
+
+/** Jass keywords: never a global's type or name (`set x = 1` is no global). */
+const KEYWORDS = new Set([
+  "and",
+  "array",
+  "call",
+  "constant",
+  "else",
+  "elseif",
+  "endfunction",
+  "endglobals",
+  "endif",
+  "endloop",
+  "exitwhen",
+  "extends",
+  "false",
+  "function",
+  "globals",
+  "if",
+  "local",
+  "loop",
+  "native",
+  "not",
+  "nothing",
+  "null",
+  "or",
+  "return",
+  "returns",
+  "set",
+  "takes",
+  "then",
+  "true",
+  "type",
+]);
 
 export function parseJass(source: SourceName, text: string): ParseResult {
   const context: Context = {
@@ -60,7 +105,7 @@ export function parseJass(source: SourceName, text: string): ParseResult {
       case "function":
         return functionBody(context, code);
       case "globals":
-        return globalsBlock(context, code);
+        return globalsBlock(context, code, line);
     }
   });
   endOfFile(context);
@@ -123,7 +168,15 @@ function topLevel(context: Context, code: string, line: number): void {
   }
 
   if (code === "globals") {
-    report(context, line, "globals blocks are not supported yet");
+    if (context.globalsLine === undefined) {
+      context.globalsLine = line;
+    } else {
+      report(
+        context,
+        line,
+        `a second globals block (the first is at line ${context.globalsLine})`
+      );
+    }
     context.region = { kind: "globals", line };
     return;
   }
@@ -135,8 +188,49 @@ function functionBody(context: Context, code: string): void {
   if (code === "endfunction") context.region = { kind: "top" };
 }
 
-function globalsBlock(context: Context, code: string): void {
-  if (code === "endglobals") context.region = { kind: "top" };
+function globalsBlock(context: Context, code: string, line: number): void {
+  if (code === "") return;
+  if (code === "endglobals") {
+    context.region = { kind: "top" };
+    return;
+  }
+  const global = parseGlobal(code);
+  if (global) {
+    context.declarations.push({
+      kind: "global",
+      ...global,
+      source: context.source,
+      line,
+    });
+    return;
+  }
+  report(context, line, `unknown line: ${code}`);
+}
+
+type GlobalForm = Pick<
+  GlobalDeclaration,
+  "constant" | "array" | "type" | "name" | "initializer"
+>;
+
+/** One of the four global forms; undefined for anything else. */
+function parseGlobal(code: string): GlobalForm | undefined {
+  let form: GlobalForm | undefined;
+  let match: RegExpExecArray | null;
+  if ((match = CONSTANT_GLOBAL.exec(code))) {
+    form = { constant: true, array: false, type: match[1]!, name: match[2]! };
+    form.initializer = match[3]!;
+  } else if ((match = ARRAY_GLOBAL.exec(code))) {
+    form = { constant: false, array: true, type: match[1]!, name: match[2]! };
+  } else if ((match = INITIALIZED_GLOBAL.exec(code))) {
+    form = { constant: false, array: false, type: match[1]!, name: match[2]! };
+    form.initializer = match[3]!;
+  } else if ((match = PLAIN_GLOBAL.exec(code))) {
+    form = { constant: false, array: false, type: match[1]!, name: match[2]! };
+  }
+  if (!form || KEYWORDS.has(form.type) || KEYWORDS.has(form.name)) {
+    return undefined;
+  }
+  return form;
 }
 
 function endOfFile(context: Context): void {

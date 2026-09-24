@@ -38,9 +38,53 @@ export interface OverlayEntry {
   origin?: typeof SEED_ORIGIN;
 }
 
+/**
+ * A global's entry (mandatory for every global): `name`, `source`,
+ * `nullable`, and the optional `deprecated`, `notes`, `since` and `origin`.
+ * It has no `returns` or `params`: `nullable` is the global's own nullability,
+ * and for an array the nullability of its elements.
+ */
+export interface GlobalEntry {
+  /** Path relative to the Overlay folder, `/`-separated. */
+  file: string;
+  name: string;
+  source: SourceName;
+  nullable: boolean;
+  deprecated?: string;
+  /** Rendered as `@remarks`. */
+  notes?: string;
+  /** The Patch build that introduced the global; rendered as `@patch`. */
+  since?: string;
+  /** Absent for hand-written entries. */
+  origin?: typeof SEED_ORIGIN;
+}
+
+/** A type's optional entry: `name`, `source`, `deprecated` and `notes` only. */
+export interface TypeEntry {
+  /** Path relative to the Overlay folder, `/`-separated. */
+  file: string;
+  name: string;
+  source: SourceName;
+  deprecated?: string;
+  /** Rendered as `@remarks`. */
+  notes?: string;
+}
+
+/** The kind of declaration an entry describes. */
+export type EntryKind = "function" | "global" | "type";
+
 export interface Overlay {
-  /** Valid entries by `<source>/<name>`, in folder then file-name order. */
+  /**
+   * Function entries by `<source>/<name>`, in folder then file-name order.
+   * An entry file's shape picks its map: `returns` or `params` make a
+   * function entry, a top-level `nullable` a global entry, and neither a
+   * type entry.
+   */
   entries: Map<string, OverlayEntry>;
+  /** Global entries, keyed and ordered as `entries`. */
+  globals: Map<string, GlobalEntry>;
+  /** Type entries, keyed and ordered as `entries`. */
+  types: Map<string, TypeEntry>;
   /** Keys of files that exist but are not valid entries. */
   rejected: Set<string>;
   diagnostics: Diagnostic[];
@@ -53,6 +97,8 @@ export function overlayKey(source: SourceName, name: string): string {
 export async function loadOverlay(overlayDir: string): Promise<Overlay> {
   const overlay: Overlay = {
     entries: new Map(),
+    globals: new Map(),
+    types: new Map(),
     rejected: new Set(),
     diagnostics: [],
   };
@@ -69,7 +115,8 @@ export async function loadOverlay(overlayDir: string): Promise<Overlay> {
       const name = fileName.slice(0, -".json".length);
       const file = `${source}/${fileName}`;
       const text = await readFile(join(overlayDir, source, fileName), "utf8");
-      const result = readEntry(file, source, name, text);
+      const kind = entryShape(text);
+      const result = readEntry(ENTRY_FIELDS[kind], file, source, name, text);
       if (typeof result === "string") {
         overlay.rejected.add(overlayKey(source, name));
         overlay.diagnostics.push({
@@ -80,7 +127,13 @@ export async function loadOverlay(overlayDir: string): Promise<Overlay> {
           message: `${file}: ${result}`,
         });
       } else {
-        overlay.entries.set(overlayKey(source, name), result);
+        const entries: Map<string, unknown> =
+          kind === "function"
+            ? overlay.entries
+            : kind === "global"
+              ? overlay.globals
+              : overlay.types;
+        entries.set(overlayKey(source, name), result);
       }
     }
   }
@@ -173,13 +226,65 @@ const FIELDS = {
   [K in keyof Omit<OverlayEntry, "file">]: Reader<OverlayEntry[K]>;
 };
 
-/** The entry, or the first problem found as text. */
+/** A global entry's fields: the function entry's readers, and `nullable`. */
+const GLOBAL_FIELDS = {
+  name: FIELDS.name,
+  source: FIELDS.source,
+  nullable: (value) =>
+    typeof value === "boolean"
+      ? value
+      : new Problem(`nullable must be a boolean, found ${show(value)}`),
+  deprecated: FIELDS.deprecated,
+  notes: FIELDS.notes,
+  since: FIELDS.since,
+  origin: FIELDS.origin,
+} satisfies {
+  [K in keyof Omit<GlobalEntry, "file">]: Reader<GlobalEntry[K]>;
+};
+
+/** A type entry carries `deprecated` and `notes` only. */
+const TYPE_FIELDS = {
+  name: FIELDS.name,
+  source: FIELDS.source,
+  deprecated: FIELDS.deprecated,
+  notes: FIELDS.notes,
+} satisfies {
+  [K in keyof Omit<TypeEntry, "file">]: Reader<TypeEntry[K]>;
+};
+
+const ENTRY_FIELDS: Record<EntryKind, Record<string, Reader<unknown>>> = {
+  function: FIELDS,
+  global: GLOBAL_FIELDS,
+  type: TYPE_FIELDS,
+};
+
+/**
+ * The kind an entry file's shape says it describes: `returns` or `params`
+ * make a function entry, a top-level `nullable` a global entry, neither a
+ * type entry. Text that is no JSON object is read (and rejected) as a
+ * function entry.
+ */
+function entryShape(text: string): EntryKind {
+  let json: unknown;
+  try {
+    json = JSON.parse(text);
+  } catch {
+    return "function";
+  }
+  if (!isObject(json) || "returns" in json || "params" in json) {
+    return "function";
+  }
+  return "nullable" in json ? "global" : "type";
+}
+
+/** The entry read with `fields`, or the first problem found as text. */
 function readEntry(
+  fields: Record<string, Reader<unknown>>,
   file: string,
   source: SourceName,
   name: string,
   text: string
-): OverlayEntry | string {
+): OverlayEntry | GlobalEntry | TypeEntry | string {
   let json: unknown;
   try {
     json = JSON.parse(text);
@@ -188,16 +293,16 @@ function readEntry(
   }
   if (!isObject(json)) return "an entry must be a JSON object";
   // A misspelt field would otherwise drop its fact silently.
-  const unknown = unknownField(json, Object.keys(FIELDS));
+  const unknown = unknownField(json, Object.keys(fields));
   if (unknown) return `unknown field "${unknown}"`;
 
   const entry: Record<string, unknown> = { file };
-  for (const [field, read] of Object.entries(FIELDS)) {
-    const value = (read as Reader<unknown>)(json[field], { source, name });
+  for (const [field, read] of Object.entries(fields)) {
+    const value = read(json[field], { source, name });
     if (value instanceof Problem) return value.text;
     entry[field] = value;
   }
-  return entry as unknown as OverlayEntry;
+  return entry as unknown as OverlayEntry | GlobalEntry | TypeEntry;
 }
 
 const PARAM_FIELDS: readonly string[] = ["name", "nullable", "type"];

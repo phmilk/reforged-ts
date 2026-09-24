@@ -6,7 +6,11 @@
  * tag in `factTags`.
  */
 import { docType } from "./jass-types.js";
-import type { ResolvedFunction } from "./resolve.js";
+import type {
+  ResolvedFunction,
+  ResolvedGlobal,
+  ResolvedType,
+} from "./resolve.js";
 
 const JASSBOT = "https://lep.duckdns.org/jassbot/doc/";
 
@@ -59,4 +63,31 @@ export function docComment(tags: readonly string[]): string[] {
     ...lines.map((line) => (line === "" ? " *" : ` * ${line}`)),
     " */",
   ];
+}
+
+/**
+ * A global's header: a first line with its Jass form (`constant`, the Jass
+ * type, `array`), the initializer as `@defaultValue`, the Overlay facts and
+ * the reference page. The initializer is never a literal type; a `*\/` in
+ * it is escaped so it cannot close the comment.
+ */
+export function globalHeader(global: ResolvedGlobal): string[] {
+  const form = [
+    ...(global.constant ? ["constant"] : []),
+    docType(global.type),
+    ...(global.array ? ["array"] : []),
+  ].join(" ");
+  const initializer = global.initializer?.replaceAll("*/", "*\\/");
+  return docComment([
+    `Jass: ${form}`,
+    ...(initializer === undefined ? [] : [`@defaultValue \`${initializer}\``]),
+    ...factTags(global.overlay),
+    seeTag(global.name),
+  ]);
+}
+
+/** A type's header, only when its optional entry carries a fact. */
+export function typeHeader(type: ResolvedType): string[] {
+  const tags = type.overlay ? factTags(type.overlay) : [];
+  return tags.length === 0 ? [] : docComment(tags);
 }

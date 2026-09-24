@@ -159,35 +159,6 @@ describe("generate: unknown lines", () => {
       message: "blizzard.j:2: function Open has no endfunction",
     });
   });
-
-  it("reports a globals block as not supported yet, once, and reads on after it", async () => {
-    const result = await run({
-      "common.j": [
-        "type unit extends handle",
-        "globals",
-        "    constant integer A = 1",
-        "endglobals",
-        "junk",
-      ].join("\n"),
-    });
-
-    expect(result.diagnostics).toEqual([
-      {
-        severity: "error",
-        kind: "parse",
-        file: "common.j",
-        line: 2,
-        message: "common.j:2: globals blocks are not supported yet",
-      },
-      {
-        severity: "error",
-        kind: "parse",
-        file: "common.j",
-        line: 5,
-        message: "common.j:5: unknown line: junk",
-      },
-    ]);
-  });
 });
 
 describe("generate: orphan entries", () => {
