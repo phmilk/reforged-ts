@@ -1,3 +1,5 @@
+/** @noSelfInFile */
+
 import { MapPlayer } from "../handles/player";
 
 export * from "./order";

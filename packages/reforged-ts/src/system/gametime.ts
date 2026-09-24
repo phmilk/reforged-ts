@@ -1,3 +1,5 @@
+/** @noSelfInFile */
+
 import { Timer } from "../handles/timer";
 import { addScriptHook, W3TS_HOOK } from "../hooks/index";
 

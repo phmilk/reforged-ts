@@ -1,3 +1,5 @@
+/** @noSelfInFile */
+
 /**
  * Packs primitive types into a binary string.
  *

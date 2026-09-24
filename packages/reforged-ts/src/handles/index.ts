@@ -1,3 +1,5 @@
+/** @noSelfInFile */
+
 export * from "./camera";
 export * from "./destructable";
 export * from "./dialog";
