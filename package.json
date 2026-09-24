@@ -1,0 +1,16 @@
+{
+  "name": "reforged-ts-workspace",
+  "private": true,
+  "description": "Workspace root of reforged-ts: the library, its Typings and its Lua test harness.",
+  "license": "MIT",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "build": "pnpm --recursive build",
+    "typecheck": "pnpm --recursive typecheck",
+    "typings:generate": "pnpm --filter reforged-types typings:generate",
+    "typings:check": "pnpm --filter reforged-types typings:check"
+  }
+}
