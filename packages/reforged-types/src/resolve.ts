@@ -6,6 +6,7 @@
  * that no vendored Patch declares is an orphan warning, not an error, because
  * the Overlay is shared by all vendored Patches.
  */
+import { patchList } from "./build.js";
 import type { Diagnostic } from "./diagnostics.js";
 import {
   jassGlobal,
@@ -23,7 +24,6 @@ import {
   type OverlayEntry,
   type TypeEntry,
 } from "./overlay.js";
-import { patchList } from "./provenance.js";
 
 /** A function with the Overlay facts that shape its declaration. */
 export interface ResolvedFunction extends FunctionDeclaration {

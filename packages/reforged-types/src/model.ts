@@ -3,7 +3,10 @@
  * source file and Jass types kept verbatim.
  */
 
-/** The Patch files the generator reads, in output order. */
+/**
+ * The Patch files under their lowercase names, in output order: what the
+ * vendor step stores per Patch and what the generator reads.
+ */
 export const SOURCES = ["common.j", "blizzard.j", "common.ai"] as const;
 
 export type SourceName = (typeof SOURCES)[number];

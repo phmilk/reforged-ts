@@ -9,8 +9,10 @@
  */
 import { readdir, readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
+import { isBuild } from "./build.js";
 import type { Diagnostic } from "./diagnostics.js";
 import { SOURCES, type SourceName } from "./model.js";
+import { byCodePoint } from "./order.js";
 
 export interface OverlayParam {
   name: string;
@@ -303,7 +305,7 @@ const FIELDS = {
   deprecated: (value) => docText("deprecated", value),
   notes: (value) => docText("notes", value),
   since: (value) =>
-    value === undefined || (typeof value === "string" && BUILD.test(value))
+    value === undefined || (typeof value === "string" && isBuild(value))
       ? value
       : new Problem(
           `since must be a Patch build such as "3.0.0.24268", found ${show(
@@ -383,9 +385,6 @@ function readEntry(
 
 const PARAM_FIELDS: readonly string[] = ["name", "nullable", "type"];
 
-/** A full Patch build: version and build number. */
-const BUILD = /^\d+\.\d+\.\d+\.\d+$/;
-
 /**
  * Free text a header renders. It may link with `{@link ...}` but neither
  * start another TSDoc tag nor close the comment, so a header only ever
@@ -428,10 +427,6 @@ async function isDirectory(path: string): Promise<boolean> {
   } catch {
     return false;
   }
-}
-
-export function byCodePoint(a: string, b: string): number {
-  return a < b ? -1 : a > b ? 1 : 0;
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {

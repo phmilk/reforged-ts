@@ -3,12 +3,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { runVerify } from "../src/cli/verify.js";
+import { parseProvenance } from "../src/provenance.js";
 import {
   type Fetcher,
   JASS_HISTORY,
-  parseProvenance,
   patchFromTag,
-  runVerify,
   vendorTag,
   verifyPatchDir,
 } from "../src/vendor/index.js";
@@ -177,7 +177,7 @@ describe("vendorTag", () => {
 });
 
 describe("verify", () => {
-  const silent = { log: () => {}, error: () => {} };
+  const silent = { stdout: () => {}, stderr: () => {} };
 
   async function vendored(): Promise<string> {
     return (await vendorTag({ tag: TAG, vendorRoot, fetcher: archiveFetcher(), now: NOW })).patchDir;

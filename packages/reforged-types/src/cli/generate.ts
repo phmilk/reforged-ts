@@ -9,8 +9,8 @@
  * folders and the package root.
  */
 import type { Additions } from "../additions.js";
+import { patchList } from "../build.js";
 import { generate } from "../generate.js";
-import { patchList } from "../provenance.js";
 import { httpFetcher, vendorTag, type Fetcher } from "../vendor/index.js";
 import { countDiagnostics, formatChecklist } from "./checklist.js";
 import {

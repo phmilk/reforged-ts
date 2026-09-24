@@ -1,7 +1,7 @@
 /**
  * What a newer vendored Patch declares that the one before it does not: the
  * list a maintainer reads to set `since` on the new Overlay entries. Patches
- * are ordered by build, component by component.
+ * come in oldest first, as `compareBuilds` orders them.
  */
 import {
   jassGlobal,
@@ -25,17 +25,6 @@ export interface Additions {
   patch: string;
   previous: string;
   declarations: Added[];
-}
-
-/** Orders two four-part builds (`3.0.0.24268`) numerically. */
-export function compareBuilds(a: string, b: string): number {
-  const left = a.split(".").map(Number);
-  const right = b.split(".").map(Number);
-  for (let i = 0; i < Math.max(left.length, right.length); i++) {
-    const difference = (left[i] ?? 0) - (right[i] ?? 0);
-    if (difference !== 0 && !Number.isNaN(difference)) return difference;
-  }
-  return a < b ? -1 : a > b ? 1 : 0;
 }
 
 /**

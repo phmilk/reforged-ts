@@ -4,9 +4,10 @@
  * Patch. Deterministic like the declaration files: LF, no timestamps, one
  * trailing newline.
  */
+import { gameVersion } from "./build.js";
 import { REGENERATE_COMMAND } from "./emit.js";
-import { byCodePoint } from "./overlay.js";
-import { gameVersion, type PatchIdentity } from "./provenance.js";
+import { byCodePoint } from "./order.js";
+import type { PatchIdentity } from "./provenance.js";
 import type {
   Resolved,
   ResolvedFunction,

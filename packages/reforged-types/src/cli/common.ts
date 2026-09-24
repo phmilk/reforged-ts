@@ -1,11 +1,12 @@
 /**
- * What the `typings:generate` and `typings:check` commands share: their
- * options and defaults, the vendored Patch folders, the output streams, and
- * writing generated files.
+ * What the package's commands share: the folder options and defaults of
+ * `typings:generate` and `typings:check`, the vendored Patch folders, the
+ * output streams, and writing generated files.
  */
 import { mkdir, readdir, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { byCodePoint } from "../order.js";
 
 export interface Output {
   stdout: (text: string) => void;
@@ -66,14 +67,17 @@ export function parseArgs(
   return { folders, positional };
 }
 
-/** Every vendored Patch folder under `vendorDir`, in name order. */
+/**
+ * Every vendored Patch folder under `vendorDir`, in code-point order of its
+ * name; none when `vendorDir` does not exist.
+ */
 export async function vendoredPatchDirs(vendorDir: string): Promise<string[]> {
   try {
     const items = await readdir(vendorDir, { withFileTypes: true });
     return items
       .filter((item) => item.isDirectory())
       .map((item) => item.name)
-      .sort()
+      .sort(byCodePoint)
       .map((name) => join(vendorDir, name));
   } catch {
     return [];

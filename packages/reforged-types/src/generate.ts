@@ -11,7 +11,7 @@
  */
 import { readFile } from "node:fs/promises";
 import { basename, join } from "node:path";
-import { additions, compareBuilds, type Additions } from "./additions.js";
+import { additions, type Additions } from "./additions.js";
 import {
   ASYNC_NATIVES_FILE,
   emitAsyncNatives,
@@ -19,17 +19,14 @@ import {
   emitManifest,
   MANIFEST_FILE,
 } from "./artefacts.js";
+import { compareBuilds, gameVersion } from "./build.js";
 import { hasErrors, type Diagnostic } from "./diagnostics.js";
 import { emitFile } from "./emit.js";
 import { SOURCES, type Declaration } from "./model.js";
 import { checkNames } from "./names.js";
 import { loadOverlay } from "./overlay.js";
 import { parseJass } from "./parser.js";
-import {
-  gameVersion,
-  readPatchIdentity,
-  type PatchIdentity,
-} from "./provenance.js";
+import { readPatchIdentity, type PatchIdentity } from "./provenance.js";
 import { orphans, resolve, type Resolved } from "./resolve.js";
 
 /**
