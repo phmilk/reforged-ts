@@ -15,9 +15,10 @@
     "lint:prettier": "prettier --check \"**/*.{json,md,yaml,yml}\"",
     "format": "eslint --fix . && prettier --write \"**/*.{json,md,yaml,yml}\"",
     "typecheck": "pnpm --recursive typecheck",
-    "test": "vitest run",
+    "test": "vitest run && pnpm run typings:check",
     "typings:generate": "pnpm --filter reforged-types typings:generate",
-    "typings:check": "pnpm --filter reforged-types typings:check"
+    "typings:check": "pnpm --filter reforged-types typings:check",
+    "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test"
   },
   "devDependencies": {
     "@eslint/js": "catalog:",
