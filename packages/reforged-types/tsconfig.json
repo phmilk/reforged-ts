@@ -6,7 +6,7 @@
     "moduleResolution": "nodenext",
     "rootDir": "src",
     "outDir": "build",
-    "types": [],
+    "types": ["node"],
     "strict": true,
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,

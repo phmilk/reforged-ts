@@ -7,3 +7,5 @@ catalog:
   typescript-to-lua: ^1.37.1
   lua-types: ^2.14.1
   vitest: ^5.0.1
+  # Node built-ins for the generator (fs, path); major follows .node-version.
+  "@types/node": ^24.0.0

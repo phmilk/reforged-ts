@@ -1,0 +1,6 @@
+{
+  "name": "RequestExtraBooleanData",
+  "source": "common.j",
+  "returns": { "nullable": false },
+  "params": [{ "name": "dataType", "nullable": false }]
+}
