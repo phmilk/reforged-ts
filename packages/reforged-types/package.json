@@ -34,8 +34,9 @@
     "/README.md"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json && pnpm run typings:typecheck",
+    "build": "tsc -p tsconfig.json && pnpm run typings:typecheck && pnpm run scripts:typecheck",
     "typings:typecheck": "tsc -p tsconfig.typings.json",
+    "scripts:typecheck": "tsc -p tsconfig.scripts.json",
     "test": "vitest run && pnpm run typings:check",
     "vendor": "node build/cli/vendor.js",
     "verify": "node build/cli/verify.js",

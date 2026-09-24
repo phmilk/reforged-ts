@@ -36,4 +36,4 @@ Follow these steps in order for a Patch update. The loop is done when the checks
 
 ## Generator changes
 
-Test through Seam 1 (`generate()` in `src/generate.ts`) with the fixture helpers in `test/support/`: small synthetic Patch and Overlay folders in, emitted text and diagnostics asserted. `scripts/seed-from-war3-types-strict.ts` is the one-off seed import, kept for provenance; the build never runs it.
+Test through Seam 1 (`generate()` in `src/generate.ts`) with the fixture helpers in `test/support/`: small synthetic Patch and Overlay folders in, emitted text and diagnostics asserted. `scripts/seed-from-war3-types-strict.ts` is the one-off seed import, kept for provenance; the build type-checks it but never runs it.
