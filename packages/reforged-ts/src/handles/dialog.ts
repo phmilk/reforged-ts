@@ -12,7 +12,7 @@ export class DialogButton extends Handle<button> {
     text: string,
     hotkey = 0,
     quit = false,
-    score = false
+    score = false,
   ) {
     if (Handle.initFromHandle()) {
       super();
@@ -39,7 +39,7 @@ export class DialogButton extends Handle<button> {
     text: string,
     hotkey = 0,
     quit = false,
-    score = false
+    score = false,
   ): DialogButton | undefined {
     let handle: button | undefined;
 
@@ -66,7 +66,7 @@ export class DialogButton extends Handle<button> {
   }
 
   public static fromHandle(
-    handle: button | undefined
+    handle: button | undefined,
   ): DialogButton | undefined {
     return handle ? this.getObject(handle) : undefined;
   }

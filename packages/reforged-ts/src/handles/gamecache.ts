@@ -125,7 +125,7 @@ export class GameCache extends Handle<gamecache> {
     forWhichPlayer: MapPlayer,
     x: number,
     y: number,
-    face: number
+    face: number,
   ) {
     return RestoreUnit(
       this.handle,
@@ -134,7 +134,7 @@ export class GameCache extends Handle<gamecache> {
       forWhichPlayer.handle,
       x,
       y,
-      face
+      face,
     );
   }
 
@@ -145,7 +145,7 @@ export class GameCache extends Handle<gamecache> {
   public store(
     missionKey: string,
     key: string,
-    value: number | string | boolean | unit
+    value: number | string | boolean | unit,
   ) {
     if (typeof value === "string") {
       StoreString(this.handle, missionKey, key, value);
@@ -179,7 +179,7 @@ export class GameCache extends Handle<gamecache> {
   }
 
   public static fromHandle(
-    handle: gamecache | undefined
+    handle: gamecache | undefined,
   ): GameCache | undefined {
     return handle ? this.getObject(handle) : undefined;
   }

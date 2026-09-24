@@ -58,7 +58,7 @@ export interface Resolution {
 
 export function resolve(
   declarations: readonly Declaration[],
-  overlay: Overlay
+  overlay: Overlay,
 ): Resolution {
   const resolved: Resolved[] = [];
   const diagnostics: Diagnostic[] = [];
@@ -105,7 +105,7 @@ export function resolve(
 export function orphans(
   declarations: readonly Declaration[],
   overlay: Overlay,
-  patches: readonly string[]
+  patches: readonly string[],
 ): Diagnostic[] {
   const declared = new Set(declarations.map(expectedPath));
   const diagnostics: Diagnostic[] = [];
@@ -125,17 +125,17 @@ function expectedPath(declaration: Declaration): string {
 
 function sameParameters(
   fn: FunctionDeclaration,
-  entry: FunctionEntry
+  entry: FunctionEntry,
 ): boolean {
   return (
     fn.params.length === entry.params.length &&
-    fn.params.every((param, index) => param.name === entry.params[index]!.name)
+    fn.params.every((param, index) => param.name === entry.params[index].name)
   );
 }
 
 /** The checklist line: source, the Jass declaration and the file to write. */
 function missing(
-  declaration: FunctionDeclaration | GlobalDeclaration
+  declaration: FunctionDeclaration | GlobalDeclaration,
 ): Diagnostic {
   const jass = jassDeclaration(declaration);
   return {

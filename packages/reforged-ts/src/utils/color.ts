@@ -7,7 +7,7 @@ export class Color {
     readonly red: ColorValue,
     readonly green: ColorValue,
     readonly blue: ColorValue,
-    alpha?: ColorValue
+    alpha?: ColorValue,
   ) {
     if (alpha) {
       this.alpha = alpha;
@@ -81,7 +81,7 @@ export class Color {
       math.max(0, math.min(255, r)) as ColorValue,
       math.max(0, math.min(255, g)) as ColorValue,
       math.max(0, math.min(255, b)) as ColorValue,
-      math.max(0, math.min(255, a)) as ColorValue
+      math.max(0, math.min(255, a)) as ColorValue,
     );
   }
 }
@@ -90,7 +90,7 @@ export const color = (
   red: ColorValue,
   green: ColorValue,
   blue: ColorValue,
-  alpha?: ColorValue
+  alpha?: ColorValue,
 ) => new Color(red, green, blue, alpha);
 
 /**
@@ -192,18 +192,22 @@ function toHex(value: ColorValue) {
   return hex;
 }
 
-type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
+type Enumerate<
+  N extends number,
+  Acc extends number[] = [],
+> = Acc["length"] extends N
   ? Acc[number]
-  : Enumerate<N, [...Acc, Acc['length']]>
-
+  : Enumerate<N, [...Acc, Acc["length"]]>;
 
 /**
  * Generate a type that is represent a number ranging from [A, B)
  */
-export type NumberRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
-
+export type NumberRange<F extends number, T extends number> = Exclude<
+  Enumerate<T>,
+  Enumerate<F>
+>;
 
 /**
  * The valid values for a color component.
  */
-export type ColorValue = NumberRange<0,256>;
+export type ColorValue = NumberRange<0, 256>;

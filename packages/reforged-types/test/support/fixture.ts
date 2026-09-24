@@ -40,7 +40,7 @@ export function entry(
   source: string,
   name: string,
   params: string[] = [],
-  returnsNullable = false
+  returnsNullable = false,
 ): OverlayEntryFixture {
   return {
     name,
@@ -49,7 +49,7 @@ export function entry(
     params: params.map((param) =>
       param.endsWith("?")
         ? { name: param.slice(0, -1), nullable: true }
-        : { name: param, nullable: false }
+        : { name: param, nullable: false },
     ),
   };
 }
@@ -70,7 +70,7 @@ export function globalEntry(
   source: string,
   name: string,
   nullable = false,
-  facts: Omit<GlobalEntryFixture, "name" | "source" | "nullable"> = {}
+  facts: Omit<GlobalEntryFixture, "name" | "source" | "nullable"> = {},
 ): GlobalEntryFixture {
   return { name, source, nullable, ...facts };
 }
@@ -86,16 +86,14 @@ export interface TypeEntryFixture {
 export function typeEntry(
   source: string,
   name: string,
-  facts: Omit<TypeEntryFixture, "name" | "source"> = {}
+  facts: Omit<TypeEntryFixture, "name" | "source"> = {},
 ): TypeEntryFixture {
   return { name, source, ...facts };
 }
 
 /** Any Overlay entry: every entry file has a name and a source. */
 export type AnyEntryFixture =
-  | OverlayEntryFixture
-  | GlobalEntryFixture
-  | TypeEntryFixture;
+  OverlayEntryFixture | GlobalEntryFixture | TypeEntryFixture;
 
 export interface FixtureOptions {
   /** Raw Overlay files, by path relative to the Overlay folder. */
@@ -111,7 +109,7 @@ export interface FixtureOptions {
 export async function writeFixture(
   patch: PatchFiles,
   overlay: AnyEntryFixture[] = [],
-  options: FixtureOptions = {}
+  options: FixtureOptions = {},
 ): Promise<{ patchDir: string; overlayDir: string; vendorDir: string }> {
   const root = await mkdtemp(join(tmpdir(), "reforged-types-"));
   const vendorDir = join(root, "vendor");
@@ -132,12 +130,12 @@ export async function writeFixture(
 export async function writePatch(
   vendorDir: string,
   patch: PatchFiles,
-  provenanceFile: unknown = provenance
+  provenanceFile: unknown = provenance,
 ): Promise<string> {
   const build = (provenanceFile as { patch?: unknown } | null)?.patch;
   const patchDir = join(
     vendorDir,
-    typeof build === "string" && /^[\w.]+$/.test(build) ? build : "patch"
+    typeof build === "string" && /^[\w.]+$/.test(build) ? build : "patch",
   );
   await mkdir(patchDir, { recursive: true });
   for (const file of ["common.j", "blizzard.j", "common.ai"] as const) {
@@ -146,7 +144,7 @@ export async function writePatch(
   if (provenanceFile !== null) {
     await writeFile(
       join(patchDir, "provenance.json"),
-      JSON.stringify(provenanceFile, null, 2) + "\n"
+      JSON.stringify(provenanceFile, null, 2) + "\n",
     );
   }
   return patchDir;
@@ -156,14 +154,14 @@ export async function writePatch(
 export async function writeOverlay(
   overlayDir: string,
   overlay: AnyEntryFixture[],
-  rawOverlay: Record<string, string> = {}
+  rawOverlay: Record<string, string> = {},
 ): Promise<void> {
   for (const item of overlay) {
     const folder = join(overlayDir, item.source, kindFolder(item));
     await mkdir(folder, { recursive: true });
     await writeFile(
       join(folder, `${item.name}.json`),
-      JSON.stringify(item, null, 2) + "\n"
+      JSON.stringify(item, null, 2) + "\n",
     );
   }
   for (const [path, text] of Object.entries(rawOverlay)) {

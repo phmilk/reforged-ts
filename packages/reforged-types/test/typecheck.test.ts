@@ -21,14 +21,14 @@ function typecheck(replace: Record<string, string> = {}): ts.Diagnostic[] {
   const config = ts.getParsedCommandLineOfConfigFile(
     TYPINGS_CONFIG,
     {},
-    { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => {} }
+    { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => {} },
   )!;
   expect(config.errors).toEqual([]);
   const replaced = new Map(
     Object.entries(replace).map(([path, text]) => [
       resolve(packageRoot, path).toLowerCase(),
       text,
-    ])
+    ]),
   );
   const host = ts.createCompilerHost(config.options);
   const getSourceFile = host.getSourceFile.bind(host);
@@ -59,13 +59,13 @@ describe("the typings type-check", () => {
     const config = ts.getParsedCommandLineOfConfigFile(
       TYPINGS_CONFIG,
       {},
-      { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => {} }
+      { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => {} },
     )!;
 
     expect(
       config.fileNames.map((name) =>
-        relative(packageRoot, name).replace(/\\/g, "/")
-      )
+        relative(packageRoot, name).replace(/\\/g, "/"),
+      ),
     ).toEqual(["3.0.0.d.ts", "3.0.0/common.ai.d.ts"]);
     expect(config.options.noEmit).toBe(true);
     expect(config.options.skipLibCheck).toBeFalsy();
@@ -86,18 +86,22 @@ describe("the typings type-check", () => {
     });
 
     expect(diagnostics.map((d) => d.code)).toEqual([2304]);
-    expect(diagnostics[0]!.file!.fileName).toMatch(/3\.0\.0\/common\.j\.d\.ts$/);
+    expect(diagnostics[0].file!.fileName).toMatch(/3\.0\.0\/common\.j\.d\.ts$/);
   }, 60_000);
 });
 
 describe("the Lua runtime file", () => {
   it("declares FourCC and __jarray and nothing else", async () => {
     const text = await readFile(join(packageRoot, "lua-runtime.d.ts"), "utf8");
-    const file = ts.createSourceFile("lua-runtime.d.ts", text, ts.ScriptTarget.Latest);
+    const file = ts.createSourceFile(
+      "lua-runtime.d.ts",
+      text,
+      ts.ScriptTarget.Latest,
+    );
     const printer = ts.createPrinter({ removeComments: true });
 
     const declarations = file.statements.map((statement) =>
-      printer.printNode(ts.EmitHint.Unspecified, statement, file)
+      printer.printNode(ts.EmitHint.Unspecified, statement, file),
     );
 
     expect(text.startsWith("/** @noSelfInFile */\n")).toBe(true);

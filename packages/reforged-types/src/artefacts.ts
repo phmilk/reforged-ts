@@ -8,11 +8,7 @@ import { gameVersion } from "./build.js";
 import { REGENERATE_COMMAND } from "./emit.js";
 import { byCodePoint } from "./order.js";
 import type { PatchIdentity } from "./provenance.js";
-import type {
-  Resolved,
-  ResolvedFunction,
-  ResolvedGlobal,
-} from "./resolve.js";
+import type { Resolved, ResolvedFunction, ResolvedGlobal } from "./resolve.js";
 
 /** The hand-written declarations of the Lua runtime, at the package root. */
 export const LUA_RUNTIME_FILE = "lua-runtime.d.ts";
@@ -53,7 +49,7 @@ export function emitAsyncNatives(declarations: readonly Resolved[]): string {
   const names = new Set(
     declarations
       .filter((d): d is ResolvedFunction => isFunction(d) && d.overlay.async)
-      .map((d) => d.name)
+      .map((d) => d.name),
   );
   return JSON.stringify([...names].sort(byCodePoint), null, 2) + "\n";
 }
@@ -66,10 +62,10 @@ export function emitAsyncNatives(declarations: readonly Resolved[]): string {
  */
 export function emitManifest(
   patch: string,
-  declarations: readonly Resolved[]
+  declarations: readonly Resolved[],
 ): string {
   const entries = declarations.flatMap((d) =>
-    d.kind === "type" ? [] : [JSON.stringify(manifestEntry(d))]
+    d.kind === "type" ? [] : [JSON.stringify(manifestEntry(d))],
   );
   const list =
     entries.length === 0
@@ -103,7 +99,7 @@ function manifestEntry(declaration: ResolvedFunction | ResolvedGlobal) {
     params: params.map((param, index) => ({
       name: param.name,
       type: param.type,
-      nullable: overlay.params[index]!.nullable,
+      nullable: overlay.params[index].nullable,
     })),
     returns: { type: returns, nullable: overlay.returns.nullable },
     async: overlay.async,

@@ -9,7 +9,7 @@ import { BinaryWriter } from "./binarywriter";
 import { SyncRequest } from "./sync";
 
 const lobbyTimes: number[] = [];
-const hostCallbacks: Array<() => void> = [];
+const hostCallbacks: (() => void)[] = [];
 let localJoinTime = 0;
 let localStartTime = 0;
 let host: MapPlayer | undefined;
@@ -48,7 +48,7 @@ function findHost() {
       const syncedTime = reader.readFloat();
 
       // store how long the player has been in the game
-      const from = MapPlayer.fromEvent() as MapPlayer;
+      const from = MapPlayer.fromEvent()!;
       lobbyTimes[from.id] = syncedTime;
 
       // check which player has been in the game the longest
@@ -64,7 +64,6 @@ function findHost() {
           p.slotState !== PLAYER_SLOT_STATE_PLAYING ||
           p.controller !== MAP_CONTROL_USER
         ) {
-          // eslint-disable-next-line no-continue
           continue;
         }
 

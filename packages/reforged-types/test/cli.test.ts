@@ -29,7 +29,7 @@ async function runCli(args: string[], network = NO_NETWORK) {
       stdout: (text) => (stdout += text),
       stderr: (text) => (stderr += text),
     },
-    network
+    network,
   );
   return { status, stdout, stderr };
 }
@@ -70,7 +70,7 @@ describe("typings:generate", () => {
         "Warnings (1):",
         "- [ ] common.j/functions/RequestExtraBooleanData.json: orphan Overlay entry, common.j of Patch 3.0.0.24268 declares no RequestExtraBooleanData",
         "",
-      ].join("\n")
+      ].join("\n"),
     );
     expect((await readdir(join(outDir, "3.0.0"))).sort()).toEqual([
       "blizzard.j.d.ts",
@@ -84,9 +84,9 @@ describe("typings:generate", () => {
       "async-natives.json",
     ]);
     expect(
-      await readFile(join(outDir, "3.0.0", "common.j.d.ts"), "utf8")
+      await readFile(join(outDir, "3.0.0", "common.j.d.ts"), "utf8"),
     ).toContain(
-      "declare function CreateUnit(id: player, unitid: number, x: number, y: number, face: number): unit | undefined;"
+      "declare function CreateUnit(id: player, unitid: number, x: number, y: number, face: number): unit | undefined;",
     );
   });
 
@@ -96,7 +96,7 @@ describe("typings:generate", () => {
         "common.j":
           "native A takes nothing returns nothing\nnative B takes integer n returns nothing\nbogus\n",
       },
-      [entry("common.j", "B", ["m"]), entry("common.j", "Gone")]
+      [entry("common.j", "B", ["m"]), entry("common.j", "Gone")],
     );
     const outDir = await tempDir("out");
 
@@ -123,7 +123,7 @@ describe("typings:generate", () => {
         "Warnings (1):",
         "- [ ] common.j/functions/Gone.json: orphan Overlay entry, common.j of Patch 3.0.0.24268 declares no Gone",
         "",
-      ].join("\n")
+      ].join("\n"),
     );
     expect(await readdir(outDir)).toEqual([]);
   });
@@ -163,10 +163,10 @@ describe("typings:generate", () => {
     for (const item of items) {
       const [, source, name, path] =
         /^- \[ \] ([\w.]+): no Overlay entry for (?:.* )?(\w+)(?: takes .*| = .*); expected (.+)$/.exec(
-          item
+          item,
         )!;
-      expect(path).toBe(`${source}/${path!.split("/")[1]}/${name}.json`);
-      expect(["functions", "globals"]).toContain(path!.split("/")[1]);
+      expect(path).toBe(`${source}/${path.split("/")[1]}/${name}.json`);
+      expect(["functions", "globals"]).toContain(path.split("/")[1]);
     }
   });
 
@@ -179,7 +179,7 @@ describe("typings:generate", () => {
 
     expect(status).toBe(2);
     expect(stderr).toBe(
-      "Usage: typings:generate [tag] [--vendor <dir>] [--overlay <dir>] [--out <dir>]\n"
+      "Usage: typings:generate [tag] [--vendor <dir>] [--overlay <dir>] [--out <dir>]\n",
     );
   });
 });
@@ -194,8 +194,8 @@ describe("typings:generate <tag>", () => {
         folder: fileURLToPath(
           new URL(
             `./fixtures/jass-history/${COMMIT}/timeline/scripts/`,
-            import.meta.url
-          )
+            import.meta.url,
+          ),
         ),
       },
     }),
@@ -210,7 +210,12 @@ describe("typings:generate <tag>", () => {
     await cp(join(fixture, "vendor"), vendorDir, { recursive: true });
     await cp(join(fixture, "overlay"), overlayDir, { recursive: true });
     const folders = ["--vendor", vendorDir, "--overlay", overlayDir];
-    return { vendorDir, overlayDir, outDir, folders: [...folders, "--out", outDir] };
+    return {
+      vendorDir,
+      overlayDir,
+      outDir,
+      folders: [...folders, "--out", outDir],
+    };
   }
 
   it("vendors the tag, then prints what the new Patch adds and the checklist of its missing entries", async () => {
@@ -233,7 +238,7 @@ describe("typings:generate <tag>", () => {
         "- common.ai:2: native DebugS takes string str returns nothing",
         "",
         "",
-      ].join("\n")
+      ].join("\n"),
     );
     expect(stderr).toBe(
       [
@@ -248,7 +253,7 @@ describe("typings:generate <tag>", () => {
         "Warnings (1):",
         "- [ ] common.j/functions/RequestExtraBooleanData.json: orphan Overlay entry, common.j of Patches 3.0.0.24268 and 9.9.9.12345 declares no RequestExtraBooleanData",
         "",
-      ].join("\n")
+      ].join("\n"),
     );
     expect(await readdir(outDir)).toEqual([]);
   });
@@ -257,8 +262,13 @@ describe("typings:generate <tag>", () => {
     const { overlayDir, outDir, folders } = await vendoredOnce();
     await runCli([TAG, ...folders], network);
     await writeOverlay(overlayDir, [
-      { ...entry("common.j", "GetTriggerUnit", [], true), since: "9.9.9.12345" },
-      globalEntry("blizzard.j", "bj_forLoopAIndex", false, { since: "9.9.9.12345" }),
+      {
+        ...entry("common.j", "GetTriggerUnit", [], true),
+        since: "9.9.9.12345",
+      },
+      globalEntry("blizzard.j", "bj_forLoopAIndex", false, {
+        since: "9.9.9.12345",
+      }),
       entry("blizzard.j", "TriggerRegisterAnyUnitEventBJ"),
       entry("common.ai", "DebugS", ["str"]),
     ]);
@@ -268,7 +278,7 @@ describe("typings:generate <tag>", () => {
     expect(stderr).toBe("");
     expect(status).toBe(0);
     expect(stdout).toContain(
-      "Generated 11 files for Patches 3.0.0.24268 and 9.9.9.12345.\n"
+      "Generated 11 files for Patches 3.0.0.24268 and 9.9.9.12345.\n",
     );
     expect((await readdir(outDir)).sort()).toEqual([
       "3.0.0",
@@ -278,7 +288,7 @@ describe("typings:generate <tag>", () => {
       "async-natives.json",
     ]);
     expect(
-      await readFile(join(outDir, "9.9.9", "common.j.d.ts"), "utf8")
+      await readFile(join(outDir, "9.9.9", "common.j.d.ts"), "utf8"),
     ).toContain("@patch 9.9.9.12345");
   });
 
@@ -287,13 +297,13 @@ describe("typings:generate <tag>", () => {
 
     const { status, stdout, stderr } = await runCli(
       ["Reforged-v9.9.9.99999-w3-missing", ...folders],
-      network
+      network,
     );
 
     expect(status).toBe(1);
     expect(stdout).toBe("");
     expect(stderr).toMatch(
-      /^Vendoring Reforged-v9\.9\.9\.99999-w3-missing failed: GET .* 422/
+      /^Vendoring Reforged-v9\.9\.9\.99999-w3-missing failed: GET .* 422/,
     );
   });
 });
@@ -304,7 +314,7 @@ describe("typings:generate on the vendored 3.0.0.24268 tag", () => {
 
   it("vendors the same bytes again and regenerates the committed output unchanged", async () => {
     const provenance = JSON.parse(
-      await readFile(join(committed, "provenance.json"), "utf8")
+      await readFile(join(committed, "provenance.json"), "utf8"),
     );
     const vendorDir = await tempDir("vendor");
     const outDir = await tempDir("out");
@@ -326,20 +336,20 @@ describe("typings:generate on the vendored 3.0.0.24268 tag", () => {
         }),
         // A later day: re-vendoring the same bytes keeps the recorded date.
         now: new Date("2031-01-01T00:00:00Z"),
-      }
+      },
     );
 
     expect(status).toBe(0);
     expect(stdout).toBe(
       `Vendored ${provenance.tag}: Patch 3.0.0.24268 at commit ${provenance.commit}, unchanged.\n` +
-        "Generated 6 files for Patch 3.0.0.24268.\n"
+        "Generated 6 files for Patch 3.0.0.24268.\n",
     );
     for (const name of await readdir(committed)) {
       expect(
         (await readFile(join(vendorDir, "3.0.0.24268", name))).equals(
-          await readFile(join(committed, name))
+          await readFile(join(committed, name)),
         ),
-        name
+        name,
       ).toBe(true);
     }
     for (const path of [
@@ -352,9 +362,9 @@ describe("typings:generate on the vendored 3.0.0.24268 tag", () => {
     ]) {
       expect(
         (await readFile(join(outDir, path))).equals(
-          await readFile(join(packageRoot, path))
+          await readFile(join(packageRoot, path)),
         ),
-        path
+        path,
       ).toBe(true);
     }
   }, 60_000);

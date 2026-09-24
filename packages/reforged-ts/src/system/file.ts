@@ -1,7 +1,5 @@
 /** @noSelfInFile */
 /* eslint-disable no-useless-escape */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-param-reassign */
 
 /**
  * A system which provides the ability to read and write files. There are no standard IO natives
@@ -33,7 +31,6 @@ export class File {
   // The string limit per Preload call.
   private static preloadLimit = 259;
 
-  // eslint-disable-next-line no-useless-constructor
   private constructor() {
     // nothing
   }
@@ -98,25 +95,25 @@ export class File {
   public static writeRaw(
     filename: string,
     contents: string,
-    allowReading = false
+    allowReading = false,
   ): File {
     PreloadGenClear();
     PreloadGenStart();
 
     if (allowReading) {
       Preload(
-        `\")\n//! beginusercode\nlocal o=''\nPreload=function(s)o=o..s end\nPreloadEnd=function()end\n//!endusercode\n//`
+        `\")\n//! beginusercode\nlocal o=''\nPreload=function(s)o=o..s end\nPreloadEnd=function()end\n//!endusercode\n//`,
       );
       contents = File.escape(contents);
     }
 
     for (let i = 0; i < contents.length / File.preloadLimit; i++) {
-      Preload(`${contents.substr(i * File.preloadLimit, File.preloadLimit)}`);
+      Preload(contents.substr(i * File.preloadLimit, File.preloadLimit));
     }
 
     if (allowReading) {
       Preload(
-        `\")\n//! beginusercode\nBlzSetAbilityIcon(${this.dummyAbility},o)\n//!endusercode\n//`
+        `\")\n//! beginusercode\nBlzSetAbilityIcon(${this.dummyAbility},o)\n//!endusercode\n//`,
       );
     }
 

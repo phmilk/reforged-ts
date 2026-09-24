@@ -15,7 +15,7 @@ describe("generate: reserved words", () => {
           "native Remove takes unit delete, integer default, boolean in returns nothing",
         ].join("\n"),
       },
-      [entry("common.j", "Remove", ["delete", "default?", "in?"])]
+      [entry("common.j", "Remove", ["delete", "default?", "in?"])],
     );
 
     expect(result.ok).toBe(true);
@@ -25,29 +25,35 @@ describe("generate: reserved words", () => {
         " * @param delete - unit",
         " * @param default - integer (32-bit)",
         " * @param in - boolean",
-      ].join("\n")
+      ].join("\n"),
     );
     expect(text).toContain(
-      "declare function Remove(delete_: unit, default_?: number, in_?: boolean): void;"
+      "declare function Remove(delete_: unit, default_?: number, in_?: boolean): void;",
     );
     expect(result.diagnostics).toEqual([]);
   });
 
   it("keeps an ordinary name that only contains a reserved word", async () => {
     const result = await run(
-      { "common.j": "native F takes integer newX, integer classic returns nothing\n" },
-      [entry("common.j", "F", ["newX", "classic"])]
+      {
+        "common.j":
+          "native F takes integer newX, integer classic returns nothing\n",
+      },
+      [entry("common.j", "F", ["newX", "classic"])],
     );
 
     expect(result.ok && result.files.get("3.0.0/common.j.d.ts")).toContain(
-      "declare function F(newX: number, classic: number): void;"
+      "declare function F(newX: number, classic: number): void;",
     );
   });
 
   it("fails on a Native named after a reserved word, naming it", async () => {
     const result = await run(
-      { "common.j": "type unit extends handle\nnative delete takes unit u returns nothing\n" },
-      [entry("common.j", "delete", ["u"])]
+      {
+        "common.j":
+          "type unit extends handle\nnative delete takes unit u returns nothing\n",
+      },
+      [entry("common.j", "delete", ["u"])],
     );
 
     expect(result.ok).toBe(false);
@@ -66,13 +72,16 @@ describe("generate: reserved words", () => {
 
   it("fails on a Blizzard.j function named after a reserved word", async () => {
     const result = await run(
-      { "blizzard.j": "function switch takes nothing returns nothing\nendfunction\n" },
-      [entry("blizzard.j", "switch")]
+      {
+        "blizzard.j":
+          "function switch takes nothing returns nothing\nendfunction\n",
+      },
+      [entry("blizzard.j", "switch")],
     );
 
     expect(result.ok).toBe(false);
     expect(result.diagnostics[0]?.message).toBe(
-      'blizzard.j:1: function "switch" is a TypeScript reserved word and cannot be declared'
+      'blizzard.j:1: function "switch" is a TypeScript reserved word and cannot be declared',
     );
   });
 
@@ -94,7 +103,7 @@ describe("generate: reserved words", () => {
           message: `common.j:2: type "${name}" is a TypeScript reserved word or a name the Typings already declare, and cannot be declared`,
         },
       ]);
-    }
+    },
   );
 });
 
@@ -112,7 +121,7 @@ describe("generate: names declared in two source files", () => {
         entry("common.j", "Shared", ["a"]),
         entry("common.ai", "AiOnly"),
         entry("common.ai", "Shared", ["a"]),
-      ]
+      ],
     );
 
     expect(result.ok).toBe(true);
@@ -130,7 +139,7 @@ describe("generate: names declared in two source files", () => {
     if (!result.ok) return;
     for (const path of ["3.0.0/common.j.d.ts", "3.0.0/common.ai.d.ts"]) {
       expect(result.files.get(path)).toContain(
-        "declare function Shared(a: number): void;"
+        "declare function Shared(a: number): void;",
       );
     }
   });

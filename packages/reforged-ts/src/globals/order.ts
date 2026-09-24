@@ -250,7 +250,6 @@ export const enum OrderId {
   Replenishmanaon = 852549,
   Replenishoff = 852544,
   Replenishon = 852543,
-  // eslint-disable-next-line camelcase
   Request_hero = 852239,
   Requestsacrifice = 852201,
   Restoration = 852202,

@@ -70,23 +70,23 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
 
   it("re-parents framehandle to agent", () => {
     expect(commonJ).toContain(
-      "declare interface framehandle extends agent { __framehandle: never }"
+      "declare interface framehandle extends agent { __framehandle: never }",
     );
   });
 
   it("types CreateUnit as returning unit | undefined", () => {
     expect(commonJ).toContain(
-      "declare function CreateUnit(id: player, unitid: number, x: number, y: number, face: number): unit | undefined;"
+      "declare function CreateUnit(id: player, unitid: number, x: number, y: number, face: number): unit | undefined;",
     );
   });
 
   it("gives Condition and Filter the boolean callback alias", () => {
     expect(commonJ).toContain("type boolcode = (this: void) => boolean;");
     expect(commonJ).toContain(
-      "declare function Condition(func: boolcode): conditionfunc;"
+      "declare function Condition(func: boolcode): conditionfunc;",
     );
     expect(commonJ).toContain(
-      "declare function Filter(func: boolcode): filterfunc;"
+      "declare function Filter(func: boolcode): filterfunc;",
     );
   });
 
@@ -99,7 +99,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
         " * @see {@link https://lep.duckdns.org/jassbot/doc/GetLocalPlayer}",
         " */",
         "declare function GetLocalPlayer(): player;",
-      ].join("\n")
+      ].join("\n"),
     );
     expect(count(commonJ, /^ \* @async$/)).toBe(56);
     expect(count(blizzardJ + commonAi, /^ \* @async$/)).toBe(0);
@@ -113,7 +113,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
 
   it("types bj_FORCE_PLAYER as a Record", () => {
     expect(blizzardJ).toContain(
-      "declare let bj_FORCE_PLAYER: Record<number, force | undefined>;"
+      "declare let bj_FORCE_PLAYER: Record<number, force | undefined>;",
     );
   });
 
@@ -123,7 +123,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
     expect(count(blizzardJ + commonAi, since)).toBe(0);
     expect(count(commonJ + blizzardJ + commonAi, /@patch /)).toBe(188);
     expect(commonJ).toMatch(
-      / \* @patch 3\.0\.0\.24268\n \* @see \{@link https:\/\/lep\.duckdns\.org\/jassbot\/doc\/BlzGetUnitAbilityCooldownPercent\}\n \*\/\ndeclare function BlzGetUnitAbilityCooldownPercent\(/
+      / \* @patch 3\.0\.0\.24268\n \* @see \{@link https:\/\/lep\.duckdns\.org\/jassbot\/doc\/BlzGetUnitAbilityCooldownPercent\}\n \*\/\ndeclare function BlzGetUnitAbilityCooldownPercent\(/,
     );
     // StartSoundEx predates 3.0.0 and only lacked a seeded record.
     expect(commonJ).toContain(
@@ -132,7 +132,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
         " * @see {@link https://lep.duckdns.org/jassbot/doc/StartSoundEx}",
         " */",
         "declare function StartSoundEx(soundHandle: sound, fadeIn: boolean): void;",
-      ].join("\n")
+      ].join("\n"),
     );
   });
 
@@ -163,17 +163,15 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
     const manifest = JSON.parse(result.files.get("3.0.0/manifest.json")!);
     const declared = [commonJ, blizzardJ, commonAi].reduce(
       (sum, text) => sum + count(text, FUNCTION) + count(text, GLOBAL),
-      0
+      0,
     );
     expect(manifest.patch).toBe("3.0.0.24268");
     expect(manifest.entries).toHaveLength(declared);
     expect(manifest.entries).toHaveLength(
-      1681 + 1738 + 1056 + 522 + 123 + 120 + 472
+      1681 + 1738 + 1056 + 522 + 123 + 120 + 472,
     );
     expect(
-      manifest.entries.find(
-        (e: { name: string }) => e.name === "CreateUnit"
-      )
+      manifest.entries.find((e: { name: string }) => e.name === "CreateUnit"),
     ).toEqual({
       name: "CreateUnit",
       source: "common.j",
@@ -192,7 +190,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
       deprecated: null,
     });
     expect(
-      manifest.entries.filter((e: { async?: boolean }) => e.async)
+      manifest.entries.filter((e: { async?: boolean }) => e.async),
     ).toHaveLength(56);
   });
 
@@ -200,7 +198,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
     for (const [path, text] of result.files) {
       expect(
         await readFile(join(packageRoot, path), "utf8"),
-        `${path} differs from the generated file; run typings:generate`
+        `${path} differs from the generated file; run typings:generate`,
       ).toBe(text);
     }
   });

@@ -164,25 +164,25 @@ export class Trigger extends Handle<trigger> {
 
   public registerEnterRegion(
     whichRegion: Region,
-    filter: boolexpr | (() => boolean) | undefined
+    filter: boolexpr | (() => boolean) | undefined,
   ) {
     return TriggerRegisterEnterRegion(
       this.handle,
       whichRegion.handle,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
   public registerFilterUnitEvent(
     whichUnit: Unit,
     whichEvent: unitevent,
-    filter: boolexpr | (() => boolean) | undefined
+    filter: boolexpr | (() => boolean) | undefined,
   ) {
     return TriggerRegisterFilterUnitEvent(
       this.handle,
       whichUnit.handle,
       whichEvent,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
@@ -193,59 +193,59 @@ export class Trigger extends Handle<trigger> {
   public registerGameStateEvent(
     whichState: gamestate,
     opcode: limitop,
-    limitval: number
+    limitval: number,
   ) {
     return TriggerRegisterGameStateEvent(
       this.handle,
       whichState,
       opcode,
-      limitval
+      limitval,
     );
   }
 
   public registerLeaveRegion(
     whichRegion: Region,
-    filter: boolexpr | (() => boolean) | undefined
+    filter: boolexpr | (() => boolean) | undefined,
   ) {
     return TriggerRegisterLeaveRegion(
       this.handle,
       whichRegion.handle,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
   public registerPlayerAllianceChange(
     whichPlayer: MapPlayer,
-    whichAlliance: alliancetype
+    whichAlliance: alliancetype,
   ) {
     return TriggerRegisterPlayerAllianceChange(
       this.handle,
       whichPlayer.handle,
-      whichAlliance
+      whichAlliance,
     );
   }
 
   public registerPlayerChatEvent(
     whichPlayer: MapPlayer,
     chatMessageToDetect: string,
-    exactMatchOnly: boolean
+    exactMatchOnly: boolean,
   ) {
     return TriggerRegisterPlayerChatEvent(
       this.handle,
       whichPlayer.handle,
       chatMessageToDetect,
-      exactMatchOnly
+      exactMatchOnly,
     );
   }
 
   public registerPlayerEvent(
     whichPlayer: MapPlayer,
-    whichPlayerEvent: playerevent
+    whichPlayerEvent: playerevent,
   ) {
     return TriggerRegisterPlayerEvent(
       this.handle,
       whichPlayer.handle,
-      whichPlayerEvent
+      whichPlayerEvent,
     );
   }
 
@@ -253,25 +253,25 @@ export class Trigger extends Handle<trigger> {
     whichPlayer: MapPlayer,
     whichKey: oskeytype,
     metaKey: number,
-    fireOnKeyDown: boolean
+    fireOnKeyDown: boolean,
   ) {
     return BlzTriggerRegisterPlayerKeyEvent(
       this.handle,
       whichPlayer.handle,
       whichKey,
       metaKey,
-      fireOnKeyDown
+      fireOnKeyDown,
     );
   }
 
   public registerPlayerMouseEvent(
     whichPlayer: MapPlayer,
-    whichMouseEvent: number
+    whichMouseEvent: number,
   ) {
     return TriggerRegisterPlayerMouseEventBJ(
       this.handle,
       whichPlayer.handle,
-      whichMouseEvent
+      whichMouseEvent,
     );
   }
 
@@ -279,40 +279,40 @@ export class Trigger extends Handle<trigger> {
     whichPlayer: MapPlayer,
     whichState: playerstate,
     opcode: limitop,
-    limitval: number
+    limitval: number,
   ) {
     return TriggerRegisterPlayerStateEvent(
       this.handle,
       whichPlayer.handle,
       whichState,
       opcode,
-      limitval
+      limitval,
     );
   }
 
   public registerPlayerSyncEvent(
     whichPlayer: MapPlayer,
     prefix: string,
-    fromServer: boolean
+    fromServer: boolean,
   ) {
     return BlzTriggerRegisterPlayerSyncEvent(
       this.handle,
       whichPlayer.handle,
       prefix,
-      fromServer
+      fromServer,
     );
   }
 
   public registerPlayerUnitEvent(
     whichPlayer: MapPlayer,
     whichPlayerUnitEvent: playerunitevent,
-    filter: boolexpr | (() => boolean) | undefined
+    filter: boolexpr | (() => boolean) | undefined,
   ) {
     return TriggerRegisterPlayerUnitEvent(
       this.handle,
       whichPlayer.handle,
       whichPlayerUnitEvent,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
@@ -341,13 +341,13 @@ export class Trigger extends Handle<trigger> {
   public registerUnitInRange(
     whichUnit: Unit,
     range: number,
-    filter: boolexpr | (() => boolean) | undefined
+    filter: boolexpr | (() => boolean) | undefined,
   ) {
     return TriggerRegisterUnitInRange(
       this.handle,
       whichUnit.handle,
       range,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
@@ -355,14 +355,14 @@ export class Trigger extends Handle<trigger> {
     whichUnit: Unit,
     whichState: unitstate,
     opcode: limitop,
-    limitval: number
+    limitval: number,
   ) {
     return TriggerRegisterUnitStateEvent(
       this.handle,
       whichUnit.handle,
       whichState,
       opcode,
-      limitval
+      limitval,
     );
   }
 
@@ -373,7 +373,7 @@ export class Trigger extends Handle<trigger> {
   public registerVariableEvent(
     varName: string,
     opcode: limitop,
-    limitval: number
+    limitval: number,
   ) {
     return TriggerRegisterVariableEvent(this.handle, varName, opcode, limitval);
   }

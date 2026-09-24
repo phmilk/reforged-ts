@@ -39,10 +39,7 @@ main = hookedMain;
 config = hookedConfig;
 
 type W3tsHookType =
-  | "main::before"
-  | "main::after"
-  | "config::before"
-  | "config::after";
+  "main::before" | "main::after" | "config::before" | "config::after";
 
 export enum W3TS_HOOK {
   MAIN_BEFORE = "main::before",
@@ -51,7 +48,7 @@ export enum W3TS_HOOK {
   CONFIG_AFTER = "config::after",
 }
 
-const entryPoints: { [key: string]: scriptHookSignature[] } = {
+const entryPoints: Record<string, scriptHookSignature[]> = {
   [W3TS_HOOK.MAIN_BEFORE]: hooksMainBefore,
   [W3TS_HOOK.MAIN_AFTER]: hooksMainAfter,
   [W3TS_HOOK.CONFIG_BEFORE]: hooksConfigBefore,
@@ -60,7 +57,7 @@ const entryPoints: { [key: string]: scriptHookSignature[] } = {
 
 export function addScriptHook(
   entryPoint: W3tsHookType,
-  hook: scriptHookSignature
+  hook: scriptHookSignature,
 ): boolean {
   if (!(entryPoint in entryPoints)) {
     return false;

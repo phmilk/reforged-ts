@@ -15,7 +15,7 @@ async function generateOk(...args: Parameters<typeof writeFixture>) {
   if (!result.ok) {
     throw new Error(
       "generation failed:\n" +
-        result.diagnostics.map((d) => d.message).join("\n")
+        result.diagnostics.map((d) => d.message).join("\n"),
     );
   }
   return result;
@@ -47,7 +47,7 @@ describe("generate: Overlay header facts", () => {
         " * @see {@link https://lep.duckdns.org/jassbot/doc/GetLocalPlayer}",
         " */",
         "declare function GetLocalPlayer(): player;",
-      ].join("\n")
+      ].join("\n"),
     );
   });
 
@@ -58,7 +58,7 @@ describe("generate: Overlay header facts", () => {
     });
     const absent = await commonJ(
       getLocalPlayer,
-      entry("common.j", "GetLocalPlayer")
+      entry("common.j", "GetLocalPlayer"),
     );
 
     expect(off).not.toContain("@async");
@@ -71,9 +71,7 @@ describe("generate: Overlay header facts", () => {
       deprecated: "Use {@link GetPlayer} instead.",
     });
 
-    expect(text).toContain(
-      " * @deprecated Use {@link GetPlayer} instead.\n"
-    );
+    expect(text).toContain(" * @deprecated Use {@link GetPlayer} instead.\n");
   });
 
   it("renders notes as @remarks, one comment line per text line", async () => {
@@ -88,7 +86,7 @@ describe("generate: Overlay header facts", () => {
         " *",
         " * Never branch game state on it.",
         " * @see",
-      ].join("\n")
+      ].join("\n"),
     );
   });
 
@@ -111,7 +109,7 @@ describe("generate: Overlay header facts", () => {
         notes: "A note.",
         since: "3.0.0.24268",
         origin: "war3-types-strict",
-      }
+      },
     );
 
     expect(text).toContain(
@@ -126,7 +124,7 @@ describe("generate: Overlay header facts", () => {
         " * @see {@link https://lep.duckdns.org/jassbot/doc/GetPlayer}",
         " */",
         "declare function GetPlayer(id: number): player;",
-      ].join("\n")
+      ].join("\n"),
     );
   });
 
@@ -137,7 +135,7 @@ describe("generate: Overlay header facts", () => {
     });
     const handWritten = await commonJ(
       getLocalPlayer,
-      entry("common.j", "GetLocalPlayer")
+      entry("common.j", "GetLocalPlayer"),
     );
 
     expect(seeded).toBe(handWritten);
@@ -163,7 +161,7 @@ describe("generate: Overlay header facts", () => {
           origin: "war3-types-strict",
         },
         entry("blizzard.j", "Helper"),
-      ]
+      ],
     );
 
     const standard = ["param", "returns", "deprecated", "remarks", "see"];
@@ -172,16 +170,21 @@ describe("generate: Overlay header facts", () => {
     const tags = new Set<string>();
     for (const text of result.files.values()) {
       // Every line of a header comment, the `@noSelfInFile` banner excepted.
-      const headers = text
-        .split("\n")
-        .filter((line) => line.startsWith(" *"));
+      const headers = text.split("\n").filter((line) => line.startsWith(" *"));
       for (const line of headers) {
-        for (const [, tag] of line.matchAll(/@(\w+)/g)) tags.add(tag!);
+        for (const [, tag] of line.matchAll(/@(\w+)/g)) tags.add(tag);
       }
     }
-    expect([...tags].sort()).toEqual(
-      ["async", "deprecated", "link", "param", "patch", "remarks", "returns", "see"]
-    );
+    expect([...tags].sort()).toEqual([
+      "async",
+      "deprecated",
+      "link",
+      "param",
+      "patch",
+      "remarks",
+      "returns",
+      "see",
+    ]);
     for (const tag of tags) {
       expect([...standard, ...custom, ...inline]).toContain(tag);
     }
@@ -196,23 +199,23 @@ describe("generate: parameter type override", () => {
 
   it("replaces the parameter's type in the signature and keeps the Jass type in the header", async () => {
     const overlay = entry("common.j", "Pick", ["a", "n", "b"]);
-    overlay.params[1]!.type = "0 | 1 | 2";
+    overlay.params[1].type = "0 | 1 | 2";
     const text = await commonJ(jass, overlay);
 
     expect(text).toContain(
-      "declare function Pick(a: unit, n: 0 | 1 | 2, b: unit): void;"
+      "declare function Pick(a: unit, n: 0 | 1 | 2, b: unit): void;",
     );
     expect(text).toContain(" * @param n - integer (32-bit)\n");
   });
 
   it("keeps nullability on an overridden parameter", async () => {
     const overlay = entry("common.j", "Pick", ["a?", "n", "b?"]);
-    overlay.params[0]!.type = "(this: void) => boolean";
-    overlay.params[2]!.type = "unit";
+    overlay.params[0].type = "(this: void) => boolean";
+    overlay.params[2].type = "unit";
     const text = await commonJ(jass, overlay);
 
     expect(text).toContain(
-      "declare function Pick(a: ((this: void) => boolean) | undefined, n: number, b?: unit): void;"
+      "declare function Pick(a: ((this: void) => boolean) | undefined, n: number, b?: unit): void;",
     );
   });
 });
@@ -229,7 +232,7 @@ describe("generate: boolean callback alias", () => {
 
   function overridden(name: string): OverlayEntryFixture {
     const overlay = entry("common.j", name, ["func"]);
-    overlay.params[0]!.type = "boolcode";
+    overlay.params[0].type = "boolcode";
     return overlay;
   }
 
@@ -237,7 +240,8 @@ describe("generate: boolean callback alias", () => {
     const result = await generateOk(
       {
         "common.j": jass,
-        "blizzard.j": "function Noop takes nothing returns nothing\nendfunction\n",
+        "blizzard.j":
+          "function Noop takes nothing returns nothing\nendfunction\n",
         "common.ai": "native AiNoop takes nothing returns nothing\n",
       },
       [
@@ -246,7 +250,7 @@ describe("generate: boolean callback alias", () => {
         entry("common.j", "TimerStart", ["handlerFunc"]),
         entry("blizzard.j", "Noop"),
         entry("common.ai", "AiNoop"),
-      ]
+      ],
     );
 
     const text = result.files.get("3.0.0/common.j.d.ts")!;
@@ -256,18 +260,18 @@ describe("generate: boolean callback alias", () => {
         "type code = (this: void) => void;",
         "type boolcode = (this: void) => boolean;",
         "",
-      ].join("\n")
+      ].join("\n"),
     );
     expect(text.split("type code =").length - 1).toBe(1);
     expect(text.split("type boolcode =").length - 1).toBe(1);
     expect(text).toContain(
-      "declare function Condition(func: boolcode): conditionfunc;"
+      "declare function Condition(func: boolcode): conditionfunc;",
     );
     expect(text).toContain(
-      "declare function Filter(func: boolcode): filterfunc;"
+      "declare function Filter(func: boolcode): filterfunc;",
     );
     expect(text).toContain(
-      "declare function TimerStart(handlerFunc: code): void;"
+      "declare function TimerStart(handlerFunc: code): void;",
     );
     expect(text).toContain(" * @param func - code\n");
     for (const other of ["3.0.0/blizzard.j.d.ts", "3.0.0/common.ai.d.ts"]) {
@@ -282,11 +286,11 @@ describe("generate: boolean callback alias", () => {
         "type conditionfunc extends boolexpr",
         "native Condition takes code func returns conditionfunc",
       ].join("\n"),
-      entry("common.j", "Condition", ["func"])
+      entry("common.j", "Condition", ["func"]),
     );
 
     expect(text).toContain(
-      "declare function Condition(func: code): conditionfunc;"
+      "declare function Condition(func: code): conditionfunc;",
     );
   });
 });
@@ -301,7 +305,10 @@ describe("generate: Overlay field validation", () => {
   }
 
   it("fails on an unknown field, naming the file and the field", async () => {
-    const result = await invalid({ ...entry("common.j", "A", ["x"]), asnyc: true });
+    const result = await invalid({
+      ...entry("common.j", "A", ["x"]),
+      asnyc: true,
+    });
 
     expect(result.ok).toBe(false);
     expect(result.diagnostics).toEqual([
@@ -324,7 +331,7 @@ describe("generate: Overlay field validation", () => {
 
     expect(result.ok).toBe(false);
     expect(result.diagnostics[0]?.message).toBe(
-      'common.j/functions/A.json: unknown field "params[0].typ"'
+      'common.j/functions/A.json: unknown field "params[0].typ"',
     );
   });
 
@@ -334,11 +341,22 @@ describe("generate: Overlay field validation", () => {
     ["a non-string notes", { notes: 3 }, "notes must be"],
     ["a since that is not a Build", { since: "3.0" }, "since must be"],
     ["an unknown origin", { origin: "jassdoc" }, "origin must be"],
-    ["a notes text that closes the comment", { notes: "a */ b" }, "notes must not"],
+    [
+      "a notes text that closes the comment",
+      { notes: "a */ b" },
+      "notes must not",
+    ],
     ["a notes text with a TSDoc tag", { notes: "see @note" }, "notes must not"],
-    ["a deprecated text with a TSDoc tag", { deprecated: "@internal" }, "deprecated must not"],
+    [
+      "a deprecated text with a TSDoc tag",
+      { deprecated: "@internal" },
+      "deprecated must not",
+    ],
   ])("fails on %s, naming the field", async (_case, patch, text) => {
-    const result = await invalid({ ...entry("common.j", "A", ["x"]), ...patch });
+    const result = await invalid({
+      ...entry("common.j", "A", ["x"]),
+      ...patch,
+    });
 
     expect(result.ok).toBe(false);
     expect(result.diagnostics[0]).toMatchObject({
@@ -346,7 +364,9 @@ describe("generate: Overlay field validation", () => {
       kind: "overlay-invalid",
       file: "common.j/functions/A.json",
     });
-    expect(result.diagnostics[0]?.message).toContain(`common.j/functions/A.json: ${text}`);
+    expect(result.diagnostics[0]?.message).toContain(
+      `common.j/functions/A.json: ${text}`,
+    );
   });
 
   it("fails on an empty or non-string parameter type override", async () => {
@@ -358,7 +378,7 @@ describe("generate: Overlay field validation", () => {
       });
 
       expect(result.diagnostics[0]?.message).toContain(
-        "common.j/functions/A.json: params[0].type must be"
+        "common.j/functions/A.json: params[0].type must be",
       );
     }
   });

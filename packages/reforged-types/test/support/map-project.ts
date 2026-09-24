@@ -6,7 +6,16 @@
  * from this package's installation.
  */
 import { execFileSync, execSync } from "node:child_process";
-import { cp, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from "node:fs/promises";
+import {
+  cp,
+  mkdir,
+  mkdtemp,
+  readFile,
+  realpath,
+  rm,
+  symlink,
+  writeFile,
+} from "node:fs/promises";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
@@ -37,7 +46,9 @@ export interface Workspace {
 
 /** Packs this package and installs it into a fresh temporary folder. */
 export async function createWorkspace(): Promise<Workspace> {
-  const root = await realpath(await mkdtemp(join(tmpdir(), "reforged-types-map-")));
+  const root = await realpath(
+    await mkdtemp(join(tmpdir(), "reforged-types-map-")),
+  );
   const tarball = pack(root);
   const installed = join(root, "node_modules", "reforged-types");
   await unpack(await readFile(tarball), installed);
@@ -69,9 +80,12 @@ function pack(destination: string): string {
       ? execFileSync(
           process.execPath,
           [execPath, "pack", "--json", "--pack-destination", destination],
-          options
+          options,
         )
-      : execSync(`pnpm pack --json --pack-destination "${destination}"`, options);
+      : execSync(
+          `pnpm pack --json --pack-destination "${destination}"`,
+          options,
+        );
   return (JSON.parse(output) as { filename: string }).filename;
 }
 
@@ -80,7 +94,7 @@ async function unpack(tarball: Buffer, into: string): Promise<void> {
   const archive = gunzipSync(tarball);
   const field = (header: Buffer, start: number, length: number) =>
     header.toString("utf8", start, start + length).replace(/\0.*$/s, "");
-  for (let offset = 0; offset + 512 <= archive.length; ) {
+  for (let offset = 0; offset + 512 <= archive.length;) {
     const header = archive.subarray(offset, offset + 512);
     if (header.every((byte) => byte === 0)) break;
     const prefix = field(header, 345, 155);
@@ -112,7 +126,7 @@ export interface MapProject {
 export async function createMapProject(
   workspace: Workspace,
   name: string,
-  types: string[]
+  types: string[],
 ): Promise<MapProject> {
   const dir = join(workspace.root, name);
   await cp(join(fixturesRoot, name), join(dir, "src"), { recursive: true });
@@ -151,9 +165,11 @@ export function typecheck(project: MapProject): {
     {
       ...ts.sys,
       onUnRecoverableConfigFileDiagnostic: (diagnostic) => {
-        throw new Error(ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"));
+        throw new Error(
+          ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"),
+        );
       },
-    }
+    },
   )!;
   const program = ts.createProgram({
     rootNames: config.fileNames,
@@ -171,8 +187,13 @@ export function locate(project: MapProject, diagnostic: ts.Diagnostic): string {
   if (diagnostic.file === undefined || diagnostic.start === undefined) {
     return `${code} ${ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")}`;
   }
-  const file = relative(project.dir, resolve(diagnostic.file.fileName)).replace(/\\/g, "/");
-  const { line } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+  const file = relative(project.dir, resolve(diagnostic.file.fileName)).replace(
+    /\\/g,
+    "/",
+  );
+  const { line } = diagnostic.file.getLineAndCharacterOfPosition(
+    diagnostic.start,
+  );
   return `${file}:${line + 1} ${code}`;
 }
 

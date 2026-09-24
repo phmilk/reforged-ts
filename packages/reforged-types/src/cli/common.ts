@@ -44,7 +44,7 @@ export const FOLDER_OPTIONS =
  * arguments. `undefined` when an option is unknown or lacks its value.
  */
 export function parseArgs(
-  args: readonly string[]
+  args: readonly string[],
 ): { folders: Folders; positional: string[] } | undefined {
   const folders: Folders = {
     vendorDir: join(packageRoot, "vendor"),
@@ -53,7 +53,7 @@ export function parseArgs(
   };
   const positional: string[] = [];
   for (let i = 0; i < args.length; i++) {
-    const arg = args[i]!;
+    const arg = args[i];
     if (!arg.startsWith("--")) {
       positional.push(arg);
       continue;
@@ -87,7 +87,7 @@ export async function vendoredPatchDirs(vendorDir: string): Promise<string[]> {
 /** Writes each file under `outDir` at its `/`-separated output path. */
 export async function writeFiles(
   outDir: string,
-  files: ReadonlyMap<string, string>
+  files: ReadonlyMap<string, string>,
 ): Promise<void> {
   for (const [path, text] of files) {
     const target = join(outDir, path);

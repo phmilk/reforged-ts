@@ -4,7 +4,7 @@ import { Handle } from "./handle";
 import { Widget } from "./widget";
 
 export class Destructable extends Widget {
-  public declare readonly handle: destructable;
+  declare public readonly handle: destructable;
 
   public readonly skin?: number;
 
@@ -16,7 +16,7 @@ export class Destructable extends Widget {
     z: number,
     face: number,
     scale: number,
-    variation: number
+    variation: number,
   ) {
     if (Handle.initFromHandle()) {
       super();
@@ -30,7 +30,7 @@ export class Destructable extends Widget {
       z,
       face,
       scale,
-      variation
+      variation,
     );
 
     if (handle === undefined) {
@@ -57,7 +57,7 @@ export class Destructable extends Widget {
     face?: number,
     scale?: number,
     variation?: number,
-    skinId?: number
+    skinId?: number,
   ): Destructable | undefined {
     if (face === undefined) face = 0;
     if (scale === undefined) scale = 1;
@@ -73,7 +73,7 @@ export class Destructable extends Widget {
         face,
         scale,
         variation,
-        skinId
+        skinId,
       );
     } else {
       handle = CreateDestructable(objectId, x, y, face, scale, variation);
@@ -112,7 +112,7 @@ export class Destructable extends Widget {
     face?: number,
     scale?: number,
     variation?: number,
-    skinId?: number
+    skinId?: number,
   ): Destructable | undefined {
     if (face === undefined) face = 0;
     if (scale === undefined) scale = 1;
@@ -128,7 +128,7 @@ export class Destructable extends Widget {
         face,
         scale,
         variation,
-        skinId
+        skinId,
       );
     } else {
       handle = CreateDestructableZ(objectId, x, y, z, face, scale, variation);
@@ -240,7 +240,7 @@ export class Destructable extends Widget {
   }
 
   public static override fromHandle(
-    handle: destructable | undefined
+    handle: destructable | undefined,
   ): Destructable | undefined {
     return handle ? this.getObject(handle) : undefined;
   }

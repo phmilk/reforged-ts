@@ -67,7 +67,7 @@ export function kindFolder(declaration: Declaration): KindFolder {
 export function entryPath(
   source: SourceName,
   folder: KindFolder,
-  name: string
+  name: string,
 ): string {
   return `${source}/${folder}/${name}.json`;
 }
@@ -106,7 +106,13 @@ export async function loadOverlay(overlayDir: string): Promise<Overlay> {
           continue;
         }
         const text = await readFile(join(overlayDir, file), "utf8");
-        const result = readEntry(FOLDER_FIELDS[folder], file, source, name, text);
+        const result = readEntry(
+          FOLDER_FIELDS[folder],
+          file,
+          source,
+          name,
+          text,
+        );
         if (typeof result === "string") {
           overlay.rejected.add(file);
           overlay.diagnostics.push({
@@ -148,13 +154,13 @@ function caseClashes(fileNames: readonly string[]): Map<string, string[]> {
 function caseClash(
   source: SourceName,
   folder: KindFolder,
-  group: readonly string[]
+  group: readonly string[],
 ): Diagnostic {
   const files = group.map((fileName) => `${source}/${folder}/${fileName}`);
   return {
     severity: "error",
     kind: "overlay-invalid",
-    file: files[0]!,
+    file: files[0],
     message:
       `${files.join(", ")}: entry file names differ only by case, ` +
       "which a case-insensitive file system cannot hold",
@@ -167,7 +173,7 @@ function caseClash(
  */
 async function strayFiles(
   overlayDir: string,
-  source: SourceName
+  source: SourceName,
 ): Promise<Diagnostic[]> {
   const folder = join(overlayDir, source);
   if (!(await isDirectory(folder))) return [];
@@ -184,7 +190,7 @@ async function strayFiles(
       kind: "overlay-invalid",
       file,
       message: `${file}: not an entry location; entries live in ${source}/${KIND_FOLDERS.join(
-        `, ${source}/`
+        `, ${source}/`,
       )}`,
     });
   }
@@ -199,7 +205,7 @@ class Problem {
 /** A field reader returns the value, or the problem. */
 type Reader<T> = (
   value: unknown,
-  expected: { source: SourceName; name: string }
+  expected: { source: SourceName; name: string },
 ) => T | Problem;
 
 const FIELDS = {
@@ -208,16 +214,16 @@ const FIELDS = {
       ? expected.name
       : new Problem(
           `name must be "${expected.name}" (the file name), found ${show(
-            value
-          )}`
+            value,
+          )}`,
         ),
   source: (value, expected) =>
     value === expected.source
       ? expected.source
       : new Problem(
           `source must be "${expected.source}" (the folder), found ${show(
-            value
-          )}`
+            value,
+          )}`,
         ),
   returns: (value) => {
     if (!isObject(value) || typeof value.nullable !== "boolean") {
@@ -243,8 +249,8 @@ const FIELDS = {
         if (typeof param.type !== "string" || param.type.trim() === "") {
           return new Problem(
             `${field}.type must be non-empty TypeScript type text, found ${show(
-              param.type
-            )}`
+              param.type,
+            )}`,
           );
         }
         read.type = param.type;
@@ -264,14 +270,14 @@ const FIELDS = {
       ? value
       : new Problem(
           `since must be a Patch build such as "3.0.0.24268", found ${show(
-            value
-          )}`
+            value,
+          )}`,
         ),
   origin: (value) =>
     value === undefined || value === SEED_ORIGIN
       ? value
       : new Problem(
-          `origin must be "${SEED_ORIGIN}" or absent, found ${show(value)}`
+          `origin must be "${SEED_ORIGIN}" or absent, found ${show(value)}`,
         ),
 } satisfies {
   [K in keyof Omit<FunctionEntry, "file">]: Reader<FunctionEntry[K]>;
@@ -316,7 +322,7 @@ function readEntry(
   file: string,
   source: SourceName,
   name: string,
-  text: string
+  text: string,
 ): FunctionEntry | GlobalEntry | TypeEntry | string {
   let json: unknown;
   try {
@@ -355,7 +361,7 @@ function docText(field: string, value: unknown): string | undefined | Problem {
   }
   if (value.replace(/\{@link\s[^}]*\}/g, "").includes("@")) {
     return new Problem(
-      `${field} must not contain "@" outside {@link ...}, which would start a TSDoc tag`
+      `${field} must not contain "@" outside {@link ...}, which would start a TSDoc tag`,
     );
   }
   return value;
@@ -364,7 +370,7 @@ function docText(field: string, value: unknown): string | undefined | Problem {
 /** The first key of `object` that is not in `known`. */
 function unknownField(
   object: Record<string, unknown>,
-  known: readonly string[]
+  known: readonly string[],
 ): string | undefined {
   return Object.keys(object).find((key) => !known.includes(key));
 }

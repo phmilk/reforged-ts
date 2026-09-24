@@ -57,9 +57,7 @@ export interface GlobalDeclaration extends Located {
 }
 
 export type Declaration =
-  | TypeDeclaration
-  | FunctionDeclaration
-  | GlobalDeclaration;
+  TypeDeclaration | FunctionDeclaration | GlobalDeclaration;
 
 /**
  * The words of a global's Jass form before its name: `constant`, the type
@@ -68,7 +66,7 @@ export type Declaration =
  */
 export function jassGlobalForm(
   global: GlobalDeclaration,
-  type: string = global.type
+  type: string = global.type,
 ): string {
   const words = [
     ...(global.constant ? ["constant"] : []),

@@ -28,7 +28,7 @@ export async function verifyPatchDir(patchDir: string): Promise<VerifyResult> {
   const provenancePath = join(patchDir, PROVENANCE_FILE);
   const provenance = parseProvenance(
     await readFile(provenancePath, "utf8"),
-    provenancePath
+    provenancePath,
   );
   const problems: string[] = [];
   for (const name of SOURCES) {
@@ -43,12 +43,12 @@ export async function verifyPatchDir(patchDir: string): Promise<VerifyResult> {
     const actual = sha256(bytes);
     if (actual !== expected.sha256) {
       problems.push(
-        `${name}: sha256 ${actual} does not match recorded ${expected.sha256}`
+        `${name}: sha256 ${actual} does not match recorded ${expected.sha256}`,
       );
     }
     if (bytes.byteLength !== expected.bytes) {
       problems.push(
-        `${name}: ${bytes.byteLength} bytes, recorded ${expected.bytes}`
+        `${name}: ${bytes.byteLength} bytes, recorded ${expected.bytes}`,
       );
     }
   }

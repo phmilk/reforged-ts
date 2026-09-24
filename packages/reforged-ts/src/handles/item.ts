@@ -6,7 +6,7 @@ import { Point } from "./point";
 import { Widget } from "./widget";
 
 export class Item extends Widget {
-  public declare readonly handle: item;
+  declare public readonly handle: item;
 
   /**
    * @deprecated use `Item.create` instead.
@@ -44,7 +44,7 @@ export class Item extends Widget {
     itemId: number,
     x: number,
     y: number,
-    skinId?: number
+    skinId?: number,
   ): Item | undefined {
     const handle =
       skinId === undefined
@@ -217,7 +217,8 @@ export class Item extends Widget {
   }
 
   public getField(
-    field: itembooleanfield | itemintegerfield | itemrealfield | itemstringfield
+    field:
+      itembooleanfield | itemintegerfield | itemrealfield | itemstringfield,
   ) {
     const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
 
@@ -265,11 +266,8 @@ export class Item extends Widget {
 
   public setField(
     field:
-      | itembooleanfield
-      | itemintegerfield
-      | itemrealfield
-      | itemstringfield,
-    value: boolean | number | string
+      itembooleanfield | itemintegerfield | itemrealfield | itemstringfield,
+    value: boolean | number | string,
   ) {
     const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
 
@@ -277,14 +275,14 @@ export class Item extends Widget {
       return BlzSetItemBooleanField(
         this.handle,
         field as itembooleanfield,
-        value
+        value,
       );
     }
     if (fieldType === "unitintegerfield" && typeof value === "number") {
       return BlzSetItemIntegerField(
         this.handle,
         field as itemintegerfield,
-        value
+        value,
       );
     }
     if (fieldType === "unitrealfield" && typeof value === "number") {
@@ -294,7 +292,7 @@ export class Item extends Widget {
       return BlzSetItemStringField(
         this.handle,
         field as itemstringfield,
-        value
+        value,
       );
     }
 
@@ -318,7 +316,7 @@ export class Item extends Widget {
   }
 
   public static override fromHandle(
-    handle: item | undefined
+    handle: item | undefined,
   ): Item | undefined {
     return handle ? this.getObject(handle) : undefined;
   }

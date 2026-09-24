@@ -12,7 +12,7 @@ import { Sound } from "./sound";
 import { Widget } from "./widget";
 
 export class Unit extends Widget {
-  public declare readonly handle: unit;
+  declare public readonly handle: unit;
 
   /**
    * @deprecated use `Unit.create` instead.
@@ -29,7 +29,7 @@ export class Unit extends Widget {
     x: number,
     y: number,
     face?: number,
-    skinId?: number
+    skinId?: number,
   ) {
     if (Handle.initFromHandle() === true) {
       super();
@@ -64,7 +64,7 @@ export class Unit extends Widget {
     x: number,
     y: number,
     face?: number,
-    skinId?: number
+    skinId?: number,
   ): Unit | undefined {
     if (face === undefined) face = bj_UNIT_FACING;
     const handle =
@@ -291,9 +291,7 @@ export class Unit extends Widget {
   }
 
   public get owner(): MapPlayer {
-    return MapPlayer.fromHandle(
-      GetOwningPlayer(this.handle) as player
-    ) as MapPlayer;
+    return MapPlayer.fromHandle(GetOwningPlayer(this.handle))!;
   }
 
   /**
@@ -317,7 +315,7 @@ export class Unit extends Widget {
    * @deprecated use getPoint/setPoint instead.
    */
   public get point() {
-    return Point.fromHandle(GetUnitLoc(this.handle) as location) as Point;
+    return Point.fromHandle(GetUnitLoc(this.handle))!;
   }
 
   public set point(whichPoint: Point) {
@@ -555,7 +553,7 @@ export class Unit extends Widget {
   public addItemToStock(
     itemId: number,
     currentStock: number,
-    stockMax: number
+    stockMax: number,
   ) {
     AddItemToStock(this.handle, itemId, currentStock, stockMax);
   }
@@ -584,7 +582,7 @@ export class Unit extends Widget {
   public addUnitToStock(
     unitId: number,
     currentStock: number,
-    stockMax: number
+    stockMax: number,
   ) {
     AddUnitToStock(this.handle, unitId, currentStock, stockMax);
   }
@@ -612,7 +610,7 @@ export class Unit extends Widget {
     physical: boolean,
     timedLife: boolean,
     aura: boolean,
-    autoDispel: boolean
+    autoDispel: boolean,
   ) {
     return UnitCountBuffsEx(
       this.handle,
@@ -622,7 +620,7 @@ export class Unit extends Widget {
       physical,
       timedLife,
       aura,
-      autoDispel
+      autoDispel,
     );
   }
 
@@ -636,7 +634,7 @@ export class Unit extends Widget {
     ranged: boolean,
     attackType: attacktype,
     damageType: damagetype,
-    weaponType: weapontype
+    weaponType: weapontype,
   ) {
     return UnitDamagePoint(
       this.handle,
@@ -649,7 +647,7 @@ export class Unit extends Widget {
       ranged,
       attackType,
       damageType,
-      weaponType
+      weaponType,
     );
   }
 
@@ -672,7 +670,7 @@ export class Unit extends Widget {
     ranged: boolean,
     attackType: attacktype,
     damageType: damagetype,
-    weaponType: weapontype
+    weaponType: weapontype,
   ) {
     return UnitDamageTarget(
       this.handle,
@@ -682,7 +680,7 @@ export class Unit extends Widget {
       ranged,
       attackType,
       damageType,
-      weaponType
+      weaponType,
     );
   }
 
@@ -716,7 +714,7 @@ export class Unit extends Widget {
 
   public dropItemTarget(
     whichItem: Item,
-    target: Widget /* | Unit | Item | Destructable */
+    target: Widget /* | Unit | Item | Destructable */,
   ) {
     return UnitDropItemTarget(this.handle, whichItem.handle, target.handle);
   }
@@ -774,7 +772,8 @@ export class Unit extends Widget {
   }
 
   public getField(
-    field: unitbooleanfield | unitintegerfield | unitrealfield | unitstringfield
+    field:
+      unitbooleanfield | unitintegerfield | unitrealfield | unitstringfield,
   ) {
     const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
 
@@ -839,7 +838,7 @@ export class Unit extends Widget {
     physical: boolean,
     timedLife: boolean,
     aura: boolean,
-    autoDispel: boolean
+    autoDispel: boolean,
   ) {
     return UnitHasBuffsEx(
       this.handle,
@@ -849,7 +848,7 @@ export class Unit extends Widget {
       physical,
       timedLife,
       aura,
-      autoDispel
+      autoDispel,
     );
   }
 
@@ -968,7 +967,7 @@ export class Unit extends Widget {
     order: string | OrderId,
     x: number,
     y: number,
-    instantTargetWidget: Widget
+    instantTargetWidget: Widget,
   ) {
     return typeof order === "string"
       ? IssueInstantPointOrder(
@@ -976,34 +975,34 @@ export class Unit extends Widget {
           order,
           x,
           y,
-          instantTargetWidget.handle
+          instantTargetWidget.handle,
         )
       : IssueInstantPointOrderById(
           this.handle,
           order,
           x,
           y,
-          instantTargetWidget.handle
+          instantTargetWidget.handle,
         );
   }
 
   public issueInstantTargetOrder(
     order: string | OrderId,
     targetWidget: Widget,
-    instantTargetWidget: Widget
+    instantTargetWidget: Widget,
   ) {
     return typeof order === "string"
       ? IssueInstantTargetOrder(
           this.handle,
           order,
           targetWidget.handle,
-          instantTargetWidget.handle
+          instantTargetWidget.handle,
         )
       : IssueInstantTargetOrderById(
           this.handle,
           order,
           targetWidget.handle,
-          instantTargetWidget.handle
+          instantTargetWidget.handle,
         );
   }
 
@@ -1081,7 +1080,7 @@ export class Unit extends Widget {
     lookAtTarget: Unit,
     offsetX: number,
     offsetY: number,
-    offsetZ: number
+    offsetZ: number,
   ) {
     SetUnitLookAt(
       this.handle,
@@ -1089,7 +1088,7 @@ export class Unit extends Widget {
       lookAtTarget.handle,
       offsetX,
       offsetY,
-      offsetZ
+      offsetZ,
     );
   }
 
@@ -1135,7 +1134,7 @@ export class Unit extends Widget {
     physical: boolean,
     timedLife: boolean,
     aura: boolean,
-    autoDispel: boolean
+    autoDispel: boolean,
   ) {
     UnitRemoveBuffsEx(
       this.handle,
@@ -1145,7 +1144,7 @@ export class Unit extends Widget {
       physical,
       timedLife,
       aura,
-      autoDispel
+      autoDispel,
     );
   }
 
@@ -1279,11 +1278,8 @@ export class Unit extends Widget {
 
   public setField(
     field:
-      | unitbooleanfield
-      | unitintegerfield
-      | unitrealfield
-      | unitstringfield,
-    value: boolean | number | string
+      unitbooleanfield | unitintegerfield | unitrealfield | unitstringfield,
+    value: boolean | number | string,
   ) {
     const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
 
@@ -1291,14 +1287,14 @@ export class Unit extends Widget {
       return BlzSetUnitBooleanField(
         this.handle,
         field as unitbooleanfield,
-        value
+        value,
       );
     }
     if (fieldType === "unitintegerfield" && typeof value === "number") {
       return BlzSetUnitIntegerField(
         this.handle,
         field as unitintegerfield,
-        value
+        value,
       );
     }
     if (fieldType === "unitrealfield" && typeof value === "number") {
@@ -1308,7 +1304,7 @@ export class Unit extends Widget {
       return BlzSetUnitStringField(
         this.handle,
         field as unitstringfield,
-        value
+        value,
       );
     }
 
@@ -1425,7 +1421,7 @@ export class Unit extends Widget {
     red: number,
     green: number,
     blue: number,
-    alpha: number
+    alpha: number,
   ) {
     SetUnitVertexColor(this.handle, red, green, blue, alpha);
   }
@@ -1503,7 +1499,7 @@ export class Unit extends Widget {
   }
 
   public static override fromHandle(
-    handle: unit | undefined
+    handle: unit | undefined,
   ): Unit | undefined {
     return handle ? this.getObject(handle) : undefined;
   }

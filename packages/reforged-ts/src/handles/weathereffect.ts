@@ -28,7 +28,7 @@ export class WeatherEffect extends Handle<weathereffect> {
    */
   public static create(
     where: Rectangle,
-    effectID: number
+    effectID: number,
   ): WeatherEffect | undefined {
     const handle = AddWeatherEffect(where.handle, effectID);
     if (handle) {

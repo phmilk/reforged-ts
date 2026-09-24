@@ -1,7 +1,7 @@
 /** @noSelfInFile */
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const map: WeakMap<handle, any> = new WeakMap<handle, any>();
+const map: WeakMap<handle, any> = new WeakMap<handle>();
 
 export class Handle<T extends handle> {
   public readonly handle: T;

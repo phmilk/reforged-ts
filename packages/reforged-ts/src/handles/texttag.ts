@@ -81,7 +81,7 @@ export class TextTag extends Handle<texttag> {
     const vel = (speed * 0.071) / 128;
     this.setVelocity(
       vel * Cos(angle * bj_DEGTORAD),
-      vel * Sin(angle * bj_DEGTORAD)
+      vel * Sin(angle * bj_DEGTORAD),
     );
   }
 

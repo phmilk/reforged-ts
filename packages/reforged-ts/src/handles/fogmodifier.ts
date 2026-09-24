@@ -24,7 +24,7 @@ export class FogModifier extends Handle<fogmodifier> {
     centerY: number,
     radius: number,
     useSharedVision: boolean,
-    afterUnits: boolean
+    afterUnits: boolean,
   ) {
     if (Handle.initFromHandle()) {
       super();
@@ -38,7 +38,7 @@ export class FogModifier extends Handle<fogmodifier> {
       centerY,
       radius,
       useSharedVision,
-      afterUnits
+      afterUnits,
     );
 
     if (handle === undefined) {
@@ -66,7 +66,7 @@ export class FogModifier extends Handle<fogmodifier> {
     centerY: number,
     radius: number,
     useSharedVision: boolean,
-    afterUnits: boolean
+    afterUnits: boolean,
   ): FogModifier | undefined {
     const handle = CreateFogModifierRadius(
       forWhichPlayer.handle,
@@ -75,7 +75,7 @@ export class FogModifier extends Handle<fogmodifier> {
       centerY,
       radius,
       useSharedVision,
-      afterUnits
+      afterUnits,
     );
 
     if (handle) {
@@ -103,7 +103,7 @@ export class FogModifier extends Handle<fogmodifier> {
   }
 
   public static fromHandle(
-    handle: fogmodifier | undefined
+    handle: fogmodifier | undefined,
   ): FogModifier | undefined {
     return handle ? this.getObject(handle) : undefined;
   }
@@ -113,7 +113,7 @@ export class FogModifier extends Handle<fogmodifier> {
     whichState: fogstate,
     where: Rectangle,
     useSharedVision: boolean,
-    afterUnits: boolean
+    afterUnits: boolean,
   ) {
     return this.fromHandle(
       CreateFogModifierRect(
@@ -121,8 +121,8 @@ export class FogModifier extends Handle<fogmodifier> {
         whichState,
         where.handle,
         useSharedVision,
-        afterUnits
-      )
+        afterUnits,
+      ),
     );
   }
 }

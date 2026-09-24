@@ -14,7 +14,7 @@ export function formatChecklist(diagnostics: readonly Diagnostic[]): string {
     if (items.length === 0) continue;
     sections.push(
       `${title} (${items.length}):\n` +
-        items.map((d) => `- [ ] ${d.message}\n`).join("")
+        items.map((d) => `- [ ] ${d.message}\n`).join(""),
     );
   }
   return sections.join("\n");

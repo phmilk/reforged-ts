@@ -43,7 +43,7 @@ class SyncIncomingPacket {
   public constructor(prefix: string, data: string) {
     const isChunk = prefix === SYNC_PREFIX_CHUNK;
     const header = base64Decode(
-      isChunk ? data.substr(0, 10) : data.substr(0, 5)
+      isChunk ? data.substr(0, 10) : data.substr(0, 5),
     );
     const reader = new BinaryReader(header);
     const id = reader.readUInt16();
@@ -67,7 +67,7 @@ class SyncOutgoingPacket {
     req: SyncRequest,
     data: string,
     chunk = -1,
-    totalChunks = 0
+    totalChunks = 0,
   ) {
     this.req = req;
     this.data = data;
@@ -228,8 +228,8 @@ export class SyncRequest {
             this,
             data.substr(i * SYNC_MAX_CHUNK_SIZE, SYNC_MAX_CHUNK_SIZE),
             i,
-            chunks
-          )
+            chunks,
+          ),
         );
       }
     }
@@ -248,7 +248,7 @@ export class SyncRequest {
               status: SyncStatus.Timeout,
               time: this.startTime,
             },
-            this
+            this,
           );
         }
       });
@@ -349,7 +349,7 @@ export class SyncRequest {
         packet.req.status = SyncStatus.Success;
         packet.req.onResponse(
           { data, status, time: getElapsedTime() },
-          packet.req
+          packet.req,
         );
       }
     }

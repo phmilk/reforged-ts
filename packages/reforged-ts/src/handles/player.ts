@@ -127,12 +127,12 @@ export class MapPlayer extends Handle<player> {
 
   public compareAlliance(
     otherPlayer: MapPlayer,
-    whichAllianceSetting: alliancetype
+    whichAllianceSetting: alliancetype,
   ) {
     return GetPlayerAlliance(
       this.handle,
       otherPlayer.handle,
-      whichAllianceSetting
+      whichAllianceSetting,
     );
   }
 
@@ -195,13 +195,13 @@ export class MapPlayer extends Handle<player> {
   public getUnitCountByType(
     unitName: string,
     includeIncomplete: boolean,
-    includeUpgrades: boolean
+    includeUpgrades: boolean,
   ) {
     return GetPlayerTypedUnitCount(
       this.handle,
       unitName,
       includeIncomplete,
-      includeUpgrades
+      includeUpgrades,
     );
   }
 
@@ -260,13 +260,13 @@ export class MapPlayer extends Handle<player> {
   public setAlliance(
     otherPlayer: MapPlayer,
     whichAllianceSetting: alliancetype,
-    value: boolean
+    value: boolean,
   ) {
     SetPlayerAlliance(
       this.handle,
       otherPlayer.handle,
       whichAllianceSetting,
-      value
+      value,
     );
   }
 
@@ -281,7 +281,7 @@ export class MapPlayer extends Handle<player> {
   public setTaxRate(
     otherPlayer: MapPlayer,
     whichResource: playerstate,
-    rate: number
+    rate: number,
   ) {
     SetPlayerTaxRate(this.handle, otherPlayer.handle, whichResource, rate);
   }
@@ -328,6 +328,6 @@ export class MapPlayer extends Handle<player> {
         print("$$$$$$$$$ LOCAL PLAYER IS NULL. TELL ME");
       }
     }
-    return this.fromHandle(pl) as MapPlayer;
+    return this.fromHandle(pl)!;
   }
 }

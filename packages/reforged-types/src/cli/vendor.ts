@@ -20,7 +20,7 @@ const USAGE =
 export async function main(
   args: readonly string[],
   output: Output,
-  fetcher: Fetcher = httpFetcher
+  fetcher: Fetcher = httpFetcher,
 ): Promise<number> {
   const [tag] = args;
   if (!tag || args.length > 1) {
@@ -41,9 +41,9 @@ export async function main(
           .map(
             ([name, file]) =>
               `  ${name.padEnd(10)} ${String(file.bytes).padStart(8)} bytes` +
-              `  sha256 ${file.sha256}\n`
+              `  sha256 ${file.sha256}\n`,
           )
-          .join("")
+          .join(""),
     );
   } catch (error) {
     output.stderr(`vendor failed: ${(error as Error).message}\n`);

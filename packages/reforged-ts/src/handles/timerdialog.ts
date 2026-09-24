@@ -65,7 +65,7 @@ export class TimerDialog extends Handle<timerdialog> {
     red: number,
     green: number,
     blue: number,
-    alpha: number
+    alpha: number,
   ) {
     TimerDialogSetTitleColor(this.handle, red, green, blue, alpha);
   }
@@ -82,7 +82,7 @@ export class TimerDialog extends Handle<timerdialog> {
   }
 
   public static fromHandle(
-    handle: timerdialog | undefined
+    handle: timerdialog | undefined,
   ): TimerDialog | undefined {
     return handle ? this.getObject(handle) : undefined;
   }

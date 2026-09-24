@@ -23,7 +23,7 @@ export class Rectangle extends Handle<rect> {
     minX: number,
     minY: number,
     maxX: number,
-    maxY: number
+    maxY: number,
   ): Rectangle {
     const handle = Rect(minX, minY, maxX, maxY);
     const obj = this.getObject(handle) as Rectangle;
@@ -64,12 +64,12 @@ export class Rectangle extends Handle<rect> {
 
   public enumDestructables(
     filter: boolexpr | (() => boolean),
-    actionFunc: () => void
+    actionFunc: () => void,
   ) {
     EnumDestructablesInRect(
       this.handle,
       typeof filter === "function" ? Filter(filter) : filter,
-      actionFunc
+      actionFunc,
     );
   }
 
@@ -77,7 +77,7 @@ export class Rectangle extends Handle<rect> {
     EnumItemsInRect(
       this.handle,
       typeof filter === "function" ? Filter(filter) : filter,
-      actionFunc
+      actionFunc,
     );
   }
 

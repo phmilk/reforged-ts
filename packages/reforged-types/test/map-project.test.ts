@@ -56,27 +56,33 @@ describe("a Map project with the Template's types", () => {
       expect(name.startsWith(normalize(workspace.installed) + "/")).toBe(true);
       expect(name.startsWith(normalize(packageRoot) + "/")).toBe(false);
     }
-    expect(typings.map((name) => name.slice(normalize(workspace.installed).length))).toEqual(
+    expect(
+      typings.map((name) => name.slice(normalize(workspace.installed).length)),
+    ).toEqual(
       expect.arrayContaining([
         "/3.0.0.d.ts",
         "/lua-runtime.d.ts",
         "/3.0.0/common.j.d.ts",
         "/3.0.0/blizzard.j.d.ts",
-      ])
+      ]),
     );
-    expect(typings).not.toContain(normalize(join(workspace.installed, "3.0.0", "common.ai.d.ts")));
+    expect(typings).not.toContain(
+      normalize(join(workspace.installed, "3.0.0", "common.ai.d.ts")),
+    );
   });
 
   it("gets lua-types as a dependency of the installed package", async () => {
     const manifest = JSON.parse(
-      await readFile(join(workspace.installed, "package.json"), "utf8")
+      await readFile(join(workspace.installed, "package.json"), "utf8"),
     ) as { dependencies?: Record<string, string> };
 
     expect(Object.keys(manifest.dependencies ?? {})).toContain("lua-types");
   });
 
   it("type-checks handle types, omitted optional parameters, Filter and bj_ arrays", () => {
-    expect(diagnostics.filter((d) => d.startsWith("src/handles.ts"))).toEqual([]);
+    expect(diagnostics.filter((d) => d.startsWith("src/handles.ts"))).toEqual(
+      [],
+    );
   });
 
   it("reports exactly the negative fixtures' errors, by code and line", () => {
@@ -112,12 +118,18 @@ describe("a Map project compiled with typescript-to-lua for Lua 5.3", () => {
     const project = await createMapProject(workspace, "lua", TEMPLATE_TYPES);
     const emitted = new Map<string, string>();
 
-    const result = tstl.transpileProject(project.tsconfig, {}, (fileName, text) => {
-      emitted.set(normalize(fileName), text);
-    });
+    const result = tstl.transpileProject(
+      project.tsconfig,
+      {},
+      (fileName, text) => {
+        emitted.set(normalize(fileName), text);
+      },
+    );
 
     expect(result.diagnostics.map((d) => locate(project, d))).toEqual([]);
-    const emittedLua = emitted.get(normalize(join(project.dir, "dist", "callbacks.lua")));
+    const emittedLua = emitted.get(
+      normalize(join(project.dir, "dist", "callbacks.lua")),
+    );
     expect(emittedLua).toBeDefined();
     // One space for every run of whitespace: the assertions below do not
     // depend on how typescript-to-lua breaks long calls over lines.
@@ -130,9 +142,11 @@ describe("a Map project compiled with typescript-to-lua for Lua 5.3", () => {
 
   it("emits the callbacks passed to TimerStart and Filter without a self parameter", () => {
     expect(lua).toContain(
-      "TimerStart( ticker, 0.03, true, function() PauseTimer(ticker) end )"
+      "TimerStart( ticker, 0.03, true, function() PauseTimer(ticker) end )",
     );
-    expect(lua).toContain("Filter(function() return GetFilterUnit() ~= nil end)");
+    expect(lua).toContain(
+      "Filter(function() return GetFilterUnit() ~= nil end)",
+    );
   });
 
   it("calls the Natives with a dot: no colon, no context argument", () => {
@@ -144,6 +158,8 @@ describe("a Map project compiled with typescript-to-lua for Lua 5.3", () => {
   });
 
   it("keeps self where the Typings are not involved (the control)", () => {
-    expect(lua).toContain("registerLocal( nil, function(self) DestroyTimer(ticker) end )");
+    expect(lua).toContain(
+      "registerLocal( nil, function(self) DestroyTimer(ticker) end )",
+    );
   });
 });

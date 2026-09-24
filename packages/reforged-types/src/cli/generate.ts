@@ -37,7 +37,7 @@ export interface Network {
 export async function main(
   args: readonly string[],
   output: Output,
-  network: Network = { fetcher: httpFetcher }
+  network: Network = { fetcher: httpFetcher },
 ): Promise<number> {
   const parsed = parseArgs(args);
   if (!parsed || parsed.positional.length > 1) {
@@ -74,7 +74,7 @@ export async function main(
     output.stdout(report);
     output.stderr(
       `Generation failed: ${counts}. No file was written.\n\n` +
-        formatChecklist(result.diagnostics)
+        formatChecklist(result.diagnostics),
     );
     return 1;
   }
@@ -84,7 +84,7 @@ export async function main(
   output.stdout(
     result.diagnostics.length === 0
       ? report
-      : report + "\n" + formatChecklist(result.diagnostics)
+      : report + "\n" + formatChecklist(result.diagnostics),
   );
   return 0;
 }
@@ -102,7 +102,7 @@ export function formatAdditions(additions: readonly Additions[]): string {
         declarations
           .map((d) => `- ${d.source}:${d.line}: ${d.jass}\n`)
           .join("") +
-        "\n"
+        "\n",
     )
     .join("");
 }

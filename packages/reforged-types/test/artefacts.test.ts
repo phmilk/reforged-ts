@@ -12,7 +12,7 @@ async function generateOk(...args: Parameters<typeof writeFixture>) {
   if (!result.ok) {
     throw new Error(
       "generation failed:\n" +
-        result.diagnostics.map((d) => d.message).join("\n")
+        result.diagnostics.map((d) => d.message).join("\n"),
     );
   }
   return result;
@@ -49,7 +49,7 @@ describe("generate: the entry of the Game version", () => {
         '/// <reference path="./3.0.0/common.j.d.ts" />',
         '/// <reference path="./3.0.0/blizzard.j.d.ts" />',
         "",
-      ].join("\n")
+      ].join("\n"),
     );
   });
 });
@@ -72,8 +72,11 @@ describe("generate: async-natives.json", () => {
         { ...entry("common.j", "CreateUnit"), async: false },
         { ...entry("common.j", "BlzGetLocalUnitZ"), async: true },
         entry("common.j", "GetCameraTargetPositionX"),
-        { ...entry("blizzard.j", "GetCurrentCameraBoundsMapRectBJ"), async: true },
-      ]
+        {
+          ...entry("blizzard.j", "GetCurrentCameraBoundsMapRectBJ"),
+          async: true,
+        },
+      ],
     );
 
     expect(result.files.get("async-natives.json")).toBe(
@@ -84,7 +87,7 @@ describe("generate: async-natives.json", () => {
         '  "GetLocalPlayer"',
         "]",
         "",
-      ].join("\n")
+      ].join("\n"),
     );
   });
 
@@ -132,7 +135,7 @@ describe("generate: the manifest of the Patch", () => {
           deprecated: "GUI only.",
         }),
         entry("blizzard.j", "Noop"),
-      ]
+      ],
     );
 
     expect(result.files.get("3.0.0/manifest.json")).toBe(
@@ -150,12 +153,14 @@ describe("generate: the manifest of the Patch", () => {
         "  ]",
         "}",
         "",
-      ].join("\n")
+      ].join("\n"),
     );
   });
 
   it("is valid JSON with an empty list when the Patch declares no function or global", async () => {
-    const result = await generateOk({ "common.j": "type agent extends handle\n" });
+    const result = await generateOk({
+      "common.j": "type agent extends handle\n",
+    });
     const text = result.files.get("3.0.0/manifest.json")!;
 
     expect(JSON.parse(text)).toEqual({ patch: "3.0.0.24268", entries: [] });

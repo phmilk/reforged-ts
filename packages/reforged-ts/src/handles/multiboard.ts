@@ -21,7 +21,7 @@ export class MultiboardItem extends Handle<multiboarditem> {
   public static create(
     board: Multiboard,
     x: number,
-    y: number
+    y: number,
   ): MultiboardItem | undefined {
     const handle = MultiboardGetItem(board.handle, x - 1, y - 1);
     if (handle) {
@@ -55,7 +55,7 @@ export class MultiboardItem extends Handle<multiboarditem> {
     red: number,
     green: number,
     blue: number,
-    alpha: number
+    alpha: number,
   ) {
     MultiboardSetItemValueColor(this.handle, red, green, blue, alpha);
   }
@@ -180,7 +180,7 @@ export class Multiboard extends Handle<multiboard> {
     red: number,
     green: number,
     blue: number,
-    alpha: number
+    alpha: number,
   ) {
     MultiboardSetItemsValueColor(this.handle, red, green, blue, alpha);
   }
@@ -193,13 +193,13 @@ export class Multiboard extends Handle<multiboard> {
     red: number,
     green: number,
     blue: number,
-    alpha: number
+    alpha: number,
   ) {
     MultiboardSetTitleTextColor(this.handle, red, green, blue, alpha);
   }
 
   public static fromHandle(
-    handle: multiboard | undefined
+    handle: multiboard | undefined,
   ): Multiboard | undefined {
     return handle ? this.getObject(handle) : undefined;
   }

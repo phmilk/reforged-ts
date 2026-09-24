@@ -169,10 +169,10 @@ interface GlobalRecord {
   isNullable: boolean;
 }
 
-type Merged = {
+interface Merged {
   kind: EntryKind;
   record: FunctionRecord | GlobalRecord;
-};
+}
 
 export async function seed(input: SeedInput): Promise<SeedReport> {
   const records = await readLayers(input.checkout);
@@ -185,7 +185,9 @@ export async function seed(input: SeedInput): Promise<SeedReport> {
 
   for (const { kind, record } of records.values()) {
     const source = record.source;
-    const declaration = declarations.get(declarationKey(source, kind, record.name));
+    const declaration = declarations.get(
+      declarationKey(source, kind, record.name),
+    );
     const skip = (reason: string) =>
       skipped.push({ kind, source, name: record.name, reason });
     if (!declaration) {
@@ -198,7 +200,7 @@ export async function seed(input: SeedInput): Promise<SeedReport> {
       const takes = (record as FunctionRecord).takes;
       if (takes.length !== fn.params.length) {
         skip(
-          `the record has ${takes.length} parameters, the Patch ${fn.params.length}`
+          `the record has ${takes.length} parameters, the Patch ${fn.params.length}`,
         );
         continue;
       }
@@ -208,7 +210,7 @@ export async function seed(input: SeedInput): Promise<SeedReport> {
         returns: { nullable: record.isNullable },
         params: fn.params.map((param, index) => ({
           name: param.name,
-          nullable: takes[index]!.isNullable,
+          nullable: takes[index].isNullable,
         })),
         ...(asyncNames.has(fn.name) ? { async: true } : {}),
         origin: SEED_ORIGIN,
@@ -221,7 +223,12 @@ export async function seed(input: SeedInput): Promise<SeedReport> {
         origin: SEED_ORIGIN,
       };
     }
-    const file = join(input.overlayDir, declaration.source, kind, `${declaration.name}.json`);
+    const file = join(
+      input.overlayDir,
+      declaration.source,
+      kind,
+      `${declaration.name}.json`,
+    );
     if (await handWritten(file)) {
       skip("a hand-written entry exists");
       continue;
@@ -237,14 +244,14 @@ export async function seed(input: SeedInput): Promise<SeedReport> {
     (a, b) =>
       byCodePoint(a.source, b.source) ||
       byCodePoint(a.kind, b.kind) ||
-      byCodePoint(a.name, b.name)
+      byCodePoint(a.name, b.name),
   );
   return {
     upstream: UPSTREAM,
     commit: input.commit,
     layers: LAYERS,
     written: Object.fromEntries(
-      Object.entries(written).sort(([a], [b]) => byCodePoint(a, b))
+      Object.entries(written).sort(([a], [b]) => byCodePoint(a, b)),
     ),
     skipped,
     asyncUnseeded: [...asyncNames]
@@ -273,7 +280,9 @@ async function readLayers(checkout: string): Promise<Map<string, Merged>> {
         const record = JSON.parse(await readFile(join(path, file), "utf8"));
         const name = file.slice(0, -".json".length);
         if (record.name !== name) {
-          throw new Error(`${layer}/${folder}/${file}: name is ${JSON.stringify(record.name)}`);
+          throw new Error(
+            `${layer}/${folder}/${file}: name is ${JSON.stringify(record.name)}`,
+          );
         }
         merged.set(`${folder}/${name}`, {
           kind: folder === "globals" ? "globals" : "functions",
@@ -282,9 +291,7 @@ async function readLayers(checkout: string): Promise<Map<string, Merged>> {
       }
     }
   }
-  return new Map(
-    [...merged].sort(([a], [b]) => byCodePoint(a, b))
-  );
+  return new Map([...merged].sort(([a], [b]) => byCodePoint(a, b)));
 }
 
 /** Functions and globals of the Patch by source, entry kind and name. */
@@ -295,13 +302,16 @@ async function readPatch(patchDir: string): Promise<Map<string, Declaration>> {
     const parsed = parseJass(source, text);
     if (parsed.diagnostics.length > 0) {
       throw new Error(
-        `${source}: ${parsed.diagnostics.map((d) => d.message).join("; ")}`
+        `${source}: ${parsed.diagnostics.map((d) => d.message).join("; ")}`,
       );
     }
     for (const declaration of parsed.declarations) {
       if (declaration.kind === "type") continue;
       const kind = declaration.kind === "global" ? "globals" : "functions";
-      declarations.set(declarationKey(source, kind, declaration.name), declaration);
+      declarations.set(
+        declarationKey(source, kind, declaration.name),
+        declaration,
+      );
     }
   }
   return declarations;
@@ -325,12 +335,16 @@ async function handWritten(file: string): Promise<boolean> {
 const packageRoot = fileURLToPath(new URL("../", import.meta.url));
 
 /** The record of the seed next to this script. */
-export const RECORD_FILE = join(packageRoot, "scripts", "war3-types-strict.json");
+export const RECORD_FILE = join(
+  packageRoot,
+  "scripts",
+  "war3-types-strict.json",
+);
 
 async function main(args: readonly string[]): Promise<number> {
   if (args.length < 2 || args.length > 4) {
     console.error(
-      "Usage: seed-from-war3-types-strict <checkout> <commit> [patchDir] [overlayDir]"
+      "Usage: seed-from-war3-types-strict <checkout> <commit> [patchDir] [overlayDir]",
     );
     return 2;
   }
@@ -344,7 +358,7 @@ async function main(args: readonly string[]): Promise<number> {
     return 1;
   }
   const manifest = JSON.parse(
-    await readFile(join(packageRoot, "package.json"), "utf8")
+    await readFile(join(packageRoot, "package.json"), "utf8"),
   );
   const report = await seed({
     checkout,
@@ -363,7 +377,9 @@ async function main(args: readonly string[]): Promise<number> {
     console.log(`  ${s.source}/${s.kind}/${s.name}: ${s.reason}`);
   }
   if (report.asyncUnseeded.length > 0) {
-    console.log(`async Natives with no seeded entry: ${report.asyncUnseeded.join(", ")}`);
+    console.log(
+      `async Natives with no seeded entry: ${report.asyncUnseeded.join(", ")}`,
+    );
   }
   return 0;
 }

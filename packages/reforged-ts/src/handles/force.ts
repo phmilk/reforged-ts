@@ -50,41 +50,41 @@ export class Force extends Handle<force> {
 
   public enumAllies(
     whichPlayer: MapPlayer,
-    filter: boolexpr | (() => boolean)
+    filter: boolexpr | (() => boolean),
   ) {
     ForceEnumAllies(
       this.handle,
       whichPlayer.handle,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
   public enumEnemies(
     whichPlayer: MapPlayer,
-    filter: boolexpr | (() => boolean)
+    filter: boolexpr | (() => boolean),
   ) {
     ForceEnumEnemies(
       this.handle,
       whichPlayer.handle,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
   public enumPlayers(filter: boolexpr | (() => boolean)) {
     ForceEnumPlayers(
       this.handle,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
   public enumPlayersCounted(
     filter: boolexpr | (() => boolean),
-    countLimit: number
+    countLimit: number,
   ) {
     ForceEnumPlayersCounted(
       this.handle,
       typeof filter === "function" ? Filter(filter) : filter,
-      countLimit
+      countLimit,
     );
   }
 

@@ -30,7 +30,7 @@ const USAGE = `Usage: typings:check ${FOLDER_OPTIONS}\n`;
 
 export async function main(
   args: readonly string[],
-  output: Output
+  output: Output,
 ): Promise<number> {
   const parsed = parseArgs(args);
   if (!parsed || parsed.positional.length > 0) {
@@ -45,7 +45,7 @@ export async function main(
     const counts = countDiagnostics(result.diagnostics);
     output.stderr(
       `Generation failed: ${counts}. Nothing was compared.\n\n` +
-        formatChecklist(result.diagnostics)
+        formatChecklist(result.diagnostics),
     );
     return 1;
   }
@@ -60,7 +60,7 @@ export async function main(
           drift.length === 1 ? "file does" : "files do"
         } not match what the sources and the Overlay generate. ` +
           `Run \`${REGENERATE_COMMAND}\` and commit the result.\n\n` +
-          drift.map((line) => `- [ ] ${line}\n`).join("")
+          drift.map((line) => `- [ ] ${line}\n`).join(""),
       );
       return 1;
     }
@@ -69,7 +69,7 @@ export async function main(
   }
   output.stdout(
     `Typings match: ${result.files.size} files of ${patchList(result.patches)} ` +
-      "are exactly what the sources and the Overlay generate.\n"
+      "are exactly what the sources and the Overlay generate.\n",
   );
   return 0;
 }
@@ -82,20 +82,22 @@ export async function main(
 async function compare(
   paths: readonly string[],
   generatedDir: string,
-  committedDir: string
+  committedDir: string,
 ): Promise<string[]> {
   const drift = new Map<string, string>();
   for (const path of paths) {
     const committed = await readBytes(join(committedDir, path));
     if (committed === undefined) {
       drift.set(path, `${path}: generated but not committed`);
-    } else if (!committed.equals((await readBytes(join(generatedDir, path)))!)) {
+    } else if (
+      !committed.equals((await readBytes(join(generatedDir, path)))!)
+    ) {
       drift.set(path, `${path}: differs from the generated file`);
     }
   }
   const generated = new Set(paths);
   const folders = new Set(
-    paths.map((path) => posix.dirname(path)).filter((folder) => folder !== ".")
+    paths.map((path) => posix.dirname(path)).filter((folder) => folder !== "."),
   );
   for (const folder of folders) {
     for (const item of await filesIn(join(committedDir, folder))) {

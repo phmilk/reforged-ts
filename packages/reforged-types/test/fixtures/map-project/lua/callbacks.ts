@@ -9,9 +9,15 @@ TimerStart(ticker, 0.03, true, function () {
 
 const nearby = CreateGroup();
 if (nearby !== undefined) {
-  GroupEnumUnitsInRange(nearby, 0, 0, 256, Filter(function () {
-    return GetFilterUnit() !== undefined;
-  }));
+  GroupEnumUnitsInRange(
+    nearby,
+    0,
+    0,
+    256,
+    Filter(function () {
+      return GetFilterUnit() !== undefined;
+    }),
+  );
 }
 
 // Control: declared here, without `this: void` and without a self directive,

@@ -25,7 +25,7 @@ export function base64Encode(input: string) {
 
     if (charCode > 0xff) {
       print(
-        "'base64Encode' failed: The string to be encoded contains characters outside of the Latin1 range."
+        "'base64Encode' failed: The string to be encoded contains characters outside of the Latin1 range.",
       );
       return output;
     }
@@ -49,12 +49,11 @@ export function base64Decode(input: string) {
   let output = "";
   if (str.length % 4 === 1) {
     print(
-      "'base64Decode' failed: The string to be decoded is not correctly encoded."
+      "'base64Decode' failed: The string to be decoded is not correctly encoded.",
     );
     return output;
   }
   let bs = 0;
-  // tslint:disable-next-line:no-conditional-assignment
   for (
     let bc = 0, buffer, idx = 0;
     (buffer = str.charAt(idx));
@@ -62,7 +61,7 @@ export function base64Decode(input: string) {
       ? (output += String.fromCharCode(255 & (bs >>> ((-2 * bc) & 6))))
       : 0
   ) {
-    if (`${buffer}`.length === 0) {
+    if (buffer.length === 0) {
       break;
     }
     buffer = chars.indexOf(buffer);

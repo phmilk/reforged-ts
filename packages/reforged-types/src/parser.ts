@@ -38,18 +38,20 @@ interface Context {
 const IDENT = "[A-Za-z_][A-Za-z0-9_]*";
 const TYPE = new RegExp(`^type\\s+(${IDENT})\\s+extends\\s+(${IDENT})$`);
 const NATIVE = new RegExp(
-  `^(constant\\s+)?native\\s+(${IDENT})\\s+takes\\s+(.+?)\\s+returns\\s+(${IDENT})$`
+  `^(constant\\s+)?native\\s+(${IDENT})\\s+takes\\s+(.+?)\\s+returns\\s+(${IDENT})$`,
 );
 const FUNCTION = new RegExp(
-  `^function\\s+(${IDENT})\\s+takes\\s+(.+?)\\s+returns\\s+(${IDENT})$`
+  `^function\\s+(${IDENT})\\s+takes\\s+(.+?)\\s+returns\\s+(${IDENT})$`,
 );
 const PARAMETER = new RegExp(`^(${IDENT})\\s+(${IDENT})$`);
 
 // The four forms of a `globals` block line.
 const CONSTANT_GLOBAL = new RegExp(
-  `^constant\\s+(${IDENT})\\s+(${IDENT})\\s*=\\s*(.+)$`
+  `^constant\\s+(${IDENT})\\s+(${IDENT})\\s*=\\s*(.+)$`,
 );
-const INITIALIZED_GLOBAL = new RegExp(`^(${IDENT})\\s+(${IDENT})\\s*=\\s*(.+)$`);
+const INITIALIZED_GLOBAL = new RegExp(
+  `^(${IDENT})\\s+(${IDENT})\\s*=\\s*(.+)$`,
+);
 const PLAIN_GLOBAL = new RegExp(`^(${IDENT})\\s+(${IDENT})$`);
 const ARRAY_GLOBAL = new RegExp(`^(${IDENT})\\s+array\\s+(${IDENT})$`);
 
@@ -100,12 +102,18 @@ export function parseJass(source: SourceName, text: string): ParseResult {
     const code = stripComment(raw).trim();
     const line = index + 1;
     switch (context.region.kind) {
-      case "top":
-        return topLevel(context, code, line);
-      case "function":
-        return functionBody(context, code);
-      case "globals":
-        return globalsBlock(context, code, line);
+      case "top": {
+        topLevel(context, code, line);
+        return;
+      }
+      case "function": {
+        functionBody(context, code);
+        return;
+      }
+      case "globals": {
+        globalsBlock(context, code, line);
+        return;
+      }
     }
   });
   endOfFile(context);
@@ -123,8 +131,8 @@ function topLevel(context: Context, code: string, line: number): void {
   if (type) {
     context.declarations.push({
       kind: "type",
-      name: type[1]!,
-      parent: type[2]!,
+      name: type[1],
+      parent: type[2],
       source,
       line,
     });
@@ -133,14 +141,14 @@ function topLevel(context: Context, code: string, line: number): void {
 
   const native = NATIVE.exec(code);
   if (native) {
-    const params = parseTakes(native[3]!);
+    const params = parseTakes(native[3]);
     if (params) {
       context.declarations.push({
         kind: "native",
         constant: native[1] !== undefined,
-        name: native[2]!,
+        name: native[2],
         params,
-        returns: native[4]!,
+        returns: native[4],
         source,
         line,
       });
@@ -150,14 +158,14 @@ function topLevel(context: Context, code: string, line: number): void {
 
   const fn = FUNCTION.exec(code);
   if (fn) {
-    const params = parseTakes(fn[2]!);
+    const params = parseTakes(fn[2]);
     if (params) {
       const declaration: FunctionDeclaration = {
         kind: "function",
         constant: false,
-        name: fn[1]!,
+        name: fn[1],
         params,
-        returns: fn[3]!,
+        returns: fn[3],
         source,
         line,
       };
@@ -174,7 +182,7 @@ function topLevel(context: Context, code: string, line: number): void {
       report(
         context,
         line,
-        `a second globals block (the first is at line ${context.globalsLine})`
+        `a second globals block (the first is at line ${context.globalsLine})`,
       );
     }
     context.region = { kind: "globals", line };
@@ -217,15 +225,15 @@ function parseGlobal(code: string): GlobalForm | undefined {
   let form: GlobalForm | undefined;
   let match: RegExpExecArray | null;
   if ((match = CONSTANT_GLOBAL.exec(code))) {
-    form = { constant: true, array: false, type: match[1]!, name: match[2]! };
+    form = { constant: true, array: false, type: match[1], name: match[2] };
     form.initializer = match[3]!;
   } else if ((match = ARRAY_GLOBAL.exec(code))) {
-    form = { constant: false, array: true, type: match[1]!, name: match[2]! };
+    form = { constant: false, array: true, type: match[1], name: match[2] };
   } else if ((match = INITIALIZED_GLOBAL.exec(code))) {
-    form = { constant: false, array: false, type: match[1]!, name: match[2]! };
+    form = { constant: false, array: false, type: match[1], name: match[2] };
     form.initializer = match[3]!;
   } else if ((match = PLAIN_GLOBAL.exec(code))) {
-    form = { constant: false, array: false, type: match[1]!, name: match[2]! };
+    form = { constant: false, array: false, type: match[1], name: match[2] };
   }
   if (!form || KEYWORDS.has(form.type) || KEYWORDS.has(form.name)) {
     return undefined;
@@ -250,7 +258,7 @@ function parseTakes(takes: string): Parameter[] | undefined {
   for (const part of takes.split(",")) {
     const match = PARAMETER.exec(part.trim());
     if (!match) return undefined;
-    params.push({ type: match[1]!, name: match[2]! });
+    params.push({ type: match[1], name: match[2] });
   }
   return params;
 }
