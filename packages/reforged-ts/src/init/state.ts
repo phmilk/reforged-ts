@@ -10,7 +10,9 @@
 // So the state that wrapping must see again lives in one table anchored on a
 // global the library owns, `_G["reforged-ts"].init`: the wrappers installed
 // (the marker), the names still pending, the queues and what ran. A second
-// load finds it, adopts it, and its registrations join the same queues.
+// load finds it, adopts it, and its registrations join the same queues. The
+// anchor takes one entry per module family (`anchored`): the `reforged`
+// module keeps the dev-mode flag on it the same way.
 //
 // Package-internal: nothing here is exported from the library index.
 
@@ -75,9 +77,27 @@ export const LIBRARY = "reforged-ts";
 /** The globals table, typed for raw reads and writes by name. */
 export const globals = _G as unknown as Record<string, unknown>;
 
-/** What the library keeps under its global. */
-interface Anchor {
-  init?: InitState;
+/** What the library keeps under its global: one entry per module family. */
+type Anchor = Record<string, unknown>;
+
+/**
+ * The value an earlier load anchored under `key` on the library's global, or
+ * the one `create` makes, anchored now. Raw reads and writes, so a `_G`
+ * metatable a map installed (an undeclared-global warner) never sees the
+ * library's own global.
+ */
+export function anchored<T extends object>(key: string, create: () => T): T {
+  let anchor = rawget(globals, LIBRARY) as Anchor | undefined;
+  if (anchor === undefined) {
+    anchor = {};
+    rawset(globals, LIBRARY, anchor);
+  }
+  let value = anchor[key] as T | undefined;
+  if (value === undefined) {
+    value = create();
+    anchor[key] = value;
+  }
+  return value;
 }
 
 function stage(): StageState {
@@ -99,19 +119,5 @@ function create(): InitState {
   };
 }
 
-/**
- * The shared state: the one an earlier load anchored, or a new one. Raw
- * reads and writes, so a `_G` metatable a map installed (an undeclared-global
- * warner) never sees the library's own global.
- */
-function adopt(): InitState {
-  let anchor = rawget(globals, LIBRARY) as Anchor | undefined;
-  if (anchor === undefined) {
-    anchor = {};
-    rawset(globals, LIBRARY, anchor);
-  }
-  anchor.init ??= create();
-  return anchor.init;
-}
-
-export const state: InitState = adopt();
+/** The shared state: the one an earlier load anchored, or a new one. */
+export const state: InitState = anchored("init", create);
