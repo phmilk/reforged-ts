@@ -39,7 +39,7 @@
     "test": "vitest run && pnpm run typings:check",
     "vendor": "node build/cli/vendor.js",
     "verify": "node build/cli/verify.js",
-    "typings:generate": "node build/cli/generate.js",
+    "typings:generate": "tsc -p tsconfig.json && node build/cli/generate.js",
     "typings:check": "tsc -p tsconfig.json && node build/cli/check.js",
     "seed:war3-types-strict": "node --experimental-strip-types scripts/seed-from-war3-types-strict.ts"
   },

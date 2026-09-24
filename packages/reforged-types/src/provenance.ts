@@ -63,3 +63,10 @@ export async function readPatchIdentity(
 export function gameVersion(patch: string): string {
   return patch.split(".").slice(0, 3).join(".");
 }
+
+/** `Patch 3.0.0.24268`, `Patches 3.0.0.24268 and 3.1.0.25000`. */
+export function patchList(patches: readonly string[]): string {
+  return patches.length === 1
+    ? `Patch ${patches[0]}`
+    : `Patches ${patches.slice(0, -1).join(", ")} and ${patches.at(-1)}`;
+}
