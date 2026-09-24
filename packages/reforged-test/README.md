@@ -169,6 +169,7 @@ One file per Native family, loaded after `base.lua` by name:
 | `timers.lua`    | `CreateTimer`, `TimerStart`, `TimerGetTimeout`, `DestroyTimer` | `__stub_fire_timer(timer)` runs the handler `TimerStart` stored, once.               |
 | `triggers.lua`  | `TriggerAddAction`                                             | `__stub_fire_trigger(trigger)` runs the trigger's actions once each, in added order. |
 | `units.lua`     | `CreateUnit`, `GetOwningPlayer`, `GetUnitTypeId`               |                                                                                      |
+| `frames.lua`    | `BlzCreateFrame*`, `BlzGetFrameByName` and the other lookups   | `__stub_frame_not_found()` returns the "not found" frame, whose handle id is 0.      |
 
 A timer or trigger never fires on its own: a test fires it with the helper. The helpers are not Natives, so they add no call-log line. A TypeScript test declares the ones it calls, for example `declare function __stub_fire_timer(whichTimer: timer): void;`.
 
