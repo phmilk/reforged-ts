@@ -43,9 +43,6 @@ build/Release
 node_modules/
 jspm_packages/
 
-# TypeScript v1 declaration files
-typings/
-
 # TypeScript cache
 *.tsbuildinfo
 
@@ -104,6 +101,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# reforged-types generator build output (the generated Typings themselves are committed)
+packages/reforged-types/build/
 
 # Claude Code agent worktrees and local state
 .claude/

@@ -1,0 +1,40 @@
+{
+  "name": "reforged-types",
+  "version": "1.0.0",
+  "description": "TypeScript declarations for the Warcraft III Reforged natives, generated from the game's Patch files.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "warcraft",
+    "wc3",
+    "reforged",
+    "typescript-to-lua"
+  ],
+  "homepage": "https://phmilk.github.io/reforged-ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phmilk/reforged-ts.git",
+    "directory": "packages/reforged-types"
+  },
+  "bugs": {
+    "url": "https://github.com/phmilk/reforged-ts/issues"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "reforged": {
+    "patch": "3.0.0.24268"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "lua-types": "catalog:"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "typescript-to-lua": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,2 +1,6 @@
-# Auto detect text files and perform LF normalization
-* text=LF
+# Every text file is stored and checked out with LF, whatever core.autocrlf says.
+* text=auto eol=lf
+
+# Vendored Patch files stay byte for byte as downloaded, so their recorded sha256 holds on every platform.
+packages/reforged-types/sources/**/*.j -text
+packages/reforged-types/sources/**/*.ai -text
