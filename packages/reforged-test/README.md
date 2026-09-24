@@ -160,15 +160,20 @@ It also holds the shared machinery the other stub files use:
 
 One file per Native family, loaded after `base.lua` by name:
 
-| File            | Natives                                                        | Firing helper                                                                        |
-| --------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `locations.lua` | `Location`                                                     |                                                                                      |
-| `players.lua`   | `GetLocalPlayer`, which returns the player in slot 0           |                                                                                      |
-| `rects.lua`     | `Rect`, `RectFromLoc`, `GetWorldBounds` (a new rect per call)  |                                                                                      |
-| `regions.lua`   | `CreateRegion`                                                 |                                                                                      |
-| `timers.lua`    | `CreateTimer`, `TimerStart`, `TimerGetTimeout`, `DestroyTimer` | `__stub_fire_timer(timer)` runs the handler `TimerStart` stored, once.               |
-| `triggers.lua`  | `TriggerAddAction`                                             | `__stub_fire_trigger(trigger)` runs the trigger's actions once each, in added order. |
-| `units.lua`     | `CreateUnit`, `GetOwningPlayer`, `GetUnitTypeId`               |                                                                                      |
+| File               | Natives                                                                                                             | Firing helper                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `dialogs.lua`      | `DialogCreate`, `DialogAddButton`, `DialogAddQuitButton`                                                            |                                                                                      |
+| `effects.lua`      | `AddSpecialEffect`, `AddSpecialEffectTarget`, `AddSpellEffectById`, `AddSpellEffectTargetById`, `ConvertEffectType` |                                                                                      |
+| `leaderboards.lua` | `CreateLeaderboard`                                                                                                 |                                                                                      |
+| `locations.lua`    | `Location`                                                                                                          |                                                                                      |
+| `multiboards.lua`  | `CreateMultiboard`, `MultiboardGetItem` (a new item per call)                                                       |                                                                                      |
+| `players.lua`      | `GetLocalPlayer`, which returns the player in slot 0                                                                |                                                                                      |
+| `quests.lua`       | `CreateQuest`, `QuestCreateItem`, `QuestItemSetDescription`                                                         |                                                                                      |
+| `rects.lua`        | `Rect`, `RectFromLoc`, `GetWorldBounds` (a new rect per call)                                                       |                                                                                      |
+| `regions.lua`      | `CreateRegion`                                                                                                      |                                                                                      |
+| `timers.lua`       | `CreateTimer`, `TimerStart`, `TimerGetTimeout`, `DestroyTimer`                                                      | `__stub_fire_timer(timer)` runs the handler `TimerStart` stored, once.               |
+| `triggers.lua`     | `TriggerAddAction`                                                                                                  | `__stub_fire_trigger(trigger)` runs the trigger's actions once each, in added order. |
+| `units.lua`        | `CreateUnit`, `GetOwningPlayer`, `GetUnitTypeId`                                                                    |                                                                                      |
 
 A timer or trigger never fires on its own: a test fires it with the helper. The helpers are not Natives, so they add no call-log line. A TypeScript test declares the ones it calls, for example `declare function __stub_fire_timer(whichTimer: timer): void;`.
 
