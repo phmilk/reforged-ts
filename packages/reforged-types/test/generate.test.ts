@@ -47,6 +47,7 @@ describe("generate: declaration file shape", () => {
         "",
         "declare interface handle { __handle: never }",
         "type code = (this: void) => void;",
+        "type boolcode = (this: void) => boolean;",
         "",
         "declare interface agent extends handle { __agent: never }",
         "declare interface unit extends agent { __unit: never }",

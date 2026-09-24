@@ -6,6 +6,19 @@
 /** The alias `code` parameters use; declared in the common.j output. */
 export const CODE_ALIAS = "code";
 
+/**
+ * The alias for a callback that returns a boolean, declared next to `code`.
+ * No Jass type maps to it: a parameter reaches it only through its Overlay
+ * `type` override (`Condition`, `Filter`).
+ */
+export const BOOLEAN_CODE_ALIAS = "boolcode";
+
+/** The callback aliases the common.j output declares, in order. */
+export const CALLBACK_ALIASES: ReadonlyArray<{ name: string; type: string }> = [
+  { name: CODE_ALIAS, type: "(this: void) => void" },
+  { name: BOOLEAN_CODE_ALIAS, type: "(this: void) => boolean" },
+];
+
 const PRIMITIVES: Record<string, string> = {
   integer: "number",
   real: "number",

@@ -15,7 +15,11 @@ export type DiagnosticKind =
   /** An Overlay entry whose parameters differ from the Patch signature. */
   | "param-mismatch"
   /** An Overlay entry that matches no declaration of the Patch. */
-  | "orphan";
+  | "orphan"
+  /** A declaration named after a TypeScript reserved word. */
+  | "reserved-name"
+  /** A name declared in two source files (a warning). */
+  | "duplicate-name";
 
 export interface Diagnostic {
   severity: "error" | "warning";
