@@ -15,6 +15,9 @@ catalogs:
     lua-types:
       specifier: ^2.14.1
       version: 2.14.1
+    lua-wasm-bindings:
+      specifier: ^0.5.3
+      version: 0.5.3
     typescript:
       specifier: 6.0.2
       version: 6.0.2
@@ -69,6 +72,31 @@ importers:
       typescript-to-lua:
         specifier: ^1.15.1
         version: 1.37.1(typescript@5.9.3)
+
+  packages/reforged-test:
+    dependencies:
+      lua-wasm-bindings:
+        specifier: 'catalog:'
+        version: 0.5.3
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.6
+      '@typescript-to-lua/language-extensions':
+        specifier: 'catalog:'
+        version: 1.19.0
+      lua-types:
+        specifier: 'catalog:'
+        version: 2.14.1
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.2
+      typescript-to-lua:
+        specifier: 'catalog:'
+        version: 1.37.1(typescript@6.0.2)
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.1(@types/node@24.13.6)(vite@8.3.0(@types/node@24.13.6))
 
   packages/reforged-types:
     dependencies:
@@ -1126,6 +1154,9 @@ packages:
 
   lua-types@2.14.1:
     resolution: {integrity: sha512-+EbnTjF+Bbfp5xmpfT0O9AZgC5J6Oq6jRnZei3HLb0pbWuCRHmdnIVRPIgEpUncWvHq21DHB2qTHhA4xGceHHg==}
+
+  lua-wasm-bindings@0.5.3:
+    resolution: {integrity: sha512-GnGSkZmYA2VzkNV/xkwOSoxwNsqEk/EcX6uvRLKQw0pCAxCauTymRO2KmJUIrG/psV3cloaS4Cjsr39iCRkrpQ==}
 
   magic-string@1.4.2:
     resolution: {integrity: sha512-vG+rjFRj1PqdIBozIxAGMjPlOhaVe+GXpbttY/iSK7rGcJRMlwNJO7dcUwmUqkymsFLJiNGI06t4D7Fr7yRC9g==}
@@ -2767,6 +2798,11 @@ snapshots:
   lodash.truncate@4.4.2: {}
 
   lua-types@2.14.1: {}
+
+  lua-wasm-bindings@0.5.3:
+    dependencies:
+      '@types/semver': 7.8.0
+      semver: 7.8.5
 
   magic-string@1.4.2:
     dependencies:
