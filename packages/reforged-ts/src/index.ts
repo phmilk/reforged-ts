@@ -1,3 +1,5 @@
+/** @noSelfInFile */
+
 import * as tsGlobals from "./globals/index";
 
 export * from "./handles/index";

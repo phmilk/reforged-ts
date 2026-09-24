@@ -1,3 +1,5 @@
+/** @noSelfInFile */
+
 /**
  * Reads primitive types from a packed binary string.
  *

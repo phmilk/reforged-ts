@@ -35,6 +35,7 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json && pnpm run typings:typecheck && pnpm run scripts:typecheck",
+    "typecheck": "tsc -p tsconfig.json --noEmit && pnpm run typings:typecheck && pnpm run scripts:typecheck",
     "typings:typecheck": "tsc -p tsconfig.typings.json",
     "scripts:typecheck": "tsc -p tsconfig.scripts.json",
     "test": "vitest run && pnpm run typings:check",

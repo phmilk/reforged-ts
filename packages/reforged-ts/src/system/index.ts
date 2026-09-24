@@ -1,3 +1,5 @@
+/** @noSelfInFile */
+
 export * from "./base64";
 export * from "./binaryreader";
 export * from "./binarywriter";

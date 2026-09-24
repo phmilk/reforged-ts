@@ -1,3 +1,5 @@
+/** @noSelfInFile */
+
 export class Color {
   readonly alpha: ColorValue;
 

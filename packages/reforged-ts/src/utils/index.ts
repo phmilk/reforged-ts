@@ -1,3 +1,5 @@
+/** @noSelfInFile */
+
 import { Timer } from "../handles/timer";
 
 export * from "./color";

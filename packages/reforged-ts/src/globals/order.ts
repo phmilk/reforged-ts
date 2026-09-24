@@ -1,3 +1,5 @@
+/** @noSelfInFile */
+
 export const enum OrderId {
   Absorb = 852529,
   Acidbomb = 852662,
