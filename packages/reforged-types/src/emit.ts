@@ -4,8 +4,9 @@
  * source order. Deterministic: LF, no timestamps, one trailing newline.
  */
 import { functionHeader } from "./header.js";
-import { CODE_ALIAS, tsType } from "./jass-types.js";
+import { CALLBACK_ALIASES, tsType } from "./jass-types.js";
 import type { SourceName, TypeDeclaration } from "./model.js";
+import { parameterName } from "./names.js";
 import type { PatchIdentity } from "./provenance.js";
 import type { Resolved, ResolvedFunction } from "./resolve.js";
 
@@ -46,11 +47,11 @@ function banner(
   ];
 }
 
-/** The root of the handle hierarchy and the callback alias. */
+/** The root of the handle hierarchy and the callback aliases. */
 function prelude(): string[] {
   return [
     "declare interface handle { __handle: never }",
-    `type ${CODE_ALIAS} = (this: void) => void;`,
+    ...CALLBACK_ALIASES.map(({ name, type }) => `type ${name} = ${type};`),
   ];
 }
 
@@ -70,18 +71,27 @@ function functionDeclaration(fn: ResolvedFunction): string[] {
 
 /**
  * Nullable trailing parameters become optional; a nullable parameter
- * followed by a non-nullable one becomes `T | undefined`.
+ * followed by a non-nullable one becomes `T | undefined`. An Overlay `type`
+ * override replaces the mapped Jass type; a reserved-word name is suffixed.
  */
 function parameterList(fn: ResolvedFunction): string {
-  const nullable = fn.overlay.params.map((param) => param.nullable);
-  const firstOptional = nullable.lastIndexOf(false) + 1;
+  const overlay = fn.overlay.params;
+  const firstOptional =
+    overlay.map((param) => param.nullable).lastIndexOf(false) + 1;
   return fn.params
     .map((param, index) => {
-      const type = tsType(param.type);
-      if (!nullable[index]) return `${param.name}: ${type}`;
+      const { nullable, type: override } = overlay[index]!;
+      const name = parameterName(param.name);
+      const type = override ?? tsType(param.type);
+      if (!nullable) return `${name}: ${type}`;
       return index >= firstOptional
-        ? `${param.name}?: ${type}`
-        : `${param.name}: ${type} | undefined`;
+        ? `${name}?: ${type}`
+        : `${name}: ${unionMember(type)} | undefined`;
     })
     .join(", ");
+}
+
+/** A function type needs parentheses before `| undefined` joins it. */
+function unionMember(type: string): string {
+  return type.includes("=>") ? `(${type})` : type;
 }

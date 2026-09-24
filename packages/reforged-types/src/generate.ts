@@ -8,6 +8,7 @@ import { basename, join } from "node:path";
 import { hasErrors, type Diagnostic } from "./diagnostics.js";
 import { emitFile } from "./emit.js";
 import { SOURCES, type Declaration } from "./model.js";
+import { checkNames } from "./names.js";
 import { loadOverlay } from "./overlay.js";
 import { parseJass } from "./parser.js";
 import { gameVersion, readPatchIdentity } from "./provenance.js";
@@ -62,6 +63,7 @@ export async function generate(input: GenerateInput): Promise<GenerateResult> {
     declarations.push(...parsed.declarations);
     diagnostics.push(...parsed.diagnostics);
   }
+  diagnostics.push(...checkNames(declarations));
 
   const overlay = await loadOverlay(input.overlayDir);
   diagnostics.push(...overlay.diagnostics);

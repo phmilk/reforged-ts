@@ -14,7 +14,12 @@ export interface OverlayEntryFixture {
   name: string;
   source: string;
   returns: { nullable: boolean };
-  params: { name: string; nullable: boolean }[];
+  params: { name: string; nullable: boolean; type?: string }[];
+  async?: boolean;
+  deprecated?: string;
+  notes?: string;
+  since?: string;
+  origin?: string;
 }
 
 export const provenance = {
