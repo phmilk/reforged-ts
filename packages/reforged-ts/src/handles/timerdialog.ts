@@ -1,33 +1,11 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { HandleBase } from "./handle";
 import { Timer } from "./timer";
 
-export class TimerDialog extends Handle<timerdialog> {
-  /** @deprecated use `TimerDialog.create` instead. */
-  constructor(t: Timer) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = CreateTimerDialog(t.handle);
-    if (handle === undefined) {
-      error("w3ts failed to create timer handle.", 3);
-    }
-    super(handle);
-  }
-
-  public static create(t: Timer): TimerDialog | undefined {
-    const handle = CreateTimerDialog(t.handle);
-    if (handle) {
-      const obj = this.getObject(handle) as TimerDialog;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+export class TimerDialog extends HandleBase<timerdialog> {
+  public static create(t: Timer): TimerDialog {
+    return this.expect(CreateTimerDialog(t.handle));
   }
 
   public get display() {
@@ -79,12 +57,5 @@ export class TimerDialog extends Handle<timerdialog> {
    */
   public setTimeColor(red: number, green: number, blue: number, alpha: number) {
     TimerDialogSetTimeColor(this.handle, red, green, blue, alpha);
-  }
-
-  public static fromHandle(
-    handle: timerdialog | undefined,
-  ): TimerDialog | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }
