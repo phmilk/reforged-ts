@@ -26,6 +26,26 @@ export default defineConfig({
           globalSetup: ["test/support/compile-runner.ts"],
         },
       },
+      {
+        // The library, compiled with its tests by typescript-to-lua and run
+        // on the reforged-test harness. The global setup compiles them
+        // before every run, the first one and each watch rerun.
+        test: {
+          name: "reforged-ts",
+          root: "packages/reforged-ts",
+          include: ["test/harness/*.spec.ts"],
+          environment: "node",
+          globalSetup: ["test/harness/compile.ts"],
+        },
+      },
+    ],
+    // The library's Lua tests are not in the vitest module graph: a change to
+    // a library source or a test reruns the spec that runs them.
+    watchTriggerPatterns: [
+      {
+        pattern: /\/packages\/reforged-ts\/(src|test)\/.+\.ts$/,
+        testsToRun: () => "packages/reforged-ts/test/harness/lua.spec.ts",
+      },
     ],
   },
 });

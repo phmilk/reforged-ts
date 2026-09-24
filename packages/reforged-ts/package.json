@@ -34,16 +34,26 @@
   ],
   "scripts": {
     "build": "tstl -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json --noEmit && tsc -p test/harness/tsconfig.json",
+    "test": "vitest run --root ../.. --project reforged-ts"
   },
   "peerDependencies": {
+    "reforged-test": "^1.0.0",
     "reforged-types": "^1.0.0"
   },
+  "peerDependenciesMeta": {
+    "reforged-test": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@types/node": "catalog:",
     "@typescript-to-lua/language-extensions": "catalog:",
     "lua-types": "catalog:",
+    "reforged-test": "workspace:*",
     "reforged-types": "workspace:*",
     "typescript": "catalog:",
-    "typescript-to-lua": "catalog:"
+    "typescript-to-lua": "catalog:",
+    "vitest": "catalog:"
   }
 }
