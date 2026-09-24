@@ -10,15 +10,22 @@
 // So the state that wrapping must see again lives in one table anchored on a
 // global the library owns, `_G["reforged-ts"].init`: the wrappers installed
 // (the marker), the names still pending, the hook on `_G` that captures
-// them, the queues and what ran. A second load finds it, adopts it, and its
-// registrations join the same queues. The anchor takes one entry per module
-// family (`anchored`): the `reforged` module keeps the dev-mode flag on it
-// the same way.
+// them, the queues of the stages and of the deprecated alias, and what ran.
+// A second load finds it, adopts it, and its registrations join the same
+// queues. The anchor takes one entry per module family (`anchored`): the
+// `reforged` module keeps the dev-mode flag on it the same way.
 //
 // Package-internal: nothing here is exported from the library index.
 
 /** One of the four Init stages, named after the Blizzard function it wraps. */
 export type InitStage = "globals" | "triggers" | "initTriggers" | "gameStart";
+
+/**
+ * An entry point of the deprecated alias: before or after the map script's
+ * `main` or `config`.
+ */
+export type EntryPoint =
+  "main::before" | "main::after" | "config::before" | "config::after";
 
 /**
  * A callback registered for a stage or an entry point, and the name a
@@ -89,6 +96,8 @@ export interface InitState {
   /** The hook on `_G` while a name is pending; undefined when it is off. */
   interception: Interception | undefined;
   readonly stages: Record<InitStage, StageState>;
+  /** The deprecated alias's queues, one per entry point, run in order. */
+  readonly entryPoints: Record<EntryPoint, Registration[]>;
   /** The stage running now, or none. */
   current: InitStage | undefined;
   /** Whether the Map project registered a callback yet. */
@@ -138,6 +147,12 @@ function create(): InitState {
       triggers: stage(),
       initTriggers: stage(),
       gameStart: stage(),
+    },
+    entryPoints: {
+      "main::before": [],
+      "main::after": [],
+      "config::before": [],
+      "config::after": [],
     },
     current: undefined,
     projectRegistered: false,
