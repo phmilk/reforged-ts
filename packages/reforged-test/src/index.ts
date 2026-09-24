@@ -244,7 +244,9 @@ function register(children: SuiteNode["children"], inSuite32 = false): void {
   for (const child of children) {
     if ("children" in child) {
       const marked = inSuite32 || child.name.includes(MARKER_32_BIT);
-      describe(child.name, () => register(child.children, marked));
+      describe(child.name, () => {
+        register(child.children, marked);
+      });
     } else if (inSuite32 || child.name.includes(MARKER_32_BIT)) {
       test.skip(child.name, () => undefined);
     } else {

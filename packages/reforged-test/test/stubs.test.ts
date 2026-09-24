@@ -14,17 +14,17 @@ describe("the baseline stub on a fresh state", () => {
   const [baseline] = runLuaTestFiles({ outDir: outDir("baseline") });
 
   it.each(
-    baseline?.tests.map((test) => [
+    baseline.tests.map((test) => [
       `${test.suite.join(" > ")} > ${test.name}`,
       test,
-    ]) ?? [],
+    ]),
   )("%s", (_, test) => {
     expect(test).toMatchObject({ status: "pass" });
   });
 
   it("runs all its checks", () => {
-    expect(baseline?.error).toBeUndefined();
-    expect(baseline?.tests).toHaveLength(9);
+    expect(baseline.error).toBeUndefined();
+    expect(baseline.tests).toHaveLength(9);
   });
 });
 

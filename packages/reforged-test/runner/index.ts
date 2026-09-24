@@ -13,10 +13,11 @@
 
 type Status = "pass" | "fail" | "error";
 
+/** @noSelf */
 interface Block {
   suite: string[];
   name: string;
-  fn: (this: void) => void;
+  fn: () => void;
 }
 
 interface Result {
@@ -31,9 +32,6 @@ interface Failure {
   reforgedTestFailure: true;
   message: string;
 }
-
-declare let __reforged_test_run: (() => string) | undefined;
-declare const __stub_calls: string[] | undefined;
 
 const blocks: Block[] = [];
 const suites: string[] = [];
@@ -100,7 +98,7 @@ function sortedKeys(value: object): unknown[] {
 function show(value: unknown, depth = 0): string {
   const kind = type(value);
   if (kind === "nil") return "nil";
-  if (kind === "string") return string.format("%q", value as string);
+  if (kind === "string") return string.format("%q", value);
   if (kind === "function") return "<function>";
   if (kind !== "table") return tostring(value);
   const record = value as Record<string | number, unknown>;
@@ -143,7 +141,8 @@ function errorMessage(err: unknown): string {
 
 function fail(message: string): never {
   const failure: Failure = { reforgedTestFailure: true, message };
-  throw failure;
+  // What `throw failure` compiles to; the table reaches pcall unchanged.
+  error(failure, 0);
 }
 
 function keyPath(path: string, key: unknown): string {
@@ -160,7 +159,7 @@ function difference(
   actual: unknown,
   expected: unknown,
   path: string,
-  seen: LuaTable<object, LuaTable<object, boolean>>,
+  seen: LuaMap<object, LuaMap<object, boolean>>,
 ): string | undefined {
   if (actual === expected) return undefined;
   if (type(actual) !== "table" || type(expected) !== "table") {
@@ -170,7 +169,7 @@ function difference(
   const b = expected as Record<string, unknown>;
   let pairsOfA = seen.get(a);
   if (pairsOfA === undefined) {
-    pairsOfA = new LuaTable();
+    pairsOfA = new LuaMap();
     seen.set(a, pairsOfA);
   }
   if (pairsOfA.get(b) === true) return undefined;
@@ -221,7 +220,7 @@ export function expect<T>(actual: T): Matchers<T> {
   return {
     toEqual: (expected) => {
       if (type(actual) === "table" && type(expected) === "table") {
-        const found = difference(actual, expected, "", new LuaTable());
+        const found = difference(actual, expected, "", new LuaMap());
         if (found !== undefined) {
           fail(
             `Expected ${show(actual)} to deeply equal ${show(expected)} (first difference at ${found})`,
@@ -253,7 +252,7 @@ export function expect<T>(actual: T): Matchers<T> {
     toThrow: (message) => {
       if (type(actual) !== "function")
         fail(`Expected a function to call, got ${show(actual)}`);
-      const [ok, err] = pcall(actual as unknown as (this: void) => void);
+      const [ok, err] = pcall(actual as unknown as () => void);
       if (ok) fail("Expected the function to throw, but it returned");
       if (message !== undefined) {
         const text = errorMessage(err);

@@ -121,7 +121,7 @@ describe("consumer stubs", () => {
         fixturePath("stubs", "second.lua"),
       ],
     });
-    expect(order?.tests).toEqual([
+    expect(order.tests).toEqual([
       {
         suite: [],
         name: "loads consumer stubs after the shipped ones, in the listed order",
@@ -137,8 +137,8 @@ describe("consumer stubs", () => {
 
   it("does not load them unless listed", () => {
     const [order] = runLuaTestFiles({ outDir: outDir("consumer-stubs") });
-    expect(order?.tests.map((test) => test.status)).toEqual(["fail", "error"]);
-    expect(order?.tests[1]?.message).toMatch(
+    expect(order.tests.map((test) => test.status)).toEqual(["fail", "error"]);
+    expect(order.tests[1]?.message).toMatch(
       /Native BlzGetLocale is not stubbed$/,
     );
   });
@@ -146,7 +146,7 @@ describe("consumer stubs", () => {
 
 describe("matchers", () => {
   const [matchers] = runLuaTestFiles({ outDir: outDir("matchers") });
-  const tests = matchers?.tests ?? [];
+  const { tests } = matchers;
 
   it("pass when the expectation holds", () => {
     const passing = tests.filter((test) => test.suite[0] === "pass");
@@ -213,7 +213,7 @@ describe("the JSON contract", () => {
         },
       ],
     });
-    expect(norunner?.error).toBe(
+    expect(norunner.error).toBe(
       "norunner_test did not load the reforged-test runner: the global __reforged_test_run is not a function",
     );
   });

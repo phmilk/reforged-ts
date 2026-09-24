@@ -19,7 +19,6 @@ let module: TestModule;
 beforeAll(async () => {
   const exitCode = process.exitCode;
   vitest = await startVitest(
-    "test",
     [],
     { root: project, config: false, watch: false, reporters: [] },
     {
@@ -31,7 +30,7 @@ beforeAll(async () => {
   );
   // The inner run has failing tests by design; they are not this run's.
   process.exitCode = exitCode;
-  const [only] = vitest.state.getTestModules();
+  const only = vitest.state.getTestModules().at(0);
   if (only === undefined)
     throw new Error("the inner vitest run collected no module");
   module = only;
