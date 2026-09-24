@@ -1,44 +1,12 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { rawcodeToString } from "../utils/rawcode";
 import { Widget } from "./widget";
 
 export class Destructable extends Widget {
   declare public readonly handle: destructable;
 
   public readonly skin?: number;
-
-  /** @deprecated use `Destructable.create` or `Destructable.createZ` instead. */
-  constructor(
-    objectId: number,
-    x: number,
-    y: number,
-    z: number,
-    face: number,
-    scale: number,
-    variation: number,
-  ) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-
-    const handle = CreateDestructableZ(
-      objectId,
-      x,
-      y,
-      z,
-      face,
-      scale,
-      variation,
-    );
-
-    if (handle === undefined) {
-      error("w3ts failed to create destructable handle.", 3);
-    }
-
-    super(handle);
-  }
 
   /**
    * Creates a destructable at the specified x-y coordinates.
@@ -58,7 +26,7 @@ export class Destructable extends Widget {
     scale?: number,
     variation?: number,
     skinId?: number,
-  ): Destructable | undefined {
+  ): Destructable {
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
     if (face === undefined) face = 0;
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
@@ -66,34 +34,23 @@ export class Destructable extends Widget {
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
     if (variation === undefined) variation = 0;
 
-    let handle: destructable | undefined;
-
-    if (skinId !== undefined) {
-      handle = BlzCreateDestructableWithSkin(
-        objectId,
-        x,
-        y,
-        face,
-        scale,
-        variation,
-        skinId,
-      );
-    } else {
-      handle = CreateDestructable(objectId, x, y, face, scale, variation);
-    }
-
-    if (handle) {
-      const obj = this.getObject(handle) as Destructable;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-      if (skinId !== undefined) {
-        values.skin = skinId;
-      }
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+    return this.expect(
+      skinId === undefined
+        ? CreateDestructable(objectId, x, y, face, scale, variation)
+        : BlzCreateDestructableWithSkin(
+            objectId,
+            x,
+            y,
+            face,
+            scale,
+            variation,
+            skinId,
+          ),
+      rawcodeToString(objectId),
+      (destructable) => {
+        destructable.skin = skinId;
+      },
+    );
   }
 
   /**
@@ -116,7 +73,7 @@ export class Destructable extends Widget {
     scale?: number,
     variation?: number,
     skinId?: number,
-  ): Destructable | undefined {
+  ): Destructable {
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
     if (face === undefined) face = 0;
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
@@ -124,34 +81,24 @@ export class Destructable extends Widget {
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
     if (variation === undefined) variation = 0;
 
-    let handle: destructable | undefined;
-    if (skinId !== undefined) {
-      handle = BlzCreateDestructableZWithSkin(
-        objectId,
-        x,
-        y,
-        z,
-        face,
-        scale,
-        variation,
-        skinId,
-      );
-    } else {
-      handle = CreateDestructableZ(objectId, x, y, z, face, scale, variation);
-    }
-
-    if (handle) {
-      const obj = this.getObject(handle) as Destructable;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-      if (skinId !== undefined) {
-        values.skin = skinId;
-      }
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+    return this.expect(
+      skinId === undefined
+        ? CreateDestructableZ(objectId, x, y, z, face, scale, variation)
+        : BlzCreateDestructableZWithSkin(
+            objectId,
+            x,
+            y,
+            z,
+            face,
+            scale,
+            variation,
+            skinId,
+          ),
+      rawcodeToString(objectId),
+      (destructable) => {
+        destructable.skin = skinId;
+      },
+    );
   }
 
   public set invulnerable(flag: boolean) {
@@ -241,14 +188,7 @@ export class Destructable extends Widget {
     ShowDestructable(this.handle, flag);
   }
 
-  public static override fromEvent() {
+  public static override fromEvent(): Destructable | undefined {
     return this.fromHandle(GetTriggerDestructable());
-  }
-
-  public static override fromHandle(
-    handle: destructable | undefined,
-  ): Destructable | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }

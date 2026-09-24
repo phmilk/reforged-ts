@@ -26,15 +26,13 @@ Stub helpers the tests call (`__stub_fire_timer`, `__stub_record`) are declared 
 `withNative` replaces one Native global for the length of `body` and puts back what was there before (the stub, or nil), also when `body` throws. It returns what `body` returns. The replacement's calls are recorded in the call log like any stub's, so `toContainCall` still sees them, and it may return nil even where the Typings say the Native never does:
 
 ```ts
-const unit = withNative(
-  "CreateUnit",
+const item = withNative(
+  "UnitItemInSlot",
   () => undefined,
-  () => Unit.create(owner, footman, 30, 40, 180),
+  () => unit.getItemInSlot(2),
 );
-expect(unit).toBeUndefined();
-expect(stubCalls()).toContainCall(
-  `CreateUnit(${ownerRef}, 1751543663, 30, 40, 180)`,
-);
+expect(item).toBeUndefined();
+expect(stubCalls()).toContainCall(`UnitItemInSlot(${unitRef}, 2)`);
 ```
 
 Use it instead of editing the shipped stub files when one test needs a Native to fail or to return a handle it controls.

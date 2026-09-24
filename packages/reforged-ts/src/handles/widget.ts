@@ -1,8 +1,8 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { HandleBase } from "./handle";
 
-export class Widget extends Handle<widget> {
+export class Widget extends HandleBase<widget> {
   /**
    * Get the Widget's life.
    */
@@ -31,12 +31,7 @@ export class Widget extends Handle<widget> {
     return GetWidgetY(this.handle);
   }
 
-  public static fromEvent() {
+  public static fromEvent(): Widget | undefined {
     return this.fromHandle(GetTriggerWidget());
-  }
-
-  public static fromHandle(handle: widget | undefined): Widget | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }
