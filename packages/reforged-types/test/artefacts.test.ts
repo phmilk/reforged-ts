@@ -1,6 +1,6 @@
 /**
  * Seam 1: the files a generation writes besides the three declaration files,
- * namely the entry of the game version, `async-natives.json` and the
+ * namely the entry of the Game version, `async-natives.json` and the
  * manifest of the Patch.
  */
 import { describe, expect, it } from "vitest";
@@ -33,7 +33,7 @@ describe("generate: output paths", () => {
   });
 });
 
-describe("generate: the entry of the game version", () => {
+describe("generate: the entry of the Game version", () => {
   it("references lua-types, the Lua runtime and the common.j and blizzard.j outputs, never common.ai", async () => {
     const result = await generateOk({});
 

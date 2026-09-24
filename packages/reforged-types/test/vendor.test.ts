@@ -62,7 +62,7 @@ afterEach(async () => {
 });
 
 describe("patchFromTag", () => {
-  it("reads the Patch build out of a jass-history tag", () => {
+  it("reads the Build out of a jass-history tag", () => {
     expect(patchFromTag("Reforged-v3.0.0.24268-w3-3a9d8f2")).toBe("3.0.0.24268");
     expect(patchFromTag("Reforged-v3.0.0.24277-w3t-e38e03b")).toBe("3.0.0.24277");
   });

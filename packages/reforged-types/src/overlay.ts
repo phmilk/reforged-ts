@@ -74,11 +74,12 @@ export interface TypeEntry {
 
 /**
  * The kind folders inside a source folder and the entries each holds:
- * `functions` for natives and Jass functions, `globals`, `types`. The folder
- * decides an entry's kind. Kinds live apart because names of different kinds
- * collide case-insensitively within one source file (type `location` and
- * native `Location` in common.j, native `Sleep` and global `SLEEP` in
- * common.ai), and Windows and macOS file systems are case-insensitive.
+ * `functions` for `native` and `function` declarations, `globals`, `types`.
+ * The folder decides an entry's kind. Kinds live apart because names of
+ * different kinds collide case-insensitively within one source file (type
+ * `location` and Native `Location` in common.j, Native `Sleep` and global
+ * `SLEEP` in common.ai), and Windows and macOS file systems are
+ * case-insensitive (ADR 0001).
  */
 export const KIND_FOLDERS = ["functions", "globals", "types"] as const;
 

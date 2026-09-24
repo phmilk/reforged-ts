@@ -16,7 +16,7 @@ const JASSBOT = "https://lep.duckdns.org/jassbot/doc/";
 
 /** The Overlay facts a header shows, for any kind of declaration. */
 export interface HeaderFacts {
-  /** Patch build, rendered as `@patch`. */
+  /** Build, rendered as `@patch`. */
   since?: string | undefined;
   async?: boolean | undefined;
   deprecated?: string | undefined;

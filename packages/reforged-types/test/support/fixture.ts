@@ -105,7 +105,7 @@ export interface FixtureOptions {
 }
 
 /**
- * Writes a vendor folder holding one Patch folder, named after its build, and
+ * Writes a vendor folder holding one Patch folder, named after its Build, and
  * an Overlay folder to a fresh temporary directory.
  */
 export async function writeFixture(
@@ -125,7 +125,7 @@ export async function writeFixture(
 }
 
 /**
- * Writes one Patch folder into `vendorDir`, named after the build its
+ * Writes one Patch folder into `vendorDir`, named after the Build its
  * provenance names (`patch` when it names none); `null` leaves the provenance
  * file out. Returns the folder.
  */

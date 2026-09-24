@@ -95,7 +95,7 @@ export function resolve(
 /**
  * The orphan warnings: every entry that no declaration of any vendored Patch
  * matches by source, kind and name. `declarations` holds the declarations of
- * all vendored Patches, `patches` their builds, oldest first.
+ * all vendored Patches, `patches` their Builds, oldest first.
  */
 export function orphans(
   declarations: readonly Declaration[],

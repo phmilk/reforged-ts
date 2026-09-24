@@ -2,7 +2,7 @@
 
 TypeScript declarations for the Natives of Warcraft III Reforged, generated from the game's own Patch files, for map scripts compiled to Lua with [typescript-to-lua](https://typescripttolua.github.io/).
 
-**Supported Patch: 3.0.0.24268** (game version 3.0.0). The `reforged.patch` field of `package.json` carries the same build.
+**Supported Patch: 3.0.0.24268** (Game version 3.0.0). The `reforged.patch` field of `package.json` carries the same Build.
 
 ## Usage
 
@@ -10,7 +10,7 @@ TypeScript declarations for the Natives of Warcraft III Reforged, generated from
 npm install --save-dev reforged-types
 ```
 
-Add the entry of your game version to `types` in `tsconfig.json`, next to the typescript-to-lua language extensions:
+Add the entry of your Game version to `types` in `tsconfig.json`, next to the typescript-to-lua language extensions:
 
 ```json
 {

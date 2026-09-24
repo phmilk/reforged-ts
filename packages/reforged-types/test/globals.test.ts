@@ -344,7 +344,7 @@ describe("generate: missing and invalid global entries", () => {
     ["an empty deprecated", { deprecated: "" }, "deprecated must be"],
     ["a non-string notes", { notes: 3 }, "notes must be"],
     ["a non-string since", { since: 3 }, "since must be"],
-    ["a since that is no Patch build", { since: "3.0" }, "since must be a Patch build"],
+    ["a since that is no Build", { since: "3.0" }, "since must be a Patch build"],
     ["notes starting a TSDoc tag", { notes: "see @foo" }, 'notes must not contain "@"'],
     ["an unknown origin", { origin: "jassdoc" }, "origin must be"],
     ["an unknown field", { async: true }, 'unknown field "async"'],

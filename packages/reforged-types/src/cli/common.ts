@@ -21,7 +21,7 @@ export const PROCESS_OUTPUT: Output = {
 export const packageRoot = fileURLToPath(new URL("../../", import.meta.url));
 
 export interface Folders {
-  /** Holds one folder per vendored Patch, named after its build. */
+  /** Holds one folder per vendored Patch, named after its Build. */
   vendorDir: string;
   overlayDir: string;
   /** Where the generated files live, by their output paths. */
