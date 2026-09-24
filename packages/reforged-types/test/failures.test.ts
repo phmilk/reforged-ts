@@ -31,7 +31,7 @@ describe("generate: missing Overlay entries", () => {
         line: 2,
         name: "GetUnitX",
         message:
-          "common.j: no Overlay entry for constant native GetUnitX takes unit whichUnit returns real",
+          "common.j: no Overlay entry for constant native GetUnitX takes unit whichUnit returns real; expected common.j/functions/GetUnitX.json",
       },
       {
         severity: "error",
@@ -40,7 +40,7 @@ describe("generate: missing Overlay entries", () => {
         line: 4,
         name: "DoNothing",
         message:
-          "common.j: no Overlay entry for native DoNothing takes nothing returns nothing",
+          "common.j: no Overlay entry for native DoNothing takes nothing returns nothing; expected common.j/functions/DoNothing.json",
       },
       {
         severity: "error",
@@ -49,7 +49,7 @@ describe("generate: missing Overlay entries", () => {
         line: 1,
         name: "BJDebugMsg",
         message:
-          "blizzard.j: no Overlay entry for function BJDebugMsg takes string msg returns nothing",
+          "blizzard.j: no Overlay entry for function BJDebugMsg takes string msg returns nothing; expected blizzard.j/functions/BJDebugMsg.json",
       },
     ]);
   });
@@ -97,10 +97,10 @@ describe("generate: parameter mismatch", () => {
       {
         severity: "error",
         kind: "param-mismatch",
-        file: "common.j/KillUnit.json",
+        file: "common.j/functions/KillUnit.json",
         name: "KillUnit",
         message:
-          "common.j/KillUnit.json: parameters do not match the Patch: " +
+          "common.j/functions/KillUnit.json: parameters do not match the Patch: " +
           `native KillUnit takes unit whichUnit, real delay returns nothing; Overlay has ${overlaySide}`,
       },
     ]);
@@ -113,7 +113,7 @@ describe("generate: parameter mismatch", () => {
     );
 
     expect(result.diagnostics[0]?.message).toBe(
-      "common.j/Tick.json: parameters do not match the Patch: " +
+      "common.j/functions/Tick.json: parameters do not match the Patch: " +
         "native Tick takes nothing returns nothing; Overlay has (x)"
     );
   });
@@ -159,35 +159,6 @@ describe("generate: unknown lines", () => {
       message: "blizzard.j:2: function Open has no endfunction",
     });
   });
-
-  it("reports a globals block as not supported yet, once, and reads on after it", async () => {
-    const result = await run({
-      "common.j": [
-        "type unit extends handle",
-        "globals",
-        "    constant integer A = 1",
-        "endglobals",
-        "junk",
-      ].join("\n"),
-    });
-
-    expect(result.diagnostics).toEqual([
-      {
-        severity: "error",
-        kind: "parse",
-        file: "common.j",
-        line: 2,
-        message: "common.j:2: globals blocks are not supported yet",
-      },
-      {
-        severity: "error",
-        kind: "parse",
-        file: "common.j",
-        line: 5,
-        message: "common.j:5: unknown line: junk",
-      },
-    ]);
-  });
 });
 
 describe("generate: orphan entries", () => {
@@ -205,10 +176,10 @@ describe("generate: orphan entries", () => {
       {
         severity: "warning",
         kind: "orphan",
-        file: "common.j/RequestExtraBooleanData.json",
+        file: "common.j/functions/RequestExtraBooleanData.json",
         name: "RequestExtraBooleanData",
         message:
-          "common.j/RequestExtraBooleanData.json: orphan Overlay entry, common.j of Patch 3.0.0.24268 declares no RequestExtraBooleanData",
+          "common.j/functions/RequestExtraBooleanData.json: orphan Overlay entry, common.j of Patch 3.0.0.24268 declares no RequestExtraBooleanData",
       },
     ]);
   });
@@ -219,14 +190,14 @@ describe("generate: invalid inputs", () => {
     const result = await run(
       { "common.j": "native A takes nothing returns nothing\n" },
       [],
-      { rawOverlay: { "common.j/A.json": "{ not json" } }
+      { rawOverlay: { "common.j/functions/A.json": "{ not json" } }
     );
 
     expect(result.ok).toBe(false);
     expect(result.diagnostics[0]).toMatchObject({
       severity: "error",
       kind: "overlay-invalid",
-      file: "common.j/A.json",
+      file: "common.j/functions/A.json",
     });
   });
 
@@ -251,17 +222,17 @@ describe("generate: invalid inputs", () => {
       const result = await run(
         { "common.j": "native A takes nothing returns nothing\n" },
         [],
-        { rawOverlay: { "common.j/A.json": JSON.stringify(json) } }
+        { rawOverlay: { "common.j/functions/A.json": JSON.stringify(json) } }
       );
 
       expect(result.ok).toBe(false);
       expect(result.diagnostics[0]).toMatchObject({
         severity: "error",
         kind: "overlay-invalid",
-        file: "common.j/A.json",
+        file: "common.j/functions/A.json",
       });
       expect(result.diagnostics[0]?.message).toContain(
-        `common.j/A.json: ${field}`
+        `common.j/functions/A.json: ${field}`
       );
     }
   );

@@ -35,7 +35,7 @@ describe("typings:generate", () => {
         "Generated 3 files for Patch 3.0.0.24268.",
         "",
         "Warnings (1):",
-        "- [ ] common.j/RequestExtraBooleanData.json: orphan Overlay entry, common.j of Patch 3.0.0.24268 declares no RequestExtraBooleanData",
+        "- [ ] common.j/functions/RequestExtraBooleanData.json: orphan Overlay entry, common.j of Patch 3.0.0.24268 declares no RequestExtraBooleanData",
         "",
       ].join("\n")
     );
@@ -75,11 +75,11 @@ describe("typings:generate", () => {
         "",
         "Errors (3):",
         "- [ ] common.j:3: unknown line: bogus",
-        "- [ ] common.j: no Overlay entry for native A takes nothing returns nothing",
-        "- [ ] common.j/B.json: parameters do not match the Patch: native B takes integer n returns nothing; Overlay has (m)",
+        "- [ ] common.j: no Overlay entry for native A takes nothing returns nothing; expected common.j/functions/A.json",
+        "- [ ] common.j/functions/B.json: parameters do not match the Patch: native B takes integer n returns nothing; Overlay has (m)",
         "",
         "Warnings (1):",
-        "- [ ] common.j/Gone.json: orphan Overlay entry, common.j of Patch 3.0.0.24268 declares no Gone",
+        "- [ ] common.j/functions/Gone.json: orphan Overlay entry, common.j of Patch 3.0.0.24268 declares no Gone",
         "",
       ].join("\n")
     );

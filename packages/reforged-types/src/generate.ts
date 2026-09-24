@@ -17,7 +17,10 @@ import { resolve } from "./resolve.js";
 export interface GenerateInput {
   /** A vendored Patch folder: `common.j`, `blizzard.j`, `common.ai`, `provenance.json`. */
   patchDir: string;
-  /** The Overlay folder: one folder per source file, one JSON per declaration. */
+  /**
+   * The Overlay folder: one folder per source file, holding the kind folders
+   * `functions`, `globals` and `types`, one JSON per declaration.
+   */
   overlayDir: string;
 }
 

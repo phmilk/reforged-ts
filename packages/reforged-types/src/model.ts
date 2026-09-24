@@ -37,7 +37,38 @@ export interface FunctionDeclaration extends Located {
   returns: string;
 }
 
-export type Declaration = TypeDeclaration | FunctionDeclaration;
+/**
+ * A declaration of the `globals` block, in one of its four forms:
+ * `constant <type> NAME = <expr>`, `<type> NAME = <expr>`, `<type> NAME`
+ * and `<type> array NAME`.
+ */
+export interface GlobalDeclaration extends Located {
+  kind: "global";
+  constant: boolean;
+  array: boolean;
+  /** Jass type, verbatim (the element type of an array). */
+  type: string;
+  name: string;
+  /** Initializer text, verbatim; for the header only, never a literal type. */
+  initializer?: string;
+}
+
+export type Declaration =
+  | TypeDeclaration
+  | FunctionDeclaration
+  | GlobalDeclaration;
+
+/** The Jass line of a global without its trailing comment. */
+export function jassGlobal(global: GlobalDeclaration): string {
+  const words = [
+    ...(global.constant ? ["constant"] : []),
+    global.type,
+    ...(global.array ? ["array"] : []),
+    global.name,
+    ...(global.initializer === undefined ? [] : ["=", global.initializer]),
+  ];
+  return words.join(" ");
+}
 
 /** The Jass header of a function, as the failure checklist prints it. */
 export function jassSignature(fn: FunctionDeclaration): string {

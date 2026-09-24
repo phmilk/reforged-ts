@@ -3,12 +3,16 @@
  * generated-file banner, the common.j prelude, then every declaration in
  * source order. Deterministic: LF, no timestamps, one trailing newline.
  */
-import { functionHeader } from "./header.js";
+import { functionHeader, globalHeader, typeHeader } from "./header.js";
 import { CALLBACK_ALIASES, tsType } from "./jass-types.js";
 import type { SourceName, TypeDeclaration } from "./model.js";
 import { parameterName } from "./names.js";
 import type { PatchIdentity } from "./provenance.js";
-import type { Resolved, ResolvedFunction } from "./resolve.js";
+import type {
+  Resolved,
+  ResolvedFunction,
+  ResolvedGlobal,
+} from "./resolve.js";
 
 export const REGENERATE_COMMAND =
   "pnpm --filter reforged-types typings:generate";
@@ -23,10 +27,17 @@ export function emitFile(
 
   let types: string[] | undefined;
   for (const declaration of declarations) {
-    if (declaration.kind === "type") {
+    if (declaration.kind === "type" && typeHeader(declaration).length > 0) {
+      // A type with a header stands in its own block, as a function does.
+      types = undefined;
+      blocks.push([...typeHeader(declaration), typeDeclaration(declaration)]);
+    } else if (declaration.kind === "type") {
       // Consecutive types share one block, one line each.
       if (!types) blocks.push((types = []));
       types.push(typeDeclaration(declaration));
+    } else if (declaration.kind === "global") {
+      types = undefined;
+      blocks.push(globalDeclaration(declaration));
     } else {
       types = undefined;
       blocks.push(functionDeclaration(declaration));
@@ -57,6 +68,26 @@ function prelude(): string[] {
 
 function typeDeclaration({ name, parent }: TypeDeclaration): string {
   return `declare interface ${name} extends ${parent} { __${name}: never }`;
+}
+
+/**
+ * `constant` globals are `declare const`, the others `declare let`. An array
+ * is `Record<number, T>`: Jass arrays index from zero, unlike the one-based
+ * arrays typescript-to-lua emits. A nullable global is `T | undefined`; for
+ * an array, its elements are.
+ */
+function globalDeclaration(global: ResolvedGlobal): string[] {
+  const keyword = global.constant ? "const" : "let";
+  const type = tsType(global.type);
+  const value = global.overlay.nullable
+    ? `${unionMember(type)} | undefined`
+    : type;
+  return [
+    ...globalHeader(global),
+    `declare ${keyword} ${global.name}: ${
+      global.array ? `Record<number, ${value}>` : value
+    };`,
+  ];
 }
 
 function functionDeclaration(fn: ResolvedFunction): string[] {
