@@ -29,6 +29,7 @@
   "files": [
     "/dist/**/*.lua",
     "/dist/**/*.d.ts",
+    "/migration/**",
     "/LICENSE",
     "/README.md"
   ],
@@ -49,6 +50,7 @@
   "devDependencies": {
     "@types/node": "catalog:",
     "@typescript-to-lua/language-extensions": "catalog:",
+    "ajv": "catalog:",
     "lua-types": "catalog:",
     "reforged-test": "workspace:*",
     "reforged-types": "workspace:*",

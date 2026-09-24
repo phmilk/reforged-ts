@@ -235,3 +235,64 @@ function parseConfig(
   }
   return config;
 }
+
+export interface PublicApi {
+  /**
+   * Whether the library exports a class of that name and, when a member is
+   * named, whether the class has a public static or instance member of that
+   * name (its own or inherited).
+   */
+  has(symbol: { className: string; member: string | undefined }): boolean;
+}
+
+/** The public API the Map project reads from the library's entry file. */
+export function publicApi(project: MapProject): PublicApi {
+  const config = parseConfig(project.tsconfig, { noEmit: true });
+  const entry = join(
+    project.dir,
+    "node_modules",
+    "reforged-ts",
+    "dist",
+    "index.d.ts",
+  );
+  const program = ts.createProgram({
+    rootNames: [entry],
+    options: config.options,
+  });
+  const checker = program.getTypeChecker();
+  const source = program.getSourceFile(entry);
+  const entryModule =
+    source === undefined ? undefined : checker.getSymbolAtLocation(source);
+  if (entryModule === undefined) {
+    throw new Error(`${entry} is not a module`);
+  }
+  const exported = new Map(
+    checker
+      .getExportsOfModule(entryModule)
+      .map((symbol) => [
+        symbol.name,
+        symbol.flags & ts.SymbolFlags.Alias
+          ? checker.getAliasedSymbol(symbol)
+          : symbol,
+      ]),
+  );
+  const isPublic = (member: ts.Symbol) =>
+    (member.declarations ?? []).every(
+      (declaration) =>
+        (ts.getCombinedModifierFlags(declaration) &
+          (ts.ModifierFlags.Private | ts.ModifierFlags.Protected)) ===
+        0,
+    );
+  return {
+    has({ className, member }) {
+      const symbol = exported.get(className);
+      if (symbol === undefined) return false;
+      if (member === undefined) return true;
+      if (!(symbol.flags & ts.SymbolFlags.Class)) return false;
+      return [
+        checker.getTypeOfSymbol(symbol).getProperty(member),
+        checker.getDeclaredTypeOfSymbol(symbol).getProperty(member),
+      ].some((found) => found !== undefined && isPublic(found));
+    },
+  };
+}

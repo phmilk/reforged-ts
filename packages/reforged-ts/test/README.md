@@ -48,3 +48,7 @@ Use it instead of editing the shipped stub files when one test needs a Native to
 - A file in `negative/` states each error it expects with a trailing comment on the offending line, `// error TS2322` (several codes separated by spaces), and must produce exactly those: a diagnostic not stated fails the test, and so does a stated one that does not occur.
 
 A fixture imports the library as a Map project does, `import { Unit } from "reforged-ts"`, and is a module (it has an `export`). In the editor and the lint, `node/fixtures/declarations/tsconfig.json` maps `reforged-ts` to the sources.
+
+### The rename map
+
+`node/renames.test.ts` validates `migration/renames.json`, the removed and renamed symbols the migration guide and the legacy-names lint rule read, through the loader in `node/support/renames.ts`: the file must match `migration/renames.schema.json`, every entry must carry the first release's version pair (`w3ts@3` to `reforged-ts@1`), no `old` symbol may appear twice, every replacement in `new` must be a class or a public static or instance member of one in the library's emitted declarations, and every member a build step removes must have an entry. A step that removes or renames a public symbol appends its entries to the map and its list of removed members to the test, and its behaviour changes that are not renames to `migration/behaviour-changes.md`.

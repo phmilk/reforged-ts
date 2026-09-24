@@ -1,0 +1,391 @@
+[
+  {
+    "old": "new CameraSetup(...)",
+    "new": "CameraSetup.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `CameraSetup.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Destructable(...)",
+    "new": "Destructable.createZ(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The constructor took a z coordinate, which `Destructable.createZ` takes in the same position with the same other arguments, while `Destructable.create` has none."
+  },
+  {
+    "old": "new Dialog(...)",
+    "new": "Dialog.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Dialog.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new DialogButton(...)",
+    "new": "DialogButton.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `DialogButton.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Effect(...)",
+    "new": ["Effect.create(...)", "Effect.createAttachment(...)"],
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The overloads split by argument shape: `(modelName, x, y)` is `Effect.create` and `(modelName, targetWidget, attachPointName)` is `Effect.createAttachment`, each with the same arguments."
+  },
+  {
+    "old": "new FogModifier(...)",
+    "new": "FogModifier.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `FogModifier.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Force(...)",
+    "new": "Force.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Force.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Frame(...)",
+    "new": [
+      "Frame.create(...)",
+      "Frame.createSimple(...)",
+      "Frame.createType(...)"
+    ],
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The overloads split by argument shape: `(name, owner, priority, createContext)` is `Frame.create` with the same arguments, `(name, owner, priority)` is `Frame.createSimple` with the same arguments, and `(name, owner, priority, createContext, typeName, inherits)` is `Frame.createType(name, owner, createContext, typeName, inherits)`, which drops the priority the constructor ignored."
+  },
+  {
+    "old": "new GameCache(...)",
+    "new": "GameCache.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `GameCache.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Group(...)",
+    "new": "Group.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Group.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Image(...)",
+    "new": "Image.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Image.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Item(...)",
+    "new": "Item.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Item.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Leaderboard(...)",
+    "new": "Leaderboard.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Leaderboard.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new MapPlayer(...)",
+    "new": "MapPlayer.fromIndex(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "Players are not created, so the constructor, private in w3ts 3.x, gives way to the lookup `MapPlayer.fromIndex`, which returns `undefined` for a slot out of range."
+  },
+  {
+    "old": "new Multiboard(...)",
+    "new": "Multiboard.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Multiboard.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new MultiboardItem(...)",
+    "new": "MultiboardItem.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `MultiboardItem.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Point(...)",
+    "new": "Point.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Point.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Quest(...)",
+    "new": "Quest.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Quest.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new QuestItem(...)",
+    "new": "QuestItem.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `QuestItem.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Rectangle(...)",
+    "new": "Rectangle.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Rectangle.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Region(...)",
+    "new": "Region.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Region.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Sound(...)",
+    "new": "Sound.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Sound.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new TextTag(...)",
+    "new": "TextTag.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `TextTag.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Timer(...)",
+    "new": "Timer.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Timer.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new TimerDialog(...)",
+    "new": "TimerDialog.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `TimerDialog.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Trigger(...)",
+    "new": "Trigger.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Trigger.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Ubersplat(...)",
+    "new": "Ubersplat.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Ubersplat.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new Unit(...)",
+    "new": "Unit.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `Unit.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "new WeatherEffect(...)",
+    "new": "WeatherEffect.create(...)",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The deprecated constructor is gone: `WeatherEffect.create` takes the same arguments and is the one way to create the Handle, throwing when the game returns nothing."
+  },
+  {
+    "old": "Frame.parent",
+    "new": ["Frame.getParent", "Frame.setParent"],
+    "kind": "accessor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The deprecated accessor splits into `getParent()`, which returns `undefined` when the frame has no parent, and `setParent(parent)`."
+  },
+  {
+    "old": "Unit.owner",
+    "new": ["Unit.getOwner", "Unit.setOwner"],
+    "kind": "accessor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The deprecated accessor splits into `getOwner()` and `setOwner(player)`, whose `changeColor` argument defaults to `true` as the setter did."
+  },
+  {
+    "old": "Unit.point",
+    "new": ["Unit.getPoint", "Unit.setPoint"],
+    "kind": "accessor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The deprecated accessor splits into `getPoint()`, which creates a new location on each call, and `setPoint(point)`."
+  },
+  {
+    "old": "Group.getEnumUnit",
+    "new": "Unit.fromEnum",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The enumerated unit has one accessor, on the class it returns, instead of two names for one Native."
+  },
+  {
+    "old": "Group.getFilterUnit",
+    "new": "Unit.fromFilter",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The filtered unit has one accessor, on the class it returns, instead of two names for one Native."
+  },
+  {
+    "old": "MapPlayer.create",
+    "new": "MapPlayer.fromIndex",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "Players are not created, so the factory, private in w3ts 3.x, gives way to the lookup `MapPlayer.fromIndex`, which returns `undefined` for a slot out of range."
+  }
+]
