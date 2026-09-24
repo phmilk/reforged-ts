@@ -110,7 +110,7 @@ export abstract class Handle<T extends handle> {
     detail = "",
     init?: (wrapper: Initialising<C>) => void,
   ): C {
-    return created(this, handle, detail, init);
+    return wrapCreated(this, handle, detail, init);
   }
 }
 
@@ -129,7 +129,7 @@ export function expectWrapper<C extends Handle<handle>>(
   handle: C["handle"] | undefined,
   detail = "",
 ): C {
-  return created(cls, handle, detail);
+  return wrapCreated(cls, handle, detail);
 }
 
 /**
@@ -139,7 +139,7 @@ export function expectWrapper<C extends Handle<handle>>(
  * tail-called by the creation member), so level 2 names the frame that
  * called the creation member.
  */
-function created<C extends Handle<handle>>(
+function wrapCreated<C extends Handle<handle>>(
   cls: WrapperClass<C>,
   handle: C["handle"] | undefined,
   detail: string,
