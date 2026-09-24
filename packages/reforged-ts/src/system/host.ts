@@ -2,7 +2,7 @@
 
 import { MapPlayer } from "../handles/index";
 import { Timer } from "../handles/timer";
-import { addScriptHook, W3TS_HOOK } from "../hooks/index";
+import { onEntryPoint } from "../init/entry-points";
 import { base64Decode, base64Encode } from "./base64";
 import { BinaryReader } from "./binaryreader";
 import { BinaryWriter } from "./binarywriter";
@@ -105,5 +105,5 @@ function onMain() {
   checkTimer.start(0.0, false, findHost);
 }
 
-addScriptHook(W3TS_HOOK.MAIN_AFTER, onMain);
-addScriptHook(W3TS_HOOK.CONFIG_BEFORE, onConfig);
+onEntryPoint("main::after", "library", onMain, "host detection");
+onEntryPoint("config::before", "library", onConfig, "host join time");

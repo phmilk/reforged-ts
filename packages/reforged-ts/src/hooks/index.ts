@@ -1,75 +1,53 @@
 /** @noSelfInFile */
 
-// eslint-disable-next-line prefer-const -- the entry point global is declared with let because the hooks reassign it; step 4 (#49) removes it
-declare let main: () => void;
-// eslint-disable-next-line prefer-const -- the entry point global is declared with let because the hooks reassign it; step 4 (#49) removes it
-declare let config: () => void;
+// The deprecated alias of the Init stages, kept one release for w3ts 3.x
+// consumers: `addScriptHook` registers a callback before or after the map
+// script's `main` or `config`, at the alias's old timing, now on the init
+// machinery (each callback under pcall, in both load positions). The stage
+// that replaces each entry point is in the deprecation notes; the two
+// `config` entry points have no stage in this release.
 
-const oldMain = main;
-const oldConfig = config;
+import { isEntryPoint, onEntryPoint } from "../init/entry-points";
+import type { EntryPoint } from "../init/state";
 
-type scriptHookSignature = () => void;
-
-const hooksMainBefore: scriptHookSignature[] = [];
-const hooksMainAfter: scriptHookSignature[] = [];
-const hooksConfigBefore: scriptHookSignature[] = [];
-const hooksConfigAfter: scriptHookSignature[] = [];
-
-export const executeHooksMainBefore = () =>
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- adding braces changes the emitted Lua; step 4 (#49) removes it
-  hooksMainBefore.forEach((func) => func());
-export const executeHooksMainAfter = () =>
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- adding braces changes the emitted Lua; step 4 (#49) removes it
-  hooksMainAfter.forEach((func) => func());
-
-export function hookedMain() {
-  executeHooksMainBefore();
-  oldMain();
-  executeHooksMainAfter();
-}
-
-export const executeHooksConfigBefore = () =>
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- adding braces changes the emitted Lua; step 4 (#49) removes it
-  hooksConfigBefore.forEach((func) => func());
-export const executeHooksConfigAfter = () =>
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- adding braces changes the emitted Lua; step 4 (#49) removes it
-  hooksConfigAfter.forEach((func) => func());
-
-export function hookedConfig() {
-  executeHooksConfigBefore();
-  oldConfig();
-  executeHooksConfigAfter();
-}
-
-// eslint-disable-next-line no-useless-assignment -- the hooks reassign the global entry point; step 4 (#49) removes it
-main = hookedMain;
-// eslint-disable-next-line no-useless-assignment -- the hooks reassign the global entry point; step 4 (#49) removes it
-config = hookedConfig;
-
-type W3tsHookType =
-  "main::before" | "main::after" | "config::before" | "config::after";
-
+/**
+ * The entry points of `addScriptHook`.
+ * @deprecated Register an Init stage instead: `Init.onGlobals` for
+ * `MAIN_BEFORE` and `Init.onInitTriggers` for `MAIN_AFTER`. `CONFIG_BEFORE`
+ * and `CONFIG_AFTER` have no stage in this release: code that needs lobby
+ * timing stays on `addScriptHook` until 2.0.
+ */
 export enum W3TS_HOOK {
+  /**
+   * @deprecated Use `Init.onGlobals`: later than before, after
+   * `InitGlobals`, by design.
+   */
   MAIN_BEFORE = "main::before",
+  /** @deprecated Use `Init.onInitTriggers`: the same moment, the end of `main`. */
   MAIN_AFTER = "main::after",
+  /** @deprecated No stage in this release: stay on `addScriptHook` until 2.0. */
   CONFIG_BEFORE = "config::before",
+  /** @deprecated No stage in this release: stay on `addScriptHook` until 2.0. */
   CONFIG_AFTER = "config::after",
 }
 
-const entryPoints: Record<string, scriptHookSignature[]> = {
-  [W3TS_HOOK.MAIN_BEFORE]: hooksMainBefore,
-  [W3TS_HOOK.MAIN_AFTER]: hooksMainAfter,
-  [W3TS_HOOK.CONFIG_BEFORE]: hooksConfigBefore,
-  [W3TS_HOOK.CONFIG_AFTER]: hooksConfigAfter,
-};
-
+/**
+ * Registers `hook` to run at `entryPoint`, before or after the map script's
+ * `main` or `config`, and returns whether the entry point is one of the
+ * four. The hook runs under pcall: a failure prints one line, and the other
+ * hooks of the entry point and the entry point itself still run.
+ * @deprecated Register an Init stage instead: `Init.onGlobals` for
+ * `main::before` and `Init.onInitTriggers` for `main::after`. The two
+ * `config` entry points have no stage in this release: code that needs
+ * lobby timing stays on this alias until 2.0.
+ */
 export function addScriptHook(
-  entryPoint: W3tsHookType,
-  hook: scriptHookSignature,
+  entryPoint: EntryPoint,
+  hook: () => void,
 ): boolean {
-  if (!(entryPoint in entryPoints)) {
+  if (!isEntryPoint(entryPoint)) {
     return false;
   }
-  entryPoints[entryPoint].push(hook);
+  onEntryPoint(entryPoint, "project", hook);
   return true;
 }

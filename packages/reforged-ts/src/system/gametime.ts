@@ -1,7 +1,7 @@
 /** @noSelfInFile */
 
 import { Timer } from "../handles/timer";
-import { addScriptHook, W3TS_HOOK } from "../hooks/index";
+import { onEntryPoint } from "../init/entry-points";
 
 let elapsedTime = 0.0;
 let gameTimer: Timer | undefined;
@@ -11,8 +11,13 @@ export function getElapsedTime() {
   return elapsedTime + gameTimer.elapsed;
 }
 
-addScriptHook(W3TS_HOOK.MAIN_AFTER, () => {
-  gameTimer = Timer.create().start(30, true, () => {
-    elapsedTime += 30;
-  });
-});
+onEntryPoint(
+  "main::after",
+  "library",
+  () => {
+    gameTimer = Timer.create().start(30, true, () => {
+      elapsedTime += 30;
+    });
+  },
+  "game time",
+);
