@@ -140,14 +140,14 @@ The runner writes it with its own encoder, with keys sorted, because the game's 
 
 ### The shipped baseline
 
-`stubs/base.lua` defines what the library reads when its modules load, before any test runs:
+`stubs/base.lua` defines the baseline every test can rely on, before any test runs:
 
-- the globals `bj_MAX_PLAYER_SLOTS` (28), `bj_MAX_PLAYERS` (24) and `bj_UNIT_FACING` (270.0);
+- the globals `bj_MAX_PLAYER_SLOTS` (28), `bj_MAX_PLAYERS` (24) and `bj_UNIT_FACING` (270.0), which the library reads when its modules load;
 - the slot-state constants `PLAYER_SLOT_STATE_EMPTY`, `PLAYER_SLOT_STATE_PLAYING` and `PLAYER_SLOT_STATE_LEFT`, and the controller constants `MAP_CONTROL_USER`, `MAP_CONTROL_COMPUTER`, `MAP_CONTROL_RESCUABLE`, `MAP_CONTROL_NEUTRAL`, `MAP_CONTROL_CREEP` and `MAP_CONTROL_NONE`: opaque values a test compares by identity (`toBe`), rendered by name in the call log;
-- the Natives `Player`, `GetPlayerId`, `GetHandleId` and `CreateTrigger`;
+- the Natives `Player`, `GetPlayerId`, `GetHandleId` and `CreateTrigger`: what the library's `globals` stage calls to fill `Players` and create the sync Trigger once a test runs `InitGlobals`, and what every Wrapper reads its ids with;
 - `FourCC`, a Lua helper of the game rather than a Native.
 
-`main` and `config` stay nil, because the library's Hook code (`hooks/index.ts`) reads them before the game would define them. For the same reason the glue does not make undefined globals an error.
+The editor's entry points (`config`, `main`, `InitGlobals`, `InitCustomTriggers`, `RunInitializationTriggers`, `MarkGameStarted`) stay nil. The library wraps the ones that exist when it loads and captures the others on their first assignment, so it loads with none of them defined, and a test defines the ones it drives, in the load position it stands in for. The library makes no Handle-creating Native call when it loads: requiring it adds no `Player`, `CreateTrigger` or `CreateTimer` line to the call log. The glue does not make an undefined global an error either: which entry points exist is the test's decision.
 
 It also holds the shared machinery the other stub files use:
 

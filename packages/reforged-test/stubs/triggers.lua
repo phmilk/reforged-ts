@@ -1,6 +1,7 @@
--- reforged-test stubs for the triggers family. CreateTrigger is in base.lua
--- because the library calls it at module load. A trigger never fires on its
--- own: TriggerAddAction stores the action, and a test runs the actions with
+-- reforged-test stubs for the triggers family. CreateTrigger is in base.lua,
+-- the baseline every test can rely on (the library's globals stage creates
+-- the sync Trigger with it). A trigger never fires on its own:
+-- TriggerAddAction stores the action, and a test runs the actions with
 -- __stub_fire_trigger.
 
 function TriggerAddAction(whichTrigger, actionFunc)
