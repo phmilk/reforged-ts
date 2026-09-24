@@ -73,8 +73,16 @@ The tools that turn a Map project's TypeScript into a Lua map script: TypeScript
 _Avoid_: build system, pipeline, stack
 
 **Patch**:
-A released version of the game, identified by version and build number (3.0.0.24268). Typings and library releases are tied to a Patch.
+A released version of the game, identified by its Build (3.0.0.24268). Typings and library releases are tied to a Patch.
 _Avoid_: version, update, release (a library release is not a game patch)
+
+**Build**:
+The full four-component number that identifies one Patch (3.0.0.24268); its first three components are its Game version.
+_Avoid_: version, patch number, build number
+
+**Game version**:
+The first three components of a Build (3.0.0), shared by every Patch released under that number; a Map project selects its Typings by Game version.
+_Avoid_: version (alone), Patch (one Game version can span several Builds)
 
 **Agent skill**:
 A folder holding a `SKILL.md` that scripts one workflow for an AI coding agent to follow when invoked (`add-wrapper`, `map-feature`).
