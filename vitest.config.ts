@@ -52,8 +52,8 @@ export default defineConfig({
         },
       },
     ],
-    // Neither the library's Lua tests nor the sources and fixtures the
-    // declaration test reads are in the vitest module graph: a change to one
+    // Neither the library's Lua tests nor the sources, fixtures and rename
+    // map the Node tests read are in the vitest module graph: a change to one
     // of them reruns the spec that reads it.
     watchTriggerPatterns: [
       {
@@ -64,6 +64,10 @@ export default defineConfig({
         pattern:
           /\/packages\/reforged-ts\/(?:src|test\/node\/fixtures)\/.+\.ts$/,
         testsToRun: () => "packages/reforged-ts/test/node/declarations.test.ts",
+      },
+      {
+        pattern: /\/packages\/reforged-ts\/(?:src\/.+\.ts|migration\/.+)$/,
+        testsToRun: () => "packages/reforged-ts/test/node/renames.test.ts",
       },
     ],
   },
