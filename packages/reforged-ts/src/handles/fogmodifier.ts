@@ -1,53 +1,10 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
-import { MapPlayer } from "./player";
-import { Rectangle } from "./rect";
+import { HandleBase } from "./handle";
+import type { MapPlayer } from "./player";
+import type { Rectangle } from "./rect";
 
-export class FogModifier extends Handle<fogmodifier> {
-  /**
-   * @deprecated use `FogModifier.create` instead.
-   * @param forWhichPlayer
-   * @param whichState Determines what type of fog the area is being modified to.
-   * @param centerX The x-coordinate where the fog modifier begins.
-   * @param centerY The y-coordinate where the fog modifier begins.
-   * @param radius Determines the extent that the fog travels (expanding from the coordinates ( centerx , centery )).
-   * @param useSharedVision Determines whether or not the fog modifier will be applied to allied players with shared vision.
-   * @param afterUnits Will determine whether or not units in that area will be masked by the fog.
-   * If it is set to true and the fogstate is masked, it will hide all the units in the fog modifier's radius and mask the area.
-   * If set to false, it will only mask the areas that are not visible to the units.
-   */
-  constructor(
-    forWhichPlayer: MapPlayer,
-    whichState: fogstate,
-    centerX: number,
-    centerY: number,
-    radius: number,
-    useSharedVision: boolean,
-    afterUnits: boolean,
-  ) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-
-    const handle = CreateFogModifierRadius(
-      forWhichPlayer.handle,
-      whichState,
-      centerX,
-      centerY,
-      radius,
-      useSharedVision,
-      afterUnits,
-    );
-
-    if (handle === undefined) {
-      error("w3ts failed to create fogmodifier handle.", 3);
-    }
-
-    super(handle);
-  }
-
+export class FogModifier extends HandleBase<fogmodifier> {
   /**
    * @param forWhichPlayer
    * @param whichState Determines what type of fog the area is being modified to.
@@ -67,27 +24,18 @@ export class FogModifier extends Handle<fogmodifier> {
     radius: number,
     useSharedVision: boolean,
     afterUnits: boolean,
-  ): FogModifier | undefined {
-    const handle = CreateFogModifierRadius(
-      forWhichPlayer.handle,
-      whichState,
-      centerX,
-      centerY,
-      radius,
-      useSharedVision,
-      afterUnits,
+  ): FogModifier {
+    return this.expect(
+      CreateFogModifierRadius(
+        forWhichPlayer.handle,
+        whichState,
+        centerX,
+        centerY,
+        radius,
+        useSharedVision,
+        afterUnits,
+      ),
     );
-
-    if (handle) {
-      const obj = this.getObject(handle) as FogModifier;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-
-    return undefined;
   }
 
   public destroy() {
@@ -102,21 +50,17 @@ export class FogModifier extends Handle<fogmodifier> {
     FogModifierStop(this.handle);
   }
 
-  public static fromHandle(
-    handle: fogmodifier | undefined,
-  ): FogModifier | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
-  }
-
+  /**
+   * A new fog modifier over `where`: a creation, whatever its name says.
+   */
   public static fromRect(
     forWhichPlayer: MapPlayer,
     whichState: fogstate,
     where: Rectangle,
     useSharedVision: boolean,
     afterUnits: boolean,
-  ) {
-    return this.fromHandle(
+  ): FogModifier {
+    return this.expect(
       CreateFogModifierRect(
         forWhichPlayer.handle,
         whichState,
