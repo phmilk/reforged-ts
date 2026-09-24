@@ -57,8 +57,9 @@ end
 -- One player handle per slot, created on first use and returned after.
 local players = {}
 
-function Player(number)
-  __stub_record("Player", number)
+-- The handle of a slot, without a call-log line: for stubs that return a
+-- player (GetLocalPlayer) and must return the same handle as Player.
+function __stub_player(number)
   local player = players[number]
   if player == nil then
     player = __stub_new_handle("player")
@@ -66,6 +67,11 @@ function Player(number)
     players[number] = player
   end
   return player
+end
+
+function Player(number)
+  __stub_record("Player", number)
+  return __stub_player(number)
 end
 
 function GetPlayerId(whichPlayer)

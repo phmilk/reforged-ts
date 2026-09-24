@@ -86,7 +86,7 @@ describe("unstubbed Natives", () => {
         suite: [],
         name: "calls a Native no stub defines",
         status: "error",
-        message: "natives_test.lua:5: Native CreateUnit is not stubbed",
+        message: "natives_test.lua:5: Native PauseGame is not stubbed",
       },
     ]);
   });
@@ -96,7 +96,7 @@ describe("unstubbed Natives", () => {
       module: "load_test",
       name: "load.test.ts",
       tests: [],
-      error: "load_test.lua:3: Native GetLocalPlayer is not stubbed",
+      error: "load_test.lua:3: Native BlzGetLocale is not stubbed",
     });
   });
 });
@@ -139,7 +139,7 @@ describe("consumer stubs", () => {
     const [order] = runLuaTestFiles({ outDir: outDir("consumer-stubs") });
     expect(order?.tests.map((test) => test.status)).toEqual(["fail", "error"]);
     expect(order?.tests[1]?.message).toMatch(
-      /Native GetLocalPlayer is not stubbed$/,
+      /Native BlzGetLocale is not stubbed$/,
     );
   });
 });

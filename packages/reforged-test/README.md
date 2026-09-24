@@ -153,6 +153,20 @@ It also holds the shared machinery the other stub files use:
 - `__stub_record(name, ...)` appends one line, `Name(arg, arg)`, to the call log. Handles are rendered as `kind#id`, strings are quoted and functions are shown as `<function>`.
 - `__stub_new_handle(kind)` returns a new handle. A handle is a table carrying `__kind` and `__handleId`. Ids are sequential from a fixed base, so the first handle of a state is `1048577`.
 - `__stub_format(value)` renders one argument as `__stub_record` does.
+- `__stub_player(number)` returns the player handle of a slot, the one `Player` returns, without a call-log line. Stubs that return a player use it.
+
+### The shipped families
+
+One file per Native family, loaded after `base.lua` by name:
+
+| File           | Natives                                                        | Firing helper                                                                        |
+| -------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `players.lua`  | `GetLocalPlayer`, which returns the player in slot 0           |                                                                                      |
+| `timers.lua`   | `CreateTimer`, `TimerStart`, `TimerGetTimeout`, `DestroyTimer` | `__stub_fire_timer(timer)` runs the handler `TimerStart` stored, once.               |
+| `triggers.lua` | `TriggerAddAction`                                             | `__stub_fire_trigger(trigger)` runs the trigger's actions once each, in added order. |
+| `units.lua`    | `CreateUnit`, `GetOwningPlayer`, `GetUnitTypeId`               |                                                                                      |
+
+A timer or trigger never fires on its own: a test fires it with the helper. The helpers are not Natives, so they add no call-log line. A TypeScript test declares the ones it calls, for example `declare function __stub_fire_timer(whichTimer: timer): void;`.
 
 ### Stub authoring rules
 
