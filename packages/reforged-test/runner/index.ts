@@ -95,6 +95,17 @@ function sortedKeys(value: object): unknown[] {
   return keys;
 }
 
+/**
+ * Whether a table is an array: its keys (sorted, as sortedKeys returns them)
+ * are 1..n, or it has none.
+ */
+function isArray(record: object, keys: unknown[]): boolean {
+  return (
+    keys.length === 0 ||
+    (keys.length === (record as unknown[]).length && type(keys[0]) === "number")
+  );
+}
+
 function show(value: unknown, depth = 0): string {
   const kind = type(value);
   if (kind === "nil") return "nil";
@@ -107,10 +118,7 @@ function show(value: unknown, depth = 0): string {
   if (depth >= 2) return "{...}";
   const parts: string[] = [];
   const keys = sortedKeys(record);
-  if (
-    keys.length > 0 &&
-    keys.length === (record as unknown as unknown[]).length
-  ) {
+  if (keys.length > 0 && isArray(record, keys)) {
     for (const item of record as unknown as unknown[]) {
       table.insert(parts, show(item, depth + 1));
     }
@@ -340,11 +348,7 @@ function toJson(value: unknown): string {
   const record = value as Record<string | number, unknown>;
   const keys = sortedKeys(record);
   const parts: string[] = [];
-  if (
-    keys.length === 0 ||
-    (keys.length === (record as unknown as unknown[]).length &&
-      type(keys[0]) === "number")
-  ) {
+  if (isArray(record, keys)) {
     for (const item of record as unknown as unknown[]) {
       table.insert(parts, toJson(item));
     }
