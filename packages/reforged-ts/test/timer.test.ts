@@ -5,11 +5,7 @@
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Timer } from "../src/index";
-
-/** How the call log renders a handle. */
-function ref(kind: string, handle: handle): string {
-  return `${kind}#${tostring(GetHandleId(handle))}`;
-}
+import { handleRef } from "./support/handle-ref";
 
 describe("Timer", () => {
   it("is the same object for its handle", () => {
@@ -22,7 +18,7 @@ describe("Timer", () => {
     const timer = Timer.create().start(1.5, true, () => undefined);
     expect(timer.timeout).toEqual(1.5);
     expect(stubCalls()).toContainCall(
-      `TimerStart(${ref("timer", timer.handle)}, 1.5, true, <function>)`,
+      `TimerStart(${handleRef("timer", timer.handle)}, 1.5, true, <function>)`,
     );
   });
 
@@ -40,7 +36,7 @@ describe("Timer", () => {
     const timer = Timer.create();
     timer.destroy();
     expect(stubCalls()).toContainCall(
-      `DestroyTimer(${ref("timer", timer.handle)})`,
+      `DestroyTimer(${handleRef("timer", timer.handle)})`,
     );
   });
 });

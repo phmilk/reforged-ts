@@ -6,12 +6,13 @@
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { MapPlayer, Unit } from "../src/index";
 import { defined } from "./support/defined";
+import { handleRef } from "./support/handle-ref";
 
 const footman = FourCC("hfoo");
 
 describe("Unit.create", () => {
   const owner = defined(MapPlayer.fromIndex(0), "MapPlayer.fromIndex(0)");
-  const ownerRef = `player#${tostring(GetHandleId(owner.handle))}`;
+  const ownerRef = handleRef("player", owner.handle);
 
   it("passes the recorded arguments to CreateUnit", () => {
     Unit.create(owner, footman, 10, 20, 90);
