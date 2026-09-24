@@ -1,0 +1,22 @@
+{
+  "name": "AddHeroXPSwapped",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "xpToAdd",
+      "nullable": false
+    },
+    {
+      "name": "whichHero",
+      "nullable": false
+    },
+    {
+      "name": "showEyeCandy",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

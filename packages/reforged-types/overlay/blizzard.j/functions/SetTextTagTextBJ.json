@@ -1,0 +1,22 @@
+{
+  "name": "SetTextTagTextBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "tt",
+      "nullable": false
+    },
+    {
+      "name": "s",
+      "nullable": false
+    },
+    {
+      "name": "size",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "BlzGetItemStringField",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichItem",
+      "nullable": false
+    },
+    {
+      "name": "whichField",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

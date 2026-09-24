@@ -1,0 +1,22 @@
+{
+  "name": "SetProduce",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "qty",
+      "nullable": false
+    },
+    {
+      "name": "id",
+      "nullable": false
+    },
+    {
+      "name": "town",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "PlayerGetLeaderboard",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "toPlayer",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

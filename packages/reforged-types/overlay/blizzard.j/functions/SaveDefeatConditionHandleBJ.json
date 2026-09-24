@@ -1,0 +1,26 @@
+{
+  "name": "SaveDefeatConditionHandleBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichDefeatcondition",
+      "nullable": false
+    },
+    {
+      "name": "key",
+      "nullable": false
+    },
+    {
+      "name": "missionKey",
+      "nullable": false
+    },
+    {
+      "name": "table",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

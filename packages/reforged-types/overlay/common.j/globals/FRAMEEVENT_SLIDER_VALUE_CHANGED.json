@@ -1,0 +1,6 @@
+{
+  "name": "FRAMEEVENT_SLIDER_VALUE_CHANGED",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

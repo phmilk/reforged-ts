@@ -1,0 +1,6 @@
+{
+  "name": "bj_MELEE_CLEAR_UNITS_RADIUS",
+  "source": "blizzard.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

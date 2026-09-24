@@ -1,0 +1,14 @@
+{
+  "name": "TriggerExecuteWait",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichTrigger",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

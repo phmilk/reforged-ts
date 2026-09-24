@@ -1,0 +1,22 @@
+{
+  "name": "AddSpecialEffectTarget",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "modelName",
+      "nullable": false
+    },
+    {
+      "name": "targetWidget",
+      "nullable": false
+    },
+    {
+      "name": "attachPointName",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

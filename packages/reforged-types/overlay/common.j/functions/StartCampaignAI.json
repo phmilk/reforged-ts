@@ -1,0 +1,18 @@
+{
+  "name": "StartCampaignAI",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "num",
+      "nullable": false
+    },
+    {
+      "name": "script",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "SetTextTagVisibility",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "t",
+      "nullable": false
+    },
+    {
+      "name": "flag",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

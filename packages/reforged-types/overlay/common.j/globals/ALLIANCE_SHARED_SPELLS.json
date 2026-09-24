@@ -1,0 +1,6 @@
+{
+  "name": "ALLIANCE_SHARED_SPELLS",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

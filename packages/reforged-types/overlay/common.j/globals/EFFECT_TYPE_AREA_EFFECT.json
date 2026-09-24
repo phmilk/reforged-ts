@@ -1,0 +1,6 @@
+{
+  "name": "EFFECT_TYPE_AREA_EFFECT",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "R2SW",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "r",
+      "nullable": false
+    },
+    {
+      "name": "width",
+      "nullable": false
+    },
+    {
+      "name": "precision",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

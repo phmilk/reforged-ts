@@ -1,0 +1,22 @@
+{
+  "name": "AddSpellEffectByIdLoc",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "abilityId",
+      "nullable": false
+    },
+    {
+      "name": "t",
+      "nullable": false
+    },
+    {
+      "name": "where",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

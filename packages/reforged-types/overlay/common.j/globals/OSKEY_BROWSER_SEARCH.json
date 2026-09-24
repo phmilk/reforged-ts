@@ -1,0 +1,6 @@
+{
+  "name": "OSKEY_BROWSER_SEARCH",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

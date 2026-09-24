@@ -1,0 +1,22 @@
+{
+  "name": "TriggerRegisterCommandEvent",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichTrigger",
+      "nullable": false
+    },
+    {
+      "name": "whichAbility",
+      "nullable": false
+    },
+    {
+      "name": "order",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

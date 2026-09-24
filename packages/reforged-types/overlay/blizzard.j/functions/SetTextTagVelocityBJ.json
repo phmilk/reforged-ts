@@ -1,0 +1,22 @@
+{
+  "name": "SetTextTagVelocityBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "tt",
+      "nullable": false
+    },
+    {
+      "name": "speed",
+      "nullable": false
+    },
+    {
+      "name": "angle",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

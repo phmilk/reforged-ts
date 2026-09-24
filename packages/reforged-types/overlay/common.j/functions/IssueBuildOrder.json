@@ -1,0 +1,26 @@
+{
+  "name": "IssueBuildOrder",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichPeon",
+      "nullable": false
+    },
+    {
+      "name": "unitToBuild",
+      "nullable": false
+    },
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

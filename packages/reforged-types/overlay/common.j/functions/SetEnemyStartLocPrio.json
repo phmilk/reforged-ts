@@ -1,0 +1,26 @@
+{
+  "name": "SetEnemyStartLocPrio",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichStartLoc",
+      "nullable": false
+    },
+    {
+      "name": "prioSlotIndex",
+      "nullable": false
+    },
+    {
+      "name": "otherStartLocIndex",
+      "nullable": false
+    },
+    {
+      "name": "priority",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "UNIT_WEAPON_BF_ATTACK_SHOW_UI",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

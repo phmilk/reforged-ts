@@ -1,0 +1,18 @@
+{
+  "name": "BasicExpansion",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "build_it",
+      "nullable": false
+    },
+    {
+      "name": "unitid",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

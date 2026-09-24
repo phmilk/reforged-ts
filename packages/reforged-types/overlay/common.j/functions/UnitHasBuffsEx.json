@@ -1,0 +1,42 @@
+{
+  "name": "UnitHasBuffsEx",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "removePositive",
+      "nullable": false
+    },
+    {
+      "name": "removeNegative",
+      "nullable": false
+    },
+    {
+      "name": "magic",
+      "nullable": false
+    },
+    {
+      "name": "physical",
+      "nullable": false
+    },
+    {
+      "name": "timedLife",
+      "nullable": false
+    },
+    {
+      "name": "aura",
+      "nullable": false
+    },
+    {
+      "name": "autoDispel",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

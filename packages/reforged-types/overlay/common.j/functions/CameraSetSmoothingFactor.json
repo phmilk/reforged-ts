@@ -1,0 +1,14 @@
+{
+  "name": "CameraSetSmoothingFactor",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "factor",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

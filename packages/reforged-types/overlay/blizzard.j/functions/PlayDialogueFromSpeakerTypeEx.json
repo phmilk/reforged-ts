@@ -1,0 +1,42 @@
+{
+  "name": "PlayDialogueFromSpeakerTypeEx",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "toForce",
+      "nullable": false
+    },
+    {
+      "name": "fromPlayer",
+      "nullable": false
+    },
+    {
+      "name": "speakerType",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    },
+    {
+      "name": "soundHandle",
+      "nullable": false
+    },
+    {
+      "name": "timeType",
+      "nullable": false
+    },
+    {
+      "name": "timeVal",
+      "nullable": false
+    },
+    {
+      "name": "wait",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

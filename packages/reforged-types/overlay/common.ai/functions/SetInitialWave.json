@@ -1,0 +1,14 @@
+{
+  "name": "SetInitialWave",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "seconds",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

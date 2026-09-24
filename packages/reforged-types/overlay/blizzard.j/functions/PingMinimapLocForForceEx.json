@@ -1,0 +1,38 @@
+{
+  "name": "PingMinimapLocForForceEx",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichForce",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    },
+    {
+      "name": "duration",
+      "nullable": false
+    },
+    {
+      "name": "style",
+      "nullable": false
+    },
+    {
+      "name": "red",
+      "nullable": false
+    },
+    {
+      "name": "green",
+      "nullable": false
+    },
+    {
+      "name": "blue",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

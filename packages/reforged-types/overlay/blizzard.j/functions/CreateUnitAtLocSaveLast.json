@@ -1,0 +1,26 @@
+{
+  "name": "CreateUnitAtLocSaveLast",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "id",
+      "nullable": false
+    },
+    {
+      "name": "unitid",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    },
+    {
+      "name": "face",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

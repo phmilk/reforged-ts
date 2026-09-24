@@ -1,0 +1,6 @@
+{
+  "name": "bj_QUESTTYPE_OPT_DISCOVERED",
+  "source": "blizzard.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

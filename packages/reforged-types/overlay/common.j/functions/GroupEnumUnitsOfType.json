@@ -1,0 +1,22 @@
+{
+  "name": "GroupEnumUnitsOfType",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichGroup",
+      "nullable": false
+    },
+    {
+      "name": "unitname",
+      "nullable": false
+    },
+    {
+      "name": "filter",
+      "nullable": true
+    }
+  ],
+  "origin": "war3-types-strict"
+}

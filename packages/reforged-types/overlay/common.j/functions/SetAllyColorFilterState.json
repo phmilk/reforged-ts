@@ -1,0 +1,14 @@
+{
+  "name": "SetAllyColorFilterState",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "state",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

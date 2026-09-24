@@ -1,0 +1,6 @@
+{
+  "name": "bj_ALLIANCE_UNALLIED_VISION",
+  "source": "blizzard.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

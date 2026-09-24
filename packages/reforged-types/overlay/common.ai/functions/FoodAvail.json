@@ -1,0 +1,14 @@
+{
+  "name": "FoodAvail",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "base",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

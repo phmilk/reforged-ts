@@ -1,0 +1,22 @@
+{
+  "name": "SetRectFromLoc",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichRect",
+      "nullable": false
+    },
+    {
+      "name": "min",
+      "nullable": false
+    },
+    {
+      "name": "max",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

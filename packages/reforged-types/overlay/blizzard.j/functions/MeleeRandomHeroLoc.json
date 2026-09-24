@@ -1,0 +1,34 @@
+{
+  "name": "MeleeRandomHeroLoc",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "p",
+      "nullable": false
+    },
+    {
+      "name": "id1",
+      "nullable": false
+    },
+    {
+      "name": "id2",
+      "nullable": false
+    },
+    {
+      "name": "id3",
+      "nullable": false
+    },
+    {
+      "name": "id4",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

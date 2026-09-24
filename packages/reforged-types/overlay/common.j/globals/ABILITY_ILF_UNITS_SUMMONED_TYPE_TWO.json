@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_ILF_UNITS_SUMMONED_TYPE_TWO",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

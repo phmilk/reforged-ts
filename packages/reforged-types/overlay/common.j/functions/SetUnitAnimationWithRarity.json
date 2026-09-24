@@ -1,0 +1,22 @@
+{
+  "name": "SetUnitAnimationWithRarity",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "whichAnimation",
+      "nullable": false
+    },
+    {
+      "name": "rarity",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "max_hero_level",
+  "source": "common.ai",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

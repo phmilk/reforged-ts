@@ -1,0 +1,22 @@
+{
+  "name": "MultiboardGetItem",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "lb",
+      "nullable": false
+    },
+    {
+      "name": "row",
+      "nullable": false
+    },
+    {
+      "name": "column",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

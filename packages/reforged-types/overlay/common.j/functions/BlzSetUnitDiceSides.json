@@ -1,0 +1,22 @@
+{
+  "name": "BlzSetUnitDiceSides",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "diceSides",
+      "nullable": false
+    },
+    {
+      "name": "weaponIndex",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

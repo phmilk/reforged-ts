@@ -1,0 +1,6 @@
+{
+  "name": "MAP_LOCK_RESOURCE_TRADING",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

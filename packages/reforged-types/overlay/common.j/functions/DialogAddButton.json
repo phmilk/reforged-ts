@@ -1,0 +1,22 @@
+{
+  "name": "DialogAddButton",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichDialog",
+      "nullable": false
+    },
+    {
+      "name": "buttonText",
+      "nullable": false
+    },
+    {
+      "name": "hotkey",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

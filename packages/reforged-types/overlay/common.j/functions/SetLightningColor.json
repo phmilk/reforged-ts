@@ -1,0 +1,30 @@
+{
+  "name": "SetLightningColor",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichBolt",
+      "nullable": false
+    },
+    {
+      "name": "r",
+      "nullable": false
+    },
+    {
+      "name": "g",
+      "nullable": false
+    },
+    {
+      "name": "b",
+      "nullable": false
+    },
+    {
+      "name": "a",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

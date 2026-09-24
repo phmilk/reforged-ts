@@ -1,0 +1,14 @@
+{
+  "name": "SetCampaignMenuRaceEx",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "campaignIndex",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

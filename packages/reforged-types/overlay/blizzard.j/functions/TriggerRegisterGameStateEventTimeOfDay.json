@@ -1,0 +1,22 @@
+{
+  "name": "TriggerRegisterGameStateEventTimeOfDay",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "trig",
+      "nullable": false
+    },
+    {
+      "name": "opcode",
+      "nullable": false
+    },
+    {
+      "name": "limitval",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

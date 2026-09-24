@@ -1,0 +1,18 @@
+{
+  "name": "SetUnitCreepGuard",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "creepGuard",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

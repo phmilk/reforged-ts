@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_BLF_IGNORE_FRIENDLY_BUFFS",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

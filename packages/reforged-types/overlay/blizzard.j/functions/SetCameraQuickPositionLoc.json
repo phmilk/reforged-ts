@@ -1,0 +1,14 @@
+{
+  "name": "SetCameraQuickPositionLoc",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "loc",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

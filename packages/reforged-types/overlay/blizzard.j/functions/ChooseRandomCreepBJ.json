@@ -1,0 +1,14 @@
+{
+  "name": "ChooseRandomCreepBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "level",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

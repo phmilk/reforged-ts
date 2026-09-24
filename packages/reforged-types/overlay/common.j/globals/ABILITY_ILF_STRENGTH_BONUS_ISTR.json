@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_ILF_STRENGTH_BONUS_ISTR",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "CreatePermanentCorpseLocBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "style",
+      "nullable": false
+    },
+    {
+      "name": "unitid",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    },
+    {
+      "name": "facing",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

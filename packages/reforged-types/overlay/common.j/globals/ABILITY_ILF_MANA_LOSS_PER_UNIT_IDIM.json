@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_ILF_MANA_LOSS_PER_UNIT_IDIM",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

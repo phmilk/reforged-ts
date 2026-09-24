@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_INITIAL_IMMUNITY_DURATION",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

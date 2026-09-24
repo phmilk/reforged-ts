@@ -30,7 +30,8 @@
     "test": "vitest run",
     "vendor": "node build/cli/vendor.js",
     "verify": "node build/cli/verify.js",
-    "typings:generate": "node build/cli/generate.js"
+    "typings:generate": "node build/cli/generate.js",
+    "seed:war3-types-strict": "node --experimental-strip-types scripts/seed-from-war3-types-strict.ts"
   },
   "dependencies": {
     "lua-types": "catalog:"

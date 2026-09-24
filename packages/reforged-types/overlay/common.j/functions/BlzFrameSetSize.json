@@ -1,0 +1,22 @@
+{
+  "name": "BlzFrameSetSize",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "frame",
+      "nullable": false
+    },
+    {
+      "name": "width",
+      "nullable": false
+    },
+    {
+      "name": "height",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "GroupEnumUnitsInRect",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichGroup",
+      "nullable": false
+    },
+    {
+      "name": "r",
+      "nullable": false
+    },
+    {
+      "name": "filter",
+      "nullable": true
+    }
+  ],
+  "origin": "war3-types-strict"
+}

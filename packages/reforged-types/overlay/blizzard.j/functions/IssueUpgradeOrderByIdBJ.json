@@ -1,0 +1,18 @@
+{
+  "name": "IssueUpgradeOrderByIdBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "techId",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

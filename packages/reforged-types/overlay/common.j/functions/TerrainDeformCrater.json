@@ -1,0 +1,34 @@
+{
+  "name": "TerrainDeformCrater",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "depth",
+      "nullable": false
+    },
+    {
+      "name": "duration",
+      "nullable": false
+    },
+    {
+      "name": "permanent",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

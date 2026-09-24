@@ -1,0 +1,18 @@
+{
+  "name": "ForeverSuicideOnPlayer",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "seconds",
+      "nullable": false
+    },
+    {
+      "name": "p",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

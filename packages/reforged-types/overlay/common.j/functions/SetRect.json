@@ -1,0 +1,30 @@
+{
+  "name": "SetRect",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichRect",
+      "nullable": false
+    },
+    {
+      "name": "minx",
+      "nullable": false
+    },
+    {
+      "name": "miny",
+      "nullable": false
+    },
+    {
+      "name": "maxx",
+      "nullable": false
+    },
+    {
+      "name": "maxy",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

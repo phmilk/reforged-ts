@@ -1,0 +1,14 @@
+{
+  "name": "BlzShowSkyBox",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "show",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

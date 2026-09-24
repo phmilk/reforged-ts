@@ -1,0 +1,22 @@
+{
+  "name": "UnitDropItemTargetBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "whichItem",
+      "nullable": false
+    },
+    {
+      "name": "target",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

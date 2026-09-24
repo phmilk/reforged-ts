@@ -1,0 +1,14 @@
+{
+  "name": "PlayerEx",
+  "source": "common.ai",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "slot",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

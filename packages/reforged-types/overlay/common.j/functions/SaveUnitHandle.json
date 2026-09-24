@@ -1,0 +1,26 @@
+{
+  "name": "SaveUnitHandle",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "table",
+      "nullable": false
+    },
+    {
+      "name": "parentKey",
+      "nullable": false
+    },
+    {
+      "name": "childKey",
+      "nullable": false
+    },
+    {
+      "name": "whichUnit",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_UNIT_DAMAGE_PER_MANA_POINT",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

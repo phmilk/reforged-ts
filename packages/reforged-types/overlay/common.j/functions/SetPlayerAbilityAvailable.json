@@ -1,0 +1,22 @@
+{
+  "name": "SetPlayerAbilityAvailable",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "abilid",
+      "nullable": false
+    },
+    {
+      "name": "avail",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

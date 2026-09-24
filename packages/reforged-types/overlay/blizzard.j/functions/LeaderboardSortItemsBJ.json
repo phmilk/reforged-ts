@@ -1,0 +1,22 @@
+{
+  "name": "LeaderboardSortItemsBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "lb",
+      "nullable": false
+    },
+    {
+      "name": "sortType",
+      "nullable": false
+    },
+    {
+      "name": "ascending",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

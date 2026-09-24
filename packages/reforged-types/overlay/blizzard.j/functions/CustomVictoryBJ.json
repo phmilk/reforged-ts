@@ -1,0 +1,22 @@
+{
+  "name": "CustomVictoryBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "showDialog",
+      "nullable": false
+    },
+    {
+      "name": "showScores",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

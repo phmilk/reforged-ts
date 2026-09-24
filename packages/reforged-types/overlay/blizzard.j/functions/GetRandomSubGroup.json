@@ -1,0 +1,18 @@
+{
+  "name": "GetRandomSubGroup",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "count",
+      "nullable": false
+    },
+    {
+      "name": "sourceGroup",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "BlzFrameSetModel",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "frame",
+      "nullable": false
+    },
+    {
+      "name": "modelFile",
+      "nullable": false
+    },
+    {
+      "name": "cameraIndex",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

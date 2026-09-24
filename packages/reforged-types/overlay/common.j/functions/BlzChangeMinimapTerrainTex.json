@@ -1,0 +1,14 @@
+{
+  "name": "BlzChangeMinimapTerrainTex",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "texFile",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

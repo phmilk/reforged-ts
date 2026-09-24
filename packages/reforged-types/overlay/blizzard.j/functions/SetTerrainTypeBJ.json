@@ -1,0 +1,30 @@
+{
+  "name": "SetTerrainTypeBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "where",
+      "nullable": false
+    },
+    {
+      "name": "terrainType",
+      "nullable": false
+    },
+    {
+      "name": "variation",
+      "nullable": false
+    },
+    {
+      "name": "area",
+      "nullable": false
+    },
+    {
+      "name": "shape",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

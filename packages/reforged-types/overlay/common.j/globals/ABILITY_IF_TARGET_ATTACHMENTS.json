@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_IF_TARGET_ATTACHMENTS",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

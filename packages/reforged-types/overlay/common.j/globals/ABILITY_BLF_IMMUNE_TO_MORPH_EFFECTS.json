@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_BLF_IMMUNE_TO_MORPH_EFFECTS",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "CreateTimerDialogBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "t",
+      "nullable": false
+    },
+    {
+      "name": "title",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

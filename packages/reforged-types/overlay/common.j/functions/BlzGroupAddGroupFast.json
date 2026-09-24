@@ -1,0 +1,18 @@
+{
+  "name": "BlzGroupAddGroupFast",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichGroup",
+      "nullable": false
+    },
+    {
+      "name": "addGroup",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

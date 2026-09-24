@@ -1,0 +1,14 @@
+{
+  "name": "SetPortraitLight",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "portraitDNCFile",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

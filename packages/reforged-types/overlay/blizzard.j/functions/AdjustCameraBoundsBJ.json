@@ -1,0 +1,30 @@
+{
+  "name": "AdjustCameraBoundsBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "adjustMethod",
+      "nullable": false
+    },
+    {
+      "name": "dxWest",
+      "nullable": false
+    },
+    {
+      "name": "dxEast",
+      "nullable": false
+    },
+    {
+      "name": "dyNorth",
+      "nullable": false
+    },
+    {
+      "name": "dySouth",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_DAMAGE_BONUS_IPV1",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "AddGuardPost",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "id",
+      "nullable": false
+    },
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "SetMapDescription",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "description",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

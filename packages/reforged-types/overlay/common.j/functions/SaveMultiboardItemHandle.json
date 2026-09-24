@@ -1,0 +1,26 @@
+{
+  "name": "SaveMultiboardItemHandle",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "table",
+      "nullable": false
+    },
+    {
+      "name": "parentKey",
+      "nullable": false
+    },
+    {
+      "name": "childKey",
+      "nullable": false
+    },
+    {
+      "name": "whichMultiboarditem",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

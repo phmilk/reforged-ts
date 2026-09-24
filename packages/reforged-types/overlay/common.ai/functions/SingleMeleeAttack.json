@@ -1,0 +1,26 @@
+{
+  "name": "SingleMeleeAttack",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "needs_exp",
+      "nullable": false
+    },
+    {
+      "name": "has_siege",
+      "nullable": false
+    },
+    {
+      "name": "major_ok",
+      "nullable": false
+    },
+    {
+      "name": "air_units",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

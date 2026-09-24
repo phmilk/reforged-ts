@@ -1,0 +1,6 @@
+{
+  "name": "ARMOR_TYPE_WHOKNOWS",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,38 @@
+{
+  "name": "CameraSetupApplyForPlayerSmooth",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "doPan",
+      "nullable": false
+    },
+    {
+      "name": "whichSetup",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "forcedDuration",
+      "nullable": false
+    },
+    {
+      "name": "easeInDuration",
+      "nullable": false
+    },
+    {
+      "name": "easeOutDuration",
+      "nullable": false
+    },
+    {
+      "name": "smoothFactor",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "BlzUnitForceStopOrder",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "clearQueue",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

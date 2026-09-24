@@ -1,0 +1,14 @@
+{
+  "name": "TimerGetElapsed",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichTimer",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

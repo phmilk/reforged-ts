@@ -1,0 +1,30 @@
+{
+  "name": "CreateFogModifierRadiusLocSimple",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "whichFogState",
+      "nullable": false
+    },
+    {
+      "name": "center",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "afterUnits",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

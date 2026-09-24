@@ -1,0 +1,26 @@
+{
+  "name": "MultiboardSetItemIconBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "mb",
+      "nullable": false
+    },
+    {
+      "name": "col",
+      "nullable": false
+    },
+    {
+      "name": "row",
+      "nullable": false
+    },
+    {
+      "name": "iconFileName",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

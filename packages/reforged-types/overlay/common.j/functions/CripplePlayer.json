@@ -1,0 +1,22 @@
+{
+  "name": "CripplePlayer",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "toWhichPlayers",
+      "nullable": false
+    },
+    {
+      "name": "flag",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

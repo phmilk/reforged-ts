@@ -1,0 +1,6 @@
+{
+  "name": "EVENT_UNIT_PICKUP_ITEM",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

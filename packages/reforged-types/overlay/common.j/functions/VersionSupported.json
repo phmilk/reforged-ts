@@ -1,0 +1,14 @@
+{
+  "name": "VersionSupported",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichVersion",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

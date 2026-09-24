@@ -1,0 +1,22 @@
+{
+  "name": "IntegerTertiaryOp",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "flag",
+      "nullable": false
+    },
+    {
+      "name": "valueA",
+      "nullable": false
+    },
+    {
+      "name": "valueB",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

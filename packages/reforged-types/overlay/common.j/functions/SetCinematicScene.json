@@ -1,0 +1,34 @@
+{
+  "name": "SetCinematicScene",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "portraitUnitId",
+      "nullable": false
+    },
+    {
+      "name": "color",
+      "nullable": false
+    },
+    {
+      "name": "speakerTitle",
+      "nullable": false
+    },
+    {
+      "name": "text",
+      "nullable": false
+    },
+    {
+      "name": "sceneDuration",
+      "nullable": false
+    },
+    {
+      "name": "voiceoverDuration",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

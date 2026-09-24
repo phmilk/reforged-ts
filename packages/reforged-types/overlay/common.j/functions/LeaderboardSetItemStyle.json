@@ -1,0 +1,30 @@
+{
+  "name": "LeaderboardSetItemStyle",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "lb",
+      "nullable": false
+    },
+    {
+      "name": "whichItem",
+      "nullable": false
+    },
+    {
+      "name": "showLabel",
+      "nullable": false
+    },
+    {
+      "name": "showValue",
+      "nullable": false
+    },
+    {
+      "name": "showIcon",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

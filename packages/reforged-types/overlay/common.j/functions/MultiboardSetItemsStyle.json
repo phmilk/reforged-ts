@@ -1,0 +1,22 @@
+{
+  "name": "MultiboardSetItemsStyle",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "lb",
+      "nullable": false
+    },
+    {
+      "name": "showValues",
+      "nullable": false
+    },
+    {
+      "name": "showIcons",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

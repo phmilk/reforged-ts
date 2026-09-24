@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_SF_ICON_ACTIVATED",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,26 @@
+{
+  "name": "SetPlayerAllianceBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "sourcePlayer",
+      "nullable": false
+    },
+    {
+      "name": "whichAllianceSetting",
+      "nullable": false
+    },
+    {
+      "name": "value",
+      "nullable": false
+    },
+    {
+      "name": "otherPlayer",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,26 @@
+{
+  "name": "TriggerRegisterPlayerChatEvent",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichTrigger",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "chatMessageToDetect",
+      "nullable": false
+    },
+    {
+      "name": "exactMatchOnly",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "CreateLearnCommandButtonEffectBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "abilityId",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

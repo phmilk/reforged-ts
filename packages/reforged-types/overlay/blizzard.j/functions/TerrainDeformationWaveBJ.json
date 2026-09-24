@@ -1,0 +1,34 @@
+{
+  "name": "TerrainDeformationWaveBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "duration",
+      "nullable": false
+    },
+    {
+      "name": "source",
+      "nullable": false
+    },
+    {
+      "name": "target",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "depth",
+      "nullable": false
+    },
+    {
+      "name": "trailDelay",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

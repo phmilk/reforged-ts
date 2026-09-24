@@ -1,0 +1,14 @@
+{
+  "name": "AutomationSetTestType",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "testType",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

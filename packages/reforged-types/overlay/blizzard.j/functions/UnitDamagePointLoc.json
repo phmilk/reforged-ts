@@ -1,0 +1,38 @@
+{
+  "name": "UnitDamagePointLoc",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "delay",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    },
+    {
+      "name": "amount",
+      "nullable": false
+    },
+    {
+      "name": "whichAttack",
+      "nullable": false
+    },
+    {
+      "name": "whichDamage",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

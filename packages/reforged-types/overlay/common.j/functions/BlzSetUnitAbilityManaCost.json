@@ -1,0 +1,26 @@
+{
+  "name": "BlzSetUnitAbilityManaCost",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "abilId",
+      "nullable": false
+    },
+    {
+      "name": "level",
+      "nullable": false
+    },
+    {
+      "name": "manaCost",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "GetResearched",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [],
+  "origin": "war3-types-strict"
+}

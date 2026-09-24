@@ -1,0 +1,18 @@
+{
+  "name": "ForForce",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichForce",
+      "nullable": false
+    },
+    {
+      "name": "callback",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

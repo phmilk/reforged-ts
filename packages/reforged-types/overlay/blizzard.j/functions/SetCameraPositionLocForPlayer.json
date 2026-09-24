@@ -1,0 +1,18 @@
+{
+  "name": "SetCameraPositionLocForPlayer",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

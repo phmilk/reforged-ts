@@ -1,0 +1,22 @@
+{
+  "name": "BlzSetItemRealField",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichItem",
+      "nullable": false
+    },
+    {
+      "name": "whichField",
+      "nullable": false
+    },
+    {
+      "name": "value",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

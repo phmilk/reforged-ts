@@ -1,0 +1,14 @@
+{
+  "name": "SetCineFilterTexMapFlags",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichFlags",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

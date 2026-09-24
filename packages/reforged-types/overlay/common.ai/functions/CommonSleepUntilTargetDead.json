@@ -1,0 +1,18 @@
+{
+  "name": "CommonSleepUntilTargetDead",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "target",
+      "nullable": false
+    },
+    {
+      "name": "reform",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

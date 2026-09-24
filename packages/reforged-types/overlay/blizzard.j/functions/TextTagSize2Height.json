@@ -1,0 +1,14 @@
+{
+  "name": "TextTagSize2Height",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "size",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

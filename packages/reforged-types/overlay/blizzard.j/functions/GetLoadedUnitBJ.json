@@ -1,0 +1,9 @@
+{
+  "name": "GetLoadedUnitBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [],
+  "origin": "war3-types-strict"
+}

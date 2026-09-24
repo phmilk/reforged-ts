@@ -1,0 +1,18 @@
+{
+  "name": "BlzItemRemoveAbility",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichItem",
+      "nullable": false
+    },
+    {
+      "name": "abilCode",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

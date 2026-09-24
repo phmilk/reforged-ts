@@ -1,0 +1,22 @@
+{
+  "name": "MoveLocation",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichLocation",
+      "nullable": false
+    },
+    {
+      "name": "newX",
+      "nullable": false
+    },
+    {
+      "name": "newY",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

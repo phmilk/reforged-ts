@@ -1,0 +1,42 @@
+{
+  "name": "TransmissionFromUnitWithNameBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "toForce",
+      "nullable": false
+    },
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "unitName",
+      "nullable": false
+    },
+    {
+      "name": "soundHandle",
+      "nullable": false
+    },
+    {
+      "name": "message",
+      "nullable": false
+    },
+    {
+      "name": "timeType",
+      "nullable": false
+    },
+    {
+      "name": "timeVal",
+      "nullable": false
+    },
+    {
+      "name": "wait",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

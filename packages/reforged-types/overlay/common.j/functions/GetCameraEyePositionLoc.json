@@ -1,0 +1,10 @@
+{
+  "name": "GetCameraEyePositionLoc",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [],
+  "async": true,
+  "origin": "war3-types-strict"
+}

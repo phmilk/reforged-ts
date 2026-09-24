@@ -1,0 +1,14 @@
+{
+  "name": "IsItemHiddenBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichItem",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_BLF_EXPLODES_ON_DEATH",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

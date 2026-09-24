@@ -1,0 +1,14 @@
+{
+  "name": "StringHashBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "s",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

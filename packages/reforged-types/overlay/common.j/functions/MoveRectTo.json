@@ -1,0 +1,22 @@
+{
+  "name": "MoveRectTo",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichRect",
+      "nullable": false
+    },
+    {
+      "name": "newCenterX",
+      "nullable": false
+    },
+    {
+      "name": "newCenterY",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

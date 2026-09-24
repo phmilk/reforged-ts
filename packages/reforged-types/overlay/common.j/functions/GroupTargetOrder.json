@@ -1,0 +1,22 @@
+{
+  "name": "GroupTargetOrder",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichGroup",
+      "nullable": false
+    },
+    {
+      "name": "order",
+      "nullable": false
+    },
+    {
+      "name": "targetWidget",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

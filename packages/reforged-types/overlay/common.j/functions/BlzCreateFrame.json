@@ -1,0 +1,26 @@
+{
+  "name": "BlzCreateFrame",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "name",
+      "nullable": false
+    },
+    {
+      "name": "owner",
+      "nullable": false
+    },
+    {
+      "name": "priority",
+      "nullable": false
+    },
+    {
+      "name": "createContext",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

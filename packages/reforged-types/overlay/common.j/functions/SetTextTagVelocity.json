@@ -1,0 +1,22 @@
+{
+  "name": "SetTextTagVelocity",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "t",
+      "nullable": false
+    },
+    {
+      "name": "xvel",
+      "nullable": false
+    },
+    {
+      "name": "yvel",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

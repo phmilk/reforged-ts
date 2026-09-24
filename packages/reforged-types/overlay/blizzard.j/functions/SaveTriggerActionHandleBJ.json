@@ -1,0 +1,26 @@
+{
+  "name": "SaveTriggerActionHandleBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichTriggeraction",
+      "nullable": false
+    },
+    {
+      "name": "key",
+      "nullable": false
+    },
+    {
+      "name": "missionKey",
+      "nullable": false
+    },
+    {
+      "name": "table",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

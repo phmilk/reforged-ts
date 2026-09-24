@@ -1,0 +1,26 @@
+{
+  "name": "SetBuildAll",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "t",
+      "nullable": false
+    },
+    {
+      "name": "qty",
+      "nullable": false
+    },
+    {
+      "name": "unitid",
+      "nullable": false
+    },
+    {
+      "name": "town",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

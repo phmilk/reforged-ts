@@ -1,0 +1,18 @@
+{
+  "name": "StaggerSleep",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "base",
+      "nullable": false
+    },
+    {
+      "name": "spread",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

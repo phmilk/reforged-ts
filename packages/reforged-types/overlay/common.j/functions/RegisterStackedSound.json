@@ -1,0 +1,26 @@
+{
+  "name": "RegisterStackedSound",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "soundHandle",
+      "nullable": false
+    },
+    {
+      "name": "byPosition",
+      "nullable": false
+    },
+    {
+      "name": "rectwidth",
+      "nullable": false
+    },
+    {
+      "name": "rectheight",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

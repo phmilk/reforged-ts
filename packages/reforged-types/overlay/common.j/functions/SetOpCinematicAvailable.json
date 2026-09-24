@@ -1,0 +1,18 @@
+{
+  "name": "SetOpCinematicAvailable",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "campaignNumber",
+      "nullable": false
+    },
+    {
+      "name": "available",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

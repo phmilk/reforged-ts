@@ -1,0 +1,26 @@
+{
+  "name": "SetDoodadAnimationRect",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "r",
+      "nullable": false
+    },
+    {
+      "name": "doodadID",
+      "nullable": false
+    },
+    {
+      "name": "animName",
+      "nullable": false
+    },
+    {
+      "name": "animRandom",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

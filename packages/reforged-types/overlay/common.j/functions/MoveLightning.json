@@ -1,0 +1,34 @@
+{
+  "name": "MoveLightning",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichBolt",
+      "nullable": false
+    },
+    {
+      "name": "checkVisibility",
+      "nullable": false
+    },
+    {
+      "name": "x1",
+      "nullable": false
+    },
+    {
+      "name": "y1",
+      "nullable": false
+    },
+    {
+      "name": "x2",
+      "nullable": false
+    },
+    {
+      "name": "y2",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

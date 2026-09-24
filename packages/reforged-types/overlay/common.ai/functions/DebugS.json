@@ -1,0 +1,14 @@
+{
+  "name": "DebugS",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "str",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

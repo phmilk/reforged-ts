@@ -1,0 +1,18 @@
+{
+  "name": "PlayThematicMusicEx",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "musicFileName",
+      "nullable": false
+    },
+    {
+      "name": "frommsecs",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

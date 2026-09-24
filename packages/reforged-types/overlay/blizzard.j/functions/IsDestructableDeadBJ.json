@@ -1,0 +1,14 @@
+{
+  "name": "IsDestructableDeadBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "d",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

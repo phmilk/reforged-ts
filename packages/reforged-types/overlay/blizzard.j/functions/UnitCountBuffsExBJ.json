@@ -1,0 +1,30 @@
+{
+  "name": "UnitCountBuffsExBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "polarity",
+      "nullable": false
+    },
+    {
+      "name": "resist",
+      "nullable": false
+    },
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "bTLife",
+      "nullable": false
+    },
+    {
+      "name": "bAura",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

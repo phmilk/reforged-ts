@@ -1,0 +1,14 @@
+{
+  "name": "SetForLoopIndexB",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "newIndex",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

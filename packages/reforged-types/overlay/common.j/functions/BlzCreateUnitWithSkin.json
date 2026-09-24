@@ -1,0 +1,34 @@
+{
+  "name": "BlzCreateUnitWithSkin",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "id",
+      "nullable": false
+    },
+    {
+      "name": "unitid",
+      "nullable": false
+    },
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "face",
+      "nullable": false
+    },
+    {
+      "name": "skinId",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

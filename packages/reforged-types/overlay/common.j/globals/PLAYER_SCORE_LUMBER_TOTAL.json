@@ -1,0 +1,6 @@
+{
+  "name": "PLAYER_SCORE_LUMBER_TOTAL",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

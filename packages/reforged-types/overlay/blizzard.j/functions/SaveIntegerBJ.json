@@ -1,0 +1,26 @@
+{
+  "name": "SaveIntegerBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "value",
+      "nullable": false
+    },
+    {
+      "name": "key",
+      "nullable": false
+    },
+    {
+      "name": "missionKey",
+      "nullable": false
+    },
+    {
+      "name": "table",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "SetThematicMusicPlayPosition",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "millisecs",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}
