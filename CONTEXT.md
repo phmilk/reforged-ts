@@ -52,6 +52,10 @@ _Avoid_: consumer, user code, game project
 The starter repository a Map project is generated from.
 _Avoid_: boilerplate, starter kit, example map
 
+**Seed**:
+A file the Template ships that becomes the Map project author's own after generation (`AGENTS.md`, `CONTEXT.md`, the Agent skills); the Template refreshes its copy on each library release, a generated Map project never does.
+_Avoid_: template file, scaffold, boilerplate file
+
 **Reference consumer**:
 The Template in its role as the Map project every library release must build, with the packed packages, before it is published.
 _Avoid_: example project, demo map, integration test
@@ -63,3 +67,7 @@ _Avoid_: build system, pipeline, stack
 **Patch**:
 A released version of the game, identified by version and build number (3.0.0.24268). Typings and library releases are tied to a Patch.
 _Avoid_: version, update, release (a library release is not a game patch)
+
+**Agent skill**:
+A folder holding a `SKILL.md` that scripts one workflow for an AI coding agent to follow when invoked (`add-wrapper`, `map-feature`).
+_Avoid_: prompt, recipe, playbook
