@@ -1,8 +1,8 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 
-export class Timer extends HandleBase<timer> {
+export class Timer extends Handle<timer> {
   public static create(): Timer {
     return this.expect(CreateTimer());
   }

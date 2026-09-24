@@ -1,44 +1,7 @@
 /** @noSelfInFile */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- the registry holds any; step 3 (#51) removes it
-const map: WeakMap<handle, any> = new WeakMap<handle>();
-
-export class Handle<T extends handle> {
-  public readonly handle: T;
-
-  private static initHandle: handle | undefined;
-
-  protected constructor(handle?: T) {
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- the rewrite changes the emitted Lua; step 3 (#51) removes it
-    this.handle = handle === undefined ? (Handle.initHandle as T) : handle;
-    map.set(this.handle, this);
-  }
-
-  /**
-   * Get the unique ID of the handle. The ID is recycled once you destroy the object.
-   * @returns The unique ID of a handle object.
-   */
-  public get id() {
-    return GetHandleId(this.handle);
-  }
-
-  protected static initFromHandle(): boolean {
-    return Handle.initHandle !== undefined;
-  }
-
-  protected static getObject(handle: handle) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- the registry holds any; step 3 (#51) removes it
-    const obj = map.get(handle);
-    if (obj !== undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-      return obj;
-    }
-    Handle.initHandle = handle;
-    const newObj = new this();
-    Handle.initHandle = undefined;
-    return newObj;
-  }
-}
+/** The registry: the one Wrapper object for each Handle. */
+const registry = new WeakMap<handle, Handle<handle>>();
 
 /** A Wrapper class as its static members see it: `this` inside a static. */
 interface WrapperClass<C> {
@@ -50,24 +13,40 @@ interface WrapperClass<C> {
 type Initialising<C> = { -readonly [K in keyof C]: C[K] };
 
 /**
- * The Handle base the Wrappers move onto during build step 3 (#51): creation
- * throws, lookup returns undefined, and one Wrapper object per Handle.
+ * The Handle base: every Wrapper extends it, directly or through another
+ * Wrapper. It holds the registry (one Wrapper object per Handle), the
+ * wrapping logic and the creation helper, and applies one error rule:
+ * creation throws, lookup returns undefined.
  *
- * A Wrapper on this base declares no public constructor (a protected one
- * taking the Handle and calling `super`, only if it adds fields). Its lookups
- * return `this.fromHandle(Native(...))`, typed `X | undefined`; its creation
- * members return `this.expect(Native(...), detail)`, typed `X`. It never calls
- * `getObject` and never overrides `fromHandle`.
+ * A Wrapper declares no public constructor. The base's protected constructor
+ * takes the Handle and only stores it; a Wrapper that adds fields declares a
+ * protected constructor taking the Handle and calling `super(handle)`,
+ * otherwise none. Its lookups return `this.fromHandle(Native(...))`, typed
+ * `X | undefined`; its creation members return
+ * `this.expect(Native(...), detail)`, typed `X`. It never overrides
+ * `fromHandle`, except `Frame`, whose "not found" frame has handle id 0.
  *
- * It extends the old `Handle` only while the Wrappers still on the old path
- * (`getObject` and the `initHandle` slot) override `fromHandle` with their own
- * signatures, which a generic `fromHandle` on `Handle` itself would reject;
- * the two share one registry. When every Wrapper is on this base, #81 folds
- * it into `Handle` and deletes the old path.
+ * Naming rule: a Wrapper class is named after its Native type, capitalised
+ * (`timer` is `Timer`, `unit` is `Unit`), unless that name collides with a
+ * Native function; then it takes a descriptive noun instead (`rect` is
+ * `Rectangle`, because `Rect` is a Native; `player` is `MapPlayer`, because
+ * `Player` is one).
  */
-export abstract class HandleBase<T extends handle> extends Handle<T> {
+export abstract class Handle<T extends handle> {
+  public readonly handle: T;
+
   protected constructor(handle: T) {
-    super(handle);
+    this.handle = handle;
+  }
+
+  /**
+   * Get the unique ID of the handle. IDs are not recycled immediately when
+   * the object is destroyed (a new Handle created right after gets the next
+   * ID), and they are allocated deterministically from map start.
+   * @returns The unique ID of a handle object.
+   */
+  public get id() {
+    return GetHandleId(this.handle);
   }
 
   /**
@@ -77,7 +56,7 @@ export abstract class HandleBase<T extends handle> extends Handle<T> {
    * `MyTimer.fromHandle` asked), a new object of the class asked for replaces
    * it. `Unit.fromHandle(h)` is typed `Unit | undefined`.
    */
-  public static fromHandle<C extends HandleBase<handle>>(
+  public static fromHandle<C extends Handle<handle>>(
     this: WrapperClass<C>,
     handle: C["handle"] | undefined,
   ): C | undefined {
@@ -102,7 +81,7 @@ export abstract class HandleBase<T extends handle> extends Handle<T> {
    * writable, for a Wrapper that keeps a creation argument in a field:
    * `return this.expect(QuestCreateItem(quest.handle), "", (item) => { item.quest = quest; })`.
    */
-  protected static expect<C extends HandleBase<handle>>(
+  protected static expect<C extends Handle<handle>>(
     this: WrapperClass<C>,
     handle: C["handle"] | undefined,
     detail = "",
@@ -119,11 +98,10 @@ export abstract class HandleBase<T extends handle> extends Handle<T> {
  * error level, same tail-position rule as `expect`:
  * `return expectWrapper(Point, GetCameraEyePositionLoc())`.
  *
- * Package-internal: `handles/index.ts` re-exports only `Handle` and
- * `HandleBase` from this module, so the library's entry file does not
- * reach it.
+ * Package-internal: `handles/index.ts` re-exports only `Handle` from this
+ * module, so the library's entry file does not reach it.
  */
-export function expectWrapper<C extends HandleBase<handle>>(
+export function expectWrapper<C extends Handle<handle>>(
   cls: WrapperClass<C>,
   handle: C["handle"] | undefined,
   detail = "",
@@ -138,7 +116,7 @@ export function expectWrapper<C extends HandleBase<handle>>(
  * tail-called by the creation member), so level 2 names the frame that
  * called the creation member.
  */
-function created<C extends HandleBase<handle>>(
+function created<C extends Handle<handle>>(
   cls: WrapperClass<C>,
   handle: C["handle"] | undefined,
   detail: string,
@@ -159,17 +137,17 @@ function created<C extends HandleBase<handle>>(
  * otherwise a new `cls` for the Handle, registered and returned. The cast
  * that calls the protected constructor is the only place that bypasses it.
  */
-function wrap<C extends HandleBase<handle>>(
+function wrap<C extends Handle<handle>>(
   cls: WrapperClass<C>,
   handle: C["handle"],
 ): C {
-  const cached: unknown = map.get(handle);
+  const cached = registry.get(handle);
   if (cached instanceof (cls as unknown as abstract new () => C)) {
     return cached;
   }
   const wrapper = new (cls as unknown as new (handle: C["handle"]) => C)(
     handle,
   );
-  map.set(handle, wrapper);
+  registry.set(handle, wrapper);
   return wrapper;
 }

@@ -1,11 +1,11 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import { Point } from "./point";
 import { Rectangle } from "./rect";
 import { Unit } from "./unit";
 
-export class Region extends HandleBase<region> {
+export class Region extends Handle<region> {
   public static create(): Region {
     return this.expect(CreateRegion());
   }

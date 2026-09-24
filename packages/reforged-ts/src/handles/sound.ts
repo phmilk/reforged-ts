@@ -1,8 +1,8 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 
-export class Sound extends HandleBase<sound> {
+export class Sound extends Handle<sound> {
   /**
    * Creates a sound handle.
    * @note You can only play the same sound handle once.

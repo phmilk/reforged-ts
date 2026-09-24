@@ -1,9 +1,9 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import { Point } from "./point";
 
-export class Rectangle extends HandleBase<rect> {
+export class Rectangle extends Handle<rect> {
   public static create(
     minX: number,
     minY: number,

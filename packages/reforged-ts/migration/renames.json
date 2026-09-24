@@ -387,5 +387,27 @@
     },
     "oneToOne": true,
     "note": "Players are not created, so the factory, private in w3ts 3.x, gives way to the lookup `MapPlayer.fromIndex`, which returns `undefined` for a slot out of range."
+  },
+  {
+    "old": "Handle.getObject",
+    "new": "Handle.fromHandle",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The protected wrapping step of a Wrapper subclass gives way to the inherited `fromHandle`, typed on the class it is called on and returning `undefined` for an undefined Handle, while a creation member returns `this.expect(Native(...), detail)` instead."
+  },
+  {
+    "old": "Handle.initFromHandle",
+    "new": null,
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "No constructor asks whether it is wrapping an existing Handle any more: the protected constructor takes the Handle and only stores it, and the base registers the Wrapper."
   }
 ]

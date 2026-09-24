@@ -2,13 +2,13 @@
 
 import { Dialog, DialogButton } from "./dialog";
 import { Frame } from "./frame";
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Region } from "./region";
 import { Unit } from "./unit";
 import { Widget } from "./widget";
 
-export class Trigger extends HandleBase<trigger> {
+export class Trigger extends Handle<trigger> {
   public static create(): Trigger {
     return this.expect(CreateTrigger());
   }

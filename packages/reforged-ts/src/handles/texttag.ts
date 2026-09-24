@@ -1,9 +1,9 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import { Unit } from "./unit";
 
-export class TextTag extends HandleBase<texttag> {
+export class TextTag extends Handle<texttag> {
   public static create(): TextTag {
     return this.expect(CreateTextTag());
   }

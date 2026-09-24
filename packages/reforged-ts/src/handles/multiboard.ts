@@ -1,8 +1,8 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 
-export class MultiboardItem extends HandleBase<multiboarditem> {
+export class MultiboardItem extends Handle<multiboarditem> {
   public static create(
     board: Multiboard,
     x: number,
@@ -41,7 +41,7 @@ export class MultiboardItem extends HandleBase<multiboarditem> {
   }
 }
 
-export class Multiboard extends HandleBase<multiboard> {
+export class Multiboard extends Handle<multiboard> {
   /**
    * Create a Multiboard object
    * @bug Do not use this in a global initialisation as it crashes the game there.

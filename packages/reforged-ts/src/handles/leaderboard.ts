@@ -1,9 +1,9 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 
-export class Leaderboard extends HandleBase<leaderboard> {
+export class Leaderboard extends Handle<leaderboard> {
   /**
    * Create a Leaderboard object
    * @note Leaderboards initially have 0 rows, 0 columns, and no label.

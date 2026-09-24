@@ -1,8 +1,8 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 
-export class Point extends HandleBase<location> {
+export class Point extends Handle<location> {
   /**
    * Creates a new location handle. Generally, raw coordinates should be used instead.
    * @param x

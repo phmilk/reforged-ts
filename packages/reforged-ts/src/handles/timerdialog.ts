@@ -1,9 +1,9 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import { Timer } from "./timer";
 
-export class TimerDialog extends HandleBase<timerdialog> {
+export class TimerDialog extends Handle<timerdialog> {
   public static create(t: Timer): TimerDialog {
     return this.expect(CreateTimerDialog(t.handle));
   }

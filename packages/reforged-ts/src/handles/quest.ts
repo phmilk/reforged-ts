@@ -1,8 +1,8 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 
-export class QuestItem extends HandleBase<questitem> {
+export class QuestItem extends Handle<questitem> {
   public readonly quest?: Quest;
 
   public static create(whichQuest: Quest): QuestItem {
@@ -24,7 +24,7 @@ export class QuestItem extends HandleBase<questitem> {
   }
 }
 
-export class Quest extends HandleBase<quest> {
+export class Quest extends Handle<quest> {
   /**
    * @bug Do not use this in a global initialisation as it crashes the game there.
    */

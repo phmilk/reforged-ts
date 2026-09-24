@@ -1,10 +1,10 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import type { MapPlayer } from "./player";
 import type { Rectangle } from "./rect";
 
-export class FogModifier extends HandleBase<fogmodifier> {
+export class FogModifier extends Handle<fogmodifier> {
   /**
    * @param forWhichPlayer
    * @param whichState Determines what type of fog the area is being modified to.
