@@ -7,6 +7,7 @@ import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { MapPlayer, Unit } from "../src/index";
 import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
+import { withNative } from "./support/native-override";
 
 const footman = FourCC("hfoo");
 
@@ -32,5 +33,22 @@ describe("Unit.create", () => {
     const unit = defined(Unit.create(owner, footman, 0, 0), "Unit.create");
     expect(unit.getOwner()?.handle).toBe(owner.handle);
     expect(unit.typeId).toEqual(footman);
+  });
+});
+
+describe("Unit.create when CreateUnit returns nil", () => {
+  const owner = defined(MapPlayer.fromIndex(0), "MapPlayer.fromIndex(0)");
+  const ownerRef = handleRef("player", owner.handle);
+
+  it("returns undefined and still records the call", () => {
+    const unit = withNative(
+      "CreateUnit",
+      () => undefined,
+      () => Unit.create(owner, footman, 30, 40, 180),
+    );
+    expect(unit).toBeUndefined();
+    expect(stubCalls()).toContainCall(
+      `CreateUnit(${ownerRef}, 1751543663, 30, 40, 180)`,
+    );
   });
 });
