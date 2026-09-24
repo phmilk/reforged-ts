@@ -17,6 +17,7 @@ Written as the [reforged-test README](../../reforged-test/README.md) describes: 
 - `defined(value, what)`: the value of a factory or lookup that may return undefined, or an error naming it.
 - `handleRef(kind, handle)`: a handle as the call log renders it, `timer#1048578`.
 - `withNative(name, replacement, body)`: the per-test Native override (below).
+- `raisedIn(call)`: the message of the error `call` raised, bare only when Lua's `file:line:` position for it lies inside `call`; how a test proves a creation error points at the line that called the creation member (below).
 
 Stub helpers the tests call (`__stub_fire_timer`, `__stub_record`) are declared in `stubs.d.ts`.
 
@@ -37,6 +38,24 @@ expect(stubCalls()).toContainCall(
 ```
 
 Use it instead of editing the shipped stub files when one test needs a Native to fail or to return a handle it controls.
+
+### Where a creation error points
+
+A creation member throws `reforged-ts: failed to create <Wrapper> (<detail>)` at the Map project's line that called it. `toThrow` only matches a substring, so it cannot tell a right error level from a wrong one; `raisedIn` can. Make the creation call as a statement inside `call`, never as its return value (a returned call is a Lua tail call that drops `call`'s frame), and compare the bare message:
+
+```ts
+const message = withNative(
+  "CreateTimer",
+  () => undefined,
+  () =>
+    raisedIn(() => {
+      Timer.create();
+    }),
+);
+expect(message).toEqual("reforged-ts: failed to create Timer");
+```
+
+An error that points into the library comes back as `src/handles/handle.lua:84: reforged-ts: …`, and one with no position as `(no position) reforged-ts: …`, so the comparison fails for either wrong level.
 
 ## Node tests
 

@@ -1,30 +1,10 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { HandleBase } from "./handle";
 
-export class Timer extends Handle<timer> {
-  /** @deprecated use `Timer.create` instead. */
-  constructor() {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = CreateTimer();
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
-    if (handle === undefined) {
-      error("w3ts failed to create timer handle.", 3);
-    }
-    super(handle);
-  }
-
+export class Timer extends HandleBase<timer> {
   public static create(): Timer {
-    const handle = CreateTimer();
-    const obj = this.getObject(handle) as Timer;
-
-    const values: Record<string, unknown> = {};
-    values.handle = handle;
-
-    return Object.assign(obj, values);
+    return this.expect(CreateTimer());
   }
 
   public get elapsed(): number {
@@ -65,12 +45,7 @@ export class Timer extends Handle<timer> {
   /**
    * @bug Might crash the game if called when there is no expired timer.
    */
-  public static fromExpired() {
+  public static fromExpired(): Timer | undefined {
     return this.fromHandle(GetExpiredTimer());
-  }
-
-  public static fromHandle(handle: timer | undefined): Timer | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }

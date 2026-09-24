@@ -2,35 +2,15 @@
 
 import { Dialog, DialogButton } from "./dialog";
 import { Frame } from "./frame";
-import { Handle } from "./handle";
+import { HandleBase } from "./handle";
 import { MapPlayer } from "./player";
 import { Region } from "./region";
 import { Unit } from "./unit";
 import { Widget } from "./widget";
 
-export class Trigger extends Handle<trigger> {
-  /** @deprecated use `Trigger.create` instead. */
-  constructor() {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = CreateTrigger();
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
-    if (handle === undefined) {
-      error("w3ts failed to create trigger handle.", 3);
-    }
-    super(handle);
-  }
-
+export class Trigger extends HandleBase<trigger> {
   public static create(): Trigger {
-    const handle = CreateTrigger();
-    const obj = this.getObject(handle) as Trigger;
-
-    const values: Record<string, unknown> = {};
-    values.handle = handle;
-
-    return Object.assign(obj, values);
+    return this.expect(CreateTrigger());
   }
 
   public set enabled(flag: boolean) {
@@ -410,12 +390,7 @@ export class Trigger extends Handle<trigger> {
     return BlzTriggerRegisterFrameEvent(this.handle, frame.handle, eventId);
   }
 
-  public static fromEvent() {
+  public static fromEvent(): Trigger | undefined {
     return this.fromHandle(GetTriggeringTrigger());
-  }
-
-  public static fromHandle(handle: trigger | undefined): Trigger | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }
