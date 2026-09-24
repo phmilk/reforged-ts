@@ -1,0 +1,17 @@
+{
+  "name": "StartSoundEx",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "soundHandle",
+      "nullable": false
+    },
+    {
+      "name": "fadeIn",
+      "nullable": false
+    }
+  ]
+}

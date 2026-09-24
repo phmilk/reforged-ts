@@ -1,0 +1,5 @@
+{
+  "name": "bj_lastUnequippedItem",
+  "source": "blizzard.j",
+  "nullable": true
+}

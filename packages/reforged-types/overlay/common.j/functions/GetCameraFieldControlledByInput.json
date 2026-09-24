@@ -1,0 +1,14 @@
+{
+  "name": "GetCameraFieldControlledByInput",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichField",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

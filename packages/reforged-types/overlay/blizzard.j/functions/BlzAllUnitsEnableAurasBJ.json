@@ -1,0 +1,17 @@
+{
+  "name": "BlzAllUnitsEnableAurasBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "enable",
+      "nullable": false
+    },
+    {
+      "name": "affectsUI",
+      "nullable": false
+    }
+  ]
+}

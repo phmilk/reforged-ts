@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetTerrainFogLinearEndBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "linearEnd",
+      "nullable": false
+    }
+  ]
+}

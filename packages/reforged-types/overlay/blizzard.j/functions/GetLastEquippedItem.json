@@ -1,0 +1,8 @@
+{
+  "name": "GetLastEquippedItem",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": []
+}

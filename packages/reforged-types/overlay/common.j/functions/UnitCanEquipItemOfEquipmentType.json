@@ -1,0 +1,18 @@
+{
+  "name": "UnitCanEquipItemOfEquipmentType",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "equipmentId",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

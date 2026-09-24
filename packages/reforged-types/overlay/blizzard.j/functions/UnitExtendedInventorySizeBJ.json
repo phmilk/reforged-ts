@@ -1,0 +1,13 @@
+{
+  "name": "UnitExtendedInventorySizeBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    }
+  ]
+}

@@ -5,21 +5,19 @@
  * (by default the package root), prints the diagnostics as a checklist, and
  * exits non-zero on any error, zero with warnings only.
  */
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { generate } from "../generate.js";
 import { countDiagnostics, formatChecklist } from "./checklist.js";
+import {
+  folders,
+  invokedDirectly,
+  PROCESS_OUTPUT,
+  writeFiles,
+  type Output,
+} from "./common.js";
 
-export interface Output {
-  stdout: (text: string) => void;
-  stderr: (text: string) => void;
-}
+export type { Output } from "./common.js";
 
 const USAGE = "Usage: typings:generate [patchDir] [overlayDir] [outDir]\n";
-
-/** The package root, from `src/cli` in tests and `build/cli` when built. */
-const packageRoot = fileURLToPath(new URL("../../", import.meta.url));
 
 export async function main(
   args: readonly string[],
@@ -29,9 +27,7 @@ export async function main(
     output.stderr(USAGE);
     return 2;
   }
-  const patchDir = args[0] ?? join(packageRoot, "vendor", await packagePatch());
-  const overlayDir = args[1] ?? join(packageRoot, "overlay");
-  const outDir = args[2] ?? packageRoot;
+  const { patchDir, overlayDir, outDir } = await folders(args);
 
   const result = await generate({ patchDir, overlayDir });
   if (!result.ok) {
@@ -43,11 +39,7 @@ export async function main(
     return 1;
   }
 
-  for (const [path, text] of result.files) {
-    const target = join(outDir, path);
-    await mkdir(dirname(target), { recursive: true });
-    await writeFile(target, text);
-  }
+  await writeFiles(outDir, result.files);
   const summary = `Generated ${result.files.size} files for Patch ${result.patch}.\n`;
   output.stdout(
     result.diagnostics.length === 0
@@ -57,24 +49,6 @@ export async function main(
   return 0;
 }
 
-async function packagePatch(): Promise<string> {
-  const manifest = JSON.parse(
-    await readFile(join(packageRoot, "package.json"), "utf8")
-  );
-  return manifest.reforged.patch;
-}
-
-function invokedDirectly(): boolean {
-  const script = process.argv[1];
-  return (
-    script !== undefined &&
-    pathToFileURL(resolve(script)).href === import.meta.url
-  );
-}
-
-if (invokedDirectly()) {
-  process.exitCode = await main(process.argv.slice(2), {
-    stdout: (text) => process.stdout.write(text),
-    stderr: (text) => process.stderr.write(text),
-  });
+if (invokedDirectly(import.meta.url)) {
+  process.exitCode = await main(process.argv.slice(2), PROCESS_OUTPUT);
 }

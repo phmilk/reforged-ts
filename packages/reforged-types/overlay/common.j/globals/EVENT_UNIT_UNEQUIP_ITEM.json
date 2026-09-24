@@ -1,0 +1,6 @@
+{
+  "name": "EVENT_UNIT_UNEQUIP_ITEM",
+  "source": "common.j",
+  "nullable": false,
+  "since": "3.0.0.24268"
+}

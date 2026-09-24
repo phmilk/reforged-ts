@@ -1,0 +1,13 @@
+{
+  "name": "IsMetaKeyPressedBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "metakey",
+      "nullable": false
+    }
+  ]
+}

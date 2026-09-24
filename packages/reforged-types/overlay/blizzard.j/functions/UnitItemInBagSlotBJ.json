@@ -1,0 +1,17 @@
+{
+  "name": "UnitItemInBagSlotBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "itemSlot",
+      "nullable": false
+    }
+  ]
+}

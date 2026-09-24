@@ -1,0 +1,30 @@
+{
+  "name": "SetDestructableVertexColor",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichDestructable",
+      "nullable": false
+    },
+    {
+      "name": "red",
+      "nullable": false
+    },
+    {
+      "name": "green",
+      "nullable": false
+    },
+    {
+      "name": "blue",
+      "nullable": false
+    },
+    {
+      "name": "alpha",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

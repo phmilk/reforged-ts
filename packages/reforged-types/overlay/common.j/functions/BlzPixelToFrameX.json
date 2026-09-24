@@ -1,0 +1,14 @@
+{
+  "name": "BlzPixelToFrameX",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "pixelX",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

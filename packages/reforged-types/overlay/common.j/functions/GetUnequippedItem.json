@@ -1,0 +1,9 @@
+{
+  "name": "GetUnequippedItem",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [],
+  "since": "3.0.0.24268"
+}

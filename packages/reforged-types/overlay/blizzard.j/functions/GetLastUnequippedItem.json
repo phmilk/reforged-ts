@@ -1,0 +1,8 @@
+{
+  "name": "GetLastUnequippedItem",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": []
+}

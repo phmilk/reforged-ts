@@ -1,0 +1,13 @@
+{
+  "name": "BlzSetHDWaterMaxOpacityBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "maxOpacity",
+      "nullable": false
+    }
+  ]
+}

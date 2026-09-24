@@ -1,0 +1,9 @@
+{
+  "name": "BlzGetModelCinematicGameShotCount",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [],
+  "since": "3.0.0.24268"
+}

@@ -1,0 +1,54 @@
+{
+  "name": "SetTerrainFogExV",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "style",
+      "nullable": false
+    },
+    {
+      "name": "zstart",
+      "nullable": false
+    },
+    {
+      "name": "zend",
+      "nullable": false
+    },
+    {
+      "name": "density",
+      "nullable": false
+    },
+    {
+      "name": "heightStart",
+      "nullable": false
+    },
+    {
+      "name": "heightEnd",
+      "nullable": false
+    },
+    {
+      "name": "linearStart",
+      "nullable": false
+    },
+    {
+      "name": "linearEnd",
+      "nullable": false
+    },
+    {
+      "name": "red",
+      "nullable": false
+    },
+    {
+      "name": "green",
+      "nullable": false
+    },
+    {
+      "name": "blue",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}

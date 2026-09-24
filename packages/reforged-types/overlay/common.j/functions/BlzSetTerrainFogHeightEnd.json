@@ -1,0 +1,14 @@
+{
+  "name": "BlzSetTerrainFogHeightEnd",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "heightEnd",
+      "nullable": false
+    }
+  ],
+  "since": "3.0.0.24268"
+}
