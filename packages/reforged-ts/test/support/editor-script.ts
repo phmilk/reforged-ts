@@ -1,20 +1,21 @@
 /** @noSelfInFile */
 
-// The editor's script, stubbed: the six entry points the game defines in the
-// map script and Blizzard.j, as recording functions on one shared log.
-// `main` calls the three init functions through the globals, as the editor's
-// script does, skipping one a test left undefined (its `InitBlizzard` call
-// is left out: nothing wraps it).
+// The editor's script, stubbed: the seven entry points the game defines in
+// the map script and Blizzard.j, as recording functions on one shared log.
+// `main` calls the four init functions through the globals, as the editor's
+// script does, skipping one a test left undefined.
 //
 // The library wraps these when it loads, so a test module that defines them
-// (`bundle-position.ts`, `entry-points.ts`) is imported ahead of the
-// library. The shipped stubs leave all six nil (see the reforged-test
-// README), so only those modules define them.
+// ahead of it (`bundle-position.ts`, `header-position.ts`, `entry-points.ts`)
+// is imported ahead of the library; a header test defines the rest itself
+// afterwards. The shipped stubs leave all seven nil (see the reforged-test
+// README), so only the test side defines them.
 
 /** An entry point of the editor's script. */
 export type EditorFunction =
   | "config"
   | "main"
+  | "InitBlizzard"
   | "InitGlobals"
   | "InitCustomTriggers"
   | "RunInitializationTriggers"
@@ -38,6 +39,7 @@ function editorFunction(name: EditorFunction): () => void {
   if (name === "main") {
     return () => {
       editorLog.push("main");
+      callGlobal("InitBlizzard");
       callGlobal("InitGlobals");
       callGlobal("InitCustomTriggers");
       callGlobal("RunInitializationTriggers");
