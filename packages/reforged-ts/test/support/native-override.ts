@@ -5,8 +5,8 @@
 // back afterwards, also when the callback throws. A test that needs a Native
 // to return nil, or a handle it controls, wraps the calls under test:
 //
-//   const unit = withNative("CreateUnit", () => undefined, () =>
-//     Unit.create(owner, footman, 0, 0),
+//   const unit = withNative("GetTriggerUnit", () => undefined, () =>
+//     Unit.fromEvent(),
 //   );
 //
 // The replacement is a stub like the shipped ones: each call is recorded in

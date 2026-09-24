@@ -1,37 +1,12 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { rawcodeToString } from "../utils/rawcode";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
 import { Widget } from "./widget";
 
 export class Item extends Widget {
   declare public readonly handle: item;
-
-  /**
-   * @deprecated use `Item.create` instead.
-   * @param itemId The rawcode of the item.
-   * @param x The x-coordinate of the item
-   * @param y The y-coordinate of the item
-   * @param skinId  The skin ID of the item.
-   */
-  constructor(itemId: number, x: number, y: number, skinId?: number) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-
-    const handle =
-      skinId === undefined
-        ? CreateItem(itemId, x, y)
-        : BlzCreateItemWithSkin(itemId, x, y, skinId);
-
-    if (handle === undefined) {
-      error("w3ts failed to create item handle.", 3);
-    }
-
-    super(handle);
-  }
 
   /**
    * Creates an item object at the specified coordinates.
@@ -45,20 +20,13 @@ export class Item extends Widget {
     x: number,
     y: number,
     skinId?: number,
-  ): Item | undefined {
-    const handle =
+  ): Item {
+    return this.expect(
       skinId === undefined
         ? CreateItem(itemId, x, y)
-        : BlzCreateItemWithSkin(itemId, x, y, skinId);
-    if (handle) {
-      const obj = this.getObject(handle) as Item;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+        : BlzCreateItemWithSkin(itemId, x, y, skinId),
+      rawcodeToString(itemId),
+    );
   }
 
   public get charges() {
@@ -313,15 +281,8 @@ export class Item extends Widget {
     SetItemPosition(this.handle, x, y);
   }
 
-  public static override fromEvent() {
+  public static override fromEvent(): Item | undefined {
     return this.fromHandle(GetManipulatedItem());
-  }
-
-  public static override fromHandle(
-    handle: item | undefined,
-  ): Item | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 
   public static isIdPawnable(itemId: number) {
