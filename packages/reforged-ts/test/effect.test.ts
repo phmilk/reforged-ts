@@ -107,9 +107,7 @@ describe("Effect.createSpell", () => {
           Effect.createSpell(thunderClap, caster, 16, 32);
         }),
     );
-    expect(message).toEqual(
-      `reforged-ts: failed to create Effect (${tostring(thunderClap)})`,
-    );
+    expect(message).toEqual("reforged-ts: failed to create Effect (AHtc)");
   });
 });
 
@@ -138,8 +136,6 @@ describe("Effect.createSpellAttachment", () => {
           Effect.createSpellAttachment(thunderClap, caster, target, "origin");
         }),
     );
-    expect(message).toEqual(
-      `reforged-ts: failed to create Effect (${tostring(thunderClap)})`,
-    );
+    expect(message).toEqual("reforged-ts: failed to create Effect (AHtc)");
   });
 });

@@ -1,5 +1,6 @@
 /** @noSelfInFile */
 
+import { rawcodeToString } from "../utils/rawcode";
 import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
@@ -59,7 +60,7 @@ export class Effect extends Handle<effect> {
   ): Effect {
     return this.expect(
       AddSpellEffectById(abilityId, effectType, x, y),
-      tostring(abilityId),
+      rawcodeToString(abilityId),
     );
   }
 
@@ -86,7 +87,7 @@ export class Effect extends Handle<effect> {
         targetWidget.handle,
         attachPointName,
       ),
-      tostring(abilityId),
+      rawcodeToString(abilityId),
       (effect) => {
         effect.attachWidget = targetWidget;
         effect.attachPointName = attachPointName;
