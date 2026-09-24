@@ -2,5 +2,7 @@
 * text=auto eol=lf
 
 # Vendored Patch files stay byte for byte as downloaded, so their recorded sha256 holds on every platform.
-packages/reforged-types/sources/**/*.j -text
-packages/reforged-types/sources/**/*.ai -text
+packages/reforged-types/vendor/**/*.j -text
+packages/reforged-types/vendor/**/*.ai -text
+packages/reforged-types/test/fixtures/jass-history/**/*.j -text
+packages/reforged-types/test/fixtures/jass-history/**/*.ai -text

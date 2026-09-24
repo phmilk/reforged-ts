@@ -27,12 +27,15 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "vendor": "node build/cli/vendor.js",
+    "verify": "node build/cli/verify.js"
   },
   "dependencies": {
     "lua-types": "catalog:"
   },
   "devDependencies": {
+    "@types/node": "catalog:",
     "typescript": "catalog:",
     "typescript-to-lua": "catalog:",
     "vitest": "catalog:"

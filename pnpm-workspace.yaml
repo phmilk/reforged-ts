@@ -7,3 +7,4 @@ catalog:
   typescript-to-lua: ^1.37.1
   lua-types: ^2.14.1
   vitest: ^5.0.1
+  "@types/node": ^22.13.0
