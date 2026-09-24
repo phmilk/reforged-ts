@@ -5,6 +5,13 @@
  */
 import { readFile } from "node:fs/promises";
 import { basename, join } from "node:path";
+import {
+  ASYNC_NATIVES_FILE,
+  emitAsyncNatives,
+  emitEntry,
+  emitManifest,
+  MANIFEST_FILE,
+} from "./artefacts.js";
 import { hasErrors, type Diagnostic } from "./diagnostics.js";
 import { emitFile } from "./emit.js";
 import { SOURCES, type Declaration } from "./model.js";
@@ -28,7 +35,11 @@ export interface GenerateSuccess {
   ok: true;
   /** Full build of the Patch the files describe. */
   patch: string;
-  /** File text by output path, `/`-separated and relative to the package root. */
+  /**
+   * File text by output path, `/`-separated and relative to the package
+   * root: the three declaration files and the manifest in the game-version
+   * folder, then the entry of the game version and `async-natives.json`.
+   */
   files: Map<string, string>;
   /** Warnings only. */
   diagnostics: Diagnostic[];
@@ -88,5 +99,11 @@ export async function generate(input: GenerateInput): Promise<GenerateResult> {
       emitFile(source, ofSource, provenance.identity)
     );
   }
+  files.set(
+    `${folder}/${MANIFEST_FILE}`,
+    emitManifest(patch, resolution.declarations)
+  );
+  files.set(`${folder}.d.ts`, emitEntry(provenance.identity));
+  files.set(ASYNC_NATIVES_FILE, emitAsyncNatives(resolution.declarations));
   return { ok: true, patch, files, diagnostics };
 }

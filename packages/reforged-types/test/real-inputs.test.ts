@@ -43,6 +43,9 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
       "3.0.0/common.j.d.ts",
       "3.0.0/blizzard.j.d.ts",
       "3.0.0/common.ai.d.ts",
+      "3.0.0/manifest.json",
+      "3.0.0.d.ts",
+      "async-natives.json",
     ]);
     expect(result.diagnostics).toEqual([]);
   });
@@ -131,6 +134,66 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
         "declare function StartSoundEx(soundHandle: sound, fadeIn: boolean): void;",
       ].join("\n")
     );
+  });
+
+  it("references the common.j and blizzard.j outputs from the 3.0.0 entry, never common.ai", () => {
+    const references = result.files
+      .get("3.0.0.d.ts")!
+      .match(/^\/\/\/ <reference .*\/>$/gm);
+    expect(references).toEqual([
+      '/// <reference types="lua-types/5.3" resolution-mode="require" />',
+      '/// <reference path="./lua-runtime.d.ts" />',
+      '/// <reference path="./3.0.0/common.j.d.ts" />',
+      '/// <reference path="./3.0.0/blizzard.j.d.ts" />',
+    ]);
+  });
+
+  it("lists the 56 async Natives in async-natives.json, sorted", () => {
+    const names: string[] = JSON.parse(result.files.get("async-natives.json")!);
+    expect(names).toHaveLength(56);
+    expect(names).toContain("GetLocalPlayer");
+    expect(names).toEqual([...names].sort());
+    expect(new Set(names).size).toBe(56);
+    for (const name of names) {
+      expect(commonJ).toContain(`declare function ${name}(`);
+    }
+  });
+
+  it("lists every function and global in the manifest", () => {
+    const manifest = JSON.parse(result.files.get("3.0.0/manifest.json")!);
+    const declared = [commonJ, blizzardJ, commonAi].reduce(
+      (sum, text) => sum + count(text, FUNCTION) + count(text, GLOBAL),
+      0
+    );
+    expect(manifest.patch).toBe("3.0.0.24268");
+    expect(manifest.entries).toHaveLength(declared);
+    expect(manifest.entries).toHaveLength(
+      1681 + 1738 + 1056 + 522 + 123 + 120 + 472
+    );
+    expect(
+      manifest.entries.find(
+        (e: { name: string }) => e.name === "CreateUnit"
+      )
+    ).toEqual({
+      name: "CreateUnit",
+      source: "common.j",
+      kind: "native",
+      constant: false,
+      params: [
+        { name: "id", type: "player", nullable: false },
+        { name: "unitid", type: "integer", nullable: false },
+        { name: "x", type: "real", nullable: false },
+        { name: "y", type: "real", nullable: false },
+        { name: "face", type: "real", nullable: false },
+      ],
+      returns: { type: "unit", nullable: true },
+      async: false,
+      since: null,
+      deprecated: null,
+    });
+    expect(
+      manifest.entries.filter((e: { async?: boolean }) => e.async)
+    ).toHaveLength(56);
   });
 
   it("equals the committed output (the drift gate)", async () => {

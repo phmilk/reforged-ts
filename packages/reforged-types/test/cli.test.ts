@@ -32,7 +32,7 @@ describe("typings:generate", () => {
     expect(stderr).toBe("");
     expect(stdout).toBe(
       [
-        "Generated 3 files for Patch 3.0.0.24268.",
+        "Generated 6 files for Patch 3.0.0.24268.",
         "",
         "Warnings (1):",
         "- [ ] common.j/functions/RequestExtraBooleanData.json: orphan Overlay entry, common.j of Patch 3.0.0.24268 declares no RequestExtraBooleanData",
@@ -43,6 +43,12 @@ describe("typings:generate", () => {
       "blizzard.j.d.ts",
       "common.ai.d.ts",
       "common.j.d.ts",
+      "manifest.json",
+    ]);
+    expect((await readdir(outDir)).sort()).toEqual([
+      "3.0.0",
+      "3.0.0.d.ts",
+      "async-natives.json",
     ]);
     expect(
       await readFile(join(outDir, "3.0.0", "common.j.d.ts"), "utf8")
