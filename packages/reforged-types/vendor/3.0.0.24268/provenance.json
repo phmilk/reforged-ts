@@ -1,0 +1,22 @@
+{
+  "patch": "3.0.0.24268",
+  "tag": "Reforged-v3.0.0.24268-w3-3a9d8f2",
+  "commit": "a392fc3d5e6c37980accbfc560b28387fc7d01bc",
+  "upstream": "https://github.com/Luashine/jass-history",
+  "path": "timeline/scripts",
+  "downloaded": "2026-09-24",
+  "files": {
+    "common.j": {
+      "sha256": "7561e8be53a01c7105aec9a09b707ac168495a412d059e68e39e24dcf92f8fbb",
+      "bytes": 377904
+    },
+    "blizzard.j": {
+      "sha256": "b6db172525d7b106781337252efcba4f56bceb16bb4832680ad07dea052e6e26",
+      "bytes": 495120
+    },
+    "common.ai": {
+      "sha256": "c6ad51b462d642c58acc426234ed88c588a296ec0351b2627c4c2dacdef43394",
+      "bytes": 96014
+    }
+  }
+}
