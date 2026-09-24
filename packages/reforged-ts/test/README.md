@@ -18,6 +18,9 @@ Written as the [reforged-test README](../../reforged-test/README.md) describes: 
 - `handleRef(kind, handle)`: a handle as the call log renders it, `timer#1048578`.
 - `withNative(name, replacement, body)`: the per-test Native override (below).
 - `raisedIn(call)`: the message of the error `call` raised, bare only when Lua's `file:line:` position for it lies inside `call`; how a test proves a creation error points at the line that called the creation member (below).
+- `withPrint(body)`: the lines `body` printed, with `print` put back afterwards; how a test asserts on the failure line of an Init stage callback.
+- `reloadModules(family, entry)`: runs a family of the library's modules again in the same Lua state (`reloadModules("src.init.", "src.init.index")`) and returns the entry's new exports; how a test stands in for a root that executes twice.
+- The editor's script, stubbed (`editor-script.ts`): `defineEditorScript(names)` defines the named entry points (`config`, `main`, `InitGlobals`, `InitCustomTriggers`, `RunInitializationTriggers`, `MarkGameStarted`) as functions that log their names on `editorLog`, `main` calling the init functions it finds. The library wraps them when it loads, so a test imports one of the modules that call it ahead of the library: `bundle-position.ts` (all six), `bundle-position-without-triggers.ts` (no `InitCustomTriggers`) or `entry-points.ts` (`config` and `main`).
 
 Stub helpers the tests call (`__stub_fire_timer`, `__stub_record`) are declared in `stubs.d.ts`.
 
