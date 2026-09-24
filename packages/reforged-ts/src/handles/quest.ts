@@ -1,36 +1,14 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { HandleBase } from "./handle";
 
-export class QuestItem extends Handle<questitem> {
+export class QuestItem extends HandleBase<questitem> {
   public readonly quest?: Quest;
 
-  /** @deprecated use `QuestItem.create` instead. */
-  constructor(whichQuest: Quest) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = QuestCreateItem(whichQuest.handle);
-    if (handle === undefined) {
-      error("w3ts failed to create questitem handle.", 3);
-    }
-    super(handle);
-    this.quest = whichQuest;
-  }
-
-  public static create(whichQuest: Quest): QuestItem | undefined {
-    const handle = QuestCreateItem(whichQuest.handle);
-    if (handle) {
-      const obj = this.getObject(handle) as QuestItem;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-      values.quest = whichQuest;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+  public static create(whichQuest: Quest): QuestItem {
+    return this.expect(QuestCreateItem(whichQuest.handle), "", (item) => {
+      item.quest = whichQuest;
+    });
   }
 
   public setDescription(description: string) {
@@ -46,37 +24,12 @@ export class QuestItem extends Handle<questitem> {
   }
 }
 
-export class Quest extends Handle<quest> {
-  /**
-   * @deprecated use `Quest.create` instead.
-   * @bug Do not use this in a global initialisation as it crashes the game there.
-   */
-  constructor() {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = CreateQuest();
-    if (handle === undefined) {
-      error("w3ts failed to create quest handle.", 3);
-    }
-    super(handle);
-  }
-
+export class Quest extends HandleBase<quest> {
   /**
    * @bug Do not use this in a global initialisation as it crashes the game there.
    */
-  public static create(): Quest | undefined {
-    const handle = CreateQuest();
-    if (handle) {
-      const obj = this.getObject(handle) as Quest;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+  public static create(): Quest {
+    return this.expect(CreateQuest());
   }
 
   public get completed() {
@@ -119,12 +72,11 @@ export class Quest extends Handle<quest> {
     QuestSetRequired(this.handle, required);
   }
 
-  public addItem(description: string) {
-    const questItem = QuestItem.create(this);
-
-    questItem?.setDescription(description);
-
-    return questItem;
+  public addItem(description: string): QuestItem {
+    return QuestItem.expect(QuestCreateItem(this.handle), "", (item) => {
+      item.quest = this;
+      item.setDescription(description);
+    });
   }
 
   public destroy() {
@@ -149,10 +101,5 @@ export class Quest extends Handle<quest> {
 
   public static forceQuestDialogUpdate() {
     ForceQuestDialogUpdate();
-  }
-
-  public static fromHandle(handle: quest | undefined): Quest | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }

@@ -1,77 +1,26 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { HandleBase } from "./handle";
 import { MapPlayer } from "./player";
 
-export class DialogButton extends Handle<button> {
-  /**
-   * @deprecated use `DialogButton.create` instead.
-   */
-  constructor(
-    whichDialog: Dialog,
-    text: string,
-    hotkey = 0,
-    quit = false,
-    score = false,
-  ) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-
-    let handle: button | undefined;
-
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare -- dropping the comparison changes the emitted Lua; step 3 (#51) removes it
-    if (quit === false) {
-      handle = DialogAddButton(whichDialog.handle, text, hotkey);
-    } else {
-      handle = DialogAddQuitButton(whichDialog.handle, score, text, hotkey);
-    }
-
-    if (handle === undefined) {
-      error("w3ts failed to create button handle.", 3);
-    }
-
-    super(handle);
-  }
-
+export class DialogButton extends HandleBase<button> {
   public static create(
     whichDialog: Dialog,
     text: string,
     hotkey = 0,
     quit = false,
     score = false,
-  ): DialogButton | undefined {
-    let handle: button | undefined;
-
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare -- dropping the comparison changes the emitted Lua; step 3 (#51) removes it
-    if (quit === false) {
-      handle = DialogAddButton(whichDialog.handle, text, hotkey);
-    } else {
-      handle = DialogAddQuitButton(whichDialog.handle, score, text, hotkey);
+  ): DialogButton {
+    if (quit) {
+      return this.expect(
+        DialogAddQuitButton(whichDialog.handle, score, text, hotkey),
+      );
     }
-
-    if (handle) {
-      const obj = this.getObject(handle) as DialogButton;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-
-    return undefined;
+    return this.expect(DialogAddButton(whichDialog.handle, text, hotkey));
   }
 
-  public static fromEvent() {
+  public static fromEvent(): DialogButton | undefined {
     return this.fromHandle(GetClickedButton());
-  }
-
-  public static fromHandle(
-    handle: button | undefined,
-  ): DialogButton | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }
 
@@ -80,59 +29,33 @@ export class DialogButton extends Handle<button> {
  * @example Create a simple dialog.
  * ```ts
  * const dialog = Dialog.create();
- * if (dialog) {
- *   const trigger = Trigger.create();
+ * const trigger = Trigger.create();
  *
- *   trigger.registerDialogEvent(dialog);
- *   trigger.addAction(() => {
- *     const clicked = DialogButton.fromEvent();
- *   });
+ * trigger.registerDialogEvent(dialog);
+ * trigger.addAction(() => {
+ *   const clicked = DialogButton.fromEvent();
+ * });
  *
- *   Timer.create().start(1.00, false, () => {
- *     DialogButton.create(dialog, "Stay", 0);
- *     DialogButton.create(dialog, "Leave", 0, true);
+ * Timer.create().start(1.00, false, () => {
+ *   DialogButton.create(dialog, "Stay", 0);
+ *   DialogButton.create(dialog, "Leave", 0, true);
  *
- *     dialog.setMessage("Welcome to TypeScript!");
- *     dialog.display(Players[0], true);
- *   });
- * }
+ *   dialog.setMessage("Welcome to TypeScript!");
+ *   dialog.display(Players[0], true);
+ * });
  * ```
  */
-export class Dialog extends Handle<dialog> {
-  /**
-   * @deprecated use `Dialog.create` instead.
-   */
-  constructor() {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-
-    const handle = DialogCreate();
-
-    if (handle === undefined) {
-      error("w3ts failed to create dialog handle.", 3);
-    }
-
-    super(handle);
+export class Dialog extends HandleBase<dialog> {
+  public static create(): Dialog {
+    return this.expect(DialogCreate());
   }
 
-  public static create(): Dialog | undefined {
-    const handle = DialogCreate();
-
-    if (handle) {
-      const obj = this.getObject(handle) as Dialog;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-
-    return undefined;
-  }
-
-  public addButton(text: string, hotkey = 0, quit = false, score = false) {
+  public addButton(
+    text: string,
+    hotkey = 0,
+    quit = false,
+    score = false,
+  ): DialogButton {
     return DialogButton.create(this, text, hotkey, quit, score);
   }
 
@@ -155,12 +78,7 @@ export class Dialog extends Handle<dialog> {
     DialogSetMessage(this.handle, whichMessage);
   }
 
-  public static fromEvent() {
+  public static fromEvent(): Dialog | undefined {
     return this.fromHandle(GetClickedDialog());
-  }
-
-  public static fromHandle(handle: dialog | undefined): Dialog | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }
