@@ -13,7 +13,7 @@ export class Sound extends Handle<sound> {
     stopWhenOutOfRange: boolean,
     fadeInRate: number,
     fadeOutRate: number,
-    eaxSetting: string
+    eaxSetting: string,
   ) {
     if (Handle.initFromHandle()) {
       super();
@@ -26,7 +26,7 @@ export class Sound extends Handle<sound> {
       stopWhenOutOfRange,
       fadeInRate,
       fadeOutRate,
-      eaxSetting
+      eaxSetting,
     );
     if (handle === undefined) {
       error("w3ts failed to create sound handle.", 3);
@@ -57,7 +57,7 @@ export class Sound extends Handle<sound> {
     stopWhenOutOfRange: boolean,
     fadeInRate: number,
     fadeOutRate: number,
-    eaxSetting: string
+    eaxSetting: string,
   ): Sound | undefined {
     const handle = CreateSound(
       fileName,
@@ -66,7 +66,7 @@ export class Sound extends Handle<sound> {
       stopWhenOutOfRange,
       fadeInRate,
       fadeOutRate,
-      eaxSetting
+      eaxSetting,
     );
     if (handle) {
       const obj = this.getObject(handle) as Sound;
@@ -118,7 +118,7 @@ export class Sound extends Handle<sound> {
   public registerStacked(
     byPosition: boolean,
     rectWidth: number,
-    rectHeight: number
+    rectHeight: number,
   ) {
     RegisterStackedSound(this.handle, byPosition, rectWidth, rectHeight);
   }
@@ -237,12 +237,13 @@ export class Sound extends Handle<sound> {
   public unregisterStacked(
     byPosition: boolean,
     rectWidth: number,
-    rectHeight: number
+    rectHeight: number,
   ) {
     UnregisterStackedSound(this.handle, byPosition, rectWidth, rectHeight);
   }
 
   public static fromHandle(handle: sound | undefined): Sound | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 

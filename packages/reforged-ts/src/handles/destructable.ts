@@ -4,7 +4,7 @@ import { Handle } from "./handle";
 import { Widget } from "./widget";
 
 export class Destructable extends Widget {
-  public declare readonly handle: destructable;
+  declare public readonly handle: destructable;
 
   public readonly skin?: number;
 
@@ -16,7 +16,7 @@ export class Destructable extends Widget {
     z: number,
     face: number,
     scale: number,
-    variation: number
+    variation: number,
   ) {
     if (Handle.initFromHandle()) {
       super();
@@ -30,7 +30,7 @@ export class Destructable extends Widget {
       z,
       face,
       scale,
-      variation
+      variation,
     );
 
     if (handle === undefined) {
@@ -57,10 +57,13 @@ export class Destructable extends Widget {
     face?: number,
     scale?: number,
     variation?: number,
-    skinId?: number
+    skinId?: number,
   ): Destructable | undefined {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
     if (face === undefined) face = 0;
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
     if (scale === undefined) scale = 1;
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
     if (variation === undefined) variation = 0;
 
     let handle: destructable | undefined;
@@ -73,7 +76,7 @@ export class Destructable extends Widget {
         face,
         scale,
         variation,
-        skinId
+        skinId,
       );
     } else {
       handle = CreateDestructable(objectId, x, y, face, scale, variation);
@@ -112,10 +115,13 @@ export class Destructable extends Widget {
     face?: number,
     scale?: number,
     variation?: number,
-    skinId?: number
+    skinId?: number,
   ): Destructable | undefined {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
     if (face === undefined) face = 0;
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
     if (scale === undefined) scale = 1;
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
     if (variation === undefined) variation = 0;
 
     let handle: destructable | undefined;
@@ -128,7 +134,7 @@ export class Destructable extends Widget {
         face,
         scale,
         variation,
-        skinId
+        skinId,
       );
     } else {
       handle = CreateDestructableZ(objectId, x, y, z, face, scale, variation);
@@ -240,8 +246,9 @@ export class Destructable extends Widget {
   }
 
   public static override fromHandle(
-    handle: destructable | undefined
+    handle: destructable | undefined,
   ): Destructable | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }

@@ -23,7 +23,7 @@ const options = (vendor: string, overlay: string, out: string) => [
 
 async function run(
   command: typeof check,
-  args: string[]
+  args: string[],
 ): Promise<{ status: number; stdout: string; stderr: string }> {
   let stdout = "";
   let stderr = "";
@@ -44,30 +44,39 @@ describe("typings:check", () => {
 
   beforeEach(async () => {
     outDir = await mkdtemp(join(tmpdir(), "reforged-types-committed-"));
-    const generated = await run(generate, options(vendorDir, overlayDir, outDir));
+    const generated = await run(
+      generate,
+      options(vendorDir, overlayDir, outDir),
+    );
     expect(generated.status).toBe(0);
   });
 
   it("passes when the committed output is what generation produces", async () => {
-    const { status, stdout, stderr } = await run(check, options(vendorDir, overlayDir, outDir));
+    const { status, stdout, stderr } = await run(
+      check,
+      options(vendorDir, overlayDir, outDir),
+    );
 
     expect(status).toBe(0);
     expect(stderr).toBe("");
     expect(stdout).toBe(
-      "Typings match: 6 files of Patch 3.0.0.24268 are exactly what the sources and the Overlay generate.\n"
+      "Typings match: 6 files of Patch 3.0.0.24268 are exactly what the sources and the Overlay generate.\n",
     );
   });
 
   it("fails naming a committed output file that was edited", async () => {
     await appendFile(join(outDir, "3.0.0", "common.j.d.ts"), "// edited\n");
 
-    const { status, stdout, stderr } = await run(check, options(vendorDir, overlayDir, outDir));
+    const { status, stdout, stderr } = await run(
+      check,
+      options(vendorDir, overlayDir, outDir),
+    );
 
     expect(status).toBe(1);
     expect(stdout).toBe("");
     expect(stderr).toBe(
       `Typings drift: 1 file does ${DRIFT}\n\n` +
-        "- [ ] 3.0.0/common.j.d.ts: differs from the generated file\n"
+        "- [ ] 3.0.0/common.j.d.ts: differs from the generated file\n",
     );
   });
 
@@ -78,35 +87,47 @@ describe("typings:check", () => {
   ])("fails naming %s when it was edited", async (_, path) => {
     await appendFile(join(outDir, path), " ");
 
-    const { status, stderr } = await run(check, options(vendorDir, overlayDir, outDir));
+    const { status, stderr } = await run(
+      check,
+      options(vendorDir, overlayDir, outDir),
+    );
 
     expect(status).toBe(1);
     expect(stderr).toBe(
       `Typings drift: 1 file does ${DRIFT}\n\n` +
-        `- [ ] ${path}: differs from the generated file\n`
+        `- [ ] ${path}: differs from the generated file\n`,
     );
   });
 
   it("names a data artefact that is missing", async () => {
     await rm(join(outDir, "async-natives.json"));
 
-    const { status, stderr } = await run(check, options(vendorDir, overlayDir, outDir));
+    const { status, stderr } = await run(
+      check,
+      options(vendorDir, overlayDir, outDir),
+    );
 
     expect(status).toBe(1);
     expect(stderr).toContain(
-      "- [ ] async-natives.json: generated but not committed\n"
+      "- [ ] async-natives.json: generated but not committed\n",
     );
   });
 
   it("treats a line-ending change as drift", async () => {
     const file = join(outDir, "3.0.0", "common.ai.d.ts");
-    await writeFile(file, (await readFile(file, "utf8")).replace(/\n/g, "\r\n"));
+    await writeFile(
+      file,
+      (await readFile(file, "utf8")).replace(/\n/g, "\r\n"),
+    );
 
-    const { status, stderr } = await run(check, options(vendorDir, overlayDir, outDir));
+    const { status, stderr } = await run(
+      check,
+      options(vendorDir, overlayDir, outDir),
+    );
 
     expect(status).toBe(1);
     expect(stderr).toContain(
-      "- [ ] 3.0.0/common.ai.d.ts: differs from the generated file\n"
+      "- [ ] 3.0.0/common.ai.d.ts: differs from the generated file\n",
     );
   });
 
@@ -116,23 +137,29 @@ describe("typings:check", () => {
     // Files at the package root are not generated output of a folder.
     await writeFile(join(outDir, "package.json"), "{}");
 
-    const { status, stderr } = await run(check, options(vendorDir, overlayDir, outDir));
+    const { status, stderr } = await run(
+      check,
+      options(vendorDir, overlayDir, outDir),
+    );
 
     expect(status).toBe(1);
     expect(stderr).toBe(
       `Typings drift: 2 files do ${DRIFT}\n\n` +
         "- [ ] 3.0.0/blizzard.j.d.ts: generated but not committed\n" +
-        "- [ ] 3.0.0/stale.d.ts: committed but no longer generated\n"
+        "- [ ] 3.0.0/stale.d.ts: committed but no longer generated\n",
     );
   });
 
   it("fails with the generator's checklist when generation fails", async () => {
     const broken = await writeFixture(
       { "common.j": "native A takes nothing returns nothing\n" },
-      [entry("common.j", "B")]
+      [entry("common.j", "B")],
     );
 
-    const { status, stdout, stderr } = await run(check, options(broken.vendorDir, broken.overlayDir, outDir));
+    const { status, stdout, stderr } = await run(
+      check,
+      options(broken.vendorDir, broken.overlayDir, outDir),
+    );
 
     expect(status).toBe(1);
     expect(stdout).toBe("");
@@ -146,7 +173,7 @@ describe("typings:check", () => {
         "Warnings (1):",
         "- [ ] common.j/functions/B.json: orphan Overlay entry, common.j of Patch 3.0.0.24268 declares no B",
         "",
-      ].join("\n")
+      ].join("\n"),
     );
   });
 
@@ -158,7 +185,7 @@ describe("typings:check", () => {
 
     expect(status).toBe(2);
     expect(stderr).toBe(
-      "Usage: typings:check [--vendor <dir>] [--overlay <dir>] [--out <dir>]\n"
+      "Usage: typings:check [--vendor <dir>] [--overlay <dir>] [--out <dir>]\n",
     );
   });
 });

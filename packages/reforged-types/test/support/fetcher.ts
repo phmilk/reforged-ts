@@ -12,21 +12,24 @@ const RAW = "https://raw.githubusercontent.com/Luashine/jass-history/";
  * network.
  */
 export function jassHistoryFetcher(
-  tags: Record<string, { commit: string; folder: string }>
+  tags: Record<string, { commit: string; folder: string }>,
 ): Fetcher {
   return async (url) => {
     if (url.startsWith(API)) {
-      const tag = tags[decodeURIComponent(url.slice(API.length))];
+      const tag = (tags as Partial<typeof tags>)[
+        decodeURIComponent(url.slice(API.length))
+      ];
       if (!tag) throw new Error(`GET ${url} failed: 422 Unprocessable Entity`);
       return new TextEncoder().encode(tag.commit);
     }
     const match = /^([0-9a-f]{40})\/timeline\/scripts\/([\w.]+)$/.exec(
-      url.startsWith(RAW) ? url.slice(RAW.length) : ""
+      url.startsWith(RAW) ? url.slice(RAW.length) : "",
     );
     const folder = Object.values(tags).find(
-      (tag) => tag.commit === match?.[1]
+      (tag) => tag.commit === match?.[1],
     )?.folder;
-    if (!match || folder === undefined) throw new Error(`unexpected URL ${url}`);
-    return new Uint8Array(await readFile(join(folder, match[2]!)));
+    if (!match || folder === undefined)
+      throw new Error(`unexpected URL ${url}`);
+    return new Uint8Array(await readFile(join(folder, match[2])));
   };
 }

@@ -58,7 +58,7 @@ export function serializeProvenance(p: Provenance): string {
       SOURCES.map((name) => [
         name,
         { sha256: p.files[name].sha256, bytes: p.files[name].bytes },
-      ])
+      ]),
     ) as Provenance["files"],
   };
   return `${JSON.stringify(ordered, null, 2)}\n`;
@@ -70,7 +70,7 @@ export function serializeProvenance(p: Provenance): string {
  */
 export function parseProvenance(
   text: string,
-  source = PROVENANCE_FILE
+  source = PROVENANCE_FILE,
 ): Provenance {
   const fail = (what: string): never => {
     throw new Error(`${source}: ${what}`);
@@ -124,7 +124,7 @@ export function parseProvenance(
  * reporting a problem as a diagnostic: the generator needs no more of it.
  */
 export async function readPatchIdentity(
-  patchDir: string
+  patchDir: string,
 ): Promise<{ identity?: PatchIdentity; diagnostics: Diagnostic[] }> {
   const fail = (problem: string) => ({
     diagnostics: [
@@ -147,7 +147,7 @@ export async function readPatchIdentity(
     (typeof json === "object" && json !== null ? json : {}) as Record<
       string,
       unknown
-    >
+    >,
   );
   return typeof identity === "string"
     ? fail(identity)
@@ -156,7 +156,7 @@ export async function readPatchIdentity(
 
 /** The identity fields of a provenance record, or the first problem. */
 function parseIdentity(
-  record: Record<string, unknown>
+  record: Record<string, unknown>,
 ): PatchIdentity | string {
   const { patch, tag, commit } = record;
   if (typeof patch !== "string" || !isBuild(patch)) {

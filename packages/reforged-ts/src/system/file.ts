@@ -1,7 +1,4 @@
 /** @noSelfInFile */
-/* eslint-disable no-useless-escape */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-param-reassign */
 
 /**
  * A system which provides the ability to read and write files. There are no standard IO natives
@@ -26,6 +23,7 @@
  * }
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class -- File is a static-only System; step 6 (#53) audits it and settles its shape
 export class File {
   // The ability used to read and write data.
   private static dummyAbility: number = FourCC("Amls");
@@ -33,7 +31,6 @@ export class File {
   // The string limit per Preload call.
   private static preloadLimit = 259;
 
-  // eslint-disable-next-line no-useless-constructor
   private constructor() {
     // nothing
   }
@@ -98,25 +95,28 @@ export class File {
   public static writeRaw(
     filename: string,
     contents: string,
-    allowReading = false
+    allowReading = false,
+    // eslint-disable-next-line @typescript-eslint/prefer-return-this-type -- the write methods return the class; step 6 (#53) removes it
   ): File {
     PreloadGenClear();
     PreloadGenStart();
 
     if (allowReading) {
       Preload(
-        `\")\n//! beginusercode\nlocal o=''\nPreload=function(s)o=o..s end\nPreloadEnd=function()end\n//!endusercode\n//`
+        `")\n//! beginusercode\nlocal o=''\nPreload=function(s)o=o..s end\nPreloadEnd=function()end\n//!endusercode\n//`,
       );
       contents = File.escape(contents);
     }
 
     for (let i = 0; i < contents.length / File.preloadLimit; i++) {
-      Preload(`${contents.substr(i * File.preloadLimit, File.preloadLimit)}`);
+      // eslint-disable-next-line @typescript-eslint/no-deprecated -- substr; step 6 (#53) removes it
+      Preload(contents.substr(i * File.preloadLimit, File.preloadLimit));
     }
 
     if (allowReading) {
       Preload(
-        `\")\n//! beginusercode\nBlzSetAbilityIcon(${this.dummyAbility},o)\n//!endusercode\n//`
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- a number or status in a template literal; step 6 (#53) removes it
+        `")\n//! beginusercode\nBlzSetAbilityIcon(${this.dummyAbility},o)\n//!endusercode\n//`,
       );
     }
 

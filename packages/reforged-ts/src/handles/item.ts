@@ -6,7 +6,7 @@ import { Point } from "./point";
 import { Widget } from "./widget";
 
 export class Item extends Widget {
-  public declare readonly handle: item;
+  declare public readonly handle: item;
 
   /**
    * @deprecated use `Item.create` instead.
@@ -44,7 +44,7 @@ export class Item extends Widget {
     itemId: number,
     x: number,
     y: number,
-    skinId?: number
+    skinId?: number,
   ): Item | undefined {
     const handle =
       skinId === undefined
@@ -217,8 +217,10 @@ export class Item extends Widget {
   }
 
   public getField(
-    field: itembooleanfield | itemintegerfield | itemrealfield | itemstringfield
+    field:
+      itembooleanfield | itemintegerfield | itemrealfield | itemstringfield,
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string, @typescript-eslint/no-deprecated -- a field object stringified for its type prefix; substr; step 6 (#53) removes it
     const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
 
     switch (fieldType) {
@@ -265,26 +267,24 @@ export class Item extends Widget {
 
   public setField(
     field:
-      | itembooleanfield
-      | itemintegerfield
-      | itemrealfield
-      | itemstringfield,
-    value: boolean | number | string
+      itembooleanfield | itemintegerfield | itemrealfield | itemstringfield,
+    value: boolean | number | string,
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string, @typescript-eslint/no-deprecated -- a field object stringified for its type prefix; substr; step 6 (#53) removes it
     const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
 
     if (fieldType === "unitbooleanfield" && typeof value === "boolean") {
       return BlzSetItemBooleanField(
         this.handle,
         field as itembooleanfield,
-        value
+        value,
       );
     }
     if (fieldType === "unitintegerfield" && typeof value === "number") {
       return BlzSetItemIntegerField(
         this.handle,
         field as itemintegerfield,
-        value
+        value,
       );
     }
     if (fieldType === "unitrealfield" && typeof value === "number") {
@@ -294,7 +294,7 @@ export class Item extends Widget {
       return BlzSetItemStringField(
         this.handle,
         field as itemstringfield,
-        value
+        value,
       );
     }
 
@@ -318,8 +318,9 @@ export class Item extends Widget {
   }
 
   public static override fromHandle(
-    handle: item | undefined
+    handle: item | undefined,
   ): Item | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 

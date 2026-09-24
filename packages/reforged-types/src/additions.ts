@@ -29,12 +29,12 @@ export interface Additions {
  * match.
  */
 export function additions(
-  patches: readonly { patch: string; declarations: readonly Declaration[] }[]
+  patches: readonly { patch: string; declarations: readonly Declaration[] }[],
 ): Additions[] {
   const result: Additions[] = [];
   for (let i = 1; i < patches.length; i++) {
-    const previous = patches[i - 1]!;
-    const current = patches[i]!;
+    const previous = patches[i - 1];
+    const current = patches[i];
     const known = new Set(previous.declarations.map(identity));
     result.push({
       patch: current.patch,

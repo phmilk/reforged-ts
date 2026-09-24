@@ -15,16 +15,56 @@ import type { Declaration } from "./model.js";
  */
 const RESERVED_WORDS: ReadonlySet<string> = new Set([
   // Reserved words.
-  "break", "case", "catch", "class", "const", "continue", "debugger",
-  "default", "delete", "do", "else", "enum", "export", "extends", "false",
-  "finally", "for", "function", "if", "import", "in", "instanceof", "new",
-  "null", "return", "super", "switch", "this", "throw", "true", "try",
-  "typeof", "var", "void", "while", "with",
+  "break",
+  "case",
+  "catch",
+  "class",
+  "const",
+  "continue",
+  "debugger",
+  "default",
+  "delete",
+  "do",
+  "else",
+  "enum",
+  "export",
+  "extends",
+  "false",
+  "finally",
+  "for",
+  "function",
+  "if",
+  "import",
+  "in",
+  "instanceof",
+  "new",
+  "null",
+  "return",
+  "super",
+  "switch",
+  "this",
+  "throw",
+  "true",
+  "try",
+  "typeof",
+  "var",
+  "void",
+  "while",
+  "with",
   // Strict-mode reserved words.
-  "implements", "interface", "let", "package", "private", "protected",
-  "public", "static", "yield", "await",
+  "implements",
+  "interface",
+  "let",
+  "package",
+  "private",
+  "protected",
+  "public",
+  "static",
+  "yield",
+  "await",
   // Restricted in strict mode.
-  "arguments", "eval",
+  "arguments",
+  "eval",
 ]);
 
 /**
@@ -33,8 +73,16 @@ const RESERVED_WORDS: ReadonlySet<string> = new Set([
  */
 const RESERVED_TYPE_NAMES: ReadonlySet<string> = new Set([
   ...RESERVED_WORDS,
-  "any", "unknown", "never", "number", "bigint", "boolean", "string",
-  "symbol", "object", "undefined",
+  "any",
+  "unknown",
+  "never",
+  "number",
+  "bigint",
+  "boolean",
+  "string",
+  "symbol",
+  "object",
+  "undefined",
   "handle",
   ...CALLBACK_ALIASES.map((alias) => alias.name),
 ]);
@@ -55,7 +103,7 @@ export function checkNames(declarations: readonly Declaration[]): Diagnostic[] {
 
   for (const declaration of declarations) {
     const { name, source, line, kind } = declaration;
-    const where = `${source}:${line}`;
+    const where = `${source}:${String(line)}`;
     const location = { file: source, line, name };
 
     const reserved = kind === "type" ? RESERVED_TYPE_NAMES : RESERVED_WORDS;

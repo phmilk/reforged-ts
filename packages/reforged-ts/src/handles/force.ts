@@ -1,6 +1,7 @@
 /** @noSelfInFile * */
 
 import { Handle } from "./handle";
+// eslint-disable-next-line import-x/no-cycle -- force and player import each other; type-only imports in step 3 (#51) break the cycle
 import { MapPlayer } from "./player";
 
 export class Force extends Handle<force> {
@@ -50,41 +51,41 @@ export class Force extends Handle<force> {
 
   public enumAllies(
     whichPlayer: MapPlayer,
-    filter: boolexpr | (() => boolean)
+    filter: boolexpr | (() => boolean),
   ) {
     ForceEnumAllies(
       this.handle,
       whichPlayer.handle,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
   public enumEnemies(
     whichPlayer: MapPlayer,
-    filter: boolexpr | (() => boolean)
+    filter: boolexpr | (() => boolean),
   ) {
     ForceEnumEnemies(
       this.handle,
       whichPlayer.handle,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
   public enumPlayers(filter: boolexpr | (() => boolean)) {
     ForceEnumPlayers(
       this.handle,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
   public enumPlayersCounted(
     filter: boolexpr | (() => boolean),
-    countLimit: number
+    countLimit: number,
   ) {
     ForceEnumPlayersCounted(
       this.handle,
       typeof filter === "function" ? Filter(filter) : filter,
-      countLimit
+      countLimit,
     );
   }
 
@@ -121,6 +122,7 @@ export class Force extends Handle<force> {
   }
 
   public static fromHandle(handle: force | undefined): Force | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }

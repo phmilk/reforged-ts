@@ -16,6 +16,7 @@ export class Trigger extends Handle<trigger> {
       return;
     }
     const handle = CreateTrigger();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
     if (handle === undefined) {
       error("w3ts failed to create trigger handle.", 3);
     }
@@ -97,6 +98,7 @@ export class Trigger extends Handle<trigger> {
   public addCondition(condition: boolexpr | (() => boolean)) {
     if (typeof condition === "function") {
       const cf = Condition(condition);
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- a truthiness test on a filter (also a typescript-to-lua warning); step 5 (#47) removes it
       return cf ? TriggerAddCondition(this.handle, cf) : undefined;
     }
     return TriggerAddCondition(this.handle, condition);
@@ -130,6 +132,7 @@ export class Trigger extends Handle<trigger> {
    * Control will return to the caller when the trigger has finished or has been suspended via TriggerSleepAction.
    */
   public exec() {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
     return TriggerExecute(this.handle);
   }
 
@@ -143,6 +146,7 @@ export class Trigger extends Handle<trigger> {
   }
 
   public registerAnyUnitEvent(whichPlayerUnitEvent: playerunitevent) {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
     return TriggerRegisterAnyUnitEventBJ(this.handle, whichPlayerUnitEvent);
   }
 
@@ -164,25 +168,25 @@ export class Trigger extends Handle<trigger> {
 
   public registerEnterRegion(
     whichRegion: Region,
-    filter: boolexpr | (() => boolean) | undefined
+    filter: boolexpr | (() => boolean) | undefined,
   ) {
     return TriggerRegisterEnterRegion(
       this.handle,
       whichRegion.handle,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
   public registerFilterUnitEvent(
     whichUnit: Unit,
     whichEvent: unitevent,
-    filter: boolexpr | (() => boolean) | undefined
+    filter: boolexpr | (() => boolean) | undefined,
   ) {
     return TriggerRegisterFilterUnitEvent(
       this.handle,
       whichUnit.handle,
       whichEvent,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
@@ -193,59 +197,59 @@ export class Trigger extends Handle<trigger> {
   public registerGameStateEvent(
     whichState: gamestate,
     opcode: limitop,
-    limitval: number
+    limitval: number,
   ) {
     return TriggerRegisterGameStateEvent(
       this.handle,
       whichState,
       opcode,
-      limitval
+      limitval,
     );
   }
 
   public registerLeaveRegion(
     whichRegion: Region,
-    filter: boolexpr | (() => boolean) | undefined
+    filter: boolexpr | (() => boolean) | undefined,
   ) {
     return TriggerRegisterLeaveRegion(
       this.handle,
       whichRegion.handle,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
   public registerPlayerAllianceChange(
     whichPlayer: MapPlayer,
-    whichAlliance: alliancetype
+    whichAlliance: alliancetype,
   ) {
     return TriggerRegisterPlayerAllianceChange(
       this.handle,
       whichPlayer.handle,
-      whichAlliance
+      whichAlliance,
     );
   }
 
   public registerPlayerChatEvent(
     whichPlayer: MapPlayer,
     chatMessageToDetect: string,
-    exactMatchOnly: boolean
+    exactMatchOnly: boolean,
   ) {
     return TriggerRegisterPlayerChatEvent(
       this.handle,
       whichPlayer.handle,
       chatMessageToDetect,
-      exactMatchOnly
+      exactMatchOnly,
     );
   }
 
   public registerPlayerEvent(
     whichPlayer: MapPlayer,
-    whichPlayerEvent: playerevent
+    whichPlayerEvent: playerevent,
   ) {
     return TriggerRegisterPlayerEvent(
       this.handle,
       whichPlayer.handle,
-      whichPlayerEvent
+      whichPlayerEvent,
     );
   }
 
@@ -253,25 +257,25 @@ export class Trigger extends Handle<trigger> {
     whichPlayer: MapPlayer,
     whichKey: oskeytype,
     metaKey: number,
-    fireOnKeyDown: boolean
+    fireOnKeyDown: boolean,
   ) {
     return BlzTriggerRegisterPlayerKeyEvent(
       this.handle,
       whichPlayer.handle,
       whichKey,
       metaKey,
-      fireOnKeyDown
+      fireOnKeyDown,
     );
   }
 
   public registerPlayerMouseEvent(
     whichPlayer: MapPlayer,
-    whichMouseEvent: number
+    whichMouseEvent: number,
   ) {
     return TriggerRegisterPlayerMouseEventBJ(
       this.handle,
       whichPlayer.handle,
-      whichMouseEvent
+      whichMouseEvent,
     );
   }
 
@@ -279,40 +283,40 @@ export class Trigger extends Handle<trigger> {
     whichPlayer: MapPlayer,
     whichState: playerstate,
     opcode: limitop,
-    limitval: number
+    limitval: number,
   ) {
     return TriggerRegisterPlayerStateEvent(
       this.handle,
       whichPlayer.handle,
       whichState,
       opcode,
-      limitval
+      limitval,
     );
   }
 
   public registerPlayerSyncEvent(
     whichPlayer: MapPlayer,
     prefix: string,
-    fromServer: boolean
+    fromServer: boolean,
   ) {
     return BlzTriggerRegisterPlayerSyncEvent(
       this.handle,
       whichPlayer.handle,
       prefix,
-      fromServer
+      fromServer,
     );
   }
 
   public registerPlayerUnitEvent(
     whichPlayer: MapPlayer,
     whichPlayerUnitEvent: playerunitevent,
-    filter: boolexpr | (() => boolean) | undefined
+    filter: boolexpr | (() => boolean) | undefined,
   ) {
     return TriggerRegisterPlayerUnitEvent(
       this.handle,
       whichPlayer.handle,
       whichPlayerUnitEvent,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
@@ -341,13 +345,13 @@ export class Trigger extends Handle<trigger> {
   public registerUnitInRange(
     whichUnit: Unit,
     range: number,
-    filter: boolexpr | (() => boolean) | undefined
+    filter: boolexpr | (() => boolean) | undefined,
   ) {
     return TriggerRegisterUnitInRange(
       this.handle,
       whichUnit.handle,
       range,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
@@ -355,14 +359,14 @@ export class Trigger extends Handle<trigger> {
     whichUnit: Unit,
     whichState: unitstate,
     opcode: limitop,
-    limitval: number
+    limitval: number,
   ) {
     return TriggerRegisterUnitStateEvent(
       this.handle,
       whichUnit.handle,
       whichState,
       opcode,
-      limitval
+      limitval,
     );
   }
 
@@ -373,24 +377,28 @@ export class Trigger extends Handle<trigger> {
   public registerVariableEvent(
     varName: string,
     opcode: limitop,
-    limitval: number
+    limitval: number,
   ) {
     return TriggerRegisterVariableEvent(this.handle, varName, opcode, limitval);
   }
 
   public removeAction(whichAction: triggeraction) {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
     return TriggerRemoveAction(this.handle, whichAction);
   }
 
   public removeActions() {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
     return TriggerClearActions(this.handle);
   }
 
   public removeCondition(whichCondition: triggercondition) {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
     return TriggerRemoveCondition(this.handle, whichCondition);
   }
 
   public removeConditions() {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
     return TriggerClearConditions(this.handle);
   }
 
@@ -407,6 +415,7 @@ export class Trigger extends Handle<trigger> {
   }
 
   public static fromHandle(handle: trigger | undefined): Trigger | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }

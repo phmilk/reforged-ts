@@ -46,7 +46,8 @@ export class Frame extends Handle<framehandle> {
     name: string,
     owner: Frame,
     priority: number,
-    createContext: number
+    // eslint-disable-next-line @typescript-eslint/unified-signatures -- the deprecated Frame constructor overloads go; step 3 (#51) removes it
+    createContext: number,
   );
 
   /**
@@ -75,7 +76,7 @@ export class Frame extends Handle<framehandle> {
     priority: number,
     createContext: number,
     typeName: string,
-    inherits: string
+    inherits: string,
   );
 
   constructor(
@@ -84,7 +85,7 @@ export class Frame extends Handle<framehandle> {
     priority: number,
     createContext?: number,
     typeName?: string,
-    inherits?: string
+    inherits?: string,
   ) {
     if (Handle.initFromHandle()) {
       super();
@@ -101,7 +102,7 @@ export class Frame extends Handle<framehandle> {
         name,
         owner.handle,
         inherits,
-        createContext
+        createContext,
       );
     } else {
       handle = BlzCreateFrame(name, owner.handle, priority, createContext);
@@ -125,7 +126,7 @@ export class Frame extends Handle<framehandle> {
     name: string,
     owner: Frame,
     priority: number,
-    createContext: number
+    createContext: number,
   ): Frame | undefined {
     const handle = BlzCreateFrame(name, owner.handle, priority, createContext);
     if (handle) {
@@ -150,7 +151,7 @@ export class Frame extends Handle<framehandle> {
   public static createSimple(
     name: string,
     owner: Frame,
-    createContext: number
+    createContext: number,
   ): Frame | undefined {
     const handle = BlzCreateSimpleFrame(name, owner.handle, createContext);
     if (handle) {
@@ -177,14 +178,14 @@ export class Frame extends Handle<framehandle> {
     owner: Frame,
     createContext: number,
     typeName: string,
-    inherits: string
+    inherits: string,
   ): Frame | undefined {
     const handle = BlzCreateFrameByType(
       typeName,
       name,
       owner.handle,
       inherits,
-      createContext
+      createContext,
     );
 
     if (handle) {
@@ -247,9 +248,8 @@ export class Frame extends Handle<framehandle> {
   }
 
   public get parent() {
-    return Frame.fromHandle(
-      BlzFrameGetParent(this.handle) as framehandle
-    ) as Frame;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- a lookup used as non-null; lookups get one documented non-null path; step 3 (#51) removes it
+    return Frame.fromHandle(BlzFrameGetParent(this.handle))!;
   }
 
   public set text(text: string) {
@@ -389,7 +389,7 @@ export class Frame extends Handle<framehandle> {
     relative: Frame,
     relativePoint: framepointtype,
     x: number,
-    y: number
+    y: number,
   ) {
     BlzFrameSetPoint(this.handle, point, relative.handle, relativePoint, x, y);
     return this;
@@ -469,6 +469,7 @@ export class Frame extends Handle<framehandle> {
   }
 
   public static fromHandle(handle: framehandle | undefined): Frame | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 

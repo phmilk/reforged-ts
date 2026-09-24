@@ -15,6 +15,7 @@ export class Region extends Handle<region> {
       return;
     }
     const handle = CreateRegion();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
     if (handle === undefined) {
       error("w3ts failed to create rect handle.", 3);
     }
@@ -76,6 +77,7 @@ export class Region extends Handle<region> {
   }
 
   public static fromHandle(handle: region | undefined): Region | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }

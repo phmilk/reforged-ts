@@ -1,0 +1,20 @@
+{
+  // Solution file for the editor and the lint's project service; nothing
+  // builds from here (every package builds with its own scripts). A file finds
+  // its program through the nearest tsconfig.json; the programs below own
+  // files that the nearest tsconfig.json does not name, so they are listed
+  // here, where the search continues.
+  "files": [],
+  "references": [
+    // The workspace's vitest configuration, at the root.
+    { "path": "tsconfig.vitest.json" },
+    // The seed script.
+    { "path": "packages/reforged-types/tsconfig.scripts.json" },
+    // The generated Typings.
+    { "path": "packages/reforged-types/tsconfig.typings.json" },
+    // The hand-written Lua runtime file, through the Map project fixtures.
+    {
+      "path": "packages/reforged-types/test/fixtures/map-project/tsconfig.json"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 /** @noSelfInFile */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const map: WeakMap<handle, any> = new WeakMap<handle, any>();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- the registry holds any; step 3 (#51) removes it
+const map: WeakMap<handle, any> = new WeakMap<handle>();
 
 export class Handle<T extends handle> {
   public readonly handle: T;
@@ -9,6 +9,7 @@ export class Handle<T extends handle> {
   private static initHandle: handle | undefined;
 
   protected constructor(handle?: T) {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- the rewrite changes the emitted Lua; step 3 (#51) removes it
     this.handle = handle === undefined ? (Handle.initHandle as T) : handle;
     map.set(this.handle, this);
   }
@@ -26,8 +27,10 @@ export class Handle<T extends handle> {
   }
 
   protected static getObject(handle: handle) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- the registry holds any; step 3 (#51) removes it
     const obj = map.get(handle);
     if (obj !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
       return obj;
     }
     Handle.initHandle = handle;

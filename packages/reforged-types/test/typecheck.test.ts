@@ -7,8 +7,9 @@
 import { readFile } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import ts from "typescript";
+import * as ts from "typescript";
 import { describe, expect, it } from "vitest";
+import { required } from "./support/fixture.js";
 
 const packageRoot = fileURLToPath(new URL("../", import.meta.url));
 const TYPINGS_CONFIG = join(packageRoot, "tsconfig.typings.json");
@@ -18,17 +19,20 @@ const TYPINGS_CONFIG = join(packageRoot, "tsconfig.typings.json");
  * text of some files (by path relative to the package root).
  */
 function typecheck(replace: Record<string, string> = {}): ts.Diagnostic[] {
-  const config = ts.getParsedCommandLineOfConfigFile(
-    TYPINGS_CONFIG,
-    {},
-    { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => {} }
-  )!;
+  const config = required(
+    ts.getParsedCommandLineOfConfigFile(
+      TYPINGS_CONFIG,
+      {},
+      { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => undefined },
+    ),
+    "the parsed tsconfig",
+  );
   expect(config.errors).toEqual([]);
   const replaced = new Map(
     Object.entries(replace).map(([path, text]) => [
       resolve(packageRoot, path).toLowerCase(),
       text,
-    ])
+    ]),
   );
   const host = ts.createCompilerHost(config.options);
   const getSourceFile = host.getSourceFile.bind(host);
@@ -56,16 +60,19 @@ function format(diagnostics: readonly ts.Diagnostic[]): string {
 
 describe("the typings type-check", () => {
   it("checks the entry and the common.ai output, not skipping declaration files", () => {
-    const config = ts.getParsedCommandLineOfConfigFile(
-      TYPINGS_CONFIG,
-      {},
-      { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => {} }
-    )!;
+    const config = required(
+      ts.getParsedCommandLineOfConfigFile(
+        TYPINGS_CONFIG,
+        {},
+        { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => undefined },
+      ),
+      "the parsed tsconfig",
+    );
 
     expect(
       config.fileNames.map((name) =>
-        relative(packageRoot, name).replace(/\\/g, "/")
-      )
+        relative(packageRoot, name).replace(/\\/g, "/"),
+      ),
     ).toEqual(["3.0.0.d.ts", "3.0.0/common.ai.d.ts"]);
     expect(config.options.noEmit).toBe(true);
     expect(config.options.skipLibCheck).toBeFalsy();
@@ -86,18 +93,22 @@ describe("the typings type-check", () => {
     });
 
     expect(diagnostics.map((d) => d.code)).toEqual([2304]);
-    expect(diagnostics[0]!.file!.fileName).toMatch(/3\.0\.0\/common\.j\.d\.ts$/);
+    expect(diagnostics[0].file?.fileName).toMatch(/3\.0\.0\/common\.j\.d\.ts$/);
   }, 60_000);
 });
 
 describe("the Lua runtime file", () => {
   it("declares FourCC and __jarray and nothing else", async () => {
     const text = await readFile(join(packageRoot, "lua-runtime.d.ts"), "utf8");
-    const file = ts.createSourceFile("lua-runtime.d.ts", text, ts.ScriptTarget.Latest);
+    const file = ts.createSourceFile(
+      "lua-runtime.d.ts",
+      text,
+      ts.ScriptTarget.Latest,
+    );
     const printer = ts.createPrinter({ removeComments: true });
 
     const declarations = file.statements.map((statement) =>
-      printer.printNode(ts.EmitHint.Unspecified, statement, file)
+      printer.printNode(ts.EmitHint.Unspecified, statement, file),
     );
 
     expect(text.startsWith("/** @noSelfInFile */\n")).toBe(true);

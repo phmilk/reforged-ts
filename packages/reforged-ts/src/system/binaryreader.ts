@@ -44,44 +44,54 @@ export class BinaryReader {
     if (unpacked.length <= 0) {
       return 0;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- read returns what string.unpack returns (any); step 6 (#53) removes it
     return unpacked[0];
   }
 
   public readDouble(): number {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- read returns what string.unpack returns (any); step 6 (#53) removes it
     return this.read(">d", 4);
   }
 
   public readFloat(): number {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- read returns what string.unpack returns (any); step 6 (#53) removes it
     return this.read(">f", 4);
   }
 
   public readInt16(): number {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- read returns what string.unpack returns (any); step 6 (#53) removes it
     return this.read(">h", 2);
   }
 
   public readInt32(): number {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- read returns what string.unpack returns (any); step 6 (#53) removes it
     return this.read(">i4", 4);
   }
 
   public readInt8(): number {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- read returns what string.unpack returns (any); step 6 (#53) removes it
     return this.read(">b", 1);
   }
 
   public readString(): string {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- read returns what string.unpack returns (any); step 6 (#53) removes it
     const value: string = this.read(">z", 0);
     this.pos += value.length + 1;
     return value;
   }
 
   public readUInt16(): number {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- read returns what string.unpack returns (any); step 6 (#53) removes it
     return this.read(">H", 2);
   }
 
   public readUInt32(): number {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- read returns what string.unpack returns (any); step 6 (#53) removes it
     return this.read(">I4", 4);
   }
 
   public readUInt8(): number {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- read returns what string.unpack returns (any); step 6 (#53) removes it
     return this.read(">B", 1);
   }
 }

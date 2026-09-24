@@ -9,11 +9,12 @@ import { BinaryWriter } from "./binarywriter";
 import { SyncRequest } from "./sync";
 
 const lobbyTimes: number[] = [];
-const hostCallbacks: Array<() => void> = [];
+const hostCallbacks: (() => void)[] = [];
 let localJoinTime = 0;
 let localStartTime = 0;
 let host: MapPlayer | undefined;
 let checkTimer: Timer | undefined;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- an unused variable or parameter, whose removal changes the emitted Lua; step 6 (#53) removes it
 let isChecking = false;
 
 export function onHostDetect(callback: () => void) {
@@ -42,13 +43,15 @@ function findHost() {
   writer.writeFloat(localStartTime - localJoinTime);
 
   new SyncRequest(MapPlayer.fromLocal(), base64Encode(writer.toString()))
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- an unused variable or parameter, whose removal changes the emitted Lua; step 6 (#53) removes it
     .then((res, req) => {
       const data = base64Decode(res.data);
       const reader = new BinaryReader(data);
       const syncedTime = reader.readFloat();
 
       // store how long the player has been in the game
-      const from = MapPlayer.fromEvent() as MapPlayer;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- the sync sender lookup; step 6 (#53) removes it
+      const from = MapPlayer.fromEvent()!;
       lobbyTimes[from.id] = syncedTime;
 
       // check which player has been in the game the longest
@@ -60,11 +63,11 @@ function findHost() {
 
         // skip if the player is not playing
         if (
+          // eslint-disable-next-line @typescript-eslint/prefer-optional-chain -- rewriting the check changes the emitted Lua; step 6 (#53) removes it
           p === undefined ||
           p.slotState !== PLAYER_SLOT_STATE_PLAYING ||
           p.controller !== MAP_CONTROL_USER
         ) {
-          // eslint-disable-next-line no-continue
           continue;
         }
 
@@ -89,7 +92,9 @@ function findHost() {
         cb();
       });
     })
+    // eslint-disable-next-line @typescript-eslint/use-unknown-in-catch-callback-variable -- SyncRequest.catch is not thenable; step 6 (#53) removes it
     .catch((res) => {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- a number or status in a template literal; step 6 (#53) removes it
       print(`findHost Error: ${res.status}`);
       isChecking = false;
     });

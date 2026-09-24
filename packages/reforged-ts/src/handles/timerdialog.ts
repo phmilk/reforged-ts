@@ -65,7 +65,7 @@ export class TimerDialog extends Handle<timerdialog> {
     red: number,
     green: number,
     blue: number,
-    alpha: number
+    alpha: number,
   ) {
     TimerDialogSetTitleColor(this.handle, red, green, blue, alpha);
   }
@@ -82,8 +82,9 @@ export class TimerDialog extends Handle<timerdialog> {
   }
 
   public static fromHandle(
-    handle: timerdialog | undefined
+    handle: timerdialog | undefined,
   ): TimerDialog | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }

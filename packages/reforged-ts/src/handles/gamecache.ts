@@ -125,7 +125,7 @@ export class GameCache extends Handle<gamecache> {
     forWhichPlayer: MapPlayer,
     x: number,
     y: number,
-    face: number
+    face: number,
   ) {
     return RestoreUnit(
       this.handle,
@@ -134,7 +134,7 @@ export class GameCache extends Handle<gamecache> {
       forWhichPlayer.handle,
       x,
       y,
-      face
+      face,
     );
   }
 
@@ -145,7 +145,7 @@ export class GameCache extends Handle<gamecache> {
   public store(
     missionKey: string,
     key: string,
-    value: number | string | boolean | unit
+    value: number | string | boolean | unit,
   ) {
     if (typeof value === "string") {
       StoreString(this.handle, missionKey, key, value);
@@ -159,28 +159,34 @@ export class GameCache extends Handle<gamecache> {
   }
 
   public syncBoolean(missionKey: string, key: string) {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
     return SyncStoredBoolean(this.handle, missionKey, key);
   }
 
   public syncInteger(missionKey: string, key: string) {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
     return SyncStoredInteger(this.handle, missionKey, key);
   }
 
   public syncNumber(missionKey: string, key: string) {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
     return SyncStoredReal(this.handle, missionKey, key);
   }
 
   public syncString(missionKey: string, key: string) {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
     return SyncStoredString(this.handle, missionKey, key);
   }
 
   public syncUnit(missionKey: string, key: string) {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
     return SyncStoredUnit(this.handle, missionKey, key);
   }
 
   public static fromHandle(
-    handle: gamecache | undefined
+    handle: gamecache | undefined,
   ): GameCache | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 

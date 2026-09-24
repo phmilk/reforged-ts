@@ -43,5 +43,5 @@ export function compareBuilds(a: string, b: string): number {
 export function patchList(builds: readonly string[]): string {
   return builds.length === 1
     ? `Patch ${builds[0]}`
-    : `Patches ${builds.slice(0, -1).join(", ")} and ${builds.at(-1)}`;
+    : `Patches ${builds.slice(0, -1).join(", ")} and ${builds[builds.length - 1]}`;
 }

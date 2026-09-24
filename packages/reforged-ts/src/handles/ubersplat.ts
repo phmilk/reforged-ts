@@ -13,7 +13,7 @@ export class Ubersplat extends Handle<ubersplat> {
     blue: number,
     alpha: number,
     forcePaused: boolean,
-    noBirthTime: boolean
+    noBirthTime: boolean,
   ) {
     if (Handle.initFromHandle()) {
       super();
@@ -28,7 +28,7 @@ export class Ubersplat extends Handle<ubersplat> {
       blue,
       alpha,
       forcePaused,
-      noBirthTime
+      noBirthTime,
     );
     if (handle === undefined) {
       error("w3ts failed to create ubersplat handle.", 3);
@@ -45,7 +45,7 @@ export class Ubersplat extends Handle<ubersplat> {
     blue: number,
     alpha: number,
     forcePaused: boolean,
-    noBirthTime: boolean
+    noBirthTime: boolean,
   ): Ubersplat | undefined {
     const handle = CreateUbersplat(
       x,
@@ -56,7 +56,7 @@ export class Ubersplat extends Handle<ubersplat> {
       blue,
       alpha,
       forcePaused,
-      noBirthTime
+      noBirthTime,
     );
     if (handle) {
       const obj = this.getObject(handle) as Ubersplat;
@@ -100,8 +100,9 @@ export class Ubersplat extends Handle<ubersplat> {
   }
 
   public static fromHandle(
-    handle: ubersplat | undefined
+    handle: ubersplat | undefined,
   ): Ubersplat | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }

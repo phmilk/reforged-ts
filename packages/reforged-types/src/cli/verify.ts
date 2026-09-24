@@ -17,21 +17,21 @@ import {
 
 export async function main(
   args: readonly string[],
-  output: Output
+  output: Output,
 ): Promise<number> {
   const [patchDir] = args;
   return runVerify(
     patchDir
       ? [patchDir]
       : await vendoredPatchDirs(join(packageRoot, "vendor")),
-    output
+    output,
   );
 }
 
 /** Verifies each Patch folder in turn; 0 when all verify, 1 otherwise. */
 export async function runVerify(
   patchDirs: readonly string[],
-  output: Output
+  output: Output,
 ): Promise<number> {
   if (patchDirs.length === 0) {
     output.stderr("verify: no vendored Patch folder to verify\n");
@@ -55,7 +55,7 @@ export async function runVerify(
       exitCode = 1;
       output.stderr(
         `FAIL ${patch} (${tag})\n` +
-          problems.map((problem) => `  ${problem}\n`).join("")
+          problems.map((problem) => `  ${problem}\n`).join(""),
       );
     }
   }

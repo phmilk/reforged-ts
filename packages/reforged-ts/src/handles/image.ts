@@ -36,7 +36,7 @@ export class Image extends Handle<image> {
     originX: number,
     originY: number,
     originZ: number,
-    imageType: ImageType
+    imageType: ImageType,
   ) {
     if (Handle.initFromHandle()) {
       super();
@@ -53,7 +53,7 @@ export class Image extends Handle<image> {
       originX,
       originY,
       originZ,
-      imageType
+      imageType,
     );
 
     if (handle === undefined) {
@@ -90,7 +90,7 @@ export class Image extends Handle<image> {
     originX: number,
     originY: number,
     originZ: number,
-    imageType: ImageType
+    imageType: ImageType,
   ): Image | undefined {
     const handle = CreateImage(
       file,
@@ -103,7 +103,7 @@ export class Image extends Handle<image> {
       originX,
       originY,
       originZ,
-      imageType
+      imageType,
     );
     if (handle) {
       const obj = this.getObject(handle) as Image;
@@ -184,6 +184,7 @@ export class Image extends Handle<image> {
   }
 
   public static fromHandle(handle: image | undefined): Image | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }

@@ -24,7 +24,7 @@ const provenanceOf = (patch: string) => ({
 /** Vendors each Patch in its Build folder and runs Seam 1 over all of them. */
 async function generateVendored(
   patches: Record<string, PatchFiles>,
-  overlay: AnyEntryFixture[]
+  overlay: AnyEntryFixture[],
 ) {
   const root = await mkdtemp(join(tmpdir(), "reforged-types-patches-"));
   const vendorDir = join(root, "vendor");
@@ -81,7 +81,7 @@ describe("generate: two vendored Patches", () => {
     // Given in newest-first order: Seam 1 orders Patches by Build.
     const result = await generateVendored(
       { "3.1.0.25000": NEWER, "3.0.0.24268": OLDER },
-      OVERLAY
+      OVERLAY,
     );
 
     expect(result.additions).toEqual([
@@ -121,7 +121,7 @@ describe("generate: two vendored Patches", () => {
   it("orders Builds numerically, not as text", async () => {
     const result = await generateVendored(
       { "3.0.0.9999": OLDER, "3.0.0.24268": NEWER },
-      OVERLAY
+      OVERLAY,
     );
 
     expect(result.additions.map((a) => [a.previous, a.patch])).toEqual([
@@ -138,20 +138,20 @@ describe("generate: two vendored Patches", () => {
   it("reports additions even when generation fails on missing entries", async () => {
     const result = await generateVendored(
       { "3.0.0.24268": OLDER, "3.1.0.25000": NEWER },
-      OVERLAY.filter((e) => e.name !== "GetEquippedItem")
+      OVERLAY.filter((e) => e.name !== "GetEquippedItem"),
     );
 
     expect(result.ok).toBe(false);
     expect(result.diagnostics.map((d) => d.kind)).toEqual(["missing-entry"]);
     expect(result.additions[0]?.declarations.map((d) => d.name)).toContain(
-      "GetEquippedItem"
+      "GetEquippedItem",
     );
   });
 
   it("does not report an entry as an orphan when an older vendored Patch declares it", async () => {
     const result = await generateVendored(
       { "3.0.0.24268": OLDER, "3.1.0.25000": NEWER },
-      OVERLAY
+      OVERLAY,
     );
 
     expect(result).toMatchObject({ ok: true, diagnostics: [] });
@@ -160,7 +160,7 @@ describe("generate: two vendored Patches", () => {
   it("reports an entry that no vendored Patch declares as an orphan naming every Patch", async () => {
     const result = await generateVendored(
       { "3.0.0.24268": OLDER, "3.1.0.25000": NEWER },
-      [...OVERLAY, entry("common.j", "Gone"), typeEntry("common.j", "gone")]
+      [...OVERLAY, entry("common.j", "Gone"), typeEntry("common.j", "gone")],
     );
 
     expect(result.ok).toBe(true);
@@ -176,8 +176,8 @@ describe("generate: two vendored Patches", () => {
       OVERLAY.map((e) =>
         e.name === "KillUnit" || e.name === "RequestExtraBooleanData"
           ? { ...e, async: true }
-          : e
-      )
+          : e,
+      ),
     );
 
     expect(result.ok).toBe(true);
@@ -198,16 +198,16 @@ describe("generate: two vendored Patches", () => {
       "async-natives.json",
     ]);
     expect(result.files.get("3.0.0/common.j.d.ts")).toContain(
-      "declare function RequestExtraBooleanData("
+      "declare function RequestExtraBooleanData(",
     );
     expect(result.files.get("3.1.0/common.j.d.ts")).not.toContain(
-      "RequestExtraBooleanData"
+      "RequestExtraBooleanData",
     );
     expect(result.files.get("3.1.0.d.ts")).toContain(
-      '/// <reference path="./3.1.0/common.j.d.ts" />'
+      '/// <reference path="./3.1.0/common.j.d.ts" />',
     );
     expect(result.files.get("async-natives.json")).toBe(
-      '[\n  "KillUnit",\n  "RequestExtraBooleanData"\n]\n'
+      '[\n  "KillUnit",\n  "RequestExtraBooleanData"\n]\n',
     );
   });
 
@@ -215,7 +215,7 @@ describe("generate: two vendored Patches", () => {
     const result = await generateVendored(
       { "3.0.0.24268": OLDER, "3.0.0.24277": NEWER },
       // The older Build's own declarations need no entry.
-      OVERLAY.filter((e) => e.name !== "RequestExtraBooleanData")
+      OVERLAY.filter((e) => e.name !== "RequestExtraBooleanData"),
     );
 
     expect(result.ok).toBe(true);
@@ -236,7 +236,7 @@ describe("generate: two vendored Patches", () => {
   it("reports a missing entry once when two generated Patches lack it", async () => {
     const result = await generateVendored(
       { "3.0.0.24268": OLDER, "3.1.0.25000": NEWER },
-      OVERLAY.filter((e) => e.name !== "KillUnit")
+      OVERLAY.filter((e) => e.name !== "KillUnit"),
     );
 
     expect(result.diagnostics.map((d) => d.message)).toEqual([
@@ -250,7 +250,7 @@ describe("generate: two vendored Patches", () => {
         "3.0.0.24268": OLDER,
         "3.1.0.25000": { ...NEWER, "common.ai": "bogus\n" },
       },
-      OVERLAY
+      OVERLAY,
     );
 
     expect(result.ok).toBe(false);
@@ -258,7 +258,7 @@ describe("generate: two vendored Patches", () => {
       expect.objectContaining({
         kind: "parse",
         message: "3.1.0.25000/common.ai:1: unknown line: bogus",
-      })
+      }),
     );
   });
 

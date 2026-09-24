@@ -28,7 +28,7 @@ export class WeatherEffect extends Handle<weathereffect> {
    */
   public static create(
     where: Rectangle,
-    effectID: number
+    effectID: number,
   ): WeatherEffect | undefined {
     const handle = AddWeatherEffect(where.handle, effectID);
     if (handle) {
@@ -51,6 +51,7 @@ export class WeatherEffect extends Handle<weathereffect> {
   }
 
   public static fromHandle(handle: weathereffect): WeatherEffect {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return this.getObject(handle);
   }
 }

@@ -23,7 +23,7 @@ import {
  */
 export type Fetcher = (
   url: string,
-  options?: { accept?: string }
+  options?: { accept?: string },
 ) => Promise<Uint8Array>;
 
 /** A GitHub repository and the folder in it that holds the Patch files. */
@@ -57,7 +57,7 @@ export function tagCommitUrl(upstream: Upstream, tag: string): string {
 export function rawFileUrl(
   upstream: Upstream,
   commit: string,
-  file: string
+  file: string,
 ): string {
   const { owner, repo, path } = upstream;
   const host = "https://raw.githubusercontent.com";
@@ -75,10 +75,10 @@ export function patchFromTag(tag: string): string {
   if (!match) {
     throw new Error(
       `"${tag}" is not a jass-history Reforged tag ` +
-        "(expected Reforged-v<a.b.c.build>-...)"
+        "(expected Reforged-v<a.b.c.build>-...)",
     );
   }
-  return match[1]!;
+  return match[1];
 }
 
 /** Default fetcher over the global `fetch`. */
@@ -91,7 +91,7 @@ export const httpFetcher: Fetcher = async (url, options) => {
   });
   if (!response.ok) {
     throw new Error(
-      `GET ${url} failed: ${response.status} ${response.statusText}`
+      `GET ${url} failed: ${String(response.status)} ${response.statusText}`,
     );
   }
   return new Uint8Array(await response.arrayBuffer());
@@ -132,20 +132,20 @@ export async function vendorTag(options: VendorOptions): Promise<VendorResult> {
 
   const commitBytes = await options.fetcher(
     tagCommitUrl(upstream, options.tag),
-    { accept: "application/vnd.github.sha" }
+    { accept: "application/vnd.github.sha" },
   );
   const commit = new TextDecoder().decode(commitBytes).trim();
   if (!isCommit(commit)) {
     const got = commit.slice(0, 80);
     throw new Error(
-      `tag ${options.tag} did not resolve to a commit sha (got "${got}")`
+      `tag ${options.tag} did not resolve to a commit sha (got "${got}")`,
     );
   }
 
-  const contents = new Map<SourceName, Uint8Array>();
+  const contents: (readonly [SourceName, Uint8Array])[] = [];
   for (const name of SOURCES) {
     const url = rawFileUrl(upstream, commit, name);
-    contents.set(name, await options.fetcher(url));
+    contents.push([name, await options.fetcher(url)]);
   }
 
   const provenance: Provenance = {
@@ -156,7 +156,7 @@ export async function vendorTag(options: VendorOptions): Promise<VendorResult> {
     path: upstream.path,
     downloaded: (options.now ?? new Date()).toISOString().slice(0, 10),
     files: Object.fromEntries(
-      SOURCES.map((name) => [name, fileRecord(contents.get(name)!)])
+      contents.map(([name, bytes]) => [name, fileRecord(bytes)]),
     ) as Provenance["files"],
   };
 
@@ -168,12 +168,12 @@ export async function vendorTag(options: VendorOptions): Promise<VendorResult> {
       serializeProvenance(provenance);
   if (unchanged) provenance.downloaded = previous.downloaded;
   await mkdir(patchDir, { recursive: true });
-  for (const name of SOURCES) {
-    await writeFile(join(patchDir, name), contents.get(name)!);
+  for (const [name, bytes] of contents) {
+    await writeFile(join(patchDir, name), bytes);
   }
   await writeFile(
     join(patchDir, PROVENANCE_FILE),
-    serializeProvenance(provenance)
+    serializeProvenance(provenance),
   );
   return { patchDir, provenance, unchanged };
 }
@@ -182,7 +182,7 @@ export async function vendorTag(options: VendorOptions): Promise<VendorResult> {
 async function readPrevious(patchDir: string): Promise<Provenance | undefined> {
   try {
     return parseProvenance(
-      await readFile(join(patchDir, PROVENANCE_FILE), "utf8")
+      await readFile(join(patchDir, PROVENANCE_FILE), "utf8"),
     );
   } catch {
     return undefined;

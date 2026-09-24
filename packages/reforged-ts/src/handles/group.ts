@@ -4,6 +4,7 @@ import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
 import { Rectangle } from "./rect";
+// eslint-disable-next-line import-x/no-cycle -- group and unit import each other; type-only imports in step 3 (#51) break the cycle
 import { Unit } from "./unit";
 import { Widget } from "./widget";
 
@@ -58,14 +59,14 @@ export class Group extends Handle<group> {
     x: number,
     y: number,
     radius: number,
-    filter: boolexpr | (() => boolean)
+    filter: boolexpr | (() => boolean),
   ) {
     GroupEnumUnitsInRange(
       this.handle,
       x,
       y,
       radius,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
@@ -77,7 +78,7 @@ export class Group extends Handle<group> {
     y: number,
     radius: number,
     filter: boolexpr | (() => boolean),
-    countLimit: number
+    countLimit: number,
   ) {
     GroupEnumUnitsInRangeCounted(
       this.handle,
@@ -85,20 +86,20 @@ export class Group extends Handle<group> {
       y,
       radius,
       typeof filter === "function" ? Filter(filter) : filter,
-      countLimit
+      countLimit,
     );
   }
 
   public enumUnitsInRangeOfPoint(
     whichPoint: Point,
     radius: number,
-    filter: boolexpr | (() => boolean)
+    filter: boolexpr | (() => boolean),
   ) {
     GroupEnumUnitsInRangeOfLoc(
       this.handle,
       whichPoint.handle,
       radius,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
@@ -109,14 +110,14 @@ export class Group extends Handle<group> {
     whichPoint: Point,
     radius: number,
     filter: boolexpr | (() => boolean),
-    countLimit: number
+    countLimit: number,
   ) {
     GroupEnumUnitsInRangeOfLocCounted(
       this.handle,
       whichPoint.handle,
       radius,
       typeof filter === "function" ? Filter(filter) : filter,
-      countLimit
+      countLimit,
     );
   }
 
@@ -124,7 +125,7 @@ export class Group extends Handle<group> {
     GroupEnumUnitsInRect(
       this.handle,
       r.handle,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
@@ -134,13 +135,13 @@ export class Group extends Handle<group> {
   public enumUnitsInRectCounted(
     r: Rectangle,
     filter: boolexpr | (() => boolean),
-    countLimit: number
+    countLimit: number,
   ) {
     GroupEnumUnitsInRectCounted(
       this.handle,
       r.handle,
       typeof filter === "function" ? Filter(filter) : filter,
-      countLimit
+      countLimit,
     );
   }
 
@@ -149,12 +150,12 @@ export class Group extends Handle<group> {
    */
   public enumUnitsOfPlayer(
     whichPlayer: MapPlayer,
-    filter: boolexpr | (() => boolean)
+    filter: boolexpr | (() => boolean),
   ) {
     GroupEnumUnitsOfPlayer(
       this.handle,
       whichPlayer.handle,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
@@ -162,7 +163,7 @@ export class Group extends Handle<group> {
     GroupEnumUnitsOfType(
       this.handle,
       unitName,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
@@ -172,24 +173,24 @@ export class Group extends Handle<group> {
   public enumUnitsOfTypeCounted(
     unitName: string,
     filter: boolexpr | (() => boolean),
-    countLimit: number
+    countLimit: number,
   ) {
     GroupEnumUnitsOfTypeCounted(
       this.handle,
       unitName,
       typeof filter === "function" ? Filter(filter) : filter,
-      countLimit
+      countLimit,
     );
   }
 
   public enumUnitsSelected(
     whichPlayer: MapPlayer,
-    filter: boolexpr | (() => boolean)
+    filter: boolexpr | (() => boolean),
   ) {
     GroupEnumUnitsSelected(
       this.handle,
       whichPlayer.handle,
-      typeof filter === "function" ? Filter(filter) : filter
+      typeof filter === "function" ? Filter(filter) : filter,
     );
   }
 
@@ -271,6 +272,7 @@ export class Group extends Handle<group> {
   }
 
   public static fromHandle(handle: group | undefined): Group | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 

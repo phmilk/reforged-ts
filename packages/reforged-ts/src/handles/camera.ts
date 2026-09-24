@@ -3,8 +3,8 @@
 import { Handle } from "./handle";
 import { Point } from "./point";
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class -- Camera is a static namespace by design; step 7 (#54) settles that shape together with Input
 export class Camera {
-  // eslint-disable-next-line no-useless-constructor
   private constructor() {
     // nothing
   }
@@ -107,7 +107,7 @@ export class Camera {
   public static adjustField(
     whichField: camerafield,
     offset: number,
-    duration: number
+    duration: number,
   ) {
     AdjustCameraField(whichField, offset, duration);
   }
@@ -143,7 +143,7 @@ export class Camera {
     x: number,
     y: number,
     duration: number,
-    zOffsetDest: number | undefined
+    zOffsetDest: number | undefined,
   ) {
     if (zOffsetDest === undefined) {
       PanCameraToTimed(x, y, duration);
@@ -164,7 +164,7 @@ export class Camera {
     x3: number,
     y3: number,
     x4: number,
-    y4: number
+    y4: number,
   ) {
     SetCameraBounds(x1, y1, x2, y2, x3, y3, x4, y4);
   }
@@ -172,7 +172,7 @@ export class Camera {
   public static setCameraOrientController(
     whichUnit: unit,
     xOffset: number,
-    yOffset: number
+    yOffset: number,
   ) {
     SetCameraOrientController(whichUnit, xOffset, yOffset);
   }
@@ -189,7 +189,7 @@ export class Camera {
     red: number,
     green: number,
     blue: number,
-    alpha: number
+    alpha: number,
   ) {
     SetCineFilterEndColor(red, green, blue, alpha);
   }
@@ -198,7 +198,7 @@ export class Camera {
     minU: number,
     minV: number,
     maxU: number,
-    maxV: number
+    maxV: number,
   ) {
     SetCineFilterEndUV(minU, minV, maxU, maxV);
   }
@@ -207,7 +207,7 @@ export class Camera {
     red: number,
     green: number,
     blue: number,
-    alpha: number
+    alpha: number,
   ) {
     SetCineFilterStartColor(red, green, blue, alpha);
   }
@@ -216,7 +216,7 @@ export class Camera {
     minU: number,
     minV: number,
     maxU: number,
-    maxV: number
+    maxV: number,
   ) {
     SetCineFilterStartUV(minU, minV, maxU, maxV);
   }
@@ -243,7 +243,7 @@ export class Camera {
     speakerTitle: string,
     text: string,
     sceneDuration: number,
-    voiceoverDuration: number
+    voiceoverDuration: number,
   ) {
     SetCinematicScene(
       portraitUnitId,
@@ -251,7 +251,7 @@ export class Camera {
       speakerTitle,
       text,
       sceneDuration,
-      voiceoverDuration
+      voiceoverDuration,
     );
   }
 
@@ -262,7 +262,7 @@ export class Camera {
   public static setField(
     whichField: camerafield,
     value: number,
-    duration: number
+    duration: number,
   ) {
     SetCameraField(whichField, value, duration);
   }
@@ -279,7 +279,7 @@ export class Camera {
     x: number,
     y: number,
     radiansToSweep: number,
-    duration: number
+    duration: number,
   ) {
     SetCameraRotateMode(x, y, radiansToSweep, duration);
   }
@@ -291,7 +291,7 @@ export class Camera {
   public static setSourceNoise(
     mag: number,
     velocity: number,
-    vertOnly = false
+    vertOnly = false,
   ) {
     CameraSetSourceNoiseEx(mag, velocity, vertOnly);
   }
@@ -300,7 +300,7 @@ export class Camera {
     whichUnit: unit,
     xOffset: number,
     yOffset: number,
-    inheritOrientation: boolean
+    inheritOrientation: boolean,
   ) {
     SetCameraTargetController(whichUnit, xOffset, yOffset, inheritOrientation);
   }
@@ -308,7 +308,7 @@ export class Camera {
   public static setTargetNoise(
     mag: number,
     velocity: number,
-    vertOnly = false
+    vertOnly = false,
   ) {
     CameraSetTargetNoiseEx(mag, velocity, vertOnly);
   }
@@ -329,6 +329,7 @@ export class CameraSetup extends Handle<camerasetup> {
     }
 
     const handle = CreateCameraSetup();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
     if (handle === undefined) {
       error("w3ts failed to create camerasetup handle.", 3);
     }
@@ -341,6 +342,7 @@ export class CameraSetup extends Handle<camerasetup> {
    */
   public static create(): CameraSetup | undefined {
     const handle = CreateCameraSetup();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
     if (handle) {
       const obj = this.getObject(handle) as CameraSetup;
 
@@ -438,7 +440,7 @@ export class CameraSetup extends Handle<camerasetup> {
     forcedDuration: number,
     easeInDuration: number,
     easeOutDuration: number,
-    smoothFactor: number
+    smoothFactor: number,
   ) {
     BlzCameraSetupApplyForceDurationSmooth(
       this.handle,
@@ -446,7 +448,7 @@ export class CameraSetup extends Handle<camerasetup> {
       forcedDuration,
       easeInDuration,
       easeOutDuration,
-      smoothFactor
+      smoothFactor,
     );
   }
 
@@ -504,8 +506,9 @@ export class CameraSetup extends Handle<camerasetup> {
   }
 
   public static fromHandle(
-    handle: camerasetup | undefined
+    handle: camerasetup | undefined,
   ): CameraSetup | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }
