@@ -1,9 +1,9 @@
 /** @noSelfInFile * */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 
-export class Force extends HandleBase<force> {
+export class Force extends Handle<force> {
   public static create(): Force {
     return this.expect(CreateForce());
   }

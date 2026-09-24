@@ -49,6 +49,12 @@ The library's tests import the harness by its package name: the runner from `ref
 
 `.gitattributes` stores and checks out every text file with LF, whatever `core.autocrlf` says. On a Windows clone made before that rule, run `git add --renormalize .` once, or the formatter reports every file as changed.
 
+## Rules for library code
+
+- **Cross-Wrapper references only inside method bodies, never at module top level.** Two Wrapper modules may import each other (`Force` calls `MapPlayer.fromEnum`, `MapPlayer` takes a `Force`), and typescript-to-lua compiles each import to a Lua `require`. A reference made while a module loads (a static field initialised from another Wrapper, a top-level call) can run before the other module has finished loading and fails at `require` time; a reference inside a method body runs after both have loaded. When one side of a pair uses the other only as a type, that side writes `import type`, so `import-x/no-cycle` runs with no exception.
+- **A tolerated lint finding is disabled inline, on its line, naming the build step that clears it.** No rule is disabled in `eslint.config.mjs`, and a disable left behind after its fix fails lint.
+- **A Wrapper follows the Handle base's rules**, written in the doc comment of `Handle` (`packages/reforged-ts/src/handles/handle.ts`): the naming rule, no public constructor, lookups through `fromHandle` and creation through the creation helper (creation throws, lookup returns `undefined`).
+
 ## For agents
 
 [`AGENTS.md`](AGENTS.md) holds the agent instructions: the issue tracker, the triage labels and where the domain docs live. [`CONTEXT.md`](CONTEXT.md) is the project vocabulary (Native, Handle, Wrapper, System, Typings, Patch); use its terms.

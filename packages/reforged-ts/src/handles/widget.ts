@@ -1,8 +1,8 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 
-export class Widget extends HandleBase<widget> {
+export class Widget extends Handle<widget> {
   /**
    * Get the Widget's life.
    */

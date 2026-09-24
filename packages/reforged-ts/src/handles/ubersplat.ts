@@ -1,8 +1,8 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 
-export class Ubersplat extends HandleBase<ubersplat> {
+export class Ubersplat extends Handle<ubersplat> {
   public static create(
     x: number,
     y: number,

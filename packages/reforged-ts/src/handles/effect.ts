@@ -1,11 +1,11 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
 import { Widget } from "./widget";
 
-export class Effect extends HandleBase<effect> {
+export class Effect extends Handle<effect> {
   public readonly attachWidget?: Widget;
 
   public readonly attachPointName?: string;

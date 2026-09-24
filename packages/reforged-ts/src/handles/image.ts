@@ -1,6 +1,6 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 
 export enum ImageType {
   /**
@@ -21,7 +21,7 @@ export enum ImageType {
   Ubersplat = 4,
 }
 
-export class Image extends HandleBase<image> {
+export class Image extends Handle<image> {
   /**
    * Creates a new image, the first ID given being 0 and then counting upwards (0, 1, 2, 3, ...).
    * Multiple images with the same type are drawn in their order of creation,

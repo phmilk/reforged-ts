@@ -1,9 +1,9 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 
-export class GameCache extends HandleBase<gamecache> {
+export class GameCache extends Handle<gamecache> {
   public readonly filename?: string;
 
   /**
@@ -130,28 +130,23 @@ export class GameCache extends HandleBase<gamecache> {
   }
 
   public syncBoolean(missionKey: string, key: string) {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
-    return SyncStoredBoolean(this.handle, missionKey, key);
+    SyncStoredBoolean(this.handle, missionKey, key);
   }
 
   public syncInteger(missionKey: string, key: string) {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
-    return SyncStoredInteger(this.handle, missionKey, key);
+    SyncStoredInteger(this.handle, missionKey, key);
   }
 
   public syncNumber(missionKey: string, key: string) {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
-    return SyncStoredReal(this.handle, missionKey, key);
+    SyncStoredReal(this.handle, missionKey, key);
   }
 
   public syncString(missionKey: string, key: string) {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
-    return SyncStoredString(this.handle, missionKey, key);
+    SyncStoredString(this.handle, missionKey, key);
   }
 
   public syncUnit(missionKey: string, key: string) {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
-    return SyncStoredUnit(this.handle, missionKey, key);
+    SyncStoredUnit(this.handle, missionKey, key);
   }
 
   public static reloadFromDisk() {

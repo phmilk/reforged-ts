@@ -1,7 +1,7 @@
 /** @noSelfInFile */
 
 import type { Force } from "./force";
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import type { Point } from "./point";
 
 /**
@@ -10,7 +10,7 @@ import type { Point } from "./point";
  * player model; the lookups inherited from the base then give instances of
  * the subclass.
  */
-export class MapPlayer extends HandleBase<player> {
+export class MapPlayer extends Handle<player> {
   public set color(color: playercolor) {
     SetPlayerColor(this.handle, color);
   }

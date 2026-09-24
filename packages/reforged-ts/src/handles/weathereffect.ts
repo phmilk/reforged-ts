@@ -1,10 +1,10 @@
 /** @noSelfInFile */
 
 import { rawcodeToString } from "../utils/rawcode";
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import { Rectangle } from "./rect";
 
-export class WeatherEffect extends HandleBase<weathereffect> {
+export class WeatherEffect extends Handle<weathereffect> {
   /**
    * Adds a weather effect.
    * @param where The rect to apply the WeatherEffect to.

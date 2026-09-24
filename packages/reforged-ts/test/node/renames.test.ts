@@ -64,6 +64,9 @@ const REMOVED_IN_STEP_3: [old: string, kind: RenameEntry["kind"]][] = [
   ["Group.getEnumUnit", "member"],
   ["Group.getFilterUnit", "member"],
   ["MapPlayer.create", "member"],
+  // Protected: what a w3ts 3.x author's own Wrapper subclass called.
+  ["Handle.getObject", "member"],
+  ["Handle.initFromHandle", "member"],
 ];
 
 const valid: RenameEntry = {
@@ -188,6 +191,7 @@ describe("migration/renames.json", () => {
     expect(api.has(parseSymbol("Frame.getParent"))).toBe(true);
     // Private in w3ts 3.x and deleted by step 3: never a replacement.
     expect(api.has(parseSymbol("MapPlayer.create"))).toBe(false);
+    expect(api.has(parseSymbol("Handle.fromHandle"))).toBe(true);
   });
 });
 

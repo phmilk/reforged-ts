@@ -1,6 +1,6 @@
 /** @noSelfInFile */
 
-import { expectWrapper, HandleBase } from "./handle";
+import { expectWrapper, Handle } from "./handle";
 import { Point } from "./point";
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class -- Camera is a static namespace by design; step 7 (#54) settles that shape together with Input
@@ -318,7 +318,7 @@ export class Camera {
   }
 }
 
-export class CameraSetup extends HandleBase<camerasetup> {
+export class CameraSetup extends Handle<camerasetup> {
   /**
    * Creates a new CameraSetup object.
    */

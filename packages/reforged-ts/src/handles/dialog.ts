@@ -1,9 +1,9 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 
-export class DialogButton extends HandleBase<button> {
+export class DialogButton extends Handle<button> {
   public static create(
     whichDialog: Dialog,
     text: string,
@@ -45,7 +45,7 @@ export class DialogButton extends HandleBase<button> {
  * });
  * ```
  */
-export class Dialog extends HandleBase<dialog> {
+export class Dialog extends Handle<dialog> {
   public static create(): Dialog {
     return this.expect(DialogCreate());
   }

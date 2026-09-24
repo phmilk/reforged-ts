@@ -1,6 +1,6 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 
 /**
  * The Handle, or undefined for nothing and for the frame the game hands back
@@ -44,7 +44,7 @@ function found<H extends handle>(handle: H | undefined): H | undefined {
  * https://www.hiveworkshop.com/pastebin/913bd439799b3d917e5b522dd9ef458f20598/
  * https://www.hiveworkshop.com/tags/ui-fdf/
  */
-export class Frame extends HandleBase<framehandle> {
+export class Frame extends Handle<framehandle> {
   /**
    * Creates a Frame.
    * @param name The name of the frame to be accessed with `Frame.fromName`.
@@ -373,7 +373,7 @@ export class Frame extends HandleBase<framehandle> {
    * game's "not found" frame (handle id 0) is nothing: `undefined`, never
    * registered.
    */
-  public static override fromHandle<C extends HandleBase<handle>>(
+  public static override fromHandle<C extends Handle<handle>>(
     this: { readonly prototype: C; readonly name: string },
     handle: C["handle"] | undefined,
   ): C | undefined {

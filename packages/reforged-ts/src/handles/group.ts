@@ -1,13 +1,13 @@
 /** @noSelfInFile */
 
-import { HandleBase } from "./handle";
+import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
 import { Rectangle } from "./rect";
 import { Unit } from "./unit";
 import { Widget } from "./widget";
 
-export class Group extends HandleBase<group> {
+export class Group extends Handle<group> {
   public static create(): Group {
     return this.expect(CreateGroup());
   }
