@@ -19,6 +19,26 @@ describe("load-time globals", function()
     expect(main).toBeUndefined()
     expect(config).toBeUndefined()
   end)
+  it("defines the slot-state and controller constants as distinct values", function()
+    local slotStates = { PLAYER_SLOT_STATE_EMPTY, PLAYER_SLOT_STATE_PLAYING, PLAYER_SLOT_STATE_LEFT }
+    local controllers = {
+      MAP_CONTROL_USER, MAP_CONTROL_COMPUTER, MAP_CONTROL_RESCUABLE,
+      MAP_CONTROL_NEUTRAL, MAP_CONTROL_CREEP, MAP_CONTROL_NONE,
+    }
+    expect(#slotStates).toEqual(3)
+    expect(#controllers).toEqual(6)
+    local seen = {}
+    for _, constant in ipairs(slotStates) do
+      expect(seen[constant]).toBeUndefined()
+      seen[constant] = true
+    end
+    for _, constant in ipairs(controllers) do
+      expect(seen[constant]).toBeUndefined()
+      seen[constant] = true
+    end
+    expect(PLAYER_SLOT_STATE_PLAYING).toBe(PLAYER_SLOT_STATE_PLAYING)
+    expect(PLAYER_SLOT_STATE_PLAYING == PLAYER_SLOT_STATE_EMPTY).toEqual(false)
+  end)
 end)
 
 describe("machinery", function()
@@ -54,5 +74,14 @@ describe("machinery", function()
     __stub_record("TimerStart", h, 1.5, false, function() end, "s", nil)
     expect(runner.stubCalls()).toContainCall('TimerStart(timer#1048581, 1.5, false, <function>, "s", nil)')
     expect(__stub_player(3)).toBe(Player(3))
+  end)
+  it("renders a constant by its name and gives it no handle id", function()
+    local constant = __stub_constant("mapcontrol", "MAP_CONTROL_USER")
+    expect(constant).toBe(constant)
+    expect(constant == MAP_CONTROL_USER).toEqual(false)
+    expect(constant.__handleId).toBeUndefined()
+    __stub_record("SetPlayerController", Player(3), MAP_CONTROL_COMPUTER)
+    expect(runner.stubCalls()).toContainCall("SetPlayerController(player#1048580, MAP_CONTROL_COMPUTER)")
+    expect(GetHandleId(CreateTrigger())).toEqual(1048582)
   end)
 end)

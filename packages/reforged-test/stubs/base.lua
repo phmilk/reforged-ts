@@ -11,11 +11,14 @@ __stub_calls = {}
 -- so ids are deterministic within a Lua state (the first one is 1048577).
 local nextHandleId = 0x100000
 
--- Renders one argument for the call log: handles as kind#id, strings quoted.
+-- Renders one argument for the call log: handles as kind#id, constants by
+-- their name, strings quoted.
 function __stub_format(value)
   local kind = type(value)
   if kind == "table" and value.__handleId ~= nil then
     return tostring(value.__kind) .. "#" .. tostring(value.__handleId)
+  elseif kind == "table" and value.__name ~= nil then
+    return tostring(value.__name)
   elseif kind == "string" then
     return string.format("%q", value)
   elseif kind == "function" then
@@ -41,11 +44,32 @@ function __stub_new_handle(kind)
   return { __kind = kind, __handleId = nextHandleId }
 end
 
+-- A constant of the game (PLAYER_SLOT_STATE_PLAYING, MAP_CONTROL_USER): an
+-- opaque value a test compares by identity. It takes no handle id, so the
+-- sequence above stays the same whether or not a constant is defined.
+function __stub_constant(kind, name)
+  return { __kind = kind, __name = name }
+end
+
 -- Globals read at module load time. `main` and `config` stay nil: the
 -- library's Hook code reads them before the game would define them.
 bj_MAX_PLAYER_SLOTS = 28
 bj_MAX_PLAYERS = 24
 bj_UNIT_FACING = 270.0
+
+-- The slot-state and controller constants, in the order the Typings declare
+-- them. The players family answers GetPlayerSlotState and
+-- GetPlayerController with them.
+PLAYER_SLOT_STATE_EMPTY = __stub_constant("playerslotstate", "PLAYER_SLOT_STATE_EMPTY")
+PLAYER_SLOT_STATE_PLAYING = __stub_constant("playerslotstate", "PLAYER_SLOT_STATE_PLAYING")
+PLAYER_SLOT_STATE_LEFT = __stub_constant("playerslotstate", "PLAYER_SLOT_STATE_LEFT")
+
+MAP_CONTROL_USER = __stub_constant("mapcontrol", "MAP_CONTROL_USER")
+MAP_CONTROL_COMPUTER = __stub_constant("mapcontrol", "MAP_CONTROL_COMPUTER")
+MAP_CONTROL_RESCUABLE = __stub_constant("mapcontrol", "MAP_CONTROL_RESCUABLE")
+MAP_CONTROL_NEUTRAL = __stub_constant("mapcontrol", "MAP_CONTROL_NEUTRAL")
+MAP_CONTROL_CREEP = __stub_constant("mapcontrol", "MAP_CONTROL_CREEP")
+MAP_CONTROL_NONE = __stub_constant("mapcontrol", "MAP_CONTROL_NONE")
 
 -- FourCC is the game's Lua helper, not a Native: a four-character id to its
 -- integer, as the game computes it.

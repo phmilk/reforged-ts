@@ -14,6 +14,13 @@ function TriggerAddAction(whichTrigger, actionFunc)
   return __stub_new_handle("triggeraction")
 end
 
+-- Registers a player sync event: the call-log line is all the trigger keeps
+-- of it. Sync events never fire on the harness.
+function BlzTriggerRegisterPlayerSyncEvent(whichTrigger, whichPlayer, prefix, fromServer)
+  __stub_record("BlzTriggerRegisterPlayerSyncEvent", whichTrigger, whichPlayer, prefix, fromServer)
+  return __stub_new_handle("event")
+end
+
 -- Runs the trigger's actions, once each, in the order they were added, as
 -- one event would. Not a Native, so it adds no call-log line.
 function __stub_fire_trigger(whichTrigger)
