@@ -1,6 +1,6 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { Handle, type WrapperClass } from "./handle";
 
 /**
  * The Handle, or undefined for nothing and for the frame the game hands back
@@ -374,7 +374,7 @@ export class Frame extends Handle<framehandle> {
    * registered.
    */
   public static override fromHandle<C extends Handle<handle>>(
-    this: { readonly prototype: C; readonly name: string },
+    this: WrapperClass<C>,
     handle: C["handle"] | undefined,
   ): C | undefined {
     return super.fromHandle.call(this, found(handle)) as C | undefined;

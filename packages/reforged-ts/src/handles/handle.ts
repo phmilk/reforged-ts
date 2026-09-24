@@ -3,11 +3,19 @@
 /** The registry: the one Wrapper object for each Handle. */
 const registry = new WeakMap<handle, Handle<handle>>();
 
-/** A Wrapper class as its static members see it: `this` inside a static. */
-interface WrapperClass<C> {
+/**
+ * A Wrapper class as its static members see it: `this` inside a static. The
+ * abstract base itself is not one: `typeof Handle` has a `Handle<any>`
+ * prototype, and `0 extends 1 & H` holds only when `H` is `any`, so
+ * `Handle.fromHandle(h)` asks for a property `typeof Handle` lacks and does
+ * not compile. Package-internal: `handles/index.ts` re-exports only `Handle`.
+ */
+export type WrapperClass<C extends Handle<handle>> = {
   readonly prototype: C;
   readonly name: string;
-}
+} & (0 extends 1 & C["handle"]
+  ? { readonly "the abstract Handle base wraps nothing": never }
+  : unknown);
 
 /** A fresh Wrapper as the creation helper's `init` sees it: fields writable. */
 type Initialising<C> = { -readonly [K in keyof C]: C[K] };
