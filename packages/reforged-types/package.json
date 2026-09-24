@@ -38,7 +38,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit && pnpm run typings:typecheck && pnpm run scripts:typecheck",
     "typings:typecheck": "tsc -p tsconfig.typings.json",
     "scripts:typecheck": "tsc -p tsconfig.scripts.json",
-    "test": "vitest run && pnpm run typings:check",
+    "test": "vitest run --root ../.. --project reforged-types && pnpm run typings:check",
     "vendor": "node build/cli/vendor.js",
     "verify": "node build/cli/verify.js",
     "typings:generate": "tsc -p tsconfig.json && node build/cli/generate.js",
