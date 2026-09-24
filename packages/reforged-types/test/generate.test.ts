@@ -86,10 +86,13 @@ describe("generate: declaration file shape", () => {
       "common.j": "type agent extends handle\n",
     });
 
-    expect([...result.files.keys()]).toEqual([
+    expect(
+      [...result.files.keys()].filter((path) => path.startsWith("3.0.0/"))
+    ).toEqual([
       "3.0.0/common.j.d.ts",
       "3.0.0/blizzard.j.d.ts",
       "3.0.0/common.ai.d.ts",
+      "3.0.0/manifest.json",
     ]);
     expect(result.files.get("3.0.0/blizzard.j.d.ts")).toBe(
       banner("blizzard.j") + "\n"

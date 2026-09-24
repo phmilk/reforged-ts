@@ -48,7 +48,7 @@ describe("typings:check", () => {
     expect(status).toBe(0);
     expect(stderr).toBe("");
     expect(stdout).toBe(
-      "Typings match: 3 files of Patch 3.0.0.24268 are exactly what the sources and the Overlay generate.\n"
+      "Typings match: 6 files of Patch 3.0.0.24268 are exactly what the sources and the Overlay generate.\n"
     );
   });
 
@@ -66,6 +66,33 @@ describe("typings:check", () => {
     expect(stderr).toBe(
       `Typings drift: 1 file does ${DRIFT}\n\n` +
         "- [ ] 3.0.0/common.j.d.ts: differs from the generated file\n"
+    );
+  });
+
+  it.each([
+    ["the entry", "3.0.0.d.ts"],
+    ["async-natives.json", "async-natives.json"],
+    ["the manifest", "3.0.0/manifest.json"],
+  ])("fails naming %s when it was edited", async (_, path) => {
+    await appendFile(join(outDir, path), " ");
+
+    const { status, stderr } = await run(check, [patchDir, overlayDir, outDir]);
+
+    expect(status).toBe(1);
+    expect(stderr).toBe(
+      `Typings drift: 1 file does ${DRIFT}\n\n` +
+        `- [ ] ${path}: differs from the generated file\n`
+    );
+  });
+
+  it("names a data artefact that is missing", async () => {
+    await rm(join(outDir, "async-natives.json"));
+
+    const { status, stderr } = await run(check, [patchDir, overlayDir, outDir]);
+
+    expect(status).toBe(1);
+    expect(stderr).toContain(
+      "- [ ] async-natives.json: generated but not committed\n"
     );
   });
 

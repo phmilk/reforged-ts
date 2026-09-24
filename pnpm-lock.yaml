@@ -9,6 +9,9 @@ catalogs:
     '@types/node':
       specifier: ^24.0.0
       version: 24.13.6
+    '@typescript-to-lua/language-extensions':
+      specifier: ^1.19.0
+      version: 1.19.0
     lua-types:
       specifier: ^2.14.1
       version: 2.14.1
@@ -76,6 +79,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.13.6
+      '@typescript-to-lua/language-extensions':
+        specifier: 'catalog:'
+        version: 1.19.0
       typescript:
         specifier: 'catalog:'
         version: 6.0.2
