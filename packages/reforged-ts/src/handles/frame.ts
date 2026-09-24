@@ -46,6 +46,7 @@ export class Frame extends Handle<framehandle> {
     name: string,
     owner: Frame,
     priority: number,
+    // eslint-disable-next-line @typescript-eslint/unified-signatures -- the deprecated Frame constructor overloads go; step 3 (#51) removes it
     createContext: number,
   );
 
@@ -247,6 +248,7 @@ export class Frame extends Handle<framehandle> {
   }
 
   public get parent() {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- a lookup used as non-null; lookups get one documented non-null path; step 3 (#51) removes it
     return Frame.fromHandle(BlzFrameGetParent(this.handle))!;
   }
 
@@ -467,6 +469,7 @@ export class Frame extends Handle<framehandle> {
   }
 
   public static fromHandle(handle: framehandle | undefined): Frame | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 

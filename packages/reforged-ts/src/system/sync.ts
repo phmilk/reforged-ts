@@ -43,6 +43,7 @@ class SyncIncomingPacket {
   public constructor(prefix: string, data: string) {
     const isChunk = prefix === SYNC_PREFIX_CHUNK;
     const header = base64Decode(
+      // eslint-disable-next-line @typescript-eslint/no-deprecated -- substr; step 6 (#53) removes it
       isChunk ? data.substr(0, 10) : data.substr(0, 5),
     );
     const reader = new BinaryReader(header);
@@ -50,6 +51,7 @@ class SyncIncomingPacket {
     this.req = SyncRequest.fromIndex(id);
     this.chunks = isChunk ? reader.readUInt16() : 0;
     this.chunk = isChunk ? reader.readUInt16() : 0;
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- substr; step 6 (#53) removes it
     this.data = isChunk ? data.substr(10) : data.substr(5);
   }
 }
@@ -155,6 +157,7 @@ export class SyncRequest {
    * @param from The player to send the data from.
    * @param data The data to send.
    */
+  // eslint-disable-next-line @typescript-eslint/unified-signatures -- the data-taking SyncRequest constructor overloads; step 6 (#53) removes it
   constructor(from: MapPlayer, data: string);
 
   /**
@@ -165,6 +168,7 @@ export class SyncRequest {
    */
   constructor(from: MapPlayer, data?: string, options?: ISyncOptions) {
     // initialize
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- rewriting the default changes the emitted Lua; step 6 (#53) removes it
     this.options = !options ? SyncRequest.defaultOptions : options;
     this.from = from;
 
@@ -226,6 +230,7 @@ export class SyncRequest {
         this.send(
           new SyncOutgoingPacket(
             this,
+            // eslint-disable-next-line @typescript-eslint/no-deprecated -- substr; step 6 (#53) removes it
             data.substr(i * SYNC_MAX_CHUNK_SIZE, SYNC_MAX_CHUNK_SIZE),
             i,
             chunks,
@@ -311,6 +316,7 @@ export class SyncRequest {
     for (let i = 0; i < bj_MAX_PLAYER_SLOTS; i++) {
       const p = MapPlayer.fromIndex(i);
       if (
+        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain -- rewriting the check changes the emitted Lua; step 6 (#53) removes it
         p !== undefined &&
         p.controller === MAP_CONTROL_USER &&
         p.slotState === PLAYER_SLOT_STATE_PLAYING
@@ -335,6 +341,7 @@ export class SyncRequest {
 
     const packet = new SyncIncomingPacket(syncPrefix, syncData);
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- a packet check the types call unnecessary; step 6 (#53) removes it
     if (packet.req === undefined) {
       return;
     }

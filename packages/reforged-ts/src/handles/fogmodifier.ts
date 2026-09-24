@@ -105,6 +105,7 @@ export class FogModifier extends Handle<fogmodifier> {
   public static fromHandle(
     handle: fogmodifier | undefined,
   ): FogModifier | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 

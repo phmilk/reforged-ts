@@ -3,6 +3,7 @@
 import { Handle } from "./handle";
 import { Point } from "./point";
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class -- Camera is a static namespace by design; step 7 (#54) settles that shape together with Input
 export class Camera {
   private constructor() {
     // nothing
@@ -328,6 +329,7 @@ export class CameraSetup extends Handle<camerasetup> {
     }
 
     const handle = CreateCameraSetup();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
     if (handle === undefined) {
       error("w3ts failed to create camerasetup handle.", 3);
     }
@@ -340,6 +342,7 @@ export class CameraSetup extends Handle<camerasetup> {
    */
   public static create(): CameraSetup | undefined {
     const handle = CreateCameraSetup();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
     if (handle) {
       const obj = this.getObject(handle) as CameraSetup;
 
@@ -505,6 +508,7 @@ export class CameraSetup extends Handle<camerasetup> {
   public static fromHandle(
     handle: camerasetup | undefined,
   ): CameraSetup | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }

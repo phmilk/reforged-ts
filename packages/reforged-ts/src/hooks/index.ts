@@ -1,6 +1,8 @@
 /** @noSelfInFile */
 
+// eslint-disable-next-line prefer-const -- the entry point global is declared with let because the hooks reassign it; step 4 (#49) removes it
 declare let main: () => void;
+// eslint-disable-next-line prefer-const -- the entry point global is declared with let because the hooks reassign it; step 4 (#49) removes it
 declare let config: () => void;
 
 const oldMain = main;
@@ -14,8 +16,10 @@ const hooksConfigBefore: scriptHookSignature[] = [];
 const hooksConfigAfter: scriptHookSignature[] = [];
 
 export const executeHooksMainBefore = () =>
+  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- adding braces changes the emitted Lua; step 4 (#49) removes it
   hooksMainBefore.forEach((func) => func());
 export const executeHooksMainAfter = () =>
+  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- adding braces changes the emitted Lua; step 4 (#49) removes it
   hooksMainAfter.forEach((func) => func());
 
 export function hookedMain() {
@@ -25,8 +29,10 @@ export function hookedMain() {
 }
 
 export const executeHooksConfigBefore = () =>
+  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- adding braces changes the emitted Lua; step 4 (#49) removes it
   hooksConfigBefore.forEach((func) => func());
 export const executeHooksConfigAfter = () =>
+  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- adding braces changes the emitted Lua; step 4 (#49) removes it
   hooksConfigAfter.forEach((func) => func());
 
 export function hookedConfig() {
@@ -35,7 +41,9 @@ export function hookedConfig() {
   executeHooksConfigAfter();
 }
 
+// eslint-disable-next-line no-useless-assignment -- the hooks reassign the global entry point; step 4 (#49) removes it
 main = hookedMain;
+// eslint-disable-next-line no-useless-assignment -- the hooks reassign the global entry point; step 4 (#49) removes it
 config = hookedConfig;
 
 type W3tsHookType =

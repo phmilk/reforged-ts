@@ -1,6 +1,7 @@
 /** @noSelfInFile * */
 
 import { Handle } from "./handle";
+// eslint-disable-next-line import-x/no-cycle -- force and player import each other; type-only imports in step 3 (#51) break the cycle
 import { MapPlayer } from "./player";
 
 export class Force extends Handle<force> {
@@ -121,6 +122,7 @@ export class Force extends Handle<force> {
   }
 
   public static fromHandle(handle: force | undefined): Force | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }

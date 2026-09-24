@@ -13,6 +13,7 @@ export class Rectangle extends Handle<rect> {
       return;
     }
     const handle = Rect(minX, minY, maxX, maxY);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
     if (handle === undefined) {
       error("w3ts failed to create rect handle.", 3);
     }
@@ -98,6 +99,7 @@ export class Rectangle extends Handle<rect> {
   }
 
   public static fromHandle(handle: rect | undefined): Rectangle | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 

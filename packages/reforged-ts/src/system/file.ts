@@ -23,6 +23,7 @@
  * }
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class -- File is a static-only System; step 6 (#53) audits it and settles its shape
 export class File {
   // The ability used to read and write data.
   private static dummyAbility: number = FourCC("Amls");
@@ -95,6 +96,7 @@ export class File {
     filename: string,
     contents: string,
     allowReading = false,
+    // eslint-disable-next-line @typescript-eslint/prefer-return-this-type -- the write methods return the class; step 6 (#53) removes it
   ): File {
     PreloadGenClear();
     PreloadGenStart();
@@ -107,11 +109,13 @@ export class File {
     }
 
     for (let i = 0; i < contents.length / File.preloadLimit; i++) {
+      // eslint-disable-next-line @typescript-eslint/no-deprecated -- substr; step 6 (#53) removes it
       Preload(contents.substr(i * File.preloadLimit, File.preloadLimit));
     }
 
     if (allowReading) {
       Preload(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- a number or status in a template literal; step 6 (#53) removes it
         `")\n//! beginusercode\nBlzSetAbilityIcon(${this.dummyAbility},o)\n//!endusercode\n//`,
       );
     }

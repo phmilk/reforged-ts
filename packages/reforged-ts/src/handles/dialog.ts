@@ -21,6 +21,7 @@ export class DialogButton extends Handle<button> {
 
     let handle: button | undefined;
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare -- dropping the comparison changes the emitted Lua; step 3 (#51) removes it
     if (quit === false) {
       handle = DialogAddButton(whichDialog.handle, text, hotkey);
     } else {
@@ -43,6 +44,7 @@ export class DialogButton extends Handle<button> {
   ): DialogButton | undefined {
     let handle: button | undefined;
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare -- dropping the comparison changes the emitted Lua; step 3 (#51) removes it
     if (quit === false) {
       handle = DialogAddButton(whichDialog.handle, text, hotkey);
     } else {
@@ -68,6 +70,7 @@ export class DialogButton extends Handle<button> {
   public static fromHandle(
     handle: button | undefined,
   ): DialogButton | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }
@@ -157,6 +160,7 @@ export class Dialog extends Handle<dialog> {
   }
 
   public static fromHandle(handle: dialog | undefined): Dialog | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }

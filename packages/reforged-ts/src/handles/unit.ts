@@ -4,6 +4,7 @@ import { OrderId } from "../globals/order";
 import { Destructable } from "./destructable";
 import { Force } from "./force";
 import { Handle } from "./handle";
+// eslint-disable-next-line import-x/no-cycle -- unit and group import each other; type-only imports in step 3 (#51) break the cycle
 import { Group } from "./group";
 import { Item } from "./item";
 import { MapPlayer } from "./player";
@@ -31,11 +32,13 @@ export class Unit extends Widget {
     face?: number,
     skinId?: number,
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare -- dropping the comparison changes the emitted Lua; step 3 (#51) removes it
     if (Handle.initFromHandle() === true) {
       super();
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- the rewrite changes the emitted Lua; step 3 (#51) removes it
     if (face === undefined) face = bj_UNIT_FACING;
     const handle =
       skinId === undefined
@@ -66,6 +69,7 @@ export class Unit extends Widget {
     face?: number,
     skinId?: number,
   ): Unit | undefined {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- the rewrite changes the emitted Lua; step 3 (#51) removes it
     if (face === undefined) face = bj_UNIT_FACING;
     const handle =
       skinId === undefined
@@ -291,6 +295,7 @@ export class Unit extends Widget {
   }
 
   public get owner(): MapPlayer {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- a lookup used as non-null; lookups get one documented non-null path; step 3 (#51) removes it
     return MapPlayer.fromHandle(GetOwningPlayer(this.handle))!;
   }
 
@@ -315,6 +320,7 @@ export class Unit extends Widget {
    * @deprecated use getPoint/setPoint instead.
    */
   public get point() {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- a lookup used as non-null; lookups get one documented non-null path; step 3 (#51) removes it
     return Point.fromHandle(GetUnitLoc(this.handle))!;
   }
 
@@ -775,6 +781,7 @@ export class Unit extends Widget {
     field:
       unitbooleanfield | unitintegerfield | unitrealfield | unitstringfield,
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string, @typescript-eslint/no-deprecated -- a field object stringified for its type prefix; substr; step 6 (#53) removes it
     const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
 
     switch (fieldType) {
@@ -1281,6 +1288,7 @@ export class Unit extends Widget {
       unitbooleanfield | unitintegerfield | unitrealfield | unitstringfield,
     value: boolean | number | string,
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string, @typescript-eslint/no-deprecated -- a field object stringified for its type prefix; substr; step 6 (#53) removes it
     const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
 
     if (fieldType === "unitbooleanfield" && typeof value === "boolean") {
@@ -1501,6 +1509,7 @@ export class Unit extends Widget {
   public static override fromHandle(
     handle: unit | undefined,
   ): Unit | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 

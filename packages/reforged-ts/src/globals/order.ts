@@ -31,6 +31,7 @@ export const enum OrderId {
   Barkskinoff = 852137,
   Barkskinon = 852136,
   Battleroar = 852099,
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values -- the game gives both orders one id; step 8 (#43) documents the alias when it documents OrderId
   Battlestations = 852099,
   Bearform = 852138,
   Berserk = 852100,
@@ -129,6 +130,7 @@ export const enum OrderId {
   Flare = 852060,
   Forceboard = 852044,
   Forceofnature = 852176,
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values -- the game gives both orders one id; step 8 (#43) documents the alias when it documents OrderId
   Forkedlightning = 852586,
   Freezingbreath = 852195,
   Frenzy = 852561,

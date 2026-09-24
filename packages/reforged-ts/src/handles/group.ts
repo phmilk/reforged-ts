@@ -4,6 +4,7 @@ import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
 import { Rectangle } from "./rect";
+// eslint-disable-next-line import-x/no-cycle -- group and unit import each other; type-only imports in step 3 (#51) break the cycle
 import { Unit } from "./unit";
 import { Widget } from "./widget";
 
@@ -271,6 +272,7 @@ export class Group extends Handle<group> {
   }
 
   public static fromHandle(handle: group | undefined): Group | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 

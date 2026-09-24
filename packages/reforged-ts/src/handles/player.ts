@@ -1,5 +1,6 @@
 /** @noSelfInFile */
 
+// eslint-disable-next-line import-x/no-cycle -- player and force import each other; type-only imports in step 3 (#51) break the cycle
 import { Force } from "./force";
 import { Handle } from "./handle";
 import { Point } from "./point";
@@ -311,6 +312,7 @@ export class MapPlayer extends Handle<player> {
   }
 
   public static fromHandle(handle: player | undefined): MapPlayer | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 
@@ -323,11 +325,13 @@ export class MapPlayer extends Handle<player> {
    */
   public static fromLocal() {
     const pl = GetLocalPlayer();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
     if (pl === undefined) {
       for (let i = 0; i < 10; i++) {
         print("$$$$$$$$$ LOCAL PLAYER IS NULL. TELL ME");
       }
     }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- a lookup used as non-null; lookups get one documented non-null path; step 3 (#51) removes it
     return this.fromHandle(pl)!;
   }
 }

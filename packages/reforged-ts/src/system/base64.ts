@@ -10,6 +10,7 @@ const chars =
 export function base64Encode(input: string) {
   let output = "";
   for (
+    // eslint-disable-next-line no-useless-assignment -- an unused loop variable, whose removal changes the emitted Lua; step 6 (#53) removes it
     let block = 0, charCode = 0, idx = 0, map = chars;
     input.charAt(Math.floor(idx) | 0).length > 0 || ((map = "="), idx % 1);
     output += map.charAt(Math.floor(63 & (block >>> (8 - (idx % 1) * 8))))
@@ -45,6 +46,7 @@ export function base64Decode(input: string) {
   for (; i > 0 && input[i] !== "="; i--) {
     /* do nothing */
   }
+  // eslint-disable-next-line @typescript-eslint/no-deprecated -- substr; step 6 (#53) removes it
   const str = input.substr(0, i - 1);
   let output = "";
   if (str.length % 4 === 1) {

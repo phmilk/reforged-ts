@@ -12,6 +12,7 @@ export class Point extends Handle<location> {
       return;
     }
     const handle = Location(x, y);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
     if (handle === undefined) {
       error("w3ts failed to create player handle.", 3);
     }
@@ -69,6 +70,7 @@ export class Point extends Handle<location> {
   }
 
   public static fromHandle(handle: location | undefined): Point | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }

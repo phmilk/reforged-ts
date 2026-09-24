@@ -10,6 +10,7 @@ export class Timer extends Handle<timer> {
       return;
     }
     const handle = CreateTimer();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
     if (handle === undefined) {
       error("w3ts failed to create timer handle.", 3);
     }
@@ -69,6 +70,7 @@ export class Timer extends Handle<timer> {
   }
 
   public static fromHandle(handle: timer | undefined): Timer | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }

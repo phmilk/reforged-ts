@@ -220,6 +220,7 @@ export class Item extends Widget {
     field:
       itembooleanfield | itemintegerfield | itemrealfield | itemstringfield,
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string, @typescript-eslint/no-deprecated -- a field object stringified for its type prefix; substr; step 6 (#53) removes it
     const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
 
     switch (fieldType) {
@@ -269,6 +270,7 @@ export class Item extends Widget {
       itembooleanfield | itemintegerfield | itemrealfield | itemstringfield,
     value: boolean | number | string,
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string, @typescript-eslint/no-deprecated -- a field object stringified for its type prefix; substr; step 6 (#53) removes it
     const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
 
     if (fieldType === "unitbooleanfield" && typeof value === "boolean") {
@@ -318,6 +320,7 @@ export class Item extends Widget {
   public static override fromHandle(
     handle: item | undefined,
   ): Item | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 

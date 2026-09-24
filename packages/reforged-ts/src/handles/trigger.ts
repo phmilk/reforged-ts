@@ -16,6 +16,7 @@ export class Trigger extends Handle<trigger> {
       return;
     }
     const handle = CreateTrigger();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
     if (handle === undefined) {
       error("w3ts failed to create trigger handle.", 3);
     }
@@ -97,6 +98,7 @@ export class Trigger extends Handle<trigger> {
   public addCondition(condition: boolexpr | (() => boolean)) {
     if (typeof condition === "function") {
       const cf = Condition(condition);
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- a truthiness test on a filter (also a typescript-to-lua warning); step 5 (#47) removes it
       return cf ? TriggerAddCondition(this.handle, cf) : undefined;
     }
     return TriggerAddCondition(this.handle, condition);
@@ -130,6 +132,7 @@ export class Trigger extends Handle<trigger> {
    * Control will return to the caller when the trigger has finished or has been suspended via TriggerSleepAction.
    */
   public exec() {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
     return TriggerExecute(this.handle);
   }
 
@@ -143,6 +146,7 @@ export class Trigger extends Handle<trigger> {
   }
 
   public registerAnyUnitEvent(whichPlayerUnitEvent: playerunitevent) {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
     return TriggerRegisterAnyUnitEventBJ(this.handle, whichPlayerUnitEvent);
   }
 
@@ -379,18 +383,22 @@ export class Trigger extends Handle<trigger> {
   }
 
   public removeAction(whichAction: triggeraction) {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
     return TriggerRemoveAction(this.handle, whichAction);
   }
 
   public removeActions() {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
     return TriggerClearActions(this.handle);
   }
 
   public removeCondition(whichCondition: triggercondition) {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
     return TriggerRemoveCondition(this.handle, whichCondition);
   }
 
   public removeConditions() {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
     return TriggerClearConditions(this.handle);
   }
 
@@ -407,6 +415,7 @@ export class Trigger extends Handle<trigger> {
   }
 
   public static fromHandle(handle: trigger | undefined): Trigger | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
     return handle ? this.getObject(handle) : undefined;
   }
 }
