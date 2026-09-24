@@ -1,21 +1,33 @@
 /** @noSelfInFile */
 
-// Wrapping a global function in place: the wrapper calls the original, with
-// what the caller asked for before and after it, and takes the original's
-// place under its name. A wrapper carries a marker (it is in the shared set
-// of wrappers), and wrapping a function that carries it is a no-op, so a
-// root that executes twice in one Lua state wraps each function once.
+// Wrapping a global function, now or on its first assignment: the wrapper
+// calls the original, with what the caller asked for before and after it,
+// and takes the original's place under its name. A wrapper carries a marker
+// (it is in the shared set of wrappers), and wrapping a function that
+// carries it is a no-op, so a root that executes twice in one Lua state
+// wraps each function once.
 //
 // A name that is nil when asked for (the map header position: the editor's
 // script defines `InitCustomTriggers`, `RunInitializationTriggers`, `main`
-// and `config` after the header) is recorded as pending. The interception
-// through the `_G` metatable that wraps a pending name on its first
-// assignment is the next ticket's; it reads `pendingNames` and calls
-// `wrapPendingName` from its hook.
+// and `config` after the header) is pending, and a hook set as `_G`'s
+// metatable wraps it the moment the editor's script assigns it, storing the
+// wrapper with a raw set. The decision is per name; nothing records a load
+// position. The hook composes with a metatable the map installed before it
+// (an undeclared-global warner): the map's `__index` and `__newindex` keep
+// working for every other key (a raw set when there was no `__newindex`),
+// and the map's metatable is `_G`'s again, or `_G` has none again, once
+// every pending name was captured. The hook lives in the shared state, so a
+// second root finds it on and installs none over it.
 //
 // Package-internal: nothing here is exported from the library index.
 
-import { type Around, globals, state } from "./state";
+import {
+  type Around,
+  type Globals,
+  type GlobalsMetatable,
+  globals,
+  state,
+} from "./state";
 
 /** Installs the wrapper of `original` as the global `name` and marks it. */
 function install(name: string, original: () => void, around: Around): void {
@@ -29,9 +41,90 @@ function install(name: string, original: () => void, around: Around): void {
 }
 
 /**
- * Wraps the global function `name` in place, or records the name as pending
- * when the global is nil now. A global that already is a wrapper is left as
- * it is.
+ * Assigns `value` to `key` as `_G` did before the hook: through the
+ * `__newindex` of the metatable the map installed, or with a raw set.
+ */
+function assignThrough(
+  previous: GlobalsMetatable | undefined,
+  table: Globals,
+  key: string,
+  value: unknown,
+): void {
+  const newindex = previous?.__newindex;
+  if (newindex === undefined) {
+    rawset(table, key, value);
+  } else if (typeof newindex === "function") {
+    newindex(table, key, value);
+  } else {
+    (newindex as Globals)[key] = value;
+  }
+}
+
+/**
+ * Takes the hook off `_G` once every pending name was captured: the map's
+ * metatable is `_G`'s again, or `_G` has none. A metatable something else
+ * put over the hook meanwhile is left alone.
+ */
+function release(): void {
+  const interception = state.interception;
+  if (interception === undefined || state.pending.length > 0) {
+    return;
+  }
+  state.interception = undefined;
+  if (getmetatable(globals) === interception.hook) {
+    setmetatable(globals, interception.previous);
+  }
+}
+
+/**
+ * The hook's `__newindex`: a function assigned to a pending name is wrapped
+ * and stored with a raw set; every other assignment goes where it went
+ * before the hook.
+ */
+function capture(
+  previous: GlobalsMetatable | undefined,
+  table: Globals,
+  key: string,
+  value: unknown,
+): void {
+  const index =
+    typeof value === "function"
+      ? state.pending.findIndex((pending) => pending.name === key)
+      : -1;
+  if (index < 0) {
+    assignThrough(previous, table, key, value);
+    return;
+  }
+  const [pending] = state.pending.splice(index, 1);
+  install(pending.name, value as () => void, pending.around);
+  release();
+}
+
+/**
+ * Puts the hook on `_G` unless it is on already: the metatable `_G` has now
+ * is what the hook composes with and what comes back when the hook goes.
+ */
+function intercept(): void {
+  if (state.interception !== undefined) {
+    return;
+  }
+  const previous: GlobalsMetatable | undefined = getmetatable(globals);
+  const hook: GlobalsMetatable = {
+    __newindex: (table, key, value) => {
+      capture(previous, table, key, value);
+    },
+  };
+  if (previous?.__index !== undefined) {
+    hook.__index = previous.__index;
+  }
+  setmetatable(globals, hook);
+  state.interception = { hook, previous };
+}
+
+/**
+ * Wraps the global function `name` in place, or, when the global is nil now,
+ * on its first assignment. A global that already is a wrapper is left as it
+ * is.
  */
 export function wrapGlobal(name: string, around: Around): void {
   const current = rawget(globals, name);
@@ -45,23 +138,5 @@ export function wrapGlobal(name: string, around: Around): void {
   if (!state.pending.some((pending) => pending.name === name)) {
     state.pending.push({ name, around });
   }
-}
-
-/** The names asked for while their global was nil, oldest first. */
-export function pendingNames(): string[] {
-  return state.pending.map((pending) => pending.name);
-}
-
-/**
- * Wraps `original`, just assigned to the pending global `name`, and stores
- * the wrapper under the name with a raw set. Does nothing for a name that is
- * not pending.
- */
-export function wrapPendingName(name: string, original: () => void): void {
-  const index = state.pending.findIndex((pending) => pending.name === name);
-  if (index < 0) {
-    return;
-  }
-  const [pending] = state.pending.splice(index, 1);
-  install(name, original, pending.around);
+  intercept();
 }

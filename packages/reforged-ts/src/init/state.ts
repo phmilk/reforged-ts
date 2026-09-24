@@ -9,8 +9,9 @@
 // would wrap Blizzard's functions a second time around the first wrappers.
 // So the state that wrapping must see again lives in one table anchored on a
 // global the library owns, `_G["reforged-ts"].init`: the wrappers installed
-// (the marker), the names still pending, the queues and what ran. A second
-// load finds it, adopts it, and its registrations join the same queues.
+// (the marker), the names still pending, the hook on `_G` that captures
+// them, the queues and what ran. A second load finds it, adopts it, and its
+// registrations join the same queues.
 //
 // Package-internal: nothing here is exported from the library index.
 
@@ -46,6 +47,27 @@ export interface PendingGlobal {
   readonly around: Around;
 }
 
+/** The globals table as a metatable of `_G` receives it: any key, any value. */
+export type Globals = Record<string, unknown>;
+
+/**
+ * A metatable of `_G`, the two fields the interception composes with. Lua
+ * calls either with the table first, or indexes it when it is a table.
+ * @noSelf
+ */
+export interface GlobalsMetatable {
+  __index?: ((table: Globals, key: string) => unknown) | object;
+  __newindex?: ((table: Globals, key: string, value: unknown) => void) | object;
+}
+
+/** The hook on `_G` while names are pending, and what it replaced. */
+export interface Interception {
+  /** The hook: `_G`'s metatable until every pending name was captured. */
+  readonly hook: GlobalsMetatable;
+  /** The metatable `_G` had before the hook, or undefined when it had none. */
+  readonly previous: GlobalsMetatable | undefined;
+}
+
 /** One stage: its two queues and whether its run started. */
 export interface StageState {
   /** True from the moment the stage's run started. */
@@ -62,6 +84,8 @@ export interface InitState {
   readonly wrappers: LuaSet<() => void>;
   /** The names that were nil at load, in the order they were asked for. */
   readonly pending: PendingGlobal[];
+  /** The hook on `_G` while a name is pending; undefined when it is off. */
+  interception: Interception | undefined;
   readonly stages: Record<InitStage, StageState>;
   /** The stage running now, or none. */
   current: InitStage | undefined;
@@ -88,6 +112,7 @@ function create(): InitState {
   return {
     wrappers: new LuaSet<() => void>(),
     pending: [],
+    interception: undefined,
     stages: {
       globals: stage(),
       triggers: stage(),
