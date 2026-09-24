@@ -1,0 +1,30 @@
+{
+  // The Lua-side runner, compiled by typescript-to-lua in library mode to
+  // ../lua, where a test file reaches it as `reforged-test/lua`. Written in
+  // Lua-shaped TypeScript (table.*, string.*, pcall) so the emitted Lua needs
+  // no lualib_bundle.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "rootDir": ".",
+    "outDir": "../lua",
+    "declaration": true,
+    "types": ["@typescript-to-lua/language-extensions", "lua-types/5.3"],
+    "strict": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "forceConsistentCasingInFileNames": true,
+    "newLine": "lf"
+  },
+  "include": ["."],
+  "tstl": {
+    "buildMode": "library",
+    "luaTarget": "5.3",
+    "noHeader": true,
+    "noImplicitSelf": true,
+    "sourceMapTraceback": false
+  }
+}

@@ -11,3 +11,5 @@ catalog:
   vitest: ^5.0.1
   # Node built-ins for the generator (fs, path); major follows .node-version.
   "@types/node": ^24.0.0
+  # Lua 5.3.6 compiled to WebAssembly, the VM typescript-to-lua's own suite runs on; reforged-test executes compiled tests on it (ADR 0002).
+  lua-wasm-bindings: ^0.5.3

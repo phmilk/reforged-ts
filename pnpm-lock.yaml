@@ -15,6 +15,9 @@ catalogs:
     lua-types:
       specifier: ^2.14.1
       version: 2.14.1
+    lua-wasm-bindings:
+      specifier: ^0.5.3
+      version: 0.5.3
     typescript:
       specifier: 6.0.2
       version: 6.0.2
@@ -28,6 +31,31 @@ catalogs:
 importers:
 
   .: {}
+
+  packages/reforged-test:
+    dependencies:
+      lua-wasm-bindings:
+        specifier: 'catalog:'
+        version: 0.5.3
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.6
+      '@typescript-to-lua/language-extensions':
+        specifier: 'catalog:'
+        version: 1.19.0
+      lua-types:
+        specifier: 'catalog:'
+        version: 2.14.1
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.2
+      typescript-to-lua:
+        specifier: 'catalog:'
+        version: 1.37.1(typescript@6.0.2)
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.1(@types/node@24.13.6)(vite@8.3.0(@types/node@24.13.6))
 
   packages/reforged-ts:
     devDependencies:
@@ -195,6 +223,9 @@ packages:
   '@types/node@24.13.6':
     resolution: {integrity: sha512-SGrw/h3KPFshy3OE6ZL53LMBG5vGQQ8/gIpiqz/kRZhPJ7HgwCEs8LBuNtWLa8dvGZVpSF7+Bf+c11HUrCb/yg==}
 
+  '@types/semver@7.8.0':
+    resolution: {integrity: sha512-1mAINjtQCXXeLkJ9ehXkwOcBpqtLxiVtKhpUf83DdRNdQKV0iXZpaHYqRr7nj+wvxuJzoAmAwXI+sCNMv1CzLQ==}
+
   '@typescript-to-lua/language-extensions@1.19.0':
     resolution: {integrity: sha512-Os5wOKwviTD4LeqI29N0btYOjokSJ97iCf45EOjIABlb5IwNQy7AE/AqZJobRw3ywHH8+KzJUMkEirWPzh2tUA==}
 
@@ -347,6 +378,9 @@ packages:
   lua-types@2.14.1:
     resolution: {integrity: sha512-+EbnTjF+Bbfp5xmpfT0O9AZgC5J6Oq6jRnZei3HLb0pbWuCRHmdnIVRPIgEpUncWvHq21DHB2qTHhA4xGceHHg==}
 
+  lua-wasm-bindings@0.5.3:
+    resolution: {integrity: sha512-GnGSkZmYA2VzkNV/xkwOSoxwNsqEk/EcX6uvRLKQw0pCAxCauTymRO2KmJUIrG/psV3cloaS4Cjsr39iCRkrpQ==}
+
   magic-string@1.4.2:
     resolution: {integrity: sha512-vG+rjFRj1PqdIBozIxAGMjPlOhaVe+GXpbttY/iSK7rGcJRMlwNJO7dcUwmUqkymsFLJiNGI06t4D7Fr7yRC9g==}
 
@@ -385,6 +419,11 @@ packages:
   rolldown@1.2.10:
     resolution: {integrity: sha512-OxkA08pSryMK7B3XiFA09B4OJ1xJMPgIYCBMY2xchzpqgBGsV1o0DetPAE+Sl3N3L4oCPiEzmHVSOj7iR04Zog==}
     engines: {node: ^20.19.0 || >=22.12.0}
+    hasBin: true
+
+  semver@7.8.5:
+    resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
+    engines: {node: '>=10'}
     hasBin: true
 
   siginfo@2.0.0:
@@ -601,6 +640,8 @@ snapshots:
     dependencies:
       undici-types: 7.18.2
 
+  '@types/semver@7.8.0': {}
+
   '@typescript-to-lua/language-extensions@1.19.0': {}
 
   '@vitest/mocker@5.0.1(vite@8.3.0(@types/node@24.13.6))':
@@ -705,6 +746,11 @@ snapshots:
 
   lua-types@2.14.1: {}
 
+  lua-wasm-bindings@0.5.3:
+    dependencies:
+      '@types/semver': 7.8.0
+      semver: 7.8.5
+
   magic-string@1.4.2:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.6.0
@@ -754,6 +800,8 @@ snapshots:
       '@rolldown/binding-openharmony-arm64': 1.2.10
       '@rolldown/binding-win32-arm64-msvc': 1.2.10
       '@rolldown/binding-win32-x64-msvc': 1.2.10
+
+  semver@7.8.5: {}
 
   siginfo@2.0.0: {}
 
