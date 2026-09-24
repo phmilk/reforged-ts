@@ -8,8 +8,18 @@ import { main as generate } from "../src/cli/generate.js";
 import { entry, writeFixture } from "./support/fixture.js";
 
 const fixture = fileURLToPath(new URL("./fixtures/cli/", import.meta.url));
-const patchDir = join(fixture, "patch");
+const vendorDir = join(fixture, "vendor");
 const overlayDir = join(fixture, "overlay");
+
+/** The folder options of both commands. */
+const options = (vendor: string, overlay: string, out: string) => [
+  "--vendor",
+  vendor,
+  "--overlay",
+  overlay,
+  "--out",
+  out,
+];
 
 async function run(
   command: typeof check,
@@ -34,16 +44,12 @@ describe("typings:check", () => {
 
   beforeEach(async () => {
     outDir = await mkdtemp(join(tmpdir(), "reforged-types-committed-"));
-    const generated = await run(generate, [patchDir, overlayDir, outDir]);
+    const generated = await run(generate, options(vendorDir, overlayDir, outDir));
     expect(generated.status).toBe(0);
   });
 
   it("passes when the committed output is what generation produces", async () => {
-    const { status, stdout, stderr } = await run(check, [
-      patchDir,
-      overlayDir,
-      outDir,
-    ]);
+    const { status, stdout, stderr } = await run(check, options(vendorDir, overlayDir, outDir));
 
     expect(status).toBe(0);
     expect(stderr).toBe("");
@@ -55,11 +61,7 @@ describe("typings:check", () => {
   it("fails naming a committed output file that was edited", async () => {
     await appendFile(join(outDir, "3.0.0", "common.j.d.ts"), "// edited\n");
 
-    const { status, stdout, stderr } = await run(check, [
-      patchDir,
-      overlayDir,
-      outDir,
-    ]);
+    const { status, stdout, stderr } = await run(check, options(vendorDir, overlayDir, outDir));
 
     expect(status).toBe(1);
     expect(stdout).toBe("");
@@ -76,7 +78,7 @@ describe("typings:check", () => {
   ])("fails naming %s when it was edited", async (_, path) => {
     await appendFile(join(outDir, path), " ");
 
-    const { status, stderr } = await run(check, [patchDir, overlayDir, outDir]);
+    const { status, stderr } = await run(check, options(vendorDir, overlayDir, outDir));
 
     expect(status).toBe(1);
     expect(stderr).toBe(
@@ -88,7 +90,7 @@ describe("typings:check", () => {
   it("names a data artefact that is missing", async () => {
     await rm(join(outDir, "async-natives.json"));
 
-    const { status, stderr } = await run(check, [patchDir, overlayDir, outDir]);
+    const { status, stderr } = await run(check, options(vendorDir, overlayDir, outDir));
 
     expect(status).toBe(1);
     expect(stderr).toContain(
@@ -100,7 +102,7 @@ describe("typings:check", () => {
     const file = join(outDir, "3.0.0", "common.ai.d.ts");
     await writeFile(file, (await readFile(file, "utf8")).replace(/\n/g, "\r\n"));
 
-    const { status, stderr } = await run(check, [patchDir, overlayDir, outDir]);
+    const { status, stderr } = await run(check, options(vendorDir, overlayDir, outDir));
 
     expect(status).toBe(1);
     expect(stderr).toContain(
@@ -114,7 +116,7 @@ describe("typings:check", () => {
     // Files at the package root are not generated output of a folder.
     await writeFile(join(outDir, "package.json"), "{}");
 
-    const { status, stderr } = await run(check, [patchDir, overlayDir, outDir]);
+    const { status, stderr } = await run(check, options(vendorDir, overlayDir, outDir));
 
     expect(status).toBe(1);
     expect(stderr).toBe(
@@ -130,11 +132,7 @@ describe("typings:check", () => {
       [entry("common.j", "B")]
     );
 
-    const { status, stdout, stderr } = await run(check, [
-      broken.patchDir,
-      broken.overlayDir,
-      outDir,
-    ]);
+    const { status, stdout, stderr } = await run(check, options(broken.vendorDir, broken.overlayDir, outDir));
 
     expect(status).toBe(1);
     expect(stdout).toBe("");
@@ -152,12 +150,15 @@ describe("typings:check", () => {
     );
   });
 
-  it("rejects more than three arguments", async () => {
-    const { status, stderr } = await run(check, ["a", "b", "c", "d"]);
+  it.each([
+    ["a positional argument", ["Reforged-v3.0.0.24268-w3-3a9d8f2"]],
+    ["an unknown option", ["--patch", "x"]],
+  ])("rejects %s", async (_case, args) => {
+    const { status, stderr } = await run(check, args);
 
     expect(status).toBe(2);
     expect(stderr).toBe(
-      "Usage: typings:check [patchDir] [overlayDir] [outDir]\n"
+      "Usage: typings:check [--vendor <dir>] [--overlay <dir>] [--out <dir>]\n"
     );
   });
 });

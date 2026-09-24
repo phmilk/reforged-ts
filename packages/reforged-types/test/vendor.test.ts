@@ -123,6 +123,39 @@ describe("vendorTag", () => {
     expect((await readFile(join(patchDir, "common.ai"), "latin1")).includes("\r\n")).toBe(true);
   });
 
+  it("leaves a folder byte for byte as it was when the same tag is vendored again on a later day", async () => {
+    const first = await vendorTag({ tag: TAG, vendorRoot, fetcher: archiveFetcher(), now: NOW });
+    const before = await readFile(join(first.patchDir, "provenance.json"));
+
+    const again = await vendorTag({
+      tag: TAG,
+      vendorRoot,
+      fetcher: archiveFetcher(),
+      now: new Date("2027-03-01T00:00:00Z"),
+    });
+
+    expect(first.unchanged).toBe(false);
+    expect(again.unchanged).toBe(true);
+    expect(again.provenance.downloaded).toBe("2026-09-24");
+    expect((await readFile(join(again.patchDir, "provenance.json"))).equals(before)).toBe(true);
+  });
+
+  it("records the new download date when the stored provenance differs", async () => {
+    const { patchDir } = await vendorTag({ tag: TAG, vendorRoot, fetcher: archiveFetcher(), now: NOW });
+    const file = join(patchDir, "provenance.json");
+    await writeFile(file, (await readFile(file, "utf8")).replace(/"bytes": \d+/, '"bytes": 1'));
+
+    const again = await vendorTag({
+      tag: TAG,
+      vendorRoot,
+      fetcher: archiveFetcher(),
+      now: new Date("2027-03-01T00:00:00Z"),
+    });
+
+    expect(again.unchanged).toBe(false);
+    expect(parseProvenance(await readFile(file, "utf8")).downloaded).toBe("2027-03-01");
+  });
+
   it("fails on an unknown tag and writes nothing", async () => {
     await expect(
       vendorTag({ tag: "Reforged-v1.2.3.4-w3-missing", vendorRoot, fetcher: archiveFetcher(), now: NOW }),

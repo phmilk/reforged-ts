@@ -104,28 +104,60 @@ export interface FixtureOptions {
   provenance?: unknown;
 }
 
-/** Writes a Patch folder and an Overlay folder to a fresh temporary directory. */
+/**
+ * Writes a vendor folder holding one Patch folder, named after its build, and
+ * an Overlay folder to a fresh temporary directory.
+ */
 export async function writeFixture(
   patch: PatchFiles,
   overlay: AnyEntryFixture[] = [],
   options: FixtureOptions = {}
-): Promise<{ patchDir: string; overlayDir: string }> {
+): Promise<{ patchDir: string; overlayDir: string; vendorDir: string }> {
   const root = await mkdtemp(join(tmpdir(), "reforged-types-"));
-  const patchDir = join(root, "patch");
+  const vendorDir = join(root, "vendor");
   const overlayDir = join(root, "overlay");
-  await mkdir(patchDir);
   await mkdir(overlayDir);
+  const provenanceFile =
+    options.provenance === undefined ? provenance : options.provenance;
+  const patchDir = await writePatch(vendorDir, patch, provenanceFile);
+  await writeOverlay(overlayDir, overlay, options.rawOverlay);
+  return { patchDir, overlayDir, vendorDir };
+}
+
+/**
+ * Writes one Patch folder into `vendorDir`, named after the build its
+ * provenance names (`patch` when it names none); `null` leaves the provenance
+ * file out. Returns the folder.
+ */
+export async function writePatch(
+  vendorDir: string,
+  patch: PatchFiles,
+  provenanceFile: unknown = provenance
+): Promise<string> {
+  const build = (provenanceFile as { patch?: unknown } | null)?.patch;
+  const patchDir = join(
+    vendorDir,
+    typeof build === "string" && /^[\w.]+$/.test(build) ? build : "patch"
+  );
+  await mkdir(patchDir, { recursive: true });
   for (const file of ["common.j", "blizzard.j", "common.ai"] as const) {
     await writeFile(join(patchDir, file), patch[file] ?? "");
   }
-  const provenanceFile =
-    options.provenance === undefined ? provenance : options.provenance;
   if (provenanceFile !== null) {
     await writeFile(
       join(patchDir, "provenance.json"),
       JSON.stringify(provenanceFile, null, 2) + "\n"
     );
   }
+  return patchDir;
+}
+
+/** Writes the Overlay entries and the raw Overlay files into `overlayDir`. */
+export async function writeOverlay(
+  overlayDir: string,
+  overlay: AnyEntryFixture[],
+  rawOverlay: Record<string, string> = {}
+): Promise<void> {
   for (const item of overlay) {
     const folder = join(overlayDir, item.source, kindFolder(item));
     await mkdir(folder, { recursive: true });
@@ -134,11 +166,10 @@ export async function writeFixture(
       JSON.stringify(item, null, 2) + "\n"
     );
   }
-  for (const [path, text] of Object.entries(options.rawOverlay ?? {})) {
+  for (const [path, text] of Object.entries(rawOverlay)) {
     await mkdir(dirname(join(overlayDir, path)), { recursive: true });
     await writeFile(join(overlayDir, path), text);
   }
-  return { patchDir, overlayDir };
 }
 
 /**

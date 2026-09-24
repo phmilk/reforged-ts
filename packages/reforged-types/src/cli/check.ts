@@ -1,6 +1,7 @@
 /**
- * `typings:check [patchDir] [overlayDir] [outDir]`: the drift gate. Runs
- * Seam 1 over the same inputs as `typings:generate`, writes the result into a
+ * `typings:check [--vendor <dir>] [--overlay <dir>] [--out <dir>]`: the drift
+ * gate. Runs Seam 1 over the same inputs as `typings:generate` without a tag
+ * (every vendored Patch and the Overlay), writes the result into a
  * temporary folder, and compares it byte for byte with the committed output
  * under `outDir` (by default the package root). It fails naming each file
  * that differs, that is generated but not committed, and that is committed
@@ -13,28 +14,33 @@ import { join, posix } from "node:path";
 import { REGENERATE_COMMAND } from "../emit.js";
 import { generate } from "../generate.js";
 import { byCodePoint } from "../overlay.js";
+import { patchList } from "../provenance.js";
 import { countDiagnostics, formatChecklist } from "./checklist.js";
 import {
-  folders,
+  FOLDER_OPTIONS,
   invokedDirectly,
+  parseArgs,
   PROCESS_OUTPUT,
+  vendoredPatchDirs,
   writeFiles,
   type Output,
 } from "./common.js";
 
-const USAGE = "Usage: typings:check [patchDir] [overlayDir] [outDir]\n";
+const USAGE = `Usage: typings:check ${FOLDER_OPTIONS}\n`;
 
 export async function main(
   args: readonly string[],
   output: Output
 ): Promise<number> {
-  if (args.length > 3) {
+  const parsed = parseArgs(args);
+  if (!parsed || parsed.positional.length > 0) {
     output.stderr(USAGE);
     return 2;
   }
-  const { patchDir, overlayDir, outDir } = await folders(args);
+  const { vendorDir, overlayDir, outDir } = parsed.folders;
 
-  const result = await generate({ patchDir, overlayDir });
+  const patchDirs = await vendoredPatchDirs(vendorDir);
+  const result = await generate({ patchDirs, overlayDir });
   if (!result.ok) {
     const counts = countDiagnostics(result.diagnostics);
     output.stderr(
@@ -62,7 +68,7 @@ export async function main(
     await rm(tempDir, { recursive: true, force: true });
   }
   output.stdout(
-    `Typings match: ${result.files.size} files of Patch ${result.patch} ` +
+    `Typings match: ${result.files.size} files of ${patchList(result.patches)} ` +
       "are exactly what the sources and the Overlay generate.\n"
   );
   return 0;

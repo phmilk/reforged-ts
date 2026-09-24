@@ -1,8 +1,9 @@
 /**
  * What the `typings:generate` and `typings:check` commands share: their
- * arguments and defaults, the output streams, and writing generated files.
+ * options and defaults, the vendored Patch folders, the output streams, and
+ * writing generated files.
  */
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -20,22 +21,63 @@ export const PROCESS_OUTPUT: Output = {
 export const packageRoot = fileURLToPath(new URL("../../", import.meta.url));
 
 export interface Folders {
-  patchDir: string;
+  /** Holds one folder per vendored Patch, named after its build. */
+  vendorDir: string;
   overlayDir: string;
   /** Where the generated files live, by their output paths. */
   outDir: string;
 }
 
+const FLAGS = {
+  "--vendor": "vendorDir",
+  "--overlay": "overlayDir",
+  "--out": "outDir",
+} as const;
+
+export const FOLDER_OPTIONS =
+  "[--vendor <dir>] [--overlay <dir>] [--out <dir>]";
+
 /**
- * `[patchDir] [overlayDir] [outDir]`, by default the package's vendored
- * Patch named by `reforged.patch`, its Overlay and the package root.
+ * Splits the arguments into the folder options (by default the package's
+ * `vendor` and `overlay` folders and the package root) and the positional
+ * arguments. `undefined` when an option is unknown or lacks its value.
  */
-export async function folders(args: readonly string[]): Promise<Folders> {
-  return {
-    patchDir: args[0] ?? join(packageRoot, "vendor", await packagePatch()),
-    overlayDir: args[1] ?? join(packageRoot, "overlay"),
-    outDir: args[2] ?? packageRoot,
+export function parseArgs(
+  args: readonly string[]
+): { folders: Folders; positional: string[] } | undefined {
+  const folders: Folders = {
+    vendorDir: join(packageRoot, "vendor"),
+    overlayDir: join(packageRoot, "overlay"),
+    outDir: packageRoot,
   };
+  const positional: string[] = [];
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i]!;
+    if (!arg.startsWith("--")) {
+      positional.push(arg);
+      continue;
+    }
+    const key = FLAGS[arg as keyof typeof FLAGS];
+    const value = args[i + 1];
+    if (key === undefined || value === undefined) return undefined;
+    folders[key] = value;
+    i++;
+  }
+  return { folders, positional };
+}
+
+/** Every vendored Patch folder under `vendorDir`, in name order. */
+export async function vendoredPatchDirs(vendorDir: string): Promise<string[]> {
+  try {
+    const items = await readdir(vendorDir, { withFileTypes: true });
+    return items
+      .filter((item) => item.isDirectory())
+      .map((item) => item.name)
+      .sort()
+      .map((name) => join(vendorDir, name));
+  } catch {
+    return [];
+  }
 }
 
 /** Writes each file under `outDir` at its `/`-separated output path. */
@@ -48,13 +90,6 @@ export async function writeFiles(
     await mkdir(dirname(target), { recursive: true });
     await writeFile(target, text);
   }
-}
-
-async function packagePatch(): Promise<string> {
-  const manifest = JSON.parse(
-    await readFile(join(packageRoot, "package.json"), "utf8")
-  );
-  return manifest.reforged.patch;
 }
 
 /** Whether the module at `moduleUrl` is the script Node was started with. */

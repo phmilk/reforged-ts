@@ -1,9 +1,10 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
   PATCH_FILES,
   PROVENANCE_FILE,
   fileRecord,
+  parseProvenance,
   serializeProvenance,
   type PatchFileName,
   type Provenance,
@@ -79,12 +80,19 @@ export interface VendorOptions {
 export interface VendorResult {
   patchDir: string;
   provenance: Provenance;
+  /**
+   * The folder already held this tag at this commit with these exact bytes;
+   * it is rewritten unchanged, download date included.
+   */
+  unchanged: boolean;
 }
 
 /**
  * Resolves the tag to a commit, downloads the three Patch files at that
  * commit, stores them byte for byte in `<vendorRoot>/<patch>/` and writes the
  * provenance file next to them. Nothing is written unless every download succeeds.
+ * Vendoring a tag again that yields the same commit and bytes keeps the
+ * recorded download date, so it leaves the folder byte for byte as it was.
  */
 export async function vendorTag(options: VendorOptions): Promise<VendorResult> {
   const upstream = options.upstream ?? JASS_HISTORY;
@@ -116,10 +124,25 @@ export async function vendorTag(options: VendorOptions): Promise<VendorResult> {
   };
 
   const patchDir = join(options.vendorRoot, patch);
+  const previous = await readPrevious(patchDir);
+  const unchanged =
+    previous !== undefined &&
+    serializeProvenance({ ...previous, downloaded: provenance.downloaded }) ===
+      serializeProvenance(provenance);
+  if (unchanged) provenance.downloaded = previous.downloaded;
   await mkdir(patchDir, { recursive: true });
   for (const name of PATCH_FILES) {
     await writeFile(join(patchDir, name), contents.get(name)!);
   }
   await writeFile(join(patchDir, PROVENANCE_FILE), serializeProvenance(provenance));
-  return { patchDir, provenance };
+  return { patchDir, provenance, unchanged };
+}
+
+/** The provenance already in the Patch folder, if there is a valid one. */
+async function readPrevious(patchDir: string): Promise<Provenance | undefined> {
+  try {
+    return parseProvenance(await readFile(join(patchDir, PROVENANCE_FILE), "utf8"));
+  } catch {
+    return undefined;
+  }
 }
