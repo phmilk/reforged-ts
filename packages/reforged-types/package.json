@@ -25,8 +25,17 @@
   "reforged": {
     "patch": "3.0.0.24268"
   },
+  "files": [
+    "/[0-9]*.d.ts",
+    "/[0-9]*/*.d.ts",
+    "/lua-runtime.d.ts",
+    "/async-natives.json",
+    "/LICENSE",
+    "/README.md"
+  ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && pnpm run typings:typecheck",
+    "typings:typecheck": "tsc -p tsconfig.typings.json",
     "test": "vitest run && pnpm run typings:check",
     "vendor": "node build/cli/vendor.js",
     "verify": "node build/cli/verify.js",
@@ -38,6 +47,7 @@
     "lua-types": "catalog:"
   },
   "devDependencies": {
+    "@typescript-to-lua/language-extensions": "catalog:",
     "@types/node": "catalog:",
     "typescript": "catalog:",
     "typescript-to-lua": "catalog:",
