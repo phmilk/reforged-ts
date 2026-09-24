@@ -4,10 +4,12 @@ import { fixturePath, outDir, removeOutDirs } from "./support/fixture.js";
 
 afterAll(removeOutDirs);
 
-function file(files: LuaTestFile[], name: string): LuaTestFile {
-  const found = files.find((candidate) => candidate.name === name);
+function file(files: LuaTestFile[], testFile: string): LuaTestFile {
+  const found = files.find((candidate) => candidate.testFile === testFile);
   if (found === undefined) {
-    throw new Error(`no ${name} in ${files.map((f) => f.name).join(", ")}`);
+    throw new Error(
+      `no ${testFile} in ${files.map((f) => f.testFile).join(", ")}`,
+    );
   }
   return found;
 }
@@ -17,9 +19,11 @@ describe("results", () => {
   const results = file(files, "results.test.ts");
 
   it("discovers *_test.lua modules only, outside lua_modules, sorted", () => {
-    expect(files.map(({ module, name }) => ({ module, name }))).toEqual([
-      { module: "handles.unit_test", name: "handles/unit.test.ts" },
-      { module: "results_test", name: "results.test.ts" },
+    expect(
+      files.map(({ moduleName, testFile }) => ({ moduleName, testFile })),
+    ).toEqual([
+      { moduleName: "handles.unit_test", testFile: "handles/unit.test.ts" },
+      { moduleName: "results_test", testFile: "results.test.ts" },
     ]);
   });
 
@@ -64,8 +68,8 @@ describe("results", () => {
 
   it("reports a module under its TypeScript file name and preloads its imports", () => {
     expect(file(files, "handles/unit.test.ts")).toEqual({
-      module: "handles.unit_test",
-      name: "handles/unit.test.ts",
+      moduleName: "handles.unit_test",
+      testFile: "handles/unit.test.ts",
       tests: [
         {
           suite: ["unit"],
@@ -93,8 +97,8 @@ describe("unstubbed Natives", () => {
 
   it("reports a call at module load as the file's error", () => {
     expect(file(files, "load.test.ts")).toEqual({
-      module: "load_test",
-      name: "load.test.ts",
+      moduleName: "load_test",
+      testFile: "load.test.ts",
       tests: [],
       error: "load_test.lua:3: Native BlzGetLocale is not stubbed",
     });
@@ -104,7 +108,7 @@ describe("unstubbed Natives", () => {
 describe("state isolation", () => {
   it("runs every file in a fresh state", () => {
     const files = runLuaTestFiles({ outDir: outDir("isolation") });
-    expect(files.map((f) => f.name)).toEqual(["a.test.ts", "b.test.ts"]);
+    expect(files.map((f) => f.testFile)).toEqual(["a.test.ts", "b.test.ts"]);
     for (const { tests } of files) {
       for (const test of tests) expect(test).toMatchObject({ status: "pass" });
     }
@@ -201,8 +205,8 @@ describe("the JSON contract", () => {
   it("is all the glue needs from a module", () => {
     const [norunner, raw] = runLuaTestFiles({ outDir: outDir("contract") });
     expect(raw).toEqual({
-      module: "raw_test",
-      name: "raw.test.ts",
+      moduleName: "raw_test",
+      testFile: "raw.test.ts",
       tests: [
         { suite: ["raw"], name: "raw pass", status: "pass" },
         {
