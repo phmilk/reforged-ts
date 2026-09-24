@@ -12,8 +12,9 @@
     "declaration": false
   },
   "include": ["../src", "."],
-  // The Node side has its own tsconfig; typescript-to-lua must not see it.
-  "exclude": ["harness"],
+  // The Node side (harness/, node/) has its own tsconfigs; typescript-to-lua
+  // must not see it.
+  "exclude": ["harness", "node"],
   // The default build mode, unlike the library's, resolves the imports of
   // packages: it copies the runner's Lua to lua_modules/reforged-test/lua/
   // and requires it from there, as a Map project's build does. The other

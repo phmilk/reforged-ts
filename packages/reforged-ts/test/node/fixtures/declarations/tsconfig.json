@@ -1,0 +1,21 @@
+{
+  // The declaration fixtures as the editor and the lint see them: sources of
+  // a Map project, not of this package. The test (../../declarations.test.ts)
+  // copies them into a temporary Map project that installs the library's
+  // emitted declarations; this file is not copied. Here `reforged-ts`
+  // resolves to the sources, since the declarations exist only once the test
+  // or `pnpm build` has emitted them. The negative fixtures' type errors are
+  // what the test asserts, so this program is never built; nor are the
+  // sources through it (their one common.ai call does not resolve here).
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["reforged-types/3.0.0", "@typescript-to-lua/language-extensions"],
+    "strict": true,
+    "noEmit": true,
+    "paths": { "reforged-ts": ["../../../../src/index.ts"] }
+  },
+  "include": ["."]
+}
