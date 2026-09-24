@@ -3,6 +3,7 @@
 import { MapPlayer } from "../handles/index";
 import { Timer } from "../handles/timer";
 import { onEntryPoint } from "../init/entry-points";
+import { onStage } from "../init/stages";
 import { base64Decode, base64Encode } from "./base64";
 import { BinaryReader } from "./binaryreader";
 import { BinaryWriter } from "./binarywriter";
@@ -100,10 +101,15 @@ function findHost() {
     });
 }
 
-function onMain() {
+function onGameStart() {
   checkTimer = Timer.create();
   checkTimer.start(0.0, false, findHost);
 }
 
-onEntryPoint("main::after", "library", onMain, "host detection");
+// The detection Timer is born at the `gameStart` stage, not at the end of
+// `main`: timers do not tick during initialization, so the difference is
+// invisible, and no Handle is created in the Lua root. The join-time
+// measurement keeps `config` timing, the lobby, which no stage has: build
+// step 6 (#53) owns whether the heuristic stays.
+onStage("gameStart", "library", onGameStart, "host detection");
 onEntryPoint("config::before", "library", onConfig, "host join time");

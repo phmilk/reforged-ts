@@ -1,8 +1,10 @@
 /** @noSelfInFile */
 
+import { Players } from "../globals/index";
 import { MapPlayer } from "../handles/player";
 import { Timer } from "../handles/timer";
 import { Trigger } from "../handles/trigger";
+import { onStage } from "../init/stages";
 import { base64Decode, base64Encode } from "./base64";
 import { BinaryReader } from "./binaryreader";
 import { BinaryWriter } from "./binarywriter";
@@ -96,6 +98,14 @@ class SyncOutgoingPacket {
 }
 
 /**
+ * The `MapPlayer` of slot `index`: the `Players` entry, or a lookup while
+ * `Players` is still empty (a request made before the `globals` stage).
+ */
+function playerOfSlot(index: number): MapPlayer | undefined {
+  return Players[index] ?? MapPlayer.fromIndex(index);
+}
+
+/**
  * A system which provides an easy way to synchronize data between game clients.
  * The data will be split into chunks and sent in order until all of them are recieved by
  * every player. Splitting the data is required as `BlzSendSyncData` only allows 255 characters
@@ -138,13 +148,27 @@ export class SyncRequest {
 
   private static defaultOptions: ISyncOptions = { timeout: 0 };
 
-  private static eventTrigger = Trigger.create();
+  /** The Trigger every sync event is registered on: born at the `globals` stage. */
+  private static eventTrigger?: Trigger;
 
   private static index = 0;
 
   private static indicies: number[] = [];
 
-  private static initialized = false;
+  // The library's own `globals` callback: the Trigger and its events are
+  // born after `InitGlobals`, not at class definition, so requiring the
+  // library creates no Handle in the Lua root. The constructor's guard below
+  // stays for a request made earlier than that.
+  static {
+    onStage(
+      "globals",
+      "library",
+      () => {
+        SyncRequest.init();
+      },
+      "sync events",
+    );
+  }
 
   /**
    * Creates a new sync request.
@@ -307,28 +331,30 @@ export class SyncRequest {
   }
 
   /**
-   * Initialize
+   * Creates the Trigger and registers both sync prefixes for every playing
+   * user slot, once: the `globals` stage does it, and a request made before
+   * that does it on the way. The slot's `MapPlayer` is the `Players` entry,
+   * or a lookup when `Players` is still empty.
    */
   private static init() {
-    if (this.initialized) {
+    if (this.eventTrigger) {
       return;
     }
+    const trigger = Trigger.create();
+    this.eventTrigger = trigger;
     for (let i = 0; i < bj_MAX_PLAYER_SLOTS; i++) {
-      const p = MapPlayer.fromIndex(i);
+      const p = playerOfSlot(i);
       if (
-        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain -- rewriting the check changes the emitted Lua; step 6 (#53) removes it
-        p !== undefined &&
-        p.controller === MAP_CONTROL_USER &&
+        p?.controller === MAP_CONTROL_USER &&
         p.slotState === PLAYER_SLOT_STATE_PLAYING
       ) {
-        this.eventTrigger.registerPlayerSyncEvent(p, SYNC_PREFIX, false);
-        this.eventTrigger.registerPlayerSyncEvent(p, SYNC_PREFIX_CHUNK, false);
+        trigger.registerPlayerSyncEvent(p, SYNC_PREFIX, false);
+        trigger.registerPlayerSyncEvent(p, SYNC_PREFIX_CHUNK, false);
       }
     }
-    this.eventTrigger.addAction(() => {
+    trigger.addAction(() => {
       this.onSync();
     });
-    this.initialized = true;
   }
 
   /**

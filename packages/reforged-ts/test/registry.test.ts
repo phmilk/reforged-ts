@@ -3,9 +3,17 @@
 // A handle maps to one Wrapper object for the life of the state (registry
 // identity).
 
+// Keep this import ahead of the library's: the library wraps the entry
+// points when it loads, and this file defines them.
+import "./support/bundle-position";
 import { describe, expect, it } from "reforged-test/lua";
 import { MapPlayer, tsGlobals, Unit } from "../src/index";
 import { defined } from "./support/defined";
+
+declare const InitGlobals: () => void;
+
+// `Players` is filled at the `globals` stage: run it, as `main` would.
+InitGlobals();
 
 describe("the Handle registry", () => {
   const owner = defined(MapPlayer.fromIndex(0), "MapPlayer.fromIndex(0)");
