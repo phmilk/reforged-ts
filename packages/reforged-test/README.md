@@ -90,6 +90,7 @@ A fresh state costs a few milliseconds: about 9 ms with the whole reforged-ts li
 Other exports of the glue:
 
 - `runLuaTestFiles(options)`: runs the same files and returns their results without registering anything with vitest. Each result carries the Lua `moduleName` (`handles.unit_test`), the `testFile` it was compiled from (`handles/unit.test.ts`), its `tests` and, when the module failed to load, its `error`.
+- `compileLuaProject(tsconfigPath)`: compiles a typescript-to-lua project and returns its errors as text, or `""` when it compiled. A Map project's vitest global setup calls it to build the tests before they run. `typescript` and `typescript-to-lua` are peer dependencies for it.
 - `MARKER_32_BIT`: the `[32-bit]` marker described under the integer width policy.
 - `LOAD_TEST_NAME`: the name of the one failing test that stands for a file that failed to load, for example on a Native called at module load that no stub defines. The other files still run.
 - The types `LuaTestOptions`, `LuaTestFile`, `LuaTestResult` and `LuaTestStatus`.

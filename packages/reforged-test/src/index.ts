@@ -12,6 +12,8 @@ import {
   type LuaModule,
 } from "./lua-state.js";
 
+export { compileLuaProject } from "./compile.js";
+
 export interface LuaTestOptions {
   /** The folder typescript-to-lua emitted the tests and their modules to. */
   readonly outDir: string;

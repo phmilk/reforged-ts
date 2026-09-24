@@ -2,24 +2,11 @@
 // the package build does, so the fixtures load the artefact that ships.
 
 import { fileURLToPath } from "node:url";
-import { DiagnosticCategory, formatDiagnostics } from "typescript";
-import { transpileProject } from "typescript-to-lua";
+import { compileLuaProject } from "../../src/compile.js";
 
 export default function compileRunner(): void {
-  const project = fileURLToPath(
-    new URL("../../runner/tsconfig.json", import.meta.url),
+  const errors = compileLuaProject(
+    fileURLToPath(new URL("../../runner/tsconfig.json", import.meta.url)),
   );
-  const { diagnostics } = transpileProject(project);
-  const errors = diagnostics.filter(
-    (diagnostic) => diagnostic.category === DiagnosticCategory.Error,
-  );
-  if (errors.length > 0) {
-    throw new Error(
-      formatDiagnostics(errors, {
-        getCanonicalFileName: (name) => name,
-        getCurrentDirectory: () => process.cwd(),
-        getNewLine: () => "\n",
-      }),
-    );
-  }
+  if (errors !== "") throw new Error(errors);
 }
