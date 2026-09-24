@@ -1,0 +1,18 @@
+{
+  "name": "Conversions",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "desire",
+      "nullable": false
+    },
+    {
+      "name": "unitid",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

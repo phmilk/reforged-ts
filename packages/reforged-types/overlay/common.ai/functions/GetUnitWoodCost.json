@@ -1,0 +1,14 @@
+{
+  "name": "GetUnitWoodCost",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "unitid",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

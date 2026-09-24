@@ -1,0 +1,14 @@
+{
+  "name": "UnitId",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "unitIdString",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

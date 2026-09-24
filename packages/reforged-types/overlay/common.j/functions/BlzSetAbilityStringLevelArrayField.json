@@ -1,0 +1,30 @@
+{
+  "name": "BlzSetAbilityStringLevelArrayField",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichAbility",
+      "nullable": false
+    },
+    {
+      "name": "whichField",
+      "nullable": false
+    },
+    {
+      "name": "level",
+      "nullable": false
+    },
+    {
+      "name": "index",
+      "nullable": false
+    },
+    {
+      "name": "value",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "StandardAI",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "heroes",
+      "nullable": false
+    },
+    {
+      "name": "peons",
+      "nullable": false
+    },
+    {
+      "name": "attacks",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

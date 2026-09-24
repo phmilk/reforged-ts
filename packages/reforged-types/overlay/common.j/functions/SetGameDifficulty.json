@@ -1,0 +1,14 @@
+{
+  "name": "SetGameDifficulty",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichdifficulty",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

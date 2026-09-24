@@ -1,0 +1,18 @@
+{
+  "name": "BlzFrameSetEnable",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "frame",
+      "nullable": false
+    },
+    {
+      "name": "enabled",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

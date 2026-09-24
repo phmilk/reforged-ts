@@ -1,0 +1,14 @@
+{
+  "name": "DestroyTextTag",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "t",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

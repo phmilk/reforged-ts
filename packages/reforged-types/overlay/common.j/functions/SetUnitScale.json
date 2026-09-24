@@ -1,0 +1,26 @@
+{
+  "name": "SetUnitScale",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "scaleX",
+      "nullable": false
+    },
+    {
+      "name": "scaleY",
+      "nullable": false
+    },
+    {
+      "name": "scaleZ",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

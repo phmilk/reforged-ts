@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_MANA_REGENERATION_BONUS_AS_FRACTION_OF_NORMAL",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

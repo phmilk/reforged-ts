@@ -1,0 +1,18 @@
+{
+  "name": "MultiboardSetRowCount",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "lb",
+      "nullable": false
+    },
+    {
+      "name": "count",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "SubStringBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "source",
+      "nullable": false
+    },
+    {
+      "name": "start",
+      "nullable": false
+    },
+    {
+      "name": "end",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

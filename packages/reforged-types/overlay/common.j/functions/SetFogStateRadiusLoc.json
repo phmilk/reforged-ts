@@ -1,0 +1,30 @@
+{
+  "name": "SetFogStateRadiusLoc",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "forWhichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "whichState",
+      "nullable": false
+    },
+    {
+      "name": "center",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "useSharedVision",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "GetTownUnitCount",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "id",
+      "nullable": false
+    },
+    {
+      "name": "tn",
+      "nullable": false
+    },
+    {
+      "name": "dn",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

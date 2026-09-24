@@ -1,0 +1,42 @@
+{
+  "name": "DoTransmissionBasicsXYBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "unitId",
+      "nullable": false
+    },
+    {
+      "name": "color",
+      "nullable": false
+    },
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "soundHandle",
+      "nullable": false
+    },
+    {
+      "name": "unitName",
+      "nullable": false
+    },
+    {
+      "name": "message",
+      "nullable": false
+    },
+    {
+      "name": "duration",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

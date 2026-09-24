@@ -1,0 +1,26 @@
+{
+  "name": "AddSpellEffect",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "abilityString",
+      "nullable": false
+    },
+    {
+      "name": "t",
+      "nullable": false
+    },
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

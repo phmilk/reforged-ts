@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_BLF_DAMAGE_IS_PERCENT_RECEIVED",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,58 @@
+{
+  "name": "Interleave3",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "e1",
+      "nullable": false
+    },
+    {
+      "name": "m1",
+      "nullable": false
+    },
+    {
+      "name": "h1",
+      "nullable": false
+    },
+    {
+      "name": "u1",
+      "nullable": false
+    },
+    {
+      "name": "e2",
+      "nullable": false
+    },
+    {
+      "name": "m2",
+      "nullable": false
+    },
+    {
+      "name": "h2",
+      "nullable": false
+    },
+    {
+      "name": "u2",
+      "nullable": false
+    },
+    {
+      "name": "e3",
+      "nullable": false
+    },
+    {
+      "name": "m3",
+      "nullable": false
+    },
+    {
+      "name": "h3",
+      "nullable": false
+    },
+    {
+      "name": "u3",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

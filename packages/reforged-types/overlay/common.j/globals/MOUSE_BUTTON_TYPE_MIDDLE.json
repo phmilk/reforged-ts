@@ -1,0 +1,6 @@
+{
+  "name": "MOUSE_BUTTON_TYPE_MIDDLE",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

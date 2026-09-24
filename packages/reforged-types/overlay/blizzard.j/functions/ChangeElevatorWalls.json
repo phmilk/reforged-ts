@@ -1,0 +1,22 @@
+{
+  "name": "ChangeElevatorWalls",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "open",
+      "nullable": false
+    },
+    {
+      "name": "walls",
+      "nullable": false
+    },
+    {
+      "name": "d",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

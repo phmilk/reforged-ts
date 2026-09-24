@@ -1,0 +1,22 @@
+{
+  "name": "AddUnitAnimationPropertiesBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "add",
+      "nullable": false
+    },
+    {
+      "name": "animProperties",
+      "nullable": false
+    },
+    {
+      "name": "whichUnit",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

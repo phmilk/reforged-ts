@@ -1,0 +1,6 @@
+{
+  "name": "PLAYER_GAME_RESULT_TIE",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

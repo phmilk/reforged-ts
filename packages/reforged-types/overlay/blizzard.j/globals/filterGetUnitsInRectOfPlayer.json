@@ -1,0 +1,6 @@
+{
+  "name": "filterGetUnitsInRectOfPlayer",
+  "source": "blizzard.j",
+  "nullable": true,
+  "origin": "war3-types-strict"
+}

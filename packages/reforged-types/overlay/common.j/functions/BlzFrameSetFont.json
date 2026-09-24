@@ -1,0 +1,26 @@
+{
+  "name": "BlzFrameSetFont",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "frame",
+      "nullable": false
+    },
+    {
+      "name": "fileName",
+      "nullable": false
+    },
+    {
+      "name": "height",
+      "nullable": false
+    },
+    {
+      "name": "flags",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

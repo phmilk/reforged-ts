@@ -1,0 +1,18 @@
+{
+  "name": "MeleeTownHall",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "townid",
+      "nullable": false
+    },
+    {
+      "name": "unitid",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

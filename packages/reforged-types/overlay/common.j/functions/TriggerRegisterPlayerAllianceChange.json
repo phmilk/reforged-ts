@@ -1,0 +1,22 @@
+{
+  "name": "TriggerRegisterPlayerAllianceChange",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichTrigger",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "whichAlliance",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

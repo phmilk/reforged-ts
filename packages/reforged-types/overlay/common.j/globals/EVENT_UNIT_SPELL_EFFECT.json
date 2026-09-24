@@ -1,0 +1,6 @@
+{
+  "name": "EVENT_UNIT_SPELL_EFFECT",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

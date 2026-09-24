@@ -1,0 +1,22 @@
+{
+  "name": "SetHeroInt",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichHero",
+      "nullable": false
+    },
+    {
+      "name": "newInt",
+      "nullable": false
+    },
+    {
+      "name": "permanent",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

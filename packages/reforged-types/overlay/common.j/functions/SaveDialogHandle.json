@@ -1,0 +1,26 @@
+{
+  "name": "SaveDialogHandle",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "table",
+      "nullable": false
+    },
+    {
+      "name": "parentKey",
+      "nullable": false
+    },
+    {
+      "name": "childKey",
+      "nullable": false
+    },
+    {
+      "name": "whichDialog",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

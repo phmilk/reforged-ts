@@ -1,0 +1,26 @@
+{
+  "name": "SetWaterBaseColor",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "red",
+      "nullable": false
+    },
+    {
+      "name": "green",
+      "nullable": false
+    },
+    {
+      "name": "blue",
+      "nullable": false
+    },
+    {
+      "name": "alpha",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

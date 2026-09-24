@@ -1,0 +1,10 @@
+{
+  "name": "GetCameraBoundMinY",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [],
+  "async": true,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "GetHeroLevel",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichHero",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

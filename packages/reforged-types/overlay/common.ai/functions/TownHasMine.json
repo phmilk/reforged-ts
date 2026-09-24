@@ -1,0 +1,14 @@
+{
+  "name": "TownHasMine",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "townid",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "RecycleGuardPosition",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "hUnit",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

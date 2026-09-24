@@ -1,0 +1,14 @@
+{
+  "name": "DestroyUnitPool",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichPool",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

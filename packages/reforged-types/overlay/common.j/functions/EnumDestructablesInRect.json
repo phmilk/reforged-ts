@@ -1,0 +1,22 @@
+{
+  "name": "EnumDestructablesInRect",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "r",
+      "nullable": false
+    },
+    {
+      "name": "filter",
+      "nullable": true
+    },
+    {
+      "name": "actionFunc",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

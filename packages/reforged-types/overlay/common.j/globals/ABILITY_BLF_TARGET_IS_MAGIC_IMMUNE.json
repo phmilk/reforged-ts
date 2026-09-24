@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_BLF_TARGET_IS_MAGIC_IMMUNE",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "bj_TEXT_DELAY_QUESTUPDATE",
+  "source": "blizzard.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "GetAbilityName",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "abilcode",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "BlzFrameSetScale",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "frame",
+      "nullable": false
+    },
+    {
+      "name": "scale",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

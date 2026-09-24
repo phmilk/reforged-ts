@@ -1,0 +1,18 @@
+{
+  "name": "QuestItemSetCompletedBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichQuestItem",
+      "nullable": false
+    },
+    {
+      "name": "completed",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

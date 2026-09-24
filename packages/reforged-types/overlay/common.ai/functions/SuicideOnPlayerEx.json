@@ -1,0 +1,26 @@
+{
+  "name": "SuicideOnPlayerEx",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "easy",
+      "nullable": false
+    },
+    {
+      "name": "med",
+      "nullable": false
+    },
+    {
+      "name": "hard",
+      "nullable": false
+    },
+    {
+      "name": "p",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

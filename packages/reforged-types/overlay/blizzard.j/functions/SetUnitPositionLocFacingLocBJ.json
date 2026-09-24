@@ -1,0 +1,22 @@
+{
+  "name": "SetUnitPositionLocFacingLocBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    },
+    {
+      "name": "lookAt",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

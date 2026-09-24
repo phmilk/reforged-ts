@@ -1,0 +1,14 @@
+{
+  "name": "PlaySound",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "soundName",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

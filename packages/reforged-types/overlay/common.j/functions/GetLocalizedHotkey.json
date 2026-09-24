@@ -1,0 +1,15 @@
+{
+  "name": "GetLocalizedHotkey",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "source",
+      "nullable": false
+    }
+  ],
+  "async": true,
+  "origin": "war3-types-strict"
+}

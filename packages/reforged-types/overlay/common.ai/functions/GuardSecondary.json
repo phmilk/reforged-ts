@@ -1,0 +1,22 @@
+{
+  "name": "GuardSecondary",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "townid",
+      "nullable": false
+    },
+    {
+      "name": "qty",
+      "nullable": false
+    },
+    {
+      "name": "unitid",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

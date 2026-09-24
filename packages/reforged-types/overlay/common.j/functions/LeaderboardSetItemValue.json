@@ -1,0 +1,22 @@
+{
+  "name": "LeaderboardSetItemValue",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "lb",
+      "nullable": false
+    },
+    {
+      "name": "whichItem",
+      "nullable": false
+    },
+    {
+      "name": "val",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

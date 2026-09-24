@@ -1,0 +1,22 @@
+{
+  "name": "PlayMusicEx",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "musicName",
+      "nullable": false
+    },
+    {
+      "name": "frommsecs",
+      "nullable": false
+    },
+    {
+      "name": "fadeinmsecs",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

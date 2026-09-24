@@ -1,0 +1,6 @@
+{
+  "name": "ai_player",
+  "source": "common.ai",
+  "nullable": true,
+  "origin": "war3-types-strict"
+}

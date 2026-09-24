@@ -1,0 +1,22 @@
+{
+  "name": "GetCreepCamp",
+  "source": "common.ai",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "min",
+      "nullable": false
+    },
+    {
+      "name": "max",
+      "nullable": false
+    },
+    {
+      "name": "flyers_ok",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

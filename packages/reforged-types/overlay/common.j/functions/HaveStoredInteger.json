@@ -1,0 +1,22 @@
+{
+  "name": "HaveStoredInteger",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "cache",
+      "nullable": false
+    },
+    {
+      "name": "missionKey",
+      "nullable": false
+    },
+    {
+      "name": "key",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

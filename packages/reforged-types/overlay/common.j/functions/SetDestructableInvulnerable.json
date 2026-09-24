@@ -1,0 +1,18 @@
+{
+  "name": "SetDestructableInvulnerable",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "d",
+      "nullable": false
+    },
+    {
+      "name": "flag",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

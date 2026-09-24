@@ -1,0 +1,22 @@
+{
+  "name": "SetItemPlayerBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichItem",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "changeColor",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

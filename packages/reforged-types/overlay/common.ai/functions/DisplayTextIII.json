@@ -1,0 +1,30 @@
+{
+  "name": "DisplayTextIII",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "p",
+      "nullable": false
+    },
+    {
+      "name": "str",
+      "nullable": false
+    },
+    {
+      "name": "v1",
+      "nullable": false
+    },
+    {
+      "name": "v2",
+      "nullable": false
+    },
+    {
+      "name": "v3",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

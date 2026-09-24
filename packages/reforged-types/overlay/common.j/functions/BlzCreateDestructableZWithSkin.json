@@ -1,0 +1,42 @@
+{
+  "name": "BlzCreateDestructableZWithSkin",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "objectid",
+      "nullable": false
+    },
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "z",
+      "nullable": false
+    },
+    {
+      "name": "face",
+      "nullable": false
+    },
+    {
+      "name": "scale",
+      "nullable": false
+    },
+    {
+      "name": "variation",
+      "nullable": false
+    },
+    {
+      "name": "skinId",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

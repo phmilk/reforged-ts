@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_ILF_NUMBER_OF_UNITS_CREATED_MEC1",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

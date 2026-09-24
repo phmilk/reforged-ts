@@ -1,0 +1,18 @@
+{
+  "name": "TriggerRegisterTimerEventSingle",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "trig",
+      "nullable": false
+    },
+    {
+      "name": "timeout",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

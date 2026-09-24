@@ -1,0 +1,22 @@
+{
+  "name": "AdjustPlayerStateBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "delta",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayerState",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

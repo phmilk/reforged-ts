@@ -1,0 +1,26 @@
+{
+  "name": "ChangeElevatorWallBlocker",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "facing",
+      "nullable": false
+    },
+    {
+      "name": "open",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

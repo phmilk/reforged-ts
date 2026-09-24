@@ -1,0 +1,22 @@
+{
+  "name": "MoveLightningLoc",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichBolt",
+      "nullable": false
+    },
+    {
+      "name": "where1",
+      "nullable": false
+    },
+    {
+      "name": "where2",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

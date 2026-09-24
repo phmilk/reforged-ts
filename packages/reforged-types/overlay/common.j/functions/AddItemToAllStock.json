@@ -1,0 +1,22 @@
+{
+  "name": "AddItemToAllStock",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "itemId",
+      "nullable": false
+    },
+    {
+      "name": "currentStock",
+      "nullable": false
+    },
+    {
+      "name": "stockMax",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

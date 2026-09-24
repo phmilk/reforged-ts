@@ -1,0 +1,6 @@
+{
+  "name": "WEAPON_TYPE_AXE_MEDIUM_CHOP",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

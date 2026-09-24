@@ -1,0 +1,44 @@
+{
+  "upstream": "https://github.com/TinkerWorX/war3-types-strict",
+  "commit": "fc3d2f5e85bd944bca038fc5f2467e6f77a6c51a",
+  "layers": [
+    "1.29.2",
+    "1.32.10",
+    "1.33.0"
+  ],
+  "written": {
+    "blizzard.j/functions": 985,
+    "blizzard.j/globals": 497,
+    "common.ai/functions": 243,
+    "common.ai/globals": 469,
+    "common.j/functions": 1543,
+    "common.j/globals": 1679
+  },
+  "skipped": [
+    {
+      "kind": "functions",
+      "source": "common.j",
+      "name": "RequestExtraBooleanData",
+      "reason": "no declaration in common.j of the Patch"
+    },
+    {
+      "kind": "functions",
+      "source": "common.j",
+      "name": "RequestExtraIntegerData",
+      "reason": "no declaration in common.j of the Patch"
+    },
+    {
+      "kind": "functions",
+      "source": "common.j",
+      "name": "RequestExtraRealData",
+      "reason": "no declaration in common.j of the Patch"
+    },
+    {
+      "kind": "functions",
+      "source": "common.j",
+      "name": "RequestExtraStringData",
+      "reason": "no declaration in common.j of the Patch"
+    }
+  ],
+  "asyncUnseeded": []
+}

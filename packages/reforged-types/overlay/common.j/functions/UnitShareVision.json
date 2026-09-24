@@ -1,0 +1,22 @@
+{
+  "name": "UnitShareVision",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "share",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

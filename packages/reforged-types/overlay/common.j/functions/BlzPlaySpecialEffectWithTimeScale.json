@@ -1,0 +1,22 @@
+{
+  "name": "BlzPlaySpecialEffectWithTimeScale",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichEffect",
+      "nullable": false
+    },
+    {
+      "name": "whichAnim",
+      "nullable": false
+    },
+    {
+      "name": "timeScale",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

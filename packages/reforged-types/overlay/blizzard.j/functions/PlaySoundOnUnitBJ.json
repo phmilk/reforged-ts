@@ -1,0 +1,22 @@
+{
+  "name": "PlaySoundOnUnitBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "soundHandle",
+      "nullable": false
+    },
+    {
+      "name": "volumePercent",
+      "nullable": false
+    },
+    {
+      "name": "whichUnit",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

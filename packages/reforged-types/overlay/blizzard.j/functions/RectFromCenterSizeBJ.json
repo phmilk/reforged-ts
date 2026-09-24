@@ -1,0 +1,22 @@
+{
+  "name": "RectFromCenterSizeBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "center",
+      "nullable": false
+    },
+    {
+      "name": "width",
+      "nullable": false
+    },
+    {
+      "name": "height",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

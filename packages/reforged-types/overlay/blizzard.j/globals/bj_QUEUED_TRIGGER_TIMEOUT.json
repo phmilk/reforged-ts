@@ -1,0 +1,6 @@
+{
+  "name": "bj_QUEUED_TRIGGER_TIMEOUT",
+  "source": "blizzard.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

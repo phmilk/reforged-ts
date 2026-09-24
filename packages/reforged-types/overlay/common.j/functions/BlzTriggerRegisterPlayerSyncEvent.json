@@ -1,0 +1,26 @@
+{
+  "name": "BlzTriggerRegisterPlayerSyncEvent",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichTrigger",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "prefix",
+      "nullable": false
+    },
+    {
+      "name": "fromServer",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

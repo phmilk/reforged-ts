@@ -1,0 +1,18 @@
+{
+  "name": "IsUnitGroupInRectBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "g",
+      "nullable": false
+    },
+    {
+      "name": "r",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

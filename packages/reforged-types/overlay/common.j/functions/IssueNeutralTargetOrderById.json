@@ -1,0 +1,26 @@
+{
+  "name": "IssueNeutralTargetOrderById",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "forWhichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "neutralStructure",
+      "nullable": false
+    },
+    {
+      "name": "unitId",
+      "nullable": false
+    },
+    {
+      "name": "target",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

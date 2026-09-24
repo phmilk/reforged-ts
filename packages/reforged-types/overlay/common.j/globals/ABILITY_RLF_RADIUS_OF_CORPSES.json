@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_RADIUS_OF_CORPSES",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

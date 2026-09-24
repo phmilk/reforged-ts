@@ -1,0 +1,14 @@
+{
+  "name": "NewSoundEnvironment",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "environmentName",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

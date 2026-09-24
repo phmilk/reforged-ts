@@ -1,0 +1,34 @@
+{
+  "name": "SetUnitLookAt",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "whichBone",
+      "nullable": false
+    },
+    {
+      "name": "lookAtTarget",
+      "nullable": false
+    },
+    {
+      "name": "offsetX",
+      "nullable": false
+    },
+    {
+      "name": "offsetY",
+      "nullable": false
+    },
+    {
+      "name": "offsetZ",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

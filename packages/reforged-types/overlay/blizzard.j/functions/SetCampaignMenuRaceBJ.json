@@ -1,0 +1,14 @@
+{
+  "name": "SetCampaignMenuRaceBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "campaignNumber",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

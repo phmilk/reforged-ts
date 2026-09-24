@@ -1,0 +1,14 @@
+{
+  "name": "ISignBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "a",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

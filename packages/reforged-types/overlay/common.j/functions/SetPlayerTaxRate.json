@@ -1,0 +1,26 @@
+{
+  "name": "SetPlayerTaxRate",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "sourcePlayer",
+      "nullable": false
+    },
+    {
+      "name": "otherPlayer",
+      "nullable": false
+    },
+    {
+      "name": "whichResource",
+      "nullable": false
+    },
+    {
+      "name": "rate",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

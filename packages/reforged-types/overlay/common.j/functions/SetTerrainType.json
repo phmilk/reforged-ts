@@ -1,0 +1,34 @@
+{
+  "name": "SetTerrainType",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "terrainType",
+      "nullable": false
+    },
+    {
+      "name": "variation",
+      "nullable": false
+    },
+    {
+      "name": "area",
+      "nullable": false
+    },
+    {
+      "name": "shape",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

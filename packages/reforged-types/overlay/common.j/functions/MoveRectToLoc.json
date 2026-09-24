@@ -1,0 +1,18 @@
+{
+  "name": "MoveRectToLoc",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichRect",
+      "nullable": false
+    },
+    {
+      "name": "newCenterLoc",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

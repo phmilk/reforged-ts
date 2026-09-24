@@ -1,0 +1,6 @@
+{
+  "name": "UNIT_WEAPON_IF_ATTACK_ATTACK_TYPE",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

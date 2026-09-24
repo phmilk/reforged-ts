@@ -1,0 +1,22 @@
+{
+  "name": "IsUnitInRange",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "otherUnit",
+      "nullable": false
+    },
+    {
+      "name": "distance",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "GetUnitName",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    }
+  ],
+  "async": true,
+  "origin": "war3-types-strict"
+}

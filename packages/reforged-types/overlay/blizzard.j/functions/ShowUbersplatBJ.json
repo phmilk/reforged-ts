@@ -1,0 +1,18 @@
+{
+  "name": "ShowUbersplatBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "flag",
+      "nullable": false
+    },
+    {
+      "name": "whichSplat",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

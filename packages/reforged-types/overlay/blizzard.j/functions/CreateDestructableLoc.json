@@ -1,0 +1,30 @@
+{
+  "name": "CreateDestructableLoc",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "objectid",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    },
+    {
+      "name": "facing",
+      "nullable": false
+    },
+    {
+      "name": "scale",
+      "nullable": false
+    },
+    {
+      "name": "variation",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

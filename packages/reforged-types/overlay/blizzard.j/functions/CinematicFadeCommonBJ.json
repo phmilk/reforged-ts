@@ -1,0 +1,38 @@
+{
+  "name": "CinematicFadeCommonBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "red",
+      "nullable": false
+    },
+    {
+      "name": "green",
+      "nullable": false
+    },
+    {
+      "name": "blue",
+      "nullable": false
+    },
+    {
+      "name": "duration",
+      "nullable": false
+    },
+    {
+      "name": "tex",
+      "nullable": false
+    },
+    {
+      "name": "startTrans",
+      "nullable": false
+    },
+    {
+      "name": "endTrans",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

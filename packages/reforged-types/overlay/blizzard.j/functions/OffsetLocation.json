@@ -1,0 +1,22 @@
+{
+  "name": "OffsetLocation",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "loc",
+      "nullable": false
+    },
+    {
+      "name": "dx",
+      "nullable": false
+    },
+    {
+      "name": "dy",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

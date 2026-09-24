@@ -1,0 +1,22 @@
+{
+  "name": "BlzStartUnitAbilityCooldown",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "abilCode",
+      "nullable": false
+    },
+    {
+      "name": "cooldown",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

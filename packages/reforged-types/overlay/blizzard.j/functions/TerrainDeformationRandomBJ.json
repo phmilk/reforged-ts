@@ -1,0 +1,34 @@
+{
+  "name": "TerrainDeformationRandomBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "duration",
+      "nullable": false
+    },
+    {
+      "name": "where",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "minDelta",
+      "nullable": false
+    },
+    {
+      "name": "maxDelta",
+      "nullable": false
+    },
+    {
+      "name": "updateInterval",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

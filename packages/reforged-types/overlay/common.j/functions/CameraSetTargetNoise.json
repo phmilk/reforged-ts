@@ -1,0 +1,18 @@
+{
+  "name": "CameraSetTargetNoise",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "mag",
+      "nullable": false
+    },
+    {
+      "name": "velocity",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

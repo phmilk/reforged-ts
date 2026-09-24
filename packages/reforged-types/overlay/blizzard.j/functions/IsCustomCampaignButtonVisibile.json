@@ -1,0 +1,14 @@
+{
+  "name": "IsCustomCampaignButtonVisibile",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichButton",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

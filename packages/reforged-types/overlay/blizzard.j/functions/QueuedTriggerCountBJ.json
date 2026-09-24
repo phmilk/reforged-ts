@@ -1,0 +1,9 @@
+{
+  "name": "QueuedTriggerCountBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [],
+  "origin": "war3-types-strict"
+}

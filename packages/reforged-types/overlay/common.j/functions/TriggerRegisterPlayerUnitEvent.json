@@ -1,0 +1,26 @@
+{
+  "name": "TriggerRegisterPlayerUnitEvent",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichTrigger",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayerUnitEvent",
+      "nullable": false
+    },
+    {
+      "name": "filter",
+      "nullable": true
+    }
+  ],
+  "origin": "war3-types-strict"
+}

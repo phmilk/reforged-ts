@@ -1,0 +1,6 @@
+{
+  "name": "FRAMEEVENT_MOUSE_UP",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

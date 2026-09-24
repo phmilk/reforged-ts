@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_SLF_TOOLTIP_TURN_OFF_EXTENDED",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

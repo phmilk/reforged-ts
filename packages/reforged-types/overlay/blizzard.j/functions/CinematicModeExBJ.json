@@ -1,0 +1,22 @@
+{
+  "name": "CinematicModeExBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "cineMode",
+      "nullable": false
+    },
+    {
+      "name": "forForce",
+      "nullable": false
+    },
+    {
+      "name": "interfaceFadeTime",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

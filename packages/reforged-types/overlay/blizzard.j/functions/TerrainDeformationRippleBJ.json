@@ -1,0 +1,42 @@
+{
+  "name": "TerrainDeformationRippleBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "duration",
+      "nullable": false
+    },
+    {
+      "name": "limitNeg",
+      "nullable": false
+    },
+    {
+      "name": "where",
+      "nullable": false
+    },
+    {
+      "name": "startRadius",
+      "nullable": false
+    },
+    {
+      "name": "endRadius",
+      "nullable": false
+    },
+    {
+      "name": "depth",
+      "nullable": false
+    },
+    {
+      "name": "wavePeriod",
+      "nullable": false
+    },
+    {
+      "name": "waveWidth",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

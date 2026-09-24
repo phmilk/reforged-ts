@@ -1,0 +1,22 @@
+{
+  "name": "SetPlayerTechMaxAllowedSwap",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "techid",
+      "nullable": false
+    },
+    {
+      "name": "maximum",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

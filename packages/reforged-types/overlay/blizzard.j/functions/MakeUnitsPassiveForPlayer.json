@@ -1,0 +1,14 @@
+{
+  "name": "MakeUnitsPassiveForPlayer",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

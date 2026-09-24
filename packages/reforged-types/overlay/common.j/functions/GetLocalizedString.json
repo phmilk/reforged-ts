@@ -1,0 +1,15 @@
+{
+  "name": "GetLocalizedString",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "source",
+      "nullable": false
+    }
+  ],
+  "async": true,
+  "origin": "war3-types-strict"
+}

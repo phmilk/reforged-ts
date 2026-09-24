@@ -1,0 +1,18 @@
+{
+  "name": "CampaignAI",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "farms",
+      "nullable": false
+    },
+    {
+      "name": "heroes",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

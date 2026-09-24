@@ -1,0 +1,38 @@
+{
+  "name": "CreateMinimapIconBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "red",
+      "nullable": false
+    },
+    {
+      "name": "green",
+      "nullable": false
+    },
+    {
+      "name": "blue",
+      "nullable": false
+    },
+    {
+      "name": "pingPath",
+      "nullable": false
+    },
+    {
+      "name": "fogVisibility",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

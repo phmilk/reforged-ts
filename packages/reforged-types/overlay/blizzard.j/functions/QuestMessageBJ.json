@@ -1,0 +1,22 @@
+{
+  "name": "QuestMessageBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "f",
+      "nullable": false
+    },
+    {
+      "name": "messageType",
+      "nullable": false
+    },
+    {
+      "name": "message",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "UPKEEP_TIER1",
+  "source": "common.ai",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Cos",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "radians",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

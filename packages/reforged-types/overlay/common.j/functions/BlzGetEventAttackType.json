@@ -1,0 +1,9 @@
+{
+  "name": "BlzGetEventAttackType",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [],
+  "origin": "war3-types-strict"
+}

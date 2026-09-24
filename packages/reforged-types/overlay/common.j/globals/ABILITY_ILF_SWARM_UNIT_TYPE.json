@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_ILF_SWARM_UNIT_TYPE",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

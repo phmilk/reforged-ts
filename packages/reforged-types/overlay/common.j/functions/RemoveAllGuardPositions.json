@@ -1,0 +1,14 @@
+{
+  "name": "RemoveAllGuardPositions",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "num",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

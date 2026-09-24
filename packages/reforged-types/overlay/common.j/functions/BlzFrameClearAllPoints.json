@@ -1,0 +1,14 @@
+{
+  "name": "BlzFrameClearAllPoints",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "frame",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

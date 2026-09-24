@@ -1,0 +1,6 @@
+{
+  "name": "bj_WAIT_FOR_COND_MIN_INTERVAL",
+  "source": "blizzard.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

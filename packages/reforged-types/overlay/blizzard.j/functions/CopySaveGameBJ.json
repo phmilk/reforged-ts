@@ -1,0 +1,18 @@
+{
+  "name": "CopySaveGameBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "sourceSaveName",
+      "nullable": false
+    },
+    {
+      "name": "destSaveName",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

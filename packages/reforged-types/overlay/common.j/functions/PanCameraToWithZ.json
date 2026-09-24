@@ -1,0 +1,22 @@
+{
+  "name": "PanCameraToWithZ",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    },
+    {
+      "name": "zOffsetDest",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

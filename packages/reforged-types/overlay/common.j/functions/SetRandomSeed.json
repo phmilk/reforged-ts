@@ -1,0 +1,14 @@
+{
+  "name": "SetRandomSeed",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "seed",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

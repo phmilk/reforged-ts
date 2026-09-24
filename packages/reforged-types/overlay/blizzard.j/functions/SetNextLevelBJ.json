@@ -1,0 +1,14 @@
+{
+  "name": "SetNextLevelBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "nextLevel",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "TriggerRegisterTimerEvent",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichTrigger",
+      "nullable": false
+    },
+    {
+      "name": "timeout",
+      "nullable": false
+    },
+    {
+      "name": "periodic",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

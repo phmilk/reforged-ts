@@ -1,0 +1,22 @@
+{
+  "name": "GroupEnumUnitsSelected",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichGroup",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "filter",
+      "nullable": true
+    }
+  ],
+  "origin": "war3-types-strict"
+}

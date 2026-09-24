@@ -1,0 +1,14 @@
+{
+  "name": "ResetUbersplat",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichSplat",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

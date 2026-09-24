@@ -1,0 +1,22 @@
+{
+  "name": "SetImageAboveWater",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichImage",
+      "nullable": false
+    },
+    {
+      "name": "flag",
+      "nullable": false
+    },
+    {
+      "name": "useWaterAlpha",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,38 @@
+{
+  "name": "CreateFogModifierRadius",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "forWhichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "whichState",
+      "nullable": false
+    },
+    {
+      "name": "centerx",
+      "nullable": false
+    },
+    {
+      "name": "centerY",
+      "nullable": false
+    },
+    {
+      "name": "radius",
+      "nullable": false
+    },
+    {
+      "name": "useSharedVision",
+      "nullable": false
+    },
+    {
+      "name": "afterUnits",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

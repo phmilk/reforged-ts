@@ -1,0 +1,22 @@
+{
+  "name": "SetBlightRect",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "r",
+      "nullable": false
+    },
+    {
+      "name": "addBlight",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "SetUnitVertexColorBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "red",
+      "nullable": false
+    },
+    {
+      "name": "green",
+      "nullable": false
+    },
+    {
+      "name": "blue",
+      "nullable": false
+    },
+    {
+      "name": "transparency",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

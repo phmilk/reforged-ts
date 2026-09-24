@@ -1,0 +1,22 @@
+{
+  "name": "AddSpecialEffectTargetUnitBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "attachPointName",
+      "nullable": false
+    },
+    {
+      "name": "targetWidget",
+      "nullable": false
+    },
+    {
+      "name": "modelName",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

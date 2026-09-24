@@ -1,0 +1,26 @@
+{
+  "name": "PickMeleeAI",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "num",
+      "nullable": false
+    },
+    {
+      "name": "s1",
+      "nullable": false
+    },
+    {
+      "name": "s2",
+      "nullable": false
+    },
+    {
+      "name": "s3",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

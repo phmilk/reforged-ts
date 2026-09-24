@@ -1,0 +1,22 @@
+{
+  "name": "ForceEnumPlayersCounted",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichForce",
+      "nullable": false
+    },
+    {
+      "name": "filter",
+      "nullable": true
+    },
+    {
+      "name": "countLimit",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

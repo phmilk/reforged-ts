@@ -1,0 +1,26 @@
+{
+  "name": "BlzSetSpecialEffectOrientation",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichEffect",
+      "nullable": false
+    },
+    {
+      "name": "yaw",
+      "nullable": false
+    },
+    {
+      "name": "pitch",
+      "nullable": false
+    },
+    {
+      "name": "roll",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,34 @@
+{
+  "name": "CommonSuicideOnPlayer",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "standard",
+      "nullable": false
+    },
+    {
+      "name": "bldgs",
+      "nullable": false
+    },
+    {
+      "name": "seconds",
+      "nullable": false
+    },
+    {
+      "name": "p",
+      "nullable": false
+    },
+    {
+      "name": "x",
+      "nullable": false
+    },
+    {
+      "name": "y",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

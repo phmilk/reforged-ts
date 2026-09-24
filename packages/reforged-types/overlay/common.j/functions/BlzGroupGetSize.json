@@ -1,0 +1,14 @@
+{
+  "name": "BlzGroupGetSize",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichGroup",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

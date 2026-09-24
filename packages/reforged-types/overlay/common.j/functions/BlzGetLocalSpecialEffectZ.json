@@ -1,0 +1,15 @@
+{
+  "name": "BlzGetLocalSpecialEffectZ",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichEffect",
+      "nullable": false
+    }
+  ],
+  "async": true,
+  "origin": "war3-types-strict"
+}

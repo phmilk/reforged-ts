@@ -1,0 +1,22 @@
+{
+  "name": "SetUnitFlyHeightBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "newHeight",
+      "nullable": false
+    },
+    {
+      "name": "rate",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

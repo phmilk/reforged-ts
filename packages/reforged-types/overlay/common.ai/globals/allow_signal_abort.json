@@ -1,0 +1,6 @@
+{
+  "name": "allow_signal_abort",
+  "source": "common.ai",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

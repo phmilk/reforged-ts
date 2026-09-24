@@ -1,0 +1,22 @@
+{
+  "name": "ReplaceUnitBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "newUnitId",
+      "nullable": false
+    },
+    {
+      "name": "unitStateMethod",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

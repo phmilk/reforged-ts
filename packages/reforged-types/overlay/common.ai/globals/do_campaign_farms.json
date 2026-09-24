@@ -1,0 +1,6 @@
+{
+  "name": "do_campaign_farms",
+  "source": "common.ai",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

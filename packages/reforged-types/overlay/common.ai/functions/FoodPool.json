@@ -1,0 +1,38 @@
+{
+  "name": "FoodPool",
+  "source": "common.ai",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "food",
+      "nullable": false
+    },
+    {
+      "name": "weak",
+      "nullable": false
+    },
+    {
+      "name": "id1",
+      "nullable": false
+    },
+    {
+      "name": "use1",
+      "nullable": false
+    },
+    {
+      "name": "strong",
+      "nullable": false
+    },
+    {
+      "name": "id2",
+      "nullable": false
+    },
+    {
+      "name": "use2",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

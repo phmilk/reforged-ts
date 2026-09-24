@@ -1,0 +1,14 @@
+{
+  "name": "SetAllItemTypeSlots",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "slots",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

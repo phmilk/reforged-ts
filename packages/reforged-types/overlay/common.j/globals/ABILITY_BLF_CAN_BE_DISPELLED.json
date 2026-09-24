@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_BLF_CAN_BE_DISPELLED",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "VERSION_FROZEN_THRONE",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "UnitShareVisionBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "share",
+      "nullable": false
+    },
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

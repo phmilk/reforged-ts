@@ -1,0 +1,22 @@
+{
+  "name": "IssueNeutralImmediateOrder",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "forWhichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "neutralStructure",
+      "nullable": false
+    },
+    {
+      "name": "unitToBuild",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

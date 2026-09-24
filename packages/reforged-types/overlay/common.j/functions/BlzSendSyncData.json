@@ -1,0 +1,18 @@
+{
+  "name": "BlzSendSyncData",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "prefix",
+      "nullable": false
+    },
+    {
+      "name": "data",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

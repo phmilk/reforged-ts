@@ -1,0 +1,42 @@
+{
+  "name": "CreateTextTagLocBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "s",
+      "nullable": false
+    },
+    {
+      "name": "loc",
+      "nullable": false
+    },
+    {
+      "name": "zOffset",
+      "nullable": false
+    },
+    {
+      "name": "size",
+      "nullable": false
+    },
+    {
+      "name": "red",
+      "nullable": false
+    },
+    {
+      "name": "green",
+      "nullable": false
+    },
+    {
+      "name": "blue",
+      "nullable": false
+    },
+    {
+      "name": "transparency",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

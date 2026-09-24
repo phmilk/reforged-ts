@@ -1,0 +1,22 @@
+{
+  "name": "CommandAI",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "num",
+      "nullable": false
+    },
+    {
+      "name": "command",
+      "nullable": false
+    },
+    {
+      "name": "data",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

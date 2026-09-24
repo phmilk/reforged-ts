@@ -1,0 +1,6 @@
+{
+  "name": "ABILITY_RLF_ACTIVATION_DELAY_STA1",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

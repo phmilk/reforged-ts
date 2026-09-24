@@ -1,0 +1,6 @@
+{
+  "name": "MAP_FOG_ALWAYS_VISIBLE",
+  "source": "common.j",
+  "nullable": false,
+  "origin": "war3-types-strict"
+}

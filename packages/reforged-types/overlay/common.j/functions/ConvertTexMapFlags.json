@@ -1,0 +1,14 @@
+{
+  "name": "ConvertTexMapFlags",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "i",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "SetPlayerTechResearched",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    },
+    {
+      "name": "techid",
+      "nullable": false
+    },
+    {
+      "name": "setToLevel",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "SetUnitState",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "whichUnitState",
+      "nullable": false
+    },
+    {
+      "name": "newVal",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

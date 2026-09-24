@@ -1,0 +1,22 @@
+{
+  "name": "AddUnitAnimationProperties",
+  "source": "common.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "whichUnit",
+      "nullable": false
+    },
+    {
+      "name": "animProperties",
+      "nullable": false
+    },
+    {
+      "name": "add",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

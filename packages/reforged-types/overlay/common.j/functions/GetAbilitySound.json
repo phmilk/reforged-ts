@@ -1,0 +1,18 @@
+{
+  "name": "GetAbilitySound",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": [
+    {
+      "name": "abilityString",
+      "nullable": false
+    },
+    {
+      "name": "t",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

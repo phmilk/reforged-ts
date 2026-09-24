@@ -1,0 +1,22 @@
+{
+  "name": "SetPlayerUnitAvailableBJ",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "unitId",
+      "nullable": false
+    },
+    {
+      "name": "allowed",
+      "nullable": false
+    },
+    {
+      "name": "whichPlayer",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "MeleeTournamentFinishNowRuleA",
+  "source": "blizzard.j",
+  "returns": {
+    "nullable": false
+  },
+  "params": [
+    {
+      "name": "multiplier",
+      "nullable": false
+    }
+  ],
+  "origin": "war3-types-strict"
+}
