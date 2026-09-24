@@ -112,10 +112,10 @@ describe("state isolation", () => {
   });
 });
 
-describe("consumer stubs", () => {
+describe("extra stub files", () => {
   it("runs the listed files after the shipped ones, in order", () => {
     const [order] = runLuaTestFiles({
-      outDir: outDir("consumer-stubs"),
+      outDir: outDir("map-project-stubs"),
       stubs: [
         fixturePath("stubs", "first.lua"),
         fixturePath("stubs", "second.lua"),
@@ -124,19 +124,19 @@ describe("consumer stubs", () => {
     expect(order.tests).toEqual([
       {
         suite: [],
-        name: "loads consumer stubs after the shipped ones, in the listed order",
+        name: "loads the extra stub files after the shipped ones, in the listed order",
         status: "pass",
       },
       {
         suite: [],
-        name: "calls a Native a consumer stub defines",
+        name: "calls a Native an extra stub file defines",
         status: "pass",
       },
     ]);
   });
 
   it("does not load them unless listed", () => {
-    const [order] = runLuaTestFiles({ outDir: outDir("consumer-stubs") });
+    const [order] = runLuaTestFiles({ outDir: outDir("map-project-stubs") });
     expect(order.tests.map((test) => test.status)).toEqual(["fail", "error"]);
     expect(order.tests[1]?.message).toMatch(
       /Native BlzGetLocale is not stubbed$/,

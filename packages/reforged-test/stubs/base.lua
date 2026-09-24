@@ -2,7 +2,7 @@
 -- and the load-time globals the library reads before its first require.
 -- Plain Lua 5.3 on the standard libraries only; see the package README for
 -- the stub authoring rules. The glue executes this file first, then the other
--- shipped stub files, then the files the consumer lists.
+-- shipped stub files, then the extra stub files of the `stubs` option.
 
 -- The call log: every stub appends one readable line per call.
 __stub_calls = {}
@@ -41,8 +41,8 @@ function __stub_new_handle(kind)
   return { __kind = kind, __handleId = nextHandleId }
 end
 
--- Globals read at module load time. `main` and `config` stay nil: the hooks
--- module reads them before the game would define them.
+-- Globals read at module load time. `main` and `config` stay nil: the
+-- library's Hook code reads them before the game would define them.
 bj_MAX_PLAYER_SLOTS = 28
 bj_MAX_PLAYERS = 24
 bj_UNIT_FACING = 270.0

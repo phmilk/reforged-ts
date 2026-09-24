@@ -145,7 +145,7 @@ The runner writes it with its own encoder, with keys sorted, because the game's 
 - the Natives `Player`, `GetPlayerId`, `GetHandleId` and `CreateTrigger`;
 - `FourCC`, a Lua helper of the game rather than a Native.
 
-`main` and `config` stay nil, because the hooks module reads them before the game would define them. For the same reason the glue does not make undefined globals an error.
+`main` and `config` stay nil, because the library's Hook code (`hooks/index.ts`) reads them before the game would define them. For the same reason the glue does not make undefined globals an error.
 
 It also holds the shared machinery the other stub files use:
 
@@ -175,7 +175,7 @@ A timer or trigger never fires on its own: a test fires it with the helper. The 
 - Handles are tables carrying a kind and a sequential id from a fixed base, so ids are deterministic. Use `__stub_new_handle`.
 - A stub that holds a callback exposes a manual firing helper (`__stub_fire_timer`, `__stub_fire_trigger`) instead of any scheduler.
 - A stub never simulates game logic beyond storing what it was given.
-- There is one stub file per Native family: players, timers, triggers, units, frames, as they are needed. The glue loads the shipped set plus any extra files the consumer lists.
+- There is one stub file per Native family: players, timers, triggers, units, frames, as they are needed. The glue loads the shipped set, then the extra stub files a Map project lists in the `stubs` option.
 
 ## Integer width policy
 
