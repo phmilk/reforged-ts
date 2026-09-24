@@ -42,7 +42,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json && tstl -p runner/tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p runner/tsconfig.json --noEmit && tsc -p test/tsconfig.json",
-    "test": "vitest run --root ../.. --project reforged-test"
+    "test": "vitest run --root ../.. --project reforged-test",
+    "prepare": "pnpm run build"
   },
   "dependencies": {
     "lua-wasm-bindings": "catalog:"
