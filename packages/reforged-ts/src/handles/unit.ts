@@ -1,11 +1,10 @@
 /** @noSelfInFile */
 
 import { OrderId } from "../globals/order";
+import { rawcodeToString } from "../utils/rawcode";
 import { Destructable } from "./destructable";
 import { Force } from "./force";
-import { Handle } from "./handle";
-// eslint-disable-next-line import-x/no-cycle -- unit and group import each other; type-only imports in step 3 (#51) break the cycle
-import { Group } from "./group";
+import type { Group } from "./group";
 import { Item } from "./item";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
@@ -14,43 +13,6 @@ import { Widget } from "./widget";
 
 export class Unit extends Widget {
   declare public readonly handle: unit;
-
-  /**
-   * @deprecated use `Unit.create` instead.
-   * @param owner The owner of the unit.
-   * @param unitId The rawcode of the unit.
-   * @param x The x-coordinate of the unit.
-   * @param y The y-coordinate of the unit.
-   * @param face The direction that the unit will be facing in degrees.
-   * @param skinId The skin of the unit.
-   */
-  constructor(
-    owner: MapPlayer,
-    unitId: number,
-    x: number,
-    y: number,
-    face?: number,
-    skinId?: number,
-  ) {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare -- dropping the comparison changes the emitted Lua; step 3 (#51) removes it
-    if (Handle.initFromHandle() === true) {
-      super();
-      return;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- the rewrite changes the emitted Lua; step 3 (#51) removes it
-    if (face === undefined) face = bj_UNIT_FACING;
-    const handle =
-      skinId === undefined
-        ? CreateUnit(owner.handle, unitId, x, y, face)
-        : BlzCreateUnitWithSkin(owner.handle, unitId, x, y, face, skinId);
-
-    if (handle === undefined) {
-      error("w3ts failed to create unit handle.", 3);
-    }
-
-    super(handle);
-  }
 
   /**
    * Creates a unit.
@@ -66,24 +28,15 @@ export class Unit extends Widget {
     unitId: number,
     x: number,
     y: number,
-    face?: number,
+    face: number = bj_UNIT_FACING,
     skinId?: number,
-  ): Unit | undefined {
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- the rewrite changes the emitted Lua; step 3 (#51) removes it
-    if (face === undefined) face = bj_UNIT_FACING;
-    const handle =
+  ): Unit {
+    return this.expect(
       skinId === undefined
         ? CreateUnit(owner.handle, unitId, x, y, face)
-        : BlzCreateUnitWithSkin(owner.handle, unitId, x, y, face, skinId);
-    if (handle) {
-      const obj = this.getObject(handle) as Unit;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+        : BlzCreateUnitWithSkin(owner.handle, unitId, x, y, face, skinId),
+      rawcodeToString(unitId),
+    );
   }
 
   /**
@@ -288,18 +241,6 @@ export class Unit extends Widget {
   }
 
   /**
-   * @deprecated use getOwner/setOwner instead.
-   */
-  public set owner(whichPlayer: MapPlayer) {
-    SetUnitOwner(this.handle, whichPlayer.handle, true);
-  }
-
-  public get owner(): MapPlayer {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- a lookup used as non-null; lookups get one documented non-null path; step 3 (#51) removes it
-    return MapPlayer.fromHandle(GetOwningPlayer(this.handle))!;
-  }
-
-  /**
    * Pauses a unit. A paused unit has the following properties:
    * 1. Buffs/effects are suspended
    * 2. Orders are stored when paused and fired on unpause
@@ -314,18 +255,6 @@ export class Unit extends Widget {
    */
   public get paused() {
     return IsUnitPaused(this.handle);
-  }
-
-  /**
-   * @deprecated use getPoint/setPoint instead.
-   */
-  public get point() {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- a lookup used as non-null; lookups get one documented non-null path; step 3 (#51) removes it
-    return Point.fromHandle(GetUnitLoc(this.handle))!;
-  }
-
-  public set point(whichPoint: Point) {
-    SetUnitPositionLoc(this.handle, whichPoint.handle);
   }
 
   public get pointValue() {
@@ -361,15 +290,19 @@ export class Unit extends Widget {
     return GetUnitRace(this.handle);
   }
 
-  public get rallyDestructable() {
+  public get rallyDestructable(): Destructable | undefined {
     return Destructable.fromHandle(GetUnitRallyDestructable(this.handle));
   }
 
-  public get rallyPoint() {
+  /**
+   * The unit's rally point, or undefined for a unit that has none: a lookup,
+   * although the game allocates a new location each time it returns one.
+   */
+  public get rallyPoint(): Point | undefined {
     return Point.fromHandle(GetUnitRallyPoint(this.handle));
   }
 
-  public get rallyUnit() {
+  public get rallyUnit(): Unit | undefined {
     return Unit.fromHandle(GetUnitRallyUnit(this.handle));
   }
 
@@ -548,8 +481,11 @@ export class Unit extends Widget {
     return UnitAddItem(this.handle, whichItem.handle);
   }
 
-  public addItemById(itemId: number) {
-    return Item.fromHandle(UnitAddItemById(this.handle, itemId));
+  public addItemById(itemId: number): Item {
+    return Item.expect(
+      UnitAddItemById(this.handle, itemId),
+      rawcodeToString(itemId),
+    );
   }
 
   public addItemToSlotById(itemId: number, itemSlot: number) {
@@ -826,7 +762,7 @@ export class Unit extends Widget {
     return GetHeroInt(this.handle, includeBonuses);
   }
 
-  public getItemInSlot(slot: number) {
+  public getItemInSlot(slot: number): Item | undefined {
     return Item.fromHandle(UnitItemInSlot(this.handle, slot));
   }
 
@@ -1172,7 +1108,7 @@ export class Unit extends Widget {
    * the ground at the Hero's feed
    * @param itemSlot
    */
-  public removeItemFromSlot(itemSlot: number) {
+  public removeItemFromSlot(itemSlot: number): Item | undefined {
     return Item.fromHandle(UnitRemoveItemFromSlot(this.handle, itemSlot));
   }
 
@@ -1339,9 +1275,14 @@ export class Unit extends Widget {
     SetUnitOwner(this.handle, whichPlayer.handle, changeColor);
   }
 
-  // TODO: test if GetOwningPlayer() ever returns null.
-  public getOwner() {
-    return MapPlayer.fromHandle(GetOwningPlayer(this.handle));
+  /**
+   * The unit's owner. A live unit always has one, which the Typings cannot
+   * express for the Wrapper, so this goes through the creation helper: typed
+   * non-null, and should the game ever break that invariant it throws
+   * `reforged-ts: failed to create MapPlayer` instead of returning undefined.
+   */
+  public getOwner(): MapPlayer {
+    return MapPlayer.expect(GetOwningPlayer(this.handle));
   }
 
   public setPoint(point: Point) {
@@ -1353,8 +1294,8 @@ export class Unit extends Widget {
    * of the zeppelin but the last position of the unit before it was loaded into
    * the zeppelin.
    */
-  public getPoint() {
-    return Point.fromHandle(GetUnitLoc(this.handle));
+  public getPoint(): Point {
+    return Point.expect(GetUnitLoc(this.handle));
   }
 
   public setPathing(flag: boolean) {
@@ -1494,23 +1435,16 @@ export class Unit extends Widget {
     return GetFoodUsed(unitId);
   }
 
-  public static fromEnum() {
+  public static fromEnum(): Unit | undefined {
     return this.fromHandle(GetEnumUnit());
   }
 
-  public static override fromEvent() {
+  public static override fromEvent(): Unit | undefined {
     return this.fromHandle(GetTriggerUnit());
   }
 
-  public static fromFilter() {
+  public static fromFilter(): Unit | undefined {
     return this.fromHandle(GetFilterUnit());
-  }
-
-  public static override fromHandle(
-    handle: unit | undefined,
-  ): Unit | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 
   public static getPointValueByType(unitType: number) {

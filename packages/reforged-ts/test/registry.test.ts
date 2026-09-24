@@ -9,7 +9,7 @@ import { defined } from "./support/defined";
 
 describe("the Handle registry", () => {
   const owner = defined(MapPlayer.fromIndex(0), "MapPlayer.fromIndex(0)");
-  const unit = defined(Unit.create(owner, FourCC("hfoo"), 0, 0), "Unit.create");
+  const unit = Unit.create(owner, FourCC("hfoo"), 0, 0);
 
   it("returns the same Unit for a handle every time", () => {
     expect(Unit.fromHandle(unit.handle)).toBe(unit);

@@ -1,40 +1,11 @@
 /** @noSelfInFile * */
 
 import { Handle } from "./handle";
-// eslint-disable-next-line import-x/no-cycle -- force and player import each other; type-only imports in step 3 (#51) break the cycle
 import { MapPlayer } from "./player";
 
 export class Force extends Handle<force> {
-  /**
-   * @deprecated use `Force.create` instead.
-   */
-  constructor() {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-
-    const handle = CreateForce();
-
-    if (handle === undefined) {
-      error("w3ts failed to create force handle.", 3);
-    }
-
-    super(handle);
-  }
-
-  public static create(): Force | undefined {
-    const handle = CreateForce();
-
-    if (handle) {
-      const obj = this.getObject(handle) as Force;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+  public static create(): Force {
+    return this.expect(CreateForce());
   }
 
   public addPlayer(whichPlayer: MapPlayer) {
@@ -117,12 +88,14 @@ export class Force extends Handle<force> {
     ForceRemovePlayer(this.handle, whichPlayer.handle);
   }
 
-  public static fromPlayer(whichPlayer: MapPlayer) {
-    return this.fromHandle(GetForceOfPlayer(whichPlayer.handle));
-  }
-
-  public static fromHandle(handle: force | undefined): Force | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
+  /**
+   * A new force holding `whichPlayer`: a creation, a new force on every call.
+   */
+  public static fromPlayer(whichPlayer: MapPlayer): Force {
+    const handle = CreateForce();
+    if (handle !== undefined) {
+      ForceAddPlayer(handle, whichPlayer.handle);
+    }
+    return this.expect(handle);
   }
 }

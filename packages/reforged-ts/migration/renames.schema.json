@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "reforged-ts rename map",
+  "description": "Every public symbol a major version removed or renamed, with its replacement. The migration guide and the legacy-names lint rule are generated from it.",
+  "type": "array",
+  "items": { "$ref": "#/$defs/entry" },
+  "$defs": {
+    "symbol": {
+      "description": "A class, or a class-qualified static or instance member, as an author writes it; `(...)` marks a call.",
+      "type": "string",
+      "pattern": "^[A-Za-z_$][\\w$]*(\\.[A-Za-z_$][\\w$]*)?(\\(\\.\\.\\.\\))?$"
+    },
+    "version": {
+      "description": "A package and its major version.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*@[0-9]+$"
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["old", "new", "kind", "versions", "oneToOne", "note"],
+      "properties": {
+        "old": {
+          "description": "The symbol as an author of the `from` version wrote it: `new Unit(...)`, `Group.getEnumUnit`, `Frame.parent`.",
+          "type": "string",
+          "pattern": "^(new )?[A-Za-z_$][\\w$]*(\\.[A-Za-z_$][\\w$]*)?(\\(\\.\\.\\.\\))?$"
+        },
+        "new": {
+          "description": "The replacement as the author will write it; several when the old symbol splits (a get/set pair, overloads mapped by argument shape); null when there is none.",
+          "oneOf": [
+            { "$ref": "#/$defs/symbol" },
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/symbol" },
+              "minItems": 2,
+              "uniqueItems": true
+            },
+            { "type": "null" }
+          ]
+        },
+        "kind": {
+          "description": "What the old symbol is.",
+          "enum": [
+            "constructor",
+            "member",
+            "accessor",
+            "function",
+            "class",
+            "type"
+          ]
+        },
+        "versions": {
+          "description": "The major versions the entry applies between.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["from", "to"],
+          "properties": {
+            "from": { "$ref": "#/$defs/version" },
+            "to": { "$ref": "#/$defs/version" }
+          }
+        },
+        "oneToOne": {
+          "description": "Whether the rewrite is mechanical: replacing the old symbol with the new one keeps the arguments. The lint rule autofixes only these.",
+          "type": "boolean"
+        },
+        "note": {
+          "description": "Why the symbol changed, in one sentence.",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "if": {
+        "required": ["oneToOne"],
+        "properties": { "oneToOne": { "const": true } }
+      },
+      "then": {
+        "properties": { "new": { "$ref": "#/$defs/symbol" } }
+      }
+    }
+  }
+}

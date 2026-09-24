@@ -9,7 +9,8 @@ export * from "./force";
 export * from "./frame";
 export * from "./gamecache";
 export * from "./group";
-export * from "./handle";
+// Not `export *`: `expectWrapper` stays package-internal (Camera's creation route).
+export { Handle } from "./handle";
 export * from "./image";
 export * from "./item";
 export * from "./leaderboard";

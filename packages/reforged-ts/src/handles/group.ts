@@ -4,39 +4,12 @@ import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
 import { Rectangle } from "./rect";
-// eslint-disable-next-line import-x/no-cycle -- group and unit import each other; type-only imports in step 3 (#51) break the cycle
 import { Unit } from "./unit";
 import { Widget } from "./widget";
 
 export class Group extends Handle<group> {
-  /**
-   * @deprecated use `Group.create` instead.
-   */
-  constructor() {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = CreateGroup();
-
-    if (handle === undefined) {
-      error("w3ts failed to create group handle.", 3);
-    }
-
-    super(handle);
-  }
-
-  public static create(): Group | undefined {
-    const handle = CreateGroup();
-    if (handle) {
-      const obj = this.getObject(handle) as Group;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+  public static create(): Group {
+    return this.expect(CreateGroup());
   }
 
   public addGroupFast(addGroup: Group): number {
@@ -204,7 +177,7 @@ export class Group extends Handle<group> {
    * holds a reference to that unit but that unit is pretty much null.
    * See http://wc3c.net/showthread.php?t=104464.
    */
-  public get first() {
+  public get first(): Unit | undefined {
     return Unit.fromHandle(FirstOfGroup(this.handle));
   }
 
@@ -223,7 +196,7 @@ export class Group extends Handle<group> {
     return units;
   }
 
-  public getUnitAt(index: number) {
+  public getUnitAt(index: number): Unit | undefined {
     return Unit.fromHandle(BlzGroupUnitAt(this.handle, index));
   }
 
@@ -269,18 +242,5 @@ export class Group extends Handle<group> {
 
   public removeUnit(whichUnit: Unit): boolean {
     return GroupRemoveUnit(this.handle, whichUnit.handle);
-  }
-
-  public static fromHandle(handle: group | undefined): Group | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
-  }
-
-  public static getEnumUnit() {
-    return Unit.fromHandle(GetEnumUnit());
-  }
-
-  public static getFilterUnit() {
-    return Unit.fromHandle(GetFilterUnit());
   }
 }

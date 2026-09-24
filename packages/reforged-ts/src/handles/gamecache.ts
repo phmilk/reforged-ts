@@ -7,41 +7,12 @@ export class GameCache extends Handle<gamecache> {
   public readonly filename?: string;
 
   /**
-   * @deprecated use `GameCache.create` instead.
-   */
-  constructor(campaignFile: string) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-
-    const handle = InitGameCache(campaignFile);
-
-    if (handle === undefined) {
-      error("w3ts failed to create gamecache handle.", 3);
-    }
-
-    super(handle);
-    this.filename = campaignFile;
-  }
-
-  /**
    * @note You cannot create more than 255 gamecaches
    */
-  public static create(campaignFile: string): GameCache | undefined {
-    const handle = InitGameCache(campaignFile);
-
-    if (handle) {
-      const obj = this.getObject(handle) as GameCache;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-      values.filename = campaignFile;
-
-      return Object.assign(obj, values);
-    }
-
-    return undefined;
+  public static create(campaignFile: string): GameCache {
+    return this.expect(InitGameCache(campaignFile), campaignFile, (cache) => {
+      cache.filename = campaignFile;
+    });
   }
 
   public flush() {
@@ -159,35 +130,23 @@ export class GameCache extends Handle<gamecache> {
   }
 
   public syncBoolean(missionKey: string, key: string) {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
-    return SyncStoredBoolean(this.handle, missionKey, key);
+    SyncStoredBoolean(this.handle, missionKey, key);
   }
 
   public syncInteger(missionKey: string, key: string) {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
-    return SyncStoredInteger(this.handle, missionKey, key);
+    SyncStoredInteger(this.handle, missionKey, key);
   }
 
   public syncNumber(missionKey: string, key: string) {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
-    return SyncStoredReal(this.handle, missionKey, key);
+    SyncStoredReal(this.handle, missionKey, key);
   }
 
   public syncString(missionKey: string, key: string) {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
-    return SyncStoredString(this.handle, missionKey, key);
+    SyncStoredString(this.handle, missionKey, key);
   }
 
   public syncUnit(missionKey: string, key: string) {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 3 (#51) removes it
-    return SyncStoredUnit(this.handle, missionKey, key);
-  }
-
-  public static fromHandle(
-    handle: gamecache | undefined,
-  ): GameCache | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
+    SyncStoredUnit(this.handle, missionKey, key);
   }
 
   public static reloadFromDisk() {

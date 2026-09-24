@@ -4,35 +4,13 @@ import { Handle } from "./handle";
 import { Point } from "./point";
 
 export class Rectangle extends Handle<rect> {
-  /**
-   * @deprecated use `Rectangle.create` instead.
-   */
-  constructor(minX: number, minY: number, maxX: number, maxY: number) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = Rect(minX, minY, maxX, maxY);
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
-    if (handle === undefined) {
-      error("w3ts failed to create rect handle.", 3);
-    }
-    super(handle);
-  }
-
   public static create(
     minX: number,
     minY: number,
     maxX: number,
     maxY: number,
   ): Rectangle {
-    const handle = Rect(minX, minY, maxX, maxY);
-    const obj = this.getObject(handle) as Rectangle;
-
-    const values: Record<string, unknown> = {};
-    values.handle = handle;
-
-    return Object.assign(obj, values);
+    return this.expect(Rect(minX, minY, maxX, maxY));
   }
 
   public get centerX() {
@@ -98,17 +76,12 @@ export class Rectangle extends Handle<rect> {
     SetRectFromLoc(this.handle, min.handle, max.handle);
   }
 
-  public static fromHandle(handle: rect | undefined): Rectangle | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
-  }
-
-  public static fromPoint(min: Point, max: Point) {
-    return this.fromHandle(RectFromLoc(min.handle, max.handle));
+  public static fromPoint(min: Point, max: Point): Rectangle {
+    return this.expect(RectFromLoc(min.handle, max.handle));
   }
 
   // Returns full map bounds, including unplayable borders, in world coordinates
-  public static getWorldBounds() {
-    return Rectangle.fromHandle(GetWorldBounds());
+  public static getWorldBounds(): Rectangle {
+    return this.expect(GetWorldBounds());
   }
 }

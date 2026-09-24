@@ -3,36 +3,12 @@
 import { Handle } from "./handle";
 
 export class MultiboardItem extends Handle<multiboarditem> {
-  /**
-   * @deprecated use `MultiboardItem.create` instead.
-   */
-  constructor(board: Multiboard, x: number, y: number) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = MultiboardGetItem(board.handle, x - 1, y - 1);
-    if (handle === undefined) {
-      error("w3ts failed to create multiboarditem handle.", 3);
-    }
-    super(handle);
-  }
-
   public static create(
     board: Multiboard,
     x: number,
     y: number,
-  ): MultiboardItem | undefined {
-    const handle = MultiboardGetItem(board.handle, x - 1, y - 1);
-    if (handle) {
-      const obj = this.getObject(handle) as MultiboardItem;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+  ): MultiboardItem {
+    return this.expect(MultiboardGetItem(board.handle, x - 1, y - 1));
   }
 
   public destroy() {
@@ -63,45 +39,15 @@ export class MultiboardItem extends Handle<multiboarditem> {
   public setWidth(width: number) {
     MultiboardSetItemWidth(this.handle, width);
   }
-
-  public static fromHandle(handle: multiboarditem): MultiboardItem {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return this.getObject(handle);
-  }
 }
 
 export class Multiboard extends Handle<multiboard> {
   /**
-   * @deprecated use `Multiboard.create` instead.
-   * @bug Do not use this in a global initialisation as it crashes the game there.
-   */
-  constructor() {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = CreateMultiboard();
-    if (handle === undefined) {
-      error("w3ts failed to create multiboard handle.", 3);
-    }
-    super(handle);
-  }
-
-  /**
    * Create a Multiboard object
    * @bug Do not use this in a global initialisation as it crashes the game there.
    */
-  public static create(): Multiboard | undefined {
-    const handle = CreateMultiboard();
-    if (handle) {
-      const obj = this.getObject(handle) as Multiboard;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+  public static create(): Multiboard {
+    return this.expect(CreateMultiboard());
   }
 
   public get columns() {
@@ -139,7 +85,7 @@ export class Multiboard extends Handle<multiboard> {
     MultiboardClear(this.handle);
   }
 
-  public createItem(x: number, y: number) {
+  public createItem(x: number, y: number): MultiboardItem {
     return MultiboardItem.create(this, x, y);
   }
 
@@ -197,13 +143,6 @@ export class Multiboard extends Handle<multiboard> {
     alpha: number,
   ) {
     MultiboardSetTitleTextColor(this.handle, red, green, blue, alpha);
-  }
-
-  public static fromHandle(
-    handle: multiboard | undefined,
-  ): Multiboard | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 
   /**

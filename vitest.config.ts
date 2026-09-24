@@ -1,7 +1,8 @@
 import { defineConfig } from "vitest/config";
 
-// One vitest run over the workspace, one project per package. `pnpm test`
-// runs them all; a package's own `test` script selects its project.
+// One vitest run over the workspace, one project per package (two for the
+// library: its Lua tests and its Node tests). `pnpm test` runs them all; a
+// package's own `test` script selects its projects.
 export default defineConfig({
   test: {
     projects: [
@@ -38,13 +39,35 @@ export default defineConfig({
           globalSetup: ["test/harness/compile.ts"],
         },
       },
+      {
+        // The library's Node-side tests, run from source; typescript-to-lua
+        // never sees test/node. The fixtures are Map project sources the
+        // tests read, not tests.
+        test: {
+          name: "reforged-ts-node",
+          root: "packages/reforged-ts",
+          include: ["test/node/**/*.test.ts"],
+          exclude: ["test/node/fixtures/**"],
+          environment: "node",
+        },
+      },
     ],
-    // The library's Lua tests are not in the vitest module graph: a change to
-    // a library source or a test reruns the spec that runs them.
+    // Neither the library's Lua tests nor the sources, fixtures and rename
+    // map the Node tests read are in the vitest module graph: a change to one
+    // of them reruns the spec that reads it.
     watchTriggerPatterns: [
       {
-        pattern: /\/packages\/reforged-ts\/(src|test)\/.+\.ts$/,
+        pattern: /\/packages\/reforged-ts\/(?:src|test(?!\/node\/))\/.+\.ts$/,
         testsToRun: () => "packages/reforged-ts/test/harness/lua.spec.ts",
+      },
+      {
+        pattern:
+          /\/packages\/reforged-ts\/(?:src|test\/node\/fixtures)\/.+\.ts$/,
+        testsToRun: () => "packages/reforged-ts/test/node/declarations.test.ts",
+      },
+      {
+        pattern: /\/packages\/reforged-ts\/(?:src\/.+\.ts|migration\/.+)$/,
+        testsToRun: () => "packages/reforged-ts/test/node/renames.test.ts",
       },
     ],
   },

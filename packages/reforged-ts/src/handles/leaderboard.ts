@@ -5,38 +5,12 @@ import { MapPlayer } from "./player";
 
 export class Leaderboard extends Handle<leaderboard> {
   /**
-   * @deprecated use `Leaderboard.create` instead.
-   */
-  constructor() {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = CreateLeaderboard();
-
-    if (handle === undefined) {
-      error("w3ts failed to create leaderboard handle.", 3);
-    }
-
-    super(handle);
-  }
-
-  /**
    * Create a Leaderboard object
    * @note Leaderboards initially have 0 rows, 0 columns, and no label.
    * @bug Do not use this in a global initialisation as it crashes the game there.
    */
-  public static create(): Leaderboard | undefined {
-    const handle = CreateLeaderboard();
-    if (handle) {
-      const obj = this.getObject(handle) as Leaderboard;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+  public static create(): Leaderboard {
+    return this.expect(CreateLeaderboard());
   }
 
   public addItem(label: string, value: number, p: MapPlayer) {
@@ -183,14 +157,7 @@ export class Leaderboard extends Handle<leaderboard> {
     return LeaderboardGetLabelText(this.handle) ?? "";
   }
 
-  public static fromHandle(
-    handle: leaderboard | undefined,
-  ): Leaderboard | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
-  }
-
-  public static fromPlayer(p: MapPlayer) {
+  public static fromPlayer(p: MapPlayer): Leaderboard | undefined {
     return this.fromHandle(PlayerGetLeaderboard(p.handle));
   }
 }

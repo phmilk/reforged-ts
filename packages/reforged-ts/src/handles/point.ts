@@ -4,34 +4,12 @@ import { Handle } from "./handle";
 
 export class Point extends Handle<location> {
   /**
-   * @deprecated use `Point.create` instead.
-   */
-  constructor(x: number, y: number) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = Location(x, y);
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
-    if (handle === undefined) {
-      error("w3ts failed to create player handle.", 3);
-    }
-    super(handle);
-  }
-
-  /**
    * Creates a new location handle. Generally, raw coordinates should be used instead.
    * @param x
    * @param y
    */
   public static create(x: number, y: number): Point {
-    const handle = Location(x, y);
-    const obj = this.getObject(handle) as Point;
-
-    const values: Record<string, unknown> = {};
-    values.handle = handle;
-
-    return Object.assign(obj, values);
+    return this.expect(Location(x, y));
   }
 
   public get x(): number {
@@ -67,10 +45,5 @@ export class Point extends Handle<location> {
 
   public setPosition(x: number, y: number) {
     MoveLocation(this.handle, x, y);
-  }
-
-  public static fromHandle(handle: location | undefined): Point | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }

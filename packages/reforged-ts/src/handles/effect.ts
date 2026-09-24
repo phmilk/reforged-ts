@@ -1,5 +1,6 @@
 /** @noSelfInFile */
 
+import { rawcodeToString } from "../utils/rawcode";
 import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
@@ -11,72 +12,13 @@ export class Effect extends Handle<effect> {
   public readonly attachPointName?: string;
 
   /**
-   * @deprecated use `Effect.create` or `Effect.createAttachment` instead.
-   * @param modelName The path of the model that the effect will use.
-   * @param x
-   * @param y
-   */
-  constructor(modelName: string, x: number, y: number);
-
-  /**
-   * @deprecated use `Effect.create` or `Effect.createAttachment` instead.
-   * @param modelName The path of the model that the effect will use.
-   * @param targetWidget The widget to attach the effect to.
-   * @param attachPointName The attachment point of the widget where the effect will
-   * be placed. Attachment points are points in a model that can be referenced to as
-   * areas for effects to be attached, whether it be from a spell or this function.
-   * If the attachment point does not exist, it will attach the effect to the model's origin.
-   */
-  constructor(modelName: string, targetWidget: Widget, attachPointName: string);
-
-  constructor(modelName: string, a: number | Widget, b: number | string) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-
-    let handle: effect | undefined;
-
-    if (typeof a === "number" && typeof b === "number") {
-      handle = AddSpecialEffect(modelName, a, b);
-    } else if (typeof a !== "number" && typeof b === "string") {
-      handle = AddSpecialEffectTarget(modelName, a.handle, b);
-    }
-
-    if (handle === undefined) {
-      error("w3ts failed to create effect handle.", 3);
-    }
-
-    super(handle);
-
-    if (typeof a !== "number" && typeof b === "string") {
-      this.attachWidget = a;
-      this.attachPointName = b;
-    }
-  }
-
-  /**
    * Creates a special effect.
    * @param modelName The path of the model that the effect will use.
    * @param x
    * @param y
    */
-  public static create(
-    modelName: string,
-    x: number,
-    y: number,
-  ): Effect | undefined {
-    const handle = AddSpecialEffect(modelName, x, y);
-    if (handle) {
-      const obj = this.getObject(handle) as Effect;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-
-    return undefined;
+  public static create(modelName: string, x: number, y: number): Effect {
+    return this.expect(AddSpecialEffect(modelName, x, y), modelName);
   }
 
   /**
@@ -92,23 +34,15 @@ export class Effect extends Handle<effect> {
     modelName: string,
     targetWidget: Widget,
     attachPointName: string,
-  ): Effect | undefined {
-    const handle = AddSpecialEffectTarget(
+  ): Effect {
+    return this.expect(
+      AddSpecialEffectTarget(modelName, targetWidget.handle, attachPointName),
       modelName,
-      targetWidget.handle,
-      attachPointName,
+      (effect) => {
+        effect.attachWidget = targetWidget;
+        effect.attachPointName = attachPointName;
+      },
     );
-    if (handle) {
-      const obj = this.getObject(handle) as Effect;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-      values.attachWidget = targetWidget;
-      values.attachPointName = attachPointName;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
   }
 
   /**
@@ -123,17 +57,11 @@ export class Effect extends Handle<effect> {
     effectType: effecttype,
     x: number,
     y: number,
-  ): Effect | undefined {
-    const handle = AddSpellEffectById(abilityId, effectType, x, y);
-    if (handle) {
-      const obj = this.getObject(handle) as Effect;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+  ): Effect {
+    return this.expect(
+      AddSpellEffectById(abilityId, effectType, x, y),
+      rawcodeToString(abilityId),
+    );
   }
 
   /**
@@ -143,7 +71,7 @@ export class Effect extends Handle<effect> {
    * const peasant = Unit.create(red, FourCC("hpea"), 0, 0);
    * // Create Thunder Clap's caster art effect attached to "origin" of peasant.
    * const clap = Effect.createSpellAttachment(FourCC("AHtc"), EFFECT_TYPE_CASTER, peasant, "origin");
-   * clap?.destroy();
+   * clap.destroy();
    * ```
    */
   public static createSpellAttachment(
@@ -151,24 +79,20 @@ export class Effect extends Handle<effect> {
     effectType: effecttype,
     targetWidget: Widget,
     attachPointName: string,
-  ): Effect | undefined {
-    const handle = AddSpellEffectTargetById(
-      abilityId,
-      effectType,
-      targetWidget.handle,
-      attachPointName,
+  ): Effect {
+    return this.expect(
+      AddSpellEffectTargetById(
+        abilityId,
+        effectType,
+        targetWidget.handle,
+        attachPointName,
+      ),
+      rawcodeToString(abilityId),
+      (effect) => {
+        effect.attachWidget = targetWidget;
+        effect.attachPointName = attachPointName;
+      },
     );
-    if (handle) {
-      const obj = this.getObject(handle) as Effect;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-      values.attachWidget = targetWidget;
-      values.attachPointName = attachPointName;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
   }
 
   public get scale() {
@@ -296,10 +220,5 @@ export class Effect extends Handle<effect> {
 
   public setYaw(y: number) {
     BlzSetSpecialEffectYaw(this.handle, y);
-  }
-
-  public static fromHandle(handle: effect | undefined): Effect | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
   }
 }

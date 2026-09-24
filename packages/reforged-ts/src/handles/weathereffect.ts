@@ -1,22 +1,10 @@
 /** @noSelfInFile */
 
+import { rawcodeToString } from "../utils/rawcode";
 import { Handle } from "./handle";
 import { Rectangle } from "./rect";
 
 export class WeatherEffect extends Handle<weathereffect> {
-  /** @deprecated use `WeatherEffect.create` instead. */
-  constructor(where: Rectangle, effectID: number) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = AddWeatherEffect(where.handle, effectID);
-    if (handle === undefined) {
-      error("w3ts failed to create unit handle.", 3);
-    }
-    super(handle);
-  }
-
   /**
    * Adds a weather effect.
    * @param where The rect to apply the WeatherEffect to.
@@ -26,20 +14,11 @@ export class WeatherEffect extends Handle<weathereffect> {
    * @note To get an idea on how to add your own weather effects, you may read
    * CryoniC's article about custom weather effects: [http://www.wc3c.net/showthread.php?t=67949](https://web.archive.org/web/20180507060112/http://www.wc3c.net/showthread.php?t=67949).
    */
-  public static create(
-    where: Rectangle,
-    effectID: number,
-  ): WeatherEffect | undefined {
-    const handle = AddWeatherEffect(where.handle, effectID);
-    if (handle) {
-      const obj = this.getObject(handle) as WeatherEffect;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
+  public static create(where: Rectangle, effectID: number): WeatherEffect {
+    return this.expect(
+      AddWeatherEffect(where.handle, effectID),
+      rawcodeToString(effectID),
+    );
   }
 
   public destroy() {
@@ -48,10 +27,5 @@ export class WeatherEffect extends Handle<weathereffect> {
 
   public enable(flag: boolean) {
     EnableWeatherEffect(this.handle, flag);
-  }
-
-  public static fromHandle(handle: weathereffect): WeatherEffect {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return this.getObject(handle);
   }
 }

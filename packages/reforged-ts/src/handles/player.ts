@@ -1,39 +1,16 @@
 /** @noSelfInFile */
 
-// eslint-disable-next-line import-x/no-cycle -- player and force import each other; type-only imports in step 3 (#51) break the cycle
-import { Force } from "./force";
+import type { Force } from "./force";
 import { Handle } from "./handle";
-import { Point } from "./point";
+import type { Point } from "./point";
 
+/**
+ * A player slot. Players are not created: the game has one per slot, and
+ * `fromIndex` looks it up. A Map project may extend this class with its own
+ * player model; the lookups inherited from the base then give instances of
+ * the subclass.
+ */
 export class MapPlayer extends Handle<player> {
-  /**
-   * @deprecated use `MapPlayer.create` instead.
-   */
-  private constructor(index: number) {
-    if (Handle.initFromHandle()) {
-      super();
-      return;
-    }
-    const handle = Player(index);
-    if (handle === undefined) {
-      error("w3ts failed to create player handle.", 3);
-    }
-    super(handle);
-  }
-
-  private static create(index: number): MapPlayer | undefined {
-    const handle = Player(index);
-    if (handle) {
-      const obj = this.getObject(handle) as MapPlayer;
-
-      const values: Record<string, unknown> = {};
-      values.handle = handle;
-
-      return Object.assign(obj, values);
-    }
-    return undefined;
-  }
-
   public set color(color: playercolor) {
     SetPlayerColor(this.handle, color);
   }
@@ -299,39 +276,35 @@ export class MapPlayer extends Handle<player> {
     SetPlayerUnitsOwner(this.handle, newOwner);
   }
 
-  public static fromEnum() {
-    return MapPlayer.fromHandle(GetEnumPlayer());
+  public static fromEnum(): MapPlayer | undefined {
+    return this.fromHandle(GetEnumPlayer());
   }
 
-  public static fromEvent() {
-    return MapPlayer.fromHandle(GetTriggerPlayer());
+  public static fromEvent(): MapPlayer | undefined {
+    return this.fromHandle(GetTriggerPlayer());
   }
 
-  public static fromFilter() {
-    return MapPlayer.fromHandle(GetFilterPlayer());
+  public static fromFilter(): MapPlayer | undefined {
+    return this.fromHandle(GetFilterPlayer());
   }
 
-  public static fromHandle(handle: player | undefined): MapPlayer | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- getObject returns the registry's any; step 3 (#51) removes it
-    return handle ? this.getObject(handle) : undefined;
-  }
-
-  public static fromIndex(index: number) {
+  /**
+   * The player in slot `index`, or undefined for a slot the game has no
+   * player for.
+   */
+  public static fromIndex(index: number): MapPlayer | undefined {
     return this.fromHandle(Player(index));
   }
 
   /**
+   * The local player. `GetLocalPlayer` never returns nothing, which the
+   * Typings cannot express for the Wrapper, so this goes through the creation
+   * helper: typed non-null, and should the game ever break that invariant it
+   * throws `reforged-ts: failed to create MapPlayer` instead of returning
+   * undefined.
    * @async
    */
-  public static fromLocal() {
-    const pl = GetLocalPlayer();
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the Typings type this Native result non-null; creation and lookups get one error rule; step 3 (#51) removes it
-    if (pl === undefined) {
-      for (let i = 0; i < 10; i++) {
-        print("$$$$$$$$$ LOCAL PLAYER IS NULL. TELL ME");
-      }
-    }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- a lookup used as non-null; lookups get one documented non-null path; step 3 (#51) removes it
-    return this.fromHandle(pl)!;
+  public static fromLocal(): MapPlayer {
+    return this.expect(GetLocalPlayer());
   }
 }

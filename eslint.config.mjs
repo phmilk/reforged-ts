@@ -50,6 +50,20 @@ export default defineConfig(
       "import-x/no-cycle": "error",
     },
   },
+  // The library's declaration fixtures import `reforged-ts` as a Map project
+  // does; their tsconfig maps it to the sources for the import resolver, which
+  // otherwise reads the root tsconfig.json.
+  {
+    files: ["packages/reforged-ts/test/node/fixtures/declarations/**/*.ts"],
+    settings: {
+      "import-x/resolver": {
+        typescript: {
+          project:
+            "packages/reforged-ts/test/node/fixtures/declarations/tsconfig.json",
+        },
+      },
+    },
+  },
   // Last: Prettier formats, and eslint-config-prettier turns off the rules
   // that would fight it.
   prettierRecommended,
