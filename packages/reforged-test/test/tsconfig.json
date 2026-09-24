@@ -1,0 +1,10 @@
+{
+  // The glue tests, the vitest configuration and the fixture project's spec:
+  // type-checked only; vitest runs them from source.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "noEmit": true
+  },
+  "include": [".", "../vitest.config.ts"]
+}
