@@ -6,7 +6,7 @@
 // in for every Wrapper on the base.
 
 import { describe, expect, it } from "reforged-test/lua";
-import { Timer } from "../src/index";
+import { Handle, Timer } from "../src/index";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -26,6 +26,17 @@ class NamedTimer extends Timer {
     return this.expect(CreateTimer(), purpose, (timer) => {
       timer.purpose = purpose;
     });
+  }
+}
+
+/**
+ * A Map project's own Wrapper on the Handle base itself, for a Handle type
+ * the library does not wrap: no constructor, the inherited lookup and the
+ * creation helper.
+ */
+class Stopwatch extends Handle<timer> {
+  public static create(): Stopwatch {
+    return this.expect(CreateTimer(), "stopwatch");
   }
 }
 
@@ -128,5 +139,29 @@ describe("the creation helper's init", () => {
     const timer = NamedTimer.createNamed("respawn");
     expect(timer.purpose).toEqual("respawn");
     expect(NamedTimer.fromHandle(timer.handle)).toBe(timer);
+  });
+});
+
+describe("a Map project's Wrapper on the Handle base", () => {
+  it("creates, registers and finds its Wrapper through the base", () => {
+    const stopwatch = Stopwatch.create();
+    expect(stopwatch instanceof Stopwatch).toEqual(true);
+    expect(stopwatch instanceof Handle).toEqual(true);
+    expect(Stopwatch.fromHandle(stopwatch.handle)).toBe(stopwatch);
+    expect(stopwatch.id).toEqual(GetHandleId(stopwatch.handle));
+  });
+
+  it("throws the standard message when the Native returns nothing", () => {
+    const message = withNative(
+      "CreateTimer",
+      () => undefined,
+      () =>
+        raisedIn(() => {
+          Stopwatch.create();
+        }),
+    );
+    expect(message).toEqual(
+      "reforged-ts: failed to create Stopwatch (stopwatch)",
+    );
   });
 });
