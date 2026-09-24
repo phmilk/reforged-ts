@@ -1,0 +1,24 @@
+{
+  // The library's tests on the reforged-test harness: typescript-to-lua
+  // compiles src and the tests together to ../dist-test, where the glue finds
+  // them. The vitest global setup (harness/compile.ts) runs this compile
+  // before every run. The tests import the library through relative paths
+  // into src; module names are relative to the package root (src.index,
+  // test.unit_test).
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "outDir": "../dist-test",
+    "declaration": false
+  },
+  "include": ["../src", "."],
+  // The Node side has its own tsconfig; typescript-to-lua must not see it.
+  "exclude": ["harness"],
+  // The default build mode, unlike the library's, resolves the imports of
+  // packages: it copies the runner's Lua to lua_modules/reforged-test/lua/
+  // and requires it from there, as a Map project's build does. The other
+  // typescript-to-lua options come from the package tsconfig.
+  "tstl": {
+    "buildMode": "default"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  // The workspace's vitest configuration, as the editor and the lint see it:
+  // type-checked only; vitest loads it natively (the root package is ESM).
+  // A solution file cannot own files, so the root tsconfig.json references
+  // this one. skipLibCheck: vitest's declarations pull in tinybench's, which
+  // name DOM types a Node program does not have.
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": [],
+    "noEmit": true,
+    "strict": true,
+    "verbatimModuleSyntax": true,
+    "forceConsistentCasingInFileNames": true,
+    "newLine": "lf",
+    "skipLibCheck": true
+  },
+  "files": ["vitest.config.ts"]
+}

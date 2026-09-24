@@ -30,7 +30,7 @@ export function functionHeader(fn: ResolvedFunction): string[] {
 function functionTags(fn: ResolvedFunction): string[] {
   return [
     ...fn.params.map(
-      (param) => `@param ${param.name} - ${docType(param.type)}`
+      (param) => `@param ${param.name} - ${docType(param.type)}`,
     ),
     `@returns ${docType(fn.returns)}`,
     ...factTags(fn.overlay),

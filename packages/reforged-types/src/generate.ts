@@ -92,7 +92,7 @@ export async function generate(input: GenerateInput): Promise<GenerateResult> {
   const patches: VendoredPatch[] = [];
   for (const patchDir of patchDirs) {
     patches.push(
-      await readPatch(patchDir, prefix ? `${basename(patchDir)}/` : "")
+      await readPatch(patchDir, prefix ? `${basename(patchDir)}/` : ""),
     );
   }
   patches.sort((a, b) => compareBuilds(a.patch, b.patch));
@@ -112,7 +112,7 @@ export async function generate(input: GenerateInput): Promise<GenerateResult> {
 
   // The newest Build of each Game version generates its folder.
   const generated = patches.filter(
-    (p, i) => gameVersion(patches[i + 1]?.patch ?? "") !== gameVersion(p.patch)
+    (p, i) => gameVersion(patches[i + 1]?.patch ?? "") !== gameVersion(p.patch),
   );
   const resolved = new Map<VendoredPatch, Resolved[]>();
   const reported = new Set<string>();
@@ -131,8 +131,8 @@ export async function generate(input: GenerateInput): Promise<GenerateResult> {
       ...orphans(
         patches.flatMap((p) => p.declarations),
         overlay,
-        patches.map((p) => p.patch)
-      )
+        patches.map((p) => p.patch),
+      ),
     );
   }
 
@@ -143,29 +143,31 @@ export async function generate(input: GenerateInput): Promise<GenerateResult> {
 
   const files = new Map<string, string>();
   for (const patch of generated) {
-    const identity = patch.identity!;
-    const declarations = resolved.get(patch)!;
+    // Every generated Patch has an identity and a resolution (see above).
+    const { identity } = patch;
+    if (identity === undefined) continue;
+    const declarations = resolved.get(patch) ?? [];
     const folder = gameVersion(identity.patch);
     for (const source of SOURCES) {
       const ofSource = declarations.filter((d) => d.source === source);
       files.set(
         `${folder}/${source}.d.ts`,
-        emitFile(source, ofSource, identity)
+        emitFile(source, ofSource, identity),
       );
     }
     files.set(
       `${folder}/${MANIFEST_FILE}`,
-      emitManifest(identity.patch, declarations)
+      emitManifest(identity.patch, declarations),
     );
     files.set(`${folder}.d.ts`, emitEntry(identity));
   }
   files.set(
     ASYNC_NATIVES_FILE,
-    emitAsyncNatives([...resolved.values()].flat())
+    emitAsyncNatives([...resolved.values()].flat()),
   );
   return {
     ok: true,
-    patch: generated.at(-1)!.patch,
+    patch: generated[generated.length - 1].patch,
     patches: generated.map((p) => p.patch),
     files,
     diagnostics,
@@ -176,7 +178,7 @@ export async function generate(input: GenerateInput): Promise<GenerateResult> {
 /** Reads the provenance file and parses the three Patch files of one folder. */
 async function readPatch(
   patchDir: string,
-  prefix: string
+  prefix: string,
 ): Promise<VendoredPatch> {
   const provenance = await readPatchIdentity(patchDir);
   const diagnostics: Diagnostic[] = [...provenance.diagnostics];

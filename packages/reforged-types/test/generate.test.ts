@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { generate } from "../src/index.js";
-import { entry, writeFixture } from "./support/fixture.js";
+import { entry, writeFixture, generatedFile } from "./support/fixture.js";
 
 const banner = (source: string) =>
   [
@@ -15,7 +15,7 @@ async function generateOk(...args: Parameters<typeof writeFixture>) {
   if (!result.ok) {
     throw new Error(
       "generation failed:\n" +
-        result.diagnostics.map((d) => d.message).join("\n")
+        result.diagnostics.map((d) => d.message).join("\n"),
     );
   }
   return result;
@@ -76,7 +76,7 @@ describe("generate: declaration file shape", () => {
         " */",
         "declare function CreateUnit(id: player, unitid: number, x: number, y: number, face: number): unit | undefined;",
         "",
-      ].join("\n")
+      ].join("\n"),
     );
     expect(result.diagnostics).toEqual([]);
   });
@@ -87,7 +87,7 @@ describe("generate: declaration file shape", () => {
     });
 
     expect(
-      [...result.files.keys()].filter((path) => path.startsWith("3.0.0/"))
+      [...result.files.keys()].filter((path) => path.startsWith("3.0.0/")),
     ).toEqual([
       "3.0.0/common.j.d.ts",
       "3.0.0/blizzard.j.d.ts",
@@ -95,10 +95,10 @@ describe("generate: declaration file shape", () => {
       "3.0.0/manifest.json",
     ]);
     expect(result.files.get("3.0.0/blizzard.j.d.ts")).toBe(
-      banner("blizzard.j") + "\n"
+      banner("blizzard.j") + "\n",
     );
     expect(result.files.get("3.0.0/common.ai.d.ts")).toBe(
-      banner("common.ai") + "\n"
+      banner("common.ai") + "\n",
     );
   });
 
@@ -108,14 +108,14 @@ describe("generate: declaration file shape", () => {
         "blizzard.j":
           "function Noop takes nothing returns nothing\nendfunction\n",
       },
-      [entry("blizzard.j", "Noop")]
+      [entry("blizzard.j", "Noop")],
     );
 
     expect(result.files.get("3.0.0/common.j.d.ts")).toContain(
-      "type code = (this: void) => void;"
+      "type code = (this: void) => void;",
     );
     expect(result.files.get("3.0.0/blizzard.j.d.ts")).not.toContain(
-      "type code"
+      "type code",
     );
   });
 
@@ -136,10 +136,10 @@ describe("generate: declaration file shape", () => {
       entry("blizzard.j", "Second", ["count", "label"]),
     ]);
 
-    const text = result.files.get("3.0.0/blizzard.j.d.ts")!;
+    const text = generatedFile(result, "3.0.0/blizzard.j.d.ts");
     expect(text).toContain("declare function First(): void;");
     expect(text).toContain(
-      "declare function Second(count: number, label: string): boolean;"
+      "declare function Second(count: number, label: string): boolean;",
     );
     expect(text).not.toContain("Fake");
     expect(text.indexOf("First(")).toBeLessThan(text.indexOf("Second("));
@@ -162,15 +162,15 @@ describe("generate: declaration file shape", () => {
       entry("common.j", "Handle", ["h", "s"]),
     ]);
 
-    const text = result.files.get("3.0.0/common.j.d.ts")!;
+    const text = generatedFile(result, "3.0.0/common.j.d.ts");
     expect(text).toContain(
-      "declare function TimerStart(whichTimer: timer, timeout: number, periodic: boolean, handlerFunc: code): void;"
+      "declare function TimerStart(whichTimer: timer, timeout: number, periodic: boolean, handlerFunc: code): void;",
     );
     expect(text).toContain(
-      " * @param handlerFunc - code\n * @returns nothing\n"
+      " * @param handlerFunc - code\n * @returns nothing\n",
     );
     expect(text).toContain(
-      "declare function Handle(h: handle, s: string): number;"
+      "declare function Handle(h: handle, s: string): number;",
     );
     expect(text).toContain(" * @returns integer (32-bit)\n");
   });
@@ -181,11 +181,11 @@ describe("generate: declaration file shape", () => {
         "common.j":
           "type agent extends handle\nnative Last takes nothing returns nothing",
       },
-      [entry("common.j", "Last")]
+      [entry("common.j", "Last")],
     );
 
     expect(result.files.get("3.0.0/common.j.d.ts")).toContain(
-      "declare function Last(): void;\n"
+      "declare function Last(): void;\n",
     );
   });
 
@@ -196,7 +196,7 @@ describe("generate: declaration file shape", () => {
           "type agent extends handle\r\nnative A takes agent a returns agent\r\n",
         "blizzard.j": "function B takes nothing returns nothing\nendfunction\n",
       },
-      [entry("common.j", "A", ["a?"], true), entry("blizzard.j", "B")]
+      [entry("common.j", "A", ["a?"], true), entry("blizzard.j", "B")],
     );
 
     const first = await generate(fixture);
@@ -227,10 +227,10 @@ describe("generate: Overlay nullability", () => {
     ]);
 
     expect(nullable.files.get("3.0.0/common.j.d.ts")).toContain(
-      "declare function Pick(a: unit, filter: boolexpr, n: number): unit | undefined;"
+      "declare function Pick(a: unit, filter: boolexpr, n: number): unit | undefined;",
     );
     expect(plain.files.get("3.0.0/common.j.d.ts")).toContain(
-      "declare function Pick(a: unit, filter: boolexpr, n: number): unit;"
+      "declare function Pick(a: unit, filter: boolexpr, n: number): unit;",
     );
   });
 
@@ -240,7 +240,7 @@ describe("generate: Overlay nullability", () => {
     ]);
 
     expect(result.files.get("3.0.0/common.j.d.ts")).toContain(
-      "declare function Pick(a: unit, filter?: boolexpr, n?: number): unit;"
+      "declare function Pick(a: unit, filter?: boolexpr, n?: number): unit;",
     );
   });
 
@@ -250,7 +250,7 @@ describe("generate: Overlay nullability", () => {
     ]);
 
     expect(result.files.get("3.0.0/common.j.d.ts")).toContain(
-      "declare function Pick(a: unit | undefined, filter: boolexpr | undefined, n: number): unit;"
+      "declare function Pick(a: unit | undefined, filter: boolexpr | undefined, n: number): unit;",
     );
   });
 
@@ -265,7 +265,7 @@ describe("generate: Overlay nullability", () => {
         " * @param filter - boolexpr",
         " * @param n - integer (32-bit)",
         " * @returns unit",
-      ].join("\n")
+      ].join("\n"),
     );
   });
 });

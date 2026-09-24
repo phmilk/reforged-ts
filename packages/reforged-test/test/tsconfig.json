@@ -1,0 +1,13 @@
+{
+  // The glue tests and the fixture project's spec: type-checked only;
+  // vitest runs them from source.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "noEmit": true,
+    // vitest/config adds the `test` key to Vite's config, which map.test.ts
+    // passes to startVitest.
+    "types": ["node", "vitest/config"]
+  },
+  "include": ["."]
+}

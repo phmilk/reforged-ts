@@ -37,7 +37,7 @@ export interface Network {
 export async function main(
   args: readonly string[],
   output: Output,
-  network: Network = { fetcher: httpFetcher }
+  network: Network = { fetcher: httpFetcher },
 ): Promise<number> {
   const parsed = parseArgs(args);
   if (!parsed || parsed.positional.length > 1) {
@@ -45,7 +45,7 @@ export async function main(
     return 2;
   }
   const { vendorDir, overlayDir, outDir } = parsed.folders;
-  const [tag] = parsed.positional;
+  const tag = parsed.positional.at(0);
 
   let report = "";
   if (tag !== undefined) {
@@ -74,17 +74,17 @@ export async function main(
     output.stdout(report);
     output.stderr(
       `Generation failed: ${counts}. No file was written.\n\n` +
-        formatChecklist(result.diagnostics)
+        formatChecklist(result.diagnostics),
     );
     return 1;
   }
 
   await writeFiles(outDir, result.files);
-  report += `Generated ${result.files.size} files for ${patchList(result.patches)}.\n`;
+  report += `Generated ${String(result.files.size)} files for ${patchList(result.patches)}.\n`;
   output.stdout(
     result.diagnostics.length === 0
       ? report
-      : report + "\n" + formatChecklist(result.diagnostics)
+      : report + "\n" + formatChecklist(result.diagnostics),
   );
   return 0;
 }
@@ -98,11 +98,11 @@ export function formatAdditions(additions: readonly Additions[]): string {
   return additions
     .map(
       ({ patch, previous, declarations }) =>
-        `In Patch ${patch} and not in Patch ${previous} (${declarations.length}):\n` +
+        `In Patch ${patch} and not in Patch ${previous} (${String(declarations.length)}):\n` +
         declarations
-          .map((d) => `- ${d.source}:${d.line}: ${d.jass}\n`)
+          .map((d) => `- ${d.source}:${String(d.line)}: ${d.jass}\n`)
           .join("") +
-        "\n"
+        "\n",
     )
     .join("");
 }

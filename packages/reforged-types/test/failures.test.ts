@@ -19,7 +19,7 @@ describe("generate: missing Overlay entries", () => {
         "blizzard.j":
           "function BJDebugMsg takes string msg returns nothing\nendfunction",
       },
-      [entry("common.j", "Covered")]
+      [entry("common.j", "Covered")],
     );
 
     expect(result.ok).toBe(false);
@@ -63,7 +63,7 @@ describe("generate: missing Overlay entries", () => {
   it("does not accept an entry from another source file's folder", async () => {
     const result = await run(
       { "common.j": "native A takes nothing returns nothing\n" },
-      [entry("blizzard.j", "A")]
+      [entry("blizzard.j", "A")],
     );
 
     expect(result.ok).toBe(false);
@@ -109,12 +109,12 @@ describe("generate: parameter mismatch", () => {
   it("reports a function with no parameters against a non-empty Overlay list", async () => {
     const result = await run(
       { "common.j": "native Tick takes nothing returns nothing\n" },
-      [entry("common.j", "Tick", ["x"])]
+      [entry("common.j", "Tick", ["x"])],
     );
 
     expect(result.diagnostics[0]?.message).toBe(
       "common.j/functions/Tick.json: parameters do not match the Patch: " +
-        "native Tick takes nothing returns nothing; Overlay has (x)"
+        "native Tick takes nothing returns nothing; Overlay has (x)",
     );
   });
 });
@@ -168,7 +168,7 @@ describe("generate: orphan entries", () => {
       [
         entry("common.j", "Kept"),
         entry("common.j", "RequestExtraBooleanData", ["a"], true),
-      ]
+      ],
     );
 
     expect(result.ok).toBe(true);
@@ -190,7 +190,7 @@ describe("generate: invalid inputs", () => {
     const result = await run(
       { "common.j": "native A takes nothing returns nothing\n" },
       [],
-      { rawOverlay: { "common.j/functions/A.json": "{ not json" } }
+      { rawOverlay: { "common.j/functions/A.json": "{ not json" } },
     );
 
     expect(result.ok).toBe(false);
@@ -222,7 +222,7 @@ describe("generate: invalid inputs", () => {
       const result = await run(
         { "common.j": "native A takes nothing returns nothing\n" },
         [],
-        { rawOverlay: { "common.j/functions/A.json": JSON.stringify(json) } }
+        { rawOverlay: { "common.j/functions/A.json": JSON.stringify(json) } },
       );
 
       expect(result.ok).toBe(false);
@@ -232,9 +232,9 @@ describe("generate: invalid inputs", () => {
         file: "common.j/functions/A.json",
       });
       expect(result.diagnostics[0]?.message).toContain(
-        `common.j/functions/A.json: ${field}`
+        `common.j/functions/A.json: ${field}`,
       );
-    }
+    },
   );
 
   it("fails when the Patch folder has no provenance file", async () => {

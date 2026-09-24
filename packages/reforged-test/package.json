@@ -1,0 +1,64 @@
+{
+  "name": "reforged-test",
+  "version": "1.0.0",
+  "description": "Runs typescript-to-lua test modules on real Lua 5.3 with stubbed Warcraft III Reforged natives and reports them to vitest.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "warcraft",
+    "wc3",
+    "reforged",
+    "typescript-to-lua",
+    "lua",
+    "vitest",
+    "testing"
+  ],
+  "homepage": "https://phmilk.github.io/reforged-ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phmilk/reforged-ts.git",
+    "directory": "packages/reforged-test"
+  },
+  "bugs": {
+    "url": "https://github.com/phmilk/reforged-ts/issues"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "reforged": {
+    "patch": "3.0.0.24268"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "/dist/**/*.js",
+    "/dist/**/*.d.ts",
+    "/lua/**/*.lua",
+    "/lua/**/*.d.ts",
+    "/stubs/**/*.lua",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && tstl -p runner/tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p runner/tsconfig.json --noEmit && tsc -p test/tsconfig.json",
+    "test": "vitest run --root ../.. --project reforged-test",
+    "prepare": "pnpm run build"
+  },
+  "dependencies": {
+    "lua-wasm-bindings": "catalog:"
+  },
+  "peerDependencies": {
+    "typescript": "catalog:",
+    "typescript-to-lua": "catalog:",
+    "vitest": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@typescript-to-lua/language-extensions": "catalog:",
+    "lua-types": "catalog:",
+    "typescript": "catalog:",
+    "typescript-to-lua": "catalog:",
+    "vitest": "catalog:"
+  }
+}

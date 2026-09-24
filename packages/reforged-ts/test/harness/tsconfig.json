@@ -1,0 +1,23 @@
+{
+  // The Node side of the library tests: the vitest file that hands the
+  // compiled tests to the reforged-test glue, and the global setup that
+  // compiles them. Type-checked only; vitest runs them from source.
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "noEmit": true,
+    "strict": true,
+    "verbatimModuleSyntax": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "newLine": "lf",
+    // vitest's declarations pull in tinybench's, which name DOM types a Node
+    // program does not have.
+    "skipLibCheck": true
+  },
+  "include": ["."]
+}

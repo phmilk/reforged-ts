@@ -8,11 +8,7 @@ import { CALLBACK_ALIASES, tsType } from "./jass-types.js";
 import type { SourceName, TypeDeclaration } from "./model.js";
 import { parameterName } from "./names.js";
 import type { PatchIdentity } from "./provenance.js";
-import type {
-  Resolved,
-  ResolvedFunction,
-  ResolvedGlobal,
-} from "./resolve.js";
+import type { Resolved, ResolvedFunction, ResolvedGlobal } from "./resolve.js";
 
 export const REGENERATE_COMMAND =
   "pnpm --filter reforged-types typings:generate";
@@ -20,7 +16,7 @@ export const REGENERATE_COMMAND =
 export function emitFile(
   source: SourceName,
   declarations: readonly Resolved[],
-  identity: PatchIdentity
+  identity: PatchIdentity,
 ): string {
   const blocks: string[][] = [banner(source, identity)];
   if (source === "common.j") blocks.push(prelude());
@@ -48,7 +44,7 @@ export function emitFile(
 
 function banner(
   source: SourceName,
-  { patch, tag, commit }: PatchIdentity
+  { patch, tag, commit }: PatchIdentity,
 ): string[] {
   return [
     "/** @noSelfInFile */",
@@ -111,7 +107,7 @@ function parameterList(fn: ResolvedFunction): string {
     overlay.map((param) => param.nullable).lastIndexOf(false) + 1;
   return fn.params
     .map((param, index) => {
-      const { nullable, type: override } = overlay[index]!;
+      const { nullable, type: override } = overlay[index];
       const name = parameterName(param.name);
       const type = override ?? tsType(param.type);
       if (!nullable) return `${name}: ${type}`;

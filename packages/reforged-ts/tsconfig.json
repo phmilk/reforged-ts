@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "rootDir": "src",
+    "outDir": "dist",
+    // The Typings' default entry references lua-types/5.3 itself; it is
+    // listed here because the library calls the Lua standard library
+    // directly. common.ai is the opt-in entry that declares UnitAlive.
+    "types": [
+      "@typescript-to-lua/language-extensions",
+      "lua-types/5.3",
+      "reforged-types/3.0.0",
+      "reforged-types/3.0.0/common.ai"
+    ],
+    "declaration": true,
+    "allowJs": false,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "newLine": "lf"
+  },
+  "include": ["src"],
+  "tstl": {
+    "buildMode": "library",
+    "luaTarget": "5.3",
+    "noHeader": true,
+    "noImplicitSelf": true,
+    "sourceMapTraceback": false
+  }
+}

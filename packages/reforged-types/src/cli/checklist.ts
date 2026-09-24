@@ -13,8 +13,8 @@ export function formatChecklist(diagnostics: readonly Diagnostic[]): string {
     const items = diagnostics.filter((d) => d.severity === severity);
     if (items.length === 0) continue;
     sections.push(
-      `${title} (${items.length}):\n` +
-        items.map((d) => `- [ ] ${d.message}\n`).join("")
+      `${title} (${String(items.length)}):\n` +
+        items.map((d) => `- [ ] ${d.message}\n`).join(""),
     );
   }
   return sections.join("\n");
@@ -28,5 +28,5 @@ export function countDiagnostics(diagnostics: readonly Diagnostic[]): string {
 }
 
 function plural(count: number, noun: string): string {
-  return `${count} ${noun}${count === 1 ? "" : "s"}`;
+  return `${String(count)} ${noun}${count === 1 ? "" : "s"}`;
 }

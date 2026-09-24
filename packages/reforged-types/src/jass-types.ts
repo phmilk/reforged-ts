@@ -14,7 +14,7 @@ export const CODE_ALIAS = "code";
 export const BOOLEAN_CODE_ALIAS = "boolcode";
 
 /** The callback aliases the common.j output declares, in order. */
-export const CALLBACK_ALIASES: ReadonlyArray<{ name: string; type: string }> = [
+export const CALLBACK_ALIASES: readonly { name: string; type: string }[] = [
   { name: CODE_ALIAS, type: "(this: void) => void" },
   { name: BOOLEAN_CODE_ALIAS, type: "(this: void) => boolean" },
 ];

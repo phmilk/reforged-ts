@@ -1,0 +1,59 @@
+{
+  "name": "reforged-ts",
+  "version": "1.0.0",
+  "description": "TypeScript API for Warcraft III Reforged custom maps, compiled to Lua with typescript-to-lua.",
+  "license": "MIT",
+  "keywords": [
+    "warcraft",
+    "wc3",
+    "reforged",
+    "typescript-to-lua"
+  ],
+  "homepage": "https://phmilk.github.io/reforged-ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phmilk/reforged-ts.git",
+    "directory": "packages/reforged-ts"
+  },
+  "bugs": {
+    "url": "https://github.com/phmilk/reforged-ts/issues"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "reforged": {
+    "patch": "3.0.0.24268"
+  },
+  "main": "dist/index",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist/**/*.lua",
+    "/dist/**/*.d.ts",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "scripts": {
+    "build": "tstl -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json --noEmit && tsc -p test/harness/tsconfig.json",
+    "test": "vitest run --root ../.. --project reforged-ts"
+  },
+  "peerDependencies": {
+    "reforged-test": "^1.0.0",
+    "reforged-types": "^1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "reforged-test": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@typescript-to-lua/language-extensions": "catalog:",
+    "lua-types": "catalog:",
+    "reforged-test": "workspace:*",
+    "reforged-types": "workspace:*",
+    "typescript": "catalog:",
+    "typescript-to-lua": "catalog:",
+    "vitest": "catalog:"
+  }
+}

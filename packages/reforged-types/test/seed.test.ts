@@ -12,7 +12,7 @@ function fnRecord(
   name: string,
   takes: [string, string, boolean][],
   returns: string,
-  isNullable: boolean
+  isNullable: boolean,
 ) {
   return {
     name,
@@ -29,7 +29,12 @@ function fnRecord(
   };
 }
 
-function globalRecord(source: string, name: string, type: string, isNullable: boolean) {
+function globalRecord(
+  source: string,
+  name: string,
+  type: string,
+  isNullable: boolean,
+) {
   return {
     name,
     description: null,
@@ -43,7 +48,9 @@ function globalRecord(source: string, name: string, type: string, isNullable: bo
 }
 
 /** Writes a war3-types-strict layer set: records by `<layer>/<folder>/<Name>.json`. */
-async function writeCheckout(records: Record<string, unknown>): Promise<string> {
+async function writeCheckout(
+  records: Record<string, unknown>,
+): Promise<string> {
   const checkout = await mkdtemp(join(tmpdir(), "war3-types-strict-"));
   for (const [path, record] of Object.entries(records)) {
     await mkdir(dirname(join(checkout, path)), { recursive: true });
@@ -78,30 +85,52 @@ const PATCH = {
 
 const CHECKOUT = {
   // A type record: ignored, the Patch is the only source of types.
-  "1.29.2/types/unit.json": { description: null, name: "unit", extends: "handle", source: "common.j" },
+  "1.29.2/types/unit.json": {
+    description: null,
+    name: "unit",
+    extends: "handle",
+    source: "common.j",
+  },
   // Overridden by 1.32.10.
   "1.29.2/natives/GroupAddUnit.json": fnRecord(
     "common.j",
     "GroupAddUnit",
-    [["group", "whichGroup", false], ["unit", "whichUnit", false]],
+    [
+      ["group", "whichGroup", false],
+      ["unit", "whichUnit", false],
+    ],
     "void",
-    false
+    false,
   ),
   "1.32.10/natives/GroupAddUnit.json": fnRecord(
     "common.j",
     "GroupAddUnit",
-    [["group", "whichGroup", true], ["unit", "whichUnit", false]],
+    [
+      ["group", "whichGroup", true],
+      ["unit", "whichUnit", false],
+    ],
     "boolean",
-    true
+    true,
   ),
-  "1.29.2/natives/GetLocalPlayer.json": fnRecord("common.j", "GetLocalPlayer", [], "player", false),
+  "1.29.2/natives/GetLocalPlayer.json": fnRecord(
+    "common.j",
+    "GetLocalPlayer",
+    [],
+    "player",
+    false,
+  ),
   // The record names parameter 0 `whichUnit`, the Patch `whichPeon`.
   "1.33.0/natives/BlzQueueBuildOrderById.json": fnRecord(
     "common.j",
     "BlzQueueBuildOrderById",
-    [["unit", "whichUnit", false], ["number", "unitId", false], ["number", "x", false], ["number", "y", false]],
+    [
+      ["unit", "whichUnit", false],
+      ["number", "unitId", false],
+      ["number", "x", false],
+      ["number", "y", false],
+    ],
     "boolean",
-    false
+    false,
   ),
   // Absent from the Patch.
   "1.29.2/natives/RequestExtraBooleanData.json": fnRecord(
@@ -109,24 +138,57 @@ const CHECKOUT = {
     "RequestExtraBooleanData",
     [["number", "dataType", false]],
     "boolean",
-    false
+    false,
   ),
   // One parameter where the Patch has two.
-  "1.29.2/natives/Reshaped.json": fnRecord("common.j", "Reshaped", [["unit", "u", false]], "void", false),
+  "1.29.2/natives/Reshaped.json": fnRecord(
+    "common.j",
+    "Reshaped",
+    [["unit", "u", false]],
+    "void",
+    false,
+  ),
   // A hand-written entry exists for it.
   "1.29.2/natives/CreateUnit.json": fnRecord(
     "common.j",
     "CreateUnit",
-    [["player", "id", false], ["number", "unitid", false], ["number", "x", false], ["number", "y", false], ["number", "face", false]],
+    [
+      ["player", "id", false],
+      ["number", "unitid", false],
+      ["number", "x", false],
+      ["number", "y", false],
+      ["number", "face", false],
+    ],
     "unit",
-    false
+    false,
   ),
-  "1.29.2/globals/PLAYER_NEUTRAL_AGGRESSIVE.json": globalRecord("common.j", "PLAYER_NEUTRAL_AGGRESSIVE", "number", false),
-  "1.29.2/globals/bj_lastCreatedUnit.json": globalRecord("blizzard.j", "bj_lastCreatedUnit", "unit", true),
-  "1.29.2/functions/BJDebugMsg.json": fnRecord("blizzard.j", "BJDebugMsg", [["string", "msg", false]], "void", false),
+  "1.29.2/globals/PLAYER_NEUTRAL_AGGRESSIVE.json": globalRecord(
+    "common.j",
+    "PLAYER_NEUTRAL_AGGRESSIVE",
+    "number",
+    false,
+  ),
+  "1.29.2/globals/bj_lastCreatedUnit.json": globalRecord(
+    "blizzard.j",
+    "bj_lastCreatedUnit",
+    "unit",
+    true,
+  ),
+  "1.29.2/functions/BJDebugMsg.json": fnRecord(
+    "blizzard.j",
+    "BJDebugMsg",
+    [["string", "msg", false]],
+    "void",
+    false,
+  ),
 };
 
-const handWritten = entry("common.j", "CreateUnit", ["id", "unitid", "x", "y", "face"], true);
+const handWritten = entry(
+  "common.j",
+  "CreateUnit",
+  ["id", "unitid", "x", "y", "face"],
+  true,
+);
 
 async function runSeed() {
   const checkout = await writeCheckout(CHECKOUT);
@@ -167,9 +229,11 @@ describe("seed from war3-types-strict", () => {
         '  "origin": "war3-types-strict"',
         "}",
         "",
-      ].join("\n")
+      ].join("\n"),
     );
-    expect(JSON.parse(await read("common.j/functions/BlzQueueBuildOrderById.json"))).toEqual({
+    expect(
+      JSON.parse(await read("common.j/functions/BlzQueueBuildOrderById.json")),
+    ).toEqual({
       name: "BlzQueueBuildOrderById",
       source: "common.j",
       returns: { nullable: false },
@@ -181,7 +245,9 @@ describe("seed from war3-types-strict", () => {
       ],
       origin: "war3-types-strict",
     });
-    expect(JSON.parse(await read("blizzard.j/functions/BJDebugMsg.json"))).toEqual({
+    expect(
+      JSON.parse(await read("blizzard.j/functions/BJDebugMsg.json")),
+    ).toEqual({
       name: "BJDebugMsg",
       source: "blizzard.j",
       returns: { nullable: false },
@@ -194,21 +260,28 @@ describe("seed from war3-types-strict", () => {
     const { read, overlayDir } = await runSeed();
 
     expect(await read("blizzard.j/globals/bj_lastCreatedUnit.json")).toBe(
-      '{\n  "name": "bj_lastCreatedUnit",\n  "source": "blizzard.j",\n  "nullable": true,\n  "origin": "war3-types-strict"\n}\n'
+      '{\n  "name": "bj_lastCreatedUnit",\n  "source": "blizzard.j",\n  "nullable": true,\n  "origin": "war3-types-strict"\n}\n',
     );
-    expect(JSON.parse(await read("common.j/globals/PLAYER_NEUTRAL_AGGRESSIVE.json"))).toEqual({
+    expect(
+      JSON.parse(await read("common.j/globals/PLAYER_NEUTRAL_AGGRESSIVE.json")),
+    ).toEqual({
       name: "PLAYER_NEUTRAL_AGGRESSIVE",
       source: "common.j",
       nullable: false,
       origin: "war3-types-strict",
     });
-    expect(await readdir(join(overlayDir, "common.j"))).toEqual(["functions", "globals"]);
+    expect(await readdir(join(overlayDir, "common.j"))).toEqual([
+      "functions",
+      "globals",
+    ]);
   });
 
   it("sets async only on the listed Natives it seeds", async () => {
     const { read, report } = await runSeed();
 
-    expect(JSON.parse(await read("common.j/functions/GetLocalPlayer.json"))).toEqual({
+    expect(
+      JSON.parse(await read("common.j/functions/GetLocalPlayer.json")),
+    ).toEqual({
       name: "GetLocalPlayer",
       source: "common.j",
       returns: { nullable: false },
@@ -223,22 +296,36 @@ describe("seed from war3-types-strict", () => {
     const { report, overlayDir, read } = await runSeed();
 
     expect(report.skipped).toEqual([
-      { kind: "functions", source: "common.j", name: "CreateUnit", reason: "a hand-written entry exists" },
+      {
+        kind: "functions",
+        source: "common.j",
+        name: "CreateUnit",
+        reason: "a hand-written entry exists",
+      },
       {
         kind: "functions",
         source: "common.j",
         name: "RequestExtraBooleanData",
         reason: "no declaration in common.j of the Patch",
       },
-      { kind: "functions", source: "common.j", name: "Reshaped", reason: "the record has 1 parameters, the Patch 2" },
+      {
+        kind: "functions",
+        source: "common.j",
+        name: "Reshaped",
+        reason: "the record has 1 parameters, the Patch 2",
+      },
     ]);
-    expect((await readdir(join(overlayDir, "common.j", "functions"))).sort()).toEqual([
+    expect(
+      (await readdir(join(overlayDir, "common.j", "functions"))).sort(),
+    ).toEqual([
       "BlzQueueBuildOrderById.json",
       "CreateUnit.json",
       "GetLocalPlayer.json",
       "GroupAddUnit.json",
     ]);
-    expect(JSON.parse(await read("common.j/functions/CreateUnit.json"))).toEqual(handWritten);
+    expect(
+      JSON.parse(await read("common.j/functions/CreateUnit.json")),
+    ).toEqual(handWritten);
     expect(report.written).toEqual({
       "blizzard.j/functions": 1,
       "blizzard.j/globals": 1,

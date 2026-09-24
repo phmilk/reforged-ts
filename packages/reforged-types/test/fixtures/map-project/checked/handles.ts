@@ -14,7 +14,13 @@ TimerStart(countdown, 1.5, false, () => {
 const nearby = CreateGroup();
 if (nearby !== undefined) {
   GroupEnumUnitsInRange(nearby, 0, 0, 512);
-  GroupEnumUnitsInRange(nearby, 0, 0, 512, Filter(() => GetFilterUnit() !== undefined));
+  GroupEnumUnitsInRange(
+    nearby,
+    0,
+    0,
+    512,
+    Filter(() => GetFilterUnit() !== undefined),
+  );
   DestroyGroup(nearby);
 }
 

@@ -1,47 +1,20 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["ESNext"],
-    "moduleResolution": "Classic",
-    "outDir": "./dist",
-    "types": [
-      "@typescript-to-lua/language-extensions",
-      "lua-types/core/coroutine",
-      "lua-types/core/global",
-      "lua-types/core/math",
-      "lua-types/core/metatable",
-      "lua-types/core/modules",
-      "lua-types/core/string",
-      "lua-types/core/table",
-      "lua-types/core/os",
-      "lua-types/special/5.3",
-      "war3-types-strict/1.33.0"
-    ],
-    "declaration": true,
-    "allowJs": false,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    //"exactOptionalPropertyTypes": true,
-    //"useUnknownInCatchVariables": true,
-    "newLine": "lf"
-  },
-  "include": [
-    "./index.ts",
-    "globals",
-    "handles",
-    "hooks",
-    "system"
-  ],
-  "exclude": [],
-  "tstl": {
-    "buildMode": "library",
-    "luaTarget": "5.3",
-    "noHeader": true,
-    "noImplicitSelf": true,
-    "sourceMapTraceback": false,
-  }
+  // Solution file for the editor and the lint's project service; nothing
+  // builds from here (every package builds with its own scripts). A file finds
+  // its program through the nearest tsconfig.json; the programs below own
+  // files that the nearest tsconfig.json does not name, so they are listed
+  // here, where the search continues.
+  "files": [],
+  "references": [
+    // The workspace's vitest configuration, at the root.
+    { "path": "tsconfig.vitest.json" },
+    // The seed script.
+    { "path": "packages/reforged-types/tsconfig.scripts.json" },
+    // The generated Typings.
+    { "path": "packages/reforged-types/tsconfig.typings.json" },
+    // The hand-written Lua runtime file, through the Map project fixtures.
+    {
+      "path": "packages/reforged-types/test/fixtures/map-project/tsconfig.json"
+    }
+  ]
 }
