@@ -27,3 +27,9 @@ Decision record: https://github.com/phmilk/reforged-ts/issues/11
 The rule of `moduleResolution: bundler` with Lua as the only build target applies to the packages that compile to Lua. The `reforged-types` generator is a Node tool and never runs in a map. It compiles to ESM with `module` and `moduleResolution: nodenext` and runs on Node 22.13 or later. The Typings it generates are still type-checked under `bundler`, as a Map project sees them.
 
 Amendment record: https://github.com/phmilk/reforged-ts/issues/39
+
+## Amendment (2026-09-24)
+
+The test harness is the workspace package `packages/reforged-test`. Its Node side, the glue vitest calls, is a Node tool and never runs in a map: like the generator, it compiles to ESM under `module` and `moduleResolution: nodenext`. Its Lua side, the runner, and its stubs stay under the Lua-only rule. The harness measured about 830 lines (glue plus runner), not the estimated 200.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/45
