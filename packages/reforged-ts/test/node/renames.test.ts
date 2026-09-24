@@ -1,0 +1,204 @@
+// The rename map, migration/renames.json: the facts the migration guide and
+// the legacy-names lint rule read. It must parse against its schema, target
+// this step's version pair, name only replacements that exist in the
+// library's emitted declarations and cover every member step 3 removes.
+
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import {
+  createMapProject,
+  publicApi,
+  type MapProject,
+  type PublicApi,
+} from "./support/declarations";
+import {
+  loadRenames,
+  parseRenames,
+  parseSymbol,
+  publishedFiles,
+  replacements,
+  type RenameEntry,
+} from "./support/renames";
+
+/** The version pair every entry of the first release carries. */
+const VERSIONS = { from: "w3ts@3", to: "reforged-ts@1" };
+
+/** What build step 3 (#51) removes from the public API, with its kind. */
+const REMOVED_IN_STEP_3: [old: string, kind: RenameEntry["kind"]][] = [
+  ...[
+    "CameraSetup",
+    "Destructable",
+    "Dialog",
+    "DialogButton",
+    "Effect",
+    "FogModifier",
+    "Force",
+    "Frame",
+    "GameCache",
+    "Group",
+    "Image",
+    "Item",
+    "Leaderboard",
+    "MapPlayer",
+    "Multiboard",
+    "MultiboardItem",
+    "Point",
+    "Quest",
+    "QuestItem",
+    "Rectangle",
+    "Region",
+    "Sound",
+    "TextTag",
+    "Timer",
+    "TimerDialog",
+    "Trigger",
+    "Ubersplat",
+    "Unit",
+    "WeatherEffect",
+  ].map((name): [string, RenameEntry["kind"]] => [
+    `new ${name}(...)`,
+    "constructor",
+  ]),
+  ["Frame.parent", "accessor"],
+  ["Unit.owner", "accessor"],
+  ["Unit.point", "accessor"],
+  ["Group.getEnumUnit", "member"],
+  ["Group.getFilterUnit", "member"],
+  ["MapPlayer.create", "member"],
+];
+
+const valid: RenameEntry = {
+  old: "Group.getEnumUnit",
+  new: "Unit.fromEnum",
+  kind: "member",
+  versions: VERSIONS,
+  oneToOne: true,
+  note: "One name for one Native.",
+};
+
+describe("the rename map's loader", () => {
+  it("accepts a well-formed entry", () => {
+    expect(parseRenames(JSON.stringify([valid]))).toEqual([valid]);
+  });
+
+  it.each<[string, unknown]>([
+    ["is not an array", valid],
+    ["has an entry without a note", [{ ...valid, note: undefined }]],
+    ["has an entry with an unknown field", [{ ...valid, reason: "x" }]],
+    ["has an unknown kind", [{ ...valid, kind: "method" }]],
+    [
+      "has a version without a major",
+      [{ ...valid, versions: { ...VERSIONS, from: "w3ts" } }],
+    ],
+    [
+      "has an old symbol that is not a symbol",
+      [{ ...valid, old: "Group getEnumUnit" }],
+    ],
+    [
+      "has a one-to-one entry with two replacements",
+      [{ ...valid, new: ["Unit.fromEnum", "Unit.fromFilter"] }],
+    ],
+    ["has an empty note", [{ ...valid, note: "" }]],
+  ])("rejects a map that %s", (_, map) => {
+    expect(() => parseRenames(JSON.stringify(map))).toThrow(
+      /does not match its schema/,
+    );
+  });
+
+  it("rejects text that is not JSON", () => {
+    expect(() => parseRenames("[{")).toThrow();
+  });
+});
+
+describe("a symbol of the rename map", () => {
+  it.each([
+    ["new Unit(...)", { className: "Unit", member: undefined }],
+    ["Unit.create(...)", { className: "Unit", member: "create" }],
+    ["Frame.parent", { className: "Frame", member: "parent" }],
+    ["Unit", { className: "Unit", member: undefined }],
+  ])("%s names %o", (symbol, parsed) => {
+    expect(parseSymbol(symbol)).toEqual(parsed);
+  });
+});
+
+describe("migration/renames.json", () => {
+  let project: MapProject;
+  let api: PublicApi;
+
+  beforeAll(async () => {
+    project = await createMapProject();
+    api = publicApi(project);
+  }, 120_000);
+
+  afterAll(async () => {
+    await (project as MapProject | undefined)?.dispose();
+  });
+
+  it("matches its schema", async () => {
+    await expect(loadRenames()).resolves.not.toEqual([]);
+  });
+
+  it("targets this step's version pair in every entry", async () => {
+    const entries = await loadRenames();
+    expect(
+      entries.filter(
+        (entry) =>
+          entry.versions.from !== VERSIONS.from ||
+          entry.versions.to !== VERSIONS.to,
+      ),
+    ).toEqual([]);
+  });
+
+  it("names every old symbol once", async () => {
+    const entries = await loadRenames();
+    const olds = entries.map((entry) => entry.old);
+    expect(olds.filter((old, index) => olds.indexOf(old) !== index)).toEqual(
+      [],
+    );
+  });
+
+  it("has an entry for every member step 3 removes, of its kind", async () => {
+    const entries = await loadRenames();
+    const kinds = new Map(entries.map((entry) => [entry.old, entry.kind]));
+    expect(
+      REMOVED_IN_STEP_3.filter(([old, kind]) => kinds.get(old) !== kind),
+    ).toEqual([]);
+  });
+
+  it("names both halves of an accessor's get/set pair", async () => {
+    const entries = await loadRenames();
+    expect(
+      entries
+        .filter((entry) => entry.kind === "accessor" && entry.new !== null)
+        .filter((entry) => replacements(entry).length !== 2),
+    ).toEqual([]);
+  });
+
+  it("names only replacements the emitted declarations export publicly", async () => {
+    const entries = await loadRenames();
+    const missing = entries.flatMap((entry) =>
+      replacements(entry).filter((symbol) => !api.has(parseSymbol(symbol))),
+    );
+    expect(missing).toEqual([]);
+  });
+
+  it("sees a member that does not exist as missing", () => {
+    expect(api.has(parseSymbol("Unit.noSuchMember"))).toBe(false);
+    expect(api.has(parseSymbol("NoSuchClass"))).toBe(false);
+    expect(api.has(parseSymbol("Unit.fromEnum"))).toBe(true);
+    expect(api.has(parseSymbol("Frame.getParent"))).toBe(true);
+    // Private in w3ts 3.x and deleted by step 3: never a replacement.
+    expect(api.has(parseSymbol("MapPlayer.create"))).toBe(false);
+  });
+});
+
+describe("the published package", () => {
+  it("ships the rename map, its schema and the behaviour-changes note", () => {
+    expect(publishedFiles()).toEqual(
+      expect.arrayContaining([
+        "migration/renames.json",
+        "migration/renames.schema.json",
+        "migration/behaviour-changes.md",
+      ]),
+    );
+  });
+});
