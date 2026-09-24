@@ -5,7 +5,9 @@
  * (`@native`, `@patch`, `@async`, `@bug`); a new Overlay fact is one more
  * tag in `factTags`.
  */
+import type { FunctionEntry, TrackedEntry } from "./entry.js";
 import { docType } from "./jass-types.js";
+import { jassGlobalForm } from "./model.js";
 import type {
   ResolvedFunction,
   ResolvedGlobal,
@@ -14,15 +16,12 @@ import type {
 
 const JASSBOT = "https://lep.duckdns.org/jassbot/doc/";
 
-/** The Overlay facts a header shows, for any kind of declaration. */
-export interface HeaderFacts {
-  /** Build, rendered as `@patch`. */
-  since?: string | undefined;
-  async?: boolean | undefined;
-  deprecated?: string | undefined;
-  /** Rendered as `@remarks`. */
-  notes?: string | undefined;
-}
+/**
+ * The Overlay facts a header shows, for any kind of declaration: an entry of
+ * any kind carries them, or the subset its kind has.
+ */
+export type HeaderFacts = Pick<TrackedEntry, "since" | "deprecated" | "notes"> &
+  Partial<Pick<FunctionEntry, "async">>;
 
 export function functionHeader(fn: ResolvedFunction): string[] {
   return docComment(functionTags(fn));
@@ -72,11 +71,7 @@ export function docComment(tags: readonly string[]): string[] {
  * it is escaped so it cannot close the comment.
  */
 export function globalHeader(global: ResolvedGlobal): string[] {
-  const form = [
-    ...(global.constant ? ["constant"] : []),
-    docType(global.type),
-    ...(global.array ? ["array"] : []),
-  ].join(" ");
+  const form = jassGlobalForm(global, docType(global.type));
   const initializer = global.initializer?.replaceAll("*/", "*\\/");
   return docComment([
     `Jass: ${form}`,

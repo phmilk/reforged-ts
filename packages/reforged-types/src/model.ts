@@ -61,16 +61,46 @@ export type Declaration =
   | FunctionDeclaration
   | GlobalDeclaration;
 
+/**
+ * The words of a global's Jass form before its name: `constant`, the type
+ * and `array`, each where it applies. `type` stands in for the Jass type
+ * where a header renders it differently.
+ */
+export function jassGlobalForm(
+  global: GlobalDeclaration,
+  type: string = global.type
+): string {
+  const words = [
+    ...(global.constant ? ["constant"] : []),
+    type,
+    ...(global.array ? ["array"] : []),
+  ];
+  return words.join(" ");
+}
+
 /** The Jass line of a global without its trailing comment. */
 export function jassGlobal(global: GlobalDeclaration): string {
   const words = [
-    ...(global.constant ? ["constant"] : []),
-    global.type,
-    ...(global.array ? ["array"] : []),
+    jassGlobalForm(global),
     global.name,
     ...(global.initializer === undefined ? [] : ["=", global.initializer]),
   ];
   return words.join(" ");
+}
+
+/**
+ * A declaration as the checklists print it: `type unit extends widget`,
+ * `global constant integer X = 1`, `native A takes nothing returns nothing`.
+ */
+export function jassDeclaration(declaration: Declaration): string {
+  switch (declaration.kind) {
+    case "type":
+      return `type ${declaration.name} extends ${declaration.parent}`;
+    case "global":
+      return `global ${jassGlobal(declaration)}`;
+    default:
+      return jassSignature(declaration);
+  }
 }
 
 /** The Jass header of a function, as the failure checklist prints it. */

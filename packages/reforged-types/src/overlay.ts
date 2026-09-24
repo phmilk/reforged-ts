@@ -4,75 +4,22 @@
  * `.../globals/bj_FORCE_PLAYER.json`, `.../types/unit.json`).
  *
  * Each field is read by one reader in `FIELDS`; a new Overlay field is one
- * more entry there and one more property on `OverlayEntry`. Global and type
- * entries reuse those readers for the fields they share.
+ * more entry there and one more property on its entry shape in `entry.ts`.
+ * Global and type entries reuse those readers for the fields they share.
  */
 import { readdir, readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { isBuild } from "./build.js";
 import type { Diagnostic } from "./diagnostics.js";
-import { SOURCES, type SourceName } from "./model.js";
+import {
+  SEED_ORIGIN,
+  type FunctionEntry,
+  type GlobalEntry,
+  type OverlayParam,
+  type TypeEntry,
+} from "./entry.js";
+import { SOURCES, type Declaration, type SourceName } from "./model.js";
 import { byCodePoint } from "./order.js";
-
-export interface OverlayParam {
-  name: string;
-  nullable: boolean;
-  /** TypeScript type text that replaces the parameter's mapped Jass type. */
-  type?: string;
-}
-
-/** The only `origin` an entry may name: seeded from war3-types-strict. */
-export const SEED_ORIGIN = "war3-types-strict";
-
-export interface OverlayEntry {
-  /** Path relative to the Overlay folder, `/`-separated. */
-  file: string;
-  name: string;
-  source: SourceName;
-  returns: { nullable: boolean };
-  params: OverlayParam[];
-  /** The value is only valid for the local player; `false` when absent. */
-  async: boolean;
-  deprecated?: string;
-  /** Rendered as `@remarks`. */
-  notes?: string;
-  /** The Patch build that introduced the declaration; rendered as `@patch`. */
-  since?: string;
-  /** Absent for hand-written entries. */
-  origin?: typeof SEED_ORIGIN;
-}
-
-/**
- * A global's entry (mandatory for every global): `name`, `source`,
- * `nullable`, and the optional `deprecated`, `notes`, `since` and `origin`.
- * It has no `returns` or `params`: `nullable` is the global's own nullability,
- * and for an array the nullability of its elements.
- */
-export interface GlobalEntry {
-  /** Path relative to the Overlay folder, `/`-separated. */
-  file: string;
-  name: string;
-  source: SourceName;
-  nullable: boolean;
-  deprecated?: string;
-  /** Rendered as `@remarks`. */
-  notes?: string;
-  /** The Patch build that introduced the global; rendered as `@patch`. */
-  since?: string;
-  /** Absent for hand-written entries. */
-  origin?: typeof SEED_ORIGIN;
-}
-
-/** A type's optional entry: `name`, `source`, `deprecated` and `notes` only. */
-export interface TypeEntry {
-  /** Path relative to the Overlay folder, `/`-separated. */
-  file: string;
-  name: string;
-  source: SourceName;
-  deprecated?: string;
-  /** Rendered as `@remarks`. */
-  notes?: string;
-}
 
 /**
  * The kind folders inside a source folder and the entries each holds:
@@ -87,12 +34,13 @@ export const KIND_FOLDERS = ["functions", "globals", "types"] as const;
 
 export type KindFolder = (typeof KIND_FOLDERS)[number];
 
+/** The entries of each kind folder, by the folder's name. */
 export interface Overlay {
   /** Function entries by `<source>/<name>`, in folder then file-name order. */
-  entries: Map<string, OverlayEntry>;
-  /** Global entries, keyed and ordered as `entries`. */
+  functions: Map<string, FunctionEntry>;
+  /** Global entries, keyed and ordered as `functions`. */
   globals: Map<string, GlobalEntry>;
-  /** Type entries, keyed and ordered as `entries`. */
+  /** Type entries, keyed and ordered as `functions`. */
   types: Map<string, TypeEntry>;
   /** Paths (as `entryPath` spells them) of files that are not valid entries. */
   rejected: Set<string>;
@@ -101,6 +49,18 @@ export interface Overlay {
 
 export function overlayKey(source: SourceName, name: string): string {
   return `${source}/${name}`;
+}
+
+/** The kind folder that holds a declaration's entry. */
+export function kindFolder(declaration: Declaration): KindFolder {
+  switch (declaration.kind) {
+    case "type":
+      return "types";
+    case "global":
+      return "globals";
+    default:
+      return "functions";
+  }
 }
 
 /** Where a declaration's entry lives, relative to the Overlay folder. */
@@ -114,7 +74,7 @@ export function entryPath(
 
 export async function loadOverlay(overlayDir: string): Promise<Overlay> {
   const overlay: Overlay = {
-    entries: new Map(),
+    functions: new Map(),
     globals: new Map(),
     types: new Map(),
     rejected: new Set(),
@@ -158,12 +118,7 @@ export async function loadOverlay(overlayDir: string): Promise<Overlay> {
           });
           continue;
         }
-        const entries: Map<string, unknown> =
-          folder === "functions"
-            ? overlay.entries
-            : folder === "globals"
-              ? overlay.globals
-              : overlay.types;
+        const entries: Map<string, unknown> = overlay[folder];
         entries.set(overlayKey(source, name), result);
       }
     }
@@ -319,7 +274,7 @@ const FIELDS = {
           `origin must be "${SEED_ORIGIN}" or absent, found ${show(value)}`
         ),
 } satisfies {
-  [K in keyof Omit<OverlayEntry, "file">]: Reader<OverlayEntry[K]>;
+  [K in keyof Omit<FunctionEntry, "file">]: Reader<FunctionEntry[K]>;
 };
 
 /** A global entry's fields: the function entry's readers, and `nullable`. */
@@ -362,7 +317,7 @@ function readEntry(
   source: SourceName,
   name: string,
   text: string
-): OverlayEntry | GlobalEntry | TypeEntry | string {
+): FunctionEntry | GlobalEntry | TypeEntry | string {
   let json: unknown;
   try {
     json = JSON.parse(text);
@@ -380,7 +335,7 @@ function readEntry(
     if (value instanceof Problem) return value.text;
     entry[field] = value;
   }
-  return entry as unknown as OverlayEntry | GlobalEntry | TypeEntry;
+  return entry as unknown as FunctionEntry | GlobalEntry | TypeEntry;
 }
 
 const PARAM_FIELDS: readonly string[] = ["name", "nullable", "type"];
