@@ -22,8 +22,8 @@ import { tmpdir } from "node:os";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as ts from "typescript";
+import { packageRoot } from "./package-root";
 
-const packageRoot = fileURLToPath(new URL("../../../", import.meta.url));
 const fixturesRoot = fileURLToPath(
   new URL("../fixtures/declarations/", import.meta.url),
 );

@@ -154,8 +154,8 @@
       "from": "w3ts@3",
       "to": "reforged-ts@1"
     },
-    "oneToOne": true,
-    "note": "Players are not created, so the constructor, private in w3ts 3.x, gives way to the lookup `MapPlayer.fromIndex`, which returns `undefined` for a slot out of range."
+    "oneToOne": false,
+    "note": "Players are not created, so the constructor, private in w3ts 3.x, gives way to the lookup `MapPlayer.fromIndex`, which keeps the index argument but returns `MapPlayer | undefined`, `undefined` for a slot out of range, so the call site must handle the missing player."
   },
   {
     "old": "new Multiboard(...)",

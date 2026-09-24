@@ -1,13 +1,15 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { Handle, type WrapperClass } from "./handle";
 
 /**
  * The Handle, or undefined for nothing and for the frame the game hands back
  * when it finds none (a name it does not know, a missing FDF definition): a
  * frame whose handle id is 0. Reads the id once.
  */
-function found<H extends handle>(handle: H | undefined): H | undefined {
+function unlessNotFound<H extends handle>(
+  handle: H | undefined,
+): H | undefined {
   return handle === undefined || GetHandleId(handle) === 0 ? undefined : handle;
 }
 
@@ -59,7 +61,9 @@ export class Frame extends Handle<framehandle> {
     createContext: number,
   ): Frame {
     return this.expect(
-      found(BlzCreateFrame(name, owner.handle, priority, createContext)),
+      unlessNotFound(
+        BlzCreateFrame(name, owner.handle, priority, createContext),
+      ),
       name,
     );
   }
@@ -78,7 +82,7 @@ export class Frame extends Handle<framehandle> {
     createContext: number,
   ): Frame {
     return this.expect(
-      found(BlzCreateSimpleFrame(name, owner.handle, createContext)),
+      unlessNotFound(BlzCreateSimpleFrame(name, owner.handle, createContext)),
       name,
     );
   }
@@ -99,7 +103,7 @@ export class Frame extends Handle<framehandle> {
     inherits: string,
   ): Frame {
     return this.expect(
-      found(
+      unlessNotFound(
         BlzCreateFrameByType(
           typeName,
           name,
@@ -374,10 +378,10 @@ export class Frame extends Handle<framehandle> {
    * registered.
    */
   public static override fromHandle<C extends Handle<handle>>(
-    this: { readonly prototype: C; readonly name: string },
+    this: WrapperClass<C>,
     handle: C["handle"] | undefined,
   ): C | undefined {
-    return super.fromHandle.call(this, found(handle)) as C | undefined;
+    return super.fromHandle.call(this, unlessNotFound(handle)) as C | undefined;
   }
 
   public static fromName(

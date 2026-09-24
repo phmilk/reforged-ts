@@ -7,8 +7,8 @@ import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { Ajv2020, type SchemaObject } from "ajv/dist/2020";
+import { packageRoot } from "./package-root";
 
-const packageRoot = fileURLToPath(new URL("../../../", import.meta.url));
 const mapFile = fileURLToPath(
   new URL("../../../migration/renames.json", import.meta.url),
 );

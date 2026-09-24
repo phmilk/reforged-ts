@@ -198,7 +198,7 @@ A timer or trigger never fires on its own: a test fires it with the helper. The 
 - Every stub appends one readable line to the global call log, `Name(arg, arg)`, with handles rendered as `kind#id`. Use `__stub_record`.
 - Handles are tables carrying a kind and a sequential id from a fixed base, so ids are deterministic. Use `__stub_new_handle`.
 - A stub that holds a callback exposes a manual firing helper (`__stub_fire_timer`, `__stub_fire_trigger`) instead of any scheduler.
-- A stub never simulates game logic beyond storing what it was given.
+- A stub keeps only the state its Natives were given and hands it back through the Natives that read it: enumerating a stored group (`ForGroup`), reading a stored inventory slot, a frame's parent or child, a frame by the name it was created under. It never simulates game rules: no inventory size or first-free-slot rule, no order, no event, no frame layout.
 - There is one stub file per Native family: players, timers, triggers, units, frames, as they are needed. The glue loads the shipped set, then the extra stub files a Map project lists in the `stubs` option.
 
 ## Integer width policy
