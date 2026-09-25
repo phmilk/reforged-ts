@@ -115,6 +115,18 @@ describe("the rename map's loader", () => {
     expect(parseRenames(JSON.stringify([entryPoint]))).toEqual([entryPoint]);
   });
 
+  it("accepts the package itself, renamed, as a package entry", () => {
+    const packageEntry: RenameEntry = {
+      ...valid,
+      old: "w3ts",
+      new: "reforged-ts",
+      kind: "package",
+    };
+    expect(parseRenames(JSON.stringify([packageEntry]))).toEqual([
+      packageEntry,
+    ]);
+  });
+
   it.each<[string, unknown]>([
     ["is not an array", valid],
     ["has an entry without a note", [{ ...valid, note: undefined }]],
@@ -145,6 +157,22 @@ describe("the rename map's loader", () => {
       [{ ...valid, new: ["Unit.fromEnum", "Unit.fromFilter"] }],
     ],
     ["has an empty note", [{ ...valid, note: "" }]],
+    [
+      "has a package entry whose replacement is a symbol",
+      [{ ...valid, old: "w3ts", new: "Unit.create(...)", kind: "package" }],
+    ],
+    [
+      "has a package entry whose old name is a call",
+      [{ ...valid, old: "w3ts(...)", new: "reforged-ts", kind: "package" }],
+    ],
+    [
+      "has a package name as a member's replacement",
+      [{ ...valid, new: "reforged-ts" }],
+    ],
+    [
+      "has a package name as a member's old symbol",
+      [{ ...valid, old: "reforged-ts" }],
+    ],
   ])("rejects a map that %s", (_, map) => {
     expect(() => parseRenames(JSON.stringify(map))).toThrow(
       /does not match its schema/,
@@ -217,6 +245,17 @@ describe("migration/renames.json", () => {
     expect(
       REMOVED_IN_STEP_4.filter(([old, kind]) => kinds.get(old) !== kind),
     ).toEqual([]);
+  });
+
+  it("renames the package w3ts to reforged-ts, one to one", async () => {
+    const entries = await loadRenames();
+    expect(entries.filter((entry) => entry.kind === "package")).toEqual([
+      expect.objectContaining({
+        old: "w3ts",
+        new: "reforged-ts",
+        oneToOne: true,
+      }),
+    ]);
   });
 
   it("names both halves of an accessor's get/set pair", async () => {

@@ -27,7 +27,8 @@ export interface RenameEntry {
     | "function"
     | "class"
     | "type"
-    | "entryPoint";
+    | "entryPoint"
+    | "package";
   versions: { from: string; to: string };
   oneToOne: boolean;
   note: string;
@@ -54,9 +55,12 @@ export async function loadRenames(): Promise<RenameEntry[]> {
   return parseRenames(await readFile(mapFile, "utf8"));
 }
 
-/** The replacement symbols of an entry: none, one, or several. */
+/**
+ * The replacement symbols of an entry: none, one, or several. A `package`
+ * entry names a package, not a symbol, and has none.
+ */
 export function replacements(entry: RenameEntry): string[] {
-  if (entry.new === null) return [];
+  if (entry.new === null || entry.kind === "package") return [];
   return typeof entry.new === "string" ? [entry.new] : entry.new;
 }
 
