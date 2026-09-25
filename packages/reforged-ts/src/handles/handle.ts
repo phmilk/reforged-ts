@@ -1,5 +1,8 @@
 /** @noSelfInFile */
 
+import { hasRun } from "../init/stages";
+import { Reforged } from "../reforged/index";
+
 /** The registry: the one Wrapper object for each Handle. */
 const registry = new WeakMap<handle, Handle<handle>>();
 
@@ -191,11 +194,16 @@ export function expectWrapper<C extends Handle<handle>>(
 }
 
 /**
- * Creation, the one place its error is raised: the Wrapper for `handle`, or
- * the error naming `cls` and `detail` when `handle` is undefined. Reached
- * only through tail calls (from `expect` or `expectWrapper`, themselves
- * tail-called by the creation member), so level 2 names the frame that
- * called the creation member.
+ * The creation step, shared by every Wrapper and the one place its errors
+ * are raised: the Wrapper for `handle`, or the error naming `cls` and
+ * `detail` when `handle` is undefined. Reached only through tail calls (from
+ * `expect` or `expectWrapper`, themselves tail-called by the creation
+ * member), so level 2 names the frame that called the creation member.
+ *
+ * It is the one place a creation-time Guard goes, behind one read of Dev
+ * mode; no Wrapper method carries one. In Dev mode a creation before the
+ * globals Init stage was entered raises, naming `Init.onGlobals` (a Handle
+ * created at module top level runs before the game is set up, and desyncs).
  */
 function wrapCreated<C extends Handle<handle>>(
   cls: WrapperClass<C>,
@@ -206,6 +214,12 @@ function wrapCreated<C extends Handle<handle>>(
   if (handle === undefined) {
     const suffix = detail === "" ? "" : ` (${detail})`;
     error(`reforged-ts: failed to create ${cls.name}${suffix}`, 2);
+  }
+  if (Reforged.devMode && !hasRun("globals")) {
+    error(
+      `reforged-ts: ${cls.name} created before the globals Init stage: create Handles in Init.onGlobals or a later stage, not at module top level`,
+      2,
+    );
   }
   const wrapper = wrap(cls, handle);
   init?.(wrapper);

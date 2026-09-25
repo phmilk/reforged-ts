@@ -30,6 +30,9 @@ interface Family {
   readonly lookup: (handle: handle) => Handle<handle> | undefined;
 }
 
+// Dev mode raises for a Wrapper created before the globals Init stage.
+__stub_init_globals();
+
 const owner = defined(MapPlayer.fromIndex(0), "MapPlayer.fromIndex(0)");
 
 function gameUi(): Frame {
