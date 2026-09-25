@@ -13,19 +13,19 @@
  * A package at `0.0.0` has not had its versions applied and is never
  * published: a plan holding one is refused.
  */
-import { readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
 import { readPreMode, type PreMode } from "./changesets.js";
-import { PUBLISH_PLAN } from "./template-gate.js";
+import {
+  publishEntries,
+  PublishPlanError,
+  readPublishPlan,
+  writePublishPlan,
+} from "./publish-plan.js";
 
 /** The dist-tag of prereleases (ADR 0009): `pnpm add reforged-ts@next`. */
 export const NEXT_TAG = "next";
 
 /** The version of a package whose versions were never applied. */
 export const UNVERSIONED = "0.0.0";
-
-/** The publish plan format Changesets 3 writes. */
-const PLAN_VERSION = 1;
 
 /** A package the plan publishes, and the dist-tag it goes out under. */
 export interface TaggedRelease {
@@ -37,22 +37,11 @@ export interface TaggedRelease {
   tag: string;
 }
 
-/** A publish plan that cannot be tagged: unreadable, or unversioned. */
-export class PublishPlanError extends Error {
-  override name = "PublishPlanError";
-}
-
 export interface DistTagResult {
   /** The plan, with its tags set. */
   plan: unknown;
   /** Its publish entries in plan order. */
   releases: TaggedRelease[];
-}
-
-type Entry = Record<string, unknown>;
-
-function isRecord(value: unknown): value is Entry {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 /**
@@ -63,40 +52,18 @@ function isRecord(value: unknown): value is Entry {
  * one or that publishes a package at `0.0.0`.
  */
 export function setDistTags(plan: unknown, preMode: PreMode): DistTagResult {
-  if (
-    !isRecord(plan) ||
-    plan.version !== PLAN_VERSION ||
-    !Array.isArray(plan.plan) ||
-    !plan.plan.every((chunk) => Array.isArray(chunk))
-  ) {
-    throw new PublishPlanError(
-      `The publish plan is not a version ${String(PLAN_VERSION)} Changesets plan.`,
-    );
-  }
-  const copy = structuredClone(plan) as { plan: unknown[][] };
-  const releases: TaggedRelease[] = [];
-  for (const entry of copy.plan.flat()) {
-    if (isRecord(entry) && entry.kind === "tag-only") continue;
-    if (
-      !isRecord(entry) ||
-      entry.kind !== "publish" ||
-      typeof entry.name !== "string" ||
-      typeof entry.version !== "string" ||
-      typeof entry.tag !== "string"
-    ) {
-      throw new PublishPlanError(
-        `The publish plan holds an entry that is neither a publish nor a tag-only one: ${JSON.stringify(entry)}`,
-      );
-    }
+  const copy: unknown = structuredClone(plan);
+  const releases = publishEntries(copy).map((entry): TaggedRelease => {
     const tag = preMode === "pre" ? NEXT_TAG : entry.tag;
-    releases.push({
+    const release = {
       name: entry.name,
       version: entry.version,
       from: entry.tag,
       tag,
-    });
+    };
     entry.tag = tag;
-  }
+    return release;
+  });
   const unversioned = releases.filter(({ version }) => version === UNVERSIONED);
   if (unversioned.length > 0) {
     throw new PublishPlanError(
@@ -119,18 +86,9 @@ export async function distTag(
   packDir: string,
   root: string,
 ): Promise<DistTagResult> {
-  const file = join(packDir, PUBLISH_PLAN);
-  let plan: unknown;
-  try {
-    plan = JSON.parse(await readFile(file, "utf8"));
-  } catch (error) {
-    throw new PublishPlanError(
-      `Cannot read the publish plan ${file}: ${error instanceof Error ? error.message : String(error)}`,
-      { cause: error },
-    );
-  }
+  const { file, plan } = await readPublishPlan(packDir);
   const result = setDistTags(plan, await readPreMode(root));
-  await writeFile(file, `${JSON.stringify(result.plan, null, 2)}\n`);
+  await writePublishPlan(file, result.plan);
   return result;
 }
 

@@ -10,14 +10,10 @@ import { readFile, writeFile } from "node:fs/promises";
 import { isAbsolute, join, posix, relative, resolve, sep } from "node:path";
 import { byCodePoint } from "./order.js";
 import { LIBRARY_PACKAGE } from "./packages.js";
+import { publishEntries, readPublishPlan } from "./publish-plan.js";
 import { parseSemver } from "./semver.js";
+import { errorMessage, isRecord } from "./unknown.js";
 import { readPublishablePackages } from "./workspace.js";
-
-/** The file `changeset pack` writes at the root of its output folder. */
-export const PUBLISH_PLAN = "publish-plan.json";
-
-/** The publish plan format the gate reads (Changesets 3). */
-const PLAN_VERSION = 1;
 
 /** A package of the publish plan, and its tarball in the pack output. */
 export interface PackedPackage {
@@ -78,37 +74,9 @@ export async function releaseTemplateRef(
 export async function readPackedPackages(
   packDir: string,
 ): Promise<PackedPackage[]> {
-  const planPath = join(packDir, PUBLISH_PLAN);
-  let plan: unknown;
-  try {
-    plan = JSON.parse(await readFile(planPath, "utf8"));
-  } catch (error) {
-    throw new TemplateGateError(
-      `Cannot read the publish plan ${planPath}: ${error instanceof Error ? error.message : String(error)}`,
-      { cause: error },
-    );
-  }
-  if (!isRecord(plan) || plan.version !== PLAN_VERSION) {
-    throw new TemplateGateError(
-      `${planPath} is not a version ${String(PLAN_VERSION)} publish plan.`,
-    );
-  }
-  if (!Array.isArray(plan.plan)) {
-    throw new TemplateGateError(`${planPath} has no plan.`);
-  }
+  const { file: planPath, plan } = await readPublishPlan(packDir);
   const packed: PackedPackage[] = [];
-  for (const entry of plan.plan.flat() as unknown[]) {
-    if (isRecord(entry) && entry.kind === "tag-only") continue;
-    if (
-      !isRecord(entry) ||
-      entry.kind !== "publish" ||
-      typeof entry.name !== "string" ||
-      typeof entry.version !== "string"
-    ) {
-      throw new TemplateGateError(
-        `${planPath} holds an entry that is neither a publish nor a tag-only one: ${JSON.stringify(entry)}`,
-      );
-    }
+  for (const entry of publishEntries(plan, planPath)) {
     const label = `${entry.name}@${entry.version}`;
     const tarball = entry.tarball;
     if (
@@ -238,7 +206,7 @@ export async function runTemplateGate(
     manifest = parsed;
   } catch (error) {
     throw new TemplateGateError(
-      `${input.template} is not a Template checkout: cannot read ${manifestPath}: ${error instanceof Error ? error.message : String(error)}`,
+      `${input.template} is not a Template checkout: cannot read ${manifestPath}: ${errorMessage(error)}`,
       { cause: error },
     );
   }
@@ -351,8 +319,4 @@ async function overridesIgnored(
     }
   }
   return undefined;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }

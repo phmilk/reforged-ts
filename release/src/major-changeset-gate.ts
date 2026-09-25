@@ -32,6 +32,7 @@ import {
   parseSemver,
   type SemVer,
 } from "./semver.js";
+import { isRecord } from "./unknown.js";
 import { readPublishablePackages } from "./workspace.js";
 
 export type { PreMode } from "./changesets.js";
@@ -154,11 +155,12 @@ function pairTo(major: number): VersionPair {
 /** Whether the rename map has an entry or the marker for `pair`. */
 function hasRenames(renames: readonly unknown[], pair: VersionPair): boolean {
   return renames.some((item) => {
-    if (typeof item !== "object" || item === null) return false;
-    const versions = (item as { versions?: unknown }).versions;
-    if (typeof versions !== "object" || versions === null) return false;
-    const { from, to } = versions as { from?: unknown; to?: unknown };
-    return from === pair.from && to === pair.to;
+    const versions = isRecord(item) ? item.versions : undefined;
+    return (
+      isRecord(versions) &&
+      versions.from === pair.from &&
+      versions.to === pair.to
+    );
   });
 }
 

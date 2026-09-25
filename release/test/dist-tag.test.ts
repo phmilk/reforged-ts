@@ -90,15 +90,6 @@ describe("setDistTags", () => {
         "A package at 0.0.0 is never published",
     );
   });
-
-  it("refuses what is not a Changesets 3 plan", () => {
-    expect(() => setDistTags({ version: 2, plan: [] }, "pre")).toThrow(
-      "not a version 1 Changesets plan",
-    );
-    expect(() => setDistTags(plan([{ kind: "publish" }]), "pre")).toThrow(
-      "neither a publish nor a tag-only one",
-    );
-  });
 });
 
 describe("formatReleases", () => {

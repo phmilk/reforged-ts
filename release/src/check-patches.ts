@@ -12,6 +12,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { compareBuilds, gameVersion, isBuild } from "./build.js";
 import { LIBRARY_PACKAGE, TYPINGS_PACKAGE } from "./packages.js";
+import { errorMessage, isRecord } from "./unknown.js";
 import {
   readPublishablePackages,
   type PackageManifest,
@@ -88,8 +89,7 @@ export interface PatchCheckResult {
 /** The `reforged.patch` of a manifest, `undefined` when it has none. */
 function declaredPatch(manifest: PackageManifest): unknown {
   const reforged = manifest.reforged;
-  if (typeof reforged !== "object" || reforged === null) return undefined;
-  return (reforged as Record<string, unknown>).patch;
+  return isRecord(reforged) ? reforged.patch : undefined;
 }
 
 const listed = (patches: readonly string[]) =>
@@ -189,15 +189,11 @@ export async function readTypingsEntries(dir: string): Promise<TypingsEntry[]> {
     let patch: unknown;
     try {
       const manifest = JSON.parse(await readFile(file, "utf8")) as unknown;
-      patch =
-        typeof manifest === "object" && manifest !== null
-          ? (manifest as Record<string, unknown>).patch
-          : undefined;
+      patch = isRecord(manifest) ? manifest.patch : undefined;
     } catch (error) {
-      throw new PatchInputError(
-        `${file}: ${error instanceof Error ? error.message : String(error)}`,
-        { cause: error },
-      );
+      throw new PatchInputError(`${file}: ${errorMessage(error)}`, {
+        cause: error,
+      });
     }
     if (!isBuild(patch) || gameVersion(patch) !== folder) {
       throw new PatchInputError(

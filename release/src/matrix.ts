@@ -25,6 +25,7 @@ import {
   TYPINGS_PACKAGE,
 } from "./packages.js";
 import { isPrerelease, parseSemver } from "./semver.js";
+import { errorMessage, isRecord, isStringList } from "./unknown.js";
 import type { PublishablePackage } from "./workspace.js";
 
 /** The committed matrix, relative to the repository root. */
@@ -538,26 +539,18 @@ async function readJson(
     ) {
       return missing;
     }
-    throw new MatrixInputError(
-      `${path}: ${error instanceof Error ? error.message : String(error)}`,
-      { cause: error },
-    );
+    throw new MatrixInputError(`${path}: ${errorMessage(error)}`, {
+      cause: error,
+    });
   }
   try {
     return JSON.parse(text) as unknown;
   } catch (error) {
-    throw new MatrixInputError(
-      `${path}: ${error instanceof Error ? error.message : String(error)}`,
-      { cause: error },
-    );
+    throw new MatrixInputError(`${path}: ${errorMessage(error)}`, {
+      cause: error,
+    });
   }
 }
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
-
-const isStringList = (value: unknown): value is string[] =>
-  Array.isArray(value) && value.every((item) => typeof item === "string");
 
 /** The systems list of `systems.json`: `{ "minors": { "1.0": [...] } }`. */
 export function parseSystems(value: unknown): SystemsList {
@@ -633,10 +626,9 @@ export async function readMatrixInputs(
   try {
     yaml = await readFile(join(root, "pnpm-workspace.yaml"), "utf8");
   } catch (error) {
-    throw new MatrixInputError(
-      `pnpm-workspace.yaml: ${error instanceof Error ? error.message : String(error)}`,
-      { cause: error },
-    );
+    throw new MatrixInputError(`pnpm-workspace.yaml: ${errorMessage(error)}`, {
+      cause: error,
+    });
   }
   return {
     packages,

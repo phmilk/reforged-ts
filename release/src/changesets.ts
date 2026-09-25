@@ -9,6 +9,7 @@ import { parseChangesetFile } from "@changesets/parse";
 import { readdir, readFile } from "node:fs/promises";
 import { join, posix } from "node:path";
 import { byCodePoint } from "./order.js";
+import { errorMessage } from "./unknown.js";
 
 /** The folder that holds the pending changesets, relative to the root. */
 export const CHANGESET_DIR = ".changeset";
@@ -33,10 +34,7 @@ export class ChangesetError extends Error {
     readonly file: string,
     cause: unknown,
   ) {
-    super(
-      `${file}: ${cause instanceof Error ? cause.message : String(cause)}`,
-      { cause },
-    );
+    super(`${file}: ${errorMessage(cause)}`, { cause });
     this.name = "ChangesetError";
   }
 }
