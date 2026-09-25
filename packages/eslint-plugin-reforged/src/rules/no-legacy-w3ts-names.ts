@@ -18,7 +18,7 @@ import {
 
 import { libraryClassesOf, libraryClassOf } from "../classify/library-class.js";
 import { createRule } from "../create-rule.js";
-import type { RenameEntry } from "../data/index.js";
+import type { RenameEntry, RenameName } from "../data/index.js";
 import { defineRuleEntry } from "../rule-entry.js";
 
 export const name = "no-legacy-w3ts-names";
@@ -28,22 +28,6 @@ type MessageIds = "renamed" | "removed" | "useReplacement";
 type Edit = (
   fixer: TSESLint.RuleFixer,
 ) => TSESLint.RuleFix | TSESLint.RuleFix[];
-
-/** A symbol of the map: `Unit`, `Unit.create(...)`, `new Unit(...)`. */
-interface MapSymbol {
-  readonly className: string;
-  readonly member: string | undefined;
-}
-
-const symbolPattern =
-  /^(?:new )?([A-Za-z_$][\w$]*)(?:\.([A-Za-z_$][\w$]*))?(?:\(\.\.\.\))?$/;
-
-function parseSymbol(symbol: string): MapSymbol | undefined {
-  const match = symbolPattern.exec(symbol);
-  return match?.[1] === undefined
-    ? undefined
-    : { className: match[1], member: match[2] };
-}
 
 /** The map, indexed by what the rule matches syntactically. */
 interface Index {
@@ -74,13 +58,13 @@ function indexOf(entries: readonly RenameEntry[]): Index {
   >();
   for (const entry of entries) {
     if (entry.kind === "package") {
-      packages.set(entry.old, entry);
+      packages.set(entry.old.text, entry);
       continue;
     }
     if (entry.kind === "entryPoint") {
       continue;
     }
-    const symbol = parseSymbol(entry.old);
+    const { symbol } = entry.old;
     if (symbol === undefined) {
       continue;
     }
@@ -97,12 +81,14 @@ function indexOf(entries: readonly RenameEntry[]): Index {
   }
   const renamed = [...packages.values()];
   const newPackage =
-    renamed.flatMap((entry) => entry.replacements)[0] ?? "reforged-ts";
+    renamed.flatMap((entry) => entry.replacements)[0]?.text ?? "reforged-ts";
   return {
     packages,
     libraryPackages: new Set([
       newPackage,
-      ...renamed.flatMap((entry) => [entry.old, ...entry.replacements]),
+      ...renamed.flatMap((entry) =>
+        [entry.old, ...entry.replacements].map((each) => each.text),
+      ),
     ]),
     newPackage,
     exports,
@@ -142,15 +128,15 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
       function report(
         node: TSESTree.Node,
         entry: RenameEntry,
-        edit: (replacement: string) => Edit | undefined,
+        edit: (replacement: RenameName) => Edit | undefined,
       ): void {
         const data = {
-          old: entry.old,
+          old: entry.old.text,
           from: entry.versions.from,
           to: entry.versions.to,
           note: entry.note,
           replacement: entry.replacements
-            .map((each) => `\`${each}\``)
+            .map((each) => `\`${each.text}\``)
             .join(" or "),
         };
         if (entry.replacements.length === 0) {
@@ -176,7 +162,7 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
               : [
                   {
                     messageId: "useReplacement" as const,
-                    data: { replacement },
+                    data: { replacement: replacement.text },
                     fix,
                   },
                 ],
@@ -237,7 +223,7 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
           node,
           entry,
           (replacement) => (fixer) =>
-            fixer.replaceText(node, `${quote}${replacement}${quote}`),
+            fixer.replaceText(node, `${quote}${replacement.text}${quote}`),
         );
       }
 
@@ -253,7 +239,7 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
         const aliased =
           specifier.local.range[0] !== specifier.imported.range[0];
         report(specifier, entry, (replacement) => {
-          const symbol = parseSymbol(replacement);
+          const { symbol } = replacement;
           if (symbol === undefined || symbol.member !== undefined) {
             return undefined;
           }
@@ -309,7 +295,7 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
             node.arguments.length > 0 ||
             sourceCode.getLastToken(node)?.value === ")";
           report(node, entry, (replacement) => {
-            const symbol = parseSymbol(replacement);
+            const { symbol } = replacement;
             if (symbol === undefined) {
               return undefined;
             }
@@ -366,7 +352,7 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
             (parent.type === AST_NODE_TYPES.UpdateExpression &&
               parent.argument === node);
           report(property, found.entry, (replacement) => {
-            const symbol = parseSymbol(replacement);
+            const { symbol } = replacement;
             const member = symbol?.member;
             if (symbol === undefined || member === undefined) {
               return undefined;

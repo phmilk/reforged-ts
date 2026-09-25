@@ -88,7 +88,12 @@ export function loadPluginData(
 }
 
 export type { OptionalPackage } from "./optional.js";
-export type { RenameEntry, RenameKind } from "./renames.js";
+export type {
+  RenameEntry,
+  RenameKind,
+  RenameName,
+  RenameSymbol,
+} from "./renames.js";
 export type { UnsafeNative } from "./unsafe-natives.js";
 export type { LocalSafeEntry, LocalSafeKind } from "./local-safe.js";
 export type { CreationNative } from "./creation-natives.js";

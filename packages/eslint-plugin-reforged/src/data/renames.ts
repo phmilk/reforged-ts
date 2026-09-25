@@ -26,12 +26,35 @@ export const renameKinds = [
 
 export type RenameKind = (typeof renameKinds)[number];
 
+/** A code symbol of the map, parsed: `Unit`, `Unit.create(...)`, `new Unit(...)`. */
+export interface RenameSymbol {
+  /** The class, function or type name: `Unit` in all three. */
+  readonly className: string;
+  /** The member after the dot (`create`), undefined for a bare name. */
+  readonly member: string | undefined;
+  /** Written `new X(...)`: a constructor call (an `old` symbol only). */
+  readonly isNew: boolean;
+  /** Written with `(...)`: a call. */
+  readonly isCall: boolean;
+}
+
+/** A name of the map: the text as written, and its symbol when it is code. */
+export interface RenameName {
+  /** As the map writes it; the messages quote it. */
+  readonly text: string;
+  /**
+   * The parsed symbol; undefined for a package name and for an entry-point
+   * hook (`main::before`).
+   */
+  readonly symbol: RenameSymbol | undefined;
+}
+
 /** One entry of the rename map. */
 export interface RenameEntry {
-  /** The old symbol: `new Unit(...)`, `Group.getEnumUnit`, `hookedMain`, `main::before`, or a package name. */
-  readonly old: string;
+  /** The old name: `new Unit(...)`, `Group.getEnumUnit`, `hookedMain`, `main::before`, or a package name. */
+  readonly old: RenameName;
   /** The replacements, in the map's order; empty when the symbol was removed. */
-  readonly replacements: readonly string[];
+  readonly replacements: readonly RenameName[];
   readonly kind: RenameKind;
   /** The version pair, as the message names it: `w3ts@3` and `reforged-ts@1`. */
   readonly versions: { readonly from: string; readonly to: string };
@@ -42,13 +65,10 @@ export interface RenameEntry {
 }
 
 const identifier = String.raw`[A-Za-z_$][\w$]*`;
-const call = String.raw`(\(\.\.\.\))?`;
 const symbolPattern = new RegExp(
-  String.raw`^${identifier}(\.${identifier})?${call}$`,
+  String.raw`^(?<isNew>new )?(?<className>${identifier})(?:\.(?<member>${identifier}))?(?<call>\(\.\.\.\))?$`,
 );
-const oldSymbolPattern = new RegExp(
-  String.raw`^((new )?${identifier}(\.${identifier})?${call}|${identifier}::${identifier})$`,
-);
+const hookPattern = new RegExp(String.raw`^${identifier}::${identifier}$`);
 const packagePattern = /^(@[a-z0-9~-][a-z0-9._~-]*\/)?[a-z0-9~-][a-z0-9._~-]*$/;
 const versionPattern = /^[a-z][a-z0-9-]*@[0-9]+$/;
 
@@ -64,6 +84,60 @@ function expectMatch(
     throw new DataFileError(path.file, `${path.field}.${key}`, expected);
   }
   return value;
+}
+
+/** A code symbol; `new X(...)` only in an old name. */
+function parseSymbol(text: string, isOld: boolean): RenameSymbol | undefined {
+  // A group that did not take part in the match is undefined.
+  const groups = symbolPattern.exec(text)?.groups as
+    | Partial<Record<"isNew" | "className" | "member" | "call", string>>
+    | undefined;
+  if (
+    groups?.className === undefined ||
+    (!isOld && groups.isNew !== undefined)
+  ) {
+    return undefined;
+  }
+  return {
+    className: groups.className,
+    member: groups.member,
+    isNew: groups.isNew !== undefined,
+    isCall: groups.call !== undefined,
+  };
+}
+
+/**
+ * A code name of the map, parsed. An old name may also be a constructor
+ * (`new Unit(...)`) or an entry-point hook (`main::before`, no symbol).
+ */
+function expectSymbol(
+  text: unknown,
+  field: string,
+  path: FieldPath,
+  isOld: boolean,
+  expected: string,
+): RenameName {
+  if (typeof text === "string") {
+    const symbol = parseSymbol(text, isOld);
+    if (symbol !== undefined) {
+      return { text, symbol };
+    }
+    if (isOld && hookPattern.test(text)) {
+      return { text, symbol: undefined };
+    }
+  }
+  throw new DataFileError(path.file, field, expected);
+}
+
+function packageName(
+  entry: Record<string, unknown>,
+  key: string,
+  path: FieldPath,
+): RenameName {
+  return {
+    text: expectMatch(entry, key, path, packagePattern, "a package name"),
+    symbol: undefined,
+  };
 }
 
 function parseKind(entry: Record<string, unknown>, path: FieldPath) {
@@ -82,18 +156,19 @@ function parseReplacements(
   entry: Record<string, unknown>,
   path: FieldPath,
   kind: RenameKind,
-): string[] {
+): RenameName[] {
   const field = `${path.field}.new`;
   const value = entry.new;
   if (kind === "package") {
-    return [expectMatch(entry, "new", path, packagePattern, "a package name")];
+    return [packageName(entry, "new", path)];
   }
   const symbol = "a symbol (`Unit.create(...)`)";
   if (value === null) {
     return [];
   }
   if (typeof value === "string") {
-    return [expectMatch(entry, "new", path, symbolPattern, symbol)];
+    expectString(entry, "new", path);
+    return [expectSymbol(value, field, path, false, symbol)];
   }
   if (!Array.isArray(value) || value.length < 2) {
     throw new DataFileError(
@@ -102,13 +177,10 @@ function parseReplacements(
       `${symbol}, a list of at least two symbols, or null`,
     );
   }
-  const list = value.map((each: unknown, index) => {
-    if (typeof each !== "string" || !symbolPattern.test(each)) {
-      throw new DataFileError(path.file, `${field}[${String(index)}]`, symbol);
-    }
-    return each;
-  });
-  if (new Set(list).size !== list.length) {
+  const list = value.map((each: unknown, index) =>
+    expectSymbol(each, `${field}[${String(index)}]`, path, false, symbol),
+  );
+  if (new Set(list.map((each) => each.text)).size !== list.length) {
     throw new DataFileError(path.file, field, "a list without duplicates");
   }
   return list;
@@ -120,12 +192,12 @@ export function parseRenames(json: unknown, file: string): RenameEntry[] {
     const kind = parseKind(entry, path);
     const old =
       kind === "package"
-        ? expectMatch(entry, "old", path, packagePattern, "a package name")
-        : expectMatch(
-            entry,
-            "old",
+        ? packageName(entry, "old", path)
+        : expectSymbol(
+            expectString(entry, "old", path),
+            `${path.field}.old`,
             path,
-            oldSymbolPattern,
+            true,
             "a symbol (`new Unit(...)`, `Group.getEnumUnit`, `main::before`)",
           );
     const replacements = parseReplacements(entry, path, kind);
