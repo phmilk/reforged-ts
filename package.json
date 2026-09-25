@@ -22,6 +22,7 @@
     "release:check-changeset": "pnpm --filter reforged-ts-release release:check-changeset",
     "release:check-patches": "pnpm --filter reforged-ts-release release:check-patches",
     "release:gate": "pnpm --filter reforged-ts-release release:gate",
+    "release:template-gate": "pnpm --filter reforged-ts-release release:template-gate",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test"
   },
   "devDependencies": {
