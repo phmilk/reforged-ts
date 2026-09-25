@@ -9,6 +9,7 @@ import { parseChangesetFile } from "@changesets/parse";
 import { readdir, readFile } from "node:fs/promises";
 import { join, posix } from "node:path";
 import { byCodePoint } from "./order.js";
+import { errorMessage, isRecord } from "./unknown.js";
 
 /** The folder that holds the pending changesets, relative to the root. */
 export const CHANGESET_DIR = ".changeset";
@@ -33,10 +34,7 @@ export class ChangesetError extends Error {
     readonly file: string,
     cause: unknown,
   ) {
-    super(
-      `${file}: ${cause instanceof Error ? cause.message : String(cause)}`,
-      { cause },
-    );
+    super(`${file}: ${errorMessage(cause)}`, { cause });
     this.name = "ChangesetError";
   }
 }
@@ -93,10 +91,17 @@ export async function readChangesetFolder(dir: string): Promise<Changeset[]> {
   return changesets;
 }
 
-/** The pre state of `.changeset/pre.json`: absent, active or exited. */
+/**
+ * The pre state of `.changeset/pre.json`: absent, active or exited. Only
+ * `pre` produces prereleases; after `changeset pre exit` the next version
+ * step releases stable versions.
+ */
 export type PreMode = "none" | "pre" | "exit";
 
-/** The pre state of the workspace at `root`. */
+/**
+ * The pre state of the workspace at `root`. Throws when `pre.json` is not
+ * JSON or its mode is neither `pre` nor `exit`, naming the file.
+ */
 export async function readPreMode(root: string): Promise<PreMode> {
   const file = join(root, CHANGESET_DIR, "pre.json");
   let text: string;
@@ -106,7 +111,15 @@ export async function readPreMode(root: string): Promise<PreMode> {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return "none";
     throw error;
   }
-  const mode = (JSON.parse(text) as { mode?: unknown }).mode;
+  let state: unknown;
+  try {
+    state = JSON.parse(text);
+  } catch (error) {
+    throw new Error(`${CHANGESET_DIR}/pre.json: ${errorMessage(error)}`, {
+      cause: error,
+    });
+  }
+  const mode = isRecord(state) ? state.mode : undefined;
   if (mode !== "pre" && mode !== "exit") {
     throw new Error(
       `${CHANGESET_DIR}/pre.json: mode must be "pre" or "exit", not ${JSON.stringify(mode)}.`,

@@ -25,12 +25,17 @@ import {
   type PreMode,
 } from "./changesets.js";
 import { byCodePoint } from "./order.js";
+import { LIBRARY_PACKAGE } from "./packages.js";
+import {
+  compareSemver,
+  isPrerelease,
+  parseSemver,
+  type SemVer,
+} from "./semver.js";
+import { isRecord } from "./unknown.js";
 import { readPublishablePackages } from "./workspace.js";
 
 export type { PreMode } from "./changesets.js";
-
-/** The package the gate guards. */
-export const LIBRARY = "reforged-ts";
 
 /** What the first major of `reforged-ts` migrates from: w3ts 3.x. */
 export const PREDECESSOR = "w3ts@3";
@@ -111,55 +116,51 @@ export interface GateResult {
   preMode: PreMode;
 }
 
-interface Semver {
-  major: number;
-  minor: number;
-  patch: number;
-  prerelease: boolean;
-}
-
-function parseVersion(version: string): Semver {
-  const match =
-    /^(\d+)\.(\d+)\.(\d+)(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$/.exec(version);
-  if (match === null) {
+function parseVersion(version: string): SemVer {
+  const parsed = parseSemver(version);
+  if (parsed === undefined) {
     throw new Error(
-      `${LIBRARY} has version "${version}", which is not semver.`,
+      `${LIBRARY_PACKAGE} has version "${version}", which is not semver.`,
     );
   }
-  return {
-    major: Number(match[1]),
-    minor: Number(match[2]),
-    patch: Number(match[3]),
-    // A `-` before any build metadata starts the prerelease.
-    prerelease: /^[^+]*-/.test(version),
-  };
+  return parsed;
 }
+
+/** The first stable version of the library. */
+const FIRST_STABLE: SemVer = {
+  major: 1,
+  minor: 0,
+  patch: 0,
+  prerelease: [],
+  build: [],
+};
 
 /**
  * The major a major bump gives: `X.0.0-pre` becomes `X.0.0`, as Changesets
  * computes it, and any other version `X+1.0.0`.
  */
-function majorAfterBump(version: Semver): number {
-  return version.prerelease && version.minor === 0 && version.patch === 0
+function majorAfterBump(version: SemVer): number {
+  return isPrerelease(version) && version.minor === 0 && version.patch === 0
     ? version.major
     : version.major + 1;
 }
 
 function pairTo(major: number): VersionPair {
   return {
-    from: major === 1 ? PREDECESSOR : `${LIBRARY}@${String(major - 1)}`,
-    to: `${LIBRARY}@${String(major)}`,
+    from: major === 1 ? PREDECESSOR : `${LIBRARY_PACKAGE}@${String(major - 1)}`,
+    to: `${LIBRARY_PACKAGE}@${String(major)}`,
   };
 }
 
 /** Whether the rename map has an entry or the marker for `pair`. */
 function hasRenames(renames: readonly unknown[], pair: VersionPair): boolean {
   return renames.some((item) => {
-    if (typeof item !== "object" || item === null) return false;
-    const versions = (item as { versions?: unknown }).versions;
-    if (typeof versions !== "object" || versions === null) return false;
-    const { from, to } = versions as { from?: unknown; to?: unknown };
-    return from === pair.from && to === pair.to;
+    const versions = isRecord(item) ? item.versions : undefined;
+    return (
+      isRecord(versions) &&
+      versions.from === pair.from &&
+      versions.to === pair.to
+    );
   });
 }
 
@@ -169,25 +170,22 @@ export function evaluateGate(input: GateInput): GateResult {
   const majors = input.changesets
     .filter((changeset) =>
       changeset.releases.some(
-        (release) => release.name === LIBRARY && release.type === "major",
+        (release) =>
+          release.name === LIBRARY_PACKAGE && release.type === "major",
       ),
     )
     .map((changeset) => changeset.file)
     .sort(byCodePoint);
   const releasesLibrary =
-    version.prerelease ||
+    isPrerelease(version) ||
     input.changesets.some((changeset) =>
       changeset.releases.some(
-        (release) => release.name === LIBRARY && release.type !== "none",
+        (release) =>
+          release.name === LIBRARY_PACKAGE && release.type !== "none",
       ),
     );
   // Below 1.0.0: `0.x`, or a prerelease of 1.0.0 (the alphas).
-  const beforeFirstStable =
-    version.major < 1 ||
-    (version.major === 1 &&
-      version.minor === 0 &&
-      version.patch === 0 &&
-      version.prerelease);
+  const beforeFirstStable = compareSemver(version, FIRST_STABLE) < 0;
   const firstStable = beforeFirstStable && releasesLibrary;
 
   let requirement: Requirement | undefined;
@@ -258,9 +256,11 @@ async function readPages(root: string): Promise<Set<string>> {
  */
 export async function readGateInput(root: string): Promise<GateInput> {
   const packages = await readPublishablePackages(root);
-  const library = packages.find((pkg) => pkg.name === LIBRARY);
+  const library = packages.find((pkg) => pkg.name === LIBRARY_PACKAGE);
   if (library === undefined) {
-    throw new Error(`The workspace has no publishable package ${LIBRARY}.`);
+    throw new Error(
+      `The workspace has no publishable package ${LIBRARY_PACKAGE}.`,
+    );
   }
   const changesets = [
     ...(await readChangesetFolder(join(root, CHANGESET_DIR))),
@@ -292,13 +292,13 @@ export async function majorChangesetGate(root: string): Promise<GateResult> {
 export function formatGate(result: GateResult): string {
   const { requirement } = result;
   if (requirement === undefined) {
-    return `No major of ${LIBRARY} is pending and its next stable version is not its first: no migration page is required.\n`;
+    return `No major of ${LIBRARY_PACKAGE} is pending and its next stable version is not its first: no migration page is required.\n`;
   }
   const pair = formatPair(requirement.pair);
   const why =
     requirement.reason.kind === "first-stable"
-      ? `The next stable version of ${LIBRARY} is its first (1.0.0), a major relative to ${PREDECESSOR}`
-      : `A major of ${LIBRARY} is pending (${requirement.reason.changesets.map((file) => `\`${file}\``).join(", ")})`;
+      ? `The next stable version of ${LIBRARY_PACKAGE} is its first (1.0.0), a major relative to ${PREDECESSOR}`
+      : `A major of ${LIBRARY_PACKAGE} is pending (${requirement.reason.changesets.map((file) => `\`${file}\``).join(", ")})`;
   const lines = [`${why}: version pair ${pair}.`];
   if (result.missing.length === 0) {
     lines.push(
@@ -318,7 +318,7 @@ export function formatGate(result: GateResult): string {
   lines.push(
     result.verdict === "report"
       ? "Pre mode is active (`.changeset/pre.json`): reported only. The gate fails once pre mode is exited and the version is stable."
-      : `The next version of ${LIBRARY} is stable, so this blocks the release. See "The major-changeset gate" in docs/release.md.`,
+      : `The next version of ${LIBRARY_PACKAGE} is stable, so this blocks the release. See "The major-changeset gate" in docs/release.md.`,
   );
   return `${lines.join("\n")}\n`;
 }

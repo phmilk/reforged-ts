@@ -10,6 +10,8 @@ A fork of [cipherxof/w3ts](https://github.com/cipherxof/w3ts) targeting Warcraft
 
 **For AI agents:** the documentation of this version, as one plain-text file for a language model, is [llms.txt](https://phmilk.github.io/reforged-ts/llms.txt).
 
+**Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag. Install with `@next`: `pnpm add reforged-ts@next reforged-types@next`. npm gave `latest` to the first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then.
+
 ## Status
 
 Alpha. The 1.0.0 line is under construction: expect API changes until the migration steps to the 3.0.0 API land.
@@ -17,10 +19,10 @@ Alpha. The 1.0.0 line is under construction: expect API changes until the migrat
 ## Install
 
 ```sh
-npm install reforged-ts reforged-types
+npm install reforged-ts@next reforged-types@next
 ```
 
-or `pnpm add reforged-ts reforged-types`. `reforged-types` is a peer dependency: it holds the Typings of the game's Natives. `reforged-test` is an optional peer dependency, for a Map project that runs its tests on Lua outside the game. Each peer range is a caret on the version the library was released with, so your package manager warns when a major does not match.
+or `pnpm add reforged-ts@next reforged-types@next` (drop `@next` from 1.0.0). `reforged-types` is a peer dependency: it holds the Typings of the game's Natives. `reforged-test` is an optional peer dependency, for a Map project that runs its tests on Lua outside the game. Each peer range is a caret on the version the library was released with, so your package manager warns when a major does not match.
 
 Add the typescript-to-lua language extensions and the Typings of your Game version to `types` in the Map project's `tsconfig.json`:
 

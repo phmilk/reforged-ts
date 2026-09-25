@@ -3,13 +3,8 @@ import { readFile } from "node:fs/promises";
 import { join, posix, sep } from "node:path";
 import { describe, expect, it } from "vitest";
 import { main } from "../src/cli/template-gate.js";
-import {
-  commandLine,
-  runTemplateGate,
-  templateRef,
-  type Command,
-  type Runner,
-} from "../src/template-gate.js";
+import { commandLine, type Command, type Runner } from "../src/process.js";
+import { runTemplateGate, templateRef } from "../src/template-gate.js";
 import { tempDir, writeText, writeWorkspace } from "./support/workspace.js";
 
 const ALPHA = "1.0.0-alpha.0";
@@ -115,15 +110,17 @@ function fakePnpm(
     commands.push(command);
     if (commandLine(command) === options.failing) return 1;
     if (command.args[0] === "install") {
+      // The gate runs every command in the checkout.
+      const cwd = command.cwd ?? "";
       const manifest = JSON.parse(
-        await readFile(join(command.cwd, "package.json"), "utf8"),
+        await readFile(join(cwd, "package.json"), "utf8"),
       ) as { pnpm: { overrides: Record<string, string> } };
       for (const [name, spec] of Object.entries(manifest.pnpm.overrides)) {
         const version =
           options.installs?.[name] ??
           /-(\d+\.\d+\.\d+[^/]*)\.tgz$/.exec(spec)?.[1];
         await writeText(
-          command.cwd,
+          cwd,
           `node_modules/${name}/package.json`,
           JSON.stringify({ name, version }),
         );
@@ -276,6 +273,9 @@ describe("templateRef", () => {
 
   it("refuses a version that is not semver", () => {
     expect(() => templateRef("1.0")).toThrow('"1.0" is not a semver version.');
+    expect(() => templateRef("01.0.0")).toThrow(
+      '"01.0.0" is not a semver version.',
+    );
   });
 });
 

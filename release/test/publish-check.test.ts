@@ -39,6 +39,9 @@ describe("atLeast", () => {
     expect(atLeast("11.5.0", "11.5.1")).toBe(false);
     expect(atLeast("10.9.4", "11.5.1")).toBe(false);
     expect(atLeast("not a version", "11.5.1")).toBe(false);
+    // A prerelease comes before its release.
+    expect(atLeast("11.5.1-rc.0", "11.5.1")).toBe(false);
+    expect(atLeast("11.6.0-rc.0", "11.5.1")).toBe(true);
   });
 });
 

@@ -19,9 +19,11 @@ on:
 permissions:
   contents: read
 
-# Two runs never version or publish at once; a newer push waits.
+# Two releases never version or publish at once; a newer push waits. A dry
+# run gets its own group, so rehearsing on master never holds up (or, as a
+# pending run, replaces) a release run.
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ github.ref }}${{ github.event_name == 'workflow_dispatch' && inputs.dry-run && '-dry-run' || '' }}
   cancel-in-progress: false
 
 jobs:
@@ -164,6 +166,13 @@ jobs:
         run: pnpm release:version
       - name: Build
         run: pnpm build
+      # The committed Typings must be what the generator writes from the
+      # vendored inputs: a drifted declaration file is never packed.
+      - name: Typings generator output check
+        run: pnpm typings:check
+      # The Changesets CLI rather than the pack sub-action, which uploads the
+      # artifact itself: the plan's tags must be rewritten to next
+      # (release:dist-tag) before the upload.
       - name: Pack
         run: pnpm changeset pack --out-dir "$RUNNER_TEMP/pack"
       # The next dist-tag in pre mode, written into the plan the Template
@@ -215,8 +224,9 @@ jobs:
       # provenance.
       id-token: write
     steps:
-      # Tags and releases go through the App, so the reforged-ts tags trigger
-      # docs.yml (tags created with the default token trigger no workflow).
+      # Tags and releases go through the App, so the reforged-ts tags can
+      # trigger the docs workflow the workflows spec (#48) plans, docs.yml
+      # (tags created with the default token trigger no workflow).
       - id: app
         uses: ./.github/actions/app-token
         with:

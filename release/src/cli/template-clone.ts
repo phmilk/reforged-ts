@@ -12,17 +12,21 @@
  * workspace. Relative paths resolve against the folder the command was
  * started from. Exit codes: 0 cloned, 1 failed, 2 usage.
  */
-import { spawn } from "node:child_process";
 import { resolve } from "node:path";
+import { runGit, type GitRunner } from "../git.js";
 import {
   cloneTemplate,
   TEMPLATE_REPOSITORY,
   TOKEN_VARIABLE,
-  type GitRunner,
 } from "../template-clone.js";
 import { releaseTemplateRef } from "../template-gate.js";
 import { repositoryRoot } from "../workspace.js";
-import { invokedDirectly, PROCESS_OUTPUT, type Output } from "./common.js";
+import {
+  errorMessage,
+  invokedDirectly,
+  PROCESS_OUTPUT,
+  type Output,
+} from "./common.js";
 
 const USAGE = "Usage: release:template-clone --pack-dir <dir> --into <dir>\n";
 
@@ -67,7 +71,7 @@ export async function main(
     cwd: process.env.INIT_CWD ?? process.cwd(),
     root: repositoryRoot,
     env: process.env,
-    git: spawnGit,
+    git: runGit,
   },
 ): Promise<number> {
   const options = parseArgs(args);
@@ -95,25 +99,10 @@ export async function main(
     output.stdout(`Cloned ${TEMPLATE_REPOSITORY} at ${ref} into ${into}.\n`);
     return 0;
   } catch (error) {
-    output.stderr(
-      `${error instanceof Error ? error.message : String(error)}\n`,
-    );
+    output.stderr(`${errorMessage(error)}\n`);
     return 1;
   }
 }
-
-/** Runs git with the process's output, adding `env` to its environment. */
-const spawnGit: GitRunner = ({ args, env }) =>
-  new Promise((resolvePromise, reject) => {
-    const child = spawn("git", args, {
-      stdio: "inherit",
-      env: { ...process.env, ...env },
-    });
-    child.on("error", reject);
-    child.on("close", (code) => {
-      resolvePromise(code ?? 1);
-    });
-  });
 
 if (invokedDirectly(import.meta.url)) {
   process.exitCode = await main(process.argv.slice(2), PROCESS_OUTPUT);

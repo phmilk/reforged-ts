@@ -5,6 +5,7 @@
  * prerequisites fail with a message naming them: read access to the
  * Template while it is private, and its `v<major>` ref.
  */
+import type { GitRunner } from "./git.js";
 
 /** The Template repository, on GitHub. */
 export const TEMPLATE_REPOSITORY = "phmilk/reforged-ts-template";
@@ -16,15 +17,6 @@ const TEMPLATE_URL = `https://github.com/${TEMPLATE_REPOSITORY}.git`;
 
 /** `git ls-remote --exit-code` found no matching ref. */
 const NO_MATCHING_REF = 2;
-
-/** A git command and the environment variables it adds. */
-export interface GitCommand {
-  args: readonly string[];
-  env: Readonly<Record<string, string>>;
-}
-
-/** Runs git to completion and resolves with its exit code. */
-export type GitRunner = (command: GitCommand) => Promise<number>;
 
 export interface CloneInput {
   /** The Template ref: `v<major>`, a tag or a branch. */

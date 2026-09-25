@@ -7,19 +7,21 @@
  * pre mode; 1 missing artefacts for a stable version, or the inputs cannot
  * be read; 2 usage.
  */
-import { appendFile } from "node:fs/promises";
 import {
   formatGate,
   majorChangesetGate,
   type GateResult,
 } from "../major-changeset-gate.js";
 import { repositoryRoot } from "../workspace.js";
-import { invokedDirectly, PROCESS_OUTPUT, type Output } from "./common.js";
+import {
+  appendSummary,
+  errorMessage,
+  invokedDirectly,
+  PROCESS_OUTPUT,
+  type Output,
+} from "./common.js";
 
 const USAGE = "Usage: release:gate\n";
-
-/** The environment variable GitHub Actions names the job summary in. */
-export const SUMMARY_VARIABLE = "GITHUB_STEP_SUMMARY";
 
 /** Where the command looks: the repository and the environment. */
 export interface Context {
@@ -41,20 +43,13 @@ export async function main(
   try {
     result = await majorChangesetGate(context.root);
   } catch (error) {
-    output.stderr(
-      `${error instanceof Error ? error.message : String(error)}\n`,
-    );
+    output.stderr(`${errorMessage(error)}\n`);
     return 1;
   }
 
   const text = formatGate(result);
-  const summary = context.env[SUMMARY_VARIABLE];
-  if (
-    summary !== undefined &&
-    summary !== "" &&
-    result.requirement !== undefined
-  ) {
-    await appendFile(summary, `## Major-changeset gate\n\n${text}\n`);
+  if (result.requirement !== undefined) {
+    await appendSummary(context.env, `## Major-changeset gate\n\n${text}\n`);
   }
   if (result.verdict === "fail") {
     output.stderr(text);

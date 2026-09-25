@@ -13,16 +13,16 @@
  * Exit codes: 0 pass, 1 a command failed or the inputs cannot be read, 2
  * usage.
  */
-import { spawn } from "node:child_process";
 import { resolve } from "node:path";
-import {
-  commandLine,
-  releaseTemplateRef,
-  runTemplateGate,
-  type Runner,
-} from "../template-gate.js";
+import { commandLine, runInherited, type Runner } from "../process.js";
+import { releaseTemplateRef, runTemplateGate } from "../template-gate.js";
 import { repositoryRoot } from "../workspace.js";
-import { invokedDirectly, PROCESS_OUTPUT, type Output } from "./common.js";
+import {
+  errorMessage,
+  invokedDirectly,
+  PROCESS_OUTPUT,
+  type Output,
+} from "./common.js";
 
 const USAGE =
   "Usage: release:template-gate --template <path> --pack-dir <dir>\n" +
@@ -108,9 +108,7 @@ export async function main(
     );
     return 0;
   } catch (error) {
-    output.stderr(
-      `${error instanceof Error ? error.message : String(error)}\n`,
-    );
+    output.stderr(`${errorMessage(error)}\n`);
     return 1;
   }
 }
@@ -121,22 +119,10 @@ export async function main(
  * starts; the gate's arguments hold no spaces or shell characters.
  */
 export function spawnRunner(output: Output): Runner {
-  return (command) =>
-    new Promise((resolvePromise, reject) => {
-      const line = commandLine(command);
-      output.stdout(`> ${line}\n`);
-      const child =
-        process.platform === "win32"
-          ? spawn(line, { cwd: command.cwd, stdio: "inherit", shell: true })
-          : spawn(command.command, command.args, {
-              cwd: command.cwd,
-              stdio: "inherit",
-            });
-      child.on("error", reject);
-      child.on("close", (code) => {
-        resolvePromise(code ?? 1);
-      });
-    });
+  return (command) => {
+    output.stdout(`> ${commandLine(command)}\n`);
+    return runInherited(command, { shell: process.platform === "win32" });
+  };
 }
 
 if (invokedDirectly(import.meta.url)) {

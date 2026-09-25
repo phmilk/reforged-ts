@@ -9,13 +9,12 @@ import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import { isAbsolute, join, posix, relative, resolve, sep } from "node:path";
 import { byCodePoint } from "./order.js";
+import { commandLine, type Command, type Runner } from "./process.js";
+import { LIBRARY_PACKAGE } from "./packages.js";
+import { publishEntries, readPublishPlan } from "./publish-plan.js";
+import { parseSemver } from "./semver.js";
+import { errorMessage, isRecord } from "./unknown.js";
 import { readPublishablePackages } from "./workspace.js";
-
-/** The file `changeset pack` writes at the root of its output folder. */
-export const PUBLISH_PLAN = "publish-plan.json";
-
-/** The publish plan format the gate reads (Changesets 3). */
-const PLAN_VERSION = 1;
 
 /** A package of the publish plan, and its tarball in the pack output. */
 export interface PackedPackage {
@@ -37,17 +36,12 @@ export class TemplateGateError extends Error {
  * alphas included, maps to `v1`.
  */
 export function templateRef(libraryVersion: string): string {
-  const match = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:[-+].+)?$/.exec(
-    libraryVersion,
-  );
-  if (match === null) {
+  const version = parseSemver(libraryVersion);
+  if (version === undefined) {
     throw new TemplateGateError(`"${libraryVersion}" is not a semver version.`);
   }
-  return `v${match[1]}`;
+  return `v${String(version.major)}`;
 }
-
-/** The library, whose major names the Template ref. */
-const LIBRARY = "reforged-ts";
 
 /**
  * The Template ref a release is gated against: `templateRef` of the library
@@ -60,11 +54,13 @@ export async function releaseTemplateRef(
 ): Promise<string> {
   const packed = await readPackedPackages(packDir);
   const library =
-    packed.find(({ name }) => name === LIBRARY) ??
-    (await readPublishablePackages(root)).find(({ name }) => name === LIBRARY);
+    packed.find(({ name }) => name === LIBRARY_PACKAGE) ??
+    (await readPublishablePackages(root)).find(
+      ({ name }) => name === LIBRARY_PACKAGE,
+    );
   if (library === undefined) {
     throw new TemplateGateError(
-      `Neither the plan nor the workspace has ${LIBRARY}.`,
+      `Neither the plan nor the workspace has ${LIBRARY_PACKAGE}.`,
     );
   }
   return templateRef(library.version);
@@ -79,37 +75,9 @@ export async function releaseTemplateRef(
 export async function readPackedPackages(
   packDir: string,
 ): Promise<PackedPackage[]> {
-  const planPath = join(packDir, PUBLISH_PLAN);
-  let plan: unknown;
-  try {
-    plan = JSON.parse(await readFile(planPath, "utf8"));
-  } catch (error) {
-    throw new TemplateGateError(
-      `Cannot read the publish plan ${planPath}: ${error instanceof Error ? error.message : String(error)}`,
-      { cause: error },
-    );
-  }
-  if (!isRecord(plan) || plan.version !== PLAN_VERSION) {
-    throw new TemplateGateError(
-      `${planPath} is not a version ${String(PLAN_VERSION)} publish plan.`,
-    );
-  }
-  if (!Array.isArray(plan.plan)) {
-    throw new TemplateGateError(`${planPath} has no plan.`);
-  }
+  const { file: planPath, plan } = await readPublishPlan(packDir);
   const packed: PackedPackage[] = [];
-  for (const entry of plan.plan.flat() as unknown[]) {
-    if (isRecord(entry) && entry.kind === "tag-only") continue;
-    if (
-      !isRecord(entry) ||
-      entry.kind !== "publish" ||
-      typeof entry.name !== "string" ||
-      typeof entry.version !== "string"
-    ) {
-      throw new TemplateGateError(
-        `${planPath} holds an entry that is neither a publish nor a tag-only one: ${JSON.stringify(entry)}`,
-      );
-    }
+  for (const entry of publishEntries(plan, planPath)) {
     const label = `${entry.name}@${entry.version}`;
     const tarball = entry.tarball;
     if (
@@ -162,24 +130,6 @@ async function checkIntegrity(
       `The tarball of ${label} does not match the publish plan's integrity: ${path}`,
     );
   }
-}
-
-/** A command the gate runs, in a folder. */
-export interface Command {
-  command: string;
-  args: readonly string[];
-  cwd: string;
-}
-
-/**
- * Runs a command to completion, its output going to the gate's own, and
- * resolves with its exit code.
- */
-export type Runner = (command: Command) => Promise<number>;
-
-/** The command as a shell line, for messages. */
-export function commandLine({ command, args }: Command): string {
-  return [command, ...args].join(" ");
 }
 
 /**
@@ -239,7 +189,7 @@ export async function runTemplateGate(
     manifest = parsed;
   } catch (error) {
     throw new TemplateGateError(
-      `${input.template} is not a Template checkout: cannot read ${manifestPath}: ${error instanceof Error ? error.message : String(error)}`,
+      `${input.template} is not a Template checkout: cannot read ${manifestPath}: ${errorMessage(error)}`,
       { cause: error },
     );
   }
@@ -352,8 +302,4 @@ async function overridesIgnored(
     }
   }
   return undefined;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }

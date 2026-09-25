@@ -37,6 +37,8 @@ By hand, a Markdown file in `.changeset/` with any name (kebab-case, describing 
 
 **The empty changeset.** A change that publishes nothing (the website, CI, the release scripts, a test or a comment) carries an empty changeset: `pnpm changeset add --empty`, or the same file with nothing between the two `---` lines. It releases nothing and says that no release was forgotten.
 
+`release:check-changeset` accepts an empty changeset for every package the pull request changed, publishable ones included: the empty changeset is the author's statement that nothing publishable changed (a comment or a test inside a package folder), and the script cannot tell such a change from one that ships. Review is the check: a pull request that changes what a package ships and carries only an empty changeset is sent back for a real one.
+
 The changelog generator ([`@changesets/changelog-github`](https://github.com/changesets/changesets/tree/main/packages/changelog-github)) prefixes each entry with a link to the pull request that added the changeset, its commit and its author.
 
 ### The `reforged.patch` field
@@ -47,7 +49,7 @@ Every publishable package declares the game Patch it supports in its `package.js
 "reforged": { "patch": "3.0.0.24268" }
 ```
 
-It is the minimum Patch the package supports ([ADR 0009](adr/0009-independent-semver-with-changesets-and-patch-field.md)), and the one place that says so: the Patch-watch workflow, the compatibility matrix and the docs read it. Private packages (the workspace root, the release scripts) have none. The fields must agree:
+It is the minimum Patch the package supports ([ADR 0009](adr/0009-independent-semver-with-changesets-and-patch-field.md)), and the one place that says so: the compatibility matrix and the docs read it, and so will the Patch-watch workflow the workflows spec plans ([#48](https://github.com/phmilk/reforged-ts/issues/48)). Private packages (the workspace root, the release scripts) have none. The fields must agree:
 
 - Each names a Patch `reforged-types` ships an entry for: a Game version folder of the Typings (`packages/reforged-types/3.0.0/`) whose `manifest.json` records that Build.
 - The library's (`reforged-ts`) is the newest Patch the Typings ship an entry for: the library pins the newest Patch it supports.
@@ -60,7 +62,7 @@ A new game Patch is adopted in one pull request: the Typings are regenerated for
 
 - **A Patch that adds Natives:** a minor for `reforged-types` (new declarations); a minor for `reforged-ts` when new Wrappers ship; a minor for `reforged-test` when stubs are added; no bump for `eslint-plugin-reforged` unless one of its data files changes.
 - **A Patch that changes or removes a Native the public API depends on:** a major for `reforged-ts` only if its public API breaks, otherwise a minor with a changelog note naming the Native. A major needs its migration page and `renames.json` entries.
-- **A generator fix in the Typings:** a patch for `reforged-types`.
+- **A generator fix in the Typings:** a patch release of `reforged-types`.
 
 Which fields move:
 
@@ -123,7 +125,7 @@ The workspace is in Changesets pre mode with the `alpha` identifier during the b
 
 Alphas go to npm under the `next` dist-tag, so a Map project installs one with `pnpm add reforged-ts@next`. Changesets refuses `changeset publish --tag` in pre mode and when publishing from packed tarballs, so the tag is not a command-line option: the release workflow writes `next` into the `tag` of each entry of the publish plan (`publish-plan.json`) before publishing ([`release:dist-tag`](#the-dist-tag)).
 
-**Known limitation.** npm gives the `latest` dist-tag to the first version of a package, prerelease or not. After the first publish, `latest` and `next` both point at `1.0.0-alpha.0`; later alphas move `next` only, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, when it moves to 1.0.0. There is no workaround short of publishing a placeholder stable version, which is rejected. A Map project should install with `@next` during the build phase.
+**Known limitation.** npm gives the `latest` dist-tag to the first version of a package, prerelease or not. After the first publish, `latest` and `next` both point at `1.0.0-alpha.0`; later alphas move `next` only, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, when it moves to 1.0.0. There is no workaround short of publishing a placeholder stable version, which is rejected. A Map project should install with `@next` during the build phase; the root README and each package README say so until 1.0.0.
 
 ## The first alpha
 
@@ -261,13 +263,15 @@ Missing either fails with a message naming the page path expected and the pair. 
 
 **In pre mode.** While `.changeset/pre.json` has `"mode": "pre"`, the version produced is a prerelease, so the gate reports what is missing and exits zero: alphas keep publishing before the docs site exists. It fails only when the version it would produce is stable: once pre mode is exited (the `pnpm changeset pre exit` pull request, where the 1.0.0 checklist's migration page becomes mechanical) or with no pre state at all.
 
-**Running it.** `pnpm release:gate` takes no arguments. The verdict goes to stdout, or to stderr when it fails; in GitHub Actions (`GITHUB_STEP_SUMMARY` set) a requirement and what is missing are also appended to the job summary. Exit codes: 0 when it passes or only reports (pre mode), 1 when something is missing for a stable version or an input cannot be read (a changeset, `pre.json`, the rename map), 2 on an argument. CI runs it on every pull request, and the version job of the release workflow runs it again before opening the Version Packages pull request.
+**Running it.** `pnpm release:gate` takes no arguments. The verdict goes to stdout, or to stderr when it fails; in GitHub Actions (`GITHUB_STEP_SUMMARY` set) a requirement and what is missing are also appended to the job summary. Exit codes: 0 when it passes or only reports (pre mode), 1 when something is missing for a stable version or an input cannot be read (a changeset, `pre.json`, the rename map), 2 on an argument. CI will run it on every pull request (`ci.yml`, [#48](https://github.com/phmilk/reforged-ts/issues/48)), and the version job of the release workflow runs it before opening the Version Packages pull request.
 
 ## The Template gate
 
 The Template is the Reference consumer ([ADR 0006](adr/0006-template-owns-code-editor-owns-data.md)): no release reaches npm unless the Template builds, lints and passes its tests against the packed packages. `pnpm release:template-gate` checks this. The release workflow runs it between pack and publish, and it runs locally the same way.
 
 It takes a Template checkout and the output folder of `changeset pack`, which holds `publish-plan.json` and the tarballs under `packages/`. It checks each tarball against the plan's integrity. It writes one `pnpm.overrides` entry per package in the plan into the checkout's `package.json`, pointing at that tarball, and runs `pnpm install --no-frozen-lockfile`. It checks that the Template's own dependencies resolved to the packed versions. Then it runs the Template's scripts by name: `build --mode release`, `lint` and `test`. It stops at the first command that fails, or at the first script the Template lacks, and names it. Exit codes: 0 pass, 1 fail, 2 usage.
+
+**Only the packages of the plan.** The spec ([#46](https://github.com/phmilk/reforged-ts/issues/46)) has the gate install the tarballs of all four packages. It installs those of the publish plan only, deliberately: a package the release does not publish is not packed, and what the Template gets for it from npm is the bytes already published, which are the bytes a Map project installs next to this release. Packing it again would test a build that is never published.
 
 The Template is checked out at `v<major>` of the library version. Every 1.x, alphas included, maps to `v1`. A tag and a branch check out the same way. `pnpm -s release:template-gate --print-ref --pack-dir <dir>` prints the ref for the library version in the plan.
 
@@ -296,6 +300,7 @@ Checked by hand, then `pnpm changeset pre exit` in a pull request; the next Vers
 - [ ] The Template gate is green on the last alpha.
 - [ ] The docs site is deployed green from `master`.
 - [ ] [The compatibility matrix generator](#the-compatibility-matrix) produces the 1.0.0 row without error.
+- [ ] The build-phase notes are gone from the root README and the four package READMEs, and their install commands no longer name `@next`.
 - [ ] The migration page for w3ts 3.x to reforged-ts 1.0 is present with its `renames.json` entries (the major-changeset gate checks this mechanically: it treats the first stable release of `reforged-ts` as a major).
 
 ## Deprecating and removing a symbol
@@ -309,23 +314,23 @@ A symbol is never removed in a minor.
 
 ## Support window
 
-Fixes land only on the latest minor of the latest major. There are no maintenance branches and no backports: a bug found in 1.2 once 1.3 is out is fixed in the next 1.3 patch (or whatever is latest), and 1.2 gets no more releases. Releases are only ever cut from `master`.
+Fixes land only on the latest minor of the latest major. There are no maintenance branches and no backports: a bug found in 1.2 once 1.3 is out is fixed in the next 1.3 patch release (or whatever is latest), and 1.2 gets no more releases. Releases are only ever cut from `master`.
 
 ## The release workflow
 
-`.github/workflows/release.yml` runs on every push to `master`. Merging to `master` releases, and no one holds a token: the pull requests are opened by the repository's GitHub App, and npm accepts the upload through trusted publishing. A concurrency group keeps two runs from versioning or publishing at once; a newer push waits for the running one. Each job runs on Node 24, pins its actions to a commit, restores no dependency cache, and gets only the permissions listed below. The workflow uses the `changesets/action` v2 sub-actions rather than the combined action, so only the publish job can request an OIDC token.
+`.github/workflows/release.yml` runs on every push to `master`. Merging to `master` releases, and no one holds a token: the pull requests are opened by the repository's GitHub App, and npm accepts the upload through trusted publishing. A concurrency group keeps two releases from versioning or publishing at once; a newer push waits for the running one. A dry run has a group of its own (the ref and `-dry-run`), so a rehearsal on `master` never waits behind a release, nor replaces a release run waiting in the group. Each job runs on Node 24, pins its actions to a commit, restores no dependency cache, and gets only the permissions listed below. The workflow uses the `changesets/action` v2 sub-actions rather than the combined action, so only the publish job can request an OIDC token. The pack job is the exception: it runs `changeset pack` itself rather than the `pack` sub-action, because the sub-action uploads the artifact as it packs, and the publish plan's tags must be rewritten to `next` ([`release:dist-tag`](#the-dist-tag)) before the upload.
 
 | Job             | Runs when                                                      | Permissions                                  | What it does                                                                                                                                                                                                                                              |
 | --------------- | -------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `select`        | always                                                         | `contents: read`                             | `select-mode`: `version` while a changeset releases something, else `publish` when a publishable version is not on npm, else `none`. Writes the mode to the job summary.                                                                                  |
 | `version`       | mode `version`                                                 | `contents: read`, the App                    | Runs `pnpm release:gate` (the [major-changeset gate](#the-major-changeset-gate)), then the `version` sub-action with `pnpm release:version`, which opens or updates the Version Packages pull request on `changeset-release/master`, authored by the App. |
-| `pack`          | mode `publish`; in [the dry run](#the-dry-run), also `version` | `contents: read`, PRs `read`                 | `pnpm build`, `pnpm changeset pack` (the tarballs and the publish plan), `pnpm release:dist-tag`, then uploads the pack folder as the `release-pack` artifact.                                                                                            |
+| `pack`          | mode `publish`; in [the dry run](#the-dry-run), also `version` | `contents: read`, PRs `read`                 | `pnpm build`, `pnpm typings:check` (the Typings are what their generator writes), `pnpm changeset pack` (the tarballs and the publish plan), `pnpm release:dist-tag`, then uploads the pack folder as the `release-pack` artifact.                        |
 | `template-gate` | after `pack`                                                   | `contents: read`                             | Downloads the artifact, clones the Template at its ref (`pnpm release:template-clone`, outside the checkout) and runs [the Template gate](#the-template-gate).                                                                                            |
 | `publish`       | mode `publish`, after `template-gate`, never in the dry run    | `contents: read`, `id-token: write`, the App | Runs `pnpm release:publish-check`, then the `publish` sub-action on the same artifact: `changeset publish --from-pack-dir` from the checkout, no build, then a git tag (`reforged-ts@1.0.0-alpha.1`) and a GitHub Release per published package.          |
 
 The bytes published are the bytes the Template gate tested: the publish job downloads the artifact the gate downloaded, by its id, and `changeset publish --from-pack-dir` uploads those tarballs as they are. Provenance comes with trusted publishing, because the repository is public.
 
-The tags and the releases are created with the App's token, not the job's default one: a tag created with the default token triggers no workflow, and the `reforged-ts@<major>.<minor>.0` tags must trigger `docs.yml`, which cuts the docs version ([#48](https://github.com/phmilk/reforged-ts/issues/48)).
+The tags and the releases are created with the App's token, not the job's default one: a tag created with the default token triggers no workflow, and the `reforged-ts@<major>.<minor>.0` tags must be able to trigger `docs.yml`, the workflow that will cut the docs version, which the workflows spec plans ([#48](https://github.com/phmilk/reforged-ts/issues/48)).
 
 ### The dist-tag
 
@@ -378,7 +383,7 @@ They gate the dry run and the first tokenless publish, not the merge of the work
 
 ### The Version Packages pull request and CI
 
-The Version Packages pull request changes package manifests and changelogs and adds no changeset (it consumes them), so `release:check-changeset` would fail on it. `ci.yml` ([#48](https://github.com/phmilk/reforged-ts/issues/48)) skips that one step when the pull request's head branch is `changeset-release/master`, the branch the `version` sub-action always uses; every other check runs on it as on any pull request. The App opens it, so CI does run on it.
+The Version Packages pull request changes package manifests and changelogs and adds no changeset (it consumes them), so `release:check-changeset` would fail on it. `ci.yml`, the CI workflow the workflows spec plans ([#48](https://github.com/phmilk/reforged-ts/issues/48)), is to skip that one step when the pull request's head branch is `changeset-release/master`, the branch the `version` sub-action always uses; every other check runs on it as on any pull request. The App opens it, so CI does run on it.
 
 Merge it once the release run of the latest push to `master` has finished: that run updates the pull request with every changeset on `master`. A changeset merged after it would stay pending, and when only empty changesets are pending `select-mode` answers `none` even while versions are unpublished. If that happens, delete the stranded empty changesets in a pull request (it changes no package, so it needs no changeset): the next run publishes.
 
