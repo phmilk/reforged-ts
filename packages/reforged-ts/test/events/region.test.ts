@@ -2,16 +2,16 @@
 
 // RegionEvents.enter(region, filter?) and RegionEvents.leave(region, filter?)
 // through on(), and the lookups they read the unit with: the suites of
-// support/events.ts, which fire the Subscription's Trigger with a stubbed
-// context and observe the call log and what the handler received. The filter
+// support/events.ts, iterating the namespace's members, which fire the
+// Subscription's Trigger with a stubbed context and observe the call log and
+// what the handler received. The filter
 // is handed to the registration: nothing when omitted, a boolexpr as is, and
 // the Filter of a plain function.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
-import type { EventDescriptor } from "../../src/index";
 import { MapPlayer, on, Region, RegionEvents, Unit } from "../../src/index";
 import { defined } from "../support/defined";
-import { describeDescriptor, describeLookup } from "../support/events";
+import { describeLookup, describeNamespace } from "../support/events";
 import { handleRef } from "../support/handle-ref";
 import { withNative } from "../support/native-override";
 
@@ -23,62 +23,63 @@ const condition = Condition(() => true);
 
 /** One member of RegionEvents, and the Natives it registers and reads with. */
 interface Member {
-  readonly name: string;
+  readonly name: "enter" | "leave";
   readonly native: string;
   readonly unitNative: "GetEnteringUnit" | "GetLeavingUnit";
-  readonly descriptor: (
-    filter?: boolexpr | (() => boolean),
-  ) => EventDescriptor<{ unit: Unit; region: Region }>;
 }
 
-const members: Member[] = [
-  {
-    name: "RegionEvents.enter",
-    native: "TriggerRegisterEnterRegion",
-    unitNative: "GetEnteringUnit",
-    descriptor: (filter) => RegionEvents.enter(region, filter),
-  },
-  {
-    name: "RegionEvents.leave",
-    native: "TriggerRegisterLeaveRegion",
-    unitNative: "GetLeavingUnit",
-    descriptor: (filter) => RegionEvents.leave(region, filter),
-  },
-];
+const enter: Member = {
+  name: "enter",
+  native: "TriggerRegisterEnterRegion",
+  unitNative: "GetEnteringUnit",
+};
+const leave: Member = {
+  name: "leave",
+  native: "TriggerRegisterLeaveRegion",
+  unitNative: "GetLeavingUnit",
+};
 
-for (const member of members) {
-  const context: StubContext = {
-    [member.unitNative]: crossing.handle,
-    GetTriggeringRegion: region.handle,
+/** The cases of `member`: without a filter and with a boolexpr filter. */
+function regionCases(member: Member) {
+  const title = `RegionEvents.${member.name}`;
+  const firing = {
+    context: {
+      [member.unitNative]: crossing.handle,
+      GetTriggeringRegion: region.handle,
+    },
+    payload: { unit: crossing, region },
+    required: [
+      ["unit", member.unitNative],
+      ["region", "GetTriggeringRegion"],
+    ] as const,
   };
-  const required = [
-    ["unit", member.unitNative],
-    ["region", "GetTriggeringRegion"],
-  ] as const;
+  return [
+    {
+      ...firing,
+      title: `${title} without a filter`,
+      args: [region] as const,
+      registers: (trigger: string) => [
+        `${member.native}(${trigger}, ${regionRef}, nil)`,
+      ],
+    },
+    {
+      ...firing,
+      title: `${title} with a boolexpr filter`,
+      args: [region, condition] as const,
+      registers: (trigger: string) => [
+        `${member.native}(${trigger}, ${regionRef}, ${handleRef("conditionfunc", condition)})`,
+      ],
+    },
+  ];
+}
 
-  describeDescriptor({
-    name: member.name,
-    title: `${member.name} without a filter`,
-    descriptor: member.descriptor(),
-    registers: (trigger) => [`${member.native}(${trigger}, ${regionRef}, nil)`],
-    context,
-    payload: { unit: crossing, region },
-    required,
-  });
+describeNamespace("RegionEvents", RegionEvents, {
+  enter: regionCases(enter),
+  leave: regionCases(leave),
+});
 
-  describeDescriptor({
-    name: member.name,
-    title: `${member.name} with a boolexpr filter`,
-    descriptor: member.descriptor(condition),
-    registers: (trigger) => [
-      `${member.native}(${trigger}, ${regionRef}, ${handleRef("conditionfunc", condition)})`,
-    ],
-    context,
-    payload: { unit: crossing, region },
-    required,
-  });
-
-  describe(`${member.name} with a function filter`, () => {
+for (const member of [enter, leave]) {
+  describe(`RegionEvents.${member.name} with a function filter`, () => {
     it("registers with the Filter of the function", () => {
       const filter = () => true;
       const expr = Filter(filter);
@@ -90,7 +91,7 @@ for (const member of members) {
           return expr;
         },
         () =>
-          on(member.descriptor(filter), () => {
+          on(RegionEvents[member.name](region, filter), () => {
             // nothing to do
           }),
       );

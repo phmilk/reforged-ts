@@ -1,8 +1,9 @@
 /** @noSelfInFile */
 
 // The table-driven suites of the events module. A test file calls
-// `describeDescriptor` once per Event descriptor (a row of a namespace, or a
-// parameterised member called with its arguments) and `describeLookup` once
+// `describeNamespace` once for a namespace other than UnitEvents, iterating
+// its members, or `describeDescriptor` once per Event descriptor (a row of
+// UnitEvents, or an `Of` twin called with its Unit), and `describeLookup` once
 // per event lookup; the suites assert only on the call log, the Trigger
 // objects and what the handler received when the stubbed trigger context
 // fired.
@@ -16,7 +17,12 @@ import { handleRef } from "./handle-ref";
 /** A response Native a firing context answers for. */
 type ResponseNative = keyof StubContext;
 
-/** One Event descriptor under test, and what the game would observe of it. */
+/**
+ * One Event descriptor under test, and what the game would observe of it.
+ * Its `registers` takes no `self`, whether a case is written in place or
+ * built by a function of the test file.
+ * @noSelf
+ */
 export interface DescriptorCase<P extends object> {
   /** The name its `required` errors carry: `UnitEvents.deathOf`. */
   readonly name: string;
@@ -225,6 +231,64 @@ export function describeDescriptor<P extends object>(
       expect(descriptor.damage).toEqual(row.damage);
     });
   });
+}
+
+/** A case of one namespace member: the arguments it takes, if any. */
+type MemberCase<M> =
+  M extends EventDescriptor<infer P extends object>
+    ? Omit<DescriptorCase<P>, "name" | "descriptor">
+    : M extends (...args: infer A) => EventDescriptor<infer P extends object>
+      ? Omit<DescriptorCase<P>, "name" | "descriptor"> & {
+          /** The arguments the member is called with. */
+          readonly args: Readonly<A>;
+        }
+      : never;
+
+/** A member case as `describeNamespace` handles it, whatever its payload. */
+type AnyMemberCase = Omit<DescriptorCase<object>, "name" | "descriptor"> & {
+  readonly args?: readonly unknown[];
+};
+
+/** A namespace member as `describeNamespace` handles it. */
+type AnyMember =
+  | EventDescriptor<object>
+  | ((...args: readonly unknown[]) => EventDescriptor<object>);
+
+/**
+ * The suites of every member of the events namespace `namespace`
+ * (`PlayerEvents`), `members` being that namespace: `describeDescriptor` for
+ * each case of each member, a parameterised member called with the case's
+ * `args`. A member with no entry in `cases` fails the typecheck, and the
+ * namespace's own suite fails when its members and the cases differ.
+ */
+export function describeNamespace<N extends object>(
+  namespace: string,
+  members: N,
+  cases: { readonly [K in keyof N]: readonly MemberCase<N[K]>[] },
+): void {
+  const named = members as Record<string, AnyMember>;
+  const byName = cases as Record<string, readonly AnyMemberCase[]>;
+  const names = Object.keys(byName).sort();
+
+  describe(namespace, () => {
+    it("has cases for every member and no other", () => {
+      expect(names).toEqual(Object.keys(named).sort());
+    });
+  });
+
+  for (const name of names) {
+    const member = named[name];
+    for (const memberCase of byName[name]) {
+      describeDescriptor({
+        ...memberCase,
+        name: `${namespace}.${name}`,
+        descriptor:
+          typeof member === "function"
+            ? member(...(memberCase.args ?? []))
+            : member,
+      });
+    }
+  }
 }
 
 /** One event lookup, and the Wrapper it finds in `context`. */
