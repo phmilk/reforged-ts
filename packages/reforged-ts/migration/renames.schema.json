@@ -1,9 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "reforged-ts rename map",
-  "description": "Every public symbol a major version removed or renamed, with its replacement. The migration guide and the legacy-names lint rule are generated from it.",
+  "description": "Every public symbol a major version removed or renamed, with its replacement. The migration guide and the legacy-names lint rule are generated from it. A version pair whose major renames nothing carries a no-renames marker instead, so the release gate sees the pair was considered.",
   "type": "array",
-  "items": { "$ref": "#/$defs/entry" },
+  "items": {
+    "if": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": { "kind": { "const": "noRenames" } }
+    },
+    "then": { "$ref": "#/$defs/noRenames" },
+    "else": { "$ref": "#/$defs/entry" }
+  },
   "$defs": {
     "symbol": {
       "description": "A class, or a class-qualified static or instance member, as an author writes it; `(...)` marks a call.",
@@ -24,6 +32,31 @@
       "description": "A package and its major version.",
       "type": "string",
       "pattern": "^[a-z][a-z0-9-]*@[0-9]+$"
+    },
+    "versions": {
+      "description": "The major versions the entry applies between.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "$ref": "#/$defs/version" },
+        "to": { "$ref": "#/$defs/version" }
+      }
+    },
+    "noRenames": {
+      "description": "The no-renames marker: the major of the version pair removes and renames no public symbol. It stands in for the entries of the pair, so the major-changeset gate and the migration page see the pair was considered; the lint rule ignores it. A pair has entries or the marker, not both.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "versions", "note"],
+      "properties": {
+        "kind": { "const": "noRenames" },
+        "versions": { "$ref": "#/$defs/versions" },
+        "note": {
+          "description": "What the major changes instead, in one sentence.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
     },
     "entry": {
       "type": "object",
@@ -64,16 +97,7 @@
             "package"
           ]
         },
-        "versions": {
-          "description": "The major versions the entry applies between.",
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["from", "to"],
-          "properties": {
-            "from": { "$ref": "#/$defs/version" },
-            "to": { "$ref": "#/$defs/version" }
-          }
-        },
+        "versions": { "$ref": "#/$defs/versions" },
         "oneToOne": {
           "description": "Whether the rewrite is mechanical: replacing the old symbol with the new one keeps the arguments. The lint rule autofixes only these.",
           "type": "boolean"
