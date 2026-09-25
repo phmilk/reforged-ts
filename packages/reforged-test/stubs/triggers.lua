@@ -259,6 +259,48 @@ function Filter(func)
   return expr
 end
 
+-- The damage exception: a registration for a damage event also keeps its
+-- trigger, its unit or player, its event and its filter, in registration
+-- order, because UnitDamageTarget dispatches the damage to the triggers the
+-- game would fire for it (__stub_dispatch_damage, below). Its call-log line
+-- and event handle are the ones every registration has.
+local damageRegistrations = {}
+local damageEvents = {
+  [EVENT_UNIT_DAMAGING] = "damaging", [EVENT_UNIT_DAMAGED] = "damaged",
+  [EVENT_PLAYER_UNIT_DAMAGING] = "damaging", [EVENT_PLAYER_UNIT_DAMAGED] = "damaged",
+}
+local registerUnitEvent = TriggerRegisterUnitEvent
+local registerPlayerUnitEvent = TriggerRegisterPlayerUnitEvent
+
+function TriggerRegisterUnitEvent(whichTrigger, whichUnit, whichEvent)
+  local event = registerUnitEvent(whichTrigger, whichUnit, whichEvent)
+  if damageEvents[whichEvent] ~= nil then
+    damageRegistrations[#damageRegistrations + 1] = {
+      trigger = whichTrigger,
+      unit = whichUnit,
+      event = whichEvent,
+    }
+  end
+  return event
+end
+
+function TriggerRegisterPlayerUnitEvent(whichTrigger, whichPlayer, whichPlayerUnitEvent, filter)
+  local event = registerPlayerUnitEvent(whichTrigger, whichPlayer, whichPlayerUnitEvent, filter)
+  if damageEvents[whichPlayerUnitEvent] ~= nil then
+    damageRegistrations[#damageRegistrations + 1] = {
+      trigger = whichTrigger,
+      player = whichPlayer,
+      event = whichPlayerUnitEvent,
+      filter = filter,
+    }
+  end
+  return event
+end
+
+-- The unit a registration's filter is asked about, from the firing context:
+-- the damaged unit while __stub_dispatch_damage runs the filter.
+__stub_response("GetFilterUnit")
+
 -- A trigger's actions and conditions are lists of { handle, value } entries,
 -- in the order they were added.
 local function append(whichTrigger, key, handle, value)
@@ -406,6 +448,87 @@ end
 function DestroyTrigger(whichTrigger)
   __stub_record("DestroyTrigger", whichTrigger)
   whichTrigger.destroyed = true
+end
+
+-- How deep damage dispatches may nest before the harness calls it a runaway
+-- loop. The game has no such limit (the client crashes); the harness stops
+-- well before Lua's own C-stack limit, so a loop the code under test fails
+-- to stop fails its test with this error instead.
+local DAMAGE_DEPTH_LIMIT = 32
+local damageDepth = 0
+
+-- Whether a damage registration matches the damaged unit: the unit it was
+-- registered on, or the target's owner for a player-unit registration whose
+-- filter, if any, accepts the target.
+local function damageMatches(registration, target)
+  if registration.unit ~= nil then
+    return rawequal(registration.unit, target)
+  end
+  if not rawequal(registration.player, target.owner) then
+    return false
+  end
+  local filter = registration.filter
+  if filter == nil then
+    return true
+  end
+  return __stub_with_context({ GetFilterUnit = target }, function()
+    return filter.func() and true or false
+  end)
+end
+
+-- Dispatches one damage event as the game does inside UnitDamageTarget:
+-- fires every trigger registered for a damaging event on the target, then
+-- every one registered for a damaged event, once per matching registration
+-- and in registration order, skipping a disabled or destroyed trigger.
+-- `damage` is { source, target, amount, attack?, attackType?, damageType?,
+-- weaponType? }. The firing context answers the damage response Natives,
+-- GetTriggerUnit (the target), GetTriggeringTrigger and GetTriggerEventId.
+-- An action that deals damage dispatches again inside its own firing; past
+-- DAMAGE_DEPTH_LIMIT nested dispatches it is an error. Returns how many
+-- triggers ran their actions. Not a Native, so it adds no call-log line.
+function __stub_dispatch_damage(damage)
+  if damageDepth >= DAMAGE_DEPTH_LIMIT then
+    error("__stub_dispatch_damage: damage dispatch nested more than "
+      .. DAMAGE_DEPTH_LIMIT .. " deep; the code under test damages without end", 2)
+  end
+  local target = damage.target
+  local registrations = table.move(damageRegistrations, 1, #damageRegistrations, 1, {})
+  damageDepth = damageDepth + 1
+  local ok, result = pcall(function()
+    local fired = 0
+    for _, kind in ipairs({ "damaging", "damaged" }) do
+      for _, registration in ipairs(registrations) do
+        local whichTrigger = registration.trigger
+        if damageEvents[registration.event] == kind
+          and not whichTrigger.destroyed
+          and not whichTrigger.disabled
+          and damageMatches(registration, target)
+        then
+          local ran = __stub_fire_trigger(whichTrigger, {
+            GetTriggerUnit = target,
+            BlzGetEventDamageTarget = target,
+            GetEventDamageSource = damage.source,
+            GetEventDamage = damage.amount,
+            BlzGetEventIsAttack = damage.attack,
+            BlzGetEventAttackType = damage.attackType,
+            BlzGetEventDamageType = damage.damageType,
+            BlzGetEventWeaponType = damage.weaponType,
+            GetTriggeringTrigger = whichTrigger,
+            GetTriggerEventId = registration.event,
+          })
+          if ran then
+            fired = fired + 1
+          end
+        end
+      end
+    end
+    return fired
+  end)
+  damageDepth = damageDepth - 1
+  if not ok then
+    error(result, 0)
+  end
+  return result
 end
 
 -- Fires the trigger as one event would, with `context` (optional: a table
