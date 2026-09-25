@@ -17,7 +17,7 @@ Follow these steps in order for a Patch update. The loop is done when the checks
 3. **Curate.** Write one JSON per missing entry at the printed path, shaped like its neighbours in the same folder (`functions/` or `globals/`). Apply the curation rules below to every entry.
 4. **Regenerate.** Run `typings:generate` (no tag) until it exits 0. Every error item of step 2 is gone; any remaining warning is accounted for in step 5.
 5. **Settle the Patch metadata.**
-   - Set `reforged.patch` in `package.json` and the supported Patch in `README.md` to the new Build.
+   - Set `reforged.patch` in `package.json` and the supported Patch in `README.md` to the new Build. Set the library's `reforged.patch` (`packages/reforged-ts/package.json`) to it too, and any other field that must move; `pnpm release:check-patches` checks them all. The changeset's bumps and which fields move are in `docs/release.md` (Choosing the bump for a Patch).
    - `test/real-inputs.test.ts` and `test/package.test.ts` pin the counts and facts of the supported Patch; update them to the new Build's measured values.
    - When the new Build shares its Game version with the old one (`3.0.0.24268` then `3.0.0.24277`), the new Build generates the `3.0.0/` folder and the old one is only compared against. Delete the old Build's `vendor/` folder once `since` is set; then delete the entries its removal leaves orphaned, since only the removed Natives had them.
 6. **Check.** Run `build`, `test` (which includes `typings:check`) and `verify`; all three pass.
