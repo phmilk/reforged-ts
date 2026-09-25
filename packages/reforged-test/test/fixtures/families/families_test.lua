@@ -376,3 +376,142 @@ describe("trackables", function()
     expect(GetTriggeringTrackable()).toBeUndefined()
   end)
 end)
+
+describe("players", function()
+  it("answers the local player a test set and hands the previous slot back", function()
+    local mark = #runner.stubCalls()
+    expect(__stub_set_local_player(1)).toEqual(0)
+    expect(__stub_local_player()).toBe(__stub_player(1))
+    expect(since(mark)).toEqual({})
+    expect(GetLocalPlayer()).toBe(Player(1))
+    expect(__stub_set_local_player(0)).toEqual(1)
+    expect(GetLocalPlayer()).toBe(Player(0))
+  end)
+end)
+
+-- The sync family: what BlzSendSyncData was given, and the delivery helper
+-- that fires the sync registrations as the game would.
+describe("sync", function()
+  it("records a sent packet with its prefix, its data and the local player, and returns true", function()
+    local before = #__stub_sync_packets()
+    expect(BlzSendSyncData("P", "hello")).toEqual(true)
+    __stub_set_local_player(1)
+    expect(BlzSendSyncData("Q", "")).toEqual(true)
+    __stub_set_local_player(0)
+    local packets = __stub_sync_packets()
+    expect(#packets).toEqual(before + 2)
+    expect(packets[before + 1]).toEqual({ prefix = "P", data = "hello", from = __stub_player(0) })
+    expect(packets[before + 2]).toEqual({ prefix = "Q", data = "", from = __stub_player(1) })
+    expect(runner.stubCalls()).toContainCall('BlzSendSyncData("P", "hello")')
+    expect(runner.stubCalls()).toContainCall('BlzSendSyncData("Q", "")')
+  end)
+  it("delivers a packet to a trigger registered for its prefix and sender, with the sync context", function()
+    local trigger = CreateTrigger()
+    local seen = {}
+    BlzTriggerRegisterPlayerSyncEvent(trigger, Player(1), "P", false)
+    TriggerAddAction(trigger, function()
+      seen[#seen + 1] = {
+        prefix = BlzGetTriggerSyncPrefix(),
+        data = BlzGetTriggerSyncData(),
+        player = GetTriggerPlayer(),
+        trigger = GetTriggeringTrigger(),
+      }
+    end)
+    expect(__stub_deliver_sync({ prefix = "P", data = "abc", from = Player(1) })).toEqual(1)
+    expect(seen).toEqual({ { prefix = "P", data = "abc", player = Player(1), trigger = trigger } })
+    expect(BlzGetTriggerSyncData()).toBeUndefined()
+  end)
+  it("delivers a recorded packet as it was sent", function()
+    local trigger = CreateTrigger()
+    local seen = {}
+    BlzTriggerRegisterPlayerSyncEvent(trigger, Player(0), "R", false)
+    TriggerAddAction(trigger, function() seen[#seen + 1] = BlzGetTriggerSyncData() end)
+    BlzSendSyncData("R", "recorded")
+    local packets = __stub_sync_packets()
+    __stub_deliver_sync(packets[#packets])
+    expect(seen).toEqual({ "recorded" })
+  end)
+  it("fires no trigger registered for another prefix or another player, nor a disabled or destroyed one", function()
+    local otherPrefix, otherPlayer = CreateTrigger(), CreateTrigger()
+    local disabled, destroyed = CreateTrigger(), CreateTrigger()
+    local runs = 0
+    for _, trigger in ipairs({ otherPrefix, otherPlayer, disabled, destroyed }) do
+      TriggerAddAction(trigger, function() runs = runs + 1 end)
+    end
+    BlzTriggerRegisterPlayerSyncEvent(otherPrefix, Player(0), "other", false)
+    BlzTriggerRegisterPlayerSyncEvent(otherPlayer, Player(1), "S", false)
+    BlzTriggerRegisterPlayerSyncEvent(disabled, Player(0), "S", false)
+    BlzTriggerRegisterPlayerSyncEvent(destroyed, Player(0), "S", false)
+    DisableTrigger(disabled)
+    DestroyTrigger(destroyed)
+    expect(__stub_deliver_sync({ prefix = "S", data = "x", from = Player(0) })).toEqual(0)
+    expect(runs).toEqual(0)
+  end)
+  it("fires every matching registration once, in registration order", function()
+    local first, second = CreateTrigger(), CreateTrigger()
+    local order = {}
+    TriggerAddAction(first, function() order[#order + 1] = "first" end)
+    TriggerAddAction(second, function() order[#order + 1] = "second" end)
+    BlzTriggerRegisterPlayerSyncEvent(second, Player(0), "O", false)
+    BlzTriggerRegisterPlayerSyncEvent(first, Player(0), "O", false)
+    BlzTriggerRegisterPlayerSyncEvent(first, Player(1), "O", false)
+    expect(__stub_deliver_sync({ prefix = "O", data = "", from = Player(0) })).toEqual(2)
+    expect(order).toEqual({ "second", "first" })
+  end)
+  it("cuts the data at its first zero byte with the cString option, as the game cuts a C string", function()
+    local trigger = CreateTrigger()
+    local seen = {}
+    BlzTriggerRegisterPlayerSyncEvent(trigger, Player(0), "Z", false)
+    TriggerAddAction(trigger, function() seen[#seen + 1] = BlzGetTriggerSyncData() end)
+    local packet = { prefix = "Z", data = "ab\0cd", from = Player(0) }
+    __stub_deliver_sync(packet)
+    __stub_deliver_sync(packet, { cString = true })
+    __stub_deliver_sync({ prefix = "Z", data = "no zero", from = Player(0) }, { cString = true })
+    expect(seen).toEqual({ "ab\0cd", "ab", "no zero" })
+    expect(packet.data).toEqual("ab\0cd")
+  end)
+end)
+
+describe("preloads", function()
+  it("records the Preload family and keeps the strings a file write was given", function()
+    local mark = #runner.stubCalls()
+    PreloadGenClear()
+    PreloadGenStart()
+    Preload("first")
+    Preload('sec"ond')
+    PreloadGenEnd("save.txt")
+    Preloader("save.txt")
+    expect(since(mark)).toEqual({
+      "PreloadGenClear()",
+      "PreloadGenStart()",
+      'Preload("first")',
+      'Preload("sec\\"ond")',
+      'PreloadGenEnd("save.txt")',
+      'Preloader("save.txt")',
+    })
+    expect(__stub_preload_file("save.txt")).toEqual({ "first", 'sec"ond' })
+    expect(__stub_preload_file("never.txt")).toBeUndefined()
+  end)
+  it("starts the strings afresh after PreloadGenClear", function()
+    PreloadGenClear()
+    Preload("old")
+    PreloadGenEnd("again.txt")
+    PreloadGenClear()
+    Preload("new")
+    PreloadGenEnd("again.txt")
+    expect(__stub_preload_file("again.txt")).toEqual({ "new" })
+  end)
+end)
+
+describe("abilities", function()
+  it("keeps an icon per ability id, with a default icon for an id never set", function()
+    local lariat, blizzard = FourCC("Amls"), FourCC("AHbz")
+    local default = "ReplaceableTextures\\CommandButtons\\BTNTemp.blp"
+    expect(BlzGetAbilityIcon(lariat)).toEqual(default)
+    BlzSetAbilityIcon(lariat, "saved contents")
+    expect(BlzGetAbilityIcon(lariat)).toEqual("saved contents")
+    expect(BlzGetAbilityIcon(blizzard)).toEqual(default)
+    expect(runner.stubCalls()).toContainCall("BlzSetAbilityIcon(" .. lariat .. ', "saved contents")')
+    expect(runner.stubCalls()).toContainCall("BlzGetAbilityIcon(" .. blizzard .. ")")
+  end)
+end)

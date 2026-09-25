@@ -21,9 +21,10 @@ Written as the [reforged-test README](../../reforged-test/README.md) describes: 
 - `describeDescriptor(case)`, `describeNamespace(namespace, members, cases)`, `describeLookup(case)` and `everySlot(line)` (`events.ts`): the table-driven suites of the events module. A file under `events/` calls `describeNamespace` once for a namespace other than `UnitEvents`, or `describeDescriptor` once per Event descriptor, with the registration lines `on()` should record, a firing context, the payload it yields and the guaranteed and optional fields with the Natives that read them, and `describeLookup` once per event lookup; `everySlot` builds the lines of a registration on every player slot.
 - `withPrint(body)`: the lines `body` printed, with `print` put back afterwards; how a test asserts on the failure line of an Init stage callback.
 - `reloadModules(family, entry)`: runs a family of the library's modules again in the same Lua state (`reloadModules("src.init.", "src.init.index")`) and returns the entry's new exports; how a test stands in for a root that executes twice.
+- `simulateClients(count, players?)` (`clients.ts`): loads one copy of the library per simulated game client in the same Lua state and returns the clients; how a test of the sync and host Systems compares what several clients decided (below).
 - The editor's script, stubbed (`editor-script.ts`): `defineEditorScript(names)` defines the named entry points (`config`, `main`, `InitBlizzard`, `InitGlobals`, `InitCustomTriggers`, `RunInitializationTriggers`, `MarkGameStarted`) as functions that log their names on `editorLog`, `main` calling the init functions it finds; `mark(text)` is a callback that logs `text` on the same log when it runs, `stages` the four Init stages in order, and `globals` is `_G` typed for reads and writes by name. The library wraps them when it loads, so a test imports one of the modules that call it ahead of the library: `bundle-position.ts` (all but `InitBlizzard`), `bundle-position-without-triggers.ts` (no `InitCustomTriggers`), `entry-points.ts` (`config` and `main`) or, for the map header position, `header-position.ts` (only `InitBlizzard`, `InitGlobals` and `MarkGameStarted`; the test defines the rest itself afterwards). `header-position-with-metatable.ts` also installs `mapMetatable` on `_G` ahead of the library, logging the reads of absent globals and the writes of new ones on `mapMetatableLog`, as an undeclared-global warner would.
 
-Stub helpers the tests call (`__stub_fire_trigger`, `__stub_fire_timer`, `__stub_record`) are declared in `stubs.d.ts`, with `StubContext`, the firing context `__stub_fire_trigger` takes: keyed by response Native name, each value typed as that Native returns it (`{ GetTriggerUnit: unit.handle, GetEventDamage: 25 }`), so a misspelt Native or a wrong value is a compile error.
+Stub helpers the tests call (`__stub_fire_trigger`, `__stub_fire_timer`, `__stub_record`, `__stub_deliver_sync`, `__stub_sync_packets`, `__stub_set_clock`, `__stub_set_local_player`, `__stub_preload_file`) are declared in `stubs.d.ts`, with `StubSyncPacket`, the `{ prefix, data, from }` packet the sync helpers record and deliver, and with `StubContext`, the firing context `__stub_fire_trigger` takes: keyed by response Native name, each value typed as that Native returns it (`{ GetTriggerUnit: unit.handle, GetEventDamage: 25 }`), so a misspelt Native or a wrong value is a compile error.
 
 ### Firing triggers and timers
 
@@ -87,6 +88,36 @@ The shipped stubs define none of the editor's entry points, and the library wrap
 - **Running them**: declare the globals (`declare const config: () => void;`) and call `config()`, `main()` and `MarkGameStarted()` in that order, as the game does; `main` calls `InitBlizzard`, `InitGlobals`, `InitCustomTriggers` and `RunInitializationTriggers` when they are defined. Every entry point logs its name on `editorLog`, and a test's own callbacks push their marks on it, so the order is one array.
 
 A test that reads `Players`, or expects the sync Trigger and its events to exist, must run `InitGlobals` first: the library fills `Players` and creates the Trigger in its `globals` stage, and nothing is created when the library loads. Import `./support/bundle-position` ahead of the library and call `InitGlobals()` at top level, as `player.test.ts` and `registry.test.ts` do. A test of the library's own load-time behaviour (`root-handles.test.ts`) asserts on the call log before it runs anything.
+
+### Simulated clients
+
+Every client of a game runs the same map script, and the sync and host Systems rely on that: each client makes the same decisions in the same order, from values only some of them measured. `simulateClients(count, players?)` stands in for `count` clients in one Lua state. Call it at the top level of the test file; it loads one copy of the library per client through `reloadModules`, and returns the clients in order.
+
+- `client.library` is that client's copy of the library, with its own registry, `Players` and Systems: `first.library.MapPlayer` is not `second.library.MapPlayer`.
+- `client.player` is the slot of the client's local player: `players[k]`, or `k` when `players` leaves it out. The stubs hold slots 0 and 1 as playing users, so a third client needs `GetPlayerSlotState` and `GetPlayerController` overridden.
+- `client.clock` is what `os.clock` answers while the client runs, 0 until the test sets it. Code the client runs that calls `__stub_set_clock` leaves its value there.
+- `client.run(body)` runs `body` as the client and returns what it returned: `GetLocalPlayer` answers the client's player, `os.clock` its clock, and the editor's entry points and the library's global are the client's own, so `client.run(() => { config(); main(); MarkGameStarted(); })` runs that client's Init stages and no other's. Everything comes back afterwards, also when `body` throws; runs nest.
+- A callback the client's code hands to the game while it runs (`TriggerAddAction`, `Condition`, `Filter`, `TimerStart`) runs as that client whenever it fires later. Each copy registers its own sync Trigger, so one `__stub_deliver_sync` fires every client's handler, each as its own client, and `__stub_fire_timer` runs a timeout as the client that started it.
+
+```ts
+const [first, second] = simulateClients(2);
+first.clock = 12.5;
+second.clock = 40;
+
+for (const client of [first, second]) {
+  client.run(() => {
+    config();
+    main();
+    MarkGameStarted();
+  });
+}
+second.run(() => BlzSendSyncData("P", "from slot 1")); // recorded from Player(1)
+for (const packet of __stub_sync_packets()) {
+  __stub_deliver_sync(packet); // reaches both clients
+}
+```
+
+Each copy is loaded in the bundle position, with its own entry points defined ahead of it, whatever position the test file's own imports stand in for. A client's copy and the test file's own import of the library (if any) are separate: use `client.library` for what a client decides.
 
 ### Overriding a Native for one test
 
