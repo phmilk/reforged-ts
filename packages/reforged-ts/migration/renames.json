@@ -409,5 +409,126 @@
     },
     "oneToOne": false,
     "note": "No constructor asks whether it is wrapping an existing Handle any more: the protected constructor takes the Handle and only stores it, and the base registers the Wrapper."
+  },
+  {
+    "old": "main::before",
+    "new": "Init.onGlobals",
+    "kind": "entryPoint",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "`addScriptHook(W3TS_HOOK.MAIN_BEFORE, hook)` becomes `Init.onGlobals(hook)`, which runs later, after `InitGlobals`, by design: nothing should be created before the map's globals exist, and the library's own setup (`Players`, the sync Trigger) runs first in that stage."
+  },
+  {
+    "old": "main::after",
+    "new": "Init.onInitTriggers",
+    "kind": "entryPoint",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "`addScriptHook(W3TS_HOOK.MAIN_AFTER, hook)` becomes `Init.onInitTriggers(hook)`, the same moment: `RunInitializationTriggers` is the last call of `main`, so the stage runs at the end of `main`."
+  },
+  {
+    "old": "config::before",
+    "new": null,
+    "kind": "entryPoint",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "No Init stage runs in the lobby, before `config`, in the first release: code that needs lobby timing stays on `addScriptHook`, deprecated and removed in 2.0, until a lobby stage exists."
+  },
+  {
+    "old": "config::after",
+    "new": null,
+    "kind": "entryPoint",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "No Init stage runs in the lobby, after `config`, in the first release: code that needs lobby timing stays on `addScriptHook`, deprecated and removed in 2.0, until a lobby stage exists."
+  },
+  {
+    "old": "W3TS_HOOK",
+    "new": null,
+    "kind": "type",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The enum of `addScriptHook` is deprecated with it and still exported for this one release; its four values are the entry points listed here, each with its stage or none, and both are removed in 2.0."
+  },
+  {
+    "old": "hookedMain",
+    "new": null,
+    "kind": "function",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "An implementation detail of the old Hook code: the Init machinery installs the wrapper of `main` itself, in place or on the function's first assignment, and no wrapper has a name."
+  },
+  {
+    "old": "hookedConfig",
+    "new": null,
+    "kind": "function",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "An implementation detail of the old Hook code: the Init machinery installs the wrapper of `config` itself, in place or on the function's first assignment, and no wrapper has a name."
+  },
+  {
+    "old": "executeHooksMainBefore",
+    "new": null,
+    "kind": "function",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "An implementation detail of the old Hook code: the wrapper of `main` runs the `main::before` queue, each hook under `pcall`, and nothing runs it by hand."
+  },
+  {
+    "old": "executeHooksMainAfter",
+    "new": null,
+    "kind": "function",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "An implementation detail of the old Hook code: the wrapper of `main` runs the `main::after` queue, each hook under `pcall`, and nothing runs it by hand."
+  },
+  {
+    "old": "executeHooksConfigBefore",
+    "new": null,
+    "kind": "function",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "An implementation detail of the old Hook code: the wrapper of `config` runs the `config::before` queue, each hook under `pcall`, and nothing runs it by hand."
+  },
+  {
+    "old": "executeHooksConfigAfter",
+    "new": null,
+    "kind": "function",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "An implementation detail of the old Hook code: the wrapper of `config` runs the `config::after` queue, each hook under `pcall`, and nothing runs it by hand."
   }
 ]

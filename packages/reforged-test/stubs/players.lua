@@ -1,5 +1,5 @@
 -- reforged-test stubs for the players family. Player, GetPlayerId and
--- GetHandleId are in base.lua because the library calls them at module load.
+-- GetHandleId are in base.lua, the baseline every test can rely on.
 
 -- The local player is the player in slot 0, the same handle Player(0)
 -- returns.

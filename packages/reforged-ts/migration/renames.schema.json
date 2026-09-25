@@ -21,9 +21,9 @@
       "required": ["old", "new", "kind", "versions", "oneToOne", "note"],
       "properties": {
         "old": {
-          "description": "The symbol as an author of the `from` version wrote it: `new Unit(...)`, `Group.getEnumUnit`, `Frame.parent`.",
+          "description": "The symbol as an author of the `from` version wrote it: `new Unit(...)`, `Group.getEnumUnit`, `Frame.parent`, `hookedMain`; or an entry point of `addScriptHook` as its `W3TS_HOOK` value reads, `main::before`.",
           "type": "string",
-          "pattern": "^(new )?[A-Za-z_$][\\w$]*(\\.[A-Za-z_$][\\w$]*)?(\\(\\.\\.\\.\\))?$"
+          "pattern": "^((new )?[A-Za-z_$][\\w$]*(\\.[A-Za-z_$][\\w$]*)?(\\(\\.\\.\\.\\))?|[A-Za-z_$][\\w$]*::[A-Za-z_$][\\w$]*)$"
         },
         "new": {
           "description": "The replacement as the author will write it; several when the old symbol splits (a get/set pair, overloads mapped by argument shape); null when there is none.",
@@ -39,14 +39,15 @@
           ]
         },
         "kind": {
-          "description": "What the old symbol is.",
+          "description": "What the old symbol is. An `entryPoint` is one of the four entry points of `addScriptHook` (`main::before`, `main::after`, `config::before`, `config::after`); its replacement, when there is one, is the Init stage at the same moment or the closest later one.",
           "enum": [
             "constructor",
             "member",
             "accessor",
             "function",
             "class",
-            "type"
+            "type",
+            "entryPoint"
           ]
         },
         "versions": {

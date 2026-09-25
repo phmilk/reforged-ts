@@ -20,7 +20,14 @@ const schemaFile = fileURLToPath(
 export interface RenameEntry {
   old: string;
   new: string | string[] | null;
-  kind: "constructor" | "member" | "accessor" | "function" | "class" | "type";
+  kind:
+    | "constructor"
+    | "member"
+    | "accessor"
+    | "function"
+    | "class"
+    | "type"
+    | "entryPoint";
   versions: { from: string; to: string };
   oneToOne: boolean;
   note: string;
