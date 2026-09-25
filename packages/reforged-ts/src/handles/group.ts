@@ -1,5 +1,6 @@
 /** @noSelfInFile */
 
+import { assertNotLocal } from "../reforged/local";
 import { protect } from "../reforged/protect";
 import { filterOf } from "./boolexpr";
 import { Handle } from "./handle";
@@ -186,6 +187,7 @@ export class Group extends Handle<group> {
    * the next unit. With Dev mode off `ForGroup` receives `callback` itself.
    */
   public for(callback: () => void) {
+    assertNotLocal("Group.for", 2);
     ForGroup(this.handle, protect(this, "Group.for", callback));
   }
 

@@ -93,7 +93,10 @@ export function reportLine(line: string): void {
 }
 
 /** The origin a report names: `Timer#1048577 Timer.start`, or the member alone. */
-function originOf(owner: Handle<handle> | undefined, member: string): string {
+export function originOf(
+  owner: Handle<handle> | undefined,
+  member: string,
+): string {
   if (owner === undefined) {
     return member;
   }
@@ -136,31 +139,58 @@ export function protect<Args extends unknown[], R>(
   }
   // Read now: the Wrapper may be destroyed by the time its callback fails.
   const origin = originOf(owner, member);
-  // The messages this callback already reported, for the store's generation.
-  let seen: Map<string, FailureRow> | undefined;
-  let generation = 0;
+  const reported = reportedFailures();
   return (...args: Args): R => {
     const [ok, result] = pcall(callback, ...args);
     if (ok) {
       return result;
     }
-    const message = tostring(result);
-    const failures = store();
-    if (seen === undefined || generation !== failures.generation) {
-      seen = new Map();
-      generation = failures.generation;
-    }
-    const row = seen.get(message);
-    if (row !== undefined) {
-      row.count++;
-    } else {
-      const added: FailureRow = { origin, message, count: 1 };
-      failures.rows.push(added);
-      seen.set(message, added);
-      reportLine(`${LIBRARY}: ${origin} failed: ${message}`);
-    }
+    reportFailure(reported, origin, tostring(result));
     return failed as R;
   };
+}
+
+/**
+ * The messages one protected callback already reported, for one generation
+ * of the store: what makes a repeat a count instead of a new report.
+ */
+export interface ReportedFailures {
+  seen: Map<string, FailureRow> | undefined;
+  generation: number;
+}
+
+/** A callback's memory of its reported failures: none yet. */
+export function reportedFailures(): ReportedFailures {
+  return { seen: undefined, generation: 0 };
+}
+
+/**
+ * Records one failure of a protected callback that `reported` remembers:
+ * the first time a message is seen (since the last reset) it is reported,
+ * `reforged-ts: <origin> failed: <message>`; afterwards it is only counted.
+ */
+export function reportFailure(
+  reported: ReportedFailures,
+  origin: string,
+  message: string,
+): void {
+  const failures = store();
+  if (
+    reported.seen === undefined ||
+    reported.generation !== failures.generation
+  ) {
+    reported.seen = new Map();
+    reported.generation = failures.generation;
+  }
+  const row = reported.seen.get(message);
+  if (row !== undefined) {
+    row.count++;
+    return;
+  }
+  const added: FailureRow = { origin, message, count: 1 };
+  failures.rows.push(added);
+  reported.seen.set(message, added);
+  reportLine(`${LIBRARY}: ${origin} failed: ${message}`);
 }
 
 /** The failures since the last reset, in the order they first happened. */

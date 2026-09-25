@@ -1,5 +1,6 @@
 /** @noSelfInFile * */
 
+import { assertNotLocal } from "../reforged/local";
 import { protect } from "../reforged/protect";
 import { filterOf } from "./boolexpr";
 import { Handle } from "./handle";
@@ -76,6 +77,7 @@ export class Force extends Handle<force> {
    * the next player. With Dev mode off `ForForce` receives `callback` itself.
    */
   public for(callback: () => void) {
+    assertNotLocal("Force.for", 2);
     ForForce(this.handle, protect(this, "Force.for", callback));
   }
 

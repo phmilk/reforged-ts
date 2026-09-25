@@ -3,6 +3,7 @@
 import { hasRun } from "../init/stages";
 import { configuration } from "../reforged/configuration";
 import { countCreated, countDestroyed } from "../reforged/leaks";
+import { assertNotLocal } from "../reforged/local";
 
 /** The registry: the one Wrapper object for each Handle. */
 const registry = new WeakMap<handle, Handle<handle>>();
@@ -123,8 +124,9 @@ export abstract class Handle<T extends handle> {
    * notifies the collections holding the Handle. It is the one place a
    * destroy-time Guard goes, behind one read of Dev mode; no Wrapper method
    * carries one. In Dev mode it counts the Wrapper destroyed for
-   * `Reforged.debug`, then turns it into a tombstone (see `entomb`), last,
-   * so every earlier part reads the Wrapper as it was.
+   * `Reforged.debug`, then turns it into a tombstone (see `entomb`), so every
+   * earlier part reads the Wrapper as it was; inside `MapPlayer.runLocal` it
+   * then raises: a Handle freed on one client desyncs.
    */
   protected release(): void {
     const released: Released = {
@@ -139,6 +141,10 @@ export abstract class Handle<T extends handle> {
     if (configuration.devMode) {
       countDestroyed(released.className);
       entomb(this, `${released.className}#${String(released.id)}`);
+      assertNotLocal(
+        `destroying ${released.className}#${String(released.id)}`,
+        3,
+      );
     }
   }
 
@@ -260,8 +266,9 @@ export function expectWrapper<C extends Handle<handle>>(
  * mode; no Wrapper method carries one. In Dev mode, for a `creation` (not
  * the non-null lookup of `expectFound`): a creation before the globals Init
  * stage was entered raises, naming `Init.onGlobals` (a Handle created at
- * module top level runs before the game is set up, and desyncs); otherwise
- * the Wrapper is counted created for `Reforged.debug`.
+ * module top level runs before the game is set up, and desyncs), and so does
+ * one inside `MapPlayer.runLocal` (a Handle id allocated on one client
+ * desyncs); otherwise the Wrapper is counted created for `Reforged.debug`.
  */
 function wrapExpected<C extends Handle<handle>>(
   cls: WrapperClass<C>,
@@ -281,6 +288,7 @@ function wrapExpected<C extends Handle<handle>>(
         2,
       );
     }
+    assertNotLocal(`creating a ${cls.name}`, 2);
     countCreated(cls.name);
   }
   const wrapper = wrap(cls, handle);
