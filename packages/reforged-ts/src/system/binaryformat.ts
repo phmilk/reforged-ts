@@ -38,7 +38,7 @@ export const unpackField = string.unpack as (
 ) => LuaMultiReturn<[unknown, number]>;
 
 /** The fields, one per typed method pair of the reader and the writer. */
-export const Fields = {
+export const FIELDS = {
   int8: { format: "i1", min: -128, max: 127 },
   uint8: { format: "I1", min: 0, max: 255 },
   int16: { format: "i2", min: -32768, max: 32767 },

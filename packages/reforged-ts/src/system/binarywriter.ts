@@ -3,7 +3,7 @@
 import {
   type BinaryField,
   BYTE_ORDER,
-  Fields,
+  FIELDS,
   UINT32_MODULUS,
   UINT32_SIGNED_LIMIT,
 } from "./binaryformat";
@@ -34,7 +34,7 @@ export class BinaryWriter {
    * `readDouble`.
    */
   public writeDouble(value: number): void {
-    this.push(Fields.double, value);
+    this.push(FIELDS.double, value);
   }
 
   /**
@@ -42,25 +42,25 @@ export class BinaryWriter {
    * single precision. `writeDouble` is the lossless pair.
    */
   public writeFloat(value: number): void {
-    this.push(Fields.float, value);
+    this.push(FIELDS.float, value);
   }
 
   /** Writes a signed 16-bit integer, from -32,768 to 32,767. */
   public writeInt16(value: number): void {
-    this.checkRange("writeInt16", Fields.int16, value);
-    this.push(Fields.int16, value);
+    this.checkRange("writeInt16", FIELDS.int16, value);
+    this.push(FIELDS.int16, value);
   }
 
   /** Writes a signed 32-bit integer, from -2^31 to 2^31 - 1. */
   public writeInt32(value: number): void {
-    this.checkRange("writeInt32", Fields.int32, value);
-    this.push(Fields.int32, value);
+    this.checkRange("writeInt32", FIELDS.int32, value);
+    this.push(FIELDS.int32, value);
   }
 
   /** Writes a signed 8-bit integer, from -128 to 127. */
   public writeInt8(value: number): void {
-    this.checkRange("writeInt8", Fields.int8, value);
-    this.push(Fields.int8, value);
+    this.checkRange("writeInt8", FIELDS.int8, value);
+    this.push(FIELDS.int8, value);
   }
 
   /**
@@ -68,19 +68,19 @@ export class BinaryWriter {
    * survives, zero included. Throws for a string longer than 65,535 bytes.
    */
   public writeString(value: string): void {
-    if (value.length > Fields.string.max) {
+    if (value.length > FIELDS.string.max) {
       error(
-        `reforged-ts: writeString takes at most ${String(Fields.string.max)} bytes, got ${String(value.length)}`,
+        `reforged-ts: writeString takes at most ${String(FIELDS.string.max)} bytes, got ${String(value.length)}`,
         2,
       );
     }
-    this.push(Fields.string, value);
+    this.push(FIELDS.string, value);
   }
 
   /** Writes an unsigned 16-bit integer, from 0 to 65,535. */
   public writeUInt16(value: number): void {
-    this.checkRange("writeUInt16", Fields.uint16, value);
-    this.push(Fields.uint16, value);
+    this.checkRange("writeUInt16", FIELDS.uint16, value);
+    this.push(FIELDS.uint16, value);
   }
 
   /**
@@ -97,17 +97,17 @@ export class BinaryWriter {
    * widths. This is the one place the library handles integer width.
    */
   public writeUInt32(value: number): void {
-    this.checkRange("writeUInt32", Fields.uint32, value);
+    this.checkRange("writeUInt32", FIELDS.uint32, value);
     this.push(
-      Fields.uint32,
+      FIELDS.uint32,
       value >= UINT32_SIGNED_LIMIT ? value - UINT32_MODULUS : value,
     );
   }
 
   /** Writes an unsigned 8-bit integer, from 0 to 255. */
   public writeUInt8(value: number): void {
-    this.checkRange("writeUInt8", Fields.uint8, value);
-    this.push(Fields.uint8, value);
+    this.checkRange("writeUInt8", FIELDS.uint8, value);
+    this.push(FIELDS.uint8, value);
   }
 
   /**
