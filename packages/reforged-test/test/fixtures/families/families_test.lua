@@ -29,10 +29,16 @@ describe("units", function()
     local unit = CreateUnit(owner, 1751543663, 10, 20.5, 270.0)
     expect(GetOwningPlayer(unit)).toBe(owner)
     expect(GetUnitTypeId(unit)).toEqual(1751543663)
+    expect(GetHeroLevel(unit)).toEqual(0)
+    SetHeroLevel(unit, 3, false)
+    expect(GetHeroLevel(unit)).toEqual(3)
     expect(since(mark)).toEqual({
       "CreateUnit(player#1048578, 1751543663, 10, 20.5, 270.0)",
       "GetOwningPlayer(unit#1048579)",
       "GetUnitTypeId(unit#1048579)",
+      "GetHeroLevel(unit#1048579)",
+      "SetHeroLevel(unit#1048579, 3, false)",
+      "GetHeroLevel(unit#1048579)",
     })
   end)
 end)

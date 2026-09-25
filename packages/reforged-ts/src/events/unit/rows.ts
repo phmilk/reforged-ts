@@ -24,11 +24,17 @@ export interface UnitEventRow<P> {
    * absent when the Patch has none, and then there is no `nameOf`.
    */
   readonly twin?: unitevent;
-  /** The payload field holding the event's unit (the triggering unit). */
+  /** The payload field holding the event's unit. */
   readonly unit: string;
   /**
-   * Reads the payload once the event's unit is known: the triggering unit for
-   * `name`, the given Unit for `nameOf`. `event` names the descriptor
+   * Reads the event's unit for `UnitEvents.name`, when a response Native
+   * names it (`Unit.fromOrdered()`); the triggering unit when absent. The
+   * twin registers on that same unit.
+   */
+  readonly from?: () => Unit | undefined;
+  /**
+   * Reads the payload once the event's unit is known: the one `from` reads
+   * for `name`, the given Unit for `nameOf`. `event` names the descriptor
    * (`UnitEvents.death`) for `required`.
    */
   readonly read: (unit: Unit, event: string) => P;
@@ -59,14 +65,18 @@ export function unitEventRows<
   return rows;
 }
 
-/** The descriptor registered for every slot, reading the triggering unit. */
+/**
+ * The descriptor registered for every slot, reading the event's unit through
+ * the row's `from`, or the triggering unit.
+ */
 function anyUnit<P>(name: string, row: UnitEventRow<P>): EventDescriptor<P> {
   const event = `UnitEvents.${name}`;
+  const from = row.from ?? (() => Unit.fromEvent());
   return {
     register: (trigger) => {
       trigger.registerAnyUnitEvent(row.event);
     },
-    read: () => row.read(required(Unit.fromEvent(), row.unit, event), event),
+    read: () => row.read(required(from(), row.unit, event), event),
     damage: row.damage,
   };
 }

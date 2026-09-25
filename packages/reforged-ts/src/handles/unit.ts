@@ -1440,6 +1440,16 @@ export class Unit extends Widget {
     return this.fromHandle(GetAttacker());
   }
 
+  /** The unit changing owner, or undefined outside an ownership change. */
+  public static fromChanging(): Unit | undefined {
+    return this.fromHandle(GetChangingUnit());
+  }
+
+  /** The finished structure, or undefined outside a construction finish. */
+  public static fromConstructed(): Unit | undefined {
+    return this.fromHandle(GetConstructedStructure());
+  }
+
   /** The unit dealing the damage, or undefined when no unit deals it. */
   public static fromDamageSource(): Unit | undefined {
     return this.fromHandle(GetEventDamageSource());
@@ -1477,9 +1487,52 @@ export class Unit extends Widget {
     return this.fromHandle(GetLeavingUnit());
   }
 
+  /** The hero gaining a level, or undefined outside a hero level event. */
+  public static fromLeveling(): Unit | undefined {
+    return this.fromHandle(GetLevelingUnit());
+  }
+
+  /** The unit loaded into a transport, or undefined outside a load event. */
+  public static fromLoaded(): Unit | undefined {
+    return this.fromHandle(GetLoadedUnit());
+  }
+
+  /** The unit given an order, or undefined outside an order event. */
+  public static fromOrdered(): Unit | undefined {
+    return this.fromHandle(GetOrderedUnit());
+  }
+
+  /**
+   * The unit a target order targets, or undefined outside a target order or
+   * when the target is not a unit.
+   */
+  public static fromOrderTarget(): Unit | undefined {
+    return this.fromHandle(GetOrderTargetUnit());
+  }
+
   /** The spell's target unit, or undefined when the spell targets none. */
   public static fromSpellTarget(): Unit | undefined {
     return this.fromHandle(GetSpellTargetUnit());
+  }
+
+  /** The summoned unit, or undefined outside a summon event. */
+  public static fromSummoned(): Unit | undefined {
+    return this.fromHandle(GetSummonedUnit());
+  }
+
+  /** The unit that summons, or undefined outside a summon event. */
+  public static fromSummoning(): Unit | undefined {
+    return this.fromHandle(GetSummoningUnit());
+  }
+
+  /** The trained unit, or undefined outside a training finish. */
+  public static fromTrained(): Unit | undefined {
+    return this.fromHandle(GetTrainedUnit());
+  }
+
+  /** The transport a unit is loaded into, or undefined outside a load event. */
+  public static fromTransport(): Unit | undefined {
+    return this.fromHandle(GetTransportUnit());
   }
 
   public static getPointValueByType(unitType: number) {
