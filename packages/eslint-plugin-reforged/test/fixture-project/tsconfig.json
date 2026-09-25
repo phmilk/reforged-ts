@@ -1,0 +1,23 @@
+{
+  // The fixture project: a Map project as the rules see it, with the Template's
+  // compiler options. The RuleTester lints every test case as file.ts in this
+  // folder (its content replaced in memory); the other sources are extra
+  // modules a case may import. reforged-types is the real package (a
+  // devDependency of the plugin, found above this folder); reforged-ts is the
+  // stub under node_modules/reforged-ts. Never built.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [
+      "@typescript-to-lua/language-extensions",
+      "lua-types/5.3",
+      "reforged-types/3.0.0"
+    ],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": ["*.ts"]
+}

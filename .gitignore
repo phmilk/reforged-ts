@@ -39,6 +39,9 @@ build/Release
 
 # Dependency directories
 node_modules/
+# ...except the stub packages of eslint-plugin-reforged's fixture project,
+# which stand in for installed packages and are committed.
+!packages/eslint-plugin-reforged/test/fixture-project/node_modules/
 jspm_packages/
 
 # TypeScript cache
