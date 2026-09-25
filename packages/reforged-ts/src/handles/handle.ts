@@ -2,6 +2,7 @@
 
 import { hasRun } from "../init/stages";
 import { configuration } from "../reforged/configuration";
+import { assertNotLocal } from "../reforged/local";
 
 /** The registry: the one Wrapper object for each Handle. */
 const registry = new WeakMap<handle, Handle<handle>>();
@@ -119,7 +120,9 @@ export abstract class Handle<T extends handle> {
    * removes the registry entry for the Handle, so a later lookup of the same
    * Handle makes a new Wrapper instead of returning this dead one, then
    * notifies the collections holding the Handle. It is the one place a
-   * destroy-time Guard goes; no Wrapper method carries one.
+   * destroy-time Guard goes; no Wrapper method carries one. In Dev mode,
+   * inside `MapPlayer.runLocal`, it then raises: a Handle freed on one client
+   * desyncs.
    */
   protected release(): void {
     const released: Released = {
@@ -130,6 +133,12 @@ export abstract class Handle<T extends handle> {
     registry.delete(released.handle);
     for (const listener of releaseListeners) {
       listener(released);
+    }
+    if (configuration.devMode) {
+      assertNotLocal(
+        `destroying ${released.className}#${String(released.id)}`,
+        3,
+      );
     }
   }
 
@@ -203,7 +212,9 @@ export function expectWrapper<C extends Handle<handle>>(
  * It is the one place a creation-time Guard goes, behind one read of Dev
  * mode; no Wrapper method carries one. In Dev mode a creation before the
  * globals Init stage was entered raises, naming `Init.onGlobals` (a Handle
- * created at module top level runs before the game is set up, and desyncs).
+ * created at module top level runs before the game is set up, and desyncs),
+ * and so does one inside `MapPlayer.runLocal` (a Handle id allocated on one
+ * client desyncs).
  */
 function wrapCreated<C extends Handle<handle>>(
   cls: WrapperClass<C>,
@@ -220,6 +231,9 @@ function wrapCreated<C extends Handle<handle>>(
       `reforged-ts: ${cls.name} created before the globals Init stage: create Handles in Init.onGlobals or a later stage, not at module top level`,
       2,
     );
+  }
+  if (configuration.devMode) {
+    assertNotLocal(`creating a ${cls.name}`, 2);
   }
   const wrapper = wrap(cls, handle);
   init?.(wrapper);

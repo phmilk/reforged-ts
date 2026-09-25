@@ -1,5 +1,6 @@
 /** @noSelfInFile * */
 
+import { assertNotLocal } from "../reforged/local";
 import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 
@@ -62,6 +63,7 @@ export class Force extends Handle<force> {
   }
 
   public for(callback: () => void) {
+    assertNotLocal("Force.for", 2);
     ForForce(this.handle, callback);
   }
 

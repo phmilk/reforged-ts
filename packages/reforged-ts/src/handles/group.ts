@@ -1,5 +1,6 @@
 /** @noSelfInFile */
 
+import { assertNotLocal } from "../reforged/local";
 import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
@@ -169,6 +170,7 @@ export class Group extends Handle<group> {
   }
 
   public for(callback: () => void) {
+    assertNotLocal("Group.for", 2);
     ForGroup(this.handle, callback);
   }
 
