@@ -7,6 +7,8 @@
 // contents string goes through it, and the closing string sets the ability
 // icon to what was collected. A written string holding a double quote would
 // end the file's string literal early, so the override refuses one.
+// That the write methods return nothing is a declaration fixture
+// (`negative/file-sleep-no-value.ts`): the lint forbids using their value.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { File } from "../src/index";
@@ -108,10 +110,6 @@ describe("File.write", () => {
     File.write("exact.txt", string.rep("x", chunkLimit));
     expect(written("exact.txt").length).toEqual(3);
   });
-
-  it("returns nothing", () => {
-    expect(File.write("nothing.txt", "x")).toBeUndefined();
-  });
 });
 
 describe("File.writeRaw", () => {
@@ -119,10 +117,6 @@ describe("File.writeRaw", () => {
     const contents = `a "quoted" ${escape} line`;
     File.writeRaw("raw.txt", contents);
     expect(written("raw.txt")).toEqual([contents]);
-  });
-
-  it("returns nothing", () => {
-    expect(File.writeRaw("nothing.txt", "x", true)).toBeUndefined();
   });
 });
 
