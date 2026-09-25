@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import plugin from "../src/index.js";
+import { plugin } from "./support/plugin.js";
 
 /** #16's rule table: every rule the plugin may export, at its decided severity. */
 const decidedTable: Readonly<Record<string, "error" | "warn">> = {

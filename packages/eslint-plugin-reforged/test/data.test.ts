@@ -1,13 +1,16 @@
 // The data files: their shape is checked at plugin load, and every Native
 // they name resolves in the installed Typings.
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
 import banList from "../data/unsafe-natives.json" with { type: "json" };
 import { createPlugin, DataFileError } from "../src/index.js";
+import { fixtureProjectRoot } from "./support/fixture-project.js";
+import { lintWithRecommended } from "./support/lint.js";
 import { installedNatives } from "./support/typings.js";
 
 const scratch = mkdtempSync(path.join(tmpdir(), "eslint-plugin-reforged-"));
@@ -50,18 +53,27 @@ describe("the ban list (data/unsafe-natives.json)", () => {
     ["invalid JSON", "[", "the content must be valid JSON"],
   ])("throws at load for %s, naming the field", (_, content, message) => {
     const file = dataFile("unsafe-natives.json", content);
-    expect(() => createPlugin({ files: { unsafeNatives: file } })).toThrow(
-      DataFileError,
-    );
-    expect(() => createPlugin({ files: { unsafeNatives: file } })).toThrow(
-      `${file}: ${message}`,
-    );
+    expect(() =>
+      createPlugin({
+        files: { unsafeNatives: file },
+        projectRoot: fixtureProjectRoot,
+      }),
+    ).toThrow(DataFileError);
+    expect(() =>
+      createPlugin({
+        files: { unsafeNatives: file },
+        projectRoot: fixtureProjectRoot,
+      }),
+    ).toThrow(`${file}: ${message}`);
   });
 
   it("loads a well-formed file", () => {
     const file = dataFile("unsafe-natives.json", JSON.stringify([entry]));
     expect(
-      createPlugin({ files: { unsafeNatives: file } }).rules,
+      createPlugin({
+        files: { unsafeNatives: file },
+        projectRoot: fixtureProjectRoot,
+      }).rules,
     ).toHaveProperty("no-unsafe-natives");
   });
 
@@ -72,5 +84,193 @@ describe("the ban list (data/unsafe-natives.json)", () => {
       .map((each) => each.name)
       .filter((name) => !natives.has(name));
     expect(missing).toEqual([]);
+  });
+});
+
+/** A project root with the given files, relative to it; a fresh directory each call. */
+function project(files: Record<string, string>): string {
+  const root = mkdtempSync(path.join(scratch, "project-"));
+  for (const [relative, content] of Object.entries(files)) {
+    const file = path.join(root, relative);
+    mkdirSync(path.dirname(file), { recursive: true });
+    writeFileSync(file, content);
+  }
+  return root;
+}
+
+const stubManifest = JSON.stringify({ name: "reforged-ts", version: "1.2.3" });
+
+describe("the rename map (reforged-ts's migration/renames.json)", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const entry = {
+    old: "new Unit(...)",
+    new: "Unit.create(...)",
+    kind: "constructor",
+    versions: { from: "w3ts@3", to: "reforged-ts@1" },
+    oneToOne: true,
+    note: "n.",
+  };
+
+  it.each([
+    ["not an array", "{}", "the root must be an array"],
+    ["an entry not an object", "[null]", "[0] must be an object"],
+    [
+      "an unknown kind",
+      JSON.stringify([entry, { ...entry, kind: "method" }]),
+      "[1].kind must be one of constructor, member, accessor, function, class, type, entryPoint, package",
+    ],
+    [
+      "an old symbol that is not a symbol",
+      JSON.stringify([{ ...entry, old: "new Unit" + "!" }]),
+      "[0].old must be a symbol",
+    ],
+    [
+      "a replacement that is not a symbol",
+      JSON.stringify([{ ...entry, new: "Unit create" }]),
+      "[0].new must be a symbol",
+    ],
+    [
+      "a list of one replacement",
+      JSON.stringify([{ ...entry, oneToOne: false, new: ["Unit.create"] }]),
+      "[0].new must be a symbol (`Unit.create(...)`), a list of at least two symbols, or null",
+    ],
+    [
+      "a list with a bad element",
+      JSON.stringify([{ ...entry, oneToOne: false, new: ["Unit.create", 3] }]),
+      "[0].new[1] must be a symbol",
+    ],
+    [
+      "a one-to-one entry without a single replacement",
+      JSON.stringify([{ ...entry, new: null }]),
+      "[0].new must be a single symbol when oneToOne is true",
+    ],
+    [
+      "a package entry whose replacement is not a package name",
+      JSON.stringify([
+        { ...entry, old: "w3ts", new: "Reforged TS", kind: "package" },
+      ]),
+      "[0].new must be a package name",
+    ],
+    [
+      "a missing versions object",
+      JSON.stringify([{ ...entry, versions: undefined }]),
+      "[0].versions must be an object",
+    ],
+    [
+      "a version without a major",
+      JSON.stringify([
+        { ...entry, versions: { from: "w3ts", to: "reforged-ts@1" } },
+      ]),
+      "[0].versions.from must be a package and its major",
+    ],
+    [
+      "a oneToOne that is not a boolean",
+      JSON.stringify([{ ...entry, oneToOne: "yes" }]),
+      "[0].oneToOne must be a boolean",
+    ],
+    [
+      "an empty note",
+      JSON.stringify([{ ...entry, note: "" }]),
+      "[0].note must be a non-empty string",
+    ],
+  ])("throws at load for %s, naming the field", (_, content, message) => {
+    const file = dataFile("renames.json", content);
+    expect(() => createPlugin({ files: { renames: file } })).toThrow(
+      DataFileError,
+    );
+    expect(() => createPlugin({ files: { renames: file } })).toThrow(
+      `${file}: ${message}`,
+    );
+  });
+
+  it("throws for a malformed map in the project's installation, naming the file and the field", () => {
+    const root = project({
+      "node_modules/reforged-ts/package.json": stubManifest,
+      "node_modules/reforged-ts/migration/renames.json": JSON.stringify([
+        { ...entry, kind: "method" },
+      ]),
+    });
+    const file = path.join(
+      root,
+      "node_modules/reforged-ts/migration/renames.json",
+    );
+    expect(() => createPlugin({ projectRoot: root })).toThrow(
+      `${file}: [0].kind must be one of`,
+    );
+  });
+
+  it("reads the map from the project's installation, found from the project root", () => {
+    const root = project({
+      "node_modules/reforged-ts/package.json": stubManifest,
+      "node_modules/reforged-ts/migration/renames.json": JSON.stringify([
+        { ...entry, old: "new Timer(...)", new: "Timer.create(...)" },
+      ]),
+      "maps/one/.keep": "",
+    });
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    // A project root below the installation: Node's lookup walks up.
+    const plugin = createPlugin({ projectRoot: path.join(root, "maps/one") });
+    expect(warn).not.toHaveBeenCalled();
+    expect(
+      lintWithRecommended(
+        'import { Timer, Unit } from "reforged-ts";\nnew Timer();\nnew Unit(0 as never, 0, 0, 0);',
+        plugin,
+      ).filter((each) => each.ruleId === "reforged/no-legacy-w3ts-names"),
+    ).toMatchObject([{ line: 2 }]);
+  });
+
+  it("warns once and disables the rule when the project has no reforged-ts", () => {
+    const root = project({ "package.json": "{}" });
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const plugin = createPlugin({ projectRoot: root });
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith(
+      `eslint-plugin-reforged: reforged-ts is not installed in ${root} (resolved from the project root); disabled: reforged/no-legacy-w3ts-names.`,
+    );
+    // Disabled, still registered: a config that names it loads.
+    expect(plugin.rules).toHaveProperty("no-legacy-w3ts-names");
+    expect(
+      lintWithRecommended(
+        'import { MapPlayer } from "w3ts";\nMapPlayer.create(0);\nTriggerSleepAction(1);',
+        plugin,
+      ).map((each) => each.ruleId),
+    ).toEqual(["reforged/no-unsafe-natives"]);
+  });
+
+  it("never reads the plugin's own reforged-ts", () => {
+    // The plugin's package has reforged-ts as a devDependency; a project
+    // root outside it must not see that installation.
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    createPlugin({ projectRoot: project({}) });
+    expect(warn).toHaveBeenCalledTimes(1);
+  });
+
+  it("warns once and disables the rule when reforged-ts does not publish the map", () => {
+    const root = project({
+      "node_modules/reforged-ts/package.json": stubManifest,
+    });
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    createPlugin({ projectRoot: root });
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith(
+      `eslint-plugin-reforged: reforged-ts@1.2.3 in ${path.join(root, "node_modules/reforged-ts")} does not publish migration/renames.json; disabled: reforged/no-legacy-w3ts-names.`,
+    );
+  });
+
+  it("loads the library's own map, the contract", () => {
+    // This package's devDependency: the workspace's reforged-ts, linked
+    // into its node_modules as a Map project's installation is.
+    const packageRoot = fileURLToPath(new URL("..", import.meta.url));
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const plugin = createPlugin({ projectRoot: packageRoot });
+    expect(warn).not.toHaveBeenCalled();
+    expect(
+      lintWithRecommended('import { Unit } from "w3ts";\nprint(Unit);', plugin)
+        .filter((each) => each.ruleId === "reforged/no-legacy-w3ts-names")
+        .map((each) => each.message),
+    ).toEqual([expect.stringContaining("use `reforged-ts`")]);
   });
 });

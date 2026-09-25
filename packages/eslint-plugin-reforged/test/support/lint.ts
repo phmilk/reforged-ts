@@ -5,12 +5,13 @@
 import { Linter } from "eslint";
 import { parser } from "typescript-eslint";
 
-import plugin from "../../src/index.js";
+import type { ReforgedPlugin } from "../../src/index.js";
 import { fixtureFile, fixtureProjectRoot } from "./fixture-project.js";
+import { plugin as fixturePlugin } from "./plugin.js";
 
 const linter = new Linter({ configType: "flat" });
 
-const config: Linter.Config[] = [
+const typeInformation: Linter.Config[] = [
   {
     files: ["**/*.ts"],
     languageOptions: {
@@ -24,10 +25,20 @@ const config: Linter.Config[] = [
     // that passes is one that matched its rule.
     linterOptions: { reportUnusedDisableDirectives: "error" },
   },
-  ...(plugin.configs.recommended as Linter.Config[]),
 ];
 
-/** The messages ESLint reports for `code` linted as the fixture's file.ts. */
-export function lintWithRecommended(code: string): Linter.LintMessage[] {
-  return linter.verify(code, config, fixtureFile("file.ts"));
+/**
+ * The messages ESLint reports for `code` linted as the fixture's file.ts,
+ * with the recommended config of `plugin` (by default, the one created for
+ * the fixture project).
+ */
+export function lintWithRecommended(
+  code: string,
+  plugin: ReforgedPlugin = fixturePlugin,
+): Linter.LintMessage[] {
+  return linter.verify(
+    code,
+    [...typeInformation, ...(plugin.configs.recommended as Linter.Config[])],
+    fixtureFile("file.ts"),
+  );
 }
