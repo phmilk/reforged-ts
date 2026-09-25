@@ -25,7 +25,7 @@ A library class that owns one Handle and exposes its Natives as typed members (`
 _Avoid_: handle class, model, entity
 
 **System**:
-A library utility that owns no Handle of its own (`sync`, `file`, `base64`, `gametime`).
+A library utility that wraps no Handle, even when it uses some for its own work (`sync`, `host`, `file`, `binary`, `base64`, `gametime`).
 _Avoid_: helper, module, util
 
 **Hook**:
