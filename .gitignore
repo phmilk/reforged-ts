@@ -114,3 +114,6 @@ packages/reforged-ts/dist-test/
 
 # Claude Code agent worktrees and local state
 .claude/
+
+# eslint-plugin-reforged cost measurement corpus (scripts/measure-cost.mjs removes it)
+packages/eslint-plugin-reforged/test/fixture-project/.cost/
