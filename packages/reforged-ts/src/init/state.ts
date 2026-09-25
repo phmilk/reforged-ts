@@ -101,8 +101,6 @@ export interface InitState {
   readonly entryPoints: Record<EntryPoint, Registration[]>;
   /** The stage running now, or none. */
   current: InitStage | undefined;
-  /** Whether the Map project registered a callback yet. */
-  projectRegistered: boolean;
 }
 
 /** The library's name, first on every line it prints. */
@@ -156,7 +154,6 @@ function create(): InitState {
       "config::after": [],
     },
     current: undefined,
-    projectRegistered: false,
   };
 }
 

@@ -48,7 +48,7 @@ describe("Reforged.configure", () => {
     });
     expect(Reforged.devMode).toBeFalsy();
     expect(lines).toEqual([
-      "reforged-ts: Reforged.configure({ devMode: false }) called after a callback was registered: only later registrations see the new value",
+      'reforged-ts: Reforged.configure({ devMode: false }) called after a callback was registered (the first: Init.onGlobals "a project callback"): only later registrations see the new value',
     ]);
   });
 
