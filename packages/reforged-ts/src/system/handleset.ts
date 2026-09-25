@@ -27,6 +27,8 @@ import { type HandleHolder, hold, iterateHandles, unhold } from "./handlekeys";
  * insertions ran in the same order, which holds when they ran in
  * synchronous code (not inside `MapPlayer.runLocal`).
  *
+ * @example
+ * {@includeCode ../../examples/handle-map-kills.ts}
  * @typeParam K - The Wrapper class of the members, `Unit` or `Widget`.
  */
 export class HandleSet<K extends Handle<handle>> {
@@ -38,6 +40,21 @@ export class HandleSet<K extends Handle<handle>> {
       this.memberOf.delete(handle);
     },
   };
+
+  /**
+   * A set holding `values`, added in their order, or an empty set: the
+   * constructor of `Set`, so swapping a `Set` of Wrappers for a `HandleSet`
+   * is a change of the class name only.
+   *
+   * @param values - The first members.
+   */
+  public constructor(values?: Iterable<K> | null) {
+    if (values !== undefined && values !== null) {
+      for (const value of values) {
+        this.add(value);
+      }
+    }
+  }
 
   /**
    * The number of members.

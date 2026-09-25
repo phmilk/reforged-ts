@@ -175,6 +175,22 @@ for (const devMode of [false, true]) {
       expect(holderCount(units[0].handle)).toEqual(0);
       expect(holderCount(units[1].handle)).toEqual(0);
     });
+
+    it("takes its first entries in the constructor, as a Map does", () => {
+      Reforged.configure({ devMode });
+      const units = [footmanAt(0), footmanAt(1)];
+      const map = new HandleMap<Unit, number>([
+        [units[1], 1],
+        [units[0], 0],
+      ]);
+      expect([...map.values()]).toEqual([1, 0]);
+      const handle = units[1].handle;
+
+      units[1].destroy();
+
+      expect([...map.keys()]).toEqual([units[0]]);
+      expect(holderCount(handle)).toEqual(0);
+    });
   });
 
   describe(`HandleSet ${mode}`, () => {
@@ -253,6 +269,19 @@ for (const devMode of [false, true]) {
 
       expect(set.size).toEqual(0);
       expect(holderCount(unit.handle)).toEqual(0);
+    });
+
+    it("takes its first members in the constructor, as a Set does", () => {
+      Reforged.configure({ devMode });
+      const units = [footmanAt(0), footmanAt(1)];
+      const set = new HandleSet<Unit>([units[1], units[0], units[1]]);
+      expect([...set]).toEqual([units[1], units[0]]);
+      const handle = units[0].handle;
+
+      units[0].destroy();
+
+      expect([...set]).toEqual([units[1]]);
+      expect(holderCount(handle)).toEqual(0);
     });
   });
 }

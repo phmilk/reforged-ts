@@ -327,14 +327,10 @@ export class MapPlayer extends Handle<player> {
    * MapPlayer.runLocal changes game state for one client, which desyncs the
    * game: only visuals belong inside runLocal`. Create what `fn` needs
    * before calling `runLocal`, on every client.
-   * @example Show a frame to one player.
-   * ```ts
-   * MapPlayer.runLocal(player, () => {
-   *   frame.visible = true;
-   * });
-   * ```
-   * @param player The player whose client runs `fn`.
-   * @param fn What to run there: visuals only.
+   * @example
+   * {@includeCode ../../examples/run-local-frame.ts}
+   * @param player - The player whose client runs `fn`.
+   * @param fn - What to run there: visuals only.
    */
   public static runLocal(player: MapPlayer, fn: () => void): void {
     if (GetLocalPlayer() !== player.handle) {
