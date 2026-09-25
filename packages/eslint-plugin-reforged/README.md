@@ -34,9 +34,12 @@ Peer dependencies: ESLint 9 or later (10 is tested), `typescript-eslint` 8 and T
 
 Each diagnostic links to the rule's page on the docs site; the pages ship in `docs/`.
 
-| Rule                                             | Severity | Reports                                                                                   |
-| ------------------------------------------------ | -------- | ----------------------------------------------------------------------------------------- |
-| [`no-unsafe-natives`](docs/no-unsafe-natives.md) | error    | A Native on the ban list (`TriggerSleepAction`, `PolledWait`, the BJ timer helpers, ...). |
+| Rule                                                       | Severity | Reports                                                                                         |
+| ---------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------- |
+| [`no-dotted-asset-paths`](docs/no-dotted-asset-paths.md)   | error    | An asset path whose file name holds a dot before its extension (`model_1.0.mdx`).               |
+| [`no-unsafe-natives`](docs/no-unsafe-natives.md)           | error    | A Native on the ban list (`TriggerSleepAction`, `PolledWait`, the BJ timer helpers, ...).       |
+| [`no-unordered-iteration`](docs/no-unordered-iteration.md) | warn     | Iteration that compiles to `pairs` (`for...in`, `Object.keys/values/entries`, `pairs`, `next`). |
+| [`no-self-recursion`](docs/no-self-recursion.md)           | warn     | A function that calls itself by name in its own body.                                           |
 
 To silence a rule on one line, say why:
 
