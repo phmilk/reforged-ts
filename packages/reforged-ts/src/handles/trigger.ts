@@ -90,16 +90,7 @@ export class Trigger extends Handle<trigger> {
    * Adding more conditions later wil join them by AND (that means all conditions need to evaluate to `true`)
    *
    * @example
-   * ```ts
-   * Trigger.create()
-   *   // trigger fires if a unit is attacked
-   *   .registerAnyUnitEvent(EVENT_PLAYER_UNIT_ATTACKED)
-   *   // but only if the unit name matches
-   *   .addCondition(() => Unit.fromAttacker()?.name === "Attacker Unit")
-   *   .addAction(() => {
-   *     // do something...
-   *   });
-   * ```
+   * {@includeCode ../../examples/trigger-add-condition.ts}
    * @param condition The condition which must evaluate to true in order to run the trigger's actions.
    */
   public addCondition(condition: boolexpr | (() => boolean)) {
