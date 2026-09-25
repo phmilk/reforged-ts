@@ -1,8 +1,10 @@
 /** @noSelfInFile */
 
 // A Timer's handler runs when the stub helper fires the timer, as the game
-// would on expiry (callback firing through a stub helper). Timer is on the
-// Handle base: creation throws, lookup returns undefined.
+// would on expiry (callback firing through a stub helper), and receives the
+// Timer that was started. `Timer.after` and `Timer.every` are observed through
+// the call log and through firing. Timer is on the Handle base: creation
+// throws, lookup returns undefined.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Timer } from "../src/index";
@@ -35,6 +37,28 @@ describe("Timer", () => {
     expect(runs).toEqual(1);
   });
 
+  it("passes the handler the Timer that was started", () => {
+    let received: Timer | undefined;
+    const timer = Timer.create().start(0.25, false, (expired) => {
+      received = expired;
+    });
+    __stub_fire_timer(timer.handle);
+    expect(received).toBe(timer);
+  });
+
+  it("returns itself from pause, resume and start", () => {
+    const timer = Timer.create();
+    expect(timer.start(1, false, () => undefined)).toBe(timer);
+    expect(timer.pause()).toBe(timer);
+    expect(timer.resume()).toBe(timer);
+    expect(stubCalls()).toContainCall(
+      `PauseTimer(${handleRef("timer", timer.handle)})`,
+    );
+    expect(stubCalls()).toContainCall(
+      `ResumeTimer(${handleRef("timer", timer.handle)})`,
+    );
+  });
+
   it("records its destruction", () => {
     const timer = Timer.create();
     timer.destroy();
@@ -64,7 +88,104 @@ describe("Timer.create", () => {
   });
 });
 
+describe("Timer.after", () => {
+  it("creates one Timer and starts it once", () => {
+    const handle = CreateTimer();
+    const before = stubCalls().length;
+    withNative(
+      "CreateTimer",
+      () => handle,
+      () => {
+        Timer.after(2, () => undefined);
+      },
+    );
+    expect(stubCalls().slice(before)).toEqual([
+      "CreateTimer()",
+      `TimerStart(${handleRef("timer", handle)}, 2, false, <function>)`,
+    ]);
+  });
+
+  it("runs the handler once, then destroys the Timer", () => {
+    const handle = CreateTimer();
+    const destroyed = `DestroyTimer(${handleRef("timer", handle)})`;
+    let runs = 0;
+    let destroyedBeforeHandler = false;
+    withNative(
+      "CreateTimer",
+      () => handle,
+      () => {
+        Timer.after(0.5, () => {
+          runs++;
+          destroyedBeforeHandler = stubCalls().includes(destroyed);
+        });
+      },
+    );
+    expect(runs).toEqual(0);
+    __stub_fire_timer(handle);
+    expect(runs).toEqual(1);
+    expect(destroyedBeforeHandler).toEqual(false);
+    expect(stubCalls()).toContainCall(destroyed);
+    expect(() => {
+      __stub_fire_timer(handle);
+    }).toThrow("was destroyed");
+    expect(runs).toEqual(1);
+  });
+});
+
+describe("Timer.every", () => {
+  it("returns the Timer it started periodically", () => {
+    const timer = Timer.every(0.5, () => undefined);
+    expect(Timer.fromHandle(timer.handle)).toBe(timer);
+    expect(stubCalls()).toContainCall(
+      `TimerStart(${handleRef("timer", timer.handle)}, 0.5, true, <function>)`,
+    );
+  });
+
+  it("runs the handler on each expiry with the same Timer", () => {
+    const received: Timer[] = [];
+    const timer = Timer.every(1, (expired) => {
+      received.push(expired);
+    });
+    __stub_fire_timer(timer.handle);
+    __stub_fire_timer(timer.handle);
+    __stub_fire_timer(timer.handle);
+    expect(received.length).toEqual(3);
+    for (const expired of received) {
+      expect(expired).toBe(timer);
+    }
+  });
+
+  it("lets the handler destroy the Timer it receives", () => {
+    let runs = 0;
+    const timer = Timer.every(1, (expired) => {
+      runs++;
+      expired.destroy();
+    });
+    __stub_fire_timer(timer.handle);
+    expect(stubCalls()).toContainCall(
+      `DestroyTimer(${handleRef("timer", timer.handle)})`,
+    );
+    expect(() => {
+      __stub_fire_timer(timer.handle);
+    }).toThrow("was destroyed");
+    expect(runs).toEqual(1);
+  });
+});
+
 describe("Timer.fromExpired", () => {
+  it("is the fired Timer inside its handler", () => {
+    let expired: Timer | undefined;
+    const timer = Timer.create().start(1, false, () => {
+      expired = Timer.fromExpired();
+    });
+    __stub_fire_timer(timer.handle);
+    expect(expired).toBe(timer);
+  });
+
+  it("is undefined outside a firing", () => {
+    expect(Timer.fromExpired()).toBeUndefined();
+  });
+
   it("is undefined when GetExpiredTimer returns nil", () => {
     const timer = withNative(
       "GetExpiredTimer",
