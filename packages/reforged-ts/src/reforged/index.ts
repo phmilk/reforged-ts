@@ -21,7 +21,7 @@
 // registrations.
 
 import { LIBRARY } from "../init/state";
-import { configuration } from "./configuration";
+import { configuration, DEFAULT_DAMAGE_DEPTH_LIMIT } from "./configuration";
 import {
   type CallbackFailure,
   callbackFailures,
@@ -34,11 +34,19 @@ export type { WrapperCount } from "./leaks";
 
 /**
  * What `Reforged.configure` takes. The Template's generated environment
- * object can be passed as is: fields other than `devMode` are ignored.
+ * object can be passed as is: fields other than `devMode` and
+ * `damageDepthLimit` are ignored.
  */
 export interface ReforgedOptions {
   /** Whether the library runs in Dev mode. Absent means off. */
   readonly devMode?: boolean;
+  /**
+   * How many nested damage dispatches Dev mode allows before
+   * `Unit.damageTarget` raises: the damage handlers running inside one
+   * another may exceed it by none. Absent means the default, eight. Read
+   * when damage is dealt, so a change applies at once.
+   */
+  readonly damageDepthLimit?: number;
 }
 
 /** What `Reforged.debug.report()` returns. */
@@ -106,7 +114,8 @@ export interface ReforgedEntry {
    * library's own load-time registrations do not count) prints a warning
    * naming the first registration, records the value anyway, and affects
    * only later registrations: a callback keeps the mode it was registered
-   * under.
+   * under. `damageDepthLimit` is recorded too, absent meaning eight; it is
+   * read when damage is dealt, so changing it never warns.
    */
   configure(options: ReforgedOptions): void;
   /** Whether the library is in Dev mode: false until `configure` sets it. */
@@ -160,6 +169,8 @@ class ReforgedObject implements ReforgedEntry {
   public readonly debug: ReforgedDebug = new ReforgedDebugObject();
 
   public configure(options: ReforgedOptions): void {
+    configuration.damageDepthLimit =
+      options.damageDepthLimit ?? DEFAULT_DAMAGE_DEPTH_LIMIT;
     const devMode = options.devMode ?? false;
     if (devMode === configuration.devMode) {
       return;
