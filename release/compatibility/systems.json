@@ -1,0 +1,16 @@
+{
+  "minors": {
+    "1.0": [
+      "Equipment and bag",
+      "Ability cooldowns",
+      "Frame additions",
+      "Special-effect animation",
+      "Trigger introspection",
+      "Loose natives",
+      "Raw keyboard and mouse input",
+      "Camera",
+      "Destructable creation variants"
+    ],
+    "1.1": ["Terrain fog and HD water", "Doodads", "Cinematics and lighting"]
+  }
+}

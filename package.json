@@ -21,6 +21,8 @@
     "changeset": "changeset",
     "release:check-changeset": "pnpm --filter reforged-ts-release release:check-changeset",
     "release:check-patches": "pnpm --filter reforged-ts-release release:check-patches",
+    "release:matrix": "pnpm --filter reforged-ts-release release:matrix",
+    "release:version": "pnpm --filter reforged-ts-release release:version",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test"
   },
   "devDependencies": {
