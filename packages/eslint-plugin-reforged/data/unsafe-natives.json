@@ -1,0 +1,42 @@
+[
+  {
+    "name": "TriggerSleepAction",
+    "reason": "kills the thread without an error outside a trigger action (in a timer callback, a condition or a ForGroup callback), and its wait drifts with network latency.",
+    "replacement": "Continue in a timer callback instead: Timer.after(seconds, callback)."
+  },
+  {
+    "name": "PolledWait",
+    "reason": "waits through TriggerSleepAction, so it kills the thread outside a trigger action and leaks the timer it polls when the thread dies mid-wait.",
+    "replacement": "Continue in a timer callback instead: Timer.after(seconds, callback)."
+  },
+  {
+    "name": "DestroyEffectAfterTimeBJ",
+    "reason": "passes the effect through shared BJ globals to an ExecuteFunc thread that waits with TriggerSleepAction, so concurrent calls race and a killed thread never destroys the effect.",
+    "replacement": "Destroy the effect from a timer callback instead: Timer.after(seconds, () => effect.destroy())."
+  },
+  {
+    "name": "CreateTimerBJ",
+    "reason": "starts a timer without a callback and keeps it only in the shared global bj_lastStartedTimer, which every other BJ timer call overwrites.",
+    "replacement": "Create the timer yourself and keep the reference: Timer.create() or Timer.after(seconds, callback)."
+  },
+  {
+    "name": "StartTimerBJ",
+    "reason": "starts the timer without a callback and records it in the shared global bj_lastStartedTimer, which every other BJ timer call overwrites; it is also listed among the known desync causes.",
+    "replacement": "Start the timer with its callback and keep the reference: timer.start(seconds, periodic, callback)."
+  },
+  {
+    "name": "GetLastCreatedTimerBJ",
+    "reason": "reads the shared global bj_lastStartedTimer, which any other BJ timer call may have overwritten since yours.",
+    "replacement": "Keep the Timer your creating call returned."
+  },
+  {
+    "name": "SelectGroupForPlayerBJ",
+    "reason": "runs ForGroup inside a GetLocalPlayer branch, a systematic desync since patch 1.32.",
+    "replacement": "Collect the units first, then call ClearSelection and SelectUnit for each inside the local branch, without ForGroup."
+  },
+  {
+    "name": "SmartCameraPanBJ",
+    "reason": "is listed among the known desync causes (reported fixed in patch 1.31, not verified on 3.0.0).",
+    "replacement": "Pan the local camera yourself inside the local branch: PanCameraToTimed(x, y, duration)."
+  }
+]

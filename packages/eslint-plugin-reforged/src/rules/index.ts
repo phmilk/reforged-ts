@@ -1,0 +1,30 @@
+// The registry: every rule of the plugin, one line each, sorted by name.
+// Adding a rule is its file under rules/, one import and one line here.
+import type { RuleEntry } from "../rule-entry.js";
+import noAsyncValueAsState from "./no-async-value-as-state.js";
+import noDottedAssetPaths from "./no-dotted-asset-paths.js";
+import noGameStateInLocalBranch from "./no-game-state-in-local-branch.js";
+import noHandleIdAsData from "./no-handle-id-as-data.js";
+import noHandlesAtModuleTopLevel from "./no-handles-at-module-top-level.js";
+import noLegacyW3tsNames from "./no-legacy-w3ts-names.js";
+import noPercentInDisplayStrings from "./no-percent-in-display-strings.js";
+import noSelfRecursion from "./no-self-recursion.js";
+import noUnorderedIteration from "./no-unordered-iteration.js";
+import noUnsafeNatives from "./no-unsafe-natives.js";
+import noUnusedHandleResult from "./no-unused-handle-result.js";
+import preferHandleMap from "./prefer-handle-map.js";
+
+export const ruleEntries: readonly RuleEntry[] = [
+  noAsyncValueAsState,
+  noDottedAssetPaths,
+  noGameStateInLocalBranch,
+  noHandleIdAsData,
+  noHandlesAtModuleTopLevel,
+  noLegacyW3tsNames,
+  noPercentInDisplayStrings,
+  noSelfRecursion,
+  noUnorderedIteration,
+  noUnsafeNatives,
+  noUnusedHandleResult,
+  preferHandleMap,
+];

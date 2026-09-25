@@ -10,6 +10,16 @@
       "type": "string",
       "pattern": "^[A-Za-z_$][\\w$]*(\\.[A-Za-z_$][\\w$]*)?(\\(\\.\\.\\.\\))?$"
     },
+    "oldSymbol": {
+      "description": "A symbol, a symbol after `new`, or an entry point of `addScriptHook` (`main::before`).",
+      "type": "string",
+      "pattern": "^((new )?[A-Za-z_$][\\w$]*(\\.[A-Za-z_$][\\w$]*)?(\\(\\.\\.\\.\\))?|[A-Za-z_$][\\w$]*::[A-Za-z_$][\\w$]*)$"
+    },
+    "packageName": {
+      "description": "An npm package name, as an import names it: `w3ts`, `reforged-ts`.",
+      "type": "string",
+      "pattern": "^(@[a-z0-9~-][a-z0-9._~-]*/)?[a-z0-9~-][a-z0-9._~-]*$"
+    },
     "version": {
       "description": "A package and its major version.",
       "type": "string",
@@ -21,14 +31,17 @@
       "required": ["old", "new", "kind", "versions", "oneToOne", "note"],
       "properties": {
         "old": {
-          "description": "The symbol as an author of the `from` version wrote it: `new Unit(...)`, `Group.getEnumUnit`, `Frame.parent`, `hookedMain`; or an entry point of `addScriptHook` as its `W3TS_HOOK` value reads, `main::before`.",
-          "type": "string",
-          "pattern": "^((new )?[A-Za-z_$][\\w$]*(\\.[A-Za-z_$][\\w$]*)?(\\(\\.\\.\\.\\))?|[A-Za-z_$][\\w$]*::[A-Za-z_$][\\w$]*)$"
+          "description": "The symbol as an author of the `from` version wrote it: `new Unit(...)`, `Group.getEnumUnit`, `Frame.parent`, `hookedMain`; an entry point of `addScriptHook` as its `W3TS_HOOK` value reads, `main::before`; or, for kind `package`, the package name an import names, `w3ts`.",
+          "anyOf": [
+            { "$ref": "#/$defs/oldSymbol" },
+            { "$ref": "#/$defs/packageName" }
+          ]
         },
         "new": {
-          "description": "The replacement as the author will write it; several when the old symbol splits (a get/set pair, overloads mapped by argument shape); null when there is none.",
-          "oneOf": [
+          "description": "The replacement as the author will write it; several when the old symbol splits (a get/set pair, overloads mapped by argument shape); null when there is none. For kind `package`, the new package name.",
+          "anyOf": [
             { "$ref": "#/$defs/symbol" },
+            { "$ref": "#/$defs/packageName" },
             {
               "type": "array",
               "items": { "$ref": "#/$defs/symbol" },
@@ -39,7 +52,7 @@
           ]
         },
         "kind": {
-          "description": "What the old symbol is. An `entryPoint` is one of the four entry points of `addScriptHook` (`main::before`, `main::after`, `config::before`, `config::after`); its replacement, when there is one, is the Init stage at the same moment or the closest later one.",
+          "description": "What the old symbol is. An `entryPoint` is one of the four entry points of `addScriptHook` (`main::before`, `main::after`, `config::before`, `config::after`); its replacement, when there is one, is the Init stage at the same moment or the closest later one. A `package` is the package itself, renamed: its `old` and `new` are package names, and an import from the old name reads the new one.",
           "enum": [
             "constructor",
             "member",
@@ -47,7 +60,8 @@
             "function",
             "class",
             "type",
-            "entryPoint"
+            "entryPoint",
+            "package"
           ]
         },
         "versions": {
@@ -70,13 +84,41 @@
           "minLength": 1
         }
       },
-      "if": {
-        "required": ["oneToOne"],
-        "properties": { "oneToOne": { "const": true } }
-      },
-      "then": {
-        "properties": { "new": { "$ref": "#/$defs/symbol" } }
-      }
+      "allOf": [
+        {
+          "if": {
+            "required": ["oneToOne"],
+            "properties": { "oneToOne": { "const": true } }
+          },
+          "then": {
+            "properties": { "new": { "type": "string" } }
+          }
+        },
+        {
+          "if": {
+            "required": ["kind"],
+            "properties": { "kind": { "const": "package" } }
+          },
+          "then": {
+            "properties": {
+              "old": { "$ref": "#/$defs/packageName" },
+              "new": { "$ref": "#/$defs/packageName" }
+            }
+          },
+          "else": {
+            "properties": {
+              "old": { "$ref": "#/$defs/oldSymbol" },
+              "new": {
+                "anyOf": [
+                  { "$ref": "#/$defs/symbol" },
+                  { "type": "array" },
+                  { "type": "null" }
+                ]
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }

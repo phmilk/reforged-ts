@@ -1,0 +1,85 @@
+{
+  "name": "eslint-plugin-reforged",
+  "version": "1.0.0",
+  "description": "Type-aware ESLint rules that catch the Warcraft III scripting pitfalls (desync, crash, leak) in reforged-ts Map projects.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "warcraft",
+    "wc3",
+    "reforged",
+    "typescript-to-lua"
+  ],
+  "homepage": "https://phmilk.github.io/reforged-ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phmilk/reforged-ts.git",
+    "directory": "packages/eslint-plugin-reforged"
+  },
+  "bugs": {
+    "url": "https://github.com/phmilk/reforged-ts/issues"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "reforged": {
+    "patch": "3.0.0.24268",
+    "docs": "next"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "/dist/**/*.js",
+    "/dist/**/*.d.ts",
+    "/data/*.json",
+    "/docs/*.md",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json",
+    "test": "vitest run --root ../.. --project eslint-plugin-reforged",
+    "measure-cost": "pnpm run build && node scripts/measure-cost.mjs"
+  },
+  "dependencies": {
+    "@typescript-eslint/utils": "catalog:"
+  },
+  "peerDependencies": {
+    "eslint": "^9.0.0 || ^10.0.0",
+    "reforged-ts": "^1.0.0",
+    "reforged-types": "^1.0.0",
+    "typescript": "catalog:",
+    "typescript-eslint": "^8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "reforged-ts": {
+      "optional": true
+    },
+    "reforged-types": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@typescript-eslint/rule-tester": "catalog:",
+    "@typescript-to-lua/language-extensions": "catalog:",
+    "eslint": "catalog:",
+    "lua-types": "catalog:",
+    "reforged-ts": "workspace:*",
+    "reforged-types": "workspace:*",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:",
+    "vitest": "catalog:"
+  }
+}

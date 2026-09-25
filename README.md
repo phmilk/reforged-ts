@@ -4,11 +4,12 @@ The pnpm workspace of reforged-ts, a TypeScript API for Warcraft III Reforged cu
 
 ## Packages
 
-| Package                                     | What it is for                                                                                                                              |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`reforged-ts`](packages/reforged-ts)       | The library: Wrappers and Systems over the game's Natives, compiled to Lua. What a Map project installs.                                    |
-| [`reforged-types`](packages/reforged-types) | The Typings: TypeScript declarations for the Natives of one Patch, generated from the game's Patch files and the Overlay.                   |
-| [`reforged-test`](packages/reforged-test)   | The Lua test harness: runs tests compiled by typescript-to-lua on real Lua 5.3 with the Natives stubbed in Lua, and reports them to vitest. |
+| Package                                                     | What it is for                                                                                                                              |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`reforged-ts`](packages/reforged-ts)                       | The library: Wrappers and Systems over the game's Natives, compiled to Lua. What a Map project installs.                                    |
+| [`reforged-types`](packages/reforged-types)                 | The Typings: TypeScript declarations for the Natives of one Patch, generated from the game's Patch files and the Overlay.                   |
+| [`reforged-test`](packages/reforged-test)                   | The Lua test harness: runs tests compiled by typescript-to-lua on real Lua 5.3 with the Natives stubbed in Lua, and reports them to vitest. |
+| [`eslint-plugin-reforged`](packages/eslint-plugin-reforged) | The lint layer of the Guards: type-aware ESLint rules that report the scripting pitfalls (desync, crash, leak) before the map compiles.     |
 
 The library's own tests run on `reforged-test`, and the library compiles against `reforged-types/3.0.0`.
 
@@ -28,7 +29,7 @@ Run from the root after `pnpm install`:
 | `pnpm format`           | `eslint --fix` and `prettier --write` over the same files: lints and formats in one pass.                                |
 | `pnpm typecheck`        | `tsc --noEmit` on each package's tsconfigs: the library and its tests, the harness glue and runner, the generator.       |
 | `pnpm build`            | Builds every package, dependencies first: the library's Lua and declarations land in `packages/reforged-ts/dist`.        |
-| `pnpm test`             | One vitest run over the three packages' projects, then `typings:check`.                                                  |
+| `pnpm test`             | One vitest run over every package's projects, then `typings:check`.                                                      |
 | `pnpm typings:generate` | Regenerates the Typings from the vendored Patch files and the Overlay.                                                   |
 | `pnpm typings:check`    | Fails when the committed Typings differ from what the generator produces (the drift check).                              |
 
