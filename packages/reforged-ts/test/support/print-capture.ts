@@ -5,7 +5,7 @@
 // Lua global `print` for the length of one callback and gets the previous
 // `print` back afterwards, also when the callback throws.
 
-const globals = _G as unknown as Record<string, unknown>;
+import { globals } from "./editor-script";
 
 /**
  * Runs `body` with `print` collecting its lines instead of writing them, and

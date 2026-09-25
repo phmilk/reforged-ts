@@ -14,33 +14,32 @@ import { editorLog } from "./support/bundle-position";
 import { describe, expect, it } from "reforged-test/lua";
 import { Init, type InitStage } from "../src/init/index";
 import { onStage } from "../src/init/stages";
+import { mark, stages } from "./support/editor-script";
 import { withPrint } from "./support/print-capture";
 
 declare const config: () => void;
 declare const main: () => void;
 
-const stages: readonly InitStage[] = [
-  "globals",
-  "triggers",
-  "initTriggers",
-  "gameStart",
-];
+/** What the library printed while the editor's script ran. */
+const printed: string[] = [];
 
-/** A callback that logs `text` when it runs. */
-function mark(text: string): () => void {
-  return () => {
-    editorLog.push(text);
-  };
+/** Runs `entryPoint` as the game does, keeping what the library printed. */
+function drive(entryPoint: () => void): void {
+  printed.push(...withPrint(entryPoint));
 }
 
-/** What the library printed while the editor's script ran. */
-let printed: string[] = [];
+/** The stages `Init.hasRun` reports as run, in stage order. */
+function ranStages(): readonly InitStage[] {
+  return stages.filter((stage) => Init.hasRun(stage));
+}
+
+/** What a callback of the `globals` stage read from `Init` while it ran. */
+let readDuringGlobals:
+  { hasRun: boolean; current: InitStage | undefined } | undefined;
 
 describe("Init in the bundle position", () => {
   it("reports no stage as run and none as current before the editor's script runs", () => {
-    for (const stage of stages) {
-      expect(Init.hasRun(stage)).toBeFalsy();
-    }
+    expect(ranStages()).toEqual([]);
     expect(Init.current).toBeUndefined();
   });
 
@@ -51,6 +50,12 @@ describe("Init in the bundle position", () => {
       // Registered during the stage's own run: it joins that run.
       Init.onGlobals(mark("globals 3"));
     });
+    Init.onGlobals(() => {
+      readDuringGlobals = {
+        hasRun: Init.hasRun("globals"),
+        current: Init.current,
+      };
+    }, "reads Init");
     onStage("globals", "library", mark("library globals"), "Players");
     Init.onTriggers(mark("triggers 1"));
     Init.onTriggers(() => {
@@ -61,11 +66,12 @@ describe("Init in the bundle position", () => {
     Init.onGameStart(mark("gameStart 1"));
     onStage("gameStart", "library", mark("library gameStart"), "Timers");
 
-    printed = withPrint(() => {
-      config();
-      main();
-      MarkGameStarted();
-    });
+    drive(config);
+    expect(ranStages()).toEqual([]);
+    drive(main);
+    expect(ranStages()).toEqual(["globals", "triggers", "initTriggers"]);
+    drive(MarkGameStarted);
+    expect(ranStages()).toEqual(stages);
 
     expect(editorLog).toEqual([
       "config",
@@ -92,10 +98,12 @@ describe("Init in the bundle position", () => {
     ]);
   });
 
+  it("reports the stage as run and as current inside one of its own callbacks", () => {
+    expect(readDuringGlobals).toEqual({ hasRun: true, current: "globals" });
+  });
+
   it("reports every stage as run afterwards, and none as current", () => {
-    for (const stage of stages) {
-      expect(Init.hasRun(stage)).toBeTruthy();
-    }
+    expect(ranStages()).toEqual(stages);
     expect(Init.current).toBeUndefined();
   });
 

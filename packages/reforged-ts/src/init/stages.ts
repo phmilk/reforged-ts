@@ -51,6 +51,9 @@ function runStage(stage: InitStage): void {
   const outer = state.current;
   queues.started = true;
   state.current = stage;
+  // Not two calls of `runQueue` (queue.ts): both queues can grow during the
+  // run, and the library's must be drained before the project's each time
+  // one is picked, so the two cursors interleave over the same loop.
   let library = 0;
   let project = 0;
   for (;;) {
@@ -96,12 +99,18 @@ export function onStage(
   }
 }
 
-/** Whether the stage's run started: its Blizzard function returned. */
+/**
+ * Whether the stage's run started: its Blizzard function returned and its
+ * callbacks began, or finished. True inside the stage's own callbacks.
+ */
 export function hasRun(stage: InitStage): boolean {
   return state.stages[stage].started;
 }
 
-/** The stage running now, or undefined. */
+/**
+ * The stage whose run is in progress, or undefined. The immediate run of a
+ * late registration does not set it.
+ */
 export function currentStage(): InitStage | undefined {
   return state.current;
 }

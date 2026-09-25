@@ -10,18 +10,12 @@
 import { editorLog } from "./support/bundle-position";
 import { describe, expect, it } from "reforged-test/lua";
 import { Init } from "../src/init/index";
+import { mark } from "./support/editor-script";
 import { reloadModules } from "./support/reload";
 
 declare const config: () => void;
 declare const main: () => void;
 declare const InitGlobals: () => void;
-
-/** A callback that logs `text` when it runs. */
-function mark(text: string): () => void {
-  return () => {
-    editorLog.push(text);
-  };
-}
 
 describe("Init loaded twice in one state", () => {
   it("wraps each Blizzard function once: a callback registered once runs once", () => {

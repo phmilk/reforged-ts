@@ -6,9 +6,8 @@
 // init functions `main` would call stay nil here, so `main` only logs
 // itself.
 
-import { defineEditorScript, editorLog } from "./editor-script";
+import { defineEditorScript } from "./editor-script";
 
-/** What ran in `main` and `config`, in order: the stubs log their own names. */
-export const entryPointLog = editorLog;
+export { editorLog } from "./editor-script";
 
 defineEditorScript(["config", "main"]);

@@ -28,9 +28,17 @@ export interface InitStages {
   onInitTriggers(callback: () => void, label?: string): void;
   /** Registers `callback` for the `gameStart` stage, after `MarkGameStarted`. */
   onGameStart(callback: () => void, label?: string): void;
-  /** Whether `stage` ran: its Blizzard function returned and its callbacks run. */
+  /**
+   * Whether `stage` ran: its Blizzard function returned and the stage's
+   * callbacks began, or finished. Inside one of the stage's own callbacks it
+   * is already true, and `current` names the stage.
+   */
   hasRun(stage: InitStage): boolean;
-  /** The stage running now, or undefined. */
+  /**
+   * The stage whose run is in progress, or undefined between stages and
+   * once all ran. A callback registered after its stage ran runs at once,
+   * and that immediate run does not change it.
+   */
   readonly current: InitStage | undefined;
 }
 

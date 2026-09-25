@@ -1,7 +1,5 @@
 /** @noSelfInFile */
 
-/* eslint-disable @typescript-eslint/no-deprecated -- the deprecated alias is what this file tests; the alias's removal in 2.0 removes the file with it */
-
 // The deprecated alias in the bundle load position: `config` and `main`
 // exist when the library loads, so both are wrapped in place. Hooks for the
 // four entry points run at their old positions around `config` and `main`,
@@ -13,22 +11,16 @@
 
 // Keep this import ahead of the library's: the library wraps the entry
 // points when it loads, and this file defines them.
-import { entryPointLog } from "./support/entry-points";
+import { editorLog } from "./support/entry-points";
 import { describe, expect, it } from "reforged-test/lua";
 import { addScriptHook, W3TS_HOOK } from "../src/hooks/index";
 import { onEntryPoint } from "../src/init/entry-points";
 import { Reforged } from "../src/reforged/index";
+import { mark } from "./support/editor-script";
 import { withPrint } from "./support/print-capture";
 
 declare const config: () => void;
 declare const main: () => void;
-
-/** A hook that logs `text` when it runs. */
-function mark(text: string): () => void {
-  return () => {
-    entryPointLog.push(text);
-  };
-}
 
 /** What the library printed while the entry points ran. */
 let printed: string[] = [];
@@ -36,6 +28,7 @@ let printed: string[] = [];
 describe("addScriptHook in the bundle position", () => {
   it("refuses an entry point it does not know", () => {
     expect(
+      // eslint-disable-next-line @typescript-eslint/no-deprecated -- the deprecated alias is what this test drives; its removal in 2.0 removes the file
       addScriptHook("main::during" as W3TS_HOOK, mark("never")),
     ).toBeFalsy();
   });
@@ -55,15 +48,22 @@ describe("addScriptHook in the bundle position", () => {
 
   it("runs the hooks of the four entry points around config and main, in order, past a throwing one", () => {
     expect(
+      // eslint-disable-next-line @typescript-eslint/no-deprecated -- the deprecated alias is what this test drives; its removal in 2.0 removes the file
       addScriptHook(W3TS_HOOK.CONFIG_BEFORE, mark("config before 1")),
     ).toBeTruthy();
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- the deprecated alias is what this test drives; its removal in 2.0 removes the file
     addScriptHook(W3TS_HOOK.CONFIG_BEFORE, () => {
       error("lobby failure", 0);
     });
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- the deprecated alias is what this test drives; its removal in 2.0 removes the file
     addScriptHook(W3TS_HOOK.CONFIG_BEFORE, mark("config before 2"));
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- the deprecated alias is what this test drives; its removal in 2.0 removes the file
     addScriptHook(W3TS_HOOK.CONFIG_AFTER, mark("config after"));
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- the deprecated alias is what this test drives; its removal in 2.0 removes the file
     addScriptHook(W3TS_HOOK.MAIN_BEFORE, mark("main before 1"));
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- the deprecated alias is what this test drives; its removal in 2.0 removes the file
     addScriptHook(W3TS_HOOK.MAIN_AFTER, mark("main after"));
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- the deprecated alias is what this test drives; its removal in 2.0 removes the file
     addScriptHook(W3TS_HOOK.MAIN_BEFORE, mark("main before 2"));
 
     printed = withPrint(() => {
@@ -71,7 +71,7 @@ describe("addScriptHook in the bundle position", () => {
       main();
     });
 
-    expect(entryPointLog).toEqual([
+    expect(editorLog).toEqual([
       "library config before",
       "config before 1",
       "config before 2",
