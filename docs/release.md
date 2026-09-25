@@ -105,6 +105,35 @@ The first versions are applied on `master` before the first-publish wizard ([#14
 
 When the release workflow is already on `master`, its Version Packages pull request carries the same result and can be merged instead.
 
+## The major-changeset gate
+
+No stable major of `reforged-ts` ships without its migration guide. `pnpm release:gate` (`release/src/major-changeset-gate.ts`, programmatic entry `majorChangesetGate(root)`) reads the pending changesets in `.changeset/` and the versioned prerelease changesets in `.changeset/pre/`. When any of them bumps `reforged-ts` by a major, or when the next stable version of `reforged-ts` would be its first (1.0.0, a major relative to w3ts 3.x), it requires two things for the version pair of that major:
+
+- the migration page of the pair in the website docs;
+- at least one entry of `packages/reforged-ts/migration/renames.json` whose `versions` are the pair, or the pair's no-renames marker.
+
+Missing either fails with a message naming the page path expected and the pair. A minor or a patch of `reforged-ts`, and a major of another package, require nothing.
+
+**The version pair.** Written as the rename map writes it, the package and its major on each side: the previous major to the next one, `reforged-ts@1` to `reforged-ts@2`. The first pair is `w3ts@3` to `reforged-ts@1` (w3ts 3.x to reforged-ts 1.0).
+
+**The page path.** One hand-written page per version pair under the migration section of the docs site ([#40](https://github.com/phmilk/reforged-ts/issues/40)): `website/docs/migration/<from>-to-<to>.md`, each side the package and its major joined by a dash. The first page is `website/docs/migration/w3ts-3-to-reforged-ts-1.md`, served at `/docs/<version segment>/migration/w3ts-3-to-reforged-ts-1`; the page for 2.0 will be `website/docs/migration/reforged-ts-1-to-reforged-ts-2.md`. The same name with `.mdx` also counts. The page follows the structure of [#14](https://github.com/phmilk/reforged-ts/issues/14): install and tsconfig, the old-to-new table (generated from the rename map by the docs build), behaviour changes, Typings changes, what stays the same.
+
+**The no-renames marker.** A major that removes and renames no public symbol still needs its page, and says so in the rename map with one marker item instead of entries:
+
+```json
+{
+  "kind": "noRenames",
+  "versions": { "from": "reforged-ts@1", "to": "reforged-ts@2" },
+  "note": "2.0 raises the supported Patch and renames nothing."
+}
+```
+
+`renames.schema.json` accepts it, the library's schema test checks it (and that no pair has both entries and a marker), and `eslint-plugin-reforged`'s `no-legacy-w3ts-names` skips it.
+
+**In pre mode.** While `.changeset/pre.json` has `"mode": "pre"`, the version produced is a prerelease, so the gate reports what is missing and exits zero: alphas keep publishing before the docs site exists. It fails only when the version it would produce is stable: once pre mode is exited (the `pnpm changeset pre exit` pull request, where the 1.0.0 checklist's migration page becomes mechanical) or with no pre state at all.
+
+**Running it.** `pnpm release:gate` takes no arguments. The verdict goes to stdout, or to stderr when it fails; in GitHub Actions (`GITHUB_STEP_SUMMARY` set) a requirement and what is missing are also appended to the job summary. Exit codes: 0 when it passes or only reports (pre mode), 1 when something is missing for a stable version or an input cannot be read (a changeset, `pre.json`, the rename map), 2 on an argument. CI runs it on every pull request, and the version job of the release workflow runs it again before opening the Version Packages pull request.
+
 ## Leaving pre mode: the 1.0.0 checklist
 
 Checked by hand, then `pnpm changeset pre exit` in a pull request; the next Version Packages pull request releases 1.0.0 of every package, with the changelogs of every alpha rolled in, on `latest`.
@@ -115,6 +144,15 @@ Checked by hand, then `pnpm changeset pre exit` in a pull request; the next Vers
 - [ ] The docs site is deployed green from `master`.
 - [ ] The compatibility matrix generator produces the 1.0.0 row without error.
 - [ ] The migration page for w3ts 3.x to reforged-ts 1.0 is present with its `renames.json` entries (the major-changeset gate checks this mechanically: it treats the first stable release of `reforged-ts` as a major).
+
+## Deprecating and removing a symbol
+
+The deprecation policy of [#46](https://github.com/phmilk/reforged-ts/issues/46), which the checks encode:
+
+1. **Deprecate in a minor.** The symbol keeps working and its TSDoc gains `@deprecated` with a `{@link}` to the replacement (the TSDoc standard, [ADR 0004](adr/0004-tsdoc-standard-with-compiled-examples.md)). In the same pull request, add its `renames.json` entry with the version pair from the current major to the next one (`reforged-ts@1` to `reforged-ts@2` for a symbol deprecated in 1.x), so the lint rule flags the old name and the next migration table lists it.
+2. **Remove in the next major.** The major changeset that removes it trips [the major-changeset gate](#the-major-changeset-gate), which requires the migration page of the pair; its entries are already in the rename map.
+
+A symbol is never removed in a minor.
 
 ## Support window
 
