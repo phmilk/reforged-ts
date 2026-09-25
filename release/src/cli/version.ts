@@ -10,8 +10,8 @@
  * failed (the matrix is not generated when `changeset version` fails), 2
  * usage.
  */
-import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
+import { runInherited } from "../process.js";
 import { repositoryRoot } from "../workspace.js";
 import { invokedDirectly, PROCESS_OUTPUT, type Output } from "./common.js";
 import { DEFAULT_CONTEXT, main as matrix } from "./matrix.js";
@@ -24,15 +24,10 @@ export type ChangesetVersion = (root: string) => Promise<number>;
 /** The Changesets CLI of the workspace, run with this Node. */
 export const runChangesetVersion: ChangesetVersion = (root) => {
   const bin = createRequire(import.meta.url).resolve("@changesets/cli/bin.js");
-  return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, [bin, "version"], {
-      cwd: root,
-      stdio: "inherit",
-    });
-    child.on("error", reject);
-    child.on("close", (code) => {
-      resolve(code ?? 1);
-    });
+  return runInherited({
+    command: process.execPath,
+    args: [bin, "version"],
+    cwd: root,
   });
 };
 

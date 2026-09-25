@@ -2,11 +2,8 @@ import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { main } from "../src/cli/template-clone.js";
-import {
-  cloneTemplate,
-  gitEnvironment,
-  type GitCommand,
-} from "../src/template-clone.js";
+import type { GitCommand } from "../src/git.js";
+import { cloneTemplate, gitEnvironment } from "../src/template-clone.js";
 import { tempDir, writeText, writeWorkspace } from "./support/workspace.js";
 
 const TOKEN = "github_pat_secret";

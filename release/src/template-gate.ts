@@ -9,6 +9,7 @@ import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import { isAbsolute, join, posix, relative, resolve, sep } from "node:path";
 import { byCodePoint } from "./order.js";
+import { commandLine, type Command, type Runner } from "./process.js";
 import { LIBRARY_PACKAGE } from "./packages.js";
 import { publishEntries, readPublishPlan } from "./publish-plan.js";
 import { parseSemver } from "./semver.js";
@@ -129,24 +130,6 @@ async function checkIntegrity(
       `The tarball of ${label} does not match the publish plan's integrity: ${path}`,
     );
   }
-}
-
-/** A command the gate runs, in a folder. */
-export interface Command {
-  command: string;
-  args: readonly string[];
-  cwd: string;
-}
-
-/**
- * Runs a command to completion, its output going to the gate's own, and
- * resolves with its exit code.
- */
-export type Runner = (command: Command) => Promise<number>;
-
-/** The command as a shell line, for messages. */
-export function commandLine({ command, args }: Command): string {
-  return [command, ...args].join(" ");
 }
 
 /**

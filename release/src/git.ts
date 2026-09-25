@@ -1,11 +1,30 @@
 /**
- * What the release scripts ask git. Every question goes through a `Git`
- * function, so a test answers it without a repository.
+ * What the release scripts ask git, and the git commands they run. Every
+ * question goes through a `Git` function and every command through a
+ * `GitRunner`, so a test answers them without a repository or a network.
  */
 import { execFile } from "node:child_process";
+import { runInherited } from "./process.js";
 
 /** Runs git with `args` and resolves with its stdout; rejects on failure. */
 export type Git = (args: readonly string[]) => Promise<string>;
+
+/** A git command and the environment variables it adds. */
+export interface GitCommand {
+  args: readonly string[];
+  env: Readonly<Record<string, string>>;
+}
+
+/**
+ * Runs git to completion and resolves with its exit code, for a command
+ * whose exit code is the answer (`ls-remote --exit-code`) or whose output
+ * belongs in the job log (`clone`), where a `Git` would only reject.
+ */
+export type GitRunner = (command: GitCommand) => Promise<number>;
+
+/** A `GitRunner` with the process's standard streams. */
+export const runGit: GitRunner = ({ args, env }) =>
+  runInherited({ command: "git", args, env });
 
 /** A `Git` that runs the git executable in the folder `cwd`. */
 export function gitIn(cwd: string): Git {
