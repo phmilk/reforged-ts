@@ -38,3 +38,7 @@ catalog:
   # changesets and the same packages as `changeset version`.
   "@changesets/parse": ^1.0.0
   "@manypkg/get-packages": ^3.1.0
+  # Changesets drives the versions and the changelogs (#46, ADR 0009); the
+  # GitHub generator links each entry to its pull request and its author.
+  "@changesets/cli": ^3.0.3
+  "@changesets/changelog-github": ^1.0.1
