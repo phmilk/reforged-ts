@@ -105,6 +105,30 @@ The first versions are applied on `master` before the first-publish wizard ([#14
 
 When the release workflow is already on `master`, its Version Packages pull request carries the same result and can be merged instead.
 
+## The Template gate
+
+The Template is the Reference consumer ([ADR 0006](adr/0006-template-owns-code-editor-owns-data.md)): no release reaches npm unless the Template builds, lints and passes its tests against the packed packages. `pnpm release:template-gate` checks this. The release workflow runs it between pack and publish, and it runs locally the same way.
+
+It takes a Template checkout and the output folder of `changeset pack`, which holds `publish-plan.json` and the tarballs under `packages/`. It checks each tarball against the plan's integrity. It writes one `pnpm.overrides` entry per package in the plan into the checkout's `package.json`, pointing at that tarball, and runs `pnpm install --no-frozen-lockfile`. It checks that the Template's own dependencies resolved to the packed versions. Then it runs the Template's scripts by name: `build --mode release`, `lint` and `test`. It stops at the first command that fails, or at the first script the Template lacks, and names it. Exit codes: 0 pass, 1 fail, 2 usage.
+
+The Template is checked out at `v<major>` of the library version. Every 1.x, alphas included, maps to `v1`. A tag and a branch check out the same way. `pnpm -s release:template-gate --print-ref --pack-dir <dir>` prints the ref for the library version in the plan.
+
+### Running it locally
+
+```sh
+pnpm run build
+pnpm changeset pack --out-dir ../pack
+git clone --branch "$(pnpm -s release:template-gate --print-ref --pack-dir ../pack)" \
+  https://github.com/phmilk/reforged-ts-template.git ../t
+pnpm release:template-gate --template ../t --pack-dir ../pack
+```
+
+- Relative paths resolve against the folder you run the command from.
+- Keep the clone outside this repository. A Template without its own `pnpm-workspace.yaml` would otherwise be installed as part of this workspace. On Windows, keep its path short: vitest fails at startup when a path under the Template's `node_modules` passes 260 characters.
+- The gate leaves the overrides, a lockfile and the build output in the checkout. Use a throwaway clone.
+- Packing an unversioned workspace (every package at `0.0.0`) is fine for a local run, because the overrides replace the Template's ranges. It is never fine for publishing.
+- Until the Template has a `v1` ref, clone its default branch instead.
+
 ## Leaving pre mode: the 1.0.0 checklist
 
 Checked by hand, then `pnpm changeset pre exit` in a pull request; the next Version Packages pull request releases 1.0.0 of every package, with the changelogs of every alpha rolled in, on `latest`.
