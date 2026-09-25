@@ -5,8 +5,35 @@ import { Frame } from "./frame";
 import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Region } from "./region";
+import { Timer } from "./timer";
 import { Unit } from "./unit";
 import { Widget } from "./widget";
+
+/** The mouse events `Trigger.registerPlayerMouseEvent` registers. */
+export const enum MouseEventKind {
+  Down = "down",
+  Up = "up",
+  Move = "move",
+}
+
+/** The player event constant of a mouse event. */
+function mouseEvent(kind: MouseEventKind): playerevent {
+  switch (kind) {
+    case MouseEventKind.Down:
+      return EVENT_PLAYER_MOUSE_DOWN;
+    case MouseEventKind.Up:
+      return EVENT_PLAYER_MOUSE_UP;
+    case MouseEventKind.Move:
+      return EVENT_PLAYER_MOUSE_MOVE;
+  }
+}
+
+/** The `boolexpr` a registration passes: a function goes through `Filter`. */
+function filterOf(
+  filter: boolexpr | (() => boolean) | undefined,
+): boolexpr | undefined {
+  return typeof filter === "function" ? Filter(filter) : filter;
+}
 
 export class Trigger extends Handle<trigger> {
   public static create(): Trigger {
@@ -51,37 +78,35 @@ export class Trigger extends Handle<trigger> {
   }
 
   public addAction(actionFunc: () => void) {
-    return TriggerAddAction(this.handle, actionFunc);
+    TriggerAddAction(this.handle, actionFunc);
+    return this;
   }
 
   /**
-   * Adds a new condition to the trigger.
+   * Adds a new condition to the trigger: a `boolexpr`, or a function the
+   * trigger wraps with `Condition`.
    *
    * Adding more conditions later wil join them by AND (that means all conditions need to evaluate to `true`)
    *
    * @example
    * ```ts
-   * const t = Trigger.create()
-   *
-   * // trigger fires if a unit is attacked
-   * t.registerAnyUnitEvent(EVENT_PLAYER_UNIT_ATTACKED)
-   *
-   * // but only if the unit name matches
-   * t.addCondition(Condition(() => Unit.fromHandle(GetAttacker()).name === 'Attacker Unit'))
-   *
-   * t.addAction(() => {
-   *  //do something...
-   * })
+   * Trigger.create()
+   *   // trigger fires if a unit is attacked
+   *   .registerAnyUnitEvent(EVENT_PLAYER_UNIT_ATTACKED)
+   *   // but only if the unit name matches
+   *   .addCondition(() => Unit.fromAttacker()?.name === "Attacker Unit")
+   *   .addAction(() => {
+   *     // do something...
+   *   });
    * ```
    * @param condition The condition which must evaluate to true in order to run the trigger's actions.
    */
   public addCondition(condition: boolexpr | (() => boolean)) {
-    if (typeof condition === "function") {
-      const cf = Condition(condition);
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- a truthiness test on a filter (also a typescript-to-lua warning); step 5 (#47) removes it
-      return cf ? TriggerAddCondition(this.handle, cf) : undefined;
-    }
-    return TriggerAddCondition(this.handle, condition);
+    TriggerAddCondition(
+      this.handle,
+      typeof condition === "function" ? Condition(condition) : condition,
+    );
+    return this;
   }
 
   /**
@@ -112,8 +137,7 @@ export class Trigger extends Handle<trigger> {
    * Control will return to the caller when the trigger has finished or has been suspended via TriggerSleepAction.
    */
   public exec() {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
-    return TriggerExecute(this.handle);
+    TriggerExecute(this.handle);
   }
 
   /**
@@ -125,53 +149,83 @@ export class Trigger extends Handle<trigger> {
     TriggerExecuteWait(this.handle);
   }
 
+  public interrupt() {
+    BlzTriggerInterrupt(this.handle);
+  }
+
+  public isRunning(): boolean {
+    return BlzTriggerIsRunning(this.handle);
+  }
+
+  /** Registers the player unit event for the player in every slot, with no filter. */
   public registerAnyUnitEvent(whichPlayerUnitEvent: playerunitevent) {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
-    return TriggerRegisterAnyUnitEventBJ(this.handle, whichPlayerUnitEvent);
+    for (let index = 0; index < bj_MAX_PLAYER_SLOTS; index++) {
+      const whichPlayer = Player(index);
+      if (whichPlayer !== undefined) {
+        TriggerRegisterPlayerUnitEvent(
+          this.handle,
+          whichPlayer,
+          whichPlayerUnitEvent,
+        );
+      }
+    }
+    return this;
   }
 
   public registerCommandEvent(whichAbility: number, order: string) {
-    return TriggerRegisterCommandEvent(this.handle, whichAbility, order);
+    TriggerRegisterCommandEvent(this.handle, whichAbility, order);
+    return this;
   }
 
   public registerDeathEvent(whichWidget: Widget) {
-    return TriggerRegisterDeathEvent(this.handle, whichWidget.handle);
+    TriggerRegisterDeathEvent(this.handle, whichWidget.handle);
+    return this;
   }
 
   public registerDialogButtonEvent(whichButton: DialogButton) {
-    return TriggerRegisterDialogButtonEvent(this.handle, whichButton.handle);
+    TriggerRegisterDialogButtonEvent(this.handle, whichButton.handle);
+    return this;
   }
 
   public registerDialogEvent(whichDialog: Dialog) {
-    return TriggerRegisterDialogEvent(this.handle, whichDialog.handle);
+    TriggerRegisterDialogEvent(this.handle, whichDialog.handle);
+    return this;
   }
 
   public registerEnterRegion(
     whichRegion: Region,
-    filter: boolexpr | (() => boolean) | undefined,
+    filter?: boolexpr | (() => boolean),
   ) {
-    return TriggerRegisterEnterRegion(
+    TriggerRegisterEnterRegion(
       this.handle,
       whichRegion.handle,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(filter),
     );
+    return this;
   }
 
   public registerFilterUnitEvent(
     whichUnit: Unit,
     whichEvent: unitevent,
-    filter: boolexpr | (() => boolean) | undefined,
+    filter?: boolexpr | (() => boolean),
   ) {
-    return TriggerRegisterFilterUnitEvent(
+    TriggerRegisterFilterUnitEvent(
       this.handle,
       whichUnit.handle,
       whichEvent,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(filter),
     );
+    return this;
+  }
+
+  public registerFrameEvent(frame: Frame, event: frameeventtype) {
+    BlzTriggerRegisterFrameEvent(this.handle, frame.handle, event);
+    return this;
   }
 
   public registerGameEvent(whichGameEvent: gameevent) {
-    return TriggerRegisterGameEvent(this.handle, whichGameEvent);
+    TriggerRegisterGameEvent(this.handle, whichGameEvent);
+    return this;
   }
 
   public registerGameStateEvent(
@@ -179,34 +233,32 @@ export class Trigger extends Handle<trigger> {
     opcode: limitop,
     limitval: number,
   ) {
-    return TriggerRegisterGameStateEvent(
-      this.handle,
-      whichState,
-      opcode,
-      limitval,
-    );
+    TriggerRegisterGameStateEvent(this.handle, whichState, opcode, limitval);
+    return this;
   }
 
   public registerLeaveRegion(
     whichRegion: Region,
-    filter: boolexpr | (() => boolean) | undefined,
+    filter?: boolexpr | (() => boolean),
   ) {
-    return TriggerRegisterLeaveRegion(
+    TriggerRegisterLeaveRegion(
       this.handle,
       whichRegion.handle,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(filter),
     );
+    return this;
   }
 
   public registerPlayerAllianceChange(
     whichPlayer: MapPlayer,
     whichAlliance: alliancetype,
   ) {
-    return TriggerRegisterPlayerAllianceChange(
+    TriggerRegisterPlayerAllianceChange(
       this.handle,
       whichPlayer.handle,
       whichAlliance,
     );
+    return this;
   }
 
   public registerPlayerChatEvent(
@@ -214,23 +266,25 @@ export class Trigger extends Handle<trigger> {
     chatMessageToDetect: string,
     exactMatchOnly: boolean,
   ) {
-    return TriggerRegisterPlayerChatEvent(
+    TriggerRegisterPlayerChatEvent(
       this.handle,
       whichPlayer.handle,
       chatMessageToDetect,
       exactMatchOnly,
     );
+    return this;
   }
 
   public registerPlayerEvent(
     whichPlayer: MapPlayer,
     whichPlayerEvent: playerevent,
   ) {
-    return TriggerRegisterPlayerEvent(
+    TriggerRegisterPlayerEvent(
       this.handle,
       whichPlayer.handle,
       whichPlayerEvent,
     );
+    return this;
   }
 
   public registerPlayerKeyEvent(
@@ -239,24 +293,27 @@ export class Trigger extends Handle<trigger> {
     metaKey: number,
     fireOnKeyDown: boolean,
   ) {
-    return BlzTriggerRegisterPlayerKeyEvent(
+    BlzTriggerRegisterPlayerKeyEvent(
       this.handle,
       whichPlayer.handle,
       whichKey,
       metaKey,
       fireOnKeyDown,
     );
+    return this;
   }
 
+  /** Registers the player event of the mouse event `kind` for the player. */
   public registerPlayerMouseEvent(
     whichPlayer: MapPlayer,
-    whichMouseEvent: number,
+    kind: MouseEventKind,
   ) {
-    return TriggerRegisterPlayerMouseEventBJ(
+    TriggerRegisterPlayerEvent(
       this.handle,
       whichPlayer.handle,
-      whichMouseEvent,
+      mouseEvent(kind),
     );
+    return this;
   }
 
   public registerPlayerStateEvent(
@@ -265,13 +322,14 @@ export class Trigger extends Handle<trigger> {
     opcode: limitop,
     limitval: number,
   ) {
-    return TriggerRegisterPlayerStateEvent(
+    TriggerRegisterPlayerStateEvent(
       this.handle,
       whichPlayer.handle,
       whichState,
       opcode,
       limitval,
     );
+    return this;
   }
 
   public registerPlayerSyncEvent(
@@ -279,60 +337,68 @@ export class Trigger extends Handle<trigger> {
     prefix: string,
     fromServer: boolean,
   ) {
-    return BlzTriggerRegisterPlayerSyncEvent(
+    BlzTriggerRegisterPlayerSyncEvent(
       this.handle,
       whichPlayer.handle,
       prefix,
       fromServer,
     );
+    return this;
   }
 
   public registerPlayerUnitEvent(
     whichPlayer: MapPlayer,
     whichPlayerUnitEvent: playerunitevent,
-    filter: boolexpr | (() => boolean) | undefined,
+    filter?: boolexpr | (() => boolean),
   ) {
-    return TriggerRegisterPlayerUnitEvent(
+    TriggerRegisterPlayerUnitEvent(
       this.handle,
       whichPlayer.handle,
       whichPlayerUnitEvent,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(filter),
     );
+    return this;
   }
 
   // Creates it's own timer and triggers when it expires
   public registerTimerEvent(timeout: number, periodic: boolean) {
-    return TriggerRegisterTimerEvent(this.handle, timeout, periodic);
+    TriggerRegisterTimerEvent(this.handle, timeout, periodic);
+    return this;
   }
 
   // Triggers when the timer you tell it about expires
-  public registerTimerExpireEvent(t: timer) {
-    return TriggerRegisterTimerExpireEvent(this.handle, t);
+  public registerTimerExpire(timer: Timer) {
+    TriggerRegisterTimerExpireEvent(this.handle, timer.handle);
+    return this;
   }
 
   public registerTrackableHitEvent(whichTrackable: trackable) {
-    return TriggerRegisterTrackableHitEvent(this.handle, whichTrackable);
+    TriggerRegisterTrackableHitEvent(this.handle, whichTrackable);
+    return this;
   }
 
   public registerTrackableTrackEvent(whichTrackable: trackable) {
-    return TriggerRegisterTrackableTrackEvent(this.handle, whichTrackable);
+    TriggerRegisterTrackableTrackEvent(this.handle, whichTrackable);
+    return this;
   }
 
   public registerUnitEvent(whichUnit: Unit, whichEvent: unitevent) {
-    return TriggerRegisterUnitEvent(this.handle, whichUnit.handle, whichEvent);
+    TriggerRegisterUnitEvent(this.handle, whichUnit.handle, whichEvent);
+    return this;
   }
 
   public registerUnitInRange(
     whichUnit: Unit,
     range: number,
-    filter: boolexpr | (() => boolean) | undefined,
+    filter?: boolexpr | (() => boolean),
   ) {
-    return TriggerRegisterUnitInRange(
+    TriggerRegisterUnitInRange(
       this.handle,
       whichUnit.handle,
       range,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(filter),
     );
+    return this;
   }
 
   public registerUnitStateEvent(
@@ -341,17 +407,19 @@ export class Trigger extends Handle<trigger> {
     opcode: limitop,
     limitval: number,
   ) {
-    return TriggerRegisterUnitStateEvent(
+    TriggerRegisterUnitStateEvent(
       this.handle,
       whichUnit.handle,
       whichState,
       opcode,
       limitval,
     );
+    return this;
   }
 
   public registerUpgradeCommandEvent(whichUpgrade: number) {
-    return TriggerRegisterUpgradeCommandEvent(this.handle, whichUpgrade);
+    TriggerRegisterUpgradeCommandEvent(this.handle, whichUpgrade);
+    return this;
   }
 
   public registerVariableEvent(
@@ -359,35 +427,28 @@ export class Trigger extends Handle<trigger> {
     opcode: limitop,
     limitval: number,
   ) {
-    return TriggerRegisterVariableEvent(this.handle, varName, opcode, limitval);
+    TriggerRegisterVariableEvent(this.handle, varName, opcode, limitval);
+    return this;
   }
 
   public removeAction(whichAction: triggeraction) {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
-    return TriggerRemoveAction(this.handle, whichAction);
+    TriggerRemoveAction(this.handle, whichAction);
   }
 
   public removeActions() {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
-    return TriggerClearActions(this.handle);
+    TriggerClearActions(this.handle);
   }
 
   public removeCondition(whichCondition: triggercondition) {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
-    return TriggerRemoveCondition(this.handle, whichCondition);
+    TriggerRemoveCondition(this.handle, whichCondition);
   }
 
   public removeConditions() {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression -- returns a void Native call; dropping the return changes the emitted Lua; step 5 (#47) removes it
-    return TriggerClearConditions(this.handle);
+    TriggerClearConditions(this.handle);
   }
 
   public reset() {
     ResetTrigger(this.handle);
-  }
-
-  public triggerRegisterFrameEvent(frame: Frame, eventId: frameeventtype) {
-    return BlzTriggerRegisterFrameEvent(this.handle, frame.handle, eventId);
   }
 
   public static fromEvent(): Trigger | undefined {
