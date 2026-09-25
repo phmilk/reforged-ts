@@ -41,6 +41,7 @@ Each diagnostic links to the rule's page on the docs site; the pages ship in `do
 | [`no-legacy-w3ts-names`](docs/no-legacy-w3ts-names.md)                     | error    | A w3ts 3.x name reforged-ts renamed or removed; fixes the one-to-one renames.                           |
 | [`no-unsafe-natives`](docs/no-unsafe-natives.md)                           | error    | A Native on the ban list (`TriggerSleepAction`, `PolledWait`, the BJ timer helpers, ...).               |
 | [`no-unused-handle-result`](docs/no-unused-handle-result.md)               | error    | A statement that discards a creation or a `Filter`/`Condition` boolexpr, which then leaks.              |
+| [`no-async-value-as-state`](docs/no-async-value-as-state.md)               | warn     | A value that differs between clients (`@async`, `os.clock`) passed to game state.                       |
 | [`no-unordered-iteration`](docs/no-unordered-iteration.md)                 | warn     | Iteration that compiles to `pairs` (`for...in`, `Object.keys/values/entries`, `pairs`, `next`).         |
 | [`no-percent-in-display-strings`](docs/no-percent-in-display-strings.md)   | warn     | A lone `%` in a string that reaches a text-display Native (`print`, `DisplayTextToPlayer`, frame text). |
 | [`no-self-recursion`](docs/no-self-recursion.md)                           | warn     | A function that calls itself by name in its own body.                                                   |
