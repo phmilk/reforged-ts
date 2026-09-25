@@ -115,3 +115,258 @@ describe("triggers", function()
     expect(trigger.actions).toBeUndefined()
   end)
 end)
+
+-- The trigger registrations, conditions and firing context, the expired timer
+-- and the trackables. Lines name handles through __stub_format, so the ids
+-- they take here do not matter.
+local ref = __stub_format
+
+-- Every TriggerRegister* Native of Patch 3.0.0.24268, with its arity after
+-- the trigger.
+local REGISTRATIONS = {
+  TriggerRegisterVariableEvent = 3, TriggerRegisterTimerEvent = 2,
+  TriggerRegisterTimerExpireEvent = 1, TriggerRegisterGameStateEvent = 3,
+  TriggerRegisterDialogEvent = 1, TriggerRegisterDialogButtonEvent = 1,
+  TriggerRegisterGameEvent = 1, TriggerRegisterEnterRegion = 2, TriggerRegisterLeaveRegion = 2,
+  TriggerRegisterTrackableHitEvent = 1, TriggerRegisterTrackableTrackEvent = 1,
+  TriggerRegisterCommandEvent = 2, TriggerRegisterUpgradeCommandEvent = 1,
+  TriggerRegisterPlayerEvent = 2, TriggerRegisterPlayerUnitEvent = 3,
+  TriggerRegisterPlayerAllianceChange = 2, TriggerRegisterPlayerStateEvent = 4,
+  TriggerRegisterPlayerChatEvent = 3, TriggerRegisterDeathEvent = 1,
+  TriggerRegisterUnitStateEvent = 4, TriggerRegisterUnitEvent = 2,
+  TriggerRegisterFilterUnitEvent = 3, TriggerRegisterUnitInRange = 3,
+  BlzTriggerRegisterFrameEvent = 2, BlzTriggerRegisterPlayerSyncEvent = 3,
+  BlzTriggerRegisterPlayerKeyEvent = 4,
+}
+
+describe("trigger registrations", function()
+  it("records every TriggerRegister* Native with one argument per parameter and returns an event", function()
+    local trigger = CreateTrigger()
+    local count = 0
+    for name, arity in pairs(REGISTRATIONS) do
+      count = count + 1
+      local nils = {}
+      for i = 1, arity do
+        nils[i] = "nil"
+      end
+      local event = _G[name](trigger)
+      expect(event.__kind).toEqual("event")
+      expect(runner.stubCalls()).toContainCall(name .. "(" .. ref(trigger) .. ", " .. table.concat(nils, ", ") .. ")")
+    end
+    expect(count).toEqual(26)
+    expect(trigger.actions).toBeUndefined()
+    expect(trigger.conditions).toBeUndefined()
+  end)
+  it("renders the handles by kind and id and the constants by name", function()
+    local trigger = CreateTrigger()
+    local filter = Filter(function() return true end)
+    local mark = #runner.stubCalls()
+    local death = TriggerRegisterPlayerUnitEvent(trigger, Player(0), EVENT_PLAYER_UNIT_DEATH, filter)
+    local mouse = TriggerRegisterPlayerEvent(trigger, Player(1), EVENT_PLAYER_MOUSE_DOWN)
+    local region = CreateRegion()
+    TriggerRegisterEnterRegion(trigger, region)
+    expect(death == mouse).toEqual(false)
+    expect(since(mark)).toEqual({
+      "Player(0)",
+      "TriggerRegisterPlayerUnitEvent(" .. ref(trigger) .. ", player#1048577, EVENT_PLAYER_UNIT_DEATH, " .. ref(filter) .. ")",
+      "Player(1)",
+      "TriggerRegisterPlayerEvent(" .. ref(trigger) .. ", player#1048578, EVENT_PLAYER_MOUSE_DOWN)",
+      "CreateRegion()",
+      "TriggerRegisterEnterRegion(" .. ref(trigger) .. ", " .. ref(region) .. ", nil)",
+    })
+  end)
+  it("defines the event constants as distinct values of their kind", function()
+    expect(EVENT_PLAYER_UNIT_DEATH.__kind).toEqual("playerunitevent")
+    expect(EVENT_UNIT_DEATH.__kind).toEqual("unitevent")
+    expect(EVENT_PLAYER_UNIT_EQUIP_ITEM.__kind).toEqual("playerunitevent")
+    expect(EVENT_UNIT_UNEQUIP_ITEM.__kind).toEqual("unitevent")
+    expect(EVENT_PLAYER_KEY_DOWN.__kind).toEqual("playerevent")
+    expect(FRAMEEVENT_CONTROL_CLICK.__kind).toEqual("frameeventtype")
+    expect(ATTACK_TYPE_HERO.__kind).toEqual("attacktype")
+    expect(DAMAGE_TYPE_FIRE.__kind).toEqual("damagetype")
+    expect(WEAPON_TYPE_WHOKNOWS.__kind).toEqual("weapontype")
+    expect(OSKEY_A.__kind).toEqual("oskeytype")
+    expect(LESS_THAN.__kind).toEqual("limitop")
+    expect(EVENT_PLAYER_UNIT_DEATH == EVENT_UNIT_DEATH).toEqual(false)
+    expect(EVENT_PLAYER_UNIT_DEATH.__handleId).toBeUndefined()
+  end)
+end)
+
+describe("conditions", function()
+  it("Condition and Filter return distinct handles that remember their function", function()
+    local func = function() return true end
+    local condition = Condition(func)
+    local filter = Filter(func)
+    expect(condition.__kind).toEqual("conditionfunc")
+    expect(filter.__kind).toEqual("filterfunc")
+    expect(condition == filter).toEqual(false)
+    expect(Condition(func) == condition).toEqual(false)
+    expect(condition.func).toBe(func)
+    expect(filter.func).toBe(func)
+    expect(runner.stubCalls()).toContainCall("Condition(<function>)")
+    expect(runner.stubCalls()).toContainCall("Filter(<function>)")
+  end)
+  it("keeps the actions from running when a condition returns false, every condition still running", function()
+    local trigger = CreateTrigger()
+    local order = {}
+    local blocking = Condition(function() order[#order + 1] = "false"; return false end)
+    local handle = TriggerAddCondition(trigger, blocking)
+    TriggerAddCondition(trigger, Condition(function() order[#order + 1] = "true"; return true end))
+    TriggerAddAction(trigger, function() order[#order + 1] = "action" end)
+    expect(handle.__kind).toEqual("triggercondition")
+    expect(__stub_fire_trigger(trigger)).toEqual(false)
+    expect(order).toEqual({ "false", "true" })
+    expect(runner.stubCalls()).toContainCall("TriggerAddCondition(" .. ref(trigger) .. ", " .. ref(blocking) .. ")")
+  end)
+  it("runs the actions after the conditions when every condition returns true", function()
+    local trigger = CreateTrigger()
+    local order = {}
+    TriggerAddAction(trigger, function() order[#order + 1] = "action" end)
+    TriggerAddCondition(trigger, Filter(function() order[#order + 1] = "first"; return true end))
+    TriggerAddCondition(trigger, Condition(function() order[#order + 1] = "second"; return true end))
+    expect(__stub_fire_trigger(trigger)).toEqual(true)
+    expect(order).toEqual({ "first", "second", "action" })
+  end)
+  it("evaluates the conditions to their conjunction and executes the actions without them", function()
+    local trigger = CreateTrigger()
+    local answer = true
+    local runs = 0
+    TriggerAddCondition(trigger, Condition(function() return answer end))
+    TriggerAddAction(trigger, function() runs = runs + 1 end)
+    expect(TriggerEvaluate(trigger)).toEqual(true)
+    answer = false
+    expect(TriggerEvaluate(trigger)).toEqual(false)
+    TriggerExecute(trigger)
+    TriggerExecuteWait(trigger)
+    expect(runs).toEqual(2)
+    expect(runner.stubCalls()).toContainCall("TriggerEvaluate(" .. ref(trigger) .. ")")
+    expect(runner.stubCalls()).toContainCall("TriggerExecute(" .. ref(trigger) .. ")")
+    expect(runner.stubCalls()).toContainCall("TriggerExecuteWait(" .. ref(trigger) .. ")")
+  end)
+  it("removes one action or condition by its handle and clears them all", function()
+    local trigger = CreateTrigger()
+    local order = {}
+    local first = TriggerAddAction(trigger, function() order[#order + 1] = "first" end)
+    TriggerAddAction(trigger, function() order[#order + 1] = "second" end)
+    local blocking = TriggerAddCondition(trigger, Condition(function() return false end))
+    TriggerRemoveCondition(trigger, blocking)
+    TriggerRemoveAction(trigger, first)
+    __stub_fire_trigger(trigger)
+    expect(order).toEqual({ "second" })
+    TriggerAddCondition(trigger, Condition(function() return false end))
+    TriggerClearConditions(trigger)
+    TriggerClearActions(trigger)
+    expect(__stub_fire_trigger(trigger)).toEqual(true)
+    expect(order).toEqual({ "second" })
+    expect(runner.stubCalls()).toContainCall("TriggerRemoveAction(" .. ref(trigger) .. ", " .. ref(first) .. ")")
+    expect(runner.stubCalls()).toContainCall("TriggerRemoveCondition(" .. ref(trigger) .. ", " .. ref(blocking) .. ")")
+    expect(runner.stubCalls()).toContainCall("TriggerClearActions(" .. ref(trigger) .. ")")
+    expect(runner.stubCalls()).toContainCall("TriggerClearConditions(" .. ref(trigger) .. ")")
+  end)
+end)
+
+describe("firing a trigger with a context", function()
+  it("answers the response Natives from the context inside the firing and nil outside", function()
+    local trigger = CreateTrigger()
+    local dying = CreateUnit(Player(0), 1751543663, 0, 0, 0)
+    local seen = {}
+    TriggerAddCondition(trigger, Condition(function()
+      seen.condition = GetTriggerUnit()
+      return true
+    end))
+    TriggerAddAction(trigger, function()
+      seen.unit = GetTriggerUnit()
+      seen.killer = GetKillingUnit()
+      seen.trigger = GetTriggeringTrigger()
+    end)
+    expect(GetTriggerUnit()).toBeUndefined()
+    __stub_fire_trigger(trigger, { GetTriggerUnit = dying, GetTriggeringTrigger = trigger })
+    expect(seen.condition).toBe(dying)
+    expect(seen.unit).toBe(dying)
+    expect(seen.killer).toBeUndefined()
+    expect(seen.trigger).toBe(trigger)
+    expect(GetTriggerUnit()).toBeUndefined()
+    expect(runner.stubCalls()).toContainCall("GetKillingUnit()")
+  end)
+  it("hands the outer context back after a firing inside a firing", function()
+    local outer, inner = CreateTrigger(), CreateTrigger()
+    local seen = {}
+    TriggerAddAction(inner, function() seen.inner = GetEventDamage() end)
+    TriggerAddAction(outer, function()
+      __stub_fire_trigger(inner, { GetEventDamage = 5.0 })
+      seen.outer = GetEventDamage()
+    end)
+    __stub_fire_trigger(outer, { GetEventDamage = 10.0 })
+    expect(seen).toEqual({ inner = 5.0, outer = 10.0 })
+  end)
+  it("records the trigger-state Natives, skips a disabled trigger and refuses a destroyed one", function()
+    local trigger = CreateTrigger()
+    local runs = 0
+    TriggerAddAction(trigger, function() runs = runs + 1 end)
+    expect(IsTriggerEnabled(trigger)).toEqual(true)
+    DisableTrigger(trigger)
+    expect(IsTriggerEnabled(trigger)).toEqual(false)
+    expect(__stub_fire_trigger(trigger)).toEqual(false)
+    EnableTrigger(trigger)
+    expect(__stub_fire_trigger(trigger)).toEqual(true)
+    expect(runs).toEqual(1)
+    expect(IsTriggerWaitOnSleeps(trigger)).toEqual(false)
+    TriggerWaitOnSleeps(trigger, true)
+    expect(IsTriggerWaitOnSleeps(trigger)).toEqual(true)
+    expect(GetTriggerEvalCount(trigger)).toEqual(0)
+    expect(GetTriggerExecCount(trigger)).toEqual(0)
+    ResetTrigger(trigger)
+    DestroyTrigger(trigger)
+    expect(function() __stub_fire_trigger(trigger) end).toThrow(ref(trigger) .. " was destroyed")
+    local t = ref(trigger)
+    for _, line in ipairs({
+      "DisableTrigger(" .. t .. ")", "EnableTrigger(" .. t .. ")", "IsTriggerEnabled(" .. t .. ")",
+      "TriggerWaitOnSleeps(" .. t .. ", true)", "IsTriggerWaitOnSleeps(" .. t .. ")",
+      "GetTriggerEvalCount(" .. t .. ")", "GetTriggerExecCount(" .. t .. ")",
+      "ResetTrigger(" .. t .. ")", "DestroyTrigger(" .. t .. ")",
+    }) do
+      expect(runner.stubCalls()).toContainCall(line)
+    end
+  end)
+end)
+
+describe("timers", function()
+  it("answers GetExpiredTimer with the fired timer inside the handler and nil after", function()
+    local timer = CreateTimer()
+    local seen
+    TimerStart(timer, 1.0, true, function() seen = GetExpiredTimer() end)
+    expect(GetExpiredTimer()).toBeUndefined()
+    __stub_fire_timer(timer)
+    expect(seen).toBe(timer)
+    expect(GetExpiredTimer()).toBeUndefined()
+    expect(runner.stubCalls()).toContainCall("GetExpiredTimer()")
+  end)
+  it("records pause, resume and the time reads, and refuses a destroyed timer", function()
+    local timer = CreateTimer()
+    TimerStart(timer, 2.0, false, function() end)
+    PauseTimer(timer)
+    ResumeTimer(timer)
+    expect(TimerGetElapsed(timer)).toEqual(0.0)
+    expect(TimerGetRemaining(timer)).toEqual(0.0)
+    DestroyTimer(timer)
+    expect(function() __stub_fire_timer(timer) end).toThrow(ref(timer) .. " was destroyed")
+    for _, name in ipairs({ "PauseTimer", "ResumeTimer", "TimerGetElapsed", "TimerGetRemaining" }) do
+      expect(runner.stubCalls()).toContainCall(name .. "(" .. ref(timer) .. ")")
+    end
+  end)
+end)
+
+describe("trackables", function()
+  it("records CreateTrackable and answers GetTriggeringTrackable from the context", function()
+    local trackable = CreateTrackable("model.mdx", 1.0, 2.0, 90.0)
+    expect(trackable.__kind).toEqual("trackable")
+    expect(runner.stubCalls()).toContainCall('CreateTrackable("model.mdx", 1.0, 2.0, 90.0)')
+    local trigger = CreateTrigger()
+    local seen
+    TriggerRegisterTrackableHitEvent(trigger, trackable)
+    TriggerAddAction(trigger, function() seen = GetTriggeringTrackable() end)
+    __stub_fire_trigger(trigger, { GetTriggeringTrackable = trackable })
+    expect(seen).toBe(trackable)
+    expect(GetTriggeringTrackable()).toBeUndefined()
+  end)
+end)
