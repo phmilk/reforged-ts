@@ -1,6 +1,6 @@
 /** @noSelfInFile */
 
-// The field members of Unit: getField and setField take a field
+// The field members of Unit and Item: getField and setField take a field
 // constant of any of the four field types and call the Native of its type,
 // read from the constant's `tostring`, which the game writes as the type
 // name, a colon and the address. The stubs define no field constant and no
@@ -8,7 +8,7 @@
 // Native is supplied with `withNative`.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
-import { MapPlayer, Unit } from "../src/index";
+import { Item, MapPlayer, Unit } from "../src/index";
 import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
 import { withNative } from "./support/native-override";
@@ -33,6 +33,8 @@ function fieldConstant(kind: string, name: string): handle {
 const owner = defined(MapPlayer.fromIndex(0), "MapPlayer.fromIndex(0)");
 const unit = Unit.create(owner, FourCC("hfoo"), 0, 0);
 const unitRef = handleRef("unit", unit.handle);
+const item = Item.create(FourCC("ratf"), 0, 0);
+const itemRef = handleRef("item", item.handle);
 
 const unitBoolean = fieldConstant(
   "unitbooleanfield",
@@ -50,6 +52,22 @@ const unitString = fieldConstant(
   "unitstringfield",
   "UNIT_SF_NAME",
 ) as unitstringfield;
+const itemBoolean = fieldConstant(
+  "itembooleanfield",
+  "ITEM_BF_DROPPED_WHEN_CARRIER_DIES",
+) as itembooleanfield;
+const itemInteger = fieldConstant(
+  "itemintegerfield",
+  "ITEM_IF_LEVEL",
+) as itemintegerfield;
+const itemReal = fieldConstant(
+  "itemrealfield",
+  "ITEM_RF_SCALING_VALUE",
+) as itemrealfield;
+const itemString = fieldConstant(
+  "itemstringfield",
+  "ITEM_SF_MODEL_USED",
+) as itemstringfield;
 
 describe("Unit.getField", () => {
   it("reads a boolean field with BlzGetUnitBooleanField", () => {
@@ -159,5 +177,105 @@ describe("Unit.setField", () => {
   it("is false for a value of the wrong type", () => {
     expect(unit.setField(unitBoolean, "yes")).toBe(false);
     expect(unit.setField(unitString, 1)).toBe(false);
+  });
+});
+
+describe("Item.getField", () => {
+  it("reads a boolean field with BlzGetItemBooleanField", () => {
+    const value = withNative(
+      "BlzGetItemBooleanField",
+      () => true,
+      () => item.getField(itemBoolean),
+    );
+    expect(value).toBe(true);
+    expect(stubCalls()).toContainCall(
+      `BlzGetItemBooleanField(${itemRef}, ITEM_BF_DROPPED_WHEN_CARRIER_DIES)`,
+    );
+  });
+
+  it("reads an integer field with BlzGetItemIntegerField", () => {
+    const value = withNative(
+      "BlzGetItemIntegerField",
+      () => 3,
+      () => item.getField(itemInteger),
+    );
+    expect(value).toBe(3);
+    expect(stubCalls()).toContainCall(
+      `BlzGetItemIntegerField(${itemRef}, ITEM_IF_LEVEL)`,
+    );
+  });
+
+  it("reads a real field with BlzGetItemRealField", () => {
+    const value = withNative(
+      "BlzGetItemRealField",
+      () => 1.5,
+      () => item.getField(itemReal),
+    );
+    expect(value).toBe(1.5);
+    expect(stubCalls()).toContainCall(
+      `BlzGetItemRealField(${itemRef}, ITEM_RF_SCALING_VALUE)`,
+    );
+  });
+
+  it("reads a string field with BlzGetItemStringField", () => {
+    const value = withNative(
+      "BlzGetItemStringField",
+      () => "ration.mdx",
+      () => item.getField(itemString),
+    );
+    expect(value).toBe("ration.mdx");
+    expect(stubCalls()).toContainCall(
+      `BlzGetItemStringField(${itemRef}, ITEM_SF_MODEL_USED)`,
+    );
+  });
+});
+
+describe("Item.setField", () => {
+  it("writes a boolean field with BlzSetItemBooleanField", () => {
+    const done = withNative(
+      "BlzSetItemBooleanField",
+      () => true,
+      () => item.setField(itemBoolean, false),
+    );
+    expect(done).toBe(true);
+    expect(stubCalls()).toContainCall(
+      `BlzSetItemBooleanField(${itemRef}, ITEM_BF_DROPPED_WHEN_CARRIER_DIES, false)`,
+    );
+  });
+
+  it("writes an integer field with BlzSetItemIntegerField", () => {
+    const done = withNative(
+      "BlzSetItemIntegerField",
+      () => true,
+      () => item.setField(itemInteger, 4),
+    );
+    expect(done).toBe(true);
+    expect(stubCalls()).toContainCall(
+      `BlzSetItemIntegerField(${itemRef}, ITEM_IF_LEVEL, 4)`,
+    );
+  });
+
+  it("writes a real field with BlzSetItemRealField", () => {
+    const done = withNative(
+      "BlzSetItemRealField",
+      () => true,
+      () => item.setField(itemReal, 2.5),
+    );
+    expect(done).toBe(true);
+    expect(stubCalls()).toContainCall(
+      `BlzSetItemRealField(${itemRef}, ITEM_RF_SCALING_VALUE, 2.5)`,
+    );
+  });
+
+  it("writes a string field with BlzSetItemStringField", () => {
+    const done = withNative(
+      "BlzSetItemStringField",
+      () => true,
+      () => item.setField(itemString, "bread.mdx"),
+    );
+    expect(done).toBe(true);
+    expect(stubCalls()).toContainCall(
+      `BlzSetItemStringField(${itemRef}, ITEM_SF_MODEL_USED, "bread.mdx")`,
+    );
   });
 });
