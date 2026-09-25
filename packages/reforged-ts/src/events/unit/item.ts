@@ -46,7 +46,7 @@ export const itemRows = unitEventRows({
     unit: "unit",
     read: (unit, event) => ({
       unit,
-      item: required(Item.fromHandle(GetSoldItem()), "item", event),
+      item: required(Item.fromSold(), "item", event),
     }),
   },
   /**
@@ -60,7 +60,7 @@ export const itemRows = unitEventRows({
     unit: "unit",
     read: (unit, event) => ({
       unit,
-      item: required(Item.fromHandle(GetSoldItem()), "item", event),
+      item: required(Item.fromSold(), "item", event),
     }),
   },
   /** A unit equips an item (3.0.0). */

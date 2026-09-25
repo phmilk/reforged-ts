@@ -295,6 +295,11 @@ export class Item extends Widget {
     return this.fromHandle(GetSpellTargetItem());
   }
 
+  /** The item a shop sells or a unit pawns, or undefined outside those events. */
+  public static fromSold(): Item | undefined {
+    return this.fromHandle(GetSoldItem());
+  }
+
   /** The item a unit unequips, or undefined outside an unequip event. */
   public static fromUnequipped(): Item | undefined {
     return this.fromHandle(GetUnequippedItem());

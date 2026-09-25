@@ -1,5 +1,5 @@
 // The item and equipment payloads hand a guaranteed unit and item, and the
-// 3.0.0 equipment lookups may find nothing.
+// sold-item and 3.0.0 equipment lookups may find nothing.
 import type { EventDescriptor } from "reforged-ts";
 import { Item, on, Unit, UnitEvents } from "reforged-ts";
 
@@ -27,6 +27,7 @@ const rows: EventDescriptor<{ unit: Unit; item: Item }>[] = [
   UnitEvents.unequipOf(hero),
 ];
 const equipped: Item | undefined = Item.fromEquipped();
+const sold: Item | undefined = Item.fromSold();
 const unequipped: Item | undefined = Item.fromUnequipped();
 
-export { subscription, rows, equipped, unequipped };
+export { subscription, rows, equipped, sold, unequipped };
