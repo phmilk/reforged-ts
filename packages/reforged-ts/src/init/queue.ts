@@ -10,36 +10,50 @@
 //
 // Package-internal: nothing here is exported from the library index.
 
+import { configuration, noteRegistration } from "../reforged/configuration";
 import {
   type EntryPoint,
   type InitStage,
   LIBRARY,
   type Origin,
   type Registration,
-  state,
 } from "./state";
 
 /** Where a callback runs, as a failure line names it. */
 type Where = InitStage | EntryPoint;
 
+/** The member the Map project registers through for each place. */
+const registeringMember: Record<Where, string> = {
+  globals: "Init.onGlobals",
+  triggers: "Init.onTriggers",
+  initTriggers: "Init.onInitTriggers",
+  gameStart: "Init.onGameStart",
+  "main::before": 'addScriptHook("main::before")',
+  "main::after": 'addScriptHook("main::after")',
+  "config::before": 'addScriptHook("config::before")',
+  "config::after": 'addScriptHook("config::after")',
+};
+
 /**
- * Appends `callback` to `queue`, named `label` in failure lines, or `#n` for
- * its ordinal in the queue. A registration by the Map project is remembered:
- * `Reforged.configure` warns when it is called after one.
+ * Appends `callback` to `queue`, the one for `where`, named `label` in
+ * failure lines, or `#n` for its ordinal in the queue. The first registration
+ * by the Map project is remembered (`Init.onGlobals "spawn"`):
+ * `Reforged.configure` names it when it warns.
  */
 export function enqueue(
   queue: Registration[],
+  where: Where,
   origin: Origin,
   callback: () => void,
   label?: string,
 ): Registration {
-  if (origin === "project") {
-    state.projectRegistered = true;
-  }
   const registration: Registration = {
     callback,
     name: label === undefined ? `#${String(queue.length + 1)}` : `"${label}"`,
   };
+  if (origin === "project" && configuration.firstRegistration === undefined) {
+    noteRegistration(`${registeringMember[where]} ${registration.name}`);
+  }
   queue.push(registration);
   return registration;
 }
@@ -63,9 +77,4 @@ export function runQueue(where: Where, queue: readonly Registration[]): void {
     runProtected(where, queue[index]);
     index++;
   }
-}
-
-/** Whether the Map project registered any callback through the library yet. */
-export function hasProjectRegistrations(): boolean {
-  return state.projectRegistered;
 }

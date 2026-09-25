@@ -55,6 +55,7 @@ export function eventRows<
   for (const [name, row] of Object.entries<EventRow<never[], unknown>>(rows)) {
     const event = `${namespace}.${name}`;
     const descriptor = (...args: never[]): EventDescriptor<unknown> => ({
+      name: event,
       register: (trigger) => {
         row.register(trigger, ...args);
       },

@@ -74,3 +74,8 @@ end
 function __stub_frame_not_found()
   return notFound
 end
+
+function BlzDestroyFrame(frame)
+  __stub_record("BlzDestroyFrame", frame)
+  frame.destroyed = true
+end

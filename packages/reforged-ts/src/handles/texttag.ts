@@ -8,8 +8,17 @@ export class TextTag extends Handle<texttag> {
     return this.expect(CreateTextTag());
   }
 
+  /**
+   * Destroys the TextTag through its Native.
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
+   */
   public destroy() {
     DestroyTextTag(this.handle);
+    this.release();
   }
 
   public setAge(age: number) {

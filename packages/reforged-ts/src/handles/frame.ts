@@ -1,6 +1,8 @@
 /** @noSelfInFile */
 
-import { Handle, type WrapperClass } from "./handle";
+import { configuration } from "../reforged/configuration";
+import { assertNotLocal } from "../reforged/local";
+import { canonicalWrapper, Handle, type WrapperClass } from "./handle";
 
 /**
  * The Handle, or undefined for nothing and for the frame the game hands back
@@ -216,8 +218,17 @@ export class Frame extends Handle<framehandle> {
     return this;
   }
 
+  /**
+   * Destroys the Frame through its Native.
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
+   */
   public destroy() {
     BlzDestroyFrame(this.handle);
+    this.release();
     return this;
   }
 
@@ -384,11 +395,27 @@ export class Frame extends Handle<framehandle> {
     return super.fromHandle.call(this, unlessNotFound(handle)) as C | undefined;
   }
 
+  /**
+   * The frame created under `name` and `createContext`, or undefined when the
+   * game finds none.
+   *
+   * @remarks The first lookup of a frame the library has no Wrapper for
+   * allocates a Handle id, so in Dev mode it raises inside
+   * `MapPlayer.runLocal`: look the frame up once outside, then use it inside.
+   */
   public static fromName(
     name: string,
     createContext: number,
   ): Frame | undefined {
-    return this.fromHandle(BlzGetFrameByName(name, createContext));
+    const handle = unlessNotFound(BlzGetFrameByName(name, createContext));
+    if (
+      configuration.devMode &&
+      handle !== undefined &&
+      canonicalWrapper(handle) === undefined
+    ) {
+      assertNotLocal(`the first Frame.fromName("${name}")`, 2);
+    }
+    return this.fromHandle(handle);
   }
 
   public static fromOrigin(

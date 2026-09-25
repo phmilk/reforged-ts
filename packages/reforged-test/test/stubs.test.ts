@@ -44,6 +44,24 @@ describe("the shipped stub families on a fresh state", () => {
   });
 });
 
+describe("the test controls of the shipped stubs on a fresh state", () => {
+  const [controls] = runLuaTestFiles({ outDir: outDir("controls") });
+
+  it.each(
+    controls.tests.map((test) => [
+      `${test.suite.join(" > ")} > ${test.name}`,
+      test,
+    ]),
+  )("%s", (_, test) => {
+    expect(test).toMatchObject({ status: "pass" });
+  });
+
+  it("runs all its checks", () => {
+    expect(controls.error).toBeUndefined();
+    expect(controls.tests).toHaveLength(17);
+  });
+});
+
 // The game has none of these; a stub that used one would pass here and
 // describe nothing the game can run.
 const FORBIDDEN: [string, RegExp][] = [

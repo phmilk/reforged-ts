@@ -97,3 +97,27 @@ function GetHeroLevel(whichHero)
   __stub_record("GetHeroLevel", whichHero)
   return whichHero.heroLevel or 0
 end
+
+function RemoveUnit(whichUnit)
+  __stub_record("RemoveUnit", whichUnit)
+  whichUnit.destroyed = true
+end
+
+-- Damage is dispatched at once, inside the call, as the game dispatches it:
+-- the triggers registered for a damage event on the target fire before
+-- UnitDamageTarget returns (__stub_dispatch_damage, in triggers.lua), so an
+-- action that deals damage causes a nested dispatch. The stub keeps no life
+-- and applies no armor: the target is unchanged. It returns true.
+function UnitDamageTarget(whichUnit, target, amount, attack, ranged, attackType, damageType, weaponType)
+  __stub_record("UnitDamageTarget", whichUnit, target, amount, attack, ranged, attackType, damageType, weaponType)
+  __stub_dispatch_damage({
+    source = whichUnit,
+    target = target,
+    amount = amount,
+    attack = attack,
+    attackType = attackType,
+    damageType = damageType,
+    weaponType = weaponType,
+  })
+  return true
+end

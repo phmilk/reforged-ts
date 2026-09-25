@@ -1,5 +1,7 @@
 /** @noSelfInFile */
 
+import { configuration } from "../reforged/configuration";
+import { runLocalGuarded } from "../reforged/local";
 import type { Force } from "./force";
 import { Handle } from "./handle";
 import type { Point } from "./point";
@@ -298,13 +300,49 @@ export class MapPlayer extends Handle<player> {
 
   /**
    * The local player. `GetLocalPlayer` never returns nothing, which the
-   * Typings cannot express for the Wrapper, so this goes through the creation
-   * helper: typed non-null, and should the game ever break that invariant it
+   * Typings cannot express for the Wrapper, so this goes through the non-null
+   * lookup helper: typed non-null, and should the game ever break that invariant it
    * throws `reforged-ts: failed to create MapPlayer` instead of returning
    * undefined.
    * @async
    */
   public static fromLocal(): MapPlayer {
-    return this.expect(GetLocalPlayer());
+    return this.expectFound(GetLocalPlayer());
+  }
+
+  /**
+   * Runs `fn` on the client whose local player is `player`, and does nothing
+   * on every other client: the one way to run code for one player, in place
+   * of a `GetLocalPlayer()` comparison.
+   *
+   * @remarks Only visuals belong inside `fn`: what it shows (text, frames,
+   * sounds, camera, colours) may differ between clients, but anything that
+   * changes game state runs on one client only and desyncs the game. With
+   * Dev mode off this is the bare local-player comparison. In Dev mode `fn`
+   * runs under pcall, so an error inside is reported on screen and printed
+   * like a failing callback's (`reforged-ts: MapPlayer#<id>
+   * MapPlayer.runLocal failed: <error>`), once per function and message,
+   * and does not escape; and inside it creating or destroying a Wrapper,
+   * `Group.for`, `Force.for` and the first `Frame.fromName` of a frame raise
+   * `reforged-ts: <action> inside MapPlayer.runLocal changes game state for
+   * one client, which desyncs the game: only visuals belong inside
+   * runLocal`. A creation or destruction raises after its Native ran, so the
+   * Guard does not undo it: it names the offending line while you test in
+   * Dev mode, so the bug is found before a release build reaches a lobby.
+   * Create what `fn` needs before calling `runLocal`, on every client.
+   * @example
+   * {@includeCode ../../examples/run-local-frame.ts}
+   * @param player - The player whose client runs `fn`.
+   * @param fn - What to run there: visuals only.
+   */
+  public static runLocal(player: MapPlayer, fn: () => void): void {
+    if (GetLocalPlayer() !== player.handle) {
+      return;
+    }
+    if (configuration.devMode) {
+      runLocalGuarded(player, fn);
+    } else {
+      fn();
+    }
   }
 }

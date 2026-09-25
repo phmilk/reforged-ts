@@ -35,7 +35,7 @@ export function onEntryPoint(
   callback: () => void,
   label?: string,
 ): void {
-  enqueue(state.entryPoints[entryPoint], origin, callback, label);
+  enqueue(state.entryPoints[entryPoint], entryPoint, origin, callback, label);
 }
 
 /** What a wrapper runs for `entryPoint`: its queue, under pcall. */

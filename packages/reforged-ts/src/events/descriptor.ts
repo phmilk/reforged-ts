@@ -13,6 +13,7 @@
 // in registration order in practice, which the game does not guarantee.
 
 import { Trigger } from "../handles/trigger";
+import { protect } from "../reforged/protect";
 
 /**
  * An Event descriptor: how one game event registers on a Trigger and how its
@@ -20,6 +21,12 @@ import { Trigger } from "../handles/trigger";
  * @noSelf
  */
 export interface EventDescriptor<P> {
+  /**
+   * The descriptor's name (`UnitEvents.death`), which a Dev-mode report of
+   * a failing handler or `when` names. The library's descriptors all carry
+   * one; a descriptor without one is reported as `on`.
+   */
+  readonly name?: string;
   /** Registers the event on `trigger`. */
   readonly register: (trigger: Trigger) => void;
   /** Reads the payload from the running trigger context. */
@@ -45,31 +52,34 @@ class TriggerSubscription implements Subscription {
 }
 
 /**
- * The one path from the library to a Map project's handler or `when`
- * predicate. A plain call; the runtime Guards wrap it in Dev mode.
- */
-function dispatch<P, R>(callback: (payload: P) => R, payload: P): R {
-  return callback(payload);
-}
-
-/**
  * Subscribes `handler` to `event` on a new Trigger: `when`, if given, runs
  * first as the trigger's condition, and the handler runs only when it
  * returns true. Each reads the payload from the trigger context.
+ *
+ * In Dev mode each runs under `pcall`, through the protection step, and a
+ * failure is reported under the descriptor's name (`reforged-ts:
+ * UnitEvents.death failed: ...`): a `when` that throws evaluates false. The
+ * Trigger's own protection of its action and condition stays in place
+ * around them; it sees no failure, the descriptor's step having caught it.
  */
 export function on<P>(
   event: EventDescriptor<P>,
   handler: (payload: P) => void,
   when?: (payload: P) => boolean,
 ): Subscription {
+  const name = event.name ?? "on";
   const trigger = Trigger.create();
   event.register(trigger);
   if (when !== undefined) {
-    trigger.addCondition(() => dispatch(when, event.read()));
+    trigger.addCondition(
+      protect(undefined, name, () => when(event.read()), false),
+    );
   }
-  trigger.addAction(() => {
-    dispatch(handler, event.read());
-  });
+  trigger.addAction(
+    protect(undefined, name, () => {
+      handler(event.read());
+    }),
+  );
   return new TriggerSubscription(trigger);
 }
 
