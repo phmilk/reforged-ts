@@ -121,7 +121,7 @@ Or put `GITHUB_TOKEN=<token>` in a `.env` file at the repository root, which git
 
 The workspace is in Changesets pre mode with the `alpha` identifier during the build phase: `.changeset/pre.json` holds `{ "mode": "pre", "tag": "alpha" }`, entered with `pnpm changeset pre enter alpha` and committed. Every version is `1.0.0-alpha.N`, and each package counts its own `N`, moving only with its own changesets. `changeset version` moves the changesets it consumed into `.changeset/pre/`, where they wait to be rolled into the 1.0.0 changelog when pre mode exits. The Version Packages pull request carries `(alpha)` in its title.
 
-Alphas go to npm under the `next` dist-tag, so a Map project installs one with `pnpm add reforged-ts@next`. Changesets refuses `changeset publish --tag` in pre mode and when publishing from packed tarballs, so the tag is not a command-line option: the release workflow writes `next` into the `tag` of each entry of the publish plan (`publish-plan.json`) before publishing.
+Alphas go to npm under the `next` dist-tag, so a Map project installs one with `pnpm add reforged-ts@next`. Changesets refuses `changeset publish --tag` in pre mode and when publishing from packed tarballs, so the tag is not a command-line option: the release workflow writes `next` into the `tag` of each entry of the publish plan (`publish-plan.json`) before publishing ([`release:dist-tag`](#the-dist-tag)).
 
 **Known limitation.** npm gives the `latest` dist-tag to the first version of a package, prerelease or not. After the first publish, `latest` and `next` both point at `1.0.0-alpha.0`; later alphas move `next` only, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, when it moves to 1.0.0. There is no workaround short of publishing a placeholder stable version, which is rejected. A Map project should install with `@next` during the build phase.
 
@@ -143,7 +143,7 @@ The first versions are applied on `master` before the first-publish wizard ([#14
 2. Check the result: all four manifests at `1.0.0-alpha.0`, a `CHANGELOG.md` per package, the consumed changesets moved to `.changeset/pre/`, `.changeset/pre.json` unchanged. Run `pnpm install` and `pnpm check`.
 3. Open a pull request with the result and merge it.
 
-When the release workflow is already on `master`, its Version Packages pull request carries the same result and can be merged instead.
+When the release workflow is already on `master`, its Version Packages pull request carries the same result and can be merged instead. The run that merge starts goes on to pack, gate and publish, and its publish job stops at [the publish check](#the-publish-check), naming the four packages as not on npm yet: expected, since trusted publishing cannot create a package. Run the wizard next; it publishes what `master` holds, so that failed job needs no re-run.
 
 ## The compatibility matrix
 
@@ -285,7 +285,7 @@ pnpm release:template-gate --template ../t --pack-dir ../pack
 - Keep the clone outside this repository. A Template without its own `pnpm-workspace.yaml` would otherwise be installed as part of this workspace. On Windows, keep its path short: vitest fails at startup when a path under the Template's `node_modules` passes 260 characters.
 - The gate leaves the overrides, a lockfile and the build output in the checkout. Use a throwaway clone.
 - Packing an unversioned workspace (every package at `0.0.0`) is fine for a local run, because the overrides replace the Template's ranges. It is never fine for publishing.
-- Until the Template has a `v1` ref, clone its default branch instead.
+- Until the Template has a `v1` ref, clone its default branch instead. The release workflow does not fall back: it needs the ref (see [its prerequisites](#prerequisites-outside-this-repository)).
 
 ## Leaving pre mode: the 1.0.0 checklist
 
@@ -311,6 +311,83 @@ A symbol is never removed in a minor.
 
 Fixes land only on the latest minor of the latest major. There are no maintenance branches and no backports: a bug found in 1.2 once 1.3 is out is fixed in the next 1.3 patch (or whatever is latest), and 1.2 gets no more releases. Releases are only ever cut from `master`.
 
+## The release workflow
+
+`.github/workflows/release.yml` runs on every push to `master`. Merging to `master` releases, and no one holds a token: the pull requests are opened by the repository's GitHub App, and npm accepts the upload through trusted publishing. A concurrency group keeps two runs from versioning or publishing at once; a newer push waits for the running one. Each job runs on Node 24, pins its actions to a commit, restores no dependency cache, and gets only the permissions listed below. The workflow uses the `changesets/action` v2 sub-actions rather than the combined action, so only the publish job can request an OIDC token.
+
+| Job             | Runs when                                                      | Permissions                                  | What it does                                                                                                                                                                                                                                              |
+| --------------- | -------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `select`        | always                                                         | `contents: read`                             | `select-mode`: `version` while a changeset releases something, else `publish` when a publishable version is not on npm, else `none`. Writes the mode to the job summary.                                                                                  |
+| `version`       | mode `version`                                                 | `contents: read`, the App                    | Runs `pnpm release:gate` (the [major-changeset gate](#the-major-changeset-gate)), then the `version` sub-action with `pnpm release:version`, which opens or updates the Version Packages pull request on `changeset-release/master`, authored by the App. |
+| `pack`          | mode `publish`; in [the dry run](#the-dry-run), also `version` | `contents: read`, PRs `read`                 | `pnpm build`, `pnpm changeset pack` (the tarballs and the publish plan), `pnpm release:dist-tag`, then uploads the pack folder as the `release-pack` artifact.                                                                                            |
+| `template-gate` | after `pack`                                                   | `contents: read`                             | Downloads the artifact, clones the Template at its ref (`pnpm release:template-clone`, outside the checkout) and runs [the Template gate](#the-template-gate).                                                                                            |
+| `publish`       | mode `publish`, after `template-gate`, never in the dry run    | `contents: read`, `id-token: write`, the App | Runs `pnpm release:publish-check`, then the `publish` sub-action on the same artifact: `changeset publish --from-pack-dir` from the checkout, no build, then a git tag (`reforged-ts@1.0.0-alpha.1`) and a GitHub Release per published package.          |
+
+The bytes published are the bytes the Template gate tested: the publish job downloads the artifact the gate downloaded, by its id, and `changeset publish --from-pack-dir` uploads those tarballs as they are. Provenance comes with trusted publishing, because the repository is public.
+
+The tags and the releases are created with the App's token, not the job's default one: a tag created with the default token triggers no workflow, and the `reforged-ts@<major>.<minor>.0` tags must trigger `docs.yml`, which cuts the docs version ([#48](https://github.com/phmilk/reforged-ts/issues/48)).
+
+### The dist-tag
+
+`pnpm release:dist-tag --pack-dir <dir>` (`release/src/dist-tag.ts`) sets the `tag` of every entry of the publish plan in a `changeset pack` output: `next` while `.changeset/pre.json` is in pre mode, else the `latest` Changesets wrote. It refuses a plan that publishes a package at `0.0.0`, and writes the plan to the job summary as a table. The pack job runs it before the upload, so the Template gate and the publish job read the same plan. Exit codes: 0 done, 1 an unreadable or unversioned plan, 2 usage.
+
+### The publish check
+
+`pnpm release:publish-check` (`release/src/publish-check.ts`) runs in the publish job before anything is published and fails with one line per missing prerequisite:
+
+- the job cannot request an OIDC token: `permissions: id-token: write` is missing;
+- the publishing tool cannot do trusted publishing: pnpm 10 hands the upload to the npm CLI, which does it from 11.5.1 (Node 24 bundles a recent enough npm); pnpm 11 and later do it themselves;
+- a publishable package is not on npm yet: trusted publishing is configured on an existing package only, so a package's first version is published by hand with the first-publish wizard ([#149](https://github.com/phmilk/reforged-ts/issues/149)).
+
+npm does not expose a package's trusted publisher, so a missing or mismatched one shows only at upload, as an `ENEEDAUTH` or 404 from npm.
+
+### The dry run
+
+A rehearsal of the pipeline on the real repository, before the first tokenless alpha and after any change to the workflow or the gates. Start it from the Actions tab (workflow "release", "Run workflow", with "Dry run" ticked, which is the default) or with:
+
+```sh
+gh workflow run release.yml --ref master -f dry-run=true
+```
+
+It runs `select`, then, by mode:
+
+- `version`: the version job runs the major-changeset gate and `pnpm release:version`, then writes the would-be pull request to its job summary (the changed files, and the diff in a collapsed block) instead of opening it. The pack job applies the same versions before packing, so pack and the Template gate rehearse the release the pull request would publish.
+- `publish`: pack and the Template gate, over what `master` holds.
+- `none`: nothing after `select`.
+
+It never runs the publish job and never opens a pull request. It needs the same variables, secrets and Template ref as a release, so it also proves them. A dispatch can run from any branch as a dry run; unticking "Dry run" is refused outside `master`.
+
+### Repository variables and secrets
+
+| Name                  | Kind     | Read by              | What                                                                                                                                                                                                |
+| --------------------- | -------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `APP_CLIENT_ID`       | variable | `version`, `publish` | The client ID of the repository's GitHub App ([#48](https://github.com/phmilk/reforged-ts/issues/48)).                                                                                              |
+| `APP_PRIVATE_KEY`     | secret   | `version`, `publish` | A private key of that App.                                                                                                                                                                          |
+| `TEMPLATE_READ_TOKEN` | secret   | `template-gate`      | A fine-grained token with Contents: read on `phmilk/reforged-ts-template` only, while the Template is private. Once it is public the gate clones it without a token and this secret can be deleted. |
+
+No npm token exists anywhere. A job that needs a missing one fails at its first step, naming it: the App steps name `APP_CLIENT_ID` or `APP_PRIVATE_KEY`, and the Template clone names `TEMPLATE_READ_TOKEN` when the Template cannot be read without it, or the token when it cannot read the Template.
+
+### Prerequisites outside this repository
+
+They gate the dry run and the first tokenless publish, not the merge of the workflow:
+
+- **The GitHub App** ([#48](https://github.com/phmilk/reforged-ts/issues/48)): installed on this repository with contents write and pull requests write, its client ID and a private key stored as above.
+- **A `v1` ref on the Template**: the gate clones `v<major>` of the library version, and fails naming the ref when the Template has neither a tag nor a branch of that name. Create it on the Template commit that supports the release: `git tag v1 <commit> && git push origin v1`. The Template's own plan cuts a `v1` branch at library 2.0 and keeps `main` as the current major; a `v1` tag now and a `v1` branch then both satisfy the gate, but the tag must be moved (or replaced by the branch) when the Template's `main` moves on.
+- **A read-only token for the Template** while it is private (see the table above).
+- **The four packages on npm with their trusted publisher**: the first-publish wizard ([#149](https://github.com/phmilk/reforged-ts/issues/149)) publishes `1.0.0-alpha.0` of each and configures the publisher (repository `phmilk/reforged-ts`, workflow `release.yml`, no environment). The workflow file name is part of that configuration: renaming `release.yml` breaks publishing until every package's publisher is updated.
+
+### The Version Packages pull request and CI
+
+The Version Packages pull request changes package manifests and changelogs and adds no changeset (it consumes them), so `release:check-changeset` would fail on it. `ci.yml` ([#48](https://github.com/phmilk/reforged-ts/issues/48)) skips that one step when the pull request's head branch is `changeset-release/master`, the branch the `version` sub-action always uses; every other check runs on it as on any pull request. The App opens it, so CI does run on it.
+
+Merge it once the release run of the latest push to `master` has finished: that run updates the pull request with every changeset on `master`. A changeset merged after it would stay pending, and when only empty changesets are pending `select-mode` answers `none` even while versions are unpublished. If that happens, delete the stranded empty changesets in a pull request (it changes no package, so it needs no changeset): the next run publishes.
+
+### When a job fails
+
+- `version` or `pack`: fix the cause on `master`; the next push reruns everything.
+- `template-gate`: nothing was published. A fix in this repository lands on `master` and its push runs everything again; after a fix in the Template, or a moved Template ref, re-run the failed jobs of the run.
+- `publish`: re-run the failed job. The packages the failed attempt did publish got their tags and releases then; npm refuses them a second time and Changesets skips them.
+
 ## Human steps
 
 Done once each by the maintainer; every release after them is tokenless.
@@ -319,5 +396,5 @@ Done once each by the maintainer; every release after them is tokenless.
 2. On npm, add the GitHub Actions trusted publisher for each package: repository `phmilk/reforged-ts`, workflow `release.yml`, no environment.
 3. On each package, enable "Require two-factor authentication and disallow tokens".
 4. Revoke the token.
-5. Run the release workflow's dry run, then merge the next Version Packages pull request to prove the tokenless publish.
+5. With [the workflow's prerequisites](#prerequisites-outside-this-repository) in place, run [the dry run](#the-dry-run), then merge the next Version Packages pull request to prove the tokenless publish.
 6. At 1.0.0, run `pnpm changeset pre exit` in a pull request once [the checklist](#leaving-pre-mode-the-100-checklist) is green.
