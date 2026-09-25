@@ -90,10 +90,7 @@ class SyncOutgoingPacket {
   }
 
   public toString() {
-    const header = this.getHeader();
-    const writer = new BinaryWriter();
-    writer.writeString(this.data);
-    return header + writer.toString();
+    return this.getHeader() + this.data;
   }
 }
 
