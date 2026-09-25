@@ -35,6 +35,7 @@ const MAX_CHUNKS = FIELD_LIMIT - 1;
  */
 const ignored = { packets: 0 };
 
+/** Where a sync request stands: its `status`. */
 export const enum SyncStatus {
   /** Created, not started. */
   None,
