@@ -1,0 +1,887 @@
+[
+  {
+    "name": "BlzFrameSetAbsPoint",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetAllPoints",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetAlpha",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetEnable",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetFont",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetLevel",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetMinMaxValue",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetModel",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetParent",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetPoint",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetScale",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetSize",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetSpriteAnimate",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetStepSize",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetTextAlignment",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetTextColor",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetTextSizeLimit",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetTexture",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetTooltip",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetVertexColor",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetVisible",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameClearAllPoints",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzTextAreaFrameSetAutoScroll",
+    "kind": "visual",
+    "reason": "changes how a frame looks for the local player only; frame appearance is not game state."
+  },
+  {
+    "name": "BlzFrameSetText",
+    "kind": "text",
+    "reason": "sets a frame's text for the local player only; the game formats the string, so a lone % garbles it."
+  },
+  {
+    "name": "BlzFrameAddText",
+    "kind": "text",
+    "reason": "sets a frame's text for the local player only; the game formats the string, so a lone % garbles it."
+  },
+  {
+    "name": "SetUnitVertexColor",
+    "kind": "visual",
+    "reason": "sets a vertex colour or alpha, which only changes how the object is drawn (jassdoc, GetLocalPlayer: 'anything that's only visual (like unit color) will not desync')."
+  },
+  {
+    "name": "SetUnitVertexColorBJ",
+    "kind": "visual",
+    "reason": "sets a vertex colour or alpha, which only changes how the object is drawn (jassdoc, GetLocalPlayer: 'anything that's only visual (like unit color) will not desync')."
+  },
+  {
+    "name": "SetDestructableVertexColor",
+    "kind": "visual",
+    "reason": "sets a vertex colour or alpha, which only changes how the object is drawn (jassdoc, GetLocalPlayer: 'anything that's only visual (like unit color) will not desync')."
+  },
+  {
+    "name": "SetDestructableVertexColorBJ",
+    "kind": "visual",
+    "reason": "sets a vertex colour or alpha, which only changes how the object is drawn (jassdoc, GetLocalPlayer: 'anything that's only visual (like unit color) will not desync')."
+  },
+  {
+    "name": "BlzSetSpecialEffectColor",
+    "kind": "visual",
+    "reason": "sets a vertex colour or alpha, which only changes how the object is drawn (jassdoc, GetLocalPlayer: 'anything that's only visual (like unit color) will not desync')."
+  },
+  {
+    "name": "BlzSetSpecialEffectAlpha",
+    "kind": "visual",
+    "reason": "sets a vertex colour or alpha, which only changes how the object is drawn (jassdoc, GetLocalPlayer: 'anything that's only visual (like unit color) will not desync')."
+  },
+  {
+    "name": "BlzSetSpecialEffectColorByPlayer",
+    "kind": "visual",
+    "reason": "sets a vertex colour or alpha, which only changes how the object is drawn (jassdoc, GetLocalPlayer: 'anything that's only visual (like unit color) will not desync')."
+  },
+  {
+    "name": "SetCameraPosition",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "SetCameraQuickPosition",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "SetCameraBounds",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "StopCamera",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "ResetToGameCamera",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "PanCameraTo",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "PanCameraToTimed",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "PanCameraToWithZ",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "PanCameraToTimedWithZ",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "SetCinematicCamera",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "SetCameraRotateMode",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "SetCameraField",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "AdjustCameraField",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "SetCameraTargetController",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "SetCameraOrientController",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "CameraSetupApply",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "CameraSetupApplyWithZ",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "CameraSetupApplyForceDuration",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "CameraSetupApplyForceDurationWithZ",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "BlzCameraSetupApplyForceDurationSmooth",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "CameraSetupSetField",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "CameraSetupSetDestPosition",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "BlzCameraSetupSetLabel",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "CameraSetTargetNoise",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "CameraSetSourceNoise",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "CameraSetTargetNoiseEx",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "CameraSetSourceNoiseEx",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "CameraSetSmoothingFactor",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "CameraSetFocalDistance",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "CameraSetDepthOfFieldScale",
+    "kind": "visual",
+    "reason": "moves or configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "SetCameraFieldControlledByInput",
+    "kind": "visual",
+    "reason": "a 3.0.0 camera addition; it configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "BlzCameraSetCameraType",
+    "kind": "visual",
+    "reason": "a 3.0.0 camera addition; it configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "BlzCameraSetupSetCameraType",
+    "kind": "visual",
+    "reason": "a 3.0.0 camera addition; it configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "EnableCameraBlocker",
+    "kind": "visual",
+    "reason": "a 3.0.0 camera addition; it configures the local player's camera, which each client owns."
+  },
+  {
+    "name": "StartSound",
+    "kind": "visual",
+    "reason": "plays or tunes a sound for the local player only; sound output is not game state."
+  },
+  {
+    "name": "StartSoundEx",
+    "kind": "visual",
+    "reason": "plays or tunes a sound for the local player only; sound output is not game state."
+  },
+  {
+    "name": "StopSound",
+    "kind": "visual",
+    "reason": "plays or tunes a sound for the local player only; sound output is not game state."
+  },
+  {
+    "name": "SetSoundVolume",
+    "kind": "visual",
+    "reason": "plays or tunes a sound for the local player only; sound output is not game state."
+  },
+  {
+    "name": "SetSoundPitch",
+    "kind": "visual",
+    "reason": "plays or tunes a sound for the local player only; sound output is not game state."
+  },
+  {
+    "name": "SetSoundPlayPosition",
+    "kind": "visual",
+    "reason": "plays or tunes a sound for the local player only; sound output is not game state."
+  },
+  {
+    "name": "SetSoundPosition",
+    "kind": "visual",
+    "reason": "plays or tunes a sound for the local player only; sound output is not game state."
+  },
+  {
+    "name": "SetSoundVelocity",
+    "kind": "visual",
+    "reason": "plays or tunes a sound for the local player only; sound output is not game state."
+  },
+  {
+    "name": "SetSoundDistances",
+    "kind": "visual",
+    "reason": "plays or tunes a sound for the local player only; sound output is not game state."
+  },
+  {
+    "name": "SetSoundDistanceCutoff",
+    "kind": "visual",
+    "reason": "plays or tunes a sound for the local player only; sound output is not game state."
+  },
+  {
+    "name": "SetSoundConeAngles",
+    "kind": "visual",
+    "reason": "plays or tunes a sound for the local player only; sound output is not game state."
+  },
+  {
+    "name": "SetSoundConeOrientation",
+    "kind": "visual",
+    "reason": "plays or tunes a sound for the local player only; sound output is not game state."
+  },
+  {
+    "name": "SetSoundChannel",
+    "kind": "visual",
+    "reason": "plays or tunes a sound for the local player only; sound output is not game state."
+  },
+  {
+    "name": "VolumeGroupSetVolume",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "VolumeGroupReset",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "SetMusicVolume",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "SetThematicMusicVolume",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "PlayMusic",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "PlayMusicEx",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "StopMusic",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "ResumeMusic",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "SetMusicPlayPosition",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "PlayThematicMusic",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "PlayThematicMusicEx",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "EndThematicMusic",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "SetThematicMusicPlayPosition",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "ClearMapMusic",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "SetMapMusic",
+    "kind": "visual",
+    "reason": "sets a volume group or the music for the local player only; audio output is not game state."
+  },
+  {
+    "name": "DisplayTextToPlayer",
+    "kind": "text",
+    "reason": "displays a message; the game formats the string, so a lone % garbles it or crashes the game (jassdoc, DisplayTimedTextFromPlayer)."
+  },
+  {
+    "name": "DisplayTimedTextToPlayer",
+    "kind": "text",
+    "reason": "displays a message; the game formats the string, so a lone % garbles it or crashes the game (jassdoc, DisplayTimedTextFromPlayer)."
+  },
+  {
+    "name": "DisplayTimedTextFromPlayer",
+    "kind": "text",
+    "reason": "displays a message; the game formats the string, so a lone % garbles it or crashes the game (jassdoc, DisplayTimedTextFromPlayer)."
+  },
+  {
+    "name": "DisplayTextToForce",
+    "kind": "text",
+    "reason": "displays a message; the game formats the string, so a lone % garbles it or crashes the game (jassdoc, DisplayTimedTextFromPlayer)."
+  },
+  {
+    "name": "DisplayTimedTextToForce",
+    "kind": "text",
+    "reason": "displays a message; the game formats the string, so a lone % garbles it or crashes the game (jassdoc, DisplayTimedTextFromPlayer)."
+  },
+  {
+    "name": "BJDebugMsg",
+    "kind": "text",
+    "reason": "displays a message; the game formats the string, so a lone % garbles it or crashes the game (jassdoc, DisplayTimedTextFromPlayer)."
+  },
+  {
+    "name": "print",
+    "kind": "text",
+    "reason": "Lua's print (lua-types, not a Native) writes to the local screen only; the game formats the string, so a lone % garbles it."
+  },
+  {
+    "name": "Frame#setAlpha",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setAbsPoint",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setAllPoints",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#clearPoints",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setFont",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setHeight",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setLevel",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setMinMaxValue",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setTextAlignment",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setModel",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setParent",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setPoint",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setScale",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setSize",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setSpriteAnimate",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setStepSize",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setTextColor",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setTextSizeLimit",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setTexture",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setTooltip",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setVertexColor",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setVisible",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setWidth",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#setEnabled",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
+  },
+  {
+    "name": "Frame#alpha",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's accessor over a BlzFrameSet* visual Native (an assignment calls the setter)."
+  },
+  {
+    "name": "Frame#enabled",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's accessor over a BlzFrameSet* visual Native (an assignment calls the setter)."
+  },
+  {
+    "name": "Frame#height",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's accessor over a BlzFrameSet* visual Native (an assignment calls the setter)."
+  },
+  {
+    "name": "Frame#textSizeLimit",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's accessor over a BlzFrameSet* visual Native (an assignment calls the setter)."
+  },
+  {
+    "name": "Frame#visible",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's accessor over a BlzFrameSet* visual Native (an assignment calls the setter)."
+  },
+  {
+    "name": "Frame#width",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's accessor over a BlzFrameSet* visual Native (an assignment calls the setter)."
+  },
+  {
+    "name": "Frame#setText",
+    "kind": "text",
+    "reason": "the Frame Wrapper's member over BlzFrameSetText or BlzFrameAddText."
+  },
+  {
+    "name": "Frame#addText",
+    "kind": "text",
+    "reason": "the Frame Wrapper's member over BlzFrameSetText or BlzFrameAddText."
+  },
+  {
+    "name": "Frame#text",
+    "kind": "text",
+    "reason": "the Frame Wrapper's accessor over BlzFrameSetText (an assignment calls the setter)."
+  },
+  {
+    "name": "Unit#setVertexColor",
+    "kind": "visual",
+    "reason": "the Unit Wrapper's member over SetUnitVertexColor."
+  },
+  {
+    "name": "Effect#setAlpha",
+    "kind": "visual",
+    "reason": "the Effect Wrapper's member over a special-effect colour or alpha Native."
+  },
+  {
+    "name": "Effect#setColor",
+    "kind": "visual",
+    "reason": "the Effect Wrapper's member over a special-effect colour or alpha Native."
+  },
+  {
+    "name": "Effect#setColorByPlayer",
+    "kind": "visual",
+    "reason": "the Effect Wrapper's member over a special-effect colour or alpha Native."
+  },
+  {
+    "name": "Sound#start",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's member over a sound Native that only changes the local audio."
+  },
+  {
+    "name": "Sound#stop",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's member over a sound Native that only changes the local audio."
+  },
+  {
+    "name": "Sound#setVolume",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's member over a sound Native that only changes the local audio."
+  },
+  {
+    "name": "Sound#setPitch",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's member over a sound Native that only changes the local audio."
+  },
+  {
+    "name": "Sound#setPlayPosition",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's member over a sound Native that only changes the local audio."
+  },
+  {
+    "name": "Sound#setPosition",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's member over a sound Native that only changes the local audio."
+  },
+  {
+    "name": "Sound#setVelocity",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's member over a sound Native that only changes the local audio."
+  },
+  {
+    "name": "Sound#setDistances",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's member over a sound Native that only changes the local audio."
+  },
+  {
+    "name": "Sound#setDistanceCutoff",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's member over a sound Native that only changes the local audio."
+  },
+  {
+    "name": "Sound#setConeAngles",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's member over a sound Native that only changes the local audio."
+  },
+  {
+    "name": "Sound#setConeOrientation",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's member over a sound Native that only changes the local audio."
+  },
+  {
+    "name": "Sound#setChannel",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's member over a sound Native that only changes the local audio."
+  },
+  {
+    "name": "Camera.pan",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.panTimed",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.reset",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.stop",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.setField",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.adjustField",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.setPos",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.setBounds",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.setRotateMode",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.setSmoothingFactor",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.setFocalDistance",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.setDepthOfFieldScale",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.setSourceNoise",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.setTargetNoise",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.setTargetController",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.setCameraOrientController",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "Camera.setCinematicCamera",
+    "kind": "visual",
+    "reason": "the Camera System's static member over a camera Native of the local player."
+  },
+  {
+    "name": "CameraSetup#apply",
+    "kind": "visual",
+    "reason": "the CameraSetup Wrapper's member over a CameraSetup* Native of the local camera."
+  },
+  {
+    "name": "CameraSetup#applyZ",
+    "kind": "visual",
+    "reason": "the CameraSetup Wrapper's member over a CameraSetup* Native of the local camera."
+  },
+  {
+    "name": "CameraSetup#applyForceDuration",
+    "kind": "visual",
+    "reason": "the CameraSetup Wrapper's member over a CameraSetup* Native of the local camera."
+  },
+  {
+    "name": "CameraSetup#applyForceDurationZ",
+    "kind": "visual",
+    "reason": "the CameraSetup Wrapper's member over a CameraSetup* Native of the local camera."
+  },
+  {
+    "name": "CameraSetup#applyForceDurationSmooth",
+    "kind": "visual",
+    "reason": "the CameraSetup Wrapper's member over a CameraSetup* Native of the local camera."
+  },
+  {
+    "name": "CameraSetup#setField",
+    "kind": "visual",
+    "reason": "the CameraSetup Wrapper's member over a CameraSetup* Native of the local camera."
+  },
+  {
+    "name": "CameraSetup#setDestPos",
+    "kind": "visual",
+    "reason": "the CameraSetup Wrapper's member over a CameraSetup* Native of the local camera."
+  },
+  {
+    "name": "CameraSetup#destX",
+    "kind": "visual",
+    "reason": "the CameraSetup Wrapper's member over a CameraSetup* Native of the local camera."
+  },
+  {
+    "name": "CameraSetup#destY",
+    "kind": "visual",
+    "reason": "the CameraSetup Wrapper's member over a CameraSetup* Native of the local camera."
+  },
+  {
+    "name": "CameraSetup#label",
+    "kind": "visual",
+    "reason": "the CameraSetup Wrapper's member over a CameraSetup* Native of the local camera."
+  }
+]

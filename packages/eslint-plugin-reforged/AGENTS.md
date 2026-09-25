@@ -66,9 +66,10 @@ The tests run from source. They do not need `build`.
 
 ## Data files
 
-| File                       | Owner       | Shape                             |
-| -------------------------- | ----------- | --------------------------------- |
-| `data/unsafe-natives.json` | this plugin | `[{ name, reason, replacement }]` |
+| File                       | Owner       | Shape                                                                                                                  |
+| -------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `data/unsafe-natives.json` | this plugin | `[{ name, reason, replacement }]`                                                                                      |
+| `data/local-safe.json`     | this plugin | `[{ name, kind: "visual" \| "text", reason }]`; `name` is a Native, `print`, `Class#member` or `Class.member` (static) |
 
 A data file grows by pull request, and every line carries its reason. A review can then challenge one entry. A file with an unexpected shape throws a `DataFileError` at plugin load, naming the file and the field. Changing the shape of a file the plugin reads from another package is a major of this plugin.
 
