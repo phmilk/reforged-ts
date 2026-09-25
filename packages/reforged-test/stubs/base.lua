@@ -30,6 +30,11 @@ function __stub_format(value)
   return tostring(value)
 end
 
+-- The arguments of every recorded call, by Native name: one table.pack'd
+-- list per call, oldest first. The call log renders a function as
+-- <function>; this is where a test finds the very object a Native was given.
+local argumentsByName = {}
+
 -- Appends Name(arg, arg) to the call log. Stub files call this first thing.
 function __stub_record(name, ...)
   local parts = {}
@@ -37,6 +42,22 @@ function __stub_record(name, ...)
     parts[i] = __stub_format((select(i, ...)))
   end
   __stub_calls[#__stub_calls + 1] = name .. "(" .. table.concat(parts, ", ") .. ")"
+  local calls = argumentsByName[name]
+  if calls == nil then
+    calls = {}
+    argumentsByName[name] = calls
+  end
+  calls[#calls + 1] = table.pack(...)
+end
+
+-- The arguments of every recorded call of the Native `name`, oldest first:
+-- a list per call, with `n` its argument count (nil arguments included).
+-- Values are the ones the Native was given, so a test compares them by
+-- identity. An empty list for a Native never called. Not a Native, so it
+-- adds no call-log line.
+function __stub_args(name)
+  local calls = argumentsByName[name] or {}
+  return table.move(calls, 1, #calls, 1, {})
 end
 
 -- A new handle of the given kind with the next id.
@@ -82,6 +103,38 @@ function __stub_with_context(firing, body)
     error(result, 0)
   end
   return result
+end
+
+-- print writes to the capture, not to the terminal: one line per call, its
+-- arguments converted by tostring and joined by a tab, as the standard print
+-- joins them. It is the standard library's, not a Native, so it adds no
+-- call-log line.
+local printed = {}
+
+function print(...)
+  local parts = {}
+  for i = 1, select("#", ...) do
+    parts[i] = tostring((select(i, ...)))
+  end
+  printed[#printed + 1] = table.concat(parts, "\t")
+end
+
+-- The lines print wrote so far, oldest first. Not a Native, so it adds no
+-- call-log line.
+function __stub_printed()
+  return table.move(printed, 1, #printed, 1, {})
+end
+
+-- Enters the globals Init stage as the editor's main does: calls the global
+-- InitGlobals, after defining it as an empty function when nothing defined it
+-- yet. The definition is a plain assignment, so a wrapper the code under test
+-- installs on the first assignment of InitGlobals (the library's) sees it.
+-- Not a Native, so it adds no call-log line.
+function __stub_init_globals()
+  if InitGlobals == nil then
+    InitGlobals = function() end
+  end
+  InitGlobals()
 end
 
 -- Globals the library reads when its modules load. The editor's entry points
