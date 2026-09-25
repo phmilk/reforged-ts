@@ -9,15 +9,11 @@ import { assertNotLocal } from "../reforged/local";
 const registry = new WeakMap<handle, Handle<handle>>();
 
 /**
- * What the release step reads of a destroyed Wrapper before it forgets it:
- * the Handle, the Wrapper's class name and the Handle's id. Read first, so
- * every later part of the step (and a Dev-mode report) names the Wrapper as
- * it was, `Unit#1048577`.
+ * What the release step hands the collections of a destroyed Wrapper: its
+ * Handle, read before the Wrapper forgets it.
  */
 export interface Released {
   readonly handle: handle;
-  readonly className: string;
-  readonly id: number;
 }
 
 /**
@@ -118,33 +114,30 @@ export abstract class Handle<T extends handle> {
 
   /**
    * The release step, shared by every Wrapper: each `destroy()` calls its
-   * Native, then this, and nothing else. It reads the class name and the id,
-   * removes the registry entry for the Handle, so a later lookup of the same
-   * Handle makes a new Wrapper instead of returning this dead one, then
-   * notifies the collections holding the Handle. It is the one place a
+   * Native, then this, and nothing else. It removes the registry entry for
+   * the Handle, so a later lookup of the same Handle makes a new Wrapper
+   * instead of returning this dead one, then notifies the collections
+   * holding the Handle. With Dev mode off that is all: no other Native call
+   * (the zero-cost definition of ADR 0007). It is the one place a
    * destroy-time Guard goes, behind one read of Dev mode; no Wrapper method
-   * carries one. In Dev mode it counts the Wrapper destroyed for
-   * `Reforged.debug`, then turns it into a tombstone (see `entomb`), so every
-   * earlier part reads the Wrapper as it was; inside `MapPlayer.runLocal` it
-   * then raises: a Handle freed on one client desyncs.
+   * carries one. In Dev mode it reads the class name and the id (the id is
+   * still readable after the Native), counts the Wrapper destroyed for
+   * `Reforged.debug`, then turns it into a tombstone (see `entomb`); inside
+   * `MapPlayer.runLocal` it then raises: a Handle freed on one client
+   * desyncs.
    */
   protected release(): void {
-    const released: Released = {
-      handle: this.handle,
-      className: this.constructor.name,
-      id: GetHandleId(this.handle),
-    };
+    const released: Released = { handle: this.handle };
     registry.delete(released.handle);
     for (const listener of releaseListeners) {
       listener(released);
     }
     if (configuration.devMode) {
-      countDestroyed(released.className);
-      entomb(this, `${released.className}#${String(released.id)}`);
-      assertNotLocal(
-        `destroying ${released.className}#${String(released.id)}`,
-        3,
-      );
+      const className = this.constructor.name;
+      const name = `${className}#${String(GetHandleId(released.handle))}`;
+      countDestroyed(className);
+      entomb(this, name);
+      assertNotLocal(`destroying ${name}`, 3);
     }
   }
 

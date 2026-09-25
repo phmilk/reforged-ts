@@ -85,15 +85,7 @@ export interface ReforgedDebug {
    * counted here. The Wrapper counts are a heuristic: only the creations
    * and destructions the library saw.
    * @example
-   * ```ts
-   * Timer.every(1, () => {
-   *   error("tick failed");
-   * });
-   * // After three ticks:
-   * const { failures, wrappers } = Reforged.debug.report();
-   * // failures[0].count === 3
-   * // wrappers[0]: { className: "Timer", created: 1, destroyed: 0, live: 1 }
-   * ```
+   * {@includeCode ../../examples/debug-report.ts}
    */
   report(): DebugReport;
   /**

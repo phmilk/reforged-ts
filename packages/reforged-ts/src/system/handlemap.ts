@@ -35,6 +35,8 @@ interface Entry<K, V> {
  * insertions ran in the same order, which holds when they ran in
  * synchronous code (not inside `MapPlayer.runLocal`).
  *
+ * @example
+ * {@includeCode ../../examples/handle-map-kills.ts}
  * @typeParam K - The Wrapper class of the keys, `Unit` or `Widget`.
  * @typeParam V - The type of the values.
  */
@@ -46,6 +48,21 @@ export class HandleMap<K extends Handle<handle>, V> {
       this.entryOf.delete(handle);
     },
   };
+
+  /**
+   * A map holding `entries`, set in their order, or an empty map: the
+   * constructor of `Map`, so swapping a `Map` keyed by Wrappers for a
+   * `HandleMap` is a change of the class name only.
+   *
+   * @param entries - The first entries, each a key Wrapper and its value.
+   */
+  public constructor(entries?: Iterable<readonly [K, V]> | null) {
+    if (entries !== undefined && entries !== null) {
+      for (const [key, value] of entries) {
+        this.set(key, value);
+      }
+    }
+  }
 
   /**
    * The number of entries.

@@ -25,6 +25,9 @@ import { SortedKeys, type KeyComparator } from "./sortedkeys";
  * deleted before the loop reaches it is skipped, and a value added during
  * the loop is visited by the next one. Iteration sorts once after a burst of
  * mutations, not per insertion.
+ *
+ * @example
+ * {@includeCode ../../examples/synced-map-scores.ts}
  */
 export class SyncedSet<T extends AnyNotNil> {
   private readonly order: SortedKeys<T>;
