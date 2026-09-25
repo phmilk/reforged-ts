@@ -1,7 +1,7 @@
 /** @noSelfInFile */
 
 import { hasRun } from "../init/stages";
-import { Reforged } from "../reforged/index";
+import { configuration } from "../reforged/configuration";
 
 /** The registry: the one Wrapper object for each Handle. */
 const registry = new WeakMap<handle, Handle<handle>>();
@@ -215,7 +215,7 @@ function wrapCreated<C extends Handle<handle>>(
     const suffix = detail === "" ? "" : ` (${detail})`;
     error(`reforged-ts: failed to create ${cls.name}${suffix}`, 2);
   }
-  if (Reforged.devMode && !hasRun("globals")) {
+  if (configuration.devMode && !hasRun("globals")) {
     error(
       `reforged-ts: ${cls.name} created before the globals Init stage: create Handles in Init.onGlobals or a later stage, not at module top level`,
       2,
