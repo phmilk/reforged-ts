@@ -1447,6 +1447,11 @@ export class Unit extends Widget {
     return this.fromHandle(GetFilterUnit());
   }
 
+  /** The unit that killed the dying unit, or undefined when none did. */
+  public static fromKilling(): Unit | undefined {
+    return this.fromHandle(GetKillingUnit());
+  }
+
   public static getPointValueByType(unitType: number) {
     return GetUnitPointValueByType(unitType);
   }
