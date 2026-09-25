@@ -186,50 +186,70 @@ function parseReplacements(
   return list;
 }
 
+/**
+ * The kind of the no-renames marker, `{ kind, versions, note }`: the major
+ * of its version pair renames nothing. It is for the release gate and the
+ * migration page; the rule has nothing to report from it.
+ */
+export const noRenamesKind = "noRenames";
+
 export function parseRenames(json: unknown, file: string): RenameEntry[] {
-  return elements(json, { file, field: "" }).map(({ value, path }) => {
-    const entry = expectObject(value, path);
-    const kind = parseKind(entry, path);
-    const old =
-      kind === "package"
-        ? packageName(entry, "old", path)
-        : expectSymbol(
-            expectString(entry, "old", path),
-            `${path.field}.old`,
-            path,
-            true,
-            "a symbol (`new Unit(...)`, `Group.getEnumUnit`, `main::before`)",
-          );
-    const replacements = parseReplacements(entry, path, kind);
-    const versionsPath = { file, field: `${path.field}.versions` };
-    const versions = expectObject(entry.versions, versionsPath);
-    const version = "a package and its major (`w3ts@3`)";
-    const oneToOne = expectBoolean(entry, "oneToOne", path);
-    if (oneToOne && replacements.length !== 1) {
-      throw new DataFileError(
-        file,
-        `${path.field}.new`,
-        "a single symbol when oneToOne is true",
-      );
-    }
-    return {
-      old,
-      replacements,
-      kind,
-      versions: {
-        from: expectMatch(
-          versions,
-          "from",
-          versionsPath,
-          versionPattern,
-          version,
-        ),
-        to: expectMatch(versions, "to", versionsPath, versionPattern, version),
-      },
-      oneToOne,
-      note: expectString(entry, "note", path),
-    };
-  });
+  return elements(json, { file, field: "" }).flatMap(
+    ({ value, path }): RenameEntry[] => {
+      const entry = expectObject(value, path);
+      if (entry.kind === noRenamesKind) {
+        return [];
+      }
+      const kind = parseKind(entry, path);
+      const old =
+        kind === "package"
+          ? packageName(entry, "old", path)
+          : expectSymbol(
+              expectString(entry, "old", path),
+              `${path.field}.old`,
+              path,
+              true,
+              "a symbol (`new Unit(...)`, `Group.getEnumUnit`, `main::before`)",
+            );
+      const replacements = parseReplacements(entry, path, kind);
+      const versionsPath = { file, field: `${path.field}.versions` };
+      const versions = expectObject(entry.versions, versionsPath);
+      const version = "a package and its major (`w3ts@3`)";
+      const oneToOne = expectBoolean(entry, "oneToOne", path);
+      if (oneToOne && replacements.length !== 1) {
+        throw new DataFileError(
+          file,
+          `${path.field}.new`,
+          "a single symbol when oneToOne is true",
+        );
+      }
+      return [
+        {
+          old,
+          replacements,
+          kind,
+          versions: {
+            from: expectMatch(
+              versions,
+              "from",
+              versionsPath,
+              versionPattern,
+              version,
+            ),
+            to: expectMatch(
+              versions,
+              "to",
+              versionsPath,
+              versionPattern,
+              version,
+            ),
+          },
+          oneToOne,
+          note: expectString(entry, "note", path),
+        },
+      ];
+    },
+  );
 }
 
 /** reforged-ts's rename map, as `no-legacy-w3ts-names` reads it. */

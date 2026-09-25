@@ -34,12 +34,31 @@ export interface RenameEntry {
   note: string;
 }
 
-const validate = new Ajv2020({ allErrors: true }).compile<RenameEntry[]>(
+/**
+ * The no-renames marker: the major of the version pair removes and renames
+ * nothing. It stands in for the pair's entries.
+ */
+export interface NoRenamesMarker {
+  kind: "noRenames";
+  versions: { from: string; to: string };
+  note: string;
+}
+
+/** One item of the rename map: an entry, or the marker of a pair. */
+export type RenameMapItem = RenameEntry | NoRenamesMarker;
+
+export function isNoRenamesMarker(
+  item: RenameMapItem,
+): item is NoRenamesMarker {
+  return item.kind === "noRenames";
+}
+
+const validate = new Ajv2020({ allErrors: true }).compile<RenameMapItem[]>(
   JSON.parse(readFileSync(schemaFile, "utf8")) as SchemaObject,
 );
 
 /** Parses the text of a rename map; throws when it does not match the schema. */
-export function parseRenames(text: string): RenameEntry[] {
+export function parseRenames(text: string): RenameMapItem[] {
   const map: unknown = JSON.parse(text);
   if (!validate(map)) {
     const errors = (validate.errors ?? [])
@@ -50,9 +69,16 @@ export function parseRenames(text: string): RenameEntry[] {
   return map;
 }
 
-/** Reads and validates the package's migration/renames.json. */
-export async function loadRenames(): Promise<RenameEntry[]> {
+/** Reads and validates the package's migration/renames.json, markers included. */
+export async function loadRenameMap(): Promise<RenameMapItem[]> {
   return parseRenames(await readFile(mapFile, "utf8"));
+}
+
+/** The entries of the package's migration/renames.json, without the markers. */
+export async function loadRenames(): Promise<RenameEntry[]> {
+  return (await loadRenameMap()).filter(
+    (item): item is RenameEntry => !isNoRenamesMarker(item),
+  );
 }
 
 /**
