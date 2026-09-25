@@ -27,8 +27,13 @@ export interface ChangesetCheckResult {
 
 /**
  * A changed package is covered by a changeset that names it, whatever its
- * bump, or by an empty changeset, which declares that the pull request
- * publishes nothing. Files outside the publishable packages never need one.
+ * bump, or by an empty changeset, which covers every changed package. Files
+ * outside the publishable packages never need one.
+ *
+ * The empty changeset is the author's statement that nothing publishable
+ * changed (a comment or a test inside a package folder): the script cannot
+ * tell such a change from one that ships, so it takes the statement, and
+ * review is the check (docs/release.md, "The empty changeset").
  */
 export function checkChangeset(
   input: ChangesetCheckInput,
