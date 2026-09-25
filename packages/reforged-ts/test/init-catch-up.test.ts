@@ -14,7 +14,10 @@ import { Init } from "../src/init/index";
 declare const config: () => void;
 declare const main: () => void;
 
-/** A callback that logs `text` and the stage running when it runs. */
+/**
+ * A callback that logs `text` and the stage running when it runs: not the
+ * shared `mark`, which does not read `Init.current`.
+ */
 function mark(text: string): () => void {
   return () => {
     editorLog.push(`${text} during ${Init.current ?? "none"}`);

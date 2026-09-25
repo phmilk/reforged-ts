@@ -16,20 +16,11 @@ import {
 } from "./support/header-position-with-metatable";
 import { describe, expect, it } from "reforged-test/lua";
 import { Init } from "../src/init/index";
-import { defineEditorScript } from "./support/editor-script";
+import { defineEditorScript, globals, mark } from "./support/editor-script";
 import { reloadModules } from "./support/reload";
 
 declare const config: () => void;
 declare const main: () => void;
-
-const globals = _G as unknown as Record<string, unknown>;
-
-/** A callback that logs `text` when it runs. */
-function mark(text: string): () => void {
-  return () => {
-    editorLog.push(text);
-  };
-}
 
 describe("Init in the header position with the map's _G metatable", () => {
   it("lets the map's metatable see other keys while the library's names are pending, also after a second load", () => {

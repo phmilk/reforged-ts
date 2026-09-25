@@ -12,26 +12,13 @@
 // points when it loads, and this file defines them.
 import { editorLog } from "./support/bundle-position";
 import { describe, expect, it } from "reforged-test/lua";
-import { Init, type InitStage } from "../src/init/index";
+import { Init } from "../src/init/index";
 import { onStage } from "../src/init/stages";
+import { mark, stages } from "./support/editor-script";
 import { withPrint } from "./support/print-capture";
 
 declare const config: () => void;
 declare const main: () => void;
-
-const stages: readonly InitStage[] = [
-  "globals",
-  "triggers",
-  "initTriggers",
-  "gameStart",
-];
-
-/** A callback that logs `text` when it runs. */
-function mark(text: string): () => void {
-  return () => {
-    editorLog.push(text);
-  };
-}
 
 /** What the library printed while the editor's script ran. */
 let printed: string[] = [];
