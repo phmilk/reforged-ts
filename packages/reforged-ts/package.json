@@ -21,6 +21,9 @@
   "engines": {
     "node": ">=22.13"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "reforged": {
     "patch": "3.0.0.24268"
   },
@@ -39,8 +42,8 @@
     "test": "vitest run --root ../.. --project reforged-ts --project reforged-ts-node"
   },
   "peerDependencies": {
-    "reforged-test": "^1.0.0",
-    "reforged-types": "^1.0.0"
+    "reforged-test": "workspace:^",
+    "reforged-types": "workspace:^"
   },
   "peerDependenciesMeta": {
     "reforged-test": {
@@ -52,8 +55,8 @@
     "@typescript-to-lua/language-extensions": "catalog:",
     "ajv": "catalog:",
     "lua-types": "catalog:",
-    "reforged-test": "workspace:*",
-    "reforged-types": "workspace:*",
+    "reforged-test": "workspace:^",
+    "reforged-types": "workspace:^",
     "typescript": "catalog:",
     "typescript-to-lua": "catalog:",
     "vitest": "catalog:"

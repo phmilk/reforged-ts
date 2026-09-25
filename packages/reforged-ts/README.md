@@ -6,6 +6,10 @@ A fork of [cipherxof/w3ts](https://github.com/cipherxof/w3ts) targeting Warcraft
 
 **Supported Patch: 3.0.0.24268** (Game version 3.0.0). The `reforged.patch` field of `package.json` carries the same Build.
 
+<!-- Placeholder link: the docs site (#40) replaces it with the llms.txt of this version. -->
+
+**For AI agents:** the documentation of this version, as one plain-text file for a language model, is [llms.txt](https://phmilk.github.io/reforged-ts/llms.txt).
+
 ## Status
 
 Alpha. The 1.0.0 line is under construction: expect API changes until the migration steps to the 3.0.0 API land.
@@ -16,7 +20,7 @@ Alpha. The 1.0.0 line is under construction: expect API changes until the migrat
 npm install reforged-ts reforged-types
 ```
 
-or `pnpm add reforged-ts reforged-types`. `reforged-types` is a peer dependency: it holds the Typings of the game's Natives.
+or `pnpm add reforged-ts reforged-types`. `reforged-types` is a peer dependency: it holds the Typings of the game's Natives. `reforged-test` is an optional peer dependency, for a Map project that runs its tests on Lua outside the game. Each peer range is a caret on the version the library was released with, so your package manager warns when a major does not match.
 
 Add the typescript-to-lua language extensions and the Typings of your Game version to `types` in the Map project's `tsconfig.json`:
 

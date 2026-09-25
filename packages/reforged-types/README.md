@@ -4,6 +4,10 @@ TypeScript declarations for the Natives of Warcraft III Reforged, generated from
 
 **Supported Patch: 3.0.0.24268** (Game version 3.0.0). The `reforged.patch` field of `package.json` carries the same Build.
 
+<!-- Placeholder link: the docs site (#40) replaces it with the llms.txt of this version. -->
+
+**For AI agents:** the documentation of this version, as one plain-text file for a language model, is [llms.txt](https://phmilk.github.io/reforged-ts/llms.txt).
+
 ## Usage
 
 ```sh
