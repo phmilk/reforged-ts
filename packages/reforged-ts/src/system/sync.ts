@@ -146,7 +146,9 @@ function readPacket(
  *
  * The data is split by byte, so a multi-byte character may straddle two
  * chunks; the chunks are joined before the request resolves. A request whose
- * data fits one chunk is chunk zero of one.
+ * data fits one chunk is chunk zero of one. The chunks go out raw, and the
+ * game cuts a packet at its first zero byte, so the sender's data must hold
+ * none: encode binary data first, for example with `base64Encode`.
  *
  * A packet with another prefix, a header that does not decode, a chunk index
  * out of range, an id with no pending request, a sender other than the
@@ -231,9 +233,10 @@ export class SyncRequest {
   }
 
   /**
-   * Creates a request and starts it.
+   * Creates a request and starts it; throws as `start` does.
    * @param from The player whose client sends the data.
-   * @param data The data to send; ignored on the other clients.
+   * @param data The data to send, with no zero byte; ignored on the other
+   * clients.
    * @param options The timeout; none by default.
    */
   public static send(
@@ -241,6 +244,8 @@ export class SyncRequest {
     data: string,
     options?: SyncOptions,
   ): Promise<SyncResponse> {
+    // A tail call on purpose: it drops this frame, so the errors `start`
+    // raises point at the caller of `send`.
     return new SyncRequest(from, options).start(data);
   }
 
@@ -255,7 +260,11 @@ export class SyncRequest {
   /**
    * Starts the request: the sender's client sends the data, one packet per
    * chunk, in order. Call it once per request, on every client.
-   * @param data The data to send; ignored on the other clients.
+   *
+   * Throws, before the request starts, on a second call, and on the sender's
+   * client when the data holds a zero byte or needs more than 65,535 chunks.
+   * @param data The data to send, with no zero byte (encode binary data
+   * first, for example with `base64Encode`); ignored on the other clients.
    * @returns A `Promise` that resolves with the sender's data when every
    * chunk has arrived, and rejects with a message naming the request on a
    * timeout, a cancellation or a packet the game refused to send.
@@ -267,6 +276,8 @@ export class SyncRequest {
         2,
       );
     }
+    const sending = this.from === MapPlayer.fromLocal();
+    const count = sending ? this.chunksOf(data) : 0;
     const promise = new Promise<SyncResponse>((resolve, reject) => {
       this.resolve = resolve;
       this.reject = reject;
@@ -275,7 +286,7 @@ export class SyncRequest {
     this._status = SyncStatus.Syncing;
     SyncRequest.pending.set(this.id, this);
 
-    if (this.from === MapPlayer.fromLocal() && !this.sendChunks(data)) {
+    if (sending && !this.sendChunks(data, count)) {
       this.fail(SyncStatus.NetworkError, "could not be sent (network error)");
       return promise;
     }
@@ -293,10 +304,11 @@ export class SyncRequest {
   }
 
   /**
-   * Sends `data`, one packet per chunk, in order; false when the game refused
-   * a packet, and nothing is sent after it.
+   * The chunks `data` splits into; throws, pointing at the caller of `start`,
+   * when the data needs more chunks than a request carries or holds a zero
+   * byte, which the game would cut the packet at.
    */
-  private sendChunks(data: string): boolean {
+  private chunksOf(data: string): number {
     const count = Math.max(1, Math.ceil(data.length / CHUNK_SIZE));
     if (count > MAX_CHUNKS) {
       error(
@@ -304,6 +316,21 @@ export class SyncRequest {
         3,
       );
     }
+    const zero = data.indexOf("\0");
+    if (zero >= 0) {
+      error(
+        `reforged-ts: sync request ${String(this.id)} has a zero byte at position ${String(zero)}: encode binary data first, for example with base64Encode`,
+        3,
+      );
+    }
+    return count;
+  }
+
+  /**
+   * Sends `data` in `count` chunks, one packet each, in order; false when the
+   * game refused a packet, and nothing is sent after it.
+   */
+  private sendChunks(data: string, count: number): boolean {
     for (let index = 0; index < count; index++) {
       const chunk = string.sub(
         data,
