@@ -63,6 +63,16 @@ export default defineConfig({
           environment: "node",
         },
       },
+      {
+        // The release scripts, in Node, through their programmatic entry
+        // points, on fixture workspaces and repositories the tests create.
+        test: {
+          name: "release",
+          root: "release",
+          include: ["test/**/*.test.ts"],
+          environment: "node",
+        },
+      },
     ],
     // Neither the library's Lua tests nor the sources, fixtures and rename
     // map the Node tests read are in the vitest module graph: a change to one
