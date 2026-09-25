@@ -10,88 +10,62 @@ import { BinaryReader } from "./binaryreader";
 import { BinaryWriter } from "./binarywriter";
 import { getElapsedTime } from "./gametime";
 
-const SYNC_PREFIX = "T";
-const SYNC_PREFIX_CHUNK = "S";
-const SYNC_MAX_CHUNK_SIZE = 244;
+/** The sync prefix of every packet the System sends. */
+const SYNC_PREFIX = "rts";
+
+/** The header's length in characters: six bytes, base64-encoded. */
+const HEADER_LENGTH = 8;
+
+/** A character of the base64 alphabet: the header has eight, no padding. */
+const BASE64_CHARACTER = "[A-Za-z0-9+/]";
+
+/** The bytes of data one packet carries after its header. */
+const CHUNK_SIZE = 244;
+
+/** Request ids, chunk indexes and chunk counts are unsigned 16-bit fields. */
+const FIELD_LIMIT = 0x10000;
+
+/** The most chunks one request can be split into. */
+const MAX_CHUNKS = FIELD_LIMIT - 1;
+
+/**
+ * Packets ignored so far: the wrong prefix, a header that does not decode, a
+ * chunk index out of range, an id with no pending request, the wrong sender,
+ * or a chunk already received. Kept for the debug namespace (#52).
+ */
+const ignored = { packets: 0 };
 
 export const enum SyncStatus {
+  /** Created, not started. */
   None,
+  /** Started, waiting for its packets. */
   Syncing,
+  /** Every packet arrived: the `Promise` resolved. */
   Success,
+  /** The timeout expired first: the `Promise` rejected. */
   Timeout,
+  /** `cancel` ran first: the `Promise` rejected. */
+  Cancelled,
+  /** `BlzSendSyncData` refused a packet: the `Promise` rejected. */
+  NetworkError,
 }
 
-export interface ISyncResponse {
-  data: string;
-  status: SyncStatus;
-  time: number;
+/** What a sync request resolves with. */
+export interface SyncResponse {
+  /** The data the sender's client started the request with, joined. */
+  readonly data: string;
+  /** The sender, read from the event of the last packet to arrive. */
+  readonly from: MapPlayer;
+  /** The elapsed game time when the last packet arrived. */
+  readonly time: number;
+  /** The request that resolved. */
+  readonly request: SyncRequest;
 }
 
-export interface ISyncOptions {
-  timeout: number;
-}
-
-export type SyncCallback = (res: ISyncResponse, req: SyncRequest) => void;
-
-class SyncIncomingPacket {
-  public readonly chunk: number;
-
-  public readonly chunks: number;
-
-  public readonly data: string;
-
-  public readonly req: SyncRequest;
-
-  public constructor(prefix: string, data: string) {
-    const isChunk = prefix === SYNC_PREFIX_CHUNK;
-    const header = base64Decode(
-      // eslint-disable-next-line @typescript-eslint/no-deprecated -- substr; step 6 (#53) removes it
-      isChunk ? data.substr(0, 10) : data.substr(0, 5),
-    );
-    const reader = new BinaryReader(header);
-    const id = reader.readUInt16();
-    this.req = SyncRequest.fromIndex(id);
-    this.chunks = isChunk ? reader.readUInt16() : 0;
-    this.chunk = isChunk ? reader.readUInt16() : 0;
-    // eslint-disable-next-line @typescript-eslint/no-deprecated -- substr; step 6 (#53) removes it
-    this.data = isChunk ? data.substr(10) : data.substr(5);
-  }
-}
-
-class SyncOutgoingPacket {
-  public readonly chunk: number;
-
-  public readonly chunks: number;
-
-  public readonly data: string;
-
-  public readonly req: SyncRequest;
-
-  public constructor(
-    req: SyncRequest,
-    data: string,
-    chunk = -1,
-    totalChunks = 0,
-  ) {
-    this.req = req;
-    this.data = data;
-    this.chunk = chunk;
-    this.chunks = totalChunks;
-  }
-
-  public getHeader() {
-    const writer = new BinaryWriter();
-    writer.writeUInt16(this.req.id);
-    if (this.chunk !== -1) {
-      writer.writeUInt16(this.chunks);
-      writer.writeUInt16(this.chunk);
-    }
-    return base64Encode(writer.toString());
-  }
-
-  public toString() {
-    return this.getHeader() + this.data;
-  }
+/** The options of a sync request. */
+export interface SyncOptions {
+  /** Seconds before a pending request rejects; zero, the default, never. */
+  readonly timeout?: number;
 }
 
 /**
@@ -102,55 +76,121 @@ function playerOfSlot(index: number): MapPlayer | undefined {
   return Players[index] ?? MapPlayer.fromIndex(index);
 }
 
+/** The header of chunk `index` of `count` of request `id`. */
+function writeHeader(id: number, index: number, count: number): string {
+  const writer = new BinaryWriter();
+  writer.writeUInt16(id);
+  writer.writeUInt16(index);
+  writer.writeUInt16(count);
+  return base64Encode(writer.toString());
+}
+
+/** A packet the System sent, read. */
+interface Packet {
+  readonly id: number;
+  readonly index: number;
+  readonly count: number;
+  readonly chunk: string;
+}
+
 /**
- * A system which provides an easy way to synchronize data between game clients.
- * The data will be split into chunks and sent in order until all of them are recieved by
- * every player. Splitting the data is required as `BlzSendSyncData` only allows 255 characters
- * per request.
+ * The fields of a packet, or undefined when the packet is not one the System
+ * sent. The header is checked against the base64 alphabet before it is
+ * decoded, so corruption is ignored, not thrown.
+ */
+function readPacket(
+  prefix: string | undefined,
+  data: string | undefined,
+): Packet | undefined {
+  if (prefix !== SYNC_PREFIX || data === undefined) {
+    return undefined;
+  }
+  const header = string.sub(data, 1, HEADER_LENGTH);
+  const [, valid] = string.gsub(header, BASE64_CHARACTER, "");
+  if (valid !== HEADER_LENGTH) {
+    return undefined;
+  }
+  const reader = new BinaryReader(base64Decode(header));
+  const id = reader.readUInt16();
+  const index = reader.readUInt16();
+  const count = reader.readUInt16();
+  if (index >= count) {
+    return undefined;
+  }
+  return { id, index, count, chunk: string.sub(data, HEADER_LENGTH + 1) };
+}
+
+/**
+ * Makes data only one client has, such as the contents of a file or a local
+ * measurement, known to every client. `start` returns a `Promise` that
+ * resolves on every client with the sender's data once all of it has arrived.
+ *
+ * Every client runs the same code, so every client creates the same requests
+ * in the same order and allocates them the same ids: the ids are a 16-bit
+ * counter that wraps around, and a request is matched to its packets by id.
+ * Create and start a request on every client, with any data on the clients
+ * other than the sender's; only the sender's client sends.
+ *
+ * The data is split into packets of `BlzSendSyncData`, all with the sync
+ * prefix `"rts"`. Map projects should pick a different prefix for their own
+ * sync traffic. A packet is the header then a chunk of the data, at most 252
+ * characters, under the Native's limit of 255:
+ *
+ * | Field       | Size           | Content                                        |
+ * | ----------- | -------------- | ---------------------------------------------- |
+ * | Request id  | 2 bytes        | Unsigned 16-bit, big-endian                    |
+ * | Chunk index | 2 bytes        | Unsigned 16-bit, big-endian, from zero         |
+ * | Chunk count | 2 bytes        | Unsigned 16-bit, big-endian, at least one      |
+ * | Header      | 8 characters   | The three fields above, base64-encoded         |
+ * | Chunk       | 0 to 244 bytes | The data's bytes from `index * 244`, raw       |
+ *
+ * The data is split by byte, so a multi-byte character may straddle two
+ * chunks; the chunks are joined before the request resolves. A request whose
+ * data fits one chunk is chunk zero of one.
+ *
+ * A packet with another prefix, a header that does not decode, a chunk index
+ * out of range, an id with no pending request, a sender other than the
+ * request's, or a chunk already received is ignored.
  *
  * @example
- * ```ts
- * const data = File.read("savecode.txt");
- *
- * // Synchronize the contents of the file from the first player's computer.
- * new SyncRequest(Players[0], data).then((res, req) => {
- *  print(res.data);
- * });
- * ```
+ * {@includeCode ../../examples/sync-request-send.ts}
  */
 export class SyncRequest {
+  /** The player whose client sends the data. */
   public readonly from: MapPlayer;
 
+  /** The id the request's packets carry: the same on every client. */
   public readonly id: number;
 
-  public readonly options: ISyncOptions;
+  /** The options the request was created with. */
+  public readonly options: SyncOptions;
 
   private _startTime = 0;
 
-  private chunks: string[] = [];
+  private _status = SyncStatus.None;
 
-  private currentChunk = 0;
+  /** The chunks received, by index. */
+  private readonly chunks = new LuaMap<number, string>();
 
-  private destroyed = false;
+  /** How many chunks the sender split the data into: known from the first. */
+  private chunkCount?: number;
 
-  private onError?: SyncCallback;
+  private received = 0;
 
-  private onResponse?: SyncCallback;
+  private resolve?: (response: SyncResponse) => void;
 
-  private status: SyncStatus = SyncStatus.None;
+  private reject?: (reason: string) => void;
 
-  private static readonly cache: SyncRequest[] = [];
+  private timer?: Timer;
 
-  private static counter = 0;
+  /** The started requests that have not settled, by id. */
+  private static readonly pending = new LuaMap<number, SyncRequest>();
 
-  private static defaultOptions: ISyncOptions = { timeout: 0 };
+  /** The id of the last request created. */
+  private static lastId = 0;
 
   /** The Trigger every sync event is registered on: born at the `globals` stage. */
   private static eventTrigger?: Trigger;
-
-  private static index = 0;
-
-  private static indicies: number[] = [];
 
   // The library's own `globals` callback: the Trigger and its events are
   // born after `InitGlobals`, not at class definition, so requiring the
@@ -168,167 +208,175 @@ export class SyncRequest {
   }
 
   /**
-   * Creates a new sync request.
-   * @param from The player to send the data from.
+   * Creates a request, which sends nothing until `start`.
+   * @param from The player whose client sends the data.
+   * @param options The timeout; none by default.
    */
-  constructor(from: MapPlayer);
-
-  /**
-   * Creates a new sync request and immediately attempts to send the data.
-   * @param from The player to send the data from.
-   * @param data The data to send.
-   */
-  // eslint-disable-next-line @typescript-eslint/unified-signatures -- the data-taking SyncRequest constructor overloads; step 6 (#53) removes it
-  constructor(from: MapPlayer, data: string);
-
-  /**
-   * Creates a new sync request. The data will be sent immediately if `data` is not empty.
-   * @param from The player to send the data from.
-   * @param data The data to send.
-   * @param options The options of the request such as timeout.
-   */
-  constructor(from: MapPlayer, data?: string, options?: ISyncOptions) {
-    // initialize
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- rewriting the default changes the emitted Lua; step 6 (#53) removes it
-    this.options = !options ? SyncRequest.defaultOptions : options;
+  public constructor(from: MapPlayer, options: SyncOptions = {}) {
     this.from = from;
-
-    // TODO: test this change
-    this.id = SyncRequest.allocate();
-
-    SyncRequest.indicies[this.id] = -1;
-    SyncRequest.cache[this.id] = this;
+    this.options = options;
+    SyncRequest.lastId = (SyncRequest.lastId + 1) % FIELD_LIMIT;
+    this.id = SyncRequest.lastId;
     SyncRequest.init();
-
-    if (typeof data === "string") {
-      this.start(data);
-    }
   }
 
-  /**
-   * Get the time that the sync request started syncing.
-   */
-  public get startTime() {
+  /** The elapsed game time when the request started. */
+  public get startTime(): number {
     return this._startTime;
   }
 
-  /**
-   * Sets the callback for when a request failed.
-   * @param callback
-   */
-  public catch(callback: SyncCallback) {
-    this.onError = callback;
-    return this;
+  /** Where the request stands. */
+  public get status(): SyncStatus {
+    return this._status;
   }
 
   /**
-   * Recycles the request index and prevents it from sending any more data.
+   * Creates a request and starts it.
+   * @param from The player whose client sends the data.
+   * @param data The data to send; ignored on the other clients.
+   * @param options The timeout; none by default.
    */
-  public destroy() {
-    SyncRequest.indicies[this.id] = SyncRequest.index;
-    SyncRequest.index = this.id;
-    this.destroyed = true;
+  public static send(
+    from: MapPlayer,
+    data: string,
+    options?: SyncOptions,
+  ): Promise<SyncResponse> {
+    return new SyncRequest(from, options).start(data);
   }
 
   /**
-   * Start syncing
-   * @param data The data to sync. If data was passed to the constructor then nothing will happen.
+   * Rejects the request's `Promise` if it is still syncing; does nothing on a
+   * request not started or already settled.
    */
-  public start(data: string) {
-    if (this.status !== SyncStatus.None || this.destroyed) {
-      return false;
+  public cancel(): void {
+    this.fail(SyncStatus.Cancelled, "was cancelled");
+  }
+
+  /**
+   * Starts the request: the sender's client sends the data, one packet per
+   * chunk, in order. Call it once per request, on every client.
+   * @param data The data to send; ignored on the other clients.
+   * @returns A `Promise` that resolves with the sender's data when every
+   * chunk has arrived, and rejects with a message naming the request on a
+   * timeout, a cancellation or a packet the game refused to send.
+   */
+  public start(data: string): Promise<SyncResponse> {
+    if (this._status !== SyncStatus.None) {
+      error(
+        `reforged-ts: sync request ${String(this.id)} was already started`,
+        2,
+      );
     }
-
-    // start syncing
-    this.currentChunk = 0;
-
-    if (data.length <= SYNC_MAX_CHUNK_SIZE) {
-      this.send(new SyncOutgoingPacket(this, data));
-    } else {
-      // if the data is too long then send it over multiple packets
-      const chunks = Math.floor(data.length / SYNC_MAX_CHUNK_SIZE);
-      for (let i = 0; i <= chunks; i++) {
-        this.send(
-          new SyncOutgoingPacket(
-            this,
-            // eslint-disable-next-line @typescript-eslint/no-deprecated -- substr; step 6 (#53) removes it
-            data.substr(i * SYNC_MAX_CHUNK_SIZE, SYNC_MAX_CHUNK_SIZE),
-            i,
-            chunks,
-          ),
-        );
-      }
-    }
-
+    const promise = new Promise<SyncResponse>((resolve, reject) => {
+      this.resolve = resolve;
+      this.reject = reject;
+    });
     this._startTime = getElapsedTime();
-    this.status = SyncStatus.Syncing;
+    this._status = SyncStatus.Syncing;
+    SyncRequest.pending.set(this.id, this);
 
-    // handle timeout
-    if (this.options.timeout > 0) {
-      Timer.create().start(this.options.timeout, false, (timer) => {
-        timer.destroy();
-        if (this.onError && this.status === SyncStatus.Syncing) {
-          this.onError(
-            {
-              data: "Timeout",
-              status: SyncStatus.Timeout,
-              time: this.startTime,
-            },
-            this,
-          );
-        }
+    if (this.from === MapPlayer.fromLocal() && !this.sendChunks(data)) {
+      this.fail(SyncStatus.NetworkError, "could not be sent (network error)");
+      return promise;
+    }
+
+    const timeout = this.options.timeout ?? 0;
+    if (timeout > 0) {
+      this.timer = Timer.create().start(timeout, false, () => {
+        this.fail(
+          SyncStatus.Timeout,
+          `timed out after ${String(timeout)} seconds`,
+        );
       });
     }
+    return promise;
+  }
 
+  /**
+   * Sends `data`, one packet per chunk, in order; false when the game refused
+   * a packet, and nothing is sent after it.
+   */
+  private sendChunks(data: string): boolean {
+    const count = Math.max(1, Math.ceil(data.length / CHUNK_SIZE));
+    if (count > MAX_CHUNKS) {
+      error(
+        `reforged-ts: sync request ${String(this.id)} has ${String(data.length)} bytes, more than the ${String(MAX_CHUNKS * CHUNK_SIZE)} a request carries`,
+        3,
+      );
+    }
+    for (let index = 0; index < count; index++) {
+      const chunk = string.sub(
+        data,
+        index * CHUNK_SIZE + 1,
+        (index + 1) * CHUNK_SIZE,
+      );
+      if (
+        !BlzSendSyncData(
+          SYNC_PREFIX,
+          writeHeader(this.id, index, count) + chunk,
+        )
+      ) {
+        return false;
+      }
+    }
     return true;
   }
 
   /**
-   * Sets the callback for when a request has sucessfully synchronized.
-   * @param callback
+   * Stores a chunk and resolves when it was the last one; false for a packet
+   * this request ignores.
    */
-  public then(callback: SyncCallback) {
-    this.onResponse = callback;
-    return this;
-  }
-
-  /**
-   * Allocates a unique index.
-   */
-  private static allocate() {
-    if (SyncRequest.index !== 0) {
-      const id = SyncRequest.index;
-      SyncRequest.index = SyncRequest.indicies[id];
-      return id;
-    }
-    SyncRequest.counter++;
-    return SyncRequest.counter;
-  }
-
-  /**
-   * Encode and send the data from the correct player.
-   * @param data
-   */
-  private send(packet: SyncOutgoingPacket) {
-    const prefix = packet.chunk === -1 ? SYNC_PREFIX : SYNC_PREFIX_CHUNK;
+  private receive(packet: Packet, sender: MapPlayer | undefined): boolean {
+    const { index, count } = packet;
     if (
-      this.from === MapPlayer.fromLocal() &&
-      !BlzSendSyncData(prefix, packet.toString())
+      sender !== this.from ||
+      (this.chunkCount ?? count) !== count ||
+      this.chunks.has(index)
     ) {
-      print("SyncData: Network Error");
+      return false;
     }
+    this.chunkCount = count;
+    this.chunks.set(index, packet.chunk);
+    this.received++;
+    if (this.received === count) {
+      const parts: string[] = [];
+      for (let i = 0; i < count; i++) {
+        parts.push(this.chunks.get(i) ?? "");
+      }
+      const resolve = this.resolve;
+      this.settle(SyncStatus.Success);
+      resolve?.({
+        data: parts.join(""),
+        from: sender,
+        time: getElapsedTime(),
+        request: this,
+      });
+    }
+    return true;
+  }
+
+  /** Rejects with the cause if the request is syncing. */
+  private fail(status: SyncStatus, cause: string): void {
+    if (this._status !== SyncStatus.Syncing) {
+      return;
+    }
+    const reject = this.reject;
+    this.settle(status);
+    reject?.(`reforged-ts: sync request ${String(this.id)} ${cause}`);
+  }
+
+  /** Ends the request: no longer pending, its timeout destroyed. */
+  private settle(status: SyncStatus): void {
+    this._status = status;
+    SyncRequest.pending.delete(this.id);
+    this.timer?.destroy();
+    this.timer = undefined;
+    this.resolve = undefined;
+    this.reject = undefined;
   }
 
   /**
-   * Retrieve a request based on it's index
-   * @param index The request index
-   */
-  public static fromIndex(index: number) {
-    return this.cache[index];
-  }
-
-  /**
-   * Creates the Trigger and registers both sync prefixes for every playing
+   * Creates the Trigger and registers the sync prefix for every playing
    * user slot, once: the `globals` stage does it, and a request made before
    * that does it on the way. The slot's `MapPlayer` is the `Players` entry,
    * or a lookup when `Players` is still empty.
@@ -346,7 +394,6 @@ export class SyncRequest {
         p.slotState === PLAYER_SLOT_STATE_PLAYING
       ) {
         trigger.registerPlayerSyncEvent(p, SYNC_PREFIX, false);
-        trigger.registerPlayerSyncEvent(p, SYNC_PREFIX_CHUNK, false);
       }
     }
     trigger.addAction(() => {
@@ -354,34 +401,15 @@ export class SyncRequest {
     });
   }
 
-  /**
-   * Handler for all sync responses
-   */
+  /** Hands a packet to its pending request, or counts it as ignored. */
   private static onSync() {
-    const syncPrefix = BlzGetTriggerSyncPrefix();
-    const syncData = BlzGetTriggerSyncData();
-    if (syncPrefix === undefined || syncData === undefined) return;
-
-    const packet = new SyncIncomingPacket(syncPrefix, syncData);
-
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- a packet check the types call unnecessary; step 6 (#53) removes it
-    if (packet.req === undefined) {
-      return;
-    }
-
-    packet.req.currentChunk++;
-    packet.req.chunks[packet.chunk] = packet.data;
-
-    if (packet.chunk >= packet.chunks) {
-      if (packet.req.onResponse) {
-        const data = packet.req.chunks.join("");
-        const status = SyncStatus.Success;
-        packet.req.status = SyncStatus.Success;
-        packet.req.onResponse(
-          { data, status, time: getElapsedTime() },
-          packet.req,
-        );
-      }
+    const packet = readPacket(
+      BlzGetTriggerSyncPrefix(),
+      BlzGetTriggerSyncData(),
+    );
+    const request = packet && this.pending.get(packet.id);
+    if (!packet || !request?.receive(packet, MapPlayer.fromEvent())) {
+      ignored.packets++;
     }
   }
 }
