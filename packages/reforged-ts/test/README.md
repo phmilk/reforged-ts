@@ -25,6 +25,41 @@ Written as the [reforged-test README](../../reforged-test/README.md) describes: 
 
 Stub helpers the tests call (`__stub_fire_trigger`, `__stub_fire_timer`, `__stub_record`) are declared in `stubs.d.ts`, with `StubContext`, the firing context `__stub_fire_trigger` takes: keyed by response Native name, each value typed as that Native returns it (`{ GetTriggerUnit: unit.handle, GetEventDamage: 25 }`), so a misspelt Native or a wrong value is a compile error.
 
+### Firing triggers and timers
+
+A trigger or a timer never fires on its own on the harness; a test fires it with the stub helpers, which are not Natives and add no call-log line:
+
+- `__stub_fire_trigger(trigger.handle, context?)` fires the trigger as one event would. For the length of the firing every response Native answers the context's value for its name, and nil for a name the context leaves out (`GetTriggeringTrigger` included: put it in the context when the code reads it). Every condition runs, in added order, then the actions, in added order, only if every condition returned true; it returns whether the actions ran. A disabled trigger does not fire, and firing a destroyed one throws `was destroyed`, which is how a test sees that `destroy()` ended a Subscription. A firing inside an action has its own context, and the outer one is back when it ends.
+- `__stub_fire_timer(timer.handle)` runs the handler `TimerStart` stored for the timer, once, with `GetExpiredTimer` answering that timer inside it. Firing a timer never started, or destroyed, throws, so "fires once, then is destroyed" is a second firing that throws.
+
+A test observes the registrations and the wrapping in the call log: every `TriggerRegister*` stub records one argument per parameter, an omitted filter as `nil`, and `Condition` and `Filter` each return a new `conditionfunc` or `filterfunc` handle, so `TriggerAddCondition(trigger#…, conditionfunc#…)` shows that a plain function was wrapped. The event constants (`EVENT_PLAYER_UNIT_DEATH`, `FRAMEEVENT_CONTROL_CLICK`, `OSKEY_A`, `ATTACK_TYPE_HERO`) are defined on the harness, render by name and compare by identity. The [reforged-test README](../../reforged-test/README.md) lists the response Natives a context can answer; for another one, `withNative` or a new stub in reforged-test.
+
+### The descriptor suites
+
+The Event descriptors are tested from a table, one file per group or namespace under `events/` (`events/unit-death.test.ts`, `events/player.test.ts`). A file calls `describeDescriptor` once per descriptor, a namespace member or an `Of` twin called with its Unit, or a parameterised member called with its arguments:
+
+```ts
+describeDescriptor({
+  name: "UnitEvents.attacked", // the event name its required errors carry
+  descriptor: UnitEvents.attacked,
+  registers: (trigger) =>
+    everySlot(
+      (player) =>
+        `TriggerRegisterPlayerUnitEvent(${trigger}, ${player}, EVENT_PLAYER_UNIT_ATTACKED, nil)`,
+    ),
+  context: { GetTriggerUnit: target.handle, GetAttacker: attacker.handle },
+  payload: { unit: target, attacker },
+  required: [
+    ["unit", "GetTriggerUnit"],
+    ["attacker", "GetAttacker"],
+  ],
+});
+```
+
+Each case subscribes through `on()` and checks what the game would observe: one `CreateTrigger` per call and exactly the `registers` lines on that Trigger; the payload of a firing with `context`, every field by identity (a Wrapper is the registry's object); each `optional` field `undefined` when its Native answers nothing; each `required` field raising `reforged-ts: missing <field> in the <name> payload` when its Native answers nothing; `when` returning false keeping the handler from running, and returning true letting it run with the payload read again; `destroy()` destroying its own Trigger and no other; and the `damage` flag equal to the case's. `title` names the suite when two cases share one member (`RegionEvents.enter` with and without a filter). A case the table cannot state, such as a filter given as a function whose `filterfunc` handle is not known in advance, is a hand-written `it` in the same file. `describeLookup` checks an event lookup inside a fired trigger: the registry's Wrapper for the Handle its Native answers, `undefined` when it answers nothing.
+
+A new descriptor is one more case in its group's file, and a new group one more file; the declaration fixtures `events-<group>.ts` (below) prove its payload types.
+
 ### Driving the entry points
 
 The shipped stubs define none of the editor's entry points, and the library wraps the ones that exist when it loads and captures the others on their first assignment through its own `_G` metatable. So a test chooses a load position by what it defines ahead of the library, and drives the compiled library through the entry points as the game does:
@@ -82,4 +117,4 @@ A fixture imports the library as a Map project does, `import { Unit } from "refo
 
 ### The rename map
 
-`node/renames.test.ts` validates `migration/renames.json`, the removed and renamed symbols the migration guide and the legacy-names lint rule read, through the loader in `node/support/renames.ts`: the file must match `migration/renames.schema.json`, every entry must carry the first release's version pair (`w3ts@3` to `reforged-ts@1`), no `old` symbol may appear twice, every replacement in `new` must be, in the library's emitted declarations, a class, a public static or instance member of one, or a public member of the type of an exported value (`Init.onGlobals`, `Reforged.configure`), and every member a build step removes must have an entry. An `old` symbol is a class, a member, a bare function or enum, or an entry point of the deprecated alias as its `W3TS_HOOK` value reads (`main::before`, kind `entryPoint`). A step that removes or renames a public symbol appends its entries to the map and its list of removed members to the test (`REMOVED_IN_STEP_3`, `REMOVED_IN_STEP_4`), and its behaviour changes that are not renames to `migration/behaviour-changes.md`.
+`node/renames.test.ts` validates `migration/renames.json`, the removed and renamed symbols the migration guide and the legacy-names lint rule read, through the loader in `node/support/renames.ts`: the file must match `migration/renames.schema.json`, every entry must carry the first release's version pair (`w3ts@3` to `reforged-ts@1`), no `old` symbol may appear twice, every replacement in `new` must be, in the library's emitted declarations, a class, a public static or instance member of one, or a public member of the type of an exported value (`Init.onGlobals`, `Reforged.configure`), and every member a build step removes must have an entry. An `old` symbol is a class, a member, a bare function or enum, or an entry point of the deprecated alias as its `W3TS_HOOK` value reads (`main::before`, kind `entryPoint`). A step that removes or renames a public symbol appends its entries to the map and its list of removed members to the test (`REMOVED_IN_STEP_3`, `REMOVED_IN_STEP_4`, `REMOVED_IN_STEP_5`), and its behaviour changes that are not renames to `migration/behaviour-changes.md`.
