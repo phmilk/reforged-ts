@@ -13,6 +13,12 @@ Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all o
 
 Infer the repo from `git remote -v`; `gh` does this automatically when run inside a clone.
 
+## Where issues live
+
+- **The library, the Typings, the harness and the lint plugin**: this repo, `phmilk/reforged-ts`.
+- **The Template** (build pipeline, starter, its CI and docs): `phmilk/reforged-ts-template`. Its issues moved there on 2026-09-25, and the old numbers here redirect to them.
+- Refer to an issue in the other repo with its full form, `phmilk/reforged-ts-template#12` or `phmilk/reforged-ts#46`; a bare `#12` means this repo. Sub-issues and "blocked by" edges work across the two repos.
+
 ## Pull requests as a triage surface
 
 **PRs as a request surface: no.** _(Set to `yes` if this repo treats external PRs as feature requests; `/triage` reads this flag.)_
