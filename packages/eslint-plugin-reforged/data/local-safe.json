@@ -883,5 +883,205 @@
     "name": "CameraSetup#label",
     "kind": "visual",
     "reason": "the CameraSetup Wrapper's member over a CameraSetup* Native of the local camera."
+  },
+  {
+    "name": "I2R",
+    "kind": "pure",
+    "reason": "converts an integer to a real; it reads no game state and changes none."
+  },
+  {
+    "name": "R2I",
+    "kind": "pure",
+    "reason": "truncates a real to an integer; it reads no game state and changes none."
+  },
+  {
+    "name": "I2S",
+    "kind": "pure",
+    "reason": "formats an integer as a string; it reads no game state and changes none."
+  },
+  {
+    "name": "R2S",
+    "kind": "pure",
+    "reason": "formats a real as a string; it reads no game state and changes none."
+  },
+  {
+    "name": "R2SW",
+    "kind": "pure",
+    "reason": "formats a real as a string with a width and a precision; it reads no game state and changes none."
+  },
+  {
+    "name": "S2I",
+    "kind": "pure",
+    "reason": "parses an integer from a string; it reads no game state and changes none."
+  },
+  {
+    "name": "S2R",
+    "kind": "pure",
+    "reason": "parses a real from a string; it reads no game state and changes none."
+  },
+  {
+    "name": "Deg2Rad",
+    "kind": "pure",
+    "reason": "converts degrees to radians; arithmetic on its arguments only."
+  },
+  {
+    "name": "Rad2Deg",
+    "kind": "pure",
+    "reason": "converts radians to degrees; arithmetic on its arguments only."
+  },
+  {
+    "name": "Sin",
+    "kind": "pure",
+    "reason": "the sine of its argument; arithmetic on its arguments only."
+  },
+  {
+    "name": "Cos",
+    "kind": "pure",
+    "reason": "the cosine of its argument; arithmetic on its arguments only."
+  },
+  {
+    "name": "Tan",
+    "kind": "pure",
+    "reason": "the tangent of its argument; arithmetic on its arguments only."
+  },
+  {
+    "name": "Asin",
+    "kind": "pure",
+    "reason": "the arc sine of its argument; arithmetic on its arguments only."
+  },
+  {
+    "name": "Acos",
+    "kind": "pure",
+    "reason": "the arc cosine of its argument; arithmetic on its arguments only."
+  },
+  {
+    "name": "Atan",
+    "kind": "pure",
+    "reason": "the arc tangent of its argument; arithmetic on its arguments only."
+  },
+  {
+    "name": "Atan2",
+    "kind": "pure",
+    "reason": "the angle of a vector; arithmetic on its arguments only."
+  },
+  {
+    "name": "SquareRoot",
+    "kind": "pure",
+    "reason": "the square root of its argument; arithmetic on its arguments only."
+  },
+  {
+    "name": "Pow",
+    "kind": "pure",
+    "reason": "a power of its argument; arithmetic on its arguments only."
+  },
+  {
+    "name": "MathRound",
+    "kind": "pure",
+    "reason": "rounds a real to an integer; arithmetic on its arguments only."
+  },
+  {
+    "name": "IMinBJ",
+    "kind": "pure",
+    "reason": "the smaller of two integers (blizzard.j); arithmetic on its arguments only."
+  },
+  {
+    "name": "IMaxBJ",
+    "kind": "pure",
+    "reason": "the larger of two integers (blizzard.j); arithmetic on its arguments only."
+  },
+  {
+    "name": "RMinBJ",
+    "kind": "pure",
+    "reason": "the smaller of two reals (blizzard.j); arithmetic on its arguments only."
+  },
+  {
+    "name": "RMaxBJ",
+    "kind": "pure",
+    "reason": "the larger of two reals (blizzard.j); arithmetic on its arguments only."
+  },
+  {
+    "name": "IAbsBJ",
+    "kind": "pure",
+    "reason": "the absolute value of an integer (blizzard.j); arithmetic on its arguments only."
+  },
+  {
+    "name": "RAbsBJ",
+    "kind": "pure",
+    "reason": "the absolute value of a real (blizzard.j); arithmetic on its arguments only."
+  },
+  {
+    "name": "ISignBJ",
+    "kind": "pure",
+    "reason": "the sign of an integer (blizzard.j); arithmetic on its arguments only."
+  },
+  {
+    "name": "RSignBJ",
+    "kind": "pure",
+    "reason": "the sign of a real (blizzard.j); arithmetic on its arguments only."
+  },
+  {
+    "name": "ModuloInteger",
+    "kind": "pure",
+    "reason": "an integer modulo (blizzard.j); arithmetic on its arguments only."
+  },
+  {
+    "name": "ModuloReal",
+    "kind": "pure",
+    "reason": "a real modulo (blizzard.j); arithmetic on its arguments only."
+  },
+  {
+    "name": "BlzBitAnd",
+    "kind": "pure",
+    "reason": "a bitwise and of two integers; arithmetic on its arguments only."
+  },
+  {
+    "name": "BlzBitOr",
+    "kind": "pure",
+    "reason": "a bitwise or of two integers; arithmetic on its arguments only."
+  },
+  {
+    "name": "BlzBitXor",
+    "kind": "pure",
+    "reason": "a bitwise exclusive or of two integers; arithmetic on its arguments only."
+  },
+  {
+    "name": "SubString",
+    "kind": "pure",
+    "reason": "a part of a string; it reads no game state and changes none."
+  },
+  {
+    "name": "SubStringBJ",
+    "kind": "pure",
+    "reason": "a part of a string, one-based (blizzard.j over SubString); it reads no game state and changes none."
+  },
+  {
+    "name": "StringLength",
+    "kind": "pure",
+    "reason": "the length of a string; it reads no game state and changes none."
+  },
+  {
+    "name": "StringCase",
+    "kind": "pure",
+    "reason": "a string in upper or lower case; it reads no game state and changes none."
+  },
+  {
+    "name": "StringHash",
+    "kind": "pure",
+    "reason": "the hash of a string, the same on every client; it reads no game state and changes none."
+  },
+  {
+    "name": "StringIdentity",
+    "kind": "pure",
+    "reason": "returns its argument (blizzard.j); it reads no game state and changes none."
+  },
+  {
+    "name": "BlzGetFrameByName",
+    "kind": "pure",
+    "reason": "looks up a frame by name; frames are local presentation, and the lookup changes no game state."
+  },
+  {
+    "name": "BlzGetOriginFrame",
+    "kind": "pure",
+    "reason": "looks up one of the game's origin frames; frames are local presentation, and the lookup changes no game state."
   }
 ]

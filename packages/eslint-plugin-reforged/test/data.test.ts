@@ -113,12 +113,12 @@ describe("the allowlist (data/local-safe.json)", () => {
     [
       "a missing kind",
       JSON.stringify([entry, { name: "SetCameraField", reason: "r." }]),
-      '[1].kind must be one of "visual", "text"',
+      '[1].kind must be one of "visual", "text", "pure"',
     ],
     [
       "an unknown kind",
       JSON.stringify([{ ...entry, kind: "sound" }]),
-      '[0].kind must be one of "visual", "text"',
+      '[0].kind must be one of "visual", "text", "pure"',
     ],
     [
       "an empty reason",
@@ -129,6 +129,11 @@ describe("the allowlist (data/local-safe.json)", () => {
       "a name of another form",
       JSON.stringify([{ ...entry, name: "Frame::setText" }]),
       "[0].name must be a Native name, Class#member or Class.member",
+    ],
+    [
+      "a pure entry naming a library member",
+      JSON.stringify([{ ...entry, name: "Frame#text", kind: "pure" }]),
+      "[0].name must be a Native name (a pure entry)",
     ],
     [
       "a name listed twice",
@@ -165,7 +170,7 @@ describe("the allowlist (data/local-safe.json)", () => {
   it("gives every entry a non-empty reason and a known kind", () => {
     for (const each of localSafe) {
       expect(each.reason.trim(), each.name).not.toBe("");
-      expect(["visual", "text"], each.name).toContain(each.kind);
+      expect(["visual", "text", "pure"], each.name).toContain(each.kind);
     }
   });
 
@@ -176,6 +181,20 @@ describe("the allowlist (data/local-safe.json)", () => {
       .filter((name) => !/[#.]/.test(name) && !natives.has(name));
     // print is Lua's (lua-types), not a Native (decision 6 of the #50 run).
     expect(missing).toEqual(["print"]);
+  });
+
+  it("lists pure entries that are all Natives of the installed Typings", () => {
+    const natives = installedNatives();
+    const pure = localSafe
+      .filter((each) => each.kind === "pure")
+      .map((each) => each.name);
+    expect(pure).toEqual(
+      expect.arrayContaining(["I2S", "R2S", "R2SW", "SquareRoot", "SubString"]),
+    );
+    expect(pure).toEqual(
+      expect.arrayContaining(["BlzGetFrameByName", "BlzGetOriginFrame"]),
+    );
+    expect(pure.filter((name) => !natives.has(name))).toEqual([]);
   });
 
   it("names only members of the reforged-ts library, with their static-ness", () => {

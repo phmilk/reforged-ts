@@ -4,7 +4,8 @@
 // member (accessor assignments included) that the allowlist does not list,
 // every creation, `Filter`/`Condition`, `ForGroup`/`ForForce` and the random
 // Natives and `Math.random`. Calls to project functions and pure computation
-// are not reported; the rule does not follow calls.
+// (the `pure` entries of the allowlist: converters, math and string Natives,
+// frame lookups) are not reported; the rule does not follow calls.
 import {
   AST_NODE_TYPES,
   ESLintUtils,
@@ -118,7 +119,7 @@ function createNoGameStateInLocalBranch(data: PluginData) {
           ) {
             return;
           }
-          // Listed as visual or text, or allowed by the option.
+          // Listed as visual, text or pure, or allowed by the option.
           if (allowlist.kindOf(services, node) !== undefined) {
             return;
           }

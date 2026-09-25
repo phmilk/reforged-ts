@@ -1,8 +1,10 @@
 // The allowlist of local-safe calls (data/local-safe.json), owned by the
 // plugin: one entry per Native or library member that only changes what the
-// local player sees or hears (`visual`), or that displays a string (`text`,
-// the text sinks). It grows by pull request, and every entry carries its
-// reason.
+// local player sees or hears (`visual`), that displays a string (`text`,
+// the text sinks), or a Native that computes its result from its arguments
+// alone and changes no game state (`pure`: the converters, the math and
+// string Natives, the frame lookups). It grows by pull request, and every
+// entry carries its reason.
 import {
   DataFileError,
   elements,
@@ -11,10 +13,15 @@ import {
   expectUnique,
 } from "./schema.js";
 
-/** `visual`: only changes the local presentation. `text`: displays a string (a text sink). */
-export type LocalSafeKind = "visual" | "text";
+/**
+ * `visual`: only changes the local presentation. `text`: displays a string
+ * (a text sink). `pure`: a Native whose result depends on its arguments
+ * only (`I2S`, `SquareRoot`, `SubString`, `BlzGetFrameByName`); it changes
+ * no game state, and a value passed to it flows on into its result.
+ */
+export type LocalSafeKind = "visual" | "text" | "pure";
 
-const kinds: readonly LocalSafeKind[] = ["visual", "text"];
+const kinds: readonly LocalSafeKind[] = ["visual", "text", "pure"];
 
 export interface LocalSafeEntry {
   /**
@@ -27,6 +34,7 @@ export interface LocalSafeEntry {
   readonly reason: string;
 }
 
+const nativeNamePattern = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const namePattern =
   /^(?:[A-Za-z_][A-Za-z0-9_]*|[A-Z][A-Za-z0-9_]*[#.][A-Za-z_][A-Za-z0-9_]*)$/;
 
@@ -47,6 +55,13 @@ export function parseLocalSafe(json: unknown, file: string): LocalSafeEntry[] {
         file,
         `${path.field}.kind`,
         `one of ${kinds.map((each) => JSON.stringify(each)).join(", ")}`,
+      );
+    }
+    if (kind === "pure" && !nativeNamePattern.test(name)) {
+      throw new DataFileError(
+        file,
+        `${path.field}.name`,
+        "a Native name (a pure entry)",
       );
     }
     return {

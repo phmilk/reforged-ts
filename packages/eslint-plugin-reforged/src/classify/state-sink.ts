@@ -1,10 +1,10 @@
 // The state-sink classification: where a value becomes game state, for
 // `no-async-value-as-state`. An expression reaches a state sink when its
 // value, directly or through one `const`, is:
-// - an argument of a call (or `new`) that is neither a text sink nor a
-//   visual entry of data/local-safe.json, or the value assigned to a
-//   reforged-ts accessor that is not listed (a call to its setter,
-//   decision 4 of the #50 run);
+// - an argument of a call (or `new`) that data/local-safe.json lists
+//   neither as text nor as visual (a pure entry passes the value on, see
+//   below), or the value assigned to a reforged-ts accessor that is not
+//   listed (a call to its setter, decision 4 of the #50 run);
 // - assigned to a module-level or exported variable (an assignment or the
 //   declaration's initialiser);
 // - a table key: `t[value]`, read or written, or `{ [value]: ... }`.
@@ -14,11 +14,13 @@
 // The value flows through type assertions, `!`, optional chains, template
 // literals, operators (arithmetic, comparison, logical, unary other than
 // `void`/`delete`), the branches of a conditional, a spread argument,
-// `String()`/`tostring()` and the functions of the global `Math` (local
-// computation). A call the caller names in `isSourceCall` (a call whose own
-// value is checked as a source) is not a sink. It stops at anything else: a local `let`, a
-// return, an object property, the receiver of a member access, a call's
-// callee, the test of a conditional.
+// `String()`/`tostring()`, the functions of the global `Math` and the `pure`
+// Natives of the allowlist (`R2I`, `SquareRoot`, `SubString`: local
+// computation, whose result carries the value on). A call the caller names
+// in `isSourceCall` (a call whose own value is checked as a source) is not a
+// sink. It stops at anything else: a local `let`, a return, an object
+// property, the receiver of a member access, a call's callee, the test of a
+// conditional.
 import {
   AST_NODE_TYPES,
   ASTUtils,
@@ -164,7 +166,11 @@ function step(
       if (isSourceCall(parent) || isSyncStart(services, parent)) {
         return undefined;
       }
-      return allowlist.entryOf(services, parent) === undefined
+      const kind = allowlist.kindOf(services, parent);
+      if (kind === "pure") {
+        return through;
+      }
+      return kind === undefined
         ? {
             kind: "argument",
             node: parent,

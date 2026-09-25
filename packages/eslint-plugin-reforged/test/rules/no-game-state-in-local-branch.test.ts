@@ -152,6 +152,10 @@ ruleTester.run(
         code: `${prelude}if (mp.isLocal()) {\n  const x = Math.floor(1.5) + 2 * 3;\n  const s = "hp".toUpperCase() + String(x);\n  const doubled = [1, 2].map((n) => n * 2);\n}`,
       },
       {
+        name: "the pure Natives of local-safe.json: converters, math, strings, frame lookups",
+        code: `${prelude}if (GetLocalPlayer() === p) {\n  const label = SubString(R2S(SquareRoot(Pow(2, 3))), 0, StringLength("abc"));\n  BlzFrameSetText(BlzGetFrameByName("Label", 0)!, StringCase(I2S(R2I(S2R("1.5"))), true)!);\n  BlzFrameSetVisible(BlzGetOriginFrame(ORIGIN_FRAME_MINIMAP, 0)!, false);\n}`,
+      },
+      {
         name: "a call to a project function (not followed)",
         code: `${prelude}function killAll() {\n  KillUnit(u);\n  CreateTimer();\n}\nif (mp.isLocal()) {\n  killAll();\n}`,
       },
@@ -191,7 +195,8 @@ ruleTester.run(
         name: "Wrapper creation, Math.random, SetRandomSeed, Filter, ForGroup, a Wrapper member and an accessor",
         code: `${prelude}MapPlayer.runLocal(mp, () => {\n  const unit = Unit.create(mp, 1751543663, 0, 0);\n  const roll = Math.random();\n  SetRandomSeed(1);\n  const filter = Filter(() => true);\n  ForGroup(CreateGroup()!, () => {});\n  unit.kill();\n  unit.life = 0;\n  math.random(1, 6);\n  math.randomseed(7);\n  GetUnitX(u);\n});`,
         // GetUnitX only reads, but the rule is allowlist-based: a Native not
-        // listed as visual or text is reported (the allow option lifts it).
+        // listed as visual, text or pure is reported (the allow option lifts
+        // it). A plain value getter is not pure: it reads game state.
         errors: [
           {
             messageId: "creation",
@@ -211,6 +216,11 @@ ruleTester.run(
           { messageId: "random", data: { callee: "math.randomseed" } },
           { messageId: "gameState", data: { callee: "GetUnitX" } },
         ],
+      },
+      {
+        name: "a value getter passed to a pure Native is still reported",
+        code: `${prelude}if (GetLocalPlayer() === p) {\n  BlzFrameSetText(BlzGetFrameByName("Label", 0)!, R2S(GetUnitX(u))!);\n}`,
+        errors: [{ messageId: "gameState", data: { callee: "GetUnitX" } }],
       },
       {
         name: "a listed name outside the allow option is still reported",

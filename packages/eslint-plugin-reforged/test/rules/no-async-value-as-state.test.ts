@@ -76,6 +76,12 @@ ruleTester.run("no-async-value-as-state", ruleOf("no-async-value-as-state"), {
     { code: inFunction("print(os.difftime(os.time(), 0));") },
     ...valid("const seconds = Math.floor(SOURCE);\nprint(seconds);"),
     ...valid("SetCameraPosition(Math.max(SOURCE, 0), 0);"),
+    // A pure Native of the allowlist passes the value on to where its result
+    // flows: here a text sink, a visual call, or nowhere.
+    ...valid("DisplayTextToPlayer(Player(0)!, 0, 0, R2S(SOURCE));"),
+    ...valid("print(I2S(R2I(SOURCE)));"),
+    ...valid("SetCameraPosition(SquareRoot(Pow(SOURCE, 2)), 0);"),
+    ...valid("const label = SubString(R2S(SOURCE), 0, 4);"),
     // The sync System shares the value: its constructor and `start`.
     ...valid(
       "new SyncRequest(owner, String(SOURCE)).then((res) => {\n  print(res.data);\n});",
@@ -146,6 +152,20 @@ ruleTester.run("no-async-value-as-state", ruleOf("no-async-value-as-state"), {
     ...invalid("SetUnitX(u, SOURCE * 2 + 1);", "asyncArgument", "SetUnitX"),
     ...invalid("frame.value = SOURCE;", "asyncArgument", "Frame#value"),
     ...invalid("table.set(SOURCE, true);", "asyncArgument", "table.set"),
+    // Through a pure Native of the allowlist, which passes the value on.
+    ...invalid("SetUnitX(u, R2I(SOURCE));", "asyncArgument", "SetUnitX"),
+    ...invalid(
+      "SetUnitX(u, SquareRoot(Pow(SOURCE, 2)));",
+      "asyncArgument",
+      "SetUnitX",
+    ),
+    ...invalid("table[R2I(SOURCE)] = true;", "asyncKey", "table"),
+    ...invalid(
+      "last = S2I(I2S(R2I(SOURCE)));",
+      "asyncVariable",
+      "last",
+      "let last = 0;\n",
+    ),
     // A module-level variable, assigned or initialised.
     ...invalid("last = SOURCE;", "asyncVariable", "last", "let last = 0;\n"),
     // A table key, written or read, and a computed property key.

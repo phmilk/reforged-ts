@@ -2,7 +2,8 @@
 // clients (an `@async` Native or library member, an `@async` getter, the
 // local clock of `os`) that flows into game state: an argument of a call
 // that is neither a text sink nor a visual allowlist entry, a module-level or
-// exported variable, a table key. Each client then computes different state
+// exported variable, a table key. A pure allowlist entry (`R2I`) passes the
+// value on to where its result flows. Each client then computes different state
 // and the game desyncs. The sync System shares a local value first.
 //
 // Order: a syntactic pre-match of the source (a plain call by the

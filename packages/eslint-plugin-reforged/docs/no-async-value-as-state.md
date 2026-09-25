@@ -16,13 +16,13 @@ Sources are matched through the type checker: a project function named `GetLocal
 
 The value is state when it reaches, directly or through one `const`:
 
-- an argument of a call or `new` that is not in the plugin's allowlist, `data/local-safe.json`. The allowlist holds the text sinks (`print`, `DisplayTextToPlayer`, `BlzFrameSetText`, `Frame#text`, ...) and the visual calls (frame setters, vertex colours, the camera, sounds). An assignment to a library accessor counts as a call to its setter;
+- an argument of a call or `new` that is not in the plugin's allowlist, `data/local-safe.json`. The allowlist holds the text sinks (`print`, `DisplayTextToPlayer`, `BlzFrameSetText`, `Frame#text`, ...) and the visual calls (frame setters, vertex colours, the camera, sounds). An assignment to a library accessor counts as a call to its setter. Its `pure` Natives (the converters `I2S`, `R2S`, `R2I`, ..., the math and string Natives, the frame lookups) are neither sinks nor exempt: the value flows on through their result, so `DisplayTextToPlayer(p, 0, 0, R2S(GetCameraTargetPositionX()))` passes and `SetUnitX(u, R2I(GetCameraTargetPositionX()))` is reported;
 - the value of a module-level or exported variable, assigned or initialised;
 - a table key: `table[value]` read or written, or `{ [value]: ... }`.
 
 The sync System is the way out: an argument of `new SyncRequest(...)` or of `request.start(...)` is shared with every client, and is not state.
 
-The rule follows the value through arithmetic, comparisons, template literals, `String()`, `tostring()` and the functions of `Math`. It stops at a local `let`, a `return`, the test of an `if` or of a conditional, and at the receiver of a member access. Every other call counts as state, including a lookup Native such as `GetPlayerId(GetLocalPlayer())`: compare `GetLocalPlayer()` with a player instead.
+The rule follows the value through arithmetic, comparisons, template literals, `String()`, `tostring()`, the functions of `Math` and the `pure` Natives of the allowlist. It stops at a local `let`, a `return`, the test of an `if` or of a conditional, and at the receiver of a member access. Every other call counts as state, including a lookup Native such as `GetPlayerId(GetLocalPlayer())`: compare `GetLocalPlayer()` with a player instead.
 
 ## Incorrect
 
@@ -33,6 +33,7 @@ let lastClick = 0;
 
 function onClick(u: unit, ranks: number[], scores: LuaMap<number, number>) {
   SetUnitX(u, GetCameraTargetPositionX()); // the local camera moves a unit
+  SetUnitY(u, R2I(GetCameraTargetPositionY())); // a pure Native passes the value on
   lastClick = os.clock(); // a module-level variable
   scores.set(os.time(), 1); // a call that is neither text nor visual
   const zoom = GetCameraField(CAMERA_FIELD_TARGET_DISTANCE);
@@ -49,6 +50,7 @@ import { Frame, MapPlayer, SyncRequest } from "reforged-ts";
 
 function onClick(owner: MapPlayer) {
   print(`camera at ${GetCameraTargetPositionX()}`); // a text sink
+  DisplayTextToPlayer(owner.handle, 0, 0, R2S(GetCameraTargetPositionX())!); // through a pure Native to a text sink
   SetCameraPosition(GetCameraTargetPositionX() + 100, 0); // a visual call
   if (owner.isLocal()) {
     Frame.fromName("Tooltip", 0)!.setVisible(true); // visual, in a local branch

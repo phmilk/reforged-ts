@@ -17,7 +17,7 @@ A **local branch** is:
 
 Inside it the rule reports:
 
-- a call to a Native, or to a member of a `reforged-ts` Wrapper (an accessor assignment such as `unit.life = 0` counts as a call to its setter), that `data/local-safe.json` does not list. The file lists the calls that only change what the local player sees or hears: frame setters, vertex colours, the camera, sounds and music, the display Natives, `print`, and their Wrapper members. A Native that only reads (`GetUnitX`, `BlzGetFrameByName`) is reported too: the rule cannot tell a read from a handle allocation, and some reads allocate one;
+- a call to a Native, or to a member of a `reforged-ts` Wrapper (an accessor assignment such as `unit.life = 0` counts as a call to its setter), that `data/local-safe.json` does not list. The file lists the calls that only change what the local player sees or hears (`visual`: frame setters, vertex colours, the camera, sounds and music, and their Wrapper members), the calls that display a string (`text`: the display Natives, `print`, the frame text setters), and the Natives whose result depends on their arguments alone (`pure`: the converters `I2S`, `R2S`, `R2SW`, `S2I`, `S2R`, `I2R`, `R2I`; the math Natives `SquareRoot`, `Pow`, `Sin`, `Cos`, ...; the string Natives `SubString`, `StringLength`, `StringCase`, ...; the frame lookups `BlzGetFrameByName` and `BlzGetOriginFrame`). A Native that reads game state (`GetUnitX`, `GetPlayerState`) is reported too (see "When not to use it");
 - a creation: a creation Native (`CreateTimer`, `AddSpecialEffect`, ...) or a Wrapper static named `create*` (`Unit.create`, `Effect.createAttachment`, ...);
 - `Filter`, `Condition`, `ForGroup`, `ForForce`, `Group#for` and `Force#for`;
 - `GetRandomInt`, `GetRandomReal`, `SetRandomSeed`, `Math.random` (compiled to Lua's `math.random`) and lua-types' `math.random` and `math.randomseed`.
@@ -63,6 +63,7 @@ if (player.isLocal()) {
   frame.text = text;
   frame.setVisible(true);
   unit.setVertexColor(255, 255, 255, 128);
+  BlzFrameSetText(BlzGetFrameByName("RollLabel", 0)!, I2S(roll)!); // pure: a lookup and a converter
 }
 ```
 
@@ -92,6 +93,8 @@ A name that only changes what the local player sees belongs in `data/local-safe.
 None: moving a call out of the branch makes it run for every player, which changes what the code does. The author decides where the game-state change belongs.
 
 ## When not to use it
+
+A plain value getter such as `GetUnitX` or `GetPlayerState` is reported by design, and is not a `pure` entry: what it reads is game state, not its arguments, and the rule cannot tell a read from a handle allocation (some getters allocate one). Read the value outside the branch, for every player, and pass it in.
 
 When the call is known to be safe for one client, for instance a read Native whose value is only displayed. Prefer the `allow` option for a name used in many places; for one line, silence it and say why:
 
