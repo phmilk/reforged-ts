@@ -285,6 +285,11 @@ export class Item extends Widget {
     return this.fromHandle(GetManipulatedItem());
   }
 
+  /** The spell's target item, or undefined when the spell targets none. */
+  public static fromSpellTarget(): Item | undefined {
+    return this.fromHandle(GetSpellTargetItem());
+  }
+
   public static isIdPawnable(itemId: number) {
     return IsItemIdPawnable(itemId);
   }
