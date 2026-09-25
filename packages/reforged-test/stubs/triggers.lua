@@ -223,7 +223,7 @@ local responses = {
   "GetSpellTargetDestructable", "GetSpellTargetX", "GetSpellTargetY",
   "GetOrderedUnit", "GetIssuedOrderId", "GetOrderPointX", "GetOrderPointY",
   "GetOrderTargetUnit", "GetOrderTarget",
-  "GetManipulatedItem", "GetEquippedItem", "GetUnequippedItem",
+  "GetManipulatedItem", "GetEquippedItem", "GetUnequippedItem", "GetSoldItem",
   "GetTrainedUnit", "GetConstructedStructure", "GetResearched", "GetLevelingUnit", "GetLearnedSkill",
   "GetChangingUnit", "GetChangingUnitPrevOwner", "GetSummoningUnit", "GetSummonedUnit",
   "GetTransportUnit", "GetLoadedUnit",
