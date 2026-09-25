@@ -24,7 +24,7 @@ describe("the baseline stub on a fresh state", () => {
 
   it("runs all its checks", () => {
     expect(baseline.error).toBeUndefined();
-    expect(baseline.tests).toHaveLength(13);
+    expect(baseline.tests).toHaveLength(14);
   });
 });
 
@@ -40,7 +40,7 @@ describe("the shipped stub families on a fresh state", () => {
 
   it("runs all its checks", () => {
     expect(families.map((file) => file.error)).toEqual([undefined]);
-    expect(tests).toHaveLength(21);
+    expect(tests).toHaveLength(31);
   });
 });
 
