@@ -92,3 +92,25 @@ export async function readChangesetFolder(dir: string): Promise<Changeset[]> {
   }
   return changesets;
 }
+
+/** The pre state of `.changeset/pre.json`: absent, active or exited. */
+export type PreMode = "none" | "pre" | "exit";
+
+/** The pre state of the workspace at `root`. */
+export async function readPreMode(root: string): Promise<PreMode> {
+  const file = join(root, CHANGESET_DIR, "pre.json");
+  let text: string;
+  try {
+    text = await readFile(file, "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return "none";
+    throw error;
+  }
+  const mode = (JSON.parse(text) as { mode?: unknown }).mode;
+  if (mode !== "pre" && mode !== "exit") {
+    throw new Error(
+      `${CHANGESET_DIR}/pre.json: mode must be "pre" or "exit", not ${JSON.stringify(mode)}.`,
+    );
+  }
+  return mode;
+}
