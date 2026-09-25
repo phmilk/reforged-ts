@@ -24,6 +24,7 @@ import {
   ROW_PACKAGES,
   TYPINGS_PACKAGE,
 } from "./packages.js";
+import { isPrerelease, parseSemver } from "./semver.js";
 import type { PublishablePackage } from "./workspace.js";
 
 /** The committed matrix, relative to the repository root. */
@@ -152,8 +153,6 @@ export type MatrixResult =
     }
   | { ok: false; problems: MatrixProblem[] };
 
-const VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
-const PRERELEASE = /^\d+\.\d+\.\d+-/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const MINOR = /^(\d+)\.(\d+)$/;
 const NODE_FLOOR = /^>=\s*v?(\d+(?:\.\d+){0,2})$/;
@@ -280,7 +279,8 @@ export function buildMatrix(input: MatrixInput): MatrixResult {
       });
       continue;
     }
-    if (!VERSION.test(pkg.version)) {
+    const version = parseSemver(pkg.version);
+    if (version === undefined) {
       problems.push({
         kind: "invalid-version",
         message: `${name} has version ${JSON.stringify(pkg.version)}, which is not a semver version.`,
@@ -288,7 +288,7 @@ export function buildMatrix(input: MatrixInput): MatrixResult {
       continue;
     }
     versions[field] = pkg.version;
-    if (PRERELEASE.test(pkg.version)) prereleases.push(field);
+    if (isPrerelease(version)) prereleases.push(field);
   }
   const unreadable = problems.some(
     ({ kind }) => kind === "missing-package" || kind === "invalid-version",

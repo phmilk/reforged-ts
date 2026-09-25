@@ -13,6 +13,7 @@
  *   workflow.
  */
 import { byCodePoint } from "./order.js";
+import { compareSemver, parseSemver } from "./semver.js";
 
 /** The first npm CLI release with trusted publishing. */
 export const NPM_TRUSTED_PUBLISHING = "11.5.1";
@@ -43,23 +44,16 @@ export interface PublishCheckResult {
   problems: string[];
 }
 
-/** `[major, minor, patch]` of a version, or `undefined` when it is not one. */
-function parseVersion(version: string): [number, number, number] | undefined {
-  const match = /^(\d+)\.(\d+)\.(\d+)/.exec(version.trim());
-  return match === null
-    ? undefined
-    : [Number(match[1]), Number(match[2]), Number(match[3])];
-}
-
-/** Whether `version` is at least `floor`; `false` when it is not a version. */
+/**
+ * Whether the version `version` is at least `floor`, by semver precedence
+ * (so `11.5.1-rc.0` is below `11.5.1`); `false` when either is not a
+ * version.
+ */
 export function atLeast(version: string, floor: string): boolean {
-  const actual = parseVersion(version);
-  const minimum = parseVersion(floor);
+  const actual = parseSemver(version.trim());
+  const minimum = parseSemver(floor.trim());
   if (actual === undefined || minimum === undefined) return false;
-  for (let i = 0; i < 3; i++) {
-    if (actual[i] !== minimum[i]) return actual[i] > minimum[i];
-  }
-  return true;
+  return compareSemver(actual, minimum) >= 0;
 }
 
 export function checkPublish(input: PublishCheckInput): PublishCheckResult {
@@ -71,7 +65,7 @@ export function checkPublish(input: PublishCheckInput): PublishCheckResult {
     );
   }
   const pnpmMajor =
-    input.pnpm === null ? undefined : parseVersion(input.pnpm)?.[0];
+    input.pnpm === null ? undefined : parseSemver(input.pnpm.trim())?.major;
   if (pnpmMajor === undefined) {
     problems.push(
       input.pnpm === null

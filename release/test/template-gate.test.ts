@@ -276,6 +276,9 @@ describe("templateRef", () => {
 
   it("refuses a version that is not semver", () => {
     expect(() => templateRef("1.0")).toThrow('"1.0" is not a semver version.');
+    expect(() => templateRef("01.0.0")).toThrow(
+      '"01.0.0" is not a semver version.',
+    );
   });
 });
 

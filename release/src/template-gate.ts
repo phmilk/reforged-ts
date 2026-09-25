@@ -10,6 +10,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { isAbsolute, join, posix, relative, resolve, sep } from "node:path";
 import { byCodePoint } from "./order.js";
 import { LIBRARY_PACKAGE } from "./packages.js";
+import { parseSemver } from "./semver.js";
 import { readPublishablePackages } from "./workspace.js";
 
 /** The file `changeset pack` writes at the root of its output folder. */
@@ -38,13 +39,11 @@ export class TemplateGateError extends Error {
  * alphas included, maps to `v1`.
  */
 export function templateRef(libraryVersion: string): string {
-  const match = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:[-+].+)?$/.exec(
-    libraryVersion,
-  );
-  if (match === null) {
+  const version = parseSemver(libraryVersion);
+  if (version === undefined) {
     throw new TemplateGateError(`"${libraryVersion}" is not a semver version.`);
   }
-  return `v${match[1]}`;
+  return `v${String(version.major)}`;
 }
 
 /**

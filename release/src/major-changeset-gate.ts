@@ -26,6 +26,12 @@ import {
 } from "./changesets.js";
 import { byCodePoint } from "./order.js";
 import { LIBRARY_PACKAGE } from "./packages.js";
+import {
+  compareSemver,
+  isPrerelease,
+  parseSemver,
+  type SemVer,
+} from "./semver.js";
 import { readPublishablePackages } from "./workspace.js";
 
 export type { PreMode } from "./changesets.js";
@@ -109,36 +115,31 @@ export interface GateResult {
   preMode: PreMode;
 }
 
-interface Semver {
-  major: number;
-  minor: number;
-  patch: number;
-  prerelease: boolean;
-}
-
-function parseVersion(version: string): Semver {
-  const match =
-    /^(\d+)\.(\d+)\.(\d+)(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$/.exec(version);
-  if (match === null) {
+function parseVersion(version: string): SemVer {
+  const parsed = parseSemver(version);
+  if (parsed === undefined) {
     throw new Error(
       `${LIBRARY_PACKAGE} has version "${version}", which is not semver.`,
     );
   }
-  return {
-    major: Number(match[1]),
-    minor: Number(match[2]),
-    patch: Number(match[3]),
-    // A `-` before any build metadata starts the prerelease.
-    prerelease: /^[^+]*-/.test(version),
-  };
+  return parsed;
 }
+
+/** The first stable version of the library. */
+const FIRST_STABLE: SemVer = {
+  major: 1,
+  minor: 0,
+  patch: 0,
+  prerelease: [],
+  build: [],
+};
 
 /**
  * The major a major bump gives: `X.0.0-pre` becomes `X.0.0`, as Changesets
  * computes it, and any other version `X+1.0.0`.
  */
-function majorAfterBump(version: Semver): number {
-  return version.prerelease && version.minor === 0 && version.patch === 0
+function majorAfterBump(version: SemVer): number {
+  return isPrerelease(version) && version.minor === 0 && version.patch === 0
     ? version.major
     : version.major + 1;
 }
@@ -174,7 +175,7 @@ export function evaluateGate(input: GateInput): GateResult {
     .map((changeset) => changeset.file)
     .sort(byCodePoint);
   const releasesLibrary =
-    version.prerelease ||
+    isPrerelease(version) ||
     input.changesets.some((changeset) =>
       changeset.releases.some(
         (release) =>
@@ -182,12 +183,7 @@ export function evaluateGate(input: GateInput): GateResult {
       ),
     );
   // Below 1.0.0: `0.x`, or a prerelease of 1.0.0 (the alphas).
-  const beforeFirstStable =
-    version.major < 1 ||
-    (version.major === 1 &&
-      version.minor === 0 &&
-      version.patch === 0 &&
-      version.prerelease);
+  const beforeFirstStable = compareSemver(version, FIRST_STABLE) < 0;
   const firstStable = beforeFirstStable && releasesLibrary;
 
   let requirement: Requirement | undefined;
