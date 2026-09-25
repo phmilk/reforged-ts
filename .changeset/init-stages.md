@@ -16,6 +16,6 @@ Init stages under `pcall`, `Reforged.configure({ devMode })`, and no library Han
 
 - `tsGlobals.Players` is empty until the `globals` stage, so it is no longer readable at module top level;
 - `addScriptHook` hooks run under `pcall` with a printed line instead of ending initialization silently;
-- the game-time and host Timers start after `MarkGameStarted`, and the sync Trigger and its events are created at the `globals` stage;
+- the game-time Timer starts after `MarkGameStarted` (the host detection, opt-in since build step 6, has no Timer until `Host.detectHost()` runs), and the sync Trigger and its events are created at the `globals` stage;
 - requiring the library makes no Handle-creating Native call;
 - from the map header, the library is no longer inert: it captures `main`, `config` and the init functions as the editor's script defines them.

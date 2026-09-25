@@ -2,8 +2,9 @@
 // the legacy-names lint rule read. It must parse against its schema, target
 // this step's version pair, name only replacements that exist in the
 // library's emitted declarations and cover every member step 3 removes, every
-// entry point, enum and helper step 4 removes or replaces, and every Trigger
-// registration step 5 renames or changes.
+// entry point, enum and helper step 4 removes or replaces, every Trigger
+// registration step 5 renames or changes, and every member of the sync, host
+// and binary Systems step 6 removes or renames.
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
@@ -103,6 +104,27 @@ const REMOVED_IN_STEP_5: [old: string, kind: RenameEntry["kind"]][] = [
   ["Trigger.registerTrackableHitEvent", "member"],
   ["Trigger.registerTrackableTrackEvent", "member"],
   ["Trigger.registerPlayerMouseEvent", "member"],
+];
+
+/**
+ * What build step 6 (#53) removes from the public API or renames, with its
+ * kind: the sync System's callback API and `I`-prefixed types, the constructor
+ * overloads that took the data (a note entry: the constructor stays, taking
+ * the sender and the options), the host System's callback, and the binary
+ * reader's and writer's internals.
+ */
+const REMOVED_IN_STEP_6: [old: string, kind: RenameEntry["kind"]][] = [
+  ["new SyncRequest(...)", "constructor"],
+  ["SyncRequest.then", "member"],
+  ["SyncRequest.catch", "member"],
+  ["SyncCallback", "type"],
+  ["ISyncResponse", "type"],
+  ["ISyncOptions", "type"],
+  ["SyncRequest.destroy", "member"],
+  ["SyncRequest.fromIndex", "member"],
+  ["onHostDetect", "function"],
+  ["BinaryReader.read", "member"],
+  ["BinaryWriter.values", "member"],
 ];
 
 const valid: RenameEntry = {
@@ -242,6 +264,14 @@ describe("migration/renames.json", () => {
     ).toEqual([]);
   });
 
+  it("has an entry for every System member step 6 removes or renames, of its kind", async () => {
+    const entries = await loadRenames();
+    const kinds = new Map(entries.map((entry) => [entry.old, entry.kind]));
+    expect(
+      REMOVED_IN_STEP_6.filter(([old, kind]) => kinds.get(old) !== kind),
+    ).toEqual([]);
+  });
+
   it("names both halves of an accessor's get/set pair", async () => {
     const entries = await loadRenames();
     expect(
@@ -272,6 +302,10 @@ describe("migration/renames.json", () => {
     expect(api.has(parseSymbol("Init.onGlobals"))).toBe(true);
     expect(api.has(parseSymbol("Init.noSuchStage"))).toBe(false);
     expect(api.has(parseSymbol("Reforged.configure"))).toBe(true);
+    expect(api.has(parseSymbol("Host.detectHost"))).toBe(true);
+    // Deleted by step 6: the Promise replaces the callback members.
+    expect(api.has(parseSymbol("SyncRequest.then"))).toBe(false);
+    expect(api.has(parseSymbol("SyncRequest.send"))).toBe(true);
     // An exported type is not a value an author can write a member of.
     expect(api.has(parseSymbol("InitStages.onGlobals"))).toBe(false);
   });
