@@ -39,6 +39,46 @@ By hand, a Markdown file in `.changeset/` with any name (kebab-case, describing 
 
 The changelog generator ([`@changesets/changelog-github`](https://github.com/changesets/changesets/tree/main/packages/changelog-github)) prefixes each entry with a link to the pull request that added the changeset, its commit and its author.
 
+### The `reforged.patch` field
+
+Every publishable package declares the game Patch it supports in its `package.json`, as a full Build:
+
+```json
+"reforged": { "patch": "3.0.0.24268" }
+```
+
+It is the minimum Patch the package supports ([ADR 0009](adr/0009-independent-semver-with-changesets-and-patch-field.md)), and the one place that says so: the Patch-watch workflow, the compatibility matrix and the docs read it. Private packages (the workspace root, the release scripts) have none. The fields must agree:
+
+- Each names a Patch `reforged-types` ships an entry for: a Game version folder of the Typings (`packages/reforged-types/3.0.0/`) whose `manifest.json` records that Build.
+- The library's (`reforged-ts`) is the newest Patch the Typings ship an entry for: the library pins the newest Patch it supports.
+
+`pnpm release:check-patches` checks both and prints one line per package that breaks them. It is the script CI calls ([#48](https://github.com/phmilk/reforged-ts/issues/48)), and the compatibility matrix generator runs the same check before writing a row. Its programmatic entry point is `checkPatches` in `release/src/check-patches.ts`.
+
+### Choosing the bump for a Patch
+
+A new game Patch is adopted in one pull request: the Typings are regenerated for it (the New Patch loop of `packages/reforged-types/AGENTS.md`), and **`reforged.patch` moves with the changeset that adopts the Patch, in the same pull request**. The changeset gives each package its bump by these rules:
+
+- **A Patch that adds Natives:** a minor for `reforged-types` (new declarations); a minor for `reforged-ts` when new Wrappers ship; a minor for `reforged-test` when stubs are added; no bump for `eslint-plugin-reforged` unless one of its data files changes.
+- **A Patch that changes or removes a Native the public API depends on:** a major for `reforged-ts` only if its public API breaks, otherwise a minor with a changelog note naming the Native. A major needs its migration page and `renames.json` entries.
+- **A generator fix in the Typings:** a patch for `reforged-types`.
+
+Which fields move:
+
+- `reforged-types` and `reforged-ts` move to the new Patch every time, since the library pins the newest Patch the Typings ship.
+- Another package moves when the minimum Patch it supports changes.
+- When the new Build shares its Game version with the old one (`3.0.0.24268` then `3.0.0.24277`), the Game version folder is regenerated from the new Build and the old Build loses its entry: every field naming the old Build moves to the new one.
+
+When the rules give the library no bump, its field still moves, so the changeset names it with `none` (which `release:check-changeset` accepts for the changed manifest); no library version is released and its next release carries the field:
+
+```md
+---
+"reforged-types": minor
+"reforged-ts": none
+---
+
+Declare the Natives of Patch 3.0.0.24277.
+```
+
 ## Changesets configuration
 
 `.changeset/config.json`:
