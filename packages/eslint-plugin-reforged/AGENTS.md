@@ -34,13 +34,13 @@ The tests run from source. They do not need `build`.
 - `src/rules/<rule>.ts`: one file per rule. Its default export is a `RuleEntry` (`src/rule-entry.ts`) with the name, the severity and a `create(data)` factory.
 - `src/create-rule.ts`: the rule creator. It sets `meta.docs.url` from `src/meta.ts`.
 - `src/classify/`: the shared classification helpers, one module per concept (`package.ts`, `native.ts`, ...). Rules never inspect declarations themselves.
-- `src/data/`: loading and shape checks for the data files. `schema.ts` holds the field readers, and there is one parser module per file. `index.ts` loads them all into `PluginData`.
+- `src/data/`: loading and shape checks for the data files. `schema.ts` holds the field readers, and there is one parser module per file. `optional.ts` finds a file another package publishes in the linted project's installation. `index.ts` loads them all into `PluginData`.
 - `data/*.json`: the plugin's own data files, shipped.
 - `docs/<rule>.md`: one page per rule, shipped. `templates/rule-doc.md` is the template; it is not shipped.
 - `test/rules/<rule>.test.ts`: the RuleTester fixtures of one rule.
 - `test/plugin.test.ts`: the rule table, the recommended config, the metadata and the docs pages.
 - `test/data.test.ts`: the shape errors, and a check that every Native a data file names resolves in the Typings.
-- `test/support/`: the seams. `rule-tester.ts` wires the RuleTester to vitest. `lint.ts` lints with the recommended config as a Map project does. `plugin.ts` provides `ruleOf(name)`. `typings.ts` provides `installedNatives()`. `fixture-project.ts` holds the paths.
+- `test/support/`: the seams. `rule-tester.ts` wires the RuleTester to vitest. `lint.ts` lints with the recommended config as a Map project does. `plugin.ts` provides the plugin created with the fixture project as its project root (its optional packages are the fixture's), and `ruleOf(name)`. `typings.ts` provides `installedNatives()`. `fixture-project.ts` holds the paths.
 - `test/fixture-project/`: the Map project the rules lint. See its `tsconfig.json`.
   - The real `reforged-types` comes from this package's devDependency.
   - `node_modules/reforged-ts/` is a stub declaration package, committed; the root `.gitignore` re-includes it.
@@ -66,9 +66,12 @@ The tests run from source. They do not need `build`.
 
 ## Data files
 
-| File                       | Owner       | Shape                             |
-| -------------------------- | ----------- | --------------------------------- |
-| `data/unsafe-natives.json` | this plugin | `[{ name, reason, replacement }]` |
+| File                       | Owner       | Shape                                                                                                |
+| -------------------------- | ----------- | ---------------------------------------------------------------------------------------------------- |
+| `data/unsafe-natives.json` | this plugin | `[{ name, reason, replacement }]`                                                                    |
+| `migration/renames.json`   | reforged-ts | `[{ old, new, kind, versions: { from, to }, oneToOne, note }]` (the library's `renames.schema.json`) |
+
+A file another package publishes is read from the linted project's installation of that package, found from the project root (`src/data/optional.ts`), never from this plugin's dependencies. Declare it as an `OptionalDataFile` next to its parser, read it in `loadPluginData` with its empty value, and list the package in the rule entry's `requires`: when the package is missing, the plugin warns once and registers the rule disabled.
 
 A data file grows by pull request, and every line carries its reason. A review can then challenge one entry. A file with an unexpected shape throws a `DataFileError` at plugin load, naming the file and the field. Changing the shape of a file the plugin reads from another package is a major of this plugin.
 
