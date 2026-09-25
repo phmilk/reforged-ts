@@ -1,6 +1,6 @@
 # no-handle-id-as-data
 
-Reports a call to `GetHandleId` and a read of a Wrapper's `id` accessor whose value does not reach a text-display Native. A warning in the recommended config; key by the object itself instead.
+Reports a call to `GetHandleId` and a read of a Wrapper's `id` accessor whose value does not reach a text-display Native. A warning in the recommended config; key by the Handle or Wrapper itself instead.
 
 ## Why
 
@@ -31,7 +31,7 @@ import { Unit } from "reforged-ts";
 declare const unit: Unit;
 
 const kills = new LuaTable<Unit, number>();
-kills.set(unit, 0); // keyed by the object
+kills.set(unit, 0); // keyed by the Wrapper
 
 print(`unit ${unit.id} spawned`); // displaying the id is fine
 ```
@@ -42,7 +42,7 @@ None.
 
 ## Suggestions and fixes
 
-None: the replacement key (the object, a counter the Map project assigns) depends on what the id was for.
+None: the replacement key (the Handle or its Wrapper, a counter the Map project assigns) depends on what the id was for.
 
 ## When not to use it
 

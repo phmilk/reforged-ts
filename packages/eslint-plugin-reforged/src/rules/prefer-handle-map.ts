@@ -1,7 +1,7 @@
 // Rule 11 of #16's table (pitfall L2): a `Map` or `Set` keyed by a Wrapper.
-// The entry holds the object, so it outlives the destroyed unit or effect and
+// The entry holds the Wrapper, so it outlives the destroyed unit or effect and
 // the table grows for the rest of the game. `HandleMap`/`HandleSet` (the
-// runtime Guards of reforged-ts) drop the entry with the object. Matches
+// runtime Guards of reforged-ts) drop the entry with the Handle. Matches
 // `new Map`/`new Set` syntactically, then asks the checker for the global
 // constructor and the key type (explicit or inferred).
 import { ESLintUtils } from "@typescript-eslint/utils";

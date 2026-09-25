@@ -1,5 +1,5 @@
 // Rule 8 of #16's table (pitfall D5): a Handle's engine id used as data. In a
-// Lua map the id of the same object can differ between clients, so a table
+// Lua map the id of the same Handle can differ between clients, so a table
 // key, a comparison or stored state built on it desyncs. Displaying the id is
 // fine: a value that reaches a text sink (text-sink.ts) is not reported.
 import { AST_NODE_TYPES, type TSESTree } from "@typescript-eslint/utils";
@@ -28,7 +28,7 @@ export function createNoHandleIdAsData(localSafe: readonly LocalSafeEntry[]) {
       },
       messages: {
         handleIdAsData:
-          "{{source}} used as data: in a Lua map the id of the same object can differ between clients, so a key, a comparison or state built on it desyncs. Key by the object itself.",
+          "{{source}} used as data: in a Lua map the id of the same Handle can differ between clients, so a key, a comparison or state built on it desyncs. Key by the Handle or Wrapper itself.",
       },
       schema: [],
       defaultOptions: [],
