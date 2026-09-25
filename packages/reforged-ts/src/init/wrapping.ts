@@ -9,15 +9,16 @@
 //
 // A name that is nil when asked for (the map header position: the editor's
 // script defines `InitCustomTriggers`, `RunInitializationTriggers`, `main`
-// and `config` after the header) is pending, and a hook set as `_G`'s
-// metatable wraps it the moment the editor's script assigns it, storing the
-// wrapper with a raw set. The decision is per name; nothing records a load
-// position. The hook composes with a metatable the map installed before it
-// (an undeclared-global warner): the map's `__index` and `__newindex` keep
-// working for every other key (a raw set when there was no `__newindex`),
-// and the map's metatable is `_G`'s again, or `_G` has none again, once
-// every pending name was captured. The hook lives in the shared state, so a
-// second root finds it on and installs none over it.
+// and `config` after the header) is pending, and the interception, a
+// metatable the library sets on `_G`, wraps it the moment the editor's
+// script assigns it, storing the wrapper with a raw set. The decision is
+// per name; nothing records a load position. The library's metatable
+// composes with one the map installed before it (an undeclared-global
+// warner): the map's `__index` and `__newindex` keep working for every
+// other key (a raw set when there was no `__newindex`), and the map's
+// metatable is `_G`'s again, or `_G` has none again, once every pending
+// name was captured. The interception lives in the shared state, so a
+// second root finds it on and installs no second metatable over it.
 //
 // Package-internal: nothing here is exported from the library index.
 
@@ -41,7 +42,7 @@ function install(name: string, original: () => void, around: Around): void {
 }
 
 /**
- * Assigns `value` to `key` as `_G` did before the hook: through the
+ * Assigns `value` to `key` as `_G` did before the interception: through the
  * `__newindex` of the metatable the map installed, or with a raw set.
  */
 function assignThrough(
@@ -61,9 +62,9 @@ function assignThrough(
 }
 
 /**
- * Takes the hook off `_G` once every pending name was captured: the map's
- * metatable is `_G`'s again, or `_G` has none. A metatable something else
- * put over the hook meanwhile is left alone.
+ * Takes the library's metatable off `_G` once every pending name was
+ * captured: the map's metatable is `_G`'s again, or `_G` has none. A
+ * metatable something else put over the library's meanwhile is left alone.
  */
 function release(): void {
   const interception = state.interception;
@@ -71,15 +72,15 @@ function release(): void {
     return;
   }
   state.interception = undefined;
-  if (getmetatable(globals) === interception.hook) {
+  if (getmetatable(globals) === interception.metatable) {
     setmetatable(globals, interception.previous);
   }
 }
 
 /**
- * The hook's `__newindex`: a function assigned to a pending name is wrapped
- * and stored with a raw set; every other assignment goes where it went
- * before the hook.
+ * The `__newindex` of the library's metatable: a function assigned to a
+ * pending name is wrapped and stored with a raw set; every other assignment
+ * goes where it went before the interception.
  */
 function capture(
   previous: GlobalsMetatable | undefined,
@@ -101,24 +102,25 @@ function capture(
 }
 
 /**
- * Puts the hook on `_G` unless it is on already: the metatable `_G` has now
- * is what the hook composes with and what comes back when the hook goes.
+ * Puts the library's metatable on `_G` unless the interception is on
+ * already: the metatable `_G` has now is what the library's composes with
+ * and what comes back when the interception ends.
  */
 function intercept(): void {
   if (state.interception !== undefined) {
     return;
   }
   const previous: GlobalsMetatable | undefined = getmetatable(globals);
-  const hook: GlobalsMetatable = {
+  const metatable: GlobalsMetatable = {
     __newindex: (table, key, value) => {
       capture(previous, table, key, value);
     },
   };
   if (previous?.__index !== undefined) {
-    hook.__index = previous.__index;
+    metatable.__index = previous.__index;
   }
-  setmetatable(globals, hook);
-  state.interception = { hook, previous };
+  setmetatable(globals, metatable);
+  state.interception = { metatable, previous };
 }
 
 /**

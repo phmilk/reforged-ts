@@ -33,10 +33,12 @@ export interface ReforgedOptions {
 /** The type of `Reforged`: the configuration call and its read. */
 export interface ReforgedEntry {
   /**
-   * Records the configuration. Call it once, first thing in the entry
-   * point: a call that changes `devMode` after the Map project registered a
-   * callback through the library prints a warning and affects only later
-   * registrations.
+   * Records the configuration. An absent `devMode` means off: `configure({})`
+   * after `configure({ devMode: true })` turns Dev mode off. Call it once,
+   * first thing in the entry point: a call that changes `devMode` after the
+   * Map project registered a callback (through `Init` or `addScriptHook`; the
+   * library's own load-time registrations do not count) prints a warning,
+   * records the value anyway, and affects only later registrations.
    */
   configure(options: ReforgedOptions): void;
   /** Whether the library is in Dev mode: false until `configure` sets it. */

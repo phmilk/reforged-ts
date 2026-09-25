@@ -10,7 +10,17 @@
 //
 // Package-internal: nothing here is exported from the library index.
 
-import { LIBRARY, type Origin, type Registration, state } from "./state";
+import {
+  type EntryPoint,
+  type InitStage,
+  LIBRARY,
+  type Origin,
+  type Registration,
+  state,
+} from "./state";
+
+/** Where a callback runs, as a failure line names it. */
+type Where = InitStage | EntryPoint;
 
 /**
  * Appends `callback` to `queue`, named `label` in failure lines, or `#n` for
@@ -35,7 +45,7 @@ export function enqueue(
 }
 
 /** Runs one callback under pcall; a failure prints one line. */
-export function runProtected(where: string, registration: Registration): void {
+export function runProtected(where: Where, registration: Registration): void {
   const [ok, failure] = pcall(registration.callback);
   if (!ok) {
     print(
@@ -45,7 +55,7 @@ export function runProtected(where: string, registration: Registration): void {
 }
 
 /** Runs every callback of `queue`, the ones registered during the run too. */
-export function runQueue(where: string, queue: readonly Registration[]): void {
+export function runQueue(where: Where, queue: readonly Registration[]): void {
   // By index, reading the length each time: a registration made during the
   // run joins it.
   let index = 0;

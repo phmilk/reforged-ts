@@ -9,8 +9,9 @@
 // would wrap Blizzard's functions a second time around the first wrappers.
 // So the state that wrapping must see again lives in one table anchored on a
 // global the library owns, `_G["reforged-ts"].init`: the wrappers installed
-// (the marker), the names still pending, the hook on `_G` that captures
-// them, the queues of the stages and of the deprecated alias, and what ran.
+// (the marker), the names still pending, the interception (the library's
+// metatable on `_G`) that captures them, the queues of the stages and of the
+// deprecated alias, and what ran.
 // A second load finds it, adopts it, and its registrations join the same
 // queues. The anchor takes one entry per module family (`anchored`): the
 // `reforged` module keeps the dev-mode flag on it the same way.
@@ -69,11 +70,11 @@ export interface GlobalsMetatable {
   __newindex?: ((table: Globals, key: string, value: unknown) => void) | object;
 }
 
-/** The hook on `_G` while names are pending, and what it replaced. */
+/** The library's metatable on `_G` while names are pending, and what it replaced. */
 export interface Interception {
-  /** The hook: `_G`'s metatable until every pending name was captured. */
-  readonly hook: GlobalsMetatable;
-  /** The metatable `_G` had before the hook, or undefined when it had none. */
+  /** The library's metatable: `_G`'s until every pending name was captured. */
+  readonly metatable: GlobalsMetatable;
+  /** The metatable `_G` had before, or undefined when it had none. */
   readonly previous: GlobalsMetatable | undefined;
 }
 
@@ -93,7 +94,7 @@ export interface InitState {
   readonly wrappers: LuaSet<() => void>;
   /** The names that were nil at load, in the order they were asked for. */
   readonly pending: PendingGlobal[];
-  /** The hook on `_G` while a name is pending; undefined when it is off. */
+  /** The interception of `_G` while a name is pending; undefined when it is off. */
   interception: Interception | undefined;
   readonly stages: Record<InitStage, StageState>;
   /** The deprecated alias's queues, one per entry point, run in order. */
