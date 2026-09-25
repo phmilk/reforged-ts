@@ -5,6 +5,7 @@ import { Frame } from "./frame";
 import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Region } from "./region";
+import { forEachPlayerSlot } from "./slots";
 import { Timer } from "./timer";
 import { Trackable } from "./trackable";
 import { Unit } from "./unit";
@@ -151,16 +152,13 @@ export class Trigger extends Handle<trigger> {
 
   /** Registers the player unit event for the player in every slot, with no filter. */
   public registerAnyUnitEvent(whichPlayerUnitEvent: playerunitevent) {
-    for (let index = 0; index < bj_MAX_PLAYER_SLOTS; index++) {
-      const whichPlayer = Player(index);
-      if (whichPlayer !== undefined) {
-        TriggerRegisterPlayerUnitEvent(
-          this.handle,
-          whichPlayer,
-          whichPlayerUnitEvent,
-        );
-      }
-    }
+    forEachPlayerSlot((whichPlayer) => {
+      TriggerRegisterPlayerUnitEvent(
+        this.handle,
+        whichPlayer.handle,
+        whichPlayerUnitEvent,
+      );
+    });
     return this;
   }
 
