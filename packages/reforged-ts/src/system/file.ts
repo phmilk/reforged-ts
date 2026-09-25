@@ -34,19 +34,9 @@
  * `File` stays a class of static members: it drives one facility of the
  * whole game, the Preload generator and one ability's icon, so it has no
  * state per object, and `File.read` and `File.write` keep their w3ts names.
+ *
  * @example
- * ```ts
- * // Write to the file
- * File.write("data.txt", "Hello world!");
- *
- * // Read its contents
- * const contents = File.read("data.txt");
- *
- * // Display the contents
- * if (contents) {
- *  print(contents);
- * }
- * ```
+ * {@includeCode ../../examples/file-write-read.ts}
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class -- File is static-only by decision (see its doc comment); step 7 (#54) settles that shape for the static namespaces together with Camera and Input
 export class File {

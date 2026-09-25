@@ -17,24 +17,7 @@ import {
  * position and the width the read needed.
  *
  * @example
- * ```ts
- * // Write the values
- * const writer = new BinaryWriter();
- * writer.writeUInt8(5);
- * writer.writeUInt32(12345678);
- * writer.writeDouble(0.1);
- * writer.writeString("hello");
- * writer.writeUInt16(45000);
- *
- * // Read the values
- * const reader = new BinaryReader(writer.toString());
- * reader.readUInt8(); // 5
- * reader.readUInt32(); // 12345678
- * reader.readDouble(); // 0.1
- * reader.readString(); // hello
- * reader.readUInt16(); // 45000
- * reader.remaining; // 0
- * ```
+ * {@includeCode ../../examples/binary-round-trip.ts}
  */
 export class BinaryReader {
   /** The binary string read. */
