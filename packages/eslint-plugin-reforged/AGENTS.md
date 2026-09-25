@@ -33,7 +33,7 @@ The tests run from source. They do not need `build`.
 - `src/rules/index.ts`: the registry, one line per rule, sorted by name.
 - `src/rules/<rule>.ts`: one file per rule. Its default export is a `RuleEntry` (`src/rule-entry.ts`) with the name, the severity and a `create(data)` factory.
 - `src/create-rule.ts`: the rule creator. It sets `meta.docs.url` from `src/meta.ts`.
-- `src/classify/`: the shared classification helpers, one module per concept (`package.ts`, `native.ts`, ...). Rules never inspect declarations themselves.
+- `src/classify/`: the shared classification helpers, one module per concept (`package.ts`, `native.ts`, `handle.ts`, `wrapper.ts`, `creation.ts`, `top-level.ts`, ...). Rules never inspect declarations themselves.
 - `src/data/`: loading and shape checks for the data files. `schema.ts` holds the field readers, and there is one parser module per file. `index.ts` loads them all into `PluginData`.
 - `data/*.json`: the plugin's own data files, shipped.
 - `docs/<rule>.md`: one page per rule, shipped. `templates/rule-doc.md` is the template; it is not shipped.
@@ -66,10 +66,11 @@ The tests run from source. They do not need `build`.
 
 ## Data files
 
-| File                       | Owner       | Shape                                                                                                                  |
-| -------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `data/unsafe-natives.json` | this plugin | `[{ name, reason, replacement }]`                                                                                      |
-| `data/local-safe.json`     | this plugin | `[{ name, kind: "visual" \| "text", reason }]`; `name` is a Native, `print`, `Class#member` or `Class.member` (static) |
+| File                         | Owner       | Shape                                                                                                                  |
+| ---------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `data/unsafe-natives.json`   | this plugin | `[{ name, reason, replacement }]`                                                                                      |
+| `data/local-safe.json`       | this plugin | `[{ name, kind: "visual" \| "text", reason }]`; `name` is a Native, `print`, `Class#member` or `Class.member` (static) |
+| `data/creation-natives.json` | this plugin | `[{ name, family }]`                                                                                                   |
 
 A data file grows by pull request, and every line carries its reason. A review can then challenge one entry. A file with an unexpected shape throws a `DataFileError` at plugin load, naming the file and the field. Changing the shape of a file the plugin reads from another package is a major of this plugin.
 

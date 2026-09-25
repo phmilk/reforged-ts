@@ -8,6 +8,13 @@ import { packageNameOf } from "../../src/classify/package.js";
 import { fixtureFile } from "./fixture-project.js";
 
 let natives: ReadonlyMap<string, ts.FunctionDeclaration> | undefined;
+let program: ts.Program | undefined;
+
+/** The fixture project's TypeScript program (built once), for a checker over the Typings. */
+export function fixtureProgram(): ts.Program {
+  program ??= loadProgram();
+  return program;
+}
 
 function loadProgram(): ts.Program {
   const parsed = ts.getParsedCommandLineOfConfigFile(
@@ -38,7 +45,7 @@ export function installedNatives(): ReadonlyMap<
 > {
   if (natives === undefined) {
     const found = new Map<string, ts.FunctionDeclaration>();
-    for (const sourceFile of loadProgram().getSourceFiles()) {
+    for (const sourceFile of fixtureProgram().getSourceFiles()) {
       if (packageNameOf(sourceFile.fileName) !== "reforged-types") {
         continue;
       }
