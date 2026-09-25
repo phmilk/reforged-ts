@@ -124,6 +124,7 @@ const REMOVED_IN_STEP_6: [old: string, kind: RenameEntry["kind"]][] = [
   ["SyncRequest.fromIndex", "member"],
   ["onHostDetect", "function"],
   ["BinaryReader.read", "member"],
+  ["BinaryReader.data", "member"],
   ["BinaryWriter.values", "member"],
 ];
 

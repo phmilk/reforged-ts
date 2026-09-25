@@ -3,7 +3,7 @@
 import {
   type BinaryField,
   BYTE_ORDER,
-  Fields,
+  FIELDS,
   UINT32_MODULUS,
   unpackField,
 } from "./binaryformat";
@@ -17,27 +17,11 @@ import {
  * position and the width the read needed.
  *
  * @example
- * ```ts
- * // Write the values
- * const writer = new BinaryWriter();
- * writer.writeUInt8(5);
- * writer.writeUInt32(12345678);
- * writer.writeDouble(0.1);
- * writer.writeString("hello");
- * writer.writeUInt16(45000);
- *
- * // Read the values
- * const reader = new BinaryReader(writer.toString());
- * reader.readUInt8(); // 5
- * reader.readUInt32(); // 12345678
- * reader.readDouble(); // 0.1
- * reader.readString(); // hello
- * reader.readUInt16(); // 45000
- * reader.remaining; // 0
- * ```
+ * {@includeCode ../../examples/binary-round-trip.ts}
  */
 export class BinaryReader {
-  public readonly data: string;
+  /** The binary string read. */
+  private readonly data: string;
 
   /** The position of the next byte, from one, as `string.unpack` takes it. */
   private next = 1;
@@ -58,7 +42,7 @@ export class BinaryReader {
 
   /** Reads a double-precision float, the lossless pair of `writeDouble`. */
   public readDouble(): number {
-    const value = this.read("readDouble", Fields.double) as number;
+    const value = this.read("readDouble", FIELDS.double) as number;
     return value;
   }
 
@@ -67,25 +51,25 @@ export class BinaryReader {
    * single precision. `readDouble` is the lossless pair.
    */
   public readFloat(): number {
-    const value = this.read("readFloat", Fields.float) as number;
+    const value = this.read("readFloat", FIELDS.float) as number;
     return value;
   }
 
   /** Reads a signed 16-bit integer. */
   public readInt16(): number {
-    const value = this.read("readInt16", Fields.int16) as number;
+    const value = this.read("readInt16", FIELDS.int16) as number;
     return value;
   }
 
   /** Reads a signed 32-bit integer, from -2^31 to 2^31 - 1. */
   public readInt32(): number {
-    const value = this.read("readInt32", Fields.int32) as number;
+    const value = this.read("readInt32", FIELDS.int32) as number;
     return value;
   }
 
   /** Reads a signed 8-bit integer. */
   public readInt8(): number {
-    const value = this.read("readInt8", Fields.int8) as number;
+    const value = this.read("readInt8", FIELDS.int8) as number;
     return value;
   }
 
@@ -94,13 +78,13 @@ export class BinaryReader {
    * byte, zero bytes included.
    */
   public readString(): string {
-    const value = this.read("readString", Fields.string) as string;
+    const value = this.read("readString", FIELDS.string) as string;
     return value;
   }
 
   /** Reads an unsigned 16-bit integer. */
   public readUInt16(): number {
-    const value = this.read("readUInt16", Fields.uint16) as number;
+    const value = this.read("readUInt16", FIELDS.uint16) as number;
     return value;
   }
 
@@ -111,13 +95,13 @@ export class BinaryReader {
    * the 64-bit test VM, equal either way.
    */
   public readUInt32(): number {
-    const value = this.read("readUInt32", Fields.uint32) as number;
+    const value = this.read("readUInt32", FIELDS.uint32) as number;
     return value < 0 ? value + UINT32_MODULUS : value;
   }
 
   /** Reads an unsigned 8-bit integer. */
   public readUInt8(): number {
-    const value = this.read("readUInt8", Fields.uint8) as number;
+    const value = this.read("readUInt8", FIELDS.uint8) as number;
     return value;
   }
 
@@ -150,15 +134,15 @@ export class BinaryReader {
    * its length prefix and, once the prefix is there, the length it states.
    */
   private widthOf(field: BinaryField): number {
-    if (field !== Fields.string) {
+    if (field !== FIELDS.string) {
       return string.packsize(BYTE_ORDER + field.format);
     }
-    const prefix = string.packsize(BYTE_ORDER + Fields.stringLength.format);
+    const prefix = string.packsize(BYTE_ORDER + FIELDS.stringLength.format);
     if (prefix > this.remaining) {
       return prefix;
     }
     const [length] = unpackField(
-      BYTE_ORDER + Fields.stringLength.format,
+      BYTE_ORDER + FIELDS.stringLength.format,
       this.data,
       this.next,
     );

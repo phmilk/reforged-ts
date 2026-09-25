@@ -12,6 +12,7 @@
 import "./support/bundle-position";
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import {
+  base64Decode,
   base64Encode,
   MapPlayer,
   SyncRequest,
@@ -68,6 +69,11 @@ function header(id: number, index: number, count: number): string {
 /** A packet as the game delivers it, from `from`. */
 function packet(data: string, from: MapPlayer = local): StubSyncPacket {
   return { prefix: PREFIX, data, from: from.handle };
+}
+
+/** The id the next request created gets: a request is created to learn it. */
+function nextId(): number {
+  return (new SyncRequest(local).id + 1) % 0x10000;
 }
 
 /** `length` bytes that differ from one position to the next. */
@@ -196,6 +202,17 @@ describe("receiving", () => {
     expect(response.from).toBe(other);
   });
 
+  it("delivers base64-encoded binary data whole where the game cuts the data at a zero byte", () => {
+    const binary = string.pack(">I4", 1);
+    let outcome: Outcome = {};
+    const packets = sentBy(() => {
+      outcome = observe(SyncRequest.send(local, base64Encode(binary)));
+    });
+    __stub_deliver_sync(packets[0], { cString: true });
+    const response = defined(outcome.response, "the response");
+    expect(base64Decode(response.data)).toEqual(binary);
+  });
+
   it("ignores a packet with a foreign prefix", () => {
     const request = new SyncRequest(local);
     let outcome: Outcome = {};
@@ -290,6 +307,70 @@ describe("settling", () => {
     ).toEqual(
       `reforged-ts: sync request ${String(request.id)} was already started`,
     );
+  });
+
+  it("throws at the caller's line on data over 65,535 chunks, and leaves the request unstarted", () => {
+    const request = new SyncRequest(local);
+    const data = string.rep("a", 65535 * 244 + 1);
+    expect(
+      raisedIn(() => {
+        void request.start(data);
+      }),
+    ).toEqual(
+      `reforged-ts: sync request ${String(request.id)} has ${String(data.length)} bytes, more than the ${String(65535 * 244)} a request carries`,
+    );
+    expect(request.status).toEqual(SyncStatus.None);
+    let outcome: Outcome = {};
+    const [sent] = sentBy(() => {
+      outcome = observe(request.start("fits"));
+    });
+    __stub_deliver_sync(sent);
+    expect(defined(outcome.response, "the response").data).toEqual("fits");
+  });
+
+  it("throws at the caller's line of send on data over 65,535 chunks", () => {
+    const data = string.rep("a", 65535 * 244 + 1);
+    const id = nextId();
+    expect(
+      raisedIn(() => {
+        void SyncRequest.send(local, data);
+      }),
+    ).toEqual(
+      `reforged-ts: sync request ${String(id)} has ${String(data.length)} bytes, more than the ${String(65535 * 244)} a request carries`,
+    );
+  });
+
+  it("throws at the caller's line on data holding a zero byte, sends nothing and leaves the request unstarted", () => {
+    const request = new SyncRequest(local);
+    let raised = "";
+    const packets = sentBy(() => {
+      raised = raisedIn(() => {
+        void request.start("ab\0c");
+      });
+    });
+    expect(raised).toEqual(
+      `reforged-ts: sync request ${String(request.id)} has a zero byte at position 2: encode binary data first, for example with base64Encode`,
+    );
+    expect(packets).toEqual([]);
+    expect(request.status).toEqual(SyncStatus.None);
+  });
+
+  it("throws at the caller's line of send on data holding a zero byte", () => {
+    const id = nextId();
+    expect(
+      raisedIn(() => {
+        void SyncRequest.send(local, "\0");
+      }),
+    ).toEqual(
+      `reforged-ts: sync request ${String(id)} has a zero byte at position 0: encode binary data first, for example with base64Encode`,
+    );
+  });
+
+  it("does not check the data on a client other than the sender's, which ignores it", () => {
+    const request = new SyncRequest(other);
+    observe(request.start(`${string.rep("a", 65535 * 244 + 1)}\0`));
+    expect(request.status).toEqual(SyncStatus.Syncing);
+    request.cancel();
   });
 
   it("rejects on cancel, naming the request id, and ignores its packets afterwards", () => {

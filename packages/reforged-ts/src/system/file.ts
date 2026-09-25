@@ -12,9 +12,11 @@
  *
  * How a file is written and read back: `File.write` passes the contents to
  * `Preload` in chunks of at most 259 bytes, between an opening and a closing
- * piece of Lua user code. Running the file with `Preloader` collects the
- * chunks and sets the icon of one ability (`Amls`) to them, and `File.read`
- * reads that icon and puts the original back.
+ * piece of Lua, each between the `//! beginusercode` and `//!endusercode`
+ * markers of the generated file, which `Preloader` runs as Lua. The opening
+ * piece makes the `Preload` calls collect the chunks, and the closing piece
+ * sets the icon of one ability (`Amls`) to them. `File.read` runs the file
+ * with `Preloader`, reads that icon and puts the original back.
  *
  * The escape contract: each chunk sits inside a double-quoted string literal
  * of the generated file, so a double quote in the contents is written as the
@@ -34,19 +36,9 @@
  * `File` stays a class of static members: it drives one facility of the
  * whole game, the Preload generator and one ability's icon, so it has no
  * state per object, and `File.read` and `File.write` keep their w3ts names.
+ *
  * @example
- * ```ts
- * // Write to the file
- * File.write("data.txt", "Hello world!");
- *
- * // Read its contents
- * const contents = File.read("data.txt");
- *
- * // Display the contents
- * if (contents) {
- *  print(contents);
- * }
- * ```
+ * {@includeCode ../../examples/file-write-read.ts}
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class -- File is static-only by decision (see its doc comment); step 7 (#54) settles that shape for the static namespaces together with Camera and Input
 export class File {

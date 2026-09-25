@@ -9,6 +9,7 @@ import { onStage } from "../init/stages";
 import { base64Decode, base64Encode } from "./base64";
 import { BinaryReader } from "./binaryreader";
 import { BinaryWriter } from "./binarywriter";
+import { isPlayingUser } from "./playing-user";
 import { type SyncResponse, SyncRequest } from "./sync";
 
 /** The seconds an election waits for the lobby times by default. */
@@ -50,19 +51,11 @@ let election: Promise<MapPlayer> | undefined;
 
 let elected: MapPlayer | undefined;
 
-/** Whether `p` is a user who is playing. */
-function isPlayingUser(p: MapPlayer | undefined): p is MapPlayer {
-  return (
-    p?.slotState === PLAYER_SLOT_STATE_PLAYING &&
-    p.controller === MAP_CONTROL_USER
-  );
-}
-
 /**
  * This client's lobby time, packed as a float and base64-encoded: zero when
  * `config` never ran.
  */
-function lobbyTime(): string {
+function encodedLobbyTime(): string {
   const writer = new BinaryWriter();
   writer.writeFloat(startedAt - (joinedAt ?? startedAt));
   return base64Encode(writer.toString());
@@ -118,22 +111,22 @@ class Election {
 
   /** Starts the requests, the leave events and the timeout, if any. */
   private start(timeout: number): void {
-    const data = lobbyTime();
+    const data = encodedLobbyTime();
     const leaveTrigger = Trigger.create();
     this.leaveTrigger = leaveTrigger;
     for (let slot = 0; slot < bj_MAX_PLAYERS; slot++) {
-      const p = Players[slot];
-      if (isPlayingUser(p)) {
+      const player = Players[slot];
+      if (isPlayingUser(player)) {
         this.slots.push(slot);
-        this.waiting.set(slot, new SyncRequest(p));
+        this.waiting.set(slot, new SyncRequest(player));
         this.waitingCount++;
-        leaveTrigger.registerPlayerEvent(p, EVENT_PLAYER_LEAVE);
+        leaveTrigger.registerPlayerEvent(player, EVENT_PLAYER_LEAVE);
       }
     }
     leaveTrigger.addAction(() => {
-      const p = MapPlayer.fromEvent();
-      if (p) {
-        this.leave(p.id);
+      const player = MapPlayer.fromEvent();
+      if (player) {
+        this.leave(player.id);
       }
     });
     for (const slot of this.slots) {
