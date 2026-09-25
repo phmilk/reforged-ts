@@ -13,6 +13,9 @@ import { holderCount } from "../src/system/handlekeys";
 import { defined } from "./support/defined";
 import { withNative } from "./support/native-override";
 
+// Dev mode raises for a Wrapper created before the globals Init stage.
+__stub_init_globals();
+
 const owner = defined(MapPlayer.fromIndex(0), "MapPlayer.fromIndex(0)");
 const footman = FourCC("hfoo");
 
