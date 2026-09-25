@@ -21290,6 +21290,7 @@ declare function SetCameraFieldControlledByInput(whichField: camerafield, contro
  * @param whichField - camerafield
  * @returns boolean
  * @patch 3.0.0.24268
+ * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetCameraFieldControlledByInput}
  */
 declare function GetCameraFieldControlledByInput(whichField: camerafield): boolean;
@@ -21324,6 +21325,7 @@ declare function BlzCameraSetCameraType(cameraType: number): void;
 /**
  * @returns integer (32-bit)
  * @patch 3.0.0.24268
+ * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCameraGetCameraType}
  */
 declare function BlzCameraGetCameraType(): number;
@@ -24761,6 +24763,7 @@ declare function BlzGetTriggerPlayerIsKeyDown(): boolean;
  * @param metakey - integer (32-bit)
  * @returns boolean
  * @patch 3.0.0.24268
+ * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzIsMetaKeyPressed}
  */
 declare function BlzIsMetaKeyPressed(metakey: number): boolean;
@@ -24769,6 +24772,7 @@ declare function BlzIsMetaKeyPressed(metakey: number): boolean;
  * @param key - oskeytype
  * @returns boolean
  * @patch 3.0.0.24268
+ * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzIsKeyPressed}
  */
 declare function BlzIsKeyPressed(key: oskeytype): boolean;
@@ -24777,6 +24781,7 @@ declare function BlzIsKeyPressed(key: oskeytype): boolean;
  * @param mouseButtonType - mousebuttontype
  * @returns boolean
  * @patch 3.0.0.24268
+ * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzIsMouseButtonPressed}
  */
 declare function BlzIsMouseButtonPressed(mouseButtonType: mousebuttontype): boolean;
@@ -24784,6 +24789,7 @@ declare function BlzIsMouseButtonPressed(mouseButtonType: mousebuttontype): bool
 /**
  * @returns integer (32-bit)
  * @patch 3.0.0.24268
+ * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetMouseScreenPosX}
  */
 declare function BlzGetMouseScreenPosX(): number;
@@ -24791,6 +24797,7 @@ declare function BlzGetMouseScreenPosX(): number;
 /**
  * @returns integer (32-bit)
  * @patch 3.0.0.24268
+ * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetMouseScreenPosY}
  */
 declare function BlzGetMouseScreenPosY(): number;
@@ -24842,6 +24849,7 @@ declare function BlzGetMouseFocusUnit(): unit | undefined;
  * @param pixelX - integer (32-bit)
  * @returns real
  * @patch 3.0.0.24268
+ * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzPixelToFrameX}
  */
 declare function BlzPixelToFrameX(pixelX: number): number;
@@ -24850,6 +24858,7 @@ declare function BlzPixelToFrameX(pixelX: number): number;
  * @param pixelY - integer (32-bit)
  * @returns real
  * @patch 3.0.0.24268
+ * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzPixelToFrameY}
  */
 declare function BlzPixelToFrameY(pixelY: number): number;
@@ -24858,6 +24867,7 @@ declare function BlzPixelToFrameY(pixelY: number): number;
  * @param frameX - real
  * @returns integer (32-bit)
  * @patch 3.0.0.24268
+ * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzFrameToPixelX}
  */
 declare function BlzFrameToPixelX(frameX: number): number;
@@ -24866,6 +24876,7 @@ declare function BlzFrameToPixelX(frameX: number): number;
  * @param frameY - real
  * @returns integer (32-bit)
  * @patch 3.0.0.24268
+ * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzFrameToPixelY}
  */
 declare function BlzFrameToPixelY(frameY: number): number;

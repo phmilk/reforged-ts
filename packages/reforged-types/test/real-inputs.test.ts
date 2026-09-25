@@ -91,7 +91,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
     );
   });
 
-  it("marks GetLocalPlayer @async, and 56 Natives in all", () => {
+  it("marks GetLocalPlayer @async, and 67 Natives in all", () => {
     expect(commonJ).toContain(
       [
         "/**",
@@ -102,7 +102,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
         "declare function GetLocalPlayer(): player;",
       ].join("\n"),
     );
-    expect(count(commonJ, /^ \* @async$/)).toBe(56);
+    expect(count(commonJ, /^ \* @async$/)).toBe(67);
     expect(count(blizzardJ + commonAi, /^ \* @async$/)).toBe(0);
   });
 
@@ -149,14 +149,14 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
     ]);
   });
 
-  it("lists the 56 async Natives in async-natives.json, sorted", () => {
+  it("lists the 67 async Natives in async-natives.json, sorted", () => {
     const names = JSON.parse(
       generatedFile(result, "async-natives.json"),
     ) as string[];
-    expect(names).toHaveLength(56);
+    expect(names).toHaveLength(67);
     expect(names).toContain("GetLocalPlayer");
     expect(names).toEqual([...names].sort());
-    expect(new Set(names).size).toBe(56);
+    expect(new Set(names).size).toBe(67);
     for (const name of names) {
       expect(commonJ).toContain(`declare function ${name}(`);
     }
@@ -196,7 +196,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
     });
     expect(
       manifest.entries.filter((e: { async?: boolean }) => e.async),
-    ).toHaveLength(56);
+    ).toHaveLength(67);
   });
 
   it("equals the committed output (the drift gate)", async () => {
