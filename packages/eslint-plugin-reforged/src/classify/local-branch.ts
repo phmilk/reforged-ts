@@ -26,6 +26,7 @@ import {
   type TSESTree,
 } from "@typescript-eslint/utils";
 
+import { isFunction } from "./function.js";
 import { handleTypeName } from "./handle.js";
 import { calleeName, resolveNative } from "./native.js";
 import { resolveWrapperMember } from "./wrapper-member.js";
@@ -63,14 +64,6 @@ function unwrap(node: TSESTree.Node): TSESTree.Node {
     current = current.expression;
   }
   return current;
-}
-
-function isFunction(node: TSESTree.Node): node is TSESTree.FunctionLike {
-  return (
-    node.type === AST_NODE_TYPES.ArrowFunctionExpression ||
-    node.type === AST_NODE_TYPES.FunctionExpression ||
-    node.type === AST_NODE_TYPES.FunctionDeclaration
-  );
 }
 
 function isNode(value: unknown): value is TSESTree.Node {

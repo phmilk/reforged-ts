@@ -7,26 +7,10 @@
 // initialisers (they run in the constructor).
 import { AST_NODE_TYPES, type TSESTree } from "@typescript-eslint/utils";
 
-function isFunction(
-  node: TSESTree.Node,
-): node is
-  | TSESTree.FunctionDeclaration
-  | TSESTree.FunctionExpression
-  | TSESTree.ArrowFunctionExpression {
-  return (
-    node.type === AST_NODE_TYPES.FunctionDeclaration ||
-    node.type === AST_NODE_TYPES.FunctionExpression ||
-    node.type === AST_NODE_TYPES.ArrowFunctionExpression
-  );
-}
+import { type FunctionNode, isFunction } from "./function.js";
 
 /** Whether a function is invoked where it is written: `(() => ...)()`, `(function () {...})()`. */
-export function isImmediatelyInvoked(
-  fn:
-    | TSESTree.FunctionExpression
-    | TSESTree.ArrowFunctionExpression
-    | TSESTree.FunctionDeclaration,
-): boolean {
+export function isImmediatelyInvoked(fn: FunctionNode): boolean {
   const { parent } = fn;
   return parent.type === AST_NODE_TYPES.CallExpression && parent.callee === fn;
 }
