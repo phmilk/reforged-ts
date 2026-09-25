@@ -2,22 +2,21 @@
 
 // No root-time Handles: requiring the library index makes no Handle-creating
 // Native call. `Players`, the sync Trigger and its events are born at the
-// `globals` stage, the game-time and host Timers at `gameStart`, and the host
-// System's join-time measurement runs at `config` time, in the lobby. The
-// tests drive the compiled library through the entry points as the game does
-// (`config`, `main`, then `MarkGameStarted`) and assert on the stub call log
-// and on `Players`. The file's tests share one Lua state and one run of the
-// editor's script, in order.
+// `globals` stage and the game-time Timer at `gameStart`; the host System
+// makes its Handles only when a Map project calls `Host.detectHost`
+// (host.test.ts). The tests drive the compiled library through the entry
+// points as the game does (`main`, then `MarkGameStarted`) and assert on the
+// stub call log and on `Players`. The file's tests share one Lua state and
+// one run of the editor's script, in order.
 
 // Keep this import ahead of the library's: the library wraps the entry
 // points when it loads, and this file defines them.
-import { editorLog } from "./support/bundle-position";
+import "./support/bundle-position";
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Init, tsGlobals } from "../src/index";
 import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
 
-declare const config: () => void;
 declare const main: () => void;
 
 /** The Natives that create the library's own Handles. */
@@ -33,24 +32,6 @@ function callsTo(names: readonly string[]): string[] {
   );
 }
 
-/**
- * Runs `body` with `os.clock` logging `"os.clock"` on `editorLog` each time
- * it is read, and puts the real clock back afterwards.
- */
-function withClockLogged(body: () => void): void {
-  const osLibrary = os as unknown as Record<string, unknown>;
-  const previous = os.clock;
-  osLibrary.clock = () => {
-    editorLog.push("os.clock");
-    return previous();
-  };
-  try {
-    body();
-  } finally {
-    osLibrary.clock = previous;
-  }
-}
-
 describe("requiring the library index", () => {
   it("makes no Handle-creating Native call", () => {
     expect(callsTo(creators)).toEqual([]);
@@ -61,15 +42,6 @@ describe("requiring the library index", () => {
 
   it("leaves Players empty", () => {
     expect(tsGlobals.Players).toEqual([]);
-  });
-});
-
-describe("the host System", () => {
-  it("measures the join time when config runs, before the map's config", () => {
-    withClockLogged(() => {
-      config();
-    });
-    expect(editorLog).toEqual(["os.clock", "config"]);
   });
 });
 
@@ -100,10 +72,8 @@ describe("the globals stage", () => {
     expect(calls).toEqual([
       ...players,
       "CreateTrigger()",
-      `BlzTriggerRegisterPlayerSyncEvent(${trigger}, ${slot0}, "T", false)`,
-      `BlzTriggerRegisterPlayerSyncEvent(${trigger}, ${slot0}, "S", false)`,
-      `BlzTriggerRegisterPlayerSyncEvent(${trigger}, ${slot1}, "T", false)`,
-      `BlzTriggerRegisterPlayerSyncEvent(${trigger}, ${slot1}, "S", false)`,
+      `BlzTriggerRegisterPlayerSyncEvent(${trigger}, ${slot0}, "rts", false)`,
+      `BlzTriggerRegisterPlayerSyncEvent(${trigger}, ${slot1}, "rts", false)`,
       `TriggerAddAction(${trigger}, <function>)`,
     ]);
   });
@@ -127,18 +97,22 @@ describe("the globals stage", () => {
 });
 
 describe("the gameStart stage", () => {
-  it("creates and starts the game-time and host Timers, none earlier", () => {
+  it("creates and starts the game-time Timer, not earlier, and nothing else", () => {
     expect(callsTo(["CreateTimer", "TimerStart"])).toEqual([]);
+    const before = stubCalls().length;
     MarkGameStarted();
-    const calls = callsTo(["CreateTimer", "TimerStart"]);
-    // The Timers' handles are not exposed: the start lines name them.
+    const calls = stubCalls()
+      .slice(before)
+      .filter((line) =>
+        [...creators, "TimerStart", "BlzSendSyncData"].some((name) =>
+          line.startsWith(`${name}(`),
+        ),
+      );
+    // The Timer's handle is not exposed: the start line names it.
     const [gameTime] = string.match(calls[1] ?? "", "%((timer#%d+), ");
-    const [host] = string.match(calls[3] ?? "", "%((timer#%d+), ");
     expect(calls).toEqual([
       "CreateTimer()",
       `TimerStart(${gameTime}, 30, true, <function>)`,
-      "CreateTimer()",
-      `TimerStart(${host}, 0, false, <function>)`,
     ]);
   });
 });

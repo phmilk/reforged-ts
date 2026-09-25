@@ -153,3 +153,21 @@ function CreateTrigger()
   __stub_record("CreateTrigger")
   return __stub_new_handle("trigger")
 end
+
+-- The clock: os.clock answers the value a test set, 0.0 until then, and
+-- keeps it until the test sets it again, so lobby and start times are the
+-- test's decision. It is the standard library's, not a Native, so reading it
+-- adds no call-log line.
+local clock = 0.0
+
+os.clock = function()
+  return clock
+end
+
+-- Sets what os.clock answers from now on and returns what it answered
+-- before. Not a Native, so it adds no call-log line.
+function __stub_set_clock(seconds)
+  local previous = clock
+  clock = seconds
+  return previous
+end

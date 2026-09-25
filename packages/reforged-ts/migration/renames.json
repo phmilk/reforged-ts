@@ -585,5 +585,137 @@
     },
     "oneToOne": false,
     "note": "An implementation detail of the old Hook code: the wrapper of `config` runs the `config::after` queue, each hook under `pcall`, and nothing runs it by hand."
+  },
+  {
+    "old": "new SyncRequest(...)",
+    "new": "SyncRequest.send",
+    "kind": "constructor",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: the constructor takes only the sender and the options and never starts a request, so the overloads that took the data and started at once are gone, and `new SyncRequest(from, data, options)` becomes `SyncRequest.send(from, data, options)`."
+  },
+  {
+    "old": "SyncRequest.then",
+    "new": ["SyncRequest.start", "SyncRequest.send"],
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "`then` stored one callback and returned the request, which `await` could not use; `start(data)` and `SyncRequest.send` return a real `Promise` of the `SyncResponse`, so `request.then(callback)` becomes `request.start(data).then(callback)` or an `await`."
+  },
+  {
+    "old": "SyncRequest.catch",
+    "new": ["SyncRequest.start", "SyncRequest.send"],
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The `Promise` that `start(data)` and `SyncRequest.send` return rejects instead, with a string naming the request and the cause: a timeout, a cancellation or a network error."
+  },
+  {
+    "old": "SyncCallback",
+    "new": null,
+    "kind": "type",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The callback type of `then` and `catch` goes with them: a `Promise` continuation receives the `SyncResponse`, which carries the request."
+  },
+  {
+    "old": "ISyncResponse",
+    "new": "SyncResponse",
+    "kind": "type",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The type drops the `I` prefix and is read-only; it gains the sender, `from`, and the `request`, and loses `status`, which the request's own `status` holds."
+  },
+  {
+    "old": "ISyncOptions",
+    "new": "SyncOptions",
+    "kind": "type",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The type drops the `I` prefix; its `timeout` is optional and read-only, zero or absent meaning no timeout."
+  },
+  {
+    "old": "SyncRequest.destroy",
+    "new": "SyncRequest.cancel",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "Named for what it does: it rejects a pending request with a cancellation reason and does nothing on a settled one; ids are never recycled, so there is nothing to release."
+  },
+  {
+    "old": "SyncRequest.fromIndex",
+    "new": null,
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The table of pending requests is private: the System matches a packet to its request by id itself, and a continuation receives the request in the `SyncResponse`."
+  },
+  {
+    "old": "onHostDetect",
+    "new": "Host.detectHost",
+    "kind": "function",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The callback gives way to a `Promise` of the elected `MapPlayer`, the same `Promise` for every call, and `Host.host` reads the result once it resolved; nothing is detected until `detectHost` is called."
+  },
+  {
+    "old": "BinaryReader.read",
+    "new": null,
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The generic read that took a format and a size, the size the source of the `readDouble` misalignment, is private: the typed `readX` members advance by what `string.unpack` consumed."
+  },
+  {
+    "old": "BinaryReader.data",
+    "new": null,
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The binary string read is private: the typed `readX` members read it, and `position` and `remaining` tell how far they got."
+  },
+  {
+    "old": "BinaryWriter.values",
+    "new": null,
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The array of values written so far is private: `toString()` packs them, and the typed `writeX` members are the only way to add one."
   }
 ]

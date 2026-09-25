@@ -54,7 +54,7 @@ function callGlobal(name: string): void {
 }
 
 /** A recording entry point: logs its name, and `main` then calls the init functions. */
-function editorFunction(name: EditorFunction): () => void {
+export function editorFunction(name: EditorFunction): () => void {
   if (name === "main") {
     return () => {
       editorLog.push("main");

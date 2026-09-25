@@ -4,6 +4,7 @@ import { OrderId } from "../globals/order";
 import { rawcodeToString } from "../utils/rawcode";
 import { Destructable } from "./destructable";
 import { Force } from "./force";
+import { fieldTypeOf } from "./fields";
 import type { Group } from "./group";
 import { Item } from "./item";
 import { MapPlayer } from "./player";
@@ -718,8 +719,7 @@ export class Unit extends Widget {
     field:
       unitbooleanfield | unitintegerfield | unitrealfield | unitstringfield,
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string, @typescript-eslint/no-deprecated -- a field object stringified for its type prefix; substr; step 6 (#53) removes it
-    const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
+    const fieldType = fieldTypeOf(field);
 
     switch (fieldType) {
       case "unitbooleanfield": {
@@ -1225,8 +1225,7 @@ export class Unit extends Widget {
       unitbooleanfield | unitintegerfield | unitrealfield | unitstringfield,
     value: boolean | number | string,
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string, @typescript-eslint/no-deprecated -- a field object stringified for its type prefix; substr; step 6 (#53) removes it
-    const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
+    const fieldType = fieldTypeOf(field);
 
     if (fieldType === "unitbooleanfield" && typeof value === "boolean") {
       return BlzSetUnitBooleanField(
