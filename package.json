@@ -18,10 +18,13 @@
     "test": "vitest run && pnpm run typings:check",
     "typings:generate": "pnpm --filter reforged-types typings:generate",
     "typings:check": "pnpm --filter reforged-types typings:check",
+    "changeset": "changeset",
     "release:check-changeset": "pnpm --filter reforged-ts-release release:check-changeset",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "catalog:",
+    "@changesets/cli": "catalog:",
     "@eslint/js": "catalog:",
     "@types/node": "catalog:",
     "eslint": "catalog:",
