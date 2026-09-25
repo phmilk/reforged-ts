@@ -14,6 +14,7 @@ import {
   MouseEventKind,
   Region,
   Timer,
+  Trackable,
   Trigger,
   Unit,
 } from "../src/index";
@@ -28,6 +29,7 @@ const region = Region.create();
 const dialog = Dialog.create();
 const button = DialogButton.create(dialog, "Leave");
 const timer = Timer.create();
+const trackable = Trackable.create("trackable.mdl", 0, 0, 0);
 const frame = Frame.create(
   "TriggerFrame",
   defined(Frame.fromOrigin(ORIGIN_FRAME_GAME_UI, 0), "the game UI frame"),
@@ -183,6 +185,18 @@ const registrations: Registration[] = [
     register: (t) => t.registerTimerExpire(timer),
     native: "TriggerRegisterTimerExpireEvent",
     args: handleRef("timer", timer.handle),
+  },
+  {
+    member: "registerTrackableHit",
+    register: (t) => t.registerTrackableHit(trackable),
+    native: "TriggerRegisterTrackableHitEvent",
+    args: handleRef("trackable", trackable.handle),
+  },
+  {
+    member: "registerTrackableTrack",
+    register: (t) => t.registerTrackableTrack(trackable),
+    native: "TriggerRegisterTrackableTrackEvent",
+    args: handleRef("trackable", trackable.handle),
   },
   {
     member: "registerUnitEvent",
