@@ -43,7 +43,7 @@ function isStringTyped(
 }
 
 /** `String(x)` with the global of the default library, or lua-types' `tostring(x)`. */
-function isStringConversion(
+export function isStringConversion(
   services: ParserServicesWithTypeInformation,
   call: TSESTree.CallExpression,
 ): boolean {

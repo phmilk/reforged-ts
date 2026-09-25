@@ -6,6 +6,7 @@
 // linted project's installation. An optional file that is unavailable reads
 // as empty and is listed in `unavailable`; the plugin disables every rule
 // whose entry `requires` that package.
+import { asyncNativesFile } from "./async-natives.js";
 import {
   type CreationNative,
   parseCreationNatives,
@@ -30,6 +31,8 @@ export interface PluginData {
   readonly creationNatives: readonly CreationNative[];
   /** The rename map of `no-legacy-w3ts-names` (reforged-ts's migration/renames.json). */
   readonly renames: readonly RenameEntry[];
+  /** The async Natives of `no-async-value-as-state` (reforged-types's async-natives.json). */
+  readonly asyncNatives: readonly string[];
   /** The optional packages whose files could not be read, and why. */
   readonly unavailable: ReadonlyMap<OptionalPackage, Unavailable>;
 }
@@ -44,6 +47,8 @@ export interface DataFiles {
   readonly creationNatives?: string;
   /** Defaults to reforged-ts's migration/renames.json, found from the project root. */
   readonly renames?: string;
+  /** Defaults to reforged-types's async-natives.json, found from the project root. */
+  readonly asyncNatives?: string;
 }
 
 export function loadPluginData(
@@ -77,6 +82,7 @@ export function loadPluginData(
       parseCreationNatives,
     ),
     renames: optional(renamesFile, files.renames, []),
+    asyncNatives: optional(asyncNativesFile, files.asyncNatives, []),
     unavailable,
   };
 }
