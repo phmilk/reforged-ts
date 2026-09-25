@@ -8,32 +8,11 @@
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { sleep } from "../src/index";
 import { handleRef } from "./support/handle-ref";
-
-/** The timers `TimerStart` was given while `body` ran, in order. */
-function timersStartedBy(body: () => void): timer[] {
-  const globals = _G as unknown as Record<string, unknown>;
-  const start = TimerStart;
-  const started: timer[] = [];
-  globals.TimerStart = (
-    whichTimer: timer,
-    timeout: number,
-    periodic: boolean,
-    handler: () => void,
-  ) => {
-    started.push(whichTimer);
-    start(whichTimer, timeout, periodic, handler);
-  };
-  try {
-    body();
-  } finally {
-    globals.TimerStart = start;
-  }
-  return started;
-}
+import { timersStarted } from "./support/timers-started";
 
 describe("sleep", () => {
   it("starts a one-shot Timer for the given seconds", () => {
-    const [timer] = timersStartedBy(() => {
+    const [{ timer }] = timersStarted(() => {
       void sleep(1.5);
     });
     expect(stubCalls()).toContainCall(
@@ -44,7 +23,7 @@ describe("sleep", () => {
   it("resolves with no value when its Timer fires, and destroys the Timer", () => {
     let settled = false;
     let value: unknown = "unset";
-    const [timer] = timersStartedBy(() => {
+    const [{ timer }] = timersStarted(() => {
       void sleep(0.5).then((resolved) => {
         settled = true;
         value = resolved;
