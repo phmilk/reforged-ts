@@ -23,6 +23,7 @@ export class Leaderboard extends Handle<leaderboard> {
 
   public destroy() {
     DestroyLeaderboard(this.handle);
+    this.release();
   }
 
   public display(flag = true) {

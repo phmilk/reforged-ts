@@ -640,6 +640,7 @@ export class Unit extends Widget {
    */
   public destroy() {
     RemoveUnit(this.handle);
+    this.release();
   }
 
   public disableAbility(abilId: number, flag: boolean, hideUI: boolean) {

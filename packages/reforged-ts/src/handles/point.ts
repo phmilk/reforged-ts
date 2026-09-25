@@ -41,6 +41,7 @@ export class Point extends Handle<location> {
 
   public destroy() {
     RemoveLocation(this.handle);
+    this.release();
   }
 
   public setPosition(x: number, y: number) {

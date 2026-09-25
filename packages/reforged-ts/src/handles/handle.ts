@@ -4,6 +4,34 @@
 const registry = new WeakMap<handle, Handle<handle>>();
 
 /**
+ * What the release step reads of a destroyed Wrapper before it forgets it:
+ * the Handle, the Wrapper's class name and the Handle's id. Read first, so
+ * every later part of the step (and a Dev-mode report) names the Wrapper as
+ * it was, `Unit#1048577`.
+ */
+export interface Released {
+  readonly handle: handle;
+  readonly className: string;
+  readonly id: number;
+}
+
+/**
+ * The collections told when a Handle is released. Empty until a collection
+ * keyed by Handles registers itself through `onHandleReleased`.
+ */
+const releaseListeners: ((released: Released) => void)[] = [];
+
+/**
+ * Registers `listener` to run in every release step, after the registry
+ * entry is gone: how a collection holding Handles drops the entries of a
+ * destroyed one. Package-internal: `handles/index.ts` re-exports only
+ * `Handle` from this module.
+ */
+export function onHandleReleased(listener: (released: Released) => void) {
+  releaseListeners.push(listener);
+}
+
+/**
  * A Wrapper class as its static members see it: `this` inside a static. The
  * abstract base itself is not one: `typeof Handle` has a `Handle<any>`
  * prototype, and `0 extends 1 & H` holds only when `H` is `any`, so
@@ -70,6 +98,26 @@ export abstract class Handle<T extends handle> {
    */
   public get id() {
     return GetHandleId(this.handle);
+  }
+
+  /**
+   * The release step, shared by every Wrapper: each `destroy()` calls its
+   * Native, then this, and nothing else. It reads the class name and the id,
+   * removes the registry entry for the Handle, so a later lookup of the same
+   * Handle makes a new Wrapper instead of returning this dead one, then
+   * notifies the collections holding the Handle. It is the one place a
+   * destroy-time Guard goes; no Wrapper method carries one.
+   */
+  protected release(): void {
+    const released: Released = {
+      handle: this.handle,
+      className: this.constructor.name,
+      id: GetHandleId(this.handle),
+    };
+    registry.delete(released.handle);
+    for (const listener of releaseListeners) {
+      listener(released);
+    }
   }
 
   /**

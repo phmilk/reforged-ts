@@ -13,6 +13,7 @@ export class MultiboardItem extends Handle<multiboarditem> {
 
   public destroy() {
     MultiboardReleaseItem(this.handle);
+    this.release();
   }
 
   public setIcon(icon: string) {
@@ -91,6 +92,7 @@ export class Multiboard extends Handle<multiboard> {
 
   public destroy() {
     DestroyMultiboard(this.handle);
+    this.release();
   }
 
   /**

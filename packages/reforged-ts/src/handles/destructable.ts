@@ -154,6 +154,7 @@ export class Destructable extends Widget {
 
   public destroy() {
     RemoveDestructable(this.handle);
+    this.release();
   }
 
   /**

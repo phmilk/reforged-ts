@@ -18,6 +18,7 @@ export class Force extends Handle<force> {
 
   public destroy() {
     DestroyForce(this.handle);
+    this.release();
   }
 
   public enumAllies(

@@ -152,6 +152,7 @@ export class Effect extends Handle<effect> {
    */
   public destroy() {
     DestroyEffect(this.handle);
+    this.release();
   }
 
   public playAnimation(animType: animtype) {

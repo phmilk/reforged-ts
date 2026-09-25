@@ -76,6 +76,7 @@ export class Image extends Handle<image> {
    */
   public destroy() {
     DestroyImage(this.handle);
+    this.release();
   }
 
   /**

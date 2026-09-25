@@ -65,6 +65,7 @@ export class Dialog extends Handle<dialog> {
 
   public destroy() {
     DialogDestroy(this.handle);
+    this.release();
   }
 
   /**

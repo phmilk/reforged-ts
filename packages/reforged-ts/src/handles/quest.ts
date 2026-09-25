@@ -81,6 +81,7 @@ export class Quest extends Handle<quest> {
 
   public destroy() {
     DestroyQuest(this.handle);
+    this.release();
   }
 
   public setDescription(description: string) {

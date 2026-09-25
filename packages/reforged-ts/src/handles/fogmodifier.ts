@@ -40,6 +40,7 @@ export class FogModifier extends Handle<fogmodifier> {
 
   public destroy() {
     DestroyFogModifier(this.handle);
+    this.release();
   }
 
   public start() {
