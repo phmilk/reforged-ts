@@ -24,7 +24,6 @@ export class Timer extends Handle<timer> {
 
   public destroy() {
     DestroyTimer(this.handle);
-    return this;
   }
 
   public pause() {
@@ -37,13 +36,46 @@ export class Timer extends Handle<timer> {
     return this;
   }
 
-  public start(timeout: number, periodic: boolean, handlerFunc: () => void) {
-    TimerStart(this.handle, timeout, periodic, handlerFunc);
+  /** Starts the Timer; each expiry runs `handler` with this Timer. */
+  public start(
+    timeout: number,
+    periodic: boolean,
+    handler: (timer: this) => void,
+  ) {
+    TimerStart(this.handle, timeout, periodic, () => {
+      handler(this);
+    });
     return this;
   }
 
   /**
-   * @bug Might crash the game if called when there is no expired timer.
+   * Runs `handler` once after `timeout` seconds, on a Timer created for it and
+   * destroyed after the handler returns. Nothing is owned, so nothing is
+   * returned: a one-shot that can be cancelled is
+   * `Timer.create().start(timeout, false, handler)`.
+   */
+  public static after(timeout: number, handler: () => void): void {
+    this.create().start(timeout, false, (timer) => {
+      handler();
+      timer.destroy();
+    });
+  }
+
+  /**
+   * Runs `handler` every `interval` seconds with the Timer, which the caller
+   * owns: `pause` stops it, `destroy` ends it.
+   */
+  public static every(
+    interval: number,
+    handler: (timer: Timer) => void,
+  ): Timer {
+    return this.create().start(interval, true, handler);
+  }
+
+  /**
+   * The Timer whose expiry is running, or undefined when the game has none.
+   * A handler receives its Timer; this lookup stays for parity with the
+   * Natives.
    */
   public static fromExpired(): Timer | undefined {
     return this.fromHandle(GetExpiredTimer());
