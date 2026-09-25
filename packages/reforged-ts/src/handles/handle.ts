@@ -32,6 +32,16 @@ export function onHandleReleased(listener: (released: Released) => void) {
 }
 
 /**
+ * The canonical Wrapper of `handle`: the one the registry holds for it now,
+ * after any upgrade (`Unit` over `Widget`), or undefined when the registry
+ * holds none. How a collection keyed by Handles returns keys without asking
+ * for a class. Package-internal, like `onHandleReleased`.
+ */
+export function canonicalWrapper(handle: handle): Handle<handle> | undefined {
+  return registry.get(handle);
+}
+
+/**
  * A Wrapper class as its static members see it: `this` inside a static. The
  * abstract base itself is not one: `typeof Handle` has a `Handle<any>`
  * prototype, and `0 extends 1 & H` holds only when `H` is `any`, so
