@@ -14,7 +14,7 @@
     "lint:eslint": "eslint --max-warnings 0 .",
     "lint:prettier": "prettier --check \"**/*.{json,md,yaml,yml}\"",
     "format": "eslint --fix . && prettier --write \"**/*.{json,md,yaml,yml}\"",
-    "typecheck": "pnpm --recursive typecheck",
+    "typecheck": "pnpm --recursive typecheck && tsc -p test/tsconfig.json",
     "test": "vitest run && pnpm run typings:check",
     "typings:generate": "pnpm --filter reforged-types typings:generate",
     "typings:check": "pnpm --filter reforged-types typings:check",
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@eslint/js": "catalog:",
+    "@types/node": "catalog:",
     "eslint": "catalog:",
     "eslint-config-prettier": "catalog:",
     "eslint-import-resolver-typescript": "catalog:",
