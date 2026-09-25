@@ -25,12 +25,10 @@ import {
   type PreMode,
 } from "./changesets.js";
 import { byCodePoint } from "./order.js";
+import { LIBRARY_PACKAGE } from "./packages.js";
 import { readPublishablePackages } from "./workspace.js";
 
 export type { PreMode } from "./changesets.js";
-
-/** The package the gate guards. */
-export const LIBRARY = "reforged-ts";
 
 /** What the first major of `reforged-ts` migrates from: w3ts 3.x. */
 export const PREDECESSOR = "w3ts@3";
@@ -123,7 +121,7 @@ function parseVersion(version: string): Semver {
     /^(\d+)\.(\d+)\.(\d+)(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$/.exec(version);
   if (match === null) {
     throw new Error(
-      `${LIBRARY} has version "${version}", which is not semver.`,
+      `${LIBRARY_PACKAGE} has version "${version}", which is not semver.`,
     );
   }
   return {
@@ -147,8 +145,8 @@ function majorAfterBump(version: Semver): number {
 
 function pairTo(major: number): VersionPair {
   return {
-    from: major === 1 ? PREDECESSOR : `${LIBRARY}@${String(major - 1)}`,
-    to: `${LIBRARY}@${String(major)}`,
+    from: major === 1 ? PREDECESSOR : `${LIBRARY_PACKAGE}@${String(major - 1)}`,
+    to: `${LIBRARY_PACKAGE}@${String(major)}`,
   };
 }
 
@@ -169,7 +167,8 @@ export function evaluateGate(input: GateInput): GateResult {
   const majors = input.changesets
     .filter((changeset) =>
       changeset.releases.some(
-        (release) => release.name === LIBRARY && release.type === "major",
+        (release) =>
+          release.name === LIBRARY_PACKAGE && release.type === "major",
       ),
     )
     .map((changeset) => changeset.file)
@@ -178,7 +177,8 @@ export function evaluateGate(input: GateInput): GateResult {
     version.prerelease ||
     input.changesets.some((changeset) =>
       changeset.releases.some(
-        (release) => release.name === LIBRARY && release.type !== "none",
+        (release) =>
+          release.name === LIBRARY_PACKAGE && release.type !== "none",
       ),
     );
   // Below 1.0.0: `0.x`, or a prerelease of 1.0.0 (the alphas).
@@ -258,9 +258,11 @@ async function readPages(root: string): Promise<Set<string>> {
  */
 export async function readGateInput(root: string): Promise<GateInput> {
   const packages = await readPublishablePackages(root);
-  const library = packages.find((pkg) => pkg.name === LIBRARY);
+  const library = packages.find((pkg) => pkg.name === LIBRARY_PACKAGE);
   if (library === undefined) {
-    throw new Error(`The workspace has no publishable package ${LIBRARY}.`);
+    throw new Error(
+      `The workspace has no publishable package ${LIBRARY_PACKAGE}.`,
+    );
   }
   const changesets = [
     ...(await readChangesetFolder(join(root, CHANGESET_DIR))),
@@ -292,13 +294,13 @@ export async function majorChangesetGate(root: string): Promise<GateResult> {
 export function formatGate(result: GateResult): string {
   const { requirement } = result;
   if (requirement === undefined) {
-    return `No major of ${LIBRARY} is pending and its next stable version is not its first: no migration page is required.\n`;
+    return `No major of ${LIBRARY_PACKAGE} is pending and its next stable version is not its first: no migration page is required.\n`;
   }
   const pair = formatPair(requirement.pair);
   const why =
     requirement.reason.kind === "first-stable"
-      ? `The next stable version of ${LIBRARY} is its first (1.0.0), a major relative to ${PREDECESSOR}`
-      : `A major of ${LIBRARY} is pending (${requirement.reason.changesets.map((file) => `\`${file}\``).join(", ")})`;
+      ? `The next stable version of ${LIBRARY_PACKAGE} is its first (1.0.0), a major relative to ${PREDECESSOR}`
+      : `A major of ${LIBRARY_PACKAGE} is pending (${requirement.reason.changesets.map((file) => `\`${file}\``).join(", ")})`;
   const lines = [`${why}: version pair ${pair}.`];
   if (result.missing.length === 0) {
     lines.push(
@@ -318,7 +320,7 @@ export function formatGate(result: GateResult): string {
   lines.push(
     result.verdict === "report"
       ? "Pre mode is active (`.changeset/pre.json`): reported only. The gate fails once pre mode is exited and the version is stable."
-      : `The next version of ${LIBRARY} is stable, so this blocks the release. See "The major-changeset gate" in docs/release.md.`,
+      : `The next version of ${LIBRARY_PACKAGE} is stable, so this blocks the release. See "The major-changeset gate" in docs/release.md.`,
   );
   return `${lines.join("\n")}\n`;
 }

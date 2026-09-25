@@ -11,17 +11,12 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { compareBuilds, gameVersion, isBuild } from "./build.js";
+import { LIBRARY_PACKAGE, TYPINGS_PACKAGE } from "./packages.js";
 import {
   readPublishablePackages,
   type PackageManifest,
   type PublishablePackage,
 } from "./workspace.js";
-
-/** The library, whose Patch must be the Typings' newest. */
-export const LIBRARY_PACKAGE = "reforged-ts";
-
-/** The Typings, whose Game version folders list the supported Patches. */
-export const TYPINGS_PACKAGE = "reforged-types";
 
 /**
  * One Patch the Typings ship an entry for: the Game version folder

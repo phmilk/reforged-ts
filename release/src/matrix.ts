@@ -14,18 +14,17 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
   checkPatches,
-  LIBRARY_PACKAGE,
   readPatchInputs,
-  TYPINGS_PACKAGE,
   type TypingsEntry,
 } from "./check-patches.js";
+import {
+  HARNESS_PACKAGE,
+  LIBRARY_PACKAGE,
+  PLUGIN_PACKAGE,
+  ROW_PACKAGES,
+  TYPINGS_PACKAGE,
+} from "./packages.js";
 import type { PublishablePackage } from "./workspace.js";
-
-/** The test harness. */
-export const HARNESS_PACKAGE = "reforged-test";
-
-/** The lint plugin. */
-export const PLUGIN_PACKAGE = "eslint-plugin-reforged";
 
 /** The committed matrix, relative to the repository root. */
 export const MATRIX_FILE = "release/compatibility/matrix.json";
@@ -175,14 +174,6 @@ const ROW_FIELDS = [
   "docs",
 ] as const satisfies readonly (keyof MatrixRow)[];
 
-/** The four packages of a row, by row field. */
-const ROW_PACKAGES = {
-  library: LIBRARY_PACKAGE,
-  typings: TYPINGS_PACKAGE,
-  harness: HARNESS_PACKAGE,
-  plugin: PLUGIN_PACKAGE,
-} as const;
-
 type PackageField = keyof typeof ROW_PACKAGES;
 
 const PACKAGE_FIELDS = Object.keys(ROW_PACKAGES) as PackageField[];
@@ -252,7 +243,8 @@ function differences(committed: MatrixRow, current: MatrixRow): string[] {
     );
 }
 
-const releaseName = (row: Pick<MatrixRow, PackageField>) =>
+/** The four packages of a row and their versions, for messages. */
+export const releaseName = (row: Pick<MatrixRow, PackageField>) =>
   PACKAGE_FIELDS.map((field) => `${ROW_PACKAGES[field]} ${row[field]}`).join(
     ", ",
   );

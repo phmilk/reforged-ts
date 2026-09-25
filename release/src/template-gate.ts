@@ -9,6 +9,7 @@ import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import { isAbsolute, join, posix, relative, resolve, sep } from "node:path";
 import { byCodePoint } from "./order.js";
+import { LIBRARY_PACKAGE } from "./packages.js";
 import { readPublishablePackages } from "./workspace.js";
 
 /** The file `changeset pack` writes at the root of its output folder. */
@@ -46,9 +47,6 @@ export function templateRef(libraryVersion: string): string {
   return `v${match[1]}`;
 }
 
-/** The library, whose major names the Template ref. */
-const LIBRARY = "reforged-ts";
-
 /**
  * The Template ref a release is gated against: `templateRef` of the library
  * version the publish plan in `packDir` publishes, else of the library in
@@ -60,11 +58,13 @@ export async function releaseTemplateRef(
 ): Promise<string> {
   const packed = await readPackedPackages(packDir);
   const library =
-    packed.find(({ name }) => name === LIBRARY) ??
-    (await readPublishablePackages(root)).find(({ name }) => name === LIBRARY);
+    packed.find(({ name }) => name === LIBRARY_PACKAGE) ??
+    (await readPublishablePackages(root)).find(
+      ({ name }) => name === LIBRARY_PACKAGE,
+    );
   if (library === undefined) {
     throw new TemplateGateError(
-      `Neither the plan nor the workspace has ${LIBRARY}.`,
+      `Neither the plan nor the workspace has ${LIBRARY_PACKAGE}.`,
     );
   }
   return templateRef(library.version);

@@ -11,7 +11,7 @@
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { generateMatrix, type MatrixRow } from "../matrix.js";
+import { generateMatrix, releaseName, type MatrixRow } from "../matrix.js";
 import { repositoryRoot } from "../workspace.js";
 import { invokedDirectly, PROCESS_OUTPUT, type Output } from "./common.js";
 
@@ -39,7 +39,7 @@ async function update(root: string, path: string, text: string) {
 }
 
 const named = (row: MatrixRow) =>
-  `reforged-ts ${row.library}, reforged-types ${row.typings}, reforged-test ${row.harness}, eslint-plugin-reforged ${row.plugin} (Patch ${row.patch}, cut ${row.cutDate})`;
+  `${releaseName(row)} (Patch ${row.patch}, cut ${row.cutDate})`;
 
 export async function main(
   args: readonly string[],

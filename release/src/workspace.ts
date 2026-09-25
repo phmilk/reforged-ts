@@ -2,7 +2,8 @@
  * The workspace as the release scripts see it: the packages it publishes.
  * They are found the way Changesets finds them (`@manypkg/get-packages` over
  * `pnpm-workspace.yaml`) and a package is publishable when it is not private,
- * so no script names a package.
+ * so no list of packages is written down. The few packages a script treats
+ * apart (the library, the Typings, ...) are named once, in `packages.ts`.
  */
 import { getPackages, type Package } from "@manypkg/get-packages";
 import { posix, sep } from "node:path";
