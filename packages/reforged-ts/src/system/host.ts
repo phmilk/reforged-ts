@@ -9,6 +9,7 @@ import { onStage } from "../init/stages";
 import { base64Decode, base64Encode } from "./base64";
 import { BinaryReader } from "./binaryreader";
 import { BinaryWriter } from "./binarywriter";
+import { isPlayingUser } from "./playing-user";
 import { type SyncResponse, SyncRequest } from "./sync";
 
 /** The seconds an election waits for the lobby times by default. */
@@ -49,14 +50,6 @@ let startedAt = 0;
 let election: Promise<MapPlayer> | undefined;
 
 let elected: MapPlayer | undefined;
-
-/** Whether `p` is a user who is playing. */
-function isPlayingUser(p: MapPlayer | undefined): p is MapPlayer {
-  return (
-    p?.slotState === PLAYER_SLOT_STATE_PLAYING &&
-    p.controller === MAP_CONTROL_USER
-  );
-}
 
 /**
  * This client's lobby time, packed as a float and base64-encoded: zero when

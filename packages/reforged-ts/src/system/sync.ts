@@ -9,6 +9,7 @@ import { base64Decode, base64Encode } from "./base64";
 import { BinaryReader } from "./binaryreader";
 import { BinaryWriter } from "./binarywriter";
 import { getElapsedTime } from "./gametime";
+import { isPlayingUser } from "./playing-user";
 
 /** The sync prefix of every packet the System sends. */
 const SYNC_PREFIX = "rts";
@@ -416,12 +417,9 @@ export class SyncRequest {
     const trigger = Trigger.create();
     this.eventTrigger = trigger;
     for (let i = 0; i < bj_MAX_PLAYER_SLOTS; i++) {
-      const p = playerOfSlot(i);
-      if (
-        p?.controller === MAP_CONTROL_USER &&
-        p.slotState === PLAYER_SLOT_STATE_PLAYING
-      ) {
-        trigger.registerPlayerSyncEvent(p, SYNC_PREFIX, false);
+      const player = playerOfSlot(i);
+      if (isPlayingUser(player)) {
+        trigger.registerPlayerSyncEvent(player, SYNC_PREFIX, false);
       }
     }
     trigger.addAction(() => {
