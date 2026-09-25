@@ -72,3 +72,46 @@ describe("triggers", function()
     expect(runner.stubCalls()).toContainCall("TriggerAddAction(trigger#1048582, <function>)")
   end)
 end)
+
+-- Handle ids run through the file in order, so these later additions keep
+-- the ids asserted above in place.
+describe("players", function()
+  it("reports slots 0 and 1 as playing users and slot 2 as empty", function()
+    local mark = #runner.stubCalls()
+    expect(GetPlayerSlotState(Player(0))).toBe(PLAYER_SLOT_STATE_PLAYING)
+    expect(GetPlayerController(Player(0))).toBe(MAP_CONTROL_USER)
+    expect(GetPlayerSlotState(Player(1))).toBe(PLAYER_SLOT_STATE_PLAYING)
+    expect(GetPlayerController(Player(1))).toBe(MAP_CONTROL_USER)
+    expect(GetPlayerSlotState(Player(2))).toBe(PLAYER_SLOT_STATE_EMPTY)
+    expect(GetPlayerController(Player(2))).toBe(MAP_CONTROL_NONE)
+    expect(since(mark)).toEqual({
+      "Player(0)",
+      "GetPlayerSlotState(player#1048577)",
+      "Player(0)",
+      "GetPlayerController(player#1048577)",
+      "Player(1)",
+      "GetPlayerSlotState(player#1048578)",
+      "Player(1)",
+      "GetPlayerController(player#1048578)",
+      "Player(2)",
+      "GetPlayerSlotState(player#1048585)",
+      "Player(2)",
+      "GetPlayerController(player#1048585)",
+    })
+  end)
+end)
+
+describe("triggers", function()
+  it("records a sync event registration with its four arguments", function()
+    local trigger = CreateTrigger()
+    local mark = #runner.stubCalls()
+    local event = BlzTriggerRegisterPlayerSyncEvent(trigger, Player(1), "T", false)
+    expect(GetHandleId(event)).toEqual(1048587)
+    expect(since(mark)).toEqual({
+      "Player(1)",
+      'BlzTriggerRegisterPlayerSyncEvent(trigger#1048586, player#1048578, "T", false)',
+      "GetHandleId(event#1048587)",
+    })
+    expect(trigger.actions).toBeUndefined()
+  end)
+end)

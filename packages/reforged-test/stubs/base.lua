@@ -1,5 +1,6 @@
 -- reforged-test baseline stubs: the shared machinery every stub file uses,
--- and the load-time globals the library reads before its first require.
+-- the globals the library reads when its modules load, and the Natives every
+-- test can rely on (Player, GetPlayerId, GetHandleId, CreateTrigger).
 -- Plain Lua 5.3 on the standard libraries only; see the package README for
 -- the stub authoring rules. The glue executes this file first, then the other
 -- shipped stub files, then the extra stub files of the `stubs` option.
@@ -11,11 +12,14 @@ __stub_calls = {}
 -- so ids are deterministic within a Lua state (the first one is 1048577).
 local nextHandleId = 0x100000
 
--- Renders one argument for the call log: handles as kind#id, strings quoted.
+-- Renders one argument for the call log: handles as kind#id, constants by
+-- their name, strings quoted.
 function __stub_format(value)
   local kind = type(value)
   if kind == "table" and value.__handleId ~= nil then
     return tostring(value.__kind) .. "#" .. tostring(value.__handleId)
+  elseif kind == "table" and value.__name ~= nil then
+    return tostring(value.__name)
   elseif kind == "string" then
     return string.format("%q", value)
   elseif kind == "function" then
@@ -41,11 +45,35 @@ function __stub_new_handle(kind)
   return { __kind = kind, __handleId = nextHandleId }
 end
 
--- Globals read at module load time. `main` and `config` stay nil: the
--- library's Hook code reads them before the game would define them.
+-- A constant of the game (PLAYER_SLOT_STATE_PLAYING, MAP_CONTROL_USER): an
+-- opaque value a test compares by identity. It takes no handle id, so the
+-- sequence above stays the same whether or not a constant is defined.
+function __stub_constant(kind, name)
+  return { __kind = kind, __name = name }
+end
+
+-- Globals the library reads when its modules load. The editor's entry points
+-- (config, main, InitGlobals, InitCustomTriggers, RunInitializationTriggers,
+-- MarkGameStarted) stay nil: the library wraps the ones that exist when it
+-- loads and captures the others on their first assignment, so a test defines
+-- the ones it drives, in the load position it stands in for.
 bj_MAX_PLAYER_SLOTS = 28
 bj_MAX_PLAYERS = 24
 bj_UNIT_FACING = 270.0
+
+-- The slot-state and controller constants, in the order the Typings declare
+-- them. The players family answers GetPlayerSlotState and
+-- GetPlayerController with them.
+PLAYER_SLOT_STATE_EMPTY = __stub_constant("playerslotstate", "PLAYER_SLOT_STATE_EMPTY")
+PLAYER_SLOT_STATE_PLAYING = __stub_constant("playerslotstate", "PLAYER_SLOT_STATE_PLAYING")
+PLAYER_SLOT_STATE_LEFT = __stub_constant("playerslotstate", "PLAYER_SLOT_STATE_LEFT")
+
+MAP_CONTROL_USER = __stub_constant("mapcontrol", "MAP_CONTROL_USER")
+MAP_CONTROL_COMPUTER = __stub_constant("mapcontrol", "MAP_CONTROL_COMPUTER")
+MAP_CONTROL_RESCUABLE = __stub_constant("mapcontrol", "MAP_CONTROL_RESCUABLE")
+MAP_CONTROL_NEUTRAL = __stub_constant("mapcontrol", "MAP_CONTROL_NEUTRAL")
+MAP_CONTROL_CREEP = __stub_constant("mapcontrol", "MAP_CONTROL_CREEP")
+MAP_CONTROL_NONE = __stub_constant("mapcontrol", "MAP_CONTROL_NONE")
 
 -- FourCC is the game's Lua helper, not a Native: a four-character id to its
 -- integer, as the game computes it.
@@ -53,6 +81,11 @@ function FourCC(id)
   __stub_record("FourCC", id)
   return (string.unpack(">I4", id))
 end
+
+-- The baseline Natives every test can rely on. The library's globals stage
+-- calls Player for every slot and CreateTrigger for the sync System once a
+-- test runs InitGlobals; every Wrapper reads its ids with GetHandleId and
+-- GetPlayerId. Nothing calls them when the library loads.
 
 -- One player handle per slot, created on first use and returned after.
 local players = {}

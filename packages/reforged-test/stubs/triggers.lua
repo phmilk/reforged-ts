@@ -1,6 +1,7 @@
--- reforged-test stubs for the triggers family. CreateTrigger is in base.lua
--- because the library calls it at module load. A trigger never fires on its
--- own: TriggerAddAction stores the action, and a test runs the actions with
+-- reforged-test stubs for the triggers family. CreateTrigger is in base.lua,
+-- the baseline every test can rely on (the library's globals stage creates
+-- the sync Trigger with it). A trigger never fires on its own:
+-- TriggerAddAction stores the action, and a test runs the actions with
 -- __stub_fire_trigger.
 
 function TriggerAddAction(whichTrigger, actionFunc)
@@ -12,6 +13,13 @@ function TriggerAddAction(whichTrigger, actionFunc)
   end
   actions[#actions + 1] = actionFunc
   return __stub_new_handle("triggeraction")
+end
+
+-- Registers a player sync event: the call-log line is all the trigger keeps
+-- of it. Sync events never fire on the harness.
+function BlzTriggerRegisterPlayerSyncEvent(whichTrigger, whichPlayer, prefix, fromServer)
+  __stub_record("BlzTriggerRegisterPlayerSyncEvent", whichTrigger, whichPlayer, prefix, fromServer)
+  return __stub_new_handle("event")
 end
 
 -- Runs the trigger's actions, once each, in the order they were added, as

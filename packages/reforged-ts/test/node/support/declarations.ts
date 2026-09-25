@@ -238,9 +238,10 @@ function parseConfig(
 
 export interface PublicApi {
   /**
-   * Whether the library exports a class of that name and, when a member is
-   * named, whether the class has a public static or instance member of that
-   * name (its own or inherited).
+   * Whether the library exports a symbol of that name and, when a member is
+   * named, whether the export is a class with a public static or instance
+   * member of that name (its own or inherited) or a value (`Init`,
+   * `Reforged`) whose type has a public property of that name.
    */
   has(symbol: { className: string; member: string | undefined }): boolean;
 }
@@ -288,11 +289,20 @@ export function publicApi(project: MapProject): PublicApi {
       const symbol = exported.get(className);
       if (symbol === undefined) return false;
       if (member === undefined) return true;
-      if (!(symbol.flags & ts.SymbolFlags.Class)) return false;
-      return [
-        checker.getTypeOfSymbol(symbol).getProperty(member),
-        checker.getDeclaredTypeOfSymbol(symbol).getProperty(member),
-      ].some((found) => found !== undefined && isPublic(found));
+      const types: ts.Type[] = [];
+      if (symbol.flags & ts.SymbolFlags.Class) {
+        types.push(
+          checker.getTypeOfSymbol(symbol),
+          checker.getDeclaredTypeOfSymbol(symbol),
+        );
+      } else if (symbol.flags & ts.SymbolFlags.Variable) {
+        types.push(checker.getTypeOfSymbol(symbol));
+      } else {
+        return false;
+      }
+      return types
+        .map((type) => type.getProperty(member))
+        .some((found) => found !== undefined && isPublic(found));
     },
   };
 }
