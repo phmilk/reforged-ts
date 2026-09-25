@@ -20,10 +20,14 @@ import { join, posix, relative, sep } from "node:path";
 import {
   CHANGESET_DIR,
   readChangesetFolder,
+  readPreMode,
   type Changeset,
+  type PreMode,
 } from "./changesets.js";
 import { byCodePoint } from "./order.js";
 import { readPublishablePackages } from "./workspace.js";
+
+export type { PreMode } from "./changesets.js";
 
 /** The package the gate guards. */
 export const LIBRARY = "reforged-ts";
@@ -62,9 +66,6 @@ export function migrationPagePath(pair: VersionPair): string {
 export function formatPair(pair: VersionPair): string {
   return `${pair.from} to ${pair.to}`;
 }
-
-/** The pre state of `.changeset/pre.json`: absent, active or exited. */
-export type PreMode = "none" | "pre" | "exit";
 
 export interface GateInput {
   /** The version of `reforged-ts` in its manifest. */
@@ -223,24 +224,6 @@ export function evaluateGate(input: GateInput): GateResult {
     missing,
     preMode: input.preMode,
   };
-}
-
-async function readPreMode(root: string): Promise<PreMode> {
-  const file = join(root, CHANGESET_DIR, "pre.json");
-  let text: string;
-  try {
-    text = await readFile(file, "utf8");
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") return "none";
-    throw error;
-  }
-  const mode = (JSON.parse(text) as { mode?: unknown }).mode;
-  if (mode !== "pre" && mode !== "exit") {
-    throw new Error(
-      `${CHANGESET_DIR}/pre.json: mode must be "pre" or "exit", not ${JSON.stringify(mode)}.`,
-    );
-  }
-  return mode;
 }
 
 async function readRenames(file: string): Promise<unknown[]> {

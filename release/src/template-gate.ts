@@ -9,6 +9,7 @@ import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import { isAbsolute, join, posix, relative, resolve, sep } from "node:path";
 import { byCodePoint } from "./order.js";
+import { readPublishablePackages } from "./workspace.js";
 
 /** The file `changeset pack` writes at the root of its output folder. */
 export const PUBLISH_PLAN = "publish-plan.json";
@@ -43,6 +44,30 @@ export function templateRef(libraryVersion: string): string {
     throw new TemplateGateError(`"${libraryVersion}" is not a semver version.`);
   }
   return `v${match[1]}`;
+}
+
+/** The library, whose major names the Template ref. */
+const LIBRARY = "reforged-ts";
+
+/**
+ * The Template ref a release is gated against: `templateRef` of the library
+ * version the publish plan in `packDir` publishes, else of the library in
+ * the workspace at `root` (a release that leaves the library alone).
+ */
+export async function releaseTemplateRef(
+  packDir: string,
+  root: string,
+): Promise<string> {
+  const packed = await readPackedPackages(packDir);
+  const library =
+    packed.find(({ name }) => name === LIBRARY) ??
+    (await readPublishablePackages(root)).find(({ name }) => name === LIBRARY);
+  if (library === undefined) {
+    throw new TemplateGateError(
+      `Neither the plan nor the workspace has ${LIBRARY}.`,
+    );
+  }
+  return templateRef(library.version);
 }
 
 /**

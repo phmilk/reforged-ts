@@ -1,0 +1,47 @@
+name: Mint the release GitHub App token
+description: >
+  A short-lived installation token of the repository's GitHub App, scoped to
+  this repository. Fails naming the repository variable or secret that is
+  missing before trying.
+inputs:
+  client-id:
+    description: The App's client ID, from the repository variable APP_CLIENT_ID.
+    required: true
+  private-key:
+    description: The App's private key, from the repository secret APP_PRIVATE_KEY.
+    required: true
+  permission-contents:
+    description: read or write.
+    required: true
+  permission-pull-requests:
+    description: read or write; empty for none.
+    required: false
+    default: ""
+outputs:
+  token:
+    description: The installation token.
+    value: ${{ steps.token.outputs.token }}
+runs:
+  using: composite
+  steps:
+    - name: Check the App prerequisites
+      shell: bash
+      env:
+        CLIENT_ID: ${{ inputs.client-id }}
+        PRIVATE_KEY: ${{ inputs.private-key }}
+      run: |
+        missing=()
+        [ -n "$CLIENT_ID" ] || missing+=("the repository variable APP_CLIENT_ID")
+        [ -n "$PRIVATE_KEY" ] || missing+=("the repository secret APP_PRIVATE_KEY")
+        if [ "${#missing[@]}" -gt 0 ]; then
+          printf -v list '%s, ' "${missing[@]}"
+          echo "::error title=GitHub App not configured::The release needs the repository's GitHub App (#48). Missing: ${list%, }. See docs/release.md, \"Repository variables and secrets\"."
+          exit 1
+        fi
+    - id: token
+      uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+      with:
+        client-id: ${{ inputs.client-id }}
+        private-key: ${{ inputs.private-key }}
+        permission-contents: ${{ inputs.permission-contents }}
+        permission-pull-requests: ${{ inputs.permission-pull-requests }}

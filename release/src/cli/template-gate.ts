@@ -17,20 +17,16 @@ import { spawn } from "node:child_process";
 import { resolve } from "node:path";
 import {
   commandLine,
-  readPackedPackages,
+  releaseTemplateRef,
   runTemplateGate,
-  templateRef,
   type Runner,
 } from "../template-gate.js";
-import { readPublishablePackages, repositoryRoot } from "../workspace.js";
+import { repositoryRoot } from "../workspace.js";
 import { invokedDirectly, PROCESS_OUTPUT, type Output } from "./common.js";
 
 const USAGE =
   "Usage: release:template-gate --template <path> --pack-dir <dir>\n" +
   "       release:template-gate --print-ref --pack-dir <dir>\n";
-
-/** The library, whose major names the Template ref. */
-const LIBRARY = "reforged-ts";
 
 /** Where the command runs, and how it runs the Template's commands. */
 export interface Context {
@@ -91,16 +87,7 @@ export async function main(
 
   try {
     if (options.printRef) {
-      const packed = await readPackedPackages(packDir);
-      const library =
-        packed.find(({ name }) => name === LIBRARY) ??
-        (await readPublishablePackages(context.root)).find(
-          ({ name }) => name === LIBRARY,
-        );
-      if (library === undefined) {
-        throw new Error(`Neither the plan nor the workspace has ${LIBRARY}.`);
-      }
-      output.stdout(`${templateRef(library.version)}\n`);
+      output.stdout(`${await releaseTemplateRef(packDir, context.root)}\n`);
       return 0;
     }
 

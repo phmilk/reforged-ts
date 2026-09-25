@@ -25,6 +25,9 @@
     "release:template-gate": "pnpm --filter reforged-ts-release release:template-gate",
     "release:matrix": "pnpm --filter reforged-ts-release release:matrix",
     "release:version": "pnpm --filter reforged-ts-release release:version",
+    "release:dist-tag": "pnpm --filter reforged-ts-release release:dist-tag",
+    "release:template-clone": "pnpm --filter reforged-ts-release release:template-clone",
+    "release:publish-check": "pnpm --filter reforged-ts-release release:publish-check",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test"
   },
   "devDependencies": {
