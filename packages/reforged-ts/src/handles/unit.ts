@@ -1435,6 +1435,21 @@ export class Unit extends Widget {
     return GetFoodUsed(unitId);
   }
 
+  /** The attacking unit, or undefined outside an attacked event. */
+  public static fromAttacker(): Unit | undefined {
+    return this.fromHandle(GetAttacker());
+  }
+
+  /** The unit dealing the damage, or undefined when no unit deals it. */
+  public static fromDamageSource(): Unit | undefined {
+    return this.fromHandle(GetEventDamageSource());
+  }
+
+  /** The unit taking the damage, or undefined outside a damage event. */
+  public static fromDamageTarget(): Unit | undefined {
+    return this.fromHandle(BlzGetEventDamageTarget());
+  }
+
   public static fromEnum(): Unit | undefined {
     return this.fromHandle(GetEnumUnit());
   }
@@ -1450,6 +1465,11 @@ export class Unit extends Widget {
   /** The unit that killed the dying unit, or undefined when none did. */
   public static fromKilling(): Unit | undefined {
     return this.fromHandle(GetKillingUnit());
+  }
+
+  /** The spell's target unit, or undefined when the spell targets none. */
+  public static fromSpellTarget(): Unit | undefined {
+    return this.fromHandle(GetSpellTargetUnit());
   }
 
   public static getPointValueByType(unitType: number) {

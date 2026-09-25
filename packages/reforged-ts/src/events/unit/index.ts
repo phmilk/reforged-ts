@@ -1,5 +1,7 @@
 /** @noSelfInFile */
 
+import { combatRows } from "./combat";
+import { spellRows } from "./spell";
 import { deathRows } from "./death";
 import type { TableOf, UnitEventDescriptors } from "./rows";
 import { unitEvents } from "./rows";
@@ -9,10 +11,14 @@ import { unitEvents } from "./rows";
  * one in `groups`.
  */
 interface Groups {
+  readonly combat: typeof combatRows;
+  readonly spell: typeof spellRows;
   readonly death: typeof deathRows;
 }
 
 const groups: Groups = {
+  combat: combatRows,
+  spell: spellRows,
   death: deathRows,
 };
 
