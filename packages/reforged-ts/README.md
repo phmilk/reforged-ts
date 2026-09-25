@@ -1,6 +1,6 @@
 # reforged-ts
 
-TypeScript Wrappers and Systems over the Lua API of Warcraft III Reforged, for custom maps compiled to Lua with [typescript-to-lua](https://typescripttolua.github.io/). A Wrapper owns one Handle and exposes its Natives as typed members (`Unit`, `Timer`, `Frame`); a System is a utility that owns no Handle (`sync`, `file`, `base64`).
+TypeScript Wrappers and Systems over the Lua API of Warcraft III Reforged, for custom maps compiled to Lua with [typescript-to-lua](https://typescripttolua.github.io/). A Wrapper owns one Handle and exposes its Natives as typed members (`Unit`, `Timer`, `Frame`); a System is a utility that wraps no Handle (`sync`, `host`, `file`, `base64`).
 
 A fork of [cipherxof/w3ts](https://github.com/cipherxof/w3ts) targeting Warcraft III 3.0.0 and later. The [w3ts documentation](https://cipherxof.github.io/w3ts/) describes the upstream API this fork started from.
 
