@@ -1,5 +1,7 @@
 /** @noSelfInFile */
 
+import { protect } from "../reforged/protect";
+import { filterOf } from "./boolexpr";
 import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
@@ -48,7 +50,7 @@ export class Group extends Handle<group> {
       x,
       y,
       radius,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(this, "Group.enumUnitsInRange", filter),
     );
   }
 
@@ -67,7 +69,7 @@ export class Group extends Handle<group> {
       x,
       y,
       radius,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(this, "Group.enumUnitsInRangeCounted", filter),
       countLimit,
     );
   }
@@ -81,7 +83,7 @@ export class Group extends Handle<group> {
       this.handle,
       whichPoint.handle,
       radius,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(this, "Group.enumUnitsInRangeOfPoint", filter),
     );
   }
 
@@ -98,7 +100,7 @@ export class Group extends Handle<group> {
       this.handle,
       whichPoint.handle,
       radius,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(this, "Group.enumUnitsInRangeOfPointCounted", filter),
       countLimit,
     );
   }
@@ -107,7 +109,7 @@ export class Group extends Handle<group> {
     GroupEnumUnitsInRect(
       this.handle,
       r.handle,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(this, "Group.enumUnitsInRect", filter),
     );
   }
 
@@ -122,7 +124,7 @@ export class Group extends Handle<group> {
     GroupEnumUnitsInRectCounted(
       this.handle,
       r.handle,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(this, "Group.enumUnitsInRectCounted", filter),
       countLimit,
     );
   }
@@ -137,7 +139,7 @@ export class Group extends Handle<group> {
     GroupEnumUnitsOfPlayer(
       this.handle,
       whichPlayer.handle,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(this, "Group.enumUnitsOfPlayer", filter),
     );
   }
 
@@ -145,7 +147,7 @@ export class Group extends Handle<group> {
     GroupEnumUnitsOfType(
       this.handle,
       unitName,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(this, "Group.enumUnitsOfType", filter),
     );
   }
 
@@ -160,7 +162,7 @@ export class Group extends Handle<group> {
     GroupEnumUnitsOfTypeCounted(
       this.handle,
       unitName,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(this, "Group.enumUnitsOfTypeCounted", filter),
       countLimit,
     );
   }
@@ -172,12 +174,19 @@ export class Group extends Handle<group> {
     GroupEnumUnitsSelected(
       this.handle,
       whichPlayer.handle,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(this, "Group.enumUnitsSelected", filter),
     );
   }
 
+  /**
+   * Runs `callback` once per unit of the group, `Unit.fromEnum()` answering
+   * that unit.
+   * @remarks In Dev mode the callback runs under `pcall`: a call that throws
+   * is reported as `Group#<id> Group.for` and the enumeration continues with
+   * the next unit. With Dev mode off `ForGroup` receives `callback` itself.
+   */
   public for(callback: () => void) {
-    ForGroup(this.handle, callback);
+    ForGroup(this.handle, protect(this, "Group.for", callback));
   }
 
   /**
