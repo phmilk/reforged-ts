@@ -4,10 +4,12 @@
 // Wrapper created before the globals Init stage was entered, naming
 // `Init.onGlobals`; with Dev mode off it never does. The file's Lua state
 // starts before the stage, so the cases run in order: before the stage, in
-// an `Init.onGlobals` callback (which enters it), after it.
+// an `Init.onGlobals` callback (which enters it), after it. The documented
+// non-null lookups (`MapPlayer.fromLocal`, `unit.getOwner`) read existing
+// Handles, so they pass before the stage too.
 
 import { describe, expect, it } from "reforged-test/lua";
-import { Init, Timer } from "../src/index";
+import { Init, MapPlayer, Timer, Unit } from "../src/index";
 import { Reforged } from "../src/reforged/index";
 import { raisedIn } from "./support/raised-in";
 
@@ -29,6 +31,20 @@ describe("Init-phase creation, before the globals stage", () => {
     Reforged.configure({ devMode: false });
 
     expect(Timer.create() instanceof Timer).toEqual(true);
+  });
+
+  it("lets the non-null lookups fromLocal and getOwner pass in Dev mode", () => {
+    Reforged.configure({ devMode: false });
+    const owner = MapPlayer.fromIndex(0);
+    const unit = owner && Unit.create(owner, FourCC("hfoo"), 0, 0);
+    Reforged.configure({ devMode: true });
+
+    expect(
+      raisedIn(() => {
+        MapPlayer.fromLocal();
+      }),
+    ).toEqual("(no error)");
+    expect(unit?.getOwner()).toBe(owner);
   });
 });
 

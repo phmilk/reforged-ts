@@ -638,6 +638,11 @@ export class Unit extends Widget {
 
   /**
    * Instantly removes the unit from the game.
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
    */
   public destroy() {
     RemoveUnit(this.handle);
@@ -1277,12 +1282,12 @@ export class Unit extends Widget {
 
   /**
    * The unit's owner. A live unit always has one, which the Typings cannot
-   * express for the Wrapper, so this goes through the creation helper: typed
-   * non-null, and should the game ever break that invariant it throws
+   * express for the Wrapper, so this goes through the non-null lookup helper:
+   * typed non-null, and should the game ever break that invariant it throws
    * `reforged-ts: failed to create MapPlayer` instead of returning undefined.
    */
   public getOwner(): MapPlayer {
-    return MapPlayer.expect(GetOwningPlayer(this.handle));
+    return MapPlayer.expectFound(GetOwningPlayer(this.handle));
   }
 
   public setPoint(point: Point) {

@@ -4,7 +4,9 @@
 // disappears when its key is destroyed (the base's release step tells every
 // collection holding the Handle), is found through the upgraded `Unit` of a
 // Handle first seen as a `Widget`, and iterates in insertion order. Every
-// case runs in release and in Dev mode.
+// case runs in release and in Dev mode. After `destroy()` a case asks
+// through a new Wrapper of the same Handle: in Dev mode the destroyed one is
+// a tombstone that raises on any access.
 
 import { describe, expect, it } from "reforged-test/lua";
 import { HandleMap, HandleSet, MapPlayer, Unit, Widget } from "../src/index";
@@ -49,15 +51,17 @@ for (const devMode of [false, true]) {
       const doomed = footmanAt(0);
       const kept = footmanAt(1);
       map.set(doomed, "doomed").set(kept, "kept");
+      const handle = doomed.handle;
 
       doomed.destroy();
 
-      expect(map.has(doomed)).toEqual(false);
-      expect(map.get(doomed)).toBeUndefined();
+      const again = defined(Unit.fromHandle(handle), "Unit.fromHandle");
+      expect(map.has(again)).toEqual(false);
+      expect(map.get(again)).toBeUndefined();
       expect(map.size).toEqual(1);
       expect([...map.keys()]).toEqual([kept]);
       expect(map.get(kept)).toEqual("kept");
-      expect(holderCount(doomed.handle)).toEqual(0);
+      expect(holderCount(handle)).toEqual(0);
     });
 
     it("drops the unit from every map holding it", () => {
@@ -180,12 +184,14 @@ for (const devMode of [false, true]) {
       const doomed = footmanAt(0);
       const kept = footmanAt(1);
       set.add(doomed).add(kept);
+      const handle = doomed.handle;
 
       doomed.destroy();
 
-      expect(set.has(doomed)).toEqual(false);
+      const again = defined(Unit.fromHandle(handle), "Unit.fromHandle");
+      expect(set.has(again)).toEqual(false);
       expect([...set]).toEqual([kept]);
-      expect(holderCount(doomed.handle)).toEqual(0);
+      expect(holderCount(handle)).toEqual(0);
     });
 
     it("has a Widget added before the upgrade, as the Unit", () => {

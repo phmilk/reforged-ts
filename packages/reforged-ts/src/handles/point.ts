@@ -39,6 +39,14 @@ export class Point extends Handle<location> {
     return GetLocationZ(this.handle);
   }
 
+  /**
+   * Destroys the Point through its Native.
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
+   */
   public destroy() {
     RemoveLocation(this.handle);
     this.release();

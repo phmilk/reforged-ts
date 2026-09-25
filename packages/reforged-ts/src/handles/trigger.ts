@@ -106,8 +106,14 @@ export class Trigger extends Handle<trigger> {
   }
 
   /**
+   * Destroys the Trigger through its Native.
    * @bug Do not destroy the current running Trigger (when waits are involved)
    * as it can cause handle stack corruption as documented [here](http://www.wc3c.net/showthread.php?t=110519).
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
    */
   public destroy() {
     DestroyTrigger(this.handle);

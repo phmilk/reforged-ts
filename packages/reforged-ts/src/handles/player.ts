@@ -298,13 +298,13 @@ export class MapPlayer extends Handle<player> {
 
   /**
    * The local player. `GetLocalPlayer` never returns nothing, which the
-   * Typings cannot express for the Wrapper, so this goes through the creation
-   * helper: typed non-null, and should the game ever break that invariant it
+   * Typings cannot express for the Wrapper, so this goes through the non-null
+   * lookup helper: typed non-null, and should the game ever break that invariant it
    * throws `reforged-ts: failed to create MapPlayer` instead of returning
    * undefined.
    * @async
    */
   public static fromLocal(): MapPlayer {
-    return this.expect(GetLocalPlayer());
+    return this.expectFound(GetLocalPlayer());
   }
 }
