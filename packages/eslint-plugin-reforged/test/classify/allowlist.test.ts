@@ -112,16 +112,12 @@ ruleTester.run("allowlist entry", entryProbe, {
   ],
   invalid: [
     {
-      name: "a visual Native around a pure one",
+      name: "a visual Native around a frame lookup (not listed)",
       code: 'BlzFrameSetVisible(BlzGetFrameByName("Bar", 0)!, false);',
       errors: [
         {
           messageId: "entry",
           data: { name: "BlzFrameSetVisible", kind: "visual" },
-        },
-        {
-          messageId: "entry",
-          data: { name: "BlzGetFrameByName", kind: "pure" },
         },
       ],
     },

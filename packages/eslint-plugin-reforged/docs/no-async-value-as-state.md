@@ -16,7 +16,7 @@ Sources are matched through the type checker: a project function named `GetLocal
 
 The value is state when it reaches, directly or through one `const`:
 
-- an argument of a call or `new` that is not in the plugin's allowlist, `data/local-safe.json`. The allowlist holds the text sinks (`print`, `DisplayTextToPlayer`, `BlzFrameSetText`, `Frame#text`, ...) and the visual calls (frame setters, vertex colours, the camera, sounds). An assignment to a library accessor counts as a call to its setter. Its `pure` Natives (the converters `I2S`, `R2S`, `R2I`, ..., the math and string Natives, the frame lookups) are neither sinks nor exempt: the value flows on through their result, so `DisplayTextToPlayer(p, 0, 0, R2S(GetCameraTargetPositionX()))` passes and `SetUnitX(u, R2I(GetCameraTargetPositionX()))` is reported;
+- an argument of a call or `new` that is not in the plugin's allowlist, `data/local-safe.json`. The allowlist holds the text sinks (`print`, `DisplayTextToPlayer`, `BlzFrameSetText`, `Frame#text`, ...) and the visual calls (frame setters, vertex colours, the camera, sounds). An assignment to a library accessor counts as a call to its setter. Its `pure` Natives (the converters `I2S`, `R2S`, `R2I`, ..., the math and string Natives) are neither sinks nor exempt: the value flows on through their result, so `DisplayTextToPlayer(p, 0, 0, R2S(GetCameraTargetPositionX()))` passes and `SetUnitX(u, R2I(GetCameraTargetPositionX()))` is reported;
 - the value of a module-level or exported variable, assigned or initialised;
 - a table key: `table[value]` read or written, or `{ [value]: ... }`.
 

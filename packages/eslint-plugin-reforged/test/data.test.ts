@@ -191,9 +191,9 @@ describe("the allowlist (data/local-safe.json)", () => {
     expect(pure).toEqual(
       expect.arrayContaining(["I2S", "R2S", "R2SW", "SquareRoot", "SubString"]),
     );
-    expect(pure).toEqual(
-      expect.arrayContaining(["BlzGetFrameByName", "BlzGetOriginFrame"]),
-    );
+    // A first frame lookup may allocate a frame handle: not pure.
+    expect(pure).not.toContain("BlzGetFrameByName");
+    expect(pure).not.toContain("BlzGetOriginFrame");
     expect(pure.filter((name) => !natives.has(name))).toEqual([]);
   });
 

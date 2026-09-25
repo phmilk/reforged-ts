@@ -3,7 +3,8 @@
 // local player sees or hears (`visual`), that displays a string (`text`,
 // the text sinks), or a Native that computes its result from its arguments
 // alone and changes no game state (`pure`: the converters, the math and
-// string Natives, the frame lookups). It grows by pull request, and every
+// string Natives; not the frame lookups, whose first call may allocate a
+// frame handle). It grows by pull request, and every
 // entry carries its reason.
 import {
   DataFileError,
@@ -16,7 +17,7 @@ import {
 /**
  * `visual`: only changes the local presentation. `text`: displays a string
  * (a text sink). `pure`: a Native whose result depends on its arguments
- * only (`I2S`, `SquareRoot`, `SubString`, `BlzGetFrameByName`); it changes
+ * only (`I2S`, `SquareRoot`, `SubString`); it changes
  * no game state, and a value passed to it flows on into its result.
  */
 export type LocalSafeKind = "visual" | "text" | "pure";

@@ -124,7 +124,7 @@ ruleTester.run("no-handle-id-as-data", ruleOf("no-handle-id-as-data"), {
       code: "export function GetHandleId(value: number): number {\n  return value;\n}\nconst key = GetHandleId(5) + 1;",
     },
     {
-      name: "keyed by the object",
+      name: "keyed by the Wrapper itself",
       code: `${unitPrelude}const table = new LuaTable<Unit, string>();\ntable.set(unit, "hero");`,
     },
   ],

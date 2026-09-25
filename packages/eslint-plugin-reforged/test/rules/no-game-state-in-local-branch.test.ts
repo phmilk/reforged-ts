@@ -152,8 +152,8 @@ ruleTester.run(
         code: `${prelude}if (mp.isLocal()) {\n  const x = Math.floor(1.5) + 2 * 3;\n  const s = "hp".toUpperCase() + String(x);\n  const doubled = [1, 2].map((n) => n * 2);\n}`,
       },
       {
-        name: "the pure Natives of local-safe.json: converters, math, strings, frame lookups",
-        code: `${prelude}if (GetLocalPlayer() === p) {\n  const label = SubString(R2S(SquareRoot(Pow(2, 3))), 0, StringLength("abc"));\n  BlzFrameSetText(BlzGetFrameByName("Label", 0)!, StringCase(I2S(R2I(S2R("1.5"))), true)!);\n  BlzFrameSetVisible(BlzGetOriginFrame(ORIGIN_FRAME_MINIMAP, 0)!, false);\n}`,
+        name: "the pure Natives of local-safe.json (converters, math, strings), with the frames looked up before the branch",
+        code: `${prelude}const label = BlzGetFrameByName("Label", 0)!;\nconst minimap = BlzGetOriginFrame(ORIGIN_FRAME_MINIMAP, 0)!;\nif (GetLocalPlayer() === p) {\n  const text = SubString(R2S(SquareRoot(Pow(2, 3))), 0, StringLength("abc"));\n  BlzFrameSetText(label, StringCase(I2S(R2I(S2R("1.5"))), true)!);\n  BlzFrameSetVisible(minimap, false);\n}`,
       },
       {
         name: "a call to a project function (not followed)",
@@ -219,8 +219,16 @@ ruleTester.run(
       },
       {
         name: "a value getter passed to a pure Native is still reported",
-        code: `${prelude}if (GetLocalPlayer() === p) {\n  BlzFrameSetText(BlzGetFrameByName("Label", 0)!, R2S(GetUnitX(u))!);\n}`,
+        code: `${prelude}const label = BlzGetFrameByName("Label", 0)!;\nif (GetLocalPlayer() === p) {\n  BlzFrameSetText(label, R2S(GetUnitX(u))!);\n}`,
         errors: [{ messageId: "gameState", data: { callee: "GetUnitX" } }],
+      },
+      {
+        name: "a frame lookup inside a local branch (a first lookup may allocate a frame handle)",
+        code: `${prelude}if (GetLocalPlayer() === p) {\n  BlzFrameSetVisible(BlzGetFrameByName("Label", 0)!, true);\n  BlzFrameSetVisible(BlzGetOriginFrame(ORIGIN_FRAME_MINIMAP, 0)!, false);\n}`,
+        errors: [
+          { messageId: "gameState", data: { callee: "BlzGetFrameByName" } },
+          { messageId: "gameState", data: { callee: "BlzGetOriginFrame" } },
+        ],
       },
       {
         name: "a listed name outside the allow option is still reported",

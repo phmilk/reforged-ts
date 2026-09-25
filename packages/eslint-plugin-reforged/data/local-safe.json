@@ -1073,15 +1073,5 @@
     "name": "StringIdentity",
     "kind": "pure",
     "reason": "returns its argument (blizzard.j); it reads no game state and changes none."
-  },
-  {
-    "name": "BlzGetFrameByName",
-    "kind": "pure",
-    "reason": "looks up a frame by name; frames are local presentation, and the lookup changes no game state."
-  },
-  {
-    "name": "BlzGetOriginFrame",
-    "kind": "pure",
-    "reason": "looks up one of the game's origin frames; frames are local presentation, and the lookup changes no game state."
   }
 ]
