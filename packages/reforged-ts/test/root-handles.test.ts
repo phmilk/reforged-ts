@@ -13,7 +13,7 @@
 // points when it loads, and this file defines them.
 import { editorLog } from "./support/bundle-position";
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
-import { tsGlobals } from "../src/index";
+import { Init, tsGlobals } from "../src/index";
 import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
 
@@ -22,6 +22,9 @@ declare const main: () => void;
 
 /** The Natives that create the library's own Handles. */
 const creators = ["Player", "CreateTrigger", "CreateTimer"];
+
+/** The handles `Players` held when the Map project's `globals` callback ran. */
+let playersSeenByMap: unknown[] | undefined;
 
 /** The call-log lines of the Natives `names`, in call order. */
 function callsTo(names: readonly string[]): string[] {
@@ -72,6 +75,11 @@ describe("the host System", () => {
 
 describe("the globals stage", () => {
   it("creates one player per slot, the sync Trigger and its events for the two playing slots, and nothing else", () => {
+    // The Map project's callback: registered before the stage, run after
+    // the library's, so it observes the library-before-project guarantee.
+    Init.onGlobals(() => {
+      playersSeenByMap = tsGlobals.Players.map((player) => player.handle);
+    }, "the map's globals callback");
     main();
     const calls = callsTo([
       ...creators,
@@ -106,6 +114,14 @@ describe("the globals stage", () => {
       expect(tsGlobals.Players[slot].handle).toBe(
         defined(Player(slot), "Player(slot)"),
       );
+    }
+  });
+
+  it("fills Players before the Map project's globals callback runs: it saw every slot", () => {
+    const seen = defined(playersSeenByMap, "playersSeenByMap");
+    expect(seen.length).toEqual(bj_MAX_PLAYER_SLOTS);
+    for (let slot = 0; slot < bj_MAX_PLAYER_SLOTS; slot++) {
+      expect(seen[slot]).toBe(defined(Player(slot), "Player(slot)"));
     }
   });
 });
