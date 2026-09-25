@@ -18,16 +18,29 @@ interface OrderPayload {
   targetWidget: Widget | undefined;
 }
 
-/** A target order's payload: `targetUnit` is undefined unless it is a unit. */
-function readTarget(unit: Unit): OrderPayload {
+/** The target fields of an order payload: those the order carries. */
+type OrderTarget = Partial<
+  Pick<OrderPayload, "targetX" | "targetY" | "targetUnit" | "targetWidget">
+>;
+
+/** An order's payload, with the target fields the order carries. */
+function readOrder(unit: Unit, target: OrderTarget): OrderPayload {
   return {
     unit,
     orderId: GetIssuedOrderId(),
-    targetX: undefined,
-    targetY: undefined,
+    targetX: target.targetX,
+    targetY: target.targetY,
+    targetUnit: target.targetUnit,
+    targetWidget: target.targetWidget,
+  };
+}
+
+/** A target order's payload: `targetUnit` is undefined unless it is a unit. */
+function readTarget(unit: Unit): OrderPayload {
+  return readOrder(unit, {
     targetUnit: Unit.fromOrderTarget(),
     targetWidget: Widget.fromHandle(GetOrderTarget()),
-  };
+  });
 }
 
 export const orderRows = unitEventRows({
@@ -37,14 +50,7 @@ export const orderRows = unitEventRows({
     twin: EVENT_UNIT_ISSUED_ORDER,
     unit: "unit",
     from: () => Unit.fromOrdered(),
-    read: (unit): OrderPayload => ({
-      unit,
-      orderId: GetIssuedOrderId(),
-      targetX: undefined,
-      targetY: undefined,
-      targetUnit: undefined,
-      targetWidget: undefined,
-    }),
+    read: (unit) => readOrder(unit, {}),
   },
   /** A unit is ordered to a point; `targetX` and `targetY` are that point. */
   orderPoint: {
@@ -52,14 +58,8 @@ export const orderRows = unitEventRows({
     twin: EVENT_UNIT_ISSUED_POINT_ORDER,
     unit: "unit",
     from: () => Unit.fromOrdered(),
-    read: (unit): OrderPayload => ({
-      unit,
-      orderId: GetIssuedOrderId(),
-      targetX: GetOrderPointX(),
-      targetY: GetOrderPointY(),
-      targetUnit: undefined,
-      targetWidget: undefined,
-    }),
+    read: (unit) =>
+      readOrder(unit, { targetX: GetOrderPointX(), targetY: GetOrderPointY() }),
   },
   /**
    * A unit is ordered to target a widget; `targetUnit` is set when the target
