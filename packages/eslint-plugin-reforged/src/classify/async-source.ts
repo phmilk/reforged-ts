@@ -17,6 +17,7 @@ import {
 } from "@typescript-eslint/utils";
 import * as ts from "typescript";
 
+import { memberName } from "./member.js";
 import { isDeclaredIn, packageNameOf } from "./package.js";
 
 /** The `os` functions that read the local clock. */
@@ -115,22 +116,6 @@ function resolvedDeclarations(
   return symbol?.declarations ?? [];
 }
 
-/** `Class#member` or `Class.member` for a member declared in a named class or interface. */
-function memberName(declaration: ts.Declaration, member: string): string {
-  const owner = declaration.parent;
-  const ownerName =
-    (ts.isClassDeclaration(owner) || ts.isInterfaceDeclaration(owner)) &&
-    owner.name !== undefined
-      ? owner.name.text
-      : undefined;
-  if (ownerName === undefined) {
-    return member;
-  }
-  const isStatic =
-    ts.getCombinedModifierFlags(declaration) & ts.ModifierFlags.Static;
-  return `${ownerName}${isStatic ? "." : "#"}${member}`;
-}
-
 /**
  * The source a call or member read is (see the rules above), or undefined.
  * Asks the checker; pre-match with `mayBeAsyncSource`.
@@ -149,7 +134,7 @@ export function classifyAsyncSource(
     );
     return getter === undefined || name === undefined
       ? undefined
-      : { name: memberName(getter, name) };
+      : { name: memberName(getter, name) ?? name };
   }
   const { callee } = node;
   if (callee.type === AST_NODE_TYPES.Identifier) {
@@ -181,5 +166,7 @@ export function classifyAsyncSource(
         isDeclaredIn(each, "reforged-types")) &&
       hasAsyncTag(each),
   );
-  return member === undefined ? undefined : { name: memberName(member, name) };
+  return member === undefined
+    ? undefined
+    : { name: memberName(member, name) ?? name };
 }

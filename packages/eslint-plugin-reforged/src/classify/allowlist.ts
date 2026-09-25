@@ -19,6 +19,7 @@ import {
 import * as ts from "typescript";
 
 import type { LocalSafeEntry, LocalSafeKind } from "../data/index.js";
+import { memberName } from "./member.js";
 import { isDeclaredIn, packageNameOf } from "./package.js";
 
 /** What can invoke an allowlist entry: a call, or an assignment to an accessor. */
@@ -60,23 +61,6 @@ function resolvedSymbol(
     : symbol;
 }
 
-function memberName(
-  declaration: ts.Declaration,
-  member: string,
-): string | undefined {
-  const owner = declaration.parent;
-  if (
-    !(ts.isClassDeclaration(owner) || ts.isInterfaceDeclaration(owner)) ||
-    owner.name === undefined ||
-    !isDeclaredIn(declaration, "reforged-ts")
-  ) {
-    return undefined;
-  }
-  const isStatic =
-    ts.getCombinedModifierFlags(declaration) & ts.ModifierFlags.Static;
-  return `${owner.name.text}${isStatic ? "." : "#"}${member}`;
-}
-
 /**
  * The allowlist name of what a call or accessor assignment invokes (see the
  * name forms above), or undefined when it invokes nothing the allowlist can
@@ -112,7 +96,10 @@ export function invokedName(
     const matches = isCall
       ? ts.isMethodDeclaration(declaration) || ts.isMethodSignature(declaration)
       : ts.isSetAccessorDeclaration(declaration);
-    const found = matches ? memberName(declaration, name) : undefined;
+    const found =
+      matches && isDeclaredIn(declaration, "reforged-ts")
+        ? memberName(declaration, name)
+        : undefined;
     if (found !== undefined) {
       return found;
     }
