@@ -10,26 +10,49 @@ import { unitEventRows } from "./rows";
  * by target orders.
  */
 interface OrderPayload {
+  /** The ordered unit. */
   unit: Unit;
+  /** The order's id. */
   orderId: number;
+  /** The x coordinate of a point order's target point. */
   targetX: number | undefined;
+  /** The y coordinate of a point order's target point. */
   targetY: number | undefined;
+  /** A target order's target, when it is a unit. */
   targetUnit: Unit | undefined;
+  /** A target order's target widget. */
   targetWidget: Widget | undefined;
+}
+
+/** The target fields of an order payload: those the order carries. */
+type OrderTarget = Partial<
+  Pick<OrderPayload, "targetX" | "targetY" | "targetUnit" | "targetWidget">
+>;
+
+/** An order's payload, with the target fields the order carries. */
+function readOrder(unit: Unit, target: OrderTarget): OrderPayload {
+  return {
+    unit,
+    orderId: GetIssuedOrderId(),
+    targetX: target.targetX,
+    targetY: target.targetY,
+    targetUnit: target.targetUnit,
+    targetWidget: target.targetWidget,
+  };
 }
 
 /** A target order's payload: `targetUnit` is undefined unless it is a unit. */
 function readTarget(unit: Unit): OrderPayload {
-  return {
-    unit,
-    orderId: GetIssuedOrderId(),
-    targetX: undefined,
-    targetY: undefined,
+  return readOrder(unit, {
     targetUnit: Unit.fromOrderTarget(),
     targetWidget: Widget.fromHandle(GetOrderTarget()),
-  };
+  });
 }
 
+/**
+ * The order rows of UnitEvents: `orderIssued`, `orderPoint`, `orderTarget` and
+ * `orderUnit`.
+ */
 export const orderRows = unitEventRows({
   /** A unit is given an order with no target. */
   orderIssued: {
@@ -37,14 +60,7 @@ export const orderRows = unitEventRows({
     twin: EVENT_UNIT_ISSUED_ORDER,
     unit: "unit",
     from: () => Unit.fromOrdered(),
-    read: (unit): OrderPayload => ({
-      unit,
-      orderId: GetIssuedOrderId(),
-      targetX: undefined,
-      targetY: undefined,
-      targetUnit: undefined,
-      targetWidget: undefined,
-    }),
+    read: (unit) => readOrder(unit, {}),
   },
   /** A unit is ordered to a point; `targetX` and `targetY` are that point. */
   orderPoint: {
@@ -52,14 +68,8 @@ export const orderRows = unitEventRows({
     twin: EVENT_UNIT_ISSUED_POINT_ORDER,
     unit: "unit",
     from: () => Unit.fromOrdered(),
-    read: (unit): OrderPayload => ({
-      unit,
-      orderId: GetIssuedOrderId(),
-      targetX: GetOrderPointX(),
-      targetY: GetOrderPointY(),
-      targetUnit: undefined,
-      targetWidget: undefined,
-    }),
+    read: (unit) =>
+      readOrder(unit, { targetX: GetOrderPointX(), targetY: GetOrderPointY() }),
   },
   /**
    * A unit is ordered to target a widget; `targetUnit` is set when the target

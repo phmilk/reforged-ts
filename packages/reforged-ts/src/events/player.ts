@@ -8,13 +8,16 @@
 // scalars are read from the Natives as they are.
 
 import { MapPlayer } from "../handles/player";
+import { forEachPlayerSlot } from "../handles/slots";
 import type { Trigger } from "../handles/trigger";
 import { MouseEventKind } from "../handles/trigger";
-import type { EventDescriptor } from "./descriptor";
 import { required } from "./descriptor";
+import type { EventRow, FixedRow } from "./rows";
+import { eventRows } from "./rows";
 
 /** The payload of a player event that carries only its player. */
 interface PlayerPayload {
+  /** The triggering player. */
   readonly player: MapPlayer;
 }
 
@@ -28,20 +31,27 @@ interface ChatPayload extends PlayerPayload {
 
 /** The payload of `PlayerEvents.keyDown` and `PlayerEvents.keyUp`. */
 interface KeyPayload extends PlayerPayload {
+  /** The key pressed or released. */
   readonly key: oskeytype;
+  /** The modifier keys held with it, as the registration's `metaKey`. */
   readonly metaKey: number;
+  /** Whether the key went down: true for `keyDown`, false for `keyUp`. */
   readonly isDown: boolean;
 }
 
 /** The payload of the mouse events. */
 interface MousePayload extends PlayerPayload {
+  /** The x coordinate of the world point under the mouse. */
   readonly x: number;
+  /** The y coordinate of the world point under the mouse. */
   readonly y: number;
 }
 
 /** The payload of `PlayerEvents.syncData`. */
 interface SyncPayload extends PlayerPayload {
+  /** The prefix the data was sent with. */
   readonly prefix: string;
+  /** The data sent. */
   readonly data: string;
 }
 
@@ -50,66 +60,59 @@ function triggerPlayer(event: string): MapPlayer {
   return required(MapPlayer.fromEvent(), "player", event);
 }
 
-/** Registers `register` for every player slot, on one Trigger. */
-function everySlot(register: (trigger: Trigger, player: MapPlayer) => void) {
-  return (trigger: Trigger) => {
-    for (let index = 0; index < bj_MAX_PLAYER_SLOTS; index++) {
-      const player = MapPlayer.fromIndex(index);
-      if (player !== undefined) {
+/** The payload of a player event that carries only its player. */
+function readPlayer(event: string): PlayerPayload {
+  return { player: triggerPlayer(event) };
+}
+
+/** A fixed row that `register`s for every player slot, on one Trigger. */
+function everySlot<P>(
+  register: (trigger: Trigger, player: MapPlayer) => void,
+  read: (event: string) => P,
+): FixedRow<P> {
+  return {
+    register: (trigger) => {
+      forEachPlayerSlot((player) => {
         register(trigger, player);
-      }
-    }
+      });
+    },
+    read,
+    fixed: true,
   };
 }
 
-/** The descriptor of the player event `event` on every slot. */
-function slotEvent(
-  name: string,
-  event: playerevent,
-): EventDescriptor<PlayerPayload> {
-  const described = `PlayerEvents.${name}`;
-  return {
-    register: everySlot((trigger, player) => {
-      trigger.registerPlayerEvent(player, event);
-    }),
-    read: () => ({ player: triggerPlayer(described) }),
-  };
+/** The row of the player event `event` on every slot. */
+function slotRow(event: playerevent): FixedRow<PlayerPayload> {
+  return everySlot((trigger, player) => {
+    trigger.registerPlayerEvent(player, event);
+  }, readPlayer);
 }
 
-/** The descriptor of the mouse event `kind` on every slot. */
-function mouse(
-  name: string,
-  kind: MouseEventKind,
-): EventDescriptor<MousePayload> {
-  const described = `PlayerEvents.${name}`;
-  return {
-    register: everySlot((trigger, player) => {
+/** The row of the mouse event `kind` on every slot. */
+function mouseRow(kind: MouseEventKind): FixedRow<MousePayload> {
+  return everySlot(
+    (trigger, player) => {
       trigger.registerPlayerMouseEvent(player, kind);
-    }),
-    read: () => ({
-      player: triggerPlayer(described),
+    },
+    (event) => ({
+      player: triggerPlayer(event),
       x: BlzGetTriggerPlayerMouseX(),
       y: BlzGetTriggerPlayerMouseY(),
     }),
-  };
+  );
 }
 
-/** The descriptor of `key` with `metaKey` for `player`, down or up. */
-function keyEvent(
-  name: string,
-  player: MapPlayer,
-  key: oskeytype,
-  metaKey: number,
+/** The row of a key event, fired when the key goes down or when it goes up. */
+function keyRow(
   fireOnKeyDown: boolean,
-): EventDescriptor<KeyPayload> {
-  const described = `PlayerEvents.${name}`;
+): EventRow<[player: MapPlayer, key: oskeytype, metaKey: number], KeyPayload> {
   return {
-    register: (trigger) => {
+    register: (trigger, player, key, metaKey) => {
       trigger.registerPlayerKeyEvent(player, key, metaKey, fireOnKeyDown);
     },
-    read: () => ({
-      player: triggerPlayer(described),
-      key: required(BlzGetTriggerPlayerKey(), "key", described),
+    read: (event) => ({
+      player: triggerPlayer(event),
+      key: required(BlzGetTriggerPlayerKey(), "key", event),
       metaKey: BlzGetTriggerPlayerMetaKey(),
       isDown: BlzGetTriggerPlayerIsKeyDown(),
     }),
@@ -120,95 +123,72 @@ function keyEvent(
  * The player Event descriptors: `PlayerEvents.leave` for every player slot,
  * `PlayerEvents.chat(player, text, exactMatch)` for one player.
  */
-export const PlayerEvents = {
+export const PlayerEvents = eventRows("PlayerEvents", {
   /**
    * A player sends a chat message containing `text`, or equal to it when
    * `exactMatch`; `message` is the whole message, `matched` is `text`.
    */
-  chat: (
-    player: MapPlayer,
-    text: string,
-    exactMatch: boolean,
-  ): EventDescriptor<ChatPayload> => ({
-    register: (trigger) => {
+  chat: {
+    register: (
+      trigger: Trigger,
+      player: MapPlayer,
+      text: string,
+      exactMatch: boolean,
+    ) => {
       trigger.registerPlayerChatEvent(player, text, exactMatch);
     },
-    read: () => ({
-      player: triggerPlayer("PlayerEvents.chat"),
-      message: required(
-        GetEventPlayerChatString(),
-        "message",
-        "PlayerEvents.chat",
-      ),
-      matched: required(
-        GetEventPlayerChatStringMatched(),
-        "matched",
-        "PlayerEvents.chat",
-      ),
+    read: (event): ChatPayload => ({
+      player: triggerPlayer(event),
+      message: required(GetEventPlayerChatString(), "message", event),
+      matched: required(GetEventPlayerChatStringMatched(), "matched", event),
     }),
-  }),
+  },
 
   /** A player leaves the game. */
-  leave: slotEvent("leave", EVENT_PLAYER_LEAVE),
+  leave: slotRow(EVENT_PLAYER_LEAVE),
 
   /** A player presses `key` with the modifiers `metaKey`. */
-  keyDown: (
-    player: MapPlayer,
-    key: oskeytype,
-    metaKey: number,
-  ): EventDescriptor<KeyPayload> =>
-    keyEvent("keyDown", player, key, metaKey, true),
+  keyDown: keyRow(true),
 
   /** A player releases `key` with the modifiers `metaKey`. */
-  keyUp: (
-    player: MapPlayer,
-    key: oskeytype,
-    metaKey: number,
-  ): EventDescriptor<KeyPayload> =>
-    keyEvent("keyUp", player, key, metaKey, false),
+  keyUp: keyRow(false),
 
   /** A player presses a mouse button; `x` and `y` are the world point. */
-  mouseDown: mouse("mouseDown", MouseEventKind.Down),
+  mouseDown: mouseRow(MouseEventKind.Down),
 
   /** A player releases a mouse button; `x` and `y` are the world point. */
-  mouseUp: mouse("mouseUp", MouseEventKind.Up),
+  mouseUp: mouseRow(MouseEventKind.Up),
 
   /** A player moves the mouse; `x` and `y` are the world point. */
-  mouseMove: mouse("mouseMove", MouseEventKind.Move),
+  mouseMove: mouseRow(MouseEventKind.Move),
 
   /** A player's synced data with `prefix` arrives at every player. */
-  syncData: (
-    player: MapPlayer,
-    prefix: string,
-  ): EventDescriptor<SyncPayload> => ({
-    register: (trigger) => {
+  syncData: {
+    register: (trigger: Trigger, player: MapPlayer, prefix: string) => {
       trigger.registerPlayerSyncEvent(player, prefix, false);
     },
-    read: () => ({
-      player: triggerPlayer("PlayerEvents.syncData"),
-      prefix: required(
-        BlzGetTriggerSyncPrefix(),
-        "prefix",
-        "PlayerEvents.syncData",
-      ),
-      data: required(BlzGetTriggerSyncData(), "data", "PlayerEvents.syncData"),
+    read: (event): SyncPayload => ({
+      player: triggerPlayer(event),
+      prefix: required(BlzGetTriggerSyncPrefix(), "prefix", event),
+      data: required(BlzGetTriggerSyncData(), "data", event),
     }),
-  }),
+  },
 
   /** A player changes its `allianceType` alliance setting toward another. */
-  allianceChanged: (
-    player: MapPlayer,
-    allianceType: alliancetype,
-  ): EventDescriptor<PlayerPayload> => ({
-    register: (trigger) => {
+  allianceChanged: {
+    register: (
+      trigger: Trigger,
+      player: MapPlayer,
+      allianceType: alliancetype,
+    ) => {
       trigger.registerPlayerAllianceChange(player, allianceType);
     },
-    read: () => ({ player: triggerPlayer("PlayerEvents.allianceChanged") }),
-  }),
+    read: readPlayer,
+  },
 
   /** A player wins the game. */
-  victory: slotEvent("victory", EVENT_PLAYER_VICTORY),
+  victory: slotRow(EVENT_PLAYER_VICTORY),
 
   /** A player loses the game. */
-  defeat: slotEvent("defeat", EVENT_PLAYER_DEFEAT),
-};
+  defeat: slotRow(EVENT_PLAYER_DEFEAT),
+});

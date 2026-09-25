@@ -3,6 +3,7 @@
 import { Unit } from "../../handles/unit";
 import { unitEventRows } from "./rows";
 
+/** The death row of UnitEvents: `death`. */
 export const deathRows = unitEventRows({
   /** A unit dies; `killer` is undefined when nothing killed it. */
   death: {

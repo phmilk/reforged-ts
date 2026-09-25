@@ -20,7 +20,9 @@ import { Trigger } from "../handles/trigger";
  * @noSelf
  */
 export interface EventDescriptor<P> {
+  /** Registers the event on `trigger`. */
   readonly register: (trigger: Trigger) => void;
+  /** Reads the payload from the running trigger context. */
   readonly read: () => P;
   /** Set on the events that run inside a damage context. */
   readonly damage?: true;
@@ -28,7 +30,9 @@ export interface EventDescriptor<P> {
 
 /** The Trigger `on()` created for one handler; `destroy()` ends it. */
 export interface Subscription {
+  /** The Trigger the event is registered on, which the caller owns. */
   readonly trigger: Trigger;
+  /** Ends the Subscription: destroys its Trigger and no other. */
   destroy(): void;
 }
 

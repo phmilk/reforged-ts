@@ -2,9 +2,13 @@
 
 import { Handle } from "./handle";
 
-// The game has no Native that destroys a trackable, so the Wrapper has no
-// `destroy`.
+/**
+ * An invisible model that reports clicks and mouse-overs, for the trackable
+ * events. The game has no Native that destroys a trackable, so the Wrapper
+ * has no `destroy`.
+ */
 export class Trackable extends Handle<trackable> {
+  /** A new trackable showing `modelPath` at (`x`, `y`), facing `facing`. */
   public static create(
     modelPath: string,
     x: number,

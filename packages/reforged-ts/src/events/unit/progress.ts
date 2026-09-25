@@ -4,6 +4,10 @@ import { Unit } from "../../handles/unit";
 import { required } from "../descriptor";
 import { unitEventRows } from "./rows";
 
+/**
+ * The progress rows of UnitEvents: training, construction, research and
+ * upgrades finished, hero levels and skills.
+ */
 export const progressRows = unitEventRows({
   /** A unit finishes training `trained`. */
   trainFinish: {

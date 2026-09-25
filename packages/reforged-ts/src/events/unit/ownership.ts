@@ -5,6 +5,7 @@ import { Unit } from "../../handles/unit";
 import { required } from "../descriptor";
 import { unitEventRows } from "./rows";
 
+/** The ownership row of UnitEvents: `changeOwner`. */
 export const ownershipRows = unitEventRows({
   /** A unit changes owner; `previousOwner` is the player it had. */
   changeOwner: {

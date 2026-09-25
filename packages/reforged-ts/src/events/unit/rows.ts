@@ -12,11 +12,13 @@ import type { EventDescriptor } from "../descriptor";
 import { required } from "../descriptor";
 
 /**
- * One UnitEvents row. Its functions take no `self`, as the arrows of a row
- * written under `@noSelfInFile` do.
+ * One UnitEvents row, `P` being its payload and `U` the payload field holding
+ * the event's unit (any string where the table reads rows of every payload).
+ * Its functions take no `self`, as the arrows of a row written under
+ * `@noSelfInFile` do.
  * @noSelf
  */
-export interface UnitEventRow<P> {
+export interface UnitEventRow<P, U extends string = keyof P & string> {
   /** The player-unit event `UnitEvents.name` registers for every slot. */
   readonly event: playerunitevent;
   /**
@@ -25,7 +27,7 @@ export interface UnitEventRow<P> {
    */
   readonly twin?: unitevent;
   /** The payload field holding the event's unit. */
-  readonly unit: string;
+  readonly unit: U;
   /**
    * Reads the event's unit for `UnitEvents.name`, when a response Native
    * names it (`Unit.fromOrdered()`); the triggering unit when absent. The
@@ -33,16 +35,27 @@ export interface UnitEventRow<P> {
    */
   readonly from?: () => Unit | undefined;
   /**
+   * Set when no source confirms that the game fires the twin for the unit it
+   * was registered on: `nameOf` then reads the event's unit as `name` does,
+   * instead of taking the given Unit.
+   */
+  readonly twinReadsUnit?: true;
+  /**
    * Reads the payload once the event's unit is known: the one `from` reads
-   * for `name`, the given Unit for `nameOf`. `event` names the descriptor
-   * (`UnitEvents.death`) for `required`.
+   * for `name`, the given Unit for `nameOf` (unless `twinReadsUnit`).
+   * `event` names the descriptor (`UnitEvents.death`) for `required`.
    */
   readonly read: (unit: Unit, event: string) => P;
+  /** Set on the events that run inside a damage context. */
   readonly damage?: true;
 }
 
 /** The payload a row reads. */
-type PayloadOf<R> = R extends UnitEventRow<infer P> ? P : never;
+type PayloadOf<R> = R extends {
+  readonly read: (unit: Unit, event: string) => infer P;
+}
+  ? P
+  : never;
 
 /** The descriptors a table gives: `name` per row, `nameOf` per twin. */
 export type UnitEventDescriptors<T> = {
@@ -60,31 +73,42 @@ export type UnitEventDescriptors<T> = {
  * payload it returns.
  */
 export function unitEventRows<
-  T extends { readonly [K in keyof T]: UnitEventRow<unknown> },
+  T extends { readonly [K in keyof T]: UnitEventRow<PayloadOf<T[K]>> },
 >(rows: T): T {
   return rows;
 }
 
 /**
- * The descriptor registered for every slot, reading the event's unit through
- * the row's `from`, or the triggering unit.
+ * Reads the event's unit through the row's `from`, or the triggering unit,
+ * naming `event` when the game gives none.
  */
-function anyUnit<P>(name: string, row: UnitEventRow<P>): EventDescriptor<P> {
+function eventUnit(row: UnitEventRow<unknown, string>, event: string): Unit {
+  const unit = row.from === undefined ? Unit.fromEvent() : row.from();
+  return required(unit, row.unit, event);
+}
+
+/** The descriptor registered for every slot, reading the event's unit. */
+function anyUnit<P>(
+  name: string,
+  row: UnitEventRow<P, string>,
+): EventDescriptor<P> {
   const event = `UnitEvents.${name}`;
-  const from = row.from ?? (() => Unit.fromEvent());
   return {
     register: (trigger) => {
       trigger.registerAnyUnitEvent(row.event);
     },
-    read: () => row.read(required(from(), row.unit, event), event),
+    read: () => row.read(eventUnit(row, event), event),
     damage: row.damage,
   };
 }
 
-/** The descriptor registered on `unit` through the row's twin. */
+/**
+ * The descriptor registered on `unit` through the row's twin, carrying `unit`
+ * in the payload unless the row `twinReadsUnit`.
+ */
 function unitOf<P>(
   name: string,
-  row: UnitEventRow<P>,
+  row: UnitEventRow<P, string>,
   twin: unitevent,
   unit: Unit,
 ): EventDescriptor<P> {
@@ -93,7 +117,8 @@ function unitOf<P>(
     register: (trigger) => {
       trigger.registerUnitEvent(unit, twin);
     },
-    read: () => row.read(unit, event),
+    read: () =>
+      row.read(row.twinReadsUnit ? eventUnit(row, event) : unit, event),
     damage: row.damage,
   };
 }
@@ -111,13 +136,15 @@ export type TableOf<G> = Intersection<G[keyof G]>;
 /** `UnitEvents` from the groups of rows, keyed by group name. */
 export function unitEvents<
   G extends {
-    readonly [K in keyof G]: Readonly<Record<string, UnitEventRow<unknown>>>;
+    readonly [K in keyof G]: Readonly<
+      Record<string, UnitEventRow<unknown, string>>
+    >;
   },
 >(groups: G): UnitEventDescriptors<TableOf<G>> {
   const events: Record<string, unknown> = {};
-  for (const rows of Object.values<Record<string, UnitEventRow<unknown>>>(
-    groups,
-  )) {
+  for (const rows of Object.values<
+    Record<string, UnitEventRow<unknown, string>>
+  >(groups)) {
     for (const [name, row] of Object.entries(rows)) {
       events[name] = anyUnit(name, row);
       const twin = row.twin;

@@ -21,6 +21,7 @@ function readDamage(target: Unit, event: string) {
   };
 }
 
+/** The combat rows of UnitEvents: `attacked`, `damaged` and `damaging`. */
 export const combatRows = unitEventRows({
   /** A unit is attacked; `attacker` is the attacking unit. */
   attacked: {

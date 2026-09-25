@@ -5,6 +5,7 @@ import { Frame } from "./frame";
 import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Region } from "./region";
+import { forEachPlayerSlot } from "./slots";
 import { Timer } from "./timer";
 import { Trackable } from "./trackable";
 import { Unit } from "./unit";
@@ -12,8 +13,11 @@ import { Widget } from "./widget";
 
 /** The mouse events `Trigger.registerPlayerMouseEvent` registers. */
 export const enum MouseEventKind {
+  /** A mouse button is pressed. */
   Down = "down",
+  /** A mouse button is released. */
   Up = "up",
+  /** The mouse moves. */
   Move = "move",
 }
 
@@ -90,16 +94,7 @@ export class Trigger extends Handle<trigger> {
    * Adding more conditions later wil join them by AND (that means all conditions need to evaluate to `true`)
    *
    * @example
-   * ```ts
-   * Trigger.create()
-   *   // trigger fires if a unit is attacked
-   *   .registerAnyUnitEvent(EVENT_PLAYER_UNIT_ATTACKED)
-   *   // but only if the unit name matches
-   *   .addCondition(() => Unit.fromAttacker()?.name === "Attacker Unit")
-   *   .addAction(() => {
-   *     // do something...
-   *   });
-   * ```
+   * {@includeCode ../../examples/trigger-add-condition.ts}
    * @param condition The condition which must evaluate to true in order to run the trigger's actions.
    */
   public addCondition(condition: boolexpr | (() => boolean)) {
@@ -150,26 +145,25 @@ export class Trigger extends Handle<trigger> {
     TriggerExecuteWait(this.handle);
   }
 
+  /** Interrupts the Trigger, through `BlzTriggerInterrupt` (3.0.0). */
   public interrupt() {
     BlzTriggerInterrupt(this.handle);
   }
 
+  /** Whether the Trigger is running, through `BlzTriggerIsRunning` (3.0.0). */
   public isRunning(): boolean {
     return BlzTriggerIsRunning(this.handle);
   }
 
   /** Registers the player unit event for the player in every slot, with no filter. */
   public registerAnyUnitEvent(whichPlayerUnitEvent: playerunitevent) {
-    for (let index = 0; index < bj_MAX_PLAYER_SLOTS; index++) {
-      const whichPlayer = Player(index);
-      if (whichPlayer !== undefined) {
-        TriggerRegisterPlayerUnitEvent(
-          this.handle,
-          whichPlayer,
-          whichPlayerUnitEvent,
-        );
-      }
-    }
+    forEachPlayerSlot((whichPlayer) => {
+      TriggerRegisterPlayerUnitEvent(
+        this.handle,
+        whichPlayer.handle,
+        whichPlayerUnitEvent,
+      );
+    });
     return this;
   }
 
@@ -219,6 +213,7 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /** Registers the frame event `event` of `frame`. */
   public registerFrameEvent(frame: Frame, event: frameeventtype) {
     BlzTriggerRegisterFrameEvent(this.handle, frame.handle, event);
     return this;
@@ -367,17 +362,19 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
-  // Triggers when the timer you tell it about expires
+  /** Registers the expiry of `timer`. */
   public registerTimerExpire(timer: Timer) {
     TriggerRegisterTimerExpireEvent(this.handle, timer.handle);
     return this;
   }
 
+  /** Registers a click on `trackable`. */
   public registerTrackableHit(trackable: Trackable) {
     TriggerRegisterTrackableHitEvent(this.handle, trackable.handle);
     return this;
   }
 
+  /** Registers the mouse moving over `trackable`. */
   public registerTrackableTrack(trackable: Trackable) {
     TriggerRegisterTrackableTrackEvent(this.handle, trackable.handle);
     return this;

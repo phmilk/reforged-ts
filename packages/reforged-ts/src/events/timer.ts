@@ -1,18 +1,19 @@
 /** @noSelfInFile */
 
 import { Timer } from "../handles/timer";
-import type { EventDescriptor } from "./descriptor";
+import type { Trigger } from "../handles/trigger";
 import { required } from "./descriptor";
+import { eventRows } from "./rows";
 
 /** The timer Event descriptors: `TimerEvents.expired(timer)` for one Timer. */
-export const TimerEvents = {
+export const TimerEvents = eventRows("TimerEvents", {
   /** `timer` expires; the payload reads it back as the expired Timer. */
-  expired: (timer: Timer): EventDescriptor<{ timer: Timer }> => ({
-    register: (trigger) => {
+  expired: {
+    register: (trigger: Trigger, timer: Timer) => {
       trigger.registerTimerExpire(timer);
     },
-    read: () => ({
-      timer: required(Timer.fromExpired(), "timer", "TimerEvents.expired"),
+    read: (event) => ({
+      timer: required(Timer.fromExpired(), "timer", event),
     }),
-  }),
-};
+  },
+});
