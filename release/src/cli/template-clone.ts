@@ -22,7 +22,12 @@ import {
 } from "../template-clone.js";
 import { releaseTemplateRef } from "../template-gate.js";
 import { repositoryRoot } from "../workspace.js";
-import { invokedDirectly, PROCESS_OUTPUT, type Output } from "./common.js";
+import {
+  errorMessage,
+  invokedDirectly,
+  PROCESS_OUTPUT,
+  type Output,
+} from "./common.js";
 
 const USAGE = "Usage: release:template-clone --pack-dir <dir> --into <dir>\n";
 
@@ -95,9 +100,7 @@ export async function main(
     output.stdout(`Cloned ${TEMPLATE_REPOSITORY} at ${ref} into ${into}.\n`);
     return 0;
   } catch (error) {
-    output.stderr(
-      `${error instanceof Error ? error.message : String(error)}\n`,
-    );
+    output.stderr(`${errorMessage(error)}\n`);
     return 1;
   }
 }

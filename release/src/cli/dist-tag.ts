@@ -9,11 +9,16 @@
  * Relative paths resolve against the folder the command was started from.
  * Exit codes: 0 done, 1 the plan cannot be read or is unversioned, 2 usage.
  */
-import { appendFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { distTag, formatReleases } from "../dist-tag.js";
 import { repositoryRoot } from "../workspace.js";
-import { invokedDirectly, PROCESS_OUTPUT, type Output } from "./common.js";
+import {
+  appendSummary,
+  errorMessage,
+  invokedDirectly,
+  PROCESS_OUTPUT,
+  type Output,
+} from "./common.js";
 
 const USAGE = "Usage: release:dist-tag --pack-dir <dir>\n";
 
@@ -55,18 +60,13 @@ export async function main(
         )
         .join(""),
     );
-    const summary = context.env.GITHUB_STEP_SUMMARY;
-    if (summary !== undefined && summary !== "") {
-      await appendFile(
-        summary,
-        `## Publish plan\n\n${formatReleases(releases)}\n`,
-      );
-    }
+    await appendSummary(
+      context.env,
+      `## Publish plan\n\n${formatReleases(releases)}\n`,
+    );
     return 0;
   } catch (error) {
-    output.stderr(
-      `${error instanceof Error ? error.message : String(error)}\n`,
-    );
+    output.stderr(`${errorMessage(error)}\n`);
     return 1;
   }
 }

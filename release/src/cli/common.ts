@@ -1,9 +1,12 @@
 /**
- * What the CLIs of the release scripts share: the output streams, the base
- * ref option, and running as a script.
+ * What the CLIs of the release scripts share: the output streams, error
+ * messages, the job summary, the base ref option, and running as a script.
  */
+import { appendFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+
+export { errorMessage } from "../unknown.js";
 
 export interface Output {
   stdout: (text: string) => void;
@@ -14,6 +17,21 @@ export const PROCESS_OUTPUT: Output = {
   stdout: (text) => process.stdout.write(text),
   stderr: (text) => process.stderr.write(text),
 };
+
+/** The environment variable GitHub Actions names the job summary file in. */
+export const SUMMARY_VARIABLE = "GITHUB_STEP_SUMMARY";
+
+/**
+ * Appends `markdown` to the job summary when the environment `env` names
+ * one (a step of GitHub Actions); does nothing elsewhere.
+ */
+export async function appendSummary(
+  env: Readonly<Record<string, string | undefined>>,
+  markdown: string,
+): Promise<void> {
+  const file = env[SUMMARY_VARIABLE];
+  if (file !== undefined && file !== "") await appendFile(file, markdown);
+}
 
 /** The environment variable that names the base ref, for CI. */
 export const BASE_REF_VARIABLE = "RELEASE_BASE_REF";

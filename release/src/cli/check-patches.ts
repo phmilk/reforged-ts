@@ -7,7 +7,12 @@
  */
 import { checkPatches, readPatchInputs } from "../check-patches.js";
 import { repositoryRoot } from "../workspace.js";
-import { invokedDirectly, PROCESS_OUTPUT, type Output } from "./common.js";
+import {
+  errorMessage,
+  invokedDirectly,
+  PROCESS_OUTPUT,
+  type Output,
+} from "./common.js";
 
 const USAGE = "Usage: release:check-patches\n";
 
@@ -30,9 +35,7 @@ export async function main(
   try {
     input = await readPatchInputs(context.root);
   } catch (error) {
-    output.stderr(
-      `${error instanceof Error ? error.message : String(error)}\n`,
-    );
+    output.stderr(`${errorMessage(error)}\n`);
     return 1;
   }
 

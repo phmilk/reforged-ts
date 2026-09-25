@@ -15,6 +15,7 @@ import { changesSince, defaultBase, gitIn, type Git } from "../git.js";
 import { readPublishablePackages, repositoryRoot } from "../workspace.js";
 import {
   BASE_OPTION,
+  errorMessage,
   invokedDirectly,
   parseBaseArgs,
   PROCESS_OUTPUT,
@@ -63,9 +64,7 @@ export async function main(
       changesets,
     };
   } catch (error) {
-    output.stderr(
-      `${error instanceof Error ? error.message : String(error)}\n`,
-    );
+    output.stderr(`${errorMessage(error)}\n`);
     return 1;
   }
 
