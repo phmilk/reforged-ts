@@ -10,5 +10,6 @@
       "nullable": false
     }
   ],
+  "async": true,
   "since": "3.0.0.24268"
 }
