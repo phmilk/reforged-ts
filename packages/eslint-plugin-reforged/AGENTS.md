@@ -66,12 +66,13 @@ The tests run from source. They do not need `build`.
 
 ## Data files
 
-| File                         | Owner       | Shape                                                                                                                  |
-| ---------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `data/unsafe-natives.json`   | this plugin | `[{ name, reason, replacement }]`                                                                                      |
-| `data/local-safe.json`       | this plugin | `[{ name, kind: "visual" \| "text", reason }]`; `name` is a Native, `print`, `Class#member` or `Class.member` (static) |
-| `data/creation-natives.json` | this plugin | `[{ name, family }]`                                                                                                   |
-| `migration/renames.json`     | reforged-ts | `[{ old, new, kind, versions: { from, to }, oneToOne, note }]` (the library's `renames.schema.json`)                   |
+| File                         | Owner          | Shape                                                                                                                  |
+| ---------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `data/unsafe-natives.json`   | this plugin    | `[{ name, reason, replacement }]`                                                                                      |
+| `data/local-safe.json`       | this plugin    | `[{ name, kind: "visual" \| "text", reason }]`; `name` is a Native, `print`, `Class#member` or `Class.member` (static) |
+| `data/creation-natives.json` | this plugin    | `[{ name, family }]`                                                                                                   |
+| `migration/renames.json`     | reforged-ts    | `[{ old, new, kind, versions: { from, to }, oneToOne, note }]` (the library's `renames.schema.json`)                   |
+| `async-natives.json`         | reforged-types | a sorted array of Native names; the same set the Typings tag `@async` (the oracle test in `test/data.test.ts`)         |
 
 A file another package publishes is read from the linted project's installation of that package, found from the project root (`src/data/optional.ts`), never from this plugin's dependencies. Declare it as an `OptionalDataFile` next to its parser, read it in `loadPluginData` with its empty value, and list the package in the rule entry's `requires`: when the package is missing, the plugin warns once and registers the rule disabled.
 
