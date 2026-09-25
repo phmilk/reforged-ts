@@ -11,7 +11,8 @@
 // library prints a warning naming the first registration, because that
 // callback keeps the decision taken for it, and the new value affects later
 // registrations only. A call that changes nothing prints nothing.
-// `Reforged.debug` reads what Dev mode counted.
+// `Reforged.debug` reads what Dev mode counted: the Wrappers created and
+// destroyed per class, and the callback failures it suppressed.
 //
 // The flag lives (configuration.ts) on the library's global with the Init state (`anchored`),
 // so a second execution of the Lua root finds the value the first one set:
@@ -26,8 +27,10 @@ import {
   callbackFailures,
   resetCallbackFailures,
 } from "./protect";
+import { resetWrapperCounts, type WrapperCount, wrapperCounts } from "./leaks";
 
 export type { CallbackFailure } from "./protect";
+export type { WrapperCount } from "./leaks";
 
 /**
  * What `Reforged.configure` takes. The Template's generated environment
@@ -40,6 +43,18 @@ export interface ReforgedOptions {
 
 /** What `Reforged.debug.report()` returns. */
 export interface DebugReport {
+  /**
+   * The Wrappers the library created and destroyed in Dev mode, one row per
+   * class with the live difference, sorted by live descending: a leak shows
+   * as a live count that keeps growing between reports. A heuristic: it
+   * counts only the creations and destructions the library saw, so a unit
+   * that decayed or an effect the game removed stays live here, and a
+   * lookup (`fromHandle`, `fromEvent`) is never counted. Exact for the
+   * classes only the library creates and destroys (`Point`, `Group`,
+   * `Force`, `Timer`, `Trigger`, `Effect`, `Frame`). Empty with Dev mode
+   * off.
+   */
+  readonly wrappers: readonly WrapperCount[];
   /**
    * Each callback that failed under the protection of Dev mode, once per
    * distinct message, in the order they first failed, with how many times
@@ -56,23 +71,26 @@ export interface DebugReport {
 export interface ReforgedDebug {
   /**
    * Prints the report, one line per row after a header, and returns it: the
-   * callbacks that failed and how many times each failed with the same
+   * Wrappers created, destroyed and live per class, most live first, then
+   * the callbacks that failed and how many times each failed with the same
    * message. A repeated failure is reported on screen once, then only
-   * counted here.
+   * counted here. The Wrapper counts are a heuristic: only the creations
+   * and destructions the library saw.
    * @example
    * ```ts
    * Timer.every(1, () => {
    *   error("tick failed");
    * });
    * // After three ticks:
-   * const { failures } = Reforged.debug.report();
+   * const { failures, wrappers } = Reforged.debug.report();
    * // failures[0].count === 3
+   * // wrappers[0]: { className: "Timer", created: 1, destroyed: 0, live: 1 }
    * ```
    */
   report(): DebugReport;
   /**
-   * Zeroes the counts: the next failure of each callback is reported on
-   * screen again.
+   * Zeroes the counts: the Wrapper counts start again from nothing, and the
+   * next failure of each callback is reported on screen again.
    */
   reset(): void;
 }
@@ -93,7 +111,10 @@ export interface ReforgedEntry {
   configure(options: ReforgedOptions): void;
   /** Whether the library is in Dev mode: false until `configure` sets it. */
   readonly devMode: boolean;
-  /** What Dev mode counted: the callback failures it suppressed. */
+  /**
+   * What Dev mode counted: the Wrappers created and destroyed per class, and
+   * the callback failures it suppressed.
+   */
   readonly debug: ReforgedDebug;
 }
 
@@ -104,10 +125,16 @@ class ReforgedDebugObject implements ReforgedDebug {
   public report(): DebugReport {
     if (!configuration.devMode) {
       print(DEV_MODE_OFF);
-      return { failures: [] };
+      return { wrappers: [], failures: [] };
     }
+    const wrappers = wrapperCounts();
     const failures = callbackFailures();
     print(`${LIBRARY}: debug report`);
+    for (const row of wrappers) {
+      print(
+        `${LIBRARY}: ${row.className}: created ${String(row.created)}, destroyed ${String(row.destroyed)}, live ${String(row.live)}`,
+      );
+    }
     if (failures.length === 0) {
       print(`${LIBRARY}: no callback failed`);
     }
@@ -116,7 +143,7 @@ class ReforgedDebugObject implements ReforgedDebug {
         `${LIBRARY}: ${failure.origin} failed ${String(failure.count)}x: ${failure.message}`,
       );
     }
-    return { failures };
+    return { wrappers, failures };
   }
 
   public reset(): void {
@@ -124,6 +151,7 @@ class ReforgedDebugObject implements ReforgedDebug {
       print(DEV_MODE_OFF);
       return;
     }
+    resetWrapperCounts();
     resetCallbackFailures();
   }
 }

@@ -37,6 +37,14 @@ export class Rectangle extends Handle<rect> {
     return GetRectMinY(this.handle);
   }
 
+  /**
+   * Destroys the Rectangle through its Native.
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
+   */
   public destroy() {
     RemoveRect(this.handle);
     this.release();

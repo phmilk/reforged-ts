@@ -73,6 +73,11 @@ export class Image extends Handle<image> {
   /**
    * Destroys the image specified and recycles the handle ID of that image instantly (no ref counting for images).
    * @bug May crash the game if an invalid image is used (null, before the first image is created).
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
    */
   public destroy() {
     DestroyImage(this.handle);

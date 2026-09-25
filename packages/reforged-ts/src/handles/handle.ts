@@ -2,6 +2,7 @@
 
 import { hasRun } from "../init/stages";
 import { configuration } from "../reforged/configuration";
+import { countCreated, countDestroyed } from "../reforged/leaks";
 
 /** The registry: the one Wrapper object for each Handle. */
 const registry = new WeakMap<handle, Handle<handle>>();
@@ -83,10 +84,11 @@ type Initialising<C> = { -readonly [K in keyof C]: C[K] };
  * - The documented non-null path: `unit.getOwner()` and
  *   `MapPlayer.fromLocal()` read an existing Handle but assert an invariant
  *   the Typings cannot express (a live unit has an owner, `GetLocalPlayer`
- *   never returns nothing) through `expect`, so they are typed non-null and,
- *   should the game break the invariant, throw the standard message
- *   (`reforged-ts: failed to create MapPlayer`). Each says why in its doc
- *   comment; no other lookup does this.
+ *   never returns nothing) through `expectFound`, so they are typed
+ *   non-null and, should the game break the invariant, throw the standard
+ *   message (`reforged-ts: failed to create MapPlayer`); being lookups, they
+ *   skip the Dev-mode creation Guards and are not counted as creations.
+ *   Each says why in its doc comment; no other lookup does this.
  * - `Frame` overrides `fromHandle`, because the game's "not found" frame has
  *   handle id 0.
  *
@@ -119,7 +121,10 @@ export abstract class Handle<T extends handle> {
    * removes the registry entry for the Handle, so a later lookup of the same
    * Handle makes a new Wrapper instead of returning this dead one, then
    * notifies the collections holding the Handle. It is the one place a
-   * destroy-time Guard goes; no Wrapper method carries one.
+   * destroy-time Guard goes, behind one read of Dev mode; no Wrapper method
+   * carries one. In Dev mode it counts the Wrapper destroyed for
+   * `Reforged.debug`, then turns it into a tombstone (see `entomb`), last,
+   * so every earlier part reads the Wrapper as it was.
    */
   protected release(): void {
     const released: Released = {
@@ -130,6 +135,10 @@ export abstract class Handle<T extends handle> {
     registry.delete(released.handle);
     for (const listener of releaseListeners) {
       listener(released);
+    }
+    if (configuration.devMode) {
+      countDestroyed(released.className);
+      entomb(this, `${released.className}#${String(released.id)}`);
     }
   }
 
@@ -171,8 +180,55 @@ export abstract class Handle<T extends handle> {
     detail = "",
     init?: (wrapper: Initialising<C>) => void,
   ): C {
-    return wrapCreated(this, handle, detail, init);
+    return wrapExpected(this, handle, detail, true, init);
   }
+
+  /**
+   * The documented non-null lookup: the Wrapper for a Handle the game
+   * already had, read by a Native that the game guarantees returns one but
+   * the Typings cannot express (`GetLocalPlayer`, `GetOwningPlayer` of a
+   * live unit). It throws `expect`'s message when the Native returns
+   * nothing, with the same tail-position rule, but it is a lookup: none of
+   * the Dev-mode creation Guards apply (it passes before the globals Init
+   * stage) and it is not counted as a creation.
+   * `return MapPlayer.expectFound(GetOwningPlayer(this.handle))`.
+   */
+  protected static expectFound<C extends Handle<handle>>(
+    this: WrapperClass<C>,
+    handle: C["handle"] | undefined,
+  ): C {
+    return wrapExpected(this, handle, "", false);
+  }
+}
+
+/**
+ * Turns a destroyed Wrapper into a tombstone, in Dev mode: every field of
+ * its own is cleared, the Handle included, and its metatable is replaced by
+ * one that raises `reforged-ts: used after destroy: <name>` on index,
+ * new-index and call and renders `<name> (destroyed)` through `tostring`.
+ * typescript-to-lua keeps methods on the class prototype, which the old
+ * metatable led to, and fields on the instance, so with both gone every
+ * access, a second `destroy()` included, reaches the raising metamethod.
+ * Level 2 names the line that made the access.
+ */
+function entomb(wrapper: Handle<handle>, name: string): void {
+  const fields = wrapper as unknown as Record<string, unknown>;
+  // Clearing the fields a traversal has already visited is allowed in Lua;
+  // the order does not matter, every one is cleared.
+  for (const [key] of pairs(fields)) {
+    rawset(fields, key, undefined);
+  }
+  const message = `reforged-ts: used after destroy: ${name}`;
+  // A block body, so `error` is not a tail call and level 2 is the access.
+  const raise = () => {
+    error(message, 2);
+  };
+  setmetatable(fields, {
+    __index: raise,
+    __newindex: raise,
+    __call: raise,
+    __tostring: () => `${name} (destroyed)`,
+  });
 }
 
 /**
@@ -190,36 +246,42 @@ export function expectWrapper<C extends Handle<handle>>(
   handle: C["handle"] | undefined,
   detail = "",
 ): C {
-  return wrapCreated(cls, handle, detail);
+  return wrapExpected(cls, handle, detail, true);
 }
 
 /**
  * The creation step, shared by every Wrapper and the one place its errors
  * are raised: the Wrapper for `handle`, or the error naming `cls` and
  * `detail` when `handle` is undefined. Reached only through tail calls (from
- * `expect` or `expectWrapper`, themselves tail-called by the creation
- * member), so level 2 names the frame that called the creation member.
+ * `expect`, `expectFound` or `expectWrapper`, themselves tail-called by the
+ * member), so level 2 names the frame that called the member.
  *
  * It is the one place a creation-time Guard goes, behind one read of Dev
- * mode; no Wrapper method carries one. In Dev mode a creation before the
- * globals Init stage was entered raises, naming `Init.onGlobals` (a Handle
- * created at module top level runs before the game is set up, and desyncs).
+ * mode; no Wrapper method carries one. In Dev mode, for a `creation` (not
+ * the non-null lookup of `expectFound`): a creation before the globals Init
+ * stage was entered raises, naming `Init.onGlobals` (a Handle created at
+ * module top level runs before the game is set up, and desyncs); otherwise
+ * the Wrapper is counted created for `Reforged.debug`.
  */
-function wrapCreated<C extends Handle<handle>>(
+function wrapExpected<C extends Handle<handle>>(
   cls: WrapperClass<C>,
   handle: C["handle"] | undefined,
   detail: string,
+  creation: boolean,
   init?: (wrapper: Initialising<C>) => void,
 ): C {
   if (handle === undefined) {
     const suffix = detail === "" ? "" : ` (${detail})`;
     error(`reforged-ts: failed to create ${cls.name}${suffix}`, 2);
   }
-  if (configuration.devMode && !hasRun("globals")) {
-    error(
-      `reforged-ts: ${cls.name} created before the globals Init stage: create Handles in Init.onGlobals or a later stage, not at module top level`,
-      2,
-    );
+  if (creation && configuration.devMode) {
+    if (!hasRun("globals")) {
+      error(
+        `reforged-ts: ${cls.name} created before the globals Init stage: create Handles in Init.onGlobals or a later stage, not at module top level`,
+        2,
+      );
+    }
+    countCreated(cls.name);
   }
   const wrapper = wrap(cls, handle);
   init?.(wrapper);

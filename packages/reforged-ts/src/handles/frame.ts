@@ -216,6 +216,14 @@ export class Frame extends Handle<framehandle> {
     return this;
   }
 
+  /**
+   * Destroys the Frame through its Native.
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
+   */
   public destroy() {
     BlzDestroyFrame(this.handle);
     this.release();

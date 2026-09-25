@@ -4,7 +4,8 @@
 // then the base's shared release step, which removes the registry entry for
 // the Handle. So a destroyed Handle never resolves to the dead Wrapper: a
 // lookup with the same Handle afterwards makes a new one, in release and in
-// Dev mode. One representative Wrapper per family.
+// Dev mode. One representative Wrapper per family. The Handle is read before
+// `destroy()`: in Dev mode the destroyed Wrapper is a tombstone.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import {
@@ -92,18 +93,19 @@ for (const devMode of [false, true]) {
       it(`calls ${family.native}, then a lookup of the same ${family.name} Handle makes a new Wrapper`, () => {
         Reforged.configure({ devMode });
         const wrapper = family.create();
-        expect(family.lookup(wrapper.handle)).toBe(wrapper);
+        const handle = wrapper.handle;
+        expect(family.lookup(handle)).toBe(wrapper);
 
         wrapper.destroy();
 
         expect(stubCalls()).toContainCall(
-          `${family.native}(${handleRef(family.kind, wrapper.handle)})`,
+          `${family.native}(${handleRef(family.kind, handle)})`,
         );
-        const after = family.lookup(wrapper.handle);
+        const after = family.lookup(handle);
         expect(after).toBeTruthy();
         expect(after === wrapper).toBeFalsy();
-        expect(after?.handle).toBe(wrapper.handle);
-        expect(family.lookup(wrapper.handle)).toBe(after);
+        expect(after?.handle).toBe(handle);
+        expect(family.lookup(handle)).toBe(after);
       });
     }
   });

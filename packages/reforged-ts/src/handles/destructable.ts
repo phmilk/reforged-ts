@@ -152,6 +152,14 @@ export class Destructable extends Widget {
     return GetDestructableY(this.handle);
   }
 
+  /**
+   * Destroys the Destructable through its Native.
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
+   */
   public destroy() {
     RemoveDestructable(this.handle);
     this.release();

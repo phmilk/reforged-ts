@@ -11,6 +11,14 @@ export class MultiboardItem extends Handle<multiboarditem> {
     return this.expect(MultiboardGetItem(board.handle, x - 1, y - 1));
   }
 
+  /**
+   * Destroys the MultiboardItem through its Native.
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
+   */
   public destroy() {
     MultiboardReleaseItem(this.handle);
     this.release();
@@ -90,6 +98,14 @@ export class Multiboard extends Handle<multiboard> {
     return MultiboardItem.create(this, x, y);
   }
 
+  /**
+   * Destroys the Multiboard through its Native.
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
+   */
   public destroy() {
     DestroyMultiboard(this.handle);
     this.release();

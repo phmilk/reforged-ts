@@ -63,6 +63,14 @@ export class Dialog extends Handle<dialog> {
     DialogClear(this.handle);
   }
 
+  /**
+   * Destroys the Dialog through its Native.
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
+   */
   public destroy() {
     DialogDestroy(this.handle);
     this.release();
