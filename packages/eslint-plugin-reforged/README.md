@@ -41,7 +41,9 @@ Each diagnostic links to the rule's page on the docs site; the pages ship in `do
 | [`no-unsafe-natives`](docs/no-unsafe-natives.md)                           | error    | A Native on the ban list (`TriggerSleepAction`, `PolledWait`, the BJ timer helpers, ...).               |
 | [`no-unused-handle-result`](docs/no-unused-handle-result.md)               | error    | A statement that discards a creation or a `Filter`/`Condition` boolexpr, which then leaks.              |
 | [`no-unordered-iteration`](docs/no-unordered-iteration.md)                 | warn     | Iteration that compiles to `pairs` (`for...in`, `Object.keys/values/entries`, `pairs`, `next`).         |
+| [`no-handle-id-as-data`](docs/no-handle-id-as-data.md)                     | warn     | `GetHandleId` or a Wrapper's `id` used as data (a key, arithmetic, state) rather than displayed.        |
 | [`no-percent-in-display-strings`](docs/no-percent-in-display-strings.md)   | warn     | A lone `%` in a string that reaches a text-display Native (`print`, `DisplayTextToPlayer`, frame text). |
+| [`prefer-handle-map`](docs/prefer-handle-map.md)                           | warn     | A `Map` or `Set` keyed by a Wrapper, which keeps entries for destroyed objects.                         |
 | [`no-self-recursion`](docs/no-self-recursion.md)                           | warn     | A function that calls itself by name in its own body.                                                   |
 
 To silence a rule on one line, say why:
