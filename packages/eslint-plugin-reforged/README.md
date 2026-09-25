@@ -36,6 +36,7 @@ Each diagnostic links to the rule's page on the docs site; the pages ship in `do
 
 | Rule                                                                       | Severity | Reports                                                                                                 |
 | -------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------- |
+| [`no-game-state-in-local-branch`](docs/no-game-state-in-local-branch.md)   | error    | A game-state call, creation or random number inside a branch that runs for the local player only.       |
 | [`no-dotted-asset-paths`](docs/no-dotted-asset-paths.md)                   | error    | An asset path whose file name holds a dot before its extension (`model_1.0.mdx`).                       |
 | [`no-handles-at-module-top-level`](docs/no-handles-at-module-top-level.md) | error    | A creation (`Unit.create`, `CreateTimer`, ...) at module top level, which runs in the Lua root.         |
 | [`no-legacy-w3ts-names`](docs/no-legacy-w3ts-names.md)                     | error    | A w3ts 3.x name reforged-ts renamed or removed; fixes the one-to-one renames.                           |
