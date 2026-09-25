@@ -4,7 +4,8 @@
 // when it is an argument of the call (the assigned value) or feeds it through:
 // - template literals (`${value}`);
 // - string concatenation (a `+` whose type is a string);
-// - `String(value)` (the global) or `tostring(value)` (lua-types);
+// - `String(value)` (the global), `tostring(value)` (lua-types), or the
+//   Natives `I2S(value)`, `R2S(value)` and `R2SW(value, width, precision)`;
 // - one `const` (`const message = value;` then `message` feeds the sink),
 //   followed once: a const initialised from another const is not followed.
 // Type assertions and non-null assertions are transparent. Calls to project
@@ -76,7 +77,9 @@ function step(
         return undefined;
       }
       return isStringConversion(services, parent)
-        ? through
+        ? parent.arguments[0] === child
+          ? through
+          : undefined
         : textSink(services, allowlist, parent);
     case AST_NODE_TYPES.AssignmentExpression:
       return parent.right === child

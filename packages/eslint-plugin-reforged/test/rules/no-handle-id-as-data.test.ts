@@ -49,6 +49,10 @@ const dataUses: readonly { name: string; code: string }[] = [
     code: "const key = ID;\nconst table: Record<number, boolean> = {};\ntable[key] = true;",
   },
   {
+    name: "converted by I2S into a key",
+    code: "const table: Record<string, boolean> = {};\ntable[I2S(ID)!] = true;",
+  },
+  {
     name: "concatenated into a key",
     code: 'const key = "unit" + ID;\nconst table: Record<string, boolean> = {};\ntable[key] = true;',
   },
@@ -63,6 +67,13 @@ const displayUses: readonly { name: string; code: string }[] = [
     code: 'DisplayTextToPlayer(Player(0)!, 0, 0, "id " + ID);',
   },
   { name: "through tostring", code: "print(tostring(ID));" },
+  { name: "through I2S", code: "print(I2S(ID));" },
+  {
+    name: "through I2S, concatenated for DisplayTextToPlayer",
+    code: 'DisplayTextToPlayer(Player(0)!, 0, 0, "id " + I2S(ID)!);',
+  },
+  { name: "through R2S", code: "BJDebugMsg(R2S(ID)!);" },
+  { name: "through R2SW", code: "print(R2SW(ID, 8, 0));" },
   {
     name: "through a one-hop const",
     code: "const label = `id ${ID}`;\nprint(label);",
@@ -135,6 +146,27 @@ ruleTester.run("no-handle-id-as-data", ruleOf("no-handle-id-as-data"), {
       name: "a sink reached through a user function (not followed)",
       code: `${unitPrelude}function show(value: number): void {\n  print(value);\n}\nshow(unit.id);`,
       errors: [{ messageId: "handleIdAsData", data: { source: "Unit#id" } }],
+    },
+    {
+      name: "R2SW's width is not the formatted value",
+      code: "declare const u: unit;\nexport {};\nprint(R2SW(1.5, GetHandleId(u), 2));",
+      errors: [
+        { messageId: "handleIdAsData", data: { source: "GetHandleId" } },
+      ],
+    },
+    {
+      name: "a project function named I2S is not the converter",
+      code: "declare const u: unit;\nexport function I2S(value: number): string {\n  return tostring(value);\n}\nprint(I2S(GetHandleId(u)));",
+      errors: [
+        { messageId: "handleIdAsData", data: { source: "GetHandleId" } },
+      ],
+    },
+    {
+      name: "a pure Native other than the string converters is not followed",
+      code: "declare const u: unit;\nexport {};\nprint(R2S(I2R(GetHandleId(u)))!);",
+      errors: [
+        { messageId: "handleIdAsData", data: { source: "GetHandleId" } },
+      ],
     },
     {
       name: "a visual allowlist call is not a text sink",

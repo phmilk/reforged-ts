@@ -12,6 +12,7 @@ import {
   type TSESTree,
 } from "@typescript-eslint/utils";
 
+import { resolveNative } from "./native.js";
 import { packageNameOf } from "./package.js";
 
 /** What the walk needs from a rule's context. */
@@ -117,12 +118,29 @@ export function walkValueFlow<Hit>(
   return walk(flow, expression, constHops);
 }
 
-/** `String(x)` with the global of the default library, or lua-types' `tostring(x)`. */
+/** The Natives that format a number as a string (the value is their first argument). */
+const stringConverterNatives: ReadonlySet<string> = new Set([
+  "I2S",
+  "R2S",
+  "R2SW",
+]);
+
+/**
+ * A conversion to a string: `String(x)` with the global of the default
+ * library, lua-types' `tostring(x)`, or the Natives `I2S`, `R2S` and `R2SW`
+ * of reforged-types. The converted value is the first argument.
+ */
 export function isStringConversion(
   services: ParserServicesWithTypeInformation,
   call: TSESTree.CallExpression,
 ): boolean {
   const { callee } = call;
+  if (
+    callee.type === AST_NODE_TYPES.Identifier &&
+    stringConverterNatives.has(callee.name)
+  ) {
+    return resolveNative(services, call) !== undefined;
+  }
   if (
     callee.type !== AST_NODE_TYPES.Identifier ||
     (callee.name !== "String" && callee.name !== "tostring")

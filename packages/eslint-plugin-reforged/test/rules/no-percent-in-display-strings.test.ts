@@ -93,6 +93,14 @@ const feeds: readonly {
     fixedExpression: 'tostring("50%%")',
   },
   {
+    // I2S takes a number; the assertion stands for any value the walk
+    // follows into the converter's first argument.
+    name: "through I2S",
+    prelude: "",
+    expression: 'I2S("50%" as unknown as number)!',
+    fixedExpression: 'I2S("50%%" as unknown as number)!',
+  },
+  {
     name: "through String()",
     prelude: "",
     expression: 'String("50%")',
@@ -158,6 +166,10 @@ ruleTester.run(
       {
         name: "a sink reached through two consts (one hop only)",
         code: 'const first = "50%";\nconst second = first;\nprint(second);',
+      },
+      {
+        name: "a string parsed by S2I is not displayed",
+        code: 'print(I2S(S2I("50%")));\nprint(R2SW(1.5, S2I("5%"), 2));',
       },
       {
         name: "a let is not followed",

@@ -8,7 +8,7 @@ Pitfall D5 of the catalogue (#15). "GetHandleId is synchronous in JASS-mode, but
 
 The `id` accessor of the Wrappers returns `GetHandleId(this.handle)`, so it has the same problem. `MapPlayer#id` is the player's slot (`GetPlayerId`), the same on every client, and is not reported.
 
-Displaying an id changes no game state, so a value that reaches a text sink is fine. A text sink is a call listed with kind `text` in `data/local-safe.json` (`print`, `BJDebugMsg`, `DisplayTextToPlayer` and the other display Natives, the frame text setters and their `Frame` members). The rule follows the id into the sink through a template literal, a string concatenation, `String()` or `tostring`, and one `const`. It does not follow calls into project functions.
+Displaying an id changes no game state, so a value that reaches a text sink is fine. A text sink is a call listed with kind `text` in `data/local-safe.json` (`print`, `BJDebugMsg`, `DisplayTextToPlayer` and the other display Natives, the frame text setters and their `Frame` members). The rule follows the id into the sink through a template literal, a string concatenation, `String()`, `tostring`, the converters `I2S`, `R2S` and `R2SW` (their first argument), and one `const`. It does not follow calls into project functions.
 
 ## Incorrect
 
@@ -34,6 +34,7 @@ const kills = new LuaTable<Unit, number>();
 kills.set(unit, 0); // keyed by the Wrapper
 
 print(`unit ${unit.id} spawned`); // displaying the id is fine
+BJDebugMsg(I2S(GetHandleId(unit.handle))!); // through a converter too
 ```
 
 ## Options
