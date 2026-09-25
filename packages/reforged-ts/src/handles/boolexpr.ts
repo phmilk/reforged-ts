@@ -16,15 +16,18 @@ export type BoolexprInput = boolexpr | (() => boolean);
 /**
  * The condition `Trigger.addCondition` hands `TriggerAddCondition`: a
  * function goes through `Condition`, protected as `member` of `owner` and
- * evaluating false when it throws in Dev mode.
+ * evaluating false when it throws in Dev mode, then through `around` (the
+ * Trigger's damage nesting), outside the protection, so what `around` wraps
+ * never throws.
  */
 export function conditionOf(
   owner: Handle<handle>,
   member: string,
   condition: BoolexprInput,
+  around: (protectedCondition: () => boolean) => () => boolean = (fn) => fn,
 ): boolexpr {
   return typeof condition === "function"
-    ? Condition(protect(owner, member, condition, false))
+    ? Condition(around(protect(owner, member, condition, false)))
     : condition;
 }
 

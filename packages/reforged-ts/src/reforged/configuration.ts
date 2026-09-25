@@ -23,12 +23,21 @@ export interface Configuration {
    * not count.
    */
   firstRegistration: string | undefined;
+  /**
+   * How deep damage handlers may nest before `Unit.damageTarget` raises in
+   * Dev mode: `DEFAULT_DAMAGE_DEPTH_LIMIT` unless `configure` set another.
+   */
+  damageDepthLimit: number;
 }
+
+/** The damage nesting depth `Unit.damageTarget` allows by default in Dev mode. */
+export const DEFAULT_DAMAGE_DEPTH_LIMIT = 8;
 
 /** The configuration: the one an earlier load anchored, or a new one. */
 export const configuration = anchored<Configuration>("configuration", () => ({
   devMode: false,
   firstRegistration: undefined,
+  damageDepthLimit: DEFAULT_DAMAGE_DEPTH_LIMIT,
 }));
 
 /**

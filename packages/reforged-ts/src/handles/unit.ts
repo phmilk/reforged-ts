@@ -1,6 +1,8 @@
 /** @noSelfInFile */
 
 import { OrderId } from "../globals/order";
+import { configuration } from "../reforged/configuration";
+import { assertDamageDepth } from "../reforged/damage";
 import { rawcodeToString } from "../utils/rawcode";
 import { Destructable } from "./destructable";
 import { Force } from "./force";
@@ -605,6 +607,17 @@ export class Unit extends Widget {
    * @param attackType
    * @param damageType
    * @param weaponType
+   * @remarks
+   * Dealing damage inside a damage handler fires the damage events again, so
+   * a handler that damages back without a stop loops until the client
+   * crashes. In Dev mode every action and condition of a Trigger carrying a
+   * damage event (an `on()` damage subscription included) runs one level
+   * deeper in a shared damage depth, and this member raises
+   * `reforged-ts: Unit#<id> Unit.damageTarget at damage depth <depth>, past
+   * the limit of <limit>: ...` when the depth exceeds the limit: eight
+   * nested dispatches by default, `Reforged.configure({ damageDepthLimit })`
+   * to change it. A single bounce (reflect damage) passes. With Dev mode off
+   * nothing is counted and nothing raises.
    */
   public damageTarget(
     target: widget,
@@ -615,6 +628,9 @@ export class Unit extends Widget {
     damageType: damagetype,
     weaponType: weapontype,
   ) {
+    if (configuration.devMode) {
+      assertDamageDepth(this, 2);
+    }
     return UnitDamageTarget(
       this.handle,
       target,
