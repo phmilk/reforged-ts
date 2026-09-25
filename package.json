@@ -20,6 +20,7 @@
     "typings:check": "pnpm --filter reforged-types typings:check",
     "changeset": "changeset",
     "release:check-changeset": "pnpm --filter reforged-ts-release release:check-changeset",
+    "release:check-patches": "pnpm --filter reforged-ts-release release:check-patches",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test"
   },
   "devDependencies": {
