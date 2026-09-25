@@ -15,6 +15,7 @@
 // records which keys the array holds (present or not), so a key deleted and
 // set again before the next sort is not listed twice.
 
+import { LIBRARY } from "../init/state";
 import { Reforged } from "../reforged/index";
 
 /** How a caller orders object keys: negative, zero or positive, as `Array.prototype.sort`. */
@@ -151,7 +152,7 @@ export class SortedKeys<K extends AnyNotNil> {
     if (kind !== "number" && kind !== "string") {
       // Level 4: this function, `add`, the collection's member, its caller.
       error(
-        `reforged-ts: ${this.owner} without a comparator takes number or string keys, got a ${kind}: pass a comparator to the constructor to order other keys`,
+        `${LIBRARY}: ${this.owner} without a comparator takes number or string keys, got a ${kind}: pass a comparator to the constructor to order other keys`,
         4,
       );
     }
@@ -159,7 +160,7 @@ export class SortedKeys<K extends AnyNotNil> {
       this.kind = kind;
     } else if (this.kind !== kind) {
       error(
-        `reforged-ts: ${this.owner} without a comparator takes keys of one kind, got a ${kind} after ${this.kind} keys: the sorted order that keeps iteration identical on every client cannot compare them`,
+        `${LIBRARY}: ${this.owner} without a comparator takes keys of one kind, got a ${kind} after ${this.kind} keys: the sorted order that keeps iteration identical on every client cannot compare them`,
         4,
       );
     }

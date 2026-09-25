@@ -4,7 +4,11 @@
 // Wrapper created per class and its release step a Wrapper destroyed; live
 // is the difference, so a leak shows as a number that keeps growing.
 // Lookups (`fromHandle`, `fromEvent`, the documented non-null lookups) never
-// count: they wrap objects the library did not create. The counts are a
+// count: they wrap objects the library did not create. A destruction counts
+// only for a Handle counted created since the last reset, under the class it
+// was counted created as, so no row goes below zero: a looked-up Wrapper
+// destroyed, one created before the reset or before Dev mode was on, is not
+// counted. The counts are a
 // heuristic, then: a unit that decayed or an effect the game removed is not
 // a destruction the library saw. They are exact for the classes only the
 // library creates and destroys (`Point`, `Group`, `Force`, `Timer`,
@@ -20,7 +24,7 @@ export interface WrapperCount {
   readonly className: string;
   /** How many the library created in Dev mode since the last reset. */
   readonly created: number;
-  /** How many of any the library destroyed in Dev mode since the last reset. */
+  /** How many of those the library destroyed in Dev mode since then. */
   readonly destroyed: number;
   /** `created - destroyed`: how many the library believes still live. */
   readonly live: number;
@@ -35,7 +39,14 @@ interface CountRow {
 
 /** The counts since the last reset, by class name, in first-counted order. */
 interface CountStore {
-  rows: Map<string, CountRow>;
+  /** One row per class ever counted: a reset zeroes it, never removes it. */
+  readonly rows: Map<string, CountRow>;
+  /**
+   * The Handles counted created since the last reset and not yet destroyed,
+   * with the class name they were counted under. Weak, so a Handle the game
+   * dropped does not stay here; a reset replaces it.
+   */
+  counted: WeakMap<handle, string>;
 }
 
 /**
@@ -44,7 +55,10 @@ interface CountStore {
  * never counts, so it never creates it.
  */
 function store(): CountStore {
-  return anchored<CountStore>("wrappers", () => ({ rows: new Map() }));
+  return anchored<CountStore>("wrappers", () => ({
+    rows: new Map(),
+    counted: new WeakMap(),
+  }));
 }
 
 /** The row of `className`, made at zero on its first count. */
@@ -58,13 +72,31 @@ function rowOf(className: string): CountRow {
   return row;
 }
 
-/** Counts one `className` Wrapper created. Called in Dev mode only. */
-export function countCreated(className: string): void {
+/**
+ * Counts `handle` created as a `className` Wrapper, once. Called in Dev mode
+ * only.
+ */
+export function countCreated(className: string, handle: handle): void {
+  const counted = store().counted;
+  if (counted.has(handle)) {
+    return;
+  }
+  counted.set(handle, className);
   rowOf(className).created++;
 }
 
-/** Counts one `className` Wrapper destroyed. Called in Dev mode only. */
-export function countDestroyed(className: string): void {
+/**
+ * Counts `handle` destroyed, under the class it was counted created as, when
+ * it was counted created since the last reset; otherwise counts nothing.
+ * Called in Dev mode only.
+ */
+export function countDestroyed(handle: handle): void {
+  const counted = store().counted;
+  const className = counted.get(handle);
+  if (className === undefined) {
+    return;
+  }
+  counted.delete(handle);
   rowOf(className).destroyed++;
 }
 
@@ -94,7 +126,15 @@ export function wrapperCounts(): WrapperCount[] {
   );
 }
 
-/** Forgets every count: the next report counts from zero. */
+/**
+ * Zeroes every row and forgets the Handles counted created: a Wrapper
+ * created before the reset is not counted destroyed after it.
+ */
 export function resetWrapperCounts(): void {
-  store().rows = new Map();
+  const counts = store();
+  for (const [, row] of counts.rows) {
+    row.created = 0;
+    row.destroyed = 0;
+  }
+  counts.counted = new WeakMap();
 }

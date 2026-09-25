@@ -1,6 +1,7 @@
 /** @noSelfInFile */
 
 import { hasRun } from "../init/stages";
+import { LIBRARY } from "../init/state";
 import { configuration } from "../reforged/configuration";
 import { countCreated, countDestroyed } from "../reforged/leaks";
 import { assertNotLocal } from "../reforged/local";
@@ -120,22 +121,23 @@ export abstract class Handle<T extends handle> {
    * holding the Handle. With Dev mode off that is all: no other Native call
    * (the zero-cost definition of ADR 0007). It is the one place a
    * destroy-time Guard goes, behind one read of Dev mode; no Wrapper method
-   * carries one. In Dev mode it reads the class name and the id (the id is
-   * still readable after the Native), counts the Wrapper destroyed for
-   * `Reforged.debug`, then turns it into a tombstone (see `entomb`); inside
-   * `MapPlayer.runLocal` it then raises: a Handle freed on one client
-   * desyncs.
+   * carries one. In Dev mode it reads the class name and the id first,
+   * before anything else (the id is still readable after the Native), and,
+   * after the collections were told, counts the Wrapper destroyed for
+   * `Reforged.debug`, turns it into a tombstone (see `entomb`), and inside
+   * `MapPlayer.runLocal` raises: a Handle freed on one client desyncs.
    */
   protected release(): void {
     const released: Released = { handle: this.handle };
+    const name = configuration.devMode
+      ? `${this.constructor.name}#${String(GetHandleId(released.handle))}`
+      : undefined;
     registry.delete(released.handle);
     for (const listener of releaseListeners) {
       listener(released);
     }
-    if (configuration.devMode) {
-      const className = this.constructor.name;
-      const name = `${className}#${String(GetHandleId(released.handle))}`;
-      countDestroyed(className);
+    if (name !== undefined) {
+      countDestroyed(released.handle);
       entomb(this, name);
       assertNotLocal(`destroying ${name}`, 3);
     }
@@ -217,7 +219,7 @@ function entomb(wrapper: Handle<handle>, name: string): void {
   for (const [key] of pairs(fields)) {
     rawset(fields, key, undefined);
   }
-  const message = `reforged-ts: used after destroy: ${name}`;
+  const message = `${LIBRARY}: used after destroy: ${name}`;
   // A block body, so `error` is not a tail call and level 2 is the access.
   const raise = () => {
     error(message, 2);
@@ -272,17 +274,17 @@ function wrapExpected<C extends Handle<handle>>(
 ): C {
   if (handle === undefined) {
     const suffix = detail === "" ? "" : ` (${detail})`;
-    error(`reforged-ts: failed to create ${cls.name}${suffix}`, 2);
+    error(`${LIBRARY}: failed to create ${cls.name}${suffix}`, 2);
   }
   if (creation && configuration.devMode) {
     if (!hasRun("globals")) {
       error(
-        `reforged-ts: ${cls.name} created before the globals Init stage: create Handles in Init.onGlobals or a later stage, not at module top level`,
+        `${LIBRARY}: ${cls.name} created before the globals Init stage: create Handles in Init.onGlobals or a later stage, not at module top level`,
         2,
       );
     }
     assertNotLocal(`creating a ${cls.name}`, 2);
-    countCreated(cls.name);
+    countCreated(cls.name, handle);
   }
   const wrapper = wrap(cls, handle);
   init?.(wrapper);

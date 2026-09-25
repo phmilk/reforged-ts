@@ -3,7 +3,7 @@
 import { configuration } from "../reforged/configuration";
 import { damageNested } from "../reforged/damage";
 import { protect } from "../reforged/protect";
-import { conditionOf, filterOf } from "./boolexpr";
+import { filterOf } from "./boolexpr";
 import { Dialog, DialogButton } from "./dialog";
 import { Frame } from "./frame";
 import { Handle } from "./handle";
@@ -133,9 +133,15 @@ export class Trigger extends Handle<trigger> {
   public addCondition(condition: boolexpr | (() => boolean)) {
     TriggerAddCondition(
       this.handle,
-      conditionOf(this, "Trigger.addCondition", condition, (fn) =>
-        this.damageNesting(fn),
-      ),
+      typeof condition === "function"
+        ? Condition(
+            // The damage nesting goes outside the protection, so what it
+            // wraps never throws.
+            this.damageNesting(
+              protect(this, "Trigger.addCondition", condition, false),
+            ),
+          )
+        : condition,
     );
     return this;
   }

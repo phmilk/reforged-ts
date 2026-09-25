@@ -54,7 +54,7 @@ describe("mode at registration", () => {
       Reforged.configure({ devMode: false });
     });
     expect(warning).toEqual([
-      `reforged-ts: Reforged.configure({ devMode: false }) called after a callback was registered (the first: Timer#${String(timer.id)} Timer.start): only later registrations see the new value`,
+      `reforged-ts: Reforged.configure({ devMode: false }) called after a callback was registered (the first: Timer#${String(timer.id)} Timer.start): call it first in the entry point; a callback keeps the mode it was registered under`,
     ]);
     const seen = output(() => {
       __stub_fire_timer(timer.handle);

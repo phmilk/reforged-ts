@@ -31,13 +31,15 @@ Reforged.configure({ devMode: true });
 The Template generates this call from its build mode: a development build turns Dev mode on, a release build turns it off. A Map project never configures individual Guards. The library defaults to off, so a map that never calls `configure` runs as a release build.
 
 - **Decided at registration, never per call.** Every Guard is decided at one of three moments: when a callback is registered (it is wrapped or handed to the Native as is), when a Wrapper is created, and when it is destroyed. Wrapper methods that call Natives contain no Guard code.
-- **Callbacks keep their mode.** A callback registered before `configure` keeps the mode it was registered under, and a later call does not wrap it again. So a call that changes `devMode` after the Map project registered a callback prints a warning naming the first registration, because it usually means `configure` is in the wrong place:
+- **Callbacks keep their mode.** A callback registered before `configure` keeps the mode it was registered under, and a later call does not wrap it again. So in Dev mode (on before the call or after it), any call after the Map project registered a callback prints a warning naming the first registration, because it usually means `configure` is in the wrong place:
 
   ```text
-  reforged-ts: Reforged.configure({ devMode: true }) called after a callback was registered (the first: Timer#1048580 Timer.start): only later registrations see the new value
+  reforged-ts: Reforged.configure({ devMode: true }) called after a callback was registered (the first: Timer#1048580 Timer.start): call it first in the entry point; a callback keeps the mode it was registered under
   ```
 
-- **`damageDepthLimit`.** `Reforged.configure({ devMode: true, damageDepthLimit: 4 })` sets how deep damage handlers may nest before the re-entrancy Guard stops them (eight when absent). It is read when damage is dealt, so changing it never warns.
+  With Dev mode off before and after the call, nothing is printed. The first call of a second execution of the Lua root (which the game can run twice in one game) that keeps the mode is the same statement run again, and prints nothing either.
+
+- **`damageDepthLimit`.** `Reforged.configure({ devMode: true, damageDepthLimit: 4 })` sets how deep damage handlers may nest before the re-entrancy Guard stops them (eight until a call sets it; a call without it keeps the current limit). It is read when damage is dealt, so a new limit applies at once.
 - **`Reforged.devMode`** reads the flag.
 
 ### What a release build pays
@@ -102,7 +104,9 @@ In Dev mode, inside `fn`, these raise at the line that called them:
 | `Group.for`, `Force.for`                                             | `reforged-ts: Group.for inside MapPlayer.runLocal changes game state for one client, which desyncs the game: only visuals belong inside runLocal`                              |
 | The first `Frame.fromName` of a frame the library has no Wrapper for | `reforged-ts: the first Frame.fromName("ScorePanel") inside MapPlayer.runLocal changes game state for one client, which desyncs the game: only visuals belong inside runLocal` |
 
-Create and look up what `fn` needs before calling `runLocal`, on every client. An error inside `fn` is reported like a failing callback and does not escape:
+A creation or destruction raises after its Native ran: the Guard does not undo the change or stop it from happening. It raises at the offending line while you test in Dev mode, so the bug is found and fixed before a release build, which has no Guard, reaches a lobby. The same holds for the creation Guard of the next section.
+
+Create and look up what `fn` needs before calling `runLocal`, on every client. An error inside `fn` is reported like a failing callback, once per function and message, and does not escape:
 
 ```text
 reforged-ts: MapPlayer#1048576 MapPlayer.runLocal failed: <Lua error>
@@ -122,7 +126,7 @@ A raw `if (GetLocalPlayer() === p)` branch bypasses the library, so the runtime 
 reforged-ts: Timer created before the globals Init stage: create Handles in Init.onGlobals or a later stage, not at module top level
 ```
 
-Creations inside `Init.onGlobals` callbacks or later pass. The documented non-null lookups (`MapPlayer.fromLocal()`, `unit.getOwner()`) are lookups, not creations, and pass. The lint rule `no-handles-at-module-top-level` reports the same mistake in the editor.
+The creation Native has run by then, so the Guard does not prevent the early Handle: it names the line in Dev mode, so the creation is moved before a release build ships. Creations inside `Init.onGlobals` callbacks or later pass. The documented non-null lookups (`MapPlayer.fromLocal()`, `unit.getOwner()`) are lookups, not creations, and pass. The lint rule `no-handles-at-module-top-level` reports the same mistake in the editor.
 
 ### Use after destroy (S3)
 
@@ -175,17 +179,18 @@ With Dev mode off the sort itself raises when it compares them, at the next loop
 
 ```text
 reforged-ts: debug report
+reforged-ts: counts only the Wrappers the library created and destroyed: a unit that decayed or an effect the game removed stays live here
 reforged-ts: Timer: created 3, destroyed 1, live 2
 reforged-ts: Group: created 1, destroyed 1, live 0
 reforged-ts: Timer#1048580 Timer.every failed 12x: war3map.lua:1234: attempt to index a nil value
 ```
 
-- **`wrappers`**: one row per Wrapper class, `{ className, created, destroyed, live }`, most live first. `created` counts the creation members (`Timer.create`, `Unit.create`, `unit.getPoint()`, ...) and `destroyed` counts `destroy()`. Lookups (`fromHandle`, `fromEvent`, `MapPlayer.fromLocal()`, `unit.getOwner()`) are never counted: they wrap objects the library did not create.
+- **`wrappers`**: one row per Wrapper class, `{ className, created, destroyed, live }`, most live first. `created` counts the creation members (`Timer.create`, `Unit.create`, `unit.getPoint()`, ...) and `destroyed` counts `destroy()` of a Wrapper counted created since the last reset, so no count goes below zero: destroying a Wrapper got by a lookup, or one created before the last reset or before Dev mode was on, counts nothing. Lookups (`fromHandle`, `fromEvent`, `MapPlayer.fromLocal()`, `unit.getOwner()`) are never counted: they wrap objects the library did not create.
 - **`failures`**: each protected callback that failed, `{ origin, message, count }`, once per distinct message, in the order they first failed, with how many times it failed. Without failures the report prints `reforged-ts: no callback failed`.
 
-The Wrapper counts are a heuristic. They count only the creations and destructions the library saw: a unit that decayed, a unit removed by the editor's triggers or an effect the game removed stays live in the report. They are exact for the classes only the library creates and destroys (`Point`, `Group`, `Force`, `Timer`, `Trigger`, `Effect`, `Frame`, `TimerDialog`, boards, dialogs).
+The Wrapper counts are a heuristic, and the report says so on its second line. They count only the creations and destructions the library saw: a unit that decayed, a unit removed by the editor's triggers or an effect the game removed stays live in the report. They are exact for the classes only the library creates and destroys (`Point`, `Group`, `Force`, `Timer`, `Trigger`, `Effect`, `Frame`, `TimerDialog`, boards, dialogs).
 
-`Reforged.debug.reset()` zeroes both: the counts start again from nothing, and the next failure of each callback is shown on screen again. With Dev mode off, both print `reforged-ts: Dev mode is off: Reforged.debug has nothing to report` and `report()` returns empty lists.
+`Reforged.debug.reset()` zeroes both: every Wrapper row stays, at zero, the failures are forgotten, and the next failure of each callback is shown on screen again. With Dev mode off, both print `reforged-ts: Dev mode is off: Reforged.debug has nothing to report` and `report()` returns empty lists.
 
 ## The four collections
 

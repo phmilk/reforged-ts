@@ -210,6 +210,25 @@ describe("runLocal in Dev mode", () => {
       }),
     ).toEqual("(no error)");
   });
+
+  it("reports a repeated failure once per function, as a protected callback", () => {
+    Reforged.configure({ devMode: true });
+    const first = () => {
+      error("shared failure", 0);
+    };
+    const second = () => {
+      error("shared failure", 0);
+    };
+    const printed = printedBy(() => {
+      MapPlayer.runLocal(local, first);
+      MapPlayer.runLocal(local, first);
+      MapPlayer.runLocal(local, second);
+    });
+    expect(printed).toEqual([
+      `reforged-ts: MapPlayer#${String(local.id)} MapPlayer.runLocal failed: shared failure`,
+      `reforged-ts: MapPlayer#${String(local.id)} MapPlayer.runLocal failed: shared failure`,
+    ]);
+  });
 });
 
 describe("runLocal with Dev mode off", () => {

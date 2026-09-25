@@ -1,15 +1,23 @@
 /** @noSelfInFile */
 
 // The `Reforged` entry point: the dev-mode flag is off until `configure`
-// sets it, a call that changes nothing is silent, and a call that changes
-// the flag after the Map project registered a callback through the library
-// warns and still records the value. The file's tests share one Lua state,
-// in order: the flag they set stays set.
+// sets it. A call after the Map project registered a callback through the
+// library warns when Dev mode is or becomes on, and still records the value;
+// with Dev mode off before and after, it is silent. So is the first call of
+// a second load of the library that keeps the mode: a root executing twice.
+// The file's tests share one Lua state, in order: the flag they set stays
+// set.
 
 import { describe, expect, it } from "reforged-test/lua";
 import { Init } from "../src/init/index";
 import { Reforged } from "../src/reforged/index";
 import { withPrint } from "./support/print-capture";
+import { reloadModules } from "./support/reload";
+
+/** The warning a late `configure({ devMode })` prints. */
+function lateWarning(devMode: boolean): string {
+  return `reforged-ts: Reforged.configure({ devMode: ${String(devMode)} }) called after a callback was registered (the first: Init.onGlobals "a project callback"): call it first in the entry point; a callback keeps the mode it was registered under`;
+}
 
 describe("Reforged.configure", () => {
   it("is off by default", () => {
@@ -47,9 +55,7 @@ describe("Reforged.configure", () => {
       Reforged.configure({ devMode: false });
     });
     expect(Reforged.devMode).toBeFalsy();
-    expect(lines).toEqual([
-      'reforged-ts: Reforged.configure({ devMode: false }) called after a callback was registered (the first: Init.onGlobals "a project callback"): only later registrations see the new value',
-    ]);
+    expect(lines).toEqual([lateWarning(false)]);
   });
 
   it("prints nothing on a repeated identical call, also when callbacks are registered", () => {
@@ -59,5 +65,29 @@ describe("Reforged.configure", () => {
     });
     expect(Reforged.devMode).toBeFalsy();
     expect(lines).toEqual([]);
+  });
+
+  it("warns on every call in Dev mode after a registration, also one that changes nothing", () => {
+    const lines = withPrint(() => {
+      Reforged.configure({ devMode: true });
+      Reforged.configure({ devMode: true, damageDepthLimit: 4 });
+    });
+    expect(Reforged.devMode).toBeTruthy();
+    expect(lines).toEqual([lateWarning(true), lateWarning(true)]);
+  });
+
+  it("is silent on the first call of a second load that keeps the mode, and warns after it", () => {
+    const second = reloadModules(
+      "src.reforged.",
+      "src.reforged.index",
+    ) as typeof import("../src/reforged/index");
+    const lines = withPrint(() => {
+      second.Reforged.configure({ devMode: true });
+    });
+    expect(lines).toEqual([]);
+    const later = withPrint(() => {
+      second.Reforged.configure({ devMode: true });
+    });
+    expect(later).toEqual([lateWarning(true)]);
   });
 });

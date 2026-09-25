@@ -15,25 +15,40 @@
 
 import type { Handle } from "../handles/handle";
 import { anchored, LIBRARY } from "../init/state";
-import { originOf, reportedFailures, reportFailure } from "./protect";
+import {
+  originOf,
+  type ReportedFailures,
+  reportedFailures,
+  reportFailure,
+} from "./protect";
 
 /** How many Dev-mode `runLocal` functions are running now, nested. */
 const local = anchored<{ depth: number }>("local", () => ({ depth: 0 }));
 
-/** What the failures of every `runLocal` function reported, shared. */
-const reported = reportedFailures();
+/**
+ * What each `runLocal` function's failures reported, by function, as each
+ * protected callback keeps its own: the same function failing again with the
+ * same message is counted, not reported again. Weak, so a function no longer
+ * referenced is forgotten.
+ */
+const reportedBy = new WeakMap<() => void, ReportedFailures>();
 
 /**
  * Runs `fn` as Dev mode's `runLocal` does, for `player` (already known to be
  * the local player): one level deeper, under pcall, then back at the depth it
  * started at. A failure is reported like a protected callback's, with the
- * origin `MapPlayer#<id> MapPlayer.runLocal`.
+ * origin `MapPlayer#<id> MapPlayer.runLocal`, once per function and message.
  */
 export function runLocalGuarded(player: Handle<handle>, fn: () => void): void {
   local.depth++;
   const [ok, failure] = pcall(fn);
   local.depth--;
   if (!ok) {
+    let reported = reportedBy.get(fn);
+    if (reported === undefined) {
+      reported = reportedFailures();
+      reportedBy.set(fn, reported);
+    }
     reportFailure(
       reported,
       originOf(player, "MapPlayer.runLocal"),

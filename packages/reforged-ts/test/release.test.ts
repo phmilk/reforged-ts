@@ -8,6 +8,7 @@
 // `destroy()`: in Dev mode the destroyed Wrapper is a tombstone.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
+import { onHandleReleased } from "../src/handles/handle";
 import {
   Effect,
   Frame,
@@ -110,3 +111,22 @@ for (const devMode of [false, true]) {
     }
   });
 }
+
+describe("the release step in Dev mode", () => {
+  it("reads the class name and id before removing the registry entry and telling the collections", () => {
+    Reforged.configure({ devMode: true });
+    const timer = Timer.create();
+    const handle = timer.handle;
+    const ref = handleRef("timer", handle);
+    let seen: string[] | undefined;
+    onHandleReleased((released) => {
+      if (released.handle === handle) {
+        seen = stubCalls().slice(-2);
+      }
+    });
+
+    timer.destroy();
+
+    expect(seen).toEqual([`DestroyTimer(${ref})`, `GetHandleId(${ref})`]);
+  });
+});

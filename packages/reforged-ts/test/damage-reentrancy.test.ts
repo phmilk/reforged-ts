@@ -131,8 +131,9 @@ describe("damage re-entrancy in Dev mode", () => {
     trigger.destroy();
   });
 
-  it("honours the limit set through configure", () => {
+  it("honours the limit set through configure, kept by a later configure without it", () => {
     Reforged.configure({ devMode: true, damageDepthLimit: 3 });
+    Reforged.configure({ devMode: true });
     const [a, b] = duel();
     const trigger = reflecting(a, b);
     let printed: string[] = [];
@@ -151,7 +152,7 @@ describe("damage re-entrancy in Dev mode", () => {
       ),
     ).toEqual(true);
     trigger.destroy();
-    Reforged.configure({ devMode: true });
+    Reforged.configure({ devMode: true, damageDepthLimit: 8 });
   });
 
   it("counts an action added before the damage registration", () => {

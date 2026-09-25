@@ -321,12 +321,15 @@ export class MapPlayer extends Handle<player> {
    * Dev mode off this is the bare local-player comparison. In Dev mode `fn`
    * runs under pcall, so an error inside is reported on screen and printed
    * like a failing callback's (`reforged-ts: MapPlayer#<id>
-   * MapPlayer.runLocal failed: <error>`) and does not escape; and inside it
-   * creating or destroying a Wrapper, `Group.for`, `Force.for` and the first
-   * `Frame.fromName` of a frame raise `reforged-ts: <action> inside
-   * MapPlayer.runLocal changes game state for one client, which desyncs the
-   * game: only visuals belong inside runLocal`. Create what `fn` needs
-   * before calling `runLocal`, on every client.
+   * MapPlayer.runLocal failed: <error>`), once per function and message,
+   * and does not escape; and inside it creating or destroying a Wrapper,
+   * `Group.for`, `Force.for` and the first `Frame.fromName` of a frame raise
+   * `reforged-ts: <action> inside MapPlayer.runLocal changes game state for
+   * one client, which desyncs the game: only visuals belong inside
+   * runLocal`. A creation or destruction raises after its Native ran, so the
+   * Guard does not undo it: it names the offending line while you test in
+   * Dev mode, so the bug is found before a release build reaches a lobby.
+   * Create what `fn` needs before calling `runLocal`, on every client.
    * @example
    * {@includeCode ../../examples/run-local-frame.ts}
    * @param player - The player whose client runs `fn`.
