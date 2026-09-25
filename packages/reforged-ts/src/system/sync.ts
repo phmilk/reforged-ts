@@ -5,6 +5,7 @@ import { MapPlayer } from "../handles/player";
 import { Timer } from "../handles/timer";
 import { Trigger } from "../handles/trigger";
 import { onStage } from "../init/stages";
+import { asLibraryRegistration } from "../reforged/protect";
 import { base64Decode, base64Encode } from "./base64";
 import { BinaryReader } from "./binaryreader";
 import { BinaryWriter } from "./binarywriter";
@@ -422,8 +423,13 @@ export class SyncRequest {
         trigger.registerPlayerSyncEvent(player, SYNC_PREFIX, false);
       }
     }
-    trigger.addAction(() => {
-      this.onSync();
+    // The Map project's callbacks run inside this action (a request's
+    // resolution), so it is protected in Dev mode; it is the library's own
+    // registration, which the late-configure warning does not name.
+    asLibraryRegistration(() => {
+      trigger.addAction(() => {
+        this.onSync();
+      });
     });
   }
 

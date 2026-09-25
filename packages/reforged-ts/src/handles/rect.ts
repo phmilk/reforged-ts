@@ -1,5 +1,7 @@
 /** @noSelfInFile */
 
+import { protect } from "../reforged/protect";
+import { filterOf } from "./boolexpr";
 import { Handle } from "./handle";
 import { Point } from "./point";
 
@@ -37,8 +39,17 @@ export class Rectangle extends Handle<rect> {
     return GetRectMinY(this.handle);
   }
 
+  /**
+   * Destroys the Rectangle through its Native.
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
+   */
   public destroy() {
     RemoveRect(this.handle);
+    this.release();
   }
 
   public enumDestructables(
@@ -47,16 +58,16 @@ export class Rectangle extends Handle<rect> {
   ) {
     EnumDestructablesInRect(
       this.handle,
-      typeof filter === "function" ? Filter(filter) : filter,
-      actionFunc,
+      filterOf(this, "Rectangle.enumDestructables", filter),
+      protect(this, "Rectangle.enumDestructables", actionFunc),
     );
   }
 
   public enumItems(filter: boolexpr | (() => boolean), actionFunc: () => void) {
     EnumItemsInRect(
       this.handle,
-      typeof filter === "function" ? Filter(filter) : filter,
-      actionFunc,
+      filterOf(this, "Rectangle.enumItems", filter),
+      protect(this, "Rectangle.enumItems", actionFunc),
     );
   }
 

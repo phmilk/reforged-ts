@@ -27,3 +27,8 @@ function ConvertEffectType(i)
   __stub_record("ConvertEffectType", i)
   return __stub_new_handle("effecttype")
 end
+
+function DestroyEffect(whichEffect)
+  __stub_record("DestroyEffect", whichEffect)
+  whichEffect.destroyed = true
+end

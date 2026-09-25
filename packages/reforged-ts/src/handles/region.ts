@@ -46,8 +46,17 @@ export class Region extends Handle<region> {
     return IsUnitInRegion(this.handle, whichUnit.handle);
   }
 
+  /**
+   * Destroys the Region through its Native.
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
+   */
   public destroy() {
     RemoveRegion(this.handle);
+    this.release();
   }
 
   public static fromEvent(): Region | undefined {

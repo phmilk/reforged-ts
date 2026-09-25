@@ -51,3 +51,8 @@ function GetEnumUnit()
   __stub_record("GetEnumUnit")
   return enumUnit
 end
+
+function DestroyGroup(whichGroup)
+  __stub_record("DestroyGroup", whichGroup)
+  whichGroup.destroyed = true
+end

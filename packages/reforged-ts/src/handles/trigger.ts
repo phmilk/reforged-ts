@@ -1,5 +1,9 @@
 /** @noSelfInFile */
 
+import { configuration } from "../reforged/configuration";
+import { damageNested } from "../reforged/damage";
+import { protect } from "../reforged/protect";
+import { filterOf } from "./boolexpr";
 import { Dialog, DialogButton } from "./dialog";
 import { Frame } from "./frame";
 import { Handle } from "./handle";
@@ -33,12 +37,23 @@ function mouseEvent(kind: MouseEventKind): playerevent {
   }
 }
 
-/** The `boolexpr` a registration passes: a function goes through `Filter`. */
-function filterOf(
-  filter: boolexpr | (() => boolean) | undefined,
-): boolexpr | undefined {
-  return typeof filter === "function" ? Filter(filter) : filter;
+/** Whether `event` is a damage event: damaged or damaging, unit or player-unit. */
+function isDamageEvent(event: playerunitevent | unitevent): boolean {
+  return (
+    event === EVENT_PLAYER_UNIT_DAMAGED ||
+    event === EVENT_PLAYER_UNIT_DAMAGING ||
+    event === EVENT_UNIT_DAMAGED ||
+    event === EVENT_UNIT_DAMAGING
+  );
 }
+
+/**
+ * The triggers a damage event was registered on, by Handle: their actions
+ * and conditions nest the damage depth in Dev mode. Keyed by the Handle, not
+ * the Wrapper, so a callback reads it without touching a Wrapper that may be
+ * a tombstone by then.
+ */
+const damageTriggers = new WeakSet<trigger>();
 
 export class Trigger extends Handle<trigger> {
   public static create(): Trigger {
@@ -82,8 +97,20 @@ export class Trigger extends Handle<trigger> {
     return IsTriggerWaitOnSleeps(this.handle);
   }
 
+  /**
+   * Adds an action to the trigger.
+   * @remarks In Dev mode the action runs under `pcall`: one that throws is
+   * reported as `Trigger#<id> Trigger.addAction` and the trigger's next
+   * action still runs. On a Trigger carrying a damage event it also runs
+   * one level deeper in the damage depth `Unit.damageTarget` checks, the
+   * registration made before or after. With Dev mode off `TriggerAddAction`
+   * receives `actionFunc` itself.
+   */
   public addAction(actionFunc: () => void) {
-    TriggerAddAction(this.handle, actionFunc);
+    TriggerAddAction(
+      this.handle,
+      this.damageNesting(protect(this, "Trigger.addAction", actionFunc)),
+    );
     return this;
   }
 
@@ -96,21 +123,68 @@ export class Trigger extends Handle<trigger> {
    * @example
    * {@includeCode ../../examples/trigger-add-condition.ts}
    * @param condition The condition which must evaluate to true in order to run the trigger's actions.
+   * @remarks In Dev mode a function condition runs under `pcall`: one that
+   * throws is reported as `Trigger#<id> Trigger.addCondition` and evaluates
+   * false, as the game evaluates a crashed condition. The same holds for the
+   * function filters of the `register*` members, reported under the member.
+   * On a Trigger carrying a damage event a function condition also runs one
+   * level deeper in the damage depth `Unit.damageTarget` checks.
    */
   public addCondition(condition: boolexpr | (() => boolean)) {
     TriggerAddCondition(
       this.handle,
-      typeof condition === "function" ? Condition(condition) : condition,
+      typeof condition === "function"
+        ? Condition(
+            // The damage nesting goes outside the protection, so what it
+            // wraps never throws.
+            this.damageNesting(
+              protect(this, "Trigger.addCondition", condition, false),
+            ),
+          )
+        : condition,
     );
     return this;
   }
 
   /**
+   * Marks the Trigger as carrying a damage event when `event` is one, at
+   * registration, in both modes.
+   */
+  private noteEvent(event: playerunitevent | unitevent): void {
+    if (isDamageEvent(event)) {
+      damageTriggers.add(this.handle);
+    }
+  }
+
+  /**
+   * What the action or condition wrappers hand the Native for the protected
+   * `callback`: with Dev mode off, `callback` itself; in Dev mode, a
+   * function that runs it one level deeper in the damage depth whenever the
+   * Trigger carries a damage event. The mark is read at each run, so an
+   * action added before the damage registration is counted too.
+   */
+  private damageNesting<R>(callback: () => R): () => R {
+    if (!configuration.devMode) {
+      return callback;
+    }
+    const handle = this.handle;
+    return () =>
+      damageTriggers.has(handle) ? damageNested(callback) : callback();
+  }
+
+  /**
+   * Destroys the Trigger through its Native.
    * @bug Do not destroy the current running Trigger (when waits are involved)
    * as it can cause handle stack corruption as documented [here](http://www.wc3c.net/showthread.php?t=110519).
+   * @remarks
+   * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
+   * a second `destroy()` included, raises
+   * `reforged-ts: used after destroy: <Class>#<id>`, and
+   * `Reforged.debug.report()` counts it destroyed.
    */
   public destroy() {
     DestroyTrigger(this.handle);
+    this.release();
   }
 
   /**
@@ -157,6 +231,7 @@ export class Trigger extends Handle<trigger> {
 
   /** Registers the player unit event for the player in every slot, with no filter. */
   public registerAnyUnitEvent(whichPlayerUnitEvent: playerunitevent) {
+    this.noteEvent(whichPlayerUnitEvent);
     forEachPlayerSlot((whichPlayer) => {
       TriggerRegisterPlayerUnitEvent(
         this.handle,
@@ -194,7 +269,7 @@ export class Trigger extends Handle<trigger> {
     TriggerRegisterEnterRegion(
       this.handle,
       whichRegion.handle,
-      filterOf(filter),
+      filterOf(this, "Trigger.registerEnterRegion", filter),
     );
     return this;
   }
@@ -204,11 +279,12 @@ export class Trigger extends Handle<trigger> {
     whichEvent: unitevent,
     filter?: boolexpr | (() => boolean),
   ) {
+    this.noteEvent(whichEvent);
     TriggerRegisterFilterUnitEvent(
       this.handle,
       whichUnit.handle,
       whichEvent,
-      filterOf(filter),
+      filterOf(this, "Trigger.registerFilterUnitEvent", filter),
     );
     return this;
   }
@@ -240,7 +316,7 @@ export class Trigger extends Handle<trigger> {
     TriggerRegisterLeaveRegion(
       this.handle,
       whichRegion.handle,
-      filterOf(filter),
+      filterOf(this, "Trigger.registerLeaveRegion", filter),
     );
     return this;
   }
@@ -347,11 +423,12 @@ export class Trigger extends Handle<trigger> {
     whichPlayerUnitEvent: playerunitevent,
     filter?: boolexpr | (() => boolean),
   ) {
+    this.noteEvent(whichPlayerUnitEvent);
     TriggerRegisterPlayerUnitEvent(
       this.handle,
       whichPlayer.handle,
       whichPlayerUnitEvent,
-      filterOf(filter),
+      filterOf(this, "Trigger.registerPlayerUnitEvent", filter),
     );
     return this;
   }
@@ -381,6 +458,7 @@ export class Trigger extends Handle<trigger> {
   }
 
   public registerUnitEvent(whichUnit: Unit, whichEvent: unitevent) {
+    this.noteEvent(whichEvent);
     TriggerRegisterUnitEvent(this.handle, whichUnit.handle, whichEvent);
     return this;
   }
@@ -394,7 +472,7 @@ export class Trigger extends Handle<trigger> {
       this.handle,
       whichUnit.handle,
       range,
-      filterOf(filter),
+      filterOf(this, "Trigger.registerUnitInRange", filter),
     );
     return this;
   }
