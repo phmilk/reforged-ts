@@ -411,6 +411,61 @@
     "note": "No constructor asks whether it is wrapping an existing Handle any more: the protected constructor takes the Handle and only stores it, and the base registers the Wrapper."
   },
   {
+    "old": "Trigger.registerTimerExpireEvent",
+    "new": "Trigger.registerTimerExpire",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The registration takes the `Timer` Wrapper instead of the raw `timer` handle, like the Trigger's other registrations, so the argument `timer.handle` becomes `timer`."
+  },
+  {
+    "old": "Trigger.triggerRegisterFrameEvent",
+    "new": "Trigger.registerFrameEvent",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The one registration whose name began with `trigger` takes the name of its siblings, with the same `Frame` and `frameeventtype` arguments."
+  },
+  {
+    "old": "Trigger.registerTrackableHitEvent",
+    "new": "Trigger.registerTrackableHit",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The registration takes the new `Trackable` Wrapper, which `Trackable.create` returns, instead of the raw `trackable` handle."
+  },
+  {
+    "old": "Trigger.registerTrackableTrackEvent",
+    "new": "Trigger.registerTrackableTrack",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The registration takes the new `Trackable` Wrapper, which `Trackable.create` returns, instead of the raw `trackable` handle."
+  },
+  {
+    "old": "Trigger.registerPlayerMouseEvent",
+    "new": "Trigger.registerPlayerMouseEvent",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: the second argument is `MouseEventKind.Down`, `MouseEventKind.Up` or `MouseEventKind.Move` instead of Blizzard.j's number (`bj_MOUSEEVENTTYPE_DOWN`, `_UP`, `_MOVE`), and a number is now a type error."
+  },
+  {
     "old": "main::before",
     "new": "Init.onGlobals",
     "kind": "entryPoint",

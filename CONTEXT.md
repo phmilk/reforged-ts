@@ -37,7 +37,7 @@ A value that knows how to register one game event on a Trigger and how to read t
 _Avoid_: event type, event enum, listener spec
 
 **Subscription**:
-The Trigger that `on()` creates for one handler and one Event descriptor; owned by the caller and ended with `destroy()`.
+What `on()` returns for one handler and one Event descriptor: it holds the one Trigger `on()` created for them, is owned by the caller and is ended with `destroy()`, which destroys that Trigger only.
 _Avoid_: listener, binding, registration
 
 **Init stage**:

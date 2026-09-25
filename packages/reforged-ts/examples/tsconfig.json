@@ -1,0 +1,22 @@
+{
+  // The examples the doc comments include with `{@includeCode}` (ADR 0004),
+  // as a Map project writes them: `reforged-ts` resolves to the sources. The
+  // package's typecheck checks them; build step 8 (#43) compiles them with
+  // typescript-to-lua and runs them on the harness.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [
+      "@typescript-to-lua/language-extensions",
+      "lua-types/5.3",
+      "reforged-types/3.0.0",
+      "reforged-types/3.0.0/common.ai"
+    ],
+    "strict": true,
+    "noEmit": true,
+    "paths": { "reforged-ts": ["../src/index.ts"] }
+  },
+  "include": ["."]
+}

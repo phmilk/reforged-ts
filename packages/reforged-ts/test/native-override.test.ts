@@ -57,10 +57,10 @@ describe("withNative", () => {
 
   it("leaves a Native no stub defines undefined again", () => {
     withNative(
-      "PauseTimer",
+      "PauseGame",
       () => undefined,
       () => undefined,
     );
-    expect(PauseTimer).toBeUndefined();
+    expect(PauseGame).toBeUndefined();
   });
 });
