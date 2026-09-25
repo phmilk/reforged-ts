@@ -30,7 +30,14 @@ import {
 
 import { type Allowlist, invokedName } from "./allowlist.js";
 import { libraryClassOf } from "./library-class.js";
-import { isStringConversion, type SinkRuleContext } from "./text-sink.js";
+import {
+  type FlowStep,
+  isStringConversion,
+  type SinkRuleContext,
+  through,
+  type ValueDeclarator,
+  walkValueFlow,
+} from "./value-flow.js";
 
 export type StateSinkKind = "argument" | "variable" | "key";
 
@@ -113,159 +120,112 @@ function isExported(declarator: TSESTree.VariableDeclarator): boolean {
   );
 }
 
-function walk(
-  context: SinkRuleContext,
-  services: ParserServicesWithTypeInformation,
-  allowlist: Allowlist,
-  isSourceCall: SourceCallTest,
-  start: TSESTree.Node,
-  constHops: number,
-): StateSinkHit | undefined {
-  const { sourceCode } = context;
-  let current = start;
-  for (;;) {
-    const parent = current.parent;
-    if (parent === undefined) {
-      return undefined;
-    }
-    switch (parent.type) {
-      case AST_NODE_TYPES.TSAsExpression:
-      case AST_NODE_TYPES.TSSatisfiesExpression:
-      case AST_NODE_TYPES.TSNonNullExpression:
-      case AST_NODE_TYPES.TSTypeAssertion:
-      case AST_NODE_TYPES.ChainExpression:
-      case AST_NODE_TYPES.TemplateLiteral:
-      case AST_NODE_TYPES.BinaryExpression:
-      case AST_NODE_TYPES.LogicalExpression:
-      case AST_NODE_TYPES.SpreadElement:
-        current = parent;
-        continue;
-      case AST_NODE_TYPES.UnaryExpression:
-        if (parent.operator === "void" || parent.operator === "delete") {
-          return undefined;
-        }
-        current = parent;
-        continue;
-      case AST_NODE_TYPES.ConditionalExpression:
-        if (parent.test === current) {
-          return undefined;
-        }
-        current = parent;
-        continue;
-      case AST_NODE_TYPES.CallExpression: {
-        if (parent.callee === current) {
-          return undefined;
-        }
-        if (
-          isStringConversion(services, parent) ||
-          isMathCall(services, parent)
-        ) {
-          current = parent;
-          continue;
-        }
-        if (isSourceCall(parent) || isSyncStart(services, parent)) {
-          return undefined;
-        }
-        return allowlist.entryOf(services, parent) === undefined
-          ? {
-              kind: "argument",
-              node: parent,
-              name: sourceCode.getText(parent.callee),
-            }
-          : undefined;
-      }
-      case AST_NODE_TYPES.NewExpression:
-        return parent.callee === current || isSyncRequest(services, parent)
-          ? undefined
-          : {
-              kind: "argument",
-              node: parent,
-              name: `new ${sourceCode.getText(parent.callee)}`,
-            };
-      case AST_NODE_TYPES.AssignmentExpression: {
-        if (parent.right !== current) {
-          return undefined;
-        }
-        if (parent.left.type === AST_NODE_TYPES.Identifier) {
-          const variable = ASTUtils.findVariable(
-            sourceCode.getScope(parent),
-            parent.left,
-          );
-          return variable !== null && isModuleLevel(variable)
-            ? { kind: "variable", node: parent, name: variable.name }
-            : undefined;
-        }
-        if (allowlist.entryOf(services, parent) !== undefined) {
-          return undefined;
-        }
-        const setter = invokedName(services, parent);
-        return setter === undefined
-          ? undefined
-          : { kind: "argument", node: parent, name: setter };
-      }
-      case AST_NODE_TYPES.MemberExpression:
-        return parent.computed && parent.property === current
-          ? {
-              kind: "key",
-              node: parent,
-              name: sourceCode.getText(parent.object),
-            }
-          : undefined;
-      case AST_NODE_TYPES.Property:
-        return parent.computed && parent.key === current
-          ? { kind: "key", node: parent, name: "an object literal" }
-          : undefined;
-      case AST_NODE_TYPES.VariableDeclarator:
-        return parent.init === current &&
-          parent.id.type === AST_NODE_TYPES.Identifier
-          ? throughDeclarator(
-              context,
-              services,
-              allowlist,
-              isSourceCall,
-              parent,
-              constHops,
-            )
-          : undefined;
-      default:
+/** One state-sink walk: what `step` needs besides the nodes. */
+interface StateWalk {
+  readonly sourceCode: SinkRuleContext["sourceCode"];
+  readonly services: ParserServicesWithTypeInformation;
+  readonly allowlist: Allowlist;
+  readonly isSourceCall: SourceCallTest;
+}
+
+function step(
+  walk: StateWalk,
+  parent: TSESTree.Node,
+  child: TSESTree.Node,
+): FlowStep<StateSinkHit> {
+  const { sourceCode, services, allowlist, isSourceCall } = walk;
+  switch (parent.type) {
+    case AST_NODE_TYPES.TSAsExpression:
+    case AST_NODE_TYPES.TSSatisfiesExpression:
+    case AST_NODE_TYPES.TSNonNullExpression:
+    case AST_NODE_TYPES.TSTypeAssertion:
+    case AST_NODE_TYPES.ChainExpression:
+    case AST_NODE_TYPES.TemplateLiteral:
+    case AST_NODE_TYPES.BinaryExpression:
+    case AST_NODE_TYPES.LogicalExpression:
+    case AST_NODE_TYPES.SpreadElement:
+      return through;
+    case AST_NODE_TYPES.UnaryExpression:
+      return parent.operator === "void" || parent.operator === "delete"
+        ? undefined
+        : through;
+    case AST_NODE_TYPES.ConditionalExpression:
+      return parent.test === child ? undefined : through;
+    case AST_NODE_TYPES.CallExpression: {
+      if (parent.callee === child) {
         return undefined;
+      }
+      if (
+        isStringConversion(services, parent) ||
+        isMathCall(services, parent)
+      ) {
+        return through;
+      }
+      if (isSourceCall(parent) || isSyncStart(services, parent)) {
+        return undefined;
+      }
+      return allowlist.entryOf(services, parent) === undefined
+        ? {
+            kind: "argument",
+            node: parent,
+            name: sourceCode.getText(parent.callee),
+          }
+        : undefined;
     }
+    case AST_NODE_TYPES.NewExpression:
+      return parent.callee === child || isSyncRequest(services, parent)
+        ? undefined
+        : {
+            kind: "argument",
+            node: parent,
+            name: `new ${sourceCode.getText(parent.callee)}`,
+          };
+    case AST_NODE_TYPES.AssignmentExpression: {
+      if (parent.right !== child) {
+        return undefined;
+      }
+      if (parent.left.type === AST_NODE_TYPES.Identifier) {
+        const variable = ASTUtils.findVariable(
+          sourceCode.getScope(parent),
+          parent.left,
+        );
+        return variable !== null && isModuleLevel(variable)
+          ? { kind: "variable", node: parent, name: variable.name }
+          : undefined;
+      }
+      if (allowlist.entryOf(services, parent) !== undefined) {
+        return undefined;
+      }
+      const setter = invokedName(services, parent);
+      return setter === undefined
+        ? undefined
+        : { kind: "argument", node: parent, name: setter };
+    }
+    case AST_NODE_TYPES.MemberExpression:
+      return parent.computed && parent.property === child
+        ? {
+            kind: "key",
+            node: parent,
+            name: sourceCode.getText(parent.object),
+          }
+        : undefined;
+    case AST_NODE_TYPES.Property:
+      return parent.computed && parent.key === child
+        ? { kind: "key", node: parent, name: "an object literal" }
+        : undefined;
+    default:
+      return undefined;
   }
 }
 
-function throughDeclarator(
-  context: SinkRuleContext,
-  services: ParserServicesWithTypeInformation,
-  allowlist: Allowlist,
-  isSourceCall: SourceCallTest,
-  declarator: TSESTree.VariableDeclarator,
-  constHops: number,
+/** A module-level or exported variable initialised with the value is a sink. */
+function declared(
+  declarator: ValueDeclarator,
+  variable: TSESLint.Scope.Variable,
 ): StateSinkHit | undefined {
-  for (const variable of context.sourceCode.getDeclaredVariables(declarator)) {
-    if (isModuleLevel(variable) || isExported(declarator)) {
-      return { kind: "variable", node: declarator, name: variable.name };
-    }
-    if (declarator.parent.kind !== "const" || constHops === 0) {
-      return undefined;
-    }
-    for (const reference of variable.references) {
-      if (!reference.isRead() || reference.init === true) {
-        continue;
-      }
-      const hit = walk(
-        context,
-        services,
-        allowlist,
-        isSourceCall,
-        reference.identifier,
-        constHops - 1,
-      );
-      if (hit !== undefined) {
-        return hit;
-      }
-    }
-  }
-  return undefined;
+  return isModuleLevel(variable) || isExported(declarator)
+    ? { kind: "variable", node: declarator, name: variable.name }
+    : undefined;
 }
 
 /**
@@ -281,5 +241,19 @@ export function reachedStateSink(
   isSourceCall: SourceCallTest = () => false,
 ): StateSinkHit | undefined {
   const services = ESLintUtils.getParserServices(context);
-  return walk(context, services, allowlist, isSourceCall, expression, 1);
+  const walk: StateWalk = {
+    sourceCode: context.sourceCode,
+    services,
+    allowlist,
+    isSourceCall,
+  };
+  return walkValueFlow(
+    {
+      context,
+      services,
+      step: (parent, child) => step(walk, parent, child),
+      declared,
+    },
+    expression,
+  );
 }

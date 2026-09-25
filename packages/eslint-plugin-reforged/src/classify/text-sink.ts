@@ -13,13 +13,18 @@ import {
   AST_NODE_TYPES,
   ESLintUtils,
   type ParserServicesWithTypeInformation,
-  type TSESLint,
   type TSESTree,
 } from "@typescript-eslint/utils";
 import * as ts from "typescript";
 
 import type { Allowlist, Invocation } from "./allowlist.js";
-import { packageNameOf } from "./package.js";
+import {
+  type FlowStep,
+  isStringConversion,
+  type SinkRuleContext,
+  through,
+  walkValueFlow,
+} from "./value-flow.js";
 
 /** The sink an expression reaches. */
 export interface TextSinkHit {
@@ -29,11 +34,6 @@ export interface TextSinkHit {
   readonly name: string;
 }
 
-/** What the walk needs from a rule's context. */
-export type SinkRuleContext = Readonly<
-  TSESLint.RuleContext<string, readonly unknown[]>
->;
-
 function isStringTyped(
   services: ParserServicesWithTypeInformation,
   node: TSESTree.Node,
@@ -42,120 +42,49 @@ function isStringTyped(
   return (type.flags & ts.TypeFlags.StringLike) !== 0;
 }
 
-/** `String(x)` with the global of the default library, or lua-types' `tostring(x)`. */
-export function isStringConversion(
-  services: ParserServicesWithTypeInformation,
-  call: TSESTree.CallExpression,
-): boolean {
-  const { callee } = call;
-  if (
-    callee.type !== AST_NODE_TYPES.Identifier ||
-    (callee.name !== "String" && callee.name !== "tostring")
-  ) {
-    return false;
-  }
-  const declarations =
-    services.program
-      .getTypeChecker()
-      .getSymbolAtLocation(services.esTreeNodeToTSNodeMap.get(callee))
-      ?.declarations ?? [];
-  return declarations.some((declaration) => {
-    const file = declaration.getSourceFile();
-    return callee.name === "String"
-      ? services.program.isSourceFileDefaultLibrary(file)
-      : packageNameOf(file.fileName) === "lua-types";
-  });
-}
-
-function walk(
-  context: SinkRuleContext,
+/** The text sink an invocation is, when the allowlist lists it as `text`. */
+function textSink(
   services: ParserServicesWithTypeInformation,
   allowlist: Allowlist,
-  start: TSESTree.Node,
-  constHops: number,
+  sink: Invocation,
 ): TextSinkHit | undefined {
-  let current = start;
-  for (;;) {
-    const parent = current.parent;
-    if (parent === undefined) {
-      return undefined;
-    }
-    switch (parent.type) {
-      case AST_NODE_TYPES.TSAsExpression:
-      case AST_NODE_TYPES.TSSatisfiesExpression:
-      case AST_NODE_TYPES.TSNonNullExpression:
-      case AST_NODE_TYPES.TSTypeAssertion:
-      case AST_NODE_TYPES.TemplateLiteral:
-        current = parent;
-        continue;
-      case AST_NODE_TYPES.BinaryExpression:
-        if (parent.operator !== "+" || !isStringTyped(services, parent)) {
-          return undefined;
-        }
-        current = parent;
-        continue;
-      case AST_NODE_TYPES.CallExpression: {
-        if (
-          !parent.arguments.includes(current as TSESTree.CallExpressionArgument)
-        ) {
-          return undefined;
-        }
-        if (isStringConversion(services, parent)) {
-          current = parent;
-          continue;
-        }
-        const entry = allowlist.entryOf(services, parent);
-        return entry?.kind === "text"
-          ? { sink: parent, name: entry.name }
-          : undefined;
-      }
-      case AST_NODE_TYPES.AssignmentExpression: {
-        if (parent.right !== current) {
-          return undefined;
-        }
-        const entry = allowlist.entryOf(services, parent);
-        return entry?.kind === "text"
-          ? { sink: parent, name: entry.name }
-          : undefined;
-      }
-      case AST_NODE_TYPES.VariableDeclarator:
-        return parent.init === current &&
-          constHops > 0 &&
-          parent.id.type === AST_NODE_TYPES.Identifier &&
-          parent.parent.kind === "const"
-          ? throughConst(context, services, allowlist, parent, constHops - 1)
-          : undefined;
-      default:
+  const entry = allowlist.entryOf(services, sink);
+  return entry?.kind === "text" ? { sink, name: entry.name } : undefined;
+}
+
+function step(
+  services: ParserServicesWithTypeInformation,
+  allowlist: Allowlist,
+  parent: TSESTree.Node,
+  child: TSESTree.Node,
+): FlowStep<TextSinkHit> {
+  switch (parent.type) {
+    case AST_NODE_TYPES.TSAsExpression:
+    case AST_NODE_TYPES.TSSatisfiesExpression:
+    case AST_NODE_TYPES.TSNonNullExpression:
+    case AST_NODE_TYPES.TSTypeAssertion:
+    case AST_NODE_TYPES.TemplateLiteral:
+      return through;
+    case AST_NODE_TYPES.BinaryExpression:
+      return parent.operator === "+" && isStringTyped(services, parent)
+        ? through
+        : undefined;
+    case AST_NODE_TYPES.CallExpression:
+      if (
+        !parent.arguments.includes(child as TSESTree.CallExpressionArgument)
+      ) {
         return undefined;
-    }
-  }
-}
-
-function throughConst(
-  context: SinkRuleContext,
-  services: ParserServicesWithTypeInformation,
-  allowlist: Allowlist,
-  declarator: TSESTree.VariableDeclarator,
-  constHops: number,
-): TextSinkHit | undefined {
-  for (const variable of context.sourceCode.getDeclaredVariables(declarator)) {
-    for (const reference of variable.references) {
-      if (!reference.isRead() || reference.init === true) {
-        continue;
       }
-      const hit = walk(
-        context,
-        services,
-        allowlist,
-        reference.identifier,
-        constHops,
-      );
-      if (hit !== undefined) {
-        return hit;
-      }
-    }
+      return isStringConversion(services, parent)
+        ? through
+        : textSink(services, allowlist, parent);
+    case AST_NODE_TYPES.AssignmentExpression:
+      return parent.right === child
+        ? textSink(services, allowlist, parent)
+        : undefined;
+    default:
+      return undefined;
   }
-  return undefined;
 }
 
 /**
@@ -170,7 +99,14 @@ export function reachedTextSink(
   expression: TSESTree.Node,
 ): TextSinkHit | undefined {
   const services = ESLintUtils.getParserServices(context);
-  return walk(context, services, allowlist, expression, 1);
+  return walkValueFlow(
+    {
+      context,
+      services,
+      step: (parent, child) => step(services, allowlist, parent, child),
+    },
+    expression,
+  );
 }
 
 /** Whether `expression` reaches a text sink. */
