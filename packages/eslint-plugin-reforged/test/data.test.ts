@@ -1,10 +1,17 @@
 // The data files: their shape is checked at plugin load, and every Native
 // they name resolves in the installed Typings.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import * as ts from "typescript";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
 import creationNatives from "../data/creation-natives.json" with { type: "json" };
@@ -14,6 +21,9 @@ import {
   isRegistrationType,
   returnedHandleType,
 } from "../src/classify/handle.js";
+import { packageNameOf } from "../src/classify/package.js";
+import { parseAsyncNatives } from "../src/data/async-natives.js";
+import { findPackageDirectory } from "../src/data/optional.js";
 import { createPlugin, DataFileError } from "../src/index.js";
 import { fixtureProjectRoot } from "./support/fixture-project.js";
 import { lintWithRecommended } from "./support/lint.js";
@@ -240,6 +250,15 @@ function project(files: Record<string, string>): string {
 
 const stubManifest = JSON.stringify({ name: "reforged-ts", version: "1.2.3" });
 
+/** A reforged-types installation that publishes an (empty) async-natives.json. */
+const typesStub: Record<string, string> = {
+  "node_modules/reforged-types/package.json": JSON.stringify({
+    name: "reforged-types",
+    version: "3.0.0",
+  }),
+  "node_modules/reforged-types/async-natives.json": "[]",
+};
+
 describe("the rename map (reforged-ts's migration/renames.json)", () => {
   afterEach(() => {
     vi.restoreAllMocks();
@@ -349,6 +368,7 @@ describe("the rename map (reforged-ts's migration/renames.json)", () => {
         { ...entry, old: "new Timer(...)", new: "Timer.create(...)" },
       ]),
       "maps/one/.keep": "",
+      ...typesStub,
     });
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     // A project root below the installation: Node's lookup walks up.
@@ -363,7 +383,7 @@ describe("the rename map (reforged-ts's migration/renames.json)", () => {
   });
 
   it("warns once and disables the rule when the project has no reforged-ts", () => {
-    const root = project({ "package.json": "{}" });
+    const root = project({ "package.json": "{}", ...typesStub });
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     const plugin = createPlugin({ projectRoot: root });
     expect(warn).toHaveBeenCalledTimes(1);
@@ -384,13 +404,17 @@ describe("the rename map (reforged-ts's migration/renames.json)", () => {
     // The plugin's package has reforged-ts as a devDependency; a project
     // root outside it must not see that installation.
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
-    createPlugin({ projectRoot: project({}) });
+    createPlugin({ projectRoot: project(typesStub) });
     expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining("reforged-ts is not installed"),
+    );
   });
 
   it("warns once and disables the rule when reforged-ts does not publish the map", () => {
     const root = project({
       "node_modules/reforged-ts/package.json": stubManifest,
+      ...typesStub,
     });
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     createPlugin({ projectRoot: root });
@@ -412,5 +436,170 @@ describe("the rename map (reforged-ts's migration/renames.json)", () => {
         .filter((each) => each.ruleId === "reforged/no-legacy-w3ts-names")
         .map((each) => each.message),
     ).toEqual([expect.stringContaining("use `reforged-ts`")]);
+  });
+});
+
+describe("the async Natives (reforged-types's async-natives.json)", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  /** reforged-ts too, so only reforged-types can be missing. */
+  const libraryStub: Record<string, string> = {
+    "node_modules/reforged-ts/package.json": stubManifest,
+    "node_modules/reforged-ts/migration/renames.json": "[]",
+  };
+  const asyncCode = "export const x = GetCameraTargetPositionX();";
+
+  function asyncMessages(plugin: ReturnType<typeof createPlugin>) {
+    return lintWithRecommended(asyncCode, plugin).filter(
+      (each) => each.ruleId === "reforged/no-async-value-as-state",
+    );
+  }
+
+  it.each([
+    ["not an array", "{}", "the root must be an array"],
+    [
+      "a name that is not a string",
+      '["GetLocalPlayer", 3]',
+      "[1] must be a non-empty string",
+    ],
+    ["an empty name", '[""]', "[0] must be a non-empty string"],
+    [
+      "a name listed twice",
+      '["GetLocalPlayer", "GetLocalPlayer"]',
+      '[1].name must be unique ("GetLocalPlayer" is listed twice)',
+    ],
+  ])("throws at load for %s, naming the field", (_, content, message) => {
+    const file = dataFile("async-natives.json", content);
+    expect(() =>
+      createPlugin({
+        files: { asyncNatives: file },
+        projectRoot: fixtureProjectRoot,
+      }),
+    ).toThrow(`${file}: ${message}`);
+  });
+
+  it("throws for a malformed file in the project's installation, naming the file and the field", () => {
+    const root = project({
+      ...libraryStub,
+      ...typesStub,
+      "node_modules/reforged-types/async-natives.json":
+        '{"GetLocalPlayer": true}',
+    });
+    const file = path.join(
+      root,
+      "node_modules/reforged-types/async-natives.json",
+    );
+    expect(() => createPlugin({ projectRoot: root })).toThrow(DataFileError);
+    expect(() => createPlugin({ projectRoot: root })).toThrow(
+      `${file}: the root must be an array`,
+    );
+  });
+
+  it("reads the file from the project's installation, found from the project root", () => {
+    // The fixture Typings tag GetCameraTargetPositionX; the rule pre-matches
+    // a plain call by the file's names, so a list without it reports nothing.
+    const listed = project({
+      ...libraryStub,
+      ...typesStub,
+      "node_modules/reforged-types/async-natives.json":
+        '["GetCameraTargetPositionX"]',
+    });
+    const unlisted = project({ ...libraryStub, ...typesStub });
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    expect(asyncMessages(createPlugin({ projectRoot: listed }))).toHaveLength(
+      1,
+    );
+    expect(asyncMessages(createPlugin({ projectRoot: unlisted }))).toEqual([]);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it("warns once and disables the rule when the project has no reforged-types", () => {
+    const root = project(libraryStub);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const plugin = createPlugin({ projectRoot: root });
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith(
+      `eslint-plugin-reforged: reforged-types is not installed in ${root} (resolved from the project root); disabled: reforged/no-async-value-as-state.`,
+    );
+    // Disabled, still registered: a config that names it loads.
+    expect(plugin.rules).toHaveProperty("no-async-value-as-state");
+    expect(asyncMessages(plugin)).toEqual([]);
+  });
+
+  it("warns once and disables the rule when reforged-types does not publish the file", () => {
+    const root = project({
+      ...libraryStub,
+      "node_modules/reforged-types/package.json": JSON.stringify({
+        name: "reforged-types",
+        version: "2.0.0",
+      }),
+    });
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const plugin = createPlugin({ projectRoot: root });
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith(
+      `eslint-plugin-reforged: reforged-types@2.0.0 in ${path.join(root, "node_modules/reforged-types")} does not publish async-natives.json; disabled: reforged/no-async-value-as-state.`,
+    );
+    expect(asyncMessages(plugin)).toEqual([]);
+  });
+
+  describe("the oracle: the installed file and the Typings' @async tags agree", () => {
+    // The installation the plugin reads for the fixture project (this
+    // package's devDependency, the workspace's reforged-types).
+    const installed = path.join(
+      findPackageDirectory(fixtureProjectRoot, "reforged-types") ?? "",
+      "async-natives.json",
+    );
+    const listed = JSON.parse(readFileSync(installed, "utf8")) as string[];
+
+    /** Every declaration of the installed Typings carrying the tag, by name. */
+    function taggedDeclarations(): string[] {
+      const names: string[] = [];
+      for (const sourceFile of fixtureProgram().getSourceFiles()) {
+        if (packageNameOf(sourceFile.fileName) !== "reforged-types") {
+          continue;
+        }
+        const visit = (node: ts.Node): void => {
+          if (
+            ts.getJSDocTags(node).some((tag) => tag.tagName.text === "async")
+          ) {
+            const name = ts.getNameOfDeclaration(node as ts.Declaration);
+            names.push(name === undefined ? node.getText() : name.getText());
+          }
+          ts.forEachChild(node, visit);
+        };
+        visit(sourceFile);
+      }
+      return names.sort();
+    }
+
+    it("parses as the plugin reads it", () => {
+      expect(() => parseAsyncNatives(listed, installed)).not.toThrow();
+      expect(listed.length).toBeGreaterThan(0);
+    });
+
+    it("names only Natives that carry @async", () => {
+      const natives = installedNatives();
+      const untagged = listed.filter((name) => {
+        const declaration = natives.get(name);
+        return (
+          declaration === undefined ||
+          !ts
+            .getJSDocTags(declaration)
+            .some((tag) => tag.tagName.text === "async")
+        );
+      });
+      expect(untagged).toEqual([]);
+    });
+
+    it("lists every @async declaration", () => {
+      const listedSet = new Set(listed);
+      expect(taggedDeclarations()).not.toEqual([]);
+      expect(
+        taggedDeclarations().filter((name) => !listedSet.has(name)),
+      ).toEqual([]);
+    });
   });
 });
