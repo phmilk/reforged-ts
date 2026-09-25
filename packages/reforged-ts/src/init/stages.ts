@@ -93,7 +93,7 @@ export function onStage(
   label?: string,
 ): void {
   const queues = state.stages[stage];
-  const registration = enqueue(queues[origin], origin, callback, label);
+  const registration = enqueue(queues[origin], stage, origin, callback, label);
   if (queues.started && state.current !== stage) {
     runProtected(stage, registration);
   }

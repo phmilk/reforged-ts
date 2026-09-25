@@ -95,7 +95,7 @@ describe("addScriptHook in the bundle position", () => {
       Reforged.configure({ devMode: false });
     });
     expect(lines).toEqual([
-      "reforged-ts: Reforged.configure({ devMode: false }) called after a callback was registered: only later registrations see the new value",
+      'reforged-ts: Reforged.configure({ devMode: false }) called after a callback was registered (the first: addScriptHook("config::before") #2): only later registrations see the new value',
     ]);
   });
 });
