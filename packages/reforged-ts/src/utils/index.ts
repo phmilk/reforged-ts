@@ -4,12 +4,14 @@ import { Timer } from "../handles/timer";
 
 export * from "./color";
 
-export async function sleep(howMuch: number): Promise<null> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- an unused variable or parameter, whose removal changes the emitted Lua; step 6 (#53) removes it
-  return new Promise((resolve, reject) => {
-    Timer.create().start(howMuch, false, (timer) => {
-      timer.destroy();
-      resolve(null);
+/**
+ * Resolves with no value after `howMuch` seconds of game time, on a one-shot
+ * Timer (`Timer.after`).
+ */
+export async function sleep(howMuch: number): Promise<void> {
+  return new Promise((resolve) => {
+    Timer.after(howMuch, () => {
+      resolve();
     });
   });
 }
