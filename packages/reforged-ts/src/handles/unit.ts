@@ -1435,6 +1435,11 @@ export class Unit extends Widget {
     return GetFoodUsed(unitId);
   }
 
+  /** The unit entering the region, or undefined outside a region event. */
+  public static fromEntering(): Unit | undefined {
+    return this.fromHandle(GetEnteringUnit());
+  }
+
   public static fromEnum(): Unit | undefined {
     return this.fromHandle(GetEnumUnit());
   }
@@ -1450,6 +1455,11 @@ export class Unit extends Widget {
   /** The unit that killed the dying unit, or undefined when none did. */
   public static fromKilling(): Unit | undefined {
     return this.fromHandle(GetKillingUnit());
+  }
+
+  /** The unit leaving the region, or undefined outside a region event. */
+  public static fromLeaving(): Unit | undefined {
+    return this.fromHandle(GetLeavingUnit());
   }
 
   public static getPointValueByType(unitType: number) {
