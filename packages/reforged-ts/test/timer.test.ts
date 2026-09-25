@@ -130,6 +130,25 @@ describe("Timer.after", () => {
     }).toThrow("was destroyed");
     expect(runs).toEqual(1);
   });
+
+  it("destroys the Timer when the handler throws, and the error propagates", () => {
+    const handle = CreateTimer();
+    withNative(
+      "CreateTimer",
+      () => handle,
+      () => {
+        Timer.after(1, () => {
+          error("handler failed", 0);
+        });
+      },
+    );
+    expect(() => {
+      __stub_fire_timer(handle);
+    }).toThrow("handler failed");
+    expect(stubCalls()).toContainCall(
+      `DestroyTimer(${handleRef("timer", handle)})`,
+    );
+  });
 });
 
 describe("Timer.every", () => {

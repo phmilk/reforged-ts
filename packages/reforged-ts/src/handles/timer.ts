@@ -50,14 +50,17 @@ export class Timer extends Handle<timer> {
 
   /**
    * Runs `handler` once after `timeout` seconds, on a Timer created for it and
-   * destroyed after the handler returns. Nothing is owned, so nothing is
-   * returned: a one-shot that can be cancelled is
-   * `Timer.create().start(timeout, false, handler)`.
+   * destroyed after the handler returns or throws (the error still
+   * propagates). Nothing is owned, so nothing is returned: a one-shot that can
+   * be cancelled is `Timer.create().start(timeout, false, handler)`.
    */
   public static after(timeout: number, handler: () => void): void {
     this.create().start(timeout, false, (timer) => {
-      handler();
-      timer.destroy();
+      try {
+        handler();
+      } finally {
+        timer.destroy();
+      }
     });
   }
 
