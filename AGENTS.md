@@ -15,3 +15,7 @@ The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `
 ### Domain docs
 
 Single-context: `CONTEXT.md` at the repo root and ADRs under `docs/adr/`. See `docs/agents/domain.md`.
+
+## Packages
+
+Before changing a package, read its nested `AGENTS.md` when it has one: `packages/reforged-types` (the Typings generator) and `packages/eslint-plugin-reforged` (the lint rules of the Guards: adding or changing a rule, its fixtures, docs page and data files).

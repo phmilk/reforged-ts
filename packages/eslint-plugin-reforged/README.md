@@ -30,6 +30,8 @@ export default defineConfig(
 
 Peer dependencies: ESLint 9 or later (10 is tested), `typescript-eslint` 8 and TypeScript 6.0.2. `reforged-types` and `reforged-ts` are optional peers: the plugin reads their data files from the Map project's own installation, found from the directory ESLint runs in (`createPlugin({ projectRoot })` sets another). Without one of them, the plugin prints one warning at load and the rules that need it report nothing.
 
+The plugin adds about 10% to a lint run with typescript-eslint's type-checked preset: each rule matches the syntax first and asks the type checker only about the nodes it matched (measured on the package's fixture project with `pnpm --filter eslint-plugin-reforged measure-cost`).
+
 ## Rules
 
 Each diagnostic links to the rule's page on the docs site; the pages ship in `docs/`.

@@ -16,15 +16,18 @@ The rules classify through the type checker, never by name alone. They read:
 
 Run from the repository root:
 
-| Command                                            | What it does                                                          |
-| -------------------------------------------------- | --------------------------------------------------------------------- |
-| `pnpm --filter eslint-plugin-reforged test`        | The package's vitest project: the rule fixtures and the export tests. |
-| `pnpm --filter eslint-plugin-reforged typecheck`   | `tsc --noEmit` on the sources and on the tests.                       |
-| `pnpm --filter eslint-plugin-reforged build`       | Compiles `src/` to `dist/`, the entry ESLint loads.                   |
-| `pnpm exec eslint packages/eslint-plugin-reforged` | The workspace lint on this package.                                   |
-| `pnpm check`                                       | The whole workspace; the finish condition.                            |
+| Command                                             | What it does                                                          |
+| --------------------------------------------------- | --------------------------------------------------------------------- |
+| `pnpm --filter eslint-plugin-reforged test`         | The package's vitest project: the rule fixtures and the export tests. |
+| `pnpm --filter eslint-plugin-reforged typecheck`    | `tsc --noEmit` on the sources and on the tests.                       |
+| `pnpm --filter eslint-plugin-reforged build`        | Compiles `src/` to `dist/`, the entry ESLint loads.                   |
+| `pnpm exec eslint packages/eslint-plugin-reforged`  | The workspace lint on this package.                                   |
+| `pnpm check`                                        | The whole workspace; the finish condition.                            |
+| `pnpm --filter eslint-plugin-reforged measure-cost` | The cost over typescript-eslint's type-checked preset (see below).    |
 
 The tests run from source. They do not need `build`.
+
+**Cost.** Spec #50 expects the plugin to add less than one fifth to a lint run with typescript-eslint's type-checked preset. `scripts/measure-cost.mjs` lints the docs examples on the fixture project in fresh processes, with and without the plugin, and prints the median overhead (about 10% at the first release, most of it loading the plugin; the rules themselves take about 50 ms). Run it after a change to a classification helper or a new rule that asks the checker more.
 
 ## Layout
 
@@ -38,7 +41,7 @@ The tests run from source. They do not need `build`.
 - `data/*.json`: the plugin's own data files, shipped.
 - `docs/<rule>.md`: one page per rule, shipped. `templates/rule-doc.md` is the template; it is not shipped.
 - `test/rules/<rule>.test.ts`: the RuleTester fixtures of one rule.
-- `test/plugin.test.ts`: the rule table, the recommended config, the metadata and the docs pages.
+- `test/plugin.test.ts`: the rule table, the recommended config, the metadata, the docs pages, and loading without the optional packages.
 - `test/data.test.ts`: the shape errors, and a check that every Native a data file names resolves in the Typings.
 - `test/support/`: the seams. `rule-tester.ts` wires the RuleTester to vitest. `lint.ts` lints with the recommended config as a Map project does. `plugin.ts` provides the plugin created with the fixture project as its project root (its optional packages are the fixture's), and `ruleOf(name)`. `typings.ts` provides `installedNatives()`. `fixture-project.ts` holds the paths.
 - `test/fixture-project/`: the Map project the rules lint. See its `tsconfig.json`.
@@ -49,10 +52,11 @@ The tests run from source. They do not need `build`.
 
 ## Adding or changing a rule
 
-1. **Rule file.** Create `src/rules/<rule>.ts` with `createRule` and a default `defineRuleEntry({ name, severity, create })`. Set the severity from #16's table (`test/plugin.test.ts` holds it). The rule declares `meta.type`, `meta.docs.description`, `messages` with ids, `hasSuggestions` if it suggests, and `schema` with `defaultOptions`. Only `no-legacy-w3ts-names` may declare `fixable`. Each message says the pitfall, the consequence and the replacement.
+1. **Rule file.** Create `src/rules/<rule>.ts` with `createRule` and a default `defineRuleEntry({ name, severity, create })`. Set the severity from #16's table. The rule declares `meta.type`, `meta.docs.description`, `messages` with ids, `hasSuggestions` if it suggests, and `schema` with `defaultOptions`. Only `no-legacy-w3ts-names` may declare `fixable`. Each message says the pitfall, the consequence and the replacement.
 2. **Match syntactically first.** Then ask the checker, through `src/classify/`, only for the matched node. Call `ESLintUtils.getParserServices(context)` at the top of `create`: without type information, the rule then fails at the first file.
-3. **Registry.** Add one import and one line to `src/rules/index.ts`, in name order. The recommended config and the rule table follow from it.
-4. **Fixtures.** Create `test/rules/<rule>.test.ts` with `createRuleTester()` and `ruleOf("<rule>")`. It needs these cases:
+3. **Registry.** Add one import and one line to `src/rules/index.ts`, in name order. The recommended config follows from it.
+4. **Rule-table test.** In `test/plugin.test.ts`, add the rule to `decidedTable` with its severity, and raise the rule count and the error/warning split the table asserts. Extend `everyRuleReports` so the new rule reports it. A rule with `requires` goes in `optionalRules` too.
+5. **Fixtures.** Create `test/rules/<rule>.test.ts` with `createRuleTester()` and `ruleOf("<rule>")`. It needs these cases:
    - valid cases, including every allowlist family and every option;
    - invalid cases with message ids and data;
    - suggestion outputs;
@@ -60,9 +64,9 @@ The tests run from source. They do not need `build`.
 
    Test escapes (`eslint-disable-next-line reforged/<rule> -- reason`) and severities with `lintWithRecommended`. The RuleTester registers rules under its own prefix. When a case needs a Wrapper member the stub lacks, add it to `test/fixture-project/node_modules/reforged-ts/index.d.ts`, with the shape of the real library.
 
-5. **Docs page.** Copy `templates/rule-doc.md` to `docs/<rule>.md`. Keep the title and the six headings. Add a row to the rules table in `README.md`.
-6. **Data.** If the rule reads a data file, write a parser in `src/data/` with the `schema.ts` readers. Add the file to `PluginData` and `DataFiles` in `src/data/index.ts`. Add shape tests to `test/data.test.ts`. Every Native the file names must be in `installedNatives()`.
-7. **Changeset.** Add one for `eslint-plugin-reforged`.
+6. **Docs page.** Copy `templates/rule-doc.md` to `docs/<rule>.md`. Keep the title and the six headings. Add a row to the rules table in `README.md`.
+7. **Data.** If the rule reads a data file, write a parser in `src/data/` with the `schema.ts` readers. Add the file to `PluginData` and `DataFiles` in `src/data/index.ts`. Add shape tests to `test/data.test.ts`. Every Native the file names must be in `installedNatives()`.
+8. **Changeset.** Until the first release, add the rule's paragraph to the initial-release changeset, `.changeset/eslint-plugin-reforged.md`, under its severity. After it, write a new changeset for `eslint-plugin-reforged`.
 
 ## Data files
 
