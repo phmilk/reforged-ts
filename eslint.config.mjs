@@ -64,6 +64,18 @@ export default defineConfig(
       },
     },
   },
+  // The examples the doc comments include import `reforged-ts` as a Map
+  // project does, through the same kind of mapping.
+  {
+    files: ["packages/reforged-ts/examples/**/*.ts"],
+    settings: {
+      "import-x/resolver": {
+        typescript: {
+          project: "packages/reforged-ts/examples/tsconfig.json",
+        },
+      },
+    },
+  },
   // Last: Prettier formats, and eslint-config-prettier turns off the rules
   // that would fight it.
   prettierRecommended,

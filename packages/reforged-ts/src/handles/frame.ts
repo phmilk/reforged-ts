@@ -403,7 +403,7 @@ export class Frame extends Handle<framehandle> {
   }
 
   public static getEventText() {
-    return BlzGetTriggerFrameValue();
+    return BlzGetTriggerFrameText();
   }
 
   public static getEventValue() {

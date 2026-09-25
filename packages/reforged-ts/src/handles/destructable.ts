@@ -191,4 +191,12 @@ export class Destructable extends Widget {
   public static override fromEvent(): Destructable | undefined {
     return this.fromHandle(GetTriggerDestructable());
   }
+
+  /**
+   * The spell's target destructable, or undefined when the spell targets
+   * none.
+   */
+  public static fromSpellTarget(): Destructable | undefined {
+    return this.fromHandle(GetSpellTargetDestructable());
+  }
 }

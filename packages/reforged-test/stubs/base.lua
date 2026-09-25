@@ -52,6 +52,38 @@ function __stub_constant(kind, name)
   return { __kind = kind, __name = name }
 end
 
+-- The firing context: while a firing helper runs, the value each response
+-- Native (GetTriggerUnit, GetExpiredTimer) answers with, keyed by the
+-- Native's name. nil outside a firing, where every response Native answers
+-- nil.
+local context = nil
+
+-- Defines the response Native `name`: it records its call and answers with
+-- the firing context's value for its name, nil when the context has none.
+function __stub_response(name)
+  _G[name] = function()
+    __stub_record(name)
+    if context == nil then
+      return nil
+    end
+    return context[name]
+  end
+end
+
+-- Runs body with `firing` as the firing context and returns what it returned.
+-- The previous context is put back afterwards, also when body throws, so a
+-- firing inside a firing hands the outer one back when it ends.
+function __stub_with_context(firing, body)
+  local previous = context
+  context = firing
+  local ok, result = pcall(body)
+  context = previous
+  if not ok then
+    error(result, 0)
+  end
+  return result
+end
+
 -- Globals the library reads when its modules load. The editor's entry points
 -- (config, main, InitGlobals, InitCustomTriggers, RunInitializationTriggers,
 -- MarkGameStarted) stay nil: the library wraps the ones that exist when it

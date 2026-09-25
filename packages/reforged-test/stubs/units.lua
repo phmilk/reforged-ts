@@ -86,3 +86,14 @@ function UnitRemoveItemFromSlot(whichUnit, itemSlot)
   inventory[itemSlot] = nil
   return item
 end
+
+-- A hero's level is the one SetHeroLevel stored, 0 before any.
+function SetHeroLevel(whichHero, level, showEyeCandy)
+  __stub_record("SetHeroLevel", whichHero, level, showEyeCandy)
+  whichHero.heroLevel = level
+end
+
+function GetHeroLevel(whichHero)
+  __stub_record("GetHeroLevel", whichHero)
+  return whichHero.heroLevel or 0
+end

@@ -281,8 +281,28 @@ export class Item extends Widget {
     SetItemPosition(this.handle, x, y);
   }
 
+  /** The item a unit equips, or undefined outside an equip event. */
+  public static fromEquipped(): Item | undefined {
+    return this.fromHandle(GetEquippedItem());
+  }
+
   public static override fromEvent(): Item | undefined {
     return this.fromHandle(GetManipulatedItem());
+  }
+
+  /** The spell's target item, or undefined when the spell targets none. */
+  public static fromSpellTarget(): Item | undefined {
+    return this.fromHandle(GetSpellTargetItem());
+  }
+
+  /** The item a shop sells or a unit pawns, or undefined outside those events. */
+  public static fromSold(): Item | undefined {
+    return this.fromHandle(GetSoldItem());
+  }
+
+  /** The item a unit unequips, or undefined outside an unequip event. */
+  public static fromUnequipped(): Item | undefined {
+    return this.fromHandle(GetUnequippedItem());
   }
 
   public static isIdPawnable(itemId: number) {

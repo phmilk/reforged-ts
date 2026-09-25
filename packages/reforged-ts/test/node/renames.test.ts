@@ -1,8 +1,9 @@
 // The rename map, migration/renames.json: the facts the migration guide and
 // the legacy-names lint rule read. It must parse against its schema, target
 // this step's version pair, name only replacements that exist in the
-// library's emitted declarations and cover every member step 3 removes and
-// every entry point, enum and helper step 4 removes or replaces.
+// library's emitted declarations and cover every member step 3 removes, every
+// entry point, enum and helper step 4 removes or replaces, and every Trigger
+// registration step 5 renames or changes.
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
@@ -88,6 +89,20 @@ const REMOVED_IN_STEP_4: [old: string, kind: RenameEntry["kind"]][] = [
   ["executeHooksMainAfter", "function"],
   ["executeHooksConfigBefore", "function"],
   ["executeHooksConfigAfter", "function"],
+];
+
+/**
+ * What build step 5 (#47) removes from the public API, with its kind: the
+ * four Trigger registrations that took a raw handle or a misnamed prefix, and
+ * the mouse registration, whose numeric argument became `MouseEventKind` (a
+ * note entry: the member keeps its name).
+ */
+const REMOVED_IN_STEP_5: [old: string, kind: RenameEntry["kind"]][] = [
+  ["Trigger.registerTimerExpireEvent", "member"],
+  ["Trigger.triggerRegisterFrameEvent", "member"],
+  ["Trigger.registerTrackableHitEvent", "member"],
+  ["Trigger.registerTrackableTrackEvent", "member"],
+  ["Trigger.registerPlayerMouseEvent", "member"],
 ];
 
 const valid: RenameEntry = {
@@ -256,6 +271,14 @@ describe("migration/renames.json", () => {
         oneToOne: true,
       }),
     ]);
+  });
+
+  it("has an entry for every Trigger registration step 5 renames or changes, of its kind", async () => {
+    const entries = await loadRenames();
+    const kinds = new Map(entries.map((entry) => [entry.old, entry.kind]));
+    expect(
+      REMOVED_IN_STEP_5.filter(([old, kind]) => kinds.get(old) !== kind),
+    ).toEqual([]);
   });
 
   it("names both halves of an accessor's get/set pair", async () => {

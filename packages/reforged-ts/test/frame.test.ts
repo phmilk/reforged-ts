@@ -315,3 +315,14 @@ describe("Frame.createType", () => {
     expect(message).toEqual("reforged-ts: failed to create Frame (NilType)");
   });
 });
+
+describe("Frame event reads", () => {
+  it("getEventText reads the text of the frame event", () => {
+    const text = withNative(
+      "BlzGetTriggerFrameText",
+      () => "typed",
+      () => Frame.getEventText(),
+    );
+    expect(text).toEqual("typed");
+  });
+});

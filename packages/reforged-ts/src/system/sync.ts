@@ -268,8 +268,8 @@ export class SyncRequest {
 
     // handle timeout
     if (this.options.timeout > 0) {
-      Timer.create().start(this.options.timeout, false, () => {
-        Timer.fromExpired()?.destroy();
+      Timer.create().start(this.options.timeout, false, (timer) => {
+        timer.destroy();
         if (this.onError && this.status === SyncStatus.Syncing) {
           this.onError(
             {

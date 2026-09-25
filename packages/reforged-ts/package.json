@@ -35,7 +35,7 @@
   ],
   "scripts": {
     "build": "tstl -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json --noEmit && tsc -p test/harness/tsconfig.json && tsc -p test/node/tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json --noEmit && tsc -p test/harness/tsconfig.json && tsc -p test/node/tsconfig.json && tsc -p examples/tsconfig.json",
     "test": "vitest run --root ../.. --project reforged-ts --project reforged-ts-node"
   },
   "peerDependencies": {
