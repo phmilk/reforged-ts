@@ -13,6 +13,10 @@ function readItem(lookup: () => Item | undefined) {
   });
 }
 
+/**
+ * The item rows of UnitEvents: pick up, drop, use, sell, pawn, equip and
+ * unequip.
+ */
 export const itemRows = unitEventRows({
   /** A unit picks up an item. */
   pickupItem: {

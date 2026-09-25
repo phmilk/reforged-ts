@@ -13,8 +13,11 @@ import { Widget } from "./widget";
 
 /** The mouse events `Trigger.registerPlayerMouseEvent` registers. */
 export const enum MouseEventKind {
+  /** A mouse button is pressed. */
   Down = "down",
+  /** A mouse button is released. */
   Up = "up",
+  /** The mouse moves. */
   Move = "move",
 }
 
@@ -142,10 +145,12 @@ export class Trigger extends Handle<trigger> {
     TriggerExecuteWait(this.handle);
   }
 
+  /** Interrupts the Trigger, through `BlzTriggerInterrupt` (3.0.0). */
   public interrupt() {
     BlzTriggerInterrupt(this.handle);
   }
 
+  /** Whether the Trigger is running, through `BlzTriggerIsRunning` (3.0.0). */
   public isRunning(): boolean {
     return BlzTriggerIsRunning(this.handle);
   }
@@ -208,6 +213,7 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /** Registers the frame event `event` of `frame`. */
   public registerFrameEvent(frame: Frame, event: frameeventtype) {
     BlzTriggerRegisterFrameEvent(this.handle, frame.handle, event);
     return this;
@@ -356,17 +362,19 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
-  // Triggers when the timer you tell it about expires
+  /** Registers the expiry of `timer`. */
   public registerTimerExpire(timer: Timer) {
     TriggerRegisterTimerExpireEvent(this.handle, timer.handle);
     return this;
   }
 
+  /** Registers a click on `trackable`. */
   public registerTrackableHit(trackable: Trackable) {
     TriggerRegisterTrackableHitEvent(this.handle, trackable.handle);
     return this;
   }
 
+  /** Registers the mouse moving over `trackable`. */
   public registerTrackableTrack(trackable: Trackable) {
     TriggerRegisterTrackableTrackEvent(this.handle, trackable.handle);
     return this;

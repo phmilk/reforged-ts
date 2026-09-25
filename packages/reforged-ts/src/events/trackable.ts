@@ -7,6 +7,7 @@ import { eventRows } from "./rows";
 
 /** The payload of a trackable event: the Trackable read back. */
 interface TrackablePayload {
+  /** The Trackable hit or tracked. */
   trackable: Trackable;
 }
 

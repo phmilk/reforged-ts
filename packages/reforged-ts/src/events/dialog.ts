@@ -7,7 +7,9 @@ import { eventRows } from "./rows";
 
 /** The payload of a dialog click: the dialog and the button clicked in it. */
 interface DialogClick {
+  /** The dialog clicked in. */
   dialog: Dialog;
+  /** The button clicked. */
   button: DialogButton;
 }
 

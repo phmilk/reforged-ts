@@ -7,9 +7,13 @@ import { eventRows } from "./rows";
 
 /** The payload of `FrameEvents.of`. */
 interface FramePayload {
+  /** The Frame the event happened on. */
   frame: Frame;
+  /** The frame event type that happened. */
   event: frameeventtype;
+  /** The Frame's value, for the events that carry one (a slider's). */
   value: number;
+  /** The Frame's text, or undefined when the event carries none. */
   text: string | undefined;
 }
 

@@ -4,6 +4,7 @@ import { Unit } from "../../handles/unit";
 import { required } from "../descriptor";
 import { unitEventRows } from "./rows";
 
+/** The transport row of UnitEvents: `loaded`. */
 export const transportRows = unitEventRows({
   /**
    * A unit is loaded into `transport`. `loadedOf(unit)` registers

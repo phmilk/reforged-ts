@@ -8,7 +8,9 @@ import { eventRows } from "./rows";
 
 /** The payload of a region event: the unit and the region it crossed. */
 interface RegionCrossing {
+  /** The unit entering or leaving. */
   unit: Unit;
+  /** The region it crossed. */
   region: Region;
 }
 

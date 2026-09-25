@@ -21,6 +21,7 @@ function readSpell(caster: Unit) {
   };
 }
 
+/** The spell rows of UnitEvents: the five spell events, channel to endcast. */
 export const spellRows = unitEventRows({
   /** A unit starts channeling a spell: the first of the five spell events. */
   spellChannel: {

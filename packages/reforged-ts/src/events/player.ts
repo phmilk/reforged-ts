@@ -17,6 +17,7 @@ import { eventRows } from "./rows";
 
 /** The payload of a player event that carries only its player. */
 interface PlayerPayload {
+  /** The triggering player. */
   readonly player: MapPlayer;
 }
 
@@ -40,13 +41,17 @@ interface KeyPayload extends PlayerPayload {
 
 /** The payload of the mouse events. */
 interface MousePayload extends PlayerPayload {
+  /** The x coordinate of the world point under the mouse. */
   readonly x: number;
+  /** The y coordinate of the world point under the mouse. */
   readonly y: number;
 }
 
 /** The payload of `PlayerEvents.syncData`. */
 interface SyncPayload extends PlayerPayload {
+  /** The prefix the data was sent with. */
   readonly prefix: string;
+  /** The data sent. */
   readonly data: string;
 }
 

@@ -4,6 +4,7 @@ import { Unit } from "../../handles/unit";
 import { required } from "../descriptor";
 import { unitEventRows } from "./rows";
 
+/** The summon row of UnitEvents: `summon`. */
 export const summonRows = unitEventRows({
   /**
    * A unit summons `summoned`. `summonOf(unit)` registers `EVENT_UNIT_SUMMON`

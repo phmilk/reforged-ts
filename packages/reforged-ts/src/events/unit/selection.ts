@@ -4,6 +4,7 @@ import { MapPlayer } from "../../handles/player";
 import { required } from "../descriptor";
 import { unitEventRows } from "./rows";
 
+/** The selection rows of UnitEvents: `selected` and `deselected`. */
 export const selectionRows = unitEventRows({
   /** `player` selects a unit. */
   selected: {

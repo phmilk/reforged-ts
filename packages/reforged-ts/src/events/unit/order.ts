@@ -10,11 +10,17 @@ import { unitEventRows } from "./rows";
  * by target orders.
  */
 interface OrderPayload {
+  /** The ordered unit. */
   unit: Unit;
+  /** The order's id. */
   orderId: number;
+  /** The x coordinate of a point order's target point. */
   targetX: number | undefined;
+  /** The y coordinate of a point order's target point. */
   targetY: number | undefined;
+  /** A target order's target, when it is a unit. */
   targetUnit: Unit | undefined;
+  /** A target order's target widget. */
   targetWidget: Widget | undefined;
 }
 
@@ -43,6 +49,10 @@ function readTarget(unit: Unit): OrderPayload {
   });
 }
 
+/**
+ * The order rows of UnitEvents: `orderIssued`, `orderPoint`, `orderTarget` and
+ * `orderUnit`.
+ */
 export const orderRows = unitEventRows({
   /** A unit is given an order with no target. */
   orderIssued: {
