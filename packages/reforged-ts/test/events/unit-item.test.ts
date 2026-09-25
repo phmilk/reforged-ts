@@ -2,7 +2,7 @@
 
 // The item rows of UnitEvents (pickupItem, dropItem, useItem, sellItem,
 // pawnItem, and the 3.0.0 equip and unequip) and their Of twins through on(),
-// and the equipment lookups: the suites of support/events.ts, which fire the
+// and the equipment and sold-item lookups: the suites of support/events.ts, which fire the
 // Subscription's Trigger with a stubbed context and observe the call log and
 // what the handler received. Every context answers both GetEquippedItem and
 // GetUnequippedItem with different items, so equip yielding the equipped
@@ -153,6 +153,13 @@ describeLookup({
   lookup: () => Item.fromEquipped(),
   context: { GetEquippedItem: equipped.handle },
   expected: equipped,
+});
+
+describeLookup({
+  name: "Item.fromSold",
+  lookup: () => Item.fromSold(),
+  context: { GetSoldItem: sold.handle },
+  expected: sold,
 });
 
 describeLookup({

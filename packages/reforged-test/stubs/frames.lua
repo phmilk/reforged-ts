@@ -57,12 +57,6 @@ function BlzGetOriginFrame(frameType, index)
   return frame
 end
 
--- No frame event fires in a stub, so there is no triggering frame.
-function BlzGetTriggerFrame()
-  __stub_record("BlzGetTriggerFrame")
-  return nil
-end
-
 -- An origin frame was given no owner, so it has no parent.
 function BlzFrameGetParent(frame)
   __stub_record("BlzFrameGetParent", frame)
