@@ -14,7 +14,9 @@
     "release:check-changeset": "tsc -p tsconfig.json && node build/cli/check-changeset.js",
     "release:check-patches": "tsc -p tsconfig.json && node build/cli/check-patches.js",
     "release:gate": "tsc -p tsconfig.json && node build/cli/major-changeset-gate.js",
-    "release:template-gate": "tsc -p tsconfig.json && node build/cli/template-gate.js"
+    "release:template-gate": "tsc -p tsconfig.json && node build/cli/template-gate.js",
+    "release:matrix": "tsc -p tsconfig.json && node build/cli/matrix.js",
+    "release:version": "tsc -p tsconfig.json && node build/cli/version.js"
   },
   "dependencies": {
     "@changesets/parse": "catalog:",

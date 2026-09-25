@@ -145,6 +145,95 @@ The first versions are applied on `master` before the first-publish wizard ([#14
 
 When the release workflow is already on `master`, its Version Packages pull request carries the same result and can be merged instead.
 
+## The compatibility matrix
+
+The compatibility matrix tells a Map project author which versions of the four packages, which game Patch and which Toolchain go together. It is generated from the packages and never edited by hand: one row per stable release, only ever appended, written during the version step so the Version Packages pull request shows the row under review (no commit after publishing).
+
+### The version step: `release:version`
+
+`pnpm release:version` is the version step of a release, and the command the release workflow's version job runs: `changeset version` in the repository root, then the matrix generator. When `changeset version` fails, the matrix is not generated and the command exits 1. It needs what `changeset version` needs: a GitHub token for the changelog generator (see [Versioning locally](#versioning-locally-the-github-token); CI passes `GITHUB_TOKEN`), and at least one pending changeset. It does not run the major-changeset gate: the gate reads the pending changesets, which `changeset version` consumes, so it runs before this step.
+
+`pnpm release:matrix` runs the generator alone. It rewrites the three files from the committed JSON, so running it twice, or on another day, changes no byte. Exit codes of both: 0 done, 1 a problem (one line each, then a link here), 2 usage. Their programmatic entry points are `generateMatrix` and `buildMatrix` in `release/src/matrix.ts`.
+
+### What the generator reads and writes
+
+| File                                     | Kind      | What                                                                                                                                                                                                                                                                                  |
+| ---------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `release/compatibility/systems.json`     | declared  | The 3.0.0 systems each library minor adds, extended by the maintainer when a tier ships.                                                                                                                                                                                              |
+| `release/compatibility/matrix.json`      | generated | The matrix, the data file the docs site reads ([its shape](#the-json-file-a-stable-shape)).                                                                                                                                                                                           |
+| `website/docs/compatibility/_matrix.mdx` | generated | The table of the docs site's compatibility page: a partial (the underscore keeps Docusaurus from making it a page) that the page imports.                                                                                                                                             |
+| `release/compatibility/matrix.md`        | generated | The same table as a fragment, which the Template's sync workflow fetches from `master` at `https://raw.githubusercontent.com/phmilk/reforged-ts/master/release/compatibility/matrix.md` and splices into the Template README between its markers. The path is stable: do not move it. |
+
+It also reads each publishable package's name, version and `reforged.patch`, the Toolchain pins of the catalog in `pnpm-workspace.yaml` (`typescript`, `typescript-to-lua`, `lua-types`, as written there), the Node floor of the library's `engines.node` (a `>=` range) and `.changeset/pre.json`. The tables list the newest release first; before the first stable release they hold a one-line empty state. Prettier leaves the generated `.md` and `.json` alone (`.prettierignore`), so their bytes are the generator's.
+
+### When a row is added
+
+- **One row per stable release.** A row is identified by the four package versions. When the workspace's versions have no row, the generator appends one; when they have one (a version step that released nothing new), every field of it but the cut date must still match, and the row is kept as it is, cut date included. A Typings-only release (a new Patch adopted by `reforged-types` alone) gets its own row, with the library version of the row before it.
+- **Prereleases produce no row.** In pre mode, or when the library's version is a prerelease, the generator adds nothing and rewrites the files unchanged; it still runs the `reforged.patch` check. A stable library with a prerelease package beside it is an error.
+- **The cut date** is the day the version step ran, `YYYY-MM-DD` in UTC.
+
+The generator fails, writing nothing:
+
+- when the `reforged.patch` consistency check fails ([the field](#the-reforgedpatch-field));
+- when `systems.json` has no entry for the library's minor (`1.2` for `1.2.0`);
+- when the release already has a row whose other contents differ. Rows are never rewritten: a change to what a release was built with (a Toolchain pin, a Patch field) ships in a new release, which gets its own row.
+
+### The systems list
+
+`release/compatibility/systems.json` maps each library minor to the 3.0.0 systems it **adds**; a row covers the systems of its minor and of every earlier minor, in the order declared. 1.0 adds tiers 1 and 2 of [#8](https://github.com/phmilk/reforged-ts/issues/8) and 1.1 adds tier 3. Every library minor needs an entry before it is released, with an empty list when it adds none:
+
+```json
+{
+  "minors": {
+    "1.0": ["Equipment and bag", "Ability cooldowns"],
+    "1.1": ["Doodads"],
+    "1.2": []
+  }
+}
+```
+
+### The JSON file: a stable shape
+
+`release/compatibility/matrix.json` is the data the docs site builds its compatibility page from. Its shape is stable: fields may be added, but a field is never renamed, removed or given another meaning without bumping `format`.
+
+```json
+{
+  "format": 1,
+  "rows": [
+    {
+      "library": "1.0.0",
+      "typings": "1.0.0",
+      "harness": "1.0.0",
+      "plugin": "1.0.0",
+      "patch": "3.0.0.24268",
+      "typescript": "6.0.2",
+      "typescriptToLua": "^1.37.1",
+      "luaTypes": "^2.14.1",
+      "node": "22.13",
+      "systems": ["Equipment and bag", "Ability cooldowns"],
+      "cutDate": "2026-10-01",
+      "docs": "https://phmilk.github.io/reforged-ts/docs/1.0"
+    }
+  ]
+}
+```
+
+| Field                                       | Value                                                                                                |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `format`                                    | `1`, the version of this shape.                                                                      |
+| `rows`                                      | One per stable release, oldest first, only ever appended.                                            |
+| `library`, `typings`, `harness`, `plugin`   | The exact versions of `reforged-ts`, `reforged-types`, `reforged-test` and `eslint-plugin-reforged`. |
+| `patch`                                     | The game Patch, a Build: the library's `reforged.patch`, which is the newest Patch the Typings ship. |
+| `typescript`, `typescriptToLua`, `luaTypes` | The catalog pins as written there: TypeScript exact, the others as caret ranges.                     |
+| `node`                                      | The Node floor, the version of the library's `engines.node` (`>=22.13` gives `22.13`).               |
+| `systems`                                   | The 3.0.0 systems the release covers, from the systems list.                                         |
+| `cutDate`                                   | The day the version step ran, `YYYY-MM-DD` (UTC).                                                    |
+| `docs`                                      | The docs version URL of the library's minor.                                                         |
+
+### The docs version URL
+
+The docs site keeps one docs version per library minor, labelled by the library's `major.minor` ([#40](https://github.com/phmilk/reforged-ts/issues/40)). A row's URL is `https://phmilk.github.io/reforged-ts/docs/` followed by that label: `.../docs/1.0` for 1.0.0 and 1.0.3 alike. The label is used rather than the empty segment the site gives its newest version, because a row never changes and the newest version stops being the newest. So the site must answer at `/docs/<label>` for its newest version too (a version path or a redirect), and a version the site no longer keeps (it keeps the last three minors of each major) is a dead link the compatibility page should not render as a link.
+
 ## The major-changeset gate
 
 No stable major of `reforged-ts` ships without its migration guide. `pnpm release:gate` (`release/src/major-changeset-gate.ts`, programmatic entry `majorChangesetGate(root)`) reads the pending changesets in `.changeset/` and the versioned prerelease changesets in `.changeset/pre/`. When any of them bumps `reforged-ts` by a major, or when the next stable version of `reforged-ts` would be its first (1.0.0, a major relative to w3ts 3.x), it requires two things for the version pair of that major:
@@ -206,7 +295,7 @@ Checked by hand, then `pnpm changeset pre exit` in a pull request; the next Vers
 - [ ] The TSDoc gate is at error and green.
 - [ ] The Template gate is green on the last alpha.
 - [ ] The docs site is deployed green from `master`.
-- [ ] The compatibility matrix generator produces the 1.0.0 row without error.
+- [ ] [The compatibility matrix generator](#the-compatibility-matrix) produces the 1.0.0 row without error.
 - [ ] The migration page for w3ts 3.x to reforged-ts 1.0 is present with its `renames.json` entries (the major-changeset gate checks this mechanically: it treats the first stable release of `reforged-ts` as a major).
 
 ## Deprecating and removing a symbol

@@ -23,6 +23,8 @@
     "release:check-patches": "pnpm --filter reforged-ts-release release:check-patches",
     "release:gate": "pnpm --filter reforged-ts-release release:gate",
     "release:template-gate": "pnpm --filter reforged-ts-release release:template-gate",
+    "release:matrix": "pnpm --filter reforged-ts-release release:matrix",
+    "release:version": "pnpm --filter reforged-ts-release release:version",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test"
   },
   "devDependencies": {
