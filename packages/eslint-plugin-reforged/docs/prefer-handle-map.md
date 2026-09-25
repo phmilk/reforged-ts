@@ -6,7 +6,7 @@ Reports `new Map` and `new Set` whose key type is a Wrapper (`Map<Unit, number>`
 
 Pitfall L2 of the catalogue (#15). "(Key,value)-pairs containing an Wc3 object will remain in the table even after the object has been destroyed or removed. A famous example is when you use units as keys" ([A comprehensive guide to mapping in Lua](https://www.hiveworkshop.com/threads/a-comprehensive-guide-to-mapping-in-lua.341880/), "General Tables"). A `Map` or `Set` compiles to a Lua table that holds its keys strongly: an entry for a dead unit or a destroyed effect stays until the Map project deletes it, and the table grows for the rest of the game.
 
-`HandleMap` and `HandleSet`, the runtime Guards of `reforged-ts`, drop an entry when its Handle is destroyed. They ship with the runtime Guards (#52); until then the rule names them in its message and suggestion only. `WeakMap` and `WeakSet` are not reported: they do not keep their keys alive.
+`HandleMap` and `HandleSet`, safe collections of `reforged-ts` that ship with its runtime Guards, drop an entry when its Handle is destroyed (see [Desync safety and guards](../../../website/docs/guides/desync-safety-and-guards.md)). `WeakMap` and `WeakSet` are not reported: they do not keep their keys alive.
 
 ## Incorrect
 
