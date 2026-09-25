@@ -1,6 +1,7 @@
 /** @noSelfInFile */
 
 import { rawcodeToString } from "../utils/rawcode";
+import { fieldTypeOf } from "./fields";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
 import { Widget } from "./widget";
@@ -188,8 +189,7 @@ export class Item extends Widget {
     field:
       itembooleanfield | itemintegerfield | itemrealfield | itemstringfield,
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string, @typescript-eslint/no-deprecated -- a field object stringified for its type prefix; substr; step 6 (#53) removes it
-    const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
+    const fieldType = fieldTypeOf(field);
 
     switch (fieldType) {
       case "unitbooleanfield":
@@ -238,8 +238,7 @@ export class Item extends Widget {
       itembooleanfield | itemintegerfield | itemrealfield | itemstringfield,
     value: boolean | number | string,
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string, @typescript-eslint/no-deprecated -- a field object stringified for its type prefix; substr; step 6 (#53) removes it
-    const fieldType = field.toString().substr(0, field.toString().indexOf(":"));
+    const fieldType = fieldTypeOf(field);
 
     if (fieldType === "unitbooleanfield" && typeof value === "boolean") {
       return BlzSetItemBooleanField(
