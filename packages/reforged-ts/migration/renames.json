@@ -1,5 +1,16 @@
 [
   {
+    "old": "w3ts",
+    "new": "reforged-ts",
+    "kind": "package",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The library is published under a new name: an import from `w3ts` reads the same exports from `reforged-ts`, less the symbols the other entries rename or remove."
+  },
+  {
     "old": "new CameraSetup(...)",
     "new": "CameraSetup.create(...)",
     "kind": "constructor",

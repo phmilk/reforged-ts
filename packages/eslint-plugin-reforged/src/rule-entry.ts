@@ -4,7 +4,7 @@
 // are all derived from the list in rules/index.ts.
 import type { TSESLint } from "@typescript-eslint/utils";
 
-import type { PluginData } from "./data/index.js";
+import type { OptionalPackage, PluginData } from "./data/index.js";
 
 export type Severity = "error" | "warn";
 
@@ -17,6 +17,12 @@ export interface RuleEntry {
   readonly name: string;
   /** Its severity in `configs.recommended`. */
   readonly severity: Severity;
+  /**
+   * The optional packages whose data files the rule reads. When the linted
+   * project lacks one, the plugin warns once and registers the rule disabled
+   * (it reports nothing), so a config that names it still loads.
+   */
+  readonly requires?: readonly OptionalPackage[];
   /** Builds the rule from the loaded data files. */
   readonly create: (data: PluginData) => AnyRuleModule;
 }

@@ -28,7 +28,7 @@ export default defineConfig(
 );
 ```
 
-Peer dependencies: ESLint 9 or later (10 is tested), `typescript-eslint` 8 and TypeScript 6.0.2. `reforged-types` and `reforged-ts` are optional peers: the plugin reads their data files from the Map project's own installation.
+Peer dependencies: ESLint 9 or later (10 is tested), `typescript-eslint` 8 and TypeScript 6.0.2. `reforged-types` and `reforged-ts` are optional peers: the plugin reads their data files from the Map project's own installation, found from the directory ESLint runs in (`createPlugin({ projectRoot })` sets another). Without one of them, the plugin prints one warning at load and the rules that need it report nothing.
 
 ## Rules
 
@@ -38,6 +38,7 @@ Each diagnostic links to the rule's page on the docs site; the pages ship in `do
 | -------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------- |
 | [`no-dotted-asset-paths`](docs/no-dotted-asset-paths.md)                   | error    | An asset path whose file name holds a dot before its extension (`model_1.0.mdx`).                       |
 | [`no-handles-at-module-top-level`](docs/no-handles-at-module-top-level.md) | error    | A creation (`Unit.create`, `CreateTimer`, ...) at module top level, which runs in the Lua root.         |
+| [`no-legacy-w3ts-names`](docs/no-legacy-w3ts-names.md)                     | error    | A w3ts 3.x name reforged-ts renamed or removed; fixes the one-to-one renames.                           |
 | [`no-unsafe-natives`](docs/no-unsafe-natives.md)                           | error    | A Native on the ban list (`TriggerSleepAction`, `PolledWait`, the BJ timer helpers, ...).               |
 | [`no-unused-handle-result`](docs/no-unused-handle-result.md)               | error    | A statement that discards a creation or a `Filter`/`Condition` boolexpr, which then leaks.              |
 | [`no-unordered-iteration`](docs/no-unordered-iteration.md)                 | warn     | Iteration that compiles to `pairs` (`for...in`, `Object.keys/values/entries`, `pairs`, `next`).         |
