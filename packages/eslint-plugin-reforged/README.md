@@ -34,9 +34,11 @@ Peer dependencies: ESLint 9 or later (10 is tested), `typescript-eslint` 8 and T
 
 Each diagnostic links to the rule's page on the docs site; the pages ship in `docs/`.
 
-| Rule                                             | Severity | Reports                                                                                   |
-| ------------------------------------------------ | -------- | ----------------------------------------------------------------------------------------- |
-| [`no-unsafe-natives`](docs/no-unsafe-natives.md) | error    | A Native on the ban list (`TriggerSleepAction`, `PolledWait`, the BJ timer helpers, ...). |
+| Rule                                                                       | Severity | Reports                                                                                         |
+| -------------------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------- |
+| [`no-handles-at-module-top-level`](docs/no-handles-at-module-top-level.md) | error    | A creation (`Unit.create`, `CreateTimer`, ...) at module top level, which runs in the Lua root. |
+| [`no-unsafe-natives`](docs/no-unsafe-natives.md)                           | error    | A Native on the ban list (`TriggerSleepAction`, `PolledWait`, the BJ timer helpers, ...).       |
+| [`no-unused-handle-result`](docs/no-unused-handle-result.md)               | error    | A statement that discards a creation or a `Filter`/`Condition` boolexpr, which then leaks.      |
 
 To silence a rule on one line, say why:
 
