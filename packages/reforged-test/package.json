@@ -25,6 +25,9 @@
   "engines": {
     "node": ">=22.13"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "reforged": {
     "patch": "3.0.0.24268"
   },
@@ -39,6 +42,7 @@
     "/LICENSE",
     "/README.md"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "tsc -p tsconfig.json && tstl -p runner/tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p runner/tsconfig.json --noEmit && tsc -p test/tsconfig.json",

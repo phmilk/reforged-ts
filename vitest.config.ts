@@ -63,6 +63,17 @@ export default defineConfig({
           environment: "node",
         },
       },
+      {
+        // The publishable packages as npm receives them: each is packed and
+        // its tarball read. Needs the build output (`pnpm check` builds
+        // first).
+        test: {
+          name: "tarballs",
+          root: "test",
+          include: ["*.test.ts"],
+          environment: "node",
+        },
+      },
     ],
     // Neither the library's Lua tests nor the sources, fixtures and rename
     // map the Node tests read are in the vitest module graph: a change to one

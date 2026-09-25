@@ -4,6 +4,10 @@ Runs TypeScript tests for Warcraft III Reforged map code on real Lua 5.3, with t
 
 **Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build.
 
+<!-- Placeholder link: the docs site (#40) replaces it with the llms.txt of this version. -->
+
+**For AI agents:** the documentation of this version, as one plain-text file for a language model, is [llms.txt](https://phmilk.github.io/reforged-ts/llms.txt).
+
 The tests are compiled by [typescript-to-lua](https://typescripttolua.github.io/) exactly like map code, then run on Lua 5.3.6 compiled to WebAssembly ([lua-wasm-bindings](https://www.npmjs.com/package/lua-wasm-bindings), the VM typescript-to-lua's own suite uses). What a test observes is the Lua your code emits, the Native calls it makes and the objects it returns.
 
 The package has three parts:

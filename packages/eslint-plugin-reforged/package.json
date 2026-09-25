@@ -25,6 +25,9 @@
   "engines": {
     "node": ">=22.13"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "reforged": {
     "patch": "3.0.0.24268",
     "docs": "next"
@@ -57,8 +60,8 @@
   },
   "peerDependencies": {
     "eslint": "^9.0.0 || ^10.0.0",
-    "reforged-ts": "^1.0.0",
-    "reforged-types": "^1.0.0",
+    "reforged-ts": "workspace:^",
+    "reforged-types": "workspace:^",
     "typescript": "catalog:",
     "typescript-eslint": "^8.0.0"
   },
@@ -76,8 +79,8 @@
     "@typescript-to-lua/language-extensions": "catalog:",
     "eslint": "catalog:",
     "lua-types": "catalog:",
-    "reforged-ts": "workspace:*",
-    "reforged-types": "workspace:*",
+    "reforged-ts": "workspace:^",
+    "reforged-types": "workspace:^",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:",
     "vitest": "catalog:"
