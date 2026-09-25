@@ -12,7 +12,7 @@ The Systems with real `Promise`s: a sync API that `await` works with over a fixe
 
 **base64, file, time.** `base64Decode` throws on malformed input, naming the offset, and neither function prints. `File.read` reads the escape character followed by `q` correctly, and `File`'s doc states its escape contract and the two cases left unspecified until verified in game. `sleep` runs on `Timer.after` and resolves with no value. `Item.getField` and `Item.setField` now reach the item field Natives.
 
-**Removed or renamed** (each listed with its replacement in `migration/renames.json`): `SyncRequest.then` and `SyncRequest.catch` (use the `Promise`), `SyncCallback`, `ISyncResponse` (now `SyncResponse`), `ISyncOptions` (now `SyncOptions`), `SyncRequest.destroy` (now `cancel`), `SyncRequest.fromIndex`, the `SyncRequest` constructor overloads that took the data (use `SyncRequest.send`), `onHostDetect` (now `Host.detectHost`), `BinaryReader.read` and `BinaryWriter.values`.
+**Removed or renamed** (each listed with its replacement in `migration/renames.json`): `SyncRequest.then` and `SyncRequest.catch` (use the `Promise`), `SyncCallback`, `ISyncResponse` (now `SyncResponse`), `ISyncOptions` (now `SyncOptions`), `SyncRequest.destroy` (now `cancel`), `SyncRequest.fromIndex`, the `SyncRequest` constructor overloads that took the data (use `SyncRequest.send`), `onHostDetect` (now `Host.detectHost`), `BinaryReader.read`, `BinaryReader.data` and `BinaryWriter.values`.
 
 **Behaviour changes** (detailed in `migration/behaviour-changes.md`):
 

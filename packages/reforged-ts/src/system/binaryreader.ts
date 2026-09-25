@@ -37,7 +37,8 @@ import {
  * ```
  */
 export class BinaryReader {
-  public readonly data: string;
+  /** The binary string read. */
+  private readonly data: string;
 
   /** The position of the next byte, from one, as `string.unpack` takes it. */
   private next = 1;

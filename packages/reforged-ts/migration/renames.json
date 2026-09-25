@@ -697,6 +697,17 @@
     "note": "The generic read that took a format and a size, the size the source of the `readDouble` misalignment, is private: the typed `readX` members advance by what `string.unpack` consumed."
   },
   {
+    "old": "BinaryReader.data",
+    "new": null,
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "The binary string read is private: the typed `readX` members read it, and `position` and `remaining` tell how far they got."
+  },
+  {
     "old": "BinaryWriter.values",
     "new": null,
     "kind": "member",
