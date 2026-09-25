@@ -12,9 +12,11 @@
  *
  * How a file is written and read back: `File.write` passes the contents to
  * `Preload` in chunks of at most 259 bytes, between an opening and a closing
- * piece of Lua user code. Running the file with `Preloader` collects the
- * chunks and sets the icon of one ability (`Amls`) to them, and `File.read`
- * reads that icon and puts the original back.
+ * piece of Lua, each between the `//! beginusercode` and `//!endusercode`
+ * markers of the generated file, which `Preloader` runs as Lua. The opening
+ * piece makes the `Preload` calls collect the chunks, and the closing piece
+ * sets the icon of one ability (`Amls`) to them. `File.read` runs the file
+ * with `Preloader`, reads that icon and puts the original back.
  *
  * The escape contract: each chunk sits inside a double-quoted string literal
  * of the generated file, so a double quote in the contents is written as the
