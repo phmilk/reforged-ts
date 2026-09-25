@@ -3,7 +3,9 @@
 // UnitEvents.loaded and UnitEvents.loadedOf(unit) through on(), and the
 // lookups they read the loaded unit and the transport with: the suites of
 // support/events.ts, which fire the Subscription's Trigger with a stubbed
-// context and observe the call log and what the handler received.
+// context and observe the call log and what the handler received. Which unit
+// the game fires EVENT_UNIT_LOADED for is unverified, so loadedOf reads both
+// units from the Natives like loaded.
 
 import { MapPlayer, Unit, UnitEvents } from "../../src/index";
 import { defined } from "../support/defined";
@@ -40,9 +42,12 @@ describeDescriptor({
   registers: (trigger) => [
     `TriggerRegisterUnitEvent(${trigger}, ${handleRef("unit", loaded.handle)}, EVENT_UNIT_LOADED)`,
   ],
-  context: { GetTransportUnit: transport.handle },
+  context: { GetLoadedUnit: loaded.handle, GetTransportUnit: transport.handle },
   payload: { unit: loaded, transport },
-  required: [["transport", "GetTransportUnit"]],
+  required: [
+    ["unit", "GetLoadedUnit"],
+    ["transport", "GetTransportUnit"],
+  ],
 });
 
 describeLookup({

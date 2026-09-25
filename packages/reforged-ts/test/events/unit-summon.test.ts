@@ -3,7 +3,9 @@
 // UnitEvents.summon and UnitEvents.summonOf(summoner) through on(), and the
 // lookups they read the summoner and the summoned unit with: the suites of
 // support/events.ts, which fire the Subscription's Trigger with a stubbed
-// context and observe the call log and what the handler received.
+// context and observe the call log and what the handler received. Which unit
+// the game fires EVENT_UNIT_SUMMON for is unverified, so summonOf reads both
+// units from the Natives like summon.
 
 import { MapPlayer, Unit, UnitEvents } from "../../src/index";
 import { defined } from "../support/defined";
@@ -43,9 +45,15 @@ describeDescriptor({
   registers: (trigger) => [
     `TriggerRegisterUnitEvent(${trigger}, ${handleRef("unit", summoner.handle)}, EVENT_UNIT_SUMMON)`,
   ],
-  context: { GetSummonedUnit: summoned.handle },
+  context: {
+    GetSummoningUnit: summoner.handle,
+    GetSummonedUnit: summoned.handle,
+  },
   payload: { summoner, summoned },
-  required: [["summoned", "GetSummonedUnit"]],
+  required: [
+    ["summoner", "GetSummoningUnit"],
+    ["summoned", "GetSummonedUnit"],
+  ],
 });
 
 describeLookup({
