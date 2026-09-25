@@ -100,10 +100,8 @@ describe("the globals stage", () => {
     expect(calls).toEqual([
       ...players,
       "CreateTrigger()",
-      `BlzTriggerRegisterPlayerSyncEvent(${trigger}, ${slot0}, "T", false)`,
-      `BlzTriggerRegisterPlayerSyncEvent(${trigger}, ${slot0}, "S", false)`,
-      `BlzTriggerRegisterPlayerSyncEvent(${trigger}, ${slot1}, "T", false)`,
-      `BlzTriggerRegisterPlayerSyncEvent(${trigger}, ${slot1}, "S", false)`,
+      `BlzTriggerRegisterPlayerSyncEvent(${trigger}, ${slot0}, "rts", false)`,
+      `BlzTriggerRegisterPlayerSyncEvent(${trigger}, ${slot1}, "rts", false)`,
       `TriggerAddAction(${trigger}, <function>)`,
     ]);
   });

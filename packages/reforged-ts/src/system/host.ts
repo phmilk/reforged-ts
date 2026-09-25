@@ -7,7 +7,7 @@ import { onStage } from "../init/stages";
 import { base64Decode, base64Encode } from "./base64";
 import { BinaryReader } from "./binaryreader";
 import { BinaryWriter } from "./binarywriter";
-import { SyncRequest } from "./sync";
+import { type SyncResponse, SyncRequest } from "./sync";
 
 const lobbyTimes: number[] = [];
 const hostCallbacks: (() => void)[] = [];
@@ -32,6 +32,54 @@ function onConfig() {
   }
 }
 
+/** Whether `p` is a user who is playing. */
+function isPlayingUser(p: MapPlayer | undefined): p is MapPlayer {
+  return (
+    p?.slotState === PLAYER_SLOT_STATE_PLAYING &&
+    p.controller === MAP_CONTROL_USER
+  );
+}
+
+function onLobbyTime(res: SyncResponse) {
+  const reader = new BinaryReader(base64Decode(res.data));
+
+  // store how long the player has been in the game
+  lobbyTimes[res.from.id] = reader.readFloat();
+
+  // check which player has been in the game the longest
+  let hostTime = 0;
+  let hostId = 0;
+
+  for (let i = 0; i < bj_MAX_PLAYERS; i++) {
+    const p = MapPlayer.fromIndex(i);
+
+    // skip if the player is not playing
+    if (!isPlayingUser(p)) {
+      continue;
+    }
+
+    // if a playing user has not yet finished syncing then terminate execution
+    if (!lobbyTimes[p.id]) {
+      return;
+    }
+
+    // store the host with the longest game time
+    if (lobbyTimes[p.id] > hostTime) {
+      hostTime = lobbyTimes[p.id];
+      hostId = p.id;
+    }
+  }
+
+  // set the host, cleanup, and execute callbacks
+  host = MapPlayer.fromIndex(hostId);
+  if (checkTimer) {
+    checkTimer.destroy();
+  }
+  hostCallbacks.forEach((cb) => {
+    cb();
+  });
+}
+
 function findHost() {
   isChecking = true;
 
@@ -42,63 +90,19 @@ function findHost() {
   // sync each players total game time
   const writer = new BinaryWriter();
   writer.writeFloat(localStartTime - localJoinTime);
+  const data = base64Encode(writer.toString());
 
-  new SyncRequest(MapPlayer.fromLocal(), base64Encode(writer.toString()))
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- an unused variable or parameter, whose removal changes the emitted Lua; step 6 (#53) removes it
-    .then((res, req) => {
-      const data = base64Decode(res.data);
-      const reader = new BinaryReader(data);
-      const syncedTime = reader.readFloat();
-
-      // store how long the player has been in the game
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- the sync sender lookup; step 6 (#53) removes it
-      const from = MapPlayer.fromEvent()!;
-      lobbyTimes[from.id] = syncedTime;
-
-      // check which player has been in the game the longest
-      let hostTime = 0;
-      let hostId = 0;
-
-      for (let i = 0; i < bj_MAX_PLAYERS; i++) {
-        const p = MapPlayer.fromIndex(i);
-
-        // skip if the player is not playing
-        if (
-          // eslint-disable-next-line @typescript-eslint/prefer-optional-chain -- rewriting the check changes the emitted Lua; step 6 (#53) removes it
-          p === undefined ||
-          p.slotState !== PLAYER_SLOT_STATE_PLAYING ||
-          p.controller !== MAP_CONTROL_USER
-        ) {
-          continue;
-        }
-
-        // if a playing user has not yet finished syncing then terminate execution
-        if (!lobbyTimes[p.id]) {
-          return;
-        }
-
-        // store the host with the longest game time
-        if (lobbyTimes[p.id] > hostTime) {
-          hostTime = lobbyTimes[p.id];
-          hostId = p.id;
-        }
-      }
-
-      // set the host, cleanup, and execute callbacks
-      host = MapPlayer.fromIndex(hostId);
-      if (checkTimer) {
-        checkTimer.destroy();
-      }
-      hostCallbacks.forEach((cb) => {
-        cb();
+  // One request per playing user, in slot order on every client, so the ids
+  // agree; only that user's client sends, with its own measurement.
+  for (let i = 0; i < bj_MAX_PLAYERS; i++) {
+    const p = MapPlayer.fromIndex(i);
+    if (isPlayingUser(p)) {
+      SyncRequest.send(p, data).then(onLobbyTime, (reason: unknown) => {
+        print(`findHost Error: ${String(reason)}`);
+        isChecking = false;
       });
-    })
-    // eslint-disable-next-line @typescript-eslint/use-unknown-in-catch-callback-variable -- SyncRequest.catch is not thenable; step 6 (#53) removes it
-    .catch((res) => {
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- a number or status in a template literal; step 6 (#53) removes it
-      print(`findHost Error: ${res.status}`);
-      isChecking = false;
-    });
+    }
+  }
 }
 
 function onGameStart() {
