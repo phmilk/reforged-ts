@@ -7,7 +7,8 @@
 // library class (or an instance, or a subclass), never a project class of the
 // same name. One-to-one entries are fixed; the others are suggested, one
 // suggestion per replacement; a removed symbol gets neither. Entries of kind
-// `entryPoint` (the `W3TS_HOOK` values) are not code the rule can find.
+// `entryPoint` (the `W3TS_HOOK` values) are not code the rule can find, and
+// an entry whose new name is its old one is a note, not a rename.
 import {
   AST_NODE_TYPES,
   ASTUtils,
@@ -61,7 +62,13 @@ function indexOf(entries: readonly RenameEntry[]): Index {
       packages.set(entry.old.text, entry);
       continue;
     }
-    if (entry.kind === "entryPoint") {
+    // An entry point is not code; an entry that keeps its name (a note on
+    // changed arguments, `Trigger.registerPlayerMouseEvent`) has no old name
+    // to find.
+    if (
+      entry.kind === "entryPoint" ||
+      entry.replacements.some((each) => each.text === entry.old.text)
+    ) {
       continue;
     }
     const { symbol } = entry.old;

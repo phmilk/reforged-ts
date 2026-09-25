@@ -1,6 +1,6 @@
 // The rename map these cases read is the fixture's stub reforged-ts,
 // test/fixture-project/node_modules/reforged-ts/migration/renames.json: one
-// entry of each kind the rule handles.
+// entry of each kind the rule handles, and a note entry that keeps its name.
 import { describe, expect, it } from "vitest";
 
 import { lintWithRecommended } from "../support/lint.js";
@@ -58,6 +58,10 @@ ruleTester.run("no-legacy-w3ts-names", ruleOf("no-legacy-w3ts-names"), {
     {
       name: "a map-named export imported from another module",
       code: 'import { PolledWait as hookedMain } from "./wait";\nhookedMain(1);',
+    },
+    {
+      name: "an entry whose new name is its old one is a note, not a rename",
+      code: `${header}Unit.create(MapPlayer.fromIndex(0)!, 0, 0, 0).kill();`,
     },
     {
       name: "an entry point is not code",
