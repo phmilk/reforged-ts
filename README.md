@@ -13,6 +13,8 @@ The pnpm workspace of reforged-ts, a TypeScript API for Warcraft III Reforged cu
 
 The library's own tests run on `reforged-test`, and the library compiles against `reforged-types/3.0.0`.
 
+**Build phase.** Until 1.0.0, every version of the four packages is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag, so a Map project installs them with `@next` (`pnpm add reforged-ts@next reforged-types@next`). npm gave `latest` to the first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then. See [Pre mode and the `next` dist-tag](docs/release.md#pre-mode-and-the-next-dist-tag).
+
 ## Requirements
 
 - Node 22.13 or later. Node 24 is the tested version (`.node-version`).

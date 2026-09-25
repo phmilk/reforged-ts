@@ -125,7 +125,7 @@ The workspace is in Changesets pre mode with the `alpha` identifier during the b
 
 Alphas go to npm under the `next` dist-tag, so a Map project installs one with `pnpm add reforged-ts@next`. Changesets refuses `changeset publish --tag` in pre mode and when publishing from packed tarballs, so the tag is not a command-line option: the release workflow writes `next` into the `tag` of each entry of the publish plan (`publish-plan.json`) before publishing ([`release:dist-tag`](#the-dist-tag)).
 
-**Known limitation.** npm gives the `latest` dist-tag to the first version of a package, prerelease or not. After the first publish, `latest` and `next` both point at `1.0.0-alpha.0`; later alphas move `next` only, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, when it moves to 1.0.0. There is no workaround short of publishing a placeholder stable version, which is rejected. A Map project should install with `@next` during the build phase.
+**Known limitation.** npm gives the `latest` dist-tag to the first version of a package, prerelease or not. After the first publish, `latest` and `next` both point at `1.0.0-alpha.0`; later alphas move `next` only, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, when it moves to 1.0.0. There is no workaround short of publishing a placeholder stable version, which is rejected. A Map project should install with `@next` during the build phase; the root README and each package README say so until 1.0.0.
 
 ## The first alpha
 
@@ -300,6 +300,7 @@ Checked by hand, then `pnpm changeset pre exit` in a pull request; the next Vers
 - [ ] The Template gate is green on the last alpha.
 - [ ] The docs site is deployed green from `master`.
 - [ ] [The compatibility matrix generator](#the-compatibility-matrix) produces the 1.0.0 row without error.
+- [ ] The build-phase notes are gone from the root README and the four package READMEs, and their install commands no longer name `@next`.
 - [ ] The migration page for w3ts 3.x to reforged-ts 1.0 is present with its `renames.json` entries (the major-changeset gate checks this mechanically: it treats the first stable release of `reforged-ts` as a major).
 
 ## Deprecating and removing a symbol
