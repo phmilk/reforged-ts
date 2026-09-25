@@ -48,6 +48,7 @@ export class Region extends Handle<region> {
 
   public destroy() {
     RemoveRegion(this.handle);
+    this.release();
   }
 
   public static fromEvent(): Region | undefined {

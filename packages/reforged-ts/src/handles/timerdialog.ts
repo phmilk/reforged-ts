@@ -18,6 +18,7 @@ export class TimerDialog extends Handle<timerdialog> {
 
   public destroy() {
     DestroyTimerDialog(this.handle);
+    this.release();
   }
 
   public setSpeed(speedMultFactor: number) {

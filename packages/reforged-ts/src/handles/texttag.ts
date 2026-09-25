@@ -10,6 +10,7 @@ export class TextTag extends Handle<texttag> {
 
   public destroy() {
     DestroyTextTag(this.handle);
+    this.release();
   }
 
   public setAge(age: number) {

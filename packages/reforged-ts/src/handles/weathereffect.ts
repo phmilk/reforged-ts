@@ -23,6 +23,7 @@ export class WeatherEffect extends Handle<weathereffect> {
 
   public destroy() {
     RemoveWeatherEffect(this.handle);
+    this.release();
   }
 
   public enable(flag: boolean) {

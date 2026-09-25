@@ -24,6 +24,7 @@ export class Timer extends Handle<timer> {
 
   public destroy() {
     DestroyTimer(this.handle);
+    this.release();
   }
 
   public pause() {

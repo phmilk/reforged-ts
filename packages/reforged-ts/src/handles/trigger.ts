@@ -111,6 +111,7 @@ export class Trigger extends Handle<trigger> {
    */
   public destroy() {
     DestroyTrigger(this.handle);
+    this.release();
   }
 
   /**

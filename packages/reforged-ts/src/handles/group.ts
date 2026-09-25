@@ -26,6 +26,7 @@ export class Group extends Handle<group> {
 
   public destroy() {
     DestroyGroup(this.handle);
+    this.release();
   }
 
   public enumUnitsInRange(

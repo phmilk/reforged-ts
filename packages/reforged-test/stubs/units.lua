@@ -97,3 +97,8 @@ function GetHeroLevel(whichHero)
   __stub_record("GetHeroLevel", whichHero)
   return whichHero.heroLevel or 0
 end
+
+function RemoveUnit(whichUnit)
+  __stub_record("RemoveUnit", whichUnit)
+  whichUnit.destroyed = true
+end

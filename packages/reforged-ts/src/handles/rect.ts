@@ -39,6 +39,7 @@ export class Rectangle extends Handle<rect> {
 
   public destroy() {
     RemoveRect(this.handle);
+    this.release();
   }
 
   public enumDestructables(

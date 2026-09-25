@@ -182,6 +182,7 @@ export class Item extends Widget {
 
   public destroy() {
     RemoveItem(this.handle);
+    this.release();
   }
 
   public getField(
