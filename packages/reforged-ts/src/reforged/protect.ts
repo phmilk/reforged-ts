@@ -35,6 +35,27 @@ export interface CallbackFailure {
   readonly count: number;
 }
 
+/**
+ * How many `asLibraryRegistration` bodies are running: while one is, a
+ * registration is the library's own and is not remembered as the first.
+ */
+let libraryRegistrations = 0;
+
+/**
+ * Runs `body`, whose callback registrations are the library's own (the sync
+ * System's Trigger, born at the globals stage): they are protected as any
+ * other, but the late-configure warning does not name them, as it does not
+ * name the library's own Init registrations.
+ */
+export function asLibraryRegistration<T>(body: () => T): T {
+  libraryRegistrations++;
+  try {
+    return body();
+  } finally {
+    libraryRegistrations--;
+  }
+}
+
 /** A failure row as the store keeps it: the count grows. */
 interface FailureRow {
   readonly origin: string;
@@ -95,7 +116,8 @@ function originOf(owner: Handle<handle> | undefined, member: string): string {
  *   filter, nothing for an action or a handler.
  *
  * Either way the registration is remembered as the first one if it is, so
- * `Reforged.configure` can name it.
+ * `Reforged.configure` can name it, unless it is the library's own
+ * (`asLibraryRegistration`).
  */
 export function protect<Args extends unknown[], R>(
   owner: Handle<handle> | undefined,
@@ -103,7 +125,10 @@ export function protect<Args extends unknown[], R>(
   callback: (...args: Args) => R,
   failed?: R,
 ): (...args: Args) => R {
-  if (configuration.firstRegistration === undefined) {
+  if (
+    configuration.firstRegistration === undefined &&
+    libraryRegistrations === 0
+  ) {
     noteRegistration(originOf(owner, member));
   }
   if (!configuration.devMode) {

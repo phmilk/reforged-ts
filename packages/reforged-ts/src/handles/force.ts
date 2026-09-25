@@ -1,5 +1,7 @@
 /** @noSelfInFile * */
 
+import { protect } from "../reforged/protect";
+import { filterOf } from "./boolexpr";
 import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 
@@ -28,7 +30,7 @@ export class Force extends Handle<force> {
     ForceEnumAllies(
       this.handle,
       whichPlayer.handle,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(this, "Force.enumAllies", filter),
     );
   }
 
@@ -39,15 +41,12 @@ export class Force extends Handle<force> {
     ForceEnumEnemies(
       this.handle,
       whichPlayer.handle,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(this, "Force.enumEnemies", filter),
     );
   }
 
   public enumPlayers(filter: boolexpr | (() => boolean)) {
-    ForceEnumPlayers(
-      this.handle,
-      typeof filter === "function" ? Filter(filter) : filter,
-    );
+    ForceEnumPlayers(this.handle, filterOf(this, "Force.enumPlayers", filter));
   }
 
   public enumPlayersCounted(
@@ -56,13 +55,20 @@ export class Force extends Handle<force> {
   ) {
     ForceEnumPlayersCounted(
       this.handle,
-      typeof filter === "function" ? Filter(filter) : filter,
+      filterOf(this, "Force.enumPlayersCounted", filter),
       countLimit,
     );
   }
 
+  /**
+   * Runs `callback` once per player of the force, `MapPlayer.fromEnum()`
+   * answering that player.
+   * @remarks In Dev mode the callback runs under `pcall`: a call that throws
+   * is reported as `Force#<id> Force.for` and the enumeration continues with
+   * the next player. With Dev mode off `ForForce` receives `callback` itself.
+   */
   public for(callback: () => void) {
-    ForForce(this.handle, callback);
+    ForForce(this.handle, protect(this, "Force.for", callback));
   }
 
   /**

@@ -1,5 +1,7 @@
 /** @noSelfInFile */
 
+import { protect } from "../reforged/protect";
+import { conditionOf, filterOf } from "./boolexpr";
 import { Dialog, DialogButton } from "./dialog";
 import { Frame } from "./frame";
 import { Handle } from "./handle";
@@ -31,13 +33,6 @@ function mouseEvent(kind: MouseEventKind): playerevent {
     case MouseEventKind.Move:
       return EVENT_PLAYER_MOUSE_MOVE;
   }
-}
-
-/** The `boolexpr` a registration passes: a function goes through `Filter`. */
-function filterOf(
-  filter: boolexpr | (() => boolean) | undefined,
-): boolexpr | undefined {
-  return typeof filter === "function" ? Filter(filter) : filter;
 }
 
 export class Trigger extends Handle<trigger> {
@@ -82,8 +77,18 @@ export class Trigger extends Handle<trigger> {
     return IsTriggerWaitOnSleeps(this.handle);
   }
 
+  /**
+   * Adds an action to the trigger.
+   * @remarks In Dev mode the action runs under `pcall`: one that throws is
+   * reported as `Trigger#<id> Trigger.addAction` and the trigger's next
+   * action still runs. With Dev mode off `TriggerAddAction` receives
+   * `actionFunc` itself.
+   */
   public addAction(actionFunc: () => void) {
-    TriggerAddAction(this.handle, actionFunc);
+    TriggerAddAction(
+      this.handle,
+      protect(this, "Trigger.addAction", actionFunc),
+    );
     return this;
   }
 
@@ -96,11 +101,15 @@ export class Trigger extends Handle<trigger> {
    * @example
    * {@includeCode ../../examples/trigger-add-condition.ts}
    * @param condition The condition which must evaluate to true in order to run the trigger's actions.
+   * @remarks In Dev mode a function condition runs under `pcall`: one that
+   * throws is reported as `Trigger#<id> Trigger.addCondition` and evaluates
+   * false, as the game evaluates a crashed condition. The same holds for the
+   * function filters of the `register*` members, reported under the member.
    */
   public addCondition(condition: boolexpr | (() => boolean)) {
     TriggerAddCondition(
       this.handle,
-      typeof condition === "function" ? Condition(condition) : condition,
+      conditionOf(this, "Trigger.addCondition", condition),
     );
     return this;
   }
@@ -195,7 +204,7 @@ export class Trigger extends Handle<trigger> {
     TriggerRegisterEnterRegion(
       this.handle,
       whichRegion.handle,
-      filterOf(filter),
+      filterOf(this, "Trigger.registerEnterRegion", filter),
     );
     return this;
   }
@@ -209,7 +218,7 @@ export class Trigger extends Handle<trigger> {
       this.handle,
       whichUnit.handle,
       whichEvent,
-      filterOf(filter),
+      filterOf(this, "Trigger.registerFilterUnitEvent", filter),
     );
     return this;
   }
@@ -241,7 +250,7 @@ export class Trigger extends Handle<trigger> {
     TriggerRegisterLeaveRegion(
       this.handle,
       whichRegion.handle,
-      filterOf(filter),
+      filterOf(this, "Trigger.registerLeaveRegion", filter),
     );
     return this;
   }
@@ -352,7 +361,7 @@ export class Trigger extends Handle<trigger> {
       this.handle,
       whichPlayer.handle,
       whichPlayerUnitEvent,
-      filterOf(filter),
+      filterOf(this, "Trigger.registerPlayerUnitEvent", filter),
     );
     return this;
   }
@@ -395,7 +404,7 @@ export class Trigger extends Handle<trigger> {
       this.handle,
       whichUnit.handle,
       range,
-      filterOf(filter),
+      filterOf(this, "Trigger.registerUnitInRange", filter),
     );
     return this;
   }

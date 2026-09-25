@@ -94,6 +94,7 @@ function anyUnit<P>(
 ): EventDescriptor<P> {
   const event = `UnitEvents.${name}`;
   return {
+    name: event,
     register: (trigger) => {
       trigger.registerAnyUnitEvent(row.event);
     },
@@ -114,6 +115,7 @@ function unitOf<P>(
 ): EventDescriptor<P> {
   const event = `UnitEvents.${name}Of`;
   return {
+    name: event,
     register: (trigger) => {
       trigger.registerUnitEvent(unit, twin);
     },
