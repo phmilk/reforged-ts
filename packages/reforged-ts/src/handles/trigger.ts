@@ -6,6 +6,7 @@ import { Handle } from "./handle";
 import { MapPlayer } from "./player";
 import { Region } from "./region";
 import { Timer } from "./timer";
+import { Trackable } from "./trackable";
 import { Unit } from "./unit";
 import { Widget } from "./widget";
 
@@ -372,13 +373,13 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
-  public registerTrackableHitEvent(whichTrackable: trackable) {
-    TriggerRegisterTrackableHitEvent(this.handle, whichTrackable);
+  public registerTrackableHit(trackable: Trackable) {
+    TriggerRegisterTrackableHitEvent(this.handle, trackable.handle);
     return this;
   }
 
-  public registerTrackableTrackEvent(whichTrackable: trackable) {
-    TriggerRegisterTrackableTrackEvent(this.handle, whichTrackable);
+  public registerTrackableTrack(trackable: Trackable) {
+    TriggerRegisterTrackableTrackEvent(this.handle, trackable.handle);
     return this;
   }
 

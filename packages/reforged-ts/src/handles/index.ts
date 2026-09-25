@@ -24,6 +24,7 @@ export * from "./sound";
 export * from "./texttag";
 export * from "./timer";
 export * from "./timerdialog";
+export * from "./trackable";
 export * from "./trigger";
 export * from "./ubersplat";
 export * from "./unit";
