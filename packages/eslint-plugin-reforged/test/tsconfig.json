@@ -1,0 +1,15 @@
+{
+  // The tests, under the package's compiler options. Named tsconfig.json so
+  // the lint's project service finds it from any test file; vitest runs the
+  // tests from source. The fixture project is a Map project with a tsconfig
+  // of its own. skipLibCheck: vitest's declarations need the DOM lib.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "noEmit": true,
+    "declaration": false,
+    "skipLibCheck": true
+  },
+  "include": ["."],
+  "exclude": ["fixture-project"]
+}

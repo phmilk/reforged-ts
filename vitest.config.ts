@@ -51,6 +51,18 @@ export default defineConfig({
           environment: "node",
         },
       },
+      {
+        // The lint plugin, in Node: its rules run by typescript-eslint's
+        // RuleTester on the fixture project, and its export. The fixture
+        // project is Map project sources the rules lint, not tests.
+        test: {
+          name: "eslint-plugin-reforged",
+          root: "packages/eslint-plugin-reforged",
+          include: ["test/**/*.test.ts"],
+          exclude: ["test/fixture-project/**"],
+          environment: "node",
+        },
+      },
     ],
     // Neither the library's Lua tests nor the sources, fixtures and rename
     // map the Node tests read are in the vitest module graph: a change to one
@@ -68,6 +80,12 @@ export default defineConfig({
       {
         pattern: /\/packages\/reforged-ts\/(?:src\/.+\.ts|migration\/.+)$/,
         testsToRun: () => "packages/reforged-ts/test/node/renames.test.ts",
+      },
+      {
+        // The plugin reads its data files and the fixture project from disk.
+        pattern:
+          /\/packages\/eslint-plugin-reforged\/(?:data\/.+\.json|test\/fixture-project\/.+)$/,
+        testsToRun: () => "packages/eslint-plugin-reforged/test",
       },
     ],
   },
