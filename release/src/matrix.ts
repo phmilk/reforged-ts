@@ -9,118 +9,37 @@
  * right after `changeset version`, so the Version Packages pull request
  * shows the row. The shape of the JSON file is documented in
  * `docs/release.md` and is stable.
+ *
+ * This module builds the rows. The shapes are in `matrix-model.ts`, the
+ * rendering of the files in `matrix-render.ts` and the reading of the
+ * workspace in `matrix-inputs.ts`; all three are re-exported here.
  */
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { checkPatches } from "./check-patches.js";
+import { readMatrixInputs } from "./matrix-inputs.js";
 import {
-  checkPatches,
-  readPatchInputs,
-  type TypingsEntry,
-} from "./check-patches.js";
-import {
-  HARNESS_PACKAGE,
-  LIBRARY_PACKAGE,
-  PLUGIN_PACKAGE,
-  ROW_PACKAGES,
-  TYPINGS_PACKAGE,
-} from "./packages.js";
+  canonicalRow,
+  docsUrl,
+  MATRIX_FORMAT,
+  minorLabel,
+  PACKAGE_FIELDS,
+  releaseName,
+  ROW_FIELDS,
+  SYSTEMS_FILE,
+  TOOLCHAIN,
+  type Matrix,
+  type MatrixInput,
+  type MatrixRow,
+  type PackageField,
+  type SystemsList,
+  type ToolchainField,
+} from "./matrix-model.js";
+import { render } from "./matrix-render.js";
+import { LIBRARY_PACKAGE, ROW_PACKAGES } from "./packages.js";
 import { isPrerelease, parseSemver } from "./semver.js";
-import { errorMessage, isRecord, isStringList } from "./unknown.js";
-import type { PublishablePackage } from "./workspace.js";
 
-/** The committed matrix, relative to the repository root. */
-export const MATRIX_FILE = "release/compatibility/matrix.json";
-
-/**
- * The declared list of the 3.0.0 systems each library minor adds, relative
- * to the repository root. The maintainer extends it when a tier ships.
- */
-export const SYSTEMS_FILE = "release/compatibility/systems.json";
-
-/**
- * The README fragment the Template's sync workflow fetches from `master`
- * (`https://raw.githubusercontent.com/phmilk/reforged-ts/master/release/compatibility/matrix.md`).
- */
-export const FRAGMENT_FILE = "release/compatibility/matrix.md";
-
-/**
- * The table of the docs site's compatibility page: a partial (the leading
- * underscore keeps Docusaurus from making it a page) the page imports.
- */
-export const SITE_TABLE_FILE = "website/docs/compatibility/_matrix.mdx";
-
-/**
- * Where the docs of a library version live: the docs site's base followed
- * by the docs version label, the library's `major.minor` (#40).
- */
-export const DOCS_BASE_URL = "https://phmilk.github.io/reforged-ts/docs";
-
-/** The version of the JSON file's shape; bumped only when it breaks. */
-export const MATRIX_FORMAT = 1;
-
-/** The Toolchain pins a row records, by row field, as catalog names. */
-export const TOOLCHAIN = {
-  typescript: "typescript",
-  typescriptToLua: "typescript-to-lua",
-  luaTypes: "lua-types",
-} as const;
-
-type ToolchainField = keyof typeof TOOLCHAIN;
-
-/** One stable release: the row of the matrix. */
-export interface MatrixRow {
-  /** `reforged-ts`'s version. */
-  library: string;
-  /** `reforged-types`'s version. */
-  typings: string;
-  /** `reforged-test`'s version. */
-  harness: string;
-  /** `eslint-plugin-reforged`'s version. */
-  plugin: string;
-  /** The game Patch, a Build: the library's `reforged.patch`. */
-  patch: string;
-  /** The catalog pins: TypeScript exact, the others as ranges. */
-  typescript: string;
-  typescriptToLua: string;
-  luaTypes: string;
-  /** The Node floor of the library's `engines.node` (`22.13`). */
-  node: string;
-  /** The 3.0.0 systems the library covers, in the order declared. */
-  systems: string[];
-  /** The day the version step ran, `YYYY-MM-DD` (UTC). */
-  cutDate: string;
-  /** The docs of the library's `major.minor`. */
-  docs: string;
-}
-
-/** The committed JSON file. */
-export interface Matrix {
-  format: typeof MATRIX_FORMAT;
-  /** Oldest first; only ever appended. */
-  rows: MatrixRow[];
-}
-
-/** The 3.0.0 systems each library minor (`1.0`) adds, in declared order. */
-export type SystemsList = Readonly<Record<string, readonly string[]>>;
-
-export interface MatrixInput {
-  /** The publishable packages. */
-  packages: readonly Pick<
-    PublishablePackage,
-    "name" | "version" | "manifest"
-  >[];
-  /** The Patches the Typings ship an entry for. */
-  entries: readonly TypingsEntry[];
-  /** The workspace catalog of `pnpm-workspace.yaml`. */
-  catalog: Readonly<Partial<Record<string, string>>>;
-  /** Whether Changesets is in pre mode (`.changeset/pre.json`). */
-  preMode: boolean;
-  systems: SystemsList;
-  /** The committed matrix. */
-  existing: Matrix;
-  /** The day the version step runs, `YYYY-MM-DD`. */
-  cutDate: string;
-}
+export * from "./matrix-inputs.js";
+export * from "./matrix-model.js";
+export * from "./matrix-render.js";
 
 /** Why the generator fails; `message` says it in one line. */
 export interface MatrixProblem {
@@ -154,63 +73,13 @@ export type MatrixResult =
     }
   | { ok: false; problems: MatrixProblem[] };
 
-const DATE = /^\d{4}-\d{2}-\d{2}$/;
-const MINOR = /^(\d+)\.(\d+)$/;
 const NODE_FLOOR = /^>=\s*v?(\d+(?:\.\d+){0,2})$/;
-
-/** A row's fields, in the order the file writes them. */
-const ROW_FIELDS = [
-  "library",
-  "typings",
-  "harness",
-  "plugin",
-  "patch",
-  "typescript",
-  "typescriptToLua",
-  "luaTypes",
-  "node",
-  "systems",
-  "cutDate",
-  "docs",
-] as const satisfies readonly (keyof MatrixRow)[];
-
-type PackageField = keyof typeof ROW_PACKAGES;
-
-const PACKAGE_FIELDS = Object.keys(ROW_PACKAGES) as PackageField[];
-
-/** The same row with its fields in the file's order. */
-function canonicalRow(row: MatrixRow): MatrixRow {
-  return {
-    library: row.library,
-    typings: row.typings,
-    harness: row.harness,
-    plugin: row.plugin,
-    patch: row.patch,
-    typescript: row.typescript,
-    typescriptToLua: row.typescriptToLua,
-    luaTypes: row.luaTypes,
-    node: row.node,
-    systems: [...row.systems],
-    cutDate: row.cutDate,
-    docs: row.docs,
-  };
-}
-
-/** A library version's or minor's `major.minor` label. */
-function minorLabel(version: string): string {
-  return version.split(".").slice(0, 2).join(".");
-}
 
 /** Orders two `major.minor` labels numerically. */
 function compareMinors(a: string, b: string): number {
   const [aMajor = 0, aMinor = 0] = a.split(".").map(Number);
   const [bMajor = 0, bMinor = 0] = b.split(".").map(Number);
   return aMajor - bMajor || aMinor - bMinor;
-}
-
-/** The docs version URL of a library version: its `major.minor` label. */
-export function docsUrl(libraryVersion: string): string {
-  return `${DOCS_BASE_URL}/${minorLabel(libraryVersion)}`;
 }
 
 /**
@@ -242,12 +111,6 @@ function differences(committed: MatrixRow, current: MatrixRow): string[] {
         `${field} ${JSON.stringify(committed[field])} in the matrix, ${JSON.stringify(current[field])} now`,
     );
 }
-
-/** The four packages of a row and their versions, for messages. */
-export const releaseName = (row: Pick<MatrixRow, PackageField>) =>
-  PACKAGE_FIELDS.map((field) => `${ROW_PACKAGES[field]} ${row[field]}`).join(
-    ", ",
-  );
 
 /**
  * The matrix after this version step: the committed rows, plus the row of
@@ -295,7 +158,7 @@ export function buildMatrix(input: MatrixInput): MatrixResult {
     ({ kind }) => kind === "missing-package" || kind === "invalid-version",
   );
   // A prerelease produces no row, but still fails on its Patch fields.
-  const skip = input.preMode || prereleases.includes("library");
+  const skip = input.preMode === "pre" || prereleases.includes("library");
   if (unreadable || (skip && problems.length > 0)) {
     return { ok: false, problems };
   }
@@ -311,7 +174,7 @@ export function buildMatrix(input: MatrixInput): MatrixResult {
   };
 
   const library = versions.library ?? "";
-  if (input.preMode) {
+  if (input.preMode === "pre") {
     return done(
       "skipped",
       null,
@@ -410,238 +273,6 @@ export function buildMatrix(input: MatrixInput): MatrixResult {
     return done("unchanged", committed, null, existing);
   }
   return done("appended", row, null, [...existing, row]);
-}
-
-/** Escapes what Markdown and MDX would read as markup in a table cell. */
-function cell(text: string): string {
-  return text
-    .replaceAll("&", "&amp;")
-    .replaceAll("|", "\\|")
-    .replaceAll("<", "&lt;")
-    .replaceAll("{", "&#123;")
-    .replaceAll("}", "&#125;");
-}
-
-const HEADERS = [
-  LIBRARY_PACKAGE,
-  TYPINGS_PACKAGE,
-  HARNESS_PACKAGE,
-  PLUGIN_PACKAGE,
-  "Patch",
-  "TypeScript",
-  "typescript-to-lua",
-  "lua-types",
-  "Node",
-  "3.0.0 systems",
-  "Cut",
-  "Docs",
-];
-
-/** The table, newest release first; columns padded to their widest cell. */
-function table(rows: readonly MatrixRow[]): string {
-  const body = [...rows]
-    .reverse()
-    .map((row) => [
-      row.library,
-      row.typings,
-      row.harness,
-      row.plugin,
-      row.patch,
-      row.typescript,
-      row.typescriptToLua,
-      row.luaTypes,
-      `${row.node} or later`,
-      row.systems.length === 0 ? "none" : row.systems.join(", "),
-      row.cutDate,
-      `[${row.docs.slice(row.docs.lastIndexOf("/") + 1)}](${row.docs})`,
-    ]);
-  const lines = [HEADERS, ...body].map((cells) => cells.map(cell));
-  const widths = HEADERS.map((_, column) =>
-    Math.max(3, ...lines.map((cells) => (cells[column] ?? "").length)),
-  );
-  const line = (cells: readonly string[]) =>
-    `| ${cells.map((text, column) => text + " ".repeat((widths[column] ?? 0) - text.length)).join(" | ")} |\n`;
-  const [header = [], ...others] = lines;
-  return (
-    line(header) +
-    line(widths.map((width) => "-".repeat(width))) +
-    others.map(line).join("")
-  );
-}
-
-const EMPTY =
-  "No stable release yet. During the build phase the packages are published as `1.0.0-alpha.N` under the `next` dist-tag.\n";
-
-const GENERATED = `Generated by \`pnpm release:matrix\` from ${MATRIX_FILE}; do not edit.`;
-
-/** The three generated files of a matrix, by path. */
-export function render(matrix: Matrix): Map<string, string> {
-  const rows = matrix.rows.map(canonicalRow);
-  const content = rows.length === 0 ? EMPTY : table(rows);
-  return new Map([
-    [
-      MATRIX_FILE,
-      `${JSON.stringify({ format: MATRIX_FORMAT, rows }, null, 2)}\n`,
-    ],
-    [FRAGMENT_FILE, `<!-- ${GENERATED} -->\n\n${content}`],
-    [SITE_TABLE_FILE, `{/* ${GENERATED} */}\n\n${content}`],
-  ]);
-}
-
-/** Inputs the generator cannot read, naming the file at fault. */
-export class MatrixInputError extends Error {
-  constructor(message: string, options?: ErrorOptions) {
-    super(message, options);
-    this.name = "MatrixInputError";
-  }
-}
-
-/**
- * The `catalog:` map of a `pnpm-workspace.yaml`: the top-level `catalog`
- * key's entries, one `name: specifier` per line, quotes and comments
- * dropped. Only the flat form the workspace uses is read.
- */
-export function parseCatalog(yaml: string): Record<string, string> {
-  const catalog: Record<string, string> = {};
-  const lines = yaml.split(/\r?\n/);
-  const start = lines.findIndex((line) => /^catalog:\s*(#.*)?$/.test(line));
-  if (start === -1) return catalog;
-  const entry =
-    /^\s+(?:"([^"]+)"|'([^']+)'|([^\s:#"']+)):\s*(?:"([^"]*)"|'([^']*)'|([^\s#]+))\s*(?:#.*)?$/;
-  for (const line of lines.slice(start + 1)) {
-    if (/^\s*(#.*)?$/.test(line)) continue;
-    if (!/^\s/.test(line)) break;
-    const match = entry.exec(line);
-    if (match === null) continue;
-    const groups: (string | undefined)[] = match.slice(1);
-    const name = groups[0] ?? groups[1] ?? groups[2] ?? "";
-    catalog[name] = groups[3] ?? groups[4] ?? groups[5] ?? "";
-  }
-  return catalog;
-}
-
-/**
- * The parsed JSON file at `path` under `root`; `missing` when there is no
- * such file.
- */
-async function readJson(
-  root: string,
-  path: string,
-  missing?: unknown,
-): Promise<unknown> {
-  let text: string;
-  try {
-    text = await readFile(join(root, path), "utf8");
-  } catch (error) {
-    if (
-      missing !== undefined &&
-      (error as NodeJS.ErrnoException).code === "ENOENT"
-    ) {
-      return missing;
-    }
-    throw new MatrixInputError(`${path}: ${errorMessage(error)}`, {
-      cause: error,
-    });
-  }
-  try {
-    return JSON.parse(text) as unknown;
-  } catch (error) {
-    throw new MatrixInputError(`${path}: ${errorMessage(error)}`, {
-      cause: error,
-    });
-  }
-}
-
-/** The systems list of `systems.json`: `{ "minors": { "1.0": [...] } }`. */
-export function parseSystems(value: unknown): SystemsList {
-  const minors = isRecord(value) ? value.minors : undefined;
-  if (!isRecord(minors)) {
-    throw new MatrixInputError(
-      `${SYSTEMS_FILE}: expected { "minors": { "<major>.<minor>": [<3.0.0 system>, ...] } }.`,
-    );
-  }
-  for (const [label, systems] of Object.entries(minors)) {
-    if (!MINOR.test(label) || !isStringList(systems)) {
-      throw new MatrixInputError(
-        `${SYSTEMS_FILE}: "${label}" must be a library minor such as "1.0" listing the 3.0.0 systems it adds as strings.`,
-      );
-    }
-  }
-  return minors as SystemsList;
-}
-
-/** The committed matrix, validated field by field. */
-export function parseMatrix(value: unknown): Matrix {
-  const invalid = (why: string) =>
-    new MatrixInputError(`${MATRIX_FILE}: ${why}`);
-  if (!isRecord(value) || value.format !== MATRIX_FORMAT) {
-    throw invalid(
-      `expected { "format": ${String(MATRIX_FORMAT)}, "rows": [...] }.`,
-    );
-  }
-  if (!Array.isArray(value.rows)) throw invalid(`"rows" must be an array.`);
-  const rows = value.rows.map((row: unknown, index): MatrixRow => {
-    if (!isRecord(row)) throw invalid(`row ${String(index)} is not an object.`);
-    for (const field of ROW_FIELDS) {
-      const ok =
-        field === "systems"
-          ? isStringList(row[field])
-          : typeof row[field] === "string";
-      if (!ok) throw invalid(`row ${String(index)} has no valid "${field}".`);
-    }
-    const typed = row as unknown as MatrixRow;
-    if (!DATE.test(typed.cutDate)) {
-      throw invalid(
-        `row ${String(index)} has cutDate ${typed.cutDate}, not YYYY-MM-DD.`,
-      );
-    }
-    return canonicalRow(typed);
-  });
-  return { format: MATRIX_FORMAT, rows };
-}
-
-/** Changesets' pre mode state, relative to the repository root. */
-export const PRE_STATE_FILE = ".changeset/pre.json";
-
-/** Whether a pre state (`{ "mode": "pre", "tag": "alpha" }`) is in pre mode. */
-const isPreMode = (state: unknown): boolean =>
-  isRecord(state) && state.mode === "pre";
-
-/** The date of `now` as a cut date, `YYYY-MM-DD` in UTC. */
-export function cutDateOf(now: Date): string {
-  return now.toISOString().slice(0, 10);
-}
-
-/**
- * The inputs of `buildMatrix` for the workspace at `root`, with the cut
- * date of `now`. A missing matrix file is an empty matrix; a missing
- * systems list is an error.
- */
-export async function readMatrixInputs(
-  root: string,
-  now: Date,
-): Promise<MatrixInput> {
-  const { packages, entries } = await readPatchInputs(root);
-  let yaml: string;
-  try {
-    yaml = await readFile(join(root, "pnpm-workspace.yaml"), "utf8");
-  } catch (error) {
-    throw new MatrixInputError(`pnpm-workspace.yaml: ${errorMessage(error)}`, {
-      cause: error,
-    });
-  }
-  return {
-    packages,
-    entries,
-    catalog: parseCatalog(yaml),
-    preMode: isPreMode(await readJson(root, PRE_STATE_FILE, {})),
-    systems: parseSystems(await readJson(root, SYSTEMS_FILE)),
-    // No matrix yet: the first stable release writes it.
-    existing: parseMatrix(
-      await readJson(root, MATRIX_FILE, { format: MATRIX_FORMAT, rows: [] }),
-    ),
-    cutDate: cutDateOf(now),
-  };
 }
 
 /** Reads the workspace at `root` and builds its matrix. */

@@ -11,7 +11,6 @@ import {
   generateMatrix,
   MATRIX_FILE,
   MatrixInputError,
-  parseCatalog,
   render,
   SITE_TABLE_FILE,
   SYSTEMS_FILE,
@@ -281,6 +280,34 @@ describe("generateMatrix", () => {
     if (result.ok) expect(result.files).toEqual(await files(root));
   });
 
+  it("appends the row of a stable release once pre mode is exited", async () => {
+    const root = await workspace();
+    await writeText(
+      root,
+      ".changeset/pre.json",
+      JSON.stringify({ mode: "exit", tag: "alpha" }),
+    );
+
+    expect(await generateMatrix(root, TODAY)).toMatchObject({
+      ok: true,
+      status: "appended",
+      row: row(),
+    });
+  });
+
+  it("refuses a pre state whose mode it does not know", async () => {
+    const root = await workspace();
+    await writeText(
+      root,
+      ".changeset/pre.json",
+      JSON.stringify({ mode: "alpha" }),
+    );
+
+    await expect(generateMatrix(root, TODAY)).rejects.toThrow(
+      '.changeset/pre.json: mode must be "pre" or "exit", not "alpha".',
+    );
+  });
+
   it("skips a prerelease of the library outside pre mode", async () => {
     const root = await workspace({ versions: { "reforged-ts": "2.0.0-rc.1" } });
 
@@ -382,16 +409,6 @@ describe("generateMatrix", () => {
 
     expect(result).toMatchObject({ ok: true, status: "skipped" });
     if (result.ok) expect(result.files).toEqual(await files(repositoryRoot));
-  });
-});
-
-describe("parseCatalog", () => {
-  it("reads the catalog's entries, quotes and comments dropped", () => {
-    expect(
-      parseCatalog(
-        'packages:\n  - packages/*\n\ncatalog:\n  # a comment\n  a: 1.0.0\n  "@b/c": ^2.0.0 # why\n  \'d\': "~3"\n\nother:\n  e: 4\n',
-      ),
-    ).toEqual({ a: "1.0.0", "@b/c": "^2.0.0", d: "~3" });
   });
 });
 
