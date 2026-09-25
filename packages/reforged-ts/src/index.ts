@@ -2,6 +2,7 @@
 
 import * as tsGlobals from "./globals/index";
 
+export * from "./events/index";
 export * from "./handles/index";
 export * from "./hooks/index";
 export * from "./init/index";
