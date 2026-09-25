@@ -6,11 +6,11 @@ TypeScript API for Warcraft III custom maps, compiled to Lua with typescript-to-
 
 ### Issue tracker
 
-Issues live in this repo's GitHub Issues and are driven with the `gh` CLI. The wayfinder map for the first release is issue #1; its tickets are sub-issues with native "blocked by" dependencies. See `docs/agents/issue-tracker.md`.
+Issues live in this repo's GitHub Issues and are driven with the `gh` CLI. The wayfinder map for the first release is issue #1; its tickets are sub-issues with native "blocked by" dependencies. The Template's issues live in `phmilk/reforged-ts-template`. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 
-The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Two kind labels sit next to them: `spec` on an issue created with `to-spec`, `ticket` on one created with `to-tickets`. See `docs/agents/triage-labels.md`.
 
 ### Domain docs
 

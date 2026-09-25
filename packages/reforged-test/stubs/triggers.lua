@@ -3,7 +3,9 @@
 -- the sync Trigger with it). A trigger never fires on its own: it stores its
 -- actions and conditions, a registration keeps nothing beyond its call-log
 -- line, and a test fires the trigger with __stub_fire_trigger and the context
--- the response Natives answer from.
+-- the response Natives answer from. The one exception is a sync
+-- registration, remembered so that __stub_deliver_sync finds the triggers
+-- the game would fire for a packet.
 
 -- The game's constants the registration Natives take and the event response
 -- Natives answer with, per kind in the order the Typings declare them: opaque
@@ -207,6 +209,23 @@ for _, registration in ipairs(registrations) do
     __stub_record(name, whichTrigger, table.unpack({ ... }, 1, arity))
     return __stub_new_handle("event")
   end
+end
+
+-- The exception: a sync registration also keeps its trigger, player and
+-- prefix, in registration order, because a delivery must find the triggers
+-- the game would fire for a packet. Its call-log line and event handle are
+-- the ones every registration has.
+local syncRegistrations = {}
+local registerSync = BlzTriggerRegisterPlayerSyncEvent
+
+function BlzTriggerRegisterPlayerSyncEvent(whichTrigger, whichPlayer, prefix, fromServer)
+  local event = registerSync(whichTrigger, whichPlayer, prefix, fromServer)
+  syncRegistrations[#syncRegistrations + 1] = {
+    trigger = whichTrigger,
+    player = whichPlayer,
+    prefix = prefix,
+  }
+  return event
 end
 
 -- The event response Natives, answering from the firing context: nil outside
@@ -428,4 +447,42 @@ function __stub_fire_trigger(whichTrigger, context)
     execute(whichTrigger)
     return true
   end)
+end
+
+-- Delivers a sync packet as the game would: fires every trigger registered
+-- for the packet's prefix and sender, once per registration, in registration
+-- order, skipping a disabled or destroyed one. `packet` is { prefix, data,
+-- from }, a recorded one (__stub_sync_packets) or one the test built, which
+-- is how a foreign packet is simulated. The firing context answers
+-- BlzGetTriggerSyncPrefix, BlzGetTriggerSyncData, GetTriggerPlayer and
+-- GetTriggeringTrigger. With `options.cString`, the data is cut at its first
+-- zero byte, as the game cuts a C string. Returns how many triggers ran their
+-- actions. Not a Native, so it adds no call-log line.
+function __stub_deliver_sync(packet, options)
+  local data = packet.data
+  if options ~= nil and options.cString then
+    local zero = string.find(data, "\0", 1, true)
+    if zero ~= nil then
+      data = string.sub(data, 1, zero - 1)
+    end
+  end
+  local fired = 0
+  for _, registration in ipairs(table.move(syncRegistrations, 1, #syncRegistrations, 1, {})) do
+    local whichTrigger = registration.trigger
+    if registration.prefix == packet.prefix
+      and rawequal(registration.player, packet.from)
+      and not whichTrigger.destroyed
+    then
+      local ran = __stub_fire_trigger(whichTrigger, {
+        BlzGetTriggerSyncPrefix = packet.prefix,
+        BlzGetTriggerSyncData = data,
+        GetTriggerPlayer = packet.from,
+        GetTriggeringTrigger = whichTrigger,
+      })
+      if ran then
+        fired = fired + 1
+      end
+    end
+  end
+  return fired
 end
