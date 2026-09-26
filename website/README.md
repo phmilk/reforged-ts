@@ -24,6 +24,6 @@ Every build generates the API reference first, with TypeDoc, from the library's 
 - `src/components/`: the components the pages import (`SupportedPatch` prints the Typings' `reforged.patch`, which the configuration reads at build time).
 - `config.ts`: the configuration, built by `docusaurus.config.ts` and, strict, by `docusaurus.check.config.ts`.
 - `reference.ts`: the API reference, one docusaurus-plugin-typedoc instance per entry of `REFERENCES` (the library: `docs/api/reforged-ts/`, git-ignored, rewritten at every build), and the sidebar generator that puts the sidebar each one writes under its section.
-- `typedoc/`: the site's TypeDoc plugin, which every reference instance loads from source: the validation gate, and the custom tags of `typedoc/tsdoc.json` when the library has no `tsdoc.json` of its own yet.
+- `typedoc/`: the site's TypeDoc plugin, which every reference instance loads from source (TypeDoc imports it inside the Docusaurus process, where only Node's own type stripping runs it, without a flag from Node 22.18 on: the package's `engines` floor): the validation gate, and the custom tags of `typedoc/tsdoc.json` when the library has no `tsdoc.json` of its own yet.
 - `test/`: the site's tests (vitest project `website`), on fixtures under `test/fixtures/`.
 - `scripts/`: the site's Node scripts (`.mts`), run from source by Node's type stripping and type-checked by `scripts/tsconfig.json`.

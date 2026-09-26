@@ -23,8 +23,8 @@ export interface SiteOptions {
 /**
  * Whether `strict` also fails the API reference on TypeDoc's validation
  * warnings. Off while the library's TSDoc pass is under way: `docs:check`
- * lists each undocumented member as a warning and stays green. Build step 8
- * (#43) turns it on when every member is documented.
+ * lists each undocumented member as a warning and stays green. The last
+ * build step, #43, turns it on when every member is documented.
  */
 const STRICT_REFERENCE = false;
 

@@ -1,3 +1,7 @@
+// The API reference as the site generates it: the docusaurus-plugin-typedoc
+// instance the site configures, run on a fixture library through the
+// plugin's entry point, with the site's options and TypeDoc plugin. Only
+// Docusaurus is left out (the site's scripts tested in Node, #40).
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -6,11 +10,6 @@ import type { LoadContext } from "@docusaurus/types";
 import docusaurusPluginTypedoc from "docusaurus-plugin-typedoc";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { type Reference, referencePluginOptions } from "../reference";
-
-// Seam B (#40): the reference as the site generates it, by the
-// docusaurus-plugin-typedoc instance the site configures, on a fixture
-// library. The plugin runs TypeDoc with the site's options and plugin; only
-// Docusaurus is left out.
 
 const FIXTURE = fileURLToPath(new URL("fixtures/library/", import.meta.url));
 
@@ -69,6 +68,19 @@ describe("the reference", () => {
     expect(greet).not.toContain("includeCode");
   });
 
+  it("renders an included example file whole as a fenced TypeScript block", async () => {
+    await generate(false);
+
+    const example = await readFile(
+      join(FIXTURE, "examples/welcome.ts"),
+      "utf8",
+    );
+    const code = example.replaceAll("\r\n", "\n").trimEnd();
+    expect(await page("functions/welcome.md")).toContain(
+      `## Example\n\n\`\`\`ts\n${code}\n\`\`\``,
+    );
+  });
+
   it("writes the sidebar docusaurus-plugin-typedoc configures", async () => {
     await generate(false);
 
@@ -98,6 +110,22 @@ describe("the reference", () => {
     });
 
     expect(warnings.join("\n")).toContain("unknown block tag @native");
+  });
+
+  it("fails on an error TypeDoc reports", async () => {
+    const library = join(docsPath, "library");
+    await cp(FIXTURE, library, { recursive: true });
+    const index = join(library, "src/index.ts");
+    const source = await readFile(index, "utf8");
+    await writeFile(index, source.replace("greeting.ts", "missing.ts"));
+
+    await expect(
+      generate(false, {
+        ...FIXTURE_REFERENCE,
+        entryPoints: [index],
+        tsconfig: join(library, "tsconfig.json"),
+      }),
+    ).rejects.toThrow("TypeDoc reported 1 error(s) in the reference");
   });
 
   it("reports an undocumented member as a warning when not strict", async () => {

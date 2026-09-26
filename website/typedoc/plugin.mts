@@ -16,11 +16,19 @@ import {
   type TagString,
 } from "typedoc";
 
+/** The kinds of tag a `tsdoc.json` defines, and TypeDoc's default tags of each. */
+const DEFAULT_TAGS = {
+  block: OptionDefaults.blockTags,
+  inline: OptionDefaults.inlineTags,
+  modifier: OptionDefaults.modifierTags,
+} as const;
+const TAG_KINDS = Object.keys(DEFAULT_TAGS) as (keyof typeof DEFAULT_TAGS)[];
+
 /** The part of a `tsdoc.json` the plugin reads. */
 interface TsdocConfig {
   readonly tagDefinitions: readonly {
     readonly tagName: TagString;
-    readonly syntaxKind: "block" | "inline" | "modifier";
+    readonly syntaxKind: (typeof TAG_KINDS)[number];
   }[];
 }
 
@@ -45,37 +53,29 @@ export function load(app: Application): void {
  */
 function declareSiteTags(app: Application): void {
   const options = app.options;
-  if (
-    options.isSet("blockTags") ||
-    options.isSet("inlineTags") ||
-    options.isSet("modifierTags")
-  ) {
-    return;
-  }
+  if (TAG_KINDS.some((kind) => options.isSet(`${kind}Tags`))) return;
   const config = JSON.parse(readFileSync(SITE_TSDOC, "utf8")) as TsdocConfig;
-  const tags = (kind: "block" | "inline" | "modifier") =>
-    config.tagDefinitions
+  for (const kind of TAG_KINDS) {
+    const declared = config.tagDefinitions
       .filter((tag) => tag.syntaxKind === kind)
       .map((tag) => tag.tagName);
-  options.setValue("blockTags", [
-    ...new Set([...OptionDefaults.blockTags, ...tags("block")]),
-  ]);
-  options.setValue("inlineTags", [
-    ...new Set([...OptionDefaults.inlineTags, ...tags("inline")]),
-  ]);
-  options.setValue("modifierTags", [
-    ...new Set([...OptionDefaults.modifierTags, ...tags("modifier")]),
-  ]);
+    options.setValue(`${kind}Tags`, [
+      ...new Set([...DEFAULT_TAGS[kind], ...declared]),
+    ]);
+  }
 }
 
 /**
  * Validates the project before its output is written, as TypeDoc's own
  * command does, and fails the run on an error, or on a validation warning
  * (an undocumented member, a broken `{@link}`) under
- * `treatValidationWarningsAsErrors`. TypeDoc has logged each finding, naming
- * the member, by then; the error thrown stops the Docusaurus build.
+ * `treatValidationWarningsAsErrors` or `treatWarningsAsErrors`. TypeDoc has
+ * logged each finding, naming the member, by then; the error thrown stops
+ * the Docusaurus build.
  */
 function gateOnValidation(app: Application): void {
+  // A run through TypeDoc's own command has validated already, and must not
+  // report every finding twice.
   const validated = new WeakSet<ProjectReflection>();
   app.on(Application.EVENT_VALIDATE_PROJECT, (project) => {
     validated.add(project);
@@ -97,7 +97,8 @@ function gateOnValidation(app: Application): void {
     }
     if (
       validationWarnings &&
-      app.options.getValue("treatValidationWarningsAsErrors")
+      (app.options.getValue("treatValidationWarningsAsErrors") ||
+        app.options.getValue("treatWarningsAsErrors"))
     ) {
       throw new Error(
         `TypeDoc's validation failed the reference of ${name} (strict): each validation warning above is an error.`,
