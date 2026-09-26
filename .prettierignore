@@ -4,6 +4,8 @@ packages/reforged-types/build/
 packages/reforged-test/lua/
 packages/reforged-ts/dist-test/
 release/build/
+website/build/
+website/.docusaurus/
 
 # What tools own: the Overlay JSON files, the generated Typings, the vendored
 # Patch files, the record the seed script writes and the pnpm lockfile.

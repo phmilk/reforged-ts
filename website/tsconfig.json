@@ -1,0 +1,19 @@
+{
+  // The site as Docusaurus loads it: the configuration and the sidebars in
+  // Node, the components in the browser. Type-checked only: Docusaurus
+  // compiles these files itself. The site's Node scripts (scripts/) have
+  // their own tsconfig.
+  "extends": "@docusaurus/tsconfig",
+  "compilerOptions": {
+    // The @site/* path of @docusaurus/tsconfig resolves from baseUrl, which
+    // must be this folder; TypeScript 6 deprecates baseUrl.
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "types": ["node", "@docusaurus/module-type-aliases"],
+    "strict": true,
+    "verbatimModuleSyntax": true,
+    "forceConsistentCasingInFileNames": true,
+    "newLine": "lf"
+  },
+  "include": ["*.ts", "src"]
+}

@@ -115,6 +115,10 @@ packages/reforged-ts/dist-test/
 # The release scripts' build output
 release/build/
 
+# The docs site's build output and Docusaurus' generated files and cache
+website/build/
+website/.docusaurus/
+
 # Claude Code agent worktrees and local state
 .claude/
 
