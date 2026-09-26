@@ -7,6 +7,7 @@
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Point, Rectangle } from "../src/index";
 import { handleRef } from "./support/handle-ref";
+import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -101,3 +102,28 @@ describe("Rectangle camera blocker", () => {
     expect(stubCalls()).toContainCall(`EnableCameraBlocker(${rectRef}, false)`);
   });
 });
+
+{
+  const rectangle = Rectangle.create(-64, -32, 64, 32);
+  const ref = handleRef("rect", rectangle.handle);
+  const lamp = FourCC("LOtr");
+
+  describeNatives("Rectangle doodad members", [
+    nativeCase({
+      native: "SetDoodadAnimationRect",
+      answer: () => undefined,
+      member: () => {
+        rectangle.setDoodadAnimation(lamp, "death", true);
+      },
+      line: `SetDoodadAnimationRect(${ref}, ${tostring(lamp)}, "death", true)`,
+    }),
+    nativeCase({
+      native: "SetDoodadColorRect",
+      answer: () => undefined,
+      member: () => {
+        rectangle.setDoodadColor(lamp, PLAYER_COLOR_RED);
+      },
+      line: `SetDoodadColorRect(${ref}, ${tostring(lamp)}, PLAYER_COLOR_RED)`,
+    }),
+  ]);
+}

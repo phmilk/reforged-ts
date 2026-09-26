@@ -158,6 +158,11 @@ export class Frame extends Handle<framehandle> {
     return BlzFrameGetHeight(this.handle);
   }
 
+  /** The frame's name, through `BlzFrameGetName`. */
+  public get name() {
+    return BlzFrameGetName(this.handle) ?? "";
+  }
+
   public set text(text: string) {
     BlzFrameSetText(this.handle, text);
   }

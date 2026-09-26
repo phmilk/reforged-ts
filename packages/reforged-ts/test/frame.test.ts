@@ -8,6 +8,7 @@
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Frame } from "../src/index";
 import { handleRef } from "./support/handle-ref";
+import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -375,3 +376,28 @@ describe("Frame pixel conversions", () => {
     expect(stubCalls()).toContainCall("BlzFrameToPixelY(0.3)");
   });
 });
+
+{
+  const frame = gameUi();
+  const ref = handleRef("framehandle", frame.handle);
+
+  describeNatives("Frame members", [
+    nativeCase({
+      native: "BlzFrameGetName",
+      answer: () => "ConsoleUI",
+      member: () => frame.name,
+      line: `BlzFrameGetName(${ref})`,
+      returns: "ConsoleUI",
+    }),
+  ]);
+
+  describeNatives("Frame members when their Native answers nil", [
+    nativeCase({
+      native: "BlzFrameGetName",
+      answer: () => undefined,
+      member: () => frame.name,
+      line: `BlzFrameGetName(${ref})`,
+      returns: "",
+    }),
+  ]);
+}

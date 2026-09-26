@@ -42,6 +42,75 @@ export class Sound extends Handle<sound> {
     );
   }
 
+  /**
+   * Creates a sound handle playing `fileName` with the settings of the SLK
+   * entry `slkEntryName`, through `CreateSoundFilenameWithLabel`; the other
+   * parameters are `create`'s.
+   */
+  public static createFilenameWithLabel(
+    fileName: string,
+    looping: boolean,
+    is3D: boolean,
+    stopWhenOutOfRange: boolean,
+    fadeInRate: number,
+    fadeOutRate: number,
+    slkEntryName: string,
+  ): Sound {
+    return this.expect(
+      CreateSoundFilenameWithLabel(
+        fileName,
+        looping,
+        is3D,
+        stopWhenOutOfRange,
+        fadeInRate,
+        fadeOutRate,
+        slkEntryName,
+      ),
+      fileName,
+    );
+  }
+
+  /**
+   * Creates a sound handle from the SLK entry `soundLabel`, which names the
+   * file and its settings, through `CreateSoundFromLabel`; the other
+   * parameters are `create`'s.
+   */
+  public static createFromLabel(
+    soundLabel: string,
+    looping: boolean,
+    is3D: boolean,
+    stopWhenOutOfRange: boolean,
+    fadeInRate: number,
+    fadeOutRate: number,
+  ): Sound {
+    return this.expect(
+      CreateSoundFromLabel(
+        soundLabel,
+        looping,
+        is3D,
+        stopWhenOutOfRange,
+        fadeInRate,
+        fadeOutRate,
+      ),
+      soundLabel,
+    );
+  }
+
+  /**
+   * Creates a MIDI sound handle from the SLK entry `soundLabel`, through
+   * `CreateMIDISound`; the fade rates are `create`'s.
+   */
+  public static createMIDI(
+    soundLabel: string,
+    fadeInRate: number,
+    fadeOutRate: number,
+  ): Sound {
+    return this.expect(
+      CreateMIDISound(soundLabel, fadeInRate, fadeOutRate),
+      soundLabel,
+    );
+  }
+
   public get dialogueSpeakerNameKey() {
     return GetDialogueSpeakerNameKey(this.handle) ?? "";
   }
@@ -87,7 +156,7 @@ export class Sound extends Handle<sound> {
   }
 
   public setChannel(channel: number) {
-    SetSoundDistanceCutoff(this.handle, channel);
+    SetSoundChannel(this.handle, channel);
   }
 
   /**

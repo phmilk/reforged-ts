@@ -32,7 +32,7 @@ export class GameCache extends Handle<gamecache> {
   }
 
   public flushNumber(missionKey: string, key: string) {
-    FlushStoredInteger(this.handle, missionKey, key);
+    FlushStoredReal(this.handle, missionKey, key);
   }
 
   public flushString(missionKey: string, key: string) {
@@ -87,6 +87,10 @@ export class GameCache extends Handle<gamecache> {
     return HaveStoredString(this.handle, missionKey, key);
   }
 
+  public hasUnit(missionKey: string, key: string) {
+    return HaveStoredUnit(this.handle, missionKey, key);
+  }
+
   /**
    * Returns null if the specified value's data is not found in the cache.
    */
@@ -127,6 +131,14 @@ export class GameCache extends Handle<gamecache> {
     } else {
       StoreUnit(this.handle, missionKey, key, value);
     }
+  }
+
+  /**
+   * Stores `value` as an integer, through `StoreInteger`, where `getInteger`
+   * reads it; `store` stores a number as a real.
+   */
+  public storeInteger(missionKey: string, key: string, value: number) {
+    StoreInteger(this.handle, missionKey, key, value);
   }
 
   public syncBoolean(missionKey: string, key: string) {

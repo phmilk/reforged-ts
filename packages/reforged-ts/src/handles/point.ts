@@ -40,6 +40,33 @@ export class Point extends Handle<location> {
   }
 
   /**
+   * Creates a minimap icon at the location, through `CreateMinimapIconAtLoc`,
+   * and returns the game's `minimapicon`, which the library does not wrap, or
+   * undefined when the game creates none.
+   * @param red An integer from 0-255 determining the amount of red color.
+   * @param green An integer from 0-255 determining the amount of green color.
+   * @param blue An integer from 0-255 determining the amount of blue color.
+   * @param pingPath The model of the icon.
+   * @param fogVisibility The fog state in which the icon is visible.
+   */
+  public createMinimapIcon(
+    red: number,
+    green: number,
+    blue: number,
+    pingPath: string,
+    fogVisibility: fogstate,
+  ) {
+    return CreateMinimapIconAtLoc(
+      this.handle,
+      red,
+      green,
+      blue,
+      pingPath,
+      fogVisibility,
+    );
+  }
+
+  /**
    * Destroys the Point through its Native.
    * @remarks
    * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
@@ -54,5 +81,32 @@ export class Point extends Handle<location> {
 
   public setPosition(x: number, y: number) {
     MoveLocation(this.handle, x, y);
+  }
+
+  /**
+   * The mouse position of a player mouse event, or undefined outside one,
+   * through `BlzGetTriggerPlayerMousePosition`: a lookup, although the game
+   * allocates a new location each time it returns one.
+   */
+  public static fromMousePosition(): Point | undefined {
+    return this.fromHandle(BlzGetTriggerPlayerMousePosition());
+  }
+
+  /**
+   * The target point of a point order, or undefined outside one, through
+   * `GetOrderPointLoc`: a lookup, although the game allocates a new location
+   * each time it returns one.
+   */
+  public static fromOrderPoint(): Point | undefined {
+    return this.fromHandle(GetOrderPointLoc());
+  }
+
+  /**
+   * The spell's target point, or undefined when the spell targets none,
+   * through `GetSpellTargetLoc`: a lookup, although the game allocates a new
+   * location each time it returns one.
+   */
+  public static fromSpellTarget(): Point | undefined {
+    return this.fromHandle(GetSpellTargetLoc());
   }
 }

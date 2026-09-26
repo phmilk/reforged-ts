@@ -7,7 +7,9 @@
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Sound } from "../src/index";
+import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
+import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -175,3 +177,86 @@ describe("Sound thematic music", () => {
     );
   });
 });
+
+{
+  /** A fresh sound handle, for a creation Native to answer. */
+  const fresh = () =>
+    defined(CreateSound(file, false, false, false, 10, 10, ""), "a sound");
+  const sound = defined(Sound.fromHandle(fresh()), "the Sound");
+
+  describeNatives("Sound members", [
+    nativeCase({
+      native: "SetSoundChannel",
+      answer: () => undefined,
+      member: () => {
+        sound.setChannel(5);
+      },
+      line: `SetSoundChannel(${handleRef("sound", sound.handle)}, 5)`,
+    }),
+  ]);
+
+  const label = "QuestCompleted";
+  const factories = [
+    {
+      native: "CreateSoundFilenameWithLabel",
+      handle: fresh(),
+      create: () =>
+        Sound.createFilenameWithLabel(
+          file,
+          true,
+          false,
+          true,
+          12,
+          24,
+          "WarningLabel",
+        ),
+      line: `CreateSoundFilenameWithLabel("${file}", true, false, true, 12, 24, "WarningLabel")`,
+      detail: file,
+    },
+    {
+      native: "CreateSoundFromLabel",
+      handle: fresh(),
+      create: () => Sound.createFromLabel(label, false, true, false, 12, 24),
+      line: `CreateSoundFromLabel("${label}", false, true, false, 12, 24)`,
+      detail: label,
+    },
+    {
+      native: "CreateMIDISound",
+      handle: fresh(),
+      create: () => Sound.createMIDI(label, 12, 24),
+      line: `CreateMIDISound("${label}", 12, 24)`,
+      detail: label,
+    },
+  ] as const;
+
+  describeNatives(
+    "Sound creation variants",
+    factories.map(({ native, handle, create, line }) =>
+      nativeCase({
+        native,
+        answer: () => handle,
+        member: () => create().handle,
+        line,
+        returns: handle,
+      }),
+    ),
+  );
+
+  describe("Sound creation variants when their Native returns nil", () => {
+    for (const { native, create, detail } of factories) {
+      it(`${native} throws naming ${detail}`, () => {
+        const message = withNative(
+          native,
+          () => undefined,
+          () =>
+            raisedIn(() => {
+              create();
+            }),
+        );
+        expect(message).toEqual(
+          `reforged-ts: failed to create Sound (${detail})`,
+        );
+      });
+    }
+  });
+}

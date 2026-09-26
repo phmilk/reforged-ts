@@ -97,8 +97,13 @@ export class Force extends Handle<force> {
     return players;
   }
 
+  /**
+   * Whether the player is in the force, through `BlzForceHasPlayer`, which
+   * jassdoc documents as functionally identical to `IsPlayerInForce`
+   * (`MapPlayer#inForce`).
+   */
   public hasPlayer(whichPlayer: MapPlayer) {
-    return IsPlayerInForce(whichPlayer.handle, this.handle);
+    return BlzForceHasPlayer(this.handle, whichPlayer.handle);
   }
 
   public removePlayer(whichPlayer: MapPlayer) {
