@@ -14,12 +14,16 @@ import {
   type PublicApi,
 } from "./support/declarations";
 import {
+  isNoRenamesMarker,
+  loadRenameMap,
   loadRenames,
   parseRenames,
   parseSymbol,
   publishedFiles,
   replacements,
+  type NoRenamesMarker,
   type RenameEntry,
+  type RenameMapItem,
 } from "./support/renames";
 
 /** The version pair every entry of the first release carries. */
@@ -165,8 +169,46 @@ describe("the rename map's loader", () => {
     ]);
   });
 
+  it("accepts the no-renames marker of a version pair", () => {
+    const marker: NoRenamesMarker = {
+      kind: "noRenames",
+      versions: { from: "reforged-ts@1", to: "reforged-ts@2" },
+      note: "2.0 raises the supported Patch and renames nothing.",
+    };
+    expect(parseRenames(JSON.stringify([valid, marker]))).toEqual([
+      valid,
+      marker,
+    ]);
+  });
+
   it.each<[string, unknown]>([
     ["is not an array", valid],
+    [
+      "has a no-renames marker without a note",
+      [{ kind: "noRenames", versions: VERSIONS }],
+    ],
+    [
+      "has a no-renames marker with an empty note",
+      [{ kind: "noRenames", versions: VERSIONS, note: "" }],
+    ],
+    [
+      "has a no-renames marker without its version pair",
+      [{ kind: "noRenames", note: "n." }],
+    ],
+    [
+      "has a no-renames marker naming a symbol",
+      [{ kind: "noRenames", versions: VERSIONS, note: "n.", old: "Unit" }],
+    ],
+    [
+      "has a no-renames marker with a version without a major",
+      [
+        {
+          kind: "noRenames",
+          versions: { ...VERSIONS, to: "reforged-ts" },
+          note: "n.",
+        },
+      ],
+    ],
     ["has an entry without a note", [{ ...valid, note: undefined }]],
     ["has an entry with an unknown field", [{ ...valid, reason: "x" }]],
     ["has an unknown kind", [{ ...valid, kind: "method" }]],
@@ -258,6 +300,24 @@ describe("migration/renames.json", () => {
           entry.versions.from !== VERSIONS.from ||
           entry.versions.to !== VERSIONS.to,
       ),
+    ).toEqual([]);
+  });
+
+  it("gives each version pair entries or the no-renames marker, not both", async () => {
+    const items = await loadRenameMap();
+    const pair = (item: RenameMapItem) =>
+      `${item.versions.from} to ${item.versions.to}`;
+    const marked = new Set(items.filter(isNoRenamesMarker).map(pair));
+    const markedTwice = items
+      .filter(isNoRenamesMarker)
+      .map(pair)
+      .filter((each, index, all) => all.indexOf(each) !== index);
+    expect(markedTwice).toEqual([]);
+    expect(
+      items
+        .filter((item) => !isNoRenamesMarker(item))
+        .map(pair)
+        .filter((each) => marked.has(each)),
     ).toEqual([]);
   });
 

@@ -1,0 +1,21 @@
+{
+  // The workspace-level Node tests (the tarballs of the publishable
+  // packages), type-checked only; vitest runs them from source. skipLibCheck:
+  // vitest's declarations pull in tinybench's, which name DOM types a Node
+  // program does not have.
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["node"],
+    "noEmit": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "verbatimModuleSyntax": true,
+    "forceConsistentCasingInFileNames": true,
+    "newLine": "lf",
+    "skipLibCheck": true
+  },
+  "include": ["*.ts"]
+}

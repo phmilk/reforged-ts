@@ -4,6 +4,12 @@ Type-aware ESLint rules that catch the Warcraft III scripting pitfalls (desync, 
 
 **Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build.
 
+<!-- Placeholder link: the docs site (#40) replaces it with the llms.txt of this version. -->
+
+**For AI agents:** the documentation of this version, as one plain-text file for a language model, is [llms.txt](https://phmilk.github.io/reforged-ts/llms.txt).
+
+**Build phase.** Until 1.0.0, every version is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag. Install with `@next`: `pnpm add -D eslint-plugin-reforged@next`. npm gave `latest` to the first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then.
+
 ## Setup
 
 The rules need type information: put the recommended config after typescript-eslint's type-checked presets, or after any configuration that sets `parserOptions.projectService`. It sets no parser and no project options itself.

@@ -13,6 +13,7 @@ export default defineConfig(
     // Build outputs.
     "**/dist/**",
     "packages/reforged-types/build/**",
+    "release/build/**",
     "packages/reforged-test/lua/**",
     "packages/reforged-ts/dist-test/**",
     // What tools own: the vendored Patch files and the generated Typings.

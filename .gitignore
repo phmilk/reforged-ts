@@ -112,6 +112,9 @@ packages/reforged-test/lua/
 # reforged-ts test build output: the library and its tests compiled to Lua
 packages/reforged-ts/dist-test/
 
+# The release scripts' build output
+release/build/
+
 # Claude Code agent worktrees and local state
 .claude/
 

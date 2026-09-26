@@ -1,0 +1,253 @@
+# The release: every push to master versions or publishes, with no token held
+# by anyone. docs/release.md, "The release workflow", describes the jobs, the
+# dry run, and the variables, secrets and outside prerequisites they need.
+name: release
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: >
+          Dry run: select, version without opening a pull request (the diff
+          goes to the job summary), pack and the Template gate; never
+          publish.
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+# Two releases never version or publish at once; a newer push waits. A dry
+# run gets its own group, so rehearsing on master never holds up (or, as a
+# pending run, replaces) a release run.
+concurrency:
+  group: release-${{ github.ref }}${{ github.event_name == 'workflow_dispatch' && inputs.dry-run && '-dry-run' || '' }}
+  cancel-in-progress: false
+
+jobs:
+  select:
+    name: select
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    outputs:
+      mode: ${{ steps.select.outputs.mode }}
+      dry-run: ${{ steps.dry-run.outputs.dry-run }}
+    steps:
+      - id: dry-run
+        name: Dry run or release
+        env:
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run }}
+        run: |
+          if [ "$DRY_RUN" != true ] && [ "$GITHUB_REF" != refs/heads/master ]; then
+            echo "::error title=Not master::A release runs from master only; this run is on $GITHUB_REF. Dispatch the workflow with dry-run to rehearse another branch."
+            exit 1
+          fi
+          echo "dry-run=$DRY_RUN" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-workspace
+      - id: select
+        uses: changesets/action/select-mode@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+      - name: Summary
+        env:
+          MODE: ${{ steps.select.outputs.mode }}
+          DRY_RUN: ${{ steps.dry-run.outputs.dry-run }}
+        run: |
+          {
+            echo "## Release mode: $MODE"
+            echo
+            case "$MODE" in
+              version) echo "Pending changesets: the version job opens or updates the Version Packages pull request." ;;
+              publish) echo "Versions not on npm yet: pack, the Template gate, then publish." ;;
+              *) echo "Nothing to version or publish." ;;
+            esac
+            if [ "$DRY_RUN" = true ]; then
+              echo
+              echo "Dry run: no pull request is opened and nothing is published."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  version:
+    name: version
+    needs: select
+    if: needs.select.outputs.mode == 'version'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      # The App opens the pull request, so CI runs on it (a pull request
+      # opened with the default token triggers no workflow).
+      - id: app
+        uses: ./.github/actions/app-token
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: ${{ needs.select.outputs.dry-run == 'true' && 'read' || 'write' }}
+          permission-pull-requests: ${{ needs.select.outputs.dry-run == 'true' && 'read' || 'write' }}
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The changelog links the commit that added each changeset.
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup-workspace
+      # Before the version step, which consumes the changesets the gate reads.
+      - name: Major-changeset gate
+        run: pnpm release:gate
+      - name: Open or update the Version Packages pull request
+        if: needs.select.outputs.dry-run != 'true'
+        uses: changesets/action/version@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          github-token: ${{ steps.app.outputs.token }}
+          script: pnpm release:version
+          # In pre mode the action appends " (alpha)".
+          pr-title: Version Packages
+          commit-message: Version Packages
+      - name: Version (dry run)
+        if: needs.select.outputs.dry-run == 'true'
+        env:
+          GITHUB_TOKEN: ${{ steps.app.outputs.token }}
+        run: pnpm release:version
+      - name: Would-be pull request (dry run)
+        if: needs.select.outputs.dry-run == 'true'
+        run: |
+          git add --all
+          git diff --cached > "$RUNNER_TEMP/version.diff"
+          {
+            echo "## Version Packages (dry run)"
+            echo
+            echo "The pull request a release would open or update:"
+            echo
+            echo '```'
+            git diff --cached --stat
+            echo '```'
+            echo
+            echo "<details><summary>Diff</summary>"
+            echo
+            echo '```diff'
+            # The job summary holds 1 MiB per step.
+            head -c 600000 "$RUNNER_TEMP/version.diff"
+            echo '```'
+            echo
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  pack:
+    name: pack
+    needs: select
+    # A dry run in version mode packs the versions the pull request would
+    # apply, so the Template gate rehearses them.
+    if: >-
+      needs.select.outputs.mode == 'publish' ||
+      (needs.select.outputs.mode == 'version' && needs.select.outputs.dry-run == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      # The changelog generator reads the pull request of each changeset.
+      pull-requests: read
+    outputs:
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup-workspace
+      - name: Version (dry run)
+        if: needs.select.outputs.mode == 'version'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: pnpm release:version
+      - name: Build
+        run: pnpm build
+      # The committed Typings must be what the generator writes from the
+      # vendored inputs: a drifted declaration file is never packed.
+      - name: Typings generator output check
+        run: pnpm typings:check
+      # The Changesets CLI rather than the pack sub-action, which uploads the
+      # artifact itself: the plan's tags must be rewritten to next
+      # (release:dist-tag) before the upload.
+      - name: Pack
+        run: pnpm changeset pack --out-dir "$RUNNER_TEMP/pack"
+      # The next dist-tag in pre mode, written into the plan the Template
+      # gate and the publish job read.
+      - name: Dist-tags
+        run: pnpm release:dist-tag --pack-dir "$RUNNER_TEMP/pack"
+      - id: upload
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: release-pack
+          path: ${{ runner.temp }}/pack
+          if-no-files-found: error
+          retention-days: 30
+
+  template-gate:
+    name: template-gate
+    needs: pack
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-workspace
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          artifact-ids: ${{ needs.pack.outputs.artifact-id }}
+          path: ${{ runner.temp }}/pack
+      # Outside the repository checkout: a Template without its own
+      # pnpm-workspace.yaml would otherwise install as part of this workspace.
+      - name: Clone the Template
+        env:
+          TEMPLATE_READ_TOKEN: ${{ secrets.TEMPLATE_READ_TOKEN }}
+        run: pnpm release:template-clone --pack-dir "$RUNNER_TEMP/pack" --into "$RUNNER_TEMP/template"
+      - name: Template gate
+        run: pnpm release:template-gate --template "$RUNNER_TEMP/template" --pack-dir "$RUNNER_TEMP/pack"
+
+  publish:
+    name: publish
+    needs: [select, pack, template-gate]
+    if: needs.select.outputs.mode == 'publish' && needs.select.outputs.dry-run != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      # Trusted publishing: npm exchanges the job's OIDC token, and attaches
+      # provenance.
+      id-token: write
+    steps:
+      # Tags and releases go through the App, so the reforged-ts tags can
+      # trigger the docs workflow the workflows spec (#48) plans, docs.yml
+      # (tags created with the default token trigger no workflow).
+      - id: app
+        uses: ./.github/actions/app-token
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+      # Changesets publishes each tarball from its package folder: the
+      # checkout, never a build.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-workspace
+        with:
+          ignore-scripts: true
+      - name: Publish prerequisites
+        run: pnpm release:publish-check
+      # The tarballs and plan the Template gate tested:
+      # changeset publish --from-pack-dir, GitHub Releases and per-package tags.
+      - uses: changesets/action/publish@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          github-token: ${{ steps.app.outputs.token }}
+          pack-dir-artifact-id: ${{ needs.pack.outputs.artifact-id }}
+          create-github-releases: true
+          push-git-tags: true

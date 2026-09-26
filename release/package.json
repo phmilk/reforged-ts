@@ -1,0 +1,34 @@
+{
+  "name": "reforged-ts-release",
+  "private": true,
+  "description": "The release scripts of the reforged-ts workspace: Node programs behind the root release:* scripts. Never published.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json",
+    "test": "vitest run --root .. --project release",
+    "release:check-changeset": "tsc -p tsconfig.json && node build/cli/check-changeset.js",
+    "release:check-patches": "tsc -p tsconfig.json && node build/cli/check-patches.js",
+    "release:gate": "tsc -p tsconfig.json && node build/cli/major-changeset-gate.js",
+    "release:template-gate": "tsc -p tsconfig.json && node build/cli/template-gate.js",
+    "release:matrix": "tsc -p tsconfig.json && node build/cli/matrix.js",
+    "release:version": "tsc -p tsconfig.json && node build/cli/version.js",
+    "release:dist-tag": "tsc -p tsconfig.json && node build/cli/dist-tag.js",
+    "release:template-clone": "tsc -p tsconfig.json && node build/cli/template-clone.js",
+    "release:publish-check": "tsc -p tsconfig.json && node build/cli/publish-check.js"
+  },
+  "dependencies": {
+    "@changesets/parse": "catalog:",
+    "@manypkg/get-packages": "catalog:"
+  },
+  "devDependencies": {
+    "@changesets/cli": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

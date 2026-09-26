@@ -1,6 +1,6 @@
 {
   "name": "reforged-test",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Runs typescript-to-lua test modules on real Lua 5.3 with stubbed Warcraft III Reforged natives and reports them to vitest.",
   "license": "MIT",
   "type": "module",
@@ -25,6 +25,9 @@
   "engines": {
     "node": ">=22.13"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "reforged": {
     "patch": "3.0.0.24268"
   },
@@ -39,6 +42,7 @@
     "/LICENSE",
     "/README.md"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "tsc -p tsconfig.json && tstl -p runner/tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p runner/tsconfig.json --noEmit && tsc -p test/tsconfig.json",

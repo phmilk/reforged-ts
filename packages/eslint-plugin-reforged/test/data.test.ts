@@ -401,6 +401,39 @@ describe("the rename map (reforged-ts's migration/renames.json)", () => {
     ).toMatchObject([{ line: 2 }]);
   });
 
+  it("ignores the no-renames marker of a version pair", () => {
+    const marker = {
+      kind: "noRenames",
+      versions: { from: "reforged-ts@1", to: "reforged-ts@2" },
+      note: "2.0 renames nothing.",
+    };
+    const root = project({
+      "node_modules/reforged-ts/package.json": stubManifest,
+      "node_modules/reforged-ts/migration/renames.json": JSON.stringify([
+        marker,
+        { ...entry, old: "new Timer(...)", new: "Timer.create(...)" },
+      ]),
+      ...typesStub,
+    });
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const plugin = createPlugin({ projectRoot: root });
+    expect(warn).not.toHaveBeenCalled();
+    expect(
+      lintWithRecommended(
+        'import { Timer } from "reforged-ts";\nnew Timer();',
+        plugin,
+      ).filter((each) => each.ruleId === "reforged/no-legacy-w3ts-names"),
+    ).toMatchObject([{ line: 2 }]);
+    // A map holding only markers loads: the rule has nothing to report.
+    const onlyMarker = dataFile(
+      "renames-marker.json",
+      JSON.stringify([marker]),
+    );
+    expect(() =>
+      createPlugin({ files: { renames: onlyMarker } }),
+    ).not.toThrow();
+  });
+
   it("warns once and disables the rule when the project has no reforged-ts", () => {
     const root = project({ "package.json": "{}", ...typesStub });
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);

@@ -16,6 +16,10 @@ The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `
 
 Single-context: `CONTEXT.md` at the repo root and ADRs under `docs/adr/`. See `docs/agents/domain.md`.
 
+## Changesets
+
+Every pull request adds one changeset under `.changeset/`, without the prompt: `pnpm changeset add --minor <package> -m "<changelog entry>"` (`--major`, `--minor`, `--patch` take comma-separated package names), or `pnpm changeset add --empty` for a change that publishes nothing. The file shape, pre mode and the release steps are in `docs/release.md`.
+
 ## Packages
 
 Before changing a package, read its nested `AGENTS.md` when it has one: `packages/reforged-types` (the Typings generator) and `packages/eslint-plugin-reforged` (the lint rules of the Guards: adding or changing a rule, its fixtures, docs page and data files).
