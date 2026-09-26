@@ -77,7 +77,7 @@ describe("Widget lookups of a more specific Wrapper", () => {
   it("give back the cached Unit, Item or Destructable", () => {
     const unit = Unit.create(owner, footman, 0, 0);
     const item = Item.create(FourCC("ratf"), 0, 0);
-    const tree = Destructable.create(FourCC("LTlt"), 0, 0);
+    const tree = Destructable.create({ typeId: FourCC("LTlt"), x: 0, y: 0 });
     expect(Widget.fromHandle(unit.handle)).toBe(unit);
     expect(Widget.fromHandle(item.handle)).toBe(item);
     expect(Widget.fromHandle(tree.handle)).toBe(tree);

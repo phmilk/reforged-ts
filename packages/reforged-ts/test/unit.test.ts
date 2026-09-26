@@ -210,7 +210,7 @@ describe("Unit rally lookups", () => {
 
   it("rallyDestructable is the Wrapper of the destructable GetUnitRallyDestructable returns", () => {
     const unit = Unit.create(owner, footman, 0, 0);
-    const tree = Destructable.create(FourCC("LTlt"), 0, 0);
+    const tree = Destructable.create({ typeId: FourCC("LTlt"), x: 0, y: 0 });
     expect(
       withNative(
         "GetUnitRallyDestructable",

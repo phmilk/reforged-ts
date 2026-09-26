@@ -3,102 +3,434 @@
 import { rawcodeToString } from "../utils/rawcode";
 import { Widget } from "./widget";
 
+/**
+ * The options of `Destructable.create`. `typeId`, `x` and `y` are required;
+ * each other option left out keeps its default, and each of `dead`, `z`,
+ * `pitch` or `roll`, `skin` and `color` given picks the creation Native that
+ * takes it.
+ */
+export interface DestructableOptions {
+  /** The rawcode of the destructable type. */
+  readonly typeId: number;
+  /** The x-coordinate. */
+  readonly x: number;
+  /** The y-coordinate. */
+  readonly y: number;
+  /** The z-coordinate; left out, the game places it on the ground. */
+  readonly z?: number;
+  /** The facing, in degrees; 0 by default. */
+  readonly face?: number;
+  /** The X-Y-Z scale; 1 by default. */
+  readonly scale?: number;
+  /** The model variation; 0 by default. */
+  readonly variation?: number;
+  /** The pitch, in radians; 0 when only `roll` is given. */
+  readonly pitch?: number;
+  /** The roll, in radians; 0 when only `pitch` is given. */
+  readonly roll?: number;
+  /** The skin's rawcode; left out, the type's own model. */
+  readonly skin?: number;
+  /** The team colour of the model. */
+  readonly color?: playercolor;
+  /** Creates the destructable dead when true; alive by default. */
+  readonly dead?: boolean;
+}
+
 export class Destructable extends Widget {
   declare public readonly handle: destructable;
 
+  /** The skin the Destructable was created with, when one was given. */
   public readonly skin?: number;
 
   /**
-   * Creates a destructable at the specified x-y coordinates.
-   * @param objectId The rawcode of the destructable to be created.
-   * @param x The x-coordinate of the Destructable.
-   * @param y The y-coordinate of the Destructable.
-   * @param face The facing of the Destructable.
-   * @param scale The X-Y-Z scaling value of the Destructable.
-   * @param variation The integer representing the variation of the Destructable to be created.
-   * @param skinId The integer representing the skin of the Destructable to be created.
+   * Creates a destructable. The options name one of the 32 creation Natives,
+   * on five independent axes: `dead` true creates a dead one, `z` places it
+   * at that height, `pitch` or `roll` tilts it (the absent one 0), `skin`
+   * gives it a skin and `color` a team colour.
+   * Throws `reforged-ts: failed to create Destructable (<rawcode>)` at the
+   * calling line when the game creates nothing.
+   * @example
+   * {@includeCode ../../examples/destructable-create.ts}
+   * @param options - The rawcode and the position, and the optional axes.
    */
-  public static create(
-    objectId: number,
-    x: number,
-    y: number,
-    face?: number,
-    scale?: number,
-    variation?: number,
-    skinId?: number,
-  ): Destructable {
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
-    if (face === undefined) face = 0;
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
-    if (scale === undefined) scale = 1;
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
-    if (variation === undefined) variation = 0;
-
+  public static create(options: DestructableOptions): Destructable {
     return this.expect(
-      skinId === undefined
-        ? CreateDestructable(objectId, x, y, face, scale, variation)
-        : BlzCreateDestructableWithSkin(
-            objectId,
-            x,
-            y,
-            face,
-            scale,
-            variation,
-            skinId,
-          ),
-      rawcodeToString(objectId),
+      Destructable.createHandle(options),
+      rawcodeToString(options.typeId),
       (destructable) => {
-        destructable.skin = skinId;
+        destructable.skin = options.skin;
       },
     );
   }
 
   /**
-   * Creates a destructable at the specified x-y-z coordinates.
-   * @param objectId The rawcode of the destructable to be created.
-   * @param x The x-coordinate of the Destructable.
-   * @param y The y-coordinate of the Destructable.
-   * @param z The z-coordinate of the Destructable.
-   * @param face The facing of the Destructable.
-   * @param scale The X-Y-Z scaling value of the Destructable.
-   * @param variation The integer representing the variation of the Destructable to be created.
-   * @param skinId The integer representing the skin of the Destructable to be created.
+   * The handle of the creation Native `options` name, or nothing when the
+   * game creates none: the family is picked by the colour, the skin and the
+   * tilt, then the height and whether it is dead.
    */
-  public static createZ(
-    objectId: number,
-    x: number,
-    y: number,
-    z: number,
-    face?: number,
-    scale?: number,
-    variation?: number,
-    skinId?: number,
-  ): Destructable {
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
-    if (face === undefined) face = 0;
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
-    if (scale === undefined) scale = 1;
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- a create default; Destructable.create(options) replaces create and createZ in step 7 (#54)
-    if (variation === undefined) variation = 0;
+  private static createHandle(
+    options: DestructableOptions,
+  ): destructable | undefined {
+    const { typeId, x, y, z, skin, color, dead = false } = options;
+    const face = options.face ?? 0;
+    const scale = options.scale ?? 1;
+    const variation = options.variation ?? 0;
+    const tilted = options.pitch !== undefined || options.roll !== undefined;
+    const pitch = options.pitch ?? 0;
+    const roll = options.roll ?? 0;
 
-    return this.expect(
-      skinId === undefined
-        ? CreateDestructableZ(objectId, x, y, z, face, scale, variation)
-        : BlzCreateDestructableZWithSkin(
-            objectId,
+    if (color === undefined) {
+      if (skin === undefined) {
+        if (!tilted) {
+          if (z === undefined) {
+            return dead
+              ? CreateDeadDestructable(typeId, x, y, face, scale, variation)
+              : CreateDestructable(typeId, x, y, face, scale, variation);
+          }
+          return dead
+            ? CreateDeadDestructableZ(typeId, x, y, z, face, scale, variation)
+            : CreateDestructableZ(typeId, x, y, z, face, scale, variation);
+        }
+        if (z === undefined) {
+          return dead
+            ? BlzCreateDeadDestructablePitchRoll(
+                typeId,
+                x,
+                y,
+                face,
+                roll,
+                pitch,
+                scale,
+                variation,
+              )
+            : BlzCreateDestructablePitchRoll(
+                typeId,
+                x,
+                y,
+                face,
+                roll,
+                pitch,
+                scale,
+                variation,
+              );
+        }
+        return dead
+          ? BlzCreateDeadDestructableZPitchRoll(
+              typeId,
+              x,
+              y,
+              z,
+              face,
+              roll,
+              pitch,
+              scale,
+              variation,
+            )
+          : BlzCreateDestructableZPitchRoll(
+              typeId,
+              x,
+              y,
+              z,
+              face,
+              roll,
+              pitch,
+              scale,
+              variation,
+            );
+      }
+      if (!tilted) {
+        if (z === undefined) {
+          return dead
+            ? BlzCreateDeadDestructableWithSkin(
+                typeId,
+                x,
+                y,
+                face,
+                scale,
+                variation,
+                skin,
+              )
+            : BlzCreateDestructableWithSkin(
+                typeId,
+                x,
+                y,
+                face,
+                scale,
+                variation,
+                skin,
+              );
+        }
+        return dead
+          ? BlzCreateDeadDestructableZWithSkin(
+              typeId,
+              x,
+              y,
+              z,
+              face,
+              scale,
+              variation,
+              skin,
+            )
+          : BlzCreateDestructableZWithSkin(
+              typeId,
+              x,
+              y,
+              z,
+              face,
+              scale,
+              variation,
+              skin,
+            );
+      }
+      if (z === undefined) {
+        return dead
+          ? BlzCreateDeadDestructableWithSkinPitchRoll(
+              typeId,
+              x,
+              y,
+              face,
+              roll,
+              pitch,
+              scale,
+              variation,
+              skin,
+            )
+          : BlzCreateDestructableWithSkinPitchRoll(
+              typeId,
+              x,
+              y,
+              face,
+              roll,
+              pitch,
+              scale,
+              variation,
+              skin,
+            );
+      }
+      return dead
+        ? BlzCreateDeadDestructableZWithSkinPitchRoll(
+            typeId,
+            x,
+            y,
+            z,
+            face,
+            roll,
+            pitch,
+            scale,
+            variation,
+            skin,
+          )
+        : BlzCreateDestructableZWithSkinPitchRoll(
+            typeId,
+            x,
+            y,
+            z,
+            face,
+            roll,
+            pitch,
+            scale,
+            variation,
+            skin,
+          );
+    }
+    if (skin === undefined) {
+      if (!tilted) {
+        if (z === undefined) {
+          return dead
+            ? BlzCreateDeadDestructableWithColor(
+                typeId,
+                x,
+                y,
+                face,
+                scale,
+                variation,
+                color,
+              )
+            : BlzCreateDestructableWithColor(
+                typeId,
+                x,
+                y,
+                face,
+                scale,
+                variation,
+                color,
+              );
+        }
+        return dead
+          ? BlzCreateDeadDestructableZWithColor(
+              typeId,
+              x,
+              y,
+              z,
+              face,
+              scale,
+              variation,
+              color,
+            )
+          : BlzCreateDestructableZWithColor(
+              typeId,
+              x,
+              y,
+              z,
+              face,
+              scale,
+              variation,
+              color,
+            );
+      }
+      if (z === undefined) {
+        return dead
+          ? BlzCreateDeadDestructablePitchRollWithColor(
+              typeId,
+              x,
+              y,
+              face,
+              roll,
+              pitch,
+              scale,
+              variation,
+              color,
+            )
+          : BlzCreateDestructablePitchRollWithColor(
+              typeId,
+              x,
+              y,
+              face,
+              roll,
+              pitch,
+              scale,
+              variation,
+              color,
+            );
+      }
+      return dead
+        ? BlzCreateDeadDestructableZPitchRollWithColor(
+            typeId,
+            x,
+            y,
+            z,
+            face,
+            roll,
+            pitch,
+            scale,
+            variation,
+            color,
+          )
+        : BlzCreateDestructableZPitchRollWithColor(
+            typeId,
+            x,
+            y,
+            z,
+            face,
+            roll,
+            pitch,
+            scale,
+            variation,
+            color,
+          );
+    }
+    if (!tilted) {
+      if (z === undefined) {
+        return dead
+          ? BlzCreateDeadDestructableWithSkinColor(
+              typeId,
+              x,
+              y,
+              face,
+              scale,
+              variation,
+              skin,
+              color,
+            )
+          : BlzCreateDestructableWithSkinColor(
+              typeId,
+              x,
+              y,
+              face,
+              scale,
+              variation,
+              skin,
+              color,
+            );
+      }
+      return dead
+        ? BlzCreateDeadDestructableZWithSkinColor(
+            typeId,
             x,
             y,
             z,
             face,
             scale,
             variation,
-            skinId,
-          ),
-      rawcodeToString(objectId),
-      (destructable) => {
-        destructable.skin = skinId;
-      },
-    );
+            skin,
+            color,
+          )
+        : BlzCreateDestructableZWithSkinColor(
+            typeId,
+            x,
+            y,
+            z,
+            face,
+            scale,
+            variation,
+            skin,
+            color,
+          );
+    }
+    if (z === undefined) {
+      return dead
+        ? BlzCreateDeadDestructableWithSkinPitchRollColor(
+            typeId,
+            x,
+            y,
+            face,
+            roll,
+            pitch,
+            scale,
+            variation,
+            skin,
+            color,
+          )
+        : BlzCreateDestructableWithSkinPitchRollColor(
+            typeId,
+            x,
+            y,
+            face,
+            roll,
+            pitch,
+            scale,
+            variation,
+            skin,
+            color,
+          );
+    }
+    return dead
+      ? BlzCreateDeadDestructableZWithSkinPitchRollColor(
+          typeId,
+          x,
+          y,
+          z,
+          face,
+          roll,
+          pitch,
+          scale,
+          variation,
+          skin,
+          color,
+        )
+      : BlzCreateDestructableZWithSkinPitchRollColor(
+          typeId,
+          x,
+          y,
+          z,
+          face,
+          roll,
+          pitch,
+          scale,
+          variation,
+          skin,
+          color,
+        );
   }
 
   public set invulnerable(flag: boolean) {
@@ -191,6 +523,32 @@ export class Destructable extends Widget {
 
   public setAnimSpeed(speedFactor: number) {
     SetDestructableAnimationSpeed(this.handle, speedFactor);
+  }
+
+  /**
+   * Sets the team colour of the model, through `SetDestructableColor`
+   * (3.0.0).
+   * @param color - The player colour to tint it with.
+   */
+  public setColor(color: playercolor) {
+    SetDestructableColor(this.handle, color);
+  }
+
+  /**
+   * Tints the model, through `SetDestructableVertexColor` (3.0.0). Each
+   * channel is 0 to 255.
+   * @param red - The red channel.
+   * @param green - The green channel.
+   * @param blue - The blue channel.
+   * @param alpha - The opacity, 0 transparent and 255 opaque.
+   */
+  public setVertexColor(
+    red: number,
+    green: number,
+    blue: number,
+    alpha: number,
+  ) {
+    SetDestructableVertexColor(this.handle, red, green, blue, alpha);
   }
 
   public show(flag: boolean) {
