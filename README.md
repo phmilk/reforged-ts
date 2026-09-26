@@ -1,6 +1,6 @@
 # reforged-ts workspace
 
-The pnpm workspace of reforged-ts, a TypeScript API for Warcraft III Reforged custom maps compiled to Lua with [typescript-to-lua](https://typescripttolua.github.io/). A fork of [cipherxof/w3ts](https://github.com/cipherxof/w3ts) targeting Warcraft III 3.0.0 and later.
+The pnpm workspace of reforged-ts, a TypeScript API for Warcraft III custom maps compiled to Lua with [typescript-to-lua](https://typescripttolua.github.io/). Its Wrappers and Systems sit over the game's Natives, typed by Typings generated for one Patch, and a Map project installs it to write its map's code in TypeScript. It targets Warcraft III 3.0.0 and later, and began as a fork ([Attribution](#attribution)).
 
 ## Packages
 
@@ -13,12 +13,38 @@ The pnpm workspace of reforged-ts, a TypeScript API for Warcraft III Reforged cu
 
 The library's own tests run on `reforged-test`, and the library compiles against `reforged-types/3.0.0`.
 
-**Build phase.** Until 1.0.0, every version of the four packages is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag, so a Map project installs them with `@next` (`pnpm add reforged-ts@next reforged-types@next`). npm gave `latest` to the first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then. See [Pre mode and the `next` dist-tag](docs/release.md#pre-mode-and-the-next-dist-tag).
+**Build phase.** Until 1.0.0, every version of the four packages is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag, so a Map project installs them with `@next` (`pnpm add reforged-ts@next reforged-types@next`). No alpha is published yet. Once the first one is, npm gives `latest` to it, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then. See [Pre mode and the `next` dist-tag](docs/release.md#pre-mode-and-the-next-dist-tag).
 
 ## Requirements
 
+- Warcraft III 3.0.0 or later, the Game version the library targets. Only to play a map: building and testing the library runs without the game.
 - Node 22.13 or later. Node 24 is the tested version (`.node-version`).
 - pnpm 10. The `packageManager` field pins the exact version, so `corepack enable` picks it up.
+- TypeScript 6.0.2, the version typescript-to-lua 1.37 pins. `pnpm install` brings it; see [Version policy](#version-policy).
+
+## Getting started
+
+A Map project starts from the Template, [`phmilk/reforged-ts-template`](https://github.com/phmilk/reforged-ts-template): a Warcraft III 3.0.0 map whose code lives in `src`, built into the map with `pnpm build` and opened in the game with `pnpm test:map`. The Template is under construction and private: its clone and its links below work only for its collaborators. No package is on npm yet either, so today a Map project installs the packages from a clone of this repository:
+
+```sh
+git clone https://github.com/phmilk/reforged-ts
+git clone https://github.com/phmilk/reforged-ts-template my-map
+cd my-map
+pnpm use:local ../reforged-ts   # builds, packs and installs the four packages from the clone
+# open maps/reforged-ts-template.w3m in the World Editor and save it once (the script language stays Lua)
+pnpm test:map                   # builds the map and opens it in the game
+```
+
+The Template's README has [the full first run](https://github.com/phmilk/reforged-ts-template#first-run). Once the Template is public and flagged as a template repository, and the first alpha is on npm, the start becomes `gh repo create my-map --template phmilk/reforged-ts-template --clone`, then `pnpm install && pnpm test:map`: the roadmap ([#147](https://github.com/phmilk/reforged-ts/issues/147)) tracks the way there.
+
+## Docs
+
+The documentation site, https://phmilk.github.io/reforged-ts/, comes with [#40](https://github.com/phmilk/reforged-ts/issues/40) and is not live yet. Until it is:
+
+- [`CONTEXT.md`](CONTEXT.md) defines the project's terms.
+- Each package's README says what the package does and how to use it.
+- The library's doc comments document each Wrapper and System, and the editor shows them on hover.
+- The ADRs under [`docs/adr`](docs/adr) record the decisions, and [`docs/release.md`](docs/release.md) the release process.
 
 ## Commands
 
@@ -60,8 +86,16 @@ The library's tests import the harness by its package name: the runner from `ref
 
 ## For agents
 
-[`AGENTS.md`](AGENTS.md) holds the agent instructions: the issue tracker, the triage labels and where the domain docs live. [`CONTEXT.md`](CONTEXT.md) is the project vocabulary (Native, Handle, Wrapper, System, Typings, Patch); use its terms.
+[`AGENTS.md`](AGENTS.md) is the one document an agent reads first. Its seven sections are fixed: an overview, the commands to build and test, the layout of the repository, the rules, the runtime constraints of the game's Lua, the Agent skills (domain docs, issue tracker, triage labels and the skills themselves), and the definition of done. [`CONTEXT.md`](CONTEXT.md) is the project vocabulary (Native, Handle, Wrapper, System, Typings, Patch); use its terms.
+
+## Contributing
+
+Issues and specs live in this repository's [GitHub Issues](https://github.com/phmilk/reforged-ts/issues), the Template's in [its own tracker](https://github.com/phmilk/reforged-ts-template/issues); [#1](https://github.com/phmilk/reforged-ts/issues/1) maps the work toward the first release. The contribution guide, `CONTRIBUTING.md`, comes with [#48](https://github.com/phmilk/reforged-ts/issues/48). Until then, [`AGENTS.md`](AGENTS.md) describes how the repository is worked on, for people as for agents, and a green `pnpm check` is what done means.
 
 ## License
 
-MIT. Each package carries its LICENSE, which keeps the upstream w3ts copyright line next to the fork's.
+MIT. Each package carries its LICENSE, which keeps the upstream copyright line next to the fork's.
+
+## Attribution
+
+reforged-ts is a fork of [w3ts](https://github.com/cipherxof/w3ts) by TriggerHappy ([cipherxof](https://github.com/cipherxof)), released under the MIT license.
