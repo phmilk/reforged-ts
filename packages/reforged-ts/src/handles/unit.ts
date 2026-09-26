@@ -598,10 +598,10 @@ export class Unit extends Widget {
    * Whether the unit can equip items of the equipment type, through
    * `UnitCanEquipItemOfEquipmentType` (3.0.0).
    */
-  public canEquip(type: EquipmentType) {
+  public canEquip(equipmentType: EquipmentType) {
     return UnitCanEquipItemOfEquipmentType(
       this.handle,
-      ConvertEquipmentType(type),
+      ConvertEquipmentType(equipmentType),
     );
   }
 
@@ -758,8 +758,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * Equips the item on the unit, through `UnitEquipItem` (3.0.0): whether it
-   * was equipped.
+   * Equips the item on the unit and returns whether it was equipped, through
+   * `UnitEquipItem` (3.0.0).
    */
   public equip(whichItem: Item): boolean {
     return UnitEquipItem(this.handle, whichItem.handle);
@@ -905,7 +905,7 @@ export class Unit extends Widget {
 
   /**
    * Whether the unit has any item equipped, through `UnitHasAnyItemEquiped`
-   * (3.0.0; the Native's name is misspelt).
+   * (3.0.0). The Native's name is misspelt.
    */
   public hasAnyEquipped() {
     return UnitHasAnyItemEquiped(this.handle);
@@ -949,8 +949,11 @@ export class Unit extends Widget {
    * Whether the unit has an item of the equipment type equipped, through
    * `UnitHasItemEquipmentOfType` (3.0.0).
    */
-  public hasEquipmentOfType(type: EquipmentType) {
-    return UnitHasItemEquipmentOfType(this.handle, ConvertEquipmentType(type));
+  public hasEquipmentOfType(equipmentType: EquipmentType) {
+    return UnitHasItemEquipmentOfType(
+      this.handle,
+      ConvertEquipmentType(equipmentType),
+    );
   }
 
   /** Whether the unit has the item equipped, through `UnitHasItemEquipped` (3.0.0). */
@@ -1591,7 +1594,7 @@ export class Unit extends Widget {
   }
 
   /**
-   * Unequips the item in the loadout slot: the item, or undefined for an
+   * Unequips the item in the loadout slot and returns it, or undefined for an
    * empty slot, through `UnitUnequipItemFromSlot` (3.0.0).
    */
   public unequipSlot(slot: LoadoutSlot): Item | undefined {

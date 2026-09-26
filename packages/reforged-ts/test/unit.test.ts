@@ -434,19 +434,19 @@ describe("Unit inventory", () => {
 });
 
 describe("Unit equipment and bag", () => {
-  const withEquipment = (): [Unit, Item, string, string] => {
+  const heroAndItem = () => {
     const unit = Unit.create(owner, footman, 0, 0);
     const item = Item.create(ration, 0, 0);
-    return [
+    return {
       unit,
       item,
-      handleRef("unit", unit.handle),
-      handleRef("item", item.handle),
-    ];
+      unitRef: handleRef("unit", unit.handle),
+      itemRef: handleRef("item", item.handle),
+    };
   };
 
   it("equip is what UnitEquipItem answers for the unit and the item", () => {
-    const [unit, item, unitRef, itemRef] = withEquipment();
+    const { unit, item, unitRef, itemRef } = heroAndItem();
     const equipped = withNative(
       "UnitEquipItem",
       () => true,
@@ -457,7 +457,7 @@ describe("Unit equipment and bag", () => {
   });
 
   it("unequip passes the unit and the item to UnitUnequipItem", () => {
-    const [unit, item, unitRef, itemRef] = withEquipment();
+    const { unit, item, unitRef, itemRef } = heroAndItem();
     withNative(
       "UnitUnequipItem",
       () => undefined,
@@ -471,7 +471,7 @@ describe("Unit equipment and bag", () => {
   });
 
   it("the item predicates are what their Native answers for the unit and the item", () => {
-    const [unit, item, unitRef, itemRef] = withEquipment();
+    const { unit, item, unitRef, itemRef } = heroAndItem();
     expect(
       withNative(
         "UnitHasItemEquipped",
@@ -495,7 +495,7 @@ describe("Unit equipment and bag", () => {
   });
 
   it("hasAnyEquipped is what UnitHasAnyItemEquiped answers for the unit", () => {
-    const [unit, , unitRef] = withEquipment();
+    const { unit, unitRef } = heroAndItem();
     expect(
       withNative(
         "UnitHasAnyItemEquiped",
@@ -507,7 +507,7 @@ describe("Unit equipment and bag", () => {
   });
 
   it("bagSize is what UnitExtendedInventorySize answers for the unit", () => {
-    const [unit, , unitRef] = withEquipment();
+    const { unit, unitRef } = heroAndItem();
     expect(
       withNative(
         "UnitExtendedInventorySize",
@@ -519,7 +519,7 @@ describe("Unit equipment and bag", () => {
   });
 
   it("the equipment-type predicates pass the converted EquipmentType to their Native", () => {
-    const [unit, , unitRef] = withEquipment();
+    const { unit, unitRef } = heroAndItem();
     expect(
       withNative(
         "UnitHasItemEquipmentOfType",
@@ -543,7 +543,7 @@ describe("Unit equipment and bag", () => {
   });
 
   it("hasEmptySlot passes the converted LoadoutSlot to UnitHasLoadoutSlotEmpty", () => {
-    const [unit, , unitRef] = withEquipment();
+    const { unit, unitRef } = heroAndItem();
     expect(
       withNative(
         "UnitHasLoadoutSlotEmpty",
@@ -557,7 +557,7 @@ describe("Unit equipment and bag", () => {
   });
 
   it("equippedItem is the registry's Item in the slot, undefined for an empty one", () => {
-    const [unit, item, unitRef] = withEquipment();
+    const { unit, item, unitRef } = heroAndItem();
     expect(
       withNative(
         "UnitItemInEquipmentSlot",
@@ -581,7 +581,7 @@ describe("Unit equipment and bag", () => {
   });
 
   it("unequipSlot is the registry's Item it unequipped, undefined for an empty slot", () => {
-    const [unit, item, unitRef] = withEquipment();
+    const { unit, item, unitRef } = heroAndItem();
     expect(
       withNative(
         "UnitUnequipItemFromSlot",
@@ -605,7 +605,7 @@ describe("Unit equipment and bag", () => {
   });
 
   it("bagItem is the registry's Item at the bag index, undefined for an empty one", () => {
-    const [unit, item, unitRef] = withEquipment();
+    const { unit, item, unitRef } = heroAndItem();
     expect(
       withNative(
         "UnitItemInBagSlot",
