@@ -14,13 +14,18 @@ inputs:
 runs:
   using: composite
   steps:
-    - shell: bash
+    - name: Run the script or skip it
+      shell: bash
       env:
         SCRIPT: ${{ inputs.script }}
         ADDED_BY: ${{ inputs.added-by }}
+      # The probe exits 3 when the script is not defined, so an error
+      # reading package.json fails the step instead of skipping it.
       run: |
-        if node -e 'process.exitCode = JSON.parse(require("node:fs").readFileSync("package.json", "utf8")).scripts?.[process.argv[1]] === undefined ? 1 : 0' "$SCRIPT"; then
-          pnpm run "$SCRIPT"
-        else
-          echo "::notice title=Step skipped::The root package.json defines no $SCRIPT script yet; $ADDED_BY adds it."
-        fi
+        status=0
+        node -e 'process.exitCode = JSON.parse(require("node:fs").readFileSync("package.json", "utf8")).scripts?.[process.argv[1]] === undefined ? 3 : 0' "$SCRIPT" || status=$?
+        case "$status" in
+          0) pnpm run "$SCRIPT" ;;
+          3) echo "::notice title=Step skipped::The root package.json defines no $SCRIPT script yet; $ADDED_BY adds it." ;;
+          *) exit "$status" ;;
+        esac

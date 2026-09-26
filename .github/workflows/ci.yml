@@ -1,7 +1,8 @@
-# CI: the checks `pnpm check` composes locally, on ubuntu and windows, then
-# the release checks and actionlint on ubuntu, on every pull request and
-# every push to master. Each check step runs one root script and is named
-# after it.
+# CI: the checks `pnpm check` composes locally and those later build steps
+# add, on ubuntu and windows; the docs check, the release checks and
+# actionlint on ubuntu; on every pull request and every push to master,
+# whose tarballs it keeps. Each check step runs one root script and is
+# named after it.
 name: ci
 
 on:
@@ -56,7 +57,8 @@ jobs:
       - name: build
         run: pnpm run build
       # The Typings drift gate, which also proves async-natives.json matches
-      # the Overlay. `pnpm check` runs it here too, not inside `test`.
+      # the Overlay. Its own stage, as in `pnpm check`: the root `test`
+      # script does not run it, so a leg runs it once.
       - name: typings:check
         run: pnpm run typings:check
       - name: test
@@ -106,10 +108,12 @@ jobs:
       # legs. docs/release.md describes each.
       - name: release:check-changeset
         # The Version Packages pull request consumes changesets and adds
-        # none; its head branch is always changeset-release/master.
+        # none; its head branch is always changeset-release/master of this
+        # repository (a fork's branch of that name is checked).
         if: >-
           matrix.os == 'ubuntu' && github.event_name == 'pull_request' &&
-          github.head_ref != 'changeset-release/master' &&
+          !(github.head_ref == 'changeset-release/master' &&
+            github.event.pull_request.head.repo.full_name == github.repository) &&
           !cancelled() && steps.install.outcome == 'success'
         env:
           RELEASE_BASE_REF: origin/${{ github.base_ref }}
