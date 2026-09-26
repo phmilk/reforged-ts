@@ -1,11 +1,17 @@
 {
   "name": "reforged-ts-release",
   "private": true,
-  "description": "The release scripts of the reforged-ts workspace: Node programs behind the root release:* scripts. Never published.",
+  "description": "The release scripts of the reforged-ts workspace: Node programs behind the root release:* scripts, and the rename map module the workspace's scripts import (reforged-ts-release/rename-map). Never published.",
   "license": "MIT",
   "type": "module",
   "engines": {
     "node": ">=22.13"
+  },
+  "exports": {
+    "./rename-map": {
+      "types": "./build/rename-map.d.ts",
+      "default": "./build/rename-map.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -23,12 +29,13 @@
   },
   "dependencies": {
     "@changesets/parse": "catalog:",
-    "@manypkg/get-packages": "catalog:"
+    "@manypkg/get-packages": "catalog:",
+    "ajv": "catalog:",
+    "typescript": "catalog:"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",
     "@types/node": "catalog:",
-    "typescript": "catalog:",
     "vitest": "catalog:"
   }
 }
