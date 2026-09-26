@@ -90,7 +90,8 @@ export function checkPublish(input: PublishCheckInput): PublishCheckResult {
     problems.push(
       `Not on npm yet: ${absent.join(", ")}. Trusted publishing is configured on an ` +
         "existing package only, so the first version of a package is published by hand " +
-        "with the first-publish wizard (#149), which also configures its trusted publisher; " +
+        "with the first-publish wizard (bash release/first-publish.sh), which also configures " +
+        "its trusted publisher; " +
         "then re-run this job.",
     );
   }

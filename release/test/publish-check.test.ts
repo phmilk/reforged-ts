@@ -86,7 +86,7 @@ describe("checkPublish", () => {
     });
     expect(result.problems).toEqual([
       expect.stringMatching(
-        /^Not on npm yet: eslint-plugin-reforged, reforged-types\. .*first-publish wizard \(#149\)/,
+        /^Not on npm yet: eslint-plugin-reforged, reforged-types\. .*first-publish wizard \(bash release\/first-publish\.sh\)/,
       ) as unknown,
     ]);
   });
