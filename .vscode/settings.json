@@ -1,15 +1,53 @@
 {
-  "[typescript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-    "editor.formatOnSave": true
+  // Saved on focus change, the auto-save mode under which format on save and
+  // the code actions on save run: ESLint fixes and formats TypeScript and
+  // JavaScript (through Prettier, as `pnpm format` does), Prettier the rest.
+  "files.autoSave": "onFocusChange",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
   },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-    "editor.formatOnSave": true
-  },
-  "eslint.run": "onType",
   "eslint.format.enable": true,
-  "editor.rulers": [100],
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    // A trailing double space is a hard line break (see .editorconfig).
+    "files.trimTrailingWhitespace": false
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // The TypeScript the workspace pins, so the editor diagnoses as
+  // `pnpm check` does; VS Code asks once to switch to it.
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+
+  // The generated Typings: edit the Overlay or the generator, then
+  // regenerate. The hand-written lua-runtime.d.ts stays editable.
+  "files.readonlyInclude": {
+    "packages/reforged-types/[0-9]*/**": true,
+    "packages/reforged-types/[0-9]*.d.ts": true,
+    "packages/reforged-types/async-natives.json": true
+  },
+
+  // The tasks are the three of tasks.json: the detected npm scripts set no
+  // default and list every package's scripts, unordered.
+  "npm.autoDetect": "off",
+
+  // Also in .editorconfig, which VS Code reads only through an extension.
+  "editor.rulers": [80],
   "editor.tabSize": 2,
   "files.eol": "\n",
   "files.trimTrailingWhitespace": true
