@@ -139,3 +139,40 @@ describe("Effect.createSpellAttachment", () => {
     expect(message).toEqual("reforged-ts: failed to create Effect (AHtc)");
   });
 });
+
+describe("Effect named animations", () => {
+  it("setAnimation, queueAnimation and setAnimationBlendTime pass their argument to the Native", () => {
+    const effect = Effect.create("model.mdx", 0, 0);
+    const effectRef = handleRef("effect", effect.handle);
+    withNative(
+      "BlzSetSpecialEffectAnimation",
+      () => undefined,
+      () => {
+        effect.setAnimation("stand alternate");
+      },
+    );
+    withNative(
+      "BlzQueueSpecialEffectAnimation",
+      () => undefined,
+      () => {
+        effect.queueAnimation("birth");
+      },
+    );
+    withNative(
+      "BlzSetSpecialEffectAnimationBlendTime",
+      () => undefined,
+      () => {
+        effect.setAnimationBlendTime(0.25);
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `BlzSetSpecialEffectAnimation(${effectRef}, "stand alternate")`,
+    );
+    expect(stubCalls()).toContainCall(
+      `BlzQueueSpecialEffectAnimation(${effectRef}, "birth")`,
+    );
+    expect(stubCalls()).toContainCall(
+      `BlzSetSpecialEffectAnimationBlendTime(${effectRef}, 0.25)`,
+    );
+  });
+});

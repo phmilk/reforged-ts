@@ -7,9 +7,10 @@
 // Keep this import ahead of the library's: the library wraps the entry
 // points when it loads, and this file defines them.
 import "./support/bundle-position";
-import { describe, expect, it } from "reforged-test/lua";
+import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { MapPlayer, tsGlobals } from "../src/index";
 import { defined } from "./support/defined";
+import { handleRef } from "./support/handle-ref";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -133,5 +134,21 @@ describe("a Map project subclass of MapPlayer", () => {
     expect(MapPlayer.fromIndex(8)).toBe(contestant);
     expect(tsGlobals.Players[8] === contestant).toEqual(false);
     expect(tsGlobals.Players[8]?.handle).toBe(defined(Player(8), "Player(8)"));
+  });
+});
+
+describe("MapPlayer.setRaceSkin", () => {
+  it("passes the race preference to SetPlayerRaceSkin", () => {
+    const player = defined(MapPlayer.fromIndex(2), "MapPlayer.fromIndex(2)");
+    withNative(
+      "SetPlayerRaceSkin",
+      () => undefined,
+      () => {
+        player.setRaceSkin(RACE_PREF_FORSAKEN);
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `SetPlayerRaceSkin(${handleRef("player", player.handle)}, RACE_PREF_FORSAKEN)`,
+    );
   });
 });

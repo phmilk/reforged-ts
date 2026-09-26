@@ -178,6 +178,11 @@ export class Unit extends Widget {
     return BlzIsUnitInvulnerable(this.handle);
   }
 
+  /** Whether the hero glow is allowed on the unit, through `HeroGlowIsAllowedOnUnit` (3.0.0). */
+  public get isHeroGlowAllowed() {
+    return HeroGlowIsAllowedOnUnit(this.handle);
+  }
+
   public get level() {
     return GetUnitLevel(this.handle);
   }
@@ -452,6 +457,22 @@ export class Unit extends Widget {
     return UnitAddAbility(this.handle, abilityId);
   }
 
+  /**
+   * Adjusts the remaining cooldown of the ability by `delta`, a percentage of
+   * its full cooldown, through `BlzAdjustUnitAbilityCooldownPercent` (3.0.0).
+   */
+  public adjustAbilityCooldownPercent(abilId: number, delta: number) {
+    BlzAdjustUnitAbilityCooldownPercent(this.handle, abilId, delta);
+  }
+
+  /**
+   * Adjusts the remaining cooldown of the ability by `delta` seconds, through
+   * `BlzAdjustUnitAbilityCooldownRemaining` (3.0.0).
+   */
+  public adjustAbilityCooldownRemaining(abilId: number, delta: number) {
+    BlzAdjustUnitAbilityCooldownRemaining(this.handle, abilId, delta);
+  }
+
   public addAnimationProps(animProperties: string, add: boolean) {
     AddUnitAnimationProperties(this.handle, animProperties, add);
   }
@@ -530,6 +551,18 @@ export class Unit extends Widget {
     stockMax: number,
   ) {
     AddUnitToStock(this.handle, unitId, currentStock, stockMax);
+  }
+
+  /**
+   * Allows or disallows the hero glow on the unit, through
+   * `AllowHeroGlowOnUnit` or `DisallowHeroGlowOnUnit` (3.0.0).
+   */
+  public allowHeroGlow(allow: boolean) {
+    if (allow) {
+      AllowHeroGlowOnUnit(this.handle);
+    } else {
+      DisallowHeroGlowOnUnit(this.handle);
+    }
   }
 
   public applyTimedLife(buffId: number, duration: number) {
@@ -684,6 +717,14 @@ export class Unit extends Widget {
     return UnitDropItemTarget(this.handle, whichItem.handle, target.handle);
   }
 
+  /**
+   * Enables or disables the unit's auras, through `BlzUnitEnableAuras`
+   * (3.0.0).
+   */
+  public enableAuras(enable: boolean, affectsUI: boolean) {
+    BlzUnitEnableAuras(this.handle, enable, affectsUI);
+  }
+
   public endAbilityCooldown(abilCode: number) {
     BlzEndUnitAbilityCooldown(this.handle, abilCode);
   }
@@ -698,6 +739,14 @@ export class Unit extends Widget {
 
   public getAbilityCooldown(abilId: number, level: number) {
     return BlzGetUnitAbilityCooldown(this.handle, abilId, level);
+  }
+
+  /**
+   * The remaining cooldown of the ability as a percentage of its full
+   * cooldown, through `BlzGetUnitAbilityCooldownPercent` (3.0.0).
+   */
+  public getAbilityCooldownPercent(abilId: number) {
+    return BlzGetUnitAbilityCooldownPercent(this.handle, abilId);
   }
 
   public getAbilityCooldownRemaining(abilId: number) {
@@ -718,6 +767,18 @@ export class Unit extends Widget {
 
   public getAgility(includeBonuses: boolean) {
     return GetHeroAgi(this.handle, includeBonuses);
+  }
+
+  /**
+   * The duration of an animation of the unit's model, by name or by index,
+   * through `BlzGetUnitAnimationDuration` or
+   * `BlzGetUnitAnimationDurationByIndex` (3.0.0).
+   */
+  public getAnimationDuration(animation: string | number) {
+    if (typeof animation === "string") {
+      return BlzGetUnitAnimationDuration(this.handle, animation);
+    }
+    return BlzGetUnitAnimationDurationByIndex(this.handle, animation);
   }
 
   public getAttackCooldown(weaponIndex: number) {
@@ -1146,6 +1207,14 @@ export class Unit extends Widget {
     RemoveUnitFromStock(this.handle, itemId);
   }
 
+  /**
+   * Resets the attack of the unit's weapon, through `BlzResetUnitAttack`
+   * (3.0.0).
+   */
+  public resetAttack(weaponIndex: number) {
+    BlzResetUnitAttack(this.handle, weaponIndex);
+  }
+
   public resetCooldown() {
     UnitResetCooldown(this.handle);
   }
@@ -1175,6 +1244,22 @@ export class Unit extends Widget {
 
   public setAbilityCooldown(abilId: number, level: number, cooldown: number) {
     BlzSetUnitAbilityCooldown(this.handle, abilId, level, cooldown);
+  }
+
+  /**
+   * Sets the remaining cooldown of the ability as a percentage of its full
+   * cooldown, through `BlzSetUnitAbilityCooldownPercent` (3.0.0).
+   */
+  public setAbilityCooldownPercent(abilId: number, percent: number) {
+    BlzSetUnitAbilityCooldownPercent(this.handle, abilId, percent);
+  }
+
+  /**
+   * Sets the remaining cooldown of the ability in seconds, through
+   * `BlzSetUnitAbilityCooldownRemaining` (3.0.0).
+   */
+  public setAbilityCooldownRemaining(abilId: number, seconds: number) {
+    BlzSetUnitAbilityCooldownRemaining(this.handle, abilId, seconds);
   }
 
   public setAbilityLevel(abilCode: number, level: number) {

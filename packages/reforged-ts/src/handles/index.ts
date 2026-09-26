@@ -4,6 +4,8 @@ export * from "./camera";
 export * from "./destructable";
 export * from "./dialog";
 export * from "./effect";
+// Not `export *`: the conversion helpers stay package-internal.
+export { EquipmentType, ItemTag, LoadoutSlot } from "./equipment";
 export * from "./fogmodifier";
 export * from "./force";
 export * from "./frame";
@@ -12,6 +14,7 @@ export * from "./group";
 // Not `export *`: `expectWrapper` stays package-internal (Camera's creation route).
 export { Handle } from "./handle";
 export * from "./image";
+export * from "./input";
 export * from "./item";
 export * from "./leaderboard";
 export * from "./multiboard";

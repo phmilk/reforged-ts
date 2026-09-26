@@ -13,15 +13,17 @@ const ruleTester = createRuleTester();
 type MessageIds = "asyncArgument" | "asyncVariable" | "asyncKey";
 
 const imports =
-  'import { Frame, MapPlayer, Point, SyncRequest, Unit } from "reforged-ts";\n';
+  'import { Frame, Input, MapPlayer, Point, SyncRequest, Unit } from "reforged-ts";\n';
 
 // The number-valued sources: an `@async` Native, the `os` clock functions and
-// an `@async` library getter (decision 3). `SOURCE` in a snippet is replaced.
+// an `@async` library getter (decision 3), of an instance or of a static
+// namespace. `SOURCE` in a snippet is replaced.
 const sources: readonly { name: string; code: string }[] = [
   { name: "GetCameraTargetPositionX", code: "GetCameraTargetPositionX()" },
   { name: "os.clock", code: "os.clock()" },
   { name: "os.time", code: "os.time()" },
   { name: "Point#z", code: "point.z" },
+  { name: "Input.mouseScreenX", code: "Input.mouseScreenX" },
 ];
 
 /** The body wrapped in a function, with the names the snippets use. */
@@ -217,6 +219,16 @@ ruleTester.run("no-async-value-as-state", ruleOf("no-async-value-as-state"), {
             source: "MapPlayer.fromLocal",
             sink: "Unit.create(owner, 0, 0, 0).setOwner",
           },
+        },
+      ],
+    },
+    {
+      name: "a static namespace's @async method as game state",
+      code: `${imports}export const moving = Input.isKeyPressed(OSKEY_W);`,
+      errors: [
+        {
+          messageId: "asyncVariable",
+          data: { source: "Input.isKeyPressed", sink: "moving" },
         },
       ],
     },
