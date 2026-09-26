@@ -187,6 +187,14 @@ export interface DeclarationResolver {
    * `Reforged`) whose type has a public property of that name.
    */
   has(symbol: SymbolName): boolean;
+  /**
+   * Whether an author can still write `old`, an old symbol of the map,
+   * against the entry: `new X(...)` when the exported class `X` has a
+   * public constructor (its own or inherited), any other symbol when `has`
+   * finds it. Undefined when they cannot; `deprecated` when every
+   * declaration found carries `@deprecated`.
+   */
+  stillExported(old: string): { deprecated: boolean } | undefined;
 }
 
 /**
@@ -229,32 +237,62 @@ export function declarationResolver(
           : symbol,
       ]),
   );
+  const isPublicDeclaration = (declaration: ts.Declaration) =>
+    (ts.getCombinedModifierFlags(declaration) &
+      (ts.ModifierFlags.Private | ts.ModifierFlags.Protected)) ===
+    0;
   const isPublic = (member: ts.Symbol) =>
-    (member.declarations ?? []).every(
-      (declaration) =>
-        (ts.getCombinedModifierFlags(declaration) &
-          (ts.ModifierFlags.Private | ts.ModifierFlags.Protected)) ===
-        0,
-    );
+    (member.declarations ?? []).every(isPublicDeclaration);
+  /** The export `className`, or its public member `member`. */
+  const findPublic = ({ className, member }: SymbolName) => {
+    const symbol = exported.get(className);
+    if (symbol === undefined || member === undefined) return symbol;
+    const types: ts.Type[] = [];
+    if (symbol.flags & ts.SymbolFlags.Class) {
+      types.push(
+        checker.getTypeOfSymbol(symbol),
+        checker.getDeclaredTypeOfSymbol(symbol),
+      );
+    } else if (symbol.flags & ts.SymbolFlags.Variable) {
+      types.push(checker.getTypeOfSymbol(symbol));
+    }
+    return types
+      .map((type) => type.getProperty(member))
+      .find((found) => found !== undefined && isPublic(found));
+  };
+  /** The declarations of the public constructors of the exported class. */
+  const publicConstructors = (className: string) => {
+    const symbol = exported.get(className);
+    if (symbol === undefined || !(symbol.flags & ts.SymbolFlags.Class)) {
+      return [];
+    }
+    return checker
+      .getSignaturesOfType(
+        checker.getTypeOfSymbol(symbol),
+        ts.SignatureKind.Construct,
+      )
+      .map((signature) => signature.declaration)
+      .filter(
+        (declaration) =>
+          declaration === undefined || isPublicDeclaration(declaration),
+      );
+  };
   return {
-    has({ className, member }) {
-      const symbol = exported.get(className);
-      if (symbol === undefined) return false;
-      if (member === undefined) return true;
-      const types: ts.Type[] = [];
-      if (symbol.flags & ts.SymbolFlags.Class) {
-        types.push(
-          checker.getTypeOfSymbol(symbol),
-          checker.getDeclaredTypeOfSymbol(symbol),
-        );
-      } else if (symbol.flags & ts.SymbolFlags.Variable) {
-        types.push(checker.getTypeOfSymbol(symbol));
-      } else {
-        return false;
+    has: (symbol) => findPublic(symbol) !== undefined,
+    stillExported(old) {
+      const declarations = old.startsWith("new ")
+        ? publicConstructors(parseSymbol(old).className)
+        : findPublic(parseSymbol(old))?.declarations;
+      if (declarations === undefined || declarations.length === 0) {
+        return undefined;
       }
-      return types
-        .map((type) => type.getProperty(member))
-        .some((found) => found !== undefined && isPublic(found));
+      return {
+        deprecated: declarations.every(
+          (declaration) =>
+            declaration !== undefined &&
+            ts.getJSDocDeprecatedTag(declaration) !== undefined,
+        ),
+      };
     },
   };
 }

@@ -286,6 +286,13 @@ Missing either fails with a message naming the page path expected and the pair. 
 
 **Running it.** `pnpm release:gate` takes no arguments. The verdict goes to stdout, or to stderr when it fails; in GitHub Actions (`GITHUB_STEP_SUMMARY` set) a requirement and what is missing are also appended to the job summary. Exit codes: 0 when it passes or only reports (pre mode), 1 when something is missing for a stable version or an input cannot be read (a changeset, `pre.json`, the rename map), 2 on an argument. CI runs it on every pull request and push (`ci.yml`), and the version job of the release workflow runs it before opening the Version Packages pull request.
 
+**`data:check`, between releases.** The gate looks at the pair of the major being released; `pnpm data:check` (`release/src/data-check.ts`, programmatic entry `dataCheck(input)`) checks the whole map against the code on every pull request, in seconds and without building the site. It builds the library, then fails on two things no other check catches:
+
+- an old symbol of the map that `packages/reforged-ts/dist/index.d.ts` still exports: a rename that left the old name in place. `new X(...)` counts when `X` has a public constructor. An entry point, a package name and an entry that keeps its name (a note on changed arguments) are exported on purpose, and so is an old name marked `@deprecated` until the major of its pair (step 1 of [deprecating and removing a symbol](#deprecating-and-removing-a-symbol)); from that major, it is a removal forgotten. Two old names stay although their entry says they are gone, which the map cannot express, so the module lists them with the last major that may export them: `new SyncRequest(...)` (the constructor stays without its data overloads) and `W3TS_HOOK` (kept through 1.x, removed in 2.0);
+- a version pair of the map without its migration page at the gate's page path, once the version of `reforged-ts` has reached the pair's target major (its prereleases included). A missing page is reported without failing while pre mode is active, as the gate does.
+
+The schema, the replacements and each pair's entries or marker stay the library's `renames.test.ts`; `async-natives.json` stays `typings:check`'s. Exit codes: 0 when nothing fails, 1 on a violation or an unreadable input, 2 on an argument.
+
 ## The Template gate
 
 The Template is the Reference consumer ([ADR 0006](adr/0006-template-owns-code-editor-owns-data.md)): no release reaches npm unless the Template builds, lints and passes its tests against the packed packages. `pnpm release:template-gate` checks this. The release workflow runs it between pack and publish, and it runs locally the same way.
