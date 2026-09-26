@@ -1,0 +1,45 @@
+# The Patch watch (.github/workflows/patch-watch.yml, #195) opens its
+# "New Patch" issues with this form's body: one "### <label>" section per
+# field below, in this order. Keep the ids and the labels stable; a change to
+# either changes what the watch must write, so update the watch in the same
+# pull request. The watch also finds an existing report by the `game-patch`
+# label and the Build in the title.
+name: New game Patch
+description: A live game Patch newer than the one the Typings support.
+title: "New Patch: "
+labels: [game-patch, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The Patch watch checks [jass-history](https://github.com/Luashine/jass-history) every day and opens this issue itself, so a report is only needed when you noticed a Patch first. Put its Build in the title (`New Patch: 3.0.0.24277`). A Patch on the public test realm is reported once it is live.
+  - type: input
+    id: build
+    attributes:
+      label: Build
+      description: All four numbers of the Patch, as the game shows them on its main menu. The first three are its Game version; if you know only those, write them.
+      placeholder: 3.0.0.24277
+    validations:
+      required: true
+  - type: input
+    id: tag
+    attributes:
+      label: jass-history tag
+      description: The tag of this Build in [jass-history](https://github.com/Luashine/jass-history/tags), if there is one.
+      placeholder: Reforged-v3.0.0.24277-w3-1a2b3c4
+    validations:
+      required: false
+  - type: textarea
+    id: observed
+    attributes:
+      label: Where it was observed
+      description: Where you saw the Patch (the game client, the launcher, patch notes, a jass-history commit), with links.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional context
+      description: Anything else, such as the Natives you know it adds or changes, or other Builds released since the supported one.
+    validations:
+      required: false

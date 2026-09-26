@@ -1,0 +1,82 @@
+name: Bug report
+description: The library, the Typings, the harness or the lint plugin does something wrong.
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Search the [open issues](https://github.com/phmilk/reforged-ts/issues) first; for a question about how to do something in a map, ask on [Hive Workshop, Triggers & Scripts](https://www.hiveworkshop.com/forums/triggers-scripts.269/) instead.
+  - type: input
+    id: library-version
+    attributes:
+      label: Library version
+      description: The version of `reforged-ts` in your `package.json` or lockfile.
+      placeholder: 1.0.0-alpha.3
+    validations:
+      required: true
+  - type: input
+    id: typings-version
+    attributes:
+      label: Typings version
+      description: The version of `reforged-types`, and the Game version your `tsconfig.json` selects (`reforged-types/3.0.0`).
+      placeholder: 1.0.0-alpha.2, 3.0.0
+    validations:
+      required: true
+  - type: input
+    id: patch
+    attributes:
+      label: Game Patch
+      description: The Build of the game you ran the map on, all four numbers. The game shows it on its main menu.
+      placeholder: 3.0.0.24268
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      description: Where you build the map (and play it, if they differ).
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other (say which below)
+    validations:
+      required: true
+  - type: textarea
+    id: script
+    attributes:
+      label: Minimal script
+      description: The smallest TypeScript that shows the bug, or the compiled Lua it produces, in a fenced code block. Leave out everything the bug does not need.
+      placeholder: |
+        ```ts
+        import { Timer } from "reforged-ts";
+
+        Timer.after(1, () => print("fired"));
+        ```
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: What happened instead, with any error message, lint report or desync, verbatim.
+    validations:
+      required: true
+  - type: dropdown
+    id: dev-mode
+    attributes:
+      label: Does it reproduce in Dev mode?
+      description: "Dev mode is `Reforged.configure({ devMode: true })`; its runtime Guards often name the cause."
+      options:
+        - "Yes"
+        - "No"
+        - Not tried
+    validations:
+      required: true
