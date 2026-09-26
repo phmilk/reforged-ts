@@ -113,9 +113,8 @@ export function typingsReferences(
 }
 
 /**
- * The Typings as a Map project compiles them (reforged-types'
- * `tsconfig.typings.json`), declaration files unchecked: their own build
- * type-checks them.
+ * The Jass files as declarations alone: they need no type package, and
+ * their own build type-checks them, so library files go unchecked.
  */
 const TYPINGS_COMPILER_OPTIONS = {
   target: "ESNext",
@@ -259,7 +258,11 @@ export function referenceSidebars(
               link: { type: "doc", id: index },
               items: generatedSidebar(args.version.contentPath, reference),
             }
-          : { type: "doc", id: index, label: reference.label };
+          : {
+              type: "doc",
+              id: generatedIndex(args.version.contentPath, reference),
+              label: reference.label,
+            };
       placed.set(section, [...(placed.get(section) ?? []), item]);
     }
     for (const [section, placedItems] of placed) {
@@ -287,6 +290,19 @@ function findSection(
   return undefined;
 }
 
+/** The doc id of a reference's index page, once its TypeDoc run wrote it. */
+function generatedIndex(contentPath: string, reference: Reference): string {
+  const file = join(contentPath, reference.dir, "index.md");
+  if (!existsSync(file)) {
+    throw new Error(notGenerated(file, reference));
+  }
+  return `${reference.dir}/index`;
+}
+
+function notGenerated(file: string, reference: Reference): string {
+  return `${file} does not exist: the reference of ${reference.label} was not generated. TypeDoc's log above says why.`;
+}
+
 /** The sidebar a reference's TypeDoc run wrote, read afresh at every call. */
 function generatedSidebar(
   contentPath: string,
@@ -294,9 +310,7 @@ function generatedSidebar(
 ): SidebarItem[] {
   const file = join(contentPath, reference.dir, "typedoc-sidebar.cjs");
   if (!existsSync(file)) {
-    throw new Error(
-      `${file} does not exist: the reference of ${reference.label} was not generated. TypeDoc's log above says why.`,
-    );
+    throw new Error(notGenerated(file, reference));
   }
   const require = createRequire(import.meta.url);
   // A rerun of `docs:start` regenerates the file: never serve a cached one.

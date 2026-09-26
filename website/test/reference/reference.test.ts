@@ -38,19 +38,24 @@ afterEach(async () => {
   await rm(docsPath, { recursive: true, force: true });
 });
 
-/** Generates the fixture's reference the way the site's plugin instance does. */
+/**
+ * Generates the fixture's reference the way the site's plugin instance does,
+ * with more TypeDoc plugins when given.
+ */
 async function generate(
   strict: boolean,
   reference = FIXTURE_REFERENCE,
+  plugins: readonly string[] = [],
 ): Promise<void> {
   const context = {
     siteDir: docsPath,
     siteConfig: { presets: [] },
   } as unknown as LoadContext;
-  await docusaurusPluginTypedoc(
-    context,
-    referencePluginOptions(reference, { strict, docsPath }),
-  );
+  const options = referencePluginOptions(reference, { strict, docsPath });
+  await docusaurusPluginTypedoc(context, {
+    ...options,
+    plugin: [...(options.plugin ?? []), ...plugins],
+  });
 }
 
 async function page(path: string): Promise<string> {
@@ -126,6 +131,18 @@ describe("the reference", () => {
         tsconfig: join(library, "tsconfig.json"),
       }),
     ).rejects.toThrow("TypeDoc reported 1 error(s) in the reference");
+  });
+
+  it("fails on an error TypeDoc reports writing the pages", async () => {
+    const failing = join(docsPath, "failing-page.mjs");
+    await writeFile(
+      failing,
+      'export function load(app) { app.renderer.on("endPage", () => { throw new Error("disk full"); }); }',
+    );
+
+    await expect(generate(false, FIXTURE_REFERENCE, [failing])).rejects.toThrow(
+      /TypeDoc reported \d+ error\(s\) writing the reference of fixture-library;/,
+    );
   });
 
   it("reports an undocumented member as a warning when not strict", async () => {

@@ -199,6 +199,8 @@ describe("the sidebar", () => {
       tsconfig: "",
     };
     const typings = only(typingsReferences(FIXTURE, temp));
+    await mkdir(join(temp, typings.dir), { recursive: true });
+    await writeFile(join(temp, typings.dir, "index.md"), "# 9.9.9");
     await mkdir(join(temp, library.dir), { recursive: true });
     await writeFile(
       join(temp, library.dir, "typedoc-sidebar.cjs"),

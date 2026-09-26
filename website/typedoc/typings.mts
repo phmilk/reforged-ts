@@ -8,7 +8,10 @@ import { readFileSync } from "node:fs";
 /** The kinds of entry a manifest holds (reforged-types' `src/artefacts.ts`). */
 export const ENTRY_KINDS = ["native", "function", "global"] as const;
 
-/** A Native, a Blizzard.j function, or a global. */
+/**
+ * The manifest's kinds of Native: a function of `common.j` or `common.ai`, a
+ * Blizzard.j function, or a global.
+ */
 export type EntryKind = (typeof ENTRY_KINDS)[number];
 
 /** What an entry's page needs: its name and its kind, nothing else. */
@@ -26,8 +29,8 @@ export interface TypingsManifest {
 
 /**
  * An entry's page in the Typings reference of its Game version, relative to
- * the reference's folder, without `.md`: `functions/<name>` for a Native or a
- * Blizzard.j function, `variables/<name>` for a global. The reference puts
+ * the reference's folder, without `.md`: `functions/<name>` for a `native` or
+ * a `function`, `variables/<name>` for a `global`. The reference puts
  * the declarations of `common.j`, `blizzard.j` and `common.ai` side by side,
  * so the Jass file an entry comes from is not part of it. The page's route is
  * the same path under the reference's route.

@@ -52,7 +52,9 @@ interface TsdocConfig {
 /**
  * The site's minimal `tsdoc.json`: the custom tags of the TSDoc standard
  * (ADR 0004) and typescript-to-lua's annotations, declared until the library
- * ships the workspace file (#43). The Typings have none of their own.
+ * ships the workspace file (#43). The Typings' references keep needing it:
+ * TypeDoc reads a `tsdoc.json` next to the tsconfig, and theirs are written
+ * by the site.
  */
 const SITE_TSDOC = new URL("tsdoc.json", import.meta.url);
 
