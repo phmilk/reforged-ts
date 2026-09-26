@@ -27,7 +27,8 @@
     "release:template-clone": "tsc -p tsconfig.json && node build/cli/template-clone.js",
     "release:publish-check": "tsc -p tsconfig.json && node build/cli/publish-check.js",
     "actionlint": "tsc -p tsconfig.json && node build/cli/actionlint.js",
-    "patch-watch:plan": "tsc -p tsconfig.json && node build/cli/patch-watch.js"
+    "patch-watch:plan": "tsc -p tsconfig.json && node build/cli/patch-watch.js",
+    "data:check": "tsc -p tsconfig.json && node build/cli/data-check.js"
   },
   "dependencies": {
     "@changesets/parse": "catalog:",

@@ -34,6 +34,7 @@ Run from the root after `pnpm install`:
 | `pnpm test`             | One vitest run over every package's projects and the root `test/` project (packs each publishable package and checks its tarball).                  |
 | `pnpm typings:generate` | Regenerates the Typings from the vendored Patch files and the Overlay.                                                                              |
 | `pnpm typings:check`    | Fails when the committed Typings differ from what the generator produces (the drift check).                                                         |
+| `pnpm data:check`       | Builds the library, then fails on an old name of the rename map still exported or a version pair without its migration page (reported in pre mode). |
 | `pnpm actionlint`       | actionlint on the workflow files, at the version CI runs; downloaded on first use and checked against its pinned checksum, so nothing is installed. |
 | `pnpm patch-watch:plan` | Prints whether jass-history tags a live Patch newer than the supported one, and why each other tag is ignored. Changes nothing.                     |
 
