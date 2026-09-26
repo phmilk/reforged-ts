@@ -4,8 +4,8 @@
   "totals": {
     "natives": 1681,
     "owned": 984,
-    "covered": 817,
-    "missing": 167,
+    "covered": 847,
+    "missing": 137,
     "excluded": 0,
     "unowned": 697
   },
@@ -2581,8 +2581,8 @@
       "type": "destructable",
       "counts": {
         "owned": 58,
-        "covered": 25,
-        "missing": 33,
+        "covered": 55,
+        "missing": 3,
         "excluded": 0
       },
       "covered": [
@@ -2603,6 +2603,20 @@
         {
           "name": "CreateDestructableZ",
           "signature": "CreateDestructableZ takes integer objectid, real x, real y, real z, real face, real scale, integer variation returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "CreateDeadDestructable",
+          "signature": "CreateDeadDestructable takes integer objectid, real x, real y, real face, real scale, integer variation returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "CreateDeadDestructableZ",
+          "signature": "CreateDeadDestructableZ takes integer objectid, real x, real y, real z, real face, real scale, integer variation returns destructable",
           "coveredBy": [
             "Destructable"
           ]
@@ -2713,6 +2727,13 @@
           ]
         },
         {
+          "name": "SetDestructableColor",
+          "signature": "SetDestructableColor takes destructable d, playercolor color returns nothing",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
           "name": "ShowDestructable",
           "signature": "ShowDestructable takes destructable d, boolean flag returns nothing",
           "coveredBy": [
@@ -2760,6 +2781,195 @@
           "coveredBy": [
             "Destructable"
           ]
+        },
+        {
+          "name": "BlzCreateDeadDestructableWithSkin",
+          "signature": "BlzCreateDeadDestructableWithSkin takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDeadDestructableZWithSkin",
+          "signature": "BlzCreateDeadDestructableZWithSkin takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDestructablePitchRoll",
+          "signature": "BlzCreateDestructablePitchRoll takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDestructableZPitchRoll",
+          "signature": "BlzCreateDestructableZPitchRoll takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDeadDestructablePitchRoll",
+          "signature": "BlzCreateDeadDestructablePitchRoll takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDeadDestructableZPitchRoll",
+          "signature": "BlzCreateDeadDestructableZPitchRoll takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDestructableWithSkinPitchRoll",
+          "signature": "BlzCreateDestructableWithSkinPitchRoll takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, integer skinId returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDestructableZWithSkinPitchRoll",
+          "signature": "BlzCreateDestructableZWithSkinPitchRoll takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, integer skinId returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDeadDestructableWithSkinPitchRoll",
+          "signature": "BlzCreateDeadDestructableWithSkinPitchRoll takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, integer skinId returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDeadDestructableZWithSkinPitchRoll",
+          "signature": "BlzCreateDeadDestructableZWithSkinPitchRoll takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, integer skinId returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDestructableWithColor",
+          "signature": "BlzCreateDestructableWithColor takes integer objectid, real x, real y, real face, real scale, integer variation, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDestructableZWithColor",
+          "signature": "BlzCreateDestructableZWithColor takes integer objectid, real x, real y, real z, real face, real scale, integer variation, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDeadDestructableWithColor",
+          "signature": "BlzCreateDeadDestructableWithColor takes integer objectid, real x, real y, real face, real scale, integer variation, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDeadDestructableZWithColor",
+          "signature": "BlzCreateDeadDestructableZWithColor takes integer objectid, real x, real y, real z, real face, real scale, integer variation, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDestructableWithSkinColor",
+          "signature": "BlzCreateDestructableWithSkinColor takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDestructableZWithSkinColor",
+          "signature": "BlzCreateDestructableZWithSkinColor takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDeadDestructableWithSkinColor",
+          "signature": "BlzCreateDeadDestructableWithSkinColor takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDeadDestructableZWithSkinColor",
+          "signature": "BlzCreateDeadDestructableZWithSkinColor takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDestructablePitchRollWithColor",
+          "signature": "BlzCreateDestructablePitchRollWithColor takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDestructableZPitchRollWithColor",
+          "signature": "BlzCreateDestructableZPitchRollWithColor takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDeadDestructablePitchRollWithColor",
+          "signature": "BlzCreateDeadDestructablePitchRollWithColor takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDeadDestructableZPitchRollWithColor",
+          "signature": "BlzCreateDeadDestructableZPitchRollWithColor takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDestructableWithSkinPitchRollColor",
+          "signature": "BlzCreateDestructableWithSkinPitchRollColor takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, integer skinId, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDestructableZWithSkinPitchRollColor",
+          "signature": "BlzCreateDestructableZWithSkinPitchRollColor takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, integer skinId, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDeadDestructableWithSkinPitchRollColor",
+          "signature": "BlzCreateDeadDestructableWithSkinPitchRollColor takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, integer skinId, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "BlzCreateDeadDestructableZWithSkinPitchRollColor",
+          "signature": "BlzCreateDeadDestructableZWithSkinPitchRollColor takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, integer skinId, playercolor color returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "SetDestructableVertexColor",
+          "signature": "SetDestructableVertexColor takes destructable whichDestructable, integer red, integer green, integer blue, integer alpha returns nothing",
+          "coveredBy": [
+            "Destructable"
+          ]
         }
       ],
       "missing": [
@@ -2774,126 +2984,6 @@
         {
           "name": "GetOrderTargetDestructable",
           "signature": "GetOrderTargetDestructable takes nothing returns destructable"
-        },
-        {
-          "name": "CreateDeadDestructable",
-          "signature": "CreateDeadDestructable takes integer objectid, real x, real y, real face, real scale, integer variation returns destructable"
-        },
-        {
-          "name": "CreateDeadDestructableZ",
-          "signature": "CreateDeadDestructableZ takes integer objectid, real x, real y, real z, real face, real scale, integer variation returns destructable"
-        },
-        {
-          "name": "SetDestructableColor",
-          "signature": "SetDestructableColor takes destructable d, playercolor color returns nothing"
-        },
-        {
-          "name": "BlzCreateDeadDestructableWithSkin",
-          "signature": "BlzCreateDeadDestructableWithSkin takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId returns destructable"
-        },
-        {
-          "name": "BlzCreateDeadDestructableZWithSkin",
-          "signature": "BlzCreateDeadDestructableZWithSkin takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId returns destructable"
-        },
-        {
-          "name": "BlzCreateDestructablePitchRoll",
-          "signature": "BlzCreateDestructablePitchRoll takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation returns destructable"
-        },
-        {
-          "name": "BlzCreateDestructableZPitchRoll",
-          "signature": "BlzCreateDestructableZPitchRoll takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation returns destructable"
-        },
-        {
-          "name": "BlzCreateDeadDestructablePitchRoll",
-          "signature": "BlzCreateDeadDestructablePitchRoll takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation returns destructable"
-        },
-        {
-          "name": "BlzCreateDeadDestructableZPitchRoll",
-          "signature": "BlzCreateDeadDestructableZPitchRoll takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation returns destructable"
-        },
-        {
-          "name": "BlzCreateDestructableWithSkinPitchRoll",
-          "signature": "BlzCreateDestructableWithSkinPitchRoll takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, integer skinId returns destructable"
-        },
-        {
-          "name": "BlzCreateDestructableZWithSkinPitchRoll",
-          "signature": "BlzCreateDestructableZWithSkinPitchRoll takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, integer skinId returns destructable"
-        },
-        {
-          "name": "BlzCreateDeadDestructableWithSkinPitchRoll",
-          "signature": "BlzCreateDeadDestructableWithSkinPitchRoll takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, integer skinId returns destructable"
-        },
-        {
-          "name": "BlzCreateDeadDestructableZWithSkinPitchRoll",
-          "signature": "BlzCreateDeadDestructableZWithSkinPitchRoll takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, integer skinId returns destructable"
-        },
-        {
-          "name": "BlzCreateDestructableWithColor",
-          "signature": "BlzCreateDestructableWithColor takes integer objectid, real x, real y, real face, real scale, integer variation, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDestructableZWithColor",
-          "signature": "BlzCreateDestructableZWithColor takes integer objectid, real x, real y, real z, real face, real scale, integer variation, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDeadDestructableWithColor",
-          "signature": "BlzCreateDeadDestructableWithColor takes integer objectid, real x, real y, real face, real scale, integer variation, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDeadDestructableZWithColor",
-          "signature": "BlzCreateDeadDestructableZWithColor takes integer objectid, real x, real y, real z, real face, real scale, integer variation, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDestructableWithSkinColor",
-          "signature": "BlzCreateDestructableWithSkinColor takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDestructableZWithSkinColor",
-          "signature": "BlzCreateDestructableZWithSkinColor takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDeadDestructableWithSkinColor",
-          "signature": "BlzCreateDeadDestructableWithSkinColor takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDeadDestructableZWithSkinColor",
-          "signature": "BlzCreateDeadDestructableZWithSkinColor takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDestructablePitchRollWithColor",
-          "signature": "BlzCreateDestructablePitchRollWithColor takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDestructableZPitchRollWithColor",
-          "signature": "BlzCreateDestructableZPitchRollWithColor takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDeadDestructablePitchRollWithColor",
-          "signature": "BlzCreateDeadDestructablePitchRollWithColor takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDeadDestructableZPitchRollWithColor",
-          "signature": "BlzCreateDeadDestructableZPitchRollWithColor takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDestructableWithSkinPitchRollColor",
-          "signature": "BlzCreateDestructableWithSkinPitchRollColor takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, integer skinId, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDestructableZWithSkinPitchRollColor",
-          "signature": "BlzCreateDestructableZWithSkinPitchRollColor takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, integer skinId, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDeadDestructableWithSkinPitchRollColor",
-          "signature": "BlzCreateDeadDestructableWithSkinPitchRollColor takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, integer skinId, playercolor color returns destructable"
-        },
-        {
-          "name": "BlzCreateDeadDestructableZWithSkinPitchRollColor",
-          "signature": "BlzCreateDeadDestructableZWithSkinPitchRollColor takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, integer skinId, playercolor color returns destructable"
-        },
-        {
-          "name": "SetDestructableVertexColor",
-          "signature": "SetDestructableVertexColor takes destructable whichDestructable, integer red, integer green, integer blue, integer alpha returns nothing"
         }
       ],
       "excluded": []

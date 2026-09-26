@@ -23,14 +23,14 @@
   },
   {
     "old": "new Destructable(...)",
-    "new": "Destructable.createZ(...)",
+    "new": "Destructable.create(...)",
     "kind": "constructor",
     "versions": {
       "from": "w3ts@3",
       "to": "reforged-ts@1"
     },
-    "oneToOne": true,
-    "note": "The constructor took a z coordinate, which `Destructable.createZ` takes in the same position with the same other arguments, while `Destructable.create` has none."
+    "oneToOne": false,
+    "note": "The constructor took the rawcode, x, y, z, facing, scale and variation in that order; `Destructable.create` takes one options object, `{ typeId, x, y, z, face, scale, variation }`, and picks the creation Native from the options given."
   },
   {
     "old": "new Dialog(...)",
@@ -728,5 +728,16 @@
     },
     "oneToOne": false,
     "note": "The array of values written so far is private: `toString()` packs them, and the typed `writeX` members are the only way to add one."
+  },
+  {
+    "old": "Destructable.createZ",
+    "new": "Destructable.create",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "`Destructable.create` takes the z coordinate as its `z` option, `Destructable.create({ typeId, x, y, z })`, next to the facing, scale, variation and skin `createZ` took in order."
   }
 ]

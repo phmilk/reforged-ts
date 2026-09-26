@@ -3,8 +3,9 @@
 // this step's version pair, name only replacements that exist in the
 // library's emitted declarations and cover every member step 3 removes, every
 // entry point, enum and helper step 4 removes or replaces, every Trigger
-// registration step 5 renames or changes, and every member of the sync, host
-// and binary Systems step 6 removes or renames.
+// registration step 5 renames or changes, every member of the sync, host
+// and binary Systems step 6 removes or renames, and every member step 7
+// removes.
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
@@ -130,6 +131,15 @@ const REMOVED_IN_STEP_6: [old: string, kind: RenameEntry["kind"]][] = [
   ["BinaryReader.read", "member"],
   ["BinaryReader.data", "member"],
   ["BinaryWriter.values", "member"],
+];
+
+/**
+ * What build step 7 (#54) removes from the public API, with its kind:
+ * `Destructable.createZ`, whose height is the `z` option of the one factory
+ * `Destructable.create`.
+ */
+const REMOVED_IN_STEP_7: [old: string, kind: RenameEntry["kind"]][] = [
+  ["Destructable.createZ", "member"],
 ];
 
 const valid: RenameEntry = {
@@ -369,6 +379,14 @@ describe("migration/renames.json", () => {
     const kinds = new Map(entries.map((entry) => [entry.old, entry.kind]));
     expect(
       REMOVED_IN_STEP_6.filter(([old, kind]) => kinds.get(old) !== kind),
+    ).toEqual([]);
+  });
+
+  it("has an entry for every member step 7 removes, of its kind", async () => {
+    const entries = await loadRenames();
+    const kinds = new Map(entries.map((entry) => [entry.old, entry.kind]));
+    expect(
+      REMOVED_IN_STEP_7.filter(([old, kind]) => kinds.get(old) !== kind),
     ).toEqual([]);
   });
 

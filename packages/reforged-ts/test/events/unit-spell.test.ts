@@ -24,7 +24,11 @@ const owner = defined(MapPlayer.fromIndex(0), "the player in slot 0");
 const caster = Unit.create(owner, FourCC("Hpal"), 0, 0);
 const targetUnit = Unit.create(owner, FourCC("hfoo"), 0, 0);
 const targetItem = Item.create(FourCC("ratf"), 0, 0);
-const targetDestructable = Destructable.create(FourCC("LTlt"), 0, 0);
+const targetDestructable = Destructable.create({
+  typeId: FourCC("LTlt"),
+  x: 0,
+  y: 0,
+});
 
 /** The firing context of a spell event, but for the caster. */
 const spellContext = {
