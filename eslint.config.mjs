@@ -55,15 +55,16 @@ export default defineConfig(
   },
   // The library's static namespaces: classes of static members only, over
   // one facility of the whole game rather than one Handle (`Camera`, `File`,
-  // `Input`). They stay static classes, decided on #54: a Map project calls
-  // `Camera.setPos` as in w3ts, and the coverage report counts the Natives a
-  // class calls, never those of a TypeScript namespace or a `const` object.
-  // The next static namespace (`Terrain`, the tier-3 namespaces of 1.1) adds
-  // its file to this list rather than an inline exception.
+  // `Input`, `Terrain`). They stay static classes, decided on #54: a Map
+  // project calls `Camera.setPos` as in w3ts, and the coverage report counts
+  // the Natives a class calls, never those of a TypeScript namespace or a
+  // `const` object. The next static namespace (the tier-3 namespaces of 1.1)
+  // adds its file to this list rather than an inline exception.
   {
     files: [
       "packages/reforged-ts/src/handles/camera.ts",
       "packages/reforged-ts/src/handles/input.ts",
+      "packages/reforged-ts/src/handles/terrain.ts",
       "packages/reforged-ts/src/system/file.ts",
     ],
     rules: {
