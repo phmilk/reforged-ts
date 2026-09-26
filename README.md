@@ -13,7 +13,7 @@ The pnpm workspace of reforged-ts, a TypeScript API for Warcraft III custom maps
 
 The library's own tests run on `reforged-test`, and the library compiles against `reforged-types/3.0.0`.
 
-**Build phase.** Until 1.0.0, every version of the four packages is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag, so a Map project installs them with `@next` (`pnpm add reforged-ts@next reforged-types@next`). npm gave `latest` to the first alpha, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then. See [Pre mode and the `next` dist-tag](docs/release.md#pre-mode-and-the-next-dist-tag).
+**Build phase.** Until 1.0.0, every version of the four packages is an alpha (`1.0.0-alpha.N`) published under the `next` dist-tag, so a Map project installs them with `@next` (`pnpm add reforged-ts@next reforged-types@next`). No alpha is published yet. Once the first one is, npm gives `latest` to it, so `latest` stays on `1.0.0-alpha.0` until 1.0.0 is published, and moves to 1.0.0 then. See [Pre mode and the `next` dist-tag](docs/release.md#pre-mode-and-the-next-dist-tag).
 
 ## Requirements
 
@@ -24,17 +24,18 @@ The library's own tests run on `reforged-test`, and the library compiles against
 
 ## Getting started
 
-A Map project starts from the Template, [`phmilk/reforged-ts-template`](https://github.com/phmilk/reforged-ts-template): a Warcraft III 3.0.0 map whose code lives in `src`, built into the map with `pnpm build` and opened in the game with `pnpm test:map`. The Template is under construction and not public yet, and no package is on npm yet, so today a Map project installs the packages from a clone of this repository:
+A Map project starts from the Template, [`phmilk/reforged-ts-template`](https://github.com/phmilk/reforged-ts-template): a Warcraft III 3.0.0 map whose code lives in `src`, built into the map with `pnpm build` and opened in the game with `pnpm test:map`. The Template is under construction and private: its clone and its links below work only for its collaborators. No package is on npm yet either, so today a Map project installs the packages from a clone of this repository:
 
 ```sh
 git clone https://github.com/phmilk/reforged-ts
 git clone https://github.com/phmilk/reforged-ts-template my-map
 cd my-map
 pnpm use:local ../reforged-ts   # builds, packs and installs the four packages from the clone
+# open maps/reforged-ts-template.w3m in the World Editor and save it once (the script language stays Lua)
 pnpm test:map                   # builds the map and opens it in the game
 ```
 
-The map folder must be saved once in the World Editor before the first build; the Template's README has [the full first run](https://github.com/phmilk/reforged-ts-template#first-run). Once the first alpha is on npm, the start is `gh repo create my-map --template phmilk/reforged-ts-template --clone`, then `pnpm install && pnpm test:map`: the roadmap ([#147](https://github.com/phmilk/reforged-ts/issues/147)) tracks the way there.
+The Template's README has [the full first run](https://github.com/phmilk/reforged-ts-template#first-run). Once the Template is public and flagged as a template repository, and the first alpha is on npm, the start becomes `gh repo create my-map --template phmilk/reforged-ts-template --clone`, then `pnpm install && pnpm test:map`: the roadmap ([#147](https://github.com/phmilk/reforged-ts/issues/147)) tracks the way there.
 
 ## Docs
 
