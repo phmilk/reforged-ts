@@ -76,7 +76,8 @@ export default defineConfig({
       },
       {
         // The repository's conventions, in Node, on the committed files that
-        // agents read (AGENTS.md, CLAUDE.md). Needs no build.
+        // agents and editors read (AGENTS.md, CLAUDE.md, .vscode). Needs no
+        // build.
         test: {
           name: "conventions",
           root: "test/conventions",

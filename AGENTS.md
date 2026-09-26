@@ -26,7 +26,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `docs/adr/`: the decisions, numbered. `docs/research/`: the research they rely on (the probe map of the game's Lua).
 - `docs/release.md`: changesets, versions and the release workflow.
 - `release/`: the release scripts, a private workspace package.
-- `test/`: the workspace-level tests: the tarballs, and under `conventions/` the checks on this file.
+- `test/`: the workspace-level tests: the tarballs, and under `conventions/` the checks on this file and the editor settings.
 - `.claude/skills/`: the Agent skills, listed under "Agent skills".
 
 ## Rules

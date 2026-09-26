@@ -29,7 +29,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
 
-  // The TypeScript the Toolchain pins, so the editor diagnoses as
+  // The TypeScript the workspace pins, so the editor diagnoses as
   // `pnpm check` does; VS Code asks once to switch to it.
   "js/ts.tsdk.path": "node_modules/typescript/lib",
   "js/ts.tsdk.promptToUseWorkspaceVersion": true,
