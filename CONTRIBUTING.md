@@ -76,3 +76,5 @@ The `spec` and `ticket` labels mark the maintainer's planning issues (a spec and
 ## The maintainer's repository setup
 
 The one-time setup of this repository is the maintainer's, not a contributor's: the GitHub App the workflows open their pull requests with, its client ID and private key ([docs/release.md, Prerequisites outside this repository](docs/release.md#prerequisites-outside-this-repository)), and the npm side of publishing ([Human steps](docs/release.md#human-steps)).
+
+The repository's own settings are committed: the ruleset on `master` in [`.github/rulesets/master.json`](.github/rulesets/master.json) (a pull request, both CI legs, linear history, no force push or deletion, the administrator may bypass), and the merge settings (squash only, auto-merge, head branches deleted), the Pages source (GitHub Actions) and the labels in `release/src/repo-settings.ts`. `pnpm repo:settings` makes the repository match them through the GitHub API, as the `gh` login, which must be an administrator of the repository; run `pnpm repo:settings --dry-run` first, it prints every request and sends none. `--repo <owner/name>` targets another repository, such as a fork.
