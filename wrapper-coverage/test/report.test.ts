@@ -272,6 +272,14 @@ describe("the exclusions file", () => {
       [{ ...valid, date: "2026-02-30" }],
       "entry 0 has the date 2026-02-30, not YYYY-MM-DD",
     ],
+    [
+      [{ ...valid, date: "2026-13-01" }],
+      "entry 0 has the date 2026-13-01, not YYYY-MM-DD",
+    ],
+    [
+      [{ ...valid, date: "25/09/2026" }],
+      "entry 0 has the date 25/09/2026, not YYYY-MM-DD",
+    ],
     [[valid, valid], "IsUnitInvisible is excluded twice"],
   ])("rejects %j", async (exclusions, detail) => {
     expect(await messageOf(exclusions)).toBe(
@@ -305,15 +313,20 @@ describe("the Wrapper configuration", () => {
   });
 
   it("fails on a listed handle type the manifest names nowhere", async () => {
+    const sources = standardSources();
+    sources["handles/lightning.ts"] =
+      "export class Lightning extends Handle<lightning> {}\n";
+
     const report = await reportOf({
-      wrappers: { ...standardWrappers(), Camera: "camera" },
+      sources,
+      wrappers: { ...standardWrappers(), Lightning: "lightning" },
     });
 
     expect(report.problems).toEqual([
       {
         kind: "unknown-type",
         message:
-          "The Wrapper configuration gives Camera the handle type camera, which the manifest names nowhere.",
+          "The Wrapper configuration gives Lightning the handle type lightning, which the manifest names nowhere.",
       },
     ]);
   });
@@ -327,10 +340,24 @@ describe("the Wrapper configuration", () => {
       {
         kind: "missing-wrapper",
         message:
-          "The Wrapper configuration lists Hashtable, which no class declaration in the sources names.",
+          "The Wrapper configuration lists Hashtable, which is no class extending Handle in the sources.",
       },
     ]);
     expect(wrapper(report, "Hashtable").counts.owned).toBe(1);
+  });
+
+  it("fails on a listed class that does not extend the Handle base", async () => {
+    const report = await reportOf({
+      wrappers: { ...standardWrappers(), Camera: "camerafield" },
+    });
+
+    expect(report.problems).toEqual([
+      {
+        kind: "missing-wrapper",
+        message:
+          "The Wrapper configuration lists Camera, which is no class extending Handle in the sources.",
+      },
+    ]);
   });
 
   it.each([

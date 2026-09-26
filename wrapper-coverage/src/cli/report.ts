@@ -8,7 +8,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { errorMessage } from "../input-error.js";
+import { errorMessage } from "../unknown.js";
 import {
   realInput,
   repositoryRoot,
@@ -50,6 +50,9 @@ async function update(path: string, text: string): Promise<boolean> {
   await writeFile(path, text);
   return true;
 }
+
+const plural = (count: number, noun: string) =>
+  `${String(count)} ${noun}${count === 1 ? "" : "s"}`;
 
 /** One line per missing Native, then one per problem. */
 function failures(report: CoverageReport): string {
@@ -97,7 +100,7 @@ export async function main(
   output.stdout(
     `Wrapper coverage of Patch ${result.report.patch}: ${String(totals.owned)} owned Natives, ` +
       `${String(totals.covered)} covered, ${String(totals.excluded)} excluded, ` +
-      `${String(totals.missing)} missing; ${String(problems.length)} problems. ` +
+      `${String(totals.missing)} missing; ${plural(problems.length, "problem")}. ` +
       `${written.length === 0 ? "No file changed." : `Wrote ${written.join(", ")}.`}\n`,
   );
   return result.failed ? 1 : 0;

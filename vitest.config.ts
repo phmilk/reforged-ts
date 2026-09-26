@@ -119,6 +119,13 @@ export default defineConfig({
           /\/packages\/eslint-plugin-reforged\/(?:data\/.+\.json|test\/fixture-project\/.+)$/,
         testsToRun: () => "packages/eslint-plugin-reforged/test",
       },
+      {
+        // The coverage report's drift test reads the library sources, the
+        // manifests and its committed configuration and report from disk.
+        pattern:
+          /\/(?:packages\/reforged-ts\/src\/.+\.ts|packages\/reforged-types\/[\d.]+\/manifest\.json|wrapper-coverage\/[^/]+\.(?:json|md))$/,
+        testsToRun: () => "wrapper-coverage/test/real-inputs.test.ts",
+      },
     ],
   },
 });

@@ -6,7 +6,8 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { errorMessage, InputError, isRecord } from "./input-error.js";
+import { InputError } from "./input-error.js";
+import { errorMessage, isRecord } from "./unknown.js";
 import type { CoverageInput } from "./report.js";
 
 /** The repository root, from `src/` in tests and `build/` when built. */
@@ -40,6 +41,8 @@ export async function realInput(
       `Cannot read the library's package.json: ${errorMessage(error)}`,
     );
   }
+  // A Build is four numbers and its Game version the first three, as the
+  // Typings generator names its folders (reforged-types src/build.ts).
   const gameVersion =
     typeof patch === "string" ? /^\d+\.\d+\.\d+(?=\.\d+$)/.exec(patch) : null;
   if (gameVersion === null)

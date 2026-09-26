@@ -63,6 +63,15 @@ describe("coverage:report", () => {
     );
   });
 
+  it("counts one problem in the singular", async () => {
+    const sources = standardSources();
+    sources["handles/item.ts"] = "export class Item extends Handle<item> {}\n";
+
+    const run = await runOn({ ...complete(), sources });
+
+    expect(run.stdout).toContain(" 0 missing; 1 problem. ");
+  });
+
   it("exits 1 on an unknown exclusion", async () => {
     const fixture = complete();
     fixture.exclusions = [

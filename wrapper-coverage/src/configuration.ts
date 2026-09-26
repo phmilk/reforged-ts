@@ -4,7 +4,8 @@
  * whether they agree with the manifest and the sources is the report's
  * business.
  */
-import { InputError, isRecord } from "./input-error.js";
+import { InputError } from "./input-error.js";
+import { isRecord } from "./unknown.js";
 import { isHandleType } from "./manifest.js";
 
 /** One Wrapper class and the handle type it owns. */
@@ -48,11 +49,12 @@ export interface Exclusion {
 
 const EXCLUSION_KEYS = ["native", "reason", "source", "date"] as const;
 
+/** Whether `text` is a calendar date written `YYYY-MM-DD`. */
 function isDate(text: string): boolean {
-  return (
-    /^\d{4}-\d{2}-\d{2}$/.test(text) &&
-    new Date(`${text}T00:00:00Z`).toISOString().startsWith(text)
-  );
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) return false;
+  const date = new Date(`${text}T00:00:00Z`);
+  // An impossible month makes an invalid date; an impossible day rolls over.
+  return !Number.isNaN(date.getTime()) && date.toISOString().startsWith(text);
 }
 
 /**

@@ -4,7 +4,8 @@
  * names. Blizzard.j functions are never mirrored and common.ai is outside
  * the coverage rule, so neither is read.
  */
-import { InputError, isRecord } from "./input-error.js";
+import { InputError } from "./input-error.js";
+import { isRecord } from "./unknown.js";
 
 export interface Param {
   name: string;

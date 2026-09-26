@@ -24,16 +24,18 @@ import {
   type Exclusion,
   type WrapperEntry,
 } from "./configuration.js";
-import { errorMessage, InputError } from "./input-error.js";
+import { InputError } from "./input-error.js";
 import {
   isHandleType,
   readManifest,
   signature,
+  type Manifest,
   type Native,
 } from "./manifest.js";
 import { byCodePoint } from "./order.js";
 import { renderJson, renderMarkdown } from "./render.js";
 import { scanSources, type Scan } from "./scan.js";
+import { errorMessage } from "./unknown.js";
 
 /** The report's inputs, by absolute path. */
 export interface CoverageInput {
@@ -155,14 +157,19 @@ async function readJson(path: string, what: string): Promise<unknown> {
   }
 }
 
-/** The owner of `native` among `wrappers` by handle type, if any. */
-function ownerOf(
+/**
+ * The handle type owning `native` among the `wrapped` ones: its first
+ * parameter's type when that is a handle type, else its return type (the
+ * creation Natives); `undefined` when no Wrapper owns that type.
+ */
+function ownerType(
   native: Native,
-  byType: ReadonlyMap<string, WrapperEntry>,
-): WrapperEntry | undefined {
+  wrapped: ReadonlySet<string>,
+): string | undefined {
   const first = native.params.at(0)?.type;
-  if (first !== undefined && isHandleType(first)) return byType.get(first);
-  return byType.get(native.returns);
+  const type =
+    first !== undefined && isHandleType(first) ? first : native.returns;
+  return wrapped.has(type) ? type : undefined;
 }
 
 /** Whether `name` reaches the Handle base through its `extends` chain. */
@@ -177,6 +184,7 @@ function extendsHandle(name: string, scan: Scan): boolean {
   return false;
 }
 
+/** Where the Wrapper configuration disagrees with the sources or the manifest. */
 function configurationProblems(
   wrappers: readonly WrapperEntry[],
   scan: Scan,
@@ -186,29 +194,61 @@ function configurationProblems(
   const unlisted = [...scan.classes.keys()]
     .filter((name) => !listed.has(name) && extendsHandle(name, scan))
     .sort(byCodePoint)
-    .map((name) => ({
-      kind: "unlisted-wrapper" as const,
+    .map((name): Problem => ({
+      kind: "unlisted-wrapper",
       message: `${name} extends ${HANDLE_BASE} but the Wrapper configuration does not list it.`,
     }));
-  const configured = wrappers.flatMap(({ wrapper, type }) => [
-    ...(scan.classes.has(wrapper)
-      ? []
-      : [
-          {
-            kind: "missing-wrapper" as const,
-            message: `The Wrapper configuration lists ${wrapper}, which no class declaration in the sources names.`,
-          },
-        ]),
-    ...(types.has(type)
-      ? []
-      : [
-          {
-            kind: "unknown-type" as const,
-            message: `The Wrapper configuration gives ${wrapper} the handle type ${type}, which the manifest names nowhere.`,
-          },
-        ]),
-  ]);
+  const configured = wrappers.flatMap(({ wrapper, type }) => {
+    const problems: Problem[] = [];
+    if (!extendsHandle(wrapper, scan))
+      problems.push({
+        kind: "missing-wrapper",
+        message: `The Wrapper configuration lists ${wrapper}, which is no class extending ${HANDLE_BASE} in the sources.`,
+      });
+    if (!types.has(type))
+      problems.push({
+        kind: "unknown-type",
+        message: `The Wrapper configuration gives ${wrapper} the handle type ${type}, which the manifest names nowhere.`,
+      });
+    return problems;
+  });
   return [...unlisted, ...configured];
+}
+
+/** The exclusions that no longer hold, in the order of the file. */
+function exclusionProblems(
+  exclusions: readonly Exclusion[],
+  natives: readonly Native[],
+  wrapped: ReadonlySet<string>,
+  scan: Scan,
+): Problem[] {
+  const byName = new Map(natives.map((native) => [native.name, native]));
+  return exclusions.flatMap(({ native: name }): Problem[] => {
+    const native = byName.get(name);
+    const callers = scan.calls.get(name);
+    if (native === undefined)
+      return [
+        {
+          kind: "unknown-exclusion",
+          message: `${name} is excluded, but it is no common.j Native of the manifest: remove the exclusion.`,
+        },
+      ];
+    if (ownerType(native, wrapped) === undefined)
+      return [
+        {
+          kind: "unowned-exclusion",
+          message: `${name} is excluded, but no Wrapper owns it: remove the exclusion.`,
+        },
+      ];
+    if (callers !== undefined)
+      return [
+        {
+          kind: "stale-exclusion",
+          message: `${name} is excluded, but ${[...callers].sort(byCodePoint).join(", ")} now calls it: remove the exclusion.`,
+        },
+      ];
+    return [];
+  });
 }
 
 /** The report of `input`; a failed result when an input cannot be read. */
@@ -229,12 +269,7 @@ export async function coverageReport(
       input.sourceDir,
       new Set(manifest.natives.map((native) => native.name)),
     );
-    const report = buildReport(manifest.patch, manifest.natives, {
-      wrappers,
-      exclusions,
-      scan,
-      problems: configurationProblems(wrappers, scan, manifest.types),
-    });
+    const report = buildReport(manifest, wrappers, exclusions, scan);
     return {
       ok: true,
       report,
@@ -250,23 +285,15 @@ export async function coverageReport(
 }
 
 function buildReport(
-  patch: string,
-  natives: readonly Native[],
-  facts: {
-    wrappers: readonly WrapperEntry[];
-    exclusions: readonly Exclusion[];
-    scan: Scan;
-    problems: Problem[];
-  },
+  manifest: Manifest,
+  wrappers: readonly WrapperEntry[],
+  exclusions: readonly Exclusion[],
+  scan: Scan,
 ): CoverageReport {
-  const { wrappers, scan } = facts;
-  const byType = new Map(wrappers.map((entry) => [entry.type, entry]));
-  const exclusions = new Map(
-    facts.exclusions.map((exclusion) => [exclusion.native, exclusion]),
-  );
-  const coverage = new Map(
+  const { natives } = manifest;
+  const byType = new Map(
     wrappers.map((entry): [string, WrapperCoverage] => [
-      entry.wrapper,
+      entry.type,
       {
         ...entry,
         counts: { owned: 0, covered: 0, missing: 0, excluded: 0 },
@@ -276,14 +303,17 @@ function buildReport(
       },
     ]),
   );
+  const wrapped = new Set(byType.keys());
+  const excluded = new Map(
+    exclusions.map((exclusion) => [exclusion.native, exclusion]),
+  );
   const handleFirst = new Map<string, string[]>();
   const noHandle: string[] = [];
-  const problems = [...facts.problems];
-  const owned = new Set<string>();
 
   for (const native of natives) {
-    const owner = ownerOf(native, byType);
-    if (owner === undefined) {
+    const type = ownerType(native, wrapped);
+    const entry = type === undefined ? undefined : byType.get(type);
+    if (entry === undefined) {
       const first = native.params.at(0)?.type;
       if (first !== undefined && isHandleType(first)) {
         handleFirst.set(first, [
@@ -295,12 +325,9 @@ function buildReport(
       }
       continue;
     }
-    owned.add(native.name);
-    const entry = coverage.get(owner.wrapper);
-    if (entry === undefined) continue;
     const reported = { name: native.name, signature: signature(native) };
     const callers = scan.calls.get(native.name);
-    const exclusion = exclusions.get(native.name);
+    const exclusion = excluded.get(native.name);
     entry.counts.owned++;
     if (callers !== undefined) {
       entry.counts.covered++;
@@ -308,11 +335,6 @@ function buildReport(
         ...reported,
         coveredBy: [...callers].sort(byCodePoint),
       });
-      if (exclusion !== undefined)
-        problems.push({
-          kind: "stale-exclusion",
-          message: `${native.name} is excluded, but ${[...callers].sort(byCodePoint).join(", ")} now calls it: remove the exclusion.`,
-        });
     } else if (exclusion !== undefined) {
       entry.counts.excluded++;
       const { reason, source, date } = exclusion;
@@ -323,21 +345,7 @@ function buildReport(
     }
   }
 
-  const known = new Set(natives.map((native) => native.name));
-  for (const { native } of facts.exclusions) {
-    if (!known.has(native))
-      problems.push({
-        kind: "unknown-exclusion",
-        message: `${native} is excluded, but it is no common.j Native of the manifest: remove the exclusion.`,
-      });
-    else if (!owned.has(native))
-      problems.push({
-        kind: "unowned-exclusion",
-        message: `${native} is excluded, but no Wrapper owns it: remove the exclusion.`,
-      });
-  }
-
-  const list = [...coverage.values()];
+  const list = [...byType.values()];
   const sum = (key: keyof WrapperCoverage["counts"]) =>
     list.reduce((total, entry) => total + entry.counts[key], 0);
   const groups = [...handleFirst]
@@ -345,7 +353,7 @@ function buildReport(
     .map(([type, names]) => ({ type, count: names.length, natives: names }));
   return {
     format: REPORT_FORMAT,
-    patch,
+    patch: manifest.patch,
     totals: {
       natives: natives.length,
       owned: sum("owned"),
@@ -354,7 +362,10 @@ function buildReport(
       excluded: sum("excluded"),
       unowned: natives.length - sum("owned"),
     },
-    problems,
+    problems: [
+      ...configurationProblems(wrappers, scan, manifest.types),
+      ...exclusionProblems(exclusions, natives, wrapped, scan),
+    ],
     wrappers: list,
     unowned: {
       handleFirst: groups,
