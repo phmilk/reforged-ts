@@ -22,3 +22,10 @@ From the workspace root:
 - `src/components/`: the components the pages import (`SupportedPatch` prints the Typings' `reforged.patch`, which the configuration reads at build time).
 - `config.ts`: the configuration, built by `docusaurus.config.ts` and, strict, by `docusaurus.check.config.ts`.
 - `scripts/`: the site's Node scripts (`.mts`), run from source by Node's type stripping and type-checked by `scripts/tsconfig.json`.
+- `test/`: the scripts' tests, the `website` project of the root vitest configuration (`pnpm test`), on fixture repositories they write to a temporary folder.
+
+## Collected pages
+
+`docs:collect` writes the pages whose source of truth lives elsewhere in the repository: the Contributing section (the glossary from `CONTEXT.md`, one page per ADR, the agent conventions from `AGENTS.md`, and the how-tos from the packages' `AGENTS.md`, `CONTRIBUTING.md` and the `add-wrapper` Agent skill) and the Changelog section (one page per package's `CHANGELOG.md`, and an index linking their releases). Each gets front matter and a "generated from" note; its links to repository files point at the collected page when there is one, else at GitHub.
+
+The list of sources is `scripts/sources.mts`, the source kinds are in `scripts/kinds.mts` and the collector itself is `scripts/collector.mts`. Collected files are git-ignored and rewritten at every run: edit their source, never the copy. A source that is missing fails the run, unless it declares why it may not exist yet (a changelog before the package's first release), in which case it is reported as skipped. To add a source, add its entry to the list and its outputs to the collected pages block of the root `.gitignore`; a test fails until you do.

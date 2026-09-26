@@ -1,0 +1,11 @@
+{
+  // The site's script tests, under the scripts' compiler options. Named
+  // tsconfig.json so the lint's project service finds it from any test file;
+  // vitest runs them from source. vitest's own declarations need the DOM lib,
+  // so library files are not checked.
+  "extends": "../scripts/tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true
+  },
+  "include": [".", "../scripts"]
+}
