@@ -1,19 +1,12 @@
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
-import { join, posix } from "node:path";
-import { fileURLToPath } from "node:url";
+import { posix } from "node:path";
 import {
   flattenDiagnosticMessageText,
   parseConfigFileTextToJson,
 } from "typescript";
 import { describe, expect, it } from "vitest";
 
-// The repository root, two folders up from this file.
-const root = fileURLToPath(new URL("../../", import.meta.url));
-
-function read(path: string): string {
-  return readFileSync(join(root, path), "utf8");
-}
+import { read, root } from "./repository.js";
 
 // The VS Code files are JSON with comments; TypeScript's parser for its own
 // JSONC config files reads them.

@@ -1,11 +1,13 @@
 {
-  // Saved on focus change, the auto-save mode under which format on save and
-  // the code actions on save run: ESLint fixes and formats TypeScript and
-  // JavaScript (through Prettier, as `pnpm format` does), Prettier the rest.
+  // Saved when focus leaves the file, and every save formats and applies the
+  // ESLint fixes: format on save runs on a focus-change save, the code
+  // actions only with "always" ("explicit" waits for a manual save). ESLint
+  // fixes and formats TypeScript and JavaScript (through Prettier, as
+  // `pnpm format` does), Prettier the rest.
   "files.autoSave": "onFocusChange",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.eslint": "always"
   },
   "eslint.format.enable": true,
   "[typescript]": {

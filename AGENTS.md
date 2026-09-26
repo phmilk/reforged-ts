@@ -11,7 +11,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `pnpm check`: before you report a task done (see "Definition of done").
 - `pnpm build`: after changing a package another one consumes, before running that one's tests on their own.
 - `pnpm test`: after a change, for every vitest project and the Typings drift check. One package's scripts and tests: the README's "Commands".
-- `pnpm format`: when `pnpm lint` reports formatting or a fixable finding.
+- `pnpm lint`: after an edit, for ESLint and the Prettier check; `pnpm format` fixes the formatting and fixable findings it reports.
 - `pnpm typecheck`: while you edit, faster than a full check.
 - `pnpm typings:generate`: after an Overlay edit or for a new Patch; the loop is in `packages/reforged-types/AGENTS.md`.
 - `pnpm changeset add`: the changeset of a pull request. Run it without the prompt, as `docs/release.md` ("Adding a changeset") shows.
@@ -78,5 +78,5 @@ One line per Agent skill: its `SKILL.md`, then its trigger. When your agent does
 ## Definition of done
 
 - `pnpm check` is green.
-- A changeset is present: one naming each changed package, the empty one when no package changed.
+- A changeset is present: one naming each package whose published content changes, the empty one when nothing published changes (`docs/release.md`).
 - Every new public symbol carries its TSDoc and a compiled example.
