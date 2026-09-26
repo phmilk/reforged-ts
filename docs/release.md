@@ -282,7 +282,7 @@ Missing either fails with a message naming the page path expected and the pair. 
 
 **In pre mode.** While `.changeset/pre.json` has `"mode": "pre"`, the version produced is a prerelease, so the gate reports what is missing and exits zero: alphas keep publishing before the docs site exists. It fails only when the version it would produce is stable: once pre mode is exited (the `pnpm changeset pre exit` pull request, where the 1.0.0 checklist's migration page becomes mechanical) or with no pre state at all.
 
-**Running it.** `pnpm release:gate` takes no arguments. The verdict goes to stdout, or to stderr when it fails; in GitHub Actions (`GITHUB_STEP_SUMMARY` set) a requirement and what is missing are also appended to the job summary. Exit codes: 0 when it passes or only reports (pre mode), 1 when something is missing for a stable version or an input cannot be read (a changeset, `pre.json`, the rename map), 2 on an argument. CI will run it on every pull request (`ci.yml`, [#48](https://github.com/phmilk/reforged-ts/issues/48)), and the version job of the release workflow runs it before opening the Version Packages pull request.
+**Running it.** `pnpm release:gate` takes no arguments. The verdict goes to stdout, or to stderr when it fails; in GitHub Actions (`GITHUB_STEP_SUMMARY` set) a requirement and what is missing are also appended to the job summary. Exit codes: 0 when it passes or only reports (pre mode), 1 when something is missing for a stable version or an input cannot be read (a changeset, `pre.json`, the rename map), 2 on an argument. CI runs it on every pull request and push (`ci.yml`), and the version job of the release workflow runs it before opening the Version Packages pull request.
 
 ## The Template gate
 
@@ -402,7 +402,7 @@ They gate the dry run and the first tokenless publish, not the merge of the work
 
 ### The Version Packages pull request and CI
 
-The Version Packages pull request changes package manifests and changelogs and adds no changeset (it consumes them), so `release:check-changeset` would fail on it. `ci.yml`, the CI workflow the workflows spec plans ([#48](https://github.com/phmilk/reforged-ts/issues/48)), is to skip that one step when the pull request's head branch is `changeset-release/master`, the branch the `version` sub-action always uses; every other check runs on it as on any pull request. The App opens it, so CI does run on it.
+The Version Packages pull request changes package manifests and changelogs and adds no changeset (it consumes them), so `release:check-changeset` would fail on it. `ci.yml` skips that one step when the pull request's head branch is `changeset-release/master`, the branch the `version` sub-action always uses; every other check runs on it as on any pull request. The App opens it, so CI does run on it.
 
 Merge it once the release run of the latest push to `master` has finished: that run updates the pull request with every changeset on `master`. A changeset merged after it would stay pending, and when only empty changesets are pending `select-mode` answers `none` even while versions are unpublished. If that happens, delete the stranded empty changesets in a pull request (it changes no package, so it needs no changeset): the next run publishes.
 

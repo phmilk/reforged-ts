@@ -14,7 +14,7 @@ The [README](README.md) has the requirements (Node, pnpm) and every root command
 
 ### Done means `pnpm check`
 
-`pnpm check` runs lint, typecheck, build and the tests, in that order, and stops at the first failure. Green on your machine is the definition of done, and CI runs the same package scripts on ubuntu and windows, so a green local run predicts a green CI run. There are no git hooks: run it before you push.
+`pnpm check` runs lint, typecheck, build, the Typings drift check and the tests, in that order, and stops at the first failure. Green on your machine is the definition of done, and CI runs the same package scripts on ubuntu and windows, so a green local run predicts a green CI run. On ubuntu, CI also runs the release checks (`pnpm release:check-changeset` on a pull request, `pnpm release:gate`, `pnpm release:check-patches`) and actionlint on the workflows (`pnpm actionlint` locally). There are no git hooks: run it before you push.
 
 ### Changesets
 
