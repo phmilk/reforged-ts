@@ -1,14 +1,8 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-// The repository root, two folders up from this file.
-const root = fileURLToPath(new URL("../../", import.meta.url));
-
-function read(path: string): string {
-  return readFileSync(join(root, path), "utf8");
-}
+import { read, root } from "./repository.js";
 
 function lines(text: string): string[] {
   const all = text.split(/\r?\n/);

@@ -50,16 +50,16 @@ The documentation site, https://phmilk.github.io/reforged-ts/, comes with [#40](
 
 Run from the root after `pnpm install`:
 
-| Command                 | What it does                                                                                                                                             |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm check`            | Runs `lint`, `typecheck`, `build` and `test`, in that order, and stops at the first failing stage. The finish condition.                                 |
-| `pnpm lint`             | ESLint on every TypeScript file, then a Prettier check of the JSON, Markdown and YAML files.                                                             |
-| `pnpm format`           | `eslint --fix` and `prettier --write` over the same files: lints and formats in one pass.                                                                |
-| `pnpm typecheck`        | `tsc --noEmit` on each package's tsconfigs (the library and its tests, the harness glue and runner, the generator), then on `test/`.                     |
-| `pnpm build`            | Builds every package, dependencies first: the library's Lua and declarations land in `packages/reforged-ts/dist`.                                        |
-| `pnpm test`             | One vitest run over every package's projects and the root `test/` project (packs each publishable package and checks its tarball), then `typings:check`. |
-| `pnpm typings:generate` | Regenerates the Typings from the vendored Patch files and the Overlay.                                                                                   |
-| `pnpm typings:check`    | Fails when the committed Typings differ from what the generator produces (the drift check).                                                              |
+| Command                 | What it does                                                                                                                                                                                                                                  |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm check`            | Runs `lint`, `typecheck`, `build` and `test`, in that order, and stops at the first failing stage. The finish condition.                                                                                                                      |
+| `pnpm lint`             | ESLint on every TypeScript file, then a Prettier check of the JSON, Markdown and YAML files.                                                                                                                                                  |
+| `pnpm format`           | `eslint --fix` and `prettier --write` over the same files: lints and formats in one pass.                                                                                                                                                     |
+| `pnpm typecheck`        | `tsc --noEmit` on each package's tsconfigs (the library and its tests, the harness glue and runner, the generator), then on `test/`.                                                                                                          |
+| `pnpm build`            | Builds every package, dependencies first: the library's Lua and declarations land in `packages/reforged-ts/dist`.                                                                                                                             |
+| `pnpm test`             | One vitest run over every package's projects and the two root projects, `tarballs` (packs each publishable package and checks its tarball) and `conventions` (checks `AGENTS.md`, `CLAUDE.md` and the editor settings), then `typings:check`. |
+| `pnpm typings:generate` | Regenerates the Typings from the vendored Patch files and the Overlay.                                                                                                                                                                        |
+| `pnpm typings:check`    | Fails when the committed Typings differ from what the generator produces (the drift check).                                                                                                                                                   |
 
 `pnpm check` green is what done means, for a contributor and for an agent. A package's other scripts run from the root with `pnpm --filter <package> <script>`, for example `pnpm --filter reforged-types verify`.
 
@@ -86,7 +86,7 @@ The library's tests import the harness by its package name: the runner from `ref
 
 ## For agents
 
-[`AGENTS.md`](AGENTS.md) is the one document an agent reads first. Its seven sections are fixed: an overview, the commands to build and test, the layout of the repository, the rules, the runtime constraints of the game's Lua, the Agent skills (domain docs, issue tracker, triage labels and the skills themselves), and the definition of done. [`CONTEXT.md`](CONTEXT.md) is the project vocabulary (Native, Handle, Wrapper, System, Typings, Patch); use its terms.
+[`AGENTS.md`](AGENTS.md) is the one document an agent reads first: how to build, test and change the repository, and when a task is done. [`CONTEXT.md`](CONTEXT.md) is the project vocabulary (Native, Handle, Wrapper, System, Typings, Patch); use its terms.
 
 ## Contributing
 
