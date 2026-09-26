@@ -5,6 +5,7 @@ import { configuration } from "../reforged/configuration";
 import { assertDamageDepth } from "../reforged/damage";
 import { rawcodeToString } from "../utils/rawcode";
 import { Destructable } from "./destructable";
+import type { EquipmentType, LoadoutSlot } from "./equipment";
 import { Force } from "./force";
 import { fieldTypeOf } from "./fields";
 import type { Group } from "./group";
@@ -74,6 +75,14 @@ export class Unit extends Widget {
 
   public set armor(armorAmount: number) {
     BlzSetUnitArmor(this.handle, armorAmount);
+  }
+
+  /**
+   * The size of the unit's bag, its extended inventory, through
+   * `UnitExtendedInventorySize` (3.0.0).
+   */
+  public get bagSize() {
+    return UnitExtendedInventorySize(this.handle);
   }
 
   public set canSleep(flag: boolean) {
@@ -573,8 +582,27 @@ export class Unit extends Widget {
     AttachSoundToUnit(sound.handle, this.handle);
   }
 
+  /**
+   * The item at `index` in the unit's bag, or undefined for an empty index,
+   * through `UnitItemInBagSlot` (3.0.0).
+   */
+  public bagItem(index: number): Item | undefined {
+    return Item.fromHandle(UnitItemInBagSlot(this.handle, index));
+  }
+
   public cancelTimedLife() {
     BlzUnitCancelTimedLife(this.handle);
+  }
+
+  /**
+   * Whether the unit can equip items of the equipment type, through
+   * `UnitCanEquipItemOfEquipmentType` (3.0.0).
+   */
+  public canEquip(type: EquipmentType) {
+    return UnitCanEquipItemOfEquipmentType(
+      this.handle,
+      ConvertEquipmentType(type),
+    );
   }
 
   public canSleepPerm() {
@@ -729,6 +757,24 @@ export class Unit extends Widget {
     BlzEndUnitAbilityCooldown(this.handle, abilCode);
   }
 
+  /**
+   * Equips the item on the unit, through `UnitEquipItem` (3.0.0): whether it
+   * was equipped.
+   */
+  public equip(whichItem: Item): boolean {
+    return UnitEquipItem(this.handle, whichItem.handle);
+  }
+
+  /**
+   * The item equipped in the loadout slot, or undefined for an empty slot,
+   * through `UnitItemInEquipmentSlot` (3.0.0).
+   */
+  public equippedItem(slot: LoadoutSlot): Item | undefined {
+    return Item.fromHandle(
+      UnitItemInEquipmentSlot(this.handle, ConvertLoadoutSlot(slot)),
+    );
+  }
+
   public getAbility(abilId: number) {
     return BlzGetUnitAbility(this.handle, abilId);
   }
@@ -857,6 +903,19 @@ export class Unit extends Widget {
     return GetHeroStr(this.handle, includeBonuses);
   }
 
+  /**
+   * Whether the unit has any item equipped, through `UnitHasAnyItemEquiped`
+   * (3.0.0; the Native's name is misspelt).
+   */
+  public hasAnyEquipped() {
+    return UnitHasAnyItemEquiped(this.handle);
+  }
+
+  /** Whether the item is in the unit's bag, through `UnitHasItemBagged` (3.0.0). */
+  public hasBagged(whichItem: Item) {
+    return UnitHasItemBagged(this.handle, whichItem.handle);
+  }
+
   public hasBuffs(
     removePositive: boolean,
     removeNegative: boolean,
@@ -876,6 +935,27 @@ export class Unit extends Widget {
       aura,
       autoDispel,
     );
+  }
+
+  /**
+   * Whether the unit's loadout slot is empty, through
+   * `UnitHasLoadoutSlotEmpty` (3.0.0).
+   */
+  public hasEmptySlot(slot: LoadoutSlot) {
+    return UnitHasLoadoutSlotEmpty(this.handle, ConvertLoadoutSlot(slot));
+  }
+
+  /**
+   * Whether the unit has an item of the equipment type equipped, through
+   * `UnitHasItemEquipmentOfType` (3.0.0).
+   */
+  public hasEquipmentOfType(type: EquipmentType) {
+    return UnitHasItemEquipmentOfType(this.handle, ConvertEquipmentType(type));
+  }
+
+  /** Whether the unit has the item equipped, through `UnitHasItemEquipped` (3.0.0). */
+  public hasEquipped(whichItem: Item) {
+    return UnitHasItemEquipped(this.handle, whichItem.handle);
   }
 
   public hasItem(whichItem: Item) {
@@ -1503,6 +1583,21 @@ export class Unit extends Widget {
 
   public suspendExperience(flag: boolean) {
     SuspendHeroXP(this.handle, flag);
+  }
+
+  /** Unequips the item from the unit, through `UnitUnequipItem` (3.0.0). */
+  public unequip(whichItem: Item) {
+    UnitUnequipItem(this.handle, whichItem.handle);
+  }
+
+  /**
+   * Unequips the item in the loadout slot: the item, or undefined for an
+   * empty slot, through `UnitUnequipItemFromSlot` (3.0.0).
+   */
+  public unequipSlot(slot: LoadoutSlot): Item | undefined {
+    return Item.fromHandle(
+      UnitUnequipItemFromSlot(this.handle, ConvertLoadoutSlot(slot)),
+    );
   }
 
   public useItem(whichItem: Item) {

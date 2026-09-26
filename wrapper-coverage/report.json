@@ -4,8 +4,8 @@
   "totals": {
     "natives": 1681,
     "owned": 984,
-    "covered": 817,
-    "missing": 167,
+    "covered": 829,
+    "missing": 155,
     "excluded": 0,
     "unowned": 697
   },
@@ -74,8 +74,8 @@
       "type": "unit",
       "counts": {
         "owned": 312,
-        "covered": 259,
-        "missing": 53,
+        "covered": 271,
+        "missing": 41,
         "excluded": 0
       },
       "covered": [
@@ -745,6 +745,13 @@
           ]
         },
         {
+          "name": "UnitEquipItem",
+          "signature": "UnitEquipItem takes unit whichUnit, item whichItem returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
           "name": "UnitAddItemById",
           "signature": "UnitAddItemById takes unit whichUnit, integer itemId returns item",
           "coveredBy": [
@@ -773,8 +780,29 @@
           ]
         },
         {
+          "name": "UnitUnequipItem",
+          "signature": "UnitUnequipItem takes unit whichUnit, item whichItem returns nothing",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "UnitUnequipItemFromSlot",
+          "signature": "UnitUnequipItemFromSlot takes unit whichUnit, loadoutslot slot returns item",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
           "name": "UnitHasItem",
           "signature": "UnitHasItem takes unit whichUnit, item whichItem returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "UnitHasItemBagged",
+          "signature": "UnitHasItemBagged takes unit whichUnit, item whichItem returns boolean",
           "coveredBy": [
             "Unit"
           ]
@@ -789,6 +817,62 @@
         {
           "name": "UnitInventorySize",
           "signature": "UnitInventorySize takes unit whichUnit returns integer",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "UnitExtendedInventorySize",
+          "signature": "UnitExtendedInventorySize takes unit whichUnit returns integer",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "UnitItemInBagSlot",
+          "signature": "UnitItemInBagSlot takes unit whichUnit, integer itemSlot returns item",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "UnitItemInEquipmentSlot",
+          "signature": "UnitItemInEquipmentSlot takes unit whichUnit, loadoutslot itemSlot returns item",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "UnitHasItemEquipped",
+          "signature": "UnitHasItemEquipped takes unit whichUnit, item whichItem returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "UnitHasLoadoutSlotEmpty",
+          "signature": "UnitHasLoadoutSlotEmpty takes unit whichUnit, loadoutslot itemSlot returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "UnitHasAnyItemEquiped",
+          "signature": "UnitHasAnyItemEquiped takes unit whichUnit returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "UnitHasItemEquipmentOfType",
+          "signature": "UnitHasItemEquipmentOfType takes unit whichUnit, equipmentType equipmentId returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "UnitCanEquipItemOfEquipmentType",
+          "signature": "UnitCanEquipItemOfEquipmentType takes unit whichUnit, equipmentType equipmentId returns boolean",
           "coveredBy": [
             "Unit"
           ]
@@ -1962,54 +2046,6 @@
         {
           "name": "SetUnitFacingTimed",
           "signature": "SetUnitFacingTimed takes unit whichUnit, real facingAngle, real duration returns nothing"
-        },
-        {
-          "name": "UnitEquipItem",
-          "signature": "UnitEquipItem takes unit whichUnit, item whichItem returns boolean"
-        },
-        {
-          "name": "UnitUnequipItem",
-          "signature": "UnitUnequipItem takes unit whichUnit, item whichItem returns nothing"
-        },
-        {
-          "name": "UnitUnequipItemFromSlot",
-          "signature": "UnitUnequipItemFromSlot takes unit whichUnit, loadoutslot slot returns item"
-        },
-        {
-          "name": "UnitHasItemBagged",
-          "signature": "UnitHasItemBagged takes unit whichUnit, item whichItem returns boolean"
-        },
-        {
-          "name": "UnitExtendedInventorySize",
-          "signature": "UnitExtendedInventorySize takes unit whichUnit returns integer"
-        },
-        {
-          "name": "UnitItemInBagSlot",
-          "signature": "UnitItemInBagSlot takes unit whichUnit, integer itemSlot returns item"
-        },
-        {
-          "name": "UnitItemInEquipmentSlot",
-          "signature": "UnitItemInEquipmentSlot takes unit whichUnit, loadoutslot itemSlot returns item"
-        },
-        {
-          "name": "UnitHasItemEquipped",
-          "signature": "UnitHasItemEquipped takes unit whichUnit, item whichItem returns boolean"
-        },
-        {
-          "name": "UnitHasLoadoutSlotEmpty",
-          "signature": "UnitHasLoadoutSlotEmpty takes unit whichUnit, loadoutslot itemSlot returns boolean"
-        },
-        {
-          "name": "UnitHasAnyItemEquiped",
-          "signature": "UnitHasAnyItemEquiped takes unit whichUnit returns boolean"
-        },
-        {
-          "name": "UnitHasItemEquipmentOfType",
-          "signature": "UnitHasItemEquipmentOfType takes unit whichUnit, equipmentType equipmentId returns boolean"
-        },
-        {
-          "name": "UnitCanEquipItemOfEquipmentType",
-          "signature": "UnitCanEquipItemOfEquipmentType takes unit whichUnit, equipmentType equipmentId returns boolean"
         },
         {
           "name": "IsUnitOwnedByPlayer",
