@@ -1,7 +1,7 @@
 /** @noSelfInFile */
 
 /**
- * The meta keys of a key event or a meta-key query, the integer bit flags of
+ * The meta keys `Input.isMetaKeyPressed` asks for, the integer bit flags of
  * `METAKEY_NONE` to `METAKEY_WINKEYS`; combine them with `|`
  * (`MetaKey.Shift | MetaKey.Ctrl`).
  */

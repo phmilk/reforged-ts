@@ -11,7 +11,7 @@ It reads the manifest of the library's Patch (`packages/reforged-types/<Game ver
 ## The rule
 
 - **Owner.** A Native is owned by the Wrapper whose handle type is the Jass type of its first parameter. A Native whose first parameter is not a handle (or that takes none) and that returns a wrapped handle type is owned by the returned type's Wrapper (`CreateTimer`, `Player`, `GetTriggerUnit`). Every other Native is unowned and outside the rule: its first parameter is a handle type no Wrapper owns (`hashtable`, `ability`), or it takes no handle first and returns no wrapped one.
-- **Covered.** An owned Native is covered when any class declaration of the library calls it by its bare name, static-only classes (`Camera`, `File`, `Input`) included; a call outside every class counts for none, so a static namespace must be a class declaration. The report names each calling class, so `CreateUnit`, owned by `MapPlayer`, shows as covered by `Unit`.
+- **Covered.** An owned Native is covered when any class declaration of the library calls it by its bare name, static-only classes (`Camera`, `File`) included; a call outside every class counts for none, so a static namespace must be a class declaration. The report names each calling class, so `CreateUnit`, owned by `MapPlayer`, shows as covered by `Unit`.
 - **Excluded or missing.** An owned Native no class calls is excluded when `exclusions.json` names it, and missing otherwise.
 
 ## Configuration

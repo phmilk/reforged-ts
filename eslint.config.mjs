@@ -1,8 +1,8 @@
 // One flat configuration lints and formats every package of the workspace
 // (ADR 0002). `eslint --fix` formats through Prettier, so a save in the editor
-// and a run in CI produce the same file. No rule is disabled here but for the
-// static namespaces' entry below: a tolerated finding is disabled inline, on
-// its line, naming the build step that clears it.
+// and a run in CI produce the same file. No rule is disabled or relaxed here
+// but for the static namespaces' entry below: a tolerated finding is disabled
+// inline, on its line, naming the build step that clears it.
 import eslint from "@eslint/js";
 import { defineConfig, globalIgnores } from "eslint/config";
 import importPlugin from "eslint-plugin-import-x";
