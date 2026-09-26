@@ -64,11 +64,12 @@ async function context(overrides: Partial<Context> = {}): Promise<Context> {
   const root = await tempDir("actionlint");
   const bin = await tempDir("actionlint-path");
   await writeText(bin, "shellcheck", "");
-  await writeText(bin, "shellcheck.exe", "");
   return {
     root,
     cwd: root,
     env: { PATH: bin },
+    platform: "linux",
+    arch: "x64",
     asset: asset(),
     fetcher: fakeFetch().fetcher,
     run: fakeRun().run,
@@ -185,7 +186,9 @@ describe("actionlint", () => {
       stdout: "",
       stderr:
         `The checksum of ${asset().url} is ${actual}, not the pinned ${pinned}: ` +
-        "the download is not the release actionlint published. Nothing was run.\n",
+        "the download is not the release actionlint published. " +
+        "After a bump of ACTIONLINT_VERSION, copy the checksums from the release's actionlint_9.9.9_checksums.txt into release/src/actionlint.ts. " +
+        "Nothing was run.\n",
     });
     expect(runner.commands).toEqual([]);
     expect(await exists(cached(ctx.root))).toBe(false);
@@ -196,17 +199,23 @@ describe("actionlint", () => {
     expect(await runCli(ctx)).toEqual({
       status: 1,
       stdout: "",
-      stderr: `Downloading ${asset().url} failed: HTTP 404. Nothing was run.\n`,
+      stderr:
+        `Downloading ${asset().url} failed: HTTP 404. ` +
+        "Check the network, or that actionlint 9.9.9 is released for this platform (github.com/rhysd/actionlint/releases). Nothing was run.\n",
     });
   });
 
   it("names the platform it has no pinned build for", async () => {
-    const ctx = await context({ asset: undefined });
+    const ctx = await context({
+      platform: "aix",
+      arch: "ppc64",
+      asset: undefined,
+    });
     expect(await runCli(ctx)).toEqual({
       status: 1,
       stdout: "",
       stderr: expect.stringContaining(
-        `No actionlint ${ACTIONLINT_VERSION} build is pinned for ${process.platform} ${process.arch}`,
+        `No actionlint ${ACTIONLINT_VERSION} build is pinned for aix ppc64:`,
       ) as unknown,
     });
   });

@@ -106,6 +106,10 @@ async function exists(path: string): Promise<boolean> {
   );
 }
 
+/** The installed executable, or why it could not be installed. */
+export type InstallResult =
+  { ok: true; path: string } | { ok: false; message: string };
+
 /**
  * The path of `asset`'s executable under `cacheDir`, downloaded, verified
  * and extracted there first when it is not yet. Only a verified archive is
@@ -118,7 +122,7 @@ export async function installActionlint(options: {
   fetcher: Fetcher;
   run: Runner;
   tar: string;
-}): Promise<{ ok: true; path: string } | { ok: false; message: string }> {
+}): Promise<InstallResult> {
   const { asset, fetcher, run, tar } = options;
   const dir = join(
     options.cacheDir,
@@ -131,7 +135,9 @@ export async function installActionlint(options: {
   if (!response.ok) {
     return {
       ok: false,
-      message: `Downloading ${asset.url} failed: HTTP ${String(response.status)}.`,
+      message:
+        `Downloading ${asset.url} failed: HTTP ${String(response.status)}. ` +
+        `Check the network, or that actionlint ${asset.version} is released for this platform (github.com/rhysd/actionlint/releases).`,
     };
   }
   const bytes = Buffer.from(await response.arrayBuffer());
@@ -141,7 +147,8 @@ export async function installActionlint(options: {
       ok: false,
       message:
         `The checksum of ${asset.url} is ${actual}, not the pinned ${asset.sha256}: ` +
-        "the download is not the release actionlint published.",
+        "the download is not the release actionlint published. " +
+        `After a bump of ACTIONLINT_VERSION, copy the checksums from the release's actionlint_${asset.version}_checksums.txt into release/src/actionlint.ts.`,
     };
   }
 

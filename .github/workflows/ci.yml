@@ -53,9 +53,10 @@ jobs:
       - name: test
         run: pnpm run test
       # The same version as the root `actionlint` script
-      # (release/src/actionlint.ts); bump both together.
+      # (release/src/actionlint.ts); bump both together. It needs no earlier
+      # step, so it reports workflow mistakes even when a check failed.
       - name: actionlint
-        if: matrix.os == 'ubuntu'
+        if: matrix.os == 'ubuntu' && !cancelled()
         uses: raven-actions/actionlint@3d39aea434753780c3b3d4a1a31c854b4dbf49d7 # v2.2.0
         with:
           version: 1.7.12

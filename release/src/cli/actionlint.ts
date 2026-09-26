@@ -17,6 +17,7 @@ import {
   tarCommand,
   type ActionlintAsset,
   type Fetcher,
+  type InstallResult,
 } from "../actionlint.js";
 import { runInherited, type Runner } from "../process.js";
 import { repositoryRoot } from "../workspace.js";
@@ -33,6 +34,9 @@ export interface Context {
   /** The folder actionlint runs in, which its path arguments are relative to. */
   cwd: string;
   env: Readonly<Record<string, string | undefined>>;
+  /** Node's names of this machine's operating system and processor. */
+  platform: NodeJS.Platform;
+  arch: string;
   /** The archive for this machine; `undefined` when none is pinned. */
   asset: ActionlintAsset | undefined;
   fetcher: Fetcher;
@@ -47,6 +51,8 @@ export async function main(
     // pnpm starts the script in release/; INIT_CWD is where it was typed.
     cwd: process.env.INIT_CWD ?? process.cwd(),
     env: process.env,
+    platform: process.platform,
+    arch: process.arch,
     asset: actionlintAsset(process.platform, process.arch),
     fetcher: (url) => fetch(url),
     run: (command) => runInherited(command),
@@ -55,20 +61,20 @@ export async function main(
   const { asset } = context;
   if (asset === undefined) {
     output.stderr(
-      `No actionlint ${ACTIONLINT_VERSION} build is pinned for ${process.platform} ${process.arch}: ` +
+      `No actionlint ${ACTIONLINT_VERSION} build is pinned for ${context.platform} ${context.arch}: ` +
         "add its checksum to release/src/actionlint.ts, or install actionlint and run it from the repository root.\n",
     );
     return 1;
   }
 
-  let installed: Awaited<ReturnType<typeof installActionlint>>;
+  let installed: InstallResult;
   try {
     installed = await installActionlint({
       asset,
       cacheDir: join(context.root, "node_modules", ".cache", "actionlint"),
       fetcher: context.fetcher,
       run: context.run,
-      tar: tarCommand(process.platform, context.env),
+      tar: tarCommand(context.platform, context.env),
     });
   } catch (error) {
     installed = { ok: false, message: errorMessage(error) };
@@ -78,7 +84,7 @@ export async function main(
     return 1;
   }
 
-  if (!(await onPath("shellcheck", context.env.PATH, process.platform))) {
+  if (!(await onPath("shellcheck", context.env.PATH, context.platform))) {
     output.stderr(
       "shellcheck is not on the PATH: the run: scripts are not checked here, CI checks them.\n",
     );
