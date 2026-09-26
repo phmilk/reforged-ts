@@ -40,6 +40,13 @@ export class Rectangle extends Handle<rect> {
   }
 
   /**
+   * Makes the rect a camera blocker, through `AddCameraBlocker` (3.0.0).
+   */
+  public addCameraBlocker() {
+    AddCameraBlocker(this.handle);
+  }
+
+  /**
    * Destroys the Rectangle through its Native.
    * @remarks
    * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
@@ -50,6 +57,14 @@ export class Rectangle extends Handle<rect> {
   public destroy() {
     RemoveRect(this.handle);
     this.release();
+  }
+
+  /**
+   * Turns the rect's camera blocker on or off, through `EnableCameraBlocker`
+   * (3.0.0).
+   */
+  public enableCameraBlocker(flag: boolean) {
+    EnableCameraBlocker(this.handle, flag);
   }
 
   public enumDestructables(

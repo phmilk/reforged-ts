@@ -98,6 +98,23 @@ export class Camera {
   }
 
   /**
+   * The type of the game camera, through `BlzCameraGetCameraType` (3.0.0):
+   * an integer the Patch does not name. The value is the local player's own.
+   * @async
+   */
+  public static get type(): number {
+    return BlzCameraGetCameraType();
+  }
+
+  /**
+   * Sets the type of the game camera, through `BlzCameraSetCameraType`
+   * (3.0.0): an integer the Patch does not name.
+   */
+  public static set type(cameraType: number) {
+    BlzCameraSetCameraType(cameraType);
+  }
+
+  /**
    * Changes one of the game camera's options whichField by offset over duration seconds.
    * @param whichField
    * @param offset
@@ -128,6 +145,16 @@ export class Camera {
 
   public static getMargin(whichMargin: number) {
     return GetCameraMargin(whichMargin);
+  }
+
+  /**
+   * Whether player input controls the field of the game camera, through
+   * `GetCameraFieldControlledByInput` (3.0.0). The value is the local
+   * player's own.
+   * @async
+   */
+  public static isFieldControlledByInput(field: camerafield) {
+    return GetCameraFieldControlledByInput(field);
   }
 
   public static pan(x: number, y: number, zOffsetDest: number | undefined) {
@@ -266,6 +293,17 @@ export class Camera {
     SetCameraField(whichField, value, duration);
   }
 
+  /**
+   * Hands the field of the game camera to player input, or takes it back,
+   * through `SetCameraFieldControlledByInput` (3.0.0).
+   */
+  public static setFieldControlledByInput(
+    field: camerafield,
+    controlled: boolean,
+  ) {
+    SetCameraFieldControlledByInput(field, controlled);
+  }
+
   public static setFocalDistance(distance: number) {
     CameraSetFocalDistance(distance);
   }
@@ -372,6 +410,22 @@ export class CameraSetup extends Handle<camerasetup> {
    */
   public get label() {
     return BlzCameraSetupGetLabel(this.handle) ?? "";
+  }
+
+  /**
+   * The camera type of the CameraSetup, through `BlzCameraSetupGetCameraType`
+   * (3.0.0): an integer the Patch does not name.
+   */
+  public get type(): number {
+    return BlzCameraSetupGetCameraType(this.handle);
+  }
+
+  /**
+   * Sets the camera type of the CameraSetup, through
+   * `BlzCameraSetupSetCameraType` (3.0.0): an integer the Patch does not name.
+   */
+  public set type(cameraType: number) {
+    BlzCameraSetupSetCameraType(this.handle, cameraType);
   }
 
   /**
