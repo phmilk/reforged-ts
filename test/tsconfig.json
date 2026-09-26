@@ -1,6 +1,7 @@
 {
   // The workspace-level Node tests (the tarballs of the publishable
-  // packages), type-checked only; vitest runs them from source. skipLibCheck:
+  // packages, and the repository's conventions under conventions/),
+  // type-checked only; vitest runs them from source. skipLibCheck:
   // vitest's declarations pull in tinybench's, which name DOM types a Node
   // program does not have.
   "compilerOptions": {
@@ -17,5 +18,5 @@
     "newLine": "lf",
     "skipLibCheck": true
   },
-  "include": ["*.ts"]
+  "include": ["*.ts", "conventions/*.ts"]
 }

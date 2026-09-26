@@ -115,8 +115,10 @@ packages/reforged-ts/dist-test/
 # The release scripts' build output
 release/build/
 
-# Claude Code agent worktrees and local state
-.claude/
+# Claude Code local settings, worktrees and session state; the Agent skills
+# under .claude/skills/ are committed.
+.claude/*
+!.claude/skills/
 
 # eslint-plugin-reforged cost measurement corpus (scripts/measure-cost.mjs removes it)
 packages/eslint-plugin-reforged/test/fixture-project/.cost/
