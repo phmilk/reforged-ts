@@ -19,7 +19,7 @@ import {
   type NoRenamesMarker,
   type RenameEntry,
   type RenameMapItem,
-} from "../../../../release/src/rename-map.js";
+} from "../../../../release/src/rename-map";
 import {
   createMapProject,
   publicApi,

@@ -25,7 +25,7 @@ import * as ts from "typescript";
 import {
   declarationResolver,
   type DeclarationResolver,
-} from "../../../../../release/src/rename-map.js";
+} from "../../../../../release/src/rename-map";
 import { packageRoot } from "./package-root";
 
 const fixturesRoot = fileURLToPath(
