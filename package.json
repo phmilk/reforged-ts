@@ -15,7 +15,7 @@
     "lint:prettier": "prettier --check \"**/*.{json,md,yaml,yml}\"",
     "format": "eslint --fix . && prettier --write \"**/*.{json,md,yaml,yml}\"",
     "typecheck": "pnpm --recursive typecheck && tsc -p test/tsconfig.json",
-    "test": "vitest run && pnpm run typings:check",
+    "test": "vitest run",
     "typings:generate": "pnpm --filter reforged-types typings:generate",
     "typings:check": "pnpm --filter reforged-types typings:check",
     "changeset": "changeset",
@@ -29,7 +29,7 @@
     "release:template-clone": "pnpm --filter reforged-ts-release release:template-clone",
     "release:publish-check": "pnpm --filter reforged-ts-release release:publish-check",
     "actionlint": "pnpm --filter reforged-ts-release actionlint",
-    "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test"
+    "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run typings:check && pnpm run test"
   },
   "devDependencies": {
     "@changesets/changelog-github": "catalog:",
