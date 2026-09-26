@@ -178,7 +178,8 @@ export class Sound extends Handle<sound> {
   }
 
   /**
-   * Starts the sound.
+   * Starts the sound, through `StartSound`, or `StartSoundEx` when `fadeIn` is
+   * given.
    * @note You can only play the same sound handle once.
    * @note You can only play 16 sounds in general.
    * @note Sounds of the same filepath (on different sound handles) must have a delay of at least 0.1 seconds inbetween them to be played.
@@ -224,8 +225,8 @@ export class Sound extends Handle<sound> {
   }
 
   /**
-   * Whether the thematic music pauses while the game window has lost focus,
-   * through `BlzPauseThematicMusicOnFocusLost` (3.0.0).
+   * Sets whether the thematic music pauses while the game window has lost
+   * focus, through `BlzPauseThematicMusicOnFocusLost` (3.0.0).
    */
   public static pauseThematicMusicOnFocusLost(pause: boolean) {
     BlzPauseThematicMusicOnFocusLost(pause);

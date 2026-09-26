@@ -166,8 +166,12 @@ describe("Sound thematic music", () => {
       () => undefined,
       () => {
         Sound.pauseThematicMusicOnFocusLost(true);
+        Sound.pauseThematicMusicOnFocusLost(false);
       },
     );
     expect(stubCalls()).toContainCall("BlzPauseThematicMusicOnFocusLost(true)");
+    expect(stubCalls()).toContainCall(
+      "BlzPauseThematicMusicOnFocusLost(false)",
+    );
   });
 });
