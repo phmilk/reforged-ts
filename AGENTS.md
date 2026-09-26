@@ -72,6 +72,8 @@ The five canonical triage labels are used as-is: `needs-triage`, `needs-info`, `
 
 One line per Agent skill: its `SKILL.md`, then its trigger. When your agent does not load skills, read the `SKILL.md` whose trigger matches the task and follow its steps.
 
+- [add-lint-rule](.claude/skills/add-lint-rule/SKILL.md): guard a pitfall at lint level, or add a rule to `eslint-plugin-reforged`.
+
 ## Definition of done
 
 - `pnpm check` is green.

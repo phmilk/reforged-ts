@@ -66,7 +66,7 @@ The tests run from source. They do not need `build`.
 
 6. **Docs page.** Copy `templates/rule-doc.md` to `docs/<rule>.md`. Keep the title and the six headings. Add a row to the rules table in `README.md`.
 7. **Data.** If the rule reads a data file, write a parser in `src/data/` with the `schema.ts` readers. Add the file to `PluginData` and `DataFiles` in `src/data/index.ts`. Add shape tests to `test/data.test.ts`. Every Native the file names must be in `installedNatives()`.
-8. **Changeset.** Until the first release, add the rule's paragraph to the initial-release changeset, `.changeset/eslint-plugin-reforged.md`, under its severity. After it, write a new changeset for `eslint-plugin-reforged`.
+8. **Changeset.** Write a changeset for `eslint-plugin-reforged`, a minor for a new rule (`docs/release.md`, "Adding a changeset").
 
 ## Data files
 
