@@ -383,11 +383,11 @@ It never runs the publish job and never opens a pull request. It needs the same 
 
 ### Repository variables and secrets
 
-| Name                  | Kind     | Read by              | What                                                                                                                                                                                                |
-| --------------------- | -------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `APP_CLIENT_ID`       | variable | `version`, `publish` | The client ID of the repository's GitHub App ([#48](https://github.com/phmilk/reforged-ts/issues/48)).                                                                                              |
-| `APP_PRIVATE_KEY`     | secret   | `version`, `publish` | A private key of that App.                                                                                                                                                                          |
-| `TEMPLATE_READ_TOKEN` | secret   | `template-gate`      | A fine-grained token with Contents: read on `phmilk/reforged-ts-template` only, while the Template is private. Once it is public the gate clones it without a token and this secret can be deleted. |
+| Name                  | Kind     | Read by                               | What                                                                                                                                                                                                |
+| --------------------- | -------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `APP_CLIENT_ID`       | variable | `version`, `publish`, the Patch watch | The client ID of the repository's GitHub App ([#48](https://github.com/phmilk/reforged-ts/issues/48)).                                                                                              |
+| `APP_PRIVATE_KEY`     | secret   | `version`, `publish`, the Patch watch | A private key of that App.                                                                                                                                                                          |
+| `TEMPLATE_READ_TOKEN` | secret   | `template-gate`                       | A fine-grained token with Contents: read on `phmilk/reforged-ts-template` only, while the Template is private. Once it is public the gate clones it without a token and this secret can be deleted. |
 
 No npm token exists anywhere. A job that needs a missing one fails at its first step, naming it: the App steps name `APP_CLIENT_ID` or `APP_PRIVATE_KEY`, and the Template clone names `TEMPLATE_READ_TOKEN` when the Template cannot be read without it, or the token when it cannot read the Template.
 
@@ -395,7 +395,7 @@ No npm token exists anywhere. A job that needs a missing one fails at its first 
 
 They gate the dry run and the first tokenless publish, not the merge of the workflow:
 
-- **The GitHub App** ([#48](https://github.com/phmilk/reforged-ts/issues/48)): installed on this repository with contents write and pull requests write, its client ID and a private key stored as above.
+- **The GitHub App** ([#48](https://github.com/phmilk/reforged-ts/issues/48)): installed on this repository with contents write, pull requests write and issues write (the Patch watch, `patch-watch.yml`, opens its issue with it), its client ID and a private key stored as above.
 - **A `v1` ref on the Template**: the gate clones `v<major>` of the library version, and fails naming the ref when the Template has neither a tag nor a branch of that name. Create it on the Template commit that supports the release: `git tag v1 <commit> && git push origin v1`. The Template's own plan cuts a `v1` branch at library 2.0 and keeps `main` as the current major; a `v1` tag now and a `v1` branch then both satisfy the gate, but the tag must be moved (or replaced by the branch) when the Template's `main` moves on.
 - **A read-only token for the Template** while it is private (see the table above).
 - **The four packages on npm with their trusted publisher**: [the first-publish wizard](#the-first-publish-wizard) publishes `1.0.0-alpha.0` of each and configures the publisher (repository `phmilk/reforged-ts`, workflow `release.yml`, no environment). The workflow file name is part of that configuration: renaming `release.yml` breaks publishing until every package's publisher is updated.

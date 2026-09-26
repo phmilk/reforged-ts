@@ -24,18 +24,19 @@ The library's own tests run on `reforged-test`, and the library compiles against
 
 Run from the root after `pnpm install`:
 
-| Command                 | What it does                                                                                                                                             |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm check`            | Runs `lint`, `typecheck`, `build` and `test`, in that order, and stops at the first failing stage. The finish condition.                                 |
-| `pnpm lint`             | ESLint on every TypeScript file, then a Prettier check of the JSON, Markdown and YAML files.                                                             |
-| `pnpm format`           | `eslint --fix` and `prettier --write` over the same files: lints and formats in one pass.                                                                |
-| `pnpm typecheck`        | `tsc --noEmit` on each package's tsconfigs (the library and its tests, the harness glue and runner, the generator), then on `test/`.                     |
-| `pnpm build`            | Builds every package, dependencies first: the library's Lua and declarations land in `packages/reforged-ts/dist`.                                        |
-| `pnpm test`             | One vitest run over every package's projects and the root `test/` project (packs each publishable package and checks its tarball), then `typings:check`. |
-| `pnpm typings:generate` | Regenerates the Typings from the vendored Patch files and the Overlay.                                                                                   |
-| `pnpm typings:check`    | Fails when the committed Typings differ from what the generator produces (the drift check).                                                              |
-| `pnpm actionlint`       | actionlint on the workflow files, at the version CI runs; downloaded on first use and checked against its pinned checksum, so nothing is installed.      |
-| `pnpm patch-watch:plan` | Prints whether jass-history tags a live Patch newer than the supported one, and why each other tag is ignored. Changes nothing.                          |
+| Command                   | What it does                                                                                                                                                         |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm check`              | Runs `lint`, `typecheck`, `build` and `test`, in that order, and stops at the first failing stage. The finish condition.                                             |
+| `pnpm lint`               | ESLint on every TypeScript file, then a Prettier check of the JSON, Markdown and YAML files.                                                                         |
+| `pnpm format`             | `eslint --fix` and `prettier --write` over the same files: lints and formats in one pass.                                                                            |
+| `pnpm typecheck`          | `tsc --noEmit` on each package's tsconfigs (the library and its tests, the harness glue and runner, the generator), then on `test/`.                                 |
+| `pnpm build`              | Builds every package, dependencies first: the library's Lua and declarations land in `packages/reforged-ts/dist`.                                                    |
+| `pnpm test`               | One vitest run over every package's projects and the root `test/` project (packs each publishable package and checks its tarball), then `typings:check`.             |
+| `pnpm typings:generate`   | Regenerates the Typings from the vendored Patch files and the Overlay.                                                                                               |
+| `pnpm typings:check`      | Fails when the committed Typings differ from what the generator produces (the drift check).                                                                          |
+| `pnpm actionlint`         | actionlint on the workflow files, at the version CI runs; downloaded on first use and checked against its pinned checksum, so nothing is installed.                  |
+| `pnpm patch-watch:plan`   | Prints whether jass-history tags a live Patch newer than the supported one, and why each other tag is ignored. Changes nothing.                                      |
+| `pnpm patch-watch:report` | Renders, from a saved plan, the issue and the draft pull request the Patch watch opens; the pull request's body is the generator's output as the curation checklist. |
 
 `pnpm check` green is what done means, for a contributor and for an agent. A package's other scripts run from the root with `pnpm --filter <package> <script>`, for example `pnpm --filter reforged-types verify`.
 
