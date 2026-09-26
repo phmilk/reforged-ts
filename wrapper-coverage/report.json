@@ -4,8 +4,8 @@
   "totals": {
     "natives": 1681,
     "owned": 984,
-    "covered": 863,
-    "missing": 121,
+    "covered": 864,
+    "missing": 120,
     "excluded": 0,
     "unowned": 697
   },
@@ -4744,8 +4744,8 @@
       "type": "sound",
       "counts": {
         "owned": 34,
-        "covered": 28,
-        "missing": 6,
+        "covered": 29,
+        "missing": 5,
         "excluded": 0
       },
       "covered": [
@@ -4836,6 +4836,13 @@
         {
           "name": "StartSound",
           "signature": "StartSound takes sound soundHandle returns nothing",
+          "coveredBy": [
+            "Sound"
+          ]
+        },
+        {
+          "name": "StartSoundEx",
+          "signature": "StartSoundEx takes sound soundHandle, boolean fadeIn returns nothing",
           "coveredBy": [
             "Sound"
           ]
@@ -4966,10 +4973,6 @@
         {
           "name": "SetSoundChannel",
           "signature": "SetSoundChannel takes sound soundHandle, integer channel returns nothing"
-        },
-        {
-          "name": "StartSoundEx",
-          "signature": "StartSoundEx takes sound soundHandle, boolean fadeIn returns nothing"
         }
       ],
       "excluded": []
