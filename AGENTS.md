@@ -2,17 +2,17 @@
 
 ## Overview
 
-reforged-ts is a TypeScript API over the Natives of Warcraft III 3.0.0 and later, compiled to Lua with typescript-to-lua; a fork of [cipherxof/w3ts](https://github.com/cipherxof/w3ts). The workspace holds four packages: the library (Wrappers and Systems), the Typings, the Lua test harness and the lint plugin (the lint layer of the Guards). The Template (`phmilk/reforged-ts-template`) is the Reference consumer every library release must build. The Template's `AGENTS.md` is a Seed that becomes a Map project's own file; this file is the library's and is never copied anywhere. `CONTEXT.md` is the vocabulary: use its terms.
+reforged-ts is a TypeScript API over the Natives of Warcraft III 3.0.0 and later, compiled to Lua with typescript-to-lua; a fork of [cipherxof/w3ts](https://github.com/cipherxof/w3ts). The workspace publishes four packages: the library (Wrappers and Systems), the Typings, the Lua test harness and the lint plugin (the lint layer of the Guards). The Template (`phmilk/reforged-ts-template`) is the Reference consumer every library release must build. The Template's `AGENTS.md` is a Seed that becomes a Map project's own file; this file is not a Seed. `CONTEXT.md` is the vocabulary: use its terms.
 
 ## Commands
 
 Run each from the repository root; `package.json` holds what each one runs.
 
-- `pnpm check`: the finish condition. Run it before you report a task done; green means done.
+- `pnpm check`: before you report a task done (see "Definition of done").
 - `pnpm build`: after changing a package another one consumes, before running that one's tests on their own.
-- `pnpm test`: every vitest project of the workspace. One package's scripts and tests: the README's "Commands".
-- `pnpm lint` reports; `pnpm format` fixes what it can of the report.
-- `pnpm typecheck`: every package's programs, faster than a full check while you edit.
+- `pnpm test`: after a change, for every vitest project and the Typings drift check. One package's scripts and tests: the README's "Commands".
+- `pnpm format`: when `pnpm lint` reports formatting or a fixable finding.
+- `pnpm typecheck`: while you edit, faster than a full check.
 - `pnpm typings:generate`: after an Overlay edit or for a new Patch; the loop is in `packages/reforged-types/AGENTS.md`.
 - `pnpm changeset add`: the changeset of a pull request. Run it without the prompt, as `docs/release.md` ("Adding a changeset") shows.
 
@@ -22,7 +22,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `packages/reforged-types/`: the Typings, their generator and the Overlay. Read its `AGENTS.md` before changing the package.
 - `packages/reforged-test/`: the Lua test harness the library's tests run on.
 - `packages/eslint-plugin-reforged/`: the lint layer of the Guards. Read its `AGENTS.md` before adding or changing a rule, its fixtures, docs page or data files.
-- `website/`: the docs site.
+- `website/`: the pages of the docs site.
 - `docs/adr/`: the decisions, numbered. `docs/research/`: the research they rely on (the probe map of the game's Lua).
 - `docs/release.md`: changesets, versions and the release workflow.
 - `release/`: the release scripts, a private workspace package.
@@ -33,7 +33,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 
 - Every public symbol carries TSDoc with the tags the [required-tag matrix](https://github.com/phmilk/reforged-ts/issues/18) sets for its kind (ADR 0004).
 - Every member backed by a Native carries `@native` naming the Natives behind it.
-- The library builds on Natives only: what a `*BJ` function offers is reimplemented over Natives (ADR 0008).
+- `*BJ` functions are never mirrored: what one offers is reimplemented over Natives (ADR 0008).
 - A Wrapper covers every Native whose first parameter is its Handle type, or excludes it with a reason (ADR 0008).
 - Every pull request carries a changeset, the empty one when nothing published changes (`docs/release.md`).
 - Every `@example` is included with `{@includeCode}` from a compiled file under `packages/reforged-ts/examples/` (ADR 0004).
@@ -43,16 +43,16 @@ Run each from the repository root; `package.json` holds what each one runs.
 
 The game's Lua, as measured by the probe map (`docs/research/probe-map.lua`, results in #9):
 
-- Lua is 5.3, not 5.4: `<const>`, `<close>` and `coroutine.close` do not exist.
+- Lua is 5.3: `<const>`, `<close>` and `coroutine.close` are 5.4 and do not exist.
 - Integers are 32-bit and wrap (`math.maxinteger + 1` is `-2147483648`): keep integer arithmetic inside that range.
-- `debug`, `require`, `package`, `io`, `collectgarbage`, `dofile`, `loadfile`, `os.getenv` and `warn` do not exist: code and tests call none of them.
+- `debug`, `require`, `package`, `io`, `collectgarbage`, `dofile`, `loadfile`, `os.getenv` and `warn` do not exist: code and tests use the rest of the standard library.
 - `load` works.
 - `pairs` order is deterministic per game build but not guaranteed: iterate `SyncedMap` and `SyncedSet` wherever the order reaches game state.
 - `config` runs before `main`. `InitGlobals`, `MarkGameStarted` and `InitBlizzard` exist before the map script and the rest is defined after it, so Native calls wait for an Init stage.
-- Handle identity is stable across Natives: a handle is a safe table key.
-- Handle ids are not recycled immediately and are never data: key on the handle, not on its id.
+- Handle identity is stable across Natives: a Handle is a safe table key.
+- Handle ids are not recycled immediately and are never data: key on the Handle, not on its id.
 - The World Editor crashes on save when a pasted script contains a percent character: build one with `string.char(37)`.
-- Async Natives (`GetLocalPlayer` and the 56 marked `@async`) feed visuals only, never game state.
+- Async Natives (`GetLocalPlayer` and every Native the Typings mark `@async`) feed visuals only, never game state.
 
 ## Agent skills
 

@@ -67,12 +67,14 @@ describe("AGENTS.md", () => {
     ).toBeLessThanOrEqual(150);
   });
 
-  it("keeps the subsections the setup skill maintains under Agent skills", () => {
+  // Three are written and updated in place by the setup skill of the agent
+  // skills, in the order it chooses; the fourth lists the Agent skills.
+  it("keeps the four subsections of the Agent skills block", () => {
     const agentSkills = section(agents, "## Agent skills") ?? [];
     expect(
-      headings(agentSkills.join("\n"), "###"),
-      "the `###` subsections of `## Agent skills`",
-    ).toEqual(["Domain docs", "Issue tracker", "Triage labels", "Skills"]);
+      headings(agentSkills.join("\n"), "###").sort(),
+      "the `###` subsections of `## Agent skills`, in any order",
+    ).toEqual(["Domain docs", "Issue tracker", "Skills", "Triage labels"]);
   });
 
   // An entry is one list item: the skill's folder name linked to its
@@ -80,7 +82,7 @@ describe("AGENTS.md", () => {
   //   - [add-wrapper](.claude/skills/add-wrapper/SKILL.md): cover a Native ...
   it("lists under Skills only skills that exist, each named after its folder", () => {
     const entries = (section(agents, "### Skills") ?? []).filter((line) =>
-      line.startsWith("- "),
+      /^[-*+] /.test(line),
     );
     const problems = entries.flatMap((entry) => {
       const match = /^- \[([^\]]+)\]\(([^)]+)\): \S/.exec(entry);
