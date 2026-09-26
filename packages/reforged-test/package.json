@@ -1,6 +1,6 @@
 {
   "name": "reforged-test",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha.0",
   "description": "Runs typescript-to-lua test modules on real Lua 5.3 with stubbed Warcraft III Reforged natives and reports them to vitest.",
   "license": "MIT",
   "type": "module",
