@@ -84,6 +84,17 @@ export default defineConfig({
           environment: "node",
         },
       },
+      {
+        // The docs site's scripts (seam B of #40), in Node, through their
+        // programmatic entry points, on fixture repositories the tests
+        // create. The site itself is built by docs:check, not here.
+        test: {
+          name: "website",
+          root: "website",
+          include: ["test/**/*.test.mts"],
+          environment: "node",
+        },
+      },
     ],
     // Neither the library's Lua tests nor the sources, fixtures and rename
     // map the Node tests read are in the vitest module graph: a change to one

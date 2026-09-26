@@ -15,6 +15,7 @@
     "allowImportingTsExtensions": true,
     "erasableSyntaxOnly": true,
     "strict": true,
+    "noUncheckedIndexedAccess": true,
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
