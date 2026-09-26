@@ -11,7 +11,8 @@ catalog:
   # Globals lua-types relies on (LuaMultiReturn and friends); a Map project lists it in `types` (#11).
   "@typescript-to-lua/language-extensions": ^1.19.0
   vitest: ^5.0.1
-  # JSON Schema validator for the library's rename map (migration/renames.schema.json), in its Node tests.
+  # JSON Schema validator for the library's rename map (migration/renames.schema.json), in the
+  # rename map module of the release package (release/src/rename-map.ts) its Node tests import.
   ajv: ^8.20.0
   # Node built-ins for the generator (fs, path); major follows .node-version.
   "@types/node": ^24.0.0
