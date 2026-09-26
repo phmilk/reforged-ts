@@ -2,7 +2,8 @@
 
 <!--
 The docs page of one rule, shipped in docs/<rule-name>.md and included by
-the docs site at https://phmilk.github.io/reforged-ts/<docs version>/lint/<rule-name>.
+the docs site under the Lint rules guide, at
+https://phmilk.github.io/reforged-ts/docs/<docs version>/guides/lint-rules/<rule-name>.
 Copy this file, keep the title and the six `##` headings exactly (the plugin
 test checks them, in this order), and delete this comment.
 -->

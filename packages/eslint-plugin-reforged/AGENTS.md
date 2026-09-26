@@ -35,11 +35,11 @@ The tests run from source. They do not need `build`.
 - `src/plugin.ts`: `createPlugin` builds `meta`, `rules` and `configs.recommended` from the registry.
 - `src/rules/index.ts`: the registry, one line per rule, sorted by name.
 - `src/rules/<rule>.ts`: one file per rule. Its default export is a `RuleEntry` (`src/rule-entry.ts`) with the name, the severity and a `create(data)` factory.
-- `src/create-rule.ts`: the rule creator. It sets `meta.docs.url` from `src/meta.ts`.
+- `src/create-rule.ts`: the rule creator. It sets `meta.docs.url` from `src/meta.ts`: `https://phmilk.github.io/reforged-ts/docs/<reforged.docs>/guides/lint-rules/<rule>`, where `reforged.docs` in `package.json` is a docs version label (`next`, then the library's `major.minor`, which the release process stamps).
 - `src/classify/`: the shared classification helpers, one module per concept (`package.ts`, `native.ts`, `handle.ts`, `wrapper.ts`, `creation.ts`, `top-level.ts`, ...). Rules never inspect declarations themselves.
 - `src/data/`: loading and shape checks for the data files. `schema.ts` holds the field readers, and there is one parser module per file. `optional.ts` finds a file another package publishes in the linted project's installation. `index.ts` loads them all into `PluginData`.
 - `data/*.json`: the plugin's own data files, shipped.
-- `docs/<rule>.md`: one page per rule, shipped. `templates/rule-doc.md` is the template; it is not shipped.
+- `docs/<rule>.md`: one page per rule, shipped. The docs site's `docs:collect` copies each one under the Lint rules guide, the page `meta.docs.url` links. `templates/rule-doc.md` is the template; it is not shipped.
 - `test/rules/<rule>.test.ts`: the RuleTester fixtures of one rule.
 - `test/plugin.test.ts`: the rule table, the recommended config, the metadata, the docs pages, and loading without the optional packages.
 - `test/data.test.ts`: the shape errors, and a check that every Native a data file names resolves in the Typings.
@@ -64,7 +64,7 @@ The tests run from source. They do not need `build`.
 
    Test escapes (`eslint-disable-next-line reforged/<rule> -- reason`) and severities with `lintWithRecommended`. The RuleTester registers rules under its own prefix. When a case needs a Wrapper member the stub lacks, add it to `test/fixture-project/node_modules/reforged-ts/index.d.ts`, with the shape of the real library.
 
-6. **Docs page.** Copy `templates/rule-doc.md` to `docs/<rule>.md`. Keep the title and the six headings. Add a row to the rules table in `README.md`.
+6. **Docs page.** Copy `templates/rule-doc.md` to `docs/<rule>.md`. Keep the title and the six headings. The summary paragraph is also the rule's line on the site's Lint rules index. Add a row to the rules table in `README.md`. `docs:collect` fails on a rule of the registry without a page and on a page without a rule.
 7. **Data.** If the rule reads a data file, write a parser in `src/data/` with the `schema.ts` readers. Add the file to `PluginData` and `DataFiles` in `src/data/index.ts`. Add shape tests to `test/data.test.ts`. Every Native the file names must be in `installedNatives()`.
 8. **Changeset.** Until the first release, add the rule's paragraph to the initial-release changeset, `.changeset/eslint-plugin-reforged.md`, under its severity. After it, write a new changeset for `eslint-plugin-reforged`.
 
