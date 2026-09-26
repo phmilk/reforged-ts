@@ -29,7 +29,8 @@
     "actionlint": "tsc -p tsconfig.json && node build/cli/actionlint.js",
     "patch-watch:plan": "tsc -p tsconfig.json && node build/cli/patch-watch.js",
     "data:check": "tsc -p tsconfig.json && node build/cli/data-check.js",
-    "repo:settings": "tsc -p tsconfig.json && node build/cli/repo-settings.js"
+    "repo:settings": "tsc -p tsconfig.json && node build/cli/repo-settings.js",
+    "patch-watch:report": "tsc -p tsconfig.json && node build/cli/patch-watch-report.js"
   },
   "dependencies": {
     "@changesets/parse": "catalog:",
