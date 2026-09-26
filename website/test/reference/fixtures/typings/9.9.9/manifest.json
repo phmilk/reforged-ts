@@ -1,0 +1,11 @@
+{
+  "patch": "9.9.9.99999",
+  "entries": [
+    { "name": "GetUnitName", "source": "common.j", "kind": "native" },
+    { "name": "KillUnit", "source": "common.j", "kind": "native" },
+    { "name": "SLEEP", "source": "common.j", "kind": "global" },
+    { "name": "bj_MAX_PLAYERS", "source": "blizzard.j", "kind": "global" },
+    { "name": "PolledWait", "source": "blizzard.j", "kind": "function" },
+    { "name": "Sleep", "source": "common.ai", "kind": "native" }
+  ]
+}

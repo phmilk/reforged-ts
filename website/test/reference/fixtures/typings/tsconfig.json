@@ -1,0 +1,18 @@
+{
+  // The program of the fixture Game version for the lint's project service.
+  // The reference tests run TypeDoc on it with the tsconfig the site writes.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [],
+    "strict": true,
+    "noEmit": true
+  },
+  "files": [
+    "9.9.9/common.j.d.ts",
+    "9.9.9/blizzard.j.d.ts",
+    "9.9.9/common.ai.d.ts"
+  ]
+}

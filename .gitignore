@@ -134,6 +134,7 @@ website/docs/changelog/*.md
 
 # The API reference TypeDoc generates into the docs tree at every build
 website/docs/api/reforged-ts/
+website/docs/api/typings/*/
 
 # Claude Code agent worktrees and local state
 .claude/

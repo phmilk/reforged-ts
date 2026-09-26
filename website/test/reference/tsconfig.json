@@ -5,7 +5,9 @@
   // source. The fixtures are programs of their own.
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["node"]
+    "types": ["node"],
+    // The site's TypeDoc modules (typedoc/*.mts), imported by extension.
+    "allowImportingTsExtensions": true
   },
   "include": ["."],
   "exclude": ["fixtures"]
