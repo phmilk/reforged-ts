@@ -168,6 +168,14 @@ export class Effect extends Handle<effect> {
     BlzPlaySpecialEffectWithTimeScale(this.handle, animType, timeScale);
   }
 
+  /**
+   * Queues the named animation after the current one, through
+   * `BlzQueueSpecialEffectAnimation` (3.0.0).
+   */
+  public queueAnimation(name: string) {
+    BlzQueueSpecialEffectAnimation(this.handle, name);
+  }
+
   public removeSubAnimation(subAnim: subanimtype) {
     BlzSpecialEffectRemoveSubAnimation(this.handle, subAnim);
   }
@@ -178,6 +186,22 @@ export class Effect extends Handle<effect> {
 
   public setAlpha(alpha: number) {
     BlzSetSpecialEffectAlpha(this.handle, alpha);
+  }
+
+  /**
+   * Plays the named animation, through `BlzSetSpecialEffectAnimation`
+   * (3.0.0).
+   */
+  public setAnimation(name: string) {
+    BlzSetSpecialEffectAnimation(this.handle, name);
+  }
+
+  /**
+   * Sets the time in seconds the effect takes to blend into its next
+   * animation, through `BlzSetSpecialEffectAnimationBlendTime` (3.0.0).
+   */
+  public setAnimationBlendTime(seconds: number) {
+    BlzSetSpecialEffectAnimationBlendTime(this.handle, seconds);
   }
 
   public setColor(red: number, green: number, blue: number) {

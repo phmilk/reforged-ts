@@ -484,7 +484,7 @@ describe("Trigger.isRunning and Trigger.interrupt", () => {
     const running = withNative(
       "BlzTriggerIsRunning",
       () => true,
-      () => trigger.isRunning(),
+      () => trigger.isRunning,
     );
     expect(running).toEqual(true);
     expect(stubCalls()).toContainCall(

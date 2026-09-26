@@ -4,8 +4,8 @@
   "totals": {
     "natives": 1681,
     "owned": 984,
-    "covered": 795,
-    "missing": 189,
+    "covered": 812,
+    "missing": 172,
     "excluded": 0,
     "unowned": 697
   },
@@ -74,8 +74,8 @@
       "type": "unit",
       "counts": {
         "owned": 312,
-        "covered": 247,
-        "missing": 65,
+        "covered": 259,
+        "missing": 53,
         "excluded": 0
       },
       "covered": [
@@ -446,6 +446,41 @@
         {
           "name": "AddUnitAnimationProperties",
           "signature": "AddUnitAnimationProperties takes unit whichUnit, string animProperties, boolean add returns nothing",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "AllowHeroGlowOnUnit",
+          "signature": "AllowHeroGlowOnUnit takes unit whichUnit returns nothing",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "DisallowHeroGlowOnUnit",
+          "signature": "DisallowHeroGlowOnUnit takes unit whichUnit returns nothing",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "HeroGlowIsAllowedOnUnit",
+          "signature": "HeroGlowIsAllowedOnUnit takes unit whichUnit returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzGetUnitAnimationDuration",
+          "signature": "BlzGetUnitAnimationDuration takes unit whichUnit, string whichAnimation returns real",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzGetUnitAnimationDurationByIndex",
+          "signature": "BlzGetUnitAnimationDurationByIndex takes unit whichUnit, integer index returns real",
           "coveredBy": [
             "Unit"
           ]
@@ -1572,6 +1607,13 @@
           ]
         },
         {
+          "name": "BlzResetUnitAttack",
+          "signature": "BlzResetUnitAttack takes unit whichUnit, integer weaponIndex returns nothing",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
           "name": "BlzGetUnitArmor",
           "signature": "BlzGetUnitArmor takes unit whichUnit returns real",
           "coveredBy": [
@@ -1595,6 +1637,13 @@
         {
           "name": "BlzUnitDisableAbility",
           "signature": "BlzUnitDisableAbility takes unit whichUnit, integer abilId, boolean flag, boolean hideUI returns nothing",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzUnitEnableAuras",
+          "signature": "BlzUnitEnableAuras takes unit whichUnit, boolean enable, boolean affectsUI returns nothing",
           "coveredBy": [
             "Unit"
           ]
@@ -1651,6 +1700,41 @@
         {
           "name": "BlzGetUnitAbilityCooldownRemaining",
           "signature": "BlzGetUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId returns real",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzGetUnitAbilityCooldownPercent",
+          "signature": "BlzGetUnitAbilityCooldownPercent takes unit whichUnit, integer abilId returns real",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzSetUnitAbilityCooldownRemaining",
+          "signature": "BlzSetUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId, real duration returns nothing",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzSetUnitAbilityCooldownPercent",
+          "signature": "BlzSetUnitAbilityCooldownPercent takes unit whichUnit, integer abilId, real percent returns nothing",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzAdjustUnitAbilityCooldownRemaining",
+          "signature": "BlzAdjustUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId, real duration returns nothing",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzAdjustUnitAbilityCooldownPercent",
+          "signature": "BlzAdjustUnitAbilityCooldownPercent takes unit whichUnit, integer abilId, real percent returns nothing",
           "coveredBy": [
             "Unit"
           ]
@@ -1880,26 +1964,6 @@
           "signature": "SetUnitFacingTimed takes unit whichUnit, real facingAngle, real duration returns nothing"
         },
         {
-          "name": "AllowHeroGlowOnUnit",
-          "signature": "AllowHeroGlowOnUnit takes unit whichUnit returns nothing"
-        },
-        {
-          "name": "DisallowHeroGlowOnUnit",
-          "signature": "DisallowHeroGlowOnUnit takes unit whichUnit returns nothing"
-        },
-        {
-          "name": "HeroGlowIsAllowedOnUnit",
-          "signature": "HeroGlowIsAllowedOnUnit takes unit whichUnit returns boolean"
-        },
-        {
-          "name": "BlzGetUnitAnimationDuration",
-          "signature": "BlzGetUnitAnimationDuration takes unit whichUnit, string whichAnimation returns real"
-        },
-        {
-          "name": "BlzGetUnitAnimationDurationByIndex",
-          "signature": "BlzGetUnitAnimationDurationByIndex takes unit whichUnit, integer index returns real"
-        },
-        {
           "name": "UnitEquipItem",
           "signature": "UnitEquipItem takes unit whichUnit, item whichItem returns boolean"
         },
@@ -1970,34 +2034,6 @@
         {
           "name": "CreateMinimapIconOnUnit",
           "signature": "CreateMinimapIconOnUnit takes unit whichUnit, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon"
-        },
-        {
-          "name": "BlzResetUnitAttack",
-          "signature": "BlzResetUnitAttack takes unit whichUnit, integer weaponIndex returns nothing"
-        },
-        {
-          "name": "BlzUnitEnableAuras",
-          "signature": "BlzUnitEnableAuras takes unit whichUnit, boolean enable, boolean affectsUI returns nothing"
-        },
-        {
-          "name": "BlzGetUnitAbilityCooldownPercent",
-          "signature": "BlzGetUnitAbilityCooldownPercent takes unit whichUnit, integer abilId returns real"
-        },
-        {
-          "name": "BlzSetUnitAbilityCooldownRemaining",
-          "signature": "BlzSetUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId, real duration returns nothing"
-        },
-        {
-          "name": "BlzSetUnitAbilityCooldownPercent",
-          "signature": "BlzSetUnitAbilityCooldownPercent takes unit whichUnit, integer abilId, real percent returns nothing"
-        },
-        {
-          "name": "BlzAdjustUnitAbilityCooldownRemaining",
-          "signature": "BlzAdjustUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId, real duration returns nothing"
-        },
-        {
-          "name": "BlzAdjustUnitAbilityCooldownPercent",
-          "signature": "BlzAdjustUnitAbilityCooldownPercent takes unit whichUnit, integer abilId, real percent returns nothing"
         },
         {
           "name": "BlzGetMouseFocusUnit",
@@ -2852,8 +2888,8 @@
       "type": "player",
       "counts": {
         "owned": 104,
-        "covered": 57,
-        "missing": 47,
+        "covered": 58,
+        "missing": 46,
         "excluded": 0
       },
       "covered": [
@@ -2874,6 +2910,13 @@
         {
           "name": "SetPlayerTaxRate",
           "signature": "SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "SetPlayerRaceSkin",
+          "signature": "SetPlayerRaceSkin takes player whichPlayer, racepreference whichRacePreference returns nothing",
           "coveredBy": [
             "MapPlayer"
           ]
@@ -3274,10 +3317,6 @@
         {
           "name": "SetPlayerRacePreference",
           "signature": "SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing"
-        },
-        {
-          "name": "SetPlayerRaceSkin",
-          "signature": "SetPlayerRaceSkin takes player whichPlayer, racepreference whichRacePreference returns nothing"
         },
         {
           "name": "SetPlayerRaceSelectable",
@@ -4793,8 +4832,8 @@
       "type": "effect",
       "counts": {
         "owned": 40,
-        "covered": 32,
-        "missing": 8,
+        "covered": 35,
+        "missing": 5,
         "excluded": 0
       },
       "covered": [
@@ -5002,6 +5041,27 @@
           ]
         },
         {
+          "name": "BlzSetSpecialEffectAnimationBlendTime",
+          "signature": "BlzSetSpecialEffectAnimationBlendTime takes effect whichEffect, real blendTime returns nothing",
+          "coveredBy": [
+            "Effect"
+          ]
+        },
+        {
+          "name": "BlzQueueSpecialEffectAnimation",
+          "signature": "BlzQueueSpecialEffectAnimation takes effect whichEffect, string whichAnimation returns nothing",
+          "coveredBy": [
+            "Effect"
+          ]
+        },
+        {
+          "name": "BlzSetSpecialEffectAnimation",
+          "signature": "BlzSetSpecialEffectAnimation takes effect whichEffect, string whichAnimation returns nothing",
+          "coveredBy": [
+            "Effect"
+          ]
+        },
+        {
           "name": "BlzGetSpecialEffectScale",
           "signature": "BlzGetSpecialEffectScale takes effect whichEffect returns real",
           "coveredBy": [
@@ -5043,18 +5103,6 @@
         {
           "name": "AddSpellEffectTarget",
           "signature": "AddSpellEffectTarget takes string modelName, effecttype t, widget targetWidget, string attachPoint returns effect"
-        },
-        {
-          "name": "BlzSetSpecialEffectAnimationBlendTime",
-          "signature": "BlzSetSpecialEffectAnimationBlendTime takes effect whichEffect, real blendTime returns nothing"
-        },
-        {
-          "name": "BlzQueueSpecialEffectAnimation",
-          "signature": "BlzQueueSpecialEffectAnimation takes effect whichEffect, string whichAnimation returns nothing"
-        },
-        {
-          "name": "BlzSetSpecialEffectAnimation",
-          "signature": "BlzSetSpecialEffectAnimation takes effect whichEffect, string whichAnimation returns nothing"
         }
       ],
       "excluded": []
@@ -6329,8 +6377,8 @@
       "type": "framehandle",
       "counts": {
         "owned": 47,
-        "covered": 45,
-        "missing": 2,
+        "covered": 46,
+        "missing": 1,
         "excluded": 0
       },
       "covered": [
@@ -6552,6 +6600,13 @@
           ]
         },
         {
+          "name": "BlzTextAreaFrameSetAutoScroll",
+          "signature": "BlzTextAreaFrameSetAutoScroll takes framehandle frame, boolean value returns nothing",
+          "coveredBy": [
+            "Frame"
+          ]
+        },
+        {
           "name": "BlzFrameSetMinMaxValue",
           "signature": "BlzFrameSetMinMaxValue takes framehandle frame, real minValue, real maxValue returns nothing",
           "coveredBy": [
@@ -6654,10 +6709,6 @@
         {
           "name": "BlzFrameGetName",
           "signature": "BlzFrameGetName takes framehandle frame returns string"
-        },
-        {
-          "name": "BlzTextAreaFrameSetAutoScroll",
-          "signature": "BlzTextAreaFrameSetAutoScroll takes framehandle frame, boolean value returns nothing"
         }
       ],
       "excluded": []

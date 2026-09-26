@@ -326,3 +326,53 @@ describe("Frame event reads", () => {
     expect(text).toEqual("typed");
   });
 });
+
+describe("Frame.setTextAreaAutoScroll", () => {
+  it("passes the flag to BlzTextAreaFrameSetAutoScroll", () => {
+    const frame = gameUi();
+    withNative(
+      "BlzTextAreaFrameSetAutoScroll",
+      () => undefined,
+      () => {
+        frame.setTextAreaAutoScroll(true);
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `BlzTextAreaFrameSetAutoScroll(${handleRef("framehandle", frame.handle)}, true)`,
+    );
+  });
+});
+
+describe("Frame pixel conversions", () => {
+  it("pixelToFrameX and pixelToFrameY are what their Natives answer", () => {
+    const x = withNative(
+      "BlzPixelToFrameX",
+      () => 0.125,
+      () => Frame.pixelToFrameX(240),
+    );
+    const y = withNative(
+      "BlzPixelToFrameY",
+      () => 0.25,
+      () => Frame.pixelToFrameY(270),
+    );
+    expect([x, y]).toEqual([0.125, 0.25]);
+    expect(stubCalls()).toContainCall("BlzPixelToFrameX(240)");
+    expect(stubCalls()).toContainCall("BlzPixelToFrameY(270)");
+  });
+
+  it("frameToPixelX and frameToPixelY are what their Natives answer", () => {
+    const x = withNative(
+      "BlzFrameToPixelX",
+      () => 1536,
+      () => Frame.frameToPixelX(0.8),
+    );
+    const y = withNative(
+      "BlzFrameToPixelY",
+      () => 540,
+      () => Frame.frameToPixelY(0.3),
+    );
+    expect([x, y]).toEqual([1536, 540]);
+    expect(stubCalls()).toContainCall("BlzFrameToPixelX(0.8)");
+    expect(stubCalls()).toContainCall("BlzFrameToPixelY(0.3)");
+  });
+});
