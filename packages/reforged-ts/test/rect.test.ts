@@ -1,7 +1,8 @@
 /** @noSelfInFile */
 
 // Rectangle on the Handle base: `create`, `fromPoint` and `getWorldBounds`
-// all allocate a rect, so all three follow the creation rule.
+// all allocate a rect, so all three follow the creation rule. The camera
+// blocker members pass the rect to their 3.0.0 Natives.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Point, Rectangle } from "../src/index";
@@ -71,5 +72,32 @@ describe("Rectangle.getWorldBounds", () => {
         }),
     );
     expect(message).toEqual("reforged-ts: failed to create Rectangle");
+  });
+});
+
+describe("Rectangle camera blocker", () => {
+  const rectangle = Rectangle.create(-64, -32, 64, 32);
+  const rectRef = handleRef("rect", rectangle.handle);
+
+  it("addCameraBlocker makes the rect a blocker through AddCameraBlocker", () => {
+    withNative(
+      "AddCameraBlocker",
+      () => undefined,
+      () => {
+        rectangle.addCameraBlocker();
+      },
+    );
+    expect(stubCalls()).toContainCall(`AddCameraBlocker(${rectRef})`);
+  });
+
+  it("enableCameraBlocker passes the flag to EnableCameraBlocker", () => {
+    withNative(
+      "EnableCameraBlocker",
+      () => undefined,
+      () => {
+        rectangle.enableCameraBlocker(false);
+      },
+    );
+    expect(stubCalls()).toContainCall(`EnableCameraBlocker(${rectRef}, false)`);
   });
 });
