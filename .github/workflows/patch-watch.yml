@@ -1,0 +1,265 @@
+# The Patch watch: every day, whether jass-history tags a live game Patch
+# newer than the supported one. For the newest such Build it opens one
+# "New Patch" issue and one draft pull request that vendored the Patch files
+# and ran the Typings generator, whose output is the curation checklist. It
+# never merges or publishes. CONTRIBUTING.md, "How a new Patch flows",
+# describes what happens next.
+name: patch-watch
+
+on:
+  schedule:
+    # Daily, off the hour.
+    - cron: "23 5 * * *"
+  workflow_dispatch:
+    inputs:
+      simulate_current_patch:
+        description: >
+          Rehearsal: take this Build (such as 3.0.0.24267) as the supported
+          Patch instead of reforged-types' reforged.patch, and forget the
+          Builds vendored above it. Close what the run opens.
+        type: string
+        default: ""
+      dry_run:
+        description: >
+          Dry run: print the plan, the issue and the pull request the watch
+          would open; open nothing. Runs from any branch.
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# One watch at a time; a newer run waits. A dry run gets its own group, so
+# rehearsing never holds up (or, as a pending run, replaces) a real one.
+concurrency:
+  group: patch-watch-${{ github.ref }}${{ inputs.dry_run && '-dry-run' || '' }}
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    name: watch
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      # The reports already open, read with the default token. The App token
+      # writes the issue, the branch and the pull request.
+      issues: read
+    env:
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Dry run or report
+        env:
+          DRY_RUN: ${{ inputs.dry_run == true }}
+        run: |
+          if [ "$DRY_RUN" != true ] && [ "$GITHUB_REF" != refs/heads/master ]; then
+            echo "::error title=Not master::The Patch watch reports from master only; this run is on $GITHUB_REF. Dispatch it with dry_run to rehearse another branch."
+            exit 1
+          fi
+      # The report's branch starts from this commit.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # No dependency cache: this job goes on to hold the App token, and
+      # never restores a cache another workflow could have written.
+      - uses: ./.github/actions/setup-workspace
+      # A Build named in the title of a game-patch issue, open or closed, is
+      # reported: the watch never reports it again. The form tells a person
+      # reporting a Patch to put its Build in the title too.
+      - id: reported
+        name: Reported Builds
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          titles=$(gh issue list --repo "$GITHUB_REPOSITORY" --label game-patch --state all --limit 1000 --json title --jq '.[].title')
+          builds=$(printf '%s\n' "$titles" | { grep -oE '[0-9]+(\.[0-9]+){3}' || true; } | sort -u | tr '\n' ' ')
+          echo "Reported Builds: ${builds:-none}"
+          echo "builds=$builds" >> "$GITHUB_OUTPUT"
+      - id: plan
+        name: patch-watch:plan
+        env:
+          # The tags API's anonymous limit is shared by the runner's address.
+          GH_TOKEN: ${{ github.token }}
+          SIMULATE: ${{ inputs.simulate_current_patch }}
+          REPORTED: ${{ steps.reported.outputs.builds }}
+        run: |
+          args=(--json)
+          if [ -n "$SIMULATE" ]; then args+=(--simulate-current-patch "$SIMULATE"); fi
+          for build in $REPORTED; do args+=(--reported "$build"); done
+          pnpm -s patch-watch:plan "${args[@]}" > "$RUNNER_TEMP/plan.json"
+          jq . "$RUNNER_TEMP/plan.json"
+          {
+            echo "build=$(jq -r '.patch.build // ""' "$RUNNER_TEMP/plan.json")"
+            echo "tag=$(jq -r '.patch.tag // ""' "$RUNNER_TEMP/plan.json")"
+          } >> "$GITHUB_OUTPUT"
+          jq -r '
+            "## Patch watch\n\n" +
+            (if .patch == null then "No new live Patch."
+             else "New live Patch: \(.patch.build), tag `\(.patch.tag)`." end) +
+            "\n\nSupported Patch: \(.supported)\(if .simulated then " (simulated)" else "" end)." +
+            " Reported: \(.reported | join(", ") | if . == "" then "none" else . end).\n"
+          ' "$RUNNER_TEMP/plan.json" >> "$GITHUB_STEP_SUMMARY"
+      # A failing generation is the expected outcome for a new Patch: its
+      # output is the checklist. Only a Patch that could not be vendored
+      # fails the run, before anything is opened.
+      - id: generate
+        name: typings:generate
+        if: steps.plan.outputs.build != ''
+        env:
+          BRANCH: patch-watch/${{ steps.plan.outputs.build }}
+          BUILD: ${{ steps.plan.outputs.build }}
+          TAG: ${{ steps.plan.outputs.tag }}
+        run: |
+          git switch --create "$BRANCH"
+          set +e
+          pnpm -s typings:generate "$TAG" > "$RUNNER_TEMP/generate.stdout" 2> "$RUNNER_TEMP/generate.stderr"
+          code=$?
+          set -e
+          cat "$RUNNER_TEMP/generate.stdout" "$RUNNER_TEMP/generate.stderr"
+          echo "typings:generate exited with $code."
+          # The generator prints this line once the tag is vendored
+          # (packages/reforged-types/src/cli/generate.ts).
+          if ! grep -qF "Vendored $TAG: " "$RUNNER_TEMP/generate.stdout"; then
+            echo "::error title=Vendoring failed::typings:generate did not vendor $TAG: its compile or the download failed (see its output above). Nothing was opened."
+            exit 1
+          fi
+          # The vendored files and provenance always; the generated Typings
+          # and async-natives.json only when generation succeeded (a failed
+          # one writes none).
+          if [ "$code" = 0 ]; then
+            git add packages/reforged-types
+          else
+            git add "packages/reforged-types/vendor/$BUILD"
+          fi
+          git status --short
+          {
+            echo "branch=$BRANCH"
+            echo "exit-code=$code"
+          } >> "$GITHUB_OUTPUT"
+      - name: Render the issue
+        if: steps.plan.outputs.build != ''
+        run: |
+          pnpm -s patch-watch:report issue --plan "$RUNNER_TEMP/plan.json" --run-url "$RUN_URL" > "$RUNNER_TEMP/issue.json"
+          jq -r .title "$RUNNER_TEMP/issue.json" > "$RUNNER_TEMP/issue-title.txt"
+          jq -j .body "$RUNNER_TEMP/issue.json" > "$RUNNER_TEMP/issue.md"
+      - name: What the watch would open (dry run)
+        if: steps.plan.outputs.build != '' && inputs.dry_run
+        env:
+          BRANCH: ${{ steps.generate.outputs.branch }}
+          EXIT_CODE: ${{ steps.generate.outputs.exit-code }}
+        run: |
+          pnpm -s patch-watch:report pull-request --plan "$RUNNER_TEMP/plan.json" \
+            --stdout "$RUNNER_TEMP/generate.stdout" --stderr "$RUNNER_TEMP/generate.stderr" \
+            --exit-code "$EXIT_CODE" --run-url "$RUN_URL" > "$RUNNER_TEMP/pull-request.json"
+          issue_title=$(cat "$RUNNER_TEMP/issue-title.txt")
+          pr_title=$(jq -r .title "$RUNNER_TEMP/pull-request.json")
+          echo "Would open the issue \"$issue_title\" (labels game-patch, needs-triage):"
+          cat "$RUNNER_TEMP/issue.md"
+          echo
+          echo "Would commit on $BRANCH, from $GITHUB_SHA:"
+          git diff --cached --stat
+          echo
+          echo "Would push $BRANCH and open the draft pull request \"$pr_title\" into master:"
+          jq -r .body "$RUNNER_TEMP/pull-request.json"
+          {
+            echo "## Dry run"
+            echo
+            echo "Nothing was opened. The issue, \"$issue_title\" (labels \`game-patch\`, \`needs-triage\`):"
+            echo
+            echo "<details><summary>Issue body</summary>"
+            echo
+            cat "$RUNNER_TEMP/issue.md"
+            echo
+            echo "</details>"
+            echo
+            echo "The branch \`$BRANCH\`, from $GITHUB_SHA, with:"
+            echo
+            echo '```'
+            git diff --cached --stat
+            echo '```'
+            echo
+            echo "The draft pull request, \"$pr_title\":"
+            echo
+            echo "<details><summary>Pull request body</summary>"
+            echo
+            jq -r .body "$RUNNER_TEMP/pull-request.json"
+            echo
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+      # Checked out first: the App token step is a local action. Minted only
+      # now, after the install and the generator ran with the read token.
+      - id: app
+        if: steps.plan.outputs.build != '' && !inputs.dry_run
+        uses: ./.github/actions/app-token
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-issues: write
+      - id: issue
+        name: Open the issue
+        if: steps.plan.outputs.build != '' && !inputs.dry_run
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          url=$(gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "$(cat "$RUNNER_TEMP/issue-title.txt")" --body-file "$RUNNER_TEMP/issue.md" \
+            --label game-patch --label needs-triage)
+          echo "Opened $url"
+          echo "number=${url##*/}" >> "$GITHUB_OUTPUT"
+      - name: Push the branch
+        if: steps.plan.outputs.build != '' && !inputs.dry_run
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          APP_TOKEN: ${{ steps.app.outputs.token }}
+          APP_SLUG: ${{ steps.app.outputs.app-slug }}
+          BRANCH: ${{ steps.generate.outputs.branch }}
+          BUILD: ${{ steps.plan.outputs.build }}
+          TAG: ${{ steps.plan.outputs.tag }}
+          EXIT_CODE: ${{ steps.generate.outputs.exit-code }}
+        run: |
+          bot="${APP_SLUG}[bot]"
+          id=$(gh api "users/$bot" --jq .id)
+          git config user.name "$bot"
+          git config user.email "$id+$bot@users.noreply.github.com"
+          if [ "$EXIT_CODE" = 0 ]; then
+            subject="feat(reforged-types): vendor and generate Patch $BUILD"
+            result="typings:generate succeeded."
+          else
+            subject="feat(reforged-types): vendor Patch $BUILD"
+            result="typings:generate exited with $EXIT_CODE: the Overlay needs curation (see the pull request's checklist)."
+          fi
+          # Empty in a rehearsal, which vendors a Build already vendored:
+          # the pull request still needs a commit.
+          git commit --allow-empty -m "$subject" -m "Vendored $TAG. $result"
+          header=$(printf 'x-access-token:%s' "$APP_TOKEN" | base64 -w0)
+          echo "::add-mask::$header"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $header" \
+            push origin "HEAD:refs/heads/$BRANCH"
+      - name: Open the draft pull request
+        if: steps.plan.outputs.build != '' && !inputs.dry_run
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          BRANCH: ${{ steps.generate.outputs.branch }}
+          EXIT_CODE: ${{ steps.generate.outputs.exit-code }}
+          ISSUE: ${{ steps.issue.outputs.number }}
+        run: |
+          pnpm -s patch-watch:report pull-request --plan "$RUNNER_TEMP/plan.json" \
+            --stdout "$RUNNER_TEMP/generate.stdout" --stderr "$RUNNER_TEMP/generate.stderr" \
+            --exit-code "$EXIT_CODE" --issue "$ISSUE" --run-url "$RUN_URL" > "$RUNNER_TEMP/pull-request.json"
+          # -j: no newline past the body sized to GitHub's limit.
+          jq -j .body "$RUNNER_TEMP/pull-request.json" > "$RUNNER_TEMP/pull-request.md"
+          url=$(gh pr create --repo "$GITHUB_REPOSITORY" --draft --base master --head "$BRANCH" \
+            --title "$(jq -r .title "$RUNNER_TEMP/pull-request.json")" --body-file "$RUNNER_TEMP/pull-request.md")
+          echo "Opened $url"
+          echo "Opened #$ISSUE and the draft pull request $url." >> "$GITHUB_STEP_SUMMARY"
+      # The next run skips the Build, which the issue names: say how to
+      # finish or retry.
+      - name: Issue without a pull request
+        if: failure() && steps.issue.outputs.number != ''
+        env:
+          ISSUE: ${{ steps.issue.outputs.number }}
+          BRANCH: ${{ steps.generate.outputs.branch }}
+        run: |
+          echo "::error title=Issue without a pull request::The watch opened #$ISSUE but not its pull request. To retry, remove the game-patch label from #$ISSUE and close it, delete the branch $BRANCH if it was pushed, and re-run the workflow."

@@ -15,9 +15,10 @@
     "lint:prettier": "prettier --check \"**/*.{json,md,yaml,yml}\"",
     "format": "eslint --fix . && prettier --write \"**/*.{json,md,yaml,yml}\"",
     "typecheck": "pnpm --recursive typecheck && tsc -p test/tsconfig.json",
-    "test": "vitest run && pnpm run typings:check",
+    "test": "vitest run",
     "typings:generate": "pnpm --filter reforged-types typings:generate",
     "typings:check": "pnpm --filter reforged-types typings:check",
+    "data:check": "pnpm --filter reforged-ts build && pnpm --filter reforged-ts-release data:check",
     "changeset": "changeset",
     "release:check-changeset": "pnpm --filter reforged-ts-release release:check-changeset",
     "release:check-patches": "pnpm --filter reforged-ts-release release:check-patches",
@@ -28,7 +29,11 @@
     "release:dist-tag": "pnpm --filter reforged-ts-release release:dist-tag",
     "release:template-clone": "pnpm --filter reforged-ts-release release:template-clone",
     "release:publish-check": "pnpm --filter reforged-ts-release release:publish-check",
-    "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test"
+    "actionlint": "pnpm --filter reforged-ts-release actionlint",
+    "patch-watch:plan": "pnpm --filter reforged-ts-release patch-watch:plan",
+    "patch-watch:report": "pnpm --filter reforged-ts-release patch-watch:report",
+    "repo:settings": "pnpm --filter reforged-ts-release repo:settings",
+    "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run typings:check && pnpm run test"
   },
   "devDependencies": {
     "@changesets/changelog-github": "catalog:",

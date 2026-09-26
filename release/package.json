@@ -1,11 +1,17 @@
 {
   "name": "reforged-ts-release",
   "private": true,
-  "description": "The release scripts of the reforged-ts workspace: Node programs behind the root release:* scripts. Never published.",
+  "description": "The release scripts of the reforged-ts workspace: Node programs behind the root release:* and patch-watch:* scripts, and the rename map module the workspace's scripts import (reforged-ts-release/rename-map). Never published.",
   "license": "MIT",
   "type": "module",
   "engines": {
     "node": ">=22.13"
+  },
+  "exports": {
+    "./rename-map": {
+      "types": "./build/rename-map.d.ts",
+      "default": "./build/rename-map.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -19,16 +25,23 @@
     "release:version": "tsc -p tsconfig.json && node build/cli/version.js",
     "release:dist-tag": "tsc -p tsconfig.json && node build/cli/dist-tag.js",
     "release:template-clone": "tsc -p tsconfig.json && node build/cli/template-clone.js",
-    "release:publish-check": "tsc -p tsconfig.json && node build/cli/publish-check.js"
+    "release:publish-check": "tsc -p tsconfig.json && node build/cli/publish-check.js",
+    "actionlint": "tsc -p tsconfig.json && node build/cli/actionlint.js",
+    "patch-watch:plan": "tsc -p tsconfig.json && node build/cli/patch-watch.js",
+    "data:check": "tsc -p tsconfig.json && node build/cli/data-check.js",
+    "repo:settings": "tsc -p tsconfig.json && node build/cli/repo-settings.js",
+    "patch-watch:report": "tsc -p tsconfig.json && node build/cli/patch-watch-report.js"
   },
   "dependencies": {
     "@changesets/parse": "catalog:",
-    "@manypkg/get-packages": "catalog:"
+    "@manypkg/get-packages": "catalog:",
+    "ajv": "catalog:",
+    "typescript": "catalog:"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",
     "@types/node": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "yaml": "catalog:"
   }
 }

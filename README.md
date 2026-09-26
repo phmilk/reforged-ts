@@ -24,16 +24,21 @@ The library's own tests run on `reforged-test`, and the library compiles against
 
 Run from the root after `pnpm install`:
 
-| Command                 | What it does                                                                                                                                             |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm check`            | Runs `lint`, `typecheck`, `build` and `test`, in that order, and stops at the first failing stage. The finish condition.                                 |
-| `pnpm lint`             | ESLint on every TypeScript file, then a Prettier check of the JSON, Markdown and YAML files.                                                             |
-| `pnpm format`           | `eslint --fix` and `prettier --write` over the same files: lints and formats in one pass.                                                                |
-| `pnpm typecheck`        | `tsc --noEmit` on each package's tsconfigs (the library and its tests, the harness glue and runner, the generator), then on `test/`.                     |
-| `pnpm build`            | Builds every package, dependencies first: the library's Lua and declarations land in `packages/reforged-ts/dist`.                                        |
-| `pnpm test`             | One vitest run over every package's projects and the root `test/` project (packs each publishable package and checks its tarball), then `typings:check`. |
-| `pnpm typings:generate` | Regenerates the Typings from the vendored Patch files and the Overlay.                                                                                   |
-| `pnpm typings:check`    | Fails when the committed Typings differ from what the generator produces (the drift check).                                                              |
+| Command                   | What it does                                                                                                                                                                               |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pnpm check`              | Runs `lint`, `typecheck`, `build`, `typings:check` and `test`, in that order, and stops at the first failing stage. The finish condition.                                                  |
+| `pnpm lint`               | ESLint on every TypeScript file, then a Prettier check of the JSON, Markdown and YAML files.                                                                                               |
+| `pnpm format`             | `eslint --fix` and `prettier --write` over the same files: lints and formats in one pass.                                                                                                  |
+| `pnpm typecheck`          | `tsc --noEmit` on each package's tsconfigs (the library and its tests, the harness glue and runner, the generator), then on `test/`.                                                       |
+| `pnpm build`              | Builds every package, dependencies first: the library's Lua and declarations land in `packages/reforged-ts/dist`.                                                                          |
+| `pnpm test`               | One vitest run over every package's projects and the root `test/` project (packs each publishable package and checks its tarball).                                                         |
+| `pnpm typings:generate`   | Regenerates the Typings from the vendored Patch files and the Overlay.                                                                                                                     |
+| `pnpm typings:check`      | Fails when the committed Typings differ from what the generator produces (the drift check).                                                                                                |
+| `pnpm data:check`         | Builds the library, then fails on an old name of the rename map still exported or a version pair without its migration page (reported in pre mode).                                        |
+| `pnpm actionlint`         | actionlint on the workflow files, at the version CI runs; downloaded on first use and checked against its pinned checksum, so nothing is installed.                                        |
+| `pnpm patch-watch:plan`   | Prints whether jass-history tags a live Patch newer than the supported one, and why each other tag is ignored. Changes nothing.                                                            |
+| `pnpm patch-watch:report` | Renders, from a saved plan, the issue and the draft pull request the Patch watch opens; the pull request's body is the generator's output as the curation checklist.                       |
+| `pnpm repo:settings`      | The maintainer's: applies the ruleset on `master`, the merge settings, the Pages source and the labels with an administrator's `gh` login. `--dry-run` prints the requests and sends none. |
 
 `pnpm check` green is what done means, for a contributor and for an agent. A package's other scripts run from the root with `pnpm --filter <package> <script>`, for example `pnpm --filter reforged-types verify`.
 
@@ -57,6 +62,10 @@ The library's tests import the harness by its package name: the runner from `ref
 - **Cross-Wrapper references only inside method bodies, never at module top level.** Two Wrapper modules may import each other (`Force` calls `MapPlayer.fromEnum`, `MapPlayer` takes a `Force`), and typescript-to-lua compiles each import to a Lua `require`. A reference made while a module loads (a static field initialised from another Wrapper, a top-level call) can run before the other module has finished loading and fails at `require` time; a reference inside a method body runs after both have loaded. When one side of a pair uses the other only as a type, that side writes `import type`, so `import-x/no-cycle` runs with no exception.
 - **A tolerated lint finding is disabled inline, on its line, naming the build step that clears it.** No rule is disabled in `eslint.config.mjs`, and a disable left behind after its fix fails lint.
 - **A Wrapper follows the Handle base's rules**, written in the doc comment of `Handle` (`packages/reforged-ts/src/handles/handle.ts`): the naming rule, no public constructor, lookups through `fromHandle` and creation through the creation helper (creation throws, lookup returns `undefined`). A field set from a creation argument is filled through the creation helper's `init`, with no constructor; a Wrapper declares a protected constructor taking the Handle and calling `super(handle)` only for fields that need initialisers or other constructor work. A member whose Native allocates another Wrapper's Handle calls that Wrapper's protected `expect` (`Point.expect(GetUnitLoc(...))`). The exceptions to "lookups go through `fromHandle`" are the documented non-null path (`unit.getOwner()`, `MapPlayer.fromLocal()`, which assert an invariant through the protected `expectFound` and so throw the standard message without counting as creations) and `Frame`'s `fromHandle` override for handle id 0.
+
+## Contributing
+
+[`CONTRIBUTING.md`](CONTRIBUTING.md) is the guide for a pull request: the flow, changesets, tests on the harness, the Wrapper rules, curating the Overlay and a new Patch, documentation and the issue labels.
 
 ## For agents
 

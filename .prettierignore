@@ -26,3 +26,6 @@ release/compatibility/matrix.md
 
 # Agent worktrees and local state.
 .claude/
+
+# SchemaStore's schemas, vendored byte for byte for the issue form tests.
+release/test/schemas/*.json

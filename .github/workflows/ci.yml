@@ -1,0 +1,150 @@
+# CI: the checks `pnpm check` composes locally and those later build steps
+# add, on ubuntu and windows; the docs check, the release checks and
+# actionlint on ubuntu; on every pull request and every push to master,
+# whose tarballs it keeps. Each check step runs one root script and is
+# named after it.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A newer push to a pull request cancels its running CI. Any other run gets
+# a group of its own (the run id), so pushes to master never cancel each
+# other: a shared group would still replace a pending run with a newer one.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}${{ github.event_name != 'pull_request' && format('-{0}', github.run_id) || '' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # The check names `ci (ubuntu)` and `ci (windows)` are a contract: the
+  # ruleset on master requires them (#194). Renaming this job or the matrix
+  # values silently un-protects master.
+  ci:
+    name: ci
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu, windows]
+    runs-on: ${{ matrix.os }}-latest
+    timeout-minutes: 20
+    steps:
+      # .gitattributes forces LF already; this keeps a CRLF checkout from
+      # ever reaching the lint.
+      - name: Line endings as committed
+        if: matrix.os == 'windows'
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The changeset check diffs the pull request against its base
+          # branch, which needs the history; the repository is small.
+          fetch-depth: 0
+          persist-credentials: false
+      - id: install
+        name: install
+        uses: ./.github/actions/setup-workspace
+        with:
+          cache: true
+      - name: lint
+        run: pnpm run lint
+      - name: typecheck
+        run: pnpm run typecheck
+      - name: build
+        run: pnpm run build
+      # The Typings drift gate, which also proves async-natives.json matches
+      # the Overlay. Its own stage, as in `pnpm check`: the root `test`
+      # script does not run it, so a leg runs it once.
+      - name: typings:check
+        run: pnpm run typings:check
+      - name: test
+        run: pnpm run test
+      # The guarded steps run a script that a later build step adds, and
+      # skip with a notice until the root package.json defines it. The
+      # guard (./.github/actions/guarded-script) goes when the last of these
+      # scripts lands: each step then runs `pnpm run <script>`.
+      - id: coverage-report
+        name: coverage:report
+        uses: ./.github/actions/guarded-script
+        with:
+          script: coverage:report
+          added-by: build step 7 (#54)
+      # The report is committed and rewritten by the step, so it is uploaded
+      # whenever the step ran, a gap included, and never when it was skipped.
+      - name: Upload the coverage report
+        if: >-
+          !cancelled() && steps.coverage-report.outcome != 'skipped' &&
+          hashFiles('wrapper-coverage/report.json', 'wrapper-coverage/report.md') != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: coverage-report-${{ matrix.os }}
+          path: |
+            wrapper-coverage/report.json
+            wrapper-coverage/report.md
+          if-no-files-found: error
+      - name: data:check
+        uses: ./.github/actions/guarded-script
+        with:
+          script: data:check
+          added-by: the data consistency check (#191)
+      - name: examples:build
+        uses: ./.github/actions/guarded-script
+        with:
+          script: examples:build
+          added-by: build step 8 (#43)
+      - name: docs:check
+        if: matrix.os == 'ubuntu'
+        uses: ./.github/actions/guarded-script
+        with:
+          script: docs:check
+          added-by: the docs site (#40)
+      # The release checks read the repository alone, the same on every OS:
+      # the ubuntu leg runs them, each reporting even when a check above
+      # failed. No job of their own, so the required checks stay the two
+      # legs. docs/release.md describes each.
+      - name: release:check-changeset
+        # The Version Packages pull request consumes changesets and adds
+        # none; its head branch is always changeset-release/master of this
+        # repository (a fork's branch of that name is checked).
+        if: >-
+          matrix.os == 'ubuntu' && github.event_name == 'pull_request' &&
+          !(github.head_ref == 'changeset-release/master' &&
+            github.event.pull_request.head.repo.full_name == github.repository) &&
+          !cancelled() && steps.install.outcome == 'success'
+        env:
+          RELEASE_BASE_REF: origin/${{ github.base_ref }}
+        run: pnpm run release:check-changeset
+      - name: release:gate
+        if: matrix.os == 'ubuntu' && !cancelled() && steps.install.outcome == 'success'
+        run: pnpm run release:gate
+      - name: release:check-patches
+        if: matrix.os == 'ubuntu' && !cancelled() && steps.install.outcome == 'success'
+        run: pnpm run release:check-patches
+      # The tarballs of a green master, kept a week for the Template
+      # maintainer's dry runs. Packed from the build above: the scripts are
+      # ignored, so reforged-test's prepare does not rebuild it.
+      - name: Pack the publishable packages
+        if: matrix.os == 'ubuntu' && github.event_name == 'push'
+        run: pnpm --recursive pack --config.ignore-scripts=true --pack-destination "$RUNNER_TEMP/tarballs"
+      - name: Upload the tarballs
+        if: matrix.os == 'ubuntu' && github.event_name == 'push'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: tarballs
+          path: ${{ runner.temp }}/tarballs
+          if-no-files-found: error
+          retention-days: 7
+      # The same version as the root `actionlint` script
+      # (release/src/actionlint.ts); bump both together. It needs no earlier
+      # step, so it reports workflow mistakes even when a check failed.
+      - name: actionlint
+        if: matrix.os == 'ubuntu' && !cancelled()
+        uses: raven-actions/actionlint@3d39aea434753780c3b3d4a1a31c854b4dbf49d7 # v2.2.0
+        with:
+          version: 1.7.12
+          # No Python in the workflows; the runner's shellcheck is used.
+          pyflakes: false

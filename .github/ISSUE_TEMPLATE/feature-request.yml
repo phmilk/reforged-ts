@@ -1,0 +1,39 @@
+name: Feature request
+description: Wrap Natives the library does not cover yet, or improve a workflow (the harness, the lint plugin, the Typings).
+labels: [enhancement, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every Native is already callable through the Typings; a request is about what the library should add on top. The project's words (Native, Wrapper, System, Typings, Patch) are defined in [CONTEXT.md](https://github.com/phmilk/reforged-ts/blob/master/CONTEXT.md).
+  - type: textarea
+    id: natives
+    attributes:
+      label: Natives or workflow
+      description: The Natives involved, by name, or the workflow the request is about (building, testing on the harness, linting, curating the Typings).
+      placeholder: BlzGetUnitAbilityCooldownRemaining, BlzStartUnitAbilityCooldown
+    validations:
+      required: true
+  - type: input
+    id: home
+    attributes:
+      label: Wrapper or System
+      description: The Wrapper or System it belongs to (`Unit`, `Frame`, `sync`), or "new" with the name you would give it.
+      placeholder: Unit
+    validations:
+      required: false
+  - type: textarea
+    id: why
+    attributes:
+      label: Why the Typings alone are not enough
+      description: What calling the Natives directly costs you today (a Handle to track by hand, a desync to avoid, a leak, boilerplate), and what the library could do better.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API
+      description: The TypeScript you would like to write, if you have it in mind.
+      render: ts
+    validations:
+      required: false

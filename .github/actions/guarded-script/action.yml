@@ -1,0 +1,31 @@
+name: Run a root script once it exists
+description: >
+  Runs a script of the root package.json, or, while the root package.json
+  does not define it, skips it with a notice naming the script and the work
+  that adds it. For the CI steps whose scripts later build steps add; it goes
+  when the last of them lands.
+inputs:
+  script:
+    description: The root script to run.
+    required: true
+  added-by:
+    description: The build step or spec that adds the script, for the notice.
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Run the script or skip it
+      shell: bash
+      env:
+        SCRIPT: ${{ inputs.script }}
+        ADDED_BY: ${{ inputs.added-by }}
+      # The probe exits 3 when the script is not defined, so an error
+      # reading package.json fails the step instead of skipping it.
+      run: |
+        status=0
+        node -e 'process.exitCode = JSON.parse(require("node:fs").readFileSync("package.json", "utf8")).scripts?.[process.argv[1]] === undefined ? 3 : 0' "$SCRIPT" || status=$?
+        case "$status" in
+          0) pnpm run "$SCRIPT" ;;
+          3) echo "::notice title=Step skipped::The root package.json defines no $SCRIPT script yet; $ADDED_BY adds it." ;;
+          *) exit "$status" ;;
+        esac
