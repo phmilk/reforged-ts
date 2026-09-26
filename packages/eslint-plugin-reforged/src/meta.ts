@@ -21,12 +21,17 @@ export const pluginMeta = {
 
 /**
  * The docs version segment of every rule URL: `reforged.docs` in
- * package.json, kept by the release process equal to the library version the
- * plugin was released with; `next` before the first release.
+ * package.json, always a label, since the plugin cannot know which docs
+ * version is the newest: `next` (the working tree) before the first release,
+ * then the library's `major.minor`, which the release process stamps (#186). The
+ * site answers at `/docs/<label>` for every version it keeps.
  */
 export const docsVersion = packageJson.reforged.docs;
 
-/** The documentation page of a rule, linked from the editor's Problems panel. */
+/**
+ * The documentation page of a rule, linked from the editor's Problems panel:
+ * its page under the Lint rules guide, the URL pattern of the docs site (#40).
+ */
 export function docsUrl(ruleName: string): string {
-  return `https://phmilk.github.io/reforged-ts/${docsVersion}/lint/${ruleName}`;
+  return `https://phmilk.github.io/reforged-ts/docs/${docsVersion}/guides/lint-rules/${ruleName}`;
 }

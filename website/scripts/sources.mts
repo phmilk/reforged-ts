@@ -3,7 +3,7 @@
 // `.gitignore` block of the collected pages, and a page linking it if its
 // section does not list its pages by itself.
 import type { Source } from "./collector.mts";
-import { adrFolder, changelogs, markdownFile } from "./kinds.mts";
+import { adrFolder, changelogs, lintRules, markdownFile } from "./kinds.mts";
 
 /** The published packages, in the order of the Changelog section. */
 const PACKAGES = [
@@ -14,6 +14,16 @@ const PACKAGES = [
 ];
 
 export const SOURCES: readonly Source[] = [
+  // The Lint rules guide: one page per rule of the lint plugin, at the URL
+  // its `meta.docs.url` builds, and the guide's index.
+  lintRules({
+    name: "the lint rule pages",
+    from: "packages/eslint-plugin-reforged",
+    to: "guides/lint-rules",
+    label: "Lint rules",
+    position: 10,
+  }),
+
   // The Contributing section: the project's own files for contributors,
   // listed by the section's index.
   markdownFile({

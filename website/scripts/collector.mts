@@ -6,7 +6,7 @@
 // replaces what the previous run wrote. Nothing it writes is edited in place:
 // every output is git-ignored, and each run removes what the last one wrote.
 import { mkdir, rm, stat, writeFile } from "node:fs/promises";
-import { dirname, join, posix } from "node:path";
+import { dirname, isAbsolute, join, posix, relative, sep } from "node:path";
 import { rewriteLinks } from "./markdown.mts";
 
 /** The repository the GitHub links point at, on its default branch. */
@@ -98,10 +98,17 @@ export interface Report {
 
 /**
  * A source that cannot be collected: required and missing, or read and
- * found wrong. The collector gathers them all before failing.
+ * found wrong, with one problem or several. The collector gathers them all
+ * before failing.
  */
 export class SourceError extends Error {
   override name = "SourceError";
+  /** What is wrong with the source, one problem each. */
+  readonly problems: readonly string[];
+  constructor(...problems: readonly [string, ...string[]]) {
+    super(problems.join("\n"));
+    this.problems = problems;
+  }
 }
 
 /** The collector failed: `problems` name each source and what is wrong. */
@@ -151,13 +158,15 @@ export async function collect(options: CollectOptions): Promise<Report> {
       read.push({ source, collected: await source.collect({ root, docs }) });
     } catch (error) {
       if (!(error instanceof SourceError)) throw error;
-      problems.push(`${source.name}: ${error.message}`);
+      problems.push(
+        ...error.problems.map((problem) => `${source.name}: ${problem}`),
+      );
     }
   }
   problems.push(...ownership(read));
   if (problems.length > 0) throw new CollectError(problems);
 
-  const links = await linkTargets(root, read);
+  const links = await linkTargets(root, docs, read);
   for (const output of sources.flatMap((source) => source.outputs)) {
     await rm(join(docs, output), { recursive: true, force: true });
   }
@@ -212,18 +221,25 @@ function within(path: string, output: string): boolean {
 
 /**
  * What a page's links can land on: each repository path a page is made from
- * alone (a copied file, the folder of an index) mapped to that page; and
- * which paths pages are made from are folders, for their GitHub URLs.
+ * alone (a copied file, the folder of an index) mapped to that page; the
+ * docs tree's own pages, by its repository path; and which paths pages are
+ * made from are folders, for their GitHub URLs.
  */
 interface LinkTargets {
   readonly pages: ReadonlyMap<string, string>;
+  /** The docs tree's `/`-separated repository path, when it is inside it. */
+  readonly docs: string | undefined;
   readonly folders: ReadonlySet<string>;
 }
 
 async function linkTargets(
   root: string,
+  docs: string,
   read: readonly Read[],
 ): Promise<LinkTargets> {
+  const docsPath = relative(root, docs).split(sep).join("/");
+  const inside =
+    docsPath !== "" && !docsPath.startsWith("..") && !isAbsolute(docsPath);
   const pages = new Map<string, string>();
   const folders = new Set<string>();
   for (const page of read.flatMap(({ collected }) => collected.pages ?? [])) {
@@ -233,7 +249,7 @@ async function linkTargets(
     const only = onlySource(page);
     if (only !== undefined && !pages.has(only)) pages.set(only, page.path);
   }
-  return { pages, folders };
+  return { pages, docs: inside ? docsPath : undefined, folders };
 }
 
 /** The one repository path a page is made from, if it has only one. */
@@ -284,8 +300,9 @@ function render(page: Page, links: LinkTargets): string {
 
 /**
  * The destination a page's link gets: the relative path of the page made
- * from its target, anchor kept, when the target is collected; else the
- * target's GitHub URL. Absolute URLs and same-page anchors are kept.
+ * from its target, anchor kept, when the target is collected or is a page of
+ * the docs tree (`website/docs/guides/x.md`); else the target's GitHub URL.
+ * Absolute URLs and same-page anchors are kept.
  */
 function rewriteLink(
   destination: string,
@@ -305,14 +322,26 @@ function rewriteLink(
     return url.href;
   }
   const target = decodePath(prefix[1]).replace(/\/$/, "");
-  const page = links.pages.get(target);
+  const page = links.pages.get(target) ?? docsPage(target, links.docs);
   if (page !== undefined) {
-    let relative = posix.relative(posix.dirname(pagePath), page);
-    if (!relative.startsWith(".")) relative = `./${relative}`;
-    return relative + url.hash;
+    let link = posix.relative(posix.dirname(pagePath), page);
+    if (!link.startsWith(".")) link = `./${link}`;
+    return link + url.hash;
   }
   // GitHub serves a folder's `blob` URL as its `tree` page.
   return url.href;
+}
+
+/** The docs tree page at the repository path `target`, if it is one. */
+function docsPage(
+  target: string,
+  docs: string | undefined,
+): string | undefined {
+  return docs !== undefined &&
+    target.startsWith(`${docs}/`) &&
+    /\.mdx?$/.test(target)
+    ? target.slice(docs.length + 1)
+    : undefined;
 }
 
 /** `path` percent-decoded, or as it is when its escapes are malformed. */

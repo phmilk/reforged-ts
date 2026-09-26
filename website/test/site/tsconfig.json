@@ -1,0 +1,12 @@
+{
+  // The tests of the site's configuration with what the collector writes,
+  // under the site's compiler options (they load config.ts as Docusaurus
+  // does). Named tsconfig.json so the lint's project service finds it from
+  // the test files; vitest runs them from source.
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "allowImportingTsExtensions": true
+  },
+  "include": ["."]
+}

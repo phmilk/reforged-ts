@@ -120,6 +120,12 @@ export default defineConfig({
           /\/packages\/eslint-plugin-reforged\/(?:data\/.+\.json|test\/fixture-project\/.+)$/,
         testsToRun: () => "packages/eslint-plugin-reforged/test",
       },
+      {
+        // docs:collect reads the plugin's rule pages and registry from disk.
+        pattern:
+          /\/packages\/eslint-plugin-reforged\/(?:docs\/.+\.md|src\/rules\/index\.ts)$/,
+        testsToRun: () => "website/test",
+      },
     ],
   },
 });
