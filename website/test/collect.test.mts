@@ -49,7 +49,7 @@ function capture() {
 }
 
 describe("collect", () => {
-  it("writes the Contributing pages and the changelogs of a fixture repository", async () => {
+  it("writes the lint rule pages, the Contributing pages and the changelogs of a fixture repository", async () => {
     const workspace = await fixture();
     const report = await collect(workspace);
     expect(await files(workspace.docs)).toEqual([
@@ -63,8 +63,13 @@ describe("collect", () => {
       "contributing/adr/index.md",
       "contributing/agent-conventions.md",
       "contributing/glossary.md",
+      "guides/lint-rules/_category_.json",
+      "guides/lint-rules/index.md",
+      "guides/lint-rules/no-sleep.md",
+      "guides/lint-rules/prefer-timer.md",
     ]);
     expect(report.collected.map(({ source }) => source)).toEqual([
+      "the lint rule pages",
       "the glossary",
       "the ADRs",
       "the agent conventions",
@@ -269,6 +274,23 @@ No release yet.
     );
   });
 
+  it("links a page of the docs tree by its path from the page, when the tree is in the repository", async () => {
+    const outside = await fixture({
+      ...REPOSITORY_FILES,
+      "CONTEXT.md":
+        "# Words\n\nSee [the guards](website/docs/guides/guards.md#dev-mode) and [the site](website/README.md).\n",
+    });
+    const inside = { ...outside, docs: join(outside.root, "website/docs") };
+    await collect(inside);
+    expect(await readText(inside.docs, "contributing/glossary.md")).toContain(
+      `See [the guards](../guides/guards.md#dev-mode) and [the site](${GITHUB}/website/README.md).`,
+    );
+    await collect(outside);
+    expect(await readText(outside.docs, "contributing/glossary.md")).toContain(
+      `See [the guards](${GITHUB}/website/docs/guides/guards.md#dev-mode)`,
+    );
+  });
+
   it("links a page from a source added to the list", async () => {
     const extra = markdownFile({
       name: "a new source",
@@ -296,7 +318,7 @@ describe("main", () => {
     const { out, output } = capture();
     expect(await main([], output, await fixture())).toBe(0);
     expect(out.stdout).toContain(
-      "docs:collect: 7 sources collected, 5 skipped.\n  collected the glossary: contributing/glossary.md\n",
+      "docs:collect: 8 sources collected, 5 skipped.\n  collected the lint rule pages: guides/lint-rules/index.md, guides/lint-rules/no-sleep.md, guides/lint-rules/prefer-timer.md, guides/lint-rules/_category_.json\n  collected the glossary: contributing/glossary.md\n",
     );
     expect(out.stdout).toContain(
       "  skipped the contributing guide: The contribution model (#193) adds CONTRIBUTING.md.\n",

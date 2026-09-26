@@ -1,6 +1,7 @@
 // The kinds of source the collector's list is written with: a Markdown file
-// copied as one page, the ADR folder, and the package changelogs with their
-// index. A new kind is one more function returning a Source.
+// copied as one page, the ADR folder, the package changelogs with their
+// index, and the lint plugin's rule pages with theirs. A new kind is one more
+// function returning a Source.
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { SourceError, type Page, type Source } from "./collector.mts";
@@ -201,4 +202,129 @@ export function changelogs(options: ChangelogOptions): Source[] {
     },
   };
   return [...pages, index];
+}
+
+export interface LintRulesOptions {
+  readonly name: string;
+  /**
+   * The lint plugin's package folder: its registry `src/rules/index.ts`,
+   * from which its recommended config sets every rule, and one page per rule
+   * in `docs/<rule>.md`.
+   */
+  readonly from: string;
+  /** The docs tree folder of the guide: the rule pages and their index. */
+  readonly to: string;
+  /** The guide's label in the sidebar and its index's title. */
+  readonly label: string;
+  readonly position: number;
+}
+
+/**
+ * The lint plugin's rule pages: one page per rule of its recommended config,
+ * copied from the page the plugin ships, served at `<to>/<rule>` (the URL
+ * the plugin's `meta.docs.url` builds), and the guide's index, which lists
+ * each rule with its summary. A rule without a page and a page without a
+ * rule fail, each named.
+ */
+export function lintRules(options: LintRulesOptions): Source {
+  const { name, from, to, label, position } = options;
+  const registry = `${from}/src/rules/index.ts`;
+  const pages = `${from}/docs`;
+  const page = (rule: string) => `${pages}/${rule}.md`;
+  return {
+    name,
+    from,
+    outputs: [to],
+    async collect({ root }) {
+      const rules = registeredRules(
+        await readText(root, registry).catch(() => {
+          throw new SourceError(`\`${registry}\` does not exist.`);
+        }),
+      );
+      if (rules.length === 0) {
+        throw new SourceError(
+          `\`${registry}\` registers no rule: the collector reads one \`import <name> from "./<rule>.js";\` line per rule.`,
+        );
+      }
+      const files = (await readdir(join(root, pages)).catch(() => []))
+        .filter((file) => file.endsWith(".md"))
+        .sort();
+      const problems = [
+        ...rules
+          .filter((rule) => !files.includes(`${rule}.md`))
+          .map(
+            (rule) =>
+              `the rule \`${rule}\` of the plugin's recommended config has no page: add \`${page(rule)}\`.`,
+          ),
+        ...files
+          .filter((file) => !rules.includes(file.replace(/\.md$/, "")))
+          .map(
+            (file) =>
+              `\`${pages}/${file}\` is the page of no rule of the plugin's recommended config: register the rule in \`${registry}\`, or delete the page.`,
+          ),
+      ];
+      const [first, ...rest] = problems;
+      if (first !== undefined) throw new SourceError(first, ...rest);
+
+      const collected: Page[] = [];
+      const items: string[] = [];
+      for (const [index, rule] of [...rules].sort().entries()) {
+        const { body } = takeTitle(
+          splitFrontMatter(await readText(root, page(rule))).body,
+        );
+        collected.push({
+          path: `${to}/${rule}.md`,
+          from: [page(rule)],
+          title: rule,
+          position: index + 1,
+          body,
+        });
+        items.push(`- [\`${rule}\`](${rule}.md): ${summary(body)}`);
+      }
+      const guide: Page = {
+        path: `${to}/index.md`,
+        from: [pages, registry],
+        title: label,
+        position: 0,
+        body: [
+          `\`eslint-plugin-reforged\` is the lint layer of the Guards: type-aware rules that report the Warcraft III scripting pitfalls (desync, crash, leak) in the editor and in CI, before the map compiles. Its recommended config sets every rule below, and each diagnostic links to its rule's page here. [Its README](/${from}/README.md) sets the plugin up, and [Desync safety and guards](/website/docs/guides/desync-safety-and-guards.md) says what the lint catches next to the type layer and the runtime Guards.`,
+          "",
+          "To silence a rule on one line, say why after `--`:",
+          "",
+          "```ts",
+          "// eslint-disable-next-line reforged/<rule> -- <why the code is safe here>",
+          "```",
+          "",
+          "## Rules",
+          "",
+          ...items,
+        ].join("\n"),
+      };
+      return {
+        pages: [guide, ...collected],
+        files: [
+          {
+            path: `${to}/_category_.json`,
+            text: `${JSON.stringify({ label, position }, null, 2)}\n`,
+          },
+        ],
+      };
+    },
+  };
+}
+
+/**
+ * The rules a lint plugin's registry registers: the module of each
+ * `import <name> from "./<rule>.js";` line, named after its rule (the
+ * plugin's convention, `src/rules/<rule>.ts`), in the registry's order.
+ */
+function registeredRules(registry: string): string[] {
+  return [
+    ...registry.matchAll(/^import\s+\w+\s+from\s+"\.\/([\w-]+)\.js";?$/gm),
+  ].flatMap((match) => (match[1] === undefined ? [] : [match[1]]));
+}
+
+/** A rule page's summary: its first paragraph, on one line. */
+function summary(body: string): string {
+  return (body.trim().split(/\n\s*\n/)[0] ?? "").replace(/\s*\n\s*/g, " ");
 }

@@ -76,12 +76,54 @@ export const CHANGELOG = `# reforged-ts
 - First release.
 `;
 
+/** The lint plugin's folder, where its rule registry and rule pages are. */
+export const PLUGIN = "packages/eslint-plugin-reforged";
+
+/** The registry of a fixture lint plugin with two rules. */
+export const RULE_REGISTRY = `// The registry: every rule of the plugin, one line each, sorted by name.
+import type { RuleEntry } from "../rule-entry.js";
+import noSleep from "./no-sleep.js";
+import preferTimer from "./prefer-timer.js";
+
+export const ruleEntries: readonly RuleEntry[] = [noSleep, preferTimer];
+`;
+
+export const NO_SLEEP_PAGE = `# no-sleep
+
+Reports a call to \`TriggerSleepAction\`.
+An error in the recommended config; the replacement is [\`prefer-timer\`](prefer-timer.md).
+
+## Why
+
+A sleep in a callback kills the thread.
+
+## When not to use it
+
+\`\`\`ts
+// eslint-disable-next-line reforged/no-sleep -- a trigger action
+TriggerSleepAction(1);
+\`\`\`
+`;
+
+export const PREFER_TIMER_PAGE = `# prefer-timer
+
+Reports a wait loop. A warning in the recommended config; the replacement is a Timer.
+
+## Why
+
+A loop that waits blocks the thread.
+`;
+
 /**
  * The files of a fixture repository with every required source of
- * `SOURCES`: a glossary, two ADRs, one changelog (reforged-ts's) and the
- * agent conventions; no CONTRIBUTING.md, no Agent skill, no other changelog.
+ * `SOURCES`: a glossary, two ADRs, one changelog (reforged-ts's), the agent
+ * conventions and a lint plugin with two rules; no CONTRIBUTING.md, no Agent
+ * skill, no other changelog.
  */
 export const REPOSITORY_FILES: Readonly<Record<string, string>> = {
+  [`${PLUGIN}/src/rules/index.ts`]: RULE_REGISTRY,
+  [`${PLUGIN}/docs/no-sleep.md`]: NO_SLEEP_PAGE,
+  [`${PLUGIN}/docs/prefer-timer.md`]: PREFER_TIMER_PAGE,
   "CONTEXT.md": GLOSSARY,
   "docs/adr/0001-typings-generated.md": ADR_1,
   "docs/adr/0002-site-links.md": ADR_2,

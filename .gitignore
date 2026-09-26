@@ -122,6 +122,7 @@ website/.docusaurus/
 # The docs tree's collected pages: docs:collect writes them from their sources
 # (website/scripts/sources.mts) at every build, and a test checks that each
 # output of a source is ignored here.
+website/docs/guides/lint-rules/
 website/docs/contributing/guide.md
 website/docs/contributing/glossary.md
 website/docs/contributing/adr/
