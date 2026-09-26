@@ -31,16 +31,12 @@ import {
   type ValidateFunction,
 } from "ajv/dist/2020.js";
 import * as ts from "typescript";
-import type { VersionPair } from "./major-changeset-gate.js";
+import { NO_RENAMES_KIND, type VersionPair } from "./major-changeset-gate.js";
 
-export {
-  formatPair,
-  migrationPagePath,
-  type VersionPair,
-} from "./major-changeset-gate.js";
+export { migrationPagePath, type VersionPair } from "./major-changeset-gate.js";
 
 /** The schema's file name; `loadRenameMap` looks for it next to the map. */
-export const SCHEMA_FILE = "renames.schema.json";
+const SCHEMA_FILE = "renames.schema.json";
 
 /** One entry of the rename map, as renames.schema.json describes it. */
 export interface RenameEntry {
@@ -65,7 +61,7 @@ export interface RenameEntry {
  * nothing. It stands in for the pair's entries.
  */
 export interface NoRenamesMarker {
-  kind: "noRenames";
+  kind: typeof NO_RENAMES_KIND;
   versions: VersionPair;
   note: string;
 }
@@ -76,7 +72,7 @@ export type RenameMapItem = RenameEntry | NoRenamesMarker;
 export function isNoRenamesMarker(
   item: RenameMapItem,
 ): item is NoRenamesMarker {
-  return item.kind === "noRenames";
+  return item.kind === NO_RENAMES_KIND;
 }
 
 /** The compiled schemas, by file. */

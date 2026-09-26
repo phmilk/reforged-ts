@@ -241,7 +241,7 @@ describe("the version pairs of a map", () => {
     ]);
   });
 
-  it("each have their page at the release gate's path", () => {
+  it("each have their page at the major-changeset gate's path", () => {
     expect(versionPairs([removed]).map(migrationPagePath)).toEqual([
       "website/docs/migration/w3ts-3-to-reforged-ts-1.md",
     ]);
