@@ -94,14 +94,14 @@ Declare the Natives of Patch 3.0.0.24277.
 | `changelog`                  | `@changesets/changelog-github`, `phmilk/reforged-ts` | Entries link the pull request and its author.                                                        |
 | `updateInternalDependencies` | `patch`                                              | A released package's ranges on its workspace dependencies follow any bump of them, patches included. |
 | `privatePackages`            | `{ "version": false, "tag": false }`                 | The workspace root and `reforged-ts-release` (the release scripts) are never versioned or tagged.    |
-| `ignore`                     | empty                                                | See [the website](#the-website).                                                                     |
+| `ignore`                     | `reforged-ts-website`                                | See [the website](#the-website).                                                                     |
 | `format`                     | `auto`                                               | Changelogs and manifests are formatted by the Prettier the workspace uses.                           |
 
 **No peer-bump majors.** A package whose peer dependency is bumped does not get a major. In Changesets 3 a dependent gets a patch, and only when the new version leaves its range: a minor on `reforged-types` moves `reforged-types` alone, and a major on it gives `reforged-ts` and `eslint-plugin-reforged` a patch ("Updated dependencies"). No setting is needed for this; `release/test/versioning.test.ts` proves it on a scratch copy of the workspace.
 
 ### The website
 
-The website is not a workspace package yet. When the docs spec ([#40](https://github.com/phmilk/reforged-ts/issues/40)) makes it one, it is `private` and its name goes into `ignore`, so it is never versioned, tagged or published even if `privatePackages` changes. A published package must never depend on it: Changesets rejects a package that depends on an ignored one.
+The docs site is the workspace package `reforged-ts-website`, in `website/` ([#40](https://github.com/phmilk/reforged-ts/issues/40)). It is `private` and its name is in `ignore`, so it is never versioned, tagged or published even if `privatePackages` changes, and `pnpm changeset status` never lists it. It depends on the library, the Typings and the lint plugin through `workspace:^` links; the reverse must never happen: Changesets rejects a package that depends on an ignored one. A change to the site alone carries [an empty changeset](#adding-a-changeset).
 
 ### Versioning locally: the GitHub token
 
@@ -279,6 +279,8 @@ Missing either fails with a message naming the page path expected and the pair. 
 ```
 
 `renames.schema.json` accepts it, the library's schema test checks it (and that no pair has both entries and a marker), and `eslint-plugin-reforged`'s `no-legacy-w3ts-names` skips it.
+
+**Reading the rename map.** The gate only looks for the pair in the map. The workspace's other readers of the map (the library's tests, the docs site's collector, `data:check`) share one module, `release/src/rename-map.ts`, imported as `reforged-ts-release/rename-map` from the release package's build output. It loads a map file and checks it against the `renames.schema.json` next to it, parses its symbols, and resolves each replacement against a built declaration entry (`packages/reforged-ts/dist/index.d.ts`), listing the missing ones; `checkRenameMap(file, entry)` does all three. It re-exports `migrationPagePath` from the gate, which stays the one definition of the page path. The library is published and cannot depend on the private release package, so its tests import the module's source by path.
 
 **In pre mode.** While `.changeset/pre.json` has `"mode": "pre"`, the version produced is a prerelease, so the gate reports what is missing and exits zero: alphas keep publishing before the docs site exists. It fails only when the version it would produce is stable: once pre mode is exited (the `pnpm changeset pre exit` pull request, where the 1.0.0 checklist's migration page becomes mechanical) or with no pre state at all.
 

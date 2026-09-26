@@ -84,6 +84,18 @@ export default defineConfig({
           environment: "node",
         },
       },
+      {
+        // The docs site's own code (seam B of #40), in Node, through its
+        // programmatic entry points, on fixture repositories the tests
+        // create or TypeDoc reads. The site itself is built by docs:check.
+        test: {
+          name: "website",
+          root: "website",
+          include: ["test/**/*.test.{mts,ts}"],
+          exclude: ["**/fixtures/**"],
+          environment: "node",
+        },
+      },
     ],
     // Neither the library's Lua tests nor the sources, fixtures and rename
     // map the Node tests read are in the vitest module graph: a change to one

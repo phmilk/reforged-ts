@@ -1,0 +1,53 @@
+{
+  "name": "reforged-ts-website",
+  "private": true,
+  "description": "The reforged-ts docs site on Docusaurus, served at https://phmilk.github.io/reforged-ts. Never published.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json && tsc -p scripts/tsconfig.json && tsc -p typedoc/tsconfig.json && tsc -p test/tsconfig.json && tsc -p test/reference/tsconfig.json",
+    "docs:collect": "node --experimental-strip-types scripts/collect.mts",
+    "docs:start": "pnpm run docs:collect && docusaurus start",
+    "docs:build": "pnpm run docs:collect && docusaurus build",
+    "docs:check": "pnpm run docs:collect && docusaurus build --config docusaurus.check.config.ts",
+    "docs:serve": "docusaurus serve",
+    "docs:clear": "docusaurus clear"
+  },
+  "dependencies": {
+    "@docusaurus/core": "catalog:",
+    "@docusaurus/faster": "catalog:",
+    "@docusaurus/preset-classic": "catalog:",
+    "@mdx-js/react": "catalog:",
+    "docusaurus-plugin-typedoc": "catalog:",
+    "eslint-plugin-reforged": "workspace:^",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "reforged-ts": "workspace:^",
+    "reforged-types": "workspace:^",
+    "typedoc": "catalog:",
+    "typedoc-plugin-markdown": "catalog:"
+  },
+  "devDependencies": {
+    "@docusaurus/module-type-aliases": "catalog:",
+    "@docusaurus/plugin-content-docs": "catalog:",
+    "@docusaurus/tsconfig": "catalog:",
+    "@docusaurus/types": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 3 chrome version",
+      "last 3 firefox version",
+      "last 5 safari version"
+    ]
+  }
+}

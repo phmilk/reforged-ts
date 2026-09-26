@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
+  "noStandardTags": false,
+  "tagDefinitions": [
+    { "tagName": "@native", "syntaxKind": "block", "allowMultiple": true },
+    { "tagName": "@patch", "syntaxKind": "block" },
+    { "tagName": "@async", "syntaxKind": "modifier" },
+    { "tagName": "@bug", "syntaxKind": "block", "allowMultiple": true },
+    { "tagName": "@since", "syntaxKind": "block" }
+  ]
+}

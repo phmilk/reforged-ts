@@ -1,0 +1,10 @@
+{
+  // The site's TypeDoc plugin, which TypeDoc imports from source through
+  // Node's type stripping: the same rules as the site's scripts.
+  "extends": "../scripts/tsconfig.json",
+  "compilerOptions": {
+    // TypeDoc's declarations reach Shiki's, which need the DOM's WebAssembly.
+    "skipLibCheck": true
+  },
+  "include": ["."]
+}

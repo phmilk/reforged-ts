@@ -115,6 +115,25 @@ packages/reforged-ts/dist-test/
 # The release scripts' build output
 release/build/
 
+# The docs site's build output and Docusaurus' generated files and cache
+website/build/
+website/.docusaurus/
+
+# The docs tree's collected pages: docs:collect writes them from their sources
+# (website/scripts/sources.mts) at every build, and a test checks that each
+# output of a source is ignored here.
+website/docs/contributing/guide.md
+website/docs/contributing/glossary.md
+website/docs/contributing/adr/
+website/docs/contributing/agent-conventions.md
+website/docs/contributing/adding-a-wrapper.md
+website/docs/contributing/adding-a-lint-rule.md
+website/docs/contributing/adding-a-patch.md
+website/docs/changelog/*.md
+
+# The API reference TypeDoc generates into the docs tree at every build
+website/docs/api/reforged-ts/
+
 # Claude Code agent worktrees and local state
 .claude/
 
