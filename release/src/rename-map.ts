@@ -244,7 +244,7 @@ export function declarationResolver(
   const isPublic = (member: ts.Symbol) =>
     (member.declarations ?? []).every(isPublicDeclaration);
   /** The export `className`, or its public member `member`. */
-  const find = ({ className, member }: SymbolName) => {
+  const findPublic = ({ className, member }: SymbolName) => {
     const symbol = exported.get(className);
     if (symbol === undefined || member === undefined) return symbol;
     const types: ts.Type[] = [];
@@ -278,11 +278,11 @@ export function declarationResolver(
       );
   };
   return {
-    has: (symbol) => find(symbol) !== undefined,
+    has: (symbol) => findPublic(symbol) !== undefined,
     stillExported(old) {
       const declarations = old.startsWith("new ")
         ? publicConstructors(parseSymbol(old).className)
-        : find(parseSymbol(old))?.declarations;
+        : findPublic(parseSymbol(old))?.declarations;
       if (declarations === undefined || declarations.length === 0) {
         return undefined;
       }

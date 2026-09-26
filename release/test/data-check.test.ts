@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { main } from "../src/cli/data-check.js";
 import {
   dataCheck,
-  failing,
+  failingViolations,
   type DataCheckInput,
   type Violation,
 } from "../src/data-check.js";
@@ -166,6 +166,7 @@ describe("an old name still exported", () => {
       'export { Timer, Group, SyncRequest } from "./leftovers";',
       "/** @deprecated Use `Init` instead. */",
       "export declare enum HOOK { MAIN = 0 }",
+      "export declare enum W3TS_HOOK { MAIN = 0 }",
       "export declare function hookedMain(): void;",
       "export declare function w3ts(): void;",
       "export declare function main(): void;",
@@ -190,12 +191,16 @@ describe("an old name still exported", () => {
     ].join("\n"),
   };
 
-  async function check(...renames: RenameEntry[]): Promise<Violation[]> {
+  async function check(
+    renames: RenameEntry[],
+    version?: string,
+  ): Promise<Violation[]> {
     return dataCheck(
       await fixture({
         renames,
         declarations: LEFTOVERS,
-        pages: [FIRST_PAGE],
+        pages: [FIRST_PAGE, SECOND_PAGE],
+        version,
       }),
     );
   }
@@ -213,20 +218,12 @@ describe("an old name still exported", () => {
     ["a function", { old: "hookedMain", new: null, kind: "function" }],
   ])("is found for %s", async (_, fields) => {
     const renamed = entry(fields);
-    expect(await check(renamed)).toEqual([
+    expect(await check([renamed])).toEqual([
       { kind: "old-name", old: renamed.old, versions: FIRST },
     ]);
   });
 
   it.each<[string, Partial<RenameEntry>]>([
-    [
-      "an export kept deprecated for a release",
-      { old: "HOOK", new: null, kind: "type" },
-    ],
-    [
-      "a member kept deprecated for a release",
-      { old: "Timer.make(...)", new: "Timer.create(...)", kind: "member" },
-    ],
     [
       "an entry that keeps its name, a note on changed arguments",
       { old: "Timer.start", new: "Timer.start", kind: "member" },
@@ -248,7 +245,46 @@ describe("an old name still exported", () => {
       { old: "w3ts", new: "reforged-ts", kind: "package", oneToOne: true },
     ],
   ])("is not a violation for %s", async (_, fields) => {
-    expect(await check(entry(fields))).toEqual([]);
+    expect(await check([entry(fields)])).toEqual([]);
+  });
+
+  describe("marked @deprecated", () => {
+    // Deprecated in a 1.x minor with its entry of the pair to 2, removed by
+    // the major ("Deprecating and removing a symbol" in docs/release.md).
+    const deprecations = [
+      entry({ old: "HOOK", new: null, kind: "type", versions: SECOND }),
+      entry({
+        old: "Timer.make(...)",
+        new: "Timer.create(...)",
+        kind: "member",
+        versions: SECOND,
+      }),
+    ];
+
+    it("is not a violation before the pair's target major", async () => {
+      expect(await check(deprecations, "1.4.0")).toEqual([]);
+    });
+
+    it("is one from the pair's target major: the removal was forgotten", async () => {
+      expect(await check(deprecations, "2.0.0-alpha.0")).toEqual([
+        { kind: "old-name", old: "HOOK", versions: SECOND },
+        { kind: "old-name", old: "Timer.make(...)", versions: SECOND },
+      ]);
+    });
+  });
+
+  describe("kept by the first major although its pair says it is gone", () => {
+    const hook = entry({ old: "W3TS_HOOK", new: null, kind: "type" });
+
+    it("is not a violation through 1.x", async () => {
+      expect(await check([hook], "1.2.0")).toEqual([]);
+    });
+
+    it("is one from 2.0", async () => {
+      expect(await check([hook], "2.0.0")).toEqual([
+        { kind: "old-name", old: "W3TS_HOOK", versions: FIRST },
+      ]);
+    });
   });
 });
 
@@ -321,13 +357,16 @@ describe("the violations that fail the check", () => {
   const page: Violation = { kind: "page", versions: FIRST, path: FIRST_PAGE };
 
   it("leave a missing page out while pre mode is active", () => {
-    expect(failing([oldName, page], "pre")).toEqual([oldName]);
+    expect(failingViolations([oldName, page], "pre")).toEqual([oldName]);
   });
 
   it.each(["none", "exit"] as const)(
     "are all of them with pre mode %s",
     (preMode) => {
-      expect(failing([oldName, page], preMode)).toEqual([oldName, page]);
+      expect(failingViolations([oldName, page], preMode)).toEqual([
+        oldName,
+        page,
+      ]);
     },
   );
 });
@@ -398,7 +437,7 @@ describe("pnpm data:check", () => {
     kind: "member",
   });
   const OLD_NAME_LINE =
-    "- `Unit.create` (w3ts@3 to reforged-ts@1) is still exported by packages/reforged-ts/dist/index.d.ts: remove it, or deprecate it if it stays for a release.\n";
+    "- `Unit.create` (w3ts@3 to reforged-ts@1) is still exported by packages/reforged-ts/dist/index.d.ts: remove it, or see `data:check` in docs/release.md for what may stay.\n";
   const PAGE_LINE =
     "- No migration page for w3ts@3 to reforged-ts@1: website/docs/migration/w3ts-3-to-reforged-ts-1.md (or .mdx).\n";
   const HEADER =
