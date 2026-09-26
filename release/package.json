@@ -25,7 +25,8 @@
     "release:version": "tsc -p tsconfig.json && node build/cli/version.js",
     "release:dist-tag": "tsc -p tsconfig.json && node build/cli/dist-tag.js",
     "release:template-clone": "tsc -p tsconfig.json && node build/cli/template-clone.js",
-    "release:publish-check": "tsc -p tsconfig.json && node build/cli/publish-check.js"
+    "release:publish-check": "tsc -p tsconfig.json && node build/cli/publish-check.js",
+    "data:check": "tsc -p tsconfig.json && node build/cli/data-check.js"
   },
   "dependencies": {
     "@changesets/parse": "catalog:",

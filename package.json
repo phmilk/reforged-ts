@@ -18,6 +18,7 @@
     "test": "vitest run && pnpm run typings:check",
     "typings:generate": "pnpm --filter reforged-types typings:generate",
     "typings:check": "pnpm --filter reforged-types typings:check",
+    "data:check": "pnpm --filter reforged-ts build && pnpm --filter reforged-ts-release data:check",
     "changeset": "changeset",
     "release:check-changeset": "pnpm --filter reforged-ts-release release:check-changeset",
     "release:check-patches": "pnpm --filter reforged-ts-release release:check-patches",

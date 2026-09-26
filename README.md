@@ -34,6 +34,7 @@ Run from the root after `pnpm install`:
 | `pnpm test`             | One vitest run over every package's projects and the root `test/` project (packs each publishable package and checks its tarball), then `typings:check`. |
 | `pnpm typings:generate` | Regenerates the Typings from the vendored Patch files and the Overlay.                                                                                   |
 | `pnpm typings:check`    | Fails when the committed Typings differ from what the generator produces (the drift check).                                                              |
+| `pnpm data:check`       | Builds the library, then fails on an old name of the rename map still exported or a version pair without its migration page (reported in pre mode).      |
 
 `pnpm check` green is what done means, for a contributor and for an agent. A package's other scripts run from the root with `pnpm --filter <package> <script>`, for example `pnpm --filter reforged-types verify`.
 
