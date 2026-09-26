@@ -4,8 +4,8 @@
   "totals": {
     "natives": 1681,
     "owned": 984,
-    "covered": 905,
-    "missing": 79,
+    "covered": 910,
+    "missing": 74,
     "excluded": 0,
     "unowned": 697
   },
@@ -4732,8 +4732,8 @@
       "type": "rect",
       "counts": {
         "owned": 20,
-        "covered": 16,
-        "missing": 4,
+        "covered": 18,
+        "missing": 2,
         "excluded": 0
       },
       "covered": [
@@ -4843,6 +4843,20 @@
           ]
         },
         {
+          "name": "EnableCameraBlocker",
+          "signature": "EnableCameraBlocker takes rect r, boolean flag returns nothing",
+          "coveredBy": [
+            "Rectangle"
+          ]
+        },
+        {
+          "name": "AddCameraBlocker",
+          "signature": "AddCameraBlocker takes rect where returns nothing",
+          "coveredBy": [
+            "Rectangle"
+          ]
+        },
+        {
           "name": "AddWeatherEffect",
           "signature": "AddWeatherEffect takes rect where, integer effectID returns weathereffect",
           "coveredBy": [
@@ -4851,14 +4865,6 @@
         }
       ],
       "missing": [
-        {
-          "name": "EnableCameraBlocker",
-          "signature": "EnableCameraBlocker takes rect r, boolean flag returns nothing"
-        },
-        {
-          "name": "AddCameraBlocker",
-          "signature": "AddCameraBlocker takes rect where returns nothing"
-        },
         {
           "name": "SetDoodadAnimationRect",
           "signature": "SetDoodadAnimationRect takes rect r, integer doodadID, string animName, boolean animRandom returns nothing"
@@ -4875,8 +4881,8 @@
       "type": "sound",
       "counts": {
         "owned": 34,
-        "covered": 28,
-        "missing": 6,
+        "covered": 29,
+        "missing": 5,
         "excluded": 0
       },
       "covered": [
@@ -4967,6 +4973,13 @@
         {
           "name": "StartSound",
           "signature": "StartSound takes sound soundHandle returns nothing",
+          "coveredBy": [
+            "Sound"
+          ]
+        },
+        {
+          "name": "StartSoundEx",
+          "signature": "StartSoundEx takes sound soundHandle, boolean fadeIn returns nothing",
           "coveredBy": [
             "Sound"
           ]
@@ -5097,10 +5110,6 @@
         {
           "name": "SetSoundChannel",
           "signature": "SetSoundChannel takes sound soundHandle, integer channel returns nothing"
-        },
-        {
-          "name": "StartSoundEx",
-          "signature": "StartSoundEx takes sound soundHandle, boolean fadeIn returns nothing"
         }
       ],
       "excluded": []
@@ -6996,8 +7005,8 @@
       "type": "camerasetup",
       "counts": {
         "owned": 16,
-        "covered": 14,
-        "missing": 2,
+        "covered": 16,
+        "missing": 0,
         "excluded": 0
       },
       "covered": [
@@ -7093,6 +7102,20 @@
           ]
         },
         {
+          "name": "BlzCameraSetupSetCameraType",
+          "signature": "BlzCameraSetupSetCameraType takes camerasetup whichSetup, integer cameraType returns nothing",
+          "coveredBy": [
+            "CameraSetup"
+          ]
+        },
+        {
+          "name": "BlzCameraSetupGetCameraType",
+          "signature": "BlzCameraSetupGetCameraType takes camerasetup whichSetup returns integer",
+          "coveredBy": [
+            "CameraSetup"
+          ]
+        },
+        {
           "name": "BlzCameraSetupApplyForceDurationSmooth",
           "signature": "BlzCameraSetupApplyForceDurationSmooth takes camerasetup whichSetup, boolean doPan, real forcedDuration, real easeInDuration, real easeOutDuration, real smoothFactor returns nothing",
           "coveredBy": [
@@ -7100,16 +7123,7 @@
           ]
         }
       ],
-      "missing": [
-        {
-          "name": "BlzCameraSetupSetCameraType",
-          "signature": "BlzCameraSetupSetCameraType takes camerasetup whichSetup, integer cameraType returns nothing"
-        },
-        {
-          "name": "BlzCameraSetupGetCameraType",
-          "signature": "BlzCameraSetupGetCameraType takes camerasetup whichSetup returns integer"
-        }
-      ],
+      "missing": [],
       "excluded": []
     }
   ],
