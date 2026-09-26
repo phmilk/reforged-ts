@@ -21,6 +21,7 @@ import {
   type ApiRequest,
   type GitHubApi,
 } from "../repo-settings.js";
+import { isRecord } from "../unknown.js";
 import { repositoryRoot } from "../workspace.js";
 import {
   errorMessage,
@@ -77,10 +78,18 @@ async function ghOutput(
   try {
     return (await gh(args)).trim();
   } catch (error) {
-    throw new Error(
-      `gh ${args.join(" ")} (${what}) failed: ${errorMessage(error).trim()}`,
-      { cause: error },
-    );
+    // execFile's message repeats the command line; its stderr says why.
+    const reason =
+      isRecord(error) && error.code === "ENOENT"
+        ? "gh is not installed (https://cli.github.com)"
+        : isRecord(error) &&
+            typeof error.stderr === "string" &&
+            error.stderr.trim() !== ""
+          ? error.stderr.trim()
+          : errorMessage(error).trim();
+    throw new Error(`gh ${args.join(" ")} (${what}) failed: ${reason}`, {
+      cause: error,
+    });
   }
 }
 
@@ -93,6 +102,7 @@ function gitHubApi(fetcher: typeof fetch, token: string): GitHubApi {
         accept: "application/vnd.github+json",
         authorization: `Bearer ${token}`,
         "x-github-api-version": "2022-11-28",
+        "user-agent": "reforged-ts-repo-settings",
         ...(body === undefined ? {} : { "content-type": "application/json" }),
       },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),

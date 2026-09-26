@@ -351,6 +351,28 @@ async function get(
 
 const PAGE_SIZE = 100;
 
+/** More pages than any repository's labels or rulesets fill. */
+const MAX_PAGES = 50;
+
+/** Every item of the paginated list at `endpoint` (a path and a query). */
+async function getAll(api: GitHubApi, endpoint: string): Promise<unknown[]> {
+  const items: unknown[] = [];
+  for (let page = 1; page <= MAX_PAGES; page++) {
+    const batch = await get(
+      api,
+      `${endpoint}${endpoint.includes("?") ? "&" : "?"}per_page=${String(PAGE_SIZE)}&page=${String(page)}`,
+    );
+    if (!Array.isArray(batch)) {
+      throw new RepoSettingsError(`GET ${endpoint} answered no list.`);
+    }
+    items.push(...(batch as unknown[]));
+    if (batch.length < PAGE_SIZE) return items;
+  }
+  throw new RepoSettingsError(
+    `GET ${endpoint} answered more than ${String(MAX_PAGES)} pages.`,
+  );
+}
+
 /**
  * The current state of `repository`, read through `api`. Stops with a
  * `RepoSettingsError` when the authentication cannot see the repository or
@@ -379,30 +401,13 @@ export async function readRepositoryState(
     );
   }
 
-  const rulesets = await get(
-    api,
-    `${root}/rulesets?includes_parents=false&per_page=${String(PAGE_SIZE)}`,
-  );
+  const rulesets = await getAll(api, `${root}/rulesets?includes_parents=false`);
   const pages = await get(api, `${root}/pages`, true);
-  const labels: unknown[] = [];
-  for (let page = 1; ; page++) {
-    const batch = await get(
-      api,
-      `${root}/labels?per_page=${String(PAGE_SIZE)}&page=${String(page)}`,
-    );
-    if (!Array.isArray(batch)) {
-      throw new RepoSettingsError(`GET ${root}/labels answered no list.`);
-    }
-    labels.push(...(batch as unknown[]));
-    if (batch.length < PAGE_SIZE) break;
-  }
+  const labels = await getAll(api, `${root}/labels`);
 
-  if (!Array.isArray(rulesets)) {
-    throw new RepoSettingsError(`GET ${root}/rulesets answered no list.`);
-  }
   return {
     settings,
-    rulesets: (rulesets as unknown[]).flatMap((ruleset) =>
+    rulesets: rulesets.flatMap((ruleset) =>
       isRecord(ruleset) &&
       typeof ruleset.id === "number" &&
       typeof ruleset.name === "string"

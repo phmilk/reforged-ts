@@ -240,27 +240,26 @@ describe("the committed ruleset", () => {
         "utf8",
       ),
     ) as {
-      jobs: Record<
-        string,
-        { name?: string; strategy?: { matrix?: Record<string, unknown[]> } }
+      jobs: Partial<
+        Record<
+          string,
+          {
+            name?: string;
+            strategy?: { matrix?: Partial<Record<string, unknown[]>> };
+          }
+        >
       >;
     };
+    const job = workflow.jobs.ci ?? {};
+    const matrix = job.strategy?.matrix ?? {};
 
     // GitHub names a matrix leg `<job name> (<values>)`; with one matrix key
-    // that is the key's value. A second key changes the names, so this test
-    // stops at it rather than guess.
-    const names = Object.entries(workflow.jobs).flatMap(([id, job]) => {
-      const matrix = job.strategy?.matrix ?? {};
-      const keys = Object.keys(matrix);
-      expect(keys.length, `ci.yml job ${id}: matrix keys`).toBeLessThanOrEqual(
-        1,
-      );
-      const values = keys.length === 0 ? [] : (matrix[keys[0] ?? ""] ?? []);
-      const name = job.name ?? id;
-      return values.length === 0
-        ? [name]
-        : values.map((value) => `${name} (${String(value)})`);
-    });
+    // that is the key's value. Another key, or include/exclude, changes the
+    // names, so this test stops at it rather than guess.
+    expect(Object.keys(matrix), "ci.yml's ci job: matrix keys").toEqual(["os"]);
+    const names = (matrix.os ?? []).map(
+      (os) => `${job.name ?? "ci"} (${String(os)})`,
+    );
 
     expect(requiredStatusChecks(ruleset).toSorted()).toEqual(names.toSorted());
   });

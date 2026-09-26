@@ -51,7 +51,7 @@ function configured(admin = true) {
     "/repos/owner/fork": {
       body: { ...MERGE_SETTINGS, permissions: { admin, push: true } },
     },
-    "/repos/owner/fork/rulesets?includes_parents=false&per_page=100": {
+    "/repos/owner/fork/rulesets?includes_parents=false&per_page=100&page=1": {
       body: [{ id: 42, name: "master", source_type: "Repository" }],
     },
     "/repos/owner/fork/pages": { body: { build_type: "workflow" } },
@@ -114,7 +114,7 @@ describe("repo:settings", () => {
     const answers = {
       ...configured(),
       "/repos/owner/fork/pages": { status: 404, body: {} },
-      "/repos/owner/fork/rulesets?includes_parents=false&per_page=100": {
+      "/repos/owner/fork/rulesets?includes_parents=false&per_page=100&page=1": {
         body: [],
       },
     };
@@ -220,6 +220,50 @@ describe("repo:settings", () => {
 
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain("Dry run, 1 request, none sent:");
+  });
+
+  it("names a repository it cannot see", async () => {
+    const sent: Sent[] = [];
+    const result = await run(["--dry-run"], gitHub({}, sent));
+
+    expect(result.exitCode).toBe(1);
+    expect(result.stderr).toBe(
+      "GET /repos/owner/fork answered 404: owner/fork does not exist or the gh authentication cannot see it.\n",
+    );
+    expect(sent).toHaveLength(1);
+  });
+
+  it("stops on a list answer that is not a list", async () => {
+    const result = await run(
+      ["--dry-run"],
+      gitHub({
+        ...configured(),
+        "/repos/owner/fork/labels?per_page=100&page=1": { body: {} },
+      }),
+    );
+
+    expect(result.exitCode).toBe(1);
+    expect(result.stderr).toBe(
+      "GET /repos/owner/fork/labels answered no list.\n",
+    );
+  });
+
+  it("says when gh is not installed", async () => {
+    const missing: Gh = () =>
+      Promise.reject(
+        Object.assign(new Error("spawn gh ENOENT"), { code: "ENOENT" }),
+      );
+
+    const result = await run(
+      ["--dry-run", "--repo", "owner/fork"],
+      gitHub({}),
+      {
+        gh: missing,
+      },
+    );
+
+    expect(result.exitCode).toBe(1);
+    expect(result.stderr).toContain("gh is not installed");
   });
 
   it.each([
