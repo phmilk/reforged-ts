@@ -3,7 +3,6 @@
 import { expectWrapper, Handle } from "./handle";
 import { Point } from "./point";
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class -- Camera is a static namespace by design; step 7 (#54) settles that shape together with Input
 export class Camera {
   private constructor() {
     // nothing

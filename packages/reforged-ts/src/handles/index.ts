@@ -14,6 +14,7 @@ export * from "./group";
 // Not `export *`: `expectWrapper` stays package-internal (Camera's creation route).
 export { Handle } from "./handle";
 export * from "./image";
+export * from "./input";
 export * from "./item";
 export * from "./leaderboard";
 export * from "./multiboard";
