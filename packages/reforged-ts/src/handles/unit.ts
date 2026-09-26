@@ -44,6 +44,104 @@ export class Unit extends Widget {
   }
 
   /**
+   * Creates a unit at `where`, through `CreateUnitAtLoc`.
+   * @param owner The owner of the unit.
+   * @param unitId The rawcode of the unit.
+   * @param where Where the unit stands.
+   * @param face The direction that the unit will be facing in degrees.
+   */
+  public static createAtPoint(
+    owner: MapPlayer,
+    unitId: number,
+    where: Point,
+    face: number = bj_UNIT_FACING,
+  ): Unit {
+    return this.expect(
+      CreateUnitAtLoc(owner.handle, unitId, where.handle, face),
+      rawcodeToString(unitId),
+    );
+  }
+
+  /**
+   * Creates a unit at `where` from the unit type's name, through
+   * `CreateUnitAtLocByName`.
+   * @param owner The owner of the unit.
+   * @param unitName The name of the unit type (`"footman"`).
+   * @param where Where the unit stands.
+   * @param face The direction that the unit will be facing in degrees.
+   */
+  public static createAtPointByName(
+    owner: MapPlayer,
+    unitName: string,
+    where: Point,
+    face: number = bj_UNIT_FACING,
+  ): Unit {
+    return this.expect(
+      CreateUnitAtLocByName(owner.handle, unitName, where.handle, face),
+      unitName,
+    );
+  }
+
+  /**
+   * Creates an undead gold mine and the blight around it, through
+   * `CreateBlightedGoldmine`.
+   * @param owner The owner of the gold mine.
+   * @param x The x-coordinate of the gold mine.
+   * @param y The y-coordinate of the gold mine.
+   * @param face The direction that the gold mine will be facing in degrees.
+   */
+  public static createBlightedGoldmine(
+    owner: MapPlayer,
+    x: number,
+    y: number,
+    face: number = bj_UNIT_FACING,
+  ): Unit {
+    return this.expect(CreateBlightedGoldmine(owner.handle, x, y, face));
+  }
+
+  /**
+   * Creates a unit from the unit type's name, through `CreateUnitByName`.
+   * @param owner The owner of the unit.
+   * @param unitName The name of the unit type (`"footman"`).
+   * @param x The x-coordinate of the unit.
+   * @param y The y-coordinate of the unit.
+   * @param face The direction that the unit will be facing in degrees.
+   */
+  public static createByName(
+    owner: MapPlayer,
+    unitName: string,
+    x: number,
+    y: number,
+    face: number = bj_UNIT_FACING,
+  ): Unit {
+    return this.expect(
+      CreateUnitByName(owner.handle, unitName, x, y, face),
+      unitName,
+    );
+  }
+
+  /**
+   * Creates the corpse of a unit, through `CreateCorpse`.
+   * @param owner The owner of the corpse.
+   * @param unitId The rawcode of the unit.
+   * @param x The x-coordinate of the corpse.
+   * @param y The y-coordinate of the corpse.
+   * @param face The direction that the corpse will be facing in degrees.
+   */
+  public static createCorpse(
+    owner: MapPlayer,
+    unitId: number,
+    x: number,
+    y: number,
+    face: number = bj_UNIT_FACING,
+  ): Unit {
+    return this.expect(
+      CreateCorpse(owner.handle, unitId, x, y, face),
+      rawcodeToString(unitId),
+    );
+  }
+
+  /**
    * Sets a unit's acquire range.  This is the value that a unit uses to choose targets to
    * engage with.  Note that this is not the attack range.  When acquisition range is
    * greater than attack range, the unit will attempt to move towards acquired targets, and then attack.
@@ -1115,6 +1213,59 @@ export class Unit extends Widget {
         );
   }
 
+  /**
+   * Orders this neutral structure (a shop, a tavern) to sell or train `unit`
+   * for `forPlayer`, through `IssueNeutralImmediateOrder` or, for a rawcode,
+   * `IssueNeutralImmediateOrderById`.
+   */
+  public issueNeutralImmediateOrder(
+    forPlayer: MapPlayer,
+    unit: string | number,
+  ) {
+    return typeof unit === "string"
+      ? IssueNeutralImmediateOrder(forPlayer.handle, this.handle, unit)
+      : IssueNeutralImmediateOrderById(forPlayer.handle, this.handle, unit);
+  }
+
+  /**
+   * Orders this neutral structure to use `unit` for `forPlayer` at a point,
+   * through `IssueNeutralPointOrder` or `IssueNeutralPointOrderById`.
+   */
+  public issueNeutralPointOrder(
+    forPlayer: MapPlayer,
+    unit: string | number,
+    x: number,
+    y: number,
+  ) {
+    return typeof unit === "string"
+      ? IssueNeutralPointOrder(forPlayer.handle, this.handle, unit, x, y)
+      : IssueNeutralPointOrderById(forPlayer.handle, this.handle, unit, x, y);
+  }
+
+  /**
+   * Orders this neutral structure to use `unit` for `forPlayer` on `target`,
+   * through `IssueNeutralTargetOrder` or `IssueNeutralTargetOrderById`.
+   */
+  public issueNeutralTargetOrder(
+    forPlayer: MapPlayer,
+    unit: string | number,
+    target: Widget,
+  ) {
+    return typeof unit === "string"
+      ? IssueNeutralTargetOrder(
+          forPlayer.handle,
+          this.handle,
+          unit,
+          target.handle,
+        )
+      : IssueNeutralTargetOrderById(
+          forPlayer.handle,
+          this.handle,
+          unit,
+          target.handle,
+        );
+  }
+
   public issueOrderAt(order: string | OrderId, x: number, y: number) {
     return typeof order === "string"
       ? IssuePointOrder(this.handle, order, x, y)
@@ -1222,6 +1373,55 @@ export class Unit extends Widget {
 
   public queueAnimation(whichAnimation: string) {
     QueueUnitAnimation(this.handle, whichAnimation);
+  }
+
+  /**
+   * Queues an order on this neutral structure to sell or train `unitId` for
+   * `forPlayer`, after its current orders, through
+   * `BlzQueueNeutralImmediateOrderById`.
+   */
+  public queueNeutralImmediateOrder(forPlayer: MapPlayer, unitId: number) {
+    return BlzQueueNeutralImmediateOrderById(
+      forPlayer.handle,
+      this.handle,
+      unitId,
+    );
+  }
+
+  /**
+   * Queues an order on this neutral structure to use `unitId` for
+   * `forPlayer` at a point, through `BlzQueueNeutralPointOrderById`.
+   */
+  public queueNeutralPointOrder(
+    forPlayer: MapPlayer,
+    unitId: number,
+    x: number,
+    y: number,
+  ) {
+    return BlzQueueNeutralPointOrderById(
+      forPlayer.handle,
+      this.handle,
+      unitId,
+      x,
+      y,
+    );
+  }
+
+  /**
+   * Queues an order on this neutral structure to use `unitId` for
+   * `forPlayer` on `target`, through `BlzQueueNeutralTargetOrderById`.
+   */
+  public queueNeutralTargetOrder(
+    forPlayer: MapPlayer,
+    unitId: number,
+    target: Widget,
+  ) {
+    return BlzQueueNeutralTargetOrderById(
+      forPlayer.handle,
+      this.handle,
+      unitId,
+      target.handle,
+    );
   }
 
   public recycleGuardPosition() {

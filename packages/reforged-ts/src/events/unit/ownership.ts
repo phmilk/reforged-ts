@@ -16,7 +16,7 @@ export const ownershipRows = unitEventRows({
     read: (unit, event) => ({
       unit,
       previousOwner: required(
-        MapPlayer.fromHandle(GetChangingUnitPrevOwner()),
+        MapPlayer.fromPreviousOwner(),
         "previousOwner",
         event,
       ),

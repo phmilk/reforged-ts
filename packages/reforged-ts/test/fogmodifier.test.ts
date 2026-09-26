@@ -4,7 +4,7 @@
 // fog modifier, so both follow the creation rule.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
-import { FogModifier, MapPlayer, Rectangle } from "../src/index";
+import { FogModifier, MapPlayer, Point, Rectangle } from "../src/index";
 import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
 import { withNative } from "./support/native-override";
@@ -61,6 +61,39 @@ describe("FogModifier.fromRect", () => {
       () =>
         raisedIn(() => {
           FogModifier.fromRect(player, visible, where, false, true);
+        }),
+    );
+    expect(message).toEqual("reforged-ts: failed to create FogModifier");
+  });
+});
+
+describe("FogModifier.createAtPoint", () => {
+  const center = Point.create(100, 200);
+
+  it("wraps the handle CreateFogModifierRadiusLoc returns, and a lookup finds it", () => {
+    const created = defined(
+      CreateFogModifierRadius(player.handle, visible, 0, 0, 1, false, false),
+      "CreateFogModifierRadius",
+    );
+    const modifier = withNative(
+      "CreateFogModifierRadiusLoc",
+      () => created,
+      () => FogModifier.createAtPoint(player, visible, center, 384, true, true),
+    );
+    expect(stubCalls()).toContainCall(
+      `CreateFogModifierRadiusLoc(${handleRef("player", player.handle)}, ${handleRef("fogstate", visible)}, ${handleRef("location", center.handle)}, 384, true, true)`,
+    );
+    expect(modifier.handle).toBe(created);
+    expect(FogModifier.fromHandle(created)).toBe(modifier);
+  });
+
+  it("throws when CreateFogModifierRadiusLoc returns nil", () => {
+    const message = withNative(
+      "CreateFogModifierRadiusLoc",
+      () => undefined,
+      () =>
+        raisedIn(() => {
+          FogModifier.createAtPoint(player, visible, center, 384, true, true);
         }),
     );
     expect(message).toEqual("reforged-ts: failed to create FogModifier");

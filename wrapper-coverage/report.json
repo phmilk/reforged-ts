@@ -4,8 +4,8 @@
   "totals": {
     "natives": 1681,
     "owned": 984,
-    "covered": 864,
-    "missing": 120,
+    "covered": 910,
+    "missing": 74,
     "excluded": 0,
     "unowned": 697
   },
@@ -3029,11 +3029,32 @@
       "type": "player",
       "counts": {
         "owned": 104,
-        "covered": 58,
-        "missing": 46,
+        "covered": 104,
+        "missing": 0,
         "excluded": 0
       },
       "covered": [
+        {
+          "name": "SetPlayerTeam",
+          "signature": "SetPlayerTeam takes player whichPlayer, integer whichTeam returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "SetPlayerStartLocation",
+          "signature": "SetPlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "ForcePlayerStartLocation",
+          "signature": "ForcePlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
         {
           "name": "SetPlayerColor",
           "signature": "SetPlayerColor takes player whichPlayer, playercolor color returns nothing",
@@ -3056,8 +3077,29 @@
           ]
         },
         {
+          "name": "SetPlayerRacePreference",
+          "signature": "SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
           "name": "SetPlayerRaceSkin",
           "signature": "SetPlayerRaceSkin takes player whichPlayer, racepreference whichRacePreference returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "SetPlayerRaceSelectable",
+          "signature": "SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "SetPlayerController",
+          "signature": "SetPlayerController takes player whichPlayer, mapcontrol controlType returns nothing",
           "coveredBy": [
             "MapPlayer"
           ]
@@ -3154,6 +3196,27 @@
           ]
         },
         {
+          "name": "GetWinningPlayer",
+          "signature": "GetWinningPlayer takes nothing returns player",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "GetTournamentFinishNowPlayer",
+          "signature": "GetTournamentFinishNowPlayer takes nothing returns player",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "GetTournamentScore",
+          "signature": "GetTournamentScore takes player whichPlayer returns integer",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
           "name": "GetTriggerPlayer",
           "signature": "GetTriggerPlayer takes nothing returns player",
           "coveredBy": [
@@ -3161,8 +3224,92 @@
           ]
         },
         {
+          "name": "GetChangingUnitPrevOwner",
+          "signature": "GetChangingUnitPrevOwner takes nothing returns player",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "GetEventDetectingPlayer",
+          "signature": "GetEventDetectingPlayer takes nothing returns player",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
           "name": "CreateUnit",
           "signature": "CreateUnit takes player id, integer unitid, real x, real y, real face returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "CreateUnitByName",
+          "signature": "CreateUnitByName takes player whichPlayer, string unitname, real x, real y, real face returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "CreateUnitAtLoc",
+          "signature": "CreateUnitAtLoc takes player id, integer unitid, location whichLocation, real face returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "CreateUnitAtLocByName",
+          "signature": "CreateUnitAtLocByName takes player id, string unitname, location whichLocation, real face returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "CreateCorpse",
+          "signature": "CreateCorpse takes player whichPlayer, integer unitid, real x, real y, real face returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "IssueNeutralImmediateOrder",
+          "signature": "IssueNeutralImmediateOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "IssueNeutralImmediateOrderById",
+          "signature": "IssueNeutralImmediateOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "IssueNeutralPointOrder",
+          "signature": "IssueNeutralPointOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild, real x, real y returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "IssueNeutralPointOrderById",
+          "signature": "IssueNeutralPointOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, real x, real y returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "IssueNeutralTargetOrder",
+          "signature": "IssueNeutralTargetOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild, widget target returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "IssueNeutralTargetOrderById",
+          "signature": "IssueNeutralTargetOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, widget target returns boolean",
           "coveredBy": [
             "Unit"
           ]
@@ -3281,6 +3428,20 @@
           ]
         },
         {
+          "name": "GetPlayerHandicapReviveTime",
+          "signature": "GetPlayerHandicapReviveTime takes player whichPlayer returns real",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "GetPlayerHandicapDamage",
+          "signature": "GetPlayerHandicapDamage takes player whichPlayer returns real",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
           "name": "SetPlayerHandicap",
           "signature": "SetPlayerHandicap takes player whichPlayer, real handicap returns nothing",
           "coveredBy": [
@@ -3290,6 +3451,20 @@
         {
           "name": "SetPlayerHandicapXP",
           "signature": "SetPlayerHandicapXP takes player whichPlayer, real handicap returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "SetPlayerHandicapReviveTime",
+          "signature": "SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "SetPlayerHandicapDamage",
+          "signature": "SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing",
           "coveredBy": [
             "MapPlayer"
           ]
@@ -3379,6 +3554,27 @@
           ]
         },
         {
+          "name": "SetFogStateRect",
+          "signature": "SetFogStateRect takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "SetFogStateRadius",
+          "signature": "SetFogStateRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "SetFogStateRadiusLoc",
+          "signature": "SetFogStateRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
           "name": "CreateFogModifierRect",
           "signature": "CreateFogModifierRect takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision, boolean afterUnits returns fogmodifier",
           "coveredBy": [
@@ -3393,10 +3589,38 @@
           ]
         },
         {
+          "name": "CreateFogModifierRadiusLoc",
+          "signature": "CreateFogModifierRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier",
+          "coveredBy": [
+            "FogModifier"
+          ]
+        },
+        {
           "name": "DialogDisplay",
           "signature": "DialogDisplay takes player whichPlayer, dialog whichDialog, boolean flag returns nothing",
           "coveredBy": [
             "Dialog"
+          ]
+        },
+        {
+          "name": "DisplayTextToPlayer",
+          "signature": "DisplayTextToPlayer takes player toPlayer, real x, real y, string message returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "DisplayTimedTextToPlayer",
+          "signature": "DisplayTimedTextToPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "DisplayTimedTextFromPlayer",
+          "signature": "DisplayTimedTextFromPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing",
+          "coveredBy": [
+            "MapPlayer"
           ]
         },
         {
@@ -3414,6 +3638,76 @@
           ]
         },
         {
+          "name": "SetBlight",
+          "signature": "SetBlight takes player whichPlayer, real x, real y, real radius, boolean addBlight returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "SetBlightRect",
+          "signature": "SetBlightRect takes player whichPlayer, rect r, boolean addBlight returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "SetBlightPoint",
+          "signature": "SetBlightPoint takes player whichPlayer, real x, real y, boolean addBlight returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "SetBlightLoc",
+          "signature": "SetBlightLoc takes player whichPlayer, location whichLocation, real radius, boolean addBlight returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "CreateBlightedGoldmine",
+          "signature": "CreateBlightedGoldmine takes player id, real x, real y, real face returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "StartMeleeAI",
+          "signature": "StartMeleeAI takes player num, string script returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "StartCampaignAI",
+          "signature": "StartCampaignAI takes player num, string script returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "CommandAI",
+          "signature": "CommandAI takes player num, integer command, integer data returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "PauseCompAI",
+          "signature": "PauseCompAI takes player p, boolean pause returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "GetAIDifficulty",
+          "signature": "GetAIDifficulty takes player num returns aidifficulty",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
           "name": "RemoveAllGuardPositions",
           "signature": "RemoveAllGuardPositions takes player num returns nothing",
           "coveredBy": [
@@ -3423,6 +3717,13 @@
         {
           "name": "BlzDecPlayerTechResearched",
           "signature": "BlzDecPlayerTechResearched takes player whichPlayer, integer techid, integer levels returns nothing",
+          "coveredBy": [
+            "MapPlayer"
+          ]
+        },
+        {
+          "name": "BlzDisplayChatMessage",
+          "signature": "BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing",
           "coveredBy": [
             "MapPlayer"
           ]
@@ -3440,194 +3741,30 @@
           "coveredBy": [
             "MapPlayer"
           ]
-        }
-      ],
-      "missing": [
-        {
-          "name": "SetPlayerTeam",
-          "signature": "SetPlayerTeam takes player whichPlayer, integer whichTeam returns nothing"
-        },
-        {
-          "name": "SetPlayerStartLocation",
-          "signature": "SetPlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing"
-        },
-        {
-          "name": "ForcePlayerStartLocation",
-          "signature": "ForcePlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing"
-        },
-        {
-          "name": "SetPlayerRacePreference",
-          "signature": "SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing"
-        },
-        {
-          "name": "SetPlayerRaceSelectable",
-          "signature": "SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing"
-        },
-        {
-          "name": "SetPlayerController",
-          "signature": "SetPlayerController takes player whichPlayer, mapcontrol controlType returns nothing"
-        },
-        {
-          "name": "GetWinningPlayer",
-          "signature": "GetWinningPlayer takes nothing returns player"
-        },
-        {
-          "name": "GetTournamentFinishNowPlayer",
-          "signature": "GetTournamentFinishNowPlayer takes nothing returns player"
-        },
-        {
-          "name": "GetTournamentScore",
-          "signature": "GetTournamentScore takes player whichPlayer returns integer"
-        },
-        {
-          "name": "GetChangingUnitPrevOwner",
-          "signature": "GetChangingUnitPrevOwner takes nothing returns player"
-        },
-        {
-          "name": "GetEventDetectingPlayer",
-          "signature": "GetEventDetectingPlayer takes nothing returns player"
-        },
-        {
-          "name": "CreateUnitByName",
-          "signature": "CreateUnitByName takes player whichPlayer, string unitname, real x, real y, real face returns unit"
-        },
-        {
-          "name": "CreateUnitAtLoc",
-          "signature": "CreateUnitAtLoc takes player id, integer unitid, location whichLocation, real face returns unit"
-        },
-        {
-          "name": "CreateUnitAtLocByName",
-          "signature": "CreateUnitAtLocByName takes player id, string unitname, location whichLocation, real face returns unit"
-        },
-        {
-          "name": "CreateCorpse",
-          "signature": "CreateCorpse takes player whichPlayer, integer unitid, real x, real y, real face returns unit"
-        },
-        {
-          "name": "IssueNeutralImmediateOrder",
-          "signature": "IssueNeutralImmediateOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild returns boolean"
-        },
-        {
-          "name": "IssueNeutralImmediateOrderById",
-          "signature": "IssueNeutralImmediateOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId returns boolean"
-        },
-        {
-          "name": "IssueNeutralPointOrder",
-          "signature": "IssueNeutralPointOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild, real x, real y returns boolean"
-        },
-        {
-          "name": "IssueNeutralPointOrderById",
-          "signature": "IssueNeutralPointOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, real x, real y returns boolean"
-        },
-        {
-          "name": "IssueNeutralTargetOrder",
-          "signature": "IssueNeutralTargetOrder takes player forWhichPlayer, unit neutralStructure, string unitToBuild, widget target returns boolean"
-        },
-        {
-          "name": "IssueNeutralTargetOrderById",
-          "signature": "IssueNeutralTargetOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, widget target returns boolean"
-        },
-        {
-          "name": "GetPlayerHandicapReviveTime",
-          "signature": "GetPlayerHandicapReviveTime takes player whichPlayer returns real"
-        },
-        {
-          "name": "GetPlayerHandicapDamage",
-          "signature": "GetPlayerHandicapDamage takes player whichPlayer returns real"
-        },
-        {
-          "name": "SetPlayerHandicapReviveTime",
-          "signature": "SetPlayerHandicapReviveTime takes player whichPlayer, real handicap returns nothing"
-        },
-        {
-          "name": "SetPlayerHandicapDamage",
-          "signature": "SetPlayerHandicapDamage takes player whichPlayer, real handicap returns nothing"
-        },
-        {
-          "name": "SetFogStateRect",
-          "signature": "SetFogStateRect takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision returns nothing"
-        },
-        {
-          "name": "SetFogStateRadius",
-          "signature": "SetFogStateRadius takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision returns nothing"
-        },
-        {
-          "name": "SetFogStateRadiusLoc",
-          "signature": "SetFogStateRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision returns nothing"
-        },
-        {
-          "name": "CreateFogModifierRadiusLoc",
-          "signature": "CreateFogModifierRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier"
-        },
-        {
-          "name": "DisplayTextToPlayer",
-          "signature": "DisplayTextToPlayer takes player toPlayer, real x, real y, string message returns nothing"
-        },
-        {
-          "name": "DisplayTimedTextToPlayer",
-          "signature": "DisplayTimedTextToPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing"
-        },
-        {
-          "name": "DisplayTimedTextFromPlayer",
-          "signature": "DisplayTimedTextFromPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing"
-        },
-        {
-          "name": "SetBlight",
-          "signature": "SetBlight takes player whichPlayer, real x, real y, real radius, boolean addBlight returns nothing"
-        },
-        {
-          "name": "SetBlightRect",
-          "signature": "SetBlightRect takes player whichPlayer, rect r, boolean addBlight returns nothing"
-        },
-        {
-          "name": "SetBlightPoint",
-          "signature": "SetBlightPoint takes player whichPlayer, real x, real y, boolean addBlight returns nothing"
-        },
-        {
-          "name": "SetBlightLoc",
-          "signature": "SetBlightLoc takes player whichPlayer, location whichLocation, real radius, boolean addBlight returns nothing"
-        },
-        {
-          "name": "CreateBlightedGoldmine",
-          "signature": "CreateBlightedGoldmine takes player id, real x, real y, real face returns unit"
-        },
-        {
-          "name": "StartMeleeAI",
-          "signature": "StartMeleeAI takes player num, string script returns nothing"
-        },
-        {
-          "name": "StartCampaignAI",
-          "signature": "StartCampaignAI takes player num, string script returns nothing"
-        },
-        {
-          "name": "CommandAI",
-          "signature": "CommandAI takes player num, integer command, integer data returns nothing"
-        },
-        {
-          "name": "PauseCompAI",
-          "signature": "PauseCompAI takes player p, boolean pause returns nothing"
-        },
-        {
-          "name": "GetAIDifficulty",
-          "signature": "GetAIDifficulty takes player num returns aidifficulty"
-        },
-        {
-          "name": "BlzDisplayChatMessage",
-          "signature": "BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing"
         },
         {
           "name": "BlzQueueNeutralImmediateOrderById",
-          "signature": "BlzQueueNeutralImmediateOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId returns boolean"
+          "signature": "BlzQueueNeutralImmediateOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
         },
         {
           "name": "BlzQueueNeutralPointOrderById",
-          "signature": "BlzQueueNeutralPointOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, real x, real y returns boolean"
+          "signature": "BlzQueueNeutralPointOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, real x, real y returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
         },
         {
           "name": "BlzQueueNeutralTargetOrderById",
-          "signature": "BlzQueueNeutralTargetOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, widget target returns boolean"
+          "signature": "BlzQueueNeutralTargetOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, widget target returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
         }
       ],
+      "missing": [],
       "excluded": []
     },
     {

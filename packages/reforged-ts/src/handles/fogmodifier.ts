@@ -2,6 +2,7 @@
 
 import { Handle } from "./handle";
 import type { MapPlayer } from "./player";
+import type { Point } from "./point";
 import type { Rectangle } from "./rect";
 
 export class FogModifier extends Handle<fogmodifier> {
@@ -31,6 +32,30 @@ export class FogModifier extends Handle<fogmodifier> {
         whichState,
         centerX,
         centerY,
+        radius,
+        useSharedVision,
+        afterUnits,
+      ),
+    );
+  }
+
+  /**
+   * A new fog modifier over a circle around `center`, through
+   * `CreateFogModifierRadiusLoc`; the parameters are `create`'s.
+   */
+  public static createAtPoint(
+    forWhichPlayer: MapPlayer,
+    whichState: fogstate,
+    center: Point,
+    radius: number,
+    useSharedVision: boolean,
+    afterUnits: boolean,
+  ): FogModifier {
+    return this.expect(
+      CreateFogModifierRadiusLoc(
+        forWhichPlayer.handle,
+        whichState,
+        center.handle,
         radius,
         useSharedVision,
         afterUnits,
