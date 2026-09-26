@@ -14,6 +14,7 @@ export class Terrain {
    * unchanged.
    * @note The answer is inverted: `true` when the pathing type is not set at
    * the point, `false` when it is (jassdoc, `IsTerrainPathable`).
+   * @see https://lep.duckdns.org/jassbot/doc/IsTerrainPathable
    */
   public static isPathable(x: number, y: number, type: pathingtype) {
     return IsTerrainPathable(x, y, type);

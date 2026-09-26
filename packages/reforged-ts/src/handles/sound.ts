@@ -183,8 +183,9 @@ export class Sound extends Handle<sound> {
    * @note You can only play 16 sounds in general.
    * @note Sounds of the same filepath (on different sound handles) must have a delay of at least 0.1 seconds inbetween them to be played.
    * You can overcome this by starting one earlier and then using `setPosition`.
-   * @param fadeIn Whether the sound fades in, through `StartSoundEx`; left out,
-   * the sound starts through `StartSound`.
+   * @param fadeIn Whether the sound fades in at the `fadeInRate` given to
+   * `create`, through `StartSoundEx`; left out, the sound starts through
+   * `StartSound`.
    */
   public start(fadeIn?: boolean) {
     if (fadeIn === undefined) {
@@ -245,7 +246,6 @@ export class Sound extends Handle<sound> {
 
   /**
    * Sets the volume of the thematic music, through `SetThematicMusicVolume`.
-   * @param volume Volume, between 0 and 127
    */
   public static setThematicMusicVolume(volume: number) {
     SetThematicMusicVolume(volume);
