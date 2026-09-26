@@ -1,7 +1,13 @@
 // The API reference (#40): the docusaurus-plugin-typedoc instances that
 // generate it into the docs tree, and their place in the sidebar. The site's
 // own TypeDoc plugin (typedoc/plugin.mts) runs in each instance.
-import { existsSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync,
+} from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join, posix } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -35,6 +41,12 @@ export interface Reference {
   readonly entryPoints: readonly string[];
   /** The tsconfig TypeDoc compiles them with, absolute. */
   readonly tsconfig: string;
+  /**
+   * For the Typings of a Game version: the Patch's `manifest.json`, absolute.
+   * The reference then has a page per entry of the manifest where
+   * `typedoc/typings.mts` routes it, and none of them in the sidebar.
+   */
+  readonly typingsManifest?: string;
 }
 
 /** The library, from its index, with its own tsconfig. */
@@ -46,8 +58,96 @@ export const LIBRARY_REFERENCE: Reference = {
   tsconfig: join(WORKSPACE, "packages/reforged-ts/tsconfig.json"),
 };
 
-/** Every reference the site generates, in sidebar order. */
-export const REFERENCES: readonly Reference[] = [LIBRARY_REFERENCE];
+/** The folder of the Typings' references in the docs tree: one subfolder per Game version. */
+export const TYPINGS_DIR = "api/typings";
+
+/**
+ * The reference of the Typings of each Game version `typings` holds (the
+ * reforged-types package), oldest first: every folder with a `manifest.json`,
+ * so a new Patch adds its subsection. The entry points are the Game version's
+ * Jass files, which declare every entry of its manifest and need nothing
+ * else. Each Game version gets a tsconfig of its own, written to `tsconfigs`,
+ * with its files alone: the Typings of two Game versions declare the same
+ * globals and never share a program.
+ */
+export function typingsReferences(
+  typings: string,
+  tsconfigs: string,
+): Reference[] {
+  const gameVersions = readdirSync(typings, { withFileTypes: true })
+    .filter(
+      (entry) =>
+        entry.isDirectory() &&
+        /^\d+\.\d+\.\d+$/.test(entry.name) &&
+        existsSync(join(typings, entry.name, "manifest.json")),
+    )
+    .map((entry) => entry.name)
+    .sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
+  return gameVersions.map((gameVersion) => {
+    const folder = join(typings, gameVersion);
+    const entryPoints = readdirSync(folder)
+      .filter((file) => file.endsWith(".d.ts"))
+      .sort()
+      .map((file) => join(folder, file));
+    const tsconfig = join(tsconfigs, gameVersion, "tsconfig.json");
+    writeIfChanged(
+      tsconfig,
+      `${JSON.stringify(
+        {
+          compilerOptions: TYPINGS_COMPILER_OPTIONS,
+          files: entryPoints,
+        },
+        null,
+        2,
+      )}\n`,
+    );
+    return {
+      id: `typings-${gameVersion}`,
+      label: gameVersion,
+      dir: `${TYPINGS_DIR}/${gameVersion}`,
+      entryPoints,
+      tsconfig,
+      typingsManifest: join(folder, "manifest.json"),
+    };
+  });
+}
+
+/**
+ * The Typings as a Map project compiles them (reforged-types'
+ * `tsconfig.typings.json`), declaration files unchecked: their own build
+ * type-checks them.
+ */
+const TYPINGS_COMPILER_OPTIONS = {
+  target: "ESNext",
+  lib: ["ESNext"],
+  module: "esnext",
+  moduleResolution: "bundler",
+  types: [],
+  strict: true,
+  noEmit: true,
+  skipLibCheck: true,
+};
+
+/** Writes a file unless it holds the text already: a rerun changes nothing. */
+function writeIfChanged(file: string, text: string): void {
+  if (existsSync(file) && readFileSync(file, "utf8") === text) return;
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, text);
+}
+
+/**
+ * Every reference the site generates, in sidebar order: the library, then the
+ * Typings of each Game version.
+ */
+export function siteReferences(): Reference[] {
+  return [
+    LIBRARY_REFERENCE,
+    ...typingsReferences(
+      join(WORKSPACE, "packages/reforged-types"),
+      join(SITE, "node_modules/.cache/typings-reference"),
+    ),
+  ];
+}
 
 /** How a reference is generated. */
 export interface ReferenceOptions {
@@ -60,9 +160,15 @@ export interface ReferenceOptions {
   readonly docsPath?: string;
 }
 
-/** The options of a reference's TypeDoc run, as docusaurus-plugin-typedoc takes them. */
+/**
+ * The options of a reference's TypeDoc run, as docusaurus-plugin-typedoc
+ * takes them, with the one the site's TypeDoc plugin declares.
+ */
 export type ReferencePluginOptions = Partial<TypeDocOptions> &
-  Partial<MarkdownOptions> & { readonly id: string };
+  Partial<MarkdownOptions> & {
+    readonly id: string;
+    readonly typingsManifest?: string;
+  };
 
 export function referencePluginOptions(
   reference: Reference,
@@ -87,6 +193,14 @@ export function referencePluginOptions(
     jsDocCompatibility: { exampleTag: false },
     validation: { notDocumented: true },
     treatValidationWarningsAsErrors: options.strict,
+    ...(reference.typingsManifest === undefined
+      ? {}
+      : {
+          typingsManifest: reference.typingsManifest,
+          // Generated from the Patch: the doc comments are the Jass types,
+          // and a handle type's brand has none.
+          validation: { notDocumented: false },
+        }),
   };
 }
 
@@ -109,8 +223,11 @@ type SidebarItem = Awaited<ReturnType<SidebarItemsGenerator>>[number];
 /**
  * The docs plugin's sidebar generator: the autogenerated sidebar, where each
  * reference's folder is replaced by the sidebar its TypeDoc run wrote
- * (`typedoc-sidebar.cjs`), as a category linked to its index page, at the
- * end of the section that holds the folder.
+ * (`typedoc-sidebar.cjs`), as a category linked to its index page, first in
+ * the section that holds the folder, in the order of `references`. A Typings
+ * reference is its index page alone: a page per entry, thousands, and a
+ * sidebar listing them is rendered into each of them, which takes the site
+ * past the size GitHub Pages serves. The index page lists them.
  */
 export function referenceSidebars(
   references: readonly Reference[],
@@ -125,6 +242,7 @@ export function referenceSidebars(
       ...args,
       docs: args.docs.filter((doc) => !inReference(doc.sourceDirName)),
     });
+    const placed = new Map<SidebarCategory, SidebarItem[]>();
     for (const reference of references) {
       const section = findSection(items, posix.dirname(reference.dir));
       if (section === undefined) {
@@ -132,12 +250,20 @@ export function referenceSidebars(
           `The reference of ${reference.label} goes in docs/${posix.dirname(reference.dir)}, which has no index page in the sidebar.`,
         );
       }
-      section.items.push({
-        type: "category",
-        label: reference.label,
-        link: { type: "doc", id: `${reference.dir}/index` },
-        items: generatedSidebar(args.version.contentPath, reference),
-      });
+      const index = `${reference.dir}/index`;
+      const item: SidebarItem =
+        reference.typingsManifest === undefined
+          ? {
+              type: "category",
+              label: reference.label,
+              link: { type: "doc", id: index },
+              items: generatedSidebar(args.version.contentPath, reference),
+            }
+          : { type: "doc", id: index, label: reference.label };
+      placed.set(section, [...(placed.get(section) ?? []), item]);
+    }
+    for (const [section, placedItems] of placed) {
+      section.items.unshift(...placedItems);
     }
     return items;
   };

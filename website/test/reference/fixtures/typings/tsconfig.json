@@ -1,0 +1,18 @@
+{
+  // A Game version of the Typings the reference tests run TypeDoc on, as the
+  // Typings generator lays one out.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [],
+    "strict": true,
+    "noEmit": true
+  },
+  "files": [
+    "9.9.9/common.j.d.ts",
+    "9.9.9/blizzard.j.d.ts",
+    "9.9.9/common.ai.d.ts"
+  ]
+}

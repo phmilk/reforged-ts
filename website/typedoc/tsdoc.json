@@ -6,6 +6,8 @@
     { "tagName": "@patch", "syntaxKind": "block" },
     { "tagName": "@async", "syntaxKind": "modifier" },
     { "tagName": "@bug", "syntaxKind": "block", "allowMultiple": true },
-    { "tagName": "@since", "syntaxKind": "block" }
+    { "tagName": "@since", "syntaxKind": "block" },
+    { "tagName": "@noSelf", "syntaxKind": "modifier" },
+    { "tagName": "@noSelfInFile", "syntaxKind": "modifier" }
   ]
 }

@@ -7,7 +7,11 @@ import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
-import { REFERENCES, referencePlugin, referenceSidebars } from "./reference";
+import {
+  referencePlugin,
+  referenceSidebars,
+  siteReferences,
+} from "./reference";
 
 /** What differs between the two configuration files. */
 export interface SiteOptions {
@@ -66,6 +70,7 @@ function supportedPatch(): string {
 export function siteConfig(options: SiteOptions): Config {
   const customFields: SiteFields = { supportedPatch: supportedPatch() };
   const reference = { strict: options.strict && STRICT_REFERENCE };
+  const references = siteReferences();
   return {
     title: "reforged-ts",
     tagline: "TypeScript for Warcraft III maps, compiled to Lua.",
@@ -97,7 +102,7 @@ export function siteConfig(options: SiteOptions): Config {
         {
           docs: {
             sidebarPath: "./sidebars.ts",
-            sidebarItemsGenerator: referenceSidebars(REFERENCES),
+            sidebarItemsGenerator: referenceSidebars(references),
             editUrl: `${REPOSITORY}/tree/master/website/`,
             versions: {
               // The docs of the working tree, at /docs/next from the start:
@@ -114,7 +119,7 @@ export function siteConfig(options: SiteOptions): Config {
     ],
 
     // The API reference, generated into the docs tree before the docs load.
-    plugins: REFERENCES.map((each) => referencePlugin(each, reference)),
+    plugins: references.map((each) => referencePlugin(each, reference)),
 
     themeConfig: {
       colorMode: { respectPrefersColorScheme: true },
