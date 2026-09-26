@@ -32,6 +32,7 @@
     "actionlint": "pnpm --filter reforged-ts-release actionlint",
     "patch-watch:plan": "pnpm --filter reforged-ts-release patch-watch:plan",
     "repo:settings": "pnpm --filter reforged-ts-release repo:settings",
+    "renovate:check": "pnpm --package=renovate@44.115.10 dlx renovate-config-validator --strict",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run typings:check && pnpm run test"
   },
   "devDependencies": {

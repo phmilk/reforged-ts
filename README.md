@@ -38,6 +38,7 @@ Run from the root after `pnpm install`:
 | `pnpm actionlint`       | actionlint on the workflow files, at the version CI runs; downloaded on first use and checked against its pinned checksum, so nothing is installed.                                        |
 | `pnpm patch-watch:plan` | Prints whether jass-history tags a live Patch newer than the supported one, and why each other tag is ignored. Changes nothing.                                                            |
 | `pnpm repo:settings`    | The maintainer's: applies the ruleset on `master`, the merge settings, the Pages source and the labels with an administrator's `gh` login. `--dry-run` prints the requests and sends none. |
+| `pnpm renovate:check`   | Renovate's validator on `renovate.json5`, at the Renovate version the script pins; `pnpm dlx` downloads it on first use, so nothing is installed.                                          |
 
 `pnpm check` green is what done means, for a contributor and for an agent. A package's other scripts run from the root with `pnpm --filter <package> <script>`, for example `pnpm --filter reforged-types verify`.
 
