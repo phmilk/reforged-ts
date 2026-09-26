@@ -515,3 +515,197 @@ describe("abilities", function()
     expect(runner.stubCalls()).toContainCall("BlzGetAbilityIcon(" .. blizzard .. ")")
   end)
 end)
+
+-- Step 7's seam: the equipment converters and their named constants, the 32
+-- destructable creation Natives and the constant families the 3.0.0 members
+-- take or return. Names and parameters are copied from Patch 3.0.0.24268's
+-- common.j.
+
+-- Each converter's named constants, by the integer the Patch converts.
+local CONVERTERS = {
+  { "ConvertEquipmentType", "equipmentType", {
+    [0] = "EQUIPMENT_TYPE_NONE", "EQUIPMENT_TYPE_HEAD", "EQUIPMENT_TYPE_CHEST", "EQUIPMENT_TYPE_GLOVES",
+    "EQUIPMENT_TYPE_BOOTS", "EQUIPMENT_TYPE_RING", "EQUIPMENT_TYPE_PRIMARY", "EQUIPMENT_TYPE_OFFHAND",
+    "EQUIPMENT_TYPE_TRINKET", "EQUIPMENT_TYPE_ANY",
+  } },
+  { "ConvertItemTag", "itemTag", {
+    [0] = "ITEMTAG_TYPE_UNDEFINED", "ITEMTAG_TYPE_DROPPABLE", "ITEMTAG_TYPE_QUESTREWARD",
+    "ITEMTAG_TYPE_BOSSDROP", "ITEMTAG_TYPE_SECRET", "ITEMTAG_TYPE_PUZZLE", "ITEMTAG_TYPE_WORLD",
+    "ITEMTAG_TYPE_SHOP", "ITEMTAG_TYPE_ANY",
+  } },
+  { "ConvertLoadoutSlot", "loadoutslot", {
+    [0] = "EQUIPMENT_LOADOUT_SLOT_HEAD", "EQUIPMENT_LOADOUT_SLOT_CHEST", "EQUIPMENT_LOADOUT_SLOT_GLOVES",
+    "EQUIPMENT_LOADOUT_SLOT_BOOTS", "EQUIPMENT_LOADOUT_SLOT_RING", "EQUIPMENT_LOADOUT_SLOT_RINGALT",
+    "EQUIPMENT_LOADOUT_SLOT_PRIMARY", "EQUIPMENT_LOADOUT_SLOT_OFFHAND", "EQUIPMENT_LOADOUT_SLOT_TRINKET",
+  } },
+}
+
+describe("equipment converters", function()
+  it("return the named constant of an integer, the same value on every call", function()
+    for _, converter in ipairs(CONVERTERS) do
+      local name, kind, constants = converter[1], converter[2], converter[3]
+      for i = 0, #constants do
+        local value = _G[name](i)
+        expect(value).toBe(_G[constants[i]])
+        expect(_G[name](i)).toBe(value)
+        expect(value.__kind).toEqual(kind)
+        expect(ref(value)).toEqual(constants[i])
+        expect(runner.stubCalls()).toContainCall(name .. "(" .. i .. ")")
+      end
+    end
+    expect(ConvertEquipmentType(1) == EQUIPMENT_TYPE_HEAD).toEqual(true)
+    expect(ConvertLoadoutSlot(5)).toBe(EQUIPMENT_LOADOUT_SLOT_RINGALT)
+  end)
+  it("return a distinct value rendered by its integer for an integer with no named constant", function()
+    for _, converter in ipairs(CONVERTERS) do
+      local name, kind, constants = converter[1], converter[2], converter[3]
+      local unknown = _G[name](42)
+      expect(_G[name](42)).toBe(unknown)
+      expect(unknown.__kind).toEqual(kind)
+      expect(ref(unknown)).toEqual(name .. "(42)")
+      expect(_G[name](-1) == unknown).toEqual(false)
+      for i = 0, #constants do
+        expect(unknown == _G[constants[i]]).toEqual(false)
+      end
+    end
+  end)
+  it("take no handle id, so the handle sequence is the same with or without them", function()
+    local before = CreateTimer()
+    ConvertEquipmentType(3)
+    ConvertItemTag(99)
+    ConvertLoadoutSlot(7)
+    local after = CreateTimer()
+    expect(GetHandleId(after)).toEqual(GetHandleId(before) + 1)
+    expect(ConvertItemTag(99).__handleId).toBeUndefined()
+    expect(EQUIPMENT_TYPE_ANY.__handleId).toBeUndefined()
+  end)
+end)
+
+-- Every destructable creation Native of the Patch, with its parameters.
+local DESTRUCTABLES = {
+  { "CreateDestructable", "objectid, x, y, face, scale, variation" },
+  { "CreateDestructableZ", "objectid, x, y, z, face, scale, variation" },
+  { "CreateDeadDestructable", "objectid, x, y, face, scale, variation" },
+  { "CreateDeadDestructableZ", "objectid, x, y, z, face, scale, variation" },
+  { "BlzCreateDestructableWithSkin", "objectid, x, y, face, scale, variation, skinId" },
+  { "BlzCreateDestructableZWithSkin", "objectid, x, y, z, face, scale, variation, skinId" },
+  { "BlzCreateDeadDestructableWithSkin", "objectid, x, y, face, scale, variation, skinId" },
+  { "BlzCreateDeadDestructableZWithSkin", "objectid, x, y, z, face, scale, variation, skinId" },
+  { "BlzCreateDestructablePitchRoll", "objectid, x, y, face, roll, pitch, scale, variation" },
+  { "BlzCreateDestructableZPitchRoll", "objectid, x, y, z, face, roll, pitch, scale, variation" },
+  { "BlzCreateDeadDestructablePitchRoll", "objectid, x, y, face, roll, pitch, scale, variation" },
+  { "BlzCreateDeadDestructableZPitchRoll", "objectid, x, y, z, face, roll, pitch, scale, variation" },
+  { "BlzCreateDestructableWithSkinPitchRoll", "objectid, x, y, face, roll, pitch, scale, variation, skinId" },
+  { "BlzCreateDestructableZWithSkinPitchRoll", "objectid, x, y, z, face, roll, pitch, scale, variation, skinId" },
+  { "BlzCreateDeadDestructableWithSkinPitchRoll", "objectid, x, y, face, roll, pitch, scale, variation, skinId" },
+  { "BlzCreateDeadDestructableZWithSkinPitchRoll", "objectid, x, y, z, face, roll, pitch, scale, variation, skinId" },
+  { "BlzCreateDestructableWithColor", "objectid, x, y, face, scale, variation, color" },
+  { "BlzCreateDestructableZWithColor", "objectid, x, y, z, face, scale, variation, color" },
+  { "BlzCreateDeadDestructableWithColor", "objectid, x, y, face, scale, variation, color" },
+  { "BlzCreateDeadDestructableZWithColor", "objectid, x, y, z, face, scale, variation, color" },
+  { "BlzCreateDestructableWithSkinColor", "objectid, x, y, face, scale, variation, skinId, color" },
+  { "BlzCreateDestructableZWithSkinColor", "objectid, x, y, z, face, scale, variation, skinId, color" },
+  { "BlzCreateDeadDestructableWithSkinColor", "objectid, x, y, face, scale, variation, skinId, color" },
+  { "BlzCreateDeadDestructableZWithSkinColor", "objectid, x, y, z, face, scale, variation, skinId, color" },
+  { "BlzCreateDestructablePitchRollWithColor", "objectid, x, y, face, roll, pitch, scale, variation, color" },
+  { "BlzCreateDestructableZPitchRollWithColor", "objectid, x, y, z, face, roll, pitch, scale, variation, color" },
+  { "BlzCreateDeadDestructablePitchRollWithColor", "objectid, x, y, face, roll, pitch, scale, variation, color" },
+  { "BlzCreateDeadDestructableZPitchRollWithColor", "objectid, x, y, z, face, roll, pitch, scale, variation, color" },
+  { "BlzCreateDestructableWithSkinPitchRollColor", "objectid, x, y, face, roll, pitch, scale, variation, skinId, color" },
+  { "BlzCreateDestructableZWithSkinPitchRollColor", "objectid, x, y, z, face, roll, pitch, scale, variation, skinId, color" },
+  { "BlzCreateDeadDestructableWithSkinPitchRollColor", "objectid, x, y, face, roll, pitch, scale, variation, skinId, color" },
+  { "BlzCreateDeadDestructableZWithSkinPitchRollColor", "objectid, x, y, z, face, roll, pitch, scale, variation, skinId, color" },
+}
+
+describe("destructables", function()
+  it("records every creation Native with its arguments in the Native's order and returns a new destructable", function()
+    local created = {}
+    for _, native in ipairs(DESTRUCTABLES) do
+      local name = native[1]
+      local args, rendered = {}, {}
+      for param in string.gmatch(native[2], "[^, ]+") do
+        -- A distinct value per parameter, so a swapped pair shows in the line.
+        local value = #args + 1
+        if param == "color" then
+          value = PLAYER_COLOR_BLACK
+        end
+        args[#args + 1] = value
+        rendered[#rendered + 1] = ref(value)
+      end
+      local mark = #runner.stubCalls()
+      local destructable = _G[name](table.unpack(args))
+      expect(since(mark)).toEqual({ name .. "(" .. table.concat(rendered, ", ") .. ")" })
+      expect(destructable.__kind).toEqual("destructable")
+      expect(destructable.typeId).toEqual(1)
+      expect(created[destructable]).toBeUndefined()
+      created[destructable] = true
+    end
+    expect(#DESTRUCTABLES).toEqual(32)
+  end)
+  it("records an omitted trailing argument as nil", function()
+    local mark = #runner.stubCalls()
+    BlzCreateDeadDestructableZWithSkinPitchRollColor(1, 2, 3)
+    expect(since(mark)).toEqual({
+      "BlzCreateDeadDestructableZWithSkinPitchRollColor(1, 2, 3, nil, nil, nil, nil, nil, nil, nil, nil)",
+    })
+  end)
+end)
+
+-- The constant families the 3.0.0 members take or return, per kind in the
+-- order the Patch declares them.
+local FAMILIES = {
+  mousebuttontype = { "MOUSE_BUTTON_TYPE_LEFT", "MOUSE_BUTTON_TYPE_MIDDLE", "MOUSE_BUTTON_TYPE_RIGHT" },
+  pathingtype = {
+    "PATHING_TYPE_ANY", "PATHING_TYPE_WALKABILITY", "PATHING_TYPE_FLYABILITY",
+    "PATHING_TYPE_BUILDABILITY", "PATHING_TYPE_PEONHARVESTPATHING", "PATHING_TYPE_BLIGHTPATHING",
+    "PATHING_TYPE_FLOATABILITY", "PATHING_TYPE_AMPHIBIOUSPATHING",
+  },
+  playercolor = {
+    "PLAYER_COLOR_RED", "PLAYER_COLOR_BLUE", "PLAYER_COLOR_CYAN", "PLAYER_COLOR_PURPLE",
+    "PLAYER_COLOR_YELLOW", "PLAYER_COLOR_ORANGE", "PLAYER_COLOR_GREEN", "PLAYER_COLOR_PINK",
+    "PLAYER_COLOR_LIGHT_GRAY", "PLAYER_COLOR_LIGHT_BLUE", "PLAYER_COLOR_AQUA", "PLAYER_COLOR_BROWN",
+    "PLAYER_COLOR_MAROON", "PLAYER_COLOR_NAVY", "PLAYER_COLOR_TURQUOISE", "PLAYER_COLOR_VIOLET",
+    "PLAYER_COLOR_WHEAT", "PLAYER_COLOR_PEACH", "PLAYER_COLOR_MINT", "PLAYER_COLOR_LAVENDER",
+    "PLAYER_COLOR_COAL", "PLAYER_COLOR_SNOW", "PLAYER_COLOR_EMERALD", "PLAYER_COLOR_PEANUT",
+    "PLAYER_COLOR_BLACK",
+  },
+  racepreference = {
+    "RACE_PREF_HUMAN", "RACE_PREF_ORC", "RACE_PREF_NIGHTELF", "RACE_PREF_UNDEAD", "RACE_PREF_DEMON",
+    "RACE_PREF_RANDOM", "RACE_PREF_USER_SELECTABLE", "RACE_PREF_FORSAKEN",
+  },
+  itemtype = {
+    "ITEM_TYPE_PERMANENT", "ITEM_TYPE_CHARGED", "ITEM_TYPE_POWERUP", "ITEM_TYPE_ARTIFACT",
+    "ITEM_TYPE_PURCHASABLE", "ITEM_TYPE_CAMPAIGN", "ITEM_TYPE_MISCELLANEOUS", "ITEM_TYPE_EQUIPMENT",
+    "ITEM_TYPE_UNKNOWN", "ITEM_TYPE_ANY",
+  },
+  camerafield = {
+    "CAMERA_FIELD_TARGET_DISTANCE", "CAMERA_FIELD_FARZ", "CAMERA_FIELD_ANGLE_OF_ATTACK",
+    "CAMERA_FIELD_FIELD_OF_VIEW", "CAMERA_FIELD_ROLL", "CAMERA_FIELD_ROTATION", "CAMERA_FIELD_ZOFFSET",
+    "CAMERA_FIELD_NEARZ", "CAMERA_FIELD_LOCAL_PITCH", "CAMERA_FIELD_LOCAL_YAW", "CAMERA_FIELD_LOCAL_ROLL",
+    "CAMERA_FIELD_DEPTH_OF_FIELD_DISTANCE", "CAMERA_FIELD_DEPTH_OF_FIELD_SCALE", "CAMERA_FIELD_ZABSOLUTE",
+  },
+}
+
+describe("the constant families of the 3.0.0 members", function()
+  it("defines each constant as a distinct value of its kind, rendered by name", function()
+    local seen = {}
+    for kind, names in pairs(FAMILIES) do
+      for _, name in ipairs(names) do
+        local constant = _G[name]
+        expect(constant.__kind).toEqual(kind)
+        expect(ref(constant)).toEqual(name)
+        expect(constant.__handleId).toBeUndefined()
+        expect(seen[constant]).toBeUndefined()
+        seen[constant] = true
+      end
+    end
+  end)
+  it("defines ITEM_TYPE_TOME as ITEM_TYPE_POWERUP, as the Patch converts both from 2", function()
+    expect(ITEM_TYPE_TOME).toBe(ITEM_TYPE_POWERUP)
+  end)
+  it("renders the constants by name in the call log", function()
+    local mark = #runner.stubCalls()
+    BlzCreateDestructableWithColor(1, 0, 0, 0, 1, 0, PLAYER_COLOR_BLACK)
+    expect(since(mark)).toEqual({ "BlzCreateDestructableWithColor(1, 0, 0, 0, 1, 0, PLAYER_COLOR_BLACK)" })
+  end)
+end)

@@ -45,3 +45,24 @@ function GetPlayerController(whichPlayer)
   end
   return MAP_CONTROL_NONE
 end
+
+-- The player colours and race preferences, in the order the Patch declares
+-- them: opaque values a test compares by identity, rendered by name.
+for _, name in ipairs({
+  "PLAYER_COLOR_RED", "PLAYER_COLOR_BLUE", "PLAYER_COLOR_CYAN", "PLAYER_COLOR_PURPLE",
+  "PLAYER_COLOR_YELLOW", "PLAYER_COLOR_ORANGE", "PLAYER_COLOR_GREEN", "PLAYER_COLOR_PINK",
+  "PLAYER_COLOR_LIGHT_GRAY", "PLAYER_COLOR_LIGHT_BLUE", "PLAYER_COLOR_AQUA", "PLAYER_COLOR_BROWN",
+  "PLAYER_COLOR_MAROON", "PLAYER_COLOR_NAVY", "PLAYER_COLOR_TURQUOISE", "PLAYER_COLOR_VIOLET",
+  "PLAYER_COLOR_WHEAT", "PLAYER_COLOR_PEACH", "PLAYER_COLOR_MINT", "PLAYER_COLOR_LAVENDER",
+  "PLAYER_COLOR_COAL", "PLAYER_COLOR_SNOW", "PLAYER_COLOR_EMERALD", "PLAYER_COLOR_PEANUT",
+  "PLAYER_COLOR_BLACK",
+}) do
+  _G[name] = __stub_constant("playercolor", name)
+end
+
+for _, name in ipairs({
+  "RACE_PREF_HUMAN", "RACE_PREF_ORC", "RACE_PREF_NIGHTELF", "RACE_PREF_UNDEAD", "RACE_PREF_DEMON",
+  "RACE_PREF_RANDOM", "RACE_PREF_USER_SELECTABLE", "RACE_PREF_FORSAKEN",
+}) do
+  _G[name] = __stub_constant("racepreference", name)
+end
