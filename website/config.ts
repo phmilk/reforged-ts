@@ -8,7 +8,7 @@ import { createRequire } from "node:module";
 import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
 
-/** How the build treats what is not an error from day one. */
+/** What differs between the two configuration files. */
 export interface SiteOptions {
   /**
    * Fail on what `docs:build` only warns about (broken anchors today). The
@@ -17,18 +17,26 @@ export interface SiteOptions {
   readonly strict: boolean;
 }
 
-/** What the landing page states, read at build time and never typed. */
+/**
+ * The site's `customFields`, which the components read: values taken from the
+ * packages at build time, never typed into a page. The index signature is the
+ * shape Docusaurus gives `customFields`.
+ */
 export interface SiteFields {
   /** The Build the Typings support: their `reforged.patch` field. */
   readonly supportedPatch: string;
   [key: string]: unknown;
 }
 
+const REPOSITORY = "https://github.com/phmilk/reforged-ts";
+
 /**
  * The Typings' `reforged.patch` field, read from the installed package so
- * that a new Patch changes the landing page at the next build.
+ * that a new Patch changes the landing page at the next build. A Build is
+ * four dot-separated numbers, the rule of the Typings generator's
+ * `src/build.ts`, not imported: the generator is not published.
  */
-export function supportedPatch(): string {
+function supportedPatch(): string {
   const manifestPath = createRequire(import.meta.url).resolve(
     "reforged-types/package.json",
   );
@@ -62,7 +70,8 @@ export function siteConfig(options: SiteOptions): Config {
       hooks: { onBrokenMarkdownLinks: "throw" },
     },
 
-    // Docusaurus Faster (Rspack, SWC, Lightning CSS) and the v4 defaults.
+    // Docusaurus Faster (Rspack, SWC, Lightning CSS). Its worker threads
+    // require the v4 flags, which Docusaurus recommends with it.
     future: { v4: true, faster: true },
 
     // English only (#4).
@@ -76,8 +85,7 @@ export function siteConfig(options: SiteOptions): Config {
         {
           docs: {
             sidebarPath: "./sidebars.ts",
-            editUrl:
-              "https://github.com/phmilk/reforged-ts/tree/master/website/",
+            editUrl: `${REPOSITORY}/tree/master/website/`,
             versions: {
               // The docs of the working tree, at /docs/next from the start:
               // the lint rules link `next` while the packages are
@@ -87,6 +95,7 @@ export function siteConfig(options: SiteOptions): Config {
           },
           // Docs only: the pages plugin serves the landing page alone.
           blog: false,
+          pages: { include: ["index.mdx"] },
         } satisfies Preset.Options,
       ],
     ],
@@ -103,7 +112,7 @@ export function siteConfig(options: SiteOptions): Config {
             label: "Docs",
           },
           {
-            href: "https://github.com/phmilk/reforged-ts",
+            href: REPOSITORY,
             label: "GitHub",
             position: "right",
           },

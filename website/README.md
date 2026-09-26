@@ -13,7 +13,7 @@ From the workspace root:
 | `pnpm docs:check`   | The CI gate: `docs:build` with the strict configuration, where broken anchors fail too.                          |
 | `pnpm docs:collect` | Copies the parts of the docs tree that come from elsewhere in the repository. Every other command runs it first. |
 
-`pnpm check` does not build the site: CI runs `docs:check` as its own step.
+`pnpm check` does not build the site: `docs:check` is a CI step of its own, in the workflows of [#48](https://github.com/phmilk/reforged-ts/issues/48).
 
 ## Layout
 
