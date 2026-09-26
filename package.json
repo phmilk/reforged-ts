@@ -29,6 +29,7 @@
     "release:template-clone": "pnpm --filter reforged-ts-release release:template-clone",
     "release:publish-check": "pnpm --filter reforged-ts-release release:publish-check",
     "actionlint": "pnpm --filter reforged-ts-release actionlint",
+    "patch-watch:plan": "pnpm --filter reforged-ts-release patch-watch:plan",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run typings:check && pnpm run test"
   },
   "devDependencies": {

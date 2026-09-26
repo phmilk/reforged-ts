@@ -1,0 +1,770 @@
+[
+  {
+    "name": "baseline",
+    "commit": {
+      "sha": "d7b1f706c7faeafbac3aa64765b288118f2061ee"
+    }
+  },
+  {
+    "name": "TFT-v1.31.1.12173",
+    "commit": {
+      "sha": "d438efd1c38a20f593dc718a064ff079bbc609fc"
+    }
+  },
+  {
+    "name": "TFT-v1.31.0.11889-w3t",
+    "commit": {
+      "sha": "e2eb221aa0fc6e30ae510cc8c0731511d4630496"
+    }
+  },
+  {
+    "name": "TFT-v1.30.4.11274",
+    "commit": {
+      "sha": "1565f3a4e253e0679fe7b73007178ec59e61f12c"
+    }
+  },
+  {
+    "name": "TFT-v1.30.3.11235",
+    "commit": {
+      "sha": "e65687deea66833a5993f7450a24b4b3594d539a"
+    }
+  },
+  {
+    "name": "TFT-v1.30.3.11145-w3t",
+    "commit": {
+      "sha": "522aa824617462ff83ded2a6916d428b493ce948"
+    }
+  },
+  {
+    "name": "TFT-v1.30.2.11113",
+    "commit": {
+      "sha": "681447361a09162c44d4f52c655c9b1977178a86"
+    }
+  },
+  {
+    "name": "TFT-v1.30.2.10369-w3t",
+    "commit": {
+      "sha": "3da71973967d5a40d9a7d27803827ced20768f24"
+    }
+  },
+  {
+    "name": "TFT-v1.30.1.10211",
+    "commit": {
+      "sha": "a8d7733ebc5ec9f988eb1181f6ad39f36c90e479"
+    }
+  },
+  {
+    "name": "TFT-v1.30.1.10085-w3t",
+    "commit": {
+      "sha": "18fff16b970978fc717c7f5619173436d18eb45f"
+    }
+  },
+  {
+    "name": "TFT-v1.30.0.9900",
+    "commit": {
+      "sha": "289595ff06b17a3a6a00a8d771833d4412887f06"
+    }
+  },
+  {
+    "name": "TFT-v1.30.0.9655-w3t",
+    "commit": {
+      "sha": "27ae391732f2aa4322d660c4f3a5e56c7afe9990"
+    }
+  },
+  {
+    "name": "TFT-v1.29.2.9231",
+    "commit": {
+      "sha": "0c08ac0a33681538318807469339b7190f7e3ecf"
+    }
+  },
+  {
+    "name": "TFT-v1.29.0.8803",
+    "commit": {
+      "sha": "b41e731fbb4b04987fa80bd8cede7489fcd88079"
+    }
+  },
+  {
+    "name": "TFT-v1.28.2.7395",
+    "commit": {
+      "sha": "17faaabafb1fcf12ea151c786ff160b74a626d95"
+    }
+  },
+  {
+    "name": "TFT-v1.28.0.7205-zhtw",
+    "commit": {
+      "sha": "69810375d5302052e2b0450af4e6555ea4feb4fa"
+    }
+  },
+  {
+    "name": "TFT-v1.27b-ru",
+    "commit": {
+      "sha": "fa4106354ba7f559d10a79e476a84e5b87003fe6"
+    }
+  },
+  {
+    "name": "TFT-v1.27a-ru",
+    "commit": {
+      "sha": "725e59e72e0fb0bc8c4145f0ee1b73005cd30bfd"
+    }
+  },
+  {
+    "name": "TFT-v1.26a-ru",
+    "commit": {
+      "sha": "cc794e6e0a90537f51eb6ccbfac83bfe70479258"
+    }
+  },
+  {
+    "name": "TFT-v1.25b-ru",
+    "commit": {
+      "sha": "e21b81ec782aace81748833da59232e025c877a0"
+    }
+  },
+  {
+    "name": "TFT-v1.24e-ru",
+    "commit": {
+      "sha": "00c648ff1912ebc8751fa5683538c8117756bcee"
+    }
+  },
+  {
+    "name": "TFT-v1.24d-ru",
+    "commit": {
+      "sha": "ff63630a7332d8faf2d797fadc7c9826d61d05ea"
+    }
+  },
+  {
+    "name": "TFT-v1.24c-ru",
+    "commit": {
+      "sha": "9803aa07639e51c1a4283d64787230ed2b3a773f"
+    }
+  },
+  {
+    "name": "TFT-v1.24b-ru",
+    "commit": {
+      "sha": "f8a0505496c2d2bec761d3c2d513f7ba2af98d55"
+    }
+  },
+  {
+    "name": "TFT-v1.24a-ru",
+    "commit": {
+      "sha": "b55e0d8b0bb48c612396d83dfa5e29d305c211d4"
+    }
+  },
+  {
+    "name": "TFT-v1.23a-ru",
+    "commit": {
+      "sha": "449d0f774db842eb189bb9e99a51a1bb5223981e"
+    }
+  },
+  {
+    "name": "TFT-v1.22a-ru",
+    "commit": {
+      "sha": "8fbebed07ae5986f24f9a136726133545bfc83ce"
+    }
+  },
+  {
+    "name": "TFT-v1.21b-ru",
+    "commit": {
+      "sha": "0e0a79d28ec6d2addb77c3e9a36edfc8be49c18f"
+    }
+  },
+  {
+    "name": "TFT-v1.21a-ru",
+    "commit": {
+      "sha": "0a4c2a7aba5504f72f7cc6e7550c997df8944b3e"
+    }
+  },
+  {
+    "name": "TFT-v1.20e-ru",
+    "commit": {
+      "sha": "f414f6358a0afa0fa3af9999fcf7070c331e2c6f"
+    }
+  },
+  {
+    "name": "TFT-v1.20d-ru",
+    "commit": {
+      "sha": "e710e88fff9fe90ab0332aac38300928999676e4"
+    }
+  },
+  {
+    "name": "TFT-v1.20c-ru",
+    "commit": {
+      "sha": "143e200757f83738e5ae0c6e40b7f19987f6b306"
+    }
+  },
+  {
+    "name": "TFT-v1.20b-ru",
+    "commit": {
+      "sha": "9961d9ec9e4ac11498812a6f01c5e2c92572d5b4"
+    }
+  },
+  {
+    "name": "TFT-v1.20a-ru",
+    "commit": {
+      "sha": "be40df437d4601a6620559c8678eedf844ec54db"
+    }
+  },
+  {
+    "name": "TFT-v1.19b-ru",
+    "commit": {
+      "sha": "4471b34ff8b1d0c604c68b902a086ea9b75384ff"
+    }
+  },
+  {
+    "name": "TFT-v1.19a-ru",
+    "commit": {
+      "sha": "727e9fba256bda87c944866f13101266908480ce"
+    }
+  },
+  {
+    "name": "TFT-v1.18a-ru",
+    "commit": {
+      "sha": "2d6ecc31129e3e5df1d9d4f00f78614b79f562f9"
+    }
+  },
+  {
+    "name": "TFT-v1.17a-ru",
+    "commit": {
+      "sha": "cdfa77d838a65e2cf57aa61ad5311bc23ab8afdd"
+    }
+  },
+  {
+    "name": "TFT-v1.16a-ru",
+    "commit": {
+      "sha": "6f1fc521e638e9f92a479c8fa44f438713d9192f"
+    }
+  },
+  {
+    "name": "TFT-v1.15-ru",
+    "commit": {
+      "sha": "b0248b8799afbd51b65e9b67cbf992a09e66091f"
+    }
+  },
+  {
+    "name": "TFT-v1.14b-ru",
+    "commit": {
+      "sha": "a005672bda547a4d81f4584d8c1f66421fa872d0"
+    }
+  },
+  {
+    "name": "TFT-v1.14-ru",
+    "commit": {
+      "sha": "7cb8bc9da9a6805a1e64dc3e3d1451892fa7e2a6"
+    }
+  },
+  {
+    "name": "TFT-v1.13b-ru",
+    "commit": {
+      "sha": "36489b8aeb1e27614e8638a90fdc7802f1fde404"
+    }
+  },
+  {
+    "name": "TFT-v1.13-ru",
+    "commit": {
+      "sha": "631ed47dd7f341f0b4f5dcabe48d6efb1da6f2ae"
+    }
+  },
+  {
+    "name": "TFT-v1.12-ru",
+    "commit": {
+      "sha": "e16b755bd4c0ab59cec97931845e61a36a37edf0"
+    }
+  },
+  {
+    "name": "TFT-v1.11-ru",
+    "commit": {
+      "sha": "95863f450f3d0db5a59d5c0ef6ba4950fcb95c20"
+    }
+  },
+  {
+    "name": "TFT-v1.10-ru",
+    "commit": {
+      "sha": "3ef59a17b5c3c617db4c82ed439e4ba604f77362"
+    }
+  },
+  {
+    "name": "TFT-v1.07-ru",
+    "commit": {
+      "sha": "6d2477465a2e3e4b51a68f06f3948fb43ae8f2e6"
+    }
+  },
+  {
+    "name": "Reforged-v3.0.0.24277-w3t-e38e03b",
+    "commit": {
+      "sha": "3456aa306844c010f16fa6802a52067330c9e547"
+    }
+  },
+  {
+    "name": "Reforged-v3.0.0.24268-w3-3a9d8f2",
+    "commit": {
+      "sha": "a392fc3d5e6c37980accbfc560b28387fc7d01bc"
+    }
+  },
+  {
+    "name": "Reforged-v2.0.4.23745-w3-9a94ff7",
+    "commit": {
+      "sha": "6bd66bd45987cea6842d86d16a26e10c9e85065b"
+    }
+  },
+  {
+    "name": "Reforged-v2.0.4.23727-w3t-bfa6462",
+    "commit": {
+      "sha": "657fb08b1502a2978411ac9c0dbcb3d4c6af2b2c"
+    }
+  },
+  {
+    "name": "Reforged-v2.0.3.23175-w3-8ddf8a2",
+    "commit": {
+      "sha": "c493df63dd446264929d76ba19ed847a42869b3f"
+    }
+  },
+  {
+    "name": "Reforged-v2.0.3.22904-w3t",
+    "commit": {
+      "sha": "3e36339d25b598f341aa7c08b596c57c059d73e9"
+    }
+  },
+  {
+    "name": "Reforged-v2.0.2.22692-w3t",
+    "commit": {
+      "sha": "37a9ccf853501b09c034336eec7b52c238c10069"
+    }
+  },
+  {
+    "name": "Reforged-v1.36.1.20719-w3-51d40ee",
+    "commit": {
+      "sha": "d574cab6b4e24ff90f36bfcdc0e31c5a3c1460d7"
+    }
+  },
+  {
+    "name": "Reforged-v1.36.1.20613",
+    "commit": {
+      "sha": "f79e141a4d4222b9f6f26fbef463a21fcd13bca9"
+    }
+  },
+  {
+    "name": "Reforged-v1.36.0.20257",
+    "commit": {
+      "sha": "a535daf373630f4184cdf5e31ea688b7da8d35cf"
+    }
+  },
+  {
+    "name": "Reforged-v1.36.0.20144-w3t-b8db0de",
+    "commit": {
+      "sha": "e7f9077eec3d1644ca0769f5edaa27fd4eb84eb8"
+    }
+  },
+  {
+    "name": "Reforged-v1.35.0.20093-w3-5ec1b77",
+    "commit": {
+      "sha": "9383c293bc66e6ff1b6353b8a314689e537750cd"
+    }
+  },
+  {
+    "name": "Reforged-v1.35.0.19721-w3t-2db6e67",
+    "commit": {
+      "sha": "1da3403ebf5c30e9b92a27732bcd924fe2e75968"
+    }
+  },
+  {
+    "name": "Reforged-v1.34.0.19632-w3-31590bf",
+    "commit": {
+      "sha": "d67d18d7d77a8c3ff6b036c97f1f37cf41f3719b"
+    }
+  },
+  {
+    "name": "Reforged-v1.34.0.19572-w3t-354e7e5",
+    "commit": {
+      "sha": "5249c0fa32c9b842820c3ffc8411e171a586d7e1"
+    }
+  },
+  {
+    "name": "Reforged-v1.33.0.19378-w3-e94d62c",
+    "commit": {
+      "sha": "47933e32b778a93deb3fcc26f64cf74bef32f9cf"
+    }
+  },
+  {
+    "name": "Reforged-v1.33.0.19203",
+    "commit": {
+      "sha": "11f842b253ae7dcc676ee2af64a1e4fec1561a2e"
+    }
+  },
+  {
+    "name": "Reforged-v1.33.0.18857-w3t-3e93420",
+    "commit": {
+      "sha": "bee8017e5c6c5fd9eff6f1d89d98a7f3ff18986a"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.10.19202",
+    "commit": {
+      "sha": "c6f8589ece7c19da5382fe2b85ddc4507e2d7699"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.10.18820",
+    "commit": {
+      "sha": "0a10e14050bae1ab45ab03a5091cbbdd9e055d5f"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.10.18820-w3-aa2b20f",
+    "commit": {
+      "sha": "e614bd585eb39d56c069301ee1512846756b22d0"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.9.16589",
+    "commit": {
+      "sha": "2378a45065da3dd397e7039c8caf69aeb5a91d41"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.9.15935-w3t-7d69888",
+    "commit": {
+      "sha": "1057b7a27f8916cb34dfb3938d2e8fb2e0418951"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.8.15801",
+    "commit": {
+      "sha": "96a8e5ceb44b4983fc85ac94ce13876485b10e70"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.8.15731-w3t-0349a4d",
+    "commit": {
+      "sha": "2b52f52316de138a58d714085548128366ad2da0"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.7.15572",
+    "commit": {
+      "sha": "8d724e6fd566501c55894d19fce0bfe6e7ddf2e4"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.7.15539-w3t-b5789e1",
+    "commit": {
+      "sha": "e69cec203ccf9fcce8e4390548a874ac621ce324"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.6.15269-w3t-5c6bb94",
+    "commit": {
+      "sha": "26eceaecbb39938003af9798e2522675ce6d4c48"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.5.15216-w3-2aa3f7d",
+    "commit": {
+      "sha": "670dcf4382822c193ab0c43d0b811c0cc7081128"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.5.15129-w3-e25c22c",
+    "commit": {
+      "sha": "17fcca7da5e9b43fec391a1bb513e1883980b2df"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.4.15098-w3-8112751",
+    "commit": {
+      "sha": "da24d41be0ebb83d929e5cfd94ded31c393503c5"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.3.14883-w3-c69064e",
+    "commit": {
+      "sha": "6562906e828f8d441e2bbc572f06da5771da2e1e"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.3.14857-w3-f98d8b1",
+    "commit": {
+      "sha": "fb547d4e4fad00bf579a7250eacb7c05c9db8232"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.2.14722-w3-fd283a3",
+    "commit": {
+      "sha": "70a70d7c1eb583ecc6dd7460954b5e7bb9b2ca1e"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.1.14604-w3-82335ba",
+    "commit": {
+      "sha": "26c9a287711540a13828dfb8fa508edbf0cf2bea"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.0.14481-w3-11be6c1",
+    "commit": {
+      "sha": "2723b8be65f47b7a2440fd6c3585d5f6dce8457e"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.0.14411",
+    "commit": {
+      "sha": "5021f3ffaa20ad5783bfc208feb4802aed20d232"
+    }
+  },
+  {
+    "name": "Reforged-v1.32.0.13369-w3b-ab0c8ee",
+    "commit": {
+      "sha": "21b3b34c491a1b6797012ac6a1b646f489b47dfc"
+    }
+  },
+  {
+    "name": "ROC-v1.11-ru",
+    "commit": {
+      "sha": "5775a61f7f4c8dad9c8b37479246ea5364117433"
+    }
+  },
+  {
+    "name": "ROC-v1.06-ru",
+    "commit": {
+      "sha": "89cf366c695d7f08a5de5ce7e38ac637ab726d47"
+    }
+  },
+  {
+    "name": "ROC-v1.05-ru",
+    "commit": {
+      "sha": "2bcf79ca4216ea2878e33780893de6a2e801d8e7"
+    }
+  },
+  {
+    "name": "ROC-v1.04-ru",
+    "commit": {
+      "sha": "03c3a7b3268833f652b4750592f2050cabaaf2a6"
+    }
+  },
+  {
+    "name": "ROC-v1.03-ru",
+    "commit": {
+      "sha": "e6fdd5f69c5dd8cea825d45d6abd72c85d981ae3"
+    }
+  },
+  {
+    "name": "ROC-v1.02a-ru",
+    "commit": {
+      "sha": "124e62940308433b17d1101ea5d17c34ad554b11"
+    }
+  },
+  {
+    "name": "ROC-v1.02-ru",
+    "commit": {
+      "sha": "c587482bc6d55dce4b4da7d941e1321d61b5517d"
+    }
+  },
+  {
+    "name": "ROC-v1.01b-ru",
+    "commit": {
+      "sha": "705f9e8eb4fcc59c2ea62483ac583f50ffa5733b"
+    }
+  },
+  {
+    "name": "ROC-v1.01-ru",
+    "commit": {
+      "sha": "5cf22204329949dbdec297c88178bb624a6b10c8"
+    }
+  },
+  {
+    "name": "ROC-v1.00-ru",
+    "commit": {
+      "sha": "bac3276a0adfe1d136d9dfb069a4899cf657cc34"
+    }
+  },
+  {
+    "name": "Beta-TFT-v315",
+    "commit": {
+      "sha": "457a689a45bca86768eecedbbd190e7c21d6a387"
+    }
+  },
+  {
+    "name": "Beta-TFT-v314",
+    "commit": {
+      "sha": "78104a57258f7a1a0bb5cdf0f179c4b77b4c658a"
+    }
+  },
+  {
+    "name": "Beta-TFT-v314a",
+    "commit": {
+      "sha": "1cf0b3a9935eba566530687d2f9040df2b6a3a1c"
+    }
+  },
+  {
+    "name": "Beta-TFT-v313",
+    "commit": {
+      "sha": "c0e1a94b0ea249f8cf1495ce8bdc3cdf70b87f46"
+    }
+  },
+  {
+    "name": "Beta-TFT-v312",
+    "commit": {
+      "sha": "9e4e9fa08d61309dc59dc71529b4179eeba42e2f"
+    }
+  },
+  {
+    "name": "Beta-TFT-v311",
+    "commit": {
+      "sha": "6b341b1bc9698890dd6100979736f89d30837e2c"
+    }
+  },
+  {
+    "name": "Beta-TFT-v310",
+    "commit": {
+      "sha": "234f9e7fac4275545014642fc4b8d81d3c18d690"
+    }
+  },
+  {
+    "name": "Beta-TFT-v309",
+    "commit": {
+      "sha": "c9cd93401e56c0f402595adac58a7b77ada6863a"
+    }
+  },
+  {
+    "name": "Beta-TFT-v308",
+    "commit": {
+      "sha": "31c5aab0daddc6557334c7e5177e8a393aa77232"
+    }
+  },
+  {
+    "name": "Beta-TFT-v307",
+    "commit": {
+      "sha": "e7ba9b5e2a53cbe101d31ce82a3a70e4f9be1bd3"
+    }
+  },
+  {
+    "name": "Beta-TFT-v306",
+    "commit": {
+      "sha": "eda29cf21a097276e701582ec9cf6d24a24660ea"
+    }
+  },
+  {
+    "name": "Beta-TFT-v305",
+    "commit": {
+      "sha": "f7235c8ab5707a34df6faeaf82196ea2045b043c"
+    }
+  },
+  {
+    "name": "Beta-TFT-v305a",
+    "commit": {
+      "sha": "2496854b8eda0e93227bce94862767efaa848752"
+    }
+  },
+  {
+    "name": "Beta-TFT-v304",
+    "commit": {
+      "sha": "ff2509585571b342637f18884be8f276c49efd91"
+    }
+  },
+  {
+    "name": "Beta-TFT-v304a",
+    "commit": {
+      "sha": "4128c421f51ba62a0d13b7db3ea0bd527a47c65f"
+    }
+  },
+  {
+    "name": "Beta-TFT-v303",
+    "commit": {
+      "sha": "ed7415f0b4957b0b9edbf584231cb7698a3cc750"
+    }
+  },
+  {
+    "name": "Beta-TFT-v302",
+    "commit": {
+      "sha": "febde35cc47eb41cc17a5db1d3a93096cbf64195"
+    }
+  },
+  {
+    "name": "Beta-TFT-v301",
+    "commit": {
+      "sha": "2c7de2aed28b54c630f5e42bfedccb6a70c565a9"
+    }
+  },
+  {
+    "name": "Beta-TFT-v300",
+    "commit": {
+      "sha": "5c35b68b310f37809bafde137bb709f4a7ad4125"
+    }
+  },
+  {
+    "name": "Beta-ROC-v1.34",
+    "commit": {
+      "sha": "c8cdb793cd84b7d799a5fb71b6dae7f9a4da3102"
+    }
+  },
+  {
+    "name": "Beta-ROC-v1.33",
+    "commit": {
+      "sha": "592bd874f5d2d3070857dc2935ac886b82ef24e0"
+    }
+  },
+  {
+    "name": "Beta-ROC-v1.32",
+    "commit": {
+      "sha": "76e81c4ca641ee719addb733170b747e6b3b2f4d"
+    }
+  },
+  {
+    "name": "Beta-ROC-v1.31",
+    "commit": {
+      "sha": "62d947c92474ca06b87223ba71e857ea37acab5e"
+    }
+  },
+  {
+    "name": "Beta-ROC-v1.30",
+    "commit": {
+      "sha": "13461bfd39382ec24896ce22fd5bf9fe9fe84fc3"
+    }
+  },
+  {
+    "name": "Beta-ROC-v1.21",
+    "commit": {
+      "sha": "37f95e0ef3b4e48b66e3d59bd9e369d13689c6c8"
+    }
+  },
+  {
+    "name": "Beta-ROC-v1.20",
+    "commit": {
+      "sha": "abb714c0210ed9923c3e5dbb2690801cec93503b"
+    }
+  },
+  {
+    "name": "Beta-ROC-v1.13",
+    "commit": {
+      "sha": "51831cdc020807685ea6082b7b4f8761e89135d1"
+    }
+  },
+  {
+    "name": "Beta-ROC-v1.12",
+    "commit": {
+      "sha": "37c5950b104d29d6c3fe88475765f6eebca16f01"
+    }
+  },
+  {
+    "name": "Beta-ROC-v1.11",
+    "commit": {
+      "sha": "b987b3ce524b2890d07c708b6e9faf6aa5e27604"
+    }
+  },
+  {
+    "name": "Beta-ROC-v1.10",
+    "commit": {
+      "sha": "3670874d3156bade3800dcdc4a8b46cfc6d2d0fe"
+    }
+  },
+  {
+    "name": "Beta-ROC-v1.03",
+    "commit": {
+      "sha": "45df8b3e9669f8a29dee20073b964f21ec0b7899"
+    }
+  },
+  {
+    "name": "Beta-ROC-v1.00",
+    "commit": {
+      "sha": "fdf5c7d2567b2091f37143272e1cbb3304246939"
+    }
+  }
+]
