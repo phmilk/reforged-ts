@@ -1,0 +1,63 @@
+# CI: the checks `pnpm check` composes locally, on ubuntu and windows, on
+# every pull request and every push to master. Each step runs one root
+# script and is named after it.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A newer push to a pull request cancels its running CI. Any other run gets
+# a group of its own (the run id), so pushes to master never cancel each
+# other: a shared group would still replace a pending run with a newer one.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}${{ github.event_name != 'pull_request' && format('-{0}', github.run_id) || '' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # The check names `ci (ubuntu)` and `ci (windows)` are a contract: the
+  # ruleset on master requires them (#194). Renaming this job or the matrix
+  # values silently un-protects master.
+  ci:
+    name: ci
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu, windows]
+    runs-on: ${{ matrix.os }}-latest
+    timeout-minutes: 20
+    steps:
+      # .gitattributes forces LF already; this keeps a CRLF checkout from
+      # ever reaching the lint.
+      - name: Line endings as committed
+        if: matrix.os == 'windows'
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: install
+        uses: ./.github/actions/setup-workspace
+        with:
+          cache: true
+      - name: lint
+        run: pnpm run lint
+      - name: typecheck
+        run: pnpm run typecheck
+      - name: build
+        run: pnpm run build
+      - name: test
+        run: pnpm run test
+      # The same version as the root `actionlint` script
+      # (release/src/actionlint.ts); bump both together.
+      - name: actionlint
+        if: matrix.os == 'ubuntu'
+        uses: raven-actions/actionlint@3d39aea434753780c3b3d4a1a31c854b4dbf49d7 # v2.2.0
+        with:
+          version: 1.7.12
+          # No Python in the workflows; the runner's shellcheck is used.
+          pyflakes: false
