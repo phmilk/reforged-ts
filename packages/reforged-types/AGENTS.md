@@ -8,7 +8,7 @@ Run every command from the repository root. The root `package.json` is the priva
 
 Follow these steps in order for a Patch update. The loop is done when the checks of step 6 pass and one commit holds the sources, the Overlay and the output.
 
-1. **Vendor and generate.** Pick the jass-history tag of the new Build (`Reforged-v<a.b.c.build>-...` at `github.com/Luashine/jass-history`) and run `typings:generate <tag>`. It downloads `common.j`, `blizzard.j` and `common.ai` into `vendor/<Build>/` with `provenance.json`, then regenerates every vendored Patch. Keep the previous Build vendored: the comparison in step 2 needs it.
+1. **Vendor and generate.** Pick the jass-history tag of the new Build (`Reforged-v<a.b.c.build>-...` at `github.com/Luashine/jass-history`; `pnpm patch-watch:plan` names the newest live one) and run `typings:generate <tag>`. It downloads `common.j`, `blizzard.j` and `common.ai` into `vendor/<Build>/` with `provenance.json`, then regenerates every vendored Patch. Keep the previous Build vendored: the comparison in step 2 needs it.
 2. **Read the output.** stdout lists, per pair of consecutive vendored Patches, the declarations only the newer one has (`In Patch <new> and not in Patch <old>`), each as `source:line: <Jass declaration>`. The checklist follows. On any error it goes to stderr and the exit code is 1; with warnings only it goes to stdout after the summary line and the exit code is 0.
    - `no Overlay entry for <Jass declaration>; expected <path>`: write the entry at that path.
    - `parameters do not match the Patch`: the Patch renamed or reordered parameters; make the entry's `params` match the Jass signature it prints (count, order, names).

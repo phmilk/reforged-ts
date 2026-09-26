@@ -1,7 +1,7 @@
 {
   "name": "reforged-ts-release",
   "private": true,
-  "description": "The release scripts of the reforged-ts workspace: Node programs behind the root release:* scripts. Never published.",
+  "description": "The release scripts of the reforged-ts workspace: Node programs behind the root release:* and patch-watch:* scripts. Never published.",
   "license": "MIT",
   "type": "module",
   "engines": {
@@ -20,7 +20,8 @@
     "release:dist-tag": "tsc -p tsconfig.json && node build/cli/dist-tag.js",
     "release:template-clone": "tsc -p tsconfig.json && node build/cli/template-clone.js",
     "release:publish-check": "tsc -p tsconfig.json && node build/cli/publish-check.js",
-    "actionlint": "tsc -p tsconfig.json && node build/cli/actionlint.js"
+    "actionlint": "tsc -p tsconfig.json && node build/cli/actionlint.js",
+    "patch-watch:plan": "tsc -p tsconfig.json && node build/cli/patch-watch.js"
   },
   "dependencies": {
     "@changesets/parse": "catalog:",
