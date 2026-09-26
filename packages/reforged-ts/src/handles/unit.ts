@@ -63,8 +63,12 @@ export class Unit extends Widget {
   }
 
   /**
-   * Creates a unit at `where` from the unit type's name (`"footman"`),
-   * through `CreateUnitAtLocByName`.
+   * Creates a unit at `where` from the unit type's name, through
+   * `CreateUnitAtLocByName`.
+   * @param owner The owner of the unit.
+   * @param unitName The name of the unit type (`"footman"`).
+   * @param where Where the unit stands.
+   * @param face The direction that the unit will be facing in degrees.
    */
   public static createAtPointByName(
     owner: MapPlayer,
@@ -82,6 +86,9 @@ export class Unit extends Widget {
    * Creates an undead gold mine and the blight around it, through
    * `CreateBlightedGoldmine`.
    * @param owner The owner of the gold mine.
+   * @param x The x-coordinate of the gold mine.
+   * @param y The y-coordinate of the gold mine.
+   * @param face The direction that the gold mine will be facing in degrees.
    */
   public static createBlightedGoldmine(
     owner: MapPlayer,
@@ -93,8 +100,12 @@ export class Unit extends Widget {
   }
 
   /**
-   * Creates a unit from the unit type's name (`"footman"`), through
-   * `CreateUnitByName`.
+   * Creates a unit from the unit type's name, through `CreateUnitByName`.
+   * @param owner The owner of the unit.
+   * @param unitName The name of the unit type (`"footman"`).
+   * @param x The x-coordinate of the unit.
+   * @param y The y-coordinate of the unit.
+   * @param face The direction that the unit will be facing in degrees.
    */
   public static createByName(
     owner: MapPlayer,
@@ -113,6 +124,9 @@ export class Unit extends Widget {
    * Creates the corpse of a unit, through `CreateCorpse`.
    * @param owner The owner of the corpse.
    * @param unitId The rawcode of the unit.
+   * @param x The x-coordinate of the corpse.
+   * @param y The y-coordinate of the corpse.
+   * @param face The direction that the corpse will be facing in degrees.
    */
   public static createCorpse(
     owner: MapPlayer,

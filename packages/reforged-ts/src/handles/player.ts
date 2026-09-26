@@ -189,8 +189,11 @@ export class MapPlayer extends Handle<player> {
   }
 
   /**
-   * Shows `message` in the chat log of the player, as a chat message the
-   * player sent to `recipient`, through `BlzDisplayChatMessage`.
+   * Shows `message` in the chat log as a chat message this player sent,
+   * through `BlzDisplayChatMessage`. This player is the sender, not the
+   * viewer: the message shows on every client that runs the call, so
+   * `MapPlayer.runLocal` shows it to one player. `recipient` is the chat
+   * audience the message is labelled with, as the Native's number.
    */
   public displayChatMessage(recipient: number, message: string) {
     BlzDisplayChatMessage(this.handle, recipient, message);
@@ -339,6 +342,19 @@ export class MapPlayer extends Handle<player> {
     SetPlayerAbilityAvailable(this.handle, abilId, avail);
   }
 
+  public setAlliance(
+    otherPlayer: MapPlayer,
+    whichAllianceSetting: alliancetype,
+    value: boolean,
+  ) {
+    SetPlayerAlliance(
+      this.handle,
+      otherPlayer.handle,
+      whichAllianceSetting,
+      value,
+    );
+  }
+
   /** Adds or removes blight in a circle, through `SetBlight`. */
   public setBlight(x: number, y: number, radius: number, addBlight: boolean) {
     SetBlight(this.handle, x, y, radius, addBlight);
@@ -360,19 +376,6 @@ export class MapPlayer extends Handle<player> {
   /** Adds or removes blight over `where`, through `SetBlightRect`. */
   public setBlightRect(where: Rectangle, addBlight: boolean) {
     SetBlightRect(this.handle, where.handle, addBlight);
-  }
-
-  public setAlliance(
-    otherPlayer: MapPlayer,
-    whichAllianceSetting: alliancetype,
-    value: boolean,
-  ) {
-    SetPlayerAlliance(
-      this.handle,
-      otherPlayer.handle,
-      whichAllianceSetting,
-      value,
-    );
   }
 
   /**
