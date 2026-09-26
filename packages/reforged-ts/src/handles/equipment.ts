@@ -61,8 +61,8 @@ export enum LoadoutSlot {
  * raises an error naming `native`, so a value a later Patch adds is noticed;
  * level 2 names the line that read the member, the matcher being tail-called.
  */
-function matcher<H extends handle, E>(
-  name: string,
+function enumMatcher<H extends handle, E>(
+  enumName: string,
   constants: () => [H, E][],
 ): (value: H, native: string) => E {
   let members: LuaMap<H, E> | undefined;
@@ -75,14 +75,17 @@ function matcher<H extends handle, E>(
     }
     const member = members.get(value);
     if (member === undefined) {
-      error(`${LIBRARY}: ${native} returned a value ${name} does not name`, 2);
+      error(
+        `${LIBRARY}: ${native} returned a value ${enumName} does not name`,
+        2,
+      );
     }
     return member;
   };
 }
 
 /** The `EquipmentType` of an `equipmentType` Handle `native` returned. */
-export const equipmentTypeOf = matcher("EquipmentType", () => [
+export const equipmentTypeOf = enumMatcher("EquipmentType", () => [
   [EQUIPMENT_TYPE_NONE, EquipmentType.None],
   [EQUIPMENT_TYPE_HEAD, EquipmentType.Head],
   [EQUIPMENT_TYPE_CHEST, EquipmentType.Chest],
@@ -96,7 +99,7 @@ export const equipmentTypeOf = matcher("EquipmentType", () => [
 ]);
 
 /** The `ItemTag` of an `itemTag` Handle `native` returned. */
-export const itemTagOf = matcher("ItemTag", () => [
+export const itemTagOf = enumMatcher("ItemTag", () => [
   [ITEMTAG_TYPE_UNDEFINED, ItemTag.Undefined],
   [ITEMTAG_TYPE_DROPPABLE, ItemTag.Droppable],
   [ITEMTAG_TYPE_QUESTREWARD, ItemTag.QuestReward],

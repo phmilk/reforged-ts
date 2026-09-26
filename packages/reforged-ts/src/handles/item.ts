@@ -52,19 +52,19 @@ export class Item extends Widget {
     SetItemColor(this.handle, color);
   }
 
+  public get equipmentType() {
+    return equipmentTypeOf(
+      GetItemEquipmentType(this.handle),
+      "GetItemEquipmentType",
+    );
+  }
+
   public set invulnerable(flag: boolean) {
     SetItemInvulnerable(this.handle, true);
   }
 
   public get invulnerable() {
     return IsItemInvulnerable(this.handle);
-  }
-
-  public get equipmentType() {
-    return equipmentTypeOf(
-      GetItemEquipmentType(this.handle),
-      "GetItemEquipmentType",
-    );
   }
 
   public get isEquipped() {
