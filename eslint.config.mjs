@@ -1,7 +1,8 @@
 // One flat configuration lints and formats every package of the workspace
 // (ADR 0002). `eslint --fix` formats through Prettier, so a save in the editor
-// and a run in CI produce the same file. No rule is disabled here: a tolerated
-// finding is disabled inline, on its line, naming the build step that clears it.
+// and a run in CI produce the same file. No rule is disabled or relaxed here
+// but for the static namespaces' entry below: a tolerated finding is disabled
+// inline, on its line, naming the build step that clears it.
 import eslint from "@eslint/js";
 import { defineConfig, globalIgnores } from "eslint/config";
 import importPlugin from "eslint-plugin-import-x";
@@ -14,6 +15,7 @@ export default defineConfig(
     "**/dist/**",
     "packages/reforged-types/build/**",
     "release/build/**",
+    "wrapper-coverage/build/**",
     "packages/reforged-test/lua/**",
     "packages/reforged-ts/dist-test/**",
     // What tools own: the vendored Patch files and the generated Typings.
@@ -49,6 +51,27 @@ export default defineConfig(
       // Not in the recommended set; a new import cycle is reported the day it
       // is written.
       "import-x/no-cycle": "error",
+    },
+  },
+  // The library's static namespaces: classes of static members only, over
+  // one facility of the whole game rather than one Handle (`Camera`, `File`,
+  // `Input`, `Terrain`). They stay static classes, decided on #54: a Map
+  // project calls `Camera.setPos` as in w3ts, and the coverage report counts
+  // the Natives a class calls, never those of a TypeScript namespace or a
+  // `const` object. The next static namespace (the tier-3 namespaces of 1.1)
+  // adds its file to this list rather than an inline exception.
+  {
+    files: [
+      "packages/reforged-ts/src/handles/camera.ts",
+      "packages/reforged-ts/src/handles/input.ts",
+      "packages/reforged-ts/src/handles/terrain.ts",
+      "packages/reforged-ts/src/system/file.ts",
+    ],
+    rules: {
+      "@typescript-eslint/no-extraneous-class": [
+        "error",
+        { allowStaticOnly: true },
+      ],
     },
   },
   // The library's declaration fixtures import `reforged-ts` as a Map project

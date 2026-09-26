@@ -5,6 +5,7 @@ import { configuration } from "../reforged/configuration";
 import { assertDamageDepth } from "../reforged/damage";
 import { rawcodeToString } from "../utils/rawcode";
 import { Destructable } from "./destructable";
+import type { EquipmentType, LoadoutSlot } from "./equipment";
 import { Force } from "./force";
 import { fieldTypeOf } from "./fields";
 import type { Group } from "./group";
@@ -74,6 +75,14 @@ export class Unit extends Widget {
 
   public set armor(armorAmount: number) {
     BlzSetUnitArmor(this.handle, armorAmount);
+  }
+
+  /**
+   * The size of the unit's bag, its extended inventory, through
+   * `UnitExtendedInventorySize` (3.0.0).
+   */
+  public get bagSize() {
+    return UnitExtendedInventorySize(this.handle);
   }
 
   public set canSleep(flag: boolean) {
@@ -176,6 +185,11 @@ export class Unit extends Widget {
 
   public get invulnerable() {
     return BlzIsUnitInvulnerable(this.handle);
+  }
+
+  /** Whether the hero glow is allowed on the unit, through `HeroGlowIsAllowedOnUnit` (3.0.0). */
+  public get isHeroGlowAllowed() {
+    return HeroGlowIsAllowedOnUnit(this.handle);
   }
 
   public get level() {
@@ -452,6 +466,22 @@ export class Unit extends Widget {
     return UnitAddAbility(this.handle, abilityId);
   }
 
+  /**
+   * Adjusts the remaining cooldown of the ability by `delta`, a percentage of
+   * its full cooldown, through `BlzAdjustUnitAbilityCooldownPercent` (3.0.0).
+   */
+  public adjustAbilityCooldownPercent(abilId: number, delta: number) {
+    BlzAdjustUnitAbilityCooldownPercent(this.handle, abilId, delta);
+  }
+
+  /**
+   * Adjusts the remaining cooldown of the ability by `delta` seconds, through
+   * `BlzAdjustUnitAbilityCooldownRemaining` (3.0.0).
+   */
+  public adjustAbilityCooldownRemaining(abilId: number, delta: number) {
+    BlzAdjustUnitAbilityCooldownRemaining(this.handle, abilId, delta);
+  }
+
   public addAnimationProps(animProperties: string, add: boolean) {
     AddUnitAnimationProperties(this.handle, animProperties, add);
   }
@@ -532,6 +562,18 @@ export class Unit extends Widget {
     AddUnitToStock(this.handle, unitId, currentStock, stockMax);
   }
 
+  /**
+   * Allows or disallows the hero glow on the unit, through
+   * `AllowHeroGlowOnUnit` or `DisallowHeroGlowOnUnit` (3.0.0).
+   */
+  public allowHeroGlow(allow: boolean) {
+    if (allow) {
+      AllowHeroGlowOnUnit(this.handle);
+    } else {
+      DisallowHeroGlowOnUnit(this.handle);
+    }
+  }
+
   public applyTimedLife(buffId: number, duration: number) {
     UnitApplyTimedLife(this.handle, buffId, duration);
   }
@@ -540,8 +582,27 @@ export class Unit extends Widget {
     AttachSoundToUnit(sound.handle, this.handle);
   }
 
+  /**
+   * The item at `index` in the unit's bag, or undefined for an empty index,
+   * through `UnitItemInBagSlot` (3.0.0).
+   */
+  public bagItem(index: number): Item | undefined {
+    return Item.fromHandle(UnitItemInBagSlot(this.handle, index));
+  }
+
   public cancelTimedLife() {
     BlzUnitCancelTimedLife(this.handle);
+  }
+
+  /**
+   * Whether the unit can equip items of the equipment type, through
+   * `UnitCanEquipItemOfEquipmentType` (3.0.0).
+   */
+  public canEquip(equipmentType: EquipmentType) {
+    return UnitCanEquipItemOfEquipmentType(
+      this.handle,
+      ConvertEquipmentType(equipmentType),
+    );
   }
 
   public canSleepPerm() {
@@ -684,8 +745,34 @@ export class Unit extends Widget {
     return UnitDropItemTarget(this.handle, whichItem.handle, target.handle);
   }
 
+  /**
+   * Enables or disables the unit's auras, through `BlzUnitEnableAuras`
+   * (3.0.0).
+   */
+  public enableAuras(enable: boolean, affectsUI: boolean) {
+    BlzUnitEnableAuras(this.handle, enable, affectsUI);
+  }
+
   public endAbilityCooldown(abilCode: number) {
     BlzEndUnitAbilityCooldown(this.handle, abilCode);
+  }
+
+  /**
+   * Equips the item on the unit and returns whether it was equipped, through
+   * `UnitEquipItem` (3.0.0).
+   */
+  public equip(whichItem: Item): boolean {
+    return UnitEquipItem(this.handle, whichItem.handle);
+  }
+
+  /**
+   * The item equipped in the loadout slot, or undefined for an empty slot,
+   * through `UnitItemInEquipmentSlot` (3.0.0).
+   */
+  public equippedItem(slot: LoadoutSlot): Item | undefined {
+    return Item.fromHandle(
+      UnitItemInEquipmentSlot(this.handle, ConvertLoadoutSlot(slot)),
+    );
   }
 
   public getAbility(abilId: number) {
@@ -698,6 +785,14 @@ export class Unit extends Widget {
 
   public getAbilityCooldown(abilId: number, level: number) {
     return BlzGetUnitAbilityCooldown(this.handle, abilId, level);
+  }
+
+  /**
+   * The remaining cooldown of the ability as a percentage of its full
+   * cooldown, through `BlzGetUnitAbilityCooldownPercent` (3.0.0).
+   */
+  public getAbilityCooldownPercent(abilId: number) {
+    return BlzGetUnitAbilityCooldownPercent(this.handle, abilId);
   }
 
   public getAbilityCooldownRemaining(abilId: number) {
@@ -718,6 +813,18 @@ export class Unit extends Widget {
 
   public getAgility(includeBonuses: boolean) {
     return GetHeroAgi(this.handle, includeBonuses);
+  }
+
+  /**
+   * The duration of an animation of the unit's model, by name or by index,
+   * through `BlzGetUnitAnimationDuration` or
+   * `BlzGetUnitAnimationDurationByIndex` (3.0.0).
+   */
+  public getAnimationDuration(animation: string | number) {
+    if (typeof animation === "string") {
+      return BlzGetUnitAnimationDuration(this.handle, animation);
+    }
+    return BlzGetUnitAnimationDurationByIndex(this.handle, animation);
   }
 
   public getAttackCooldown(weaponIndex: number) {
@@ -796,6 +903,19 @@ export class Unit extends Widget {
     return GetHeroStr(this.handle, includeBonuses);
   }
 
+  /**
+   * Whether the unit has any item equipped, through `UnitHasAnyItemEquiped`
+   * (3.0.0). The Native's name is misspelt.
+   */
+  public hasAnyEquipped() {
+    return UnitHasAnyItemEquiped(this.handle);
+  }
+
+  /** Whether the item is in the unit's bag, through `UnitHasItemBagged` (3.0.0). */
+  public hasBagged(whichItem: Item) {
+    return UnitHasItemBagged(this.handle, whichItem.handle);
+  }
+
   public hasBuffs(
     removePositive: boolean,
     removeNegative: boolean,
@@ -815,6 +935,30 @@ export class Unit extends Widget {
       aura,
       autoDispel,
     );
+  }
+
+  /**
+   * Whether the unit's loadout slot is empty, through
+   * `UnitHasLoadoutSlotEmpty` (3.0.0).
+   */
+  public hasEmptySlot(slot: LoadoutSlot) {
+    return UnitHasLoadoutSlotEmpty(this.handle, ConvertLoadoutSlot(slot));
+  }
+
+  /**
+   * Whether the unit has an item of the equipment type equipped, through
+   * `UnitHasItemEquipmentOfType` (3.0.0).
+   */
+  public hasEquipmentOfType(equipmentType: EquipmentType) {
+    return UnitHasItemEquipmentOfType(
+      this.handle,
+      ConvertEquipmentType(equipmentType),
+    );
+  }
+
+  /** Whether the unit has the item equipped, through `UnitHasItemEquipped` (3.0.0). */
+  public hasEquipped(whichItem: Item) {
+    return UnitHasItemEquipped(this.handle, whichItem.handle);
   }
 
   public hasItem(whichItem: Item) {
@@ -1146,6 +1290,14 @@ export class Unit extends Widget {
     RemoveUnitFromStock(this.handle, itemId);
   }
 
+  /**
+   * Resets the attack of the unit's weapon, through `BlzResetUnitAttack`
+   * (3.0.0).
+   */
+  public resetAttack(weaponIndex: number) {
+    BlzResetUnitAttack(this.handle, weaponIndex);
+  }
+
   public resetCooldown() {
     UnitResetCooldown(this.handle);
   }
@@ -1175,6 +1327,22 @@ export class Unit extends Widget {
 
   public setAbilityCooldown(abilId: number, level: number, cooldown: number) {
     BlzSetUnitAbilityCooldown(this.handle, abilId, level, cooldown);
+  }
+
+  /**
+   * Sets the remaining cooldown of the ability as a percentage of its full
+   * cooldown, through `BlzSetUnitAbilityCooldownPercent` (3.0.0).
+   */
+  public setAbilityCooldownPercent(abilId: number, percent: number) {
+    BlzSetUnitAbilityCooldownPercent(this.handle, abilId, percent);
+  }
+
+  /**
+   * Sets the remaining cooldown of the ability in seconds, through
+   * `BlzSetUnitAbilityCooldownRemaining` (3.0.0).
+   */
+  public setAbilityCooldownRemaining(abilId: number, seconds: number) {
+    BlzSetUnitAbilityCooldownRemaining(this.handle, abilId, seconds);
   }
 
   public setAbilityLevel(abilCode: number, level: number) {
@@ -1418,6 +1586,21 @@ export class Unit extends Widget {
 
   public suspendExperience(flag: boolean) {
     SuspendHeroXP(this.handle, flag);
+  }
+
+  /** Unequips the item from the unit, through `UnitUnequipItem` (3.0.0). */
+  public unequip(whichItem: Item) {
+    UnitUnequipItem(this.handle, whichItem.handle);
+  }
+
+  /**
+   * Unequips the item in the loadout slot and returns it, or undefined for an
+   * empty slot, through `UnitUnequipItemFromSlot` (3.0.0).
+   */
+  public unequipSlot(slot: LoadoutSlot): Item | undefined {
+    return Item.fromHandle(
+      UnitUnequipItemFromSlot(this.handle, ConvertLoadoutSlot(slot)),
+    );
   }
 
   public useItem(whichItem: Item) {

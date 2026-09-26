@@ -115,6 +115,9 @@ packages/reforged-ts/dist-test/
 # The release scripts' build output
 release/build/
 
+# The Wrapper coverage report script's build output
+wrapper-coverage/build/
+
 # Claude Code agent worktrees and local state
 .claude/
 

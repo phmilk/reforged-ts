@@ -183,9 +183,16 @@ export class Sound extends Handle<sound> {
    * @note You can only play 16 sounds in general.
    * @note Sounds of the same filepath (on different sound handles) must have a delay of at least 0.1 seconds inbetween them to be played.
    * You can overcome this by starting one earlier and then using `setPosition`.
+   * @param fadeIn Whether the sound fades in at the `fadeInRate` given to
+   * `create`, through `StartSoundEx`; left out, the sound starts through
+   * `StartSound`.
    */
-  public start() {
-    StartSound(this.handle);
+  public start(fadeIn?: boolean) {
+    if (fadeIn === undefined) {
+      StartSound(this.handle);
+    } else {
+      StartSoundEx(this.handle, fadeIn);
+    }
   }
 
   /**
@@ -207,5 +214,40 @@ export class Sound extends Handle<sound> {
 
   public static getFileDuration(fileName: string) {
     return GetSoundFileDuration(fileName);
+  }
+
+  /**
+   * Stops the thematic music, through `EndThematicMusic`.
+   */
+  public static endThematicMusic() {
+    EndThematicMusic();
+  }
+
+  /**
+   * Whether the thematic music pauses while the game window has lost focus,
+   * through `BlzPauseThematicMusicOnFocusLost` (3.0.0).
+   */
+  public static pauseThematicMusicOnFocusLost(pause: boolean) {
+    BlzPauseThematicMusicOnFocusLost(pause);
+  }
+
+  /**
+   * Plays a music file as the thematic music, through `PlayThematicMusic`, or
+   * through `PlayThematicMusicEx` from `fromMs` milliseconds into the file
+   * when it is given.
+   */
+  public static playThematicMusic(file: string, fromMs?: number) {
+    if (fromMs === undefined) {
+      PlayThematicMusic(file);
+    } else {
+      PlayThematicMusicEx(file, fromMs);
+    }
+  }
+
+  /**
+   * Sets the volume of the thematic music, through `SetThematicMusicVolume`.
+   */
+  public static setThematicMusicVolume(volume: number) {
+    SetThematicMusicVolume(volume);
   }
 }

@@ -1,0 +1,23 @@
+{
+  "name": "reforged-ts-wrapper-coverage",
+  "private": true,
+  "description": "The Wrapper coverage report of reforged-ts: which owned Natives each Wrapper covers, excludes or misses, from the Typings' manifest and a scan of the library sources. Never published.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json",
+    "test": "vitest run --root .. --project wrapper-coverage",
+    "coverage:report": "tsc -p tsconfig.json && node build/cli/report.js"
+  },
+  "dependencies": {
+    "typescript": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "vitest": "catalog:"
+  }
+}

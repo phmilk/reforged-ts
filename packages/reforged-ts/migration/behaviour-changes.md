@@ -52,6 +52,10 @@ Changes a Map project author migrating from w3ts 3.x notices at run time or in t
 - **`sleep` resolves with no value.** It is typed `Promise<void>`, where it was `Promise<null>`; the value at run time is nil either way. It runs on `Timer.after`.
 - **`Item.getField` and `Item.setField` reach the item field Natives.** They compared the field's type with the unit field type names, so they returned 0 and `false` for every item field without calling a Native; they now read and write item fields.
 
+## Build step 7: Wrappers for the 3.0.0 systems
+
+- **`Destructable.create` takes an options object.** It took the rawcode, x, y, facing, scale, variation and skin in that order; it now takes one object, `Destructable.create({ typeId, x, y })`, with the optional `z`, `face` (0 by default), `scale` (1), `variation` (0), `pitch`, `roll`, `skin`, `color` (a `playercolor`) and `dead`. The options given pick one of the game's 32 creation Natives: `dead: true` creates a dead destructable, `z` places it at that height (what `createZ`, now removed, did), `pitch` or `roll` tilts it with the absent one 0, `skin` gives it a skin and `color` a team colour. Positional arguments are a type error. It still throws `reforged-ts: failed to create Destructable (<rawcode>)` at the calling line when the game creates nothing.
+
 ## Runtime Guards
 
 Every bullet below but the first applies in Dev mode only. With Dev mode off (the default, and every release build) the only change is the first: the functions handed to Natives are the Map project's own, errors propagate as in w3ts 3.x, `MapPlayer.runLocal` is a `GetLocalPlayer()` comparison, and `destroy()` calls its Native and nothing else besides forgetting the Wrapper. The "Desync safety and guards" guide lists every Guard with its message.

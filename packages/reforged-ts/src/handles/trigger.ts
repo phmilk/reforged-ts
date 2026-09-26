@@ -84,6 +84,11 @@ export class Trigger extends Handle<trigger> {
     return GetTriggerExecCount(this.handle);
   }
 
+  /** Whether the Trigger is running, through `BlzTriggerIsRunning` (3.0.0). */
+  public get isRunning(): boolean {
+    return BlzTriggerIsRunning(this.handle);
+  }
+
   /**
    * Marks the given trigger to wait/no longer wait for `TriggerSleepAction`s in sub trigger executions started via `TriggerExecuteWait`.
    * Since this is an attribute of the execution rather than the trigger object, this affects future runs of the given trigger, and not
@@ -222,11 +227,6 @@ export class Trigger extends Handle<trigger> {
   /** Interrupts the Trigger, through `BlzTriggerInterrupt` (3.0.0). */
   public interrupt() {
     BlzTriggerInterrupt(this.handle);
-  }
-
-  /** Whether the Trigger is running, through `BlzTriggerIsRunning` (3.0.0). */
-  public isRunning(): boolean {
-    return BlzTriggerIsRunning(this.handle);
   }
 
   /** Registers the player unit event for the player in every slot, with no filter. */

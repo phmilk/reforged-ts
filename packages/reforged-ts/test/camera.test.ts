@@ -4,7 +4,9 @@
 // allocate a location: `Camera.eyePoint`, `Camera.targetPoint` and
 // `cameraSetup.destPoint` are creations, typed `Point`, and throw naming
 // Point when the game returns nothing. `Camera` is a static namespace, not a
-// Wrapper; its accessors reach the same creation code as the Wrappers.
+// Wrapper; its accessors reach the same creation code as the Wrappers. The
+// 3.0.0 camera type and field control call their Natives with the value
+// given and answer what the Natives answer.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Camera, CameraSetup, Point } from "../src/index";
@@ -112,5 +114,95 @@ describe("Camera.targetPoint", () => {
     );
     expect(message).toEqual("reforged-ts: failed to create Point");
     expect(point).toBeUndefined();
+  });
+});
+
+describe("Camera.type", () => {
+  it("is what BlzCameraGetCameraType answers", () => {
+    const type = withNative(
+      "BlzCameraGetCameraType",
+      () => 2,
+      () => Camera.type,
+    );
+    expect(type).toBe(2);
+    expect(stubCalls()).toContainCall("BlzCameraGetCameraType()");
+  });
+
+  it("is set through BlzCameraSetCameraType", () => {
+    withNative(
+      "BlzCameraSetCameraType",
+      () => undefined,
+      () => {
+        Camera.type = 1;
+      },
+    );
+    expect(stubCalls()).toContainCall("BlzCameraSetCameraType(1)");
+  });
+});
+
+describe("Camera field control", () => {
+  it("setFieldControlledByInput hands the field to SetCameraFieldControlledByInput", () => {
+    withNative(
+      "SetCameraFieldControlledByInput",
+      () => undefined,
+      () => {
+        Camera.setFieldControlledByInput(CAMERA_FIELD_ROTATION, false);
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      "SetCameraFieldControlledByInput(CAMERA_FIELD_ROTATION, false)",
+    );
+  });
+
+  it("isFieldControlledByInput is what GetCameraFieldControlledByInput answers", () => {
+    const controlled = withNative(
+      "GetCameraFieldControlledByInput",
+      () => true,
+      () => Camera.isFieldControlledByInput(CAMERA_FIELD_ZOFFSET),
+    );
+    expect(controlled).toBe(true);
+    expect(stubCalls()).toContainCall(
+      "GetCameraFieldControlledByInput(CAMERA_FIELD_ZOFFSET)",
+    );
+  });
+
+  it("passes a 3.0.0 field through the existing field members", () => {
+    const value = withNative(
+      "GetCameraField",
+      () => 512,
+      () => Camera.getField(CAMERA_FIELD_ZABSOLUTE),
+    );
+    expect(value).toBe(512);
+    expect(stubCalls()).toContainCall("GetCameraField(CAMERA_FIELD_ZABSOLUTE)");
+  });
+});
+
+describe("cameraSetup.type", () => {
+  const setup = CameraSetup.create();
+  const setupRef = handleRef("camerasetup", setup.handle);
+
+  it("is what BlzCameraSetupGetCameraType answers", () => {
+    const type = withNative(
+      "BlzCameraSetupGetCameraType",
+      () => 3,
+      () => setup.type,
+    );
+    expect(type).toBe(3);
+    expect(stubCalls()).toContainCall(
+      `BlzCameraSetupGetCameraType(${setupRef})`,
+    );
+  });
+
+  it("is set through BlzCameraSetupSetCameraType", () => {
+    withNative(
+      "BlzCameraSetupSetCameraType",
+      () => undefined,
+      () => {
+        setup.type = 1;
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `BlzCameraSetupSetCameraType(${setupRef}, 1)`,
+    );
   });
 });
