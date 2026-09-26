@@ -65,6 +65,40 @@ export function headings(body: string, level: number): string[] {
 }
 
 /**
+ * The sections of `body`: everything from its first heading of `level` on,
+ * or "" when it has none. What comes before (a title, an introduction) is
+ * left out.
+ */
+export function sections(body: string, level: number): string {
+  const lines: string[] = [];
+  const pattern = new RegExp(`^ {0,3}#{${String(level)}} `);
+  forEachLine(body, (line, inCode) => {
+    if (lines.length > 0 || (!inCode && pattern.test(line))) lines.push(line);
+  });
+  return lines.join("\n");
+}
+
+/**
+ * `markdown` with each heading `levels` deeper (`##` is `###` for 1), down
+ * to the sixth level: a section placed under a heading of its own.
+ */
+export function demoteHeadings(markdown: string, levels: number): string {
+  const lines: string[] = [];
+  forEachLine(markdown, (line, inCode) => {
+    lines.push(
+      inCode
+        ? line
+        : line.replace(
+            /^( {0,3})(#{1,6})(?= |$)/,
+            (_, indent: string, marks: string) =>
+              indent + "#".repeat(Math.min(marks.length + levels, 6)),
+          ),
+    );
+  });
+  return lines.join("\n");
+}
+
+/**
  * The anchor Docusaurus gives a heading: github-slugger's rule, which keeps
  * letters, marks, digits, `_`, `-` and spaces, then makes each space a `-`
  * (`1.0.0-alpha.0` is `100-alpha0`). Inline code marks are dropped first. A
@@ -77,6 +111,20 @@ export function headingAnchor(text: string): string {
     .toLowerCase()
     .replace(/[^\p{L}\p{M}\p{N}\p{Pc} -]/gu, "")
     .replace(/ /g, "-");
+}
+
+/**
+ * `markdown` read by MDX as the text GitHub shows: `{`, `}` and `<` in prose
+ * escaped with a backslash, so MDX sees neither an expression nor JSX. One
+ * already escaped and code are left alone. An autolink, an HTML comment and
+ * a bracketed link destination turn into text (no collected source has one).
+ */
+export function escapeMdx(markdown: string): string {
+  return mapProse(markdown, (prose) =>
+    prose.replace(/\\?[{}<]/g, (match) =>
+      match.length === 1 ? `\\${match}` : match,
+    ),
+  );
 }
 
 /** `text` fit for one cell of a Markdown table. */

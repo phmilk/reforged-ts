@@ -15,6 +15,8 @@ From the workspace root:
 
 `pnpm check` does not build the site: `docs:check` is a CI step of its own, in the workflows of [#48](https://github.com/phmilk/reforged-ts/issues/48).
 
+Build the packages first (`pnpm build`): `docs:collect` checks the rename map against the library's built declarations, `packages/reforged-ts/dist/index.d.ts`, and fails without them.
+
 Every build generates the API reference first, with TypeDoc, from the library's sources: no package needs to be built for it. TypeDoc's validation warnings (an undocumented member, a broken `{@link}`) are printed and the build goes on; they fail `docs:check` once `STRICT_REFERENCE` in `config.ts` is on, which build step 8 ([#43](https://github.com/phmilk/reforged-ts/issues/43)) does when every member is documented. TypeDoc's errors always fail the build.
 
 ## Layout
@@ -30,6 +32,21 @@ Every build generates the API reference first, with TypeDoc, from the library's 
 
 ## Collected pages
 
-`docs:collect` writes the pages whose source of truth lives elsewhere in the repository: the Lint rules guide (one page per rule of the lint plugin's recommended config, from the page the plugin ships in `packages/eslint-plugin-reforged/docs/`, at the URL of the rule's `meta.docs.url`, and an index listing each rule with its summary; a rule without a page or a page without a rule fails the run), the Contributing section (the glossary from `CONTEXT.md`, one page per ADR, the agent conventions from `AGENTS.md`, and the how-tos from the packages' `AGENTS.md`, `CONTRIBUTING.md` and the `add-wrapper` Agent skill) and the Changelog section (one page per package's `CHANGELOG.md`, and an index linking their releases). Each gets front matter and a "generated from" note; its links to repository files point at the collected page when there is one, or at the page itself for a page of the docs tree, else at GitHub.
+`docs:collect` writes the pages whose source of truth lives elsewhere in the repository: the Lint rules guide (one page per rule of the lint plugin's recommended config, from the page the plugin ships in `packages/eslint-plugin-reforged/docs/`, at the URL of the rule's `meta.docs.url`, and an index listing each rule with its summary; a rule without a page or a page without a rule fails the run), the Contributing section (the glossary from `CONTEXT.md`, one page per ADR, the agent conventions from `AGENTS.md`, and the how-tos from the packages' `AGENTS.md`, `CONTRIBUTING.md` and the `add-wrapper` Agent skill) the Changelog section (one page per package's `CHANGELOG.md`, and an index linking their releases), and the generated sections of the Migration section's hand-written pages. Each gets front matter and a "generated from" note; its links to repository files point at the collected page when there is one, or at the page itself for a page of the docs tree, else at GitHub.
 
-The list of sources is `scripts/sources.mts`, the source kinds are in `scripts/kinds.mts` and the collector itself is `scripts/collector.mts`. Collected files are git-ignored and rewritten at every run: edit their source, never the copy. A source that is missing fails the run, unless it declares why it may not exist yet (a changelog before the package's first release), in which case it is reported as skipped. To add a source, add its entry to the list and its outputs to the collected pages block of the root `.gitignore`; a test fails until you do. Each run deletes a source's outputs whole before writing them, so a folder output holds nothing hand-written: a source that writes next to hand-written pages owns single files or a subfolder of its own.
+The list of sources is `scripts/sources.mts`, the source kinds are in `scripts/kinds.mts` (the migration guide's in `scripts/migration.mts`) and the collector itself is `scripts/collector.mts`. Collected files are git-ignored and rewritten at every run: edit their source, never the copy. A source that is missing fails the run, unless it declares why it may not exist yet (a changelog before the package's first release), in which case it is reported as skipped. To add a source, add its entry to the list and its outputs to the collected pages block of the root `.gitignore`; a test fails until you do. Each run deletes a source's outputs whole before writing them, so a folder output holds nothing hand-written: a source that writes next to hand-written pages owns single files or a subfolder of its own.
+
+## Migration pages
+
+The Migration section holds one hand-written page per version pair of the library's rename map (`packages/reforged-ts/migration/renames.json`), at the path the release gate expects: `docs/migration/<from>-to-<to>.md`, `w3ts-3-to-reforged-ts-1.md` for w3ts 3.x to reforged-ts 1.0 ([the major-changeset gate](../docs/release.md#the-major-changeset-gate)). The page is written in the structure of [#14](https://github.com/phmilk/reforged-ts/issues/14) and imports the two sections `docs:collect` writes for its pair under `docs/migration/_generated/<page name>/`, git-ignored:
+
+- `renames.md`: the old-to-new table of every entry of the pair (old, new or "removed", kind, note), or the note of the pair's no-renames marker;
+- `behaviour-changes.md`: the sections of the library's `migration/behaviour-changes.md`, a heading level down, for the pair `scripts/sources.mts` gives it.
+
+```md
+import Renames from "./_generated/w3ts-3-to-reforged-ts-1/renames.md";
+
+<Renames />
+```
+
+A partial is MDX whatever its name, and Docusaurus rejects a partial's front matter (an error under `CI`), so the collector writes none and escapes the `{`, `}` and `<` of the sections' prose. It reads the map through the release package's rename map module and stops with the offending entry when the map does not match its schema, a replacement is not exported by the library's built declarations, a pair has no page, or a page (any `.md` or `.mdx` of the folder but `index` and `_`-prefixed files) has no entry and no no-renames marker in the map. A new major adds its page, and its behaviour changes note to the migration guide's entry in `scripts/sources.mts`.

@@ -126,6 +126,11 @@ export default defineConfig({
           /\/packages\/eslint-plugin-reforged\/(?:docs\/.+\.md|src\/rules\/index\.ts)$/,
         testsToRun: () => "website/test",
       },
+      {
+        // docs:collect reads the rename map and the behaviour changes too.
+        pattern: /\/packages\/reforged-ts\/migration\/.+$/,
+        testsToRun: () => "website/test",
+      },
     ],
   },
 });

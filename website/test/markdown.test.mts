@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { rewriteLinks } from "../scripts/markdown.mts";
+import {
+  demoteHeadings,
+  escapeMdx,
+  rewriteLinks,
+  sections,
+} from "../scripts/markdown.mts";
 
 const upper = (markdown: string) =>
   rewriteLinks(markdown, (destination) => destination.toUpperCase());
@@ -32,6 +37,46 @@ describe("rewriteLinks", () => {
   it("opens a code span on a whole backtick run", () => {
     expect(upper("``not a span` [a](x.md)\n")).toBe(
       "``not a span` [a](X.MD)\n",
+    );
+  });
+});
+
+describe("sections", () => {
+  it("keeps everything from the first heading of the level on", () => {
+    expect(
+      sections(
+        "# Title\n\nIntro.\n\n## One\n\nA.\n\n### Deeper\n\n## Two\n",
+        2,
+      ),
+    ).toBe("## One\n\nA.\n\n### Deeper\n\n## Two\n");
+  });
+
+  it("skips a heading in a fenced block and is empty without a section", () => {
+    expect(sections("Intro.\n\n```md\n## code\n```\n", 2)).toBe("");
+  });
+});
+
+describe("demoteHeadings", () => {
+  it("moves every heading down, up to the sixth level, and leaves code alone", () => {
+    expect(
+      demoteHeadings(
+        "## One\n\n#### Four\n\n##### Five\n\n```md\n## code\n```\n#hashtag\n",
+        2,
+      ),
+    ).toBe(
+      "#### One\n\n###### Four\n\n###### Five\n\n```md\n## code\n```\n#hashtag\n",
+    );
+  });
+});
+
+describe("escapeMdx", () => {
+  it("escapes braces and angle brackets in prose, neither in code nor twice", () => {
+    expect(
+      escapeMdx(
+        "A {b} <C> `{d} <E>` \\{f\\}.\n\n```ts\nconst g = <H>{};\n```\n",
+      ),
+    ).toBe(
+      "A \\{b\\} \\<C> `{d} <E>` \\{f\\}.\n\n```ts\nconst g = <H>{};\n```\n",
     );
   });
 });
