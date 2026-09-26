@@ -1,6 +1,12 @@
 /** @noSelfInFile */
 
 import { rawcodeToString } from "../utils/rawcode";
+import {
+  EquipmentType,
+  equipmentTypeOf,
+  ItemTag,
+  itemTagOf,
+} from "./equipment";
 import { fieldTypeOf } from "./fields";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
@@ -38,12 +44,35 @@ export class Item extends Widget {
     SetItemCharges(this.handle, value);
   }
 
+  /**
+   * The item's colour, set like `MapPlayer.color`. Write-only: the game has
+   * no Native that reads it back.
+   */
+  public set color(color: playercolor) {
+    SetItemColor(this.handle, color);
+  }
+
+  public get equipmentType() {
+    return equipmentTypeOf(
+      GetItemEquipmentType(this.handle),
+      "GetItemEquipmentType",
+    );
+  }
+
   public set invulnerable(flag: boolean) {
     SetItemInvulnerable(this.handle, true);
   }
 
   public get invulnerable() {
     return IsItemInvulnerable(this.handle);
+  }
+
+  public get isEquipped() {
+    return IsItemEquipped(this.handle);
+  }
+
+  public get isInBag() {
+    return IsItemInBag(this.handle);
   }
 
   public get level() {
@@ -119,6 +148,10 @@ export class Item extends Widget {
 
   public get type() {
     return GetItemType(this.handle);
+  }
+
+  public get tag() {
+    return itemTagOf(GetItemTag(this.handle), "GetItemTag");
   }
 
   public get typeId() {
@@ -287,6 +320,25 @@ export class Item extends Widget {
 
   public setPosition(x: number, y: number) {
     SetItemPosition(this.handle, x, y);
+  }
+
+  /**
+   * A random item type of the level, item type, equipment type and tag
+   * given: its id, or 0 when the game finds none (an id, not a Handle, so
+   * not a lookup).
+   */
+  public static chooseRandomWithFilter(
+    type: itemtype,
+    level: number,
+    equipmentType: EquipmentType,
+    tag: ItemTag,
+  ): number {
+    return ChooseRandomItemExWithFilter(
+      type,
+      level,
+      ConvertEquipmentType(equipmentType),
+      ConvertItemTag(tag),
+    );
   }
 
   /** The item a unit equips, or undefined outside an equip event. */
