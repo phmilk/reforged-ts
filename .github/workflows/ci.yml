@@ -1,8 +1,8 @@
 # CI: the checks `pnpm check` composes locally and those later build steps
-# add, on ubuntu and windows; the docs check, the release checks and
-# actionlint on ubuntu; on every pull request and every push to master,
-# whose tarballs it keeps. Each check step runs one root script and is
-# named after it.
+# add, on ubuntu and windows; the docs check, the release checks, Renovate's
+# validator and actionlint on ubuntu; on every pull request and every push
+# to master, whose tarballs it keeps. Each check step runs one root script
+# and is named after it.
 name: ci
 
 on:
@@ -124,6 +124,21 @@ jobs:
       - name: release:check-patches
         if: matrix.os == 'ubuntu' && !cancelled() && steps.install.outcome == 'success'
         run: pnpm run release:check-patches
+      # Renovate's validator costs a download of Renovate (about half a
+      # minute), so it runs only on a pull request that changes the
+      # configuration or the root package.json, which pins its version.
+      - name: renovate:check
+        if: >-
+          matrix.os == 'ubuntu' && github.event_name == 'pull_request' &&
+          !cancelled() && steps.install.outcome == 'success'
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
+        run: |
+          if git diff --quiet "$BASE_REF...HEAD" -- renovate.json5 package.json; then
+            echo "renovate.json5 and package.json unchanged: nothing to validate."
+          else
+            pnpm run renovate:check
+          fi
       # The tarballs of a green master, kept a week for the Template
       # maintainer's dry runs. Packed from the build above: the scripts are
       # ignored, so reforged-test's prepare does not rebuild it.

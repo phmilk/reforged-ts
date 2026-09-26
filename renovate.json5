@@ -1,0 +1,117 @@
+// Renovate: dependency upgrades as one weekly pull request (spec #48,
+// "Renovate"). Validate an edit with `pnpm renovate:check`; CI runs it on a
+// pull request that changes this file or the root package.json.
+//
+// Installing the Renovate GitHub App on this repository is a human step, the
+// maintainer's (#198): nothing runs until it is installed. With this file on
+// master, the App opens no onboarding pull request, only its Dependency
+// Dashboard issue.
+//
+// A Renovate pull request needs no changeset: a package's dependencies are
+// `catalog:` or `workspace:` references, or peer ranges and `engines`, which
+// Renovate leaves alone below. An upgrade changes only pnpm-workspace.yaml,
+// pnpm-lock.yaml, the root package.json, .node-version and .github/, never a
+// file inside a publishable package. A catalog range a package publishes is
+// the exception the notes below flag.
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:recommended",
+    // Actions stay pinned to a commit with the full version in the trailing
+    // `# vX.Y.Z` comment, which Renovate rewrites with the digest.
+    "helpers:pinGitHubActionDigestsToSemver",
+  ],
+  // Early Monday, UTC.
+  schedule: ["* 0-3 * * 1"],
+  lockFileMaintenance: {
+    enabled: true,
+    schedule: ["* 0-3 * * 1"],
+  },
+  // TypeScript follows typescript-to-lua's exact peer dependency and moves
+  // only by hand, with typescript-to-lua (ADR 0002).
+  ignoreDeps: ["typescript"],
+  packageRules: [
+    // Every non-major update in one pull request, lua-types and
+    // lua-wasm-bindings included; each major stays its own (monorepo
+    // packages share one, from config:recommended).
+    {
+      matchUpdateTypes: ["minor", "patch", "digest", "pin", "pinDigest"],
+      groupName: "all non-major dependencies",
+      groupSlug: "all-minor-patch",
+    },
+    // A peer range and `engines` are part of a package's published contract:
+    // moved by hand, with a changeset.
+    {
+      matchDepTypes: ["peerDependencies", "engines"],
+      enabled: false,
+    },
+    // The Node major (.node-version) is a decision, and the major of
+    // @types/node follows it (the catalog says so): both move by hand.
+    {
+      matchPackageNames: ["@types/node"],
+      matchUpdateTypes: ["major"],
+      enabled: false,
+    },
+    {
+      matchManagers: ["nodenv"],
+      matchUpdateTypes: ["major"],
+      enabled: false,
+    },
+    // Renovate reads the `version` input of the actionlint action, but
+    // actionlint's version is bumped by hand, in ci.yml and
+    // release/src/actionlint.ts together: the checksums pinned there change
+    // with it, and Renovate cannot compute them.
+    {
+      matchManagers: ["github-actions"],
+      matchDepTypes: ["uses-with"],
+      matchDepNames: ["actionlint"],
+      enabled: false,
+    },
+    // Catalog entries a publishable package declares as a dependency or a
+    // peer: pnpm writes the catalog's range into the package at publish, so
+    // a new range (a major, or any out-of-range update of a 0.x) changes what
+    // that package ships, which release:check-changeset cannot see.
+    {
+      matchPackageNames: [
+        "lua-types",
+        "lua-wasm-bindings",
+        "typescript-to-lua",
+        "vitest",
+        "@typescript-eslint/utils",
+      ],
+      matchUpdateTypes: ["major"],
+      prBodyNotes: [
+        "**`{{depName}}` changes the range a published package declares** (reforged-types, reforged-test or eslint-plugin-reforged, through the catalog): add a changeset naming that package before merging.",
+      ],
+    },
+    {
+      matchPackageNames: ["lua-wasm-bindings"],
+      matchUpdateTypes: ["minor"],
+      prBodyNotes: [
+        "**`lua-wasm-bindings` changes the range reforged-test declares** if the catalog's `^0.x` range moved here: add a changeset naming reforged-test before merging.",
+      ],
+    },
+    // After the group rule, so it wins: typescript-to-lua apart, for its
+    // TypeScript pin.
+    {
+      matchPackageNames: [
+        "typescript-to-lua",
+        "@typescript-to-lua/language-extensions",
+      ],
+      groupName: "typescript-to-lua",
+      prBodyNotes: [
+        "**TypeScript moves by hand, in this pull request.** Renovate ignores `typescript` (ADR 0002): set the `typescript` entry of the catalog in `pnpm-workspace.yaml` to the exact version the new typescript-to-lua's peer dependency names (`pnpm view typescript-to-lua@<version> peerDependencies`), run `pnpm install` and `pnpm check`, and push the catalog and the lockfile to this branch before merging.",
+      ],
+    },
+  ],
+  customManagers: [
+    // The validator's version in the root `renovate:check` script.
+    {
+      customType: "regex",
+      managerFilePatterns: ["/^package\\.json$/"],
+      matchStrings: ["renovate@(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
+      depNameTemplate: "renovate",
+      datasourceTemplate: "npm",
+    },
+  ],
+}

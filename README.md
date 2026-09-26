@@ -39,6 +39,7 @@ Run from the root after `pnpm install`:
 | `pnpm patch-watch:plan`   | Prints whether jass-history tags a live Patch newer than the supported one, and why each other tag is ignored. Changes nothing.                                                            |
 | `pnpm patch-watch:report` | Renders, from a saved plan, the issue and the draft pull request the Patch watch opens; the pull request's body is the generator's output as the curation checklist.                       |
 | `pnpm repo:settings`      | The maintainer's: applies the ruleset on `master`, the merge settings, the Pages source and the labels with an administrator's `gh` login. `--dry-run` prints the requests and sends none. |
+| `pnpm renovate:check`     | Renovate's validator on `renovate.json5`, at the Renovate version the script pins; `pnpm dlx` downloads it on first use, so nothing is installed.                                          |
 
 `pnpm check` green is what done means, for a contributor and for an agent. A package's other scripts run from the root with `pnpm --filter <package> <script>`, for example `pnpm --filter reforged-types verify`.
 
