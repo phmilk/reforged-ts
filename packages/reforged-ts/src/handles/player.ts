@@ -254,6 +254,14 @@ export class MapPlayer extends Handle<player> {
     SetPlayerOnScoreScreen(this.handle, flag);
   }
 
+  /**
+   * Sets the player's race skin, such as `RACE_PREF_FORSAKEN`, through
+   * `SetPlayerRaceSkin` (3.0.0).
+   */
+  public setRaceSkin(pref: racepreference) {
+    SetPlayerRaceSkin(this.handle, pref);
+  }
+
   public setState(whichPlayerState: playerstate, value: number) {
     SetPlayerState(this.handle, whichPlayerState, value);
   }

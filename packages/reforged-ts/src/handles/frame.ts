@@ -335,6 +335,15 @@ export class Frame extends Handle<framehandle> {
     return this;
   }
 
+  /**
+   * Whether the text area scrolls to its last line as text is added, through
+   * `BlzTextAreaFrameSetAutoScroll` (3.0.0).
+   */
+  public setTextAreaAutoScroll(value: boolean) {
+    BlzTextAreaFrameSetAutoScroll(this.handle, value);
+    return this;
+  }
+
   public setTextColor(color: number) {
     BlzFrameSetTextColor(this.handle, color);
     return this;
@@ -377,6 +386,26 @@ export class Frame extends Handle<framehandle> {
 
   public static autoPosition(enable: boolean) {
     BlzEnableUIAutoPosition(enable);
+  }
+
+  /**
+   * The horizontal position in pixels of the local screen for a position in
+   * frame units, through `BlzFrameToPixelX` (3.0.0). It depends on the local
+   * resolution, so it differs between clients.
+   * @async
+   */
+  public static frameToPixelX(frameX: number) {
+    return BlzFrameToPixelX(frameX);
+  }
+
+  /**
+   * The vertical position in pixels of the local screen for a position in
+   * frame units, through `BlzFrameToPixelY` (3.0.0). It depends on the local
+   * resolution, so it differs between clients.
+   * @async
+   */
+  public static frameToPixelY(frameY: number) {
+    return BlzFrameToPixelY(frameY);
   }
 
   public static fromEvent(): Frame | undefined {
@@ -443,5 +472,25 @@ export class Frame extends Handle<framehandle> {
 
   public static loadTOC(filename: string) {
     return BlzLoadTOCFile(filename);
+  }
+
+  /**
+   * The horizontal position in frame units for a position in pixels of the
+   * local screen, through `BlzPixelToFrameX` (3.0.0). It depends on the local
+   * resolution, so it differs between clients.
+   * @async
+   */
+  public static pixelToFrameX(pixelX: number) {
+    return BlzPixelToFrameX(pixelX);
+  }
+
+  /**
+   * The vertical position in frame units for a position in pixels of the
+   * local screen, through `BlzPixelToFrameY` (3.0.0). It depends on the local
+   * resolution, so it differs between clients.
+   * @async
+   */
+  public static pixelToFrameY(pixelY: number) {
+    return BlzPixelToFrameY(pixelY);
   }
 }
