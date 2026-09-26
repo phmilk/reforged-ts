@@ -14,7 +14,7 @@
 // assertions of the test still hold.
 
 /** A global the Typings declare as a function: a Native. */
-type NativeName = {
+export type NativeName = {
   [K in keyof typeof globalThis]: (typeof globalThis)[K] extends (
     ...args: never[]
   ) => unknown

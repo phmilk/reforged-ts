@@ -5,6 +5,7 @@ import { runLocalGuarded } from "../reforged/local";
 import type { Force } from "./force";
 import { Handle } from "./handle";
 import type { Point } from "./point";
+import type { Rectangle } from "./rect";
 
 /**
  * A player slot. Players are not created: the game has one per slot, and
@@ -13,6 +14,11 @@ import type { Point } from "./point";
  * the subclass.
  */
 export class MapPlayer extends Handle<player> {
+  /** The difficulty of the player's computer AI, through `GetAIDifficulty`. */
+  public get aiDifficulty() {
+    return GetAIDifficulty(this.handle);
+  }
+
   public set color(color: playercolor) {
     SetPlayerColor(this.handle, color);
   }
@@ -25,12 +31,32 @@ export class MapPlayer extends Handle<player> {
     return GetPlayerController(this.handle);
   }
 
+  public set controller(controlType: mapcontrol) {
+    SetPlayerController(this.handle, controlType);
+  }
+
   public get handicap() {
     return GetPlayerHandicap(this.handle);
   }
 
   public set handicap(handicap: number) {
     SetPlayerHandicap(this.handle, handicap);
+  }
+
+  public get handicapDamage() {
+    return GetPlayerHandicapDamage(this.handle);
+  }
+
+  public set handicapDamage(handicap: number) {
+    SetPlayerHandicapDamage(this.handle, handicap);
+  }
+
+  public get handicapReviveTime() {
+    return GetPlayerHandicapReviveTime(this.handle);
+  }
+
+  public set handicapReviveTime(handicap: number) {
+    SetPlayerHandicapReviveTime(this.handle, handicap);
   }
 
   public get handicapXp() {
@@ -61,8 +87,13 @@ export class MapPlayer extends Handle<player> {
     return GetPlayerSlotState(this.handle);
   }
 
+  /** The index of the player's start location. */
   public get startLocation() {
     return GetPlayerStartLocation(this.handle);
+  }
+
+  public set startLocation(startLocIndex: number) {
+    SetPlayerStartLocation(this.handle, startLocIndex);
   }
 
   public get startLocationX() {
@@ -79,6 +110,15 @@ export class MapPlayer extends Handle<player> {
 
   public get team() {
     return GetPlayerTeam(this.handle);
+  }
+
+  public set team(whichTeam: number) {
+    SetPlayerTeam(this.handle, whichTeam);
+  }
+
+  /** The player's score in a tournament game, through `GetTournamentScore`. */
+  public get tournamentScore() {
+    return GetTournamentScore(this.handle);
   }
 
   public get townHallCount() {
@@ -103,6 +143,14 @@ export class MapPlayer extends Handle<player> {
    */
   public cacheHeroData() {
     CachePlayerHeroData(this.handle);
+  }
+
+  /**
+   * Sends a command to the player's AI script, which reads it with
+   * `GetLastCommand` and `GetLastData`.
+   */
+  public commandAI(command: number, data: number) {
+    CommandAI(this.handle, command, data);
   }
 
   public compareAlliance(
@@ -138,6 +186,56 @@ export class MapPlayer extends Handle<player> {
    */
   public cripple(toWhichPlayers: Force, flag: boolean) {
     CripplePlayer(this.handle, toWhichPlayers.handle, flag);
+  }
+
+  /**
+   * Shows `message` in the chat log of the player, as a chat message the
+   * player sent to `recipient`, through `BlzDisplayChatMessage`.
+   */
+  public displayChatMessage(recipient: number, message: string) {
+    BlzDisplayChatMessage(this.handle, recipient, message);
+  }
+
+  /**
+   * Shows `message` on the player's screen at the offset `x`, `y`, through
+   * `DisplayTextToPlayer`. The game formats the string: a lone `%` garbles
+   * it.
+   */
+  public displayText(x: number, y: number, message: string) {
+    DisplayTextToPlayer(this.handle, x, y, message);
+  }
+
+  /**
+   * Shows `message` on the player's screen for `duration` seconds, through
+   * `DisplayTimedTextToPlayer`. The game formats the string: a lone `%`
+   * garbles it.
+   */
+  public displayTimedText(
+    x: number,
+    y: number,
+    duration: number,
+    message: string,
+  ) {
+    DisplayTimedTextToPlayer(this.handle, x, y, duration, message);
+  }
+
+  /**
+   * Shows `message` on the player's screen for `duration` seconds, through
+   * `DisplayTimedTextFromPlayer`. The game formats the string: a lone `%`
+   * garbles it, and jassdoc reports that a `%s` shows garbage or, in Lua,
+   * crashes the game.
+   */
+  public displayTimedTextFrom(
+    x: number,
+    y: number,
+    duration: number,
+    message: string,
+  ) {
+    DisplayTimedTextFromPlayer(this.handle, x, y, duration, message);
+  }
+
+  public forceStartLocation(startLocIndex: number) {
+    ForcePlayerStartLocation(this.handle, startLocIndex);
   }
 
   public getScore(whichPlayerScore: playerscore) {
@@ -213,6 +311,10 @@ export class MapPlayer extends Handle<player> {
     return GetPlayerSelectable(this.handle);
   }
 
+  public pauseCompAI(pause: boolean) {
+    PauseCompAI(this.handle, pause);
+  }
+
   public pointFogged(whichPoint: Point) {
     return IsLocationFoggedToPlayer(whichPoint.handle, this.handle);
   }
@@ -237,6 +339,29 @@ export class MapPlayer extends Handle<player> {
     SetPlayerAbilityAvailable(this.handle, abilId, avail);
   }
 
+  /** Adds or removes blight in a circle, through `SetBlight`. */
+  public setBlight(x: number, y: number, radius: number, addBlight: boolean) {
+    SetBlight(this.handle, x, y, radius, addBlight);
+  }
+
+  /**
+   * Adds or removes blight in a circle around `where`, through
+   * `SetBlightLoc`.
+   */
+  public setBlightLoc(where: Point, radius: number, addBlight: boolean) {
+    SetBlightLoc(this.handle, where.handle, radius, addBlight);
+  }
+
+  /** Adds or removes blight at one point, through `SetBlightPoint`. */
+  public setBlightPoint(x: number, y: number, addBlight: boolean) {
+    SetBlightPoint(this.handle, x, y, addBlight);
+  }
+
+  /** Adds or removes blight over `where`, through `SetBlightRect`. */
+  public setBlightRect(where: Rectangle, addBlight: boolean) {
+    SetBlightRect(this.handle, where.handle, addBlight);
+  }
+
   public setAlliance(
     otherPlayer: MapPlayer,
     whichAllianceSetting: alliancetype,
@@ -250,8 +375,69 @@ export class MapPlayer extends Handle<player> {
     );
   }
 
+  /**
+   * Sets the fog state over a circle for the player, through
+   * `SetFogStateRadius`.
+   */
+  public setFogStateRadius(
+    whichState: fogstate,
+    centerX: number,
+    centerY: number,
+    radius: number,
+    useSharedVision: boolean,
+  ) {
+    SetFogStateRadius(
+      this.handle,
+      whichState,
+      centerX,
+      centerY,
+      radius,
+      useSharedVision,
+    );
+  }
+
+  /**
+   * Sets the fog state over a circle around `center` for the player, through
+   * `SetFogStateRadiusLoc`.
+   */
+  public setFogStateRadiusLoc(
+    whichState: fogstate,
+    center: Point,
+    radius: number,
+    useSharedVision: boolean,
+  ) {
+    SetFogStateRadiusLoc(
+      this.handle,
+      whichState,
+      center.handle,
+      radius,
+      useSharedVision,
+    );
+  }
+
+  /**
+   * Sets the fog state over `where` for the player, through
+   * `SetFogStateRect`.
+   */
+  public setFogStateRect(
+    whichState: fogstate,
+    where: Rectangle,
+    useSharedVision: boolean,
+  ) {
+    SetFogStateRect(this.handle, whichState, where.handle, useSharedVision);
+  }
+
   public setOnScoreScreen(flag: boolean) {
     SetPlayerOnScoreScreen(this.handle, flag);
+  }
+
+  public setRacePreference(whichRacePreference: racepreference) {
+    SetPlayerRacePreference(this.handle, whichRacePreference);
+  }
+
+  /** Sets whether the player may choose a race; `isSelectable` reads it. */
+  public setRaceSelectable(value: boolean) {
+    SetPlayerRaceSelectable(this.handle, value);
   }
 
   /**
@@ -286,6 +472,24 @@ export class MapPlayer extends Handle<player> {
     SetPlayerUnitsOwner(this.handle, newOwner);
   }
 
+  /** Starts the campaign AI script `script` for the player. */
+  public startCampaignAI(script: string) {
+    StartCampaignAI(this.handle, script);
+  }
+
+  /** Starts the melee AI script `script` for the player. */
+  public startMeleeAI(script: string) {
+    StartMeleeAI(this.handle, script);
+  }
+
+  /**
+   * The player detecting a unit, or undefined outside a detection event,
+   * through `GetEventDetectingPlayer`.
+   */
+  public static fromDetecting(): MapPlayer | undefined {
+    return this.fromHandle(GetEventDetectingPlayer());
+  }
+
   public static fromEnum(): MapPlayer | undefined {
     return this.fromHandle(GetEnumPlayer());
   }
@@ -316,6 +520,30 @@ export class MapPlayer extends Handle<player> {
    */
   public static fromLocal(): MapPlayer {
     return this.expectFound(GetLocalPlayer());
+  }
+
+  /**
+   * The owner a unit had before an ownership change, or undefined outside
+   * one, through `GetChangingUnitPrevOwner`.
+   */
+  public static fromPreviousOwner(): MapPlayer | undefined {
+    return this.fromHandle(GetChangingUnitPrevOwner());
+  }
+
+  /**
+   * The player who ended a tournament game early, or undefined outside that
+   * event, through `GetTournamentFinishNowPlayer`.
+   */
+  public static fromTournamentFinishNow(): MapPlayer | undefined {
+    return this.fromHandle(GetTournamentFinishNowPlayer());
+  }
+
+  /**
+   * The winning player, or undefined outside a victory event, through
+   * `GetWinningPlayer`.
+   */
+  public static fromWinning(): MapPlayer | undefined {
+    return this.fromHandle(GetWinningPlayer());
   }
 
   /**

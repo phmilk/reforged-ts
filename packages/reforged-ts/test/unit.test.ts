@@ -19,6 +19,7 @@ import {
 } from "../src/index";
 import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
+import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -624,3 +625,178 @@ describe("Unit equipment and bag", () => {
     expect(stubCalls()).toContainCall(`UnitItemInBagSlot(${unitRef}, 4)`);
   });
 });
+
+// The unit-creating Natives #173 closed as Unit statics, and the neutral
+// order Natives it closed as members on the neutral structure, one case
+// each. A creation case returns the created Wrapper's handle: the one its
+// Native answered.
+{
+  const shop = Unit.create(owner, FourCC("ngme"), 0, 0);
+  const shopRef = handleRef("unit", shop.handle);
+  const buyer = defined(MapPlayer.fromIndex(3), "MapPlayer.fromIndex(3)");
+  const buyerRef = handleRef("player", buyer.handle);
+  const ownerRef = handleRef("player", owner.handle);
+  const target = Unit.create(owner, footman, 64, 64);
+  const targetRef = handleRef("unit", target.handle);
+  const where = Point.create(128, -256);
+  const whereRef = handleRef("location", where.handle);
+  const created = defined(
+    CreateUnit(owner.handle, footman, 0, 0, 0),
+    "CreateUnit",
+  );
+
+  describeNatives("Unit creation statics", [
+    nativeCase({
+      native: "CreateUnitByName",
+      answer: () => created,
+      member: () => Unit.createByName(owner, "footman", 10, 20, 90).handle,
+      line: `CreateUnitByName(${ownerRef}, "footman", 10, 20, 90)`,
+      returns: created,
+    }),
+    nativeCase({
+      native: "CreateUnitAtLoc",
+      answer: () => created,
+      member: () => Unit.createAtPoint(owner, footman, where, 45).handle,
+      line: `CreateUnitAtLoc(${ownerRef}, 1751543663, ${whereRef}, 45)`,
+      returns: created,
+    }),
+    nativeCase({
+      native: "CreateUnitAtLocByName",
+      answer: () => created,
+      member: () => Unit.createAtPointByName(owner, "footman", where).handle,
+      line: `CreateUnitAtLocByName(${ownerRef}, "footman", ${whereRef}, 270.0)`,
+      returns: created,
+    }),
+    nativeCase({
+      native: "CreateCorpse",
+      answer: () => created,
+      member: () => Unit.createCorpse(owner, footman, -5, 6, 180).handle,
+      line: `CreateCorpse(${ownerRef}, 1751543663, -5, 6, 180)`,
+      returns: created,
+    }),
+    nativeCase({
+      native: "CreateBlightedGoldmine",
+      answer: () => created,
+      member: () => Unit.createBlightedGoldmine(owner, 512, 768, 0).handle,
+      line: `CreateBlightedGoldmine(${ownerRef}, 512, 768, 0)`,
+      returns: created,
+    }),
+  ]);
+
+  describe("Unit creation statics when their Native returns nil", () => {
+    const failures = [
+      [
+        "CreateUnitByName",
+        " (footman)",
+        () => {
+          Unit.createByName(owner, "footman", 0, 0);
+        },
+      ],
+      [
+        "CreateUnitAtLoc",
+        " (hfoo)",
+        () => {
+          Unit.createAtPoint(owner, footman, where);
+        },
+      ],
+      [
+        "CreateUnitAtLocByName",
+        " (footman)",
+        () => {
+          Unit.createAtPointByName(owner, "footman", where);
+        },
+      ],
+      [
+        "CreateCorpse",
+        " (hfoo)",
+        () => {
+          Unit.createCorpse(owner, footman, 0, 0);
+        },
+      ],
+      [
+        "CreateBlightedGoldmine",
+        "",
+        () => {
+          Unit.createBlightedGoldmine(owner, 0, 0);
+        },
+      ],
+    ] as const;
+
+    for (const [native, detail, create] of failures) {
+      it(`throw at the caller's line when ${native} returns nil`, () => {
+        const message = withNative(
+          native,
+          () => undefined,
+          () => raisedIn(create),
+        );
+        expect(message).toEqual(`reforged-ts: failed to create Unit${detail}`);
+      });
+    }
+  });
+
+  describeNatives("Unit neutral orders", [
+    nativeCase({
+      native: "IssueNeutralImmediateOrder",
+      answer: () => true,
+      member: () => shop.issueNeutralImmediateOrder(buyer, "footman"),
+      line: `IssueNeutralImmediateOrder(${buyerRef}, ${shopRef}, "footman")`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "IssueNeutralImmediateOrderById",
+      answer: () => false,
+      member: () => shop.issueNeutralImmediateOrder(buyer, footman),
+      line: `IssueNeutralImmediateOrderById(${buyerRef}, ${shopRef}, 1751543663)`,
+      returns: false,
+    }),
+    nativeCase({
+      native: "IssueNeutralPointOrder",
+      answer: () => true,
+      member: () => shop.issueNeutralPointOrder(buyer, "footman", 32, 48),
+      line: `IssueNeutralPointOrder(${buyerRef}, ${shopRef}, "footman", 32, 48)`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "IssueNeutralPointOrderById",
+      answer: () => true,
+      member: () => shop.issueNeutralPointOrder(buyer, footman, -32, 48),
+      line: `IssueNeutralPointOrderById(${buyerRef}, ${shopRef}, 1751543663, -32, 48)`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "IssueNeutralTargetOrder",
+      answer: () => true,
+      member: () => shop.issueNeutralTargetOrder(buyer, "footman", target),
+      line: `IssueNeutralTargetOrder(${buyerRef}, ${shopRef}, "footman", ${targetRef})`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "IssueNeutralTargetOrderById",
+      answer: () => false,
+      member: () => shop.issueNeutralTargetOrder(buyer, footman, target),
+      line: `IssueNeutralTargetOrderById(${buyerRef}, ${shopRef}, 1751543663, ${targetRef})`,
+      returns: false,
+    }),
+    nativeCase({
+      native: "BlzQueueNeutralImmediateOrderById",
+      answer: () => true,
+      member: () => shop.queueNeutralImmediateOrder(buyer, footman),
+      line: `BlzQueueNeutralImmediateOrderById(${buyerRef}, ${shopRef}, 1751543663)`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "BlzQueueNeutralPointOrderById",
+      answer: () => true,
+      member: () => shop.queueNeutralPointOrder(buyer, footman, 16, -16),
+      line: `BlzQueueNeutralPointOrderById(${buyerRef}, ${shopRef}, 1751543663, 16, -16)`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "BlzQueueNeutralTargetOrderById",
+      answer: () => false,
+      member: () => shop.queueNeutralTargetOrder(buyer, footman, target),
+      line: `BlzQueueNeutralTargetOrderById(${buyerRef}, ${shopRef}, 1751543663, ${targetRef})`,
+      returns: false,
+    }),
+  ]);
+}
