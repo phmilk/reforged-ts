@@ -10,11 +10,7 @@
 -- The game's constants the registration Natives take and the event response
 -- Natives answer with, per kind in the order the Typings declare them: opaque
 -- values a test compares by identity, rendered by name in the call log.
-local function constants(kind, names)
-  for i = 1, #names do
-    _G[names[i]] = __stub_constant(kind, names[i])
-  end
-end
+local constants = __stub_constants
 
 constants("playerunitevent", {
   "EVENT_PLAYER_UNIT_ATTACKED", "EVENT_PLAYER_UNIT_RESCUED", "EVENT_PLAYER_UNIT_DEATH",
@@ -135,6 +131,7 @@ constants("weapontype", {
   "WEAPON_TYPE_WOOD_MEDIUM_STAB", "WEAPON_TYPE_CLAW_LIGHT_SLICE", "WEAPON_TYPE_CLAW_MEDIUM_SLICE",
   "WEAPON_TYPE_CLAW_HEAVY_SLICE", "WEAPON_TYPE_AXE_MEDIUM_CHOP", "WEAPON_TYPE_ROCK_HEAVY_BASH",
 })
+constants("mousebuttontype", { "MOUSE_BUTTON_TYPE_LEFT", "MOUSE_BUTTON_TYPE_MIDDLE", "MOUSE_BUTTON_TYPE_RIGHT" })
 constants("oskeytype", {
   "OSKEY_BACKSPACE", "OSKEY_TAB", "OSKEY_CLEAR", "OSKEY_RETURN", "OSKEY_SHIFT", "OSKEY_CONTROL",
   "OSKEY_ALT", "OSKEY_PAUSE", "OSKEY_CAPSLOCK", "OSKEY_KANA", "OSKEY_HANGUL", "OSKEY_JUNJA",

@@ -73,6 +73,14 @@ function __stub_constant(kind, name)
   return { __kind = kind, __name = name }
 end
 
+-- Defines one global constant of `kind` per name in `names`, each named after
+-- itself: a family of the game's constants in one call.
+function __stub_constants(kind, names)
+  for i = 1, #names do
+    _G[names[i]] = __stub_constant(kind, names[i])
+  end
+end
+
 -- The firing context: while a firing helper runs, the value each response
 -- Native (GetTriggerUnit, GetExpiredTimer) answers with, keyed by the
 -- Native's name. nil outside a firing, where every response Native answers
