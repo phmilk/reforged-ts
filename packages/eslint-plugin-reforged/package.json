@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-reforged",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha.0",
   "description": "Type-aware ESLint rules that catch the Warcraft III scripting pitfalls (desync, crash, leak) in reforged-ts Map projects.",
   "license": "MIT",
   "type": "module",
