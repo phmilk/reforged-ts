@@ -23,7 +23,7 @@ export const pluginMeta = {
  * The docs version segment of every rule URL: `reforged.docs` in
  * package.json, always a label, since the plugin cannot know which docs
  * version is the newest: `next` (the working tree) before the first release,
- * then the library's `major.minor`, which the release process stamps. The
+ * then the library's `major.minor`, which the release process stamps (#186). The
  * site answers at `/docs/<label>` for every version it keeps.
  */
 export const docsVersion = packageJson.reforged.docs;

@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type * as Preset from "@docusaurus/preset-classic";
-import { afterAll, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { siteConfig } from "../../config";
 import { WORKSPACE } from "../../scripts/collect.mts";
 import { collect } from "../../scripts/collector.mts";
@@ -59,12 +59,18 @@ function routeOf(path: string, base: string): string {
 
 describe("the lint rule pages", () => {
   let docs: string;
+  beforeAll(async () => {
+    docs = await mkdtemp(join(tmpdir(), "reforged-website-lint-rules-"));
+  });
   afterAll(async () => {
     await rm(docs, { recursive: true, force: true });
   });
 
+  // The routes are the current version's: the plugin links `next` while the
+  // packages are prereleases. Once the release stamps a `major.minor` label
+  // into `reforged.docs` (#186), the label's routes are those of the newest
+  // cut version, which the site answers at `/docs/<label>` (#185).
   it("are served at the URL of every rule's meta.docs.url", async () => {
-    docs = await mkdtemp(join(tmpdir(), "reforged-website-lint-rules-"));
     const report = await collect({ ...WORKSPACE, docs });
     const base = currentDocsUrl();
     const routes = report.collected
@@ -77,8 +83,6 @@ describe("the lint rule pages", () => {
     expect(
       urls.filter((url) => url === undefined || !routes.includes(url)),
     ).toEqual([]);
-    expect(routes).toContain(
-      "https://phmilk.github.io/reforged-ts/docs/next/guides/lint-rules/no-self-recursion",
-    );
+    expect(routes).toContain(`${base}guides/lint-rules/no-self-recursion`);
   });
 });

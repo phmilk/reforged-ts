@@ -26,7 +26,7 @@ Every build generates the API reference first, with TypeDoc, from the library's 
 - `reference.ts`: the API reference, one docusaurus-plugin-typedoc instance per entry of `REFERENCES` (the library: `docs/api/reforged-ts/`, git-ignored, rewritten at every build), and the sidebar generator that puts the sidebar each one writes under its section.
 - `typedoc/`: the site's TypeDoc plugin, which every reference instance loads from source (TypeDoc imports it inside the Docusaurus process, where only Node's own type stripping runs it, without a flag from Node 22.18 on: the package's `engines` floor): the validation gate, and the custom tags of `typedoc/tsdoc.json` when the library has no `tsdoc.json` of its own yet.
 - `scripts/`: the site's Node scripts (`.mts`), run from source by Node's type stripping and type-checked by `scripts/tsconfig.json`.
-- `test/`: the site's tests, the `website` project of the root vitest configuration (`pnpm test`): the scripts' tests on fixture repositories they write to a temporary folder, and under `test/reference/` the reference tests (their own `tsconfig.json`, the site's compiler options) on the fixture library of `test/reference/fixtures/`.
+- `test/`: the site's tests, the `website` project of the root vitest configuration (`pnpm test`): the scripts' tests on fixture repositories they write to a temporary folder, under `test/reference/` the reference tests (their own `tsconfig.json`, the site's compiler options) on the fixture library of `test/reference/fixtures/`, and under `test/site/` the tests of the site's configuration with what the collector writes (their own `tsconfig.json`, the same options): every lint rule's `meta.docs.url`, from the plugin's sources, is the route of a collected page.
 
 ## Collected pages
 

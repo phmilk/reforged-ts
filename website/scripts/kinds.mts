@@ -237,7 +237,8 @@ export function lintRules(options: LintRulesOptions): Source {
     outputs: [to],
     async collect({ root }) {
       const rules = registeredRules(
-        await readText(root, registry).catch(() => {
+        await readText(root, registry).catch((error: unknown) => {
+          if (!isMissing(error)) throw error;
           throw new SourceError(`\`${registry}\` does not exist.`);
         }),
       );
@@ -322,6 +323,11 @@ function registeredRules(registry: string): string[] {
   return [
     ...registry.matchAll(/^import\s+\w+\s+from\s+"\.\/([\w-]+)\.js";?$/gm),
   ].flatMap((match) => (match[1] === undefined ? [] : [match[1]]));
+}
+
+/** Whether a file system error says the path does not exist. */
+function isMissing(error: unknown): boolean {
+  return error instanceof Error && "code" in error && error.code === "ENOENT";
 }
 
 /** A rule page's summary: its first paragraph, on one line. */

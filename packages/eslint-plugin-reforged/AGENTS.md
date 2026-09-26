@@ -33,9 +33,9 @@ The tests run from source. They do not need `build`.
 
 - `src/index.ts`: the entry. Its default export is `createPlugin()`.
 - `src/plugin.ts`: `createPlugin` builds `meta`, `rules` and `configs.recommended` from the registry.
-- `src/rules/index.ts`: the registry, one line per rule, sorted by name.
+- `src/rules/index.ts`: the registry, one line per rule, sorted by name. The docs site's `docs:collect` reads its rules from the `import <name> from "./<rule>.js";` lines, the file name being the rule's name: keep that form.
 - `src/rules/<rule>.ts`: one file per rule. Its default export is a `RuleEntry` (`src/rule-entry.ts`) with the name, the severity and a `create(data)` factory.
-- `src/create-rule.ts`: the rule creator. It sets `meta.docs.url` from `src/meta.ts`: `https://phmilk.github.io/reforged-ts/docs/<reforged.docs>/guides/lint-rules/<rule>`, where `reforged.docs` in `package.json` is a docs version label (`next`, then the library's `major.minor`, which the release process stamps).
+- `src/create-rule.ts`: the rule creator. It sets `meta.docs.url` from `src/meta.ts`: `https://phmilk.github.io/reforged-ts/docs/<reforged.docs>/guides/lint-rules/<rule>`, where `reforged.docs` in `package.json` is a docs version label (`next`, then the library's `major.minor`, which the release process stamps from #186 on).
 - `src/classify/`: the shared classification helpers, one module per concept (`package.ts`, `native.ts`, `handle.ts`, `wrapper.ts`, `creation.ts`, `top-level.ts`, ...). Rules never inspect declarations themselves.
 - `src/data/`: loading and shape checks for the data files. `schema.ts` holds the field readers, and there is one parser module per file. `optional.ts` finds a file another package publishes in the linted project's installation. `index.ts` loads them all into `PluginData`.
 - `data/*.json`: the plugin's own data files, shipped.
