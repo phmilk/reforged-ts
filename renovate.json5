@@ -7,12 +7,12 @@
 // master, the App opens no onboarding pull request, only its Dependency
 // Dashboard issue.
 //
-// A Renovate pull request needs no changeset: every package's dependencies
-// are `catalog:` or `workspace:` references, so an upgrade changes only
-// pnpm-workspace.yaml, pnpm-lock.yaml, the root package.json and
-// .github/, never a file inside a publishable package. The two fields that
-// are not catalog references, peer ranges and `engines`, are left alone
-// below.
+// A Renovate pull request needs no changeset: a package's dependencies are
+// `catalog:` or `workspace:` references, or peer ranges and `engines`, which
+// Renovate leaves alone below. An upgrade changes only pnpm-workspace.yaml,
+// pnpm-lock.yaml, the root package.json, .node-version and .github/, never a
+// file inside a publishable package. A catalog range a package publishes is
+// the exception the notes below flag.
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: [
@@ -45,9 +45,15 @@
       matchDepTypes: ["peerDependencies", "engines"],
       enabled: false,
     },
-    // The major of @types/node follows .node-version (the catalog says so).
+    // The Node major (.node-version) is a decision, and the major of
+    // @types/node follows it (the catalog says so): both move by hand.
     {
       matchPackageNames: ["@types/node"],
+      matchUpdateTypes: ["major"],
+      enabled: false,
+    },
+    {
+      matchManagers: ["nodenv"],
       matchUpdateTypes: ["major"],
       enabled: false,
     },
@@ -60,6 +66,30 @@
       matchDepTypes: ["uses-with"],
       matchDepNames: ["actionlint"],
       enabled: false,
+    },
+    // Catalog entries a publishable package declares as a dependency or a
+    // peer: pnpm writes the catalog's range into the package at publish, so
+    // a new range (a major, or any out-of-range update of a 0.x) changes what
+    // that package ships, which release:check-changeset cannot see.
+    {
+      matchPackageNames: [
+        "lua-types",
+        "lua-wasm-bindings",
+        "typescript-to-lua",
+        "vitest",
+        "@typescript-eslint/utils",
+      ],
+      matchUpdateTypes: ["major"],
+      prBodyNotes: [
+        "**`{{depName}}` changes the range a published package declares** (reforged-types, reforged-test or eslint-plugin-reforged, through the catalog): add a changeset naming that package before merging.",
+      ],
+    },
+    {
+      matchPackageNames: ["lua-wasm-bindings"],
+      matchUpdateTypes: ["minor"],
+      prBodyNotes: [
+        "**`lua-wasm-bindings` changes the range reforged-test declares** if the catalog's `^0.x` range moved here: add a changeset naming reforged-test before merging.",
+      ],
     },
     // After the group rule, so it wins: typescript-to-lua apart, for its
     // TypeScript pin.
