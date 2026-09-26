@@ -87,6 +87,7 @@ export class GameCache extends Handle<gamecache> {
     return HaveStoredString(this.handle, missionKey, key);
   }
 
+  /** Whether a unit is stored under the key, through `HaveStoredUnit`. */
   public hasUnit(missionKey: string, key: string) {
     return HaveStoredUnit(this.handle, missionKey, key);
   }

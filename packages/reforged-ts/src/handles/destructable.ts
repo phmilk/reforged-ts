@@ -555,7 +555,10 @@ export class Destructable extends Widget {
     ShowDestructable(this.handle, flag);
   }
 
-  /** The destructable an enumeration is at, or undefined outside one. */
+  /**
+   * The destructable an enumeration is at, or undefined outside one, through
+   * `GetEnumDestructable`.
+   */
   public static fromEnum(): Destructable | undefined {
     return this.fromHandle(GetEnumDestructable());
   }
@@ -566,7 +569,7 @@ export class Destructable extends Widget {
 
   /**
    * The destructable an enumeration's filter is at, or undefined outside
-   * one.
+   * one, through `GetFilterDestructable`.
    */
   public static fromFilter(): Destructable | undefined {
     return this.fromHandle(GetFilterDestructable());
@@ -574,7 +577,8 @@ export class Destructable extends Widget {
 
   /**
    * The destructable a target order targets, or undefined outside a target
-   * order or when the target is not a destructable.
+   * order or when the target is not a destructable, through
+   * `GetOrderTargetDestructable`.
    */
   public static fromOrderTarget(): Destructable | undefined {
     return this.fromHandle(GetOrderTargetDestructable());

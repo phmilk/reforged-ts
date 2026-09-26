@@ -87,6 +87,9 @@ export class Point extends Handle<location> {
    * The mouse position of a player mouse event, or undefined outside one,
    * through `BlzGetTriggerPlayerMousePosition`: a lookup, although the game
    * allocates a new location each time it returns one.
+   * @remarks Each call returns a new Point, which the caller owns: `destroy()`
+   * it. Dev mode neither counts it as created nor guards it inside
+   * `MapPlayer.runLocal`.
    */
   public static fromMousePosition(): Point | undefined {
     return this.fromHandle(BlzGetTriggerPlayerMousePosition());
@@ -96,6 +99,9 @@ export class Point extends Handle<location> {
    * The target point of a point order, or undefined outside one, through
    * `GetOrderPointLoc`: a lookup, although the game allocates a new location
    * each time it returns one.
+   * @remarks Each call returns a new Point, which the caller owns: `destroy()`
+   * it. Dev mode neither counts it as created nor guards it inside
+   * `MapPlayer.runLocal`.
    */
   public static fromOrderPoint(): Point | undefined {
     return this.fromHandle(GetOrderPointLoc());
@@ -105,6 +111,9 @@ export class Point extends Handle<location> {
    * The spell's target point, or undefined when the spell targets none,
    * through `GetSpellTargetLoc`: a lookup, although the game allocates a new
    * location each time it returns one.
+   * @remarks Each call returns a new Point, which the caller owns: `destroy()`
+   * it. Dev mode neither counts it as created nor guards it inside
+   * `MapPlayer.runLocal`.
    */
   public static fromSpellTarget(): Point | undefined {
     return this.fromHandle(GetSpellTargetLoc());

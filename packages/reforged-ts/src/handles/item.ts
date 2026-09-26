@@ -350,7 +350,10 @@ export class Item extends Widget {
     return this.fromHandle(BlzGetAbsorbingItem());
   }
 
-  /** The item an enumeration is at, or undefined outside one. */
+  /**
+   * The item an enumeration is at, or undefined outside one, through
+   * `GetEnumItem`.
+   */
   public static fromEnum(): Item | undefined {
     return this.fromHandle(GetEnumItem());
   }
@@ -364,14 +367,17 @@ export class Item extends Widget {
     return this.fromHandle(GetManipulatedItem());
   }
 
-  /** The item an enumeration's filter is at, or undefined outside one. */
+  /**
+   * The item an enumeration's filter is at, or undefined outside one,
+   * through `GetFilterItem`.
+   */
   public static fromFilter(): Item | undefined {
     return this.fromHandle(GetFilterItem());
   }
 
   /**
    * The item a target order targets, or undefined outside a target order or
-   * when the target is not an item.
+   * when the target is not an item, through `GetOrderTargetItem`.
    */
   public static fromOrderTarget(): Item | undefined {
     return this.fromHandle(GetOrderTargetItem());
