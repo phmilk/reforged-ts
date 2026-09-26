@@ -55,6 +55,7 @@ Changes a Map project author migrating from w3ts 3.x notices at run time or in t
 ## Build step 7: Wrappers for the 3.0.0 systems
 
 - **`Destructable.create` takes an options object.** It took the rawcode, x, y, facing, scale, variation and skin in that order; it now takes one object, `Destructable.create({ typeId, x, y })`, with the optional `z`, `face` (0 by default), `scale` (1), `variation` (0), `pitch`, `roll`, `skin`, `color` (a `playercolor`) and `dead`. The options given pick one of the game's 32 creation Natives: `dead: true` creates a dead destructable, `z` places it at that height (what `createZ`, now removed, did), `pitch` or `roll` tilts it with the absent one 0, `skin` gives it a skin and `color` a team colour. Positional arguments are a type error. It still throws `reforged-ts: failed to create Destructable (<rawcode>)` at the calling line when the game creates nothing.
+- **`unit.removeType` removes the unit type.** In w3ts 3.x it called `UnitAddType`, so it added the unit type it was asked to remove. It now calls `UnitRemoveType` and returns its answer.
 
 ## Runtime Guards
 

@@ -4,8 +4,8 @@
   "totals": {
     "natives": 1681,
     "owned": 984,
-    "covered": 910,
-    "missing": 74,
+    "covered": 953,
+    "missing": 31,
     "excluded": 0,
     "unowned": 697
   },
@@ -16,11 +16,18 @@
       "type": "widget",
       "counts": {
         "owned": 7,
-        "covered": 5,
-        "missing": 2,
+        "covered": 7,
+        "missing": 0,
         "excluded": 0
       },
       "covered": [
+        {
+          "name": "GetOrderTarget",
+          "signature": "GetOrderTarget takes nothing returns widget",
+          "coveredBy": [
+            "Widget"
+          ]
+        },
         {
           "name": "GetWidgetLife",
           "signature": "GetWidgetLife takes widget whichWidget returns real",
@@ -55,18 +62,16 @@
           "coveredBy": [
             "Widget"
           ]
-        }
-      ],
-      "missing": [
-        {
-          "name": "GetOrderTarget",
-          "signature": "GetOrderTarget takes nothing returns widget"
         },
         {
           "name": "AddIndicator",
-          "signature": "AddIndicator takes widget whichWidget, integer red, integer green, integer blue, integer alpha returns nothing"
+          "signature": "AddIndicator takes widget whichWidget, integer red, integer green, integer blue, integer alpha returns nothing",
+          "coveredBy": [
+            "Widget"
+          ]
         }
       ],
+      "missing": [],
       "excluded": []
     },
     {
@@ -74,8 +79,8 @@
       "type": "unit",
       "counts": {
         "owned": 312,
-        "covered": 271,
-        "missing": 41,
+        "covered": 312,
+        "missing": 0,
         "excluded": 0
       },
       "covered": [
@@ -115,8 +120,43 @@
           ]
         },
         {
+          "name": "GetLearningUnit",
+          "signature": "GetLearningUnit takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "GetRevivableUnit",
+          "signature": "GetRevivableUnit takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "GetRevivingUnit",
+          "signature": "GetRevivingUnit takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
           "name": "GetAttacker",
           "signature": "GetAttacker takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "GetRescuer",
+          "signature": "GetRescuer takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "GetDyingUnit",
+          "signature": "GetDyingUnit takes nothing returns unit",
           "coveredBy": [
             "Unit"
           ]
@@ -129,6 +169,27 @@
           ]
         },
         {
+          "name": "GetDecayingUnit",
+          "signature": "GetDecayingUnit takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "GetConstructingStructure",
+          "signature": "GetConstructingStructure takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "GetCancelledStructure",
+          "signature": "GetCancelledStructure takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
           "name": "GetConstructedStructure",
           "signature": "GetConstructedStructure takes nothing returns unit",
           "coveredBy": [
@@ -136,8 +197,22 @@
           ]
         },
         {
+          "name": "GetResearchingUnit",
+          "signature": "GetResearchingUnit takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
           "name": "GetTrainedUnit",
           "signature": "GetTrainedUnit takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "GetDetectedUnit",
+          "signature": "GetDetectedUnit takes nothing returns unit",
           "coveredBy": [
             "Unit"
           ]
@@ -171,8 +246,36 @@
           ]
         },
         {
+          "name": "GetSellingUnit",
+          "signature": "GetSellingUnit takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "GetSoldUnit",
+          "signature": "GetSoldUnit takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "GetBuyingUnit",
+          "signature": "GetBuyingUnit takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
           "name": "GetChangingUnit",
           "signature": "GetChangingUnit takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "GetManipulatingUnit",
+          "signature": "GetManipulatingUnit takes nothing returns unit",
           "coveredBy": [
             "Unit"
           ]
@@ -187,6 +290,13 @@
         {
           "name": "GetOrderTargetUnit",
           "signature": "GetOrderTargetUnit takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "GetSpellAbilityUnit",
+          "signature": "GetSpellAbilityUnit takes nothing returns unit",
           "coveredBy": [
             "Unit"
           ]
@@ -208,6 +318,13 @@
         {
           "name": "GetEventDamageSource",
           "signature": "GetEventDamageSource takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "GetEventTargetUnit",
+          "signature": "GetEventTargetUnit takes nothing returns unit",
           "coveredBy": [
             "Unit"
           ]
@@ -271,6 +388,13 @@
         {
           "name": "SetUnitFacing",
           "signature": "SetUnitFacing takes unit whichUnit, real facingAngle returns nothing",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "SetUnitFacingTimed",
+          "signature": "SetUnitFacingTimed takes unit whichUnit, real facingAngle, real duration returns nothing",
           "coveredBy": [
             "Unit"
           ]
@@ -1054,6 +1178,13 @@
           ]
         },
         {
+          "name": "IsUnitOwnedByPlayer",
+          "signature": "IsUnitOwnedByPlayer takes unit whichUnit, player whichPlayer returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
           "name": "IsUnitAlly",
           "signature": "IsUnitAlly takes unit whichUnit, player whichPlayer returns boolean",
           "coveredBy": [
@@ -1075,6 +1206,20 @@
           ]
         },
         {
+          "name": "IsUnitDetected",
+          "signature": "IsUnitDetected takes unit whichUnit, player whichPlayer returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "IsUnitInvisible",
+          "signature": "IsUnitInvisible takes unit whichUnit, player whichPlayer returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
           "name": "IsUnitFogged",
           "signature": "IsUnitFogged takes unit whichUnit, player whichPlayer returns boolean",
           "coveredBy": [
@@ -1091,6 +1236,13 @@
         {
           "name": "IsUnitSelected",
           "signature": "IsUnitSelected takes unit whichUnit, player whichPlayer returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "IsUnitRace",
+          "signature": "IsUnitRace takes unit whichUnit, race whichRace returns boolean",
           "coveredBy": [
             "Unit"
           ]
@@ -1175,6 +1327,13 @@
         {
           "name": "UnitAddType",
           "signature": "UnitAddType takes unit whichUnit, unittype whichUnitType returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "UnitRemoveType",
+          "signature": "UnitRemoveType takes unit whichUnit, unittype whichUnitType returns boolean",
           "coveredBy": [
             "Unit"
           ]
@@ -1565,6 +1724,13 @@
           ]
         },
         {
+          "name": "CreateMinimapIconOnUnit",
+          "signature": "CreateMinimapIconOnUnit takes unit whichUnit, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
           "name": "SetCameraTargetController",
           "signature": "SetCameraTargetController takes unit whichUnit, real xoffset, real yoffset, boolean inheritOrientation returns nothing",
           "coveredBy": [
@@ -1880,6 +2046,13 @@
           ]
         },
         {
+          "name": "BlzGetMouseFocusUnit",
+          "signature": "BlzGetMouseFocusUnit takes nothing returns unit",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
           "name": "BlzGetUnitAbility",
           "signature": "BlzGetUnitAbility takes unit whichUnit, integer abilId returns ability",
           "coveredBy": [
@@ -1964,6 +2137,62 @@
           ]
         },
         {
+          "name": "BlzGetUnitWeaponBooleanField",
+          "signature": "BlzGetUnitWeaponBooleanField takes unit whichUnit, unitweaponbooleanfield whichField, integer index returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzGetUnitWeaponIntegerField",
+          "signature": "BlzGetUnitWeaponIntegerField takes unit whichUnit, unitweaponintegerfield whichField, integer index returns integer",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzGetUnitWeaponRealField",
+          "signature": "BlzGetUnitWeaponRealField takes unit whichUnit, unitweaponrealfield whichField, integer index returns real",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzGetUnitWeaponStringField",
+          "signature": "BlzGetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield whichField, integer index returns string",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzSetUnitWeaponBooleanField",
+          "signature": "BlzSetUnitWeaponBooleanField takes unit whichUnit, unitweaponbooleanfield whichField, integer index, boolean value returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzSetUnitWeaponIntegerField",
+          "signature": "BlzSetUnitWeaponIntegerField takes unit whichUnit, unitweaponintegerfield whichField, integer index, integer value returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzSetUnitWeaponRealField",
+          "signature": "BlzSetUnitWeaponRealField takes unit whichUnit, unitweaponrealfield whichField, integer index, real value returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
+          "name": "BlzSetUnitWeaponStringField",
+          "signature": "BlzSetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
+        },
+        {
           "name": "BlzGetUnitSkin",
           "signature": "BlzGetUnitSkin takes unit whichUnit returns integer",
           "coveredBy": [
@@ -1976,174 +2205,72 @@
           "coveredBy": [
             "Unit"
           ]
-        }
-      ],
-      "missing": [
-        {
-          "name": "GetLearningUnit",
-          "signature": "GetLearningUnit takes nothing returns unit"
-        },
-        {
-          "name": "GetRevivableUnit",
-          "signature": "GetRevivableUnit takes nothing returns unit"
-        },
-        {
-          "name": "GetRevivingUnit",
-          "signature": "GetRevivingUnit takes nothing returns unit"
-        },
-        {
-          "name": "GetRescuer",
-          "signature": "GetRescuer takes nothing returns unit"
-        },
-        {
-          "name": "GetDyingUnit",
-          "signature": "GetDyingUnit takes nothing returns unit"
-        },
-        {
-          "name": "GetDecayingUnit",
-          "signature": "GetDecayingUnit takes nothing returns unit"
-        },
-        {
-          "name": "GetConstructingStructure",
-          "signature": "GetConstructingStructure takes nothing returns unit"
-        },
-        {
-          "name": "GetCancelledStructure",
-          "signature": "GetCancelledStructure takes nothing returns unit"
-        },
-        {
-          "name": "GetResearchingUnit",
-          "signature": "GetResearchingUnit takes nothing returns unit"
-        },
-        {
-          "name": "GetDetectedUnit",
-          "signature": "GetDetectedUnit takes nothing returns unit"
-        },
-        {
-          "name": "GetSellingUnit",
-          "signature": "GetSellingUnit takes nothing returns unit"
-        },
-        {
-          "name": "GetSoldUnit",
-          "signature": "GetSoldUnit takes nothing returns unit"
-        },
-        {
-          "name": "GetBuyingUnit",
-          "signature": "GetBuyingUnit takes nothing returns unit"
-        },
-        {
-          "name": "GetManipulatingUnit",
-          "signature": "GetManipulatingUnit takes nothing returns unit"
-        },
-        {
-          "name": "GetSpellAbilityUnit",
-          "signature": "GetSpellAbilityUnit takes nothing returns unit"
-        },
-        {
-          "name": "GetEventTargetUnit",
-          "signature": "GetEventTargetUnit takes nothing returns unit"
-        },
-        {
-          "name": "SetUnitFacingTimed",
-          "signature": "SetUnitFacingTimed takes unit whichUnit, real facingAngle, real duration returns nothing"
-        },
-        {
-          "name": "IsUnitOwnedByPlayer",
-          "signature": "IsUnitOwnedByPlayer takes unit whichUnit, player whichPlayer returns boolean"
-        },
-        {
-          "name": "IsUnitDetected",
-          "signature": "IsUnitDetected takes unit whichUnit, player whichPlayer returns boolean"
-        },
-        {
-          "name": "IsUnitInvisible",
-          "signature": "IsUnitInvisible takes unit whichUnit, player whichPlayer returns boolean"
-        },
-        {
-          "name": "IsUnitRace",
-          "signature": "IsUnitRace takes unit whichUnit, race whichRace returns boolean"
-        },
-        {
-          "name": "UnitRemoveType",
-          "signature": "UnitRemoveType takes unit whichUnit, unittype whichUnitType returns boolean"
-        },
-        {
-          "name": "CreateMinimapIconOnUnit",
-          "signature": "CreateMinimapIconOnUnit takes unit whichUnit, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon"
-        },
-        {
-          "name": "BlzGetMouseFocusUnit",
-          "signature": "BlzGetMouseFocusUnit takes nothing returns unit"
-        },
-        {
-          "name": "BlzGetUnitWeaponBooleanField",
-          "signature": "BlzGetUnitWeaponBooleanField takes unit whichUnit, unitweaponbooleanfield whichField, integer index returns boolean"
-        },
-        {
-          "name": "BlzGetUnitWeaponIntegerField",
-          "signature": "BlzGetUnitWeaponIntegerField takes unit whichUnit, unitweaponintegerfield whichField, integer index returns integer"
-        },
-        {
-          "name": "BlzGetUnitWeaponRealField",
-          "signature": "BlzGetUnitWeaponRealField takes unit whichUnit, unitweaponrealfield whichField, integer index returns real"
-        },
-        {
-          "name": "BlzGetUnitWeaponStringField",
-          "signature": "BlzGetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield whichField, integer index returns string"
-        },
-        {
-          "name": "BlzSetUnitWeaponBooleanField",
-          "signature": "BlzSetUnitWeaponBooleanField takes unit whichUnit, unitweaponbooleanfield whichField, integer index, boolean value returns boolean"
-        },
-        {
-          "name": "BlzSetUnitWeaponIntegerField",
-          "signature": "BlzSetUnitWeaponIntegerField takes unit whichUnit, unitweaponintegerfield whichField, integer index, integer value returns boolean"
-        },
-        {
-          "name": "BlzSetUnitWeaponRealField",
-          "signature": "BlzSetUnitWeaponRealField takes unit whichUnit, unitweaponrealfield whichField, integer index, real value returns boolean"
-        },
-        {
-          "name": "BlzSetUnitWeaponStringField",
-          "signature": "BlzSetUnitWeaponStringField takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns boolean"
         },
         {
           "name": "BlzQueueImmediateOrderById",
-          "signature": "BlzQueueImmediateOrderById takes unit whichUnit, integer order returns boolean"
+          "signature": "BlzQueueImmediateOrderById takes unit whichUnit, integer order returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
         },
         {
           "name": "BlzQueuePointOrderById",
-          "signature": "BlzQueuePointOrderById takes unit whichUnit, integer order, real x, real y returns boolean"
+          "signature": "BlzQueuePointOrderById takes unit whichUnit, integer order, real x, real y returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
         },
         {
           "name": "BlzQueueTargetOrderById",
-          "signature": "BlzQueueTargetOrderById takes unit whichUnit, integer order, widget targetWidget returns boolean"
+          "signature": "BlzQueueTargetOrderById takes unit whichUnit, integer order, widget targetWidget returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
         },
         {
           "name": "BlzQueueInstantPointOrderById",
-          "signature": "BlzQueueInstantPointOrderById takes unit whichUnit, integer order, real x, real y, widget instantTargetWidget returns boolean"
+          "signature": "BlzQueueInstantPointOrderById takes unit whichUnit, integer order, real x, real y, widget instantTargetWidget returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
         },
         {
           "name": "BlzQueueInstantTargetOrderById",
-          "signature": "BlzQueueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean"
+          "signature": "BlzQueueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
         },
         {
           "name": "BlzQueueBuildOrderById",
-          "signature": "BlzQueueBuildOrderById takes unit whichPeon, integer unitId, real x, real y returns boolean"
+          "signature": "BlzQueueBuildOrderById takes unit whichPeon, integer unitId, real x, real y returns boolean",
+          "coveredBy": [
+            "Unit"
+          ]
         },
         {
           "name": "BlzGetUnitOrderCount",
-          "signature": "BlzGetUnitOrderCount takes unit whichUnit returns integer"
+          "signature": "BlzGetUnitOrderCount takes unit whichUnit returns integer",
+          "coveredBy": [
+            "Unit"
+          ]
         },
         {
           "name": "BlzUnitClearOrders",
-          "signature": "BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothing"
+          "signature": "BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothing",
+          "coveredBy": [
+            "Unit"
+          ]
         },
         {
           "name": "BlzUnitForceStopOrder",
-          "signature": "BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing"
+          "signature": "BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing",
+          "coveredBy": [
+            "Unit"
+          ]
         }
       ],
+      "missing": [],
       "excluded": []
     },
     {
