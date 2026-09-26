@@ -98,8 +98,8 @@ export class Camera {
   }
 
   /**
-   * The type of the local player's camera, through `BlzCameraGetCameraType`
-   * (3.0.0): an integer the Patch does not name.
+   * The type of the game camera, through `BlzCameraGetCameraType` (3.0.0):
+   * an integer the Patch does not name. The value is the local player's own.
    * @async
    */
   public static get type(): number {
@@ -148,8 +148,9 @@ export class Camera {
   }
 
   /**
-   * Whether player input controls the field of the local player's camera,
-   * through `GetCameraFieldControlledByInput` (3.0.0).
+   * Whether player input controls the field of the game camera, through
+   * `GetCameraFieldControlledByInput` (3.0.0). The value is the local
+   * player's own.
    * @async
    */
   public static isFieldControlledByInput(field: camerafield) {
