@@ -52,7 +52,7 @@ The tests run from source. They do not need `build`.
 
 ## Adding or changing a rule
 
-1. **Rule file.** Create `src/rules/<rule>.ts` with `createRule` and a default `defineRuleEntry({ name, severity, create })`. Set the severity from #16's table. The rule declares `meta.type`, `meta.docs.description`, `messages` with ids, `hasSuggestions` if it suggests, and `schema` with `defaultOptions`. Only `no-legacy-w3ts-names` may declare `fixable`. Each message says the pitfall, the consequence and the replacement.
+1. **Rule file.** Create `src/rules/<rule>.ts` with `createRule` and a default `defineRuleEntry({ name, severity, create })`. Set the severity from #16's table; a rule outside it takes the severity its issue decides: `error` for a pattern that desyncs, crashes or leaks with certainty, `warn` for one wrong in most contexts (spec #50). The rule declares `meta.type`, `meta.docs.description`, `messages` with ids, `hasSuggestions` if it suggests, and `schema` with `defaultOptions`. Only `no-legacy-w3ts-names` may declare `fixable`. Each message says the pitfall, the consequence and the replacement.
 2. **Match syntactically first.** Then ask the checker, through `src/classify/`, only for the matched node. Call `ESLintUtils.getParserServices(context)` at the top of `create`: without type information, the rule then fails at the first file.
 3. **Registry.** Add one import and one line to `src/rules/index.ts`, in name order. The recommended config follows from it.
 4. **Rule-table test.** In `test/plugin.test.ts`, add the rule to `decidedTable` with its severity, and raise the rule count and the error/warning split the table asserts. Extend `everyRuleReports` so the new rule reports it. A rule with `requires` goes in `optionalRules` too.
@@ -65,8 +65,8 @@ The tests run from source. They do not need `build`.
    Test escapes (`eslint-disable-next-line reforged/<rule> -- reason`) and severities with `lintWithRecommended`. The RuleTester registers rules under its own prefix. When a case needs a Wrapper member the stub lacks, add it to `test/fixture-project/node_modules/reforged-ts/index.d.ts`, with the shape of the real library.
 
 6. **Docs page.** Copy `templates/rule-doc.md` to `docs/<rule>.md`. Keep the title and the six headings. Add a row to the rules table in `README.md`.
-7. **Data.** If the rule reads a data file, write a parser in `src/data/` with the `schema.ts` readers. Add the file to `PluginData` and `DataFiles` in `src/data/index.ts`. Add shape tests to `test/data.test.ts`. Every Native the file names must be in `installedNatives()`.
-8. **Changeset.** Until the first release, add the rule's paragraph to the initial-release changeset, `.changeset/eslint-plugin-reforged.md`, under its severity. After it, write a new changeset for `eslint-plugin-reforged`.
+7. **Data.** If the rule reads a data file, write a parser in `src/data/` with the `schema.ts` readers. Add the file to `PluginData` and `DataFiles` in `src/data/index.ts`. Add shape tests to `test/data.test.ts` and the file's row to "Data files" below. Every Native the file names must be in `installedNatives()`.
+8. **Changeset.** Write a changeset for `eslint-plugin-reforged`: a minor for a new rule. The command and how to write its text are in "Adding a changeset" of `docs/release.md`.
 
 ## Data files
 
