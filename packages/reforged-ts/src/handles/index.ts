@@ -4,6 +4,8 @@ export * from "./camera";
 export * from "./destructable";
 export * from "./dialog";
 export * from "./effect";
+// Not `export *`: the conversion helpers stay package-internal.
+export { EquipmentType, ItemTag, LoadoutSlot } from "./equipment";
 export * from "./fogmodifier";
 export * from "./force";
 export * from "./frame";
