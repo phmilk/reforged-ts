@@ -119,6 +119,9 @@ release/build/
 website/build/
 website/.docusaurus/
 
+# The API reference TypeDoc generates into the docs tree at every build
+website/docs/api/reforged-ts/
+
 # Claude Code agent worktrees and local state
 .claude/
 

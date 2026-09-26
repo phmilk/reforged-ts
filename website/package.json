@@ -4,10 +4,10 @@
   "description": "The reforged-ts docs site on Docusaurus, served at https://phmilk.github.io/reforged-ts. Never published.",
   "license": "MIT",
   "engines": {
-    "node": ">=22.13"
+    "node": ">=22.18"
   },
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json && tsc -p scripts/tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json && tsc -p scripts/tsconfig.json && tsc -p typedoc/tsconfig.json && tsc -p test/tsconfig.json",
     "docs:collect": "node --experimental-strip-types scripts/collect.mts",
     "docs:start": "pnpm run docs:collect && docusaurus start",
     "docs:build": "pnpm run docs:collect && docusaurus build",
@@ -20,11 +20,14 @@
     "@docusaurus/faster": "catalog:",
     "@docusaurus/preset-classic": "catalog:",
     "@mdx-js/react": "catalog:",
+    "docusaurus-plugin-typedoc": "catalog:",
     "eslint-plugin-reforged": "workspace:^",
     "react": "catalog:",
     "react-dom": "catalog:",
     "reforged-ts": "workspace:^",
-    "reforged-types": "workspace:^"
+    "reforged-types": "workspace:^",
+    "typedoc": "catalog:",
+    "typedoc-plugin-markdown": "catalog:"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "catalog:",

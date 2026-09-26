@@ -1,0 +1,11 @@
+{
+  // The site's tests, under the site's compiler options. Named tsconfig.json
+  // so the lint's project service finds it from any test file; vitest itself
+  // runs the tests from source. The fixtures are programs of their own.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["."],
+  "exclude": ["fixtures"]
+}

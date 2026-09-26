@@ -1,0 +1,5 @@
+{
+  "name": "fixture-library",
+  "private": true,
+  "description": "A library the reference tests generate a reference of."
+}

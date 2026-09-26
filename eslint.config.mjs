@@ -16,6 +16,7 @@ export default defineConfig(
     "release/build/**",
     "website/build/**",
     "website/.docusaurus/**",
+    "website/docs/api/reforged-ts/**",
     "packages/reforged-test/lua/**",
     "packages/reforged-ts/dist-test/**",
     // What tools own: the vendored Patch files and the generated Typings.
