@@ -17,7 +17,7 @@ The library's own tests run on `reforged-test`, and the library compiles against
 
 ## Requirements
 
-- Warcraft III 3.0.0 or later, the Patch the library targets. Only to play a map: building and testing the library runs without the game.
+- Warcraft III 3.0.0 or later, the Game version the library targets. Only to play a map: building and testing the library runs without the game.
 - Node 22.13 or later. Node 24 is the tested version (`.node-version`).
 - pnpm 10. The `packageManager` field pins the exact version, so `corepack enable` picks it up.
 - TypeScript 6.0.2, the version typescript-to-lua 1.37 pins. `pnpm install` brings it; see [Version policy](#version-policy).
@@ -41,7 +41,7 @@ The Template's README has [the full first run](https://github.com/phmilk/reforge
 
 The documentation site, https://phmilk.github.io/reforged-ts/, comes with [#40](https://github.com/phmilk/reforged-ts/issues/40) and is not live yet. Until it is:
 
-- [`CONTEXT.md`](CONTEXT.md) defines the project's terms (Native, Handle, Wrapper, System, Typings, Patch).
+- [`CONTEXT.md`](CONTEXT.md) defines the project's terms.
 - Each package's README says what the package does and how to use it.
 - The library's doc comments document each Wrapper and System, and the editor shows them on hover.
 - The ADRs under [`docs/adr`](docs/adr) record the decisions, and [`docs/release.md`](docs/release.md) the release process.
