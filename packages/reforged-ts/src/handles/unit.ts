@@ -1,6 +1,6 @@
 /** @noSelfInFile */
 
-import { OrderId } from "../globals/order";
+import type { OrderId } from "../globals/order";
 import { configuration } from "../reforged/configuration";
 import { assertDamageDepth } from "../reforged/damage";
 import { rawcodeToString } from "../utils/rawcode";
@@ -258,6 +258,14 @@ export class Unit extends Widget {
   }
 
   /**
+   * The number of orders the unit has, the current one and the queued ones,
+   * through `BlzGetUnitOrderCount`.
+   */
+  public get orderCount() {
+    return BlzGetUnitOrderCount(this.handle);
+  }
+
+  /**
    * Pauses a unit. A paused unit has the following properties:
    * 1. Buffs/effects are suspended
    * 2. Orders are stored when paused and fired on unpause
@@ -506,8 +514,13 @@ export class Unit extends Widget {
     AddHeroXP(this.handle, xpToAdd, showEyeCandy);
   }
 
-  public addIndicator(red: number, blue: number, green: number, alpha: number) {
-    UnitAddIndicator(this.handle, red, blue, green, alpha);
+  public override addIndicator(
+    red: number,
+    green: number,
+    blue: number,
+    alpha: number,
+  ) {
+    UnitAddIndicator(this.handle, red, green, blue, alpha);
   }
 
   public addItem(whichItem: Item) {
@@ -1283,7 +1296,7 @@ export class Unit extends Widget {
   }
 
   public removeType(whichUnitType: unittype) {
-    return UnitAddType(this.handle, whichUnitType);
+    return UnitRemoveType(this.handle, whichUnitType);
   }
 
   public removeUnitFromStock(itemId: number) {
@@ -1631,6 +1644,244 @@ export class Unit extends Widget {
     WaygateSetDestination(this.handle, x, y);
   }
 
+  /**
+   * Clears the unit's orders, through `BlzUnitClearOrders`.
+   * @param onlyQueued Clears only the queued orders, keeping the current one.
+   */
+  public clearOrders(onlyQueued: boolean) {
+    BlzUnitClearOrders(this.handle, onlyQueued);
+  }
+
+  /**
+   * Creates a minimap icon over the unit, through `CreateMinimapIconOnUnit`,
+   * and returns the game's `minimapicon`, which the library does not wrap.
+   * @param red An integer from 0-255 determining the amount of red color.
+   * @param green An integer from 0-255 determining the amount of green color.
+   * @param blue An integer from 0-255 determining the amount of blue color.
+   * @param pingPath The model of the icon.
+   * @param fogVisibility The fog state in which the icon is visible.
+   */
+  public createMinimapIcon(
+    red: number,
+    green: number,
+    blue: number,
+    pingPath: string,
+    fogVisibility: fogstate,
+  ) {
+    return CreateMinimapIconOnUnit(
+      this.handle,
+      red,
+      green,
+      blue,
+      pingPath,
+      fogVisibility,
+    );
+  }
+
+  /**
+   * Stops the unit's current order, through `BlzUnitForceStopOrder`.
+   * @param clearQueue Also clears the queued orders.
+   */
+  public forceStopOrder(clearQueue: boolean) {
+    BlzUnitForceStopOrder(this.handle, clearQueue);
+  }
+
+  /**
+   * Reads a field of one of the unit's weapons, through the
+   * `BlzGetUnitWeapon*Field` Native of the field's type.
+   * @param field A weapon field constant of any of the four field types.
+   * @param index The weapon's index.
+   */
+  public getWeaponField(
+    field:
+      | unitweaponbooleanfield
+      | unitweaponintegerfield
+      | unitweaponrealfield
+      | unitweaponstringfield,
+    index: number,
+  ) {
+    const fieldType = fieldTypeOf(field);
+
+    switch (fieldType) {
+      case "unitweaponbooleanfield":
+        return BlzGetUnitWeaponBooleanField(
+          this.handle,
+          field as unitweaponbooleanfield,
+          index,
+        );
+      case "unitweaponintegerfield":
+        return BlzGetUnitWeaponIntegerField(
+          this.handle,
+          field as unitweaponintegerfield,
+          index,
+        );
+      case "unitweaponrealfield":
+        return BlzGetUnitWeaponRealField(
+          this.handle,
+          field as unitweaponrealfield,
+          index,
+        );
+      case "unitweaponstringfield":
+        return BlzGetUnitWeaponStringField(
+          this.handle,
+          field as unitweaponstringfield,
+          index,
+        );
+      default:
+        return 0;
+    }
+  }
+
+  /** Whether the player detects the unit, through `IsUnitDetected`. */
+  public isDetected(whichPlayer: MapPlayer) {
+    return IsUnitDetected(this.handle, whichPlayer.handle);
+  }
+
+  /** Whether the unit is invisible to the player, through `IsUnitInvisible`. */
+  public isInvisible(whichPlayer: MapPlayer) {
+    return IsUnitInvisible(this.handle, whichPlayer.handle);
+  }
+
+  /** Whether the player owns the unit, through `IsUnitOwnedByPlayer`. */
+  public isOwnedByPlayer(whichPlayer: MapPlayer) {
+    return IsUnitOwnedByPlayer(this.handle, whichPlayer.handle);
+  }
+
+  /** Whether the unit is of the race, through `IsUnitRace`. */
+  public isRace(whichRace: race) {
+    return IsUnitRace(this.handle, whichRace);
+  }
+
+  /**
+   * Queues a build order after the unit's current orders, through
+   * `BlzQueueBuildOrderById`.
+   */
+  public queueBuildOrder(unitId: number, x: number, y: number) {
+    return BlzQueueBuildOrderById(this.handle, unitId, x, y);
+  }
+
+  /**
+   * Queues an order with no target after the unit's current orders, through
+   * `BlzQueueImmediateOrderById`.
+   */
+  public queueImmediateOrder(order: OrderId) {
+    return BlzQueueImmediateOrderById(this.handle, order);
+  }
+
+  /**
+   * Queues an order to a point, with an instant target, after the unit's
+   * current orders, through `BlzQueueInstantPointOrderById`.
+   */
+  public queueInstantOrderAt(
+    order: OrderId,
+    x: number,
+    y: number,
+    instantTargetWidget: Widget,
+  ) {
+    return BlzQueueInstantPointOrderById(
+      this.handle,
+      order,
+      x,
+      y,
+      instantTargetWidget.handle,
+    );
+  }
+
+  /**
+   * Queues an order on a target, with an instant target, after the unit's
+   * current orders, through `BlzQueueInstantTargetOrderById`.
+   */
+  public queueInstantTargetOrder(
+    order: OrderId,
+    targetWidget: Widget,
+    instantTargetWidget: Widget,
+  ) {
+    return BlzQueueInstantTargetOrderById(
+      this.handle,
+      order,
+      targetWidget.handle,
+      instantTargetWidget.handle,
+    );
+  }
+
+  /**
+   * Queues an order to a point after the unit's current orders, through
+   * `BlzQueuePointOrderById`.
+   */
+  public queueOrderAt(order: OrderId, x: number, y: number) {
+    return BlzQueuePointOrderById(this.handle, order, x, y);
+  }
+
+  /**
+   * Queues an order on a target after the unit's current orders, through
+   * `BlzQueueTargetOrderById`.
+   */
+  public queueTargetOrder(order: OrderId, targetWidget: Widget) {
+    return BlzQueueTargetOrderById(this.handle, order, targetWidget.handle);
+  }
+
+  /**
+   * Turns the unit to face the angle, in degrees, over `duration` seconds,
+   * through `SetUnitFacingTimed`.
+   */
+  public setFacingTimed(facingAngle: number, duration: number) {
+    SetUnitFacingTimed(this.handle, facingAngle, duration);
+  }
+
+  /**
+   * Writes a field of one of the unit's weapons, through the
+   * `BlzSetUnitWeapon*Field` Native of the field's type, and returns whether
+   * it was written: false when the value is not of the field's type.
+   * @param field A weapon field constant of any of the four field types.
+   * @param index The weapon's index.
+   */
+  public setWeaponField(
+    field:
+      | unitweaponbooleanfield
+      | unitweaponintegerfield
+      | unitweaponrealfield
+      | unitweaponstringfield,
+    index: number,
+    value: boolean | number | string,
+  ) {
+    const fieldType = fieldTypeOf(field);
+
+    if (fieldType === "unitweaponbooleanfield" && typeof value === "boolean") {
+      return BlzSetUnitWeaponBooleanField(
+        this.handle,
+        field as unitweaponbooleanfield,
+        index,
+        value,
+      );
+    }
+    if (fieldType === "unitweaponintegerfield" && typeof value === "number") {
+      return BlzSetUnitWeaponIntegerField(
+        this.handle,
+        field as unitweaponintegerfield,
+        index,
+        value,
+      );
+    }
+    if (fieldType === "unitweaponrealfield" && typeof value === "number") {
+      return BlzSetUnitWeaponRealField(
+        this.handle,
+        field as unitweaponrealfield,
+        index,
+        value,
+      );
+    }
+    if (fieldType === "unitweaponstringfield" && typeof value === "string") {
+      return BlzSetUnitWeaponStringField(
+        this.handle,
+        field as unitweaponstringfield,
+        index,
+        value,
+      );
+    }
+
+    return false;
+  }
+
   public static foodMadeByType(unitId: number) {
     return GetFoodMade(unitId);
   }
@@ -1710,7 +1961,7 @@ export class Unit extends Widget {
    * The unit a target order targets, or undefined outside a target order or
    * when the target is not a unit.
    */
-  public static fromOrderTarget(): Unit | undefined {
+  public static override fromOrderTarget(): Unit | undefined {
     return this.fromHandle(GetOrderTargetUnit());
   }
 
@@ -1737,6 +1988,94 @@ export class Unit extends Widget {
   /** The transport a unit is loaded into, or undefined outside a load event. */
   public static fromTransport(): Unit | undefined {
     return this.fromHandle(GetTransportUnit());
+  }
+
+  /** The unit buying from a shop, or undefined outside a sell event. */
+  public static fromBuying(): Unit | undefined {
+    return this.fromHandle(GetBuyingUnit());
+  }
+
+  /** The structure whose construction is cancelled, or undefined outside a construction cancel. */
+  public static fromCancelled(): Unit | undefined {
+    return this.fromHandle(GetCancelledStructure());
+  }
+
+  /** The structure being built, or undefined outside a construction start. */
+  public static fromConstructing(): Unit | undefined {
+    return this.fromHandle(GetConstructingStructure());
+  }
+
+  /** The decaying unit, or undefined outside a decay event. */
+  public static fromDecaying(): Unit | undefined {
+    return this.fromHandle(GetDecayingUnit());
+  }
+
+  /** The detected unit, or undefined outside a detection event. */
+  public static fromDetected(): Unit | undefined {
+    return this.fromHandle(GetDetectedUnit());
+  }
+
+  /** The dying unit, or undefined outside a death event. */
+  public static fromDying(): Unit | undefined {
+    return this.fromHandle(GetDyingUnit());
+  }
+
+  /** The target unit of the event, or undefined when the event has none. */
+  public static fromEventTarget(): Unit | undefined {
+    return this.fromHandle(GetEventTargetUnit());
+  }
+
+  /** The hero learning a skill, or undefined outside a skill event. */
+  public static fromLearning(): Unit | undefined {
+    return this.fromHandle(GetLearningUnit());
+  }
+
+  /** The unit manipulating an item, or undefined outside an item event. */
+  public static fromManipulating(): Unit | undefined {
+    return this.fromHandle(GetManipulatingUnit());
+  }
+
+  /**
+   * The unit under the local player's mouse, or undefined when there is none.
+   * @async
+   */
+  public static fromMouseFocus(): Unit | undefined {
+    return this.fromHandle(BlzGetMouseFocusUnit());
+  }
+
+  /** The unit researching, or undefined outside a research event. */
+  public static fromResearching(): Unit | undefined {
+    return this.fromHandle(GetResearchingUnit());
+  }
+
+  /** The unit rescuing, or undefined outside a rescue event. */
+  public static fromRescuer(): Unit | undefined {
+    return this.fromHandle(GetRescuer());
+  }
+
+  /** The hero that became revivable, or undefined outside a revivable event. */
+  public static fromRevivable(): Unit | undefined {
+    return this.fromHandle(GetRevivableUnit());
+  }
+
+  /** The reviving hero, or undefined outside a revive event. */
+  public static fromReviving(): Unit | undefined {
+    return this.fromHandle(GetRevivingUnit());
+  }
+
+  /** The shop selling, or undefined outside a sell event. */
+  public static fromSelling(): Unit | undefined {
+    return this.fromHandle(GetSellingUnit());
+  }
+
+  /** The unit sold, or undefined outside a unit sell event. */
+  public static fromSold(): Unit | undefined {
+    return this.fromHandle(GetSoldUnit());
+  }
+
+  /** The unit casting the spell, or undefined outside a spell event. */
+  public static fromSpellAbility(): Unit | undefined {
+    return this.fromHandle(GetSpellAbilityUnit());
   }
 
   public static getPointValueByType(unitType: number) {

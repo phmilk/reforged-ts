@@ -14,7 +14,7 @@
 // assertions of the test still hold.
 
 /** A global the Typings declare as a function: a Native. */
-type NativeName = {
+export type NativeName = {
   [K in keyof typeof globalThis]: (typeof globalThis)[K] extends (
     ...args: never[]
   ) => unknown
@@ -22,7 +22,7 @@ type NativeName = {
     : never;
 }[keyof typeof globalThis];
 
-type NativeOf<N extends NativeName> = (typeof globalThis)[N] extends (
+export type NativeOf<N extends NativeName> = (typeof globalThis)[N] extends (
   ...args: infer A
 ) => infer R
   ? { args: A; returns: R }
