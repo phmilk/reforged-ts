@@ -32,17 +32,27 @@ export interface Source {
   /**
    * The docs tree paths, files or folders, the source owns: every page and
    * file it writes is one of them or inside one. The collector removes them
-   * before each run, and `.gitignore` must ignore them (a test holds it).
+   * whole before each run, so a folder output holds nothing hand-written (a
+   * source writing next to hand-written pages owns a subfolder or single
+   * files), and `.gitignore` must ignore them (a test holds it).
    */
   readonly outputs: readonly string[];
-  /** Reads the source from the repository at `root`. */
-  collect(root: string): Promise<Collected>;
+  /** Reads the source; `where.docs` holds the hand-written pages too. */
+  collect(where: Where): Promise<Collected>;
+}
+
+/** Where a run reads and writes. */
+export interface Where {
+  /** The repository root. */
+  readonly root: string;
+  /** The docs tree the sources write into. */
+  readonly docs: string;
 }
 
 /** What one source writes into the docs tree. */
 export interface Collected {
   readonly pages?: readonly Page[];
-  /** Files written as they are: category metadata, partials, data. */
+  /** Files written as they are, such as category metadata. */
   readonly files?: readonly DataFile[];
 }
 
@@ -106,12 +116,14 @@ export class CollectError extends Error {
   }
 }
 
-export interface CollectOptions {
-  /** The repository root. */
-  readonly root: string;
-  /** The docs tree the sources write into. */
-  readonly docs: string;
+export interface CollectOptions extends Where {
   readonly sources: readonly Source[];
+}
+
+/** A source and what it read, before anything is written. */
+interface Read {
+  readonly source: Source;
+  readonly collected: Collected;
 }
 
 /**
@@ -123,7 +135,7 @@ export interface CollectOptions {
 export async function collect(options: CollectOptions): Promise<Report> {
   const { root, docs, sources } = options;
   const problems: string[] = [];
-  const written: { source: Source; collected: Collected }[] = [];
+  const read: Read[] = [];
   const skipped: { source: string; reason: string }[] = [];
 
   for (const source of sources) {
@@ -136,45 +148,43 @@ export async function collect(options: CollectOptions): Promise<Report> {
       continue;
     }
     try {
-      written.push({ source, collected: await source.collect(root) });
+      read.push({ source, collected: await source.collect({ root, docs }) });
     } catch (error) {
       if (!(error instanceof SourceError)) throw error;
       problems.push(`${source.name}: ${error.message}`);
     }
   }
-  problems.push(...ownership(written));
+  problems.push(...ownership(read));
   if (problems.length > 0) throw new CollectError(problems);
 
-  const links = await linkTargets(root, written);
+  const links = await linkTargets(root, read);
   for (const output of sources.flatMap((source) => source.outputs)) {
     await rm(join(docs, output), { recursive: true, force: true });
   }
-  const collected = [];
-  for (const { source, collected: result } of written) {
+  const report = [];
+  for (const { source, collected } of read) {
     const paths: string[] = [];
-    for (const page of result.pages ?? []) {
+    for (const page of collected.pages ?? []) {
       await writeText(docs, page.path, render(page, links));
       paths.push(page.path);
     }
-    for (const file of result.files ?? []) {
+    for (const file of collected.files ?? []) {
       await writeText(docs, file.path, file.text);
       paths.push(file.path);
     }
-    collected.push({ source: source.name, paths });
+    report.push({ source: source.name, paths });
   }
-  return { collected, skipped };
+  return { collected: report, skipped };
 }
 
 /**
  * A problem for each path written outside its source's outputs or by two
  * sources: either would survive the next run or be overwritten silently.
  */
-function ownership(
-  written: readonly { source: Source; collected: Collected }[],
-): string[] {
+function ownership(read: readonly Read[]): string[] {
   const problems: string[] = [];
   const writers = new Map<string, string>();
-  for (const { source, collected } of written) {
+  for (const { source, collected } of read) {
     for (const { path } of [
       ...(collected.pages ?? []),
       ...(collected.files ?? []),
@@ -212,20 +222,23 @@ interface LinkTargets {
 
 async function linkTargets(
   root: string,
-  written: readonly { collected: Collected }[],
+  read: readonly Read[],
 ): Promise<LinkTargets> {
   const pages = new Map<string, string>();
   const folders = new Set<string>();
-  for (const page of written.flatMap(
-    ({ collected }) => collected.pages ?? [],
-  )) {
+  for (const page of read.flatMap(({ collected }) => collected.pages ?? [])) {
     for (const from of page.from) {
       if (await isFolder(join(root, from))) folders.add(from);
     }
-    const only = page.from.length === 1 ? page.from[0] : undefined;
+    const only = onlySource(page);
     if (only !== undefined && !pages.has(only)) pages.set(only, page.path);
   }
   return { pages, folders };
+}
+
+/** The one repository path a page is made from, if it has only one. */
+function onlySource(page: Page): string | undefined {
+  return page.from.length === 1 ? page.from[0] : undefined;
 }
 
 /** The page's file: its front matter, its note, its body with links rewritten. */
@@ -240,7 +253,7 @@ function render(page: Page, links: LinkTargets): string {
   );
   // A copy is edited in its source; a page made from several files or from
   // a folder is edited nowhere.
-  const only = page.from.length === 1 ? page.from[0] : undefined;
+  const only = onlySource(page);
   const editUrl =
     only === undefined ||
     links.folders.has(only) ||
@@ -291,7 +304,7 @@ function rewriteLink(
   if (url.origin !== repositoryUrl.origin || prefix?.[1] === undefined) {
     return url.href;
   }
-  const target = decodeURIComponent(prefix[1]).replace(/\/$/, "");
+  const target = decodePath(prefix[1]).replace(/\/$/, "");
   const page = links.pages.get(target);
   if (page !== undefined) {
     let relative = posix.relative(posix.dirname(pagePath), page);
@@ -300,6 +313,15 @@ function rewriteLink(
   }
   // GitHub serves a folder's `blob` URL as its `tree` page.
   return url.href;
+}
+
+/** `path` percent-decoded, or as it is when its escapes are malformed. */
+function decodePath(path: string): string {
+  try {
+    return decodeURIComponent(path);
+  } catch {
+    return path;
+  }
 }
 
 /** The GitHub page of a repository path; the repository's for "". */

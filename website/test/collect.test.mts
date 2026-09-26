@@ -133,7 +133,24 @@ custom_edit_url: ${GITHUB}/docs/adr/0002-site-links.md
     expect(page).toContain("[not a link either](../release.md)");
     expect(
       await readText(workspace.docs, "contributing/adding-a-lint-rule.md"),
-    ).toContain("See the [glossary](./glossary.md).");
+    ).toContain(
+      `See the [glossary](./glossary.md) and [a bad escape](${GITHUB}/packages/eslint-plugin-reforged/%zz.md).`,
+    );
+  });
+
+  it("gives a source the repository and the docs tree", async () => {
+    const seen: string[] = [];
+    const probe: Source = {
+      name: "a probe",
+      outputs: [],
+      collect: ({ root, docs }) => {
+        seen.push(root, docs);
+        return Promise.resolve({});
+      },
+    };
+    const workspace = await fixture({}, [probe]);
+    await collect(workspace);
+    expect(seen).toEqual([workspace.root, workspace.docs]);
   });
 
   it("lists the ADRs with their status and date on the index", async () => {
@@ -181,7 +198,8 @@ No release yet.
       },
       {
         source: "the add-wrapper Agent skill",
-        reason: "The add-wrapper Agent skill (#202) is not written yet.",
+        reason:
+          "The add-wrapper Agent skill (#202) is not written yet; #41 commits .claude/skills/.",
       },
       ...["reforged-types", "reforged-test", "eslint-plugin-reforged"].map(
         (pkg) => ({
@@ -303,7 +321,7 @@ describe("main", () => {
 });
 
 describe("the sources of this repository", () => {
-  it("collect without a missing source", async () => {
+  it("have no missing required source", async () => {
     const docs = await mkdtemp(join(tmpdir(), "reforged-website-docs-"));
     const report = await collect({ ...WORKSPACE, docs });
     expect(report.collected.map(({ source }) => source)).toContain(
@@ -311,7 +329,7 @@ describe("the sources of this repository", () => {
     );
   });
 
-  it("write only what git ignores", async () => {
+  it("write only paths git ignores", async () => {
     const paths = SOURCES.flatMap((source) => source.outputs).flatMap(
       (output) => [
         `website/docs/${output}`,
@@ -322,7 +340,13 @@ describe("the sources of this repository", () => {
       "git",
       ["check-ignore", "--verbose", "--non-matching", ...paths],
       { cwd: WORKSPACE.root },
-    ).catch((error: unknown) => error as { stdout: string });
+      // git check-ignore exits 1 when a path is not ignored.
+    ).catch((error: unknown) => {
+      if (error instanceof Error && "stdout" in error) {
+        return { stdout: String(error.stdout) };
+      }
+      throw error;
+    });
     const notIgnored = stdout
       .split("\n")
       .filter((line) => line.startsWith("::"))

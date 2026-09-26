@@ -90,7 +90,7 @@ export const REPOSITORY_FILES: Readonly<Record<string, string>> = {
   "packages/reforged-ts/CHANGELOG.md": CHANGELOG,
   "AGENTS.md": "# fixture\n\n## Commands\n\nRun `pnpm check`.\n",
   "packages/eslint-plugin-reforged/AGENTS.md":
-    "# eslint-plugin-reforged\n\n## Adding or changing a rule\n\nSee the [glossary](../../CONTEXT.md).\n",
+    "# eslint-plugin-reforged\n\n## Adding or changing a rule\n\nSee the [glossary](../../CONTEXT.md) and [a bad escape](%zz.md).\n",
   "packages/reforged-types/AGENTS.md":
     "# reforged-types\n\n## New Patch loop\n\nVendor, then generate.\n",
 };

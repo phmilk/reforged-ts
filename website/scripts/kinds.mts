@@ -1,7 +1,6 @@
 // The kinds of source the collector's list is written with: a Markdown file
 // copied as one page, the ADR folder, and the package changelogs with their
-// index. A later kind (the lint rule pages, the migration partials) is one
-// more function returning a Source.
+// index. A new kind is one more function returning a Source.
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { SourceError, type Page, type Source } from "./collector.mts";
@@ -42,7 +41,7 @@ export function markdownFile(options: MarkdownFileOptions): Source {
     from,
     ...(absent === undefined ? {} : { absent }),
     outputs: [to],
-    async collect(root) {
+    async collect({ root }) {
       const { body } = takeTitle(
         splitFrontMatter(await readText(root, from)).body,
       );
@@ -74,7 +73,7 @@ export function adrFolder(options: AdrFolderOptions): Source {
     name,
     from,
     outputs: [to],
-    async collect(root) {
+    async collect({ root }) {
       const files = (await readdir(join(root, from)))
         .filter((file) => /^\d{4}-.+\.md$/.test(file))
         .sort();
@@ -163,7 +162,7 @@ export function changelogs(options: ChangelogOptions): Source[] {
   const index: Source = {
     name: "the changelog index",
     outputs: [`${to}/index.md`],
-    async collect(root) {
+    async collect({ root }) {
       const from: string[] = [];
       const sections: string[] = [];
       for (const pkg of packages) {

@@ -51,7 +51,8 @@ export const SOURCES: readonly Source[] = [
     to: "contributing/adding-a-wrapper.md",
     title: "Adding a Wrapper",
     position: 5,
-    absent: "The add-wrapper Agent skill (#202) is not written yet.",
+    absent:
+      "The add-wrapper Agent skill (#202) is not written yet; #41 commits .claude/skills/.",
   }),
   markdownFile({
     name: "the lint plugin's conventions",

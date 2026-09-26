@@ -87,8 +87,11 @@ export function tableCell(text: string): string {
 /**
  * `markdown` with the destination of every link and link reference
  * definition replaced by what `rewrite` returns for it (the destination
- * without its angle brackets); `undefined` keeps it. Autolinks, bare URLs and
- * code are left alone.
+ * without its angle brackets); `undefined` keeps it. Autolinks, bare URLs,
+ * footnotes and code are left alone. Code means fenced blocks and code
+ * spans; neither indented code nor a fence inside a block quote is seen (no
+ * collected source has one). An image is rewritten like a link: no collected
+ * source has one either, and its GitHub URL would be a page, not the image.
  */
 export function rewriteLinks(
   markdown: string,
@@ -107,7 +110,7 @@ export function rewriteLinks(
         (_, open: string, destination: string) => open + replace(destination),
       )
       .replace(
-        /^( {0,3}\[[^\]\n]+\]:[ \t]*)(<[^<>\n]*>|\S+)/gm,
+        /^( {0,3}\[(?!\^)[^\]\n]+\]:[ \t]*)(<[^<>\n]*>|\S+)/gm,
         (_, open: string, destination: string) => open + replace(destination),
       ),
   );
@@ -154,15 +157,23 @@ function mapProse(
     if (prose.length > 0) lines.push(mapOutsideCodeSpans(prose.join("\n")));
     prose = [];
   };
-  const mapOutsideCodeSpans = (text: string): string => {
-    let result = "";
-    let last = 0;
-    for (const span of text.matchAll(/(`+)[\s\S]*?(?<!`)\1(?!`)/g)) {
-      result += transform(text.slice(last, span.index)) + span[0];
-      last = span.index + span[0].length;
-    }
-    return result + transform(text.slice(last));
-  };
+  // A code span opens on a whole backtick run and ends in its paragraph.
+  const mapOutsideCodeSpans = (text: string): string =>
+    text
+      .split(/(\n[ \t]*\n)/)
+      .map((paragraph) => {
+        let result = "";
+        let last = 0;
+        const spans = paragraph.matchAll(
+          /(?<!`)(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)/g,
+        );
+        for (const span of spans) {
+          result += transform(paragraph.slice(last, span.index)) + span[0];
+          last = span.index + span[0].length;
+        }
+        return result + transform(paragraph.slice(last));
+      })
+      .join("");
   forEachLine(markdown, (line, inCode) => {
     if (!inCode) {
       prose.push(line);
