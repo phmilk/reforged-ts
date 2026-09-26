@@ -24,9 +24,9 @@ export interface DestructableOptions {
   readonly scale?: number;
   /** The model variation; 0 by default. */
   readonly variation?: number;
-  /** The pitch, in radians; 0 when only `roll` is given. */
+  /** The pitch; 0 when only `roll` is given. */
   readonly pitch?: number;
-  /** The roll, in radians; 0 when only `pitch` is given. */
+  /** The roll; 0 when only `pitch` is given. */
   readonly roll?: number;
   /** The skin's rawcode; left out, the type's own model. */
   readonly skin?: number;
