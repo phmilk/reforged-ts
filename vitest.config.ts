@@ -84,6 +84,17 @@ export default defineConfig({
           environment: "node",
         },
       },
+      {
+        // The Wrapper coverage report, in Node, through its programmatic
+        // entry points, on fixture inputs the tests create and on the real
+        // library and manifest (the drift test of the committed report).
+        test: {
+          name: "wrapper-coverage",
+          root: "wrapper-coverage",
+          include: ["test/**/*.test.ts"],
+          environment: "node",
+        },
+      },
     ],
     // Neither the library's Lua tests nor the sources, fixtures and rename
     // map the Node tests read are in the vitest module graph: a change to one
