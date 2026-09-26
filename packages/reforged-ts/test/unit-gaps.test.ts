@@ -316,11 +316,11 @@ describe("Unit.addIndicator", () => {
       "UnitAddIndicator",
       () => undefined,
       () => {
-        unit.addIndicator(0, 255, 0, 255);
+        unit.addIndicator(10, 20, 30, 40);
       },
     );
     expect(stubCalls()).toContainCall(
-      `UnitAddIndicator(${unitRef}, 0, 255, 0, 255)`,
+      `UnitAddIndicator(${unitRef}, 10, 20, 30, 40)`,
     );
   });
 });

@@ -1654,7 +1654,8 @@ export class Unit extends Widget {
 
   /**
    * Creates a minimap icon over the unit, through `CreateMinimapIconOnUnit`,
-   * and returns the game's `minimapicon`, which the library does not wrap.
+   * and returns the game's `minimapicon`, which the library does not wrap, or
+   * undefined when the game creates none.
    * @param red An integer from 0-255 determining the amount of red color.
    * @param green An integer from 0-255 determining the amount of green color.
    * @param blue An integer from 0-255 determining the amount of blue color.
@@ -1753,24 +1754,24 @@ export class Unit extends Widget {
   }
 
   /**
-   * Queues a build order after the unit's current orders, through
-   * `BlzQueueBuildOrderById`.
+   * Queues a build order, by unit type id, after the unit's current orders,
+   * through `BlzQueueBuildOrderById`.
    */
   public queueBuildOrder(unitId: number, x: number, y: number) {
     return BlzQueueBuildOrderById(this.handle, unitId, x, y);
   }
 
   /**
-   * Queues an order with no target after the unit's current orders, through
-   * `BlzQueueImmediateOrderById`.
+   * Queues an order with no target, by order id, after the unit's current
+   * orders, through `BlzQueueImmediateOrderById`.
    */
   public queueImmediateOrder(order: OrderId) {
     return BlzQueueImmediateOrderById(this.handle, order);
   }
 
   /**
-   * Queues an order to a point, with an instant target, after the unit's
-   * current orders, through `BlzQueueInstantPointOrderById`.
+   * Queues an order to a point, by order id, with an instant target, after the
+   * unit's current orders, through `BlzQueueInstantPointOrderById`.
    */
   public queueInstantOrderAt(
     order: OrderId,
@@ -1788,8 +1789,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * Queues an order on a target, with an instant target, after the unit's
-   * current orders, through `BlzQueueInstantTargetOrderById`.
+   * Queues an order on a target, by order id, with an instant target, after
+   * the unit's current orders, through `BlzQueueInstantTargetOrderById`.
    */
   public queueInstantTargetOrder(
     order: OrderId,
@@ -1805,16 +1806,16 @@ export class Unit extends Widget {
   }
 
   /**
-   * Queues an order to a point after the unit's current orders, through
-   * `BlzQueuePointOrderById`.
+   * Queues an order to a point, by order id, after the unit's current orders,
+   * through `BlzQueuePointOrderById`.
    */
   public queueOrderAt(order: OrderId, x: number, y: number) {
     return BlzQueuePointOrderById(this.handle, order, x, y);
   }
 
   /**
-   * Queues an order on a target after the unit's current orders, through
-   * `BlzQueueTargetOrderById`.
+   * Queues an order on a target, by order id, after the unit's current orders,
+   * through `BlzQueueTargetOrderById`.
    */
   public queueTargetOrder(order: OrderId, targetWidget: Widget) {
     return BlzQueueTargetOrderById(this.handle, order, targetWidget.handle);
@@ -1995,7 +1996,10 @@ export class Unit extends Widget {
     return this.fromHandle(GetBuyingUnit());
   }
 
-  /** The structure whose construction is cancelled, or undefined outside a construction cancel. */
+  /**
+   * The structure whose construction is cancelled, or undefined outside a
+   * construction cancel.
+   */
   public static fromCancelled(): Unit | undefined {
     return this.fromHandle(GetCancelledStructure());
   }

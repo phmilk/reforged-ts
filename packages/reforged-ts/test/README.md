@@ -16,7 +16,7 @@ Written as the [reforged-test README](../../reforged-test/README.md) describes: 
 
 - `defined(value, what)`: the value of a factory or lookup that may return undefined, or an error naming it.
 - `handleRef(kind, handle)`: a handle as the call log renders it, `timer#1048578`.
-- `withNative(name, replacement, body)`: the per-test Native override (below).
+- `withNative(name, replacement, body)`: the per-test Native override (below). The same file exports `NativeName`, the name of any Native, and `NativeOf<N>`, its arguments and return type, for a table of cases keyed by Native.
 - `withText(text, name)` and `fieldConstant(kind, name)` (`field-constant.ts`): stand-ins for the game constants the stubs do not define, rendered in the call log by `name`; a field constant's `tostring` begins with its handle type, as the field members read it.
 - `raisedIn(call)`: the message of the error `call` raised, bare only when Lua's `file:line:` position for it lies inside `call`; how a test proves a creation error points at the line that called the creation member (below).
 - `describeDescriptor(case)`, `describeNamespace(namespace, members, cases)`, `describeLookup(case)` and `everySlot(line)` (`events.ts`): the table-driven suites of the events module. A file under `events/` calls `describeNamespace` once for a namespace other than `UnitEvents`, or `describeDescriptor` once per Event descriptor, with the registration lines `on()` should record, a firing context, the payload it yields and the guaranteed and optional fields with the Natives that read them, and `describeLookup` once per event lookup; `everySlot` builds the lines of a registration on every player slot.
