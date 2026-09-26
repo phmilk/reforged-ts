@@ -24,5 +24,6 @@ release/compatibility/matrix.md
 # The VS Code files stay as they are until the DX step (#41).
 .vscode/
 
-# Agent worktrees and local state.
-.claude/
+# Agent worktrees and local state; the Agent skills are formatted.
+.claude/*
+!.claude/skills/
