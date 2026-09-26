@@ -12,7 +12,7 @@ import {
   planPatchWatch,
   readWatchRepository,
   type IgnoredTag,
-  type NewBuild,
+  type NewPatch,
   type PatchWatchPlan,
 } from "../patch-watch.js";
 import { TYPINGS_PACKAGE } from "../packages.js";
@@ -50,8 +50,10 @@ function parseArgs(args: readonly string[]): Options | undefined {
     }
     const value = args.at(i + 1);
     if (!isBuild(value)) return undefined;
-    if (arg === "--simulate-current-patch") options.simulated = value;
-    else if (arg === "--reported") options.reported.push(value);
+    if (arg === "--reported") options.reported.push(value);
+    // Given once: a second value would silently win.
+    else if (arg === "--simulate-current-patch" && options.simulated === null)
+      options.simulated = value;
     else return undefined;
     i++;
   }
@@ -76,16 +78,20 @@ const COUNTED: Partial<Record<IgnoredTag["reason"], string>> = {
   "not-newer": "not above the supported Patch",
 };
 
-function describeBuild(build: NewBuild): string {
-  return `${build.build} (tag ${build.tag}, commit ${build.commit})`;
+function describePatch(patch: NewPatch): string {
+  return `${patch.build} (tag ${patch.tag}, commit ${patch.commit})`;
 }
 
-function text(report: PlanReport): string {
+const tagCount = (count: number) =>
+  `${String(count)} ${count === 1 ? "tag" : "tags"}`;
+
+/** The plan for a person to read. */
+function describeReport(report: PlanReport): string {
   const supported = report.simulated
     ? `${report.supported} (simulated)`
     : `${report.supported} (${TYPINGS_PACKAGE} reforged.patch)`;
   const lines = [
-    `jass-history: ${String(report.tags)} tags. Supported Patch: ${supported}. ` +
+    `jass-history: ${tagCount(report.tags)}. Supported Patch: ${supported}. ` +
       `Vendored: ${report.vendored.join(", ") || "none"}. Reported: ${report.reported.join(", ") || "none"}.`,
   ];
   if (report.patch === null) {
@@ -93,7 +99,7 @@ function text(report: PlanReport): string {
   } else {
     const { links } = report.patch;
     lines.push(
-      `New live Patch: ${describeBuild(report.patch)}.`,
+      `New live Patch: ${describePatch(report.patch)}.`,
       `  ${links.tag}`,
       `  ${links.commit}`,
       `  ${links.scripts}`,
@@ -102,7 +108,7 @@ function text(report: PlanReport): string {
   if (report.superseded.length > 0) {
     lines.push(
       "Superseded:",
-      ...report.superseded.map((b) => `- ${describeBuild(b)}`),
+      ...report.superseded.map((older) => `- ${describePatch(older)}`),
     );
   }
   if (report.ignored.length > 0) lines.push("Ignored:");
@@ -111,7 +117,7 @@ function text(report: PlanReport): string {
   }
   for (const [reason, what] of Object.entries(COUNTED)) {
     const count = report.ignored.filter((tag) => tag.reason === reason).length;
-    if (count > 0) lines.push(`- ${String(count)} tags ${what}.`);
+    if (count > 0) lines.push(`- ${tagCount(count)} ${what}.`);
   }
   return lines.map((line) => `${line}\n`).join("");
 }
@@ -171,7 +177,9 @@ export async function main(
   }
 
   output.stdout(
-    options.json ? `${JSON.stringify(report, null, 2)}\n` : text(report),
+    options.json
+      ? `${JSON.stringify(report, null, 2)}\n`
+      : describeReport(report),
   );
   return 0;
 }

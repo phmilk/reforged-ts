@@ -44,6 +44,15 @@ describe("fetchTags", () => {
     );
   });
 
+  it("throws on an answer that is not JSON", async () => {
+    const html: typeof fetch = () =>
+      Promise.resolve(new Response("<html>", { status: 200 }));
+
+    await expect(fetchTags(html)).rejects.toThrow(
+      `GET ${TAGS_URL} answered no JSON`,
+    );
+  });
+
   it("throws on a tag without a commit", async () => {
     await expect(fetchTags(tagsApi([{ name: "baseline" }]))).rejects.toThrow(
       "answered a tag without a name and a commit",
@@ -115,6 +124,15 @@ describe("readWatchRepository", () => {
     expect(await readWatchRepository(root)).toEqual({
       supported: "3.0.0.24268",
       vendored: [],
+    });
+  });
+
+  it("skips a vendor folder not named after a Build", async () => {
+    const root = await repository();
+    await writeText(root, "packages/reforged-types/vendor/notes/README.md", "");
+
+    expect(await readWatchRepository(root)).toMatchObject({
+      vendored: ["3.0.0.24268"],
     });
   });
 
@@ -276,6 +294,12 @@ describe("patch-watch:plan", () => {
       ["--reported"],
       ["--simulate-current-patch", "3.0"],
       ["--reported", "--json"],
+      [
+        "--simulate-current-patch",
+        "3.0.0.1",
+        "--simulate-current-patch",
+        "3.0.0.2",
+      ],
     ]) {
       expect(await runCli(args)).toEqual({
         status: 2,

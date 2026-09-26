@@ -9,6 +9,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { compareBuilds, gameVersion, isBuild } from "./build.js";
+import { declaredPatch } from "./check-patches.js";
 import {
   tagLinks,
   type JassHistoryTag,
@@ -18,8 +19,6 @@ import { byCodePoint } from "./order.js";
 import { TYPINGS_PACKAGE } from "./packages.js";
 import { errorMessage, isRecord } from "./unknown.js";
 import { readPublishablePackages } from "./workspace.js";
-
-export type { JassHistoryTag } from "./jass-history.js";
 
 /** A jass-history tag name, read. */
 export interface ParsedTag {
@@ -48,17 +47,19 @@ export function parseTag(name: string): ParsedTag | null {
 /** The game line the Typings vendor tags of. */
 const LIVE_PREFIX = "Reforged";
 
-/** The client marker of a live build. */
+/** The client marker of the live game. */
 const LIVE_CLIENT = "w3";
 
-/** The client markers of builds that are not live, and what they are. */
+/**
+ * The client markers of the clients that are not the live game, and what
+ * they are. Any other qualifier (none, a commit hash, a word the watch does
+ * not know) leaves the tag live: a needless issue is closed by a human, a
+ * missed Patch is not noticed at all.
+ */
 const NOT_LIVE_CLIENTS: ReadonlyMap<string, string> = new Map([
   ["w3t", "test"],
   ["w3b", "beta"],
 ]);
-
-/** An abbreviated commit hash, as a tag carries one. */
-const SHORT_HASH = /^[0-9a-f]{7,40}$/;
 
 /** Why the plan ignores a tag. */
 export type IgnoreReason =
@@ -68,8 +69,6 @@ export type IgnoreReason =
   | "not-newer"
   /** The tag is of another game line than Reforged. */
   | "not-reforged"
-  /** A qualifier is neither a client marker nor a commit hash. */
-  | "unknown-qualifier"
   /** The tag is of a test or beta client. */
   | "test-client"
   /** The Build is vendored in the repository already. */
@@ -88,8 +87,8 @@ export interface IgnoredTag {
   message: string;
 }
 
-/** A new live Build, with what an issue about it links to. */
-export interface NewBuild {
+/** A new live Patch, with what an issue about it links to. */
+export interface NewPatch {
   build: string;
   gameVersion: string;
   tag: string;
@@ -110,15 +109,21 @@ export interface PatchWatchInput {
 
 export interface PatchWatchPlan {
   supported: string;
-  /** The newest new live Build to report; `null` when there is none. */
-  patch: NewBuild | null;
-  /** The other new live Builds `patch` supersedes, in Build order. */
-  superseded: NewBuild[];
+  /** The newest new live Patch to report; `null` when there is none. */
+  patch: NewPatch | null;
+  /** The other new live Patches `patch` supersedes, in Build order. */
+  superseded: NewPatch[];
   /** Every other tag, with its reason, in code-point order of its name. */
   ignored: IgnoredTag[];
 }
 
-/** Why a read tag is not a live Reforged one, if it is not. */
+/** A tag that names a new live Build. */
+interface Candidate {
+  tag: JassHistoryTag;
+  parsed: ParsedTag;
+}
+
+/** Why a read tag is not of the live Reforged game, if it is not. */
 function notLive(
   tag: JassHistoryTag,
   parsed: ParsedTag,
@@ -127,18 +132,6 @@ function notLive(
     return {
       reason: "not-reforged",
       message: `${tag.name} is a ${parsed.prefix} tag; the Typings vendor ${LIVE_PREFIX} tags only.`,
-    };
-  }
-  const unknown = parsed.qualifiers.find(
-    (qualifier) =>
-      qualifier !== LIVE_CLIENT &&
-      !NOT_LIVE_CLIENTS.has(qualifier) &&
-      !SHORT_HASH.test(qualifier),
-  );
-  if (unknown !== undefined) {
-    return {
-      reason: "unknown-qualifier",
-      message: `${tag.name} has the qualifier ${unknown}, neither a client marker (${LIVE_CLIENT} live, w3t test, w3b beta) nor a commit hash.`,
     };
   }
   for (const qualifier of parsed.qualifiers) {
@@ -153,17 +146,17 @@ function notLive(
   return undefined;
 }
 
-/** The tag the plan reads for a Build tagged more than once. */
-function preferred(
-  a: { tag: JassHistoryTag; parsed: ParsedTag },
-  b: { tag: JassHistoryTag; parsed: ParsedTag },
-): number {
-  const live = (candidate: { parsed: ParsedTag }) =>
-    candidate.parsed.qualifiers.includes(LIVE_CLIENT) ? 0 : 1;
-  return live(a) - live(b) || byCodePoint(a.tag.name, b.tag.name);
+/**
+ * Orders the tags of one Build, the one the plan reads first: the tag
+ * marked live, then code-point order.
+ */
+function byPreference(a: Candidate, b: Candidate): number {
+  const rank = ({ parsed }: Candidate) =>
+    parsed.qualifiers.includes(LIVE_CLIENT) ? 0 : 1;
+  return rank(a) - rank(b) || byCodePoint(a.tag.name, b.tag.name);
 }
 
-function newBuild(tag: JassHistoryTag, build: string): NewBuild {
+function newPatch(tag: JassHistoryTag, build: string): NewPatch {
   return {
     build,
     gameVersion: gameVersion(build),
@@ -181,10 +174,7 @@ function newBuild(tag: JassHistoryTag, build: string): NewBuild {
  */
 export function planPatchWatch(input: PatchWatchInput): PatchWatchPlan {
   const ignored: IgnoredTag[] = [];
-  const candidates = new Map<
-    string,
-    { tag: JassHistoryTag; parsed: ParsedTag }[]
-  >();
+  const candidates = new Map<string, Candidate[]>();
 
   for (const tag of input.tags) {
     const parsed = parseTag(tag.name);
@@ -192,7 +182,8 @@ export function planPatchWatch(input: PatchWatchInput): PatchWatchPlan {
       ignored.push({
         tag: tag.name,
         reason: "no-build",
-        message: `${JSON.stringify(tag.name)} has no four-number Build such as Reforged-v3.0.0.24268-w3-3a9d8f2 (baseline, locale-only tags and old betas have none).`,
+        // Quoted: a malformed name may be empty or hold a line break.
+        message: `${JSON.stringify(tag.name)} is not <prefix>-v<four-number Build>[-<qualifier>]... (baseline, locale-only tags and old betas have no Build).`,
       });
       continue;
     }
@@ -205,9 +196,9 @@ export function planPatchWatch(input: PatchWatchInput): PatchWatchPlan {
       });
       continue;
     }
-    const why = notLive(tag, parsed);
-    if (why !== undefined) {
-      ignored.push({ tag: tag.name, ...why });
+    const reason = notLive(tag, parsed);
+    if (reason !== undefined) {
+      ignored.push({ tag: tag.name, ...reason });
       continue;
     }
     if (input.vendored.includes(build)) {
@@ -221,10 +212,10 @@ export function planPatchWatch(input: PatchWatchInput): PatchWatchPlan {
     candidates.set(build, [...(candidates.get(build) ?? []), { tag, parsed }]);
   }
 
-  const builds: NewBuild[] = [];
+  const patches: NewPatch[] = [];
   for (const [build, tags] of candidates) {
-    const [chosen, ...others] = tags.sort(preferred);
-    builds.push(newBuild(chosen.tag, build));
+    const [chosen, ...others] = tags.sort(byPreference);
+    patches.push(newPatch(chosen.tag, build));
     for (const { tag } of others) {
       ignored.push({
         tag: tag.name,
@@ -233,10 +224,10 @@ export function planPatchWatch(input: PatchWatchInput): PatchWatchPlan {
       });
     }
   }
-  builds.sort((a, b) => compareBuilds(a.build, b.build));
+  patches.sort((a, b) => compareBuilds(a.build, b.build));
 
-  let patch = builds.pop() ?? null;
-  let superseded = builds;
+  let patch = patches.pop() ?? null;
+  let superseded = patches;
   if (patch !== null && input.reported.includes(patch.build)) {
     const newest = patch.build;
     ignored.push({
@@ -267,6 +258,20 @@ export class WatchInputError extends Error {
   }
 }
 
+/** The names of the Build folders in `dir`; none when it does not exist. */
+async function buildFolders(dir: string): Promise<string[]> {
+  try {
+    return (await readdir(dir, { withFileTypes: true }))
+      .filter((item) => item.isDirectory() && isBuild(item.name))
+      .map((item) => item.name);
+  } catch (error) {
+    if (isRecord(error) && error.code === "ENOENT") return [];
+    throw new WatchInputError(`${dir}: ${errorMessage(error)}`, {
+      cause: error,
+    });
+  }
+}
+
 /**
  * What the watch reads from the workspace at `root`: the supported Patch
  * (the Typings' `reforged.patch`) and the vendored Builds (the `patch` of
@@ -284,8 +289,7 @@ export async function readWatchRepository(
       `No publishable package is named ${TYPINGS_PACKAGE} in ${root}.`,
     );
   }
-  const reforged = typings.manifest.reforged;
-  const supported = isRecord(reforged) ? reforged.patch : undefined;
+  const supported = declaredPatch(typings.manifest);
   if (!isBuild(supported)) {
     throw new WatchInputError(
       `${join(typings.absoluteDir, "package.json")}: reforged.patch is ${JSON.stringify(supported)}, not a Build such as 3.0.0.24268.`,
@@ -293,17 +297,8 @@ export async function readWatchRepository(
   }
 
   const vendorDir = join(typings.absoluteDir, "vendor");
-  let folders: string[];
-  try {
-    folders = (await readdir(vendorDir, { withFileTypes: true }))
-      .filter((item) => item.isDirectory())
-      .map((item) => item.name);
-  } catch (error) {
-    if (isRecord(error) && error.code === "ENOENT") folders = [];
-    else throw error;
-  }
   const vendored: string[] = [];
-  for (const folder of folders) {
+  for (const folder of await buildFolders(vendorDir)) {
     const file = join(vendorDir, folder, "provenance.json");
     let patch: unknown;
     try {

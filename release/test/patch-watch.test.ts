@@ -250,24 +250,22 @@ describe("planPatchWatch", () => {
     ]);
   });
 
-  it("ignores a tag whose qualifier it cannot read, naming the qualifier", () => {
+  it("takes a tag with a qualifier it does not know for a live one", () => {
     const result = plan({
       tags: [
-        { name: "TFT-v1.28.0.7205-zhtw", commit: "5".repeat(40) },
-        { name: "Reforged-v3.1.0.25000-ptr-1a2b3c4", commit: "6".repeat(40) },
+        { name: "Reforged-v3.1.0.25000-w3-1a2b3c4-eu", commit: "5".repeat(40) },
+        { name: "Reforged-v3.1.0.25001-ptr", commit: "6".repeat(40) },
+        { name: "Reforged-v3.1.0.25002-eu-w3t", commit: "7".repeat(40) },
       ],
-      supported: "1.0.0.0",
     });
 
-    expect(result.patch).toBeNull();
-    expect(result.ignored).toEqual([
-      {
-        tag: "Reforged-v3.1.0.25000-ptr-1a2b3c4",
-        reason: "unknown-qualifier",
-        message: expect.stringContaining("ptr") as unknown,
-      },
-      expect.objectContaining({ reason: "not-reforged" }),
+    expect(result.patch).toMatchObject({ tag: "Reforged-v3.1.0.25001-ptr" });
+    expect(result.superseded).toMatchObject([
+      { tag: "Reforged-v3.1.0.25000-w3-1a2b3c4-eu" },
     ]);
+    expect(reasons(result)).toEqual({
+      "Reforged-v3.1.0.25002-eu-w3t": "test-client",
+    });
   });
 
   it("never throws on a malformed tag, and ignores it", () => {
@@ -281,8 +279,6 @@ describe("planPatchWatch", () => {
       "Reforged-v3.0.0.24300-w3-3a9d8f2\n",
       "Reforged-v３.0.0.24300-w3",
       "Reforged-v3.0.0.24300-w3/../x",
-      "Reforged-v3.0.0.24300-constructor",
-      "Reforged-v3.0.0.24300-toString-w3",
     ];
     const result = plan({
       tags: names.map((name) => ({ name, commit: "7".repeat(40) })),

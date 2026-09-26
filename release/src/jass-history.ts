@@ -5,7 +5,7 @@
  * the Typings generator's `packages/reforged-types/src/vendor/vendor.ts`,
  * which is not part of the published package and so is not imported.
  */
-import { isRecord } from "./unknown.js";
+import { errorMessage, isRecord } from "./unknown.js";
 
 export const JASS_HISTORY = {
   owner: "Luashine",
@@ -66,7 +66,7 @@ function nextPage(link: string | null): string | undefined {
  * answer 200 or is not a list of tags.
  */
 export async function fetchTags(
-  fetcher: typeof fetch = fetch,
+  fetcher: typeof fetch,
   token?: string,
 ): Promise<JassHistoryTag[]> {
   const headers: Record<string, string> = {
@@ -74,9 +74,7 @@ export async function fetchTags(
     "user-agent": "reforged-ts-patch-watch",
     "x-github-api-version": "2022-11-28",
   };
-  if (token !== undefined && token !== "") {
-    headers.authorization = `Bearer ${token}`;
-  }
+  if (token !== undefined) headers.authorization = `Bearer ${token}`;
 
   const tags: JassHistoryTag[] = [];
   let url: string | undefined = TAGS_URL;
@@ -92,7 +90,14 @@ export async function fetchTags(
         `GET ${url} answered ${String(response.status)} ${response.statusText}.`,
       );
     }
-    const body = await response.json();
+    let body: unknown;
+    try {
+      body = await response.json();
+    } catch (error) {
+      throw new Error(`GET ${url} answered no JSON: ${errorMessage(error)}`, {
+        cause: error,
+      });
+    }
     if (!Array.isArray(body)) {
       throw new Error(`GET ${url} did not answer a list of tags.`);
     }
