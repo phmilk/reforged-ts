@@ -81,6 +81,12 @@ jobs:
     permissions:
       contents: read
     steps:
+      # Checked out first: the App token step is a local action.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The changelog links the commit that added each changeset.
+          fetch-depth: 0
+          persist-credentials: false
       # The App opens the pull request, so CI runs on it (a pull request
       # opened with the default token triggers no workflow).
       - id: app
@@ -90,11 +96,6 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: ${{ needs.select.outputs.dry-run == 'true' && 'read' || 'write' }}
           permission-pull-requests: ${{ needs.select.outputs.dry-run == 'true' && 'read' || 'write' }}
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          # The changelog links the commit that added each changeset.
-          fetch-depth: 0
-          persist-credentials: false
       - uses: ./.github/actions/setup-workspace
       # Before the version step, which consumes the changesets the gate reads.
       - name: Major-changeset gate
@@ -224,6 +225,12 @@ jobs:
       # provenance.
       id-token: write
     steps:
+      # Changesets publishes each tarball from its package folder: the
+      # checkout, never a build. Checked out first: the App token step is a
+      # local action.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       # Tags and releases go through the App, so the reforged-ts tags can
       # trigger the docs workflow the workflows spec (#48) plans, docs.yml
       # (tags created with the default token trigger no workflow).
@@ -233,11 +240,6 @@ jobs:
           client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: write
-      # Changesets publishes each tarball from its package folder: the
-      # checkout, never a build.
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
       - uses: ./.github/actions/setup-workspace
         with:
           ignore-scripts: true

@@ -139,13 +139,32 @@ A package at `0.0.0` is never packed or published: its versions are applied firs
 
 ### Applying the versions
 
-The first versions are applied on `master` before the first-publish wizard ([#149](https://github.com/phmilk/reforged-ts/issues/149)) runs, which publishes what `master` holds:
+The first versions are applied on `master` before [the first-publish wizard](#the-first-publish-wizard) runs, which publishes what `master` holds:
 
 1. On a branch from `master`, with a token for the changelog generator (see [Versioning locally](#versioning-locally-the-github-token)), run `pnpm changeset version`.
 2. Check the result: all four manifests at `1.0.0-alpha.0`, a `CHANGELOG.md` per package, the consumed changesets moved to `.changeset/pre/`, `.changeset/pre.json` unchanged. Run `pnpm install` and `pnpm check`.
 3. Open a pull request with the result and merge it.
 
 When the release workflow is already on `master`, its Version Packages pull request carries the same result and can be merged instead. The run that merge starts goes on to pack, gate and publish, and its publish job stops at [the publish check](#the-publish-check), naming the four packages as not on npm yet: expected, since trusted publishing cannot create a package. Run the wizard next; it publishes what `master` holds, so that failed job needs no re-run.
+
+### The first-publish wizard
+
+`release/first-publish.sh` walks the maintainer through [human steps](#human-steps) 1 to 4 in one sitting. Run it from the repository root, in Git Bash on Windows or a shell on Linux, on a clean `master` with [the versions applied](#applying-the-versions):
+
+```sh
+bash release/first-publish.sh --dry-run  # review: prints every command, publishes nothing
+bash release/first-publish.sh
+```
+
+Its stages, in order:
+
+1. **Checks:** git, node, pnpm and npm on the PATH; the checkout on `master`, clean and at `origin/master`; `.changeset/pre.json` in pre mode `alpha`; the four manifests at `1.0.0-alpha.0` (it stops here, pointing at [Applying the versions](#applying-the-versions), when they are not); and what npm holds for each package.
+2. **The token:** it opens the npm Access Tokens page and says how to generate the granular token (read and write on all packages, since none exists yet, with "Bypass two-factor authentication" unticked). It reads the token without echoing it, puts it into the user npm config with `npm config set //registry.npmjs.org/:_authToken`, and checks it with `npm whoami`. It refuses to start when npm is already logged in, so the session is the token's alone.
+3. **Publish:** what the release workflow's pack and publish jobs do, from the local checkout: `pnpm build`, `pnpm typings:check`, `pnpm changeset pack --out-dir <temporary folder>`, [`pnpm release:dist-tag`](#the-dist-tag) (which writes `next` into the publish plan and refuses `0.0.0`), a check that the plan holds only `1.0.0-alpha.0` under `next`, a confirmation, then `pnpm changeset publish --from-pack-dir <temporary folder>`, which may ask for an npm one-time password. It then checks that `npm view <package> dist-tags.next` answers `1.0.0-alpha.0` for each package, and offers to push the git tags `changeset publish` created.
+4. **Each package** (four stages): it opens `https://www.npmjs.com/package/<package>/access`, prints the trusted publisher to add (GitHub Actions; organization or user `phmilk`, repository `reforged-ts`, workflow filename `release.yml`, no environment, direct `npm publish` allowed), then has the maintainer set "Require two-factor authentication and disallow tokens" under Publishing access.
+5. **Revoke the token:** it opens the Access Tokens page, waits for the token to be deleted, checks that `npm whoami` is refused with a 401, and removes the token from the npm config.
+
+It stops at the first failed check, saying what to fix. What npm's CLI cannot show (the trusted publisher, the publishing access, the token's 2FA setting, and the revocation when this run holds no token) it asks the maintainer to confirm. It never stores or prints the token, and removes it from the npm config whenever it exits. It can be re-run after an interruption: a package npm already holds with `next` at `1.0.0-alpha.0` is not published again, and with all four there it asks for no token and goes straight to the npm settings. The dry run runs the read-only checks, only warns about the branch and the working tree, answers every confirmation with yes and opens no browser.
 
 ## The compatibility matrix
 
@@ -342,7 +361,7 @@ The tags and the releases are created with the App's token, not the job's defaul
 
 - the job cannot request an OIDC token: `permissions: id-token: write` is missing;
 - the publishing tool cannot do trusted publishing: pnpm 10 hands the upload to the npm CLI, which does it from 11.5.1 (Node 24 bundles a recent enough npm); pnpm 11 and later do it themselves;
-- a publishable package is not on npm yet: trusted publishing is configured on an existing package only, so a package's first version is published by hand with the first-publish wizard ([#149](https://github.com/phmilk/reforged-ts/issues/149)).
+- a publishable package is not on npm yet: trusted publishing is configured on an existing package only, so a package's first version is published by hand with [the first-publish wizard](#the-first-publish-wizard).
 
 npm does not expose a package's trusted publisher, so a missing or mismatched one shows only at upload, as an `ENEEDAUTH` or 404 from npm.
 
@@ -379,7 +398,7 @@ They gate the dry run and the first tokenless publish, not the merge of the work
 - **The GitHub App** ([#48](https://github.com/phmilk/reforged-ts/issues/48)): installed on this repository with contents write and pull requests write, its client ID and a private key stored as above.
 - **A `v1` ref on the Template**: the gate clones `v<major>` of the library version, and fails naming the ref when the Template has neither a tag nor a branch of that name. Create it on the Template commit that supports the release: `git tag v1 <commit> && git push origin v1`. The Template's own plan cuts a `v1` branch at library 2.0 and keeps `main` as the current major; a `v1` tag now and a `v1` branch then both satisfy the gate, but the tag must be moved (or replaced by the branch) when the Template's `main` moves on.
 - **A read-only token for the Template** while it is private (see the table above).
-- **The four packages on npm with their trusted publisher**: the first-publish wizard ([#149](https://github.com/phmilk/reforged-ts/issues/149)) publishes `1.0.0-alpha.0` of each and configures the publisher (repository `phmilk/reforged-ts`, workflow `release.yml`, no environment). The workflow file name is part of that configuration: renaming `release.yml` breaks publishing until every package's publisher is updated.
+- **The four packages on npm with their trusted publisher**: [the first-publish wizard](#the-first-publish-wizard) publishes `1.0.0-alpha.0` of each and configures the publisher (repository `phmilk/reforged-ts`, workflow `release.yml`, no environment). The workflow file name is part of that configuration: renaming `release.yml` breaks publishing until every package's publisher is updated.
 
 ### The Version Packages pull request and CI
 
@@ -397,7 +416,7 @@ Merge it once the release run of the latest push to `master` has finished: that 
 
 Done once each by the maintainer; every release after them is tokenless.
 
-1. For each of the four packages, publish `1.0.0-alpha.0` from a local checkout with a granular npm token protected by 2FA, because npm configures trusted publishing only on a package that exists. The first-publish wizard ([#149](https://github.com/phmilk/reforged-ts/issues/149)) walks through steps 1 to 4 and checks what it can; apply [the first versions](#applying-the-versions) before running it.
+1. For each of the four packages, publish `1.0.0-alpha.0` from a local checkout with a granular npm token protected by 2FA, because npm configures trusted publishing only on a package that exists. [The first-publish wizard](#the-first-publish-wizard), `bash release/first-publish.sh` (`--dry-run` to review it first), walks through steps 1 to 4 and checks what it can; apply [the first versions](#applying-the-versions) before running it.
 2. On npm, add the GitHub Actions trusted publisher for each package: repository `phmilk/reforged-ts`, workflow `release.yml`, no environment.
 3. On each package, enable "Require two-factor authentication and disallow tokens".
 4. Revoke the token.
