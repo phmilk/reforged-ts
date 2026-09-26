@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://phmilk.github.io/reforged-ts
+    about: The guides and the API reference of the library, the Typings, the harness and the lint plugin.
+  - name: Questions and support
+    url: https://www.hiveworkshop.com/forums/triggers-scripts.269/
+    about: How to do something in a map. Ask the Warcraft III scripting community on Hive Workshop, Triggers & Scripts.

@@ -59,6 +59,10 @@ The library's tests import the harness by its package name: the runner from `ref
 - **A tolerated lint finding is disabled inline, on its line, naming the build step that clears it.** No rule is disabled in `eslint.config.mjs`, and a disable left behind after its fix fails lint.
 - **A Wrapper follows the Handle base's rules**, written in the doc comment of `Handle` (`packages/reforged-ts/src/handles/handle.ts`): the naming rule, no public constructor, lookups through `fromHandle` and creation through the creation helper (creation throws, lookup returns `undefined`). A field set from a creation argument is filled through the creation helper's `init`, with no constructor; a Wrapper declares a protected constructor taking the Handle and calling `super(handle)` only for fields that need initialisers or other constructor work. A member whose Native allocates another Wrapper's Handle calls that Wrapper's protected `expect` (`Point.expect(GetUnitLoc(...))`). The exceptions to "lookups go through `fromHandle`" are the documented non-null path (`unit.getOwner()`, `MapPlayer.fromLocal()`, which assert an invariant through the protected `expectFound` and so throw the standard message without counting as creations) and `Frame`'s `fromHandle` override for handle id 0.
 
+## Contributing
+
+[`CONTRIBUTING.md`](CONTRIBUTING.md) is the guide for a pull request: the flow, changesets, tests on the harness, the Wrapper rules, curating the Overlay and a new Patch, documentation and the issue labels.
+
 ## For agents
 
 [`AGENTS.md`](AGENTS.md) holds the agent instructions: the issue tracker, the triage labels and where the domain docs live. [`CONTEXT.md`](CONTEXT.md) is the project vocabulary (Native, Handle, Wrapper, System, Typings, Patch); use its terms.
