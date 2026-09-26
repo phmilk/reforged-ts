@@ -10,11 +10,7 @@
 -- The game's constants the registration Natives take and the event response
 -- Natives answer with, per kind in the order the Typings declare them: opaque
 -- values a test compares by identity, rendered by name in the call log.
-local function constants(kind, names)
-  for i = 1, #names do
-    _G[names[i]] = __stub_constant(kind, names[i])
-  end
-end
+local constants = __stub_constants
 
 constants("playerunitevent", {
   "EVENT_PLAYER_UNIT_ATTACKED", "EVENT_PLAYER_UNIT_RESCUED", "EVENT_PLAYER_UNIT_DEATH",

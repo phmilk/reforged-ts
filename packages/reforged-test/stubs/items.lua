@@ -20,16 +20,14 @@ function BlzCreateItemWithSkin(itemid, x, y, skinId)
   return item
 end
 
--- The item types, in the order the Patch declares them. ITEM_TYPE_TOME is
+-- The item types, in the order the Typings declare them. ITEM_TYPE_TOME is
 -- converted from the same integer as ITEM_TYPE_POWERUP, so it is the same
 -- value.
-for _, name in ipairs({
+__stub_constants("itemtype", {
   "ITEM_TYPE_PERMANENT", "ITEM_TYPE_CHARGED", "ITEM_TYPE_POWERUP", "ITEM_TYPE_ARTIFACT",
   "ITEM_TYPE_PURCHASABLE", "ITEM_TYPE_CAMPAIGN", "ITEM_TYPE_MISCELLANEOUS", "ITEM_TYPE_EQUIPMENT",
   "ITEM_TYPE_UNKNOWN", "ITEM_TYPE_ANY",
-}) do
-  _G[name] = __stub_constant("itemtype", name)
-end
+})
 ITEM_TYPE_TOME = ITEM_TYPE_POWERUP
 
 -- The equipment converters. As in the game, a converter returns one value
@@ -43,18 +41,14 @@ local function converter(name, kind, names)
   local values = {}
   for i = 0, #names do
     values[i] = __stub_constant(kind, names[i])
-    values[i].value = i
     _G[names[i]] = values[i]
   end
   _G[name] = function(i)
     __stub_record(name, i)
-    local value = values[i]
-    if value == nil then
-      value = __stub_constant(kind, name .. "(" .. tostring(i) .. ")")
-      value.value = i
-      values[i] = value
+    if values[i] == nil then
+      values[i] = __stub_constant(kind, name .. "(" .. tostring(i) .. ")")
     end
-    return value
+    return values[i]
   end
 end
 

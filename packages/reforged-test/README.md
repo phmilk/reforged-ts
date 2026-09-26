@@ -161,6 +161,7 @@ It also holds the shared machinery the other stub files use:
 - `__stub_record(name, ...)` appends one line, `Name(arg, arg)`, to the call log. Handles are rendered as `kind#id`, constants by their name, strings are quoted and functions are shown as `<function>`. It also keeps the arguments themselves, which `__stub_args` hands back.
 - `__stub_new_handle(kind)` returns a new handle. A handle is a table carrying `__kind` and `__handleId`. Ids are sequential from a fixed base, so the first handle of a state is `1048577`.
 - `__stub_constant(kind, name)` returns a constant of the game: a table carrying `__kind` and `__name` and no handle id, so defining one leaves the handle sequence alone.
+- `__stub_constants(kind, names)` defines one global constant of `kind` per name in the list, each named after itself: a family of constants in one call.
 - `__stub_format(value)` renders one argument as `__stub_record` does.
 - `__stub_player(number)` returns the player handle of a slot, the one `Player` returns, without a call-log line. Stubs that return a player use it.
 - `__stub_response(name)` defines the event response Native `name` (`GetTriggerUnit`, `GetExpiredTimer`): it records its call and answers with the firing context's value for its name, nil when the context has none or outside a firing. A Map project's stub file uses it for a response Native the shipped families leave out.
@@ -212,7 +213,7 @@ A timer or trigger never fires on its own, and a sent sync packet reaches no one
 
 ### Constants and converters
 
-A constant of the game is an opaque value made with `__stub_constant`: it carries its kind and its name, no handle id, and renders by name in the call log (`PLAYER_COLOR_BLACK`, `CAMERA_FIELD_ZABSOLUTE`). A test compares constants by identity (`toBe`), and defining them leaves the handle sequence alone. Besides the event constants (below), the shipped stubs define the `PLAYER_COLOR_*`, `RACE_PREF_*`, `ITEM_TYPE_*`, `CAMERA_FIELD_*`, `MOUSE_BUTTON_TYPE_*` and `PATHING_TYPE_*` families. A constant the Patch converts from the same integer as another is that other value: `ITEM_TYPE_TOME` is `ITEM_TYPE_POWERUP`.
+A constant of the game is an opaque value made with `__stub_constant` (a whole family with `__stub_constants`): it carries its kind and its name, no handle id, and renders by name in the call log (`PLAYER_COLOR_BLACK`, `CAMERA_FIELD_ZABSOLUTE`). A test compares constants by identity (`toBe`), and defining them leaves the handle sequence alone. Besides the event constants (below), the shipped stubs define the `PLAYER_COLOR_*`, `RACE_PREF_*`, `ITEM_TYPE_*`, `CAMERA_FIELD_*`, `MOUSE_BUTTON_TYPE_*` and `PATHING_TYPE_*` families. A constant the Patch converts from the same integer as another is that other value: `ITEM_TYPE_TOME` is `ITEM_TYPE_POWERUP`.
 
 **The sentinel rule.** The equipment converters `ConvertEquipmentType`, `ConvertItemTag` and `ConvertLoadoutSlot` are recorded, and each returns one cached value, a sentinel, per integer: the same integer gives the same object on every call, as in the game. The named constants are those sentinels, so `ConvertEquipmentType(1)` is `EQUIPMENT_TYPE_HEAD`, and a value the code under test converts compares by identity with the constant it names.
 
@@ -229,7 +230,7 @@ expect(ConvertEquipmentType(1)).toBe(EQUIPMENT_TYPE_HEAD);
 const unknown = ConvertEquipmentType(42); // no EQUIPMENT_TYPE_* is this value
 ```
 
-Every sentinel also carries its integer as `value`. None takes a handle id.
+No sentinel takes a handle id. The older converters `ConvertEffectType` and `ConvertFogState` do not follow the rule yet: each call returns a new handle, which takes an id.
 
 ### Triggers, conditions and the firing context
 

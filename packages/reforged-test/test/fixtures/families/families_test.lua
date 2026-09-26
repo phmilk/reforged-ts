@@ -649,10 +649,15 @@ describe("destructables", function()
       "BlzCreateDeadDestructableZWithSkinPitchRollColor(1, 2, 3, nil, nil, nil, nil, nil, nil, nil, nil)",
     })
   end)
+  it("records an argument beyond the Native's parameters, so a call with too many shows", function()
+    local mark = #runner.stubCalls()
+    CreateDestructable(1, 2, 3, 4, 5, 6, 7)
+    expect(since(mark)).toEqual({ "CreateDestructable(1, 2, 3, 4, 5, 6, 7)" })
+  end)
 end)
 
 -- The constant families the 3.0.0 members take or return, per kind in the
--- order the Patch declares them.
+-- order the Typings declare them.
 local FAMILIES = {
   mousebuttontype = { "MOUSE_BUTTON_TYPE_LEFT", "MOUSE_BUTTON_TYPE_MIDDLE", "MOUSE_BUTTON_TYPE_RIGHT" },
   pathingtype = {

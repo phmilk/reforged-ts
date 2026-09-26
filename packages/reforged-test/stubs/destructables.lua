@@ -12,8 +12,9 @@ end
 -- Every destructable creation Native of the Patch, with its arity: the
 -- plain, dead, Z, pitch-roll, with-skin and with-colour families and their
 -- combinations. Each records one argument per parameter, in the Native's
--- order (an omitted one as nil), and returns a new destructable. objectid,
--- x and y come first in every one of them.
+-- order (an omitted one as nil, an extra one after them, so a call with too
+-- many arguments shows), and returns a new destructable. objectid, x and y
+-- come first in every one of them.
 local CREATORS = {
   CreateDestructable = 6,
   CreateDestructableZ = 7,
@@ -52,7 +53,7 @@ local CREATORS = {
 for name, arity in pairs(CREATORS) do
   _G[name] = function(...)
     local args = table.pack(...)
-    __stub_record(name, table.unpack(args, 1, arity))
+    __stub_record(name, table.unpack(args, 1, math.max(arity, args.n)))
     return newDestructable(args[1], args[2], args[3])
   end
 end
