@@ -51,6 +51,13 @@ async function readYaml(file: string): Promise<unknown> {
   return parse(await readFile(join(formsFolder, file), "utf8")) as unknown;
 }
 
+/** A form's fields, every item but the markdown ones, as id and label. */
+function fields(form: Form): (string | undefined)[][] {
+  return form.body
+    .filter((item) => item.type !== "markdown")
+    .map((item) => [item.id, item.attributes.label]);
+}
+
 const validateForm = await validator("github-issue-forms.json");
 const validateConfig = await validator("github-issue-config.json");
 
@@ -73,11 +80,9 @@ describe("the issue forms", () => {
     });
 
     it("has unique field ids and labels", async () => {
-      const fields = ((await readYaml(file)) as Form).body.filter(
-        (field) => field.type !== "markdown",
-      );
-      const ids = fields.map((field) => field.id);
-      const labels = fields.map((field) => field.attributes.label);
+      const pairs = fields((await readYaml(file)) as Form);
+      const ids = pairs.map(([id]) => id);
+      const labels = pairs.map(([, label]) => label);
       expect(new Set(ids).size).toBe(ids.length);
       expect(new Set(labels).size).toBe(labels.length);
     });
@@ -85,11 +90,7 @@ describe("the issue forms", () => {
 
   it("keeps the fields the Patch watch writes", async () => {
     const form = (await readYaml("new-game-patch.yml")) as Form;
-    expect(
-      form.body
-        .filter((field) => field.type !== "markdown")
-        .map((field) => [field.id, field.attributes.label]),
-    ).toEqual(PATCH_FIELDS);
+    expect(fields(form)).toEqual(PATCH_FIELDS);
   });
 
   it("disable blank issues in a configuration GitHub accepts", async () => {

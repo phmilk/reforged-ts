@@ -23,10 +23,10 @@ body:
     validations:
       required: true
   - type: input
-    id: patch
+    id: build
     attributes:
-      label: Game Patch
-      description: The Build of the game you ran the map on, all four numbers. The game shows it on its main menu.
+      label: Build
+      description: The Build of the game Patch you ran the map on, all four numbers. The game shows it on its main menu.
       placeholder: 3.0.0.24268
     validations:
       required: true

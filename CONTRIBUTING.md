@@ -18,16 +18,9 @@ The [README](README.md) has the requirements (Node, pnpm) and every root command
 
 ### Changesets
 
-Every pull request carries a changeset: a file in `.changeset/` naming the packages it releases and their bumps, whose text is the changelog entry a Map project author reads. Add one with `pnpm changeset`. Each package is versioned on its own ([ADR 0009](docs/adr/0009-independent-semver-with-changesets-and-patch-field.md)):
+Every pull request carries a changeset: a file in `.changeset/` naming the packages it releases and their bumps, whose text is the changelog entry a Map project author reads. Add one with `pnpm changeset`. Each package is versioned on its own ([ADR 0009](docs/adr/0009-independent-semver-with-changesets-and-patch-field.md)): a **major** when its public API breaks, a **minor** when something is added (a Wrapper member, a lint rule, the Natives of a new Patch), a **patch** for a fix that changes no API, and an **empty** changeset when nothing publishable changes (the website, CI, a test). The one exception is a pull request that only deletes stranded empty changesets: it adds none, and says so in its description.
 
-| Bump      | When                                                                                                                                                                                                                         |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **major** | The package's public API breaks: a symbol removed or renamed, a signature or a behaviour a Map project relies on changed. A major of `reforged-ts` cannot release without its migration page and its `renames.json` entries. |
-| **minor** | Something is added: a Wrapper member, a System, a lint rule, the Natives of a new Patch, a deprecation. A symbol is deprecated in a minor and removed only in the next major.                                                |
-| **patch** | A fix that changes no API, such as a bug fix in a Wrapper or a generator fix in the Typings.                                                                                                                                 |
-| empty     | Nothing publishable changes: the website, CI, the release scripts, a test, a comment (`pnpm changeset add --empty`). It says that no release was forgotten.                                                                  |
-
-[`docs/release.md`](docs/release.md) is the full guide: the non-interactive commands, how to choose the bumps for a new Patch, the deprecation policy and the release workflow. It is the reference; this table only summarises it.
+[`docs/release.md`](docs/release.md) has the rules in full: the non-interactive commands, what a major of the library requires, the bumps for a new Patch and the deprecation policy.
 
 ## Tests on the harness
 
@@ -36,7 +29,7 @@ The library's tests are TypeScript files compiled to Lua by typescript-to-lua an
 ```sh
 pnpm test                                        # everything, as pnpm check runs it
 pnpm --filter reforged-ts test                   # the library's tests only
-pnpm --filter reforged-ts test -t timer.test.ts  # the tests of one file
+pnpm --filter reforged-ts test -t timer.test.ts  # one file's tests: each file is a describe named after it
 ```
 
 ## Wrappers
