@@ -341,6 +341,7 @@ export class Frame extends Handle<framehandle> {
    */
   public setTextAreaAutoScroll(value: boolean) {
     BlzTextAreaFrameSetAutoScroll(this.handle, value);
+    return this;
   }
 
   public setTextColor(color: number) {

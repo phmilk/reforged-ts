@@ -178,7 +178,7 @@ export class Unit extends Widget {
     return BlzIsUnitInvulnerable(this.handle);
   }
 
-  /** Whether the unit shows the hero glow, through `HeroGlowIsAllowedOnUnit` (3.0.0). */
+  /** Whether the hero glow is allowed on the unit, through `HeroGlowIsAllowedOnUnit` (3.0.0). */
   public get isHeroGlowAllowed() {
     return HeroGlowIsAllowedOnUnit(this.handle);
   }

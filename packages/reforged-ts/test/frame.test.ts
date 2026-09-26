@@ -328,15 +328,14 @@ describe("Frame event reads", () => {
 });
 
 describe("Frame.setTextAreaAutoScroll", () => {
-  it("passes the flag to BlzTextAreaFrameSetAutoScroll", () => {
+  it("passes the flag to BlzTextAreaFrameSetAutoScroll and returns the Frame", () => {
     const frame = gameUi();
-    withNative(
+    const returned = withNative(
       "BlzTextAreaFrameSetAutoScroll",
       () => undefined,
-      () => {
-        frame.setTextAreaAutoScroll(true);
-      },
+      () => frame.setTextAreaAutoScroll(true),
     );
+    expect(returned).toBe(frame);
     expect(stubCalls()).toContainCall(
       `BlzTextAreaFrameSetAutoScroll(${handleRef("framehandle", frame.handle)}, true)`,
     );
