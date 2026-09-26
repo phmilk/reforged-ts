@@ -330,11 +330,12 @@ describe("the sources of this repository", () => {
   });
 
   it("write only paths git ignores", async () => {
-    const paths = SOURCES.flatMap((source) => source.outputs).flatMap(
-      (output) => [
-        `website/docs/${output}`,
-        ...(/\.\w+$/.test(output) ? [] : [`website/docs/${output}/page.md`]),
-      ],
+    // A folder output is checked through a file in it: git matches a
+    // folder-only pattern (`adr/`) on a bare path only when the folder exists.
+    const paths = SOURCES.flatMap((source) => source.outputs).map((output) =>
+      /\.\w+$/.test(output)
+        ? `website/docs/${output}`
+        : `website/docs/${output}/page.md`,
     );
     const { stdout } = await promisify(execFile)(
       "git",

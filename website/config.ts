@@ -7,15 +7,26 @@ import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
+import { REFERENCES, referencePlugin, referenceSidebars } from "./reference";
 
 /** What differs between the two configuration files. */
 export interface SiteOptions {
   /**
-   * Fail on what `docs:build` only warns about (broken anchors today). The
-   * CI gate, `docs:check`, builds strict.
+   * Fail on what `docs:build` only warns about: broken anchors, and, once
+   * `STRICT_REFERENCE` is on, TypeDoc's validation warnings in the API
+   * reference (an undocumented member). The CI gate, `docs:check`, builds
+   * strict.
    */
   readonly strict: boolean;
 }
+
+/**
+ * Whether `strict` also fails the API reference on TypeDoc's validation
+ * warnings. Off while the library's TSDoc pass is under way: `docs:check`
+ * lists each undocumented member as a warning and stays green. The last
+ * build step, #43, turns it on when every member is documented.
+ */
+const STRICT_REFERENCE = false;
 
 /**
  * The site's `customFields`, which the components read: values taken from the
@@ -54,6 +65,7 @@ function supportedPatch(): string {
 
 export function siteConfig(options: SiteOptions): Config {
   const customFields: SiteFields = { supportedPatch: supportedPatch() };
+  const reference = { strict: options.strict && STRICT_REFERENCE };
   return {
     title: "reforged-ts",
     tagline: "TypeScript for Warcraft III maps, compiled to Lua.",
@@ -85,6 +97,7 @@ export function siteConfig(options: SiteOptions): Config {
         {
           docs: {
             sidebarPath: "./sidebars.ts",
+            sidebarItemsGenerator: referenceSidebars(REFERENCES),
             editUrl: `${REPOSITORY}/tree/master/website/`,
             versions: {
               // The docs of the working tree, at /docs/next from the start:
@@ -99,6 +112,9 @@ export function siteConfig(options: SiteOptions): Config {
         } satisfies Preset.Options,
       ],
     ],
+
+    // The API reference, generated into the docs tree before the docs load.
+    plugins: REFERENCES.map((each) => referencePlugin(each, reference)),
 
     themeConfig: {
       colorMode: { respectPrefersColorScheme: true },

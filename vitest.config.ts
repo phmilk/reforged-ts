@@ -85,13 +85,14 @@ export default defineConfig({
         },
       },
       {
-        // The docs site's scripts (seam B of #40), in Node, through their
+        // The docs site's own code (seam B of #40), in Node, through its
         // programmatic entry points, on fixture repositories the tests
-        // create. The site itself is built by docs:check, not here.
+        // create or TypeDoc reads. The site itself is built by docs:check.
         test: {
           name: "website",
           root: "website",
-          include: ["test/**/*.test.mts"],
+          include: ["test/**/*.test.{mts,ts}"],
+          exclude: ["**/fixtures/**"],
           environment: "node",
         },
       },

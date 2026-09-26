@@ -1,0 +1,12 @@
+{
+  // The reference tests, under the site's compiler options (they load the
+  // site's reference.ts as Docusaurus does). Named tsconfig.json so the lint's
+  // project service finds it from the test file; vitest runs the tests from
+  // source. The fixtures are programs of their own.
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["."],
+  "exclude": ["fixtures"]
+}

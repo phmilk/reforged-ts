@@ -131,6 +131,9 @@ website/docs/contributing/adding-a-lint-rule.md
 website/docs/contributing/adding-a-patch.md
 website/docs/changelog/*.md
 
+# The API reference TypeDoc generates into the docs tree at every build
+website/docs/api/reforged-ts/
+
 # Claude Code agent worktrees and local state
 .claude/
 
