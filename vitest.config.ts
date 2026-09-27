@@ -134,6 +134,11 @@ export default defineConfig({
         pattern: /\/packages\/reforged-ts\/migration\/.+$/,
         testsToRun: () => "website/test",
       },
+      {
+        // The snippet check reads the docs pages from disk.
+        pattern: /\/website\/docs\/.+\.mdx?$/,
+        testsToRun: () => "website/test/snippets.test.mts",
+      },
     ],
   },
 });

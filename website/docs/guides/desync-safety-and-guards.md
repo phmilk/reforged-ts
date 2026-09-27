@@ -91,9 +91,13 @@ With Dev mode off, errors propagate as they do in plain Lua.
 **What it does.** `MapPlayer.runLocal(player, fn)` is the one sanctioned way to run code for one player: it runs `fn` on the client whose local player is `player`, and does nothing elsewhere.
 
 ```ts
-MapPlayer.runLocal(player, () => {
-  frame.visible = true; // visuals only
-});
+import { MapPlayer, type Frame } from "reforged-ts";
+
+export function show(player: MapPlayer, frame: Frame): void {
+  MapPlayer.runLocal(player, () => {
+    frame.visible = true; // visuals only
+  });
+}
 ```
 
 In Dev mode, inside `fn`, these raise at the line that called them:
@@ -224,10 +228,13 @@ A plain `Map` or `Set` is not unordered: typescript-to-lua's runtime keeps their
 They are keyed by Wrappers, and an entry disappears when its key is destroyed: `unit.destroy()` removes the unit from every `HandleMap` and `HandleSet` holding it.
 
 ```ts
-import { HandleMap, Unit } from "reforged-ts";
+import { HandleMap, type Unit } from "reforged-ts";
 
 const kills = new HandleMap<Unit, number>();
-kills.set(hero, (kills.get(hero) ?? 0) + 1);
+
+export function countKill(hero: Unit): void {
+  kills.set(hero, (kills.get(hero) ?? 0) + 1);
+}
 ```
 
 - They are keyed by the Handle, not the Wrapper object, so an entry set through the `Widget` that `Widget.fromEvent()` returned is found through the `Unit` the registry upgraded it to. Keys come back as the current Wrapper.
