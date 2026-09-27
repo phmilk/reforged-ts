@@ -11,7 +11,7 @@ const ruleTester = createRuleTester();
 type MessageIds = "gameState" | "creation" | "callback" | "random";
 
 const prelude = [
-  'import { CameraSetup, Camera, Effect, Frame, MapPlayer, Sound, Unit } from "reforged-ts";',
+  'import { CameraSetup, Camera, Destructable, Effect, Frame, MapPlayer, Sound, Unit } from "reforged-ts";',
   "declare const p: player;",
   "declare const mp: MapPlayer;",
   "declare const u: unit;",
@@ -20,6 +20,7 @@ const prelude = [
   "declare const effect: Effect;",
   "declare const sound: Sound;",
   "declare const setup: CameraSetup;",
+  "declare const tree: Destructable;",
   "",
 ].join("\n");
 
@@ -127,6 +128,14 @@ const memberFamilies: readonly { family: string; code: string }[] = [
     code: "Camera.pan(0, 0, undefined);\n  Camera.setPos(0, 0);",
   },
   { family: "CameraSetup", code: "setup.apply(true, false);" },
+  {
+    family: "Destructable",
+    code: "tree.setVertexColor(255, 255, 255, 128);",
+  },
+  {
+    family: "MapPlayer",
+    code: 'mp.displayText(0, 0, "hi");\n  mp.displayTimedText(0, 0, 5, "hi");\n  mp.displayTimedTextFrom(0, 0, 5, "hi");',
+  },
 ];
 
 ruleTester.run(

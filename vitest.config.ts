@@ -75,6 +75,17 @@ export default defineConfig({
         },
       },
       {
+        // The repository's conventions, in Node, on the committed files that
+        // agents and editors read (AGENTS.md, CLAUDE.md, .vscode). Needs no
+        // build.
+        test: {
+          name: "conventions",
+          root: "test/conventions",
+          include: ["*.test.ts"],
+          environment: "node",
+        },
+      },
+      {
         // The release scripts, in Node, through their programmatic entry
         // points, on fixture workspaces and repositories the tests create.
         test: {
@@ -96,6 +107,17 @@ export default defineConfig({
           testTimeout: 30_000,
           include: ["test/**/*.test.{mts,ts}"],
           exclude: ["**/fixtures/**"],
+          environment: "node",
+        },
+      },
+      {
+        // The Wrapper coverage report, in Node, through its programmatic
+        // entry points, on fixture inputs the tests create and on the real
+        // library and manifest (the drift test of the committed report).
+        test: {
+          name: "wrapper-coverage",
+          root: "wrapper-coverage",
+          include: ["test/**/*.test.ts"],
           environment: "node",
         },
       },
@@ -138,6 +160,13 @@ export default defineConfig({
         // The snippet check reads the docs pages from disk.
         pattern: /\/website\/docs\/.+\.mdx?$/,
         testsToRun: () => "website/test/snippets.test.mts",
+      },
+      {
+        // The coverage report's drift test reads the library sources, the
+        // manifests and its committed configuration and report from disk.
+        pattern:
+          /\/(?:packages\/reforged-ts\/src\/.+\.ts|packages\/reforged-types\/[\d.]+\/manifest\.json|wrapper-coverage\/[^/]+\.(?:json|md))$/,
+        testsToRun: () => "wrapper-coverage/test/real-inputs.test.ts",
       },
     ],
   },

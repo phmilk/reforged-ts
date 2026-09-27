@@ -2,7 +2,7 @@
 
 // Local-only code: `MapPlayer.runLocal` runs its function on the local
 // player's client only. In Dev mode, inside it, what changes game state for
-// one client (creating or destroying a Wrapper, `Group.for`, `Force.for`, a
+// one client (creating or destroying a Wrapper, an allocating event lookup, `Group.for`, `Force.for`, a
 // first `Frame.fromName`) raises, a visual call does not, and an error is
 // reported without escaping; with Dev mode off none of it raises.
 
@@ -12,6 +12,7 @@ import {
   Frame,
   Group,
   MapPlayer,
+  Point,
   Reforged,
   Timer,
   Unit,
@@ -83,6 +84,17 @@ function stateChangesInside(): Inside {
         }),
       },
       {
+        name: "Point.fromOrderPoint",
+        raised: withNative(
+          "GetOrderPointLoc",
+          () => Location(0, 0),
+          () =>
+            raisedIn(() => {
+              Point.fromOrderPoint();
+            }),
+        ),
+      },
+      {
         name: "unit.destroy",
         raised: raisedIn(() => {
           unit.destroy();
@@ -145,6 +157,10 @@ describe("runLocal in Dev mode", () => {
     expect(results).toEqual([
       { name: "Unit.create", raised: localOnly("creating a Unit") },
       { name: "Timer.create", raised: localOnly("creating a Timer") },
+      {
+        name: "Point.fromOrderPoint",
+        raised: localOnly("creating a Point"),
+      },
       {
         name: "unit.destroy",
         raised: localOnly(`destroying Unit#${String(unitId)}`),
@@ -236,6 +252,7 @@ describe("runLocal with Dev mode off", () => {
     Reforged.configure({ devMode: false });
     const raised = stateChangesInside().results.map((result) => result.raised);
     expect(raised).toEqual([
+      "(no error)",
       "(no error)",
       "(no error)",
       "(no error)",

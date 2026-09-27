@@ -5,6 +5,8 @@
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { GameCache } from "../src/index";
+import { handleRef } from "./support/handle-ref";
+import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -47,3 +49,34 @@ describe("GameCache.fromHandle", () => {
     expect(GameCache.fromHandle(handle)).toBe(cache);
   });
 });
+
+{
+  const cache = GameCache.create("members.w3v");
+  const ref = handleRef("gamecache", cache.handle);
+
+  describeNatives("GameCache members", [
+    nativeCase({
+      native: "StoreInteger",
+      answer: () => undefined,
+      member: () => {
+        cache.storeInteger("mission", "gold", 250);
+      },
+      line: `StoreInteger(${ref}, "mission", "gold", 250)`,
+    }),
+    nativeCase({
+      native: "HaveStoredUnit",
+      answer: () => true,
+      member: () => cache.hasUnit("mission", "hero"),
+      line: `HaveStoredUnit(${ref}, "mission", "hero")`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "FlushStoredReal",
+      answer: () => undefined,
+      member: () => {
+        cache.flushNumber("mission", "ratio");
+      },
+      line: `FlushStoredReal(${ref}, "mission", "ratio")`,
+    }),
+  ]);
+}

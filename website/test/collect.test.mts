@@ -208,8 +208,7 @@ No release yet.
       },
       {
         source: "the add-wrapper Agent skill",
-        reason:
-          "The add-wrapper Agent skill (#202) is not written yet; #41 commits .claude/skills/. Until then .gitignore ignores .claude/: a local copy is collected, CI's checkout has none, so the two builds differ.",
+        reason: "The add-wrapper Agent skill (#202) is not written yet.",
       },
       ...["reforged-types", "reforged-test", "eslint-plugin-reforged"].map(
         (pkg) => ({

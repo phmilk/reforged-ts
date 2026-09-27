@@ -40,6 +40,13 @@ export class Rectangle extends Handle<rect> {
   }
 
   /**
+   * Makes the rect a camera blocker, through `AddCameraBlocker` (3.0.0).
+   */
+  public addCameraBlocker() {
+    AddCameraBlocker(this.handle);
+  }
+
+  /**
    * Destroys the Rectangle through its Native.
    * @remarks
    * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
@@ -50,6 +57,14 @@ export class Rectangle extends Handle<rect> {
   public destroy() {
     RemoveRect(this.handle);
     this.release();
+  }
+
+  /**
+   * Turns the rect's camera blocker on or off, through `EnableCameraBlocker`
+   * (3.0.0).
+   */
+  public enableCameraBlocker(flag: boolean) {
+    EnableCameraBlocker(this.handle, flag);
   }
 
   public enumDestructables(
@@ -77,6 +92,27 @@ export class Rectangle extends Handle<rect> {
 
   public movePoint(newCenterPoint: Point) {
     MoveRectToLoc(this.handle, newCenterPoint.handle);
+  }
+
+  /**
+   * Sets the animation of every doodad of type `doodadId` in the rect,
+   * through `SetDoodadAnimationRect`.
+   * @param animRandom Plays a random animation of that name.
+   */
+  public setDoodadAnimation(
+    doodadId: number,
+    animName: string,
+    animRandom: boolean,
+  ) {
+    SetDoodadAnimationRect(this.handle, doodadId, animName, animRandom);
+  }
+
+  /**
+   * Sets the player color of every doodad of type `doodadId` in the rect,
+   * through `SetDoodadColorRect` (3.0.0).
+   */
+  public setDoodadColor(doodadId: number, color: playercolor) {
+    SetDoodadColorRect(this.handle, doodadId, color);
   }
 
   public setRect(minX: number, minY: number, maxX: number, maxY: number) {

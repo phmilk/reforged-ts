@@ -6,6 +6,11 @@ import { MapPlayer } from "./player";
 import { Point } from "./point";
 import { Widget } from "./widget";
 
+/** The creation error's detail for a spell effect: the ability it names. */
+function spellDetail(ability: number | string): string {
+  return typeof ability === "number" ? rawcodeToString(ability) : ability;
+}
+
 export class Effect extends Handle<effect> {
   public readonly attachWidget?: Widget;
 
@@ -19,6 +24,14 @@ export class Effect extends Handle<effect> {
    */
   public static create(modelName: string, x: number, y: number): Effect {
     return this.expect(AddSpecialEffect(modelName, x, y), modelName);
+  }
+
+  /**
+   * Creates a special effect at `where`, through `AddSpecialEffectLoc`.
+   * @param modelName The path of the model that the effect will use.
+   */
+  public static createAtPoint(modelName: string, where: Point): Effect {
+    return this.expect(AddSpecialEffectLoc(modelName, where.handle), modelName);
   }
 
   /**
@@ -46,26 +59,54 @@ export class Effect extends Handle<effect> {
   }
 
   /**
-   * Creates a spell visual effect at position.
+   * Creates a spell visual effect at position, through `AddSpellEffectById`
+   * for an ability id and `AddSpellEffect` for an ability string.
    * ```ts
    * // Create Thunder Clap's caster art effect at [0,0]
    * const clap = Effect.createSpell(FourCC("AHtz"), EFFECT_TYPE_CASTER, 0, 0);
    * ```
+   * @bug jassdoc documents `AddSpellEffect` as doing nothing, because no one
+   * knows what its ability string is: pass the ability id.
    */
   public static createSpell(
-    abilityId: number,
+    ability: number | string,
     effectType: effecttype,
     x: number,
     y: number,
   ): Effect {
     return this.expect(
-      AddSpellEffectById(abilityId, effectType, x, y),
-      rawcodeToString(abilityId),
+      typeof ability === "number"
+        ? AddSpellEffectById(ability, effectType, x, y)
+        : AddSpellEffect(ability, effectType, x, y),
+      spellDetail(ability),
     );
   }
 
   /**
-   * Creates a spell visual effect at position.
+   * Creates a spell visual effect at `where`, through `AddSpellEffectByIdLoc`
+   * for an ability id and `AddSpellEffectLoc` for an ability string.
+   * @bug jassdoc documents `AddSpellEffect` as doing nothing, because no one
+   * knows what its ability string is; `AddSpellEffectLoc` takes the same
+   * string. Pass the ability id.
+   */
+  public static createSpellAtPoint(
+    ability: number | string,
+    effectType: effecttype,
+    where: Point,
+  ): Effect {
+    return this.expect(
+      typeof ability === "number"
+        ? AddSpellEffectByIdLoc(ability, effectType, where.handle)
+        : AddSpellEffectLoc(ability, effectType, where.handle),
+      spellDetail(ability),
+    );
+  }
+
+  /**
+   * Creates a spell visual effect attached to a widget, through
+   * `AddSpellEffectTargetById` for an ability id and `AddSpellEffectTarget`
+   * for a string. common.j names that string `modelName`, and jassdoc does
+   * not say what it is: pass the ability id.
    * ```ts
    * const red = Players[0];
    * const peasant = Unit.create(red, FourCC("hpea"), 0, 0);
@@ -75,19 +116,26 @@ export class Effect extends Handle<effect> {
    * ```
    */
   public static createSpellAttachment(
-    abilityId: number,
+    ability: number | string,
     effectType: effecttype,
     targetWidget: Widget,
     attachPointName: string,
   ): Effect {
     return this.expect(
-      AddSpellEffectTargetById(
-        abilityId,
-        effectType,
-        targetWidget.handle,
-        attachPointName,
-      ),
-      rawcodeToString(abilityId),
+      typeof ability === "number"
+        ? AddSpellEffectTargetById(
+            ability,
+            effectType,
+            targetWidget.handle,
+            attachPointName,
+          )
+        : AddSpellEffectTarget(
+            ability,
+            effectType,
+            targetWidget.handle,
+            attachPointName,
+          ),
+      spellDetail(ability),
       (effect) => {
         effect.attachWidget = targetWidget;
         effect.attachPointName = attachPointName;
@@ -168,6 +216,14 @@ export class Effect extends Handle<effect> {
     BlzPlaySpecialEffectWithTimeScale(this.handle, animType, timeScale);
   }
 
+  /**
+   * Queues the named animation after the current one, through
+   * `BlzQueueSpecialEffectAnimation` (3.0.0).
+   */
+  public queueAnimation(name: string) {
+    BlzQueueSpecialEffectAnimation(this.handle, name);
+  }
+
   public removeSubAnimation(subAnim: subanimtype) {
     BlzSpecialEffectRemoveSubAnimation(this.handle, subAnim);
   }
@@ -178,6 +234,22 @@ export class Effect extends Handle<effect> {
 
   public setAlpha(alpha: number) {
     BlzSetSpecialEffectAlpha(this.handle, alpha);
+  }
+
+  /**
+   * Plays the named animation, through `BlzSetSpecialEffectAnimation`
+   * (3.0.0).
+   */
+  public setAnimation(name: string) {
+    BlzSetSpecialEffectAnimation(this.handle, name);
+  }
+
+  /**
+   * Sets the time in seconds the effect takes to blend into its next
+   * animation, through `BlzSetSpecialEffectAnimationBlendTime` (3.0.0).
+   */
+  public setAnimationBlendTime(seconds: number) {
+    BlzSetSpecialEffectAnimationBlendTime(this.handle, seconds);
   }
 
   public setColor(red: number, green: number, blue: number) {

@@ -4,7 +4,7 @@
 //   declared return type is a Handle type other than a registration type
 //   (`event`, `triggeraction`, `triggercondition`);
 // - a call to a static member of a Wrapper whose name starts with `create`
-//   (`create`, `createZ`, `createAttachment`, ...).
+//   (`create`, `createAttachment`, ...).
 //
 // Lookups and conversions (`Player`, `GetTriggerUnit`, `Convert*`) and the
 // other Wrapper statics (`Timer.after`, `Unit.fromEvent`) are never
@@ -31,7 +31,7 @@ export interface Creation {
 
 /**
  * Whether a Wrapper static's name makes it a creation: `create` followed by
- * nothing or an upper-case letter (`create`, `createZ`, `createAttachment`),
+ * nothing or an upper-case letter (`create`, `createAttachment`),
  * so a `created` or `creates` member is not one.
  */
 export function isCreationStaticName(member: string): boolean {

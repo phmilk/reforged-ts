@@ -40,7 +40,6 @@
  * @example
  * {@includeCode ../../examples/file-write-read.ts}
  */
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class -- File is static-only by decision (see its doc comment); step 7 (#54) settles that shape for the static namespaces together with Camera and Input
 export class File {
   // The ability used to read and write data.
   private static readonly dummyAbility: number = FourCC("Amls");

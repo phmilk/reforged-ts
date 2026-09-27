@@ -1,0 +1,28 @@
+// The root scripts of package.json. `build` and `test` are the default build and
+// test tasks; `check` is `pnpm check`, whose type and lint findings reach the
+// Problems panel. vitest reports in its own panel, so `test` scans nothing.
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "pnpm build",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "test",
+      "type": "shell",
+      "command": "pnpm test",
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "check",
+      "type": "shell",
+      "command": "pnpm check",
+      "problemMatcher": ["$tsc", "$eslint-stylish"]
+    }
+  ]
+}

@@ -15,9 +15,11 @@
     "lint:prettier": "prettier --check \"**/*.{json,md,yaml,yml}\"",
     "format": "eslint --fix . && prettier --write \"**/*.{json,md,yaml,yml}\"",
     "typecheck": "pnpm --recursive typecheck && tsc -p test/tsconfig.json",
-    "test": "vitest run && pnpm run typings:check",
+    "test": "vitest run",
     "typings:generate": "pnpm --filter reforged-types typings:generate",
     "typings:check": "pnpm --filter reforged-types typings:check",
+    "coverage:report": "pnpm --filter reforged-ts-wrapper-coverage coverage:report",
+    "data:check": "pnpm --filter reforged-ts build && pnpm --filter reforged-ts-release data:check",
     "changeset": "changeset",
     "release:check-changeset": "pnpm --filter reforged-ts-release release:check-changeset",
     "release:check-patches": "pnpm --filter reforged-ts-release release:check-patches",
@@ -34,7 +36,13 @@
     "docs:check": "pnpm --filter reforged-ts-website docs:check",
     "docs:version": "pnpm --filter reforged-ts-website docs:version",
     "docs:prune": "pnpm --filter reforged-ts-website docs:prune",
-    "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test"
+    "actionlint": "pnpm --filter reforged-ts-release actionlint",
+    "patch-watch:plan": "pnpm --filter reforged-ts-release patch-watch:plan",
+    "patch-watch:report": "pnpm --filter reforged-ts-release patch-watch:report",
+    "repo:settings": "pnpm --filter reforged-ts-release repo:settings",
+    "github-app": "pnpm --filter reforged-ts-release github-app",
+    "renovate:check": "pnpm --package=renovate@44.115.10 dlx renovate-config-validator --strict",
+    "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run typings:check && pnpm run test && pnpm run coverage:report"
   },
   "devDependencies": {
     "@changesets/changelog-github": "catalog:",

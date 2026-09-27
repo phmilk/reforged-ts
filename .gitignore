@@ -139,8 +139,13 @@ website/docs/_supported-patch.md
 website/docs/api/reforged-ts/
 website/typings/*/
 
-# Claude Code agent worktrees and local state
-.claude/
+# The Wrapper coverage report script's build output
+wrapper-coverage/build/
+
+# Claude Code local settings, worktrees and session state; the Agent skills
+# under .claude/skills/ are committed.
+.claude/*
+!.claude/skills/
 
 # eslint-plugin-reforged cost measurement corpus (scripts/measure-cost.mjs removes it)
 packages/eslint-plugin-reforged/test/fixture-project/.cost/

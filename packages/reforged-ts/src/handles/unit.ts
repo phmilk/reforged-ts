@@ -1,12 +1,14 @@
 /** @noSelfInFile */
 
-import { OrderId } from "../globals/order";
+import type { OrderId } from "../globals/order";
 import { configuration } from "../reforged/configuration";
 import { assertDamageDepth } from "../reforged/damage";
 import { rawcodeToString } from "../utils/rawcode";
 import { Destructable } from "./destructable";
+import type { EquipmentType, LoadoutSlot } from "./equipment";
 import { Force } from "./force";
 import { fieldTypeOf } from "./fields";
+import { expectUnwrapped } from "./handle";
 import type { Group } from "./group";
 import { Item } from "./item";
 import { MapPlayer } from "./player";
@@ -43,6 +45,104 @@ export class Unit extends Widget {
   }
 
   /**
+   * Creates a unit at `where`, through `CreateUnitAtLoc`.
+   * @param owner The owner of the unit.
+   * @param unitId The rawcode of the unit.
+   * @param where Where the unit stands.
+   * @param face The direction that the unit will be facing in degrees.
+   */
+  public static createAtPoint(
+    owner: MapPlayer,
+    unitId: number,
+    where: Point,
+    face: number = bj_UNIT_FACING,
+  ): Unit {
+    return this.expect(
+      CreateUnitAtLoc(owner.handle, unitId, where.handle, face),
+      rawcodeToString(unitId),
+    );
+  }
+
+  /**
+   * Creates a unit at `where` from the unit type's name, through
+   * `CreateUnitAtLocByName`.
+   * @param owner The owner of the unit.
+   * @param unitName The name of the unit type (`"footman"`).
+   * @param where Where the unit stands.
+   * @param face The direction that the unit will be facing in degrees.
+   */
+  public static createAtPointByName(
+    owner: MapPlayer,
+    unitName: string,
+    where: Point,
+    face: number = bj_UNIT_FACING,
+  ): Unit {
+    return this.expect(
+      CreateUnitAtLocByName(owner.handle, unitName, where.handle, face),
+      unitName,
+    );
+  }
+
+  /**
+   * Creates an undead gold mine and the blight around it, through
+   * `CreateBlightedGoldmine`.
+   * @param owner The owner of the gold mine.
+   * @param x The x-coordinate of the gold mine.
+   * @param y The y-coordinate of the gold mine.
+   * @param face The direction that the gold mine will be facing in degrees.
+   */
+  public static createBlightedGoldmine(
+    owner: MapPlayer,
+    x: number,
+    y: number,
+    face: number = bj_UNIT_FACING,
+  ): Unit {
+    return this.expect(CreateBlightedGoldmine(owner.handle, x, y, face));
+  }
+
+  /**
+   * Creates a unit from the unit type's name, through `CreateUnitByName`.
+   * @param owner The owner of the unit.
+   * @param unitName The name of the unit type (`"footman"`).
+   * @param x The x-coordinate of the unit.
+   * @param y The y-coordinate of the unit.
+   * @param face The direction that the unit will be facing in degrees.
+   */
+  public static createByName(
+    owner: MapPlayer,
+    unitName: string,
+    x: number,
+    y: number,
+    face: number = bj_UNIT_FACING,
+  ): Unit {
+    return this.expect(
+      CreateUnitByName(owner.handle, unitName, x, y, face),
+      unitName,
+    );
+  }
+
+  /**
+   * Creates the corpse of a unit, through `CreateCorpse`.
+   * @param owner The owner of the corpse.
+   * @param unitId The rawcode of the unit.
+   * @param x The x-coordinate of the corpse.
+   * @param y The y-coordinate of the corpse.
+   * @param face The direction that the corpse will be facing in degrees.
+   */
+  public static createCorpse(
+    owner: MapPlayer,
+    unitId: number,
+    x: number,
+    y: number,
+    face: number = bj_UNIT_FACING,
+  ): Unit {
+    return this.expect(
+      CreateCorpse(owner.handle, unitId, x, y, face),
+      rawcodeToString(unitId),
+    );
+  }
+
+  /**
    * Sets a unit's acquire range.  This is the value that a unit uses to choose targets to
    * engage with.  Note that this is not the attack range.  When acquisition range is
    * greater than attack range, the unit will attempt to move towards acquired targets, and then attack.
@@ -74,6 +174,14 @@ export class Unit extends Widget {
 
   public set armor(armorAmount: number) {
     BlzSetUnitArmor(this.handle, armorAmount);
+  }
+
+  /**
+   * The size of the unit's bag, its extended inventory, through
+   * `UnitExtendedInventorySize` (3.0.0).
+   */
+  public get bagSize() {
+    return UnitExtendedInventorySize(this.handle);
   }
 
   public set canSleep(flag: boolean) {
@@ -178,6 +286,11 @@ export class Unit extends Widget {
     return BlzIsUnitInvulnerable(this.handle);
   }
 
+  /** Whether the hero glow is allowed on the unit, through `HeroGlowIsAllowedOnUnit` (3.0.0). */
+  public get isHeroGlowAllowed() {
+    return HeroGlowIsAllowedOnUnit(this.handle);
+  }
+
   public get level() {
     return GetUnitLevel(this.handle);
   }
@@ -241,6 +354,14 @@ export class Unit extends Widget {
    */
   public get nameProper() {
     return GetHeroProperName(this.handle) ?? "";
+  }
+
+  /**
+   * The number of orders the unit has, the current one and the queued ones,
+   * through `BlzGetUnitOrderCount`.
+   */
+  public get orderCount() {
+    return BlzGetUnitOrderCount(this.handle);
   }
 
   /**
@@ -452,6 +573,22 @@ export class Unit extends Widget {
     return UnitAddAbility(this.handle, abilityId);
   }
 
+  /**
+   * Adjusts the remaining cooldown of the ability by `delta`, a percentage of
+   * its full cooldown, through `BlzAdjustUnitAbilityCooldownPercent` (3.0.0).
+   */
+  public adjustAbilityCooldownPercent(abilId: number, delta: number) {
+    BlzAdjustUnitAbilityCooldownPercent(this.handle, abilId, delta);
+  }
+
+  /**
+   * Adjusts the remaining cooldown of the ability by `delta` seconds, through
+   * `BlzAdjustUnitAbilityCooldownRemaining` (3.0.0).
+   */
+  public adjustAbilityCooldownRemaining(abilId: number, delta: number) {
+    BlzAdjustUnitAbilityCooldownRemaining(this.handle, abilId, delta);
+  }
+
   public addAnimationProps(animProperties: string, add: boolean) {
     AddUnitAnimationProperties(this.handle, animProperties, add);
   }
@@ -476,8 +613,13 @@ export class Unit extends Widget {
     AddHeroXP(this.handle, xpToAdd, showEyeCandy);
   }
 
-  public addIndicator(red: number, blue: number, green: number, alpha: number) {
-    UnitAddIndicator(this.handle, red, blue, green, alpha);
+  public override addIndicator(
+    red: number,
+    green: number,
+    blue: number,
+    alpha: number,
+  ) {
+    UnitAddIndicator(this.handle, red, green, blue, alpha);
   }
 
   public addItem(whichItem: Item) {
@@ -532,6 +674,18 @@ export class Unit extends Widget {
     AddUnitToStock(this.handle, unitId, currentStock, stockMax);
   }
 
+  /**
+   * Allows or disallows the hero glow on the unit, through
+   * `AllowHeroGlowOnUnit` or `DisallowHeroGlowOnUnit` (3.0.0).
+   */
+  public allowHeroGlow(allow: boolean) {
+    if (allow) {
+      AllowHeroGlowOnUnit(this.handle);
+    } else {
+      DisallowHeroGlowOnUnit(this.handle);
+    }
+  }
+
   public applyTimedLife(buffId: number, duration: number) {
     UnitApplyTimedLife(this.handle, buffId, duration);
   }
@@ -540,8 +694,27 @@ export class Unit extends Widget {
     AttachSoundToUnit(sound.handle, this.handle);
   }
 
+  /**
+   * The item at `index` in the unit's bag, or undefined for an empty index,
+   * through `UnitItemInBagSlot` (3.0.0).
+   */
+  public bagItem(index: number): Item | undefined {
+    return Item.fromHandle(UnitItemInBagSlot(this.handle, index));
+  }
+
   public cancelTimedLife() {
     BlzUnitCancelTimedLife(this.handle);
+  }
+
+  /**
+   * Whether the unit can equip items of the equipment type, through
+   * `UnitCanEquipItemOfEquipmentType` (3.0.0).
+   */
+  public canEquip(equipmentType: EquipmentType) {
+    return UnitCanEquipItemOfEquipmentType(
+      this.handle,
+      ConvertEquipmentType(equipmentType),
+    );
   }
 
   public canSleepPerm() {
@@ -684,8 +857,34 @@ export class Unit extends Widget {
     return UnitDropItemTarget(this.handle, whichItem.handle, target.handle);
   }
 
+  /**
+   * Enables or disables the unit's auras, through `BlzUnitEnableAuras`
+   * (3.0.0).
+   */
+  public enableAuras(enable: boolean, affectsUI: boolean) {
+    BlzUnitEnableAuras(this.handle, enable, affectsUI);
+  }
+
   public endAbilityCooldown(abilCode: number) {
     BlzEndUnitAbilityCooldown(this.handle, abilCode);
+  }
+
+  /**
+   * Equips the item on the unit and returns whether it was equipped, through
+   * `UnitEquipItem` (3.0.0).
+   */
+  public equip(whichItem: Item): boolean {
+    return UnitEquipItem(this.handle, whichItem.handle);
+  }
+
+  /**
+   * The item equipped in the loadout slot, or undefined for an empty slot,
+   * through `UnitItemInEquipmentSlot` (3.0.0).
+   */
+  public equippedItem(slot: LoadoutSlot): Item | undefined {
+    return Item.fromHandle(
+      UnitItemInEquipmentSlot(this.handle, ConvertLoadoutSlot(slot)),
+    );
   }
 
   public getAbility(abilId: number) {
@@ -698,6 +897,14 @@ export class Unit extends Widget {
 
   public getAbilityCooldown(abilId: number, level: number) {
     return BlzGetUnitAbilityCooldown(this.handle, abilId, level);
+  }
+
+  /**
+   * The remaining cooldown of the ability as a percentage of its full
+   * cooldown, through `BlzGetUnitAbilityCooldownPercent` (3.0.0).
+   */
+  public getAbilityCooldownPercent(abilId: number) {
+    return BlzGetUnitAbilityCooldownPercent(this.handle, abilId);
   }
 
   public getAbilityCooldownRemaining(abilId: number) {
@@ -718,6 +925,18 @@ export class Unit extends Widget {
 
   public getAgility(includeBonuses: boolean) {
     return GetHeroAgi(this.handle, includeBonuses);
+  }
+
+  /**
+   * The duration of an animation of the unit's model, by name or by index,
+   * through `BlzGetUnitAnimationDuration` or
+   * `BlzGetUnitAnimationDurationByIndex` (3.0.0).
+   */
+  public getAnimationDuration(animation: string | number) {
+    if (typeof animation === "string") {
+      return BlzGetUnitAnimationDuration(this.handle, animation);
+    }
+    return BlzGetUnitAnimationDurationByIndex(this.handle, animation);
   }
 
   public getAttackCooldown(weaponIndex: number) {
@@ -796,6 +1015,19 @@ export class Unit extends Widget {
     return GetHeroStr(this.handle, includeBonuses);
   }
 
+  /**
+   * Whether the unit has any item equipped, through `UnitHasAnyItemEquiped`
+   * (3.0.0). The Native's name is misspelt.
+   */
+  public hasAnyEquipped() {
+    return UnitHasAnyItemEquiped(this.handle);
+  }
+
+  /** Whether the item is in the unit's bag, through `UnitHasItemBagged` (3.0.0). */
+  public hasBagged(whichItem: Item) {
+    return UnitHasItemBagged(this.handle, whichItem.handle);
+  }
+
   public hasBuffs(
     removePositive: boolean,
     removeNegative: boolean,
@@ -815,6 +1047,30 @@ export class Unit extends Widget {
       aura,
       autoDispel,
     );
+  }
+
+  /**
+   * Whether the unit's loadout slot is empty, through
+   * `UnitHasLoadoutSlotEmpty` (3.0.0).
+   */
+  public hasEmptySlot(slot: LoadoutSlot) {
+    return UnitHasLoadoutSlotEmpty(this.handle, ConvertLoadoutSlot(slot));
+  }
+
+  /**
+   * Whether the unit has an item of the equipment type equipped, through
+   * `UnitHasItemEquipmentOfType` (3.0.0).
+   */
+  public hasEquipmentOfType(equipmentType: EquipmentType) {
+    return UnitHasItemEquipmentOfType(
+      this.handle,
+      ConvertEquipmentType(equipmentType),
+    );
+  }
+
+  /** Whether the unit has the item equipped, through `UnitHasItemEquipped` (3.0.0). */
+  public hasEquipped(whichItem: Item) {
+    return UnitHasItemEquipped(this.handle, whichItem.handle);
   }
 
   public hasItem(whichItem: Item) {
@@ -971,6 +1227,59 @@ export class Unit extends Widget {
         );
   }
 
+  /**
+   * Orders this neutral structure (a shop, a tavern) to sell or train `unit`
+   * for `forPlayer`, through `IssueNeutralImmediateOrder` or, for a rawcode,
+   * `IssueNeutralImmediateOrderById`.
+   */
+  public issueNeutralImmediateOrder(
+    forPlayer: MapPlayer,
+    unit: string | number,
+  ) {
+    return typeof unit === "string"
+      ? IssueNeutralImmediateOrder(forPlayer.handle, this.handle, unit)
+      : IssueNeutralImmediateOrderById(forPlayer.handle, this.handle, unit);
+  }
+
+  /**
+   * Orders this neutral structure to use `unit` for `forPlayer` at a point,
+   * through `IssueNeutralPointOrder` or `IssueNeutralPointOrderById`.
+   */
+  public issueNeutralPointOrder(
+    forPlayer: MapPlayer,
+    unit: string | number,
+    x: number,
+    y: number,
+  ) {
+    return typeof unit === "string"
+      ? IssueNeutralPointOrder(forPlayer.handle, this.handle, unit, x, y)
+      : IssueNeutralPointOrderById(forPlayer.handle, this.handle, unit, x, y);
+  }
+
+  /**
+   * Orders this neutral structure to use `unit` for `forPlayer` on `target`,
+   * through `IssueNeutralTargetOrder` or `IssueNeutralTargetOrderById`.
+   */
+  public issueNeutralTargetOrder(
+    forPlayer: MapPlayer,
+    unit: string | number,
+    target: Widget,
+  ) {
+    return typeof unit === "string"
+      ? IssueNeutralTargetOrder(
+          forPlayer.handle,
+          this.handle,
+          unit,
+          target.handle,
+        )
+      : IssueNeutralTargetOrderById(
+          forPlayer.handle,
+          this.handle,
+          unit,
+          target.handle,
+        );
+  }
+
   public issueOrderAt(order: string | OrderId, x: number, y: number) {
     return typeof order === "string"
       ? IssuePointOrder(this.handle, order, x, y)
@@ -1080,6 +1389,55 @@ export class Unit extends Widget {
     QueueUnitAnimation(this.handle, whichAnimation);
   }
 
+  /**
+   * Queues an order on this neutral structure to sell or train `unitId` for
+   * `forPlayer`, after its current orders, through
+   * `BlzQueueNeutralImmediateOrderById`.
+   */
+  public queueNeutralImmediateOrder(forPlayer: MapPlayer, unitId: number) {
+    return BlzQueueNeutralImmediateOrderById(
+      forPlayer.handle,
+      this.handle,
+      unitId,
+    );
+  }
+
+  /**
+   * Queues an order on this neutral structure to use `unitId` for
+   * `forPlayer` at a point, through `BlzQueueNeutralPointOrderById`.
+   */
+  public queueNeutralPointOrder(
+    forPlayer: MapPlayer,
+    unitId: number,
+    x: number,
+    y: number,
+  ) {
+    return BlzQueueNeutralPointOrderById(
+      forPlayer.handle,
+      this.handle,
+      unitId,
+      x,
+      y,
+    );
+  }
+
+  /**
+   * Queues an order on this neutral structure to use `unitId` for
+   * `forPlayer` on `target`, through `BlzQueueNeutralTargetOrderById`.
+   */
+  public queueNeutralTargetOrder(
+    forPlayer: MapPlayer,
+    unitId: number,
+    target: Widget,
+  ) {
+    return BlzQueueNeutralTargetOrderById(
+      forPlayer.handle,
+      this.handle,
+      unitId,
+      target.handle,
+    );
+  }
+
   public recycleGuardPosition() {
     RecycleGuardPosition(this.handle);
   }
@@ -1139,11 +1497,19 @@ export class Unit extends Widget {
   }
 
   public removeType(whichUnitType: unittype) {
-    return UnitAddType(this.handle, whichUnitType);
+    return UnitRemoveType(this.handle, whichUnitType);
   }
 
   public removeUnitFromStock(itemId: number) {
     RemoveUnitFromStock(this.handle, itemId);
+  }
+
+  /**
+   * Resets the attack of the unit's weapon, through `BlzResetUnitAttack`
+   * (3.0.0).
+   */
+  public resetAttack(weaponIndex: number) {
+    BlzResetUnitAttack(this.handle, weaponIndex);
   }
 
   public resetCooldown() {
@@ -1175,6 +1541,22 @@ export class Unit extends Widget {
 
   public setAbilityCooldown(abilId: number, level: number, cooldown: number) {
     BlzSetUnitAbilityCooldown(this.handle, abilId, level, cooldown);
+  }
+
+  /**
+   * Sets the remaining cooldown of the ability as a percentage of its full
+   * cooldown, through `BlzSetUnitAbilityCooldownPercent` (3.0.0).
+   */
+  public setAbilityCooldownPercent(abilId: number, percent: number) {
+    BlzSetUnitAbilityCooldownPercent(this.handle, abilId, percent);
+  }
+
+  /**
+   * Sets the remaining cooldown of the ability in seconds, through
+   * `BlzSetUnitAbilityCooldownRemaining` (3.0.0).
+   */
+  public setAbilityCooldownRemaining(abilId: number, seconds: number) {
+    BlzSetUnitAbilityCooldownRemaining(this.handle, abilId, seconds);
   }
 
   public setAbilityLevel(abilCode: number, level: number) {
@@ -1420,6 +1802,21 @@ export class Unit extends Widget {
     SuspendHeroXP(this.handle, flag);
   }
 
+  /** Unequips the item from the unit, through `UnitUnequipItem` (3.0.0). */
+  public unequip(whichItem: Item) {
+    UnitUnequipItem(this.handle, whichItem.handle);
+  }
+
+  /**
+   * Unequips the item in the loadout slot and returns it, or undefined for an
+   * empty slot, through `UnitUnequipItemFromSlot` (3.0.0).
+   */
+  public unequipSlot(slot: LoadoutSlot): Item | undefined {
+    return Item.fromHandle(
+      UnitUnequipItemFromSlot(this.handle, ConvertLoadoutSlot(slot)),
+    );
+  }
+
   public useItem(whichItem: Item) {
     return UnitUseItem(this.handle, whichItem.handle);
   }
@@ -1446,6 +1843,250 @@ export class Unit extends Widget {
 
   public waygateSetDestination(x: number, y: number) {
     WaygateSetDestination(this.handle, x, y);
+  }
+
+  /**
+   * Clears the unit's orders, through `BlzUnitClearOrders`.
+   * @param onlyQueued Clears only the queued orders, keeping the current one.
+   */
+  public clearOrders(onlyQueued: boolean) {
+    BlzUnitClearOrders(this.handle, onlyQueued);
+  }
+
+  /**
+   * Creates a minimap icon over the unit, through `CreateMinimapIconOnUnit`,
+   * and returns the game's `minimapicon`, which the library does not wrap.
+   * Throws `reforged-ts: failed to create minimapicon (<pingPath>)` when the
+   * game creates none.
+   * @param red An integer from 0-255 determining the amount of red color.
+   * @param green An integer from 0-255 determining the amount of green color.
+   * @param blue An integer from 0-255 determining the amount of blue color.
+   * @param pingPath The model of the icon.
+   * @param fogVisibility The fog state in which the icon is visible.
+   */
+  public createMinimapIcon(
+    red: number,
+    green: number,
+    blue: number,
+    pingPath: string,
+    fogVisibility: fogstate,
+  ): minimapicon {
+    return expectUnwrapped(
+      CreateMinimapIconOnUnit(
+        this.handle,
+        red,
+        green,
+        blue,
+        pingPath,
+        fogVisibility,
+      ),
+      "minimapicon",
+      pingPath,
+    );
+  }
+
+  /**
+   * Stops the unit's current order, through `BlzUnitForceStopOrder`.
+   * @param clearQueue Also clears the queued orders.
+   */
+  public forceStopOrder(clearQueue: boolean) {
+    BlzUnitForceStopOrder(this.handle, clearQueue);
+  }
+
+  /**
+   * Reads a field of one of the unit's weapons, through the
+   * `BlzGetUnitWeapon*Field` Native of the field's type.
+   * @param field A weapon field constant of any of the four field types.
+   * @param index The weapon's index.
+   */
+  public getWeaponField(
+    field:
+      | unitweaponbooleanfield
+      | unitweaponintegerfield
+      | unitweaponrealfield
+      | unitweaponstringfield,
+    index: number,
+  ) {
+    const fieldType = fieldTypeOf(field);
+
+    switch (fieldType) {
+      case "unitweaponbooleanfield":
+        return BlzGetUnitWeaponBooleanField(
+          this.handle,
+          field as unitweaponbooleanfield,
+          index,
+        );
+      case "unitweaponintegerfield":
+        return BlzGetUnitWeaponIntegerField(
+          this.handle,
+          field as unitweaponintegerfield,
+          index,
+        );
+      case "unitweaponrealfield":
+        return BlzGetUnitWeaponRealField(
+          this.handle,
+          field as unitweaponrealfield,
+          index,
+        );
+      case "unitweaponstringfield":
+        return BlzGetUnitWeaponStringField(
+          this.handle,
+          field as unitweaponstringfield,
+          index,
+        );
+      default:
+        return 0;
+    }
+  }
+
+  /** Whether the player detects the unit, through `IsUnitDetected`. */
+  public isDetected(whichPlayer: MapPlayer) {
+    return IsUnitDetected(this.handle, whichPlayer.handle);
+  }
+
+  /** Whether the unit is invisible to the player, through `IsUnitInvisible`. */
+  public isInvisible(whichPlayer: MapPlayer) {
+    return IsUnitInvisible(this.handle, whichPlayer.handle);
+  }
+
+  /** Whether the player owns the unit, through `IsUnitOwnedByPlayer`. */
+  public isOwnedByPlayer(whichPlayer: MapPlayer) {
+    return IsUnitOwnedByPlayer(this.handle, whichPlayer.handle);
+  }
+
+  /** Whether the unit is of the race, through `IsUnitRace`. */
+  public isRace(whichRace: race) {
+    return IsUnitRace(this.handle, whichRace);
+  }
+
+  /**
+   * Queues a build order, by unit type id, after the unit's current orders,
+   * through `BlzQueueBuildOrderById`.
+   */
+  public queueBuildOrder(unitId: number, x: number, y: number) {
+    return BlzQueueBuildOrderById(this.handle, unitId, x, y);
+  }
+
+  /**
+   * Queues an order with no target, by order id, after the unit's current
+   * orders, through `BlzQueueImmediateOrderById`.
+   */
+  public queueImmediateOrder(order: OrderId) {
+    return BlzQueueImmediateOrderById(this.handle, order);
+  }
+
+  /**
+   * Queues an order to a point, by order id, with an instant target, after the
+   * unit's current orders, through `BlzQueueInstantPointOrderById`.
+   */
+  public queueInstantOrderAt(
+    order: OrderId,
+    x: number,
+    y: number,
+    instantTargetWidget: Widget,
+  ) {
+    return BlzQueueInstantPointOrderById(
+      this.handle,
+      order,
+      x,
+      y,
+      instantTargetWidget.handle,
+    );
+  }
+
+  /**
+   * Queues an order on a target, by order id, with an instant target, after
+   * the unit's current orders, through `BlzQueueInstantTargetOrderById`.
+   */
+  public queueInstantTargetOrder(
+    order: OrderId,
+    targetWidget: Widget,
+    instantTargetWidget: Widget,
+  ) {
+    return BlzQueueInstantTargetOrderById(
+      this.handle,
+      order,
+      targetWidget.handle,
+      instantTargetWidget.handle,
+    );
+  }
+
+  /**
+   * Queues an order to a point, by order id, after the unit's current orders,
+   * through `BlzQueuePointOrderById`.
+   */
+  public queueOrderAt(order: OrderId, x: number, y: number) {
+    return BlzQueuePointOrderById(this.handle, order, x, y);
+  }
+
+  /**
+   * Queues an order on a target, by order id, after the unit's current orders,
+   * through `BlzQueueTargetOrderById`.
+   */
+  public queueTargetOrder(order: OrderId, targetWidget: Widget) {
+    return BlzQueueTargetOrderById(this.handle, order, targetWidget.handle);
+  }
+
+  /**
+   * Turns the unit to face the angle, in degrees, over `duration` seconds,
+   * through `SetUnitFacingTimed`.
+   */
+  public setFacingTimed(facingAngle: number, duration: number) {
+    SetUnitFacingTimed(this.handle, facingAngle, duration);
+  }
+
+  /**
+   * Writes a field of one of the unit's weapons, through the
+   * `BlzSetUnitWeapon*Field` Native of the field's type, and returns whether
+   * it was written: false when the value is not of the field's type.
+   * @param field A weapon field constant of any of the four field types.
+   * @param index The weapon's index.
+   */
+  public setWeaponField(
+    field:
+      | unitweaponbooleanfield
+      | unitweaponintegerfield
+      | unitweaponrealfield
+      | unitweaponstringfield,
+    index: number,
+    value: boolean | number | string,
+  ) {
+    const fieldType = fieldTypeOf(field);
+
+    if (fieldType === "unitweaponbooleanfield" && typeof value === "boolean") {
+      return BlzSetUnitWeaponBooleanField(
+        this.handle,
+        field as unitweaponbooleanfield,
+        index,
+        value,
+      );
+    }
+    if (fieldType === "unitweaponintegerfield" && typeof value === "number") {
+      return BlzSetUnitWeaponIntegerField(
+        this.handle,
+        field as unitweaponintegerfield,
+        index,
+        value,
+      );
+    }
+    if (fieldType === "unitweaponrealfield" && typeof value === "number") {
+      return BlzSetUnitWeaponRealField(
+        this.handle,
+        field as unitweaponrealfield,
+        index,
+        value,
+      );
+    }
+    if (fieldType === "unitweaponstringfield" && typeof value === "string") {
+      return BlzSetUnitWeaponStringField(
+        this.handle,
+        field as unitweaponstringfield,
+        index,
+        value,
+      );
+    }
+
+    return false;
   }
 
   public static foodMadeByType(unitId: number) {
@@ -1527,7 +2168,7 @@ export class Unit extends Widget {
    * The unit a target order targets, or undefined outside a target order or
    * when the target is not a unit.
    */
-  public static fromOrderTarget(): Unit | undefined {
+  public static override fromOrderTarget(): Unit | undefined {
     return this.fromHandle(GetOrderTargetUnit());
   }
 
@@ -1554,6 +2195,97 @@ export class Unit extends Widget {
   /** The transport a unit is loaded into, or undefined outside a load event. */
   public static fromTransport(): Unit | undefined {
     return this.fromHandle(GetTransportUnit());
+  }
+
+  /** The unit buying from a shop, or undefined outside a sell event. */
+  public static fromBuying(): Unit | undefined {
+    return this.fromHandle(GetBuyingUnit());
+  }
+
+  /**
+   * The structure whose construction is cancelled, or undefined outside a
+   * construction cancel.
+   */
+  public static fromCancelled(): Unit | undefined {
+    return this.fromHandle(GetCancelledStructure());
+  }
+
+  /** The structure being built, or undefined outside a construction start. */
+  public static fromConstructing(): Unit | undefined {
+    return this.fromHandle(GetConstructingStructure());
+  }
+
+  /** The decaying unit, or undefined outside a decay event. */
+  public static fromDecaying(): Unit | undefined {
+    return this.fromHandle(GetDecayingUnit());
+  }
+
+  /** The detected unit, or undefined outside a detection event. */
+  public static fromDetected(): Unit | undefined {
+    return this.fromHandle(GetDetectedUnit());
+  }
+
+  /** The dying unit, or undefined outside a death event. */
+  public static fromDying(): Unit | undefined {
+    return this.fromHandle(GetDyingUnit());
+  }
+
+  /** The target unit of the event, or undefined when the event has none. */
+  public static fromEventTarget(): Unit | undefined {
+    return this.fromHandle(GetEventTargetUnit());
+  }
+
+  /** The hero learning a skill, or undefined outside a skill event. */
+  public static fromLearning(): Unit | undefined {
+    return this.fromHandle(GetLearningUnit());
+  }
+
+  /** The unit manipulating an item, or undefined outside an item event. */
+  public static fromManipulating(): Unit | undefined {
+    return this.fromHandle(GetManipulatingUnit());
+  }
+
+  /**
+   * The unit under the local player's mouse, or undefined when there is none.
+   * @async
+   */
+  public static fromMouseFocus(): Unit | undefined {
+    return this.fromHandle(BlzGetMouseFocusUnit());
+  }
+
+  /** The unit researching, or undefined outside a research event. */
+  public static fromResearching(): Unit | undefined {
+    return this.fromHandle(GetResearchingUnit());
+  }
+
+  /** The unit rescuing, or undefined outside a rescue event. */
+  public static fromRescuer(): Unit | undefined {
+    return this.fromHandle(GetRescuer());
+  }
+
+  /** The hero that became revivable, or undefined outside a revivable event. */
+  public static fromRevivable(): Unit | undefined {
+    return this.fromHandle(GetRevivableUnit());
+  }
+
+  /** The reviving hero, or undefined outside a revive event. */
+  public static fromReviving(): Unit | undefined {
+    return this.fromHandle(GetRevivingUnit());
+  }
+
+  /** The shop selling, or undefined outside a sell event. */
+  public static fromSelling(): Unit | undefined {
+    return this.fromHandle(GetSellingUnit());
+  }
+
+  /** The unit sold, or undefined outside a unit sell event. */
+  public static fromSold(): Unit | undefined {
+    return this.fromHandle(GetSoldUnit());
+  }
+
+  /** The unit casting the spell, or undefined outside a spell event. */
+  public static fromSpellAbility(): Unit | undefined {
+    return this.fromHandle(GetSpellAbilityUnit());
   }
 
   public static getPointValueByType(unitType: number) {
