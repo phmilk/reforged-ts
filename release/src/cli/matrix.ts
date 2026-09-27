@@ -9,14 +9,13 @@
  * contents. Exit codes: 0 generated, 1 a problem or inputs that cannot be
  * read, 2 usage.
  */
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
 import { generateMatrix, releaseName, type MatrixRow } from "../matrix.js";
 import { repositoryRoot } from "../workspace.js";
 import {
   errorMessage,
   invokedDirectly,
   PROCESS_OUTPUT,
+  update,
   type Output,
 } from "./common.js";
 
@@ -32,16 +31,6 @@ export const DEFAULT_CONTEXT: Context = {
   root: repositoryRoot,
   now: () => new Date(),
 };
-
-/** Writes `text` at `path` under `root` unless the file already holds it. */
-async function update(root: string, path: string, text: string) {
-  const target = join(root, path);
-  const current = await readFile(target, "utf8").catch(() => null);
-  if (current === text) return false;
-  await mkdir(dirname(target), { recursive: true });
-  await writeFile(target, text);
-  return true;
-}
 
 const named = (row: MatrixRow) =>
   `${releaseName(row)} (Patch ${row.patch}, cut ${row.cutDate})`;

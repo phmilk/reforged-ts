@@ -25,7 +25,7 @@ export const SOURCES: readonly Source[] = [
   supportedPatch({
     name: "the supported Patch",
     from: "packages/reforged-types/package.json",
-    to: "_supported-patch.json",
+    to: "_supported-patch.md",
   }),
 
   // The Lint rules guide: one page per rule of the lint plugin, at the URL

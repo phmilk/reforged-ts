@@ -1,7 +1,8 @@
 // The URL contract of the lint rule pages (#40): every rule's
 // `meta.docs.url`, as the plugin's sources build it, is the route of a page
-// docs:collect writes from this repository, under the site's configuration.
-import { mkdtemp, rm } from "node:fs/promises";
+// docs:collect writes from this repository, under the site's configuration,
+// in the docs version the plugin's `reforged.docs` label names.
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,12 +19,11 @@ interface LintPlugin {
   >;
 }
 
-const PLUGIN_ENTRY = fileURLToPath(
-  new URL(
-    "../../../packages/eslint-plugin-reforged/src/index.ts",
-    import.meta.url,
-  ),
+const PLUGIN_ENTRY_URL = new URL(
+  "../../../packages/eslint-plugin-reforged/src/index.ts",
+  import.meta.url,
 );
+const PLUGIN_ENTRY = fileURLToPath(PLUGIN_ENTRY_URL);
 
 /** The plugin's default export, the object ESLint loads, from its sources. */
 async function lintPlugin(): Promise<LintPlugin> {
@@ -38,18 +38,30 @@ async function lintPlugin(): Promise<LintPlugin> {
   }
 }
 
-/** Where the site serves the current docs version, from its configuration. */
-function currentDocsUrl(): string {
+/**
+ * Where the site serves the docs version labelled `label`, from its
+ * configuration: `next` is the current version's path, and a cut version
+ * is served at its label.
+ */
+function docsUrl(label: string): string {
   const config = siteConfig({ strict: false });
   const [, preset] = config.presets?.[0] as [string, Preset.Options];
   const docs = preset.docs === false ? undefined : preset.docs;
   const versions: Partial<Record<string, { path?: string }>> =
     docs?.versions ?? {};
-  const path = versions.current?.path;
+  const path = label === "next" ? versions.current?.path : label;
   if (path === undefined) {
     throw new Error("The site gives the current docs version no path.");
   }
   return `${config.url}${config.baseUrl}${docs?.routeBasePath ?? "docs"}/${path}/`;
+}
+
+/** The docs version the plugin links: its `reforged.docs` label. */
+async function pluginDocsLabel(): Promise<string> {
+  const manifest = JSON.parse(
+    await readFile(new URL("../package.json", PLUGIN_ENTRY_URL), "utf8"),
+  ) as { reforged: { docs: string } };
+  return manifest.reforged.docs;
 }
 
 /** The URL of the docs tree page at `path`, under the version at `base`. */
@@ -66,13 +78,14 @@ describe("the lint rule pages", () => {
     await rm(docs, { recursive: true, force: true });
   });
 
-  // The routes are the current version's: the plugin links `next` while the
-  // packages are prereleases. Once the release stamps a `major.minor` label
-  // into `reforged.docs` (#186), the label's routes are those of the newest
-  // cut version, which the site answers at `/docs/<label>` (#185).
+  // The pages are the working tree's. The plugin links `next`, the current
+  // version, while the packages are prereleases; a stable release stamps its
+  // library's `major.minor` into `reforged.docs` (#186), the label of the
+  // docs version cut from this tree, which the site answers at
+  // `/docs/<label>` (#185).
   it("are served at the URL of every rule's meta.docs.url", async () => {
     const report = await collect({ ...WORKSPACE, docs });
-    const base = currentDocsUrl();
+    const base = docsUrl(await pluginDocsLabel());
     const routes = report.collected
       .flatMap(({ paths }) => paths)
       .filter((path) => path.endsWith(".md"))

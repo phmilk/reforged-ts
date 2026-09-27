@@ -65,3 +65,8 @@ catalog:
   typedoc: ^0.28.20
   typedoc-plugin-markdown: ^4.13.1
   docusaurus-plugin-typedoc: ^1.4.3
+  # The docs site's search and LLM files (#40): offline search over the docs
+  # version being read, and llms.txt, llms-full.txt and a Markdown copy of
+  # each page per docs version.
+  "@easyops-cn/docusaurus-search-local": ^0.55.3
+  docusaurus-plugin-llms: 0.6.0

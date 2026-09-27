@@ -339,15 +339,17 @@ export interface SupportedPatchOptions {
   readonly name: string;
   /** The Typings' `package.json`, whose `reforged.patch` field is the Patch. */
   readonly from: string;
-  /** The data file's path under the docs tree. */
+  /** The partial's path under the docs tree. */
   readonly to: string;
 }
 
 /**
- * The Patch the Typings support, their `reforged.patch` field, as a data
- * file the landing page imports (`{ "patch": "3.0.0.24268" }`): in the docs
- * tree, a docs version cut freezes it with the pages, and each version
- * states the Patch it was cut with. A field that is not a Build fails.
+ * The Patch the Typings support, their `reforged.patch` field, as the
+ * sentence of the landing page that states it, a Markdown partial the page
+ * imports (`**Supported Patch: 3.0.0.24268.**`): in the docs tree, a docs
+ * version cut freezes it with the pages, and each version states the Patch
+ * it was cut with; a partial, not data, so the page's Markdown copy for AI
+ * agents (llms.txt) states it too. A field that is not a Build fails.
  */
 export function supportedPatch(options: SupportedPatchOptions): Source {
   const { name, from, to } = options;
@@ -369,7 +371,7 @@ export function supportedPatch(options: SupportedPatchOptions): Source {
         );
       }
       return {
-        files: [{ path: to, text: `${JSON.stringify({ patch }, null, 2)}\n` }],
+        files: [{ path: to, text: `**Supported Patch: ${patch}.**\n` }],
       };
     },
   };

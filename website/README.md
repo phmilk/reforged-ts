@@ -27,6 +27,7 @@ Every build generates the API reference first, with TypeDoc, from the library's 
 - `src/pages/index.mdx`: the front page, the only page outside the docs.
 - `src/components/`: the components the pages import (`MatrixLink`, the compatibility matrix's links, which leaves a docs version the site no longer keeps as text).
 - `versioning.ts`: the docs versions as the site serves them, from `versions.json`; `versions.json`, `versioned_docs/` and `versioned_sidebars/` are what `docs:version` writes, committed.
+- `llms.ts`: the files for AI agents, `llms.txt` and `llms-full.txt` per docs version and a Markdown copy of each page ([Search and LLM files](#search-and-llm-files)).
 - `config.ts`: the configuration, built by `docusaurus.config.ts` and, strict, by `docusaurus.check.config.ts`.
 - `reference.ts`: the API reference, one docusaurus-plugin-typedoc instance per entry of `siteReferences()` (the library: `docs/api/reforged-ts/`; the Typings: `typings/<Game version>/`, one per folder of `reforged-types` with a `manifest.json`; all git-ignored, rewritten at every build), the docs tree's sidebar generator, which puts the library's sidebar under the API section followed by a link to the Typings, and the Typings' own. The Typings are a docs instance of their own (id `typings`, folder `typings/`, whose `index.mdx` is committed), not versioned: served at `/typings`, a Game version's reference at `/typings/<Game version>/overview` (a route ending in `3.0.0` would be taken for a file by a static server) and an entry's page at `/typings/<Game version>/functions/<Name>` or `/typings/<Game version>/variables/<Name>`, whatever the docs version. A Game version's reference is its index page alone in the sidebar: a sidebar of its thousands of pages would be rendered into each of them. Each Game version's TypeDoc run compiles its Jass files with a tsconfig written to `node_modules/.cache/typings-reference/`.
 - `typedoc/`: the site's TypeDoc plugin, which every reference instance loads from source (TypeDoc imports it inside the Docusaurus process, where only Node's own type stripping runs it, without a flag from Node 22.18 on: the package's `engines` floor): the validation gate, the custom tags of `typedoc/tsdoc.json` when the library has no `tsdoc.json` of its own yet, and, for the Typings, their Jass files merged into one page set and the check that every entry of the manifest has its page, and, for the library, each `@native` tag as a link to the Native's page in the Typings of the newest Game version and to jassbot (`JASSBOT` in `reference.ts`), a tag naming no entry of that manifest failing the build. `typedoc/typings.mts` holds the Typings' routes, the one source of them: the instance's route base path, a Game version's route, its index page's slug, and an entry's page from its name and kind alone (`functions/<Name>` for the manifest kinds `native` and `function`, `variables/<Name>` for `global`): the `@native` links are built from it.
@@ -39,7 +40,7 @@ Every build generates the API reference first, with TypeDoc, from the library's 
 
 The list of sources is `scripts/sources.mts`, the source kinds are in `scripts/kinds.mts` (the migration guide's in `scripts/migration.mts`) and the collector itself is `scripts/collector.mts`. Collected files are git-ignored and rewritten at every run: edit their source, never the copy. A source that is missing fails the run, unless it declares why it may not exist yet (a changelog before the package's first release), in which case it is reported as skipped. To add a source, add its entry to the list and its outputs to the collected pages block of the root `.gitignore`; a test fails until you do. Each run deletes a source's outputs whole before writing them, so a folder output holds nothing hand-written: a source that writes next to hand-written pages owns single files or a subfolder of its own.
 
-The landing page states the Patch the Typings support from `docs/_supported-patch.json`, which docs:collect writes from their `reforged.patch` field: in the docs tree, a cut freezes it, and each docs version states the Patch it was cut with.
+The landing page states the Patch the Typings support with `docs/_supported-patch.md`, a partial docs:collect writes from their `reforged.patch` field (a partial, not data, so the page's Markdown copy for AI agents states it too): in the docs tree, a cut freezes it, and each docs version states the Patch it was cut with.
 
 ## Migration pages
 
@@ -55,6 +56,18 @@ import Renames from "./_generated/w3ts-3-to-reforged-ts-1/renames.md";
 ```
 
 A partial is MDX whatever its name, and Docusaurus rejects a partial's front matter (an error under `CI`), so the collector writes none and escapes the `{`, `}` and `<` of the sections' prose. It reads the map through the release package's rename map module and stops with the offending entry when the map does not match its schema, a replacement is not exported by the library's built declarations, a pair has no page, or a page (any `.md` or `.mdx` of the folder but `index` and `_`-prefixed files) has no entry and no no-renames marker in the map. A new major adds its page, and its behaviour changes note to the migration guide's entry in `scripts/sources.mts`.
+
+## Search and LLM files
+
+The search is `@easyops-cn/docusaurus-search-local`, offline, over the docs only: each docs version has its own index, and the search bar loads the one of the version being read, so a result never leads to another version (the newest version's index at the build root, the others' under `docs/<version>/`). The Typings, not versioned, are indexed once, apart (`search-index-typings.json`): their pages search their own index, and a docs version's search does not load it, about 16 MB.
+
+`llms.ts` writes the files for AI agents with docusaurus-plugin-llms, once per docs version and once for the Typings:
+
+- `/docs/<version>/llms.txt`: the version's pages, one link per page to its Markdown copy, `/docs/<version>/<page>.md` (the version's first page: `/docs/<version>.md`); `<version>` is `next` or a cut version's label.
+- `/docs/<version>/llms-full.txt`: every page of the version in one file.
+- `/typings/llms.txt`, `/typings/llms-full.txt` and `/typings/<Game version>/functions/<Name>.md`: the same for the Typings.
+
+The plugin's own versions mode places the files and their links for versions at the site root, not under `baseUrl` and `/docs`, so `llms.ts` runs it once per version with that version's routes alone, then checks what it wrote: both files, and a Markdown copy of a page of the version behind each link, else the build fails (the plugin itself only logs its errors). It copies the partials a page imports into the page; an MDX comment is removed, and a JSX expression would be copied as written, so a partial states its facts as Markdown (the supported Patch). The four package READMEs link the `llms.txt` of their docs version, which the release stamps ([the docs version stamp](../docs/release.md#the-version-step-releaseversion)).
 
 ## Code samples
 
