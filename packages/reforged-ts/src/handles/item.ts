@@ -1,6 +1,12 @@
 /** @noSelfInFile */
 
 import { rawcodeToString } from "../utils/rawcode";
+import {
+  EquipmentType,
+  equipmentTypeOf,
+  ItemTag,
+  itemTagOf,
+} from "./equipment";
 import { fieldTypeOf } from "./fields";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
@@ -38,12 +44,35 @@ export class Item extends Widget {
     SetItemCharges(this.handle, value);
   }
 
+  /**
+   * The item's colour, set like `MapPlayer.color`. Write-only: the game has
+   * no Native that reads it back.
+   */
+  public set color(color: playercolor) {
+    SetItemColor(this.handle, color);
+  }
+
+  public get equipmentType() {
+    return equipmentTypeOf(
+      GetItemEquipmentType(this.handle),
+      "GetItemEquipmentType",
+    );
+  }
+
   public set invulnerable(flag: boolean) {
     SetItemInvulnerable(this.handle, true);
   }
 
   public get invulnerable() {
     return IsItemInvulnerable(this.handle);
+  }
+
+  public get isEquipped() {
+    return IsItemEquipped(this.handle);
+  }
+
+  public get isInBag() {
+    return IsItemInBag(this.handle);
   }
 
   public get level() {
@@ -119,6 +148,10 @@ export class Item extends Widget {
 
   public get type() {
     return GetItemType(this.handle);
+  }
+
+  public get tag() {
+    return itemTagOf(GetItemTag(this.handle), "GetItemTag");
   }
 
   public get typeId() {
@@ -289,6 +322,42 @@ export class Item extends Widget {
     SetItemPosition(this.handle, x, y);
   }
 
+  /**
+   * A random item type of the level, item type, equipment type and tag
+   * given: its id, or 0 when the game finds none (an id, not a Handle, so
+   * not a lookup).
+   */
+  public static chooseRandomWithFilter(
+    type: itemtype,
+    level: number,
+    equipmentType: EquipmentType,
+    tag: ItemTag,
+  ): number {
+    return ChooseRandomItemExWithFilter(
+      type,
+      level,
+      ConvertEquipmentType(equipmentType),
+      ConvertItemTag(tag),
+    );
+  }
+
+  /**
+   * The stacking item that absorbs a picked-up item, or undefined outside a
+   * pickup event or when the picked-up item stacks with none, through
+   * `BlzGetAbsorbingItem`.
+   */
+  public static fromAbsorbing(): Item | undefined {
+    return this.fromHandle(BlzGetAbsorbingItem());
+  }
+
+  /**
+   * The item an enumeration is at, or undefined outside one, through
+   * `GetEnumItem`.
+   */
+  public static fromEnum(): Item | undefined {
+    return this.fromHandle(GetEnumItem());
+  }
+
   /** The item a unit equips, or undefined outside an equip event. */
   public static fromEquipped(): Item | undefined {
     return this.fromHandle(GetEquippedItem());
@@ -296,6 +365,22 @@ export class Item extends Widget {
 
   public static override fromEvent(): Item | undefined {
     return this.fromHandle(GetManipulatedItem());
+  }
+
+  /**
+   * The item an enumeration's filter is at, or undefined outside one,
+   * through `GetFilterItem`.
+   */
+  public static fromFilter(): Item | undefined {
+    return this.fromHandle(GetFilterItem());
+  }
+
+  /**
+   * The item a target order targets, or undefined outside a target order or
+   * when the target is not an item, through `GetOrderTargetItem`.
+   */
+  public static override fromOrderTarget(): Item | undefined {
+    return this.fromHandle(GetOrderTargetItem());
   }
 
   /** The spell's target item, or undefined when the spell targets none. */
@@ -306,6 +391,22 @@ export class Item extends Widget {
   /** The item a shop sells or a unit pawns, or undefined outside those events. */
   public static fromSold(): Item | undefined {
     return this.fromHandle(GetSoldItem());
+  }
+
+  /**
+   * The item losing charges to another when items stack, or undefined
+   * outside a stack event, through `BlzGetStackingItemSource`.
+   */
+  public static fromStackingSource(): Item | undefined {
+    return this.fromHandle(BlzGetStackingItemSource());
+  }
+
+  /**
+   * The item gaining the charges when items stack, or undefined outside a
+   * stack event, through `BlzGetStackingItemTarget`.
+   */
+  public static fromStackingTarget(): Item | undefined {
+    return this.fromHandle(BlzGetStackingItemTarget());
   }
 
   /** The item a unit unequips, or undefined outside an unequip event. */

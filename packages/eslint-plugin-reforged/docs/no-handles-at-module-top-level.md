@@ -10,7 +10,7 @@ Module top level covers the module body: top-level variable initialisers, class 
 
 A creation is:
 
-- a static member of a Wrapper whose name starts with `create` (`create`, `createZ`, `createAttachment`, ...), also through a project class that extends a Wrapper;
+- a static member of a Wrapper whose name starts with `create` (`create`, `createAttachment`, ...), also through a project class that extends a Wrapper;
 - a Native listed in the plugin's `data/creation-natives.json` that returns a Handle type. The list holds the families `Create*`, `BlzCreate*`, `AddSpecialEffect*`, `AddSpellEffect*`, `AddLightning*`, `AddWeatherEffect*`, `DialogCreate`, `Location`, `Rect`, `InitHashtable*`, `TerrainDeform*` and a few more, one entry per Native.
 
 Lookups and conversions (`Player`, `GetTriggerUnit`, `GetLocalPlayer`, `Convert*`), the registration Natives (their types `event`, `triggeraction` and `triggercondition` are never creations) and the other Wrapper statics (`Timer.after`, `Unit.fromEvent`) are not reported.

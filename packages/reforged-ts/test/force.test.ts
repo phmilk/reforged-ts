@@ -9,6 +9,7 @@ import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Force, MapPlayer } from "../src/index";
 import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
+import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -85,3 +86,18 @@ describe("Force.fromPlayer", () => {
     expect(blizzard).toEqual([]);
   });
 });
+
+{
+  const force = Force.create();
+  const player = defined(MapPlayer.fromIndex(1), "player 1");
+
+  describeNatives("Force members", [
+    nativeCase({
+      native: "BlzForceHasPlayer",
+      answer: () => true,
+      member: () => force.hasPlayer(player),
+      line: `BlzForceHasPlayer(${handleRef("force", force.handle)}, ${handleRef("player", player.handle)})`,
+      returns: true,
+    }),
+  ]);
+}

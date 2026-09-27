@@ -42,6 +42,75 @@ export class Sound extends Handle<sound> {
     );
   }
 
+  /**
+   * Creates a sound handle playing `fileName` with the settings of the SLK
+   * entry `slkEntryName`, through `CreateSoundFilenameWithLabel`; the other
+   * parameters are `create`'s.
+   */
+  public static createFilenameWithLabel(
+    fileName: string,
+    looping: boolean,
+    is3D: boolean,
+    stopWhenOutOfRange: boolean,
+    fadeInRate: number,
+    fadeOutRate: number,
+    slkEntryName: string,
+  ): Sound {
+    return this.expect(
+      CreateSoundFilenameWithLabel(
+        fileName,
+        looping,
+        is3D,
+        stopWhenOutOfRange,
+        fadeInRate,
+        fadeOutRate,
+        slkEntryName,
+      ),
+      fileName,
+    );
+  }
+
+  /**
+   * Creates a sound handle from the SLK entry `soundLabel`, which names the
+   * file and its settings, through `CreateSoundFromLabel`; the other
+   * parameters are `create`'s.
+   */
+  public static createFromLabel(
+    soundLabel: string,
+    looping: boolean,
+    is3D: boolean,
+    stopWhenOutOfRange: boolean,
+    fadeInRate: number,
+    fadeOutRate: number,
+  ): Sound {
+    return this.expect(
+      CreateSoundFromLabel(
+        soundLabel,
+        looping,
+        is3D,
+        stopWhenOutOfRange,
+        fadeInRate,
+        fadeOutRate,
+      ),
+      soundLabel,
+    );
+  }
+
+  /**
+   * Creates a MIDI sound handle from the SLK entry `soundLabel`, through
+   * `CreateMIDISound`; the fade rates are `create`'s.
+   */
+  public static createMIDI(
+    soundLabel: string,
+    fadeInRate: number,
+    fadeOutRate: number,
+  ): Sound {
+    return this.expect(
+      CreateMIDISound(soundLabel, fadeInRate, fadeOutRate),
+      soundLabel,
+    );
+  }
+
   public get dialogueSpeakerNameKey() {
     return GetDialogueSpeakerNameKey(this.handle) ?? "";
   }
@@ -87,7 +156,7 @@ export class Sound extends Handle<sound> {
   }
 
   public setChannel(channel: number) {
-    SetSoundDistanceCutoff(this.handle, channel);
+    SetSoundChannel(this.handle, channel);
   }
 
   /**
@@ -178,14 +247,22 @@ export class Sound extends Handle<sound> {
   }
 
   /**
-   * Starts the sound.
+   * Starts the sound, through `StartSound`, or `StartSoundEx` when `fadeIn` is
+   * given.
    * @note You can only play the same sound handle once.
    * @note You can only play 16 sounds in general.
    * @note Sounds of the same filepath (on different sound handles) must have a delay of at least 0.1 seconds inbetween them to be played.
    * You can overcome this by starting one earlier and then using `setPosition`.
+   * @param fadeIn Whether the sound fades in at the `fadeInRate` given to
+   * `create`, through `StartSoundEx`; left out, the sound starts through
+   * `StartSound`.
    */
-  public start() {
-    StartSound(this.handle);
+  public start(fadeIn?: boolean) {
+    if (fadeIn === undefined) {
+      StartSound(this.handle);
+    } else {
+      StartSoundEx(this.handle, fadeIn);
+    }
   }
 
   /**
@@ -207,5 +284,40 @@ export class Sound extends Handle<sound> {
 
   public static getFileDuration(fileName: string) {
     return GetSoundFileDuration(fileName);
+  }
+
+  /**
+   * Stops the thematic music, through `EndThematicMusic`.
+   */
+  public static endThematicMusic() {
+    EndThematicMusic();
+  }
+
+  /**
+   * Sets whether the thematic music pauses while the game window has lost
+   * focus, through `BlzPauseThematicMusicOnFocusLost` (3.0.0).
+   */
+  public static pauseThematicMusicOnFocusLost(pause: boolean) {
+    BlzPauseThematicMusicOnFocusLost(pause);
+  }
+
+  /**
+   * Plays a music file as the thematic music, through `PlayThematicMusic`, or
+   * through `PlayThematicMusicEx` from `fromMs` milliseconds into the file
+   * when it is given.
+   */
+  public static playThematicMusic(file: string, fromMs?: number) {
+    if (fromMs === undefined) {
+      PlayThematicMusic(file);
+    } else {
+      PlayThematicMusicEx(file, fromMs);
+    }
+  }
+
+  /**
+   * Sets the volume of the thematic music, through `SetThematicMusicVolume`.
+   */
+  public static setThematicMusicVolume(volume: number) {
+    SetThematicMusicVolume(volume);
   }
 }

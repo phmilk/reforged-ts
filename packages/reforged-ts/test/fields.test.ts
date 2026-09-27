@@ -10,25 +10,9 @@
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Item, MapPlayer, Unit } from "../src/index";
 import { defined } from "./support/defined";
+import { fieldConstant, withText } from "./support/field-constant";
 import { handleRef } from "./support/handle-ref";
 import { withNative } from "./support/native-override";
-
-/** A value whose `tostring` is `text`, rendered in the call log by `name`. */
-function withText(text: string, name: string): handle {
-  return setmetatable(
-    { __name: name },
-    {
-      __tostring(this: unknown): string {
-        return text;
-      },
-    },
-  ) as unknown as handle;
-}
-
-/** A field constant of `kind`, whose `tostring` begins as the game's does. */
-function fieldConstant(kind: string, name: string): handle {
-  return withText(`${kind}: 0000ABCD`, name);
-}
 
 const owner = defined(MapPlayer.fromIndex(0), "MapPlayer.fromIndex(0)");
 const unit = Unit.create(owner, FourCC("hfoo"), 0, 0);

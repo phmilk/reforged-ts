@@ -1,11 +1,13 @@
 /** @noSelfInFile */
 
 // Rectangle on the Handle base: `create`, `fromPoint` and `getWorldBounds`
-// all allocate a rect, so all three follow the creation rule.
+// all allocate a rect, so all three follow the creation rule. The camera
+// blocker members pass the rect to their 3.0.0 Natives.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Point, Rectangle } from "../src/index";
 import { handleRef } from "./support/handle-ref";
+import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -73,3 +75,55 @@ describe("Rectangle.getWorldBounds", () => {
     expect(message).toEqual("reforged-ts: failed to create Rectangle");
   });
 });
+
+describe("Rectangle camera blocker", () => {
+  const rectangle = Rectangle.create(-64, -32, 64, 32);
+  const rectRef = handleRef("rect", rectangle.handle);
+
+  it("addCameraBlocker makes the rect a blocker through AddCameraBlocker", () => {
+    withNative(
+      "AddCameraBlocker",
+      () => undefined,
+      () => {
+        rectangle.addCameraBlocker();
+      },
+    );
+    expect(stubCalls()).toContainCall(`AddCameraBlocker(${rectRef})`);
+  });
+
+  it("enableCameraBlocker passes the flag to EnableCameraBlocker", () => {
+    withNative(
+      "EnableCameraBlocker",
+      () => undefined,
+      () => {
+        rectangle.enableCameraBlocker(false);
+      },
+    );
+    expect(stubCalls()).toContainCall(`EnableCameraBlocker(${rectRef}, false)`);
+  });
+});
+
+{
+  const rectangle = Rectangle.create(-64, -32, 64, 32);
+  const ref = handleRef("rect", rectangle.handle);
+  const lamp = FourCC("LOtr");
+
+  describeNatives("Rectangle doodad members", [
+    nativeCase({
+      native: "SetDoodadAnimationRect",
+      answer: () => undefined,
+      member: () => {
+        rectangle.setDoodadAnimation(lamp, "death", true);
+      },
+      line: `SetDoodadAnimationRect(${ref}, ${tostring(lamp)}, "death", true)`,
+    }),
+    nativeCase({
+      native: "SetDoodadColorRect",
+      answer: () => undefined,
+      member: () => {
+        rectangle.setDoodadColor(lamp, PLAYER_COLOR_RED);
+      },
+      line: `SetDoodadColorRect(${ref}, ${tostring(lamp)}, PLAYER_COLOR_RED)`,
+    }),
+  ]);
+}

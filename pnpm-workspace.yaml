@@ -2,6 +2,8 @@ packages:
   - packages/*
   # The release scripts (#46), a private package: never published.
   - release
+  # The Wrapper coverage report (#163), a private package: never published.
+  - wrapper-coverage
 
 catalog:
   # typescript-to-lua pins its TypeScript peer exactly; move both together (ADR 0002).

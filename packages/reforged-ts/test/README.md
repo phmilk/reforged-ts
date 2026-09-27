@@ -16,7 +16,9 @@ Written as the [reforged-test README](../../reforged-test/README.md) describes: 
 
 - `defined(value, what)`: the value of a factory or lookup that may return undefined, or an error naming it.
 - `handleRef(kind, handle)`: a handle as the call log renders it, `timer#1048578`.
-- `withNative(name, replacement, body)`: the per-test Native override (below).
+- `withNative(name, replacement, body)`: the per-test Native override (below). The same file exports `NativeName`, the name of any Native, and `NativeOf<N>`, its arguments and return type, for a table of cases keyed by Native.
+- `describeNatives(title, cases)` and `nativeCase({ native, answer, member, line, returns })` (`native-cases.ts`): the table-driven suite of a Wrapper's plain members, one case per Native and named by it, so a suite reads against the coverage report's list of the Natives it closes. Each case runs `member` with `native` answering what `answer` returns, and asserts the `line` the Native recorded during that call and that `member` returned `returns` (undefined when left out), by identity.
+- `withText(text, name)` and `fieldConstant(kind, name)` (`field-constant.ts`): stand-ins for the game constants the stubs do not define, rendered in the call log by `name`; a field constant's `tostring` begins with its handle type, as the field members read it.
 - `raisedIn(call)`: the message of the error `call` raised, bare only when Lua's `file:line:` position for it lies inside `call`; how a test proves a creation error points at the line that called the creation member (below).
 - `describeDescriptor(case)`, `describeNamespace(namespace, members, cases)`, `describeLookup(case)` and `everySlot(line)` (`events.ts`): the table-driven suites of the events module. A file under `events/` calls `describeNamespace` once for a namespace other than `UnitEvents`, or `describeDescriptor` once per Event descriptor, with the registration lines `on()` should record, a firing context, the payload it yields and the guaranteed and optional fields with the Natives that read them, and `describeLookup` once per event lookup; `everySlot` builds the lines of a registration on every player slot.
 - `timersStarted(body)`: the `TimerStart` calls `body` made, in order, each as its timer handle, timeout and `periodic` flag, with the stub still run for each; how a test gets hold of a Timer the library started to fire it with `__stub_fire_timer`.
@@ -137,6 +139,30 @@ expect(stubCalls()).toContainCall(`UnitItemInSlot(${unitRef}, 2)`);
 ```
 
 Use it instead of editing the shipped stub files when one test needs a Native to fail or to return a handle it controls.
+
+### Enum members and the sentinel rule
+
+A member that takes one of the library's TypeScript enums (`EquipmentType`, `ItemTag`, `LoadoutSlot`) converts it at call time (`ConvertLoadoutSlot(slot)`), and one that returns an enum matches the Native's answer against the named constants. The equipment converters of reforged-test follow the sentinel rule its README describes: one cached value per integer, the named constant being that value. So a test asserts the constant by name in the call log, `UnitItemInEquipmentSlot(unit#…, EQUIPMENT_LOADOUT_SLOT_HEAD)`, and feeds a reader a constant (`EQUIPMENT_TYPE_HEAD`) through `withNative` to expect the enum member. A value no member names is a converted integer with no named constant, which the reader must refuse at the reading line:
+
+```ts
+const message = withNative(
+  "GetItemEquipmentType",
+  () => ConvertEquipmentType(42), // no EQUIPMENT_TYPE_* is this value
+  () =>
+    raisedIn(() => {
+      read = item.equipmentType;
+    }),
+);
+expect(message).toEqual(
+  "reforged-ts: GetItemEquipmentType returned a value EquipmentType does not name",
+);
+```
+
+Each conversion adds its own line to the call log (`ConvertLoadoutSlot(0)`), and no conversion may run while the library loads (`root-handles.test.ts`). `equipment.test.ts` checks every enum member against its integer.
+
+### The gap suites
+
+The members that closed the coverage report's gaps are tested from tables, one case per Native and named by it, so a suite reads against the report's list. A Wrapper's file ends with `describeNatives` blocks of `nativeCase` entries (`item.test.ts`, `player.test.ts`, `sound.test.ts` and the others). `unit-gaps.test.ts` keeps a table of its own, `gap("<Native>", { answer, member, line, returns, lookup })`, whose `lookup: true` cases also assert that the lookup is undefined when the Native answers nothing. A creation among the gaps gets its own `raisedIn` test beside the table. A member added for a Native of a later Patch adds one case to its Wrapper's table.
 
 ### Where a creation error points
 

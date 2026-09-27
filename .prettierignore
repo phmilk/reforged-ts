@@ -4,6 +4,7 @@ packages/reforged-types/build/
 packages/reforged-test/lua/
 packages/reforged-ts/dist-test/
 release/build/
+wrapper-coverage/build/
 
 # What tools own: the Overlay JSON files, the generated Typings, the vendored
 # Patch files, the record the seed script writes and the pnpm lockfile.
@@ -17,6 +18,10 @@ pnpm-lock.yaml
 # The compatibility matrix, written byte for byte by release:matrix.
 release/compatibility/matrix.json
 release/compatibility/matrix.md
+
+# The Wrapper coverage report, written byte for byte by coverage:report.
+wrapper-coverage/report.json
+wrapper-coverage/report.md
 
 # Lua is not formatted.
 *.lua

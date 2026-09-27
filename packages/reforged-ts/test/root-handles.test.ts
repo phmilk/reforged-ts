@@ -40,6 +40,12 @@ describe("requiring the library index", () => {
     ).toEqual([]);
   });
 
+  it("converts no equipment enum", () => {
+    expect(
+      callsTo(["ConvertEquipmentType", "ConvertItemTag", "ConvertLoadoutSlot"]),
+    ).toEqual([]);
+  });
+
   it("leaves Players empty", () => {
     expect(tsGlobals.Players).toEqual([]);
   });

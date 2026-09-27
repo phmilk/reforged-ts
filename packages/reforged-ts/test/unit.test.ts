@@ -8,9 +8,18 @@
 // documented non-null path (a live unit has an owner).
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
-import { Destructable, Item, MapPlayer, Point, Unit } from "../src/index";
+import {
+  Destructable,
+  EquipmentType,
+  Item,
+  LoadoutSlot,
+  MapPlayer,
+  Point,
+  Unit,
+} from "../src/index";
 import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
+import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -97,6 +106,169 @@ describe("Unit.getOwner", () => {
         }),
     );
     expect(message).toEqual("reforged-ts: failed to create MapPlayer");
+  });
+});
+
+describe("Unit ability cooldowns", () => {
+  const thunderClap = FourCC("AHtc");
+
+  it("getAbilityCooldownPercent is what BlzGetUnitAbilityCooldownPercent answers", () => {
+    const unit = Unit.create(owner, footman, 0, 0);
+    const percent = withNative(
+      "BlzGetUnitAbilityCooldownPercent",
+      () => 0.25,
+      () => unit.getAbilityCooldownPercent(thunderClap),
+    );
+    expect(percent).toEqual(0.25);
+    expect(stubCalls()).toContainCall(
+      `BlzGetUnitAbilityCooldownPercent(${handleRef("unit", unit.handle)}, ${tostring(thunderClap)})`,
+    );
+  });
+
+  it("the setters and adjusters pass the ability and the value to their Native", () => {
+    const unit = Unit.create(owner, footman, 0, 0);
+    const unitRef = handleRef("unit", unit.handle);
+    withNative(
+      "BlzSetUnitAbilityCooldownRemaining",
+      () => undefined,
+      () => {
+        unit.setAbilityCooldownRemaining(thunderClap, 4.5);
+      },
+    );
+    withNative(
+      "BlzSetUnitAbilityCooldownPercent",
+      () => undefined,
+      () => {
+        unit.setAbilityCooldownPercent(thunderClap, 0.5);
+      },
+    );
+    withNative(
+      "BlzAdjustUnitAbilityCooldownRemaining",
+      () => undefined,
+      () => {
+        unit.adjustAbilityCooldownRemaining(thunderClap, -1.5);
+      },
+    );
+    withNative(
+      "BlzAdjustUnitAbilityCooldownPercent",
+      () => undefined,
+      () => {
+        unit.adjustAbilityCooldownPercent(thunderClap, 0.125);
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `BlzSetUnitAbilityCooldownRemaining(${unitRef}, ${tostring(thunderClap)}, 4.5)`,
+    );
+    expect(stubCalls()).toContainCall(
+      `BlzSetUnitAbilityCooldownPercent(${unitRef}, ${tostring(thunderClap)}, 0.5)`,
+    );
+    expect(stubCalls()).toContainCall(
+      `BlzAdjustUnitAbilityCooldownRemaining(${unitRef}, ${tostring(thunderClap)}, -1.5)`,
+    );
+    expect(stubCalls()).toContainCall(
+      `BlzAdjustUnitAbilityCooldownPercent(${unitRef}, ${tostring(thunderClap)}, 0.125)`,
+    );
+  });
+});
+
+describe("Unit.getAnimationDuration", () => {
+  it("reads a named animation through BlzGetUnitAnimationDuration", () => {
+    const unit = Unit.create(owner, footman, 0, 0);
+    const duration = withNative(
+      "BlzGetUnitAnimationDuration",
+      () => 1.25,
+      () => unit.getAnimationDuration("attack slam"),
+    );
+    expect(duration).toEqual(1.25);
+    expect(stubCalls()).toContainCall(
+      `BlzGetUnitAnimationDuration(${handleRef("unit", unit.handle)}, "attack slam")`,
+    );
+  });
+
+  it("reads an animation index through BlzGetUnitAnimationDurationByIndex", () => {
+    const unit = Unit.create(owner, footman, 0, 0);
+    const duration = withNative(
+      "BlzGetUnitAnimationDurationByIndex",
+      () => 0.75,
+      () => unit.getAnimationDuration(3),
+    );
+    expect(duration).toEqual(0.75);
+    expect(stubCalls()).toContainCall(
+      `BlzGetUnitAnimationDurationByIndex(${handleRef("unit", unit.handle)}, 3)`,
+    );
+  });
+});
+
+describe("Unit hero glow", () => {
+  it("allowHeroGlow(true) calls AllowHeroGlowOnUnit", () => {
+    const unit = Unit.create(owner, footman, 0, 0);
+    withNative(
+      "AllowHeroGlowOnUnit",
+      () => undefined,
+      () => {
+        unit.allowHeroGlow(true);
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `AllowHeroGlowOnUnit(${handleRef("unit", unit.handle)})`,
+    );
+  });
+
+  it("allowHeroGlow(false) calls DisallowHeroGlowOnUnit", () => {
+    const unit = Unit.create(owner, footman, 0, 0);
+    withNative(
+      "DisallowHeroGlowOnUnit",
+      () => undefined,
+      () => {
+        unit.allowHeroGlow(false);
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `DisallowHeroGlowOnUnit(${handleRef("unit", unit.handle)})`,
+    );
+  });
+
+  it("isHeroGlowAllowed is what HeroGlowIsAllowedOnUnit answers", () => {
+    const unit = Unit.create(owner, footman, 0, 0);
+    const allowed = withNative(
+      "HeroGlowIsAllowedOnUnit",
+      () => true,
+      () => unit.isHeroGlowAllowed,
+    );
+    expect(allowed).toEqual(true);
+    expect(stubCalls()).toContainCall(
+      `HeroGlowIsAllowedOnUnit(${handleRef("unit", unit.handle)})`,
+    );
+  });
+});
+
+describe("Unit auras and attack reset", () => {
+  it("enableAuras passes both flags to BlzUnitEnableAuras", () => {
+    const unit = Unit.create(owner, footman, 0, 0);
+    withNative(
+      "BlzUnitEnableAuras",
+      () => undefined,
+      () => {
+        unit.enableAuras(false, true);
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `BlzUnitEnableAuras(${handleRef("unit", unit.handle)}, false, true)`,
+    );
+  });
+
+  it("resetAttack passes the weapon index to BlzResetUnitAttack", () => {
+    const unit = Unit.create(owner, footman, 0, 0);
+    withNative(
+      "BlzResetUnitAttack",
+      () => undefined,
+      () => {
+        unit.resetAttack(1);
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `BlzResetUnitAttack(${handleRef("unit", unit.handle)}, 1)`,
+    );
   });
 });
 
@@ -210,7 +382,7 @@ describe("Unit rally lookups", () => {
 
   it("rallyDestructable is the Wrapper of the destructable GetUnitRallyDestructable returns", () => {
     const unit = Unit.create(owner, footman, 0, 0);
-    const tree = Destructable.create(FourCC("LTlt"), 0, 0);
+    const tree = Destructable.create({ typeId: FourCC("LTlt"), x: 0, y: 0 });
     expect(
       withNative(
         "GetUnitRallyDestructable",
@@ -261,3 +433,370 @@ describe("Unit inventory", () => {
     expect(unit.removeItemFromSlot(0)).toBeUndefined();
   });
 });
+
+describe("Unit equipment and bag", () => {
+  const heroAndItem = () => {
+    const unit = Unit.create(owner, footman, 0, 0);
+    const item = Item.create(ration, 0, 0);
+    return {
+      unit,
+      item,
+      unitRef: handleRef("unit", unit.handle),
+      itemRef: handleRef("item", item.handle),
+    };
+  };
+
+  it("equip is what UnitEquipItem answers for the unit and the item", () => {
+    const { unit, item, unitRef, itemRef } = heroAndItem();
+    const equipped = withNative(
+      "UnitEquipItem",
+      () => true,
+      () => unit.equip(item),
+    );
+    expect(equipped).toBe(true);
+    expect(stubCalls()).toContainCall(`UnitEquipItem(${unitRef}, ${itemRef})`);
+  });
+
+  it("unequip passes the unit and the item to UnitUnequipItem", () => {
+    const { unit, item, unitRef, itemRef } = heroAndItem();
+    withNative(
+      "UnitUnequipItem",
+      () => undefined,
+      () => {
+        unit.unequip(item);
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `UnitUnequipItem(${unitRef}, ${itemRef})`,
+    );
+  });
+
+  it("the item predicates are what their Native answers for the unit and the item", () => {
+    const { unit, item, unitRef, itemRef } = heroAndItem();
+    expect(
+      withNative(
+        "UnitHasItemEquipped",
+        () => true,
+        () => unit.hasEquipped(item),
+      ),
+    ).toBe(true);
+    expect(
+      withNative(
+        "UnitHasItemBagged",
+        () => false,
+        () => unit.hasBagged(item),
+      ),
+    ).toBe(false);
+    expect(stubCalls()).toContainCall(
+      `UnitHasItemEquipped(${unitRef}, ${itemRef})`,
+    );
+    expect(stubCalls()).toContainCall(
+      `UnitHasItemBagged(${unitRef}, ${itemRef})`,
+    );
+  });
+
+  it("hasAnyEquipped is what UnitHasAnyItemEquiped answers for the unit", () => {
+    const { unit, unitRef } = heroAndItem();
+    expect(
+      withNative(
+        "UnitHasAnyItemEquiped",
+        () => true,
+        () => unit.hasAnyEquipped(),
+      ),
+    ).toBe(true);
+    expect(stubCalls()).toContainCall(`UnitHasAnyItemEquiped(${unitRef})`);
+  });
+
+  it("bagSize is what UnitExtendedInventorySize answers for the unit", () => {
+    const { unit, unitRef } = heroAndItem();
+    expect(
+      withNative(
+        "UnitExtendedInventorySize",
+        () => 12,
+        () => unit.bagSize,
+      ),
+    ).toEqual(12);
+    expect(stubCalls()).toContainCall(`UnitExtendedInventorySize(${unitRef})`);
+  });
+
+  it("the equipment-type predicates pass the converted EquipmentType to their Native", () => {
+    const { unit, unitRef } = heroAndItem();
+    expect(
+      withNative(
+        "UnitHasItemEquipmentOfType",
+        () => true,
+        () => unit.hasEquipmentOfType(EquipmentType.Ring),
+      ),
+    ).toBe(true);
+    expect(
+      withNative(
+        "UnitCanEquipItemOfEquipmentType",
+        () => false,
+        () => unit.canEquip(EquipmentType.Offhand),
+      ),
+    ).toBe(false);
+    expect(stubCalls()).toContainCall(
+      `UnitHasItemEquipmentOfType(${unitRef}, EQUIPMENT_TYPE_RING)`,
+    );
+    expect(stubCalls()).toContainCall(
+      `UnitCanEquipItemOfEquipmentType(${unitRef}, EQUIPMENT_TYPE_OFFHAND)`,
+    );
+  });
+
+  it("hasEmptySlot passes the converted LoadoutSlot to UnitHasLoadoutSlotEmpty", () => {
+    const { unit, unitRef } = heroAndItem();
+    expect(
+      withNative(
+        "UnitHasLoadoutSlotEmpty",
+        () => true,
+        () => unit.hasEmptySlot(LoadoutSlot.RingAlt),
+      ),
+    ).toBe(true);
+    expect(stubCalls()).toContainCall(
+      `UnitHasLoadoutSlotEmpty(${unitRef}, EQUIPMENT_LOADOUT_SLOT_RINGALT)`,
+    );
+  });
+
+  it("equippedItem is the registry's Item in the slot, undefined for an empty one", () => {
+    const { unit, item, unitRef } = heroAndItem();
+    expect(
+      withNative(
+        "UnitItemInEquipmentSlot",
+        () => item.handle,
+        () => unit.equippedItem(LoadoutSlot.Head),
+      ),
+    ).toBe(item);
+    expect(
+      withNative(
+        "UnitItemInEquipmentSlot",
+        () => undefined,
+        () => unit.equippedItem(LoadoutSlot.Trinket),
+      ),
+    ).toBeUndefined();
+    expect(stubCalls()).toContainCall(
+      `UnitItemInEquipmentSlot(${unitRef}, EQUIPMENT_LOADOUT_SLOT_HEAD)`,
+    );
+    expect(stubCalls()).toContainCall(
+      `UnitItemInEquipmentSlot(${unitRef}, EQUIPMENT_LOADOUT_SLOT_TRINKET)`,
+    );
+  });
+
+  it("unequipSlot is the registry's Item it unequipped, undefined for an empty slot", () => {
+    const { unit, item, unitRef } = heroAndItem();
+    expect(
+      withNative(
+        "UnitUnequipItemFromSlot",
+        () => item.handle,
+        () => unit.unequipSlot(LoadoutSlot.Chest),
+      ),
+    ).toBe(item);
+    expect(
+      withNative(
+        "UnitUnequipItemFromSlot",
+        () => undefined,
+        () => unit.unequipSlot(LoadoutSlot.Boots),
+      ),
+    ).toBeUndefined();
+    expect(stubCalls()).toContainCall(
+      `UnitUnequipItemFromSlot(${unitRef}, EQUIPMENT_LOADOUT_SLOT_CHEST)`,
+    );
+    expect(stubCalls()).toContainCall(
+      `UnitUnequipItemFromSlot(${unitRef}, EQUIPMENT_LOADOUT_SLOT_BOOTS)`,
+    );
+  });
+
+  it("bagItem is the registry's Item at the bag index, undefined for an empty one", () => {
+    const { unit, item, unitRef } = heroAndItem();
+    expect(
+      withNative(
+        "UnitItemInBagSlot",
+        () => item.handle,
+        () => unit.bagItem(3),
+      ),
+    ).toBe(item);
+    expect(
+      withNative(
+        "UnitItemInBagSlot",
+        () => undefined,
+        () => unit.bagItem(4),
+      ),
+    ).toBeUndefined();
+    expect(stubCalls()).toContainCall(`UnitItemInBagSlot(${unitRef}, 3)`);
+    expect(stubCalls()).toContainCall(`UnitItemInBagSlot(${unitRef}, 4)`);
+  });
+});
+
+// The unit-creating Natives #173 closed as Unit statics, and the neutral
+// order Natives it closed as members on the neutral structure, one case
+// each. A creation case returns the created Wrapper's handle: the one its
+// Native answered.
+{
+  const shop = Unit.create(owner, FourCC("ngme"), 0, 0);
+  const shopRef = handleRef("unit", shop.handle);
+  const buyer = defined(MapPlayer.fromIndex(3), "MapPlayer.fromIndex(3)");
+  const buyerRef = handleRef("player", buyer.handle);
+  const ownerRef = handleRef("player", owner.handle);
+  const target = Unit.create(owner, footman, 64, 64);
+  const targetRef = handleRef("unit", target.handle);
+  const where = Point.create(128, -256);
+  const whereRef = handleRef("location", where.handle);
+  const created = defined(
+    CreateUnit(owner.handle, footman, 0, 0, 0),
+    "CreateUnit",
+  );
+
+  describeNatives("Unit creation statics", [
+    nativeCase({
+      native: "CreateUnitByName",
+      answer: () => created,
+      member: () => Unit.createByName(owner, "footman", 10, 20, 90).handle,
+      line: `CreateUnitByName(${ownerRef}, "footman", 10, 20, 90)`,
+      returns: created,
+    }),
+    nativeCase({
+      native: "CreateUnitAtLoc",
+      answer: () => created,
+      member: () => Unit.createAtPoint(owner, footman, where, 45).handle,
+      line: `CreateUnitAtLoc(${ownerRef}, 1751543663, ${whereRef}, 45)`,
+      returns: created,
+    }),
+    nativeCase({
+      native: "CreateUnitAtLocByName",
+      answer: () => created,
+      member: () => Unit.createAtPointByName(owner, "footman", where).handle,
+      line: `CreateUnitAtLocByName(${ownerRef}, "footman", ${whereRef}, 270.0)`,
+      returns: created,
+    }),
+    nativeCase({
+      native: "CreateCorpse",
+      answer: () => created,
+      member: () => Unit.createCorpse(owner, footman, -5, 6, 180).handle,
+      line: `CreateCorpse(${ownerRef}, 1751543663, -5, 6, 180)`,
+      returns: created,
+    }),
+    nativeCase({
+      native: "CreateBlightedGoldmine",
+      answer: () => created,
+      member: () => Unit.createBlightedGoldmine(owner, 512, 768, 0).handle,
+      line: `CreateBlightedGoldmine(${ownerRef}, 512, 768, 0)`,
+      returns: created,
+    }),
+  ]);
+
+  describe("Unit creation statics when their Native returns nil", () => {
+    const failures = [
+      [
+        "CreateUnitByName",
+        " (footman)",
+        () => {
+          Unit.createByName(owner, "footman", 0, 0);
+        },
+      ],
+      [
+        "CreateUnitAtLoc",
+        " (hfoo)",
+        () => {
+          Unit.createAtPoint(owner, footman, where);
+        },
+      ],
+      [
+        "CreateUnitAtLocByName",
+        " (footman)",
+        () => {
+          Unit.createAtPointByName(owner, "footman", where);
+        },
+      ],
+      [
+        "CreateCorpse",
+        " (hfoo)",
+        () => {
+          Unit.createCorpse(owner, footman, 0, 0);
+        },
+      ],
+      [
+        "CreateBlightedGoldmine",
+        "",
+        () => {
+          Unit.createBlightedGoldmine(owner, 0, 0);
+        },
+      ],
+    ] as const;
+
+    for (const [native, detail, create] of failures) {
+      it(`throw at the caller's line when ${native} returns nil`, () => {
+        const message = withNative(
+          native,
+          () => undefined,
+          () => raisedIn(create),
+        );
+        expect(message).toEqual(`reforged-ts: failed to create Unit${detail}`);
+      });
+    }
+  });
+
+  describeNatives("Unit neutral orders", [
+    nativeCase({
+      native: "IssueNeutralImmediateOrder",
+      answer: () => true,
+      member: () => shop.issueNeutralImmediateOrder(buyer, "footman"),
+      line: `IssueNeutralImmediateOrder(${buyerRef}, ${shopRef}, "footman")`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "IssueNeutralImmediateOrderById",
+      answer: () => false,
+      member: () => shop.issueNeutralImmediateOrder(buyer, footman),
+      line: `IssueNeutralImmediateOrderById(${buyerRef}, ${shopRef}, 1751543663)`,
+      returns: false,
+    }),
+    nativeCase({
+      native: "IssueNeutralPointOrder",
+      answer: () => true,
+      member: () => shop.issueNeutralPointOrder(buyer, "footman", 32, 48),
+      line: `IssueNeutralPointOrder(${buyerRef}, ${shopRef}, "footman", 32, 48)`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "IssueNeutralPointOrderById",
+      answer: () => true,
+      member: () => shop.issueNeutralPointOrder(buyer, footman, -32, 48),
+      line: `IssueNeutralPointOrderById(${buyerRef}, ${shopRef}, 1751543663, -32, 48)`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "IssueNeutralTargetOrder",
+      answer: () => true,
+      member: () => shop.issueNeutralTargetOrder(buyer, "footman", target),
+      line: `IssueNeutralTargetOrder(${buyerRef}, ${shopRef}, "footman", ${targetRef})`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "IssueNeutralTargetOrderById",
+      answer: () => false,
+      member: () => shop.issueNeutralTargetOrder(buyer, footman, target),
+      line: `IssueNeutralTargetOrderById(${buyerRef}, ${shopRef}, 1751543663, ${targetRef})`,
+      returns: false,
+    }),
+    nativeCase({
+      native: "BlzQueueNeutralImmediateOrderById",
+      answer: () => true,
+      member: () => shop.queueNeutralImmediateOrder(buyer, footman),
+      line: `BlzQueueNeutralImmediateOrderById(${buyerRef}, ${shopRef}, 1751543663)`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "BlzQueueNeutralPointOrderById",
+      answer: () => true,
+      member: () => shop.queueNeutralPointOrder(buyer, footman, 16, -16),
+      line: `BlzQueueNeutralPointOrderById(${buyerRef}, ${shopRef}, 1751543663, 16, -16)`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "BlzQueueNeutralTargetOrderById",
+      answer: () => false,
+      member: () => shop.queueNeutralTargetOrder(buyer, footman, target),
+      line: `BlzQueueNeutralTargetOrderById(${buyerRef}, ${shopRef}, 1751543663, ${targetRef})`,
+      returns: false,
+    }),
+  ]);
+}
