@@ -38,14 +38,16 @@ describe("checkPublish", () => {
   });
 
   it("refuses pnpm 10, which never exchanges the OIDC token, whatever its npm", () => {
-    expect(checkPublish({ ...READY, pnpm: "10.33.0", npm: "11.19.0" })).toEqual({
-      ok: false,
-      problems: [
-        expect.stringContaining(
-          "pnpm 10.33.0 cannot publish without a token: `pnpm publish` does trusted publishing from pnpm 11",
-        ) as unknown,
-      ],
-    });
+    expect(checkPublish({ ...READY, pnpm: "10.33.0", npm: "11.19.0" })).toEqual(
+      {
+        ok: false,
+        problems: [
+          expect.stringContaining(
+            "pnpm 10.33.0 cannot publish without a token: `pnpm publish` does trusted publishing from pnpm 11",
+          ) as unknown,
+        ],
+      },
+    );
   });
 
   it("names the missing id-token permission", () => {
