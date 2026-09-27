@@ -430,7 +430,7 @@ Its stages, in order:
 
 It ends with what the App unlocks: the Patch watch's rehearsals ([#200](https://github.com/phmilk/reforged-ts/issues/200)) and [human step 5](#human-steps), the release workflow's dry run.
 
-It stops at the first failed check, saying what to fix, and never prints the private key. It can be re-run: the App stages are skipped when the variable and the secret exist (unless the maintainer asks to set the App up again, for a new key), Renovate's installation when its Dependency Dashboard exists, and the settings when they read back as committed. The dry run runs the read-only checks and `pnpm repo:settings --dry-run`, only warns about the branch, the working tree and a `master` without `renovate.json5`, answers every confirmation with yes, opens no browser and prints the commands that would change something.
+It stops at the first failed check, saying what to fix, and never prints the private key. It can be re-run: the App stages are skipped when the variable and the secret exist (unless the maintainer asks to set the App up again, for a new key), Renovate's installation when its Dependency Dashboard exists, and the settings when they read back as committed. The dry run runs `pnpm install` (it only fills `node_modules`), the read-only checks and `pnpm repo:settings --dry-run`, only warns about the branch, the working tree and a `master` without `renovate.json5`, answers every confirmation with yes, opens no browser and prints the commands that would change something.
 
 ### The Version Packages pull request and CI
 

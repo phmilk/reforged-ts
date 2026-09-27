@@ -60,7 +60,20 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      # No dependency cache: this job goes on to hold the App token, and
+      # Minted before any code of the checkout runs (the install's lifecycle
+      # scripts, the plan, the generator), so none of it can rewrite the
+      # local action that receives the App's private key. Minted even when
+      # the plan turns out empty; a dry run holds no App token.
+      - id: app
+        if: ${{ !inputs.dry_run }}
+        uses: ./.github/actions/app-token
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-issues: write
+      # No dependency cache: this job holds the App token, and
       # never restores a cache another workflow could have written.
       - uses: ./.github/actions/setup-workspace
       # A Build named in the title of a game-patch issue, open or closed, is
@@ -186,17 +199,6 @@ jobs:
             echo
             echo "</details>"
           } >> "$GITHUB_STEP_SUMMARY"
-      # Checked out first: the App token step is a local action. Minted only
-      # now, after the install and the generator ran with the read token.
-      - id: app
-        if: steps.plan.outputs.build != '' && !inputs.dry_run
-        uses: ./.github/actions/app-token
-        with:
-          client-id: ${{ vars.APP_CLIENT_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          permission-contents: write
-          permission-pull-requests: write
-          permission-issues: write
       - id: issue
         name: Open the issue
         if: steps.plan.outputs.build != '' && !inputs.dry_run
@@ -232,7 +234,9 @@ jobs:
           fi
           # Empty in a rehearsal, which vendors a Build already vendored:
           # the pull request still needs a commit.
-          git commit --allow-empty -m "$subject" -m "Vendored $TAG. $result"
+          # No hooks: a hook planted by the checkout's code would receive the
+          # token in this environment.
+          git -c core.hooksPath=/dev/null commit --allow-empty -m "$subject" -m "Vendored $TAG. $result"
           header=$(printf 'x-access-token:%s' "$APP_TOKEN" | base64 -w0)
           echo "::add-mask::$header"
           git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $header" \

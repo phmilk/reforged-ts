@@ -205,11 +205,12 @@ finish() {
 # exist, Renovate's installation when its Dependency Dashboard issue
 # exists, the settings when they read back as committed.
 #
-# The dry run still runs the read-only checks (gh, git, what the repository
-# holds, `pnpm repo:settings --dry-run`). It only warns about the branch,
-# the working tree and what master lacks, so the wizard can be reviewed
-# from any branch; it answers every confirmation with yes, opens no browser,
-# and prints the commands that change something instead of running them.
+# The dry run still runs `pnpm install` and the read-only checks (gh, git,
+# what the repository holds, `pnpm repo:settings --dry-run`). It only warns
+# about the branch, the working tree and what master lacks, so the wizard
+# can be reviewed from any branch; it answers every confirmation with yes,
+# opens no browser, and prints the commands that change something instead
+# of running them.
 
 readonly REPO_OWNER=phmilk
 readonly REPO_NAME=reforged-ts
@@ -425,7 +426,9 @@ else
   fail "git fetch origin master failed: $(cat "$ERR_FILE")" "Check your network and your access to $REPO."
 fi
 
-run pnpm install --frozen-lockfile || fail "pnpm install failed." "Read the error above."
+# In the dry run too: it only fills node_modules, and the dry run's
+# `pnpm github-app url` and `pnpm repo:settings --dry-run` compile first.
+show pnpm install --frozen-lockfile || fail "pnpm install failed." "Read the error above."
 pause "Press Enter to continue"
 
 # ── 2 to 5. The GitHub App ────────────────────────────────────────────────
