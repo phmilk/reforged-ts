@@ -93,6 +93,7 @@ Three ideas carry every Map project:
 
 ## Next
 
+- [Handles and Wrappers](../guides/handles-and-wrappers.md): the first of the concept guides, one page per idea of the library, in the order they build on each other.
 - [Runtime facts](../guides/runtime-facts.md): what the game's Lua has and lacks, measured in the game.
 - [Desync safety and guards](../guides/desync-safety-and-guards.md): the pitfalls the type layer, the lint and Dev mode catch.
 - [Testing your map](../guides/testing-your-map.md): running map logic on the Lua harness without the game.
