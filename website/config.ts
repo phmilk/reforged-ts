@@ -15,6 +15,7 @@ import {
   TYPINGS_FOLDER,
   typingsSidebar,
 } from "./reference";
+import { llmsFilesPlugin } from "./llms";
 import { TYPINGS_ROUTE_BASE } from "./typedoc/typings.mts";
 import { cutVersions, docsVersions, newestVersionAliases } from "./versioning";
 
@@ -106,6 +107,27 @@ export function siteConfig(options: SiteOptions): Config {
       [
         "@docusaurus/plugin-client-redirects",
         { createRedirects: newestVersionAliases(cut) },
+      ],
+      // llms.txt, llms-full.txt and each page as Markdown, per docs version
+      // and once for the Typings.
+      llmsFilesPlugin(cut),
+    ],
+
+    themes: [
+      // Offline search over the docs version being read: one index per docs
+      // version, the one of the version shown loaded by the search bar. The
+      // Typings, not versioned, are indexed once, apart: their pages search
+      // their own index, and a docs version's search does not load it.
+      [
+        "@easyops-cn/docusaurus-search-local",
+        {
+          indexDocs: true,
+          indexBlog: false,
+          indexPages: false,
+          docsRouteBasePath: ["docs", TYPINGS_ROUTE_BASE],
+          searchContextByPaths: [TYPINGS_ROUTE_BASE],
+          language: ["en"],
+        },
       ],
     ],
 

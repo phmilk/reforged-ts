@@ -132,7 +132,7 @@ website/docs/contributing/adding-a-wrapper.md
 website/docs/contributing/adding-a-lint-rule.md
 website/docs/contributing/adding-a-patch.md
 website/docs/changelog/*.md
-website/docs/_supported-patch.json
+website/docs/_supported-patch.md
 
 # The API reference TypeDoc generates at every build: the library's into the
 # docs tree, the Typings' into their own docs instance
