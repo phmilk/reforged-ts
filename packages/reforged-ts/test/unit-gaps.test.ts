@@ -17,6 +17,7 @@ import {
   type NativeOf,
   withNative,
 } from "./support/native-override";
+import { raisedIn } from "./support/raised-in";
 
 interface GapCase {
   /** The Native the case closes, as the report names it. */
@@ -308,6 +309,22 @@ describe("the pre-existing gaps of Unit and Widget", () => {
       });
     }
   }
+});
+
+describe("Unit.createMinimapIcon", () => {
+  it("throws when CreateMinimapIconOnUnit returns nil", () => {
+    const message = withNative(
+      "CreateMinimapIconOnUnit",
+      () => undefined,
+      () =>
+        raisedIn(() => {
+          unit.createMinimapIcon(255, 0, 0, "UI/Minimap/Ping.mdl", fogVisible);
+        }),
+    );
+    expect(message).toEqual(
+      "reforged-ts: failed to create minimapicon (UI/Minimap/Ping.mdl)",
+    );
+  });
 });
 
 describe("Unit.addIndicator", () => {

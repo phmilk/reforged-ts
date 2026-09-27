@@ -379,7 +379,7 @@ export class Item extends Widget {
    * The item a target order targets, or undefined outside a target order or
    * when the target is not an item, through `GetOrderTargetItem`.
    */
-  public static fromOrderTarget(): Item | undefined {
+  public static override fromOrderTarget(): Item | undefined {
     return this.fromHandle(GetOrderTargetItem());
   }
 

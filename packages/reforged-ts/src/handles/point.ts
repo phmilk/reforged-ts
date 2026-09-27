@@ -1,6 +1,6 @@
 /** @noSelfInFile */
 
-import { Handle } from "./handle";
+import { expectUnwrapped, Handle } from "./handle";
 
 export class Point extends Handle<location> {
   /**
@@ -41,8 +41,9 @@ export class Point extends Handle<location> {
 
   /**
    * Creates a minimap icon at the location, through `CreateMinimapIconAtLoc`,
-   * and returns the game's `minimapicon`, which the library does not wrap, or
-   * undefined when the game creates none.
+   * and returns the game's `minimapicon`, which the library does not wrap.
+   * Throws `reforged-ts: failed to create minimapicon (<pingPath>)` when the
+   * game creates none.
    * @param red An integer from 0-255 determining the amount of red color.
    * @param green An integer from 0-255 determining the amount of green color.
    * @param blue An integer from 0-255 determining the amount of blue color.
@@ -55,14 +56,18 @@ export class Point extends Handle<location> {
     blue: number,
     pingPath: string,
     fogVisibility: fogstate,
-  ) {
-    return CreateMinimapIconAtLoc(
-      this.handle,
-      red,
-      green,
-      blue,
+  ): minimapicon {
+    return expectUnwrapped(
+      CreateMinimapIconAtLoc(
+        this.handle,
+        red,
+        green,
+        blue,
+        pingPath,
+        fogVisibility,
+      ),
+      "minimapicon",
       pingPath,
-      fogVisibility,
     );
   }
 
@@ -85,11 +90,14 @@ export class Point extends Handle<location> {
 
   /**
    * The mouse position of a player mouse event, or undefined outside one,
-   * through `BlzGetTriggerPlayerMousePosition`: a lookup, although the game
-   * allocates a new location each time it returns one.
-   * @remarks Each call returns a new Point, which the caller owns: `destroy()`
-   * it. Dev mode neither counts it as created nor guards it inside
-   * `MapPlayer.runLocal`.
+   * through `BlzGetTriggerPlayerMousePosition`. The Native takes no handle
+   * and returns a location, so `Point` owns it through the coverage rule's
+   * creation exception, and the game allocates a new location on each call;
+   * the member is typed `| undefined` rather than throwing, because outside
+   * the event the game has nothing to give.
+   * @remarks Each call returns a new Point for a new location, and nothing
+   * destroys it for you: `destroy()` it. Dev mode neither counts it as
+   * created nor guards it inside `MapPlayer.runLocal`.
    */
   public static fromMousePosition(): Point | undefined {
     return this.fromHandle(BlzGetTriggerPlayerMousePosition());
@@ -97,11 +105,14 @@ export class Point extends Handle<location> {
 
   /**
    * The target point of a point order, or undefined outside one, through
-   * `GetOrderPointLoc`: a lookup, although the game allocates a new location
-   * each time it returns one.
-   * @remarks Each call returns a new Point, which the caller owns: `destroy()`
-   * it. Dev mode neither counts it as created nor guards it inside
-   * `MapPlayer.runLocal`.
+   * `GetOrderPointLoc`. The Native takes no handle and returns a location, so
+   * `Point` owns it through the coverage rule's creation exception, and the
+   * game allocates a new location on each call; the member is typed
+   * `| undefined` rather than throwing, because outside a point order the
+   * game has nothing to give.
+   * @remarks Each call returns a new Point for a new location, and nothing
+   * destroys it for you: `destroy()` it. Dev mode neither counts it as
+   * created nor guards it inside `MapPlayer.runLocal`.
    */
   public static fromOrderPoint(): Point | undefined {
     return this.fromHandle(GetOrderPointLoc());
@@ -109,11 +120,14 @@ export class Point extends Handle<location> {
 
   /**
    * The spell's target point, or undefined when the spell targets none,
-   * through `GetSpellTargetLoc`: a lookup, although the game allocates a new
-   * location each time it returns one.
-   * @remarks Each call returns a new Point, which the caller owns: `destroy()`
-   * it. Dev mode neither counts it as created nor guards it inside
-   * `MapPlayer.runLocal`.
+   * through `GetSpellTargetLoc`. The Native takes no handle and returns a
+   * location, so `Point` owns it through the coverage rule's creation
+   * exception, and the game allocates a new location on each call; the
+   * member is typed `| undefined` rather than throwing, because a spell
+   * without a target point gives nothing.
+   * @remarks Each call returns a new Point for a new location, and nothing
+   * destroys it for you: `destroy()` it. Dev mode neither counts it as
+   * created nor guards it inside `MapPlayer.runLocal`.
    */
   public static fromSpellTarget(): Point | undefined {
     return this.fromHandle(GetSpellTargetLoc());

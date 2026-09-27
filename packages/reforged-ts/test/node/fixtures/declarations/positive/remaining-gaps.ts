@@ -28,7 +28,7 @@ const midi: Sound = Sound.createMIDI("QuestCompleted", 12, 12);
 const enumerated: Item | undefined = Item.fromEnum();
 const ordered: Destructable | undefined = Destructable.fromOrderTarget();
 const spellTarget: Point | undefined = Point.fromSpellTarget();
-const icon: minimapicon | undefined = where.createMinimapIcon(
+const icon: minimapicon = where.createMinimapIcon(
   255,
   0,
   0,

@@ -49,6 +49,20 @@ describe("Point.create", () => {
     }),
   ]);
 
+  it("createMinimapIcon throws when CreateMinimapIconAtLoc returns nil", () => {
+    const message = withNative(
+      "CreateMinimapIconAtLoc",
+      () => undefined,
+      () =>
+        raisedIn(() => {
+          point.createMinimapIcon(255, 128, 0, "UI/Minimap/Ping.mdx", masked);
+        }),
+    );
+    expect(message).toEqual(
+      "reforged-ts: failed to create minimapicon (UI/Minimap/Ping.mdx)",
+    );
+  });
+
   const lookups = [
     ["GetOrderPointLoc", () => Point.fromOrderPoint()],
     ["GetSpellTargetLoc", () => Point.fromSpellTarget()],

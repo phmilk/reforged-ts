@@ -8,6 +8,7 @@ import { Destructable } from "./destructable";
 import type { EquipmentType, LoadoutSlot } from "./equipment";
 import { Force } from "./force";
 import { fieldTypeOf } from "./fields";
+import { expectUnwrapped } from "./handle";
 import type { Group } from "./group";
 import { Item } from "./item";
 import { MapPlayer } from "./player";
@@ -1854,8 +1855,9 @@ export class Unit extends Widget {
 
   /**
    * Creates a minimap icon over the unit, through `CreateMinimapIconOnUnit`,
-   * and returns the game's `minimapicon`, which the library does not wrap, or
-   * undefined when the game creates none.
+   * and returns the game's `minimapicon`, which the library does not wrap.
+   * Throws `reforged-ts: failed to create minimapicon (<pingPath>)` when the
+   * game creates none.
    * @param red An integer from 0-255 determining the amount of red color.
    * @param green An integer from 0-255 determining the amount of green color.
    * @param blue An integer from 0-255 determining the amount of blue color.
@@ -1868,14 +1870,18 @@ export class Unit extends Widget {
     blue: number,
     pingPath: string,
     fogVisibility: fogstate,
-  ) {
-    return CreateMinimapIconOnUnit(
-      this.handle,
-      red,
-      green,
-      blue,
+  ): minimapicon {
+    return expectUnwrapped(
+      CreateMinimapIconOnUnit(
+        this.handle,
+        red,
+        green,
+        blue,
+        pingPath,
+        fogVisibility,
+      ),
+      "minimapicon",
       pingPath,
-      fogVisibility,
     );
   }
 

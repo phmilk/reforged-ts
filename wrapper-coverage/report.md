@@ -829,7 +829,7 @@ Covered:
 
 Excluded:
 
-- `TriggerWaitForSound takes sound s, real offset returns nothing`: It is a wait that yields the running thread, the same class as the sleep Natives the lint plugin bans (TriggerSleepAction, PolledWait); a Wrapper member would offer that wait as a safe call. Source: common.j declares it beside TriggerSleepAction in the trigger action API; eslint-plugin-reforged's data/unsafe-natives.json (rule no-unsafe-natives) bans TriggerSleepAction and PolledWait for killing the thread outside a trigger action. (2026-09-26).
+- `TriggerWaitForSound takes sound s, real offset returns nothing`: It is a wait that yields the running thread, like TriggerSleepAction and PolledWait, and the lint plugin bans it with them; a Wrapper member would offer that wait as a safe call. Source: common.j declares it beside TriggerSleepAction in the trigger action API; eslint-plugin-reforged's data/unsafe-natives.json (rule no-unsafe-natives) bans it with TriggerSleepAction and PolledWait for killing the thread outside a trigger action. (2026-09-26).
 
 Covered:
 

@@ -580,7 +580,7 @@ export class Destructable extends Widget {
    * order or when the target is not a destructable, through
    * `GetOrderTargetDestructable`.
    */
-  public static fromOrderTarget(): Destructable | undefined {
+  public static override fromOrderTarget(): Destructable | undefined {
     return this.fromHandle(GetOrderTargetDestructable());
   }
 

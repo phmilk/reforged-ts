@@ -251,6 +251,28 @@ export function expectWrapper<C extends Handle<handle>>(
 }
 
 /**
+ * The creation check for a Handle the library does not wrap, such as the
+ * `minimapicon` that `createMinimapIcon` returns: the Handle itself, or
+ * `expect`'s message naming the Native type (`reforged-ts: failed to create
+ * minimapicon (<detail>)`) when the Native returned nothing. Same error
+ * level and tail-position rule as `expect`:
+ * `return expectUnwrapped(CreateMinimapIconAtLoc(...), "minimapicon", pingPath)`.
+ * The Dev-mode creation Guards and counts apply to Wrappers only, so none
+ * runs here. Package-internal, like `expectWrapper`.
+ */
+export function expectUnwrapped<T extends handle>(
+  handle: T | undefined,
+  typeName: string,
+  detail = "",
+): T {
+  if (handle === undefined) {
+    const suffix = detail === "" ? "" : ` (${detail})`;
+    error(`${LIBRARY}: failed to create ${typeName}${suffix}`, 2);
+  }
+  return handle;
+}
+
+/**
  * The creation step, shared by every Wrapper and the one place its errors
  * are raised: the Wrapper for `handle`, or the error naming `cls` and
  * `detail` when `handle` is undefined. Reached only through tail calls (from
