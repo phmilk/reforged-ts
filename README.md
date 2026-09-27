@@ -39,8 +39,9 @@ The Template's README has [the full first run](https://github.com/phmilk/reforge
 
 ## Docs
 
-The documentation site, https://phmilk.github.io/reforged-ts/, comes with [#40](https://github.com/phmilk/reforged-ts/issues/40) and is not live yet. Until it is:
+The documentation site, https://phmilk.github.io/reforged-ts/, is built ([#40](https://github.com/phmilk/reforged-ts/issues/40)) but not deployed yet: `docs.yml`, the workflow that publishes it, comes with [#196](https://github.com/phmilk/reforged-ts/issues/196). Until it is:
 
+- `pnpm docs:start` serves the site locally after `pnpm build`; [`website/README.md`](website/README.md) lists the site's commands.
 - [`CONTEXT.md`](CONTEXT.md) defines the project's terms.
 - Each package's README says what the package does and how to use it.
 - The library's doc comments document each Wrapper and System, and the editor shows them on hover.
