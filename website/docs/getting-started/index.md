@@ -14,7 +14,7 @@ A Map project starts from the [Template](https://github.com/phmilk/reforged-ts-t
 | Warcraft III     | 3.0.0 or later, with a Battle.net login saved on the machine        | `pnpm test:map` starts the game on the built map. The game is online-only.                                                  |
 | The World Editor | The one that ships with the game                                    | It owns the map's data (terrain, object data, placed units). The map is saved as a folder, with Lua as its script language. |
 | Node             | 24 (the Template's `.node-version`); the packages need 22.13        | The build, the tests and the tools run on it.                                                                               |
-| pnpm             | 10 (the Template's `packageManager`; `corepack enable` provides it) | The package manager of the Template and of the library.                                                                     |
+| pnpm             | 10 (the Template's `packageManager`; `corepack enable` provides it) | The package manager of the Template.                                                                                        |
 
 The Template pins the rest of the Toolchain, so there is nothing else to install: TypeScript at the exact version typescript-to-lua supports (6.0.2 with typescript-to-lua 1.37), typescript-to-lua with its language extensions, the [Typings](../guides/typings.md) of the Patch (`reforged-types`), ESLint with `eslint-plugin-reforged`, and vitest with the Lua test harness (`reforged-test`). [Compatibility](../compatibility/index.mdx) lists which versions go together for each release.
 

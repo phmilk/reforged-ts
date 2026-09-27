@@ -5,7 +5,7 @@
  * workspace ranges. Run after `pnpm build` (as `pnpm check` does): the build
  * output is what the tarballs are checked for.
  */
-import { execFile, exec } from "node:child_process";
+import { exec } from "node:child_process";
 import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -308,8 +308,7 @@ async function readManifest(path: string): Promise<Manifest> {
  * Packs packages/<dir> into `destination` and reads the tarball back.
  * Lifecycle scripts are skipped: the build already ran, and reforged-test's
  * `prepare` would rebuild the harness while other test projects read it.
- * Under `pnpm test` the pnpm that runs the script is reused through node;
- * otherwise `pnpm` is looked up by the shell (pnpm.cmd on Windows).
+ * `pnpm` is looked up by the shell (pnpm.exe or pnpm.cmd on Windows).
  */
 async function pack(dir: string, destination: string): Promise<Packed> {
   const args = [
@@ -318,16 +317,9 @@ async function pack(dir: string, destination: string): Promise<Packed> {
     "--pack-destination",
     destination,
   ];
-  const options = { cwd: join(workspaceRoot, "packages", dir) };
-  const execPath = process.env.npm_execpath;
-  if (execPath !== undefined && /pnpm\.c?js$/.test(execPath)) {
-    await promisify(execFile)(process.execPath, [execPath, ...args], options);
-  } else {
-    await promisify(exec)(
-      `pnpm ${args.map((arg) => `"${arg}"`).join(" ")}`,
-      options,
-    );
-  }
+  await promisify(exec)(`pnpm ${args.map((arg) => `"${arg}"`).join(" ")}`, {
+    cwd: join(workspaceRoot, "packages", dir),
+  });
   const tarballs = (await readdir(destination)).filter((file) =>
     file.endsWith(".tgz"),
   );

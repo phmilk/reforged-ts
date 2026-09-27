@@ -55,7 +55,6 @@ describe("checkPublish", () => {
     expect(problem).toContain(
       "The publish job runs the pnpm of the root packageManager field: pin pnpm 11 or later there.",
     );
-    expect(problem).not.toContain("for itself");
   });
 
   it("names the missing id-token permission", () => {
