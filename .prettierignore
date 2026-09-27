@@ -26,8 +26,9 @@ wrapper-coverage/report.md
 # Lua is not formatted.
 *.lua
 
-# The VS Code files stay as they are until the DX step (#41).
-.vscode/
+# Agent worktrees and local state; the Agent skills are formatted.
+.claude/*
+!.claude/skills/
 
-# Agent worktrees and local state.
-.claude/
+# SchemaStore's schemas, vendored byte for byte for the issue form tests.
+release/test/schemas/*.json

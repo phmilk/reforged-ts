@@ -9,6 +9,9 @@
     "moduleResolution": "nodenext",
     "rootDir": "src",
     "outDir": "build",
+    // Other workspace packages import the rename map module (package.json
+    // `exports`), with its declarations.
+    "declaration": true,
     "types": ["node"],
     "strict": true,
     "verbatimModuleSyntax": true,
