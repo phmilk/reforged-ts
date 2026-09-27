@@ -140,6 +140,30 @@ expect(stubCalls()).toContainCall(`UnitItemInSlot(${unitRef}, 2)`);
 
 Use it instead of editing the shipped stub files when one test needs a Native to fail or to return a handle it controls.
 
+### Enum members and the sentinel rule
+
+A member that takes one of the library's TypeScript enums (`EquipmentType`, `ItemTag`, `LoadoutSlot`) converts it at call time (`ConvertLoadoutSlot(slot)`), and one that returns an enum matches the Native's answer against the named constants. The equipment converters of reforged-test follow the sentinel rule its README describes: one cached value per integer, the named constant being that value. So a test asserts the constant by name in the call log, `UnitItemInEquipmentSlot(unit#…, EQUIPMENT_LOADOUT_SLOT_HEAD)`, and feeds a reader a constant (`EQUIPMENT_TYPE_HEAD`) through `withNative` to expect the enum member. A value no member names is a converted integer with no named constant, which the reader must refuse at the reading line:
+
+```ts
+const message = withNative(
+  "GetItemEquipmentType",
+  () => ConvertEquipmentType(42), // no EQUIPMENT_TYPE_* is this value
+  () =>
+    raisedIn(() => {
+      read = item.equipmentType;
+    }),
+);
+expect(message).toEqual(
+  "reforged-ts: GetItemEquipmentType returned a value EquipmentType does not name",
+);
+```
+
+Each conversion adds its own line to the call log (`ConvertLoadoutSlot(0)`), and no conversion may run while the library loads (`root-handles.test.ts`). `equipment.test.ts` checks every enum member against its integer.
+
+### The gap suites
+
+The members that closed the coverage report's gaps are tested from tables, one case per Native and named by it, so a suite reads against the report's list. A Wrapper's file ends with `describeNatives` blocks of `nativeCase` entries (`item.test.ts`, `player.test.ts`, `sound.test.ts` and the others). `unit-gaps.test.ts` keeps a table of its own, `gap("<Native>", { answer, member, line, returns, lookup })`, whose `lookup: true` cases also assert that the lookup is undefined when the Native answers nothing. A creation among the gaps gets its own `raisedIn` test beside the table. A member added for a Native of a later Patch adds one case to its Wrapper's table.
+
 ### Where a creation error points
 
 A creation member throws `reforged-ts: failed to create <Wrapper> (<detail>)` at the Map project's line that called it. `toThrow` only matches a substring, so it cannot tell a right error level from a wrong one; `raisedIn` can. Make the creation call as a statement inside `call`, never as its return value (a returned call is a Lua tail call that drops `call`'s frame), and compare the bare message:

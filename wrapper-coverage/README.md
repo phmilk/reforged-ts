@@ -6,7 +6,7 @@ The coverage rule of ADR 0008 as a command: which common.j Natives each Wrapper 
 pnpm coverage:report
 ```
 
-It reads the manifest of the library's Patch (`packages/reforged-types/<Game version>/manifest.json`), scans the library sources (`packages/reforged-ts/src`), and writes `report.json` and `report.md` here. Exit codes: 0 nothing missing and no problem, 1 a missing Native, a problem or unreadable inputs (then nothing is written), 2 usage. Commit both files whenever a change moves coverage: `pnpm test` fails when they differ from a fresh run.
+It reads the manifest of the library's Patch (`packages/reforged-types/<Game version>/manifest.json`), scans the library sources (`packages/reforged-ts/src`), and writes `report.json` and `report.md` here. Exit codes: 0 nothing missing and no problem, 1 a missing Native, a problem or unreadable inputs (then nothing is written), 2 usage. Commit both files whenever a change moves coverage: `pnpm test` fails when they differ from a fresh run. `pnpm check` runs the command last, after `pnpm test`, so the check fails on a missing Native or a problem; the real-inputs test (`test/real-inputs.test.ts`) asserts the same on the repository's inputs: zero missing, no problem, exit 0.
 
 ## The rule
 

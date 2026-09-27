@@ -20,3 +20,14 @@ The Wrappers inherited from w3ts call about 816 of the 1,547 natives of Patch 1.
 - The first release covers about 90 of the 137 new natives (tiers 1 and 2); terrain fog, HD water, doodads and cinematics follow in 1.1.
 
 Decision record: https://github.com/phmilk/reforged-ts/issues/8
+
+## Amendment (2026-09-27)
+
+Making the rule executable (#54, the Wrapper coverage report in `wrapper-coverage/`) clarified its wording. The decision itself stands.
+
+- **Owner, with the creation exception.** A Native is owned by the Wrapper whose handle type is its first parameter's Jass type, as above. A Native whose first parameter is not a handle, or that takes none, and that returns a wrapped handle type is owned by the returned type's Wrapper: the 32 destructable constructors by `Destructable`, `CreateTimer` by `Timer`, and the event and enumeration getters (`GetDyingUnit`, `GetEnumItem`) by theirs. Every other Native is unowned and outside the rule.
+- **Covered by any class.** "A Wrapper covers its natives" means no owned Native is unreachable through the library: an owned Native is covered when any class declaration of the library calls it, static namespaces included, and the report names the calling class. `CreateUnit`, owned by `MapPlayer` through its `player` first parameter, is covered by `Unit.create`; no duplicate member is added on the owner. A call outside every class counts for none, so a static namespace is a class.
+- **Exclusions cite a source.** An exclusion names the Native, what it does wrong, the jassdoc bug note or probe-map measurement that shows it, and the date. The report fails on a stale exclusion (a class calls the Native), an unknown Native or an unowned one.
+- **The gate.** The report fails `pnpm check` as well as CI: `pnpm check` runs `coverage:report` after `test`, and a real-inputs test asserts zero missing on the library and the manifest of its Patch.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/54

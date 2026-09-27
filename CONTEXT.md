@@ -24,6 +24,18 @@ _Avoid_: patch file, fixups, manual types
 A library class that owns one Handle and exposes its Natives as typed members (`Unit`, `Timer`, `Frame`).
 _Avoid_: handle class, model, entity
 
+**Static namespace**:
+A library class of static members only, over one facility of the whole game rather than one Handle (`Camera`, `Input`, `Terrain`, `File`); a class, not a TypeScript namespace, so the Wrapper coverage report counts its calls.
+_Avoid_: singleton, module, utility class
+
+**Owner**:
+The Wrapper a Native belongs to: the one whose handle type is the Native's first parameter, or, for a Native with no handle first that returns a wrapped handle type, that type's Wrapper (`CreateTimer` to `Timer`). A Native with neither is unowned.
+_Avoid_: owning class, home, target Wrapper
+
+**Wrapper coverage report**:
+The generated list, per Wrapper, of the Natives it owns and whether each is covered (some class calls it, not necessarily the Owner), excluded with a reason, or missing; `pnpm check` fails on a missing one.
+_Avoid_: coverage (alone, which is test coverage), API audit, native checklist
+
 **System**:
 A library utility that wraps no Handle, even when it uses some for its own work (`sync`, `host`, `file`, `binary`, `base64`, `gametime`).
 _Avoid_: helper, module, util

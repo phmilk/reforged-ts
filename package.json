@@ -29,7 +29,7 @@
     "release:dist-tag": "pnpm --filter reforged-ts-release release:dist-tag",
     "release:template-clone": "pnpm --filter reforged-ts-release release:template-clone",
     "release:publish-check": "pnpm --filter reforged-ts-release release:publish-check",
-    "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test"
+    "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test && pnpm run coverage:report"
   },
   "devDependencies": {
     "@changesets/changelog-github": "catalog:",
