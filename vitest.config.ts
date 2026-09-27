@@ -75,6 +75,17 @@ export default defineConfig({
         },
       },
       {
+        // The repository's conventions, in Node, on the committed files that
+        // agents and editors read (AGENTS.md, CLAUDE.md, .vscode). Needs no
+        // build.
+        test: {
+          name: "conventions",
+          root: "test/conventions",
+          include: ["*.test.ts"],
+          environment: "node",
+        },
+      },
+      {
         // The release scripts, in Node, through their programmatic entry
         // points, on fixture workspaces and repositories the tests create.
         test: {
