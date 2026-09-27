@@ -4,22 +4,20 @@
  * naming what is missing.
  *
  * - The job can request an OIDC token (`id-token: write`).
- * - The publishing tool does trusted publishing. pnpm 11 and later do it
- *   themselves; pnpm 10 hands the upload to the npm CLI, which does it
- *   from 11.5.1.
+ * - The publishing tool does trusted publishing: pnpm 11 or later. pnpm 10
+ *   has no code path for it (its `publish` never exchanges the job's OIDC
+ *   token, so npm answers ENEEDAUTH), which is why the publish job installs
+ *   pnpm 11 for itself while the workspace stays on pnpm 10.
  * - Every publishable package exists on npm: trusted publishing is
  *   configured on an existing package only, so a package's first version
  *   is published by hand (the first-publish wizard) and never by the
  *   workflow.
  */
 import { byCodePoint } from "./order.js";
-import { compareSemver, parseSemver } from "./semver.js";
+import { parseSemver } from "./semver.js";
 
-/** The first npm CLI release with trusted publishing. */
-export const NPM_TRUSTED_PUBLISHING = "11.5.1";
-
-/** The first pnpm major that does trusted publishing itself. */
-export const PNPM_NATIVE_TRUSTED_PUBLISHING = 11;
+/** The first pnpm major whose `publish` does trusted publishing. */
+export const PNPM_TRUSTED_PUBLISHING = 11;
 
 /** The registry the packages are published to. */
 export const REGISTRY = "https://registry.npmjs.org";
@@ -32,7 +30,7 @@ export interface PublishCheckInput {
   idToken: boolean;
   /** `pnpm --version`, or `null` when pnpm cannot be run. */
   pnpm: string | null;
-  /** `npm --version`, or `null` when there is no npm. */
+  /** `npm --version`, or `null` when there is no npm; reported only. */
   npm: string | null;
   /** Each publishable package, and whether npm has it. */
   packages: readonly { name: string; onNpm: boolean }[];
@@ -42,18 +40,6 @@ export interface PublishCheckResult {
   ok: boolean;
   /** One sentence per missing prerequisite. */
   problems: string[];
-}
-
-/**
- * Whether the version `version` is at least `floor`, by semver precedence
- * (so `11.5.1-rc.0` is below `11.5.1`); `false` when either is not a
- * version.
- */
-export function atLeast(version: string, floor: string): boolean {
-  const actual = parseSemver(version.trim());
-  const minimum = parseSemver(floor.trim());
-  if (actual === undefined || minimum === undefined) return false;
-  return compareSemver(actual, minimum) >= 0;
 }
 
 export function checkPublish(input: PublishCheckInput): PublishCheckResult {
@@ -72,14 +58,12 @@ export function checkPublish(input: PublishCheckInput): PublishCheckResult {
         ? "pnpm cannot be run: `pnpm --version` failed."
         : `\`pnpm --version\` printed "${input.pnpm}", not a version.`,
     );
-  } else if (
-    pnpmMajor < PNPM_NATIVE_TRUSTED_PUBLISHING &&
-    (input.npm === null || !atLeast(input.npm, NPM_TRUSTED_PUBLISHING))
-  ) {
+  } else if (pnpmMajor < PNPM_TRUSTED_PUBLISHING) {
     problems.push(
-      `pnpm ${String(input.pnpm)} hands the upload to the npm CLI, which does trusted publishing ` +
-        `from ${NPM_TRUSTED_PUBLISHING}; found ${input.npm === null ? "no npm" : `npm ${input.npm}`}. ` +
-        "Run the publish job on Node 24, whose npm is recent enough, or install a newer npm in it.",
+      `pnpm ${String(input.pnpm)} cannot publish without a token: \`pnpm publish\` does trusted ` +
+        `publishing from pnpm ${String(PNPM_TRUSTED_PUBLISHING)} (pnpm 10 never exchanges the job's ` +
+        "OIDC token, and npm answers ENEEDAUTH). The publish job installs pnpm " +
+        `${String(PNPM_TRUSTED_PUBLISHING)} for itself before this check.`,
     );
   }
   const absent = input.packages

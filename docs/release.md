@@ -371,7 +371,7 @@ The tags and the releases are created with the App's token, not the job's defaul
 `pnpm release:publish-check` (`release/src/publish-check.ts`) runs in the publish job before anything is published and fails with one line per missing prerequisite:
 
 - the job cannot request an OIDC token: `permissions: id-token: write` is missing;
-- the publishing tool cannot do trusted publishing: pnpm 10 hands the upload to the npm CLI, which does it from 11.5.1 (Node 24 bundles a recent enough npm); pnpm 11 and later do it themselves;
+- the publishing tool cannot do trusted publishing: only pnpm 11 and later do it (pnpm 10's `publish` never exchanges the job's OIDC token, and npm answers `ENEEDAUTH`). The workspace stays on pnpm 10, so the publish job removes the root `packageManager` field from its own checkout and installs pnpm 11 for itself before this check;
 - a publishable package is not on npm yet: trusted publishing is configured on an existing package only, so a package's first version is published by hand with [the first-publish wizard](#the-first-publish-wizard).
 
 npm does not expose a package's trusted publisher, so a missing or mismatched one shows only at upload, as an `ENEEDAUTH` or 404 from npm.

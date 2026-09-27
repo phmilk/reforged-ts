@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { main } from "../src/cli/publish-check.js";
-import { atLeast, checkPublish, onNpm } from "../src/publish-check.js";
+import { checkPublish, onNpm } from "../src/publish-check.js";
 import { writeWorkspace } from "./support/workspace.js";
 
 const ON_NPM = [
@@ -10,7 +10,7 @@ const ON_NPM = [
 
 const READY = {
   idToken: true,
-  pnpm: "10.33.0",
+  pnpm: "11.25.0",
   npm: "11.19.0",
   packages: ON_NPM,
 };
@@ -31,42 +31,21 @@ function registry(published: readonly string[], status = 404): typeof fetch {
   };
 }
 
-describe("atLeast", () => {
-  it("compares release versions part by part", () => {
-    expect(atLeast("11.5.1", "11.5.1")).toBe(true);
-    expect(atLeast("11.10.0", "11.5.1")).toBe(true);
-    expect(atLeast("12.0.0", "11.5.1")).toBe(true);
-    expect(atLeast("11.5.0", "11.5.1")).toBe(false);
-    expect(atLeast("10.9.4", "11.5.1")).toBe(false);
-    expect(atLeast("not a version", "11.5.1")).toBe(false);
-    // A prerelease comes before its release.
-    expect(atLeast("11.5.1-rc.0", "11.5.1")).toBe(false);
-    expect(atLeast("11.6.0-rc.0", "11.5.1")).toBe(true);
-  });
-});
-
 describe("checkPublish", () => {
-  it("passes with an OIDC token, pnpm 10 over npm 11.5.1 or later, and every package on npm", () => {
+  it("passes with an OIDC token, pnpm 11 or later, and every package on npm", () => {
     expect(checkPublish(READY)).toEqual({ ok: true, problems: [] });
-    expect(checkPublish({ ...READY, npm: "11.5.1" }).ok).toBe(true);
+    expect(checkPublish({ ...READY, pnpm: "12.0.0", npm: null }).ok).toBe(true);
   });
 
-  it("does not need npm under pnpm 11, which publishes itself", () => {
-    expect(checkPublish({ ...READY, pnpm: "11.2.0", npm: null }).ok).toBe(true);
-  });
-
-  it("names the npm floor when pnpm 10 would hand the upload to an older npm", () => {
-    expect(checkPublish({ ...READY, npm: "10.9.4" })).toEqual({
+  it("refuses pnpm 10, which never exchanges the OIDC token, whatever its npm", () => {
+    expect(checkPublish({ ...READY, pnpm: "10.33.0", npm: "11.19.0" })).toEqual({
       ok: false,
       problems: [
         expect.stringContaining(
-          "pnpm 10.33.0 hands the upload to the npm CLI, which does trusted publishing from 11.5.1; found npm 10.9.4.",
+          "pnpm 10.33.0 cannot publish without a token: `pnpm publish` does trusted publishing from pnpm 11",
         ) as unknown,
       ],
     });
-    expect(checkPublish({ ...READY, npm: null }).problems).toEqual([
-      expect.stringContaining("found no npm.") as unknown,
-    ]);
   });
 
   it("names the missing id-token permission", () => {
@@ -137,7 +116,7 @@ describe("release:publish-check", () => {
         },
         version: (tool) =>
           Promise.resolve(
-            tool === "pnpm" ? "10.33.0" : (options.npm ?? "11.19.0"),
+            tool === "pnpm" ? "11.25.0" : (options.npm ?? "11.19.0"),
           ),
         fetcher: registry(
           options.published ?? [
@@ -156,7 +135,7 @@ describe("release:publish-check", () => {
     expect(await runCli([])).toEqual({
       status: 0,
       stdout:
-        "Ready for trusted publishing: pnpm 10.33.0, npm 11.19.0, " +
+        "Ready for trusted publishing: pnpm 11.25.0, npm 11.19.0, " +
         "eslint-plugin-reforged, reforged-test, reforged-ts, reforged-types on npm.\n",
       stderr: "",
     });
