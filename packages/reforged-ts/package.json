@@ -53,7 +53,6 @@
   "devDependencies": {
     "@types/node": "catalog:",
     "@typescript-to-lua/language-extensions": "catalog:",
-    "ajv": "catalog:",
     "lua-types": "catalog:",
     "reforged-test": "workspace:^",
     "reforged-types": "workspace:^",

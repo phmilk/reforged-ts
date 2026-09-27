@@ -24,3 +24,6 @@ release/compatibility/matrix.md
 # Agent worktrees and local state; the Agent skills are formatted.
 .claude/*
 !.claude/skills/
+
+# SchemaStore's schemas, vendored byte for byte for the issue form tests.
+release/test/schemas/*.json

@@ -87,7 +87,7 @@ export interface PatchCheckResult {
 }
 
 /** The `reforged.patch` of a manifest, `undefined` when it has none. */
-function declaredPatch(manifest: PackageManifest): unknown {
+export function declaredPatch(manifest: PackageManifest): unknown {
   const reforged = manifest.reforged;
   return isRecord(reforged) ? reforged.patch : undefined;
 }

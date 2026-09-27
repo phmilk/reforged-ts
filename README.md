@@ -50,16 +50,23 @@ The documentation site, https://phmilk.github.io/reforged-ts/, comes with [#40](
 
 Run from the root after `pnpm install`:
 
-| Command                 | What it does                                                                                                                                                                                                                                  |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm check`            | Runs `lint`, `typecheck`, `build` and `test`, in that order, and stops at the first failing stage. The finish condition.                                                                                                                      |
-| `pnpm lint`             | ESLint on every TypeScript file, then a Prettier check of the JSON, Markdown and YAML files.                                                                                                                                                  |
-| `pnpm format`           | `eslint --fix` and `prettier --write` over the same files: lints and formats in one pass.                                                                                                                                                     |
-| `pnpm typecheck`        | `tsc --noEmit` on each package's tsconfigs (the library and its tests, the harness glue and runner, the generator), then on `test/`.                                                                                                          |
-| `pnpm build`            | Builds every package, dependencies first: the library's Lua and declarations land in `packages/reforged-ts/dist`.                                                                                                                             |
-| `pnpm test`             | One vitest run over every package's projects and the two root projects, `tarballs` (packs each publishable package and checks its tarball) and `conventions` (checks `AGENTS.md`, `CLAUDE.md` and the editor settings), then `typings:check`. |
-| `pnpm typings:generate` | Regenerates the Typings from the vendored Patch files and the Overlay.                                                                                                                                                                        |
-| `pnpm typings:check`    | Fails when the committed Typings differ from what the generator produces (the drift check).                                                                                                                                                   |
+| Command                   | What it does                                                                                                                                                                                                            |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm check`              | Runs `lint`, `typecheck`, `build`, `typings:check` and `test`, in that order, and stops at the first failing stage. The finish condition.                                                                               |
+| `pnpm lint`               | ESLint on every TypeScript file, then a Prettier check of the JSON, Markdown and YAML files.                                                                                                                            |
+| `pnpm format`             | `eslint --fix` and `prettier --write` over the same files: lints and formats in one pass.                                                                                                                               |
+| `pnpm typecheck`          | `tsc --noEmit` on each package's tsconfigs (the library and its tests, the harness glue and runner, the generator), then on `test/`.                                                                                    |
+| `pnpm build`              | Builds every package, dependencies first: the library's Lua and declarations land in `packages/reforged-ts/dist`.                                                                                                       |
+| `pnpm test`               | One vitest run over every package's projects and the two root projects, `tarballs` (packs each publishable package and checks its tarball) and `conventions` (checks `AGENTS.md`, `CLAUDE.md` and the editor settings). |
+| `pnpm typings:generate`   | Regenerates the Typings from the vendored Patch files and the Overlay.                                                                                                                                                  |
+| `pnpm typings:check`      | Fails when the committed Typings differ from what the generator produces (the drift check).                                                                                                                             |
+| `pnpm data:check`         | Builds the library, then fails on an old name of the rename map still exported or a version pair without its migration page (reported in pre mode).                                                                     |
+| `pnpm actionlint`         | actionlint on the workflow files, at the version CI runs; downloaded on first use and checked against its pinned checksum, so nothing is installed.                                                                     |
+| `pnpm patch-watch:plan`   | Prints whether jass-history tags a live Patch newer than the supported one, and why each other tag is ignored. Changes nothing.                                                                                         |
+| `pnpm patch-watch:report` | Renders, from a saved plan, the issue and the draft pull request the Patch watch opens; the pull request's body is the generator's output as the curation checklist.                                                    |
+| `pnpm repo:settings`      | The maintainer's: applies the ruleset on `master`, the merge settings, the Pages source and the labels with an administrator's `gh` login. `--dry-run` prints the requests and sends none.                              |
+| `pnpm github-app`         | The maintainer's, for `release/repo-setup.sh`: prints the page registering the GitHub App, or checks an App as itself (owner, permissions, installation).                                                               |
+| `pnpm renovate:check`     | Renovate's validator on `renovate.json5`, at the Renovate version the script pins; `pnpm dlx` downloads it on first use, so nothing is installed.                                                                       |
 
 `pnpm check` green is what done means, for a contributor and for an agent. A package's other scripts run from the root with `pnpm --filter <package> <script>`, for example `pnpm --filter reforged-types verify`.
 
@@ -90,7 +97,7 @@ The library's tests import the harness by its package name: the runner from `ref
 
 ## Contributing
 
-Issues and specs live in this repository's [GitHub Issues](https://github.com/phmilk/reforged-ts/issues), the Template's in [its own tracker](https://github.com/phmilk/reforged-ts-template/issues); [#1](https://github.com/phmilk/reforged-ts/issues/1) maps the work toward the first release. The contribution guide, `CONTRIBUTING.md`, comes with [#48](https://github.com/phmilk/reforged-ts/issues/48). Until then, [`AGENTS.md`](AGENTS.md) describes how the repository is worked on, for people as for agents, and a green `pnpm check` is what done means.
+Issues and specs live in this repository's [GitHub Issues](https://github.com/phmilk/reforged-ts/issues), the Template's in [its own tracker](https://github.com/phmilk/reforged-ts-template/issues); [#1](https://github.com/phmilk/reforged-ts/issues/1) maps the work toward the first release. [`CONTRIBUTING.md`](CONTRIBUTING.md) is the guide for a pull request: the flow, changesets, tests on the harness, the Wrapper rules, curating the Overlay and a new Patch, documentation and the issue labels.
 
 ## License
 

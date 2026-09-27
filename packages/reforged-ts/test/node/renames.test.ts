@@ -8,23 +8,30 @@
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
-  createMapProject,
-  publicApi,
-  type MapProject,
-  type PublicApi,
-} from "./support/declarations";
-import {
   isNoRenamesMarker,
   loadRenameMap,
-  loadRenames,
-  parseRenames,
+  missingSymbols,
+  parseRenameMap,
   parseSymbol,
-  publishedFiles,
+  renameEntries,
   replacements,
+  type DeclarationResolver,
   type NoRenamesMarker,
   type RenameEntry,
   type RenameMapItem,
-} from "./support/renames";
+} from "../../../../release/src/rename-map";
+import {
+  createMapProject,
+  publicApi,
+  type MapProject,
+} from "./support/declarations";
+import { mapFile, publishedFiles, schemaFile } from "./support/renames";
+
+/** Parses the text of a rename map against the library's schema. */
+const parseRenames = (text: string) => parseRenameMap(text, schemaFile);
+
+/** The entries of the library's rename map, without the markers. */
+const loadRenames = async () => renameEntries(await loadRenameMap(mapFile));
 
 /** The version pair every entry of the first release carries. */
 const VERSIONS = { from: "w3ts@3", to: "reforged-ts@1" };
@@ -277,7 +284,7 @@ describe("a symbol of the rename map", () => {
 
 describe("migration/renames.json", () => {
   let project: MapProject;
-  let api: PublicApi;
+  let api: DeclarationResolver;
 
   beforeAll(async () => {
     project = await createMapProject();
@@ -304,7 +311,7 @@ describe("migration/renames.json", () => {
   });
 
   it("gives each version pair entries or the no-renames marker, not both", async () => {
-    const items = await loadRenameMap();
+    const items = await loadRenameMap(mapFile);
     const pair = (item: RenameMapItem) =>
       `${item.versions.from} to ${item.versions.to}`;
     const marked = new Set(items.filter(isNoRenamesMarker).map(pair));
@@ -383,10 +390,7 @@ describe("migration/renames.json", () => {
 
   it("names only replacements the emitted declarations export publicly", async () => {
     const entries = await loadRenames();
-    const missing = entries.flatMap((entry) =>
-      replacements(entry).filter((symbol) => !api.has(parseSymbol(symbol))),
-    );
-    expect(missing).toEqual([]);
+    expect(missingSymbols(entries, api)).toEqual([]);
   });
 
   it("sees a member that does not exist as missing", () => {
