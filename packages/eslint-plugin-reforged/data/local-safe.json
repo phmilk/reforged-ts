@@ -505,6 +505,21 @@
     "reason": "Lua's print (lua-types, not a Native) writes to the local screen only; the game formats the string, so a lone % garbles it."
   },
   {
+    "name": "MapPlayer#displayText",
+    "kind": "text",
+    "reason": "the MapPlayer Wrapper's member over a DisplayText Native; the game formats the string, so a lone % garbles it or crashes the game (jassdoc, DisplayTimedTextFromPlayer)."
+  },
+  {
+    "name": "MapPlayer#displayTimedText",
+    "kind": "text",
+    "reason": "the MapPlayer Wrapper's member over a DisplayText Native; the game formats the string, so a lone % garbles it or crashes the game (jassdoc, DisplayTimedTextFromPlayer)."
+  },
+  {
+    "name": "MapPlayer#displayTimedTextFrom",
+    "kind": "text",
+    "reason": "the MapPlayer Wrapper's member over a DisplayText Native; the game formats the string, so a lone % garbles it or crashes the game (jassdoc, DisplayTimedTextFromPlayer)."
+  },
+  {
     "name": "Frame#setAlpha",
     "kind": "visual",
     "reason": "the Frame Wrapper's member over a BlzFrameSet* visual Native."
@@ -670,9 +685,19 @@
     "reason": "the Frame Wrapper's accessor over BlzFrameSetText (an assignment calls the setter)."
   },
   {
+    "name": "Frame#setTextAreaAutoScroll",
+    "kind": "visual",
+    "reason": "the Frame Wrapper's member over BlzTextAreaFrameSetAutoScroll, a visual Native."
+  },
+  {
     "name": "Unit#setVertexColor",
     "kind": "visual",
     "reason": "the Unit Wrapper's member over SetUnitVertexColor."
+  },
+  {
+    "name": "Destructable#setVertexColor",
+    "kind": "visual",
+    "reason": "the Destructable Wrapper's member over SetDestructableVertexColor."
   },
   {
     "name": "Effect#setAlpha",
@@ -748,6 +773,21 @@
     "name": "Sound#setChannel",
     "kind": "visual",
     "reason": "the Sound Wrapper's member over a sound Native that only changes the local audio."
+  },
+  {
+    "name": "Sound.playThematicMusic",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's static member over a thematic music Native that only changes the local audio."
+  },
+  {
+    "name": "Sound.endThematicMusic",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's static member over a thematic music Native that only changes the local audio."
+  },
+  {
+    "name": "Sound.setThematicMusicVolume",
+    "kind": "visual",
+    "reason": "the Sound Wrapper's static member over a thematic music Native that only changes the local audio."
   },
   {
     "name": "Camera.pan",
@@ -835,6 +875,16 @@
     "reason": "the Camera System's static member over a camera Native of the local player."
   },
   {
+    "name": "Camera.setFieldControlledByInput",
+    "kind": "visual",
+    "reason": "the Camera namespace's member over SetCameraFieldControlledByInput, a camera Native of the local camera."
+  },
+  {
+    "name": "Camera.type",
+    "kind": "visual",
+    "reason": "the Camera namespace's accessor over BlzCameraSetCameraType, a camera Native of the local camera."
+  },
+  {
     "name": "CameraSetup#apply",
     "kind": "visual",
     "reason": "the CameraSetup Wrapper's member over a CameraSetup* Native of the local camera."
@@ -883,6 +933,11 @@
     "name": "CameraSetup#label",
     "kind": "visual",
     "reason": "the CameraSetup Wrapper's member over a CameraSetup* Native of the local camera."
+  },
+  {
+    "name": "CameraSetup#type",
+    "kind": "visual",
+    "reason": "the CameraSetup Wrapper's accessor over BlzCameraSetupSetCameraType, a CameraSetup Native of the local camera."
   },
   {
     "name": "I2R",

@@ -3,14 +3,16 @@
 // Leak counters: in Dev mode the creation step counts `created` per class
 // and the release step counts `destroyed`; `Reforged.debug.report()` prints
 // and returns the rows with the live difference, sorted by live descending,
-// and `reset()` zeroes them. Lookups never count, and neither does the
+// and `reset()` zeroes them. Lookups never count (an event lookup that
+// allocates, `Point.fromOrderPoint`, is a creation), and neither does the
 // destruction of a Wrapper not counted created since the last reset. With
 // Dev mode off nothing is counted and the report is empty.
 
 import { describe, expect, it } from "reforged-test/lua";
-import { Group, MapPlayer, Timer, Unit } from "../src/index";
+import { Group, MapPlayer, Point, Timer, Unit } from "../src/index";
 import { Reforged, type WrapperCount } from "../src/reforged/index";
 import { defined } from "./support/defined";
+import { withNative } from "./support/native-override";
 import { withPrint } from "./support/print-capture";
 
 // Dev mode raises for a Wrapper created before the globals Init stage.
@@ -113,6 +115,25 @@ describe("leak counters in Dev mode", () => {
 
     expect(rowOf("MapPlayer")).toBeUndefined();
     expect(rowOf("Unit")?.created).toEqual(1);
+  });
+
+  it("counts an allocating event lookup as created, and not when it returns nothing", () => {
+    Reforged.configure({ devMode: true });
+    Reforged.debug.reset();
+    const target = withNative(
+      "GetOrderPointLoc",
+      () => Location(0, 0),
+      () => Point.fromOrderPoint(),
+    );
+    const none = withNative(
+      "GetOrderPointLoc",
+      () => undefined,
+      () => Point.fromOrderPoint(),
+    );
+
+    expect(target).toBeTruthy();
+    expect(none).toBeUndefined();
+    expect(rowOf("Point")?.created).toEqual(1);
   });
 
   it("sorts rows by live descending and prints one line per row", () => {
