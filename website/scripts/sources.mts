@@ -10,6 +10,7 @@ import {
   markdownFile,
   supportedPatch,
 } from "./kinds.mts";
+import { migrationGuide } from "./migration.mts";
 
 /** The published packages, in the order of the Changelog section. */
 const PACKAGES = [
@@ -35,6 +36,23 @@ export const SOURCES: readonly Source[] = [
     to: "guides/lint-rules",
     label: "Lint rules",
     position: 10,
+  }),
+
+  // The Migration section: the sections its hand-written pages import, one
+  // folder per version pair of the rename map, which is checked against the
+  // pages and the library's built declarations.
+  migrationGuide({
+    name: "the migration guide",
+    map: "packages/reforged-ts/migration/renames.json",
+    declarations: "packages/reforged-ts/dist/index.d.ts",
+    pages: "website/docs/migration",
+    to: "migration/_generated",
+    behaviourChanges: [
+      {
+        versions: { from: "w3ts@3", to: "reforged-ts@1" },
+        from: "packages/reforged-ts/migration/behaviour-changes.md",
+      },
+    ],
   }),
 
   // The Contributing section: the project's own files for contributors,

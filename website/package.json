@@ -28,6 +28,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "reforged-ts": "workspace:^",
+    "reforged-ts-release": "workspace:^",
     "reforged-types": "workspace:^",
     "typedoc": "catalog:",
     "typedoc-plugin-markdown": "catalog:"

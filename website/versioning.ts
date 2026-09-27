@@ -24,7 +24,7 @@ export function cutVersions(site: string): string[] {
 export function docsVersions(
   cut: readonly string[],
 ): DocsPluginOptions["versions"] {
-  const [newest] = cut;
+  const newest = cut.at(0);
   return {
     // The docs of the working tree, at /docs/next from the start: the lint
     // rules link `next` while the packages are prereleases, and the URL does
@@ -45,7 +45,7 @@ export function docsVersions(
 export function newestVersionAliases(
   cut: readonly string[],
 ): (path: string) => string[] | undefined {
-  const [newest] = cut;
+  const newest = cut.at(0);
   return (path) => {
     if (newest === undefined) return undefined;
     const prefix = `/docs/${newest}`;

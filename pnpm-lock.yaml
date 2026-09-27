@@ -330,6 +330,9 @@ importers:
       reforged-ts:
         specifier: workspace:^
         version: link:../packages/reforged-ts
+      reforged-ts-release:
+        specifier: workspace:^
+        version: link:../release
       reforged-types:
         specifier: workspace:^
         version: link:../packages/reforged-types

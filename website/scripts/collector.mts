@@ -1,13 +1,14 @@
 // The collector (#40, #179): writes the generated parts of the docs tree from
 // their sources of truth elsewhere in the repository, through one declarative
 // list of sources (sources.mts). A source reads the repository and returns
-// pages and files; the collector checks that its sources exist, rewrites the
-// links of its pages, adds their front matter and "generated from" note, and
+// pages, partials (sections of hand-written pages) and files; the collector
+// checks that its sources exist, rewrites the links of its pages and
+// partials, adds their front matter and "generated from" note, and
 // replaces what the previous run wrote. Nothing it writes is edited in place:
 // every output is git-ignored, and each run removes what the last one wrote.
 import { mkdir, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, isAbsolute, join, posix, relative, sep } from "node:path";
-import { rewriteLinks } from "./markdown.mts";
+import { escapeMdx, rewriteLinks } from "./markdown.mts";
 
 /** The repository the GitHub links point at, on its default branch. */
 export const REPOSITORY = "https://github.com/phmilk/reforged-ts";
@@ -52,6 +53,8 @@ export interface Where {
 /** What one source writes into the docs tree. */
 export interface Collected {
   readonly pages?: readonly Page[];
+  /** Sections the docs tree's hand-written pages import. */
+  readonly partials?: readonly PagePartial[];
   /** Files written as they are, such as category metadata. */
   readonly files?: readonly DataFile[];
 }
@@ -74,6 +77,22 @@ export interface Page {
   /** The URL path relative to the page's folder, when not its file name. */
   readonly slug?: string;
   /** Markdown, without a first-level heading: the title is the page's. */
+  readonly body: string;
+}
+
+/**
+ * A section of a hand-written page, made from repository files: a Markdown
+ * file the page imports (`import Renames from "./_generated/renames.md"`),
+ * under a `_`-prefixed file or folder name, which Docusaurus serves as no
+ * page. Its links are rewritten as a page's, relative to the partial, where
+ * Docusaurus resolves them.
+ */
+export interface PagePartial {
+  /** The `/`-separated path under the docs tree. */
+  readonly path: string;
+  /** As a page's: the first one is where the body's links are relative to. */
+  readonly from: readonly string[];
+  /** Markdown, its headings at the level of the section importing it. */
   readonly body: string;
 }
 
@@ -177,6 +196,10 @@ export async function collect(options: CollectOptions): Promise<Report> {
       await writeText(docs, page.path, render(page, links));
       paths.push(page.path);
     }
+    for (const partial of collected.partials ?? []) {
+      await writeText(docs, partial.path, renderPartial(partial, links));
+      paths.push(partial.path);
+    }
     for (const file of collected.files ?? []) {
       await writeText(docs, file.path, file.text);
       paths.push(file.path);
@@ -196,6 +219,7 @@ function ownership(read: readonly Read[]): string[] {
   for (const { source, collected } of read) {
     for (const { path } of [
       ...(collected.pages ?? []),
+      ...(collected.partials ?? []),
       ...(collected.files ?? []),
     ]) {
       if (!source.outputs.some((output) => within(path, output))) {
@@ -222,8 +246,8 @@ function within(path: string, output: string): boolean {
 /**
  * What a page's links can land on: each repository path a page is made from
  * alone (a copied file, the folder of an index) mapped to that page; the
- * docs tree's own pages, by its repository path; and which paths pages are
- * made from are folders, for their GitHub URLs.
+ * docs tree's own pages, by its repository path; and which paths pages and
+ * partials are made from are folders, for their GitHub URLs.
  */
 interface LinkTargets {
   readonly pages: ReadonlyMap<string, string>;
@@ -242,10 +266,16 @@ async function linkTargets(
     docsPath !== "" && !docsPath.startsWith("..") && !isAbsolute(docsPath);
   const pages = new Map<string, string>();
   const folders = new Set<string>();
-  for (const page of read.flatMap(({ collected }) => collected.pages ?? [])) {
-    for (const from of page.from) {
-      if (await isFolder(join(root, from))) folders.add(from);
+  for (const { from } of read.flatMap(({ collected }) => [
+    ...(collected.pages ?? []),
+    ...(collected.partials ?? []),
+  ])) {
+    for (const path of from) {
+      if (await isFolder(join(root, path))) folders.add(path);
     }
+  }
+  // A partial is no page: a link to its source lands on GitHub.
+  for (const page of read.flatMap(({ collected }) => collected.pages ?? [])) {
     const only = onlySource(page);
     if (only !== undefined && !pages.has(only)) pages.set(only, page.path);
   }
@@ -259,14 +289,8 @@ function onlySource(page: Page): string | undefined {
 
 /** The page's file: its front matter, its note, its body with links rewritten. */
 function render(page: Page, links: LinkTargets): string {
-  const base = page.from[0] ?? "";
-  const baseUrl = githubUrl(base, links.folders.has(base) || base === "");
-  const body = rewriteLinks(page.body, (destination) =>
-    rewriteLink(destination, baseUrl, page.path, links),
-  );
-  const sources = page.from.map(
-    (from) => `[\`${from}\`](${githubUrl(from, links.folders.has(from))})`,
-  );
+  const body = rewriteBody(page, links);
+  const sources = sourceLinks(page.from, links);
   // A copy is edited in its source; a page made from several files or from
   // a folder is edited nowhere.
   const only = onlySource(page);
@@ -296,6 +320,44 @@ function render(page: Page, links: LinkTargets): string {
     ":::",
   ];
   return `${[...frontMatter, "", ...note, "", body.trim()].join("\n")}\n`;
+}
+
+/**
+ * The partial's file: its note and its body with links rewritten. Docusaurus
+ * reads a partial as MDX whatever its name, and rejects its front matter
+ * (an error under CI), so the file has none: an MDX comment says where it
+ * comes from, and `{`, `}` and `<` of its prose are escaped, to be text as
+ * GitHub renders the source. The importing page has the title and the edit
+ * link.
+ */
+function renderPartial(partial: PagePartial, links: LinkTargets): string {
+  const comment = `{/* Generated by docs:collect from ${partial.from.join(", ") || "the repository"}: edit the source, not this file. */}`;
+  const note = [
+    ":::note[Generated section]",
+    `This section is generated from ${sourceLinks(partial.from, links).join(", ") || "the repository"} by \`docs:collect\`. Edit the source, not this section.`,
+    ":::",
+  ];
+  const body = rewriteBody(
+    { ...partial, body: escapeMdx(partial.body) },
+    links,
+  ).trim();
+  return `${[comment, "", ...note, "", body].join("\n")}\n`;
+}
+
+/** The body of a page or a partial, its links rewritten. */
+function rewriteBody(page: Page | PagePartial, links: LinkTargets): string {
+  const base = page.from[0] ?? "";
+  const baseUrl = githubUrl(base, links.folders.has(base) || base === "");
+  return rewriteLinks(page.body, (destination) =>
+    rewriteLink(destination, baseUrl, page.path, links),
+  );
+}
+
+/** The GitHub link of each of `from`, as a generated note names them. */
+function sourceLinks(from: readonly string[], links: LinkTargets): string[] {
+  return from.map(
+    (path) => `[\`${path}\`](${githubUrl(path, links.folders.has(path))})`,
+  );
 }
 
 /**

@@ -215,7 +215,7 @@ describe("the sidebar", () => {
     const generator = referenceSidebars([library, typings]);
 
     const items = await generator({
-      version: { contentPath: temp },
+      version: { contentPath: temp, versionName: "current" },
       docs: [],
       defaultSidebarItemsGenerator: () =>
         Promise.resolve([

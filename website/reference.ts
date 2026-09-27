@@ -302,7 +302,7 @@ function versionReferences(
     label,
     typings: typingsManifest !== undefined,
   });
-  if (version.versionName === undefined || version.versionName === "current") {
+  if (version.versionName === "current") {
     return references.map(placed);
   }
   const typings = join(version.contentPath, TYPINGS_DIR);
