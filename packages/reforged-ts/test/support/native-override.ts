@@ -22,7 +22,7 @@ export type NativeName = {
     : never;
 }[keyof typeof globalThis];
 
-type NativeOf<N extends NativeName> = (typeof globalThis)[N] extends (
+export type NativeOf<N extends NativeName> = (typeof globalThis)[N] extends (
   ...args: infer A
 ) => infer R
   ? { args: A; returns: R }

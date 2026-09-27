@@ -45,7 +45,7 @@ function readOrder(unit: Unit, target: OrderTarget): OrderPayload {
 function readTarget(unit: Unit): OrderPayload {
   return readOrder(unit, {
     targetUnit: Unit.fromOrderTarget(),
-    targetWidget: Widget.fromHandle(GetOrderTarget()),
+    targetWidget: Widget.fromOrderTarget(),
   });
 }
 
