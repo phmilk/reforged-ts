@@ -71,7 +71,7 @@ describe("an @native tag", () => {
     const unit = await page("classes/Unit.md");
     for (const native of ["GetUnitName", "KillUnit"]) {
       expect(unit).toContain(
-        `[${native}](/api/typings/9.9.9/functions/${native}.md) ([jassbot](https://lep.duckdns.org/jassbot/doc/${native}))`,
+        `[${native}](/typings/9.9.9/functions/${native}) ([jassbot](https://lep.duckdns.org/jassbot/doc/${native}))`,
       );
     }
   });
@@ -80,10 +80,10 @@ describe("an @native tag", () => {
     await generate(wrapperReference());
 
     expect(await page("classes/Unit.md")).toContain(
-      "[PolledWait](/api/typings/9.9.9/functions/PolledWait.md) ([jassbot](https://lep.duckdns.org/jassbot/doc/PolledWait))",
+      "[PolledWait](/typings/9.9.9/functions/PolledWait) ([jassbot](https://lep.duckdns.org/jassbot/doc/PolledWait))",
     );
     expect(await page("variables/maxPlayers.md")).toContain(
-      "[bj_MAX_PLAYERS](/api/typings/9.9.9/variables/bj_MAX_PLAYERS.md) ([jassbot](https://lep.duckdns.org/jassbot/doc/bj_MAX_PLAYERS))",
+      "[bj_MAX_PLAYERS](/typings/9.9.9/variables/bj_MAX_PLAYERS) ([jassbot](https://lep.duckdns.org/jassbot/doc/bj_MAX_PLAYERS))",
     );
   });
 

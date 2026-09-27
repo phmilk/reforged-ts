@@ -334,3 +334,43 @@ function isMissing(error: unknown): boolean {
 function summary(body: string): string {
   return (body.trim().split(/\n\s*\n/)[0] ?? "").replace(/\s*\n\s*/g, " ");
 }
+
+export interface SupportedPatchOptions {
+  readonly name: string;
+  /** The Typings' `package.json`, whose `reforged.patch` field is the Patch. */
+  readonly from: string;
+  /** The data file's path under the docs tree. */
+  readonly to: string;
+}
+
+/**
+ * The Patch the Typings support, their `reforged.patch` field, as a data
+ * file the landing page imports (`{ "patch": "3.0.0.24268" }`): in the docs
+ * tree, a docs version cut freezes it with the pages, and each version
+ * states the Patch it was cut with. A field that is not a Build fails.
+ */
+export function supportedPatch(options: SupportedPatchOptions): Source {
+  const { name, from, to } = options;
+  return {
+    name,
+    from,
+    outputs: [to],
+    async collect({ root }) {
+      const manifest = JSON.parse(await readText(root, from)) as {
+        reforged?: { patch?: unknown };
+      };
+      const patch = manifest.reforged?.patch;
+      // A Build is four dot-separated numbers, the rule of the Typings
+      // generator's `src/build.ts`, not imported: the generator is not
+      // published.
+      if (typeof patch !== "string" || !/^\d+\.\d+\.\d+\.\d+$/.test(patch)) {
+        throw new SourceError(
+          `\`reforged.patch\` in \`${from}\` must be a Build such as 3.0.0.24268, got ${JSON.stringify(patch)}.`,
+        );
+      }
+      return {
+        files: [{ path: to, text: `${JSON.stringify({ patch }, null, 2)}\n` }],
+      };
+    },
+  };
+}

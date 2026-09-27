@@ -17,7 +17,9 @@ export default defineConfig(
     "website/build/**",
     "website/.docusaurus/**",
     "website/docs/api/reforged-ts/**",
-    "website/docs/api/typings/*/**",
+    "website/typings/*/**",
+    // The docs versions docs:version cuts: frozen copies of the docs tree.
+    "website/versioned_docs/**",
     "packages/reforged-test/lua/**",
     "packages/reforged-ts/dist-test/**",
     // What tools own: the vendored Patch files and the generated Typings.

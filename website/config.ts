@@ -3,15 +3,20 @@
 // `docs:start` and `docs:build`, docusaurus.check.config.ts, strict, for
 // `docs:check`, the CI gate. A configuration file exports its configuration
 // and nothing else: Docusaurus rejects any other export as an unknown field.
-import { readFileSync } from "node:fs";
-import { createRequire } from "node:module";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
 import {
   referencePlugin,
   referenceSidebars,
   siteReferences,
+  TYPINGS_DOCS_ID,
+  TYPINGS_FOLDER,
+  typingsSidebar,
 } from "./reference";
+import { TYPINGS_ROUTE_BASE } from "./typedoc/typings.mts";
+import { cutVersions, docsVersions, newestVersionAliases } from "./versioning";
 
 /** What differs between the two configuration files. */
 export interface SiteOptions {
@@ -32,43 +37,13 @@ export interface SiteOptions {
  */
 const STRICT_REFERENCE = false;
 
-/**
- * The site's `customFields`, which the components read: values taken from the
- * packages at build time, never typed into a page. The index signature is the
- * shape Docusaurus gives `customFields`.
- */
-export interface SiteFields {
-  /** The Build the Typings support: their `reforged.patch` field. */
-  readonly supportedPatch: string;
-  [key: string]: unknown;
-}
-
 const REPOSITORY = "https://github.com/phmilk/reforged-ts";
 
-/**
- * The Typings' `reforged.patch` field, read from the installed package so
- * that a new Patch changes the landing page at the next build. A Build is
- * four dot-separated numbers, the rule of the Typings generator's
- * `src/build.ts`, not imported: the generator is not published.
- */
-function supportedPatch(): string {
-  const manifestPath = createRequire(import.meta.url).resolve(
-    "reforged-types/package.json",
-  );
-  const manifest = JSON.parse(readFileSync(manifestPath, "utf8")) as {
-    reforged?: { patch?: unknown };
-  };
-  const patch = manifest.reforged?.patch;
-  if (typeof patch !== "string" || !/^\d+\.\d+\.\d+\.\d+$/.test(patch)) {
-    throw new Error(
-      `${manifestPath}: \`reforged.patch\` must be a Build such as 3.0.0.24268, got ${JSON.stringify(patch)}.`,
-    );
-  }
-  return patch;
-}
+/** The site folder, where Docusaurus keeps the cut versions. */
+const SITE = dirname(fileURLToPath(import.meta.url));
 
 export function siteConfig(options: SiteOptions): Config {
-  const customFields: SiteFields = { supportedPatch: supportedPatch() };
+  const cut = cutVersions(SITE);
   const reference = { strict: options.strict && STRICT_REFERENCE };
   const references = siteReferences();
   return {
@@ -94,8 +69,6 @@ export function siteConfig(options: SiteOptions): Config {
     // English only (#4).
     i18n: { defaultLocale: "en", locales: ["en"] },
 
-    customFields,
-
     presets: [
       [
         "classic",
@@ -104,12 +77,7 @@ export function siteConfig(options: SiteOptions): Config {
             sidebarPath: "./sidebars.ts",
             sidebarItemsGenerator: referenceSidebars(references),
             editUrl: `${REPOSITORY}/tree/master/website/`,
-            versions: {
-              // The docs of the working tree, at /docs/next from the start:
-              // the lint rules link `next` while the packages are
-              // prereleases, and the URL does not move at the first cut.
-              current: { label: "Next", path: "next" },
-            },
+            versions: docsVersions(cut),
           },
           // Docs only: the pages plugin serves the landing page alone.
           blog: false,
@@ -118,8 +86,28 @@ export function siteConfig(options: SiteOptions): Config {
       ],
     ],
 
-    // The API reference, generated into the docs tree before the docs load.
-    plugins: references.map((each) => referencePlugin(each, reference)),
+    plugins: [
+      // The API reference, generated before the docs load.
+      ...references.map((each) => referencePlugin(each, reference)),
+      // The Typings' references, a docs instance of their own, not versioned.
+      [
+        "@docusaurus/plugin-content-docs",
+        {
+          id: TYPINGS_DOCS_ID,
+          path: TYPINGS_FOLDER,
+          routeBasePath: TYPINGS_ROUTE_BASE,
+          sidebarItemsGenerator: typingsSidebar(
+            references.filter((each) => each.typingsManifest !== undefined),
+          ),
+          editUrl: `${REPOSITORY}/tree/master/website/`,
+        },
+      ],
+      // The newest docs version's pages without its label.
+      [
+        "@docusaurus/plugin-client-redirects",
+        { createRedirects: newestVersionAliases(cut) },
+      ],
+    ],
 
     themeConfig: {
       colorMode: { respectPrefersColorScheme: true },
@@ -132,6 +120,10 @@ export function siteConfig(options: SiteOptions): Config {
             position: "left",
             label: "Docs",
           },
+          // The docs versions, from the first cut on.
+          ...(cut.length === 0
+            ? []
+            : [{ type: "docsVersionDropdown", position: "right" } as const]),
           {
             href: REPOSITORY,
             label: "GitHub",

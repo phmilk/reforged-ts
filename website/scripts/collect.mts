@@ -12,7 +12,7 @@ export interface Output {
   stderr: (text: string) => void;
 }
 
-const PROCESS_OUTPUT: Output = {
+export const PROCESS_OUTPUT: Output = {
   stdout: (text) => process.stdout.write(text),
   stderr: (text) => process.stderr.write(text),
 };

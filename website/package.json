@@ -9,6 +9,8 @@
   "scripts": {
     "typecheck": "tsc -p tsconfig.json && tsc -p scripts/tsconfig.json && tsc -p typedoc/tsconfig.json && tsc -p test/tsconfig.json && tsc -p test/reference/tsconfig.json && tsc -p test/site/tsconfig.json",
     "docs:collect": "node --experimental-strip-types scripts/collect.mts",
+    "docs:version": "node --experimental-strip-types scripts/version.mts",
+    "docs:prune": "node --experimental-strip-types scripts/prune.mts",
     "docs:start": "pnpm run docs:collect && docusaurus start",
     "docs:build": "pnpm run docs:collect && docusaurus build",
     "docs:check": "pnpm run docs:collect && docusaurus build --config docusaurus.check.config.ts",
@@ -18,6 +20,7 @@
   "dependencies": {
     "@docusaurus/core": "catalog:",
     "@docusaurus/faster": "catalog:",
+    "@docusaurus/plugin-client-redirects": "catalog:",
     "@docusaurus/preset-classic": "catalog:",
     "@mdx-js/react": "catalog:",
     "docusaurus-plugin-typedoc": "catalog:",

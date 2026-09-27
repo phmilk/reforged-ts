@@ -3,7 +3,13 @@
 // `.gitignore` block of the collected pages, and a page linking it if its
 // section does not list its pages by itself.
 import type { Source } from "./collector.mts";
-import { adrFolder, changelogs, lintRules, markdownFile } from "./kinds.mts";
+import {
+  adrFolder,
+  changelogs,
+  lintRules,
+  markdownFile,
+  supportedPatch,
+} from "./kinds.mts";
 import { migrationGuide } from "./migration.mts";
 
 /** The published packages, in the order of the Changelog section. */
@@ -15,6 +21,13 @@ const PACKAGES = [
 ];
 
 export const SOURCES: readonly Source[] = [
+  // The Patch the landing page states, frozen with each docs version.
+  supportedPatch({
+    name: "the supported Patch",
+    from: "packages/reforged-types/package.json",
+    to: "_supported-patch.json",
+  }),
+
   // The Lint rules guide: one page per rule of the lint plugin, at the URL
   // its `meta.docs.url` builds, and the guide's index.
   lintRules({

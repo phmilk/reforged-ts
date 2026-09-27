@@ -7,7 +7,7 @@ release/build/
 website/build/
 website/.docusaurus/
 website/docs/api/reforged-ts/
-website/docs/api/typings/*/
+website/typings/*/
 
 # What tools own: the Overlay JSON files, the generated Typings, the vendored
 # Patch files, the record the seed script writes and the pnpm lockfile.
@@ -17,6 +17,12 @@ packages/reforged-types/3.0.0.d.ts
 packages/reforged-types/vendor/
 packages/reforged-types/scripts/war3-types-strict.json
 pnpm-lock.yaml
+
+# The docs versions docs:version cuts: frozen copies of the docs tree, with the
+# generated pages, and the files Docusaurus writes for them.
+website/versions.json
+website/versioned_docs/
+website/versioned_sidebars/
 
 # The compatibility matrix, written byte for byte by release:matrix.
 release/compatibility/matrix.json

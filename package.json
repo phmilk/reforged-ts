@@ -32,6 +32,8 @@
     "docs:start": "pnpm --filter reforged-ts-website docs:start",
     "docs:build": "pnpm --filter reforged-ts-website docs:build",
     "docs:check": "pnpm --filter reforged-ts-website docs:check",
+    "docs:version": "pnpm --filter reforged-ts-website docs:version",
+    "docs:prune": "pnpm --filter reforged-ts-website docs:prune",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run test"
   },
   "devDependencies": {

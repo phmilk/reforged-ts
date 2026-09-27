@@ -4,9 +4,10 @@ description: The versions of the packages, the game Patch and the Toolchain that
 ---
 
 import Matrix from "./_matrix.mdx";
+import MatrixLink from "@site/src/components/MatrixLink";
 
 # Compatibility
 
-Which versions of the four packages, which game Patch and which Toolchain go together: one row per stable release, newest first, generated from the packages at each release and never edited by hand.
+Which versions of the four packages, which game Patch and which Toolchain go together: one row per stable release, newest first, generated from the packages at each release and never edited by hand. A release's docs link leads to the docs version of its minor while the site keeps it (the last three minors of each major).
 
-<Matrix />
+<Matrix components={{ a: MatrixLink }} />
