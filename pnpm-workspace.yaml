@@ -7,6 +7,22 @@ packages:
   # The Wrapper coverage report (#163), a private package: never published.
   - wrapper-coverage
 
+# No version younger than a day (1440 minutes) is installed: pnpm's default,
+# stated because renovate.json5 waits as long (#221). A lockfile that holds a
+# younger version fails the install until the day has passed.
+minimumReleaseAge: 1440
+
+# The dependencies whose install scripts may run. pnpm runs none it is not
+# told about, and an install that meets one fails (#221). None of these runs:
+# the native bindings of @swc/core (the docs site, through
+# @docusaurus/faster) and of unrs-resolver (the lint's import resolver) come
+# as optional dependencies for each platform, and their scripts only check
+# for one or fetch a fallback; core-js's prints a funding banner.
+allowBuilds:
+  "@swc/core": false
+  core-js: false
+  unrs-resolver: false
+
 catalog:
   # typescript-to-lua pins its TypeScript peer exactly; move both together (ADR 0002).
   typescript: 6.0.2

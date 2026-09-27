@@ -486,7 +486,7 @@ else
   say "The workflows open their pull requests and the Patch-watch issue as this"
   say "App, with short-lived tokens (release.yml, patch-watch.yml, docs.yml)."
   say "The page opens pre-filled; check each value before creating the App:"
-  URL=$(pnpm -s github-app url --repo "$REPO") || fail "pnpm github-app url failed." "Read the error above."
+  URL=$(pnpm --silent github-app url --repo "$REPO") || fail "pnpm github-app url failed." "Read the error above."
   open_url "$URL"
   say "  GitHub App name         ${BOLD}$REPO_NAME-bot${RESET} (any free name: the workflows use the client ID)"
   say "  Homepage URL            ${BOLD}https://github.com/$REPO${RESET}"
@@ -537,11 +537,11 @@ else
   say ""
   say "Checking the App as the App itself (a token signed with the key):"
   if $DRY_RUN; then
-    run pnpm -s github-app check --repo "$REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE"
+    run pnpm --silent github-app check --repo "$REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE"
     INSTALL_PAGE="https://github.com/apps/<the App's slug>/installations/new"
   else
-    printf '  %s$ pnpm -s github-app check --repo %s --client-id %s --private-key %s%s\n' "$BOLD" "$REPO" "$CLIENT_ID" "$KEY_FILE" "$RESET"
-    REPORT=$(pnpm -s github-app check --repo "$REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE") ||
+    printf '  %s$ pnpm --silent github-app check --repo %s --client-id %s --private-key %s%s\n' "$BOLD" "$REPO" "$CLIENT_ID" "$KEY_FILE" "$RESET"
+    REPORT=$(pnpm --silent github-app check --repo "$REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE") ||
       fail "The App is not as the workflows need it (above)." "Fix it on the App's settings page: https://github.com/settings/apps"
     while IFS= read -r line; do note "  $line"; done <<<"$REPORT"
     INSTALL_PAGE=$(sed -n 's/^Installation page: //p' <<<"$REPORT")
@@ -562,10 +562,10 @@ else
   step "Install."
   pause "Press Enter once it is installed"
   if $DRY_RUN; then
-    run pnpm -s github-app check --repo "$REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed
+    run pnpm --silent github-app check --repo "$REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed
   else
-    printf '  %s$ pnpm -s github-app check ... --installed%s\n' "$BOLD" "$RESET"
-    REPORT=$(pnpm -s github-app check --repo "$REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed) ||
+    printf '  %s$ pnpm --silent github-app check ... --installed%s\n' "$BOLD" "$RESET"
+    REPORT=$(pnpm --silent github-app check --repo "$REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed) ||
       fail "The installation is not as the workflows need it (above)." "Fix it, then re-run. The account's installations: https://github.com/settings/installations"
     while IFS= read -r line; do note "  $line"; done <<<"$REPORT"
     ok "installed on $REPO_OWNER, on selected repositories, with the permissions accepted"
@@ -685,11 +685,11 @@ if [[ -z "$PROBLEMS" ]]; then
 else
   while IFS= read -r line; do note "  not yet: $line"; done <<<"$PROBLEMS"
   say ""
-  show pnpm -s repo:settings --dry-run ||
+  show pnpm --silent repo:settings --dry-run ||
     fail "pnpm repo:settings --dry-run failed." "Read the error above."
   say ""
   confirm "Send these requests?" || fail "The settings are not applied." "Review them, then re-run."
-  run pnpm -s repo:settings ||
+  run pnpm --silent repo:settings ||
     fail "pnpm repo:settings failed; it stops at the first failed request (above)." "Fix the cause, then re-run: what was applied reads back and is not planned again."
   say ""
   if $DRY_RUN; then

@@ -10,7 +10,7 @@ const ON_NPM = [
 
 const READY = {
   idToken: true,
-  pnpm: "11.25.0",
+  pnpm: "12.6.0",
   npm: "11.19.0",
   packages: ON_NPM,
 };
@@ -34,7 +34,7 @@ function registry(published: readonly string[], status = 404): typeof fetch {
 describe("checkPublish", () => {
   it("passes with an OIDC token, pnpm 11 or later, and every package on npm", () => {
     expect(checkPublish(READY)).toEqual({ ok: true, problems: [] });
-    expect(checkPublish({ ...READY, pnpm: "12.0.0", npm: null }).ok).toBe(true);
+    expect(checkPublish({ ...READY, pnpm: "11.0.0", npm: null }).ok).toBe(true);
   });
 
   it("refuses pnpm 10, which never exchanges the OIDC token, whatever its npm", () => {
@@ -48,6 +48,14 @@ describe("checkPublish", () => {
         ],
       },
     );
+  });
+
+  it("sends a refused pnpm back to the root packageManager field, the pnpm the job runs", () => {
+    const [problem] = checkPublish({ ...READY, pnpm: "10.33.0" }).problems;
+    expect(problem).toContain(
+      "The publish job runs the pnpm of the root packageManager field: pin pnpm 11 or later there.",
+    );
+    expect(problem).not.toContain("for itself");
   });
 
   it("names the missing id-token permission", () => {
@@ -118,7 +126,7 @@ describe("release:publish-check", () => {
         },
         version: (tool) =>
           Promise.resolve(
-            tool === "pnpm" ? "11.25.0" : (options.npm ?? "11.19.0"),
+            tool === "pnpm" ? "12.6.0" : (options.npm ?? "11.19.0"),
           ),
         fetcher: registry(
           options.published ?? [
@@ -137,7 +145,7 @@ describe("release:publish-check", () => {
     expect(await runCli([])).toEqual({
       status: 0,
       stdout:
-        "Ready for trusted publishing: pnpm 11.25.0, npm 11.19.0, " +
+        "Ready for trusted publishing: pnpm 12.6.0, npm 11.19.0, " +
         "eslint-plugin-reforged, reforged-test, reforged-ts, reforged-types on npm.\n",
       stderr: "",
     });
