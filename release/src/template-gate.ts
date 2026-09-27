@@ -2,8 +2,9 @@
  * `release:template-gate`, programmatic entry point: the Template, as the
  * Reference consumer, built against the packed packages before they are
  * published (ADR 0006). It installs the tarballs the publish plan lists into
- * a Template checkout as overrides in its pnpm-workspace.yaml, then runs the Template's build in
- * release mode, its lint and its tests, and stops at the first failure.
+ * a Template checkout as overrides in its pnpm-workspace.yaml, then runs the
+ * Template's build in release mode, its lint and its tests, and stops at the
+ * first failure.
  */
 import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
@@ -139,6 +140,16 @@ async function checkIntegrity(
  */
 const INSTALL = ["install", "--no-frozen-lockfile"] as const;
 
+/**
+ * What the Template's commands add to the environment: pnpm switches to the
+ * version the Template's `packageManager` pins, as in a Map project. The gate
+ * runs under `pnpm release:template-gate`, and pnpm turns that switch off in
+ * the environment of its scripts.
+ */
+const TEMPLATE_ENV = {
+  npm_config_manage_package_manager_versions: "true",
+} as const;
+
 /** The Template's scripts the gate runs, by name, in order. */
 export const TEMPLATE_STEPS: readonly {
   script: string;
@@ -173,10 +184,10 @@ type Manifest = Record<string, unknown>;
  * Installs the tarballs of the publish plan in `packDir` into the Template
  * checkout, as `overrides` entries in its `pnpm-workspace.yaml`, then runs its
  * build in release mode, its lint and its tests. Stops at the first command
- * that fails, or at the first script the Template lacks, and names it.
- * Throws a `TemplateGateError` when the pack output or the checkout cannot
- * be read. The checkout keeps the overrides and the lockfile they produce:
- * gate a throwaway clone.
+ * that fails, or at the first script the Template lacks, and names it. Each
+ * command runs on the pnpm the Template pins. Throws a `TemplateGateError`
+ * when the pack output or the checkout cannot be read. The checkout keeps the
+ * overrides and any lockfile the install writes: gate a throwaway clone.
  */
 export async function runTemplateGate(
   input: TemplateGateInput,
@@ -208,6 +219,7 @@ export async function runTemplateGate(
     command: "pnpm",
     args: INSTALL,
     cwd: input.template,
+    env: TEMPLATE_ENV,
   };
   const installStatus = await input.run(install);
   if (installStatus !== 0) {
@@ -222,6 +234,7 @@ export async function runTemplateGate(
       command: "pnpm",
       args: ["run", step.script, ...step.args],
       cwd: input.template,
+      env: TEMPLATE_ENV,
     };
     if (typeof scripts[step.script] !== "string") {
       return fail(
@@ -254,8 +267,14 @@ async function writeOverrides(
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
   }
   const settings = parseDocument(text);
+  if (settings.errors.length > 0) {
+    const [parseError] = settings.errors;
+    throw new TemplateGateError(`Cannot read ${path}: ${parseError.message}`, {
+      cause: parseError,
+    });
+  }
   try {
-    if (settings.errors.length > 0) throw settings.errors[0];
+    // Throws when `overrides` is not a map.
     for (const pkg of packed) {
       settings.setIn(
         ["overrides", pkg.name],

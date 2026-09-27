@@ -211,6 +211,23 @@ describe("runTemplateGate", () => {
     expect(pnpm.commands.every(({ cwd }) => cwd === template)).toBe(true);
   });
 
+  it("runs every command on the pnpm the Template pins, which a pnpm script's environment turns off", async () => {
+    const packDir = await packOutput(ALL_FOUR);
+    const pnpm = fakePnpm();
+
+    await runTemplateGate({
+      template: await templateCheckout(),
+      packDir,
+      run: pnpm.run,
+    });
+
+    expect(pnpm.commands.map(({ env }) => env)).toEqual(
+      ALL_STEPS.map(() => ({
+        npm_config_manage_package_manager_versions: "true",
+      })),
+    );
+  });
+
   it.each(ALL_STEPS.map((failing, index) => [failing, index]))(
     "stops at `%s` when it fails, naming it",
     async (failing, index) => {

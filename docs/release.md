@@ -305,7 +305,7 @@ It takes a Template checkout and the output folder of `changeset pack`, which ho
 
 The Template is checked out at `v<major>` of the library version. Every 1.x, alphas included, maps to `v1`. A tag and a branch check out the same way. `pnpm --silent release:template-gate --print-ref --pack-dir <dir>` prints the ref for the library version in the plan.
 
-The gate runs the Template with the pnpm that runs the gate, this workspace's, not the version the Template's `packageManager` pins. The ref must therefore hold a Template on pnpm 11 or later, with its settings in `pnpm-workspace.yaml`: a Template still on pnpm 10 fails the install, on the first dependency build script its settings do not list.
+Each Template command runs on the pnpm the Template's `packageManager` pins, as in a Map project, whatever pnpm runs this workspace. pnpm turns its switch to a project's pinned version off in the environment of the scripts it runs, so the gate turns it back on for the Template's commands (`npm_config_manage_package_manager_versions=true`).
 
 ### Running it locally
 
