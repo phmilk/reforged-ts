@@ -18,6 +18,12 @@ packages/reforged-types/vendor/
 packages/reforged-types/scripts/war3-types-strict.json
 pnpm-lock.yaml
 
+# The docs versions docs:version cuts: frozen copies of the docs tree, with the
+# generated pages, and the files Docusaurus writes for them.
+website/versions.json
+website/versioned_docs/
+website/versioned_sidebars/
+
 # The compatibility matrix, written byte for byte by release:matrix.
 release/compatibility/matrix.json
 release/compatibility/matrix.md

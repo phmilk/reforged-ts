@@ -4,7 +4,7 @@
 // Docusaurus is left out (the site's scripts tested in Node, #40).
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { PluginOptions as DocsPluginOptions } from "@docusaurus/plugin-content-docs";
 import type { LoadContext } from "@docusaurus/types";
@@ -250,4 +250,80 @@ describe("the sidebar", () => {
       },
     ]);
   });
+
+  it("lists the Typings a cut version was cut with, not the site's", async () => {
+    const library: Reference = {
+      id: "library",
+      label: "library",
+      dir: "api/library",
+      entryPoints: [],
+      tsconfig: "",
+    };
+    const site = only(typingsReferences(FIXTURE, temp));
+    const frozen = join(temp, "versioned_docs", "version-1.0");
+    await writeText(frozen, "api/typings/8.8.8/index.md", "# 8.8.8");
+    await writeText(
+      frozen,
+      "api/library/typedoc-sidebar.cjs",
+      "module.exports = [];",
+    );
+    const typingsSection = {
+      type: "category" as const,
+      label: "Typings",
+      link: { type: "doc" as const, id: "api/typings/index" },
+      items: [],
+    };
+    let given: unknown[] = [];
+
+    const items = await referenceSidebars([library, site])({
+      version: { contentPath: frozen, versionName: "1.0" },
+      docs: [
+        {
+          id: "api/typings/8.8.8/functions/Old",
+          sourceDirName: "api/typings/8.8.8/functions",
+        },
+        { id: "guides/index", sourceDirName: "guides" },
+      ],
+      defaultSidebarItemsGenerator: ({ docs }: { docs: unknown[] }) => {
+        given = docs;
+        return Promise.resolve([
+          {
+            type: "category",
+            label: "API",
+            link: { type: "doc", id: "api/index" },
+            items: [typingsSection],
+          },
+        ]);
+      },
+    } as unknown as SidebarArgs);
+
+    expect(given).toEqual([{ id: "guides/index", sourceDirName: "guides" }]);
+    expect(items).toEqual([
+      {
+        type: "category",
+        label: "API",
+        link: { type: "doc", id: "api/index" },
+        items: [
+          {
+            type: "category",
+            label: "library",
+            link: { type: "doc", id: "api/library/index" },
+            items: [],
+          },
+          {
+            ...typingsSection,
+            items: [
+              { type: "doc", id: "api/typings/8.8.8/index", label: "8.8.8" },
+            ],
+          },
+        ],
+      },
+    ]);
+  });
 });
+
+/** Writes `text` at the `/`-separated `path` under `root`. */
+async function writeText(root: string, path: string, text: string) {
+  await mkdir(dirname(join(root, path)), { recursive: true });
+  await writeFile(join(root, path), text);
+}

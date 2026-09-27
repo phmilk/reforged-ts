@@ -131,6 +131,7 @@ website/docs/contributing/adding-a-wrapper.md
 website/docs/contributing/adding-a-lint-rule.md
 website/docs/contributing/adding-a-patch.md
 website/docs/changelog/*.md
+website/docs/_supported-patch.json
 
 # The API reference TypeDoc generates into the docs tree at every build
 website/docs/api/reforged-ts/

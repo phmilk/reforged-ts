@@ -114,11 +114,17 @@ Reports a wait loop. A warning in the recommended config; the replacement is a T
 A loop that waits blocks the thread.
 `;
 
+/** The Typings' package.json, with the Patch they support. */
+export const TYPINGS_MANIFEST = JSON.stringify({
+  name: "reforged-types",
+  reforged: { patch: "9.9.9.99999" },
+});
+
 /**
  * The files of a fixture repository with every required source of
  * `SOURCES`: a glossary, two ADRs, one changelog (reforged-ts's), the agent
- * conventions and a lint plugin with two rules; no CONTRIBUTING.md, no Agent
- * skill, no other changelog.
+ * conventions, a lint plugin with two rules and the Typings' package.json;
+ * no CONTRIBUTING.md, no Agent skill, no other changelog.
  */
 export const REPOSITORY_FILES: Readonly<Record<string, string>> = {
   [`${PLUGIN}/src/rules/index.ts`]: RULE_REGISTRY,
@@ -135,6 +141,7 @@ export const REPOSITORY_FILES: Readonly<Record<string, string>> = {
     "# eslint-plugin-reforged\n\n## Adding or changing a rule\n\nSee the [glossary](../../CONTEXT.md) and [a bad escape](%zz.md).\n",
   "packages/reforged-types/AGENTS.md":
     "# reforged-types\n\n## New Patch loop\n\nVendor, then generate.\n",
+  "packages/reforged-types/package.json": TYPINGS_MANIFEST,
 };
 
 /** A fixture repository with `files` and an empty docs tree beside it. */

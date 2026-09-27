@@ -53,6 +53,7 @@ describe("collect", () => {
     const workspace = await fixture();
     const report = await collect(workspace);
     expect(await files(workspace.docs)).toEqual([
+      "_supported-patch.json",
       "changelog/index.md",
       "changelog/reforged-ts.md",
       "contributing/adding-a-lint-rule.md",
@@ -69,6 +70,7 @@ describe("collect", () => {
       "guides/lint-rules/prefer-timer.md",
     ]);
     expect(report.collected.map(({ source }) => source)).toEqual([
+      "the supported Patch",
       "the lint rule pages",
       "the glossary",
       "the ADRs",
@@ -250,6 +252,26 @@ No release yet.
     );
   });
 
+  it("writes the Patch the Typings support for the landing page", async () => {
+    const workspace = await fixture();
+    await collect(workspace);
+    expect(
+      JSON.parse(await readText(workspace.docs, "_supported-patch.json")),
+    ).toEqual({ patch: "9.9.9.99999" });
+  });
+
+  it("fails on a supported Patch that is not a Build", async () => {
+    const workspace = await fixture({
+      ...REPOSITORY_FILES,
+      "packages/reforged-types/package.json": JSON.stringify({
+        reforged: { patch: "3.0.0" },
+      }),
+    });
+    await expect(collect(workspace)).rejects.toThrow(
+      'the supported Patch: `reforged.patch` in `packages/reforged-types/package.json` must be a Build such as 3.0.0.24268, got "3.0.0".',
+    );
+  });
+
   it("removes what the previous run wrote", async () => {
     const workspace = await fixture();
     await collect(workspace);
@@ -318,7 +340,7 @@ describe("main", () => {
     const { out, output } = capture();
     expect(await main([], output, await fixture())).toBe(0);
     expect(out.stdout).toContain(
-      "docs:collect: 8 sources collected, 5 skipped.\n  collected the lint rule pages: guides/lint-rules/index.md, guides/lint-rules/no-sleep.md, guides/lint-rules/prefer-timer.md, guides/lint-rules/_category_.json\n  collected the glossary: contributing/glossary.md\n",
+      "docs:collect: 9 sources collected, 5 skipped.\n  collected the supported Patch: _supported-patch.json\n  collected the lint rule pages: guides/lint-rules/index.md, guides/lint-rules/no-sleep.md, guides/lint-rules/prefer-timer.md, guides/lint-rules/_category_.json\n  collected the glossary: contributing/glossary.md\n",
     );
     expect(out.stdout).toContain(
       "  skipped the contributing guide: The contribution model (#193) adds CONTRIBUTING.md.\n",
