@@ -79,7 +79,7 @@ The library's tests import the harness by its package name: the runner from `ref
 
 - TypeScript follows typescript-to-lua's peer dependency, which pins it exactly (6.0.2 for typescript-to-lua 1.37). TypeScript moves only when typescript-to-lua moves, and both move in one change.
 - Every version shared between packages lives in the catalog in `pnpm-workspace.yaml`. A package references `catalog:`, never a literal version, so a bump is one line.
-- pnpm installs no version published less than a day ago (`minimumReleaseAge` in `pnpm-workspace.yaml`), and Renovate waits as long. A dependency added by hand resolves to the newest version that old; a lockfile holding a younger one fails the install until the day has passed.
+- pnpm's wait of a day before it installs a new version (`minimumReleaseAge`) is off in `pnpm-workspace.yaml` until 1.0.0, so a fresh version never blocks an install during the build phase. It comes back with 1.0.0 (see [the 1.0.0 checklist](docs/release.md#leaving-pre-mode-the-100-checklist)).
 - A dependency's install script runs only when `allowBuilds` in `pnpm-workspace.yaml` allows it, and an install that meets a script not listed there fails. A new dependency with an install script gets an entry, `true` or `false`, and the reason.
 
 [ADR 0002](docs/adr/0002-toolchain-follows-tstl-and-tests-run-on-real-lua.md) records the decision.

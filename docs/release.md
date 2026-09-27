@@ -334,6 +334,7 @@ Checked by hand, then `pnpm changeset pre exit` in a pull request; the next Vers
 - [ ] [The compatibility matrix generator](#the-compatibility-matrix) produces the 1.0.0 row without error.
 - [ ] The build-phase notes are gone from the root README and the four package READMEs, and their install commands no longer name `@next`.
 - [ ] The migration page for w3ts 3.x to reforged-ts 1.0 is present with its `renames.json` entries (the major-changeset gate checks this mechanically: it treats the first stable release of `reforged-ts` as a major).
+- [ ] pnpm waits a day before it installs a new version again: `minimumReleaseAge: 1440` in `pnpm-workspace.yaml`, and `minimumReleaseAge: "1 day"` with `internalChecksFilter: "strict"` in `renovate.json5`, so Renovate proposes no version pnpm would refuse. It is off during the build phase ([#221](https://github.com/phmilk/reforged-ts/issues/221)).
 
 ## Deprecating and removing a symbol
 

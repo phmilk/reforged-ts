@@ -7,10 +7,11 @@ packages:
   # The Wrapper coverage report (#163), a private package: never published.
   - wrapper-coverage
 
-# No version younger than a day (1440 minutes) is installed: pnpm's default,
-# stated because renovate.json5 waits as long (#221). A lockfile that holds a
-# younger version fails the install until the day has passed.
-minimumReleaseAge: 1440
+# pnpm's wait before it installs a new version, off during the build phase
+# (#221): its default, a day, fails the install of a lockfile that holds a
+# younger version, and the alphas move fast. Back to 1440 minutes (a day),
+# with Renovate waiting as long, on the 1.0.0 checklist (docs/release.md).
+minimumReleaseAge: 0
 
 # The dependencies whose install scripts may run. pnpm runs none it is not
 # told about, and an install that meets one fails (#221). None of these runs:

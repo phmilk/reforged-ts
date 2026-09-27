@@ -23,12 +23,6 @@
   ],
   // Early Monday, UTC.
   schedule: ["* 0-3 * * 1"],
-  // pnpm installs no version younger than a day (minimumReleaseAge in
-  // pnpm-workspace.yaml), so an update waits as long: a younger one would
-  // fail the pull request's lockfile update and its install. Strict: no
-  // branch is opened for an update until it is old enough.
-  minimumReleaseAge: "1 day",
-  internalChecksFilter: "strict",
   lockFileMaintenance: {
     enabled: true,
     schedule: ["* 0-3 * * 1"],
