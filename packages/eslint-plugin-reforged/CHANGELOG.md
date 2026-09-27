@@ -1,5 +1,20 @@
 # eslint-plugin-reforged
 
+## 1.0.0-alpha.1
+
+### Patch Changes
+
+- [#208](https://github.com/phmilk/reforged-ts/pull/208) [`e30077c`](https://github.com/phmilk/reforged-ts/commit/e30077c78dc47c84393f174996a9a90bee6df0b7) Thanks [@phmilk](https://github.com/phmilk)! - `no-game-state-in-local-branch` lets the new visual and text Wrapper members of reforged-ts through inside a local branch, as it does their Natives: `Camera.setFieldControlledByInput` and the `Camera.type` setter, `CameraSetup#type`, `Sound.playThematicMusic`, `endThematicMusic` and `setThematicMusicVolume`, `Frame#setTextAreaAutoScroll`, `Destructable#setVertexColor`, and the text members `MapPlayer#displayText`, `displayTimedText` and `displayTimedTextFrom`, which `no-percent-in-display-strings` now checks too.
+
+- [#208](https://github.com/phmilk/reforged-ts/pull/208) [`9ddf666`](https://github.com/phmilk/reforged-ts/commit/9ddf666d4280c2f3c509bd128abee1a876aa3dc1) Thanks [@phmilk](https://github.com/phmilk)! - `no-unsafe-natives` bans `TriggerWaitForSound`, a trigger action wait like `TriggerSleepAction`: it yields the running thread until the sound ends. The rule suggests continuing in a timer callback when the sound ends instead.
+
+- [#209](https://github.com/phmilk/reforged-ts/pull/209) [`29057ae`](https://github.com/phmilk/reforged-ts/commit/29057ae4a2136cdf82c725b5acbf5302f5b186cd) Thanks [@phmilk](https://github.com/phmilk)! - Every rule's `meta.docs.url` points at the rule's page under the Lint rules guide of the docs site, `https://phmilk.github.io/reforged-ts/docs/<docs version>/guides/lint-rules/<rule>`, which the site serves from the page the plugin ships in `docs/`. The previous `https://phmilk.github.io/reforged-ts/<docs version>/lint/<rule>` URLs led to no page.
+
+- [#209](https://github.com/phmilk/reforged-ts/pull/209) [`7aa0ede`](https://github.com/phmilk/reforged-ts/commit/7aa0edeb5ec49bb767985ef5d42abb709281c0ce) Thanks [@phmilk](https://github.com/phmilk)! - The README's "For AI agents" line links the documentation of this version as Markdown for a language model: `llms.txt`, one link per page, and `llms-full.txt`, every page in one file. A prerelease links the working tree's docs, `https://phmilk.github.io/reforged-ts/docs/next/llms.txt`; a stable release links the docs version of its library minor, `/docs/<major.minor>/llms.txt`.
+- Updated dependencies [[`7aa0ede`](https://github.com/phmilk/reforged-ts/commit/7aa0edeb5ec49bb767985ef5d42abb709281c0ce), [`4e6e5f4`](https://github.com/phmilk/reforged-ts/commit/4e6e5f4913f9a6a14a8de1eb60d7045ebdd22eb3)]:
+  - reforged-ts@1.0.0-alpha.1
+  - reforged-types@1.0.0-alpha.1
+
 ## 1.0.0-alpha.0
 
 ### Major Changes
