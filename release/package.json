@@ -17,6 +17,7 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json",
     "test": "vitest run --root .. --project release",
+    "prepare": "pnpm run build",
     "release:check-changeset": "tsc -p tsconfig.json && node build/cli/check-changeset.js",
     "release:check-patches": "tsc -p tsconfig.json && node build/cli/check-patches.js",
     "release:gate": "tsc -p tsconfig.json && node build/cli/major-changeset-gate.js",

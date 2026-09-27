@@ -91,6 +91,9 @@ export default defineConfig({
         test: {
           name: "website",
           root: "website",
+          // A test's first TypeDoc run loads TypeScript and TypeDoc cold:
+          // seconds, more under a loaded machine or CI.
+          testTimeout: 30_000,
           include: ["test/**/*.test.{mts,ts}"],
           exclude: ["**/fixtures/**"],
           environment: "node",
@@ -124,6 +127,11 @@ export default defineConfig({
         // docs:collect reads the plugin's rule pages and registry from disk.
         pattern:
           /\/packages\/eslint-plugin-reforged\/(?:docs\/.+\.md|src\/rules\/index\.ts)$/,
+        testsToRun: () => "website/test",
+      },
+      {
+        // docs:collect reads the rename map and the behaviour changes too.
+        pattern: /\/packages\/reforged-ts\/migration\/.+$/,
         testsToRun: () => "website/test",
       },
     ],

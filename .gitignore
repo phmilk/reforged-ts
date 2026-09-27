@@ -123,6 +123,7 @@ website/.docusaurus/
 # (website/scripts/sources.mts) at every build, and a test checks that each
 # output of a source is ignored here.
 website/docs/guides/lint-rules/
+website/docs/migration/_generated/
 website/docs/contributing/guide.md
 website/docs/contributing/glossary.md
 website/docs/contributing/adr/

@@ -1,7 +1,9 @@
 /**
- * Fixture workspaces for the collector: a repository's Markdown sources and
- * an empty docs tree in a temporary folder.
+ * Fixture workspaces for the collector: a repository's sources (Markdown,
+ * the rename map, a built declaration entry, the migration pages) and an
+ * empty docs tree in a temporary folder.
  */
+import { readFileSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -114,13 +116,128 @@ Reports a wait loop. A warning in the recommended config; the replacement is a T
 A loop that waits blocks the thread.
 `;
 
+/** The library's migration folder: the rename map and the behaviour changes. */
+export const MIGRATION = "packages/reforged-ts/migration";
+
+/** The library's built declaration entry. */
+export const DECLARATIONS = "packages/reforged-ts/dist/index.d.ts";
+
+/** The migration page of the first version pair, where the gate expects it. */
+export const FIRST_PAGE = "website/docs/migration/w3ts-3-to-reforged-ts-1.md";
+
+/** The version pair of the fixture's entries. */
+export const FIRST_PAIR = { from: "w3ts@3", to: "reforged-ts@1" };
+
+/** The library's schema of the rename map, kept next to the fixture's map. */
+export const RENAMES_SCHEMA = readFileSync(
+  new URL(
+    "../../../packages/reforged-ts/migration/renames.schema.json",
+    import.meta.url,
+  ),
+  "utf8",
+);
+
+/** A rename map entry of `pair`. */
+export function renameEntry(
+  old: string,
+  replacement: string | string[] | null,
+  kind: string,
+  note: string,
+  pair: { from: string; to: string } = FIRST_PAIR,
+): Record<string, unknown> {
+  return {
+    old,
+    new: replacement,
+    kind,
+    versions: pair,
+    oneToOne: typeof replacement === "string",
+    note,
+  };
+}
+
+/** The fixture's rename map: four entries of the first pair. */
+export const RENAMES: readonly Record<string, unknown>[] = [
+  renameEntry(
+    "w3ts",
+    "reforged-ts",
+    "package",
+    "The library is published under a new name.",
+  ),
+  renameEntry(
+    "new Unit(...)",
+    "Unit.create(...)",
+    "constructor",
+    "Creation is a factory | the constructor is protected, as `Handle<T>`'s {was} <T>.",
+  ),
+  renameEntry(
+    "new Effect(...)",
+    ["Effect.create(...)", "Effect.createAttachment(...)"],
+    "constructor",
+    "The overloads split by argument shape.",
+  ),
+  renameEntry(
+    "Group.getEnumUnit",
+    null,
+    "member",
+    "The enumeration callback receives the unit.",
+  ),
+];
+
+/** The text of a rename map file holding `items`. */
+export const renamesJson = (items: readonly unknown[]) =>
+  `${JSON.stringify(items, null, 2)}\n`;
+
+/** The fixture library's built declarations: every replacement of `RENAMES`. */
+export const DECLARATION_ENTRY = `export declare class Unit {
+  protected constructor();
+  static create(x: number): Unit;
+}
+export declare class Effect {
+  static create(model: string): Effect;
+  static createAttachment(model: string, point: string): Effect;
+}
+`;
+
+export const BEHAVIOUR_CHANGES = `# Behaviour changes from w3ts 3.x
+
+What changes at run time. Removed and renamed symbols are in [\`renames.json\`](./renames.json).
+
+## Build step 3: errors
+
+- **Creation throws.** See [the Guards](/website/docs/guides/desync-safety-and-guards.md#dev-mode) and [the tests](../test/README.md).
+
+\`\`\`md
+## not a heading
+\`\`\`
+
+### A detail
+
+Text.
+`;
+
+export const MIGRATION_PAGE = `---
+title: w3ts 3.x to reforged-ts 1.0
+---
+
+import Renames from "./_generated/w3ts-3-to-reforged-ts-1/renames.md";
+
+<Renames />
+`;
+
 /**
  * The files of a fixture repository with every required source of
  * `SOURCES`: a glossary, two ADRs, one changelog (reforged-ts's), the agent
- * conventions and a lint plugin with two rules; no CONTRIBUTING.md, no Agent
- * skill, no other changelog.
+ * conventions, a lint plugin with two rules, and the library's rename map
+ * (its schema next to it, the built declarations, the behaviour changes, the
+ * migration page); no CONTRIBUTING.md, no Agent skill, no other changelog.
  */
 export const REPOSITORY_FILES: Readonly<Record<string, string>> = {
+  [`${MIGRATION}/renames.json`]: renamesJson(RENAMES),
+  [`${MIGRATION}/renames.schema.json`]: RENAMES_SCHEMA,
+  [`${MIGRATION}/behaviour-changes.md`]: BEHAVIOUR_CHANGES,
+  [DECLARATIONS]: DECLARATION_ENTRY,
+  [FIRST_PAGE]: MIGRATION_PAGE,
+  "website/docs/migration/index.md": "# Migration\n\nOne page per pair.\n",
   [`${PLUGIN}/src/rules/index.ts`]: RULE_REGISTRY,
   [`${PLUGIN}/docs/no-sleep.md`]: NO_SLEEP_PAGE,
   [`${PLUGIN}/docs/prefer-timer.md`]: PREFER_TIMER_PAGE,
