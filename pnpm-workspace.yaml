@@ -70,3 +70,11 @@ catalog:
   # each page per docs version.
   "@easyops-cn/docusaurus-search-local": ^0.55.3
   docusaurus-plugin-llms: 0.6.0
+
+packageExtensions:
+  # docusaurus-plugin-llms' declarations import @docusaurus/types, which it
+  # does not declare: without this peer its plugin type resolves only through
+  # pnpm's hidden hoisting, and the lint reports an unresolved type.
+  docusaurus-plugin-llms:
+    peerDependencies:
+      "@docusaurus/types": "*"

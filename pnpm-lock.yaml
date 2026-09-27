@@ -124,6 +124,8 @@ catalogs:
       specifier: ^5.0.1
       version: 5.0.1
 
+packageExtensionsChecksum: sha256-ncsQ3Cih75s+t+Z5pt3n3UoA4wYiT/6N4saQIJ8R+PU=
+
 importers:
 
   .:
@@ -326,7 +328,7 @@ importers:
         version: 3.1.1(@types/react@19.3.0)(react@19.3.0)
       docusaurus-plugin-llms:
         specifier: 'catalog:'
-        version: 0.6.0(@docusaurus/core@3.10.2(@docusaurus/faster@3.10.2(@docusaurus/types@3.10.2(@swc/core@1.16.2)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(postcss@8.5.28))(@mdx-js/react@3.1.1(@types/react@19.3.0)(react@19.3.0))(@rspack/core@1.7.12)(@swc/core@1.16.2)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.2))
+        version: 0.6.0(@docusaurus/core@3.10.2(@docusaurus/faster@3.10.2(@docusaurus/types@3.10.2(@swc/core@1.16.2)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(postcss@8.5.28))(@mdx-js/react@3.1.1(@types/react@19.3.0)(react@19.3.0))(@rspack/core@1.7.12)(@swc/core@1.16.2)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.2))(@docusaurus/types@3.10.2(@swc/core@1.16.2)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))
       docusaurus-plugin-typedoc:
         specifier: 'catalog:'
         version: 1.4.3(typedoc-plugin-markdown@4.13.1(typedoc@0.28.20(typescript@6.0.2)))(typedoc@0.28.20(typescript@6.0.2))
@@ -3746,6 +3748,7 @@ packages:
     engines: {node: '>=18.0'}
     peerDependencies:
       '@docusaurus/core': ^3.0.0
+      '@docusaurus/types': '*'
 
   docusaurus-plugin-typedoc@1.4.3:
     resolution: {integrity: sha512-daX9JvZe+Uwm1VZqrg6E/wyEaf8dopX1a7LuBpFoiDZ4uJHZdD6j/Sk2yAdwuWdP3aGMBcxlh7oXtUkMlg+L9Q==}
@@ -11621,9 +11624,10 @@ snapshots:
     dependencies:
       '@leichtgewicht/ip-codec': 2.0.5
 
-  docusaurus-plugin-llms@0.6.0(@docusaurus/core@3.10.2(@docusaurus/faster@3.10.2(@docusaurus/types@3.10.2(@swc/core@1.16.2)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(postcss@8.5.28))(@mdx-js/react@3.1.1(@types/react@19.3.0)(react@19.3.0))(@rspack/core@1.7.12)(@swc/core@1.16.2)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.2)):
+  docusaurus-plugin-llms@0.6.0(@docusaurus/core@3.10.2(@docusaurus/faster@3.10.2(@docusaurus/types@3.10.2(@swc/core@1.16.2)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(postcss@8.5.28))(@mdx-js/react@3.1.1(@types/react@19.3.0)(react@19.3.0))(@rspack/core@1.7.12)(@swc/core@1.16.2)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.2))(@docusaurus/types@3.10.2(@swc/core@1.16.2)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)):
     dependencies:
       '@docusaurus/core': 3.10.2(@docusaurus/faster@3.10.2(@docusaurus/types@3.10.2(@swc/core@1.16.2)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(postcss@8.5.28))(@mdx-js/react@3.1.1(@types/react@19.3.0)(react@19.3.0))(@rspack/core@1.7.12)(@swc/core@1.16.2)(debug@4.4.3)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.2)
+      '@docusaurus/types': 3.10.2(@swc/core@1.16.2)(clean-css@5.3.3)(cssnano@6.1.2(postcss@8.5.28))(html-minifier-terser@7.2.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       gray-matter: 4.0.3
       minimatch: 9.0.3
       yaml: 2.8.1
