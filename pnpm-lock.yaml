@@ -355,6 +355,12 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
+      '@typescript-to-lua/language-extensions':
+        specifier: 'catalog:'
+        version: 1.19.0
+      reforged-test:
+        specifier: workspace:^
+        version: link:../packages/reforged-test
       typescript:
         specifier: 'catalog:'
         version: 6.0.2

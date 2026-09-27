@@ -50,3 +50,11 @@ import Renames from "./_generated/w3ts-3-to-reforged-ts-1/renames.md";
 ```
 
 A partial is MDX whatever its name, and Docusaurus rejects a partial's front matter (an error under `CI`), so the collector writes none and escapes the `{`, `}` and `<` of the sections' prose. It reads the map through the release package's rename map module and stops with the offending entry when the map does not match its schema, a replacement is not exported by the library's built declarations, a pair has no page, or a page (any `.md` or `.mdx` of the folder but `index` and `_`-prefixed files) has no entry and no no-renames marker in the map. A new major adds its page, and its behaviour changes note to the migration guide's entry in `scripts/sources.mts`.
+
+## Code samples
+
+Every TypeScript fence (` ```ts `) of a hand-written page is a Map project snippet, type-checked against the library's built declarations, the Typings and `reforged-test/lua` by `test/snippets.test.mts` (`pnpm test`, after `pnpm build`), with the Template's compiler options. The checker is `scripts/snippets.mts`; it reads every `.md` and `.mdx` of `docs/` except the collected pages (the outputs of `scripts/sources.mts`) and the `api` section. A failure names the page, line and column of the error.
+
+- Each page is a Map project of its own. A fence with a title is the file at that path, so the fences of one page import each other (` ```ts title="src/score.ts" `, then `import { kills } from "../../src/score"` in ` ```ts title="tests/lua/score.test.ts" `); a fence without one is a module of its own under `src/`. The Template's `src/generated/env.ts` (`devMode`) and `tests/lua/stubs.d.ts` (`__stub_fire_trigger`, `__stub_fire_timer`, `__stub_format`) are there on every page.
+- A fence that is prose only (a partial statement, a signature, the old API on a migration page) says so with `fragment` in its meta: ` ```ts fragment `. Prefer a complete snippet: import what it uses, declare what it assumes.
+- `// @ts-expect-error` shows code that must not compile, and fails the check if it does.

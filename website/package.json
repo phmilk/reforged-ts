@@ -37,6 +37,8 @@
     "@docusaurus/types": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
+    "@typescript-to-lua/language-extensions": "catalog:",
+    "reforged-test": "workspace:^",
     "typescript": "catalog:"
   },
   "browserslist": {
