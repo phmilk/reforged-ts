@@ -47,7 +47,17 @@ export interface Reference {
    * `typedoc/typings.mts` routes it, and none of them in the sidebar.
    */
   readonly typingsManifest?: string;
+  /**
+   * The Typings reference the `@native` tags of this one link: each tag
+   * becomes a link to the Native's page there, then to jassbot, and a tag
+   * naming no entry of its manifest fails the run. Without it, the tags are
+   * left as written.
+   */
+  readonly nativeTypings?: Reference;
 }
+
+/** jassbot's page of a Native is this followed by the Native's name. */
+export const JASSBOT = "https://lep.duckdns.org/jassbot/doc/";
 
 /** The library, from its index, with its own tsconfig. */
 export const LIBRARY_REFERENCE: Reference = {
@@ -135,17 +145,22 @@ function writeIfChanged(file: string, text: string): void {
 }
 
 /**
- * Every reference the site generates, in sidebar order: the library, then the
+ * Every reference the site generates, in sidebar order: the library, its
+ * `@native` tags linked to the Typings of the newest Game version, then the
  * Typings of each Game version.
  */
 export function siteReferences(): Reference[] {
-  return [
-    LIBRARY_REFERENCE,
-    ...typingsReferences(
-      join(WORKSPACE, "packages/reforged-types"),
-      join(SITE, "node_modules/.cache/typings-reference"),
-    ),
-  ];
+  const typings = typingsReferences(
+    join(WORKSPACE, "packages/reforged-types"),
+    join(SITE, "node_modules/.cache/typings-reference"),
+  );
+  const newest = typings.at(-1);
+  if (newest === undefined) {
+    throw new Error(
+      "packages/reforged-types holds no Game version with a manifest.json: the library's @native tags have no Typings to link. Run `pnpm typings:generate`.",
+    );
+  }
+  return [{ ...LIBRARY_REFERENCE, nativeTypings: newest }, ...typings];
 }
 
 /** How a reference is generated. */
@@ -167,6 +182,9 @@ export type ReferencePluginOptions = Partial<TypeDocOptions> &
   Partial<MarkdownOptions> & {
     readonly id: string;
     readonly typingsManifest?: string;
+    readonly nativeManifest?: string;
+    readonly nativeRoute?: string;
+    readonly nativeJassbot?: string;
   };
 
 export function referencePluginOptions(
@@ -199,6 +217,15 @@ export function referencePluginOptions(
           // Generated from the Patch: the doc comments are the Jass types,
           // and a handle type's brand has none.
           validation: { notDocumented: false },
+        }),
+    ...(reference.nativeTypings?.typingsManifest === undefined
+      ? {}
+      : {
+          nativeManifest: reference.nativeTypings.typingsManifest,
+          // A Markdown link from the docs folder: Docusaurus resolves it in
+          // the docs version of the page that holds it.
+          nativeRoute: `/${reference.nativeTypings.dir}`,
+          nativeJassbot: JASSBOT,
         }),
   };
 }

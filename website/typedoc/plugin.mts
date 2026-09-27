@@ -11,7 +11,11 @@
 //   neither validates nor fails, so the plugin does both before the output;
 // - for a Typings reference (the `typingsManifest` option): the Jass files
 //   side by side in one project, and every entry of the Patch's manifest on
-//   the page `typings.mts` routes it to, or the run fails.
+//   the page `typings.mts` routes it to, or the run fails;
+// - for a reference whose `@native` tags link a Typings reference (the
+//   `nativeManifest`, `nativeRoute` and `nativeJassbot` options): each tag as
+//   a link to the Native's page there, then to jassbot, and a tag naming no
+//   entry of the manifest fails the run.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 import {
@@ -30,6 +34,9 @@ import { entryPage, readTypingsManifest } from "./typings.mts";
 declare module "typedoc" {
   export interface TypeDocOptionMap {
     typingsManifest: string;
+    nativeManifest: string;
+    nativeRoute: string;
+    nativeJassbot: string;
   }
 }
 
@@ -68,6 +75,24 @@ export function load(app: Application): void {
     type: ParameterType.String,
     defaultValue: "",
   });
+  app.options.addDeclaration({
+    name: "nativeManifest",
+    help: "The manifest.json of the Patch whose Typings reference the @native tags link; empty to leave the tags as written.",
+    type: ParameterType.String,
+    defaultValue: "",
+  });
+  app.options.addDeclaration({
+    name: "nativeRoute",
+    help: "The folder of that Typings reference, as a Markdown link from the docs folder: /api/typings/<Game version>.",
+    type: ParameterType.String,
+    defaultValue: "",
+  });
+  app.options.addDeclaration({
+    name: "nativeJassbot",
+    help: "The URL of jassbot's page of a Native, without the Native's name.",
+    type: ParameterType.String,
+    defaultValue: "",
+  });
   app.on(Application.EVENT_BOOTSTRAP_END, () => {
     declareSiteTags(app);
     excludeLuaAnnotations(app);
@@ -75,6 +100,7 @@ export function load(app: Application): void {
   gateOnValidation(app);
   mergeTypingsFiles(app);
   checkTypingsPages(app);
+  linkNatives(app);
 }
 
 /**
@@ -216,6 +242,55 @@ function checkTypingsPages(app: Application): void {
     if (missing.length !== 0) {
       throw new Error(
         `The Typings reference of ${manifest} has no page for ${String(missing.length)} of its entries, where the route of an entry says:\n${missing.join("\n")}`,
+      );
+    }
+  });
+}
+
+/**
+ * Turns each `@native` tag into a link to the Native's page in the Typings
+ * reference, where `entryPage` routes it under `nativeRoute`, and a link to
+ * its jassbot page, the Native's name as the text. A tag whose name is no
+ * entry of `nativeManifest` fails the conversion, naming the member and the
+ * tag: every such tag at once. The tags are rewritten before TypeDoc
+ * resolves the project, while each comment is still on its own member.
+ */
+function linkNatives(app: Application): void {
+  app.converter.on(Converter.EVENT_RESOLVE_BEGIN, (context) => {
+    const manifestFile = app.options.getValue("nativeManifest");
+    if (manifestFile === "") return;
+    const route = app.options.getValue("nativeRoute");
+    const jassbot = app.options.getValue("nativeJassbot");
+    const manifest = readTypingsManifest(manifestFile);
+    const entries = new Map(
+      manifest.entries.map((entry) => [entry.name, entry]),
+    );
+    const unknown: string[] = [];
+    // A comment two members share is rewritten once.
+    const seen = new WeakSet<CommentTag>();
+    for (const reflection of Object.values(context.project.reflections)) {
+      for (const tag of reflection.comment?.blockTags ?? []) {
+        if (tag.tag !== "@native" || seen.has(tag)) continue;
+        seen.add(tag);
+        const name = Comment.combineDisplayParts(tag.content).trim();
+        const entry = entries.get(name);
+        if (entry === undefined) {
+          unknown.push(
+            `- ${reflection.getFriendlyFullName()}: @native ${name}`,
+          );
+          continue;
+        }
+        tag.content = [
+          {
+            kind: "text",
+            text: `[${name}](${route}/${entryPage(entry)}.md) ([jassbot](${jassbot}${name}))`,
+          },
+        ];
+      }
+    }
+    if (unknown.length !== 0) {
+      throw new Error(
+        `The reference of ${context.project.packageName ?? context.project.name} has ${String(unknown.length)} @native tags naming what the Typings of Patch ${manifest.patch} do not declare (${manifestFile}):\n${unknown.join("\n")}`,
       );
     }
   });
