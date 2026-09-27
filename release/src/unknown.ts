@@ -15,7 +15,31 @@ export function isStringList(value: unknown): value is string[] {
   );
 }
 
-/** The message of a caught error, or the thrown value as text. */
+/**
+ * The message of a caught error, or the thrown value as text, followed by the
+ * chain of its causes: Node's `fetch` throws a bare "fetch failed" and keeps
+ * the reason (`ECONNRESET`, a certificate error, ...) in `cause`.
+ */
 export function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
+  if (!(error instanceof Error)) return String(error);
+  const causes: string[] = [];
+  let cause: unknown = error.cause;
+  while (cause !== undefined && causes.length < 5) {
+    if (cause instanceof Error) {
+      const code =
+        "code" in cause && typeof cause.code === "string" ? cause.code : "";
+      causes.push(
+        code !== "" && !cause.message.includes(code)
+          ? `${code}: ${cause.message}`
+          : cause.message,
+      );
+      cause = cause.cause;
+    } else {
+      causes.push(typeof cause === "string" ? cause : JSON.stringify(cause));
+      break;
+    }
+  }
+  return causes.length === 0
+    ? error.message
+    : `${error.message} (${causes.join("; ")})`;
 }
