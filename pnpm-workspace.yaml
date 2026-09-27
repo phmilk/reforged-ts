@@ -35,7 +35,8 @@ catalog:
   # rename map module of the release package (release/src/rename-map.ts) its Node tests import,
   # and for the issue forms (.github/ISSUE_TEMPLATE), in the release tests.
   ajv: ^8.20.0
-  # YAML parser for the issue forms, in the release tests.
+  # YAML parser: the Template gate sets its overrides in the Template's
+  # pnpm-workspace.yaml with it, and the release tests read the issue forms.
   yaml: ^2.9.1
   # Node built-ins for the generator (fs, path); major follows .node-version.
   "@types/node": ^24.0.0

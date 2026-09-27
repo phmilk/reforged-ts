@@ -2,12 +2,13 @@
  * `release:template-gate`, programmatic entry point: the Template, as the
  * Reference consumer, built against the packed packages before they are
  * published (ADR 0006). It installs the tarballs the publish plan lists into
- * a Template checkout as overrides, then runs the Template's build in
+ * a Template checkout as overrides in its pnpm-workspace.yaml, then runs the Template's build in
  * release mode, its lint and its tests, and stops at the first failure.
  */
 import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import { isAbsolute, join, posix, relative, resolve, sep } from "node:path";
+import { parseDocument } from "yaml";
 import { byCodePoint } from "./order.js";
 import { commandLine, type Command, type Runner } from "./process.js";
 import { LIBRARY_PACKAGE } from "./packages.js";
@@ -170,7 +171,7 @@ type Manifest = Record<string, unknown>;
 
 /**
  * Installs the tarballs of the publish plan in `packDir` into the Template
- * checkout, as `pnpm.overrides` entries in its `package.json`, then runs its
+ * checkout, as `overrides` entries in its `pnpm-workspace.yaml`, then runs its
  * build in release mode, its lint and its tests. Stops at the first command
  * that fails, or at the first script the Template lacks, and names it.
  * Throws a `TemplateGateError` when the pack output or the checkout cannot
@@ -194,10 +195,7 @@ export async function runTemplateGate(
     );
   }
 
-  await writeFile(
-    manifestPath,
-    `${JSON.stringify(withOverrides(manifest, installed), null, 2)}\n`,
-  );
+  await writeOverrides(input.template, installed);
 
   const fail = (failed: string, message: string): TemplateGateResult => ({
     ok: false,
@@ -239,19 +237,38 @@ export async function runTemplateGate(
 }
 
 /**
- * The manifest with an override per packed package, pointing at its
- * tarball; the Template's other overrides are kept.
+ * Sets an override per packed package, pointing at its tarball, in the
+ * Template's `pnpm-workspace.yaml`, written when it has none: the one place
+ * pnpm 11 and later read settings from, and pnpm 10 reads too. The file's
+ * other settings, other overrides and comments are kept.
  */
-function withOverrides(
-  manifest: Manifest,
+async function writeOverrides(
+  template: string,
   packed: readonly PackedPackage[],
-): Manifest {
-  const pnpm = isRecord(manifest.pnpm) ? manifest.pnpm : {};
-  const overrides = isRecord(pnpm.overrides) ? { ...pnpm.overrides } : {};
-  for (const pkg of packed) {
-    overrides[pkg.name] = `file:${pkg.tarball.split(sep).join(posix.sep)}`;
+): Promise<void> {
+  const path = join(template, "pnpm-workspace.yaml");
+  let text = "";
+  try {
+    text = await readFile(path, "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
   }
-  return { ...manifest, pnpm: { ...pnpm, overrides } };
+  const settings = parseDocument(text);
+  try {
+    if (settings.errors.length > 0) throw settings.errors[0];
+    for (const pkg of packed) {
+      settings.setIn(
+        ["overrides", pkg.name],
+        `file:${pkg.tarball.split(sep).join(posix.sep)}`,
+      );
+    }
+  } catch (error) {
+    throw new TemplateGateError(
+      `Cannot set the overrides in ${path}: ${errorMessage(error)}`,
+      { cause: error },
+    );
+  }
+  await writeFile(path, settings.toString());
 }
 
 const DEPENDENCY_FIELDS = [
@@ -262,9 +279,8 @@ const DEPENDENCY_FIELDS = [
 
 /**
  * Why the install did not put the packed version of a package the Template
- * depends on in its `node_modules` (pnpm ignoring `pnpm.overrides`, as pnpm
- * 11 does, or a `pnpm-workspace.yaml` whose own `overrides` replace them),
- * if it did not.
+ * depends on in its `node_modules`, if it did not: a pnpm that ignores the
+ * overrides of `pnpm-workspace.yaml`, or a pnpmfile that replaces them.
  */
 async function overridesIgnored(
   template: string,
@@ -297,7 +313,7 @@ async function overridesIgnored(
     if (found !== pkg.version) {
       return (
         `the install put ${pkg.name} ${found} in node_modules, ` +
-        `not the packed ${pkg.version}: pnpm did not apply the overrides in package.json.`
+        `not the packed ${pkg.version}: pnpm did not apply the overrides in pnpm-workspace.yaml.`
       );
     }
   }

@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join, posix, sep } from "node:path";
 import { describe, expect, it } from "vitest";
+import { parse } from "yaml";
 import { main } from "../src/cli/template-gate.js";
 import { commandLine, type Command, type Runner } from "../src/process.js";
 import { runTemplateGate, templateRef } from "../src/template-gate.js";
@@ -64,10 +65,13 @@ const ALL_FOUR: readonly PlanEntry[] = [
   { name: "eslint-plugin-reforged" },
 ];
 
-/** A Template checkout: the scripts and dependencies of the real one. */
+/**
+ * A Template checkout: the scripts and dependencies of the real one, and
+ * the pnpm settings `workspace` when given.
+ */
 async function templateCheckout(
   scripts: readonly string[] = ["build", "lint", "test"],
-  fields: Record<string, unknown> = {},
+  workspace?: string,
 ): Promise<string> {
   const dir = await tempDir("template");
   await writeText(
@@ -81,17 +85,19 @@ async function templateCheckout(
       ),
       dependencies: { "reforged-ts": "^1.0.0", "reforged-types": "^1.0.0" },
       devDependencies: { "reforged-test": "^1.0.0", typescript: "6.0.2" },
-      ...fields,
     }),
   );
+  if (workspace !== undefined)
+    await writeText(dir, "pnpm-workspace.yaml", workspace);
   return dir;
 }
 
-async function overridesOf(template: string): Promise<unknown> {
-  const manifest = JSON.parse(
-    await readFile(join(template, "package.json"), "utf8"),
-  ) as { pnpm?: { overrides?: unknown } };
-  return manifest.pnpm?.overrides;
+/** The overrides the Template's pnpm-workspace.yaml holds. */
+async function overridesOf(template: string): Promise<Record<string, string>> {
+  const settings = parse(
+    await readFile(join(template, "pnpm-workspace.yaml"), "utf8"),
+  ) as { overrides?: Record<string, string> } | null;
+  return settings?.overrides ?? {};
 }
 
 const fileUrl = (packDir: string, path: string) =>
@@ -112,10 +118,7 @@ function fakePnpm(
     if (command.args[0] === "install") {
       // The gate runs every command in the checkout.
       const cwd = command.cwd ?? "";
-      const manifest = JSON.parse(
-        await readFile(join(cwd, "package.json"), "utf8"),
-      ) as { pnpm: { overrides: Record<string, string> } };
-      for (const [name, spec] of Object.entries(manifest.pnpm.overrides)) {
+      for (const [name, spec] of Object.entries(await overridesOf(cwd))) {
         const version =
           options.installs?.[name] ??
           /-(\d+\.\d+\.\d+[^/]*)\.tgz$/.exec(spec)?.[1];
@@ -141,7 +144,7 @@ const ALL_STEPS = [
 ];
 
 describe("runTemplateGate", () => {
-  it("installs exactly the tarballs in the publish plan, as overrides", async () => {
+  it("installs exactly the tarballs in the publish plan, as overrides in pnpm-workspace.yaml, keeping its settings", async () => {
     const packDir = await packOutput(
       [
         { name: "reforged-types" },
@@ -150,9 +153,11 @@ describe("runTemplateGate", () => {
       ],
       ["reforged-test"],
     );
-    const template = await templateCheckout([], {
-      pnpm: { overrides: { esbuild: "0.25.0" } },
-    });
+    const template = await templateCheckout(
+      [],
+      "# No lockfile yet.\nlockfile: false\n\noverrides:\n  esbuild: 0.25.0\n",
+    );
+    const manifest = await readFile(join(template, "package.json"), "utf8");
 
     const result = await runTemplateGate({
       template,
@@ -171,6 +176,26 @@ describe("runTemplateGate", () => {
         packDir,
         `packages/reforged-types-${ALPHA}.tgz`,
       ),
+    });
+    const workspace = await readFile(
+      join(template, "pnpm-workspace.yaml"),
+      "utf8",
+    );
+    expect(workspace).toMatch(/^# No lockfile yet\.\nlockfile: false\n/);
+    // pnpm 11 and later read no setting from package.json.
+    expect(await readFile(join(template, "package.json"), "utf8")).toBe(
+      manifest,
+    );
+  });
+
+  it("writes pnpm-workspace.yaml when the Template has none", async () => {
+    const packDir = await packOutput([{ name: "reforged-ts" }]);
+    const template = await templateCheckout([]);
+
+    await runTemplateGate({ template, packDir, run: fakePnpm().run });
+
+    expect(await overridesOf(template)).toEqual({
+      "reforged-ts": fileUrl(packDir, `packages/reforged-ts-${ALPHA}.tgz`),
     });
   });
 

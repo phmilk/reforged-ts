@@ -38,12 +38,12 @@
     "@changesets/parse": "catalog:",
     "@manypkg/get-packages": "catalog:",
     "ajv": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "yaml": "catalog:"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",
     "@types/node": "catalog:",
-    "vitest": "catalog:",
-    "yaml": "catalog:"
+    "vitest": "catalog:"
   }
 }
