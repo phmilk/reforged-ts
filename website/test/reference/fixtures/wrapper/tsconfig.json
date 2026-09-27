@@ -1,0 +1,14 @@
+{
+  // A Wrapper the reference tests run TypeDoc on, its @native tags naming
+  // entries of the fixture Typings.
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [],
+    "strict": true,
+    "noEmit": true
+  },
+  "include": ["src"]
+}

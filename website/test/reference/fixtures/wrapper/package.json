@@ -1,0 +1,5 @@
+{
+  "name": "fixture-wrapper",
+  "private": true,
+  "description": "A Wrapper whose @native tags the reference tests link to the fixture Typings."
+}
