@@ -6,6 +6,7 @@ import { promisify } from "node:util";
 import { describe, expect, it } from "vitest";
 import { main as matrixMain } from "../src/cli/matrix.js";
 import { main as versionMain } from "../src/cli/version.js";
+import { stampDocsVersion } from "../src/docs-version.js";
 import {
   FRAGMENT_FILE,
   generateMatrix,
@@ -76,6 +77,9 @@ async function workspace(fixture: Fixture = {}): Promise<string> {
                   pkg.name === "reforged-ts"
                     ? (fixture.libraryPatch ?? PATCH)
                     : PATCH,
+                ...(pkg.name === "eslint-plugin-reforged"
+                  ? { docs: "next" }
+                  : {}),
               },
             },
           },
@@ -86,6 +90,11 @@ async function workspace(fixture: Fixture = {}): Promise<string> {
     "pnpm-workspace.yaml",
     `packages:\n${PACKAGES.map((pkg) => `  - ${pkg.dir}\n`).join("")}\n${fixture.catalog ?? CATALOG}`,
   );
+  for (const pkg of PACKAGES) {
+    if (pkg.private !== true) {
+      await writeText(root, `${pkg.dir}/README.md`, readme(pkg.name, "next"));
+    }
+  }
   await writeText(
     root,
     "packages/reforged-types/3.0.0/manifest.json",
@@ -109,6 +118,29 @@ async function workspace(fixture: Fixture = {}): Promise<string> {
     }
   }
   return root;
+}
+
+/** A package's README, whose links name the docs version `label`. */
+function readme(name: string, label: string): string {
+  const docs = `https://phmilk.github.io/reforged-ts/docs/${label}`;
+  return (
+    `# ${name}\n\n` +
+    `**For AI agents:** the documentation of this version as Markdown: [llms.txt](${docs}/llms.txt) links each page, and [llms-full.txt](${docs}/llms-full.txt) holds them all in one file.\n\n` +
+    "The [docs site](https://phmilk.github.io/reforged-ts) is unchanged.\n"
+  );
+}
+
+/** Each publishable package's README and the plugin's manifest under `root`. */
+async function stamped(root: string): Promise<Map<string, string>> {
+  const found = new Map<string, string>();
+  for (const pkg of PACKAGES) {
+    if (pkg.private === true) continue;
+    const path = `${pkg.dir}/README.md`;
+    found.set(path, await readFile(join(root, path), "utf8"));
+  }
+  const plugin = "packages/eslint-plugin-reforged/package.json";
+  found.set(plugin, await readFile(join(root, plugin), "utf8"));
+  return found;
 }
 
 /** The row of a release at `versions` (all `1.0.0` by default). */
@@ -518,6 +550,101 @@ describe("release:version", () => {
     return { status, stdout, stderr };
   }
 
+  it("stamps the library's major.minor into the plugin's docs field and the README links of a stable release", async () => {
+    const root = await versionable(
+      { versions: { "reforged-ts": "1.0.3" }, existing: matrix(row()) },
+      { "reforged-ts": "minor" },
+    );
+
+    const result = await version(root);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toMatch(
+      /^Docs version 1\.1: wrote packages\/eslint-plugin-reforged\/package\.json, packages\/eslint-plugin-reforged\/README\.md, packages\/reforged-test\/README\.md, packages\/reforged-ts\/README\.md, packages\/reforged-types\/README\.md\.\n/,
+    );
+    const files = await stamped(root);
+    const plugin = files.get("packages/eslint-plugin-reforged/package.json");
+    expect(JSON.parse(plugin ?? "")).toMatchObject({
+      reforged: { patch: PATCH, docs: "1.1" },
+    });
+    expect(plugin).toMatch(/^\{\n {2}"name": "eslint-plugin-reforged",\n/);
+    for (const pkg of PACKAGES.filter(({ private: hidden }) => !hidden)) {
+      expect(files.get(`${pkg.dir}/README.md`)).toBe(readme(pkg.name, "1.1"));
+    }
+  });
+
+  it("leaves the docs version on next for a prerelease", async () => {
+    const root = await versionable(
+      { pre: true, existing: matrix(row()) },
+      { "reforged-ts": "minor" },
+    );
+    const before = await stamped(root);
+
+    const result = await version(root);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toMatch(/^Docs version next: /);
+    const after = await stamped(root);
+    for (const pkg of PACKAGES.filter(({ private: hidden }) => !hidden)) {
+      const path = `${pkg.dir}/README.md`;
+      expect(after.get(path)).toBe(before.get(path));
+    }
+    expect(
+      JSON.parse(
+        after.get("packages/eslint-plugin-reforged/package.json") ?? "",
+      ),
+    ).toMatchObject({ reforged: { docs: "next" } });
+  });
+
+  it("gives byte-identical files on a repeated run", async () => {
+    const root = await versionable(
+      { existing: matrix(row()) },
+      { "reforged-ts": "minor" },
+    );
+    await version(root);
+    const first = await stamped(root);
+    await writeText(root, ".changeset/another.md", changesetText({}));
+
+    const result = await version(root);
+
+    expect(result.stdout).toMatch(/^Docs version 1\.1: no file changed\.\n/);
+    expect(await stamped(root)).toEqual(first);
+  });
+
+  it("leaves this repository's prerelease packages on next", async () => {
+    const result = await stampDocsVersion(repositoryRoot);
+
+    expect(result).toMatchObject({ ok: true, label: "next" });
+    for (const [path, text] of result.ok ? result.files : []) {
+      expect(text, path).toBe(
+        await readFile(join(repositoryRoot, path), "utf8"),
+      );
+    }
+  });
+
+  it("stops when a README has no llms.txt link", async () => {
+    const root = await versionable(
+      { existing: matrix(row()) },
+      { "reforged-ts": "minor" },
+    );
+    await writeText(
+      root,
+      "packages/reforged-test/README.md",
+      "# reforged-test\n",
+    );
+
+    const result = await version(root);
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toBe(
+      "packages/reforged-test/README.md has no link to the llms.txt of a docs version.\n" +
+        "The docs version was not stamped and the compatibility matrix was not generated: docs/release.md#the-version-step-releaseversion.\n",
+    );
+    expect(JSON.parse((await files(root)).get(MATRIX_FILE) ?? "")).toEqual(
+      matrix(row()),
+    );
+  });
+
   it("versions the packages, then appends the release's row", async () => {
     const root = await versionable(
       { existing: matrix(row({ cutDate: "2026-09-01" })) },
@@ -528,7 +655,7 @@ describe("release:version", () => {
 
     expect(result.status).toBe(0);
     expect(result.stdout).toMatch(
-      /^Appended the row of .*reforged-types 1\.1\.0/,
+      /^Appended the row of .*reforged-types 1\.1\.0/m,
     );
     expect(JSON.parse((await files(root)).get(MATRIX_FILE) ?? "")).toEqual(
       matrix(
