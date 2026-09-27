@@ -404,10 +404,33 @@ No npm token exists anywhere. A job that needs a missing one fails at its first 
 
 They gate the dry run and the first tokenless publish, not the merge of the workflow:
 
-- **The GitHub App** ([#48](https://github.com/phmilk/reforged-ts/issues/48)): installed on this repository with contents write, pull requests write and issues write (the Patch watch, `patch-watch.yml`, opens its issue with it), its client ID and a private key stored as above.
+- **The GitHub App** ([#48](https://github.com/phmilk/reforged-ts/issues/48)): installed on this repository with contents write, pull requests write and issues write (the Patch watch, `patch-watch.yml`, opens its issue with it), its client ID and a private key stored as above. [The repository-setup wizard](#the-repository-setup-wizard) registers, installs, checks and stores it.
 - **A `v1` ref on the Template**: the gate clones `v<major>` of the library version, and fails naming the ref when the Template has neither a tag nor a branch of that name. Create it on the Template commit that supports the release: `git tag v1 <commit> && git push origin v1`. The Template's own plan cuts a `v1` branch at library 2.0 and keeps `main` as the current major; a `v1` tag now and a `v1` branch then both satisfy the gate, but the tag must be moved (or replaced by the branch) when the Template's `main` moves on.
 - **A read-only token for the Template** while it is private (see the table above).
 - **The four packages on npm with their trusted publisher**: [the first-publish wizard](#the-first-publish-wizard) publishes `1.0.0-alpha.0` of each and configures the publisher (repository `phmilk/reforged-ts`, workflow `release.yml`, no environment). The workflow file name is part of that configuration: renaming `release.yml` breaks publishing until every package's publisher is updated.
+
+### The repository-setup wizard
+
+`release/repo-setup.sh` walks the maintainer through the one-off human steps of [#48](https://github.com/phmilk/reforged-ts/issues/48) in one sitting: the GitHub App, Renovate and the repository settings. Run it from the repository root, in Git Bash on Windows or a shell on Linux, on a clean `master` that holds `renovate.json5`, with `gh` logged in as an administrator of the repository:
+
+```sh
+bash release/repo-setup.sh --dry-run  # review: prints every command, changes nothing
+bash release/repo-setup.sh
+```
+
+Its stages, in order:
+
+1. **Checks:** git, gh, node and pnpm on the PATH; `gh` logged in with administrator rights on `phmilk/reforged-ts`; the checkout on `master`, clean and at `origin/master`; then `pnpm install --frozen-lockfile`.
+2. **Register the App:** it opens GitHub's registration page pre-filled by `pnpm github-app url`: name `reforged-ts-bot` (any free name will do), the repository as homepage, no webhook, repository permissions Contents, Issues and Pull requests read and write (Metadata read is implied), no organization or account permission, installable on the maintainer's account only.
+3. **Client ID and private key:** it reads the App's **client ID** (not its App ID) and the path of a private key the App's page generates, then checks them with `pnpm github-app check`, which signs a JWT with the key and reads `GET /app` as the App: the credentials belong to one App, owned by `phmilk`, with exactly those permissions and no webhook events.
+4. **Install the App:** it opens the App's installation page (Only select repositories, this one), then checks as the App that it is installed on this repository, on selected repositories, with the permissions accepted. Which repositories the installation reaches only GitHub's page shows, so it asks the maintainer to confirm this one alone.
+5. **Store them:** `gh variable set APP_CLIENT_ID` and `gh secret set APP_PRIVATE_KEY`, the key file on standard input; then it reads the variable back and finds the secret listed.
+6. **Renovate:** it stops unless `renovate.json5` is on `master`, since Renovate installed before its configuration opens an onboarding pull request. It opens Renovate's installation page, waits up to ten minutes for Renovate's Dependency Dashboard issue, offers to close an onboarding pull request if one was opened anyway (close it, never merge it: its `renovate.json` would take precedence), and asks the maintainer to confirm Only select repositories.
+7. **Settings:** `pnpm repo:settings --dry-run` for review, a confirmation, then `pnpm repo:settings`; then it reads back the ruleset `master` (active, on `refs/heads/master`, the required checks of `.github/rulesets/master.json`), the merge settings, the Pages source and the `game-patch` label.
+
+It ends with what the App unlocks: the Patch watch's rehearsals ([#200](https://github.com/phmilk/reforged-ts/issues/200)) and [human step 5](#human-steps), the release workflow's dry run.
+
+It stops at the first failed check, saying what to fix, and never prints the private key. It can be re-run: the App stages are skipped when the variable and the secret exist (unless the maintainer asks to set the App up again, for a new key), Renovate's installation when its Dependency Dashboard exists, and the settings when they read back as committed. The dry run runs the read-only checks and `pnpm repo:settings --dry-run`, only warns about the branch, the working tree and a `master` without `renovate.json5`, answers every confirmation with yes, opens no browser and prints the commands that would change something.
 
 ### The Version Packages pull request and CI
 

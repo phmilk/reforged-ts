@@ -30,6 +30,7 @@
     "patch-watch:plan": "tsc -p tsconfig.json && node build/cli/patch-watch.js",
     "data:check": "tsc -p tsconfig.json && node build/cli/data-check.js",
     "repo:settings": "tsc -p tsconfig.json && node build/cli/repo-settings.js",
+    "github-app": "tsc -p tsconfig.json && node build/cli/github-app.js",
     "patch-watch:report": "tsc -p tsconfig.json && node build/cli/patch-watch-report.js"
   },
   "dependencies": {
