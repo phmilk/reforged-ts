@@ -93,7 +93,7 @@ export const SOURCES: readonly Source[] = [
     title: "Adding a Wrapper",
     position: 5,
     absent:
-      "The add-wrapper Agent skill (#202) is not written yet; #41 commits .claude/skills/.",
+      "The add-wrapper Agent skill (#202) is not written yet; #41 commits .claude/skills/. Until then .gitignore ignores .claude/: a local copy is collected, CI's checkout has none, so the two builds differ.",
   }),
   markdownFile({
     name: "the lint plugin's conventions",

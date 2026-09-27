@@ -17,7 +17,12 @@ import {
 } from "./reference";
 import { llmsFilesPlugin } from "./llms";
 import { TYPINGS_ROUTE_BASE } from "./typedoc/typings.mts";
-import { cutVersions, docsVersions, newestVersionAliases } from "./versioning";
+import {
+  cutVersions,
+  docsVersions,
+  newestVersionAliases,
+  versionRootIndexesPlugin,
+} from "./versioning";
 
 /** What differs between the two configuration files. */
 export interface SiteOptions {
@@ -108,6 +113,8 @@ export function siteConfig(options: SiteOptions): Config {
         "@docusaurus/plugin-client-redirects",
         { createRedirects: newestVersionAliases(cut) },
       ],
+      // Each cut version's root also as a folder index (/docs/<label>).
+      () => versionRootIndexesPlugin(cut),
       // llms.txt, llms-full.txt and each page as Markdown, per docs version
       // and once for the Typings.
       llmsFilesPlugin(cut),

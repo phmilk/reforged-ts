@@ -1,7 +1,7 @@
 // The docs versions as the site serves them (#185): the cut versions of
 // versions.json, the newest at its label as well as without it, and the
 // compatibility matrix's docs links.
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -10,6 +10,7 @@ import {
   cutVersions,
   docsVersions,
   newestVersionAliases,
+  writeVersionRootIndexes,
 } from "../../versioning";
 
 let site: string;
@@ -66,6 +67,23 @@ describe("the newest version without its label", () => {
 
   it("is nothing before the first cut", () => {
     expect(newestVersionAliases([])("/docs/next")).toBe(undefined);
+  });
+});
+
+describe("a cut version's root", () => {
+  it("is also its folder's index, so /docs/<label> answers", async () => {
+    await mkdir(join(site, "docs", "1.0"), { recursive: true });
+    await writeFile(join(site, "docs", "1.0.html"), "<p>1.0</p>");
+    await writeFile(join(site, "docs", "1.1.html"), "<p>1.1</p>");
+
+    writeVersionRootIndexes(site, ["1.1", "1.0", "0.9"]);
+
+    expect(
+      await readFile(join(site, "docs", "1.0", "index.html"), "utf8"),
+    ).toBe("<p>1.0</p>");
+    expect(
+      await readFile(join(site, "docs", "1.1", "index.html"), "utf8"),
+    ).toBe("<p>1.1</p>");
   });
 });
 
