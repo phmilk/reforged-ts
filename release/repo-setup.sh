@@ -283,17 +283,45 @@ soft_fail() {
   fail "$@"
 }
 
+# What gh, git and node print when the connection to GitHub drops (a
+# timeout, a reset, a failed lookup), as opposed to an answer from GitHub.
+NETWORK_ERROR='dial tcp|connectex|i/o timeout|TLS handshake timeout|connection reset|unexpected EOF|ECONNRESET|ETIMEDOUT|EAI_AGAIN|ENOTFOUND|fetch failed'
+ATTEMPTS=3
+
+# network_dropped: whether the last error in ERR_FILE is a dropped connection.
+network_dropped() {
+  grep -Eq "$NETWORK_ERROR" "$ERR_FILE" 2>/dev/null
+}
+
+# retried CMD... runs CMD and, when it fails because the connection to GitHub
+# dropped, runs it again after a pause, up to ATTEMPTS times. Every command
+# this wizard runs gives the same result when run twice. Its error output is
+# shown after it ends.
+retried() {
+  local attempt status
+  for ((attempt = 1; ; attempt++)); do
+    status=0
+    "$@" 2>"$ERR_FILE" || status=$?
+    cat "$ERR_FILE" >&2
+    if ((status == 0)) || ((attempt >= ATTEMPTS)) || ! network_dropped; then
+      return "$status"
+    fi
+    note "The connection to GitHub dropped; trying again in $((attempt * 5)) s ($((attempt + 1)) of $ATTEMPTS)."
+    sleep $((attempt * 5))
+  done
+}
+
 # run CMD... prints the command, then runs it; in the dry run it only prints.
 run() {
   printf '  %s$ %s%s\n' "$BOLD" "$*" "$RESET"
-  $DRY_RUN || "$@"
+  $DRY_RUN || retried "$@"
 }
 
 # show CMD... prints the command, then runs it, in the dry run too: for the
 # read-only commands whose output the maintainer reads.
 show() {
   printf '  %s$ %s%s\n' "$BOLD" "$*" "$RESET"
-  "$@"
+  retried "$@"
 }
 
 # native_path PATH: PATH as native programs (node, pnpm) read it.
@@ -314,10 +342,19 @@ shell_path() {
 
 # gh_read ARGS...: gh's output for a read-only query; empty when it fails
 # (a 404 included; gh api prints the error body on stdout), its message
-# kept in ERR_FILE.
+# kept in ERR_FILE. A dropped connection is retried like `retried` does,
+# so it never reads as "not there".
 gh_read() {
-  local out
-  if out=$(gh "$@" 2>"$ERR_FILE"); then printf '%s\n' "$out"; fi
+  local out attempt
+  for ((attempt = 1; attempt <= ATTEMPTS; attempt++)); do
+    if out=$(gh "$@" 2>"$ERR_FILE"); then
+      printf '%s\n' "$out"
+      return 0
+    fi
+    network_dropped || return 0
+    ((attempt < ATTEMPTS)) && sleep $((attempt * 5))
+  done
+  return 0
 }
 
 # app_stored: whether the repository holds the App's variable and secret.
