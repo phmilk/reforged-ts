@@ -51,15 +51,13 @@ describe("the newest version without its label", () => {
     expect(aliases("/docs/1.1/guides/lint-rules/no-sleep")).toEqual([
       "/docs/guides/lint-rules/no-sleep",
     ]);
-    expect(aliases("/docs/1.1/api/typings/3.0.0")).toEqual([
-      "/docs/api/typings/3.0.0",
+    expect(aliases("/docs/1.1/api/reforged-ts/classes/Unit")).toEqual([
+      "/docs/api/reforged-ts/classes/Unit",
     ]);
   });
 
-  it("leaves out the Typings' entry pages and the other versions", () => {
-    expect(aliases("/docs/1.1/api/typings/3.0.0/functions/KillUnit")).toBe(
-      undefined,
-    );
+  it("leaves out the other versions and the other routes", () => {
+    expect(aliases("/typings/3.0.0/functions/KillUnit")).toBe(undefined);
     expect(aliases("/docs/1.0/guides")).toBe(undefined);
     expect(aliases("/docs/1.10/guides")).toBe(undefined);
     expect(aliases("/docs/next/guides")).toBe(undefined);

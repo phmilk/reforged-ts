@@ -15,6 +15,7 @@ import {
   referencePluginOptions,
   referenceSidebars,
   typingsReferences,
+  typingsSidebar,
 } from "../../reference";
 import { entryPage, readTypingsManifest } from "../../typedoc/typings.mts";
 
@@ -74,7 +75,11 @@ describe("the Typings references", () => {
     await mkdir(join(temp, "3.0.3"));
     await mkdir(join(temp, "vendor", "3.0.0.24268"), { recursive: true });
 
-    const references = typingsReferences(temp, join(temp, "tsconfigs"));
+    const references = typingsReferences(
+      temp,
+      join(temp, "tsconfigs"),
+      join(temp, "typings"),
+    );
 
     expect(references.map((reference) => reference.label)).toEqual([
       "2.1.0",
@@ -83,8 +88,9 @@ describe("the Typings references", () => {
     ]);
     expect(references[1]).toMatchObject({
       id: "typings-3.0.2",
-      dir: "api/typings/3.0.2",
+      dir: "3.0.2",
       entryPoints: [join(temp, "3.0.2", "common.j.d.ts")],
+      docsPath: join(temp, "typings"),
       typingsManifest: join(temp, "3.0.2", "manifest.json"),
     });
   });
@@ -115,6 +121,14 @@ describe("the Typings reference", () => {
       const text = await page(reference, `${entryPage({ name, kind })}.md`);
       expect(text.split("\n")).toContain(heading);
     }
+  });
+
+  it("gives the index page a slug whose last segment has no dot", async () => {
+    const reference = await generate();
+
+    expect(await page(reference, "index.md")).toMatch(
+      /^---\nslug: overview\n---\n\n# 9\.9\.9\n/,
+    );
   });
 
   it("routes a Native and a global whose names differ in case alone apart", () => {
@@ -190,97 +204,29 @@ type SidebarItemsGenerator = NonNullable<
 type SidebarArgs = Parameters<SidebarItemsGenerator>[0];
 
 describe("the sidebar", () => {
-  it("lists a Typings reference as its index page, after the library", async () => {
-    const library: Reference = {
-      id: "library",
-      label: "library",
-      dir: "api/library",
-      entryPoints: [],
-      tsconfig: "",
-    };
+  const library: Reference = {
+    id: "library",
+    label: "library",
+    dir: "api/library",
+    entryPoints: [],
+    tsconfig: "",
+  };
+
+  it("puts the library's reference first in its section, then a link to the Typings", async () => {
     const typings = only(typingsReferences(FIXTURE, temp));
-    await mkdir(join(temp, typings.dir), { recursive: true });
-    await writeFile(join(temp, typings.dir, "index.md"), "# 9.9.9");
-    await mkdir(join(temp, library.dir), { recursive: true });
-    await writeFile(
-      join(temp, library.dir, "typedoc-sidebar.cjs"),
+    await writeText(
+      temp,
+      "api/library/typedoc-sidebar.cjs",
       'module.exports = [{ type: "doc", id: "api/library/functions/greet" }];',
     );
-    const typingsSection = {
-      type: "category" as const,
-      label: "Typings",
-      link: { type: "doc" as const, id: "api/typings/index" },
-      items: [],
-    };
-    const generator = referenceSidebars([library, typings]);
-
-    const items = await generator({
-      version: { contentPath: temp, versionName: "current" },
-      docs: [],
-      defaultSidebarItemsGenerator: () =>
-        Promise.resolve([
-          {
-            type: "category",
-            label: "API",
-            link: { type: "doc", id: "api/index" },
-            items: [typingsSection],
-          },
-        ]),
-    } as unknown as SidebarArgs);
-
-    expect(items).toEqual([
-      {
-        type: "category",
-        label: "API",
-        link: { type: "doc", id: "api/index" },
-        items: [
-          {
-            type: "category",
-            label: "library",
-            link: { type: "doc", id: "api/library/index" },
-            items: [{ type: "doc", id: "api/library/functions/greet" }],
-          },
-          {
-            ...typingsSection,
-            items: [
-              { type: "doc", id: "api/typings/9.9.9/index", label: "9.9.9" },
-            ],
-          },
-        ],
-      },
-    ]);
-  });
-
-  it("lists the Typings a cut version was cut with, not the site's", async () => {
-    const library: Reference = {
-      id: "library",
-      label: "library",
-      dir: "api/library",
-      entryPoints: [],
-      tsconfig: "",
-    };
-    const site = only(typingsReferences(FIXTURE, temp));
-    const frozen = join(temp, "versioned_docs", "version-1.0");
-    await writeText(frozen, "api/typings/8.8.8/index.md", "# 8.8.8");
-    await writeText(
-      frozen,
-      "api/library/typedoc-sidebar.cjs",
-      "module.exports = [];",
-    );
-    const typingsSection = {
-      type: "category" as const,
-      label: "Typings",
-      link: { type: "doc" as const, id: "api/typings/index" },
-      items: [],
-    };
     let given: unknown[] = [];
 
-    const items = await referenceSidebars([library, site])({
-      version: { contentPath: frozen, versionName: "1.0" },
+    const items = await referenceSidebars([library, typings])({
+      version: { contentPath: temp, versionName: "current" },
       docs: [
         {
-          id: "api/typings/8.8.8/functions/Old",
-          sourceDirName: "api/typings/8.8.8/functions",
+          id: "api/library/functions/greet",
+          sourceDirName: "api/library/functions",
         },
         { id: "guides/index", sourceDirName: "guides" },
       ],
@@ -291,7 +237,7 @@ describe("the sidebar", () => {
             type: "category",
             label: "API",
             link: { type: "doc", id: "api/index" },
-            items: [typingsSection],
+            items: [{ type: "doc", id: "api/other" }],
           },
         ]);
       },
@@ -308,15 +254,30 @@ describe("the sidebar", () => {
             type: "category",
             label: "library",
             link: { type: "doc", id: "api/library/index" },
-            items: [],
+            items: [{ type: "doc", id: "api/library/functions/greet" }],
           },
-          {
-            ...typingsSection,
-            items: [
-              { type: "doc", id: "api/typings/8.8.8/index", label: "8.8.8" },
-            ],
-          },
+          { type: "link", label: "Typings", href: "/typings" },
+          { type: "doc", id: "api/other" },
         ],
+      },
+    ]);
+  });
+
+  it("lists each Game version's index page in the Typings' own sidebar", async () => {
+    const typings = only(typingsReferences(FIXTURE, temp));
+    await writeText(temp, "9.9.9/index.md", "# 9.9.9");
+
+    const items = await typingsSidebar([typings])({
+      version: { contentPath: temp, versionName: "current" },
+    } as unknown as SidebarArgs);
+
+    expect(items).toEqual([
+      {
+        type: "category",
+        label: "Typings",
+        collapsible: false,
+        link: { type: "doc", id: "index" },
+        items: [{ type: "doc", id: "9.9.9/index", label: "9.9.9" }],
       },
     ]);
   });

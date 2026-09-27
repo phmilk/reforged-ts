@@ -11,7 +11,11 @@ import {
   referencePlugin,
   referenceSidebars,
   siteReferences,
+  TYPINGS_DOCS_ID,
+  TYPINGS_FOLDER,
+  typingsSidebar,
 } from "./reference";
+import { TYPINGS_ROUTE_BASE } from "./typedoc/typings.mts";
 import { cutVersions, docsVersions, newestVersionAliases } from "./versioning";
 
 /** What differs between the two configuration files. */
@@ -83,8 +87,21 @@ export function siteConfig(options: SiteOptions): Config {
     ],
 
     plugins: [
-      // The API reference, generated into the docs tree before the docs load.
+      // The API reference, generated before the docs load.
       ...references.map((each) => referencePlugin(each, reference)),
+      // The Typings' references, a docs instance of their own, not versioned.
+      [
+        "@docusaurus/plugin-content-docs",
+        {
+          id: TYPINGS_DOCS_ID,
+          path: TYPINGS_FOLDER,
+          routeBasePath: TYPINGS_ROUTE_BASE,
+          sidebarItemsGenerator: typingsSidebar(
+            references.filter((each) => each.typingsManifest !== undefined),
+          ),
+          editUrl: `${REPOSITORY}/tree/master/website/`,
+        },
+      ],
       // The newest docs version's pages without its label.
       [
         "@docusaurus/plugin-client-redirects",

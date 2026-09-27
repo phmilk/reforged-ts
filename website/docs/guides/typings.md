@@ -6,7 +6,7 @@ description: reforged-types, the TypeScript declarations of the Natives generate
 
 # Typings
 
-The Typings are the TypeScript declarations of the Natives of one game Patch: every function, type, constant and global a map script can call in Lua. `reforged-types` ships them, generated from the Patch's own files, `common.j`, `blizzard.j` and `common.ai`, and merged with the Overlay, a set of hand-curated facts about each Native. The library's Wrappers are built on them, and a Map project can call any Native directly through them. Their [reference](../api/typings/index.mdx) has a page per Native.
+The Typings are the TypeScript declarations of the Natives of one game Patch: every function, type, constant and global a map script can call in Lua. `reforged-types` ships them, generated from the Patch's own files, `common.j`, `blizzard.j` and `common.ai`, and merged with the Overlay, a set of hand-curated facts about each Native. The library's Wrappers are built on them, and a Map project can call any Native directly through them. Their [reference](/typings) has a page per Native.
 
 ## In a Map project
 

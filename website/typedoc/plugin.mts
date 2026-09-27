@@ -10,8 +10,9 @@
 // - the validation gate: docusaurus-plugin-typedoc converts and renders but
 //   neither validates nor fails, so the plugin does both before the output;
 // - for a Typings reference (the `typingsManifest` option): the Jass files
-//   side by side in one project, and every entry of the Patch's manifest on
-//   the page `typings.mts` routes it to, or the run fails;
+//   side by side in one project, every entry of the Patch's manifest on the
+//   page `typings.mts` routes it to, or the run fails, and the index page at
+//   the slug `typings.mts` gives it;
 // - for a reference whose `@native` tags link a Typings reference (the
 //   `nativeManifest`, `nativeRoute` and `nativeJassbot` options): each tag as
 //   a link to the Native's page there, then to jassbot, and a tag naming no
@@ -24,12 +25,17 @@ import {
   CommentTag,
   Converter,
   OptionDefaults,
+  PageEvent,
   ParameterType,
   type ProjectReflection,
   ReflectionKind,
   type TagString,
 } from "typedoc";
-import { entryPage, readTypingsManifest } from "./typings.mts";
+import {
+  entryPage,
+  GAME_VERSION_INDEX_SLUG,
+  readTypingsManifest,
+} from "./typings.mts";
 
 declare module "typedoc" {
   export interface TypeDocOptionMap {
@@ -83,7 +89,7 @@ export function load(app: Application): void {
   });
   app.options.addDeclaration({
     name: "nativeRoute",
-    help: "The folder of that Typings reference, as a Markdown link from the docs folder: /api/typings/<Game version>.",
+    help: "The route of that Typings reference from the site's root: /typings/<Game version>.",
     type: ParameterType.String,
     defaultValue: "",
   });
@@ -100,6 +106,7 @@ export function load(app: Application): void {
   gateOnValidation(app);
   mergeTypingsFiles(app);
   checkTypingsPages(app);
+  slugTypingsIndex(app);
   linkNatives(app);
 }
 
@@ -248,6 +255,18 @@ function checkTypingsPages(app: Application): void {
 }
 
 /**
+ * Gives a Typings reference's index page the slug `typings.mts` says, in
+ * front matter: TypeDoc writes none.
+ */
+function slugTypingsIndex(app: Application): void {
+  app.renderer.on(PageEvent.END, (page) => {
+    if (app.options.getValue("typingsManifest") === "") return;
+    if (page.url !== "index.md") return;
+    page.contents = `---\nslug: ${GAME_VERSION_INDEX_SLUG}\n---\n\n${page.contents ?? ""}`;
+  });
+}
+
+/**
  * Turns each `@native` tag into a link to the Native's page in the Typings
  * reference, where `entryPage` routes it under `nativeRoute`, and a link to
  * its jassbot page, the Native's name as the text. A tag whose name is no
@@ -283,7 +302,7 @@ function linkNatives(app: Application): void {
         tag.content = [
           {
             kind: "text",
-            text: `[${name}](${route}/${entryPage(entry)}.md) ([jassbot](${jassbot}${name}))`,
+            text: `[${name}](${route}/${entryPage(entry)}) ([jassbot](${jassbot}${name}))`,
           },
         ];
       }

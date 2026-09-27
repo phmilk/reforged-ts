@@ -20,6 +20,25 @@ export interface TypingsEntry {
   readonly kind: EntryKind;
 }
 
+/**
+ * The route base path of the Typings' docs instance, which is not versioned
+ * (#185): the reference of a Game version is at `/typings/<Game version>`,
+ * each entry's page under it where `entryPage` says, for every docs version.
+ */
+export const TYPINGS_ROUTE_BASE = "typings";
+
+/** The route of the Typings reference of a Game version, from the site's root. */
+export function gameVersionRoute(gameVersion: string): string {
+  return `/${TYPINGS_ROUTE_BASE}/${gameVersion}`;
+}
+
+/**
+ * The slug of a Game version's index page, relative to its folder: a route
+ * ending in the Game version (`/typings/3.0.0`) is taken for a file with an
+ * extension by a static server, which answers 404 (`docusaurus serve`, #188).
+ */
+export const GAME_VERSION_INDEX_SLUG = "overview";
+
 /** The part of a Patch's `manifest.json` the site reads. */
 export interface TypingsManifest {
   /** The Build the Typings of the Game version were generated from. */
@@ -33,7 +52,7 @@ export interface TypingsManifest {
  * a `function`, `variables/<name>` for a `global`. The reference puts
  * the declarations of `common.j`, `blizzard.j` and `common.ai` side by side,
  * so the Jass file an entry comes from is not part of it. The page's route is
- * the same path under the reference's route.
+ * the same path under the reference's route, `gameVersionRoute`.
  */
 export function entryPage(entry: TypingsEntry): string {
   switch (entry.kind) {

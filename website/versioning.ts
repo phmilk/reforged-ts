@@ -8,7 +8,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { PluginOptions as DocsPluginOptions } from "@docusaurus/plugin-content-docs";
-import { TYPINGS_DIR } from "./reference";
 
 /**
  * The cut versions, newest first, as `versions.json` in the site folder
@@ -38,9 +37,7 @@ export function docsVersions(
 /**
  * The client-redirects plugin's `createRedirects`: each page of the newest
  * version, at /docs/<newest>/<page>, is also answered at /docs/<page>, the
- * newest version's page without a label. The entry pages of the Typings'
- * references are left out, thousands of redirects for a URL nothing links;
- * their index pages are kept.
+ * newest version's page without a label.
  */
 export function newestVersionAliases(
   cut: readonly string[],
@@ -50,11 +47,6 @@ export function newestVersionAliases(
     if (newest === undefined) return undefined;
     const prefix = `/docs/${newest}`;
     if (path !== prefix && !path.startsWith(`${prefix}/`)) return undefined;
-    const page = path.slice(prefix.length);
-    const typings = `/${TYPINGS_DIR}/`;
-    if (page.startsWith(typings) && page.slice(typings.length).includes("/")) {
-      return undefined;
-    }
-    return [`/docs${page}`];
+    return [`/docs${path.slice(prefix.length)}`];
   };
 }
