@@ -11,6 +11,6 @@
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
   "privatePackages": { "version": false, "tag": false },
-  "ignore": [],
+  "ignore": ["reforged-ts-website"],
   "format": "auto"
 }

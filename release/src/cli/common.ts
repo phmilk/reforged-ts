@@ -1,9 +1,10 @@
 /**
  * What the CLIs of the release scripts share: the output streams, error
- * messages, the job summary, the base ref option, and running as a script.
+ * messages, the job summary, the base ref option, writing generated files,
+ * and running as a script.
  */
-import { appendFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 export { errorMessage } from "../unknown.js";
@@ -58,6 +59,23 @@ export function parseBaseArgs(
     i++;
   }
   return { base };
+}
+
+/**
+ * Writes `text` at the `/`-separated `path` under `root` unless the file
+ * already holds it; resolves with whether it wrote.
+ */
+export async function update(
+  root: string,
+  path: string,
+  text: string,
+): Promise<boolean> {
+  const target = join(root, path);
+  const current = await readFile(target, "utf8").catch(() => null);
+  if (current === text) return false;
+  await mkdir(dirname(target), { recursive: true });
+  await writeFile(target, text);
+  return true;
 }
 
 /** Whether the module at `moduleUrl` is the script Node was started with. */

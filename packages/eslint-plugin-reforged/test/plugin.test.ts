@@ -76,15 +76,17 @@ function onTick(): void {
 TimerStart(ticker, 1, true, onTick);
 `;
 
+/** The package's manifest: its name, version and docs version label. */
+const packageJson = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+) as { name: string; version: string; reforged: { docs: string } };
+
 function docsPage(rule: string): URL {
   return new URL(`../docs/${rule}.md`, import.meta.url);
 }
 
 describe("the plugin object", () => {
   it("names itself with the package name and version", () => {
-    const packageJson = JSON.parse(
-      readFileSync(new URL("../package.json", import.meta.url), "utf8"),
-    ) as { name: string; version: string };
     expect(plugin.meta).toEqual({
       name: packageJson.name,
       version: packageJson.version,
@@ -182,9 +184,11 @@ describe.each(Object.keys(decidedTable))("rule %s", (rule) => {
     expect(meta).toBeDefined();
   });
 
-  it("links to its docs page", () => {
+  it("links to its page under the Lint rules guide of its docs version", () => {
+    // A label the site answers at: `next`, or the library's `major.minor`.
+    expect(packageJson.reforged.docs).toMatch(/^(?:next|\d+\.\d+)$/);
     expect(meta?.docs?.url).toBe(
-      `https://phmilk.github.io/reforged-ts/next/lint/${rule}`,
+      `https://phmilk.github.io/reforged-ts/docs/${packageJson.reforged.docs}/guides/lint-rules/${rule}`,
     );
     expect(meta?.docs?.description).toBeTruthy();
   });

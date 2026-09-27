@@ -1,0 +1,13 @@
+{
+  // A library the reference tests run TypeDoc on, with its examples.
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [],
+    "strict": true,
+    "noEmit": true
+  },
+  "include": ["src", "examples"]
+}

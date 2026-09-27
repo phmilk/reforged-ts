@@ -276,7 +276,7 @@ describe.each(PACKAGES)("the $dir tarball", (expected) => {
 
   it("points AI agents at the documentation of its version", () => {
     expect(tarball().read("README.md")).toMatch(
-      /^\*\*For AI agents:\*\* .*\[llms\.txt\]\(https:\/\/[^)]+\)/m,
+      /^\*\*For AI agents:\*\* .*\[llms\.txt\]\(https:\/\/phmilk\.github\.io\/reforged-ts\/docs\/(?:next|\d+\.\d+)\/llms\.txt\)/m,
     );
   });
 });

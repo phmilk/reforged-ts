@@ -1,19 +1,27 @@
 /**
  * `release:version`: the version step of a release. It runs
  * `changeset version` in the repository root (versions, changelogs, the
- * consumed changesets moved or removed), then the compatibility matrix
- * generator (`release:matrix`), so the Version Packages pull request carries
- * the matrix row. `changeset version` needs a GitHub token for the changelog
- * generator (`GITHUB_TOKEN`, or a `.env` file at the root). It does not run
- * the major-changeset gate, which reads the pending changesets and so runs
- * before this step. Exit codes: 0 versioned and generated, 1 either step
- * failed (the matrix is not generated when `changeset version` fails), 2
- * usage.
+ * consumed changesets moved or removed), then stamps the docs version of the
+ * release into the packages (`docs-version.ts`: the lint plugin's
+ * `reforged.docs` and the READMEs' `llms.txt` links), then runs the
+ * compatibility matrix generator (`release:matrix`), so the Version
+ * Packages pull request carries the stamp and the matrix row.
+ * `changeset version` needs a GitHub token for the changelog generator
+ * (`GITHUB_TOKEN`, or a `.env` file at the root). It does not run the
+ * major-changeset gate, which reads the pending changesets and so runs
+ * before this step. Exit codes: 0 versioned, stamped and generated, 1 a
+ * step failed (the steps after it do not run), 2 usage.
  */
 import { createRequire } from "node:module";
+import { stampDocsVersion } from "../docs-version.js";
 import { runInherited } from "../process.js";
 import { repositoryRoot } from "../workspace.js";
-import { invokedDirectly, PROCESS_OUTPUT, type Output } from "./common.js";
+import {
+  invokedDirectly,
+  PROCESS_OUTPUT,
+  update,
+  type Output,
+} from "./common.js";
 import { DEFAULT_CONTEXT, main as matrix } from "./matrix.js";
 
 const USAGE = "Usage: release:version\n";
@@ -58,6 +66,21 @@ export async function main(
     );
     return 1;
   }
+  const stamp = await stampDocsVersion(context.root);
+  if (!stamp.ok) {
+    output.stderr(
+      stamp.problems.map((problem) => `${problem}\n`).join("") +
+        "The docs version was not stamped and the compatibility matrix was not generated: docs/release.md#the-version-step-releaseversion.\n",
+    );
+    return 1;
+  }
+  const written: string[] = [];
+  for (const [path, text] of stamp.files) {
+    if (await update(context.root, path, text)) written.push(path);
+  }
+  output.stdout(
+    `Docs version ${stamp.label}: ${written.length === 0 ? "no file changed" : `wrote ${written.join(", ")}`}.\n`,
+  );
   return matrix([], output, { root: context.root, now: context.now });
 }
 

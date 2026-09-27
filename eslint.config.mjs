@@ -15,6 +15,12 @@ export default defineConfig(
     "**/dist/**",
     "packages/reforged-types/build/**",
     "release/build/**",
+    "website/build/**",
+    "website/.docusaurus/**",
+    "website/docs/api/reforged-ts/**",
+    "website/typings/*/**",
+    // The docs versions docs:version cuts: frozen copies of the docs tree.
+    "website/versioned_docs/**",
     "wrapper-coverage/build/**",
     "packages/reforged-test/lua/**",
     "packages/reforged-ts/dist-test/**",
@@ -34,7 +40,7 @@ export default defineConfig(
   // Every TypeScript file belongs to one tsconfig; the project service finds
   // it (see tsconfig.json at the root for the ones not named tsconfig.json).
   {
-    files: ["**/*.{ts,mts,cts}"],
+    files: ["**/*.{ts,tsx,mts,cts}"],
     extends: [
       tseslint.configs.strictTypeChecked,
       tseslint.configs.stylisticTypeChecked,
@@ -98,6 +104,24 @@ export default defineConfig(
           project: "packages/reforged-ts/examples/tsconfig.json",
         },
       },
+    },
+  },
+  // The docs site's components import Docusaurus' client modules by the
+  // aliases its bundler maps (`@docusaurus/useDocusaurusContext`, `@theme/*`),
+  // which @docusaurus/module-type-aliases declares but no file resolves, and
+  // the site's own files by `@site/*`, the path of the site's tsconfig.
+  {
+    files: ["website/src/**/*.{ts,tsx}"],
+    settings: {
+      "import-x/resolver": {
+        typescript: { project: "website/tsconfig.json" },
+      },
+    },
+    rules: {
+      "import-x/no-unresolved": [
+        "error",
+        { ignore: ["^@docusaurus/", "^@theme(-original)?/"] },
+      ],
     },
   },
   // Last: Prettier formats, and eslint-config-prettier turns off the rules

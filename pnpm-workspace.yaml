@@ -2,6 +2,8 @@ packages:
   - packages/*
   # The release scripts (#46), a private package: never published.
   - release
+  # The docs site (#40), a private package: never published.
+  - website
   # The Wrapper coverage report (#163), a private package: never published.
   - wrapper-coverage
 
@@ -48,3 +50,36 @@ catalog:
   # GitHub generator links each entry to its pull request and its author.
   "@changesets/cli": ^3.0.3
   "@changesets/changelog-github": ^1.0.1
+  # The docs site (#40, ADR 0005). Docusaurus checks that its packages share
+  # one version, so they are pinned together and move together.
+  "@docusaurus/core": 3.10.2
+  "@docusaurus/preset-classic": 3.10.2
+  "@docusaurus/plugin-content-docs": 3.10.2
+  "@docusaurus/plugin-client-redirects": 3.10.2
+  "@docusaurus/faster": 3.10.2
+  "@docusaurus/module-type-aliases": 3.10.2
+  "@docusaurus/tsconfig": 3.10.2
+  "@docusaurus/types": 3.10.2
+  "@mdx-js/react": ^3.1.1
+  react: ^19.3.0
+  react-dom: ^19.3.0
+  "@types/react": ^19.3.0
+  # The API reference (#40): TypeDoc, its Markdown output and the Docusaurus
+  # plugin that runs it into the docs tree. The two plugins follow TypeDoc's
+  # minor (their peer ranges name it); move the three together.
+  typedoc: ^0.28.20
+  typedoc-plugin-markdown: ^4.13.1
+  docusaurus-plugin-typedoc: ^1.4.3
+  # The docs site's search and LLM files (#40): offline search over the docs
+  # version being read, and llms.txt, llms-full.txt and a Markdown copy of
+  # each page per docs version.
+  "@easyops-cn/docusaurus-search-local": ^0.55.3
+  docusaurus-plugin-llms: 0.6.0
+
+packageExtensions:
+  # docusaurus-plugin-llms' declarations import @docusaurus/types, which it
+  # does not declare: without this peer its plugin type resolves only through
+  # pnpm's hidden hoisting, and the lint reports an unresolved type.
+  docusaurus-plugin-llms:
+    peerDependencies:
+      "@docusaurus/types": "*"

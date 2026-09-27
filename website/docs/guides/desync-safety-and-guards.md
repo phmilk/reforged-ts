@@ -1,6 +1,7 @@
 ---
 title: Desync safety and guards
 sidebar_label: Desync safety and guards
+sidebar_position: 9
 description: What the type layer, the lint and Dev mode catch of the classic Warcraft III scripting pitfalls, every runtime Guard with its message, and the four safe collections.
 ---
 
@@ -13,7 +14,7 @@ reforged-ts catches these mistakes with Guards in three layers:
 | Layer              | What it is                                                                                                                               | When it runs                    |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
 | The type layer     | Branded Handles, creation members typed non-null, lookups typed `X \| undefined`, `@async` on the Natives whose value differs per client | In the editor, at compile time  |
-| The lint layer     | `eslint-plugin-reforged`, type-aware rules the Template enables by default (see the Lint rules guide)                                    | In the editor and in CI         |
+| The lint layer     | `eslint-plugin-reforged`, type-aware rules the Template enables by default (see the [Lint rules](lint-rules/index.md) guide)             | In the editor and in CI         |
 | The runtime Guards | Checks inside the library, active only in Dev mode                                                                                       | While the map runs, in Dev mode |
 
 This page covers the runtime Guards, how Dev mode is switched, what `Reforged.debug.report()` counts, and the four collections that replace the unsafe patterns. Every runtime message starts with `reforged-ts:`, so searching this page for the text on your screen finds its explanation.
@@ -90,9 +91,13 @@ With Dev mode off, errors propagate as they do in plain Lua.
 **What it does.** `MapPlayer.runLocal(player, fn)` is the one sanctioned way to run code for one player: it runs `fn` on the client whose local player is `player`, and does nothing elsewhere.
 
 ```ts
-MapPlayer.runLocal(player, () => {
-  frame.visible = true; // visuals only
-});
+import { MapPlayer, type Frame } from "reforged-ts";
+
+export function show(player: MapPlayer, frame: Frame): void {
+  MapPlayer.runLocal(player, () => {
+    frame.visible = true; // visuals only
+  });
+}
 ```
 
 In Dev mode, inside `fn`, these raise at the line that called them:
@@ -114,7 +119,7 @@ reforged-ts: MapPlayer#1048576 MapPlayer.runLocal failed: <Lua error>
 
 With Dev mode off, `runLocal` is the bare comparison and nothing inside it raises.
 
-A raw `if (GetLocalPlayer() === p)` branch bypasses the library, so the runtime layer cannot see it: the lint rule `no-game-state-in-local-branch` covers raw branches, `player.isLocal()` branches and `runLocal` functions alike, and also reports random-number calls in local code (D2), which the runtime layer does not check.
+A raw `if (GetLocalPlayer() === p)` branch bypasses the library, so the runtime layer cannot see it: the lint rule [`no-game-state-in-local-branch`](lint-rules/no-game-state-in-local-branch.md) covers raw branches, `player.isLocal()` branches and `runLocal` functions alike, and also reports random-number calls in local code (D2), which the runtime layer does not check.
 
 ### Creation before the globals Init stage (D7)
 
@@ -126,7 +131,7 @@ A raw `if (GetLocalPlayer() === p)` branch bypasses the library, so the runtime 
 reforged-ts: Timer created before the globals Init stage: create Handles in Init.onGlobals or a later stage, not at module top level
 ```
 
-The creation Native has run by then, so the Guard does not prevent the early Handle: it names the line in Dev mode, so the creation is moved before a release build ships. Creations inside `Init.onGlobals` callbacks or later pass. The documented non-null lookups (`MapPlayer.fromLocal()`, `unit.getOwner()`) are lookups, not creations, and pass. The lint rule `no-handles-at-module-top-level` reports the same mistake in the editor.
+The creation Native has run by then, so the Guard does not prevent the early Handle: it names the line in Dev mode, so the creation is moved before a release build ships. Creations inside `Init.onGlobals` callbacks or later pass. The documented non-null lookups (`MapPlayer.fromLocal()`, `unit.getOwner()`) are lookups, not creations, and pass. The lint rule [`no-handles-at-module-top-level`](lint-rules/no-handles-at-module-top-level.md) reports the same mistake in the editor.
 
 ### Use after destroy (S3)
 
@@ -194,7 +199,7 @@ The Wrapper counts are a heuristic, and the report says so on its second line. T
 
 ## The four collections
 
-Two unsafe patterns have a safe replacement in the library. The lint layer points at them by name: `no-unordered-iteration` names `SyncedMap` and `SyncedSet`, and `prefer-handle-map` names `HandleMap` and `HandleSet`. All four work the same in Dev mode and in release, and have the `Map` or `Set` surface: `get`, `set` or `add`, `has`, `delete`, `clear`, `size`, `forEach`, `keys`, `values`, `entries`, `for...of`, and a constructor taking the first entries.
+Two unsafe patterns have a safe replacement in the library. The lint layer points at them by name: [`no-unordered-iteration`](lint-rules/no-unordered-iteration.md) names `SyncedMap` and `SyncedSet`, and [`prefer-handle-map`](lint-rules/prefer-handle-map.md) names `HandleMap` and `HandleSet`. All four work the same in Dev mode and in release, and have the `Map` or `Set` surface: `get`, `set` or `add`, `has`, `delete`, `clear`, `size`, `forEach`, `keys`, `values`, `entries`, `for...of`, and a constructor taking the first entries.
 
 | Instead of                                                                      | Use                      | Why                                                                                     |
 | ------------------------------------------------------------------------------- | ------------------------ | --------------------------------------------------------------------------------------- |
@@ -223,10 +228,13 @@ A plain `Map` or `Set` is not unordered: typescript-to-lua's runtime keeps their
 They are keyed by Wrappers, and an entry disappears when its key is destroyed: `unit.destroy()` removes the unit from every `HandleMap` and `HandleSet` holding it.
 
 ```ts
-import { HandleMap, Unit } from "reforged-ts";
+import { HandleMap, type Unit } from "reforged-ts";
 
 const kills = new HandleMap<Unit, number>();
-kills.set(hero, (kills.get(hero) ?? 0) + 1);
+
+export function countKill(hero: Unit): void {
+  kills.set(hero, (kills.get(hero) ?? 0) + 1);
+}
 ```
 
 - They are keyed by the Handle, not the Wrapper object, so an entry set through the `Widget` that `Widget.fromEvent()` returned is found through the `Unit` the registry upgraded it to. Keys come back as the current Wrapper.
@@ -238,4 +246,4 @@ kills.set(hero, (kills.get(hero) ?? 0) + 1);
 - **Code that bypasses the library.** Raw `GetLocalPlayer()` branches, raw `CreateGroup()` calls and raw Native callbacks are not seen by the runtime layer. The lint covers the raw local branches.
 - **Destruction the library does not see.** A unit that decays or an effect the game removes is still live in the leak report, and still a key of a `HandleMap`.
 - **Stack traces.** The game has no `debug` library: a report carries the Wrapper, the member and the `war3map.lua` line of the error, never a traceback.
-- **Pitfalls with no runtime Guard.** Sleeping in a callback (`TriggerSleepAction`, `PolledWait`: the lint rule `no-unsafe-natives`) and asset paths with a dot in the file name (`no-dotted-asset-paths`) are lint-only; a frame Native called on the wrong frame kind, and frames created before the game started, are not guarded yet.
+- **Pitfalls with no runtime Guard.** Sleeping in a callback (`TriggerSleepAction`, `PolledWait`: the lint rule [`no-unsafe-natives`](lint-rules/no-unsafe-natives.md)) and asset paths with a dot in the file name ([`no-dotted-asset-paths`](lint-rules/no-dotted-asset-paths.md)) are lint-only; a frame Native called on the wrong frame kind, and frames created before the game started, are not guarded yet.

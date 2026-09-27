@@ -96,6 +96,21 @@ export default defineConfig({
         },
       },
       {
+        // The docs site's own code (seam B of #40), in Node, through its
+        // programmatic entry points, on fixture repositories the tests
+        // create or TypeDoc reads. The site itself is built by docs:check.
+        test: {
+          name: "website",
+          root: "website",
+          // A test's first TypeDoc run loads TypeScript and TypeDoc cold:
+          // seconds, more under a loaded machine or CI.
+          testTimeout: 30_000,
+          include: ["test/**/*.test.{mts,ts}"],
+          exclude: ["**/fixtures/**"],
+          environment: "node",
+        },
+      },
+      {
         // The Wrapper coverage report, in Node, through its programmatic
         // entry points, on fixture inputs the tests create and on the real
         // library and manifest (the drift test of the committed report).
@@ -129,6 +144,22 @@ export default defineConfig({
         pattern:
           /\/packages\/eslint-plugin-reforged\/(?:data\/.+\.json|test\/fixture-project\/.+)$/,
         testsToRun: () => "packages/eslint-plugin-reforged/test",
+      },
+      {
+        // docs:collect reads the plugin's rule pages and registry from disk.
+        pattern:
+          /\/packages\/eslint-plugin-reforged\/(?:docs\/.+\.md|src\/rules\/index\.ts)$/,
+        testsToRun: () => "website/test",
+      },
+      {
+        // docs:collect reads the rename map and the behaviour changes too.
+        pattern: /\/packages\/reforged-ts\/migration\/.+$/,
+        testsToRun: () => "website/test",
+      },
+      {
+        // The snippet check reads the docs pages from disk.
+        pattern: /\/website\/docs\/.+\.mdx?$/,
+        testsToRun: () => "website/test/snippets.test.mts",
       },
       {
         // The coverage report's drift test reads the library sources, the
