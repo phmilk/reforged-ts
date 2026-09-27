@@ -364,7 +364,7 @@ export class MapPlayer extends Handle<player> {
    * Adds or removes blight in a circle around `where`, through
    * `SetBlightLoc`.
    */
-  public setBlightLoc(where: Point, radius: number, addBlight: boolean) {
+  public setBlightAtPoint(where: Point, radius: number, addBlight: boolean) {
     SetBlightLoc(this.handle, where.handle, radius, addBlight);
   }
 
@@ -403,7 +403,7 @@ export class MapPlayer extends Handle<player> {
    * Sets the fog state over a circle around `center` for the player, through
    * `SetFogStateRadiusLoc`.
    */
-  public setFogStateRadiusLoc(
+  public setFogStateRadiusAtPoint(
     whichState: fogstate,
     center: Point,
     radius: number,

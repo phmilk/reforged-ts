@@ -96,11 +96,11 @@ export class Point extends Handle<location> {
    * the member is typed `| undefined` rather than throwing, because outside
    * the event the game has nothing to give.
    * @remarks Each call returns a new Point for a new location, and nothing
-   * destroys it for you: `destroy()` it. Dev mode neither counts it as
-   * created nor guards it inside `MapPlayer.runLocal`.
+   * destroys it for you: `destroy()` it. Dev mode counts it as created and,
+   * inside `MapPlayer.runLocal`, raises as for any creation.
    */
   public static fromMousePosition(): Point | undefined {
-    return this.fromHandle(BlzGetTriggerPlayerMousePosition());
+    return this.fromAllocated(BlzGetTriggerPlayerMousePosition());
   }
 
   /**
@@ -111,11 +111,11 @@ export class Point extends Handle<location> {
    * `| undefined` rather than throwing, because outside a point order the
    * game has nothing to give.
    * @remarks Each call returns a new Point for a new location, and nothing
-   * destroys it for you: `destroy()` it. Dev mode neither counts it as
-   * created nor guards it inside `MapPlayer.runLocal`.
+   * destroys it for you: `destroy()` it. Dev mode counts it as created and,
+   * inside `MapPlayer.runLocal`, raises as for any creation.
    */
   public static fromOrderPoint(): Point | undefined {
-    return this.fromHandle(GetOrderPointLoc());
+    return this.fromAllocated(GetOrderPointLoc());
   }
 
   /**
@@ -126,10 +126,10 @@ export class Point extends Handle<location> {
    * member is typed `| undefined` rather than throwing, because a spell
    * without a target point gives nothing.
    * @remarks Each call returns a new Point for a new location, and nothing
-   * destroys it for you: `destroy()` it. Dev mode neither counts it as
-   * created nor guards it inside `MapPlayer.runLocal`.
+   * destroys it for you: `destroy()` it. Dev mode counts it as created and,
+   * inside `MapPlayer.runLocal`, raises as for any creation.
    */
   public static fromSpellTarget(): Point | undefined {
-    return this.fromHandle(GetSpellTargetLoc());
+    return this.fromAllocated(GetSpellTargetLoc());
   }
 }

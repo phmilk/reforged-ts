@@ -278,7 +278,7 @@ describe("MapPlayer.setRaceSkin", () => {
       native: "SetFogStateRadiusLoc",
       answer: () => undefined,
       member: () => {
-        player.setFogStateRadiusLoc(masked, center, 300, true);
+        player.setFogStateRadiusAtPoint(masked, center, 300, true);
       },
       line: `SetFogStateRadiusLoc(${ref}, ${maskedRef}, ${centerRef}, 300, true)`,
     }),
@@ -310,7 +310,7 @@ describe("MapPlayer.setRaceSkin", () => {
       native: "SetBlightLoc",
       answer: () => undefined,
       member: () => {
-        player.setBlightLoc(center, 250, false);
+        player.setBlightAtPoint(center, 250, false);
       },
       line: `SetBlightLoc(${ref}, ${centerRef}, 250, false)`,
     }),

@@ -77,6 +77,11 @@ type Initialising<C> = { -readonly [K in keyof C]: C[K] };
  * its creation members return `this.expect(Native(...), detail)`, typed `X`.
  * A member whose Native allocates another Wrapper's Handle calls that
  * Wrapper's protected `expect`: `return Point.expect(GetUnitLoc(this.handle))`.
+ * An event lookup whose Native allocates a new Handle on each call, and
+ * returns nothing outside its event (`Point.fromOrderPoint`), is a creation
+ * typed `X | undefined`: it returns `this.fromAllocated(Native())`, which
+ * returns undefined for nothing and otherwise counts and guards the Wrapper
+ * as `expect` does.
  * Two exceptions to "lookups go through `fromHandle`":
  *
  * - The documented non-null path: `unit.getOwner()` and
@@ -155,6 +160,25 @@ export abstract class Handle<T extends handle> {
     handle: C["handle"] | undefined,
   ): C | undefined {
     return handle === undefined ? undefined : wrap(this, handle);
+  }
+
+  /**
+   * The optional creation: the Wrapper for a Handle a Native has just
+   * allocated, or undefined when it returned nothing, for an event lookup
+   * that allocates (`GetOrderPointLoc` returns a new location on each call,
+   * and nothing outside a point order). Nothing is not an error there, so it
+   * does not throw as `expect` does; a Handle is a creation, so in Dev mode
+   * it passes `expect`'s Guards and is counted created, with the same
+   * tail-position rule: `return this.fromAllocated(GetOrderPointLoc())`.
+   */
+  protected static fromAllocated<C extends Handle<handle>>(
+    this: WrapperClass<C>,
+    handle: C["handle"] | undefined,
+  ): C | undefined {
+    if (handle === undefined) {
+      return undefined;
+    }
+    return wrapExpected(this, handle, "", true);
   }
 
   /**
@@ -276,7 +300,8 @@ export function expectUnwrapped<T extends handle>(
  * The creation step, shared by every Wrapper and the one place its errors
  * are raised: the Wrapper for `handle`, or the error naming `cls` and
  * `detail` when `handle` is undefined. Reached only through tail calls (from
- * `expect`, `expectFound` or `expectWrapper`, themselves tail-called by the
+ * `expect`, `expectFound`, `fromAllocated` or `expectWrapper`, themselves
+ * tail-called by the
  * member), so level 2 names the frame that called the member.
  *
  * It is the one place a creation-time Guard goes, behind one read of Dev
