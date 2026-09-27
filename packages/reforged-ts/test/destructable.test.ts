@@ -10,6 +10,7 @@
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Destructable, type DestructableOptions } from "../src/index";
 import { handleRef } from "./support/handle-ref";
+import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -220,3 +221,37 @@ describe("Destructable.fromEvent", () => {
     ).toBe(destructable);
   });
 });
+
+{
+  const destructable = Destructable.create({ typeId: tree, x: 0, y: 0 });
+  const lookups = [
+    ["GetFilterDestructable", () => Destructable.fromFilter()],
+    ["GetEnumDestructable", () => Destructable.fromEnum()],
+    ["GetOrderTargetDestructable", () => Destructable.fromOrderTarget()],
+  ] as const;
+
+  describeNatives(
+    "Destructable event lookups",
+    lookups.map(([native, member]) =>
+      nativeCase({
+        native,
+        answer: () => destructable.handle,
+        member,
+        line: `${native}()`,
+        returns: destructable,
+      }),
+    ),
+  );
+
+  describeNatives(
+    "Destructable event lookups when their Native answers nil",
+    lookups.map(([native, member]) =>
+      nativeCase({
+        native,
+        answer: () => undefined,
+        member,
+        line: `${native}()`,
+      }),
+    ),
+  );
+}

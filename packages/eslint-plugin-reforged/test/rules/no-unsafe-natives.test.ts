@@ -11,6 +11,8 @@ const ruleTester = createRuleTester();
 const calls: Record<string, string> = {
   TriggerSleepAction: "TriggerSleepAction(1);",
   PolledWait: "PolledWait(1);",
+  TriggerWaitForSound:
+    'TriggerWaitForSound(CreateSoundFromLabel("x", false, false, false, 0, 0)!, 0);',
   DestroyEffectAfterTimeBJ:
     'DestroyEffectAfterTimeBJ(AddSpecialEffect("model.mdx", 0, 0)!, 2);',
   CreateTimerBJ: "CreateTimerBJ(false, 1);",

@@ -9,6 +9,7 @@
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { EquipmentType, Item, ItemTag } from "../src/index";
 import { handleRef } from "./support/handle-ref";
+import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -248,3 +249,40 @@ describe("Item.chooseRandomWithFilter", () => {
     ).toEqual(0);
   });
 });
+
+{
+  const item = Item.create(ration, 0, 0);
+  const lookups = [
+    ["GetFilterItem", () => Item.fromFilter()],
+    ["GetEnumItem", () => Item.fromEnum()],
+    ["BlzGetAbsorbingItem", () => Item.fromAbsorbing()],
+    ["BlzGetStackingItemSource", () => Item.fromStackingSource()],
+    ["BlzGetStackingItemTarget", () => Item.fromStackingTarget()],
+    ["GetOrderTargetItem", () => Item.fromOrderTarget()],
+  ] as const;
+
+  describeNatives(
+    "Item event lookups",
+    lookups.map(([native, member]) =>
+      nativeCase({
+        native,
+        answer: () => item.handle,
+        member,
+        line: `${native}()`,
+        returns: item,
+      }),
+    ),
+  );
+
+  describeNatives(
+    "Item event lookups when their Native answers nil",
+    lookups.map(([native, member]) =>
+      nativeCase({
+        native,
+        answer: () => undefined,
+        member,
+        line: `${native}()`,
+      }),
+    ),
+  );
+}

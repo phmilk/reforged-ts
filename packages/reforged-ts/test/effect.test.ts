@@ -1,12 +1,13 @@
 /** @noSelfInFile */
 
-// Effect on the Handle base: its four creation members throw naming the
-// model path (or the ability id of a spell effect), lookups return undefined.
+// Effect on the Handle base: its creation members throw naming the model
+// path (or the ability of a spell effect), lookups return undefined.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
-import { Effect, Widget } from "../src/index";
+import { Effect, Point, Widget } from "../src/index";
 import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
+import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -176,3 +177,91 @@ describe("Effect named animations", () => {
     );
   });
 });
+
+{
+  /** A fresh effect handle, for a creation Native to answer. */
+  const fresh = () => defined(AddSpecialEffect("model.mdx", 0, 0), "an effect");
+  const where = Point.create(64, -32);
+  const whereRef = handleRef("location", where.handle);
+  const casterRef = handleRef("effecttype", caster);
+  const targetRef = handleRef("unit", target.handle);
+  const factories = [
+    {
+      native: "AddSpecialEffectLoc",
+      handle: fresh(),
+      create: () => Effect.createAtPoint("model.mdx", where),
+      line: `AddSpecialEffectLoc("model.mdx", ${whereRef})`,
+      detail: "model.mdx",
+    },
+    {
+      native: "AddSpellEffect",
+      handle: fresh(),
+      create: () => Effect.createSpell("AHtc", caster, 16, 32),
+      line: `AddSpellEffect("AHtc", ${casterRef}, 16, 32)`,
+      detail: "AHtc",
+    },
+    {
+      native: "AddSpellEffectLoc",
+      handle: fresh(),
+      create: () => Effect.createSpellAtPoint("AHtc", caster, where),
+      line: `AddSpellEffectLoc("AHtc", ${casterRef}, ${whereRef})`,
+      detail: "AHtc",
+    },
+    {
+      native: "AddSpellEffectByIdLoc",
+      handle: fresh(),
+      create: () => Effect.createSpellAtPoint(thunderClap, caster, where),
+      line: `AddSpellEffectByIdLoc(${tostring(thunderClap)}, ${casterRef}, ${whereRef})`,
+      detail: "AHtc",
+    },
+    {
+      native: "AddSpellEffectTarget",
+      handle: fresh(),
+      create: () =>
+        Effect.createSpellAttachment("AHtc", caster, target, "origin"),
+      line: `AddSpellEffectTarget("AHtc", ${casterRef}, ${targetRef}, "origin")`,
+      detail: "AHtc",
+    },
+  ] as const;
+
+  describeNatives(
+    "Effect creation variants",
+    factories.map(({ native, handle, create, line }) =>
+      nativeCase({
+        native,
+        answer: () => handle,
+        member: () => create().handle,
+        line,
+        returns: handle,
+      }),
+    ),
+  );
+
+  describe("Effect creation variants when their Native returns nil", () => {
+    for (const { native, create, detail } of factories) {
+      it(`${native} throws naming ${detail}`, () => {
+        const message = withNative(
+          native,
+          () => undefined,
+          () =>
+            raisedIn(() => {
+              create();
+            }),
+        );
+        expect(message).toEqual(
+          `reforged-ts: failed to create Effect (${detail})`,
+        );
+      });
+    }
+  });
+
+  describe("Effect.createSpellAttachment with an ability string", () => {
+    it("keeps its target", () => {
+      const effect = withNative("AddSpellEffectTarget", fresh, () =>
+        Effect.createSpellAttachment("AHtc", caster, target, "chest"),
+      );
+      expect(effect.attachWidget).toBe(target);
+      expect(effect.attachPointName).toEqual("chest");
+    });
+  });
+}

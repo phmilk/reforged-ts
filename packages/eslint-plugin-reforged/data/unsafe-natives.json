@@ -10,6 +10,11 @@
     "replacement": "Continue in a timer callback instead: Timer.after(seconds, callback)."
   },
   {
+    "name": "TriggerWaitForSound",
+    "reason": "is a trigger action wait like TriggerSleepAction: it yields the running thread until the sound ends, so it has the same wrong-context failure outside a trigger action.",
+    "replacement": "Continue in a timer callback when the sound ends instead: Timer.after(sound.duration / 1000, callback)."
+  },
+  {
     "name": "DestroyEffectAfterTimeBJ",
     "reason": "passes the effect through shared BJ globals to an ExecuteFunc thread that waits with TriggerSleepAction, so concurrent calls race and a killed thread never destroys the effect.",
     "replacement": "Destroy the effect from a timer callback instead: Timer.after(seconds, () => effect.destroy())."

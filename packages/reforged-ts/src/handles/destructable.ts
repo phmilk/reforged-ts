@@ -555,8 +555,33 @@ export class Destructable extends Widget {
     ShowDestructable(this.handle, flag);
   }
 
+  /**
+   * The destructable an enumeration is at, or undefined outside one, through
+   * `GetEnumDestructable`.
+   */
+  public static fromEnum(): Destructable | undefined {
+    return this.fromHandle(GetEnumDestructable());
+  }
+
   public static override fromEvent(): Destructable | undefined {
     return this.fromHandle(GetTriggerDestructable());
+  }
+
+  /**
+   * The destructable an enumeration's filter is at, or undefined outside
+   * one, through `GetFilterDestructable`.
+   */
+  public static fromFilter(): Destructable | undefined {
+    return this.fromHandle(GetFilterDestructable());
+  }
+
+  /**
+   * The destructable a target order targets, or undefined outside a target
+   * order or when the target is not a destructable, through
+   * `GetOrderTargetDestructable`.
+   */
+  public static override fromOrderTarget(): Destructable | undefined {
+    return this.fromHandle(GetOrderTargetDestructable());
   }
 
   /**

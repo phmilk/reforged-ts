@@ -94,6 +94,27 @@ export class Rectangle extends Handle<rect> {
     MoveRectToLoc(this.handle, newCenterPoint.handle);
   }
 
+  /**
+   * Sets the animation of every doodad of type `doodadId` in the rect,
+   * through `SetDoodadAnimationRect`.
+   * @param animRandom Plays a random animation of that name.
+   */
+  public setDoodadAnimation(
+    doodadId: number,
+    animName: string,
+    animRandom: boolean,
+  ) {
+    SetDoodadAnimationRect(this.handle, doodadId, animName, animRandom);
+  }
+
+  /**
+   * Sets the player color of every doodad of type `doodadId` in the rect,
+   * through `SetDoodadColorRect` (3.0.0).
+   */
+  public setDoodadColor(doodadId: number, color: playercolor) {
+    SetDoodadColorRect(this.handle, doodadId, color);
+  }
+
   public setRect(minX: number, minY: number, maxX: number, maxY: number) {
     SetRect(this.handle, minX, minY, maxX, maxY);
   }

@@ -4,9 +4,9 @@
   "totals": {
     "natives": 1681,
     "owned": 984,
-    "covered": 953,
-    "missing": 31,
-    "excluded": 0,
+    "covered": 982,
+    "missing": 0,
+    "excluded": 2,
     "unowned": 697
   },
   "problems": [],
@@ -2278,11 +2278,25 @@
       "type": "item",
       "counts": {
         "owned": 67,
-        "covered": 61,
-        "missing": 6,
+        "covered": 67,
+        "missing": 0,
         "excluded": 0
       },
       "covered": [
+        {
+          "name": "GetFilterItem",
+          "signature": "GetFilterItem takes nothing returns item",
+          "coveredBy": [
+            "Item"
+          ]
+        },
+        {
+          "name": "GetEnumItem",
+          "signature": "GetEnumItem takes nothing returns item",
+          "coveredBy": [
+            "Item"
+          ]
+        },
         {
           "name": "GetSoldItem",
           "signature": "GetSoldItem takes nothing returns item",
@@ -2307,6 +2321,34 @@
         {
           "name": "GetUnequippedItem",
           "signature": "GetUnequippedItem takes nothing returns item",
+          "coveredBy": [
+            "Item"
+          ]
+        },
+        {
+          "name": "BlzGetAbsorbingItem",
+          "signature": "BlzGetAbsorbingItem takes nothing returns item",
+          "coveredBy": [
+            "Item"
+          ]
+        },
+        {
+          "name": "BlzGetStackingItemSource",
+          "signature": "BlzGetStackingItemSource takes nothing returns item",
+          "coveredBy": [
+            "Item"
+          ]
+        },
+        {
+          "name": "BlzGetStackingItemTarget",
+          "signature": "BlzGetStackingItemTarget takes nothing returns item",
+          "coveredBy": [
+            "Item"
+          ]
+        },
+        {
+          "name": "GetOrderTargetItem",
+          "signature": "GetOrderTargetItem takes nothing returns item",
           "coveredBy": [
             "Item"
           ]
@@ -2711,32 +2753,7 @@
           ]
         }
       ],
-      "missing": [
-        {
-          "name": "GetFilterItem",
-          "signature": "GetFilterItem takes nothing returns item"
-        },
-        {
-          "name": "GetEnumItem",
-          "signature": "GetEnumItem takes nothing returns item"
-        },
-        {
-          "name": "BlzGetAbsorbingItem",
-          "signature": "BlzGetAbsorbingItem takes nothing returns item"
-        },
-        {
-          "name": "BlzGetStackingItemSource",
-          "signature": "BlzGetStackingItemSource takes nothing returns item"
-        },
-        {
-          "name": "BlzGetStackingItemTarget",
-          "signature": "BlzGetStackingItemTarget takes nothing returns item"
-        },
-        {
-          "name": "GetOrderTargetItem",
-          "signature": "GetOrderTargetItem takes nothing returns item"
-        }
-      ],
+      "missing": [],
       "excluded": []
     },
     {
@@ -2744,11 +2761,32 @@
       "type": "destructable",
       "counts": {
         "owned": 58,
-        "covered": 55,
-        "missing": 3,
+        "covered": 58,
+        "missing": 0,
         "excluded": 0
       },
       "covered": [
+        {
+          "name": "GetFilterDestructable",
+          "signature": "GetFilterDestructable takes nothing returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "GetEnumDestructable",
+          "signature": "GetEnumDestructable takes nothing returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
+        {
+          "name": "GetOrderTargetDestructable",
+          "signature": "GetOrderTargetDestructable takes nothing returns destructable",
+          "coveredBy": [
+            "Destructable"
+          ]
+        },
         {
           "name": "GetSpellTargetDestructable",
           "signature": "GetSpellTargetDestructable takes nothing returns destructable",
@@ -3135,20 +3173,7 @@
           ]
         }
       ],
-      "missing": [
-        {
-          "name": "GetFilterDestructable",
-          "signature": "GetFilterDestructable takes nothing returns destructable"
-        },
-        {
-          "name": "GetEnumDestructable",
-          "signature": "GetEnumDestructable takes nothing returns destructable"
-        },
-        {
-          "name": "GetOrderTargetDestructable",
-          "signature": "GetOrderTargetDestructable takes nothing returns destructable"
-        }
-      ],
+      "missing": [],
       "excluded": []
     },
     {
@@ -3473,7 +3498,6 @@
           "name": "IsPlayerInForce",
           "signature": "IsPlayerInForce takes player whichPlayer, force whichForce returns boolean",
           "coveredBy": [
-            "Force",
             "MapPlayer"
           ]
         },
@@ -3899,8 +3923,8 @@
       "type": "force",
       "counts": {
         "owned": 11,
-        "covered": 10,
-        "missing": 1,
+        "covered": 11,
+        "missing": 0,
         "excluded": 0
       },
       "covered": [
@@ -3928,6 +3952,13 @@
         {
           "name": "ForceRemovePlayer",
           "signature": "ForceRemovePlayer takes force whichForce, player whichPlayer returns nothing",
+          "coveredBy": [
+            "Force"
+          ]
+        },
+        {
+          "name": "BlzForceHasPlayer",
+          "signature": "BlzForceHasPlayer takes force whichForce, player whichPlayer returns boolean",
           "coveredBy": [
             "Force"
           ]
@@ -3975,12 +4006,7 @@
           ]
         }
       ],
-      "missing": [
-        {
-          "name": "BlzForceHasPlayer",
-          "signature": "BlzForceHasPlayer takes force whichForce, player whichPlayer returns boolean"
-        }
-      ],
+      "missing": [],
       "excluded": []
     },
     {
@@ -4639,8 +4665,8 @@
       "type": "location",
       "counts": {
         "owned": 17,
-        "covered": 13,
-        "missing": 4,
+        "covered": 17,
+        "missing": 0,
         "excluded": 0
       },
       "covered": [
@@ -4701,6 +4727,20 @@
           ]
         },
         {
+          "name": "GetOrderPointLoc",
+          "signature": "GetOrderPointLoc takes nothing returns location",
+          "coveredBy": [
+            "Point"
+          ]
+        },
+        {
+          "name": "GetSpellTargetLoc",
+          "signature": "GetSpellTargetLoc takes nothing returns location",
+          "coveredBy": [
+            "Point"
+          ]
+        },
+        {
           "name": "IsLocationVisibleToPlayer",
           "signature": "IsLocationVisibleToPlayer takes location whichLocation, player whichPlayer returns boolean",
           "coveredBy": [
@@ -4722,6 +4762,13 @@
           ]
         },
         {
+          "name": "CreateMinimapIconAtLoc",
+          "signature": "CreateMinimapIconAtLoc takes location where, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon",
+          "coveredBy": [
+            "Point"
+          ]
+        },
+        {
           "name": "GetCameraTargetPositionLoc",
           "signature": "GetCameraTargetPositionLoc takes nothing returns location",
           "coveredBy": [
@@ -4734,26 +4781,16 @@
           "coveredBy": [
             "Camera"
           ]
-        }
-      ],
-      "missing": [
-        {
-          "name": "GetOrderPointLoc",
-          "signature": "GetOrderPointLoc takes nothing returns location"
-        },
-        {
-          "name": "GetSpellTargetLoc",
-          "signature": "GetSpellTargetLoc takes nothing returns location"
-        },
-        {
-          "name": "CreateMinimapIconAtLoc",
-          "signature": "CreateMinimapIconAtLoc takes location where, integer red, integer green, integer blue, string pingPath, fogstate fogVisibility returns minimapicon"
         },
         {
           "name": "BlzGetTriggerPlayerMousePosition",
-          "signature": "BlzGetTriggerPlayerMousePosition takes nothing returns location"
+          "signature": "BlzGetTriggerPlayerMousePosition takes nothing returns location",
+          "coveredBy": [
+            "Point"
+          ]
         }
       ],
+      "missing": [],
       "excluded": []
     },
     {
@@ -4859,8 +4896,8 @@
       "type": "rect",
       "counts": {
         "owned": 20,
-        "covered": 18,
-        "missing": 2,
+        "covered": 20,
+        "missing": 0,
         "excluded": 0
       },
       "covered": [
@@ -4989,18 +5026,23 @@
           "coveredBy": [
             "WeatherEffect"
           ]
-        }
-      ],
-      "missing": [
+        },
         {
           "name": "SetDoodadAnimationRect",
-          "signature": "SetDoodadAnimationRect takes rect r, integer doodadID, string animName, boolean animRandom returns nothing"
+          "signature": "SetDoodadAnimationRect takes rect r, integer doodadID, string animName, boolean animRandom returns nothing",
+          "coveredBy": [
+            "Rectangle"
+          ]
         },
         {
           "name": "SetDoodadColorRect",
-          "signature": "SetDoodadColorRect takes rect r, integer doodadID, playercolor whichColor returns nothing"
+          "signature": "SetDoodadColorRect takes rect r, integer doodadID, playercolor whichColor returns nothing",
+          "coveredBy": [
+            "Rectangle"
+          ]
         }
       ],
+      "missing": [],
       "excluded": []
     },
     {
@@ -5008,14 +5050,35 @@
       "type": "sound",
       "counts": {
         "owned": 34,
-        "covered": 29,
-        "missing": 5,
-        "excluded": 0
+        "covered": 33,
+        "missing": 0,
+        "excluded": 1
       },
       "covered": [
         {
           "name": "CreateSound",
           "signature": "CreateSound takes string fileName, boolean looping, boolean is3D, boolean stopwhenoutofrange, integer fadeInRate, integer fadeOutRate, string eaxSetting returns sound",
+          "coveredBy": [
+            "Sound"
+          ]
+        },
+        {
+          "name": "CreateSoundFilenameWithLabel",
+          "signature": "CreateSoundFilenameWithLabel takes string fileName, boolean looping, boolean is3D, boolean stopwhenoutofrange, integer fadeInRate, integer fadeOutRate, string SLKEntryName returns sound",
+          "coveredBy": [
+            "Sound"
+          ]
+        },
+        {
+          "name": "CreateSoundFromLabel",
+          "signature": "CreateSoundFromLabel takes string soundLabel, boolean looping, boolean is3D, boolean stopwhenoutofrange, integer fadeInRate, integer fadeOutRate returns sound",
+          "coveredBy": [
+            "Sound"
+          ]
+        },
+        {
+          "name": "CreateMIDISound",
+          "signature": "CreateMIDISound takes string soundLabel, integer fadeInRate, integer fadeOutRate returns sound",
           "coveredBy": [
             "Sound"
           ]
@@ -5030,6 +5093,13 @@
         {
           "name": "SetSoundDistanceCutoff",
           "signature": "SetSoundDistanceCutoff takes sound soundHandle, real cutoff returns nothing",
+          "coveredBy": [
+            "Sound"
+          ]
+        },
+        {
+          "name": "SetSoundChannel",
+          "signature": "SetSoundChannel takes sound soundHandle, integer channel returns nothing",
           "coveredBy": [
             "Sound"
           ]
@@ -5217,43 +5287,37 @@
           ]
         }
       ],
-      "missing": [
+      "missing": [],
+      "excluded": [
         {
           "name": "TriggerWaitForSound",
-          "signature": "TriggerWaitForSound takes sound s, real offset returns nothing"
-        },
-        {
-          "name": "CreateSoundFilenameWithLabel",
-          "signature": "CreateSoundFilenameWithLabel takes string fileName, boolean looping, boolean is3D, boolean stopwhenoutofrange, integer fadeInRate, integer fadeOutRate, string SLKEntryName returns sound"
-        },
-        {
-          "name": "CreateSoundFromLabel",
-          "signature": "CreateSoundFromLabel takes string soundLabel, boolean looping, boolean is3D, boolean stopwhenoutofrange, integer fadeInRate, integer fadeOutRate returns sound"
-        },
-        {
-          "name": "CreateMIDISound",
-          "signature": "CreateMIDISound takes string soundLabel, integer fadeInRate, integer fadeOutRate returns sound"
-        },
-        {
-          "name": "SetSoundChannel",
-          "signature": "SetSoundChannel takes sound soundHandle, integer channel returns nothing"
+          "signature": "TriggerWaitForSound takes sound s, real offset returns nothing",
+          "reason": "It is a wait that yields the running thread, like TriggerSleepAction and PolledWait, and the lint plugin bans it with them; a Wrapper member would offer that wait as a safe call.",
+          "source": "common.j declares it beside TriggerSleepAction in the trigger action API; eslint-plugin-reforged's data/unsafe-natives.json (rule no-unsafe-natives) bans it with TriggerSleepAction and PolledWait for killing the thread outside a trigger action.",
+          "date": "2026-09-26"
         }
-      ],
-      "excluded": []
+      ]
     },
     {
       "wrapper": "Effect",
       "type": "effect",
       "counts": {
         "owned": 40,
-        "covered": 35,
-        "missing": 5,
+        "covered": 40,
+        "missing": 0,
         "excluded": 0
       },
       "covered": [
         {
           "name": "AddSpecialEffect",
           "signature": "AddSpecialEffect takes string modelName, real x, real y returns effect",
+          "coveredBy": [
+            "Effect"
+          ]
+        },
+        {
+          "name": "AddSpecialEffectLoc",
+          "signature": "AddSpecialEffectLoc takes string modelName, location where returns effect",
           "coveredBy": [
             "Effect"
           ]
@@ -5273,8 +5337,36 @@
           ]
         },
         {
+          "name": "AddSpellEffect",
+          "signature": "AddSpellEffect takes string abilityString, effecttype t, real x, real y returns effect",
+          "coveredBy": [
+            "Effect"
+          ]
+        },
+        {
+          "name": "AddSpellEffectLoc",
+          "signature": "AddSpellEffectLoc takes string abilityString, effecttype t, location where returns effect",
+          "coveredBy": [
+            "Effect"
+          ]
+        },
+        {
           "name": "AddSpellEffectById",
           "signature": "AddSpellEffectById takes integer abilityId, effecttype t, real x, real y returns effect",
+          "coveredBy": [
+            "Effect"
+          ]
+        },
+        {
+          "name": "AddSpellEffectByIdLoc",
+          "signature": "AddSpellEffectByIdLoc takes integer abilityId, effecttype t, location where returns effect",
+          "coveredBy": [
+            "Effect"
+          ]
+        },
+        {
+          "name": "AddSpellEffectTarget",
+          "signature": "AddSpellEffectTarget takes string modelName, effecttype t, widget targetWidget, string attachPoint returns effect",
           "coveredBy": [
             "Effect"
           ]
@@ -5497,28 +5589,7 @@
           ]
         }
       ],
-      "missing": [
-        {
-          "name": "AddSpecialEffectLoc",
-          "signature": "AddSpecialEffectLoc takes string modelName, location where returns effect"
-        },
-        {
-          "name": "AddSpellEffect",
-          "signature": "AddSpellEffect takes string abilityString, effecttype t, real x, real y returns effect"
-        },
-        {
-          "name": "AddSpellEffectLoc",
-          "signature": "AddSpellEffectLoc takes string abilityString, effecttype t, location where returns effect"
-        },
-        {
-          "name": "AddSpellEffectByIdLoc",
-          "signature": "AddSpellEffectByIdLoc takes integer abilityId, effecttype t, location where returns effect"
-        },
-        {
-          "name": "AddSpellEffectTarget",
-          "signature": "AddSpellEffectTarget takes string modelName, effecttype t, widget targetWidget, string attachPoint returns effect"
-        }
-      ],
+      "missing": [],
       "excluded": []
     },
     {
@@ -6332,8 +6403,8 @@
       "type": "gamecache",
       "counts": {
         "owned": 29,
-        "covered": 26,
-        "missing": 3,
+        "covered": 29,
+        "missing": 0,
         "excluded": 0
       },
       "covered": [
@@ -6347,6 +6418,13 @@
         {
           "name": "SaveGameCache",
           "signature": "SaveGameCache takes gamecache whichCache returns boolean",
+          "coveredBy": [
+            "GameCache"
+          ]
+        },
+        {
+          "name": "StoreInteger",
+          "signature": "StoreInteger takes gamecache cache, string missionKey, string key, integer value returns nothing",
           "coveredBy": [
             "GameCache"
           ]
@@ -6436,6 +6514,13 @@
           ]
         },
         {
+          "name": "HaveStoredUnit",
+          "signature": "HaveStoredUnit takes gamecache cache, string missionKey, string key returns boolean",
+          "coveredBy": [
+            "GameCache"
+          ]
+        },
+        {
           "name": "HaveStoredString",
           "signature": "HaveStoredString takes gamecache cache, string missionKey, string key returns boolean",
           "coveredBy": [
@@ -6459,6 +6544,13 @@
         {
           "name": "FlushStoredInteger",
           "signature": "FlushStoredInteger takes gamecache cache, string missionKey, string key returns nothing",
+          "coveredBy": [
+            "GameCache"
+          ]
+        },
+        {
+          "name": "FlushStoredReal",
+          "signature": "FlushStoredReal takes gamecache cache, string missionKey, string key returns nothing",
           "coveredBy": [
             "GameCache"
           ]
@@ -6520,20 +6612,7 @@
           ]
         }
       ],
-      "missing": [
-        {
-          "name": "StoreInteger",
-          "signature": "StoreInteger takes gamecache cache, string missionKey, string key, integer value returns nothing"
-        },
-        {
-          "name": "HaveStoredUnit",
-          "signature": "HaveStoredUnit takes gamecache cache, string missionKey, string key returns boolean"
-        },
-        {
-          "name": "FlushStoredReal",
-          "signature": "FlushStoredReal takes gamecache cache, string missionKey, string key returns nothing"
-        }
-      ],
+      "missing": [],
       "excluded": []
     },
     {
@@ -6647,8 +6726,8 @@
       "counts": {
         "owned": 10,
         "covered": 9,
-        "missing": 1,
-        "excluded": 0
+        "missing": 0,
+        "excluded": 1
       },
       "covered": [
         {
@@ -6715,13 +6794,16 @@
           ]
         }
       ],
-      "missing": [
+      "missing": [],
+      "excluded": [
         {
           "name": "SetImageRender",
-          "signature": "SetImageRender takes image whichImage, boolean flag returns nothing"
+          "signature": "SetImageRender takes image whichImage, boolean flag returns nothing",
+          "reason": "It does nothing; Image#setRender calls SetImageRenderAlways, the working Native, instead.",
+          "source": "jassdoc bug note on SetImageRender: \"Does not work. Use SetImageRenderAlways instead.\" (https://lep.duckdns.org/jassbot/doc/SetImageRender)",
+          "date": "2026-09-26"
         }
-      ],
-      "excluded": []
+      ]
     },
     {
       "wrapper": "Ubersplat",
@@ -6791,8 +6873,8 @@
       "type": "framehandle",
       "counts": {
         "owned": 47,
-        "covered": 46,
-        "missing": 1,
+        "covered": 47,
+        "missing": 0,
         "excluded": 0
       },
       "covered": [
@@ -6869,6 +6951,13 @@
         {
           "name": "BlzGetFrameByName",
           "signature": "BlzGetFrameByName takes string name, integer createContext returns framehandle",
+          "coveredBy": [
+            "Frame"
+          ]
+        },
+        {
+          "name": "BlzFrameGetName",
+          "signature": "BlzFrameGetName takes framehandle frame returns string",
           "coveredBy": [
             "Frame"
           ]
@@ -7119,12 +7208,7 @@
           ]
         }
       ],
-      "missing": [
-        {
-          "name": "BlzFrameGetName",
-          "signature": "BlzFrameGetName takes framehandle frame returns string"
-        }
-      ],
+      "missing": [],
       "excluded": []
     },
     {

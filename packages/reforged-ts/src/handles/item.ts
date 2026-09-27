@@ -341,6 +341,23 @@ export class Item extends Widget {
     );
   }
 
+  /**
+   * The stacking item that absorbs a picked-up item, or undefined outside a
+   * pickup event or when the picked-up item stacks with none, through
+   * `BlzGetAbsorbingItem`.
+   */
+  public static fromAbsorbing(): Item | undefined {
+    return this.fromHandle(BlzGetAbsorbingItem());
+  }
+
+  /**
+   * The item an enumeration is at, or undefined outside one, through
+   * `GetEnumItem`.
+   */
+  public static fromEnum(): Item | undefined {
+    return this.fromHandle(GetEnumItem());
+  }
+
   /** The item a unit equips, or undefined outside an equip event. */
   public static fromEquipped(): Item | undefined {
     return this.fromHandle(GetEquippedItem());
@@ -348,6 +365,22 @@ export class Item extends Widget {
 
   public static override fromEvent(): Item | undefined {
     return this.fromHandle(GetManipulatedItem());
+  }
+
+  /**
+   * The item an enumeration's filter is at, or undefined outside one,
+   * through `GetFilterItem`.
+   */
+  public static fromFilter(): Item | undefined {
+    return this.fromHandle(GetFilterItem());
+  }
+
+  /**
+   * The item a target order targets, or undefined outside a target order or
+   * when the target is not an item, through `GetOrderTargetItem`.
+   */
+  public static override fromOrderTarget(): Item | undefined {
+    return this.fromHandle(GetOrderTargetItem());
   }
 
   /** The spell's target item, or undefined when the spell targets none. */
@@ -358,6 +391,22 @@ export class Item extends Widget {
   /** The item a shop sells or a unit pawns, or undefined outside those events. */
   public static fromSold(): Item | undefined {
     return this.fromHandle(GetSoldItem());
+  }
+
+  /**
+   * The item losing charges to another when items stack, or undefined
+   * outside a stack event, through `BlzGetStackingItemSource`.
+   */
+  public static fromStackingSource(): Item | undefined {
+    return this.fromHandle(BlzGetStackingItemSource());
+  }
+
+  /**
+   * The item gaining the charges when items stack, or undefined outside a
+   * stack event, through `BlzGetStackingItemTarget`.
+   */
+  public static fromStackingTarget(): Item | undefined {
+    return this.fromHandle(BlzGetStackingItemTarget());
   }
 
   /** The item a unit unequips, or undefined outside an unequip event. */
