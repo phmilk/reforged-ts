@@ -10,7 +10,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 
 - `pnpm check`: before you report a task done (see "Definition of done").
 - `pnpm build`: after changing a package another one consumes, before running that one's tests on their own.
-- `pnpm test`: after a change, for every vitest project and the Typings drift check. One package's scripts and tests: the README's "Commands".
+- `pnpm test`: after a change, for every vitest project; `pnpm typings:check` runs the Typings drift check. One package's scripts and tests: the README's "Commands".
 - `pnpm lint`: after an edit, for ESLint and the Prettier check; `pnpm format` fixes the formatting and fixable findings it reports.
 - `pnpm typecheck`: while you edit, faster than a full check.
 - `pnpm typings:generate`: after an Overlay edit or for a new Patch; the loop is in `packages/reforged-types/AGENTS.md`.
