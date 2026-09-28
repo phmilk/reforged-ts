@@ -1349,7 +1349,7 @@ export class Unit extends Widget {
    * except a null string. To lock the chest, the string must start with `"bone_chest"`.
    * All leading spaces are ignored, it is case insensitive, and anything after the
    * first non-leading space will be ignored.
-   * @param lookAtTargetThe - bone will be locked to face this unit.
+   * @param lookAtTarget - The bone will be locked to face this unit.
    * @param offsetX - The x-offset from lookAtTarget's origin point.
    * @param offsetY - The y-offset from lookAtTarget's origin point.
    * @param offsetZ - The z-offset from lookAtTarget's origin point (this already factors in the terrain Z).
