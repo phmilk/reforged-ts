@@ -5,8 +5,8 @@
 // loaded through Docusaurus' own transpiler.
 //
 // What it adds to TypeDoc as docusaurus-plugin-typedoc runs it:
-// - the site's tag vocabulary, when the project declares none (`tsdoc.json`),
-//   and typescript-to-lua's annotations left off the pages;
+// - the workspace's tag vocabulary, when the project declares none
+//   (`tsdoc.json`), and typescript-to-lua's annotations left off the pages;
 // - the validation gate: docusaurus-plugin-typedoc converts and renders but
 //   neither validates nor fails, so the plugin does both before the output;
 // - for a Typings reference (the `typingsManifest` option): the Jass files
@@ -18,7 +18,9 @@
 //   a link to the Native's page there, then to jassbot, and a tag naming no
 //   entry of the manifest fails the run.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { createRequire } from "node:module";
 import { basename, dirname, join } from "node:path";
+import { pathToFileURL } from "node:url";
 import {
   Application,
   Comment,
@@ -54,24 +56,28 @@ const DEFAULT_TAGS = {
 } as const;
 const TAG_KINDS = Object.keys(DEFAULT_TAGS) as (keyof typeof DEFAULT_TAGS)[];
 
+/** A tag a `tsdoc.json` defines. */
+interface TagDefinition {
+  readonly tagName: TagString;
+  readonly syntaxKind: (typeof TAG_KINDS)[number];
+}
+
 /** The part of a `tsdoc.json` the plugin reads. */
 interface TsdocConfig {
-  readonly tagDefinitions: readonly {
-    readonly tagName: TagString;
-    readonly syntaxKind: (typeof TAG_KINDS)[number];
-  }[];
+  readonly extends?: readonly string[];
+  readonly tagDefinitions?: readonly TagDefinition[];
 }
 
 /**
- * The site's minimal `tsdoc.json`: the custom tags of the TSDoc standard
- * (ADR 0004) and typescript-to-lua's annotations, declared until the library
- * ships the workspace file (#43). The Typings' references keep needing it:
- * TypeDoc reads a `tsdoc.json` next to the tsconfig, and theirs are written
- * by the site.
+ * The site's `tsdoc.json`, which extends the workspace's (#43): the custom
+ * tags of the TSDoc standard (ADR 0004) and typescript-to-lua's annotations.
+ * The library's reference reads the workspace file through the library's
+ * own; the Typings' references need this one: TypeDoc reads a `tsdoc.json`
+ * next to the tsconfig, and theirs are written by the site.
  */
 const SITE_TSDOC = new URL("tsdoc.json", import.meta.url);
 
-/** typescript-to-lua's annotations, which the site's `tsdoc.json` declares too. */
+/** typescript-to-lua's annotations, which the workspace's `tsdoc.json` declares too. */
 const LUA_ANNOTATIONS: readonly TagString[] = ["@noSelf", "@noSelfInFile"];
 
 export function load(app: Application): void {
@@ -119,15 +125,30 @@ export function load(app: Application): void {
 function declareSiteTags(app: Application): void {
   const options = app.options;
   if (TAG_KINDS.some((kind) => options.isSet(`${kind}Tags`))) return;
-  const config = JSON.parse(readFileSync(SITE_TSDOC, "utf8")) as TsdocConfig;
+  const definitions = tagDefinitions(SITE_TSDOC);
   for (const kind of TAG_KINDS) {
-    const declared = config.tagDefinitions
+    const declared = definitions
       .filter((tag) => tag.syntaxKind === kind)
       .map((tag) => tag.tagName);
     options.setValue(`${kind}Tags`, [
       ...new Set([...DEFAULT_TAGS[kind], ...declared]),
     ]);
   }
+}
+
+/**
+ * The tags a `tsdoc.json` defines, those of the files it extends first,
+ * resolved from it as TypeDoc and the lint resolve them.
+ */
+function tagDefinitions(file: URL): TagDefinition[] {
+  const config = JSON.parse(readFileSync(file, "utf8")) as TsdocConfig;
+  const resolver = createRequire(file);
+  return [
+    ...(config.extends ?? []).flatMap((extended) =>
+      tagDefinitions(pathToFileURL(resolver.resolve(extended))),
+    ),
+    ...(config.tagDefinitions ?? []),
+  ];
 }
 
 /**

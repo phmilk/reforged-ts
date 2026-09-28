@@ -162,6 +162,13 @@ export default defineConfig({
         testsToRun: () => "website/test/snippets.test.mts",
       },
       {
+        // The doc lint test reads its fixtures and the tsdoc.json files from
+        // disk.
+        pattern:
+          /\/(?:tsdoc\.json|packages\/reforged-ts\/test\/node\/fixtures\/doc-lint\/.+)$/,
+        testsToRun: () => "packages/reforged-ts/test/node/doc-lint.test.ts",
+      },
+      {
         // The coverage report's drift test reads the library sources, the
         // manifests and its committed configuration and report from disk.
         pattern:
