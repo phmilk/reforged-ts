@@ -4,17 +4,23 @@
 // prior `pnpm build`. A positive fixture must produce no diagnostic; a
 // negative fixture states each error it expects on the offending line, as a
 // trailing `// error TS2322` comment (several codes are separated by spaces),
-// and must produce exactly those.
+// and must produce exactly those. The declarations carry the examples the
+// build expands from their `{@includeCode}`, as the editor's hover shows them.
 
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
   createMapProject,
   expectedErrors,
   fixtureFiles,
+  hoverExamples,
+  installedDeclarations,
   typecheck,
   type MapProject,
   type TypecheckResult,
 } from "./support/declarations";
+import { packageRoot } from "./support/package-root";
 
 const positive = fixtureFiles("positive");
 const negative = fixtureFiles("negative");
@@ -45,6 +51,32 @@ describe("the library's emitted declarations in a Map project", () => {
   it("has fixtures of both kinds", () => {
     expect(positive.length).toBeGreaterThan(0);
     expect(negative.length).toBeGreaterThan(0);
+  });
+});
+
+describe("the examples in the emitted declarations", () => {
+  it("carry no {@includeCode}: the build expands every include", async () => {
+    const declarations = await installedDeclarations(project);
+    expect(declarations.size).toBeGreaterThan(0);
+    const unexpanded = [...declarations]
+      .filter(([, text]) => text.includes("@includeCode"))
+      .map(([file]) => file);
+    expect(unexpanded).toEqual([]);
+  });
+
+  it("show Trigger.addCondition's example code in the hover, as a fenced block", async () => {
+    const code = await readFile(
+      join(packageRoot, "examples/harness/trigger-add-condition.ts"),
+      "utf8",
+    );
+    expect(
+      await hoverExamples(
+        project,
+        "dist/handles/trigger.d.ts",
+        "Trigger",
+        "addCondition",
+      ),
+    ).toEqual(["```ts\n" + code.replaceAll("\r\n", "\n").trimEnd() + "\n```"]);
   });
 });
 

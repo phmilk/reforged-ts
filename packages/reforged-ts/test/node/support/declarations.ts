@@ -1,9 +1,10 @@
 // A throwaway Map project that consumes the library as an installed
 // dependency: the declarations are emitted from the sources with the
 // workspace TypeScript into node_modules/reforged-ts/dist next to the
-// package's own package.json, and the Typings, lua-types and the
-// typescript-to-lua language extensions are linked in from this package's
-// installation. The declaration fixtures are copied to its src/.
+// package's own package.json, their `{@includeCode}` expanded as the build
+// expands them, and the Typings, lua-types and the typescript-to-lua language
+// extensions are linked in from this package's installation. The declaration
+// fixtures are copied to its src/.
 
 import { readdirSync } from "node:fs";
 import {
@@ -11,6 +12,7 @@ import {
   cp,
   mkdir,
   mkdtemp,
+  readdir,
   readFile,
   realpath,
   rm,
@@ -26,6 +28,7 @@ import {
   declarationResolver,
   type DeclarationResolver,
 } from "../../../../../release/src/rename-map";
+import { expandDeclarations } from "../../../scripts/include-code.mts";
 import { packageRoot } from "./package-root";
 
 const fixturesRoot = fileURLToPath(
@@ -81,7 +84,7 @@ export async function createMapProject(): Promise<MapProject> {
     await mkdtemp(join(tmpdir(), "reforged-ts-declarations-")),
   );
   const installed = join(dir, "node_modules", "reforged-ts");
-  emitDeclarations(join(installed, "dist"));
+  await emitDeclarations(join(installed, "dist"));
   await copyFile(
     join(packageRoot, "package.json"),
     join(installed, "package.json"),
@@ -123,10 +126,11 @@ export async function createMapProject(): Promise<MapProject> {
 }
 
 /**
- * Emits the library's declarations, as `pnpm build` does, into `outDir`;
- * throws with the diagnostics when the library does not compile.
+ * Emits the library's declarations, as `pnpm build` does, into `outDir`,
+ * and expands their includes; throws with the diagnostics when the library
+ * does not compile, and on an include that cannot be expanded.
  */
-function emitDeclarations(outDir: string): void {
+async function emitDeclarations(outDir: string): Promise<void> {
   const config = parseConfig(join(packageRoot, "tsconfig.json"), {
     noEmit: false,
     declaration: true,
@@ -155,6 +159,59 @@ function emitDeclarations(outDir: string): void {
       )}`,
     );
   }
+  await expandDeclarations(outDir, join(packageRoot, "src"));
+}
+
+/**
+ * The Map project's installed declaration files, as `dist/handles/unit.d.ts`,
+ * sorted, with their text.
+ */
+export async function installedDeclarations(
+  project: MapProject,
+): Promise<Map<string, string>> {
+  const installed = join(project.dir, "node_modules", "reforged-ts");
+  const files = (await readdir(join(installed, "dist"), { recursive: true }))
+    .map((file) => `dist/${file.split("\\").join("/")}`)
+    .filter((file) => file.endsWith(".d.ts"))
+    .sort();
+  return new Map(
+    await Promise.all(
+      files.map(
+        async (file) =>
+          [file, await readFile(join(installed, file), "utf8")] as const,
+      ),
+    ),
+  );
+}
+
+/**
+ * The `@example` tags of a class member in one of the Map project's
+ * installed declaration files, as the editor's hover reads them.
+ */
+export async function hoverExamples(
+  project: MapProject,
+  file: string,
+  className: string,
+  member: string,
+): Promise<string[]> {
+  const path = join(project.dir, "node_modules", "reforged-ts", file);
+  const source = ts.createSourceFile(
+    path,
+    await readFile(path, "utf8"),
+    ts.ScriptTarget.ESNext,
+    true,
+  );
+  const declaration = source.statements
+    .filter(ts.isClassDeclaration)
+    .find((node) => node.name?.text === className)
+    ?.members.find((node) => node.name?.getText(source) === member);
+  if (declaration === undefined) {
+    throw new Error(`${file} declares no ${className}.${member}`);
+  }
+  return ts
+    .getJSDocTags(declaration)
+    .filter((tag) => tag.tagName.text === "example")
+    .map((tag) => ts.getTextOfJSDocComment(tag.comment) ?? "");
 }
 
 export interface TypecheckResult {
