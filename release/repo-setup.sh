@@ -215,6 +215,9 @@ finish() {
 readonly REPO_OWNER=phmilk
 readonly REPO_NAME=reforged-ts
 readonly REPO="$REPO_OWNER/$REPO_NAME"
+# The release dispatches to it with the App (docs/release.md, "The Template
+# dispatch").
+readonly TEMPLATE_NAME=reforged-ts-template
 readonly CLIENT_ID_VARIABLE=APP_CLIENT_ID
 readonly PRIVATE_KEY_SECRET=APP_PRIVATE_KEY
 readonly RULESET_FILE=.github/rulesets/master.json
@@ -558,7 +561,7 @@ if $APP_DONE; then
 else
   open_url "$INSTALL_PAGE"
   step "Install it on ${BOLD}$REPO_OWNER${RESET}."
-  step "Repository access: ${BOLD}Only select repositories${RESET} → ${BOLD}$REPO_NAME${RESET}, and nothing else."
+  step "Repository access: ${BOLD}Only select repositories${RESET} → ${BOLD}$REPO_NAME${RESET} and ${BOLD}$TEMPLATE_NAME${RESET}, and nothing else."
   step "Install."
   pause "Press Enter once it is installed"
   if $DRY_RUN; then
@@ -571,7 +574,7 @@ else
     ok "installed on $REPO_OWNER, on selected repositories, with the permissions accepted"
   fi
   note "Which repositories an installation reaches, only its settings page shows."
-  confirm "Does its Repository access list $REPO_NAME only?" ||
+  confirm "Does its Repository access list $REPO_NAME and $TEMPLATE_NAME only?" ||
     fail "The App reaches other repositories." "Remove them under Repository access: https://github.com/settings/installations"
 fi
 

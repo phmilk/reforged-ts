@@ -19,8 +19,9 @@ export const MATRIX_FILE = "release/compatibility/matrix.json";
 export const SYSTEMS_FILE = "release/compatibility/systems.json";
 
 /**
- * The README fragment the Template's sync workflow fetches from `master`
- * (`https://raw.githubusercontent.com/phmilk/reforged-ts/master/release/compatibility/matrix.md`).
+ * The README fragment the Template's sync workflow fetches at the tag of a
+ * release, the `matrixUrl` of the Template dispatch
+ * (`https://raw.githubusercontent.com/phmilk/reforged-ts/<tag>/release/compatibility/matrix.md`).
  */
 export const FRAGMENT_FILE = "release/compatibility/matrix.md";
 

@@ -251,3 +251,49 @@ jobs:
           pack-dir-artifact-id: ${{ needs.pack.outputs.artifact-id }}
           create-github-releases: true
           push-git-tags: true
+
+  # The Template's sync workflow applies the release and opens the sync pull
+  # request. A dry run writes the payload to the job summary and sends
+  # nothing.
+  template-dispatch:
+    name: template-dispatch
+    needs: [select, pack, template-gate, publish]
+    if: >-
+      !cancelled() && needs.template-gate.result == 'success' &&
+      (needs.publish.result == 'success' ||
+      (needs.publish.result == 'skipped' && needs.select.outputs.dry-run == 'true'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      # Checked out first: the App token step is a local action.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-workspace
+        with:
+          ignore-scripts: true
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          artifact-ids: ${{ needs.pack.outputs.artifact-id }}
+          path: ${{ runner.temp }}/pack
+      # The versions of the plan, the workspace's for a package the release
+      # does not publish; the tag and the URLs follow from them.
+      - name: Payload
+        run: pnpm release:template-dispatch --pack-dir "$RUNNER_TEMP/pack" --out "$RUNNER_TEMP/dispatch.json"
+      # repository_dispatch needs Contents write on the Template, where the
+      # App is installed too.
+      - id: app
+        if: needs.select.outputs.dry-run != 'true'
+        uses: ./.github/actions/app-token
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          repository: reforged-ts-template
+          permission-contents: write
+      - name: Dispatch to the Template
+        if: needs.select.outputs.dry-run != 'true'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: gh api --method POST repos/phmilk/reforged-ts-template/dispatches --input "$RUNNER_TEMP/dispatch.json"

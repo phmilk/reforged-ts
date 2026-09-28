@@ -10,8 +10,9 @@ import { isRecord } from "./unknown.js";
 
 /**
  * The repository permissions of the App, as the API names them: the union
- * of what the workflows request (the version and publish jobs of
- * `release.yml`, the Patch watch, the docs version cut), plus `metadata`,
+ * of what the workflows request (the version, publish and
+ * template-dispatch jobs of `release.yml`, the Patch watch, the docs version
+ * cut), plus `metadata`,
  * which every App holds.
  */
 export const APP_PERMISSIONS: Readonly<Record<string, "read" | "write">> = {
