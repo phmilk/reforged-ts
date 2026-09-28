@@ -1,9 +1,9 @@
 /**
  * `release:template-gate --template <path> --pack-dir <dir>`: installs the
  * tarballs of the publish plan in the pack output of `changeset pack` into
- * the Template checkout as overrides, then runs the Template's build in
- * release mode, its lint and its tests, and stops at the first failure,
- * naming the command.
+ * the Template checkout as overrides in its pnpm-workspace.yaml, then runs
+ * the Template's build in release mode, its lint and its tests, and stops
+ * at the first failure, naming the command.
  *
  * `release:template-gate --print-ref --pack-dir <dir>` prints the Template
  * ref to check out for that release: `v<major>` of the library version the

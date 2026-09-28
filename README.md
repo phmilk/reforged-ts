@@ -19,7 +19,7 @@ The library's own tests run on `reforged-test`, and the library compiles against
 
 - Warcraft III 3.0.0 or later, the Game version the library targets. Only to play a map: building and testing the library runs without the game.
 - Node 22.13 or later. Node 24 is the tested version (`.node-version`).
-- pnpm 10. The `packageManager` field pins the exact version, so `corepack enable` picks it up.
+- pnpm 12. The `packageManager` field pins the exact version, and pnpm 11 or later switches to it by itself. Install it with `npm install --global pnpm@12`: pnpm 10 cannot start pnpm 12 on Windows.
 - TypeScript 6.0.2, the version typescript-to-lua 1.37 pins. `pnpm install` brings it; see [Version policy](#version-policy).
 
 ## Getting started
@@ -80,6 +80,8 @@ The library's tests import the harness by its package name: the runner from `ref
 
 - TypeScript follows typescript-to-lua's peer dependency, which pins it exactly (6.0.2 for typescript-to-lua 1.37). TypeScript moves only when typescript-to-lua moves, and both move in one change.
 - Every version shared between packages lives in the catalog in `pnpm-workspace.yaml`. A package references `catalog:`, never a literal version, so a bump is one line.
+- pnpm's wait of a day before it installs a new version (`minimumReleaseAge`) is off in `pnpm-workspace.yaml` until 1.0.0, so a fresh version never blocks an install during the build phase. It comes back with 1.0.0 (see [the 1.0.0 checklist](docs/release.md#leaving-pre-mode-the-100-checklist)).
+- A dependency's install script runs only when `allowBuilds` in `pnpm-workspace.yaml` allows it, and an install that meets a script not listed there fails. A new dependency with an install script gets an entry, `true` or `false`, and the reason.
 
 [ADR 0002](docs/adr/0002-toolchain-follows-tstl-and-tests-run-on-real-lua.md) records the decision.
 

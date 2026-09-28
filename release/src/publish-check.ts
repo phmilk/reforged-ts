@@ -6,8 +6,8 @@
  * - The job can request an OIDC token (`id-token: write`).
  * - The publishing tool does trusted publishing: pnpm 11 or later. pnpm 10
  *   has no code path for it (its `publish` never exchanges the job's OIDC
- *   token, so npm answers ENEEDAUTH), which is why the publish job installs
- *   pnpm 11 for itself while the workspace stays on pnpm 10.
+ *   token, so npm answers ENEEDAUTH). The publish job runs the pnpm of the
+ *   root packageManager field, so that field must stay on pnpm 11 or later.
  * - Every publishable package exists on npm: trusted publishing is
  *   configured on an existing package only, so a package's first version
  *   is published by hand (the first-publish wizard) and never by the
@@ -62,8 +62,8 @@ export function checkPublish(input: PublishCheckInput): PublishCheckResult {
     problems.push(
       `pnpm ${String(input.pnpm)} cannot publish without a token: \`pnpm publish\` does trusted ` +
         `publishing from pnpm ${String(PNPM_TRUSTED_PUBLISHING)} (pnpm 10 never exchanges the job's ` +
-        "OIDC token, and npm answers ENEEDAUTH). The publish job installs pnpm " +
-        `${String(PNPM_TRUSTED_PUBLISHING)} for itself before this check.`,
+        "OIDC token, and npm answers ENEEDAUTH). The publish job runs the pnpm of the root " +
+        `packageManager field: pin pnpm ${String(PNPM_TRUSTED_PUBLISHING)} or later there.`,
     );
   }
   const absent = input.packages

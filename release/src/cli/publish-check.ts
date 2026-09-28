@@ -1,8 +1,9 @@
 /**
  * `release:publish-check`: run by the release workflow's publish job before
  * it publishes. Checks that the job can request an OIDC token, that the
- * publishing tool does trusted publishing (pnpm 11, or npm 11.5.1 under
- * pnpm 10), and that every publishable package already exists on npm.
+ * publishing tool does trusted publishing (pnpm 11 or later, which the root
+ * packageManager field pins), and that every publishable package already
+ * exists on npm.
  * Prints one line per missing prerequisite. Exit codes: 0 ready, 1 a
  * prerequisite is missing or the registry cannot be asked, 2 usage.
  */

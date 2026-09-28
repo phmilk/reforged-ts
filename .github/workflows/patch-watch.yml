@@ -99,7 +99,7 @@ jobs:
           args=(--json)
           if [ -n "$SIMULATE" ]; then args+=(--simulate-current-patch "$SIMULATE"); fi
           for build in $REPORTED; do args+=(--reported "$build"); done
-          pnpm -s patch-watch:plan "${args[@]}" > "$RUNNER_TEMP/plan.json"
+          pnpm --silent patch-watch:plan "${args[@]}" > "$RUNNER_TEMP/plan.json"
           jq . "$RUNNER_TEMP/plan.json"
           {
             echo "build=$(jq -r '.patch.build // ""' "$RUNNER_TEMP/plan.json")"
@@ -125,7 +125,7 @@ jobs:
         run: |
           git switch --create "$BRANCH"
           set +e
-          pnpm -s typings:generate "$TAG" > "$RUNNER_TEMP/generate.stdout" 2> "$RUNNER_TEMP/generate.stderr"
+          pnpm --silent typings:generate "$TAG" > "$RUNNER_TEMP/generate.stdout" 2> "$RUNNER_TEMP/generate.stderr"
           code=$?
           set -e
           cat "$RUNNER_TEMP/generate.stdout" "$RUNNER_TEMP/generate.stderr"
@@ -152,7 +152,7 @@ jobs:
       - name: Render the issue
         if: steps.plan.outputs.build != ''
         run: |
-          pnpm -s patch-watch:report issue --plan "$RUNNER_TEMP/plan.json" --run-url "$RUN_URL" > "$RUNNER_TEMP/issue.json"
+          pnpm --silent patch-watch:report issue --plan "$RUNNER_TEMP/plan.json" --run-url "$RUN_URL" > "$RUNNER_TEMP/issue.json"
           jq -r .title "$RUNNER_TEMP/issue.json" > "$RUNNER_TEMP/issue-title.txt"
           jq -j .body "$RUNNER_TEMP/issue.json" > "$RUNNER_TEMP/issue.md"
       - name: What the watch would open (dry run)
@@ -161,7 +161,7 @@ jobs:
           BRANCH: ${{ steps.generate.outputs.branch }}
           EXIT_CODE: ${{ steps.generate.outputs.exit-code }}
         run: |
-          pnpm -s patch-watch:report pull-request --plan "$RUNNER_TEMP/plan.json" \
+          pnpm --silent patch-watch:report pull-request --plan "$RUNNER_TEMP/plan.json" \
             --stdout "$RUNNER_TEMP/generate.stdout" --stderr "$RUNNER_TEMP/generate.stderr" \
             --exit-code "$EXIT_CODE" --run-url "$RUN_URL" > "$RUNNER_TEMP/pull-request.json"
           issue_title=$(cat "$RUNNER_TEMP/issue-title.txt")
@@ -249,7 +249,7 @@ jobs:
           EXIT_CODE: ${{ steps.generate.outputs.exit-code }}
           ISSUE: ${{ steps.issue.outputs.number }}
         run: |
-          pnpm -s patch-watch:report pull-request --plan "$RUNNER_TEMP/plan.json" \
+          pnpm --silent patch-watch:report pull-request --plan "$RUNNER_TEMP/plan.json" \
             --stdout "$RUNNER_TEMP/generate.stdout" --stderr "$RUNNER_TEMP/generate.stderr" \
             --exit-code "$EXIT_CODE" --issue "$ISSUE" --run-url "$RUN_URL" > "$RUNNER_TEMP/pull-request.json"
           # -j: no newline past the body sized to GitHub's limit.

@@ -5,7 +5,7 @@
  * own dependencies and the Map project's other `types` entry are linked in
  * from this package's installation.
  */
-import { execFileSync, execSync } from "node:child_process";
+import { execSync } from "node:child_process";
 import {
   cp,
   mkdir,
@@ -70,23 +70,13 @@ export async function createWorkspace(): Promise<Workspace> {
 
 /**
  * Runs `pnpm pack` on this package into `destination`; returns the tarball
- * path. Under `pnpm test` the pnpm that runs the script is reused through
- * node; otherwise `pnpm` is looked up by the shell (pnpm.cmd on Windows).
+ * path. `pnpm` is looked up by the shell (pnpm.exe or pnpm.cmd on Windows).
  */
 function pack(destination: string): string {
-  const options = { cwd: packageRoot, encoding: "utf8" } as const;
-  const execPath = process.env.npm_execpath;
-  const output =
-    execPath !== undefined && /pnpm\.c?js$/.test(execPath)
-      ? execFileSync(
-          process.execPath,
-          [execPath, "pack", "--json", "--pack-destination", destination],
-          options,
-        )
-      : execSync(
-          `pnpm pack --json --pack-destination "${destination}"`,
-          options,
-        );
+  const output = execSync(
+    `pnpm pack --json --pack-destination "${destination}"`,
+    { cwd: packageRoot, encoding: "utf8" },
+  );
   return (JSON.parse(output) as { filename: string }).filename;
 }
 

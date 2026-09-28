@@ -4,7 +4,7 @@
   "description": "Workspace root of reforged-ts: the library, its Typings and its Lua test harness.",
   "license": "MIT",
   "type": "module",
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@12.6.0",
   "engines": {
     "node": ">=22.13"
   },

@@ -299,25 +299,27 @@ The schema, the replacements and each pair's entries or marker stay the library'
 
 The Template is the Reference consumer ([ADR 0006](adr/0006-template-owns-code-editor-owns-data.md)): no release reaches npm unless the Template builds, lints and passes its tests against the packed packages. `pnpm release:template-gate` checks this. The release workflow runs it between pack and publish, and it runs locally the same way.
 
-It takes a Template checkout and the output folder of `changeset pack`, which holds `publish-plan.json` and the tarballs under `packages/`. It checks each tarball against the plan's integrity. It writes one `pnpm.overrides` entry per package in the plan into the checkout's `package.json`, pointing at that tarball, and runs `pnpm install --no-frozen-lockfile`. It checks that the Template's own dependencies resolved to the packed versions. Then it runs the Template's scripts by name: `build --mode release`, `lint` and `test`. It stops at the first command that fails, or at the first script the Template lacks, and names it. Exit codes: 0 pass, 1 fail, 2 usage.
+It takes a Template checkout and the output folder of `changeset pack`, which holds `publish-plan.json` and the tarballs under `packages/`. It checks each tarball against the plan's integrity. It writes one `overrides` entry per package in the plan into the checkout's `pnpm-workspace.yaml` (the file is created when the Template has none; its other settings stay), pointing at that tarball, and runs `pnpm install --no-frozen-lockfile`. It checks that the Template's own dependencies resolved to the packed versions. Then it runs the Template's scripts by name: `build --mode release`, `lint` and `test`. It stops at the first command that fails, or at the first script the Template lacks, and names it. Exit codes: 0 pass, 1 fail, 2 usage.
 
 **Only the packages of the plan.** The spec ([#46](https://github.com/phmilk/reforged-ts/issues/46)) has the gate install the tarballs of all four packages. It installs those of the publish plan only, deliberately: a package the release does not publish is not packed, and what the Template gets for it from npm is the bytes already published, which are the bytes a Map project installs next to this release. Packing it again would test a build that is never published.
 
-The Template is checked out at `v<major>` of the library version. Every 1.x, alphas included, maps to `v1`. A tag and a branch check out the same way. `pnpm -s release:template-gate --print-ref --pack-dir <dir>` prints the ref for the library version in the plan.
+The Template is checked out at `v<major>` of the library version. Every 1.x, alphas included, maps to `v1`. A tag and a branch check out the same way. `pnpm --silent release:template-gate --print-ref --pack-dir <dir>` prints the ref for the library version in the plan.
+
+Each Template command runs on the pnpm the Template's `packageManager` pins, as in a Map project, whatever pnpm runs this workspace. pnpm turns its switch to a project's pinned version off in the environment of the scripts it runs, so the gate turns it back on for the Template's commands (`npm_config_manage_package_manager_versions=true`).
 
 ### Running it locally
 
 ```sh
 pnpm run build
 pnpm changeset pack --out-dir ../pack
-git clone --branch "$(pnpm -s release:template-gate --print-ref --pack-dir ../pack)" \
+git clone --branch "$(pnpm --silent release:template-gate --print-ref --pack-dir ../pack)" \
   https://github.com/phmilk/reforged-ts-template.git ../t
 pnpm release:template-gate --template ../t --pack-dir ../pack
 ```
 
 - Relative paths resolve against the folder you run the command from.
 - Keep the clone outside this repository. A Template without its own `pnpm-workspace.yaml` would otherwise be installed as part of this workspace. On Windows, keep its path short: vitest fails at startup when a path under the Template's `node_modules` passes 260 characters.
-- The gate leaves the overrides, a lockfile and the build output in the checkout. Use a throwaway clone.
+- The gate leaves the overrides in `pnpm-workspace.yaml`, the build output and any lockfile the install writes in the checkout. Use a throwaway clone.
 - Packing an unversioned workspace (every package at `0.0.0`) is fine for a local run, because the overrides replace the Template's ranges. It is never fine for publishing.
 - Until the Template has a `v1` ref, clone its default branch instead. The release workflow does not fall back: it needs the ref (see [its prerequisites](#prerequisites-outside-this-repository)).
 
@@ -332,6 +334,7 @@ Checked by hand, then `pnpm changeset pre exit` in a pull request; the next Vers
 - [ ] [The compatibility matrix generator](#the-compatibility-matrix) produces the 1.0.0 row without error.
 - [ ] The build-phase notes are gone from the root README and the four package READMEs, and their install commands no longer name `@next`.
 - [ ] The migration page for w3ts 3.x to reforged-ts 1.0 is present with its `renames.json` entries (the major-changeset gate checks this mechanically: it treats the first stable release of `reforged-ts` as a major).
+- [ ] pnpm waits a day before it installs a new version again: `minimumReleaseAge: 1440` in `pnpm-workspace.yaml`, and `minimumReleaseAge: "1 day"` with `internalChecksFilter: "strict"` in `renovate.json5`, so Renovate proposes no version pnpm would refuse. It is off during the build phase ([#221](https://github.com/phmilk/reforged-ts/issues/221)).
 
 ## Deprecating and removing a symbol
 
@@ -348,7 +351,7 @@ Fixes land only on the latest minor of the latest major. There are no maintenanc
 
 ## The release workflow
 
-`.github/workflows/release.yml` runs on every push to `master`. Merging to `master` releases, and no one holds a token: the pull requests are opened by the repository's GitHub App, and npm accepts the upload through trusted publishing. A concurrency group keeps two releases from versioning or publishing at once; a newer push waits for the running one. A dry run has a group of its own (the ref and `-dry-run`), so a rehearsal on `master` never waits behind a release, nor replaces a release run waiting in the group. Each job runs on the Node version of `.node-version` (24), pins its actions to a commit, restores no dependency cache, and gets only the permissions listed below. The workflow uses the `changesets/action` v2 sub-actions rather than the combined action, so only the publish job can request an OIDC token. The pack job is the exception: it runs `changeset pack` itself rather than the `pack` sub-action, because the sub-action uploads the artifact as it packs, and the publish plan's tags must be rewritten to `next` ([`release:dist-tag`](#the-dist-tag)) before the upload.
+`.github/workflows/release.yml` runs on every push to `master`. Merging to `master` releases, and no one holds a token: the pull requests are opened by the repository's GitHub App, and npm accepts the upload through trusted publishing. A concurrency group keeps two releases from versioning or publishing at once; a newer push waits for the running one. A dry run has a group of its own (the ref and `-dry-run`), so a rehearsal on `master` never waits behind a release, nor replaces a release run waiting in the group. Each job runs on the Node version of `.node-version` (24) and the pnpm of the root `packageManager` field (12), pins its actions to a commit, restores no dependency cache, and gets only the permissions listed below. The workflow uses the `changesets/action` v2 sub-actions rather than the combined action, so only the publish job can request an OIDC token. The pack job is the exception: it runs `changeset pack` itself rather than the `pack` sub-action, because the sub-action uploads the artifact as it packs, and the publish plan's tags must be rewritten to `next` ([`release:dist-tag`](#the-dist-tag)) before the upload.
 
 | Job             | Runs when                                                      | Permissions                                  | What it does                                                                                                                                                                                                                                              |
 | --------------- | -------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -371,7 +374,7 @@ The tags and the releases are created with the App's token, not the job's defaul
 `pnpm release:publish-check` (`release/src/publish-check.ts`) runs in the publish job before anything is published and fails with one line per missing prerequisite:
 
 - the job cannot request an OIDC token: `permissions: id-token: write` is missing;
-- the publishing tool cannot do trusted publishing: only pnpm 11 and later do it (pnpm 10's `publish` never exchanges the job's OIDC token, and npm answers `ENEEDAUTH`). The workspace stays on pnpm 10, so the publish job removes the root `packageManager` field from its own checkout and installs pnpm 11 for itself before this check;
+- the publishing tool cannot do trusted publishing: only pnpm 11 and later do it (pnpm 10's `publish` never exchanges the job's OIDC token, and npm answers `ENEEDAUTH`). The publish job runs the pnpm of the root `packageManager` field, pnpm 12, so that field must stay on pnpm 11 or later;
 - a publishable package is not on npm yet: trusted publishing is configured on an existing package only, so a package's first version is published by hand with [the first-publish wizard](#the-first-publish-wizard).
 
 npm does not expose a package's trusted publisher, so a missing or mismatched one shows only at upload, as an `ENEEDAUTH` or 404 from npm.
