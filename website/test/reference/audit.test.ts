@@ -1,5 +1,5 @@
 // The docs audit (#43) on the reference tests' fixture library: TypeDoc with
-// the site's reference options, and ESLint with the workspace's docs
+// the site's reference options, and ESLint with the workspace's
 // configuration, its doc comment rules extended to the fixture's files. The
 // fixture's `undocumentedFarewell` has no doc comment.
 import { join } from "node:path";
@@ -25,7 +25,7 @@ const FIXTURE_REFERENCE: Reference = {
 // Imported by URL: the configuration is JavaScript, which this program does
 // not type-check.
 const { docComments } = (await import(
-  new URL("eslint.docs.config.mjs", WORKSPACE_URL).href
+  new URL("eslint.config.mjs", WORKSPACE_URL).href
 )) as { docComments: Linter.Config };
 
 const SUBJECT: AuditSubject = {
@@ -33,7 +33,7 @@ const SUBJECT: AuditSubject = {
   reference: FIXTURE_REFERENCE,
   eslint: {
     cwd: WORKSPACE,
-    overrideConfigFile: join(WORKSPACE, "eslint.docs.config.mjs"),
+    overrideConfigFile: join(WORKSPACE, "eslint.config.mjs"),
     overrideConfig: {
       files: ["website/test/reference/fixtures/library/src/**/*.ts"],
       ...docComments,

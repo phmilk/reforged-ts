@@ -1,8 +1,9 @@
-// The doc comment lint (#43): the rules of the workspace's docs
+// The doc comment lint (#43): the doc comment rules of the workspace's ESLint
 // configuration, run by ESLint's API on the fixtures under fixtures/doc-lint,
-// so a broken tsdoc.json or rule option fails a test and not only the audit.
+// so a broken tsdoc.json or rule option fails a test and not only the lint.
 // The fixtures are linted with the rules alone, without the type-aware
-// configuration they sit beside.
+// configuration they sit beside; `pnpm lint` leaves them out of the rules,
+// since they hold deliberate findings.
 
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,7 +19,7 @@ const FIXTURES = join(LIBRARY, "test/node/fixtures/doc-lint");
 // Imported by URL: the configuration is JavaScript, which this program does
 // not type-check.
 const { docComments } = (await import(
-  new URL("eslint.docs.config.mjs", WORKSPACE_URL).href
+  new URL("eslint.config.mjs", WORKSPACE_URL).href
 )) as { docComments: Linter.Config };
 
 /**
@@ -54,12 +55,12 @@ function describeAll(messages: readonly Linter.LintMessage[]): string[] {
 }
 
 describe("the doc comment lint", () => {
-  it("runs every rule at warn", () => {
+  it("runs every rule at error", () => {
     const levels = Object.values(docComments.rules ?? {}).map((entry) =>
       Array.isArray(entry) ? entry[0] : entry,
     );
     expect(levels.length).toBeGreaterThan(0);
-    expect(new Set(levels)).toEqual(new Set(["warn"]));
+    expect(new Set(levels)).toEqual(new Set(["error"]));
   });
 
   it("accepts every declared tag and a generated Typings header", async () => {

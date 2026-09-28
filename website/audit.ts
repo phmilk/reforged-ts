@@ -2,10 +2,10 @@
 // library still lacks, per file, largest first, then a total. Two sources:
 // TypeDoc, run with the options of the site's library reference and its
 // plugin, emitting nothing, whose warnings are those `docs:check` logs (an
-// undocumented symbol first); and ESLint with the docs configuration
-// (eslint.docs.config.mjs). Exit code 0 while the gates are at warn; with
-// `--strict`, 1 on any finding. 1 on a TypeDoc error either way, 2 on
-// arguments. Node runs it from source, like the site's scripts; it sits
+// undocumented symbol first); and ESLint with the workspace's configuration
+// (eslint.config.mjs), whose doc comment rules fail `pnpm lint` too. With
+// `--strict`, which the root script passes, exit code 1 on any finding;
+// without it, 0. 1 on a TypeDoc error either way, 2 on arguments. Node runs it from source, like the site's scripts; it sits
 // beside reference.ts, whose compiler options it shares, since it runs the
 // library's reference.
 //
@@ -49,7 +49,7 @@ export interface AuditSubject {
   readonly root: string;
   /** The reference whose TypeDoc run lists the undocumented symbols. */
   readonly reference: Reference;
-  /** ESLint's options: the docs configuration, from `root`. */
+  /** ESLint's options: the configuration with the doc comment rules. */
   readonly eslint: ESLint.Options;
   /** What ESLint lints, relative to its `cwd`. */
   readonly lint: readonly string[];
@@ -65,10 +65,7 @@ export function workspaceSubject(): AuditSubject {
   return {
     root,
     reference: library,
-    eslint: {
-      cwd: root,
-      overrideConfigFile: join(root, "eslint.docs.config.mjs"),
-    },
+    eslint: { cwd: root },
     lint: ["packages/reforged-ts/src"],
   };
 }
@@ -220,7 +217,7 @@ async function typedocFindings(
   return { findings, errors };
 }
 
-/** Every message of the docs configuration on the linted files. */
+/** Every message of the ESLint configuration on the linted files. */
 async function lintFindings(subject: AuditSubject): Promise<Finding[]> {
   const eslint = new ESLint(subject.eslint);
   const results = await eslint.lintFiles([...subject.lint]);
