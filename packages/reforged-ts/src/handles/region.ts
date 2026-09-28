@@ -17,7 +17,7 @@ import { Unit } from "./unit";
  */
 export class Region extends Handle<region> {
   /**
-   * Creates an empty region, with no cells.
+   * Creates a region that holds no cell yet.
    * @returns The new region.
    * @throws When the game returns no handle:
    * `reforged-ts: failed to create Region`, at the calling line. In Dev
@@ -32,9 +32,9 @@ export class Region extends Handle<region> {
   /**
    * Adds the cell holding the given coordinates to the region.
    * @remarks
-   * A cell is a square of 32 by 32 world units aligned on multiples of 32:
-   * the coordinates, rounded down to a multiple of 32, are its minimum
-   * corner.
+   * Cells form a grid of squares 32 world units wide, whose lines lie on
+   * the multiples of 32: the point (70, 10) is in the cell from (64, 0) to
+   * (96, 32).
    * @param x - An x-coordinate inside the cell, in world units.
    * @param y - A y-coordinate inside the cell, in world units.
    * @native RegionAddCell
@@ -46,9 +46,9 @@ export class Region extends Handle<region> {
   /**
    * Adds the cell holding a Point to the region.
    * @remarks
-   * A cell is a square of 32 by 32 world units aligned on multiples of 32:
-   * the coordinates, rounded down to a multiple of 32, are its minimum
-   * corner.
+   * Cells form a grid of squares 32 world units wide, whose lines lie on
+   * the multiples of 32: the point (70, 10) is in the cell from (64, 0) to
+   * (96, 32).
    * @param whichPoint - A point inside the cell.
    * @native RegionAddCellAtLoc
    */
@@ -68,9 +68,9 @@ export class Region extends Handle<region> {
   /**
    * Removes the cell holding the given coordinates from the region.
    * @remarks
-   * A cell is a square of 32 by 32 world units aligned on multiples of 32:
-   * the coordinates, rounded down to a multiple of 32, are its minimum
-   * corner.
+   * Cells form a grid of squares 32 world units wide, whose lines lie on
+   * the multiples of 32: the point (70, 10) is in the cell from (64, 0) to
+   * (96, 32).
    * @param x - An x-coordinate inside the cell, in world units.
    * @param y - A y-coordinate inside the cell, in world units.
    * @native RegionClearCell
@@ -82,9 +82,9 @@ export class Region extends Handle<region> {
   /**
    * Removes the cell holding a Point from the region.
    * @remarks
-   * A cell is a square of 32 by 32 world units aligned on multiples of 32:
-   * the coordinates, rounded down to a multiple of 32, are its minimum
-   * corner.
+   * Cells form a grid of squares 32 world units wide, whose lines lie on
+   * the multiples of 32: the point (70, 10) is in the cell from (64, 0) to
+   * (96, 32).
    * @param whichPoint - A point inside the cell.
    * @native RegionClearCellAtLoc
    */

@@ -77,7 +77,7 @@ export class Quest extends Handle<quest> {
    * @throws When the game returns no handle: `reforged-ts: failed to create Quest`, at the calling line.
    * In Dev mode, also when called before the globals Init stage or inside `MapPlayer.runLocal`.
    * @native CreateQuest
-   * @bug Do not use this in a global initialisation as it crashes the game there.
+   * @bug Called from a global variable's initial value, it crashes the game.
    */
   public static create(): Quest {
     return this.expect(CreateQuest());
@@ -204,7 +204,8 @@ export class Quest extends Handle<quest> {
   }
 
   /**
-   * Sets the text shown when the quest is selected in the quest menu.
+   * Sets the quest's description, the text the quest menu shows while the
+   * quest is picked there.
    * @param description - The text; never empty on an enabled, discovered
    * quest, which crashes the game.
    * @native QuestSetDescription

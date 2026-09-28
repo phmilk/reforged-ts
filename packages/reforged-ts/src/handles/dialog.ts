@@ -133,7 +133,9 @@ export class Dialog extends Handle<dialog> {
 
   /**
    * Shows the dialog to one player, or hides it from them.
-   * @remarks Dialogs can not be shown at map-init. Use a wait or a zero-timer to display as soon as possible.
+   * @remarks A dialog does not appear when shown during map initialisation:
+   * show it after a wait, or from a Timer of zero seconds, to have it up
+   * as early as the game allows.
    * @param whichPlayer - The player who sees or stops seeing the dialog.
    * @param flag - True to show the dialog, or show it again after adding
    * buttons; false to hide it.

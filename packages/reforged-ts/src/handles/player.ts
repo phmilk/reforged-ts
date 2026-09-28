@@ -399,12 +399,13 @@ export class MapPlayer extends Handle<player> {
   }
 
   /**
-   * Reveals a player's remaining buildings to a force.
-   * The black mask over the buildings will be removed as if the territory had been discovered
-   * @remarks his function will not check whether the player has a town hall before revealing.
-   * @param toWhichPlayers - The players who will see whichPlayer's buildings.
-   * @param flag - If true, the buildings will be revealed. If false, the buildings will not be revealed.
-   * Note that if you set it to false, it will not hide the buildings with a black mask.
+   * Shows the player's remaining buildings to a force, lifting the black
+   * mask over them as though their area were explored.
+   * @remarks It reveals the buildings whether or not the player still has a
+   * town hall.
+   * @param toWhichPlayers - The players who get to see the buildings.
+   * @param flag - `true` to reveal the buildings. `false` stops revealing
+   * them, but does not put the black mask back over them.
    * @native CripplePlayer
    */
   public cripple(toWhichPlayers: Force, flag: boolean) {
@@ -416,7 +417,7 @@ export class MapPlayer extends Handle<player> {
    * is the sender, not the viewer: the message shows on every client that
    * runs the call, so {@link MapPlayer.runLocal} shows it to one player.
    * @remarks
-   * The message does not appear in the message log (F12).
+   * The chat log (F12) does not keep the message.
    * @param recipient - The chat channel the message is labelled with: 0 for
    * all, 1 for allies, 2 for observers, 3 or more for private. It does not
    * change who sees the message.

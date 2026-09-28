@@ -23,7 +23,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Opens the game cache saved under a campaign file name, or a new empty
    * one.
-   * @remarks You cannot create more than 255 gamecaches
+   * @remarks The game allows at most 255 game caches.
    * @param campaignFile - The cache's file name, such as `"MyCampaign.w3v"`;
    * two calls with one name give caches of the same data.
    * @returns The game cache.

@@ -78,7 +78,7 @@ export class Ubersplat extends Handle<ubersplat> {
   /**
    * Would move the ubersplat to the end of its lifetime.
    * @native FinishUbersplat
-   * @bug Does nothing.
+   * @bug The Native has no effect.
    */
   public finish() {
     FinishUbersplat(this.handle);
@@ -104,7 +104,7 @@ export class Ubersplat extends Handle<ubersplat> {
   /**
    * Would restart the ubersplat's lifetime from its birth.
    * @native ResetUbersplat
-   * @bug Does nothing.
+   * @bug The Native has no effect.
    */
   public reset() {
     ResetUbersplat(this.handle);

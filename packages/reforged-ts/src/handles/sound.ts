@@ -20,22 +20,30 @@ import { Handle } from "./handle";
  */
 export class Sound extends Handle<sound> {
   /**
-   * Creates a sound handle.
+   * Creates a sound handle for a sound file.
    * @remarks
-   * - You can only play the same sound handle once.
-   * - You can only play the same sound filepath four times.
-   * - You can only play 16 sounds in general.
-   * - Sounds of the same filepath (on different sound handles) must have a delay
-   *   of at least 0.1 seconds inbetween them to be played.
-   *   You can overcome this by starting one earlier and then using `SetSoundPosition`.
-   * @param fileName - The path to the file.
-   * @param looping - Looping sounds will restart once the sound duration has finished.
-   * @param is3D - 3D Sounds can be played on particular areas of the map. They are at their loudest when the camera is close to the sound's coordinates.
+   * The game caps playback:
+   * - a sound handle plays once;
+   * - one file path plays at most four times;
+   * - at most 16 sounds play in all;
+   * - two handles of one file path need at least 0.1 seconds between their
+   *   starts, or the second does not play. Starting one of them earlier and
+   *   then calling `SetSoundPosition` gets around it.
+   * @param fileName - The file's path.
+   * @param looping - Whether the sound starts over each time it reaches its
+   * end.
+   * @param is3D - Whether the sound plays from a place on the map, loudest
+   * when the camera is near that place.
    * @param stopWhenOutOfRange - Whether a 3D sound stops once the camera is
    * out of its range, instead of playing on unheard.
-   * @param fadeInRate - How quickly the sound fades in. The higher the number, the faster the sound fades in. Maximum number is 127.
-   * @param fadeOutRate - How quickly the sound fades out. The higher the number, the faster the sound fades out. Maximum number is 127.
-   * @param eaxSetting - EAX is an acronym for environmental audio extensions. In the sound editor, this corresponds to the "Effect" setting.
+   * @param fadeInRate - How fast the sound fades in: the higher, the faster.
+   * jassdoc gives 127 as the highest rate, yet Blizzard.j passes 10000 and
+   * 12700.
+   * @param fadeOutRate - How fast the sound fades out: the higher, the
+   * faster. jassdoc gives 127 as the highest rate, yet Blizzard.j passes
+   * 10000 and 12700.
+   * @param eaxSetting - The EAX (environmental audio extensions) preset, the
+   * sound editor's "Effect" field, such as `"DefaultEAXON"`.
    * @returns The new sound.
    * @throws When the game returns no handle:
    * `reforged-ts: failed to create Sound (<fileName>)`, at the calling line.
@@ -69,7 +77,7 @@ export class Sound extends Handle<sound> {
   /**
    * Creates a sound handle playing `fileName` with the settings of the SLK
    * entry `slkEntryName`, through `CreateSoundFilenameWithLabel`.
-   * @param fileName - The path to the file.
+   * @param fileName - The sound file's path.
    * @param looping - Whether the sound restarts each time it ends.
    * @param is3D - Whether the sound plays from a position on the map.
    * @param stopWhenOutOfRange - Whether a 3D sound stops once the camera is
@@ -290,7 +298,7 @@ export class Sound extends Handle<sound> {
   /**
    * Sets the cone in which a 3D sound is heard at full volume, around the
    * direction of `setConeOrientation`.
-   * @remarks This call is only valid if the sound was created with 3d enabled
+   * @remarks It applies only to a Sound created with `is3D`.
    * @param inside - The angle of the full-volume cone, in degrees.
    * @param outside - The angle of the outer cone, in degrees, where the volume
    * falls to `outsideVolume`.
@@ -303,7 +311,7 @@ export class Sound extends Handle<sound> {
 
   /**
    * Points the cone of a 3D sound in a direction.
-   * @remarks This call is only valid if the sound was created with 3d enabled
+   * @remarks It applies only to a Sound created with `is3D`.
    * @param x - The direction's x component.
    * @param y - The direction's y component.
    * @param z - The direction's z component.
@@ -325,7 +333,7 @@ export class Sound extends Handle<sound> {
   /**
    * Sets the distances over which a 3D sound fades with the camera's
    * distance.
-   * @remarks This call is only valid if the sound was created with 3d enabled
+   * @remarks It applies only to a Sound created with `is3D`.
    * @param minDist - The distance within which the sound is at full volume,
    * in world units.
    * @param maxDist - The distance at which it reaches its lowest volume, in
@@ -366,8 +374,10 @@ export class Sound extends Handle<sound> {
   }
 
   /**
-   * Applies default settings to the sound.
-   * @param soundLabel - The label out of one of the SLK-files, whose settings should be used, e.g. values like volume, pitch, pitch variance, priority, channel, min distance, max distance, distance cutoff or eax.
+   * Gives the sound the settings of an entry of the game's sound SLK files.
+   * @param soundLabel - The entry's label. The sound takes its settings, such
+   * as the volume, pitch and pitch variance, priority, channel, minimum and
+   * maximum distances, distance cutoff and EAX preset.
    * @native SetSoundParamsFromLabel
    */
   public setParamsFromLabel(soundLabel: string) {
@@ -375,13 +385,16 @@ export class Sound extends Handle<sound> {
   }
 
   /**
-   * Tones the pitch of the sound, default value is 1.
-   * Increasing it you get the chipmunk version and the sound becomes shorter, when decremented the sound becomes low-pitched and longer.
-   * @param pitch - The pitch ratio, where 1 is the file's own pitch.
+   * Sets the sound's pitch, which also changes how long it plays.
+   * @remarks
+   * Above 1 the sound gets higher and shorter; below 1, deeper and longer.
+   * @param pitch - The pitch ratio, where 1, the default, is the file's own
+   * pitch.
    * @native SetSoundPitch
-   * @bug This native has very weird behaviour.
-   * See [this](http://www.hiveworkshop.com/threads/setsoundpitch-weirdness.215743/#post-2145419) for an explenation
-   * and [this](http://www.hiveworkshop.com/threads/snippet-rapidsound.258991/#post-2611724) for a non-bugged implementation.
+   * @bug The Native behaves oddly. Hive Workshop explains why, at
+   * http://www.hiveworkshop.com/threads/setsoundpitch-weirdness.215743/#post-2145419,
+   * and offers a replacement without the problem, at
+   * http://www.hiveworkshop.com/threads/snippet-rapidsound.258991/#post-2611724.
    */
   public setPitch(pitch: number) {
     SetSoundPitch(this.handle, pitch);
@@ -390,7 +403,7 @@ export class Sound extends Handle<sound> {
   /**
    * Moves the playback of the sound to a point in its file.
    * @remarks
-   * Must be called immediately after starting the sound
+   * Call it right after the sound starts playing.
    * @param millisecs - The time from the file's start, in milliseconds.
    * @native SetSoundPlayPosition
    */
@@ -400,7 +413,7 @@ export class Sound extends Handle<sound> {
 
   /**
    * Places a 3D sound on the map.
-   * @remarks This call is only valid if the sound was created with 3d enabled
+   * @remarks It applies only to a Sound created with `is3D`.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @param z - The z-coordinate, in world units.
@@ -413,7 +426,7 @@ export class Sound extends Handle<sound> {
   /**
    * Sets the velocity of a 3D sound's source, which shifts its pitch as a
    * moving source's does.
-   * @remarks This call is only valid if the sound was created with 3d enabled
+   * @remarks It applies only to a Sound created with `is3D`.
    * @param x - The velocity's x component.
    * @param y - The velocity's y component.
    * @param z - The velocity's z component.
@@ -425,7 +438,7 @@ export class Sound extends Handle<sound> {
 
   /**
    * Sets the loudness of the sound.
-   * @param volume - Volume, between 0 and 127
+   * @param volume - The volume, from 0 to 127.
    * @native SetSoundVolume
    */
   public setVolume(volume: number) {
@@ -436,10 +449,11 @@ export class Sound extends Handle<sound> {
    * Starts the sound, through `StartSound`, or `StartSoundEx` when `fadeIn` is
    * given.
    * @remarks
-   * - You can only play the same sound handle once.
-   * - You can only play 16 sounds in general.
-   * - Sounds of the same filepath (on different sound handles) must have a delay of at least 0.1 seconds inbetween them to be played.
-   *   You can overcome this by starting one earlier and then using `setPosition`.
+   * - A sound handle plays once.
+   * - At most 16 sounds play in all.
+   * - Two handles of one file path need at least 0.1 seconds between their
+   *   starts, or the second does not play. Starting one of them earlier and
+   *   then calling `setPosition` gets around it.
    * @param fadeIn - Whether the sound fades in at the `fadeInRate` given to
    * `create`, through `StartSoundEx`; left out, the sound starts through
    * `StartSound`.
@@ -456,8 +470,9 @@ export class Sound extends Handle<sound> {
 
   /**
    * Stops the sound.
-   * @param killWhenDone - The sound gets destroyed if true.
-   * @param fadeOut - Turns down the volume with `fadeOutRate` as stated in constructor.
+   * @param killWhenDone - `true` to destroy the sound as well.
+   * @param fadeOut - `true` to lower the volume at the `fadeOutRate` given
+   * to `create`.
    * @native StopSound
    */
   public stop(killWhenDone: boolean, fadeOut: boolean) {
@@ -485,7 +500,7 @@ export class Sound extends Handle<sound> {
    * @remarks
    * The value can differ between clients, for a voice file whose length
    * depends on the game's language: never let it decide game state.
-   * @param fileName - The path to the file.
+   * @param fileName - The sound file's path.
    * @returns The length, in milliseconds.
    * @native GetSoundFileDuration
    * @async
@@ -519,7 +534,7 @@ export class Sound extends Handle<sound> {
    * @remarks
    * The thematic music plays once and interrupts the map's music; it
    * replaces the thematic music already playing.
-   * @param file - The path to the music file.
+   * @param file - The music file's path.
    * @param fromMs - Where in the file to start, in milliseconds; its start
    * when left out.
    * @native PlayThematicMusic

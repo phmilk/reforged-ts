@@ -34,7 +34,7 @@ export class Effect extends Handle<effect> {
 
   /**
    * Creates a special effect standing on the ground at the given point.
-   * @param modelName - The path of the model that the effect will use.
+   * @param modelName - The model file the effect shows.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @returns The new effect.
@@ -50,7 +50,7 @@ export class Effect extends Handle<effect> {
 
   /**
    * Creates a special effect at `where`, through `AddSpecialEffectLoc`.
-   * @param modelName - The path of the model that the effect will use.
+   * @param modelName - The model file the effect shows.
    * @param where - The point to stand the effect on.
    * @returns The new effect.
    * @throws When the game returns no handle:
@@ -65,12 +65,13 @@ export class Effect extends Handle<effect> {
 
   /**
    * Creates a special effect attached to a widget.
-   * @param modelName - The path of the model that the effect will use.
-   * @param targetWidget - The widget to attach the effect to.
-   * @param attachPointName - The attachment point of the widget where the effect will
-   * be placed. Attachment points are points in a model that can be referenced to as
-   * areas for effects to be attached, whether it be from a spell or this function.
-   * If the attachment point does not exist, it will attach the effect to the model's origin.
+   * @param modelName - The model file the effect shows.
+   * @param targetWidget - The unit, item or destructable that carries the
+   * effect.
+   * @param attachPointName - The attachment point of the widget's model: a
+   * named spot of the model that spells and this call attach effects to,
+   * such as `"origin"` or `"overhead"`. A point the model lacks puts the
+   * effect at the model's origin.
    * @returns The new effect, which keeps `targetWidget` and `attachPointName`
    * in its `attachWidget` and `attachPointName`.
    * @throws When the game returns no handle:
@@ -174,7 +175,8 @@ export class Effect extends Handle<effect> {
    * `FourCC("AHtc")`, or a string (see the remarks).
    * @param effectType - Which of the ability's art fields to use, such as
    * `EFFECT_TYPE_CASTER` or `EFFECT_TYPE_TARGET`.
-   * @param targetWidget - The widget to attach the effect to.
+   * @param targetWidget - The unit, item or destructable that carries the
+   * effect.
    * @param attachPointName - The attachment point of the widget's model, such
    * as `"origin"` or `"overhead"`.
    * @returns The new effect, which keeps `targetWidget` and `attachPointName`
@@ -388,8 +390,8 @@ export class Effect extends Handle<effect> {
   }
 
   /**
-   * Sets the transparency of the effect's main model; an attached effect
-   * keeps the transparency of what it is attached to.
+   * Sets how opaque the effect's own model is; an attached effect does not
+   * change, and takes the transparency of the unit or effect carrying it.
    * @param alpha - From 0 (invisible) to 255 (opaque); a value outside that
    * range does nothing.
    * @native BlzSetSpecialEffectAlpha

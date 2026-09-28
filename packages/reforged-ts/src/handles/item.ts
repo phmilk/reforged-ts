@@ -396,7 +396,7 @@ export class Item extends Widget {
   /**
    * Adds an ability to the item, which the unit carrying it gains.
    * @remarks
-   * The item must be carried by a unit for the ability to be added.
+   * It works only on an item that a unit carries.
    * @param abilCode - The ability's rawcode, such as `FourCC("AIat")`.
    * @native BlzItemAddAbility
    */

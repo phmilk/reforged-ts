@@ -42,7 +42,8 @@ export class Timer extends Handle<timer> {
    * Gets the time left before the timer expires.
    * @returns The remaining time, in seconds.
    * @native TimerGetRemaining
-   * @bug This might not return the correct value if the timer was paused and restarted at one point. See http://www.wc3c.net/showthread.php?t=95756.
+   * @bug The value can be wrong for a timer that was paused and later
+   * resumed: http://www.wc3c.net/showthread.php?t=95756.
    */
   public get remaining(): number {
     return TimerGetRemaining(this.handle);
