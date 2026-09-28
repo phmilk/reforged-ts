@@ -31,8 +31,9 @@ export class QuestItem extends Handle<questitem> {
   }
 
   /**
-   * Sets the text of the requirement's line.
-   * @param description - The text.
+   * Changes the line the quest menu shows for the requirement.
+   * @param description - The requirement as the player reads it, such as
+   * `"Find the lost sword"`.
    * @native QuestItemSetDescription
    */
   public setDescription(description: string) {
@@ -40,8 +41,9 @@ export class QuestItem extends Handle<questitem> {
   }
 
   /**
-   * Whether the requirement is marked completed.
-   * @returns True when it is completed.
+   * Whether the requirement is marked completed: the game never marks one
+   * itself, the map's code does through the setter.
+   * @returns True when it is marked completed, false for a new one.
    * @native IsQuestItemCompleted
    */
   public get completed() {
@@ -84,8 +86,10 @@ export class Quest extends Handle<quest> {
   }
 
   /**
-   * Whether the quest is marked completed.
-   * @returns True when it is completed.
+   * Whether the quest is marked completed, which the map's code does through
+   * the setter.
+   * @returns True when it is marked completed, even when it is also marked
+   * failed; false for a new quest.
    * @native IsQuestCompleted
    */
   public get completed() {
@@ -102,8 +106,9 @@ export class Quest extends Handle<quest> {
   }
 
   /**
-   * Whether the quest is discovered.
-   * @returns True when it is discovered.
+   * Whether the quest is discovered: the quest menu shows an undiscovered
+   * one with a placeholder title, icon and description.
+   * @returns True when it is discovered, as a new quest is.
    * @native IsQuestDiscovered
    */
   public get discovered() {
@@ -121,7 +126,7 @@ export class Quest extends Handle<quest> {
 
   /**
    * Whether the quest is enabled, that is listed in the quest menu.
-   * @returns True when it is enabled.
+   * @returns True when it is listed, as a new quest is.
    * @native IsQuestEnabled
    */
   public get enabled() {
@@ -138,8 +143,10 @@ export class Quest extends Handle<quest> {
   }
 
   /**
-   * Whether the quest is marked failed.
-   * @returns True when it is failed.
+   * Whether the quest is marked failed, which the map's code does through
+   * the setter.
+   * @returns True when it is marked failed, even when it is also marked
+   * completed; false for a new quest.
    * @native IsQuestFailed
    */
   public get failed() {
@@ -227,7 +234,7 @@ export class Quest extends Handle<quest> {
 
   /**
    * Sets the title shown in the quest menu's list and above the description.
-   * @param title - The title.
+   * @param title - The quest's name, such as `"The Lost Sword"`.
    * @native QuestSetTitle
    */
   public setTitle(title: string) {

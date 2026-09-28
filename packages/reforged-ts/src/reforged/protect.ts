@@ -191,7 +191,8 @@ export function reportedFailures(): ReportedFailures {
  * Records one failure of a protected callback that `reported` remembers:
  * the first time a message is seen (since the last reset) it is reported,
  * `reforged-ts: <origin> failed: <message>`; afterwards it is only counted.
- * @param reported - The failing callback's memory.
+ * @param reported - The messages this callback already reported, which
+ * decide between a report and a count.
  * @param origin - Where it was registered, as `originOf` names it.
  * @param message - The Lua error text.
  */

@@ -192,7 +192,7 @@ export class Rectangle extends Handle<rect> {
   /**
    * Moves the rectangle, keeping its size, so that it is centered on a
    * Point.
-   * @param newCenterPoint - The new center.
+   * @param newCenterPoint - The Point the rectangle's center moves to.
    * @native MoveRectToLoc
    */
   public movePoint(newCenterPoint: Point) {

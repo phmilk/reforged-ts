@@ -47,9 +47,9 @@ export class Image extends Handle<image> {
    * @param file - The texture's path. Its border should be fully
    * transparent. An invalid path makes `CreateImage` return the invalid
    * image, id -1.
-   * @param sizeX - The size along x.
-   * @param sizeY - The size along y.
-   * @param sizeZ - The size along z.
+   * @param sizeX - The image's extent along x, in world units.
+   * @param sizeY - The image's extent along y, in world units.
+   * @param sizeZ - The image's extent along z, in world units.
    * @param posX - The x-coordinate of the image's bottom-left corner.
    * @param posY - The y-coordinate of the image's bottom-left corner.
    * @param posZ - The z-coordinate of the image.
@@ -145,7 +145,7 @@ export class Image extends Handle<image> {
    * @remarks
    * No other function changes an image's z-offset.
    * @param flag - `true` to draw the image at `height`.
-   * @param height - The z-offset of the image.
+   * @param height - The height to draw the image at, in world units.
    * @native SetImageConstantHeight
    */
   public setConstantHeight(flag: boolean, height: number) {

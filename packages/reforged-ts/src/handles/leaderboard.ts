@@ -74,7 +74,8 @@ export class Leaderboard extends Handle<leaderboard> {
   }
 
   /**
-   * Whether the leaderboard is shown.
+   * Whether the leaderboard is on screen for the players whose leaderboard
+   * it is.
    * @returns True when it is shown, false when it is hidden.
    * @native IsLeaderboardDisplayed
    */
@@ -83,8 +84,10 @@ export class Leaderboard extends Handle<leaderboard> {
   }
 
   /**
-   * The number of items on the leaderboard.
-   * @returns The item count.
+   * Counts the items on the leaderboard, whether or not the board is sized
+   * to show them all.
+   * @returns The item count, the value to give the `itemCount` setter so the
+   * board fits its items.
    * @native LeaderboardGetItemCount
    */
   public get itemCount() {
@@ -144,9 +147,9 @@ export class Leaderboard extends Handle<leaderboard> {
   }
 
   /**
-   * Sets the label of one item.
+   * Changes the text one item shows next to its value.
    * @param item - The item's index, counted from 0.
-   * @param label - The new label.
+   * @param label - The text to show, usually the player's name.
    * @native LeaderboardSetItemLabel
    */
   public setItemLabel(item: number, label: string) {
@@ -196,9 +199,9 @@ export class Leaderboard extends Handle<leaderboard> {
   }
 
   /**
-   * Sets the value of one item.
+   * Changes the number one item shows, such as the player's score.
    * @param item - The item's index, counted from 0.
-   * @param value - The new integer value.
+   * @param value - The number to show, a whole number.
    * @native LeaderboardSetItemValue
    */
   public setItemValue(item: number, value: number) {

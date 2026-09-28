@@ -343,8 +343,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * Gets the turn rate the unit type defines.
-   * @returns The default turn rate.
+   * Gets the turn rate the unit type defines, its object editor field
+   * Movement - Turn Rate.
+   * @returns The default turn rate, whatever `turnSpeed` was set to since.
    * @native GetUnitDefaultTurnSpeed
    */
   public get defaultTurnSpeed() {
@@ -379,7 +380,7 @@ export class Unit extends Widget {
 
   /**
    * Gets the direction the unit faces, in degrees.
-   * @returns The facing, in degrees.
+   * @returns The facing, in degrees (0 east, 90 north).
    * @native GetUnitFacing
    */
   public get facing() {
@@ -491,8 +492,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * Gets the unit's current mana.
-   * @returns The mana.
+   * Gets the mana the unit has left to cast its abilities with, from 0 up to
+   * `maxMana`.
+   * @returns The current mana; 0 for a unit without mana.
    * @native GetUnitState
    */
   public get mana() {
@@ -500,7 +502,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit's current mana.
+   * The mana the unit has left to cast its abilities with; the game keeps
+   * the value between 0 and `maxMana`.
    * @native SetUnitState
    */
   public set mana(value: number) {
@@ -508,8 +511,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * Gets the unit's maximum life.
-   * @returns The maximum life.
+   * Gets the most life the unit can have, the full length of its health bar.
+   * @returns The maximum life, a whole number of hit points.
    * @native BlzGetUnitMaxHP
    */
   public get maxLife() {
@@ -517,7 +520,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit's maximum life.
+   * The most life the unit can have, the full length of its health bar, as a
+   * whole number of hit points.
    * @native BlzSetUnitMaxHP
    */
   public set maxLife(value: number) {
@@ -525,8 +529,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * Gets the unit's maximum mana.
-   * @returns The maximum mana.
+   * Gets the most mana the unit can have, the full length of its mana bar.
+   * @returns The maximum mana, a whole number; 0 for a unit without mana.
    * @native BlzGetUnitMaxMana
    */
   public get maxMana() {
@@ -534,7 +538,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit's maximum mana.
+   * The most mana the unit can have, the full length of its mana bar, as a
+   * whole number.
    * @native BlzSetUnitMaxMana
    */
   public set maxMana(value: number) {
@@ -832,7 +837,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit's turn rate.
+   * How fast the unit turns to a new facing, on the scale of the object
+   * editor field Movement - Turn Rate: a higher value turns faster.
    * @native SetUnitTurnSpeed
    */
   public set turnSpeed(value: number) {
@@ -840,8 +846,10 @@ export class Unit extends Widget {
   }
 
   /**
-   * Gets the unit's turn rate.
-   * @returns The turn rate.
+   * Gets how fast the unit turns to a new facing: a higher value turns
+   * faster.
+   * @returns The turn rate, on the scale of the object editor field
+   * Movement - Turn Rate.
    * @native GetUnitTurnSpeed
    */
   public get turnSpeed() {
@@ -995,7 +1003,7 @@ export class Unit extends Widget {
   /**
    * Gives the hero experience; beyond what a level needs, the hero gains that
    * level and the rest carries over to the next one.
-   * @param xpToAdd - The experience to add.
+   * @param xpToAdd - The experience points to add, a whole number.
    * @param showEyeCandy - `true` to show the level-up effect when the hero
    * gains a level.
    * @native AddHeroXP
@@ -1088,7 +1096,7 @@ export class Unit extends Widget {
 
   /**
    * Adds gold to the gold mine; a negative amount takes gold away.
-   * @param amount - The gold to add.
+   * @param amount - The gold to add, a whole number.
    * @native AddResourceAmount
    * @bug A total under zero shows as a negative amount, but a worker who then
    * gathers from the mine brings back no gold, and the mine is destroyed.
@@ -1249,8 +1257,8 @@ export class Unit extends Widget {
    * Deals damage from the unit to everything in a circle, after a delay.
    * @param delay - The delay before the damage, in seconds.
    * @param radius - The circle's radius, in world units.
-   * @param x - The x-coordinate of the circle's centre.
-   * @param y - The y-coordinate of the circle's centre.
+   * @param x - The x-coordinate of the circle's centre, in world units.
+   * @param y - The y-coordinate of the circle's centre, in world units.
    * @param amount - The damage dealt to each target.
    * @param attack - Deals the damage as an attack.
    * @param ranged - Deals the damage as a ranged one.
@@ -1305,7 +1313,8 @@ export class Unit extends Widget {
    * How the attack, damage and weapon types combine is explained in
    * [this wc3c post](http://www.wc3c.net/showpost.php?p=1030046&postcount=19).
    * @param target - The unit, item or destructable that takes the damage.
-   * @param amount - The damage.
+   * @param amount - The damage to deal, before the target's armor and the
+   * attack and damage types change it.
    * @param attack - `true` to count the damage as an attack.
    * @param ranged - `true` to count the damage as coming from range.
    * @param attackType - The attack type, such as `ATTACK_TYPE_NORMAL`.
@@ -1705,7 +1714,8 @@ export class Unit extends Widget {
   /**
    * Gets one of the unit's states, such as its life or mana.
    * @param whichUnitState - The state, such as `UNIT_STATE_LIFE` or `UNIT_STATE_MAX_MANA`.
-   * @returns The state's value.
+   * @returns The value, in the state's own unit: hit points for
+   * `UNIT_STATE_LIFE`, mana for `UNIT_STATE_MANA`.
    * @native GetUnitState
    */
   public getState(whichUnitState: unitstate) {
@@ -1735,7 +1745,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether an item is in the unit's bag.
-   * @param whichItem - The item.
+   * @param whichItem - The item to look for in the bag.
    * @returns True when the item is in the bag.
    * @native UnitHasItemBagged
    */
@@ -1807,7 +1817,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether the unit has an item equipped.
-   * @param whichItem - The item.
+   * @param whichItem - The item to look for among the equipped ones.
    * @returns True when the item is equipped.
    * @native UnitHasItemEquipped
    */
@@ -1817,7 +1827,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether an item is in the unit's inventory.
-   * @param whichItem - The item.
+   * @param whichItem - The item to look for in the inventory's slots.
    * @returns True when the unit carries the item.
    * @native UnitHasItem
    */
@@ -1853,7 +1863,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether the unit's owner is in a force.
-   * @param whichForce - The force.
+   * @param whichForce - The force to look for the unit's owner in.
    * @returns True when the unit's owner belongs to the force.
    * @native IsUnitInForce
    */
@@ -1863,7 +1873,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether the unit is in a group.
-   * @param whichGroup - The group.
+   * @param whichGroup - The group to look for the unit in.
    * @returns True when the group holds the unit.
    * @native IsUnitInGroup
    */
@@ -1885,7 +1895,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether the unit is within a distance of a point, counting its collision size.
-   * @param whichPoint - The point.
+   * @param whichPoint - The point to measure the distance from.
    * @param distance - The distance, in world units.
    * @returns True when the unit is in range.
    * @native IsUnitInRangeLoc
@@ -1896,7 +1906,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether the unit is within a distance of another unit, counting its collision size.
-   * @param otherUnit - The other unit.
+   * @param otherUnit - The unit to measure the distance from.
    * @param distance - The distance, in world units.
    * @returns True when the unit is in range.
    * @native IsUnitInRange
@@ -1915,7 +1925,8 @@ export class Unit extends Widget {
 
   /**
    * Checks whether the unit is loaded into a transport.
-   * @param whichTransport - The transport.
+   * @param whichTransport - The transport to look in, such as a Goblin
+   * Zeppelin.
    * @returns True when the unit is loaded into that transport.
    * @native IsUnitInTransport
    */
@@ -1934,7 +1945,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether the unit's owner is an ally of a player.
-   * @param whichPlayer - The player.
+   * @param whichPlayer - The player to compare the unit's owner with.
    * @returns True when the unit is the player's ally.
    * @native IsUnitAlly
    */
@@ -1944,7 +1955,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether the unit's owner is an enemy of a player.
-   * @param whichPlayer - The player.
+   * @param whichPlayer - The player to compare the unit's owner with.
    * @returns True when the unit is the player's enemy.
    * @native IsUnitEnemy
    */
@@ -1963,7 +1974,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether the unit stands in the fog of war for a player.
-   * @param whichPlayer - The player.
+   * @param whichPlayer - The player whose view of the map decides.
    * @returns True when the unit is fogged for the player.
    * @native IsUnitFogged
    */
@@ -2002,7 +2013,7 @@ export class Unit extends Widget {
   /**
    * Checks whether the unit stands under the black mask for a player, in the part
    * of the map that player has never explored.
-   * @param whichPlayer - The player.
+   * @param whichPlayer - The player whose view of the map decides.
    * @returns True when the unit is masked for the player.
    * @native IsUnitMasked
    */
@@ -2012,7 +2023,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether a player has the unit selected.
-   * @param whichPlayer - The player.
+   * @param whichPlayer - The player whose selection is read.
    * @returns True when the unit is in the player's selection.
    * @native IsUnitSelected
    */
@@ -2199,7 +2210,7 @@ export class Unit extends Widget {
   /**
    * Orders the unit to carry out an order at a point, such as `"move"`.
    * @param order - The order's name, or its id.
-   * @param whichPoint - The point.
+   * @param whichPoint - The point the order targets.
    * @returns True when the unit took the order.
    * @native IssuePointOrderLoc
    * @native IssuePointOrderByIdLoc
@@ -2254,7 +2265,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether a player can see the unit.
-   * @param whichPlayer - The player.
+   * @param whichPlayer - The player whose view of the map decides.
    * @returns True when the unit is visible to the player.
    * @native IsUnitVisible
    */
@@ -2263,7 +2274,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * Kills the unit.
+   * Kills the unit with no killer: it plays its death animation and fires the
+   * death events, as a unit killed in combat does.
    * @native KillUnit
    */
   public kill() {
@@ -2502,7 +2514,7 @@ export class Unit extends Widget {
 
   /**
    * Drops an item the unit carries onto the ground where the unit stands.
-   * @param whichItem - The item to remove.
+   * @param whichItem - The item, in the unit's inventory.
    * @native UnitRemoveItem
    */
   public removeItem(whichItem: Item) {
@@ -2592,7 +2604,7 @@ export class Unit extends Widget {
    * Revives the dead hero at a point.
    * @remarks
    * A hero with a food cost revives only when its owner has the food for it.
-   * @param whichPoint - The point.
+   * @param whichPoint - Where the hero revives.
    * @param doEyecandy - True to play the revival effect and sound.
    * @returns True when the hero was dead and revived.
    * @native ReviveHeroLoc
@@ -2671,7 +2683,8 @@ export class Unit extends Widget {
    * Sets the mana cost of one of the unit's abilities at a level.
    * @param abilId - The ability's rawcode.
    * @param level - The ability level, counted from 0 (level 1 is 0).
-   * @param manaCost - The mana cost.
+   * @param manaCost - The mana the ability costs to cast at that level, a
+   * whole number.
    * @native BlzSetUnitAbilityManaCost
    */
   public setAbilityManaCost(abilId: number, level: number, manaCost: number) {
@@ -2680,7 +2693,8 @@ export class Unit extends Widget {
 
   /**
    * Sets the hero's base agility.
-   * @param value - The agility.
+   * @param value - The new base agility, without the bonuses of items and
+   * buffs.
    * @param permanent - True for a permanent change, as the `agility` setter makes.
    * @native SetHeroAgi
    */
@@ -2725,7 +2739,7 @@ export class Unit extends Widget {
 
   /**
    * Sets the base damage of one of the unit's attacks, added to the dice roll.
-   * @param baseDamage - The base damage.
+   * @param baseDamage - The damage added to every roll, a whole number.
    * @param weaponIndex - The attack, 0 or 1.
    * @native BlzSetUnitBaseDamage
    */
@@ -2762,7 +2776,8 @@ export class Unit extends Widget {
 
   /**
    * Sets the number of dice one of the unit's attacks rolls for its damage.
-   * @param diceNumber - The number of dice.
+   * @param diceNumber - The number of dice rolled on each hit, a whole
+   * number.
    * @param weaponIndex - The attack, 0 or 1.
    * @native BlzSetUnitDiceNumber
    */
@@ -2772,7 +2787,8 @@ export class Unit extends Widget {
 
   /**
    * Sets the number of sides of the dice one of the unit's attacks rolls for its damage.
-   * @param diceSides - The number of sides.
+   * @param diceSides - The number of sides of each die: a die rolls from 1
+   * to this number.
    * @param weaponIndex - The attack, 0 or 1.
    * @native BlzSetUnitDiceSides
    */
@@ -2781,8 +2797,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * Sets the hero's experience points.
-   * @param newXpVal - The experience.
+   * Sets the hero's experience points; reaching the experience a level needs
+   * gains that level.
+   * @param newXpVal - The new experience total, a whole number.
    * @param showEyeCandy - True to show the effects of a level gained this way.
    * @native SetHeroXP
    */
@@ -2870,7 +2887,7 @@ export class Unit extends Widget {
    * Raises the hero to a level; a lower level than the current one does nothing.
    * @remarks
    * The level stops at the hero's maximum level.
-   * @param level - The new level.
+   * @param level - The level to raise the hero to.
    * @param showEyeCandy - True to show the level-up text, sound and effect.
    * @native SetHeroLevel
    */
@@ -2880,7 +2897,8 @@ export class Unit extends Widget {
 
   /**
    * Sets the hero's base intelligence.
-   * @param value - The intelligence.
+   * @param value - The new base intelligence, without the bonuses of items
+   * and buffs.
    * @param permanent - True for a permanent change, as the `intelligence` setter makes.
    * @native SetHeroInt
    */
@@ -2890,7 +2908,7 @@ export class Unit extends Widget {
 
   /**
    * Sets the number of item types the shop can offer.
-   * @param slots - The number of slots.
+   * @param slots - How many different item types the shop lists at once.
    * @native SetItemTypeSlots
    */
   public setItemTypeSlots(slots: number) {
@@ -2925,7 +2943,7 @@ export class Unit extends Widget {
 
   /**
    * Moves the unit to a point, to the nearest spot its pathing allows, cancelling its orders.
-   * @param point - The point.
+   * @param point - The point to move the unit to.
    * @native SetUnitPositionLoc
    */
   public setPoint(point: Point) {
@@ -2969,7 +2987,8 @@ export class Unit extends Widget {
 
   /**
    * Sets whether a player can rescue the unit, taking it over by coming near it.
-   * @param byWhichPlayer - The player.
+   * @param byWhichPlayer - The player who can, or no longer can, rescue the
+   * unit.
    * @param flag - True to make the unit rescuable by that player.
    * @native SetUnitRescuable
    */
@@ -3001,7 +3020,8 @@ export class Unit extends Widget {
   /**
    * Sets one of the unit's states, such as its life or mana.
    * @param whichUnitState - The state, such as `UNIT_STATE_LIFE` or `UNIT_STATE_MAX_MANA`.
-   * @param newVal - The state's new value.
+   * @param newVal - The new value, in the state's own unit: hit points for
+   * `UNIT_STATE_LIFE`, mana for `UNIT_STATE_MANA`.
    * @native SetUnitState
    */
   public setState(whichUnitState: unitstate, newVal: number) {
@@ -3010,7 +3030,8 @@ export class Unit extends Widget {
 
   /**
    * Sets the hero's base strength; lowering it lowers the hero's life.
-   * @param value - The strength.
+   * @param value - The new base strength, without the bonuses of items and
+   * buffs.
    * @param permanent - True for a permanent change, as the `strength` setter makes.
    * @native SetHeroStr
    */
@@ -3039,7 +3060,7 @@ export class Unit extends Widget {
 
   /**
    * Sets the number of unit types the shop can offer.
-   * @param slots - The number of slots.
+   * @param slots - How many different unit types the shop lists at once.
    * @native SetUnitTypeSlots
    */
   public setUnitTypeSlots(slots: number) {
@@ -3092,7 +3113,8 @@ export class Unit extends Widget {
 
   /**
    * Shares, or stops sharing, the unit's vision with a player.
-   * @param whichPlayer - The player.
+   * @param whichPlayer - The player who sees, or stops seeing, what the unit
+   * sees.
    * @param share - True to share the vision, false to stop.
    * @native UnitShareVision
    */
@@ -3196,7 +3218,7 @@ export class Unit extends Widget {
   /**
    * Orders the unit to use one of its items on a target.
    * @param whichItem - The item, in the unit's inventory.
-   * @param target - The target.
+   * @param target - The widget the item is used on.
    * @returns True when the unit took the order.
    * @native UnitUseItemTarget
    */
@@ -3350,7 +3372,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether a player detects the unit, as a detector reveals an invisible unit.
-   * @param whichPlayer - The player.
+   * @param whichPlayer - The player whose detection decides.
    * @returns True when the player detects the unit.
    * @native IsUnitDetected
    */
@@ -3360,7 +3382,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether the unit is invisible to a player.
-   * @param whichPlayer - The player.
+   * @param whichPlayer - The player whose view of the map decides.
    * @returns True when the unit is invisible to the player.
    * @native IsUnitInvisible
    */
@@ -3370,7 +3392,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether a player owns the unit.
-   * @param whichPlayer - The player.
+   * @param whichPlayer - The player to compare with the unit's owner.
    * @returns True when the player owns the unit.
    * @native IsUnitOwnedByPlayer
    */

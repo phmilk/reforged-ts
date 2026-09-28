@@ -61,7 +61,7 @@ export class Region extends Handle<region> {
 
   /**
    * Adds the cells a Rectangle covers to the region.
-   * @param r - The area to add.
+   * @param r - The rectangle whose cells join the region.
    * @native RegionAddRect
    */
   public addRect(r: Rectangle) {
@@ -97,7 +97,7 @@ export class Region extends Handle<region> {
 
   /**
    * Removes the cells a Rectangle covers from the region.
-   * @param r - The area to remove.
+   * @param r - The rectangle whose cells leave the region.
    * @native RegionClearRect
    */
   public clearRect(r: Rectangle) {

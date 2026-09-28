@@ -19,7 +19,7 @@ export class DialogButton extends Handle<button> {
    * dialog is clicked. A dialog that is already shown shows the new button once
    * {@link Dialog.display} shows it again.
    * @param whichDialog - The dialog that gets the button.
-   * @param text - The button's text.
+   * @param text - The label the player reads on the button.
    * @param hotkey - The key that clicks the button: the character code of an
    * upper-case letter, such as `"F".charCodeAt(0)`; 0, the default, for none.
    * @param quit - When true, clicking the button makes the player leave the
@@ -84,7 +84,7 @@ export class Dialog extends Handle<dialog> {
   /**
    * Adds a button to the bottom of the dialog, as {@link DialogButton.create}
    * does.
-   * @param text - The button's text.
+   * @param text - The label the player reads on the button.
    * @param hotkey - The key that clicks the button: the character code of an
    * upper-case letter, such as `"F".charCodeAt(0)`; 0, the default, for none.
    * @param quit - When true, clicking the button makes the player leave the

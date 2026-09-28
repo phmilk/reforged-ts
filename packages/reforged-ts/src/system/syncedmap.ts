@@ -82,12 +82,12 @@ export class SyncedMap<K extends AnyNotNil, V> {
   }
 
   /**
-   * The number of keys.
+   * Counts the keys, those whose value is undefined included.
    *
    * @remarks
    * Kept as a count, so reading it walks nothing and is the same on every
    * client.
-   * @returns The key count.
+   * @returns The number of keys present, 0 for an empty map.
    */
   public get size(): number {
     return this.order.size;
@@ -128,8 +128,10 @@ export class SyncedMap<K extends AnyNotNil, V> {
    * in the same position on every client. In Dev mode, without a comparator,
    * a key that is not of the kind of the present keys (all numbers or all
    * strings) raises here, where it is inserted, instead of in a later sort.
-   * @param key - The key.
-   * @param value - The value to store.
+   * @param key - The key; without a comparator, a number or a string of the
+   * same kind as the present keys.
+   * @param value - The value to store; undefined too, which keeps the key
+   * present.
    * @returns This map, for chaining.
    * @throws In Dev mode, without a comparator, when `key` is neither a number
    * nor a string, at the calling line:

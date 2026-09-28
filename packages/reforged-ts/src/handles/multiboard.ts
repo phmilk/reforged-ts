@@ -70,7 +70,7 @@ export class MultiboardItem extends Handle<multiboarditem> {
 
   /**
    * Sets the text shown in the cell; text wider than the cell is cut off.
-   * @param val - The text.
+   * @param val - The text to show, colour codes included.
    * @native MultiboardSetItemValue
    */
   public setValue(val: string) {
@@ -134,8 +134,8 @@ export class Multiboard extends Handle<multiboard> {
   }
 
   /**
-   * The number of columns of cells.
-   * @returns The column count.
+   * The number of columns of cells, 0 on a new board.
+   * @returns The column count: a cell's column runs from 1 to it.
    * @native MultiboardGetColumnCount
    */
   public get columns() {
@@ -143,7 +143,8 @@ export class Multiboard extends Handle<multiboard> {
   }
 
   /**
-   * The number of columns of cells.
+   * The number of columns of cells: `createItem` reaches the columns 1 to
+   * this count, so set it before filling the cells.
    * @native MultiboardSetColumnCount
    */
   public set columns(count: number) {
@@ -151,8 +152,9 @@ export class Multiboard extends Handle<multiboard> {
   }
 
   /**
-   * Whether the multiboard is shown.
-   * @returns True when it is shown, false when it is hidden.
+   * Whether the multiboard is on screen, for every player at once.
+   * @returns True when it is shown; false when it is hidden, as a new one
+   * is.
    * @native IsMultiboardDisplayed
    */
   public get displayed() {
@@ -160,8 +162,8 @@ export class Multiboard extends Handle<multiboard> {
   }
 
   /**
-   * The number of rows of cells.
-   * @returns The row count.
+   * The number of rows of cells, 0 on a new board.
+   * @returns The row count: a cell's row runs from 1 to it.
    * @native MultiboardGetRowCount
    */
   public get rows() {
@@ -169,7 +171,8 @@ export class Multiboard extends Handle<multiboard> {
   }
 
   /**
-   * The number of rows of cells.
+   * The number of rows of cells: `createItem` reaches the rows 1 to this
+   * count, so set it before filling the cells.
    * @native MultiboardSetRowCount
    * @bug Only a change of one row at a time is safe: to add or remove
    * several, set the count once per row.
@@ -290,7 +293,7 @@ export class Multiboard extends Handle<multiboard> {
 
   /**
    * Sets the text shown in every cell.
-   * @param value - The text.
+   * @param value - The text every cell shows, colour codes included.
    * @native MultiboardSetItemsValue
    */
   public setItemsValue(value: string) {

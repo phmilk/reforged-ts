@@ -236,7 +236,8 @@ export class Frame extends Handle<framehandle> {
   }
 
   /**
-   * Gets the frame's name.
+   * Gets the name the frame was created under, which
+   * {@link Frame.fromName} finds it by.
    * @returns The name, or `""` when the game gives none.
    * @native BlzFrameGetName
    */
@@ -293,7 +294,7 @@ export class Frame extends Handle<framehandle> {
   /**
    * Gets the value of a slider or a status bar on the local client, which
    * includes where the local player dragged a slider.
-   * @returns The value.
+   * @returns The value, within the range {@link Frame.setMinMaxValue} sets.
    * @native BlzFrameGetValue
    * @async
    */
@@ -506,7 +507,8 @@ export class Frame extends Handle<framehandle> {
   /**
    * Sets the frame's drawing level among its siblings: a higher level draws
    * above a lower one.
-   * @param level - The level.
+   * @param level - The level, compared only with the levels of the frame's
+   * siblings.
    * @returns This Frame, for chaining.
    * @native BlzFrameSetLevel
    */
@@ -647,7 +649,7 @@ export class Frame extends Handle<framehandle> {
   /**
    * Sets the text the frame shows, for a frame that holds text, such as a
    * text frame, an edit box or a text area.
-   * @param text - The text.
+   * @param text - The text to show, in place of the current one.
    * @returns This Frame, for chaining.
    * @native BlzFrameSetText
    */

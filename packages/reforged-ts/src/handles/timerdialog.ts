@@ -31,8 +31,9 @@ export class TimerDialog extends Handle<timerdialog> {
   }
 
   /**
-   * Whether the timer dialog is shown.
-   * @returns True when it is shown, false when it is hidden.
+   * Whether the timer dialog is on screen, for every player at once.
+   * @returns True when it is shown; false when it is hidden, as a new one
+   * is.
    * @native IsTimerDialogDisplayed
    */
   public get display() {
@@ -86,7 +87,7 @@ export class TimerDialog extends Handle<timerdialog> {
   /**
    * Sets the title shown before the time; a long one is cut short with an
    * ellipsis.
-   * @param title - The title.
+   * @param title - The text before the time, such as `"Next wave"`.
    * @native TimerDialogSetTitle
    */
   public setTitle(title: string) {

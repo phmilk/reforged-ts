@@ -34,7 +34,7 @@ export function isEntryPoint(name: string): name is EntryPoint {
  * project's.
  * @param entryPoint - When it runs: before or after `main` or `config`.
  * @param origin - Who registers it: the library or the Map project.
- * @param callback - The function to run.
+ * @param callback - The function the entry point runs, under pcall.
  * @param label - Its name in failure lines; its ordinal, `#n`, when left out.
  */
 export function onEntryPoint(

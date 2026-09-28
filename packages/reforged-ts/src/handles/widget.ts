@@ -12,8 +12,8 @@ import { Handle } from "./handle";
  */
 export class Widget extends Handle<widget> {
   /**
-   * Gets the widget's hit points.
-   * @returns The current hit points.
+   * Gets how many hit points the widget has left.
+   * @returns The hit points left, an amount rather than a percentage.
    * @native GetWidgetLife
    */
   public get life() {

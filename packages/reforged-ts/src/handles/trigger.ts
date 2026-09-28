@@ -498,7 +498,8 @@ export class Trigger extends Handle<trigger> {
    * @param whichState - The state, such as `GAME_STATE_TIME_OF_DAY`.
    * @param opcode - How the state compares with the limit, such as
    * `GREATER_THAN_OR_EQUAL`.
-   * @param limitval - The limit.
+   * @param limitval - The value the state is compared with, in the state's
+   * own unit: hours for the time of day, such as 6 for dawn.
    * @returns The Trigger, for chaining.
    * @native TriggerRegisterGameStateEvent
    */
@@ -654,7 +655,8 @@ export class Trigger extends Handle<trigger> {
    * @param whichState - The state, such as `PLAYER_STATE_RESOURCE_GOLD`.
    * @param opcode - How the state compares with the limit, such as
    * `GREATER_THAN_OR_EQUAL`.
-   * @param limitval - The limit.
+   * @param limitval - The value the state is compared with, in the state's
+   * own unit, such as an amount of gold.
    * @returns The Trigger, for chaining.
    * @native TriggerRegisterPlayerStateEvent
    */
@@ -678,7 +680,8 @@ export class Trigger extends Handle<trigger> {
    * Registers the arrival, at every player, of the data a player sent with
    * `BlzSendSyncData` under a prefix.
    * @param whichPlayer - The player who sends the data.
-   * @param prefix - The prefix the data is sent with.
+   * @param prefix - The prefix the sender passes to `BlzSendSyncData`; data
+   * sent under another prefix does not fire the Trigger.
    * @param fromServer - Pass false: the data comes from `whichPlayer`.
    * @returns The Trigger, for chaining.
    * @native BlzTriggerRegisterPlayerSyncEvent
@@ -831,7 +834,8 @@ export class Trigger extends Handle<trigger> {
    * @param whichState - The state, such as `UNIT_STATE_LIFE`.
    * @param opcode - How the state compares with the limit, such as
    * `LESS_THAN`.
-   * @param limitval - The limit.
+   * @param limitval - The value the state is compared with, in the state's
+   * own unit, such as hit points for `UNIT_STATE_LIFE`.
    * @returns The Trigger, for chaining.
    * @native TriggerRegisterUnitStateEvent
    */
@@ -868,7 +872,7 @@ export class Trigger extends Handle<trigger> {
    * @param varName - The variable's name, such as `"udg_Score"`.
    * @param opcode - How the variable compares with the limit, such as
    * `EQUAL`.
-   * @param limitval - The limit.
+   * @param limitval - The value the variable is compared with.
    * @returns The Trigger, for chaining.
    * @native TriggerRegisterVariableEvent
    */

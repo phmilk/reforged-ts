@@ -62,7 +62,7 @@ export enum W3TS_HOOK {
  * for the next run.
  * @param entryPoint - When the hook runs: `"main::before"`, `"main::after"`,
  * `"config::before"` or `"config::after"`, or the {@link W3TS_HOOK} value.
- * @param hook - The function to run.
+ * @param hook - The function the entry point runs, under pcall.
  * @returns True when `entryPoint` is one of the four and the hook was
  * registered; false otherwise, and nothing is registered.
  * @deprecated Register for an Init stage instead:

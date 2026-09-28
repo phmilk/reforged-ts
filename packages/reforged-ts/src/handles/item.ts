@@ -133,7 +133,8 @@ export class Item extends Widget {
 
   /**
    * Gets the item's level, as its item type sets it in the object editor.
-   * @returns The level.
+   * @returns The level, the one {@link Item.chooseRandomWithFilter} filters
+   * item types by.
    * @native GetItemLevel
    */
   public get level() {
@@ -282,7 +283,8 @@ export class Item extends Widget {
   }
 
   /**
-   * Gets the item's tag.
+   * Gets the item's tag, the {@link ItemTag} category its item type puts it
+   * in, such as a quest reward, a boss drop or a shop item.
    * @returns The tag; `ItemTag.Undefined` for an item with none.
    * @throws When the game returns a tag no member names, such as one a later
    * Patch adds: `reforged-ts: GetItemTag returned a value ItemTag does not name`,

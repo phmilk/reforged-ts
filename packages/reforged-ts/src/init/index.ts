@@ -29,7 +29,7 @@ export interface InitStages {
   /**
    * Registers `callback` for the `globals` stage, right after `InitGlobals`:
    * the first moment to create Handles, with `Players` filled.
-   * @param callback - The function to run.
+   * @param callback - The function the stage runs once, under pcall.
    * @param label - Its name in a failure line; its ordinal in the stage,
    * `#n`, when left out.
    */
@@ -37,7 +37,7 @@ export interface InitStages {
   /**
    * Registers `callback` for the `triggers` stage, after
    * `InitCustomTriggers` created the editor's triggers.
-   * @param callback - The function to run.
+   * @param callback - The function the stage runs once, under pcall.
    * @param label - Its name in a failure line; its ordinal in the stage,
    * `#n`, when left out.
    */
@@ -45,7 +45,7 @@ export interface InitStages {
   /**
    * Registers `callback` for the `initTriggers` stage, after
    * `RunInitializationTriggers`: the end of `main`.
-   * @param callback - The function to run.
+   * @param callback - The function the stage runs once, under pcall.
    * @param label - Its name in a failure line; its ordinal in the stage,
    * `#n`, when left out.
    */
@@ -53,7 +53,7 @@ export interface InitStages {
   /**
    * Registers `callback` for the `gameStart` stage, after `MarkGameStarted`:
    * the game has started, and Timers tick.
-   * @param callback - The function to run.
+   * @param callback - The function the stage runs once, under pcall.
    * @param label - Its name in a failure line; its ordinal in the stage,
    * `#n`, when left out.
    */

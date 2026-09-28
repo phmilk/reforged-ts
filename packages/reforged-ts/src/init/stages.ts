@@ -87,7 +87,7 @@ function catchUpTo(stage: InitStage): void {
  * @param stage - The stage to run it at.
  * @param origin - Whose queue: the library's, run first, or the Map
  * project's.
- * @param callback - The function to run.
+ * @param callback - The function the stage runs once, under pcall.
  * @param label - Its name in failure lines; its ordinal, `#n`, when left out.
  */
 export function onStage(

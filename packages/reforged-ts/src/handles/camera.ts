@@ -207,7 +207,7 @@ export class Camera {
    * (3.0.0): an integer the Patch does not name.
    * @remarks
    * The value is the local player's own.
-   * @returns The camera type.
+   * @returns The camera type, as the bare integer the Native gives.
    * @native BlzCameraGetCameraType
    * @async
    */
@@ -807,7 +807,7 @@ export class CameraSetup extends Handle<camerasetup> {
   }
 
   /**
-   * Gets the camera setup's label.
+   * Gets the free-text label that names the camera setup.
    * @returns The label, or an empty string when it has none.
    * @native BlzCameraSetupGetLabel
    */
@@ -818,7 +818,7 @@ export class CameraSetup extends Handle<camerasetup> {
   /**
    * Gets the camera type of the camera setup, through
    * `BlzCameraSetupGetCameraType` (3.0.0): an integer the Patch does not name.
-   * @returns The camera type.
+   * @returns The camera type, as the bare integer the Native gives.
    * @native BlzCameraSetupGetCameraType
    */
   public get type(): number {

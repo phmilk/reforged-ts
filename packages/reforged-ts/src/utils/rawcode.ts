@@ -8,7 +8,7 @@
  * bytes arithmetically, so a rawcode the game wrapped to a negative 32-bit
  * integer comes out the same.
  * @param rawcode - The rawcode, such as `FourCC("RAhr")`.
- * @returns The four characters.
+ * @returns The four-character string, such as `"RAhr"`.
  */
 export function rawcodeToString(rawcode: number): string {
   return string.char(
