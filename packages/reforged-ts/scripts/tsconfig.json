@@ -1,0 +1,26 @@
+{
+  // The library's Node scripts (the build's include-code step), which Node
+  // runs from source with --experimental-strip-types: type-checked only,
+  // nothing is emitted. erasableSyntaxOnly holds them to what type stripping
+  // can run. They are .mts files: the package is not "type": "module", so the
+  // extension makes them ES modules. typescript-to-lua never sees this folder
+  // (../tsconfig.json includes src only).
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["node"],
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "verbatimModuleSyntax": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "newLine": "lf"
+  },
+  "include": ["."]
+}

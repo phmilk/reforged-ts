@@ -44,7 +44,7 @@ The documentation site, https://phmilk.github.io/reforged-ts/, is built ([#40](h
 - `pnpm docs:start` serves the site locally after `pnpm build`; [`website/README.md`](website/README.md) lists the site's commands.
 - [`CONTEXT.md`](CONTEXT.md) defines the project's terms.
 - Each package's README says what the package does and how to use it.
-- The library's doc comments document each Wrapper and System, and the editor shows them on hover.
+- The library's doc comments document each Wrapper and System, and the editor shows them on hover, the code of their examples included.
 - The ADRs under [`docs/adr`](docs/adr) record the decisions, and [`docs/release.md`](docs/release.md) the release process.
 
 ## Commands
@@ -57,7 +57,7 @@ Run from the root after `pnpm install`:
 | `pnpm lint`               | ESLint on every TypeScript file, then a Prettier check of the JSON, Markdown and YAML files.                                                                                                                              |
 | `pnpm format`             | `eslint --fix` and `prettier --write` over the same files: lints and formats in one pass.                                                                                                                                 |
 | `pnpm typecheck`          | `tsc --noEmit` on each package's tsconfigs (the library and its tests, the harness glue and runner, the generator), then on `test/`.                                                                                      |
-| `pnpm build`              | Builds every package, dependencies first: the library's Lua and declarations land in `packages/reforged-ts/dist`.                                                                                                         |
+| `pnpm build`              | Builds every package, dependencies first: the library's Lua and declarations land in `packages/reforged-ts/dist`, each `{@includeCode}` of the declarations expanded into the code it includes.                           |
 | `pnpm test`               | One vitest run over every package's projects and the two root projects, `tarballs` (packs each publishable package and checks its tarball) and `conventions` (checks `AGENTS.md`, `CLAUDE.md` and the editor settings).   |
 | `pnpm typings:generate`   | Regenerates the Typings from the vendored Patch files and the Overlay.                                                                                                                                                    |
 | `pnpm typings:check`      | Fails when the committed Typings differ from what the generator produces (the drift check).                                                                                                                               |
