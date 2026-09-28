@@ -8,6 +8,7 @@ import { MapPlayer } from "./player";
  * Calls `callback` with the player in each of the `bj_MAX_PLAYER_SLOTS` slots,
  * skipping a slot the game has no player for. The players are read when it
  * is called, never at load.
+ * @param callback - Called once for each player, in slot order from 0.
  */
 export function forEachPlayerSlot(callback: (player: MapPlayer) => void): void {
   for (let index = 0; index < bj_MAX_PLAYER_SLOTS; index++) {
