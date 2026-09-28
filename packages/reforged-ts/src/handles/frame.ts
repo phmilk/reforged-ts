@@ -22,31 +22,15 @@ function unlessNotFound<H extends handle>(
  * A frame whose handle id is 0 is the game's "not found": it is never a
  * Frame. The lookups return `undefined` for it and the creation members throw.
  *
- * @example Create a simple button.
- * ```ts
- * const gameui = Frame.fromOrigin(ORIGIN_FRAME_GAME_UI, 0);
- * if (gameui) {
- *   // Create a "GLUEBUTTON" named "Facebutton", the clickable Button, for game UI
- *   const buttonFrame = Frame.createType("FaceButton", gameui, 0, "GLUEBUTTON", "");
- *   // Create a BACKDROP named "FaceButtonIcon", the visible image, for buttonFrame.
- *   const buttonIconFrame = Frame.createType("FaceButton", buttonFrame, 0, "BACKDROP", "");
- *   // buttonIconFrame will mimic buttonFrame in size and position
- *   buttonIconFrame.setAllPoints(buttonFrame);
- *   // Set a Texture
- *   buttonIconFrame.setTexture("ReplaceableTextures\\CommandButtons\\BTNSelectHeroOn", 0, true);
- *   // Place the buttonFrame to the center of the screen
- *   buttonFrame.setAbsPoint(FRAMEPOINT_CENTER, 0.4, 0.3);
- *   // Give that buttonFrame a size
- *   buttonFrame.setSize(0.05, 0.05);
- * }
- *```
- *
  * There are many aspects to modifying the UI and it can become complicated, so here are some
  * guides:
  *
  * https://www.hiveworkshop.com/threads/ui-frames-starting-guide.318603/
  * https://www.hiveworkshop.com/pastebin/913bd439799b3d917e5b522dd9ef458f20598/
  * https://www.hiveworkshop.com/tags/ui-fdf/
+ *
+ * @example Create a simple button.
+ * {@includeCode ../../examples/game/frame-create-button.ts}
  */
 export class Frame extends Handle<framehandle> {
   /**

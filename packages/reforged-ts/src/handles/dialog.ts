@@ -27,23 +27,7 @@ export class DialogButton extends Handle<button> {
 /**
  *
  * @example Create a simple dialog.
- * ```ts
- * const dialog = Dialog.create();
- * const trigger = Trigger.create();
- *
- * trigger.registerDialogEvent(dialog);
- * trigger.addAction(() => {
- *   const clicked = DialogButton.fromEvent();
- * });
- *
- * Timer.create().start(1.00, false, () => {
- *   DialogButton.create(dialog, "Stay", 0);
- *   DialogButton.create(dialog, "Leave", 0, true);
- *
- *   dialog.setMessage("Welcome to TypeScript!");
- *   dialog.display(Players[0], true);
- * });
- * ```
+ * {@includeCode ../../examples/harness/dialog-create.ts}
  */
 export class Dialog extends Handle<dialog> {
   public static create(): Dialog {
