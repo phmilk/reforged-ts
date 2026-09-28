@@ -185,14 +185,14 @@ export async function installedDeclarations(
 }
 
 /**
- * The `@example` tags of a class member in one of the Map project's
- * installed declaration files, as the editor's hover reads them.
+ * The `@example` tags of a declaration in one of the Map project's installed
+ * declaration files, as the editor's hover reads them: a class member,
+ * named `Class.member`, or a function.
  */
 export async function hoverExamples(
   project: MapProject,
   file: string,
-  className: string,
-  member: string,
+  name: string,
 ): Promise<string[]> {
   const path = join(project.dir, "node_modules", "reforged-ts", file);
   const source = ts.createSourceFile(
@@ -201,12 +201,20 @@ export async function hoverExamples(
     ts.ScriptTarget.ESNext,
     true,
   );
-  const declaration = source.statements
-    .filter(ts.isClassDeclaration)
-    .find((node) => node.name?.text === className)
-    ?.members.find((node) => node.name?.getText(source) === member);
+  const dot = name.indexOf(".");
+  const declaration =
+    dot === -1
+      ? source.statements
+          .filter(ts.isFunctionDeclaration)
+          .find((node) => node.name?.text === name)
+      : source.statements
+          .filter(ts.isClassDeclaration)
+          .find((node) => node.name?.text === name.slice(0, dot))
+          ?.members.find(
+            (node) => node.name?.getText(source) === name.slice(dot + 1),
+          );
   if (declaration === undefined) {
-    throw new Error(`${file} declares no ${className}.${member}`);
+    throw new Error(`${file} declares no ${name}`);
   }
   return ts
     .getJSDocTags(declaration)
