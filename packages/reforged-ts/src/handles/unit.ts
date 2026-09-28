@@ -3558,16 +3558,29 @@ export class Unit extends Widget {
     return false;
   }
 
+  /**
+   * Gets the food a unit type provides to its owner, such as a farm's.
+   * @param unitId - The unit type's rawcode.
+   * @returns The food provided.
+   * @native GetFoodMade
+   */
   public static foodMadeByType(unitId: number) {
     return GetFoodMade(unitId);
   }
 
+  /**
+   * Gets the food a unit type costs its owner.
+   * @param unitId - The unit type's rawcode.
+   * @returns The food used.
+   * @native GetFoodUsed
+   */
   public static foodUsedByType(unitId: number) {
     return GetFoodUsed(unitId);
   }
 
   /**
-   * The attacking unit, or undefined outside an attacked event.
+   * Gets the attacking unit of an attacked event.
+   * @returns The attacker, or `undefined` outside an attacked event.
    * @native GetAttacker
    */
   public static fromAttacker(): Unit | undefined {
@@ -3575,7 +3588,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit changing owner, or undefined outside an ownership change.
+   * Gets the unit changing owner in an ownership change event.
+   * @returns The unit, or `undefined` outside an ownership change.
    * @native GetChangingUnit
    */
   public static fromChanging(): Unit | undefined {
@@ -3583,7 +3597,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The finished structure, or undefined outside a construction finish.
+   * Gets the finished structure of a construction finish event.
+   * @returns The structure, or `undefined` outside a construction finish.
    * @native GetConstructedStructure
    */
   public static fromConstructed(): Unit | undefined {
@@ -3591,7 +3606,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit dealing the damage, or undefined when no unit deals it.
+   * Gets the unit dealing the damage in a damage event.
+   * @returns The source, or `undefined` outside a damage event or when no unit deals the damage.
    * @native GetEventDamageSource
    */
   public static fromDamageSource(): Unit | undefined {
@@ -3599,7 +3615,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit taking the damage, or undefined outside a damage event.
+   * Gets the unit taking the damage in a damage event.
+   * @returns The target, or `undefined` outside a damage event.
    * @native BlzGetEventDamageTarget
    */
   public static fromDamageTarget(): Unit | undefined {
@@ -3607,27 +3624,44 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit entering the region, or undefined outside a region event.
+   * Gets the unit entering the region in a region event.
+   * @returns The unit, or `undefined` outside a region event.
    * @native GetEnteringUnit
    */
   public static fromEntering(): Unit | undefined {
     return this.fromHandle(GetEnteringUnit());
   }
 
+  /**
+   * Gets the unit a group loop is at, inside the callback of `Group.for`.
+   * @returns The unit, or `undefined` outside a group loop.
+   * @native GetEnumUnit
+   */
   public static fromEnum(): Unit | undefined {
     return this.fromHandle(GetEnumUnit());
   }
 
+  /**
+   * Gets the unit of the unit event that fired the running Trigger.
+   * @returns The unit, or `undefined` outside a unit event.
+   * @native GetTriggerUnit
+   */
   public static override fromEvent(): Unit | undefined {
     return this.fromHandle(GetTriggerUnit());
   }
 
+  /**
+   * Gets the unit a group enumeration is testing, inside its filter.
+   * @returns The unit, or `undefined` outside an enumeration filter.
+   * @native GetFilterUnit
+   */
   public static fromFilter(): Unit | undefined {
     return this.fromHandle(GetFilterUnit());
   }
 
   /**
-   * The unit that killed the dying unit, or undefined when none did.
+   * Gets the unit that killed the dying unit in a death event.
+   * @returns The killer, or `undefined` outside a death event or when no unit killed it.
    * @native GetKillingUnit
    */
   public static fromKilling(): Unit | undefined {
@@ -3635,7 +3669,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit leaving the region, or undefined outside a region event.
+   * Gets the unit leaving the region in a region event.
+   * @returns The unit, or `undefined` outside a region event.
    * @native GetLeavingUnit
    */
   public static fromLeaving(): Unit | undefined {
@@ -3643,7 +3678,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The hero gaining a level, or undefined outside a hero level event.
+   * Gets the hero gaining a level in a hero level event.
+   * @returns The hero, or `undefined` outside a hero level event.
    * @native GetLevelingUnit
    */
   public static fromLeveling(): Unit | undefined {
@@ -3651,7 +3687,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit loaded into a transport, or undefined outside a load event.
+   * Gets the unit loaded into a transport in a load event.
+   * @returns The unit, or `undefined` outside a load event.
    * @native GetLoadedUnit
    */
   public static fromLoaded(): Unit | undefined {
@@ -3659,7 +3696,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit given an order, or undefined outside an order event.
+   * Gets the unit given an order in an order event.
+   * @returns The unit, or `undefined` outside an order event.
    * @native GetOrderedUnit
    */
   public static fromOrdered(): Unit | undefined {
@@ -3667,8 +3705,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit a target order targets, or undefined outside a target order or
-   * when the target is not a unit.
+   * Gets the unit a target order targets in an order event.
+   * @returns The target, or `undefined` outside a target order or when the target
+   * is not a unit.
    * @native GetOrderTargetUnit
    */
   public static override fromOrderTarget(): Unit | undefined {
@@ -3676,7 +3715,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * The spell's target unit, or undefined when the spell targets none.
+   * Gets the target unit of the spell in a spell event.
+   * @returns The target, or `undefined` outside a spell event or when the spell
+   * targets no unit.
    * @native GetSpellTargetUnit
    */
   public static fromSpellTarget(): Unit | undefined {
@@ -3684,7 +3725,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The summoned unit, or undefined outside a summon event.
+   * Gets the summoned unit of a summon event.
+   * @returns The summoned unit, or `undefined` outside a summon event.
    * @native GetSummonedUnit
    */
   public static fromSummoned(): Unit | undefined {
@@ -3692,7 +3734,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit that summons, or undefined outside a summon event.
+   * Gets the unit that summons in a summon event.
+   * @returns The summoner, or `undefined` outside a summon event.
    * @native GetSummoningUnit
    */
   public static fromSummoning(): Unit | undefined {
@@ -3700,7 +3743,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The trained unit, or undefined outside a training finish.
+   * Gets the trained unit of a training finish event.
+   * @returns The unit, or `undefined` outside a training finish.
    * @native GetTrainedUnit
    */
   public static fromTrained(): Unit | undefined {
@@ -3708,7 +3752,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The transport a unit is loaded into, or undefined outside a load event.
+   * Gets the transport a unit is loaded into in a load event.
+   * @returns The transport, or `undefined` outside a load event.
    * @native GetTransportUnit
    */
   public static fromTransport(): Unit | undefined {
@@ -3716,7 +3761,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit buying from a shop, or undefined outside a sell event.
+   * Gets the unit buying from a shop in a sell event.
+   * @returns The buyer, or `undefined` outside a sell event.
    * @native GetBuyingUnit
    */
   public static fromBuying(): Unit | undefined {
@@ -3724,8 +3770,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The structure whose construction is cancelled, or undefined outside a
-   * construction cancel.
+   * Gets the structure whose construction is cancelled in a construction cancel event.
+   * @returns The structure, or `undefined` outside a construction cancel.
    * @native GetCancelledStructure
    */
   public static fromCancelled(): Unit | undefined {
@@ -3733,7 +3779,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The structure being built, or undefined outside a construction start.
+   * Gets the structure being built in a construction start event.
+   * @returns The structure, or `undefined` outside a construction start.
    * @native GetConstructingStructure
    */
   public static fromConstructing(): Unit | undefined {
@@ -3741,7 +3788,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The decaying unit, or undefined outside a decay event.
+   * Gets the decaying unit of a decay event.
+   * @returns The unit, or `undefined` outside a decay event.
    * @native GetDecayingUnit
    */
   public static fromDecaying(): Unit | undefined {
@@ -3749,7 +3797,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The detected unit, or undefined outside a detection event.
+   * Gets the detected unit of a detection event.
+   * @returns The unit, or `undefined` outside a detection event.
    * @native GetDetectedUnit
    */
   public static fromDetected(): Unit | undefined {
@@ -3757,7 +3806,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The dying unit, or undefined outside a death event.
+   * Gets the dying unit of a death event.
+   * @returns The unit, or `undefined` outside a death event.
    * @native GetDyingUnit
    */
   public static fromDying(): Unit | undefined {
@@ -3765,7 +3815,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The target unit of the event, or undefined when the event has none.
+   * Gets the target unit of a target acquired or target in range event.
+   * @returns The target, or `undefined` when the event has none.
    * @native GetEventTargetUnit
    */
   public static fromEventTarget(): Unit | undefined {
@@ -3773,7 +3824,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The hero learning a skill, or undefined outside a skill event.
+   * Gets the hero learning a skill in a skill event.
+   * @returns The hero, or `undefined` outside a skill event.
    * @native GetLearningUnit
    */
   public static fromLearning(): Unit | undefined {
@@ -3781,7 +3833,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit manipulating an item, or undefined outside an item event.
+   * Gets the unit picking up, dropping or using an item in an item event.
+   * @returns The unit, or `undefined` outside an item event.
    * @native GetManipulatingUnit
    */
   public static fromManipulating(): Unit | undefined {
@@ -3789,7 +3842,10 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit under the local player's mouse, or undefined when there is none.
+   * Gets the unit under the local player's mouse cursor.
+   * @remarks
+   * The value differs between clients: never let it decide game state.
+   * @returns The unit, or `undefined` when the cursor is over none.
    * @native BlzGetMouseFocusUnit
    * @async
    */
@@ -3798,7 +3854,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit researching, or undefined outside a research event.
+   * Gets the unit researching in a research event.
+   * @returns The unit, or `undefined` outside a research event.
    * @native GetResearchingUnit
    */
   public static fromResearching(): Unit | undefined {
@@ -3806,7 +3863,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit rescuing, or undefined outside a rescue event.
+   * Gets the unit rescuing in a rescue event.
+   * @returns The rescuer, or `undefined` outside a rescue event.
    * @native GetRescuer
    */
   public static fromRescuer(): Unit | undefined {
@@ -3814,7 +3872,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The hero that became revivable, or undefined outside a revivable event.
+   * Gets the hero that became revivable in a revivable event.
+   * @returns The hero, or `undefined` outside a revivable event.
    * @native GetRevivableUnit
    */
   public static fromRevivable(): Unit | undefined {
@@ -3822,7 +3881,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The reviving hero, or undefined outside a revive event.
+   * Gets the reviving hero of a revive event.
+   * @returns The hero, or `undefined` outside a revive event.
    * @native GetRevivingUnit
    */
   public static fromReviving(): Unit | undefined {
@@ -3830,7 +3890,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The shop selling, or undefined outside a sell event.
+   * Gets the shop selling in a sell event.
+   * @returns The shop, or `undefined` outside a sell event.
    * @native GetSellingUnit
    */
   public static fromSelling(): Unit | undefined {
@@ -3838,7 +3899,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit sold, or undefined outside a unit sell event.
+   * Gets the unit sold in a unit sell event.
+   * @returns The unit, or `undefined` outside a unit sell event.
    * @native GetSoldUnit
    */
   public static fromSold(): Unit | undefined {
@@ -3846,21 +3908,41 @@ export class Unit extends Widget {
   }
 
   /**
-   * The unit casting the spell, or undefined outside a spell event.
+   * Gets the unit casting the spell in a spell event.
+   * @returns The caster, or `undefined` outside a spell event.
    * @native GetSpellAbilityUnit
    */
   public static fromSpellAbility(): Unit | undefined {
     return this.fromHandle(GetSpellAbilityUnit());
   }
 
+  /**
+   * Gets the point value a unit type defines, which the score screen counts.
+   * @param unitType - The unit type's rawcode.
+   * @returns The point value.
+   * @native GetUnitPointValueByType
+   */
   public static getPointValueByType(unitType: number) {
     return GetUnitPointValueByType(unitType);
   }
 
+  /**
+   * Checks whether a unit type is a hero type.
+   * @param unitId - The unit type's rawcode.
+   * @returns True when the type is a hero type.
+   * @native IsHeroUnitId
+   */
   public static isUnitIdHero(unitId: number) {
     return IsHeroUnitId(unitId);
   }
 
+  /**
+   * Checks whether a unit type has a classification, such as `UNIT_TYPE_STRUCTURE`.
+   * @param unitId - The unit type's rawcode.
+   * @param whichUnitType - The classification.
+   * @returns True when the type has it.
+   * @native IsUnitIdType
+   */
   public static isUnitIdType(unitId: number, whichUnitType: unittype) {
     return IsUnitIdType(unitId, whichUnitType);
   }
