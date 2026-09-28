@@ -92,6 +92,10 @@ export default defineConfig({
         test: {
           name: "release",
           root: "release",
+          // A test creates a git repository, commits and spawns the script:
+          // over a second each on the Windows runner, past 5 s when it is
+          // loaded (#276's run).
+          testTimeout: 30_000,
           include: ["test/**/*.test.ts"],
           environment: "node",
         },
