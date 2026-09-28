@@ -1,6 +1,6 @@
 {
   "name": "reforged-ts",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "TypeScript API for Warcraft III Reforged custom maps, compiled to Lua with typescript-to-lua.",
   "license": "MIT",
   "keywords": [
