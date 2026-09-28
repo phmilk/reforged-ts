@@ -26,6 +26,7 @@ export class QuestItem extends Handle<questitem> {
 
 export class Quest extends Handle<quest> {
   /**
+   * @native CreateQuest
    * @bug Do not use this in a global initialisation as it crashes the game there.
    */
   public static create(): Quest {
@@ -86,6 +87,7 @@ export class Quest extends Handle<quest> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyQuest
    */
   public destroy() {
     DestroyQuest(this.handle);

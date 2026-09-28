@@ -7,6 +7,7 @@ export class Point extends Handle<location> {
    * Creates a new location handle. Generally, raw coordinates should be used instead.
    * @param x -
    * @param y -
+   * @native Location
    */
   public static create(x: number, y: number): Point {
     return this.expect(Location(x, y));
@@ -33,6 +34,7 @@ export class Point extends Handle<location> {
    * If you attempt to use it in a synchronous manner, it may cause a desync.
    * @remarks Reasons for returning different values might be terrain-deformations caused by spells/abilities and different graphic settings.
    * Other reasons could be the rendering state of destructables and visibility differences.
+   * @native GetLocationZ
    * @async
    */
   public get z(): number {
@@ -49,6 +51,7 @@ export class Point extends Handle<location> {
    * @param blue - An integer from 0-255 determining the amount of blue color.
    * @param pingPath - The model of the icon.
    * @param fogVisibility - The fog state in which the icon is visible.
+   * @native CreateMinimapIconAtLoc
    */
   public createMinimapIcon(
     red: number,
@@ -78,6 +81,7 @@ export class Point extends Handle<location> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native RemoveLocation
    */
   public destroy() {
     RemoveLocation(this.handle);
@@ -98,6 +102,7 @@ export class Point extends Handle<location> {
    * @remarks Each call returns a new Point for a new location, and nothing
    * destroys it for you: `destroy()` it. Dev mode counts it as created and,
    * inside `MapPlayer.runLocal`, raises as for any creation.
+   * @native BlzGetTriggerPlayerMousePosition
    */
   public static fromMousePosition(): Point | undefined {
     return this.fromAllocated(BlzGetTriggerPlayerMousePosition());
@@ -113,6 +118,7 @@ export class Point extends Handle<location> {
    * @remarks Each call returns a new Point for a new location, and nothing
    * destroys it for you: `destroy()` it. Dev mode counts it as created and,
    * inside `MapPlayer.runLocal`, raises as for any creation.
+   * @native GetOrderPointLoc
    */
   public static fromOrderPoint(): Point | undefined {
     return this.fromAllocated(GetOrderPointLoc());
@@ -128,6 +134,7 @@ export class Point extends Handle<location> {
    * @remarks Each call returns a new Point for a new location, and nothing
    * destroys it for you: `destroy()` it. Dev mode counts it as created and,
    * inside `MapPlayer.runLocal`, raises as for any creation.
+   * @native GetSpellTargetLoc
    */
   public static fromSpellTarget(): Point | undefined {
     return this.fromAllocated(GetSpellTargetLoc());

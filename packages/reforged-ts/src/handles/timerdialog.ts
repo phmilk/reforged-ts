@@ -23,6 +23,7 @@ export class TimerDialog extends Handle<timerdialog> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyTimerDialog
    */
   public destroy() {
     DestroyTimerDialog(this.handle);
@@ -47,6 +48,7 @@ export class TimerDialog extends Handle<timerdialog> {
    * @param green - An integer from 0-255 determining the amount of red color.
    * @param blue - An integer from 0-255 determining the amount of red color.
    * @param alpha - An integer from 0-255 determining the amount of red color.
+   * @native TimerDialogSetTitleColor
    */
   public setTitleColor(
     red: number,
@@ -63,6 +65,7 @@ export class TimerDialog extends Handle<timerdialog> {
    * @param green - An integer from 0-255 determining the amount of red color.
    * @param blue - An integer from 0-255 determining the amount of red color.
    * @param alpha - An integer from 0-255 determining the amount of red color.
+   * @native TimerDialogSetTimeColor
    */
   public setTimeColor(red: number, green: number, blue: number, alpha: number) {
     TimerDialogSetTimeColor(this.handle, red, green, blue, alpha);

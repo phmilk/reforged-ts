@@ -17,7 +17,12 @@ import {
   typingsReferences,
   typingsSidebar,
 } from "../../reference";
-import { entryPage, readTypingsManifest } from "../../typedoc/typings.mts";
+import {
+  entryPage,
+  handleTypePage,
+  readHandleTypes,
+  readTypingsManifest,
+} from "../../typedoc/typings.mts";
 
 const FIXTURE = fileURLToPath(new URL("fixtures/typings/", import.meta.url));
 
@@ -178,8 +183,54 @@ describe("the Typings reference", () => {
     await writeFile(manifestFile, JSON.stringify(manifest));
 
     await expect(generate(typings)).rejects.toThrow(
-      "no page for 1 of its entries, where the route of an entry says:\n- native RemovedNative: functions/RemovedNative.md",
+      "no page for 1 of its entries and Handle types, where the route of each says:\n- native RemovedNative: functions/RemovedNative.md",
     );
+  });
+
+  it("gives every Handle type its page at the route of its name", async () => {
+    const reference = await generate();
+
+    const types = readHandleTypes(join(FIXTURE, "9.9.9/common.j.d.ts"));
+    expect(types).toEqual(["handle", "unit"]);
+    for (const name of types) {
+      const text = await page(reference, `${handleTypePage(name)}.md`);
+      expect(text.split("\n")).toContain(`# Interface: ${name}`);
+    }
+  });
+
+  it("fails naming a Handle type that has no page", async () => {
+    const typings = join(temp, "typings");
+    await cp(FIXTURE, typings, { recursive: true });
+    const commonJ = join(typings, "9.9.9/common.j.d.ts");
+    // TypeDoc renames the page of one of two interfaces whose names differ in
+    // case alone.
+    await writeFile(
+      commonJ,
+      `${await readFile(commonJ, "utf8")}declare interface UNIT extends handle {\n  __UNIT: never;\n}\n`,
+    );
+
+    await expect(generate(typings)).rejects.toThrow(
+      /no page for 1 of its entries and Handle types, where the route of each says:\n- type (unit|UNIT): interfaces\/(unit|UNIT)\.md$/,
+    );
+  });
+
+  it("reads as Handle types the interfaces that extend handle, directly or not", async () => {
+    const file = join(temp, "common.j.d.ts");
+    await writeFile(
+      file,
+      [
+        "declare interface handle { __handle: never }",
+        "type code = (this: void) => void;",
+        "declare interface agent extends handle { __agent: never }",
+        "declare interface unit extends agent {",
+        "  __unit: never;",
+        "}",
+        "declare interface options { strict: boolean }",
+        "declare interface view extends options { __view: never }",
+      ].join("\n"),
+    );
+
+    expect(readHandleTypes(file)).toEqual(["handle", "agent", "unit"]);
   });
 
   it("rejects a manifest entry of an unknown kind", async () => {

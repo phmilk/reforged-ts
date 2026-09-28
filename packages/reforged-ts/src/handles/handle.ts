@@ -113,6 +113,7 @@ export abstract class Handle<T extends handle> {
    * the object is destroyed (a new Handle created right after gets the next
    * ID), and they are allocated deterministically from map start.
    * @returns The unique ID of a handle object.
+   * @native GetHandleId
    */
   public get id() {
     return GetHandleId(this.handle);

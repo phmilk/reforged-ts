@@ -26,6 +26,7 @@ export class Force extends Handle<force> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyForce
    */
   public destroy() {
     DestroyForce(this.handle);
@@ -75,6 +76,7 @@ export class Force extends Handle<force> {
    * @remarks In Dev mode the callback runs under `pcall`: a call that throws
    * is reported as `Force#<id> Force.for` and the enumeration continues with
    * the next player. With Dev mode off `ForForce` receives `callback` itself.
+   * @native ForForce
    */
   public for(callback: () => void) {
     assertNotLocal("Force.for", 2);
@@ -83,6 +85,7 @@ export class Force extends Handle<force> {
 
   /**
    * Returns all player handles belonging to this force
+   * @native ForForce
    */
   public getPlayers() {
     const players: MapPlayer[] = [];
@@ -101,6 +104,7 @@ export class Force extends Handle<force> {
    * Whether the player is in the force, through `BlzForceHasPlayer`, which
    * jassdoc documents as functionally identical to `IsPlayerInForce`
    * ({@link MapPlayer.inForce}).
+   * @native BlzForceHasPlayer
    */
   public hasPlayer(whichPlayer: MapPlayer) {
     return BlzForceHasPlayer(this.handle, whichPlayer.handle);
@@ -112,6 +116,8 @@ export class Force extends Handle<force> {
 
   /**
    * A new force holding `whichPlayer`: a creation, a new force on every call.
+   * @native CreateForce
+   * @native ForceAddPlayer
    */
   public static fromPlayer(whichPlayer: MapPlayer): Force {
     const handle = CreateForce();

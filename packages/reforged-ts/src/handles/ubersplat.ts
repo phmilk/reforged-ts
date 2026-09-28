@@ -37,6 +37,7 @@ export class Ubersplat extends Handle<ubersplat> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyUbersplat
    */
   public destroy() {
     DestroyUbersplat(this.handle);
@@ -44,6 +45,7 @@ export class Ubersplat extends Handle<ubersplat> {
   }
 
   /**
+   * @native FinishUbersplat
    * @bug Does nothing.
    */
   public finish() {
@@ -59,6 +61,7 @@ export class Ubersplat extends Handle<ubersplat> {
   }
 
   /**
+   * @native ResetUbersplat
    * @bug Does nothing.
    */
   public reset() {

@@ -39,6 +39,7 @@ export class Frame extends Handle<framehandle> {
    * @param owner - The parent frame.
    * @param priority - Should be a natural number (greater equal to 0).
    * @param createContext - The ID assigned to a frame to be accessed with `Frame.fromName`. This value does not have to be unique and can be overwritten.
+   * @native BlzCreateFrame
    */
   public static create(
     name: string,
@@ -61,6 +62,7 @@ export class Frame extends Handle<framehandle> {
    * @param name - The name of the frame to be accessed with `Frame.fromName`.
    * @param owner - The parent frame.
    * @param createContext - The ID assigned to a frame to be accessed with `Frame.fromName`. This value does not have to be unique and can be overwritten.
+   * @native BlzCreateSimpleFrame
    */
   public static createSimple(
     name: string,
@@ -80,6 +82,7 @@ export class Frame extends Handle<framehandle> {
    * @param createContext - The ID assigned to a frame to be accessed with `Frame.fromName`. This value does not have to be unique and can be overwritten.
    * @param typeName - The type of Frame.
    * @param inherits - The name of the Frame it inherits.
+   * @native BlzCreateFrameByType
    */
   public static createType(
     name: string,
@@ -142,7 +145,10 @@ export class Frame extends Handle<framehandle> {
     return BlzFrameGetHeight(this.handle);
   }
 
-  /** The frame's name, through `BlzFrameGetName`. */
+  /**
+   * The frame's name, through `BlzFrameGetName`.
+   * @native BlzFrameGetName
+   */
   public get name() {
     return BlzFrameGetName(this.handle) ?? "";
   }
@@ -214,6 +220,7 @@ export class Frame extends Handle<framehandle> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native BlzDestroyFrame
    */
   public destroy() {
     BlzDestroyFrame(this.handle);
@@ -327,6 +334,7 @@ export class Frame extends Handle<framehandle> {
   /**
    * Whether the text area scrolls to its last line as text is added, through
    * `BlzTextAreaFrameSetAutoScroll` (3.0.0).
+   * @native BlzTextAreaFrameSetAutoScroll
    */
   public setTextAreaAutoScroll(value: boolean) {
     BlzTextAreaFrameSetAutoScroll(this.handle, value);
@@ -381,6 +389,7 @@ export class Frame extends Handle<framehandle> {
    * The horizontal position in pixels of the local screen for a position in
    * frame units, through `BlzFrameToPixelX` (3.0.0). It depends on the local
    * resolution, so it differs between clients.
+   * @native BlzFrameToPixelX
    * @async
    */
   public static frameToPixelX(frameX: number) {
@@ -391,6 +400,7 @@ export class Frame extends Handle<framehandle> {
    * The vertical position in pixels of the local screen for a position in
    * frame units, through `BlzFrameToPixelY` (3.0.0). It depends on the local
    * resolution, so it differs between clients.
+   * @native BlzFrameToPixelY
    * @async
    */
   public static frameToPixelY(frameY: number) {
@@ -420,6 +430,7 @@ export class Frame extends Handle<framehandle> {
    * @remarks The first lookup of a frame the library has no Wrapper for
    * allocates a Handle id, so in Dev mode it raises inside
    * `MapPlayer.runLocal`: look the frame up once outside, then use it inside.
+   * @native BlzGetFrameByName
    */
   public static fromName(
     name: string,
@@ -467,6 +478,7 @@ export class Frame extends Handle<framehandle> {
    * The horizontal position in frame units for a position in pixels of the
    * local screen, through `BlzPixelToFrameX` (3.0.0). It depends on the local
    * resolution, so it differs between clients.
+   * @native BlzPixelToFrameX
    * @async
    */
   public static pixelToFrameX(pixelX: number) {
@@ -477,6 +489,7 @@ export class Frame extends Handle<framehandle> {
    * The vertical position in frame units for a position in pixels of the
    * local screen, through `BlzPixelToFrameY` (3.0.0). It depends on the local
    * resolution, so it differs between clients.
+   * @native BlzPixelToFrameY
    * @async
    */
   public static pixelToFrameY(pixelY: number) {

@@ -1,4 +1,7 @@
-/** A unit of the game. */
+/**
+ * A unit of the game.
+ * @native unit
+ */
 export class Unit {
   constructor(private readonly unitName: string) {}
 

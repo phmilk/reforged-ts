@@ -5,6 +5,7 @@ import { Handle } from "./handle";
 export class Widget extends Handle<widget> {
   /**
    * Get the Widget's life.
+   * @native GetWidgetLife
    */
   public get life() {
     return GetWidgetLife(this.handle);
@@ -12,6 +13,7 @@ export class Widget extends Handle<widget> {
 
   /**
    * Set the Widget's life.
+   * @native SetWidgetLife
    */
   public set life(value: number) {
     SetWidgetLife(this.handle, value);
@@ -19,6 +21,7 @@ export class Widget extends Handle<widget> {
 
   /**
    * Get the Widget's x-coordinate
+   * @native GetWidgetX
    */
   public get x() {
     return GetWidgetX(this.handle);
@@ -26,6 +29,7 @@ export class Widget extends Handle<widget> {
 
   /**
    * Get the Widget's y-coordinate
+   * @native GetWidgetY
    */
   public get y() {
     return GetWidgetY(this.handle);
@@ -37,6 +41,7 @@ export class Widget extends Handle<widget> {
    * @param green - An integer from 0-255 determining the amount of green color.
    * @param blue - An integer from 0-255 determining the amount of blue color.
    * @param alpha - An integer from 0-255 determining the amount of alpha color.
+   * @native AddIndicator
    */
   public addIndicator(red: number, green: number, blue: number, alpha: number) {
     AddIndicator(this.handle, red, green, blue, alpha);
@@ -49,6 +54,7 @@ export class Widget extends Handle<widget> {
   /**
    * The widget a target order targets, or undefined outside a target order,
    * through `GetOrderTarget`.
+   * @native GetOrderTarget
    */
   public static fromOrderTarget(): Widget | undefined {
     return this.fromHandle(GetOrderTarget());

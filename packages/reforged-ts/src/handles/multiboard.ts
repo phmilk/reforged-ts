@@ -18,6 +18,7 @@ export class MultiboardItem extends Handle<multiboarditem> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native MultiboardReleaseItem
    */
   public destroy() {
     MultiboardReleaseItem(this.handle);
@@ -53,6 +54,7 @@ export class MultiboardItem extends Handle<multiboarditem> {
 export class Multiboard extends Handle<multiboard> {
   /**
    * Create a Multiboard object
+   * @native CreateMultiboard
    * @bug Do not use this in a global initialisation as it crashes the game there.
    */
   public static create(): Multiboard {
@@ -76,6 +78,7 @@ export class Multiboard extends Handle<multiboard> {
   }
 
   /**
+   * @native MultiboardSetRowCount
    * @bug It is only safe to change the row count by one. Use multiple calls for bigger values.
    */
   public set rows(count: number) {
@@ -105,6 +108,7 @@ export class Multiboard extends Handle<multiboard> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyMultiboard
    */
   public destroy() {
     DestroyMultiboard(this.handle);
@@ -113,6 +117,7 @@ export class Multiboard extends Handle<multiboard> {
 
   /**
    * @remarks Multiboards can not be shown at map-init. Use a wait or a zero-timer to display as soon as possible.
+   * @native MultiboardDisplay
    */
   public display(show: boolean) {
     MultiboardDisplay(this.handle, show);
@@ -123,6 +128,7 @@ export class Multiboard extends Handle<multiboard> {
   }
 
   /**
+   * @native IsMultiboardMinimized
    * @async
    */
   public minimized() {
@@ -165,6 +171,7 @@ export class Multiboard extends Handle<multiboard> {
 
   /**
    * Meant to unequivocally suspend display of existing and subsequently displayed multiboards.
+   * @native MultiboardSuppressDisplay
    */
   public static suppressDisplay(flag: boolean) {
     MultiboardSuppressDisplay(flag);

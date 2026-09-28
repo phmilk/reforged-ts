@@ -25,6 +25,7 @@ export class Input {
   /**
    * Whether the local player holds the key down, through `BlzIsKeyPressed`
    * (3.0.0).
+   * @native BlzIsKeyPressed
    * @async
    */
   public static isKeyPressed(key: oskeytype) {
@@ -34,6 +35,7 @@ export class Input {
   /**
    * Whether the local player holds the mouse button down, through
    * `BlzIsMouseButtonPressed` (3.0.0).
+   * @native BlzIsMouseButtonPressed
    * @async
    */
   public static isMouseButtonPressed(button: mousebuttontype) {
@@ -43,6 +45,7 @@ export class Input {
   /**
    * Whether the local player holds the meta keys down, through
    * `BlzIsMetaKeyPressed` (3.0.0).
+   * @native BlzIsMetaKeyPressed
    * @async
    */
   public static isMetaKeyPressed(keys: MetaKey) {
@@ -52,6 +55,7 @@ export class Input {
   /**
    * The horizontal position of the local mouse on the screen, in pixels,
    * through `BlzGetMouseScreenPosX` (3.0.0).
+   * @native BlzGetMouseScreenPosX
    * @async
    */
   public static get mouseScreenX() {
@@ -61,6 +65,7 @@ export class Input {
   /**
    * The vertical position of the local mouse on the screen, in pixels,
    * through `BlzGetMouseScreenPosY` (3.0.0).
+   * @native BlzGetMouseScreenPosY
    * @async
    */
   public static get mouseScreenY() {

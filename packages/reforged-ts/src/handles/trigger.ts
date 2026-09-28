@@ -84,7 +84,10 @@ export class Trigger extends Handle<trigger> {
     return GetTriggerExecCount(this.handle);
   }
 
-  /** Whether the Trigger is running, through `BlzTriggerIsRunning` (3.0.0). */
+  /**
+   * Whether the Trigger is running, through `BlzTriggerIsRunning` (3.0.0).
+   * @native BlzTriggerIsRunning
+   */
   public get isRunning(): boolean {
     return BlzTriggerIsRunning(this.handle);
   }
@@ -93,6 +96,7 @@ export class Trigger extends Handle<trigger> {
    * Marks the given trigger to wait/no longer wait for `TriggerSleepAction`s in sub trigger executions started via `TriggerExecuteWait`.
    * Since this is an attribute of the execution rather than the trigger object, this affects future runs of the given trigger, and not
    * those already started.
+   * @native TriggerWaitOnSleeps
    */
   public set waitOnSleeps(flag: boolean) {
     TriggerWaitOnSleeps(this.handle, flag);
@@ -110,6 +114,7 @@ export class Trigger extends Handle<trigger> {
    * one level deeper in the damage depth `Unit.damageTarget` checks, the
    * registration made before or after. With Dev mode off `TriggerAddAction`
    * receives `actionFunc` itself.
+   * @native TriggerAddAction
    */
   public addAction(actionFunc: () => void) {
     TriggerAddAction(
@@ -134,6 +139,8 @@ export class Trigger extends Handle<trigger> {
    * @example
    * {@includeCode ../../examples/harness/trigger-add-condition.ts}
    * @param condition - The condition which must evaluate to true in order to run the trigger's actions.
+   * @native TriggerAddCondition
+   * @native Condition
    */
   public addCondition(condition: boolexpr | (() => boolean)) {
     TriggerAddCondition(
@@ -184,6 +191,7 @@ export class Trigger extends Handle<trigger> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyTrigger
    * @bug Do not destroy the current running Trigger (when waits are involved)
    * as it can cause handle stack corruption as documented [here](http://www.wc3c.net/showthread.php?t=110519).
    */
@@ -203,6 +211,7 @@ export class Trigger extends Handle<trigger> {
    * - If you want to return false for a condition-function that returns string (for whatever reason) return `null` instead of `""`
    * - *All* functions added via `addCondition` are run. There is no short-circuting. If you want short-circuting use `And` or `Or`.
    * - All functions added via `addCondition` are run in the order they were added.
+   * @native TriggerEvaluate
    */
   public eval() {
     return TriggerEvaluate(this.handle);
@@ -211,6 +220,7 @@ export class Trigger extends Handle<trigger> {
   /**
    * Calls the actions of a trigger in a new execution context.
    * Control will return to the caller when the trigger has finished or has been suspended via TriggerSleepAction.
+   * @native TriggerExecute
    */
   public exec() {
     TriggerExecute(this.handle);
@@ -220,17 +230,24 @@ export class Trigger extends Handle<trigger> {
    * Does the same as `exec` but if the caller has been marked with `waitOnSleeps` before its
    * execution, it will additionally wait for `TriggerSleepAction`s of the callee, so this really ensures that
    * the callee has finished. If there was a `TriggerSleepAction`, there will be a short delay before returning.
+   * @native TriggerExecuteWait
    */
   public execWait() {
     TriggerExecuteWait(this.handle);
   }
 
-  /** Interrupts the Trigger, through `BlzTriggerInterrupt` (3.0.0). */
+  /**
+   * Interrupts the Trigger, through `BlzTriggerInterrupt` (3.0.0).
+   * @native BlzTriggerInterrupt
+   */
   public interrupt() {
     BlzTriggerInterrupt(this.handle);
   }
 
-  /** Registers the player unit event for the player in every slot, with no filter. */
+  /**
+   * Registers the player unit event for the player in every slot, with no filter.
+   * @native TriggerRegisterPlayerUnitEvent
+   */
   public registerAnyUnitEvent(whichPlayerUnitEvent: playerunitevent) {
     this.noteEvent(whichPlayerUnitEvent);
     forEachPlayerSlot((whichPlayer) => {
@@ -290,7 +307,10 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
-  /** Registers the frame event `event` of `frame`. */
+  /**
+   * Registers the frame event `event` of `frame`.
+   * @native BlzTriggerRegisterFrameEvent
+   */
   public registerFrameEvent(frame: Frame, event: frameeventtype) {
     BlzTriggerRegisterFrameEvent(this.handle, frame.handle, event);
     return this;
@@ -376,7 +396,10 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
-  /** Registers the player event of the mouse event `kind` for the player. */
+  /**
+   * Registers the player event of the mouse event `kind` for the player.
+   * @native TriggerRegisterPlayerEvent
+   */
   public registerPlayerMouseEvent(
     whichPlayer: MapPlayer,
     kind: MouseEventKind,
@@ -440,19 +463,28 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
-  /** Registers the expiry of `timer`. */
+  /**
+   * Registers the expiry of `timer`.
+   * @native TriggerRegisterTimerExpireEvent
+   */
   public registerTimerExpire(timer: Timer) {
     TriggerRegisterTimerExpireEvent(this.handle, timer.handle);
     return this;
   }
 
-  /** Registers a click on `trackable`. */
+  /**
+   * Registers a click on `trackable`.
+   * @native TriggerRegisterTrackableHitEvent
+   */
   public registerTrackableHit(trackable: Trackable) {
     TriggerRegisterTrackableHitEvent(this.handle, trackable.handle);
     return this;
   }
 
-  /** Registers the mouse moving over `trackable`. */
+  /**
+   * Registers the mouse moving over `trackable`.
+   * @native TriggerRegisterTrackableTrackEvent
+   */
   public registerTrackableTrack(trackable: Trackable) {
     TriggerRegisterTrackableTrackEvent(this.handle, trackable.handle);
     return this;

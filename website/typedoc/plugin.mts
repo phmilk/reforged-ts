@@ -10,13 +10,14 @@
 // - the validation gate: docusaurus-plugin-typedoc converts and renders but
 //   neither validates nor fails, so the plugin does both before the output;
 // - for a Typings reference (the `typingsManifest` option): the Jass files
-//   side by side in one project, every entry of the Patch's manifest on the
-//   page `typings.mts` routes it to, or the run fails, and the index page at
-//   the slug `typings.mts` gives it;
+//   side by side in one project, every entry of the Patch's manifest and
+//   every Handle type on the page `typings.mts` routes it to, or the run
+//   fails, and the index page at the slug `typings.mts` gives it;
 // - for a reference whose `@native` tags link a Typings reference (the
 //   `nativeManifest`, `nativeRoute` and `nativeJassbot` options): each tag as
-//   a link to the Native's page there, then to jassbot, and a tag naming no
-//   entry of the manifest fails the run.
+//   a link to the page of the Native, or of the Handle type, there, then to
+//   jassbot, and a tag naming neither an entry of the manifest nor a Handle
+//   type fails the run.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import { basename, dirname, join } from "node:path";
@@ -36,6 +37,9 @@ import {
 import {
   entryPage,
   GAME_VERSION_INDEX_SLUG,
+  HANDLE_TYPES_FILE,
+  handleTypePage,
+  readHandleTypes,
   readTypingsManifest,
 } from "./typings.mts";
 
@@ -243,10 +247,11 @@ function mergeTypingsFiles(app: Application): void {
 
 /**
  * Fails a Typings reference, once its pages are written, when an entry of the
- * Patch's manifest is not on the page `entryPage` routes it to: the `@native`
- * links of the library's reference are built from that route. The file names
- * are compared as written, so a page TypeDoc renamed to keep it apart from
- * another whose name differs in case alone fails too.
+ * Patch's manifest is not on the page `entryPage` routes it to, or a Handle
+ * type its `common.j.d.ts` declares not on the page `handleTypePage` routes
+ * it to: the `@native` links of the library's reference are built from those
+ * routes. The file names are compared as written, so a page TypeDoc renamed
+ * to keep it apart from another whose name differs in case alone fails too.
  */
 function checkTypingsPages(app: Application): void {
   app.on(Application.EVENT_GENERATE_OUTPUTS_END, () => {
@@ -263,13 +268,24 @@ function checkTypingsPages(app: Application): void {
       }
       return files;
     };
-    const missing = readTypingsManifest(manifest)
-      .entries.map((entry) => ({ entry, page: `${entryPage(entry)}.md` }))
+    const routed = [
+      ...readTypingsManifest(manifest).entries.map((entry) => ({
+        what: `${entry.kind} ${entry.name}`,
+        page: `${entryPage(entry)}.md`,
+      })),
+      ...readHandleTypes(join(dirname(manifest), HANDLE_TYPES_FILE)).map(
+        (name) => ({
+          what: `type ${name}`,
+          page: `${handleTypePage(name)}.md`,
+        }),
+      ),
+    ];
+    const missing = routed
       .filter(({ page }) => !written(dirname(page)).has(basename(page)))
-      .map(({ entry, page }) => `- ${entry.kind} ${entry.name}: ${page}`);
+      .map(({ what, page }) => `- ${what}: ${page}`);
     if (missing.length !== 0) {
       throw new Error(
-        `The Typings reference of ${manifest} has no page for ${String(missing.length)} of its entries, where the route of an entry says:\n${missing.join("\n")}`,
+        `The Typings reference of ${manifest} has no page for ${String(missing.length)} of its entries and Handle types, where the route of each says:\n${missing.join("\n")}`,
       );
     }
   });
@@ -290,10 +306,13 @@ function slugTypingsIndex(app: Application): void {
 /**
  * Turns each `@native` tag into a link to the Native's page in the Typings
  * reference, where `entryPage` routes it under `nativeRoute`, and a link to
- * its jassbot page, the Native's name as the text. A tag whose name is no
- * entry of `nativeManifest` fails the conversion, naming the member and the
- * tag: every such tag at once. The tags are rewritten before TypeDoc
- * resolves the project, while each comment is still on its own member.
+ * its jassbot page, the Native's name as the text. A tag naming a Handle type
+ * of the Typings (`@native unit` on a Wrapper) links the type's page, where
+ * `handleTypePage` routes it, the same way. A tag whose name is neither an
+ * entry of `nativeManifest` nor a Handle type of the `common.j.d.ts` next to
+ * it fails the conversion, naming the member and the tag: every such tag at
+ * once. The tags are rewritten before TypeDoc resolves the project, while
+ * each comment is still on its own member.
  */
 function linkNatives(app: Application): void {
   app.converter.on(Converter.EVENT_RESOLVE_BEGIN, (context) => {
@@ -302,9 +321,16 @@ function linkNatives(app: Application): void {
     const route = app.options.getValue("nativeRoute");
     const jassbot = app.options.getValue("nativeJassbot");
     const manifest = readTypingsManifest(manifestFile);
-    const entries = new Map(
-      manifest.entries.map((entry) => [entry.name, entry]),
-    );
+    // A name is an entry or a Handle type, never both: the Handle types are
+    // lowercase, the Natives capitalized, the globals uppercase.
+    const pages = new Map<string, string>([
+      ...readHandleTypes(join(dirname(manifestFile), HANDLE_TYPES_FILE)).map(
+        (name) => [name, handleTypePage(name)] as const,
+      ),
+      ...manifest.entries.map(
+        (entry) => [entry.name, entryPage(entry)] as const,
+      ),
+    ]);
     const unknown: string[] = [];
     // A comment two members share is rewritten once.
     const seen = new WeakSet<CommentTag>();
@@ -313,8 +339,8 @@ function linkNatives(app: Application): void {
         if (tag.tag !== "@native" || seen.has(tag)) continue;
         seen.add(tag);
         const name = Comment.combineDisplayParts(tag.content).trim();
-        const entry = entries.get(name);
-        if (entry === undefined) {
+        const page = pages.get(name);
+        if (page === undefined) {
           unknown.push(
             `- ${reflection.getFriendlyFullName()}: @native ${name}`,
           );
@@ -323,14 +349,14 @@ function linkNatives(app: Application): void {
         tag.content = [
           {
             kind: "text",
-            text: `[${name}](${route}/${entryPage(entry)}) ([jassbot](${jassbot}${name}))`,
+            text: `[${name}](${route}/${page}) ([jassbot](${jassbot}${name}))`,
           },
         ];
       }
     }
     if (unknown.length !== 0) {
       throw new Error(
-        `The reference of ${context.project.packageName ?? context.project.name} has ${String(unknown.length)} @native tags naming what the Typings of Patch ${manifest.patch} do not declare (${manifestFile}):\n${unknown.join("\n")}`,
+        `The reference of ${context.project.packageName ?? context.project.name} has ${String(unknown.length)} @native tags naming neither an entry of the manifest of Patch ${manifest.patch} nor a Handle type its Typings declare (${manifestFile}):\n${unknown.join("\n")}`,
       );
     }
   });

@@ -54,6 +54,7 @@ export class Dialog extends Handle<dialog> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DialogDestroy
    */
   public destroy() {
     DialogDestroy(this.handle);
@@ -62,6 +63,7 @@ export class Dialog extends Handle<dialog> {
 
   /**
    * @remarks Dialogs can not be shown at map-init. Use a wait or a zero-timer to display as soon as possible.
+   * @native DialogDisplay
    */
   public display(whichPlayer: MapPlayer, flag: boolean) {
     DialogDisplay(whichPlayer.handle, this.handle, flag);

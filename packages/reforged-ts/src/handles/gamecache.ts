@@ -8,6 +8,7 @@ export class GameCache extends Handle<gamecache> {
 
   /**
    * @remarks You cannot create more than 255 gamecaches
+   * @native InitGameCache
    */
   public static create(campaignFile: string): GameCache {
     return this.expect(InitGameCache(campaignFile), campaignFile, (cache) => {
@@ -45,6 +46,7 @@ export class GameCache extends Handle<gamecache> {
 
   /**
    * Returns false if the specified value's data is not found in the cache.
+   * @native GetStoredBoolean
    */
   public getBoolean(missionKey: string, key: string) {
     return GetStoredBoolean(this.handle, missionKey, key);
@@ -52,6 +54,7 @@ export class GameCache extends Handle<gamecache> {
 
   /**
    * Returns 0 if the specified value's data is not found in the cache.
+   * @native GetStoredInteger
    */
   public getInteger(missionKey: string, key: string) {
     return GetStoredInteger(this.handle, missionKey, key);
@@ -59,6 +62,7 @@ export class GameCache extends Handle<gamecache> {
 
   /**
    * Returns 0 if the specified value's data is not found in the cache.
+   * @native GetStoredReal
    */
   public getNumber(missionKey: string, key: string) {
     return GetStoredReal(this.handle, missionKey, key);
@@ -66,6 +70,7 @@ export class GameCache extends Handle<gamecache> {
 
   /**
    * Returns "" if the specified value's data is not found in the cache.
+   * @native GetStoredString
    */
   public getString(missionKey: string, key: string) {
     return GetStoredString(this.handle, missionKey, key);
@@ -87,13 +92,17 @@ export class GameCache extends Handle<gamecache> {
     return HaveStoredString(this.handle, missionKey, key);
   }
 
-  /** Whether a unit is stored under the key, through `HaveStoredUnit`. */
+  /**
+   * Whether a unit is stored under the key, through `HaveStoredUnit`.
+   * @native HaveStoredUnit
+   */
   public hasUnit(missionKey: string, key: string) {
     return HaveStoredUnit(this.handle, missionKey, key);
   }
 
   /**
    * Returns null if the specified value's data is not found in the cache.
+   * @native RestoreUnit
    */
   public restoreUnit(
     missionKey: string,
@@ -137,6 +146,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Stores `value` as an integer, through `StoreInteger`, where `getInteger`
    * reads it; `store` stores a number as a real.
+   * @native StoreInteger
    */
   public storeInteger(missionKey: string, key: string, value: number) {
     StoreInteger(this.handle, missionKey, key, value);

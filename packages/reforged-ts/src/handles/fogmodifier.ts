@@ -16,6 +16,7 @@ export class FogModifier extends Handle<fogmodifier> {
    * @param afterUnits - Will determine whether or not units in that area will be masked by the fog.
    * If it is set to true and the fogstate is masked, it will hide all the units in the fog modifier's radius and mask the area.
    * If set to false, it will only mask the areas that are not visible to the units.
+   * @native CreateFogModifierRadius
    */
   public static create(
     forWhichPlayer: MapPlayer,
@@ -42,6 +43,7 @@ export class FogModifier extends Handle<fogmodifier> {
   /**
    * A new fog modifier over a circle around `center`, through
    * `CreateFogModifierRadiusLoc`; the parameters are `create`'s.
+   * @native CreateFogModifierRadiusLoc
    */
   public static createAtPoint(
     forWhichPlayer: MapPlayer,
@@ -70,6 +72,7 @@ export class FogModifier extends Handle<fogmodifier> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyFogModifier
    */
   public destroy() {
     DestroyFogModifier(this.handle);
@@ -86,6 +89,7 @@ export class FogModifier extends Handle<fogmodifier> {
 
   /**
    * A new fog modifier over `where`: a creation, whatever its name says.
+   * @native CreateFogModifierRect
    */
   public static fromRect(
     forWhichPlayer: MapPlayer,

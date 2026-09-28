@@ -7,6 +7,7 @@ declare interface handle {
 declare interface unit extends handle {
   __unit: never;
 }
+type code = () => unknown;
 
 /**
  * @param whichUnit - unit

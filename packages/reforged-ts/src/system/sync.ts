@@ -271,6 +271,7 @@ export class SyncRequest {
    * @returns A `Promise` that resolves with the sender's data when every
    * chunk has arrived, and rejects with a message naming the request on a
    * timeout, a cancellation or a packet the game refused to send.
+   * @native BlzSendSyncData
    */
   public start(data: string): Promise<SyncResponse> {
     if (this._status !== SyncStatus.None) {

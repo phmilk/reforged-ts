@@ -21,6 +21,8 @@ export class Item extends Widget {
    * @param x - The x-coordinate of the item
    * @param y - The y-coordinate of the item
    * @param skinId - The skin ID of the item.
+   * @native CreateItem
+   * @native BlzCreateItemWithSkin
    */
   public static create(
     itemId: number,
@@ -47,6 +49,7 @@ export class Item extends Widget {
   /**
    * The item's colour, set like `MapPlayer.color`. Write-only: the game has
    * no Native that reads it back.
+   * @native SetItemColor
    */
   public set color(color: playercolor) {
     SetItemColor(this.handle, color);
@@ -80,6 +83,7 @@ export class Item extends Widget {
   }
 
   /**
+   * @native BlzGetItemDescription
    * @async
    */
   get description() {
@@ -91,6 +95,7 @@ export class Item extends Widget {
   }
 
   /**
+   * @native BlzGetItemExtendedTooltip
    * @async
    */
   get extendedTooltip() {
@@ -102,6 +107,7 @@ export class Item extends Widget {
   }
 
   /**
+   * @native BlzGetItemIconPath
    * @async
    */
   get icon() {
@@ -113,6 +119,7 @@ export class Item extends Widget {
   }
 
   /**
+   * @native GetItemName
    * @async
    */
   get name() {
@@ -124,6 +131,7 @@ export class Item extends Widget {
   }
 
   /**
+   * @native BlzGetItemTooltip
    * @async
    */
   get tooltip() {
@@ -221,6 +229,7 @@ export class Item extends Widget {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native RemoveItem
    */
   public destroy() {
     RemoveItem(this.handle);
@@ -326,6 +335,9 @@ export class Item extends Widget {
    * A random item type of the level, item type, equipment type and tag
    * given: its id, or 0 when the game finds none (an id, not a Handle, so
    * not a lookup).
+   * @native ChooseRandomItemExWithFilter
+   * @native ConvertEquipmentType
+   * @native ConvertItemTag
    */
   public static chooseRandomWithFilter(
     type: itemtype,
@@ -345,6 +357,7 @@ export class Item extends Widget {
    * The stacking item that absorbs a picked-up item, or undefined outside a
    * pickup event or when the picked-up item stacks with none, through
    * `BlzGetAbsorbingItem`.
+   * @native BlzGetAbsorbingItem
    */
   public static fromAbsorbing(): Item | undefined {
     return this.fromHandle(BlzGetAbsorbingItem());
@@ -353,12 +366,16 @@ export class Item extends Widget {
   /**
    * The item an enumeration is at, or undefined outside one, through
    * `GetEnumItem`.
+   * @native GetEnumItem
    */
   public static fromEnum(): Item | undefined {
     return this.fromHandle(GetEnumItem());
   }
 
-  /** The item a unit equips, or undefined outside an equip event. */
+  /**
+   * The item a unit equips, or undefined outside an equip event.
+   * @native GetEquippedItem
+   */
   public static fromEquipped(): Item | undefined {
     return this.fromHandle(GetEquippedItem());
   }
@@ -370,6 +387,7 @@ export class Item extends Widget {
   /**
    * The item an enumeration's filter is at, or undefined outside one,
    * through `GetFilterItem`.
+   * @native GetFilterItem
    */
   public static fromFilter(): Item | undefined {
     return this.fromHandle(GetFilterItem());
@@ -378,17 +396,24 @@ export class Item extends Widget {
   /**
    * The item a target order targets, or undefined outside a target order or
    * when the target is not an item, through `GetOrderTargetItem`.
+   * @native GetOrderTargetItem
    */
   public static override fromOrderTarget(): Item | undefined {
     return this.fromHandle(GetOrderTargetItem());
   }
 
-  /** The spell's target item, or undefined when the spell targets none. */
+  /**
+   * The spell's target item, or undefined when the spell targets none.
+   * @native GetSpellTargetItem
+   */
   public static fromSpellTarget(): Item | undefined {
     return this.fromHandle(GetSpellTargetItem());
   }
 
-  /** The item a shop sells or a unit pawns, or undefined outside those events. */
+  /**
+   * The item a shop sells or a unit pawns, or undefined outside those events.
+   * @native GetSoldItem
+   */
   public static fromSold(): Item | undefined {
     return this.fromHandle(GetSoldItem());
   }
@@ -396,6 +421,7 @@ export class Item extends Widget {
   /**
    * The item losing charges to another when items stack, or undefined
    * outside a stack event, through `BlzGetStackingItemSource`.
+   * @native BlzGetStackingItemSource
    */
   public static fromStackingSource(): Item | undefined {
     return this.fromHandle(BlzGetStackingItemSource());
@@ -404,12 +430,16 @@ export class Item extends Widget {
   /**
    * The item gaining the charges when items stack, or undefined outside a
    * stack event, through `BlzGetStackingItemTarget`.
+   * @native BlzGetStackingItemTarget
    */
   public static fromStackingTarget(): Item | undefined {
     return this.fromHandle(BlzGetStackingItemTarget());
   }
 
-  /** The item a unit unequips, or undefined outside an unequip event. */
+  /**
+   * The item a unit unequips, or undefined outside an unequip event.
+   * @native GetUnequippedItem
+   */
   public static fromUnequipped(): Item | undefined {
     return this.fromHandle(GetUnequippedItem());
   }

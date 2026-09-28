@@ -41,6 +41,7 @@ export class Rectangle extends Handle<rect> {
 
   /**
    * Makes the rect a camera blocker, through `AddCameraBlocker` (3.0.0).
+   * @native AddCameraBlocker
    */
   public addCameraBlocker() {
     AddCameraBlocker(this.handle);
@@ -53,6 +54,7 @@ export class Rectangle extends Handle<rect> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native RemoveRect
    */
   public destroy() {
     RemoveRect(this.handle);
@@ -62,6 +64,7 @@ export class Rectangle extends Handle<rect> {
   /**
    * Turns the rect's camera blocker on or off, through `EnableCameraBlocker`
    * (3.0.0).
+   * @native EnableCameraBlocker
    */
   public enableCameraBlocker(flag: boolean) {
     EnableCameraBlocker(this.handle, flag);
@@ -98,6 +101,7 @@ export class Rectangle extends Handle<rect> {
    * Sets the animation of every doodad of type `doodadId` in the rect,
    * through `SetDoodadAnimationRect`.
    * @param animRandom - Plays a random animation of that name.
+   * @native SetDoodadAnimationRect
    */
   public setDoodadAnimation(
     doodadId: number,
@@ -110,6 +114,7 @@ export class Rectangle extends Handle<rect> {
   /**
    * Sets the player color of every doodad of type `doodadId` in the rect,
    * through `SetDoodadColorRect` (3.0.0).
+   * @native SetDoodadColorRect
    */
   public setDoodadColor(doodadId: number, color: playercolor) {
     SetDoodadColorRect(this.handle, doodadId, color);

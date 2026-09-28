@@ -18,6 +18,7 @@ export class Camera {
 
   /**
    * Return-value for the local players camera only.
+   * @native GetCameraBoundMinX
    */
   public static get boundMinX() {
     return GetCameraBoundMinX();
@@ -25,6 +26,7 @@ export class Camera {
 
   /**
    * Return-value for the local players camera only.
+   * @native GetCameraBoundMinY
    */
   public static get boundMinY() {
     return GetCameraBoundMinY();
@@ -32,6 +34,7 @@ export class Camera {
 
   /**
    * Return-value for the local players camera only.
+   * @native GetCameraBoundMaxX
    */
   public static get boundMaxX() {
     return GetCameraBoundMaxX();
@@ -43,6 +46,7 @@ export class Camera {
 
   /**
    * Return-value for the local players camera only.
+   * @native GetCameraTargetPositionX
    */
   public static get targetX() {
     return GetCameraTargetPositionX();
@@ -50,6 +54,7 @@ export class Camera {
 
   /**
    * Return-value for the local players camera only.
+   * @native GetCameraTargetPositionY
    */
   public static get targetY() {
     return GetCameraTargetPositionY();
@@ -57,6 +62,7 @@ export class Camera {
 
   /**
    * Return-value for the local players camera only.
+   * @native GetCameraTargetPositionZ
    */
   public static get targetZ() {
     return GetCameraTargetPositionZ();
@@ -64,6 +70,7 @@ export class Camera {
 
   /**
    * Return-value for the local players camera only.
+   * @native GetCameraEyePositionX
    */
   public static get eyeX() {
     return GetCameraEyePositionX();
@@ -71,6 +78,7 @@ export class Camera {
 
   /**
    * Return-value for the local players camera only.
+   * @native GetCameraEyePositionY
    */
   public static get eyeY() {
     return GetCameraEyePositionY();
@@ -78,6 +86,7 @@ export class Camera {
 
   /**
    * Return-value for the local players camera only.
+   * @native GetCameraEyePositionZ
    */
   public static get eyeZ() {
     return GetCameraEyePositionZ();
@@ -85,6 +94,7 @@ export class Camera {
 
   /**
    * Return-value for the local players camera only.
+   * @native GetCameraEyePositionLoc
    */
   public static get eyePoint(): Point {
     return expectWrapper(Point, GetCameraEyePositionLoc());
@@ -92,6 +102,7 @@ export class Camera {
 
   /**
    * Return-value for the local players camera only.
+   * @native GetCameraTargetPositionLoc
    */
   public static get targetPoint(): Point {
     return expectWrapper(Point, GetCameraTargetPositionLoc());
@@ -100,6 +111,7 @@ export class Camera {
   /**
    * The type of the game camera, through `BlzCameraGetCameraType` (3.0.0):
    * an integer the Patch does not name. The value is the local player's own.
+   * @native BlzCameraGetCameraType
    * @async
    */
   public static get type(): number {
@@ -109,6 +121,7 @@ export class Camera {
   /**
    * Sets the type of the game camera, through `BlzCameraSetCameraType`
    * (3.0.0): an integer the Patch does not name.
+   * @native BlzCameraSetCameraType
    */
   public static set type(cameraType: number) {
     BlzCameraSetCameraType(cameraType);
@@ -119,6 +132,7 @@ export class Camera {
    * @param whichField -
    * @param offset -
    * @param duration -
+   * @native AdjustCameraField
    */
   public static adjustField(
     whichField: camerafield,
@@ -138,6 +152,7 @@ export class Camera {
 
   /**
    * Return-value for the local players camera only.
+   * @native GetCameraField
    */
   public static getField(field: camerafield) {
     return GetCameraField(field);
@@ -151,6 +166,7 @@ export class Camera {
    * Whether player input controls the field of the game camera, through
    * `GetCameraFieldControlledByInput` (3.0.0). The value is the local
    * player's own.
+   * @native GetCameraFieldControlledByInput
    * @async
    */
   public static isFieldControlledByInput(field: camerafield) {
@@ -296,6 +312,7 @@ export class Camera {
   /**
    * Hands the field of the game camera to player input, or takes it back,
    * through `SetCameraFieldControlledByInput` (3.0.0).
+   * @native SetCameraFieldControlledByInput
    */
   public static setFieldControlledByInput(
     field: camerafield,
@@ -358,6 +375,7 @@ export class Camera {
 export class CameraSetup extends Handle<camerasetup> {
   /**
    * Creates a new CameraSetup object.
+   * @native CreateCameraSetup
    */
   public static create(): CameraSetup {
     return this.expect(CreateCameraSetup());
@@ -365,6 +383,7 @@ export class CameraSetup extends Handle<camerasetup> {
 
   /**
    * Returns the target Point of a CameraSetup.
+   * @native CameraSetupGetDestPositionLoc
    */
   public get destPoint(): Point {
     return Point.expect(CameraSetupGetDestPositionLoc(this.handle));
@@ -372,6 +391,7 @@ export class CameraSetup extends Handle<camerasetup> {
 
   /**
    * Returns the target x-coordinate of a CameraSetup.
+   * @native CameraSetupGetDestPositionX
    */
   public get destX() {
     return CameraSetupGetDestPositionX(this.handle);
@@ -379,6 +399,7 @@ export class CameraSetup extends Handle<camerasetup> {
 
   /**
    * Sets the target x-coordinate of a CameraSetup.
+   * @native CameraSetupSetDestPosition
    */
   public set destX(x: number) {
     CameraSetupSetDestPosition(this.handle, x, this.destY, 0);
@@ -386,6 +407,7 @@ export class CameraSetup extends Handle<camerasetup> {
 
   /**
    * Returns the target y-coordinate of a CameraSetup.
+   * @native CameraSetupGetDestPositionY
    */
   public get destY() {
     return CameraSetupGetDestPositionY(this.handle);
@@ -393,6 +415,7 @@ export class CameraSetup extends Handle<camerasetup> {
 
   /**
    * Sets the target y-coordinate of a CameraSetup.
+   * @native CameraSetupSetDestPosition
    */
   public set destY(y: number) {
     CameraSetupSetDestPosition(this.handle, this.destX, y, 0);
@@ -400,6 +423,7 @@ export class CameraSetup extends Handle<camerasetup> {
 
   /**
    * Sets the label of a CameraSetup.
+   * @native BlzCameraSetupSetLabel
    */
   public set label(label: string) {
     BlzCameraSetupSetLabel(this.handle, label);
@@ -407,6 +431,7 @@ export class CameraSetup extends Handle<camerasetup> {
 
   /**
    * Gets the label of a CameraSetup.
+   * @native BlzCameraSetupGetLabel
    */
   public get label() {
     return BlzCameraSetupGetLabel(this.handle) ?? "";
@@ -415,6 +440,7 @@ export class CameraSetup extends Handle<camerasetup> {
   /**
    * The camera type of the CameraSetup, through `BlzCameraSetupGetCameraType`
    * (3.0.0): an integer the Patch does not name.
+   * @native BlzCameraSetupGetCameraType
    */
   public get type(): number {
     return BlzCameraSetupGetCameraType(this.handle);
@@ -423,6 +449,7 @@ export class CameraSetup extends Handle<camerasetup> {
   /**
    * Sets the camera type of the CameraSetup, through
    * `BlzCameraSetupSetCameraType` (3.0.0): an integer the Patch does not name.
+   * @native BlzCameraSetupSetCameraType
    */
   public set type(cameraType: number) {
     BlzCameraSetupSetCameraType(this.handle, cameraType);
@@ -434,6 +461,7 @@ export class CameraSetup extends Handle<camerasetup> {
    * camera setup's target coordinates. If false, the camera will not move
    * coordinates, but will still apply the other fields.
    * @param panTimed - If set to true, then it will change the camera's properties over the times specified in `CameraSetup.setField`.
+   * @native CameraSetupApply
    */
   public apply(doPan: boolean, panTimed: boolean) {
     CameraSetupApply(this.handle, doPan, panTimed);
@@ -445,6 +473,7 @@ export class CameraSetup extends Handle<camerasetup> {
    * camera setup's target coordinates. If false, the camera will not move
    * coordinates, but will still apply the other fields.
    * @param forceDuration - The duration it will take to apply all the camera fields. It will ignore the times set by `CameraSetup.setField`.
+   * @native CameraSetupApplyForceDuration
    */
   public applyForceDuration(doPan: boolean, forceDuration: number) {
     CameraSetupApplyForceDuration(this.handle, doPan, forceDuration);
@@ -459,6 +488,7 @@ export class CameraSetup extends Handle<camerasetup> {
    * @param easeInDuration -
    * @param easeOutDuration -
    * @param smoothFactor -
+   * @native BlzCameraSetupApplyForceDurationSmooth
    */
   public applyForceDurationSmooth(
     doPan: boolean,
@@ -483,6 +513,7 @@ export class CameraSetup extends Handle<camerasetup> {
    * The z-offset input will override the z-offset specified by `CameraSetup.setField`.
    * @param zDestOffset - The camera's z-offset will gradually change to this value over the specified duration.
    * @param forceDuration - The duration it will take to apply all the camera fields. It will ignore the times set by `CameraSetup.setField`.
+   * @native CameraSetupApplyForceDurationWithZ
    */
   public applyForceDurationZ(zDestOffset: number, forceDuration: number) {
     CameraSetupApplyForceDurationWithZ(this.handle, zDestOffset, forceDuration);
@@ -493,6 +524,7 @@ export class CameraSetup extends Handle<camerasetup> {
    * fields to match those of the camera setup. The z-offset input will override
    * the z-offset specified by the CameraSetup through `CameraSetup.setField`.
    * @param zDestOffset - The camera's z-offset will gradually change to this value over the specified duration.
+   * @native CameraSetupApplyWithZ
    * @bug If a player pauses the game after the CameraSetup has been applied, the z-offset of the game camera will change to the z-offset of the CameraSetup for that player.
    */
   public applyZ(zDestOffset: number) {
@@ -504,6 +536,7 @@ export class CameraSetup extends Handle<camerasetup> {
    * field of view, roll, and rotation are all returned in degrees, unlike `Camera.getField`.
    * @remarks The angle of attack, field of view, roll, and rotation are all returned in degrees.
    * @param whichField - The field of the CameraSetup.
+   * @native CameraSetupGetField
    */
   public getField(whichField: camerafield) {
     return CameraSetupGetField(this.handle, whichField);
@@ -515,6 +548,7 @@ export class CameraSetup extends Handle<camerasetup> {
    * @param x - The target x-coordinate.
    * @param y - The target y-coordinate.
    * @param duration - The coordinates will be applied over this duration once the camera setup is applied.
+   * @native CameraSetupSetDestPosition
    */
   public setDestPos(x: number, y: number, duration: number) {
     CameraSetupSetDestPosition(this.handle, x, y, duration);
@@ -525,6 +559,7 @@ export class CameraSetup extends Handle<camerasetup> {
    * @param whichField - The field of the CameraSetup.
    * @param value - The value to assign to the field.
    * @param duration - The duration over which the field will be set. If the duration is greater than 0, the changes will be made gradually once the camera setup is applied.
+   * @native CameraSetupSetField
    */
   public setField(whichField: camerafield, value: number, duration: number) {
     CameraSetupSetField(this.handle, whichField, value, duration);

@@ -58,9 +58,10 @@ export interface Reference {
   readonly typingsManifest?: string;
   /**
    * The Typings reference the `@native` tags of this one link: each tag
-   * becomes a link to the Native's page there, then to jassbot, and a tag
-   * naming no entry of its manifest fails the run. Without it, the tags are
-   * left as written.
+   * becomes a link to the page of the Native, or of the Handle type, there,
+   * then to jassbot, and a tag naming neither an entry of its manifest nor a
+   * Handle type of its `common.j.d.ts` fails the run. Without it, the tags
+   * are left as written.
    */
   readonly nativeTypings?: Reference;
 }
