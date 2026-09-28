@@ -3,9 +3,10 @@
 // TypeDoc, run with the options of the site's library reference and its
 // plugin, emitting nothing, whose warnings are those `docs:check` logs (an
 // undocumented symbol first); and ESLint with the workspace's configuration
-// (eslint.config.mjs), whose doc comment rules fail `pnpm lint` too. With
-// `--strict`, which the root script passes, exit code 1 on any finding;
-// without it, 0. 1 on a TypeDoc error either way, 2 on arguments. Node runs it from source, like the site's scripts; it sits
+// (eslint.config.mjs), of which only the doc comment rules count: they fail
+// `pnpm lint` too. With `--strict`, which the root script passes, exit code
+// 1 on any finding; without it, 0. 1 on a TypeDoc error either way, 2 on
+// arguments. Node runs it from source, like the site's scripts; it sits
 // beside reference.ts, whose compiler options it shares, since it runs the
 // library's reference.
 //
@@ -217,19 +218,41 @@ async function typedocFindings(
   return { findings, errors };
 }
 
-/** Every message of the ESLint configuration on the linted files. */
+/**
+ * The doc comment rules, those of `docComments` in eslint.config.mjs: the
+ * audit counts their findings alone, not the formatting or import findings
+ * `pnpm lint` reports on the same files. A test checks the two lists agree.
+ */
+export const DOC_RULES: ReadonlySet<string> = new Set([
+  "tsdoc/syntax",
+  "jsdoc/require-jsdoc",
+  "jsdoc/require-param",
+  "jsdoc/require-returns",
+  "jsdoc/sort-tags",
+]);
+
+/**
+ * The messages of the doc comment rules on the linted files, and any file
+ * ESLint could not parse, whose comments went unchecked.
+ */
 async function lintFindings(subject: AuditSubject): Promise<Finding[]> {
   const eslint = new ESLint(subject.eslint);
   const results = await eslint.lintFiles([...subject.lint]);
   return results.flatMap((result) =>
-    result.messages.map((message) => ({
-      source: "lint" as const,
-      file: posixRelative(subject.root, result.filePath),
-      line: message.line,
-      column: message.column,
-      rule: message.ruleId ?? "(parse)",
-      message: message.message,
-    })),
+    result.messages
+      .filter(
+        (message) =>
+          message.fatal === true ||
+          (message.ruleId !== null && DOC_RULES.has(message.ruleId)),
+      )
+      .map((message) => ({
+        source: "lint" as const,
+        file: posixRelative(subject.root, result.filePath),
+        line: message.line,
+        column: message.column,
+        rule: message.ruleId ?? "(parse)",
+        message: message.message,
+      })),
   );
 }
 
@@ -276,23 +299,28 @@ export function parseArguments(
   return { strict, summary, files };
 }
 
-/** Whether `file` is one the arguments keep. */
-function kept(file: string | undefined, files: readonly string[]): boolean {
-  if (files.length === 0) return true;
-  if (file === undefined) return false;
-  return files.some((wanted) => file === wanted || file.endsWith(`/${wanted}`));
+/** The findings on the files the arguments keep. */
+function keptFindings(
+  report: AuditReport,
+  args: AuditArguments,
+): readonly Finding[] {
+  if (args.files.length === 0) return report.findings;
+  return report.findings.filter(
+    ({ file }) =>
+      file !== undefined &&
+      args.files.some(
+        (wanted) => file === wanted || file.endsWith(`/${wanted}`),
+      ),
+  );
 }
 
 const NO_FILE = "(no file)";
 
-/** The report as `docs:audit` prints it. */
+/** The findings the arguments keep, as `docs:audit` prints them. */
 export function formatReport(
-  report: AuditReport,
+  findings: readonly Finding[],
   args: AuditArguments,
 ): string {
-  const findings = report.findings.filter((finding) =>
-    kept(finding.file, args.files),
-  );
   const byFile = new Map<string, Finding[]>();
   for (const finding of findings) {
     const file = finding.file ?? NO_FILE;
@@ -371,11 +399,9 @@ export async function main(
     );
     return 1;
   }
-  output.stdout(formatReport(report, args));
-  const failing = report.findings.some((finding) =>
-    kept(finding.file, args.files),
-  );
-  return args.strict && failing ? 1 : 0;
+  const findings = keptFindings(report, args);
+  output.stdout(formatReport(findings, args));
+  return args.strict && findings.length !== 0 ? 1 : 0;
 }
 
 /** `file` relative to `root`, POSIX slashes. */

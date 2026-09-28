@@ -273,12 +273,10 @@ function checkTypingsPages(app: Application): void {
         what: `${entry.kind} ${entry.name}`,
         page: `${entryPage(entry)}.md`,
       })),
-      ...readHandleTypes(join(dirname(manifest), HANDLE_TYPES_FILE)).map(
-        (name) => ({
-          what: `type ${name}`,
-          page: `${handleTypePage(name)}.md`,
-        }),
-      ),
+      ...handleTypesBeside(manifest).map((name) => ({
+        what: `type ${name}`,
+        page: `${handleTypePage(name)}.md`,
+      })),
     ];
     const missing = routed
       .filter(({ page }) => !written(dirname(page)).has(basename(page)))
@@ -289,6 +287,11 @@ function checkTypingsPages(app: Application): void {
       );
     }
   });
+}
+
+/** The Handle types of the `common.j.d.ts` next to a Typings `manifest.json`. */
+function handleTypesBeside(manifest: string): string[] {
+  return readHandleTypes(join(dirname(manifest), HANDLE_TYPES_FILE));
 }
 
 /**
@@ -324,7 +327,7 @@ function linkNatives(app: Application): void {
     // A name is an entry or a Handle type, never both: the Handle types are
     // lowercase, the Natives capitalized, the globals uppercase.
     const pages = new Map<string, string>([
-      ...readHandleTypes(join(dirname(manifestFile), HANDLE_TYPES_FILE)).map(
+      ...handleTypesBeside(manifestFile).map(
         (name) => [name, handleTypePage(name)] as const,
       ),
       ...manifest.entries.map(
