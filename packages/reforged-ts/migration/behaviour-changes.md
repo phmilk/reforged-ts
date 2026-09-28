@@ -59,6 +59,10 @@ Changes a Map project author migrating from w3ts 3.x notices at run time or in t
 - **`Sound.setChannel` sets the channel.** It called `SetSoundDistanceCutoff` with the channel number, so it changed the sound's distance cutoff and left its channel. It now calls `SetSoundChannel`. Code that set a cutoff through `setChannel` must call `setDistanceCutoff`.
 - **`unit.removeType` removes the unit type.** In w3ts 3.x it called `UnitAddType`, so it added the unit type it was asked to remove. It now calls `UnitRemoveType` and returns its answer.
 
+## Fixes found while documenting the Wrappers
+
+- **`Group.addGroupFast` and `Group.removeGroupFast` change `this`.** In w3ts 3.x `a.addGroupFast(b)` called `BlzGroupAddGroupFast` with `a` first, and the game adds the units of the first group to the second (measured in 3.0.0), so it added the units of `a` to `b`; `a.removeGroupFast(b)` removed the units of `a` from `b` the same way. Both now pass their argument first: `a.addGroupFast(b)` adds the units of `b` to `a`, `a.removeGroupFast(b)` removes them from `a`, and `b` is left as it was. The return value is still the number of units added or removed. Code that called `a.addGroupFast(b)` to fill `b` calls `b.addGroupFast(a)`, and code that called `a.removeGroupFast(b)` to empty `b` of the units of `a` calls `b.removeGroupFast(a)`.
+
 ## Runtime Guards
 
 Every bullet below but the first applies in Dev mode only. With Dev mode off (the default, and every release build) the only change is the first: the functions handed to Natives are the Map project's own, errors propagate as in w3ts 3.x, `MapPlayer.runLocal` is a `GetLocalPlayer()` comparison, and `destroy()` calls its Native and nothing else besides forgetting the Wrapper. The "Desync safety and guards" guide lists every Guard with its message.
