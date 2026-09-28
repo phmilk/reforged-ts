@@ -29,7 +29,7 @@ export type { KeyComparator } from "./sortedkeys";
  * mutations, not per insertion.
  *
  * @example
- * {@includeCode ../../examples/synced-map-scores.ts}
+ * {@includeCode ../../examples/harness/synced-map-scores.ts}
  */
 export class SyncedMap<K extends AnyNotNil, V> {
   private readonly order: SortedKeys<K>;

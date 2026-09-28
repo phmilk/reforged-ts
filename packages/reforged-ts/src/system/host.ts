@@ -249,7 +249,7 @@ class HostObject implements HostDetection {
  * game is a human step, tracked in its own ticket.
  *
  * @example
- * {@includeCode ../../examples/host-detect-host.ts}
+ * {@includeCode ../../examples/harness/host-detect-host.ts}
  */
 export const Host: HostDetection = new HostObject();
 

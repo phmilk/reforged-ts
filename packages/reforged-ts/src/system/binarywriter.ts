@@ -17,7 +17,7 @@ import {
  * write that gave it.
  *
  * @example
- * {@includeCode ../../examples/binary-round-trip.ts}
+ * {@includeCode ../../examples/harness/binary-round-trip.ts}
  */
 export class BinaryWriter {
   private format = BYTE_ORDER;

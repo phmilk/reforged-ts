@@ -50,7 +50,7 @@ export class Destructable extends Widget {
    * Throws `reforged-ts: failed to create Destructable (<rawcode>)` at the
    * calling line when the game creates nothing.
    * @example
-   * {@includeCode ../../examples/destructable-create.ts}
+   * {@includeCode ../../examples/harness/destructable-create.ts}
    * @param options - The rawcode and the position, and the optional axes.
    */
   public static create(options: DestructableOptions): Destructable {

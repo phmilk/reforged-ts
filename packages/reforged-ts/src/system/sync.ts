@@ -158,7 +158,7 @@ function readPacket(
  * request's, or a chunk already received is ignored.
  *
  * @example
- * {@includeCode ../../examples/sync-request-send.ts}
+ * {@includeCode ../../examples/harness/sync-request-send.ts}
  */
 export class SyncRequest {
   /** The player whose client sends the data. */

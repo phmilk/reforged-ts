@@ -17,7 +17,7 @@ import {
  * position and the width the read needed.
  *
  * @example
- * {@includeCode ../../examples/binary-round-trip.ts}
+ * {@includeCode ../../examples/harness/binary-round-trip.ts}
  */
 export class BinaryReader {
   /** The binary string read. */

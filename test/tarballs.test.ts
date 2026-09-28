@@ -136,7 +136,7 @@ const PACKAGES: readonly Expected[] = [
 
 /** Folders and files that are sources, tests or tooling, never published. */
 const UNPUBLISHED =
-  /^(src|test|runner|scripts|templates|examples|overlay|vendor|build|dist-test|node_modules)\/|^tsconfig[^/]*\.json$|^AGENTS\.md$|(?<!\.d)\.ts$/;
+  /^(src|test|runner|scripts|templates|examples|overlay|vendor|build|dist-test|dist-examples|node_modules)\/|^tsconfig[^/]*\.json$|^AGENTS\.md$|(?<!\.d)\.ts$/;
 
 const KEYWORDS = ["warcraft", "wc3", "reforged", "typescript-to-lua"];
 

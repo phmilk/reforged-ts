@@ -24,6 +24,7 @@ export default defineConfig(
     "wrapper-coverage/build/**",
     "packages/reforged-test/lua/**",
     "packages/reforged-ts/dist-test/**",
+    "packages/reforged-ts/dist-examples/**",
     // What tools own: the vendored Patch files and the generated Typings.
     "packages/reforged-types/vendor/**",
     "packages/reforged-types/3.0.0/**",

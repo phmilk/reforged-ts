@@ -1,0 +1,24 @@
+{
+  // The examples on the reforged-test harness: typescript-to-lua compiles
+  // every example with the sources, and run.ts, to ../../dist-examples. The
+  // vitest global setup (../harness/compile.ts) runs this compile and adds
+  // one test module per example under harness/, which the glue runs. Module
+  // names are relative to the package root (examples.harness.file-write-read,
+  // test.examples.run).
+  "extends": "../../examples/tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "../..",
+    "outDir": "../../dist-examples",
+    "noEmit": false,
+    // Again, relative to this file: typescript-to-lua resolves `paths`
+    // against the tsconfig it compiles, not the one that declares them.
+    "paths": { "reforged-ts": ["../../src/index.ts"] }
+  },
+  "include": ["../../examples", ".", "../stubs.d.ts"],
+  // The default build mode copies the runner's Lua to
+  // lua_modules/reforged-test/lua/, as test/tsconfig.json does. The other
+  // typescript-to-lua options come from the examples' tsconfig.
+  "tstl": {
+    "buildMode": "default"
+  }
+}
