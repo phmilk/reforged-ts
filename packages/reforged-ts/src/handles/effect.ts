@@ -61,10 +61,8 @@ export class Effect extends Handle<effect> {
   /**
    * Creates a spell visual effect at position, through `AddSpellEffectById`
    * for an ability id and `AddSpellEffect` for an ability string.
-   * ```ts
-   * // Create Thunder Clap's caster art effect at [0,0]
-   * const clap = Effect.createSpell(FourCC("AHtz"), EFFECT_TYPE_CASTER, 0, 0);
-   * ```
+   * @example
+   * {@includeCode ../../examples/harness/effect-create-spell.ts}
    * @bug jassdoc documents `AddSpellEffect` as doing nothing, because no one
    * knows what its ability string is: pass the ability id.
    */
@@ -107,13 +105,8 @@ export class Effect extends Handle<effect> {
    * `AddSpellEffectTargetById` for an ability id and `AddSpellEffectTarget`
    * for a string. common.j names that string `modelName`, and jassdoc does
    * not say what it is: pass the ability id.
-   * ```ts
-   * const red = Players[0];
-   * const peasant = Unit.create(red, FourCC("hpea"), 0, 0);
-   * // Create Thunder Clap's caster art effect attached to "origin" of peasant.
-   * const clap = Effect.createSpellAttachment(FourCC("AHtc"), EFFECT_TYPE_CASTER, peasant, "origin");
-   * clap.destroy();
-   * ```
+   * @example
+   * {@includeCode ../../examples/harness/effect-create-spell-attachment.ts}
    */
   public static createSpellAttachment(
     ability: number | string,
