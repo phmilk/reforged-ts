@@ -1,5 +1,21 @@
 # reforged-ts
 
+## 1.0.0-alpha.4
+
+### Major Changes
+
+- [#267](https://github.com/phmilk/reforged-ts/pull/267) [`6aee802`](https://github.com/phmilk/reforged-ts/commit/6aee802a12d2ad0f735ac168a324d0ae83e2ca75) Thanks [@phmilk](https://github.com/phmilk)! - `Group.addGroupFast` and `Group.removeGroupFast` change `this`, as their names say ([#260](https://github.com/phmilk/reforged-ts/issues/260)).
+
+  **Breaking change** (detailed in `migration/behaviour-changes.md`): the game's `BlzGroupAddGroupFast` and `BlzGroupRemoveGroupFast` change their second group (measured in 3.0.0), and the members passed `this` first, so `a.addGroupFast(b)` added the units of `a` to `b`. They now pass their argument first: `a.addGroupFast(b)` adds the units of `b` to `a`, and `a.removeGroupFast(b)` removes them from `a`. Code that called `a.addGroupFast(b)` to fill `b` calls `b.addGroupFast(a)`, and code that called `a.removeGroupFast(b)` to empty `b` of the units of `a` calls `b.removeGroupFast(a)`.
+
+### Patch Changes
+
+- [#272](https://github.com/phmilk/reforged-ts/pull/272) [`e92c616`](https://github.com/phmilk/reforged-ts/commit/e92c616d5586f93d344d22f80070a3758dfdf198) Thanks [@wyller](https://github.com/wyller)! - `Color`'s documentation no longer claims that an alpha of 0 comes out opaque ([#264](https://github.com/phmilk/reforged-ts/issues/264)). A documentation fix, with no behavior change in the game: on Lua, `new Color(r, g, b, 0)` always kept its alpha of 0, and the constructor now gives 255 only to an alpha left out, as a default parameter value.
+
+- [#271](https://github.com/phmilk/reforged-ts/pull/271) [`0a83de9`](https://github.com/phmilk/reforged-ts/commit/0a83de9d30ae4e269a96731df1877adfd321a99b) Thanks [@wyller](https://github.com/wyller)! - The editor hover of a titled `@example` keeps the indentation of its code: the declarations put the title on a line of its own after `@example` ([#265](https://github.com/phmilk/reforged-ts/issues/265)).
+- Updated dependencies [[`6aee802`](https://github.com/phmilk/reforged-ts/commit/6aee802a12d2ad0f735ac168a324d0ae83e2ca75)]:
+  - reforged-test@1.0.0-alpha.2
+
 ## 1.0.0-alpha.3
 
 ### Minor Changes
