@@ -51,7 +51,7 @@ export class File {
 
   // The icon set before a read: it holds a raw double quote, which the escape
   // contract never leaves in the contents of a file `File.write` wrote.
-  private static readonly unreadIcon = '"unread"';
+  private static readonly readSentinel = '"unread"';
 
   // The string limit per Preload call.
   private static readonly preloadLimit = 259;
@@ -109,12 +109,12 @@ export class File {
     const originalIcon = BlzGetAbilityIcon(this.dummyAbility);
     if (originalIcon === undefined) return undefined;
 
-    BlzSetAbilityIcon(this.dummyAbility, File.unreadIcon);
+    BlzSetAbilityIcon(this.dummyAbility, File.readSentinel);
     Preloader(filename);
     const preloadText = BlzGetAbilityIcon(this.dummyAbility);
     BlzSetAbilityIcon(this.dummyAbility, originalIcon);
 
-    if (preloadText === undefined || preloadText === File.unreadIcon) {
+    if (preloadText === undefined || preloadText === File.readSentinel) {
       return undefined;
     }
     return File.unescape(preloadText);

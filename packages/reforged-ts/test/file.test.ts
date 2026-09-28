@@ -168,9 +168,12 @@ describe("File.read", () => {
   });
 
   it("reads back contents equal to the ability's icon path, which a missing file does not", () => {
-    const icon = BlzGetAbilityIcon(ability) ?? error("the ability has no icon");
-    expect(roundTrip(icon)).toEqual(icon);
+    expect(roundTrip(defaultIcon)).toEqual(defaultIcon);
     expect(readBack("missing.txt")).toBeUndefined();
+  });
+
+  it("reads back contents spelling the sentinel a read sets the icon to", () => {
+    expect(roundTrip('"unread"')).toEqual('"unread"');
   });
 
   it("puts the ability icon back after reading a file never written", () => {
