@@ -33,6 +33,7 @@ The root [`tsdoc.json`](../tsdoc.json) declares the tags beyond the TSDoc standa
 | `@since`        | block    | The version of `reforged-ts` that added the symbol (`@since 1.2.0`), never a Patch.                                                                                                                |
 | `@async`        | modifier | The member's value can differ between clients: it comes from an async Native.                                                                                                                      |
 | `@includeCode`  | inline   | TypeDoc's include of an example file, used only inside `@example` (see [Examples](#examples)).                                                                                                     |
+| `@namespace`    | modifier | TypeDoc's: the constant it is on is documented as a namespace of its members, each with its own comment. On the events namespaces (`UnitEvents`, `PlayerEvents` and the others).                   |
 | `@noSelf`       | modifier | A typescript-to-lua directive, not documentation.                                                                                                                                                  |
 | `@noSelfInFile` | modifier | A typescript-to-lua directive, in its own `/** @noSelfInFile */` comment at the top of the file, never inside a doc comment.                                                                       |
 
@@ -53,7 +54,7 @@ Every comment orders its tags this way; `sort-tags` reports any other order, and
 9. `@patch`
 10. `@since`
 11. `@deprecated`
-12. Every other block tag (`@bug`, `@see`, `@defaultValue`, `@privateRemarks`) and `@noSelf`.
+12. Every other block tag (`@bug`, `@see`, `@defaultValue`, `@privateRemarks`), `@namespace` and `@noSelf`.
 13. The modifiers `@async`, then `@internal`.
 
 Tags of one name stay together, in the order written. No blank line is required between tags.

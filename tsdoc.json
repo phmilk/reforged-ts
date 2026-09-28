@@ -8,6 +8,7 @@
     { "tagName": "@async", "syntaxKind": "modifier" },
     { "tagName": "@since", "syntaxKind": "block" },
     { "tagName": "@includeCode", "syntaxKind": "inline" },
+    { "tagName": "@namespace", "syntaxKind": "modifier" },
     { "tagName": "@noSelf", "syntaxKind": "modifier" },
     { "tagName": "@noSelfInFile", "syntaxKind": "modifier" }
   ]
