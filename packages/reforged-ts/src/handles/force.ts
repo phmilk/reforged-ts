@@ -1,4 +1,4 @@
-/** @noSelfInFile * */
+/** @noSelfInFile */
 
 import { assertNotLocal } from "../reforged/local";
 import { protect } from "../reforged/protect";

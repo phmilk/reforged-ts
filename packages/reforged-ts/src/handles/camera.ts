@@ -116,9 +116,9 @@ export class Camera {
 
   /**
    * Changes one of the game camera's options whichField by offset over duration seconds.
-   * @param whichField
-   * @param offset
-   * @param duration
+   * @param whichField -
+   * @param offset -
+   * @param duration -
    */
   public static adjustField(
     whichField: camerafield,
@@ -430,10 +430,10 @@ export class CameraSetup extends Handle<camerasetup> {
 
   /**
    * Applies the CameraSetup, altering the current camera's fields to match those of the camera setup.
-   * @param doPan If set to true, it will move the current camera's target coordinates to the
+   * @param doPan - If set to true, it will move the current camera's target coordinates to the
    * camera setup's target coordinates. If false, the camera will not move
    * coordinates, but will still apply the other fields.
-   * @param panTimed If set to true, then it will change the camera's properties over the times specified in `CameraSetup.setField`.
+   * @param panTimed - If set to true, then it will change the camera's properties over the times specified in `CameraSetup.setField`.
    */
   public apply(doPan: boolean, panTimed: boolean) {
     CameraSetupApply(this.handle, doPan, panTimed);
@@ -441,10 +441,10 @@ export class CameraSetup extends Handle<camerasetup> {
 
   /**
    * Applies the camerasetup over a certain duration, altering the current camera's fields to match those of the camera setup.
-   * @param doPan If set to true, it will move the current camera's target coordinates to the
+   * @param doPan - If set to true, it will move the current camera's target coordinates to the
    * camera setup's target coordinates. If false, the camera will not move
    * coordinates, but will still apply the other fields.
-   * @param forceDuration The duration it will take to apply all the camera fields. It will ignore the times set by `CameraSetup.setField`.
+   * @param forceDuration - The duration it will take to apply all the camera fields. It will ignore the times set by `CameraSetup.setField`.
    */
   public applyForceDuration(doPan: boolean, forceDuration: number) {
     CameraSetupApplyForceDuration(this.handle, doPan, forceDuration);
@@ -452,13 +452,13 @@ export class CameraSetup extends Handle<camerasetup> {
 
   /**
    *
-   * @param doPan If set to true, it will move the current camera's target coordinates to the
+   * @param doPan - If set to true, it will move the current camera's target coordinates to the
    * camera setup's target coordinates. If false, the camera will not move
    * coordinates, but will still apply the other fields.
-   * @param forcedDuration The duration it will take to apply all the camera fields. It will ignore the times set by `CameraSetup.setField`.
-   * @param easeInDuration
-   * @param easeOutDuration
-   * @param smoothFactor
+   * @param forcedDuration - The duration it will take to apply all the camera fields. It will ignore the times set by `CameraSetup.setField`.
+   * @param easeInDuration -
+   * @param easeOutDuration -
+   * @param smoothFactor -
    */
   public applyForceDurationSmooth(
     doPan: boolean,
@@ -481,8 +481,8 @@ export class CameraSetup extends Handle<camerasetup> {
    * Applies the CameraSetup over a certain duration with a custom z-offset value,
    * altering the current camera's fields to match those of the camera setup.
    * The z-offset input will override the z-offset specified by `CameraSetup.setField`.
-   * @param zDestOffset The camera's z-offset will gradually change to this value over the specified duration.
-   * @param forceDuration The duration it will take to apply all the camera fields. It will ignore the times set by `CameraSetup.setField`.
+   * @param zDestOffset - The camera's z-offset will gradually change to this value over the specified duration.
+   * @param forceDuration - The duration it will take to apply all the camera fields. It will ignore the times set by `CameraSetup.setField`.
    */
   public applyForceDurationZ(zDestOffset: number, forceDuration: number) {
     CameraSetupApplyForceDurationWithZ(this.handle, zDestOffset, forceDuration);
@@ -492,7 +492,7 @@ export class CameraSetup extends Handle<camerasetup> {
    * Applies the CameraSetup with a custom z-offset, altering the current camera's
    * fields to match those of the camera setup. The z-offset input will override
    * the z-offset specified by the CameraSetup through `CameraSetup.setField`.
-   * @param zDestOffset The camera's z-offset will gradually change to this value over the specified duration.
+   * @param zDestOffset - The camera's z-offset will gradually change to this value over the specified duration.
    * @bug If a player pauses the game after the CameraSetup has been applied, the z-offset of the game camera will change to the z-offset of the CameraSetup for that player.
    */
   public applyZ(zDestOffset: number) {
@@ -503,7 +503,7 @@ export class CameraSetup extends Handle<camerasetup> {
    * Returns the value of the specified field for a CameraSetup. The angle of attack,
    * field of view, roll, and rotation are all returned in degrees, unlike `Camera.getField`.
    * @remarks The angle of attack, field of view, roll, and rotation are all returned in degrees.
-   * @param whichField The field of the CameraSetup.
+   * @param whichField - The field of the CameraSetup.
    */
   public getField(whichField: camerafield) {
     return CameraSetupGetField(this.handle, whichField);
@@ -512,9 +512,9 @@ export class CameraSetup extends Handle<camerasetup> {
   /**
    * Sets the target coordinates for a CameraSetup over a duration. The coordinate
    * change will only be applied when `CameraSetup.apply` (or some other variant) is ran.
-   * @param x The target x-coordinate.
-   * @param y The target y-coordinate.
-   * @param duration The coordinates will be applied over this duration once the camera setup is applied.
+   * @param x - The target x-coordinate.
+   * @param y - The target y-coordinate.
+   * @param duration - The coordinates will be applied over this duration once the camera setup is applied.
    */
   public setDestPos(x: number, y: number, duration: number) {
     CameraSetupSetDestPosition(this.handle, x, y, duration);
@@ -522,9 +522,9 @@ export class CameraSetup extends Handle<camerasetup> {
 
   /**
    * Assigns a value to the specified field for a CameraSetup. The input angles should be in degrees.
-   * @param whichField The field of the CameraSetup.
-   * @param value The value to assign to the field.
-   * @param duration The duration over which the field will be set. If the duration is greater than 0, the changes will be made gradually once the camera setup is applied.
+   * @param whichField - The field of the CameraSetup.
+   * @param value - The value to assign to the field.
+   * @param duration - The duration over which the field will be set. If the duration is greater than 0, the changes will be made gradually once the camera setup is applied.
    */
   public setField(whichField: camerafield, value: number, duration: number) {
     CameraSetupSetField(this.handle, whichField, value, duration);

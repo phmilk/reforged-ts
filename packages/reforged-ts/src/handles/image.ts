@@ -26,18 +26,18 @@ export class Image extends Handle<image> {
    * Creates a new image, the first ID given being 0 and then counting upwards (0, 1, 2, 3, ...).
    * Multiple images with the same type are drawn in their order of creation,
    * meaning that the image created first is drawn below the image created after.
-   * @param file The path to the image. The image itself should have its border alpha-ed out
+   * @param file - The path to the image. The image itself should have its border alpha-ed out
    * completely. If an invalid path is specified CreateImage returns image(-1).
-   * @param sizeX The x-dimensions of the image.
-   * @param sizeY The y-dimensions of the image.
-   * @param sizeZ The z-dimensions of the image.
-   * @param posX The x-cooridnate of where to create the image. This is the bottom left corner of the image.
-   * @param posY The y-cooridnate of where to create the image. This is the bottom left corner of the image.
-   * @param posZ The z-cooridnate of where to create the image.
-   * @param originX Moves the origin (bottom left corner) of the image from posX in negative X-direction.
-   * @param originY Moves the origin (bottom left corner) of the image from posY in negative Y-direction.
-   * @param originZ Moves the origin (bottom left corner) of the image from posZ in negative Z-direction.
-   * @param imageType
+   * @param sizeX - The x-dimensions of the image.
+   * @param sizeY - The y-dimensions of the image.
+   * @param sizeZ - The z-dimensions of the image.
+   * @param posX - The x-cooridnate of where to create the image. This is the bottom left corner of the image.
+   * @param posY - The y-cooridnate of where to create the image. This is the bottom left corner of the image.
+   * @param posZ - The z-cooridnate of where to create the image.
+   * @param originX - Moves the origin (bottom left corner) of the image from posX in negative X-direction.
+   * @param originY - Moves the origin (bottom left corner) of the image from posY in negative Y-direction.
+   * @param originZ - Moves the origin (bottom left corner) of the image from posZ in negative Z-direction.
+   * @param imageType -
    */
   public static create(
     file: string,
@@ -72,12 +72,12 @@ export class Image extends Handle<image> {
 
   /**
    * Destroys the image specified and recycles the handle ID of that image instantly (no ref counting for images).
-   * @bug May crash the game if an invalid image is used (null, before the first image is created).
    * @remarks
    * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @bug May crash the game if an invalid image is used (null, before the first image is created).
    */
   public destroy() {
     DestroyImage(this.handle);
@@ -86,8 +86,8 @@ export class Image extends Handle<image> {
 
   /**
    * Every ImageType other than Selection doesnt seem to appear above water.
-   * @param flag Draws the specified image above the water if the flag is true.
-   * @param useWaterAlpha
+   * @param flag - Draws the specified image above the water if the flag is true.
+   * @param useWaterAlpha -
    */
   public setAboveWater(flag: boolean, useWaterAlpha: boolean) {
     SetImageAboveWater(this.handle, flag, useWaterAlpha);
@@ -102,8 +102,8 @@ export class Image extends Handle<image> {
 
   /**
    * This is the only function that is able to modify an image's z-offset.
-   * @param flag
-   * @param height The z-offset of the image.
+   * @param flag -
+   * @param height - The z-offset of the image.
    */
   public setConstantHeight(flag: boolean, height: number) {
     SetImageConstantHeight(this.handle, flag, height);
@@ -120,7 +120,7 @@ export class Image extends Handle<image> {
 
   /**
    * Enable or disable the rendering of the image.
-   * @param flag render if true, don't render if false
+   * @param flag - render if true, don't render if false
    */
   public setRender(flag: boolean) {
     SetImageRenderAlways(this.handle, flag);
@@ -128,7 +128,7 @@ export class Image extends Handle<image> {
 
   /**
    * Change image's type.
-   * @param imageType  Influence the order in which images are drawn above one another.
+   * @param imageType - Influence the order in which images are drawn above one another.
    */
   public setType(imageType: ImageType) {
     SetImageType(this.handle, imageType);
@@ -137,7 +137,7 @@ export class Image extends Handle<image> {
   /**
    * Show or hide the image depending on boolean flag.
    * Seems like a redundant function in the light of SetImageRender(Always).
-   * @param flag true shows, false hides
+   * @param flag - true shows, false hides
    */
   public show(flag: boolean) {
     ShowImage(this.handle, flag);

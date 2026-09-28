@@ -57,10 +57,11 @@ class TriggerSubscription implements Subscription {
  * returns true. Each reads the payload from the trigger context.
  *
  * In Dev mode each runs under `pcall`, through the protection step, and a
- * failure is reported under the descriptor's name (`reforged-ts:
- * UnitEvents.death failed: ...`): a `when` that throws evaluates false. The
- * Trigger's own protection of its action and condition stays in place
- * around them; it sees no failure, the descriptor's step having caught it.
+ * failure is reported under the descriptor's name
+ * (`reforged-ts: UnitEvents.death failed: ...`): a `when` that throws
+ * evaluates false. The Trigger's own protection of its action and condition
+ * stays in place around them; it sees no failure, the descriptor's step
+ * having caught it.
  */
 export function on<P>(
   event: EventDescriptor<P>,

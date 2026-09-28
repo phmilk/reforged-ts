@@ -12,8 +12,8 @@ export class WeatherEffect extends Handle<weathereffect> {
    *   Ammorth's article about weather effects: [http://www.wc3c.net/showthread.php?t=91176](https://web.archive.org/web/20180130202056/http://www.wc3c.net/showthread.php?t=91176).
    * - To get an idea on how to add your own weather effects, you may read
    *   CryoniC's article about custom weather effects: [http://www.wc3c.net/showthread.php?t=67949](https://web.archive.org/web/20180507060112/http://www.wc3c.net/showthread.php?t=67949).
-   * @param where The rect to apply the WeatherEffect to.
-   * @param effectID Which effect to apply.
+   * @param where - The rect to apply the WeatherEffect to.
+   * @param effectID - Which effect to apply.
    */
   public static create(where: Rectangle, effectID: number): WeatherEffect {
     return this.expect(

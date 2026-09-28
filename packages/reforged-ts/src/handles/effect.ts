@@ -18,9 +18,9 @@ export class Effect extends Handle<effect> {
 
   /**
    * Creates a special effect.
-   * @param modelName The path of the model that the effect will use.
-   * @param x
-   * @param y
+   * @param modelName - The path of the model that the effect will use.
+   * @param x -
+   * @param y -
    */
   public static create(modelName: string, x: number, y: number): Effect {
     return this.expect(AddSpecialEffect(modelName, x, y), modelName);
@@ -28,7 +28,7 @@ export class Effect extends Handle<effect> {
 
   /**
    * Creates a special effect at `where`, through `AddSpecialEffectLoc`.
-   * @param modelName The path of the model that the effect will use.
+   * @param modelName - The path of the model that the effect will use.
    */
   public static createAtPoint(modelName: string, where: Point): Effect {
     return this.expect(AddSpecialEffectLoc(modelName, where.handle), modelName);
@@ -36,9 +36,9 @@ export class Effect extends Handle<effect> {
 
   /**
    * Creates a special effect attached to a widget.
-   * @param modelName The path of the model that the effect will use.
-   * @param targetWidget The widget to attach the effect to.
-   * @param attachPointName The attachment point of the widget where the effect will
+   * @param modelName - The path of the model that the effect will use.
+   * @param targetWidget - The widget to attach the effect to.
+   * @param attachPointName - The attachment point of the widget where the effect will
    * be placed. Attachment points are points in a model that can be referenced to as
    * areas for effects to be attached, whether it be from a spell or this function.
    * If the attachment point does not exist, it will attach the effect to the model's origin.

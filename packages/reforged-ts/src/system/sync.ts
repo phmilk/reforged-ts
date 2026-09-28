@@ -214,8 +214,8 @@ export class SyncRequest {
 
   /**
    * Creates a request, which sends nothing until `start`.
-   * @param from The player whose client sends the data.
-   * @param options The timeout; none by default.
+   * @param from - The player whose client sends the data.
+   * @param options - The timeout; none by default.
    */
   public constructor(from: MapPlayer, options: SyncOptions = {}) {
     this.from = from;
@@ -237,10 +237,10 @@ export class SyncRequest {
 
   /**
    * Creates a request and starts it; throws as `start` does.
-   * @param from The player whose client sends the data.
-   * @param data The data to send, with no zero byte; ignored on the other
+   * @param from - The player whose client sends the data.
+   * @param data - The data to send, with no zero byte; ignored on the other
    * clients.
-   * @param options The timeout; none by default.
+   * @param options - The timeout; none by default.
    */
   public static send(
     from: MapPlayer,
@@ -266,7 +266,7 @@ export class SyncRequest {
    *
    * Throws, before the request starts, on a second call, and on the sender's
    * client when the data holds a zero byte or needs more than 65,535 chunks.
-   * @param data The data to send, with no zero byte (encode binary data
+   * @param data - The data to send, with no zero byte (encode binary data
    * first, for example with `base64Encode`); ignored on the other clients.
    * @returns A `Promise` that resolves with the sender's data when every
    * chunk has arrived, and rejects with a message naming the request on a

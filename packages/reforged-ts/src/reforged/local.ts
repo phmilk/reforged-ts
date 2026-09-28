@@ -58,9 +58,9 @@ export function runLocalGuarded(player: Handle<handle>, fn: () => void): void {
 }
 
 /**
- * Raises when called inside a Dev-mode `runLocal`: `action` (`creating a
- * Unit`, `Group.for`) changes game state for one client. `level` is the one
- * the caller would give `error` to name the Map project's line.
+ * Raises when called inside a Dev-mode `runLocal`: `action`
+ * (`creating a Unit`, `Group.for`) changes game state for one client. `level`
+ * is the one the caller would give `error` to name the Map project's line.
  */
 export function assertNotLocal(action: string, level: number): void {
   if (local.depth !== 0) {

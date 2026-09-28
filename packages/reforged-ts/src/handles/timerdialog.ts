@@ -43,10 +43,10 @@ export class TimerDialog extends Handle<timerdialog> {
 
   /**
    * Sets the timer-dialogs color.
-   * @param red An integer from 0-255 determining the amount of red color.
-   * @param green An integer from 0-255 determining the amount of red color.
-   * @param blue An integer from 0-255 determining the amount of red color.
-   * @param alpha An integer from 0-255 determining the amount of red color.
+   * @param red - An integer from 0-255 determining the amount of red color.
+   * @param green - An integer from 0-255 determining the amount of red color.
+   * @param blue - An integer from 0-255 determining the amount of red color.
+   * @param alpha - An integer from 0-255 determining the amount of red color.
    */
   public setTitleColor(
     red: number,
@@ -59,10 +59,10 @@ export class TimerDialog extends Handle<timerdialog> {
 
   /**
    * Sets the timer-dialogs time color.
-   * @param red An integer from 0-255 determining the amount of red color.
-   * @param green An integer from 0-255 determining the amount of red color.
-   * @param blue An integer from 0-255 determining the amount of red color.
-   * @param alpha An integer from 0-255 determining the amount of red color.
+   * @param red - An integer from 0-255 determining the amount of red color.
+   * @param green - An integer from 0-255 determining the amount of red color.
+   * @param blue - An integer from 0-255 determining the amount of red color.
+   * @param alpha - An integer from 0-255 determining the amount of red color.
    */
   public setTimeColor(red: number, green: number, blue: number, alpha: number) {
     TimerDialogSetTimeColor(this.handle, red, green, blue, alpha);

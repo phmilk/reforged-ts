@@ -21,12 +21,12 @@ export class Unit extends Widget {
 
   /**
    * Creates a unit.
-   * @param owner The owner of the unit.
-   * @param unitId The rawcode of the unit.
-   * @param x The x-coordinate of the unit.
-   * @param y The y-coordinate of the unit.
-   * @param face The direction that the unit will be facing in degrees.
-   * @param skinId The skin of the unit.
+   * @param owner - The owner of the unit.
+   * @param unitId - The rawcode of the unit.
+   * @param x - The x-coordinate of the unit.
+   * @param y - The y-coordinate of the unit.
+   * @param face - The direction that the unit will be facing in degrees.
+   * @param skinId - The skin of the unit.
    */
   public static create(
     owner: MapPlayer,
@@ -46,10 +46,10 @@ export class Unit extends Widget {
 
   /**
    * Creates a unit at `where`, through `CreateUnitAtLoc`.
-   * @param owner The owner of the unit.
-   * @param unitId The rawcode of the unit.
-   * @param where Where the unit stands.
-   * @param face The direction that the unit will be facing in degrees.
+   * @param owner - The owner of the unit.
+   * @param unitId - The rawcode of the unit.
+   * @param where - Where the unit stands.
+   * @param face - The direction that the unit will be facing in degrees.
    */
   public static createAtPoint(
     owner: MapPlayer,
@@ -66,10 +66,10 @@ export class Unit extends Widget {
   /**
    * Creates a unit at `where` from the unit type's name, through
    * `CreateUnitAtLocByName`.
-   * @param owner The owner of the unit.
-   * @param unitName The name of the unit type (`"footman"`).
-   * @param where Where the unit stands.
-   * @param face The direction that the unit will be facing in degrees.
+   * @param owner - The owner of the unit.
+   * @param unitName - The name of the unit type (`"footman"`).
+   * @param where - Where the unit stands.
+   * @param face - The direction that the unit will be facing in degrees.
    */
   public static createAtPointByName(
     owner: MapPlayer,
@@ -86,10 +86,10 @@ export class Unit extends Widget {
   /**
    * Creates an undead gold mine and the blight around it, through
    * `CreateBlightedGoldmine`.
-   * @param owner The owner of the gold mine.
-   * @param x The x-coordinate of the gold mine.
-   * @param y The y-coordinate of the gold mine.
-   * @param face The direction that the gold mine will be facing in degrees.
+   * @param owner - The owner of the gold mine.
+   * @param x - The x-coordinate of the gold mine.
+   * @param y - The y-coordinate of the gold mine.
+   * @param face - The direction that the gold mine will be facing in degrees.
    */
   public static createBlightedGoldmine(
     owner: MapPlayer,
@@ -102,11 +102,11 @@ export class Unit extends Widget {
 
   /**
    * Creates a unit from the unit type's name, through `CreateUnitByName`.
-   * @param owner The owner of the unit.
-   * @param unitName The name of the unit type (`"footman"`).
-   * @param x The x-coordinate of the unit.
-   * @param y The y-coordinate of the unit.
-   * @param face The direction that the unit will be facing in degrees.
+   * @param owner - The owner of the unit.
+   * @param unitName - The name of the unit type (`"footman"`).
+   * @param x - The x-coordinate of the unit.
+   * @param y - The y-coordinate of the unit.
+   * @param face - The direction that the unit will be facing in degrees.
    */
   public static createByName(
     owner: MapPlayer,
@@ -123,11 +123,11 @@ export class Unit extends Widget {
 
   /**
    * Creates the corpse of a unit, through `CreateCorpse`.
-   * @param owner The owner of the corpse.
-   * @param unitId The rawcode of the unit.
-   * @param x The x-coordinate of the corpse.
-   * @param y The y-coordinate of the corpse.
-   * @param face The direction that the corpse will be facing in degrees.
+   * @param owner - The owner of the corpse.
+   * @param unitId - The rawcode of the unit.
+   * @param x - The x-coordinate of the corpse.
+   * @param y - The y-coordinate of the corpse.
+   * @param face - The direction that the corpse will be facing in degrees.
    */
   public static createCorpse(
     owner: MapPlayer,
@@ -398,7 +398,7 @@ export class Unit extends Widget {
    *
    * http://www.hiveworkshop.com/forums/2391397-post20.html
 
-   * @param newPropWindowAngle The propulsion window angle to assign. Should be in radians.
+   * @param newPropWindowAngle - The propulsion window angle to assign. Should be in radians.
    */
   public set propWindow(newPropWindowAngle: number) {
     SetUnitPropWindow(this.handle, newPropWindowAngle);
@@ -602,15 +602,15 @@ export class Unit extends Widget {
    * If the experience added exceeds the amount required for the hero to gain a level,
    * then it will force the unit to gain a level and the remaining experience will spill over for the next level.
    *
+   * @param xpToAdd - The amount of experience to add to the hero unit.
+   * @param showEyeCandy - If the boolean input is true, then the hero-level-gain
+   * effect will be shown if the hero gains a level from the added experience.
    * @bug Adding negative value to experience will decrease it
    * by the stated value, but won't lower the level even if the experience value
    * after deduction is lower than the lower bound of the experience required to get
    * the stated level.
    * @bug If the value will become lower than zero, the experience won't be negative, instead of it it'll be equal
    * to `4294967296+(supposed_negative_experience_value)`.
-   * @param xpToAdd The amount of experience to add to the hero unit.
-   * @param showEyeCandy If the boolean input is true, then the hero-level-gain
-   * effect will be shown if the hero gains a level from the added experience.
    */
   public addExperience(xpToAdd: number, showEyeCandy: boolean) {
     AddHeroXP(this.handle, xpToAdd, showEyeCandy);
@@ -651,11 +651,11 @@ export class Unit extends Widget {
   /**
    * Adds the amount more gold to the whichUnit gold mine.
    *
+   * @param amount - The amount of resources to add to the unit.
    * @bug If the value after adding negative amount will be less than zero, then it
    * will display negative resource amount, but if some peasant or peon will try to
    * gather resources from such a mine, he will bring back 0 gold and the mine will
    * be auto-destroyed.
-   * @param amount The amount of resources to add to the unit.
    */
   public addResourceAmount(amount: number) {
     AddResourceAmount(this.handle, amount);
@@ -781,20 +781,20 @@ export class Unit extends Widget {
    * crashes. In Dev mode every action and condition of a Trigger carrying a
    * damage event (an `on()` damage subscription included) runs one level
    * deeper in a shared damage depth, and this member raises
-   * `reforged-ts: Unit#<id> Unit.damageTarget at damage depth <depth>, past
-   * the limit of <limit>: ...` when the depth exceeds the limit: eight
-   * nested dispatches by default, `Reforged.configure({ damageDepthLimit })`
-   * to change it. A single bounce (reflect damage) passes. With Dev mode off
-   * nothing is counted and nothing raises.
+   * `reforged-ts: Unit#<id> Unit.damageTarget at damage depth <depth>, past the limit of <limit>: ...`
+   * when the depth exceeds the limit: eight nested dispatches by default,
+   * `Reforged.configure({ damageDepthLimit })` to change it. A single bounce
+   * (reflect damage) passes. With Dev mode off nothing is counted and nothing
+   * raises.
    *
    * - For some insight about the different configurations of the different types see [this post](http://www.wc3c.net/showpost.php?p=1030046&postcount=19).
-   * @param target The target being damaged.
-   * @param amount How much damage is being dealt.
-   * @param attack Consider the damage dealt as being an attack.
-   * @param ranged Consider the damage dealt as being from a ranged source.
-   * @param attackType
-   * @param damageType
-   * @param weaponType
+   * @param target - The target being damaged.
+   * @param amount - How much damage is being dealt.
+   * @param attack - Consider the damage dealt as being an attack.
+   * @param ranged - Consider the damage dealt as being from a ranged source.
+   * @param attackType -
+   * @param damageType -
+   * @param weaponType -
    */
   public damageTarget(
     target: widget,
@@ -822,7 +822,7 @@ export class Unit extends Widget {
 
   /**
    * Decreases the level of a unit's ability by 1. The level will not go below 1.
-   * @param abilCode The four digit rawcode representation of the ability.
+   * @param abilCode - The four digit rawcode representation of the ability.
    * @returns The new ability level.
    */
   public decAbilityLevel(abilCode: number) {
@@ -1091,7 +1091,7 @@ export class Unit extends Widget {
    *
    * http://www.wc3c.net/showthread.php?p=1029039#post1029039
    * http://www.hiveworkshop.com/forums/lab-715/silenceex-everything-you-dont-know-about-silence-274351/.
-   * @param abilCode The four digit rawcode representation of the ability.
+   * @param abilCode - The four digit rawcode representation of the ability.
    * @returns The new ability level.
    */
   public incAbilityLevel(abilCode: number) {
@@ -1314,7 +1314,7 @@ export class Unit extends Widget {
    * - In past patches this native bugged when used in conditionfuncs.
    *   The fix back then was to compare with true (`==true`).
    *   I cannot reproduce the faulty behaviour in patch 1.27 so this is only a note.
-   * @param whichUnitType
+   * @param whichUnitType -
    */
   public isUnitType(whichUnitType: unittype) {
     return IsUnitType(this.handle, whichUnitType);
@@ -1344,15 +1344,15 @@ export class Unit extends Widget {
    *   rename a helper so that it will move that set of bones instead.
    * - SetUnitLookAt is affected by animation speed and blend time.
    * - [How to instantly set a unit's facing](http://www.wc3c.net/showthread.php?t=105830)
-   * @param whichBone The bone to lock onto the target. The engine only supports
+   * @param whichBone - The bone to lock onto the target. The engine only supports
    * locking the head and the chest. To lock the head, you can put in any input
    * except a null string. To lock the chest, the string must start with `"bone_chest"`.
    * All leading spaces are ignored, it is case insensitive, and anything after the
    * first non-leading space will be ignored.
-   * @param lookAtTargetThe bone will be locked to face this unit.
-   * @param offsetX The x-offset from lookAtTarget's origin point.
-   * @param offsetY The y-offset from lookAtTarget's origin point.
-   * @param offsetZ The z-offset from lookAtTarget's origin point (this already factors in the terrain Z).
+   * @param lookAtTargetThe - bone will be locked to face this unit.
+   * @param offsetX - The x-offset from lookAtTarget's origin point.
+   * @param offsetY - The y-offset from lookAtTarget's origin point.
+   * @param offsetZ - The z-offset from lookAtTarget's origin point (this already factors in the terrain Z).
    */
   public lookAt(
     whichBone: string,
@@ -1482,7 +1482,7 @@ export class Unit extends Widget {
 
   /**
    * The item is removed from the Hero and placed on the ground at the Hero's feet.
-   * @param whichItem The item to remove.
+   * @param whichItem - The item to remove.
    */
   public removeItem(whichItem: Item) {
     UnitRemoveItem(this.handle, whichItem.handle);
@@ -1491,7 +1491,7 @@ export class Unit extends Widget {
   /**
    * If an item exists in the given slot, it is removed from the Hero and placed on
    * the ground at the Hero's feed
-   * @param itemSlot
+   * @param itemSlot -
    */
   public removeItemFromSlot(itemSlot: number): Item | undefined {
     return Item.fromHandle(UnitRemoveItemFromSlot(this.handle, itemSlot));
@@ -1726,10 +1726,10 @@ export class Unit extends Widget {
   }
 
   /**
+   * @param scaleX - This is actually the scale for *all* dimensions
+   * @param scaleY - This parameter is not taken into account
+   * @param scaleZ - This parameter is not taken into account
    * @bug Only takes scaleX into account and uses scaleX for all three dimensions.
-   * @param scaleX This is actually the scale for *all* dimensions
-   * @param scaleY This parameter is not taken into account
-   * @param scaleZ This parameter is not taken into account
    */
   public setScale(scaleX: number, scaleY: number, scaleZ: number) {
     SetUnitScale(this.handle, scaleX, scaleY, scaleZ);
@@ -1769,10 +1769,10 @@ export class Unit extends Widget {
 
   /**
    * Sets the unit's color to the color defined by (red,green,blue,alpha).
-   * @param red An integer from 0-255 determining the amount of red color.
-   * @param green An integer from 0-255 determining the amount of green color.
-   * @param blue An integer from 0-255 determining the amount of blue color.
-   * @param alpha An integer from 0-255 determining the amount of alpha color.
+   * @param red - An integer from 0-255 determining the amount of red color.
+   * @param green - An integer from 0-255 determining the amount of green color.
+   * @param blue - An integer from 0-255 determining the amount of blue color.
+   * @param alpha - An integer from 0-255 determining the amount of alpha color.
    */
   public setVertexColor(
     red: number,
@@ -1852,7 +1852,7 @@ export class Unit extends Widget {
 
   /**
    * Clears the unit's orders, through `BlzUnitClearOrders`.
-   * @param onlyQueued Clears only the queued orders, keeping the current one.
+   * @param onlyQueued - Clears only the queued orders, keeping the current one.
    */
   public clearOrders(onlyQueued: boolean) {
     BlzUnitClearOrders(this.handle, onlyQueued);
@@ -1863,11 +1863,11 @@ export class Unit extends Widget {
    * and returns the game's `minimapicon`, which the library does not wrap.
    * Throws `reforged-ts: failed to create minimapicon (<pingPath>)` when the
    * game creates none.
-   * @param red An integer from 0-255 determining the amount of red color.
-   * @param green An integer from 0-255 determining the amount of green color.
-   * @param blue An integer from 0-255 determining the amount of blue color.
-   * @param pingPath The model of the icon.
-   * @param fogVisibility The fog state in which the icon is visible.
+   * @param red - An integer from 0-255 determining the amount of red color.
+   * @param green - An integer from 0-255 determining the amount of green color.
+   * @param blue - An integer from 0-255 determining the amount of blue color.
+   * @param pingPath - The model of the icon.
+   * @param fogVisibility - The fog state in which the icon is visible.
    */
   public createMinimapIcon(
     red: number,
@@ -1892,7 +1892,7 @@ export class Unit extends Widget {
 
   /**
    * Stops the unit's current order, through `BlzUnitForceStopOrder`.
-   * @param clearQueue Also clears the queued orders.
+   * @param clearQueue - Also clears the queued orders.
    */
   public forceStopOrder(clearQueue: boolean) {
     BlzUnitForceStopOrder(this.handle, clearQueue);
@@ -1901,8 +1901,8 @@ export class Unit extends Widget {
   /**
    * Reads a field of one of the unit's weapons, through the
    * `BlzGetUnitWeapon*Field` Native of the field's type.
-   * @param field A weapon field constant of any of the four field types.
-   * @param index The weapon's index.
+   * @param field - A weapon field constant of any of the four field types.
+   * @param index - The weapon's index.
    */
   public getWeaponField(
     field:
@@ -2044,8 +2044,8 @@ export class Unit extends Widget {
    * Writes a field of one of the unit's weapons, through the
    * `BlzSetUnitWeapon*Field` Native of the field's type, and returns whether
    * it was written: false when the value is not of the field's type.
-   * @param field A weapon field constant of any of the four field types.
-   * @param index The weapon's index.
+   * @param field - A weapon field constant of any of the four field types.
+   * @param index - The weapon's index.
    */
   public setWeaponField(
     field:
