@@ -81,4 +81,4 @@ One line per Agent skill: its `SKILL.md`, then its trigger. When your agent does
 
 - `pnpm check` is green.
 - A changeset is present: one naming each package whose published content changes, the empty one when nothing published changes (`docs/release.md`).
-- Every new public symbol carries its TSDoc and a compiled example.
+- Every new public symbol carries the TSDoc the [required-tag matrix](docs/documentation.md#required-tags-per-symbol-kind) sets for its kind, a compiled example included where it asks for one.
