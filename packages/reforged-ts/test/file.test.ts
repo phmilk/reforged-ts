@@ -157,7 +157,7 @@ describe("File.read", () => {
     expect(BlzGetAbilityIcon(ability)).toEqual(defaultIcon);
   });
 
-  it("returns undefined when the icon is unchanged", () => {
+  it("returns undefined when running the file sets no icon", () => {
     File.write("unread.txt", "contents");
     expect(File.read("unread.txt")).toBeUndefined();
     expect(stubCalls()).toContainCall('Preloader("unread.txt")');
@@ -165,5 +165,16 @@ describe("File.read", () => {
 
   it("returns undefined for a file never written", () => {
     expect(readBack("missing.txt")).toBeUndefined();
+  });
+
+  it("reads back contents equal to the ability's icon path, which a missing file does not", () => {
+    const icon = BlzGetAbilityIcon(ability) ?? error("the ability has no icon");
+    expect(roundTrip(icon)).toEqual(icon);
+    expect(readBack("missing.txt")).toBeUndefined();
+  });
+
+  it("puts the ability icon back after reading a file never written", () => {
+    readBack("missing.txt");
+    expect(BlzGetAbilityIcon(ability)).toEqual(defaultIcon);
   });
 });

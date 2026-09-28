@@ -15,8 +15,11 @@
  * piece of Lua, each between the `//! beginusercode` and `//!endusercode`
  * markers of the generated file, which `Preloader` runs as Lua. The opening
  * piece makes the `Preload` calls collect the chunks, and the closing piece
- * sets the icon of one ability (`Amls`) to them. `File.read` runs the file
- * with `Preloader`, reads that icon and puts the original back.
+ * sets the icon of one ability (`Amls`) to them. `File.read` sets that icon
+ * to a sentinel holding a raw double quote, runs the file with `Preloader`,
+ * reads the icon and puts the original back. The icon still equal to the
+ * sentinel means nothing was read: the file is missing or was written by
+ * `File.writeRaw` without reading.
  *
  * The escape contract: each chunk sits inside a double-quoted string literal
  * of the generated file, so a double quote in the contents is written as the
@@ -26,12 +29,14 @@
  * those itself), read back unchanged. `File.writeRaw` without reading escapes
  * nothing.
  *
- * Unspecified until verified in game:
- * - Contents holding a newline: whether the line break survives the generated
- *   file.
- * - Contents equal to the ability's icon path: `File.read` returns
- *   `undefined` for them, because the icon did not change, and whether a read
- *   can tell them from a missing file is not known.
+ * Two edge cases:
+ * - Contents holding a newline: the line break survives. It is written as a
+ *   raw line feed inside the generated `Preload` string and read back byte
+ *   for byte (verified in game on 3.0.0.24268, #129).
+ * - Contents equal to the ability's icon path: read back as those contents.
+ *   The escape contract never leaves a raw double quote in the contents, so
+ *   no written file can produce the sentinel, and a read tells any contents
+ *   from a missing file (#146).
  *
  * `File` stays a class of static members: it drives one facility of the
  * whole game, the Preload generator and one ability's icon, so it has no
@@ -43,6 +48,10 @@
 export class File {
   // The ability used to read and write data.
   private static readonly dummyAbility: number = FourCC("Amls");
+
+  // The icon set before a read: it holds a raw double quote, which the escape
+  // contract never leaves in the contents of a file `File.write` wrote.
+  private static readonly unreadIcon = '"unread"';
 
   // The string limit per Preload call.
   private static readonly preloadLimit = 259;
@@ -100,17 +109,15 @@ export class File {
     const originalIcon = BlzGetAbilityIcon(this.dummyAbility);
     if (originalIcon === undefined) return undefined;
 
+    BlzSetAbilityIcon(this.dummyAbility, File.unreadIcon);
     Preloader(filename);
-
     const preloadText = BlzGetAbilityIcon(this.dummyAbility);
-    if (preloadText === undefined) return undefined;
-
     BlzSetAbilityIcon(this.dummyAbility, originalIcon);
-    if (preloadText !== originalIcon) {
-      return File.unescape(preloadText);
-    }
 
-    return undefined;
+    if (preloadText === undefined || preloadText === File.unreadIcon) {
+      return undefined;
+    }
+    return File.unescape(preloadText);
   }
 
   /**
