@@ -164,6 +164,24 @@ describe("expandIncludeCode", () => {
     expect(expandFile(text)).toBe(text);
   });
 
+  it("expands an include standing where a titled example's title would", () => {
+    const lines = expandFile(
+      declaration(
+        "{@includeCode ../../examples/example.ts:9}",
+        "{@includeCode ../../examples/example.ts:9}",
+      ),
+    ).split("\n");
+    expect(lines.slice(4, lines.indexOf("     */"))).toEqual([
+      "     * @example",
+      "     * ```ts",
+      "     * trigger.destroy();",
+      "     * ```",
+      "     * ```ts",
+      "     * trigger.destroy();",
+      "     * ```",
+    ]);
+  });
+
   it("keeps the text around the tag on lines of its own", () => {
     expect(
       expand("Before: {@includeCode ../../examples/example.ts:9} after."),

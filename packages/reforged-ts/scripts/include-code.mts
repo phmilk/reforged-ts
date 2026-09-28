@@ -98,7 +98,11 @@ export function expandIncludeCode(
     .split(/\r?\n/)
     .flatMap((line, index, lines) => {
       const titled = TITLED_EXAMPLE.exec(line);
-      if (titled !== null && includesCode(lines, index + 1)) {
+      if (
+        titled !== null &&
+        !line.includes("@includeCode") &&
+        includesCode(lines, index + 1)
+      ) {
         const [, prefix = "", title = ""] = titled;
         return [prefix + "@example", prefix + title];
       }
