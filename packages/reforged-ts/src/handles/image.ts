@@ -2,42 +2,70 @@
 
 import { Handle } from "./handle";
 
+/**
+ * The layers an image is drawn in, which decide which images cover others;
+ * the game takes them as integers from 1 to 4.
+ */
 export enum ImageType {
   /**
-   * Drawn above all other imageTypes.
+   * The top layer, over every other type.
    */
   Selection = 1,
   /**
-   *  Drawn above Ubersplat, but below Selection and OcclusionMask.
+   * Over Ubersplat; under Selection and OcclusionMask.
    */
   Indicator = 2,
   /**
-   * Drawn above Ubersplat and Indicator and below Selection.
+   * Over Ubersplat and Indicator; under Selection.
    */
   OcclusionMask = 3,
   /**
-   * Drawn below every other type. Images of this type are additionally affected by time of day and the fog of war (only for tinting).
+   * The bottom layer, under every other type. The time of day and the fog of
+   * war tint the images of this layer too.
    */
   Ubersplat = 4,
 }
 
+/**
+ * An image: a texture drawn flat on the ground of the map, such as an
+ * area-of-effect marker.
+ * @remarks
+ * - `setRender(true)` makes the game draw it; `show` hides and shows it
+ *   after that.
+ * - Its position is the bottom-left corner of the texture, not its centre.
+ * @example An area-of-effect marker around a point
+ * {@includeCode ../../examples/game/image-create.ts}
+ * @native image
+ */
 export class Image extends Handle<image> {
   /**
-   * Creates a new image, the first ID given being 0 and then counting upwards (0, 1, 2, 3, ...).
-   * Multiple images with the same type are drawn in their order of creation,
-   * meaning that the image created first is drawn below the image created after.
-   * @param file The path to the image. The image itself should have its border alpha-ed out
-   * completely. If an invalid path is specified CreateImage returns image(-1).
-   * @param sizeX The x-dimensions of the image.
-   * @param sizeY The y-dimensions of the image.
-   * @param sizeZ The z-dimensions of the image.
-   * @param posX The x-cooridnate of where to create the image. This is the bottom left corner of the image.
-   * @param posY The y-cooridnate of where to create the image. This is the bottom left corner of the image.
-   * @param posZ The z-cooridnate of where to create the image.
-   * @param originX Moves the origin (bottom left corner) of the image from posX in negative X-direction.
-   * @param originY Moves the origin (bottom left corner) of the image from posY in negative Y-direction.
-   * @param originZ Moves the origin (bottom left corner) of the image from posZ in negative Z-direction.
-   * @param imageType
+   * Creates an image of a texture at the given point.
+   * @remarks
+   * - Image ids start at 0 and go up by one with each image created.
+   * - Within one layer, images are drawn in the order they were created: a
+   *   newer image covers an older one.
+   * @param file - The texture's path. Its border should be fully
+   * transparent. An invalid path makes `CreateImage` return the invalid
+   * image, id -1.
+   * @param sizeX - The image's extent along x, in world units.
+   * @param sizeY - The image's extent along y, in world units.
+   * @param sizeZ - The image's extent along z, in world units.
+   * @param posX - The x-coordinate of the image's bottom-left corner.
+   * @param posY - The y-coordinate of the image's bottom-left corner.
+   * @param posZ - The z-coordinate of the image.
+   * @param originX - How far the bottom-left corner moves from `posX`,
+   * towards negative x.
+   * @param originY - How far the bottom-left corner moves from `posY`,
+   * towards negative y.
+   * @param originZ - How far the bottom-left corner moves from `posZ`,
+   * towards negative z.
+   * @param imageType - The layer the image is drawn in.
+   * @returns The new image.
+   * @throws When the game returns no handle:
+   * `reforged-ts: failed to create Image (<file>)`, at the calling line. In
+   * Dev mode, also when called before the globals Init stage or inside
+   * `MapPlayer.runLocal`.
+   * @native CreateImage
    */
   public static create(
     file: string,
@@ -71,13 +99,16 @@ export class Image extends Handle<image> {
   }
 
   /**
-   * Destroys the image specified and recycles the handle ID of that image instantly (no ref counting for images).
-   * @bug May crash the game if an invalid image is used (null, before the first image is created).
+   * Destroys the image; images have no reference count, so the game can
+   * reuse its handle id at once.
    * @remarks
    * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyImage
+   * @bug Given an invalid image, such as `null` or one from before any image
+   * was created, it can crash the game.
    */
   public destroy() {
     DestroyImage(this.handle);
@@ -85,34 +116,50 @@ export class Image extends Handle<image> {
   }
 
   /**
-   * Every ImageType other than Selection doesnt seem to appear above water.
-   * @param flag Draws the specified image above the water if the flag is true.
-   * @param useWaterAlpha
+   * Sets whether the image is drawn above water.
+   * @remarks
+   * Only images of the Selection layer appear to show above water.
+   * @param flag - `true` to draw the image over the water.
+   * @param useWaterAlpha - Whether the image takes the water's transparency.
+   * @native SetImageAboveWater
    */
   public setAboveWater(flag: boolean, useWaterAlpha: boolean) {
     SetImageAboveWater(this.handle, flag, useWaterAlpha);
   }
 
   /**
-   * Valid values for all channels range from 0 to 255.
+   * Tints the image and sets its transparency.
+   * @param red - The red channel, from 0 to 255.
+   * @param green - The green channel, from 0 to 255.
+   * @param blue - The blue channel, from 0 to 255.
+   * @param alpha - The opacity, from 0 (invisible) to 255 (opaque).
+   * @native SetImageColor
    */
   public setColor(red: number, green: number, blue: number, alpha: number) {
     SetImageColor(this.handle, red, green, blue, alpha);
   }
 
   /**
-   * This is the only function that is able to modify an image's z-offset.
-   * @param flag
-   * @param height The z-offset of the image.
+   * Sets whether the image is drawn at a fixed height instead of on the
+   * ground.
+   * @remarks
+   * No other function changes an image's z-offset.
+   * @param flag - `true` to draw the image at `height`.
+   * @param height - The height to draw the image at, in world units.
+   * @native SetImageConstantHeight
    */
   public setConstantHeight(flag: boolean, height: number) {
     SetImageConstantHeight(this.handle, flag, height);
   }
 
   /**
-   * Sets the X/Y position of the provided image. This is the bottom left corner of the image, unless you used values
-   * form originX/Y/Z in the constructor other than 0, in which case the bottom left corner is moved further into negative
-   * X/Y/Z direction.
+   * Moves the image so that its bottom-left corner is at the point, less the
+   * `originX`, `originY` and `originZ` offsets it was created with.
+   * @param x - The x-coordinate, in world units.
+   * @param y - The y-coordinate, in world units.
+   * @param z - The z-coordinate; the height changes through
+   * `setConstantHeight` only.
+   * @native SetImagePosition
    */
   public setPosition(x: number, y: number, z: number) {
     SetImagePosition(this.handle, x, y, z);
@@ -120,24 +167,28 @@ export class Image extends Handle<image> {
 
   /**
    * Enable or disable the rendering of the image.
-   * @param flag render if true, don't render if false
+   * @param flag - render if true, don't render if false
+   * @native SetImageRenderAlways
    */
   public setRender(flag: boolean) {
     SetImageRenderAlways(this.handle, flag);
   }
 
   /**
-   * Change image's type.
-   * @param imageType  Influence the order in which images are drawn above one another.
+   * Moves the image to another layer.
+   * @param imageType - The layer, which decides the images it covers and the
+   * images that cover it.
+   * @native SetImageType
    */
   public setType(imageType: ImageType) {
     SetImageType(this.handle, imageType);
   }
 
   /**
-   * Show or hide the image depending on boolean flag.
-   * Seems like a redundant function in the light of SetImageRender(Always).
-   * @param flag true shows, false hides
+   * Shows or hides the image.
+   * @remarks It appears to do the same as `setRender`.
+   * @param flag - `true` to show the image, `false` to hide it.
+   * @native ShowImage
    */
   public show(flag: boolean) {
     ShowImage(this.handle, flag);

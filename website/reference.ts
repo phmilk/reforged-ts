@@ -58,11 +58,18 @@ export interface Reference {
   readonly typingsManifest?: string;
   /**
    * The Typings reference the `@native` tags of this one link: each tag
-   * becomes a link to the Native's page there, then to jassbot, and a tag
-   * naming no entry of its manifest fails the run. Without it, the tags are
-   * left as written.
+   * becomes a link to the page of the Native, or of the Handle type, there,
+   * then to jassbot, and a tag naming neither an entry of its manifest nor a
+   * Handle type of its `common.j.d.ts` fails the run. Without it, the tags
+   * are left as written.
    */
   readonly nativeTypings?: Reference;
+  /**
+   * The names of types its declarations reference but its entry points
+   * leave unexported on purpose: TypeDoc's `intentionallyNotExported`, so
+   * they raise no notExported warning.
+   */
+  readonly intentionallyNotExported?: readonly string[];
 }
 
 /** jassbot's page of a Native is this followed by the Native's name. */
@@ -75,6 +82,19 @@ export const LIBRARY_REFERENCE: Reference = {
   dir: "api/reforged-ts",
   entryPoints: [join(WORKSPACE, "packages/reforged-ts/src/index.ts")],
   tsconfig: join(WORKSPACE, "packages/reforged-ts/tsconfig.json"),
+  // Type-level helpers a public type is computed from: exporting one would
+  // publish machinery, and TypeDoc would document what it expands to. One
+  // name per line.
+  intentionallyNotExported: [
+    // events/unit: the groups of rows `UnitEvents` is built from.
+    "Groups",
+    // events/unit: the groups' rows as one table.
+    "TableOf",
+    // events/unit: the payload type of a row.
+    "PayloadOf",
+    // utils/color: the numbers below a bound, behind `NumberRange`.
+    "Enumerate",
+  ],
 };
 
 /**
@@ -198,25 +218,55 @@ export interface ReferenceOptions {
 }
 
 /**
- * The options of a reference's TypeDoc run, as docusaurus-plugin-typedoc
- * takes them, with the one the site's TypeDoc plugin declares.
+ * The options of a reference's TypeDoc run: TypeDoc's, with the ones the
+ * site's TypeDoc plugin declares.
  */
-export type ReferencePluginOptions = Partial<TypeDocOptions> &
+export type ReferenceTypedocOptions = Partial<TypeDocOptions> & {
+  readonly typingsManifest?: string;
+  readonly nativeManifest?: string;
+  readonly nativeRoute?: string;
+  readonly nativeJassbot?: string;
+};
+
+/**
+ * The options of a reference's TypeDoc run as docusaurus-plugin-typedoc
+ * takes them: with its instance's id and the Markdown theme's options.
+ */
+export type ReferencePluginOptions = ReferenceTypedocOptions &
   Partial<MarkdownOptions> & {
     readonly id: string;
-    readonly typingsManifest?: string;
-    readonly nativeManifest?: string;
-    readonly nativeRoute?: string;
-    readonly nativeJassbot?: string;
   };
 
 export function referencePluginOptions(
   reference: Reference,
   options: ReferenceOptions,
 ): ReferencePluginOptions {
-  const docsPath = options.docsPath ?? reference.docsPath ?? join(SITE, "docs");
+  const docsPath = referenceDocsPath(reference, options);
   return {
     id: reference.id,
+    docsPath,
+    ...referenceTypedocOptions(reference, { ...options, docsPath }),
+  };
+}
+
+/** Where a reference's docs tree is: the option's, the reference's, or the site's `docs`. */
+function referenceDocsPath(
+  reference: Reference,
+  options: ReferenceOptions,
+): string {
+  return options.docsPath ?? reference.docsPath ?? join(SITE, "docs");
+}
+
+/**
+ * The options of a reference's TypeDoc run that TypeDoc itself and the
+ * site's TypeDoc plugin take: the docs audit runs TypeDoc with these alone.
+ */
+export function referenceTypedocOptions(
+  reference: Reference,
+  options: ReferenceOptions,
+): ReferenceTypedocOptions {
+  const docsPath = referenceDocsPath(reference, options);
+  return {
     // TypeDoc reads entry points as globs, which take POSIX slashes only.
     entryPoints: reference.entryPoints.map((path) =>
       path.replaceAll("\\", "/"),
@@ -224,15 +274,21 @@ export function referencePluginOptions(
     name: reference.label,
     tsconfig: reference.tsconfig,
     out: join(docsPath, reference.dir),
-    docsPath,
     plugin: [SITE_TYPEDOC_PLUGIN],
     readme: "none",
     // An `@example` whose body is only an `{@includeCode}` is parsed as
     // TSDoc, not taken as literal code the JSDoc way: TypeDoc then expands the
     // include into a fenced block. The line on the tag is the example's title.
     jsDocCompatibility: { exampleTag: false },
+    // A Map project sees neither private nor protected members (#43): they
+    // are left off the pages, and the docs audit lists the same members.
+    excludePrivate: true,
+    excludeProtected: true,
     validation: { notDocumented: true },
     treatValidationWarningsAsErrors: options.strict,
+    ...(reference.intentionallyNotExported === undefined
+      ? {}
+      : { intentionallyNotExported: [...reference.intentionallyNotExported] }),
     ...(reference.typingsManifest === undefined
       ? {}
       : {

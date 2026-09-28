@@ -1,0 +1,15 @@
+{
+  // The doc lint fixtures as the editor and the lint see them: sources the
+  // test (../../doc-lint.test.ts) lints with the doc comment rules. Only
+  // their comments matter; this program is never built.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [],
+    "strict": true,
+    "noEmit": true
+  },
+  "include": ["."]
+}

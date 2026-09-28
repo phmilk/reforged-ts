@@ -10,6 +10,8 @@
     "moduleResolution": "bundler",
     "types": ["node"],
     "noEmit": true,
+    // The support modules import the library's Node scripts, .mts files.
+    "allowImportingTsExtensions": true,
     "strict": true,
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,

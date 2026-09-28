@@ -46,6 +46,19 @@ const groups: Groups = {
 /**
  * The unit Event descriptors: `UnitEvents.death` for every player's units,
  * `UnitEvents.deathOf(unit)` for one Unit.
+ * @remarks
+ * - `UnitEvents.name` registers the player-unit event for the player in
+ *   every slot (`TriggerRegisterPlayerUnitEvent`); `UnitEvents.nameOf(unit)`
+ *   registers the unit event on that Unit (`TriggerRegisterUnitEvent`), and
+ *   exists only where the Patch has one (there is no `orderUnitOf`).
+ * - Every payload field is set unless the member's comment says it can be
+ *   `undefined`: the killer of `death`, the damage source of `damaged` and
+ *   `damaging`, the order targets, the spell targets.
+ * - Dealing damage from a `damaged` or `damaging` handler fires them again:
+ *   in Dev mode such a handler runs one level deeper in the damage depth
+ *   `Unit.damageTarget` checks.
+ * @example A handler with a filter
+ * {@includeCode ../../../examples/harness/events-on.ts#on}
  */
 export const UnitEvents: UnitEventDescriptors<TableOf<Groups>> =
   unitEvents(groups);

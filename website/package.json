@@ -14,6 +14,7 @@
     "docs:start": "pnpm run docs:collect && docusaurus start",
     "docs:build": "pnpm run docs:collect && docusaurus build",
     "docs:check": "pnpm run docs:collect && docusaurus build --config docusaurus.check.config.ts",
+    "docs:audit": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON audit.ts",
     "docs:serve": "docusaurus serve",
     "docs:clear": "docusaurus clear"
   },
@@ -26,6 +27,7 @@
     "@mdx-js/react": "catalog:",
     "docusaurus-plugin-llms": "catalog:",
     "docusaurus-plugin-typedoc": "catalog:",
+    "eslint": "catalog:",
     "eslint-plugin-reforged": "workspace:^",
     "react": "catalog:",
     "react-dom": "catalog:",

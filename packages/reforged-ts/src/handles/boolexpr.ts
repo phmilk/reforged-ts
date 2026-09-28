@@ -18,6 +18,13 @@ export type BoolexprInput = boolexpr | (() => boolean);
  * The filter a registration or enumeration member hands its Native: a
  * function goes through `Filter`, protected as `member` of `owner` and
  * excluding its candidate when it throws in Dev mode.
+ * @param owner - The Wrapper whose member takes the filter, named in a
+ * failure report.
+ * @param member - The member's name, such as `Group.enumUnitsInRect`.
+ * @param filter - The filter the Map project gave, if any.
+ * @returns A new `filterfunc` for a function, `filter` itself for a
+ * `boolexpr`, or `undefined` when no filter was given.
+ * @native Filter
  */
 export function filterOf(
   owner: Handle<handle>,

@@ -27,21 +27,21 @@ import {
 /** What differs between the two configuration files. */
 export interface SiteOptions {
   /**
-   * Fail on what `docs:build` only warns about: broken anchors, and, once
-   * `STRICT_REFERENCE` is on, TypeDoc's validation warnings in the API
-   * reference (an undocumented member). The CI gate, `docs:check`, builds
-   * strict.
+   * Fail on what `docs:build` only warns about: broken anchors, and, with
+   * `STRICT_REFERENCE`, TypeDoc's validation warnings in the API reference
+   * (an undocumented member). The CI gate, `docs:check`, builds strict.
    */
   readonly strict: boolean;
 }
 
 /**
  * Whether `strict` also fails the API reference on TypeDoc's validation
- * warnings. Off while the library's TSDoc pass is under way: `docs:check`
- * lists each undocumented member as a warning and stays green. The last
- * build step, #43, turns it on when every member is documented.
+ * warnings. On since #43 documented every public member: `docs:check` fails
+ * on TypeDoc's validation warnings (an undocumented member, an unresolved
+ * `{@link}`, a type referenced but not exported), so the site's gate holds
+ * the library to the doc comment standard as `pnpm lint` does.
  */
-const STRICT_REFERENCE = false;
+const STRICT_REFERENCE = true;
 
 const REPOSITORY = "https://github.com/phmilk/reforged-ts";
 

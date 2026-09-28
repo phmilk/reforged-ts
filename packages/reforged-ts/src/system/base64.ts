@@ -26,9 +26,10 @@ function byte(block: number, divisor: number): string {
 }
 
 /**
- * Encode a byte string to base64 (RFC 4648, with padding). Any byte string
- * is accepted, including zero bytes and bytes that are not UTF-8.
- * @param input The byte string to encode.
+ * Encodes a byte string to base64 (RFC 4648, with padding).
+ * @param input - The byte string to encode: any bytes, zero bytes and bytes
+ * that are not UTF-8 included.
+ * @returns The base64 text, four characters per three bytes.
  */
 export function base64Encode(input: string): string {
   const output: string[] = [];
@@ -49,12 +50,21 @@ export function base64Encode(input: string): string {
 }
 
 /**
- * Decode a base64 string (RFC 4648, with padding) back to its bytes.
- * @param input The base64 string to decode.
- * @throws When the length is not a multiple of four, when a character is
- * outside the alphabet, or when padding is anywhere but the last one or two
- * characters. Each case has its own message, with the offset of the
- * offending character.
+ * Decodes a base64 string (RFC 4648, with padding) back to its bytes.
+ * @remarks
+ * Malformed input throws, where w3ts printed `'base64Decode' failed: ...`
+ * and returned an empty string, which a caller could not tell from an empty
+ * payload.
+ * @param input - The base64 string to decode.
+ * @returns The decoded bytes, one character of the string per byte.
+ * @throws When the input is malformed, at the calling line, with one message
+ * per case, the offset counted from zero:
+ * - a length that is not a multiple of four:
+ *   `reforged-ts: base64Decode input length <length> is not a multiple of four`;
+ * - a character outside the alphabet:
+ *   `reforged-ts: base64Decode input has a character outside the alphabet at offset <offset>`;
+ * - padding anywhere but the last one or two characters:
+ *   `reforged-ts: base64Decode input has padding in the wrong place at offset <offset>`.
  */
 export function base64Decode(input: string): string {
   const length = input.length;

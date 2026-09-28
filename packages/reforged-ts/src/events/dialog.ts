@@ -5,8 +5,11 @@ import type { Trigger } from "../handles/trigger";
 import { required } from "./descriptor";
 import { eventRows } from "./rows";
 
-/** The payload of a dialog click: the dialog and the button clicked in it. */
-interface DialogClick {
+/**
+ * The payload of `DialogEvents.click` and `DialogEvents.buttonClick`: the
+ * dialog and the button clicked in it, both always set.
+ */
+export interface DialogClick {
   /** The dialog clicked in. */
   dialog: Dialog;
   /** The button clicked. */
@@ -24,20 +27,33 @@ function readClick(event: string): DialogClick {
 /**
  * The dialog Event descriptors: `DialogEvents.click(dialog)` for any button
  * of one Dialog, `DialogEvents.buttonClick(button)` for one DialogButton.
+ * Their payload, a {@link DialogClick}, always holds the dialog and the
+ * button.
  */
 export const DialogEvents = eventRows("DialogEvents", {
-  /** A button of `dialog` is clicked. */
+  /**
+   * A button of `dialog` is clicked; the payload holds the dialog and the
+   * button.
+   * @native TriggerRegisterDialogEvent
+   */
   click: {
+    /** Registers a click on any button of `dialog` on the Trigger. */
     register: (trigger: Trigger, dialog: Dialog) => {
       trigger.registerDialogEvent(dialog);
     },
+    /** Reads the clicked dialog and button. */
     read: readClick,
   },
-  /** `button` is clicked. */
+  /**
+   * `button` is clicked; the payload holds it and its dialog.
+   * @native TriggerRegisterDialogButtonEvent
+   */
   buttonClick: {
+    /** Registers a click on `button` on the Trigger. */
     register: (trigger: Trigger, button: DialogButton) => {
       trigger.registerDialogButtonEvent(button);
     },
+    /** Reads the clicked dialog and button. */
     read: readClick,
   },
 });

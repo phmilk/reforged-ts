@@ -29,8 +29,9 @@ export default defineConfig({
       },
       {
         // The library, compiled with its tests by typescript-to-lua and run
-        // on the reforged-test harness. The global setup compiles them
-        // before every run, the first one and each watch rerun.
+        // on the reforged-test harness, and compiled with its examples, the
+        // runnable ones run on the harness too. The global setup compiles
+        // them before every run, the first one and each watch rerun.
         test: {
           name: "reforged-ts",
           root: "packages/reforged-ts",
@@ -122,13 +123,18 @@ export default defineConfig({
         },
       },
     ],
-    // Neither the library's Lua tests nor the sources, fixtures and rename
-    // map the Node tests read are in the vitest module graph: a change to one
-    // of them reruns the spec that reads it.
+    // Neither the library's Lua tests and examples nor the sources, fixtures
+    // and rename map the Node tests read are in the vitest module graph: a
+    // change to one of them reruns the spec that reads it.
     watchTriggerPatterns: [
       {
         pattern: /\/packages\/reforged-ts\/(?:src|test(?!\/node\/))\/.+\.ts$/,
         testsToRun: () => "packages/reforged-ts/test/harness/lua.spec.ts",
+      },
+      {
+        pattern:
+          /\/packages\/reforged-ts\/(?:src|examples|test\/(?:examples|support))\/.+\.ts$/,
+        testsToRun: () => "packages/reforged-ts/test/harness/examples.spec.ts",
       },
       {
         pattern:
@@ -160,6 +166,13 @@ export default defineConfig({
         // The snippet check reads the docs pages from disk.
         pattern: /\/website\/docs\/.+\.mdx?$/,
         testsToRun: () => "website/test/snippets.test.mts",
+      },
+      {
+        // The doc lint test reads its fixtures and the tsdoc.json files from
+        // disk.
+        pattern:
+          /\/(?:tsdoc\.json|packages\/reforged-ts\/test\/node\/fixtures\/doc-lint\/.+)$/,
+        testsToRun: () => "packages/reforged-ts/test/node/doc-lint.test.ts",
       },
       {
         // The coverage report's drift test reads the library sources, the

@@ -23,7 +23,12 @@ function readDamage(target: Unit, event: string) {
 
 /** The combat rows of UnitEvents: `attacked`, `damaged` and `damaging`. */
 export const combatRows = unitEventRows({
-  /** A unit is attacked; `attacker` is the attacking unit. */
+  /**
+   * A unit is attacked; `attacker` is the attacking unit.
+   * Every field is set.
+   * @native TriggerRegisterPlayerUnitEvent
+   * @native TriggerRegisterUnitEvent
+   */
   attacked: {
     event: EVENT_PLAYER_UNIT_ATTACKED,
     twin: EVENT_UNIT_ATTACKED,
@@ -36,6 +41,8 @@ export const combatRows = unitEventRows({
   /**
    * A unit has taken damage; `source` is undefined when no unit dealt it.
    * `damagedOf(unit)` fires for the damage `unit` takes.
+   * @native TriggerRegisterPlayerUnitEvent
+   * @native TriggerRegisterUnitEvent
    */
   damaged: {
     event: EVENT_PLAYER_UNIT_DAMAGED,
@@ -48,6 +55,8 @@ export const combatRows = unitEventRows({
    * A unit is about to take damage; `source` is undefined when no unit deals
    * it. `damagingOf(unit)` fires for the damage `unit` is about to take, not
    * the damage it deals: the Patch fires the unit event on the target.
+   * @native TriggerRegisterPlayerUnitEvent
+   * @native TriggerRegisterUnitEvent
    */
   damaging: {
     event: EVENT_PLAYER_UNIT_DAMAGING,

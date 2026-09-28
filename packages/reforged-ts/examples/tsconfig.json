@@ -1,8 +1,12 @@
 {
   // The examples the doc comments include with `{@includeCode}` (ADR 0004),
-  // as a Map project writes them: `reforged-ts` resolves to the sources. The
-  // package's typecheck checks them; build step 8 (#43) compiles them with
-  // typescript-to-lua and runs them on the harness.
+  // as a Map project writes them: `reforged-ts` resolves to the sources.
+  // `examples:build` compiles every one with typescript-to-lua (a type or
+  // transpile error fails it; nothing is written). The library's vitest
+  // project compiles them again with test/examples/tsconfig.json and runs
+  // those under harness/ on the Lua harness with the Native stubs, each in a
+  // fresh Lua state: loading it and running the Init stages must complete
+  // without error. Those under game/ need the game and are only compiled.
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext"],
@@ -18,5 +22,13 @@
     "noEmit": true,
     "paths": { "reforged-ts": ["../src/index.ts"] }
   },
-  "include": ["."]
+  "include": ["."],
+  // The library's own options: the sources compile with the examples, so
+  // they must compile as the library's build compiles them.
+  "tstl": {
+    "luaTarget": "5.3",
+    "noHeader": true,
+    "noImplicitSelf": true,
+    "sourceMapTraceback": false
+  }
 }

@@ -46,6 +46,9 @@ let libraryRegistrations = 0;
  * System's Trigger, born at the globals stage): they are protected as any
  * other, but the late-configure warning does not name them, as it does not
  * name the library's own Init registrations.
+ * @typeParam T - What `body` returns.
+ * @param body - The code that registers the library's callbacks.
+ * @returns What `body` returned.
  */
 export function asLibraryRegistration<T>(body: () => T): T {
   libraryRegistrations++;
@@ -84,15 +87,22 @@ function store(): FailureStore {
 
 /**
  * Reports one Guard line: on screen to the local player for thirty seconds,
- * through the timed-text Native, and through `print`. `line` carries the
- * `reforged-ts:` prefix already.
+ * through the timed-text Native, and through `print`.
+ * @param line - The line, which carries the `reforged-ts:` prefix already.
+ * @native DisplayTimedTextToPlayer
+ * @native GetLocalPlayer
  */
 export function reportLine(line: string): void {
   DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, REPORT_DURATION, line);
   print(line);
 }
 
-/** The origin a report names: `Timer#1048577 Timer.start`, or the member alone. */
+/**
+ * Names where a callback was registered, as a report does.
+ * @param owner - The Wrapper registered on, if any.
+ * @param member - The registering member, such as `"Timer.start"`.
+ * @returns `Timer#1048577 Timer.start`, or the member alone without an owner.
+ */
 export function originOf(
   owner: Handle<handle> | undefined,
   member: string,
@@ -113,14 +123,22 @@ export function originOf(
  *   function.
  * - In Dev mode, a new function that runs `callback` under pcall with the
  *   arguments it was called with and returns its result. On failure it
- *   reports once per distinct message (`reforged-ts: <origin> failed:
- *   <message>`), counts every failure, and returns `failed`: the value the
- *   engine produces for a crashed callback, `false` for a condition or a
- *   filter, nothing for an action or a handler.
+ *   reports once per distinct message
+ *   (`reforged-ts: <origin> failed: <message>`), counts every failure, and
+ *   returns `failed`: the value the engine produces for a crashed callback,
+ *   `false` for a condition or a filter, nothing for an action or a handler.
  *
  * Either way the registration is remembered as the first one if it is, so
  * `Reforged.configure` can name it, unless it is the library's own
  * (`asLibraryRegistration`).
+ * @typeParam Args - The callback's parameters.
+ * @typeParam R - What the callback returns.
+ * @param owner - The Wrapper registered on, or undefined for none.
+ * @param member - The registering member, such as `"Timer.start"`.
+ * @param callback - The Map project's function.
+ * @param failed - What the protected function returns when `callback`
+ * fails; nothing when left out.
+ * @returns The function to hand the Native.
  */
 export function protect<Args extends unknown[], R>(
   owner: Handle<handle> | undefined,
@@ -155,11 +173,16 @@ export function protect<Args extends unknown[], R>(
  * of the store: what makes a repeat a count instead of a new report.
  */
 export interface ReportedFailures {
+  /** The rows reported, by message; undefined until the first failure. */
   seen: Map<string, FailureRow> | undefined;
+  /** The store's generation `seen` belongs to: a reset makes it stale. */
   generation: number;
 }
 
-/** A callback's memory of its reported failures: none yet. */
+/**
+ * Makes a callback's memory of its reported failures.
+ * @returns A memory holding none yet.
+ */
 export function reportedFailures(): ReportedFailures {
   return { seen: undefined, generation: 0 };
 }
@@ -168,6 +191,10 @@ export function reportedFailures(): ReportedFailures {
  * Records one failure of a protected callback that `reported` remembers:
  * the first time a message is seen (since the last reset) it is reported,
  * `reforged-ts: <origin> failed: <message>`; afterwards it is only counted.
+ * @param reported - The messages this callback already reported, which
+ * decide between a report and a count.
+ * @param origin - Where it was registered, as `originOf` names it.
+ * @param message - The Lua error text.
  */
 export function reportFailure(
   reported: ReportedFailures,
@@ -193,7 +220,10 @@ export function reportFailure(
   reportLine(`${LIBRARY}: ${origin} failed: ${message}`);
 }
 
-/** The failures since the last reset, in the order they first happened. */
+/**
+ * Lists the failures since the last reset.
+ * @returns A copy of each row, in the order they first happened.
+ */
 export function callbackFailures(): CallbackFailure[] {
   return store().rows.map((row) => ({ ...row }));
 }

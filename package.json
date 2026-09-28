@@ -20,6 +20,7 @@
     "typings:check": "pnpm --filter reforged-types typings:check",
     "coverage:report": "pnpm --filter reforged-ts-wrapper-coverage coverage:report",
     "data:check": "pnpm --filter reforged-ts build && pnpm --filter reforged-ts-release data:check",
+    "examples:build": "pnpm --filter reforged-ts examples:build",
     "changeset": "changeset",
     "release:check-changeset": "pnpm --filter reforged-ts-release release:check-changeset",
     "release:check-patches": "pnpm --filter reforged-ts-release release:check-patches",
@@ -35,6 +36,7 @@
     "docs:start": "pnpm --filter reforged-ts-website docs:start",
     "docs:build": "pnpm --filter reforged-ts-website docs:build",
     "docs:check": "pnpm --filter reforged-ts-website docs:check",
+    "docs:audit": "pnpm --filter reforged-ts-website docs:audit --strict",
     "docs:version": "pnpm --filter reforged-ts-website docs:version",
     "docs:prune": "pnpm --filter reforged-ts-website docs:prune",
     "actionlint": "pnpm --filter reforged-ts-release actionlint",
@@ -43,7 +45,7 @@
     "repo:settings": "pnpm --filter reforged-ts-release repo:settings",
     "github-app": "pnpm --filter reforged-ts-release github-app",
     "renovate:check": "pnpm --package=renovate@44.115.13 dlx renovate-config-validator --strict",
-    "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run typings:check && pnpm run test && pnpm run coverage:report"
+    "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run typings:check && pnpm run test && pnpm run coverage:report && pnpm run docs:audit"
   },
   "devDependencies": {
     "@changesets/changelog-github": "catalog:",
@@ -54,7 +56,9 @@
     "eslint-config-prettier": "catalog:",
     "eslint-import-resolver-typescript": "catalog:",
     "eslint-plugin-import-x": "catalog:",
+    "eslint-plugin-jsdoc": "catalog:",
     "eslint-plugin-prettier": "catalog:",
+    "eslint-plugin-tsdoc": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:",

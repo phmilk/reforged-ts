@@ -1,8 +1,24 @@
 /** @noSelfInFile */
 
+/**
+ * A color of four components, red, green, blue and alpha, each from 0 to
+ * 255, with what the game makes of it: a text color code and a player color.
+ * @remarks
+ * An `alpha` of 0 is taken as left out, so the color comes out opaque (255).
+ * @example
+ * {@includeCode ../../examples/harness/color-text.ts}
+ */
 export class Color {
+  /** The opacity, from 0 (transparent) to 255 (opaque). */
   readonly alpha: ColorValue;
 
+  /**
+   * Makes a color from its components.
+   * @param red - The red component, from 0 to 255.
+   * @param green - The green component, from 0 to 255.
+   * @param blue - The blue component, from 0 to 255.
+   * @param alpha - The opacity, from 0 to 255; 255 (opaque) when left out.
+   */
   public constructor(
     readonly red: ColorValue,
     readonly green: ColorValue,
@@ -16,7 +32,11 @@ export class Color {
     }
   }
 
-  /** Create a string code for coloring text. */
+  /**
+   * The code that colors the text after it, `|cAARRGGBB`: each component in
+   * two lowercase hexadecimal digits. `|r` ends the colored text.
+   * @returns The ten-character color code.
+   */
   public get code() {
     return (
       `|c${toHex(this.alpha)}${toHex(this.red)}` +
@@ -24,6 +44,11 @@ export class Color {
     );
   }
 
+  /**
+   * Tells whether `other` has the same four components.
+   * @param other - The color to compare with.
+   * @returns True when red, green, blue and alpha are all equal.
+   */
   public equals(other: Color) {
     return (
       this.red === other.red &&
@@ -44,8 +69,10 @@ export class Color {
   }
 
   /**
-   * Returns the name of this color, if it is one of other player colors.
-   * Otherwise returns 'unknown'.
+   * The name of the player color this color equals, as
+   * {@link playerColorNames} spells it.
+   * @returns The name, such as `"red"`, or `"unknown"` when the color is none
+   * of {@link playerColors}, alpha included.
    */
   public get name() {
     const index = this.playerColorIndex();
@@ -56,8 +83,9 @@ export class Color {
   }
 
   /**
-   * Returns the `playercolor` of this color, if it is one of the player
-   * colors. Otherwise, returns `PLAYER_COLOR_RED`.
+   * The game's `playercolor` for the player color this color equals.
+   * @returns The `playercolor`, or `PLAYER_COLOR_RED` when the color is none
+   * of {@link playerColors}, alpha included.
    */
   public get playerColor() {
     const index = this.playerColorIndex();
@@ -68,9 +96,13 @@ export class Color {
   }
 
   /**
-   * Returns the color between this color and another via linear interpolation.
-   * The provided factor should be between 0 and 1. Any color components
-   * that are outside of the 0-255 range will be clamped.
+   * Blends this color toward `other`, each component alpha included, by
+   * linear interpolation.
+   * @param other - The color reached at a `factor` of 1.
+   * @param factor - How far to go toward `other`: 0 gives this color, 1 gives
+   * `other`. Outside that range a component past 0 or 255 is clamped.
+   * @returns A new color, each component rounded to the nearest integer.
+   * @native MathRound
    */
   public lerp(other: Color, factor: number) {
     const r = MathRound(this.red * (1 - factor) + other.red * factor);
@@ -86,6 +118,14 @@ export class Color {
   }
 }
 
+/**
+ * Makes a {@link Color}, as `new Color(red, green, blue, alpha)` does.
+ * @param red - The red component, from 0 to 255.
+ * @param green - The green component, from 0 to 255.
+ * @param blue - The blue component, from 0 to 255.
+ * @param alpha - The opacity, from 0 to 255; 255 (opaque) when left out.
+ * @returns The new color.
+ */
 export const color = (
   red: ColorValue,
   green: ColorValue,
@@ -94,8 +134,8 @@ export const color = (
 ) => new Color(red, green, blue, alpha);
 
 /**
- * The player colors sorted by index. Does not include
- * neutrals colors.
+ * The 24 player colors, by player index: `playerColors[0]` is red. The
+ * neutral players' colors are not included.
  */
 export const playerColors = [
   color(255, 3, 3),
@@ -124,7 +164,7 @@ export const playerColors = [
   color(164, 111, 51),
 ];
 
-/** The names of players colors sorted by player index. */
+/** The names of the 24 player colors, by player index: `"red"` first. */
 export const playerColorNames = [
   "red",
   "blue",
@@ -200,14 +240,15 @@ type Enumerate<
   : Enumerate<N, [...Acc, Acc["length"]]>;
 
 /**
- * Generate a type that is represent a number ranging from [A, B)
+ * The integers from `F` up to `T`, `T` excluded, as a union of number
+ * literals: `NumberRange<0, 3>` is `0 | 1 | 2`.
+ * @typeParam F - The first integer, included.
+ * @typeParam T - The end of the range, excluded.
  */
 export type NumberRange<F extends number, T extends number> = Exclude<
   Enumerate<T>,
   Enumerate<F>
 >;
 
-/**
- * The valid values for a color component.
- */
+/** A color component: an integer from 0 to 255. */
 export type ColorValue = NumberRange<0, 256>;

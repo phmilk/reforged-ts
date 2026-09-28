@@ -29,7 +29,10 @@ export type { KeyComparator } from "./sortedkeys";
  * mutations, not per insertion.
  *
  * @example
- * {@includeCode ../../examples/synced-map-scores.ts}
+ * {@includeCode ../../examples/harness/synced-map-scores.ts}
+ * @typeParam K - The type of the keys: numbers or strings, or any value
+ * with a comparator.
+ * @typeParam V - The type of the values.
  */
 export class SyncedMap<K extends AnyNotNil, V> {
   private readonly order: SortedKeys<K>;
@@ -43,6 +46,8 @@ export class SyncedMap<K extends AnyNotNil, V> {
    * The comparator must be a total order that gives the same answer on every
    * client (compare ids or names, never handle addresses or `tostring`), or
    * the sorted order is not the same everywhere.
+   * @param comparator - Orders two keys: negative, zero or positive, as for
+   * `Array.prototype.sort`.
    */
   public constructor(comparator?: KeyComparator<K>);
   /**
@@ -52,6 +57,9 @@ export class SyncedMap<K extends AnyNotNil, V> {
    * @remarks
    * The comparator must be a total order that gives the same answer on every
    * client, or the sorted order is not the same everywhere.
+   * @param entries - The first entries, each a key and its value.
+   * @param comparator - Orders two keys: negative, zero or positive, as for
+   * `Array.prototype.sort`.
    */
   public constructor(
     entries: Iterable<readonly [K, V]> | null | undefined,
@@ -74,46 +82,62 @@ export class SyncedMap<K extends AnyNotNil, V> {
   }
 
   /**
-   * The number of keys.
+   * Counts the keys, those whose value is undefined included.
    *
    * @remarks
    * Kept as a count, so reading it walks nothing and is the same on every
    * client.
+   * @returns The number of keys present, 0 for an empty map.
    */
   public get size(): number {
     return this.order.size;
   }
 
   /**
-   * The value stored for `key`, or undefined when there is none.
+   * Gets the value stored for `key`.
    *
    * @remarks
    * A lookup does not depend on iteration order, so it is multiplayer-safe as
    * on a `Map`.
+   * @param key - The key to look up.
+   * @returns The value, or `undefined` when the key is absent or its value
+   * is undefined.
    */
   public get(key: K): V | undefined {
     return this.stored.get(key);
   }
 
   /**
-   * Whether `key` is present, including when its value is undefined.
+   * Tells whether `key` is present, including when its value is undefined.
    *
    * @remarks
    * A lookup does not depend on iteration order, so it is multiplayer-safe as
    * on a `Map`.
+   * @param key - The key to look up.
+   * @returns True when it is present.
    */
   public has(key: K): boolean {
     return this.order.has(key);
   }
 
   /**
-   * Stores `value` for `key` and returns this map.
+   * Stores `value` for `key`.
    *
    * @remarks
    * A new key takes its sorted place, not the end: the next loop visits it
    * in the same position on every client. In Dev mode, without a comparator,
    * a key that is not of the kind of the present keys (all numbers or all
    * strings) raises here, where it is inserted, instead of in a later sort.
+   * @param key - The key; without a comparator, a number or a string of the
+   * same kind as the present keys.
+   * @param value - The value to store; undefined too, which keeps the key
+   * present.
+   * @returns This map, for chaining.
+   * @throws In Dev mode, without a comparator, when `key` is neither a number
+   * nor a string, at the calling line:
+   * `reforged-ts: SyncedMap without a comparator takes number or string keys, got a <kind>: pass a comparator to the constructor to order other keys`;
+   * and when it is not of the kind of the present keys:
+   * `reforged-ts: SyncedMap without a comparator takes keys of one kind, got a <kind> after <kind> keys: the sorted order that keeps iteration identical on every client cannot compare them`.
    */
   public set(key: K, value: V): this {
     this.order.add(key);
@@ -122,11 +146,13 @@ export class SyncedMap<K extends AnyNotNil, V> {
   }
 
   /**
-   * Removes `key`; returns whether it was present.
+   * Removes `key` and its value.
    *
    * @remarks
    * Safe during a loop over this map: the loop skips the key if it has not
    * reached it yet and visits every other key once.
+   * @param key - The key to remove.
+   * @returns True when it was present.
    */
   public delete(key: K): boolean {
     if (!this.order.remove(key)) {
@@ -152,14 +178,14 @@ export class SyncedMap<K extends AnyNotNil, V> {
   }
 
   /**
-   * Calls `callback` with each value, its key and this map, in sorted key
-   * order.
+   * Calls `callback` for each key, in sorted key order.
    *
    * @remarks
    * The order is the same on every client, so the callback may change game
    * state. It walks a snapshot of the keys: deleting any key meanwhile
    * neither skips nor repeats one, and a key deleted before its turn is not
    * visited.
+   * @param callback - Called with the value, its key and this map.
    */
   public forEach(callback: (value: V, key: K, map: this) => void): void {
     const keys = this.order.snapshot();
@@ -171,11 +197,12 @@ export class SyncedMap<K extends AnyNotNil, V> {
   }
 
   /**
-   * The keys, in sorted order.
+   * Iterates over the keys, in sorted order.
    *
    * @remarks
    * The order is the same on every client. The iterator walks a snapshot
    * taken when it starts, skipping keys deleted before their turn.
+   * @returns An iterator of the keys.
    */
   public *keys(): IterableIterator<K> {
     const keys = this.order.snapshot();
@@ -187,11 +214,12 @@ export class SyncedMap<K extends AnyNotNil, V> {
   }
 
   /**
-   * The values, in the sorted order of their keys.
+   * Iterates over the values, in the sorted order of their keys.
    *
    * @remarks
    * The order is the same on every client. The iterator walks a snapshot
    * taken when it starts, skipping keys deleted before their turn.
+   * @returns An iterator of the values.
    */
   public *values(): IterableIterator<V> {
     const keys = this.order.snapshot();
@@ -203,11 +231,12 @@ export class SyncedMap<K extends AnyNotNil, V> {
   }
 
   /**
-   * The `[key, value]` pairs, in sorted key order.
+   * Iterates over the entries, in sorted key order.
    *
    * @remarks
    * The order is the same on every client. The iterator walks a snapshot
    * taken when it starts, skipping keys deleted before their turn.
+   * @returns An iterator of `[key, value]` pairs.
    */
   public *entries(): IterableIterator<[K, V]> {
     const keys = this.order.snapshot();
@@ -219,10 +248,11 @@ export class SyncedMap<K extends AnyNotNil, V> {
   }
 
   /**
-   * The `[key, value]` pairs, in sorted key order: what `for...of` walks.
+   * Iterates over the entries, in sorted key order: what `for...of` walks.
    *
    * @remarks
    * The order is the same on every client, unlike `pairs` over a table.
+   * @returns An iterator of `[key, value]` pairs.
    */
   public [Symbol.iterator](): IterableIterator<[K, V]> {
     return this.entries();

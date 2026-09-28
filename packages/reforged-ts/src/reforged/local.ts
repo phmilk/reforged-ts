@@ -38,6 +38,8 @@ const reportedBy = new WeakMap<() => void, ReportedFailures>();
  * the local player): one level deeper, under pcall, then back at the depth it
  * started at. A failure is reported like a protected callback's, with the
  * origin `MapPlayer#<id> MapPlayer.runLocal`, once per function and message.
+ * @param player - The local player, whose Wrapper the report names.
+ * @param fn - The local-only code.
  */
 export function runLocalGuarded(player: Handle<handle>, fn: () => void): void {
   local.depth++;
@@ -58,9 +60,14 @@ export function runLocalGuarded(player: Handle<handle>, fn: () => void): void {
 }
 
 /**
- * Raises when called inside a Dev-mode `runLocal`: `action` (`creating a
- * Unit`, `Group.for`) changes game state for one client. `level` is the one
- * the caller would give `error` to name the Map project's line.
+ * Raises when called inside a Dev-mode `runLocal`: `action` changes game
+ * state for one client.
+ * @param action - What the caller is doing, as the message names it:
+ * `creating a Unit`, `Group.for`.
+ * @param level - The level the caller would give `error` to name the Map
+ * project's line.
+ * @throws Inside a Dev-mode `MapPlayer.runLocal`, at `level`:
+ * `reforged-ts: <action> inside MapPlayer.runLocal changes game state for one client, which desyncs the game: only visuals belong inside runLocal`.
  */
 export function assertNotLocal(action: string, level: number): void {
   if (local.depth !== 0) {

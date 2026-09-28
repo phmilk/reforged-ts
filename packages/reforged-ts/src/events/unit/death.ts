@@ -5,7 +5,11 @@ import { unitEventRows } from "./rows";
 
 /** The death row of UnitEvents: `death`. */
 export const deathRows = unitEventRows({
-  /** A unit dies; `killer` is undefined when nothing killed it. */
+  /**
+   * A unit dies; `killer` is undefined when nothing killed it.
+   * @native TriggerRegisterPlayerUnitEvent
+   * @native TriggerRegisterUnitEvent
+   */
   death: {
     event: EVENT_PLAYER_UNIT_DEATH,
     twin: EVENT_UNIT_DEATH,

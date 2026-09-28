@@ -6,6 +6,16 @@ import { onStage } from "../init/stages";
 let elapsedTime = 0.0;
 let gameTimer: Timer | undefined;
 
+/**
+ * Gets the game time since the game started, from a periodic Timer the
+ * library starts at the `gameStart` stage.
+ * @remarks
+ * The Timer is created after `MarkGameStarted`, where w3ts created it at
+ * the end of `main`. Timers do not tick during initialization, so the value
+ * is the same on a running game.
+ * @returns The elapsed game time, in seconds; 0 before the `gameStart`
+ * stage.
+ */
 export function getElapsedTime() {
   if (!gameTimer) return 0;
   return elapsedTime + gameTimer.elapsed;

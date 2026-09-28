@@ -10,6 +10,7 @@ export const BYTE_ORDER = ">";
 
 /** A field of the binary format: its `string.pack` format, without the byte order. */
 export interface BinaryField {
+  /** The `string.pack` format of the field, such as `"I2"`. */
   readonly format: string;
   /** The smallest value an integer field packs. */
   readonly min?: number;

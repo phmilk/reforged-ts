@@ -28,7 +28,7 @@ import { type HandleHolder, hold, iterateHandles, unhold } from "./handlekeys";
  * synchronous code (not inside `MapPlayer.runLocal`).
  *
  * @example
- * {@includeCode ../../examples/handle-map-kills.ts}
+ * {@includeCode ../../examples/harness/handle-map-kills.ts}
  * @typeParam K - The Wrapper class of the members, `Unit` or `Widget`.
  */
 export class HandleSet<K extends Handle<handle>> {
@@ -46,7 +46,7 @@ export class HandleSet<K extends Handle<handle>> {
    * constructor of `Set`, so swapping a `Set` of Wrappers for a `HandleSet`
    * is a change of the class name only.
    *
-   * @param values - The first members.
+   * @param values - The Wrappers to add at once, in the iteration order.
    */
   public constructor(values?: Iterable<K> | null) {
     if (values !== undefined && values !== null) {
@@ -57,35 +57,42 @@ export class HandleSet<K extends Handle<handle>> {
   }
 
   /**
-   * The number of members.
+   * Counts the members: `delete`, `clear` and a member's `destroy()` lower
+   * it.
    *
    * @remarks
    * Kept in step on every client by the same additions, deletions and
    * destructions, so it is safe to branch on in multiplayer.
+   * @returns The number of members, 0 for an empty set.
    */
   public get size(): number {
     return this.memberOf.size;
   }
 
   /**
-   * Whether `member`'s Handle is in the set.
+   * Tells whether `member`'s Handle is in the set.
    *
    * @remarks
    * Looks up by Handle, so any Wrapper of the same game object answers the
    * same, on every client alike.
+   * @param member - A Wrapper of the game object.
+   * @returns True when the Handle is a member.
    */
   public has(member: K): boolean {
     return this.memberOf.has(member.handle);
   }
 
   /**
-   * Adds `member`'s Handle and returns this set. A new member goes last in
-   * the iteration order; one already there keeps its place.
+   * Adds `member`'s Handle. A new member goes last in the iteration order;
+   * one already there keeps its place.
    *
    * @remarks
    * The insertion order is the iteration order, so call it from synchronous
    * code, never inside `MapPlayer.runLocal`, for loops to agree across
    * clients.
+   * @param member - A Wrapper of the game object; the canonical one is
+   * returned in loops.
+   * @returns This set, for chaining.
    */
   public add(member: K): this {
     const handle = member.handle;
@@ -98,12 +105,14 @@ export class HandleSet<K extends Handle<handle>> {
   }
 
   /**
-   * Removes `member`'s Handle; returns whether it was in the set. After it,
-   * destroying the member has nothing left to do for this set.
+   * Removes `member`'s Handle. After it, destroying the member has nothing
+   * left to do for this set.
    *
    * @remarks
    * Deleting is a game-state change like `add`: call it from synchronous
    * code, never inside `MapPlayer.runLocal`.
+   * @param member - A Wrapper of the game object.
+   * @returns True when it was in the set.
    */
   public delete(member: K): boolean {
     const handle = member.handle;
@@ -129,8 +138,7 @@ export class HandleSet<K extends Handle<handle>> {
   }
 
   /**
-   * Calls `callback` for each member, in insertion order, with the canonical
-   * Wrapper twice (as `Set.forEach` does) and this set. A member deleted
+   * Calls `callback` for each member, in insertion order. A member deleted
    * during the loop, by `delete` or by being destroyed, is skipped if not
    * yet reached, and the loop goes on; a member added during the loop is not
    * visited.
@@ -138,6 +146,8 @@ export class HandleSet<K extends Handle<handle>> {
    * @remarks
    * Insertion order, never `pairs`: the loop runs in the same order on every
    * client, so it may change game state in multiplayer.
+   * @param callback - Called with the canonical Wrapper twice (as
+   * `Set.forEach` does) and this set.
    */
   public forEach(callback: (value: K, key: K, set: this) => void): void {
     for (const member of this.values()) {
@@ -146,12 +156,13 @@ export class HandleSet<K extends Handle<handle>> {
   }
 
   /**
-   * The members, in insertion order, each the canonical Wrapper of its
-   * Handle when the iteration reaches it. Deleting during the iteration is
-   * safe, as for `forEach`.
+   * Iterates over the members, in insertion order. Deleting during the
+   * iteration is safe, as for `forEach`.
    *
    * @remarks
    * Insertion order, never `pairs`: safe to iterate in multiplayer.
+   * @returns An iterator of the members, each the canonical Wrapper of its
+   * Handle when the iteration reaches it.
    */
   public values(): IterableIterator<K> {
     return iterateHandles(this.memberOf, (handle, added) =>
@@ -160,21 +171,23 @@ export class HandleSet<K extends Handle<handle>> {
   }
 
   /**
-   * The same as `values()`, as `Set.keys` is.
+   * Iterates over the members, as `values()` does and `Set.keys` is.
    *
    * @remarks
    * Insertion order, never `pairs`: safe to iterate in multiplayer.
+   * @returns An iterator of the members.
    */
   public keys(): IterableIterator<K> {
     return this.values();
   }
 
   /**
-   * Each member as a `[member, member]` pair, in insertion order, as
-   * `Set.entries` does.
+   * Iterates over the members as `[member, member]` pairs, in insertion
+   * order, as `Set.entries` does.
    *
    * @remarks
    * Insertion order, never `pairs`: safe to iterate in multiplayer.
+   * @returns An iterator of the pairs.
    */
   public entries(): IterableIterator<[K, K]> {
     return iterateHandles(this.memberOf, (handle, added): [K, K] => {
@@ -184,10 +197,11 @@ export class HandleSet<K extends Handle<handle>> {
   }
 
   /**
-   * The same as `values()`: `for (const unit of set)`.
+   * Iterates over the members, as `values()` does: `for (const unit of set)`.
    *
    * @remarks
    * Insertion order, never `pairs`: safe to iterate in multiplayer.
+   * @returns An iterator of the members.
    */
   public [Symbol.iterator](): IterableIterator<K> {
     return this.values();

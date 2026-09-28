@@ -35,10 +35,16 @@ const registeringMember: Record<Where, string> = {
 };
 
 /**
- * Appends `callback` to `queue`, the one for `where`, named `label` in
- * failure lines, or `#n` for its ordinal in the queue. The first registration
+ * Appends `callback` to `queue`, the one for `where`. The first registration
  * by the Map project is remembered (`Init.onGlobals "spawn"`):
  * `Reforged.configure` names it when it warns.
+ * @param queue - The queue to append to.
+ * @param where - The stage or entry point the queue runs at.
+ * @param origin - Who registers: the library or the Map project.
+ * @param callback - The function the queue runs, under pcall.
+ * @param label - Its name in failure lines; `#n`, its ordinal in the queue,
+ * when left out.
+ * @returns The registration, the callback with its name, as appended.
  */
 export function enqueue(
   queue: Registration[],
@@ -58,7 +64,12 @@ export function enqueue(
   return registration;
 }
 
-/** Runs one callback under pcall; a failure prints one line. */
+/**
+ * Runs one callback under pcall; a failure prints one line,
+ * `reforged-ts: <where> callback <name> failed: <message>`.
+ * @param where - The stage or entry point the line names.
+ * @param registration - The callback and its name.
+ */
 export function runProtected(where: Where, registration: Registration): void {
   const [ok, failure] = pcall(registration.callback);
   if (!ok) {
@@ -68,7 +79,12 @@ export function runProtected(where: Where, registration: Registration): void {
   }
 }
 
-/** Runs every callback of `queue`, the ones registered during the run too. */
+/**
+ * Runs every callback of `queue`, each under pcall, the ones registered
+ * during the run too.
+ * @param where - The stage or entry point failure lines name.
+ * @param queue - The callbacks, in registration order.
+ */
 export function runQueue(where: Where, queue: readonly Registration[]): void {
   // By index, reading the length each time: a registration made during the
   // run joins it.

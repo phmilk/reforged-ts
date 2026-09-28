@@ -87,7 +87,15 @@ describe("an @native tag", () => {
     );
   });
 
-  it("fails naming the symbol and the tag when the Typings do not declare the Native", async () => {
+  it("links the page of a Handle type the Typings declare, then jassbot", async () => {
+    await generate(wrapperReference());
+
+    expect(await page("classes/Unit.md")).toContain(
+      "[unit](/typings/9.9.9/interfaces/unit) ([jassbot](https://lep.duckdns.org/jassbot/doc/unit))",
+    );
+  });
+
+  it("fails naming the symbol and the tag when the Typings declare no such Native or Handle type", async () => {
     const wrapper = join(temp, "wrapper");
     await cp(join(FIXTURES, "wrapper"), wrapper, { recursive: true });
     const index = join(wrapper, "src/index.ts");
@@ -95,12 +103,14 @@ describe("an @native tag", () => {
     await writeFile(
       index,
       source
+        // A type of the Typings that is no Handle type.
+        .replace("@native unit", "@native code")
         .replace("@native KillUnit", "@native KillUnitNow")
         .replace("@native bj_MAX_PLAYERS", "@native bj_MAX_PLAYER"),
     );
 
     await expect(generate(wrapperReference(wrapper))).rejects.toThrow(
-      /has 2 @native tags naming what the Typings of Patch 9\.9\.9\.99999 do not declare[^]*:\n- Unit\.kill: @native KillUnitNow\n- maxPlayers: @native bj_MAX_PLAYER$/,
+      /has 3 @native tags naming neither an entry of the manifest of Patch 9\.9\.9\.99999 nor a Handle type its Typings declare[^]*:\n- Unit: @native code\n- Unit\.kill: @native KillUnitNow\n- maxPlayers: @native bj_MAX_PLAYER$/,
     );
   });
 

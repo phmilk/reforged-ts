@@ -15,22 +15,29 @@ import { required } from "./descriptor";
 import type { EventRow, FixedRow } from "./rows";
 import { eventRows } from "./rows";
 
-/** The payload of a player event that carries only its player. */
-interface PlayerPayload {
-  /** The triggering player. */
+/**
+ * The payload of a player event that carries only its player
+ * (`PlayerEvents.leave`, `allianceChanged`, `victory`, `defeat`), and
+ * the base of every player event's payload. The player is always set.
+ */
+export interface PlayerPayload {
+  /** The player the event is about, such as the one who chatted or left. */
   readonly player: MapPlayer;
 }
 
-/** The payload of `PlayerEvents.chat`. */
-interface ChatPayload extends PlayerPayload {
+/** The payload of `PlayerEvents.chat`: every field is always set. */
+export interface ChatPayload extends PlayerPayload {
   /** The whole chat message. */
   readonly message: string;
   /** The text the descriptor was registered with. */
   readonly matched: string;
 }
 
-/** The payload of `PlayerEvents.keyDown` and `PlayerEvents.keyUp`. */
-interface KeyPayload extends PlayerPayload {
+/**
+ * The payload of `PlayerEvents.keyDown` and `PlayerEvents.keyUp`: every
+ * field is always set.
+ */
+export interface KeyPayload extends PlayerPayload {
   /** The key pressed or released. */
   readonly key: oskeytype;
   /** The modifier keys held with it, as the registration's `metaKey`. */
@@ -39,19 +46,25 @@ interface KeyPayload extends PlayerPayload {
   readonly isDown: boolean;
 }
 
-/** The payload of the mouse events. */
-interface MousePayload extends PlayerPayload {
-  /** The x coordinate of the world point under the mouse. */
+/**
+ * The payload of `PlayerEvents.mouseDown`, `mouseUp` and `mouseMove`:
+ * every field is always set.
+ */
+export interface MousePayload extends PlayerPayload {
+  /** The x coordinate of the world point under the mouse, in world units. */
   readonly x: number;
-  /** The y coordinate of the world point under the mouse. */
+  /** The y coordinate of the world point under the mouse, in world units. */
   readonly y: number;
 }
 
-/** The payload of `PlayerEvents.syncData`. */
-interface SyncPayload extends PlayerPayload {
-  /** The prefix the data was sent with. */
+/**
+ * The payload of `PlayerEvents.syncData`: every field is always set, the
+ * player being the one who sent the data.
+ */
+export interface SyncPayload extends PlayerPayload {
+  /** The prefix the sender passed to `BlzSendSyncData`. */
   readonly prefix: string;
-  /** The data sent. */
+  /** The data the sender's client sent, the same string on every client. */
   readonly data: string;
 }
 
@@ -122,13 +135,23 @@ function keyRow(
 /**
  * The player Event descriptors: `PlayerEvents.leave` for every player slot,
  * `PlayerEvents.chat(player, text, exactMatch)` for one player.
+ * @remarks
+ * A member that is a descriptor registers for the player in every slot; a
+ * member that is a function registers for the player it is given. Every
+ * payload holds the triggering player (a {@link PlayerPayload}), and no
+ * field of a player event's payload is ever `undefined`.
+ * @example Listening for a chat command
+ * {@includeCode ../../examples/harness/events-on.ts#subscription}
  */
 export const PlayerEvents = eventRows("PlayerEvents", {
   /**
    * A player sends a chat message containing `text`, or equal to it when
    * `exactMatch`; `message` is the whole message, `matched` is `text`.
+   * The payload is a {@link ChatPayload}.
+   * @native TriggerRegisterPlayerChatEvent
    */
   chat: {
+    /** Registers the chat messages of `player` matching `text` on the Trigger. */
     register: (
       trigger: Trigger,
       player: MapPlayer,
@@ -137,6 +160,7 @@ export const PlayerEvents = eventRows("PlayerEvents", {
     ) => {
       trigger.registerPlayerChatEvent(player, text, exactMatch);
     },
+    /** Reads the player, the whole message and the matched text. */
     read: (event): ChatPayload => ({
       player: triggerPlayer(event),
       message: required(GetEventPlayerChatString(), "message", event),
@@ -144,29 +168,58 @@ export const PlayerEvents = eventRows("PlayerEvents", {
     }),
   },
 
-  /** A player leaves the game. */
+  /**
+   * A player leaves the game.
+   * @native TriggerRegisterPlayerEvent
+   */
   leave: slotRow(EVENT_PLAYER_LEAVE),
 
-  /** A player presses `key` with the modifiers `metaKey`. */
+  /**
+   * A player presses `key` with the modifiers `metaKey`, and again
+   * repeatedly while holding it. The payload is a {@link KeyPayload}.
+   * @native BlzTriggerRegisterPlayerKeyEvent
+   */
   keyDown: keyRow(true),
 
-  /** A player releases `key` with the modifiers `metaKey`. */
+  /**
+   * A player releases `key` with the modifiers `metaKey`. The payload is a
+   * {@link KeyPayload}.
+   * @native BlzTriggerRegisterPlayerKeyEvent
+   */
   keyUp: keyRow(false),
 
-  /** A player presses a mouse button; `x` and `y` are the world point. */
+  /**
+   * A player presses a mouse button; `x` and `y` are the world point. The payload is a
+   * {@link MousePayload}.
+   * @native TriggerRegisterPlayerEvent
+   */
   mouseDown: mouseRow(MouseEventKind.Down),
 
-  /** A player releases a mouse button; `x` and `y` are the world point. */
+  /**
+   * A player releases a mouse button; `x` and `y` are the world point. The payload is a
+   * {@link MousePayload}.
+   * @native TriggerRegisterPlayerEvent
+   */
   mouseUp: mouseRow(MouseEventKind.Up),
 
-  /** A player moves the mouse; `x` and `y` are the world point. */
+  /**
+   * A player moves the mouse; `x` and `y` are the world point. The payload is a
+   * {@link MousePayload}.
+   * @native TriggerRegisterPlayerEvent
+   */
   mouseMove: mouseRow(MouseEventKind.Move),
 
-  /** A player's synced data with `prefix` arrives at every player. */
+  /**
+   * A player's synced data with `prefix` arrives at every player. The
+   * payload is a {@link SyncPayload}.
+   * @native BlzTriggerRegisterPlayerSyncEvent
+   */
   syncData: {
+    /** Registers the data `player` sends with `prefix` on the Trigger. */
     register: (trigger: Trigger, player: MapPlayer, prefix: string) => {
       trigger.registerPlayerSyncEvent(player, prefix, false);
     },
+    /** Reads the sending player, the prefix and the data. */
     read: (event): SyncPayload => ({
       player: triggerPlayer(event),
       prefix: required(BlzGetTriggerSyncPrefix(), "prefix", event),
@@ -174,8 +227,13 @@ export const PlayerEvents = eventRows("PlayerEvents", {
     }),
   },
 
-  /** A player changes its `allianceType` alliance setting toward another. */
+  /**
+   * A player changes its `allianceType` alliance setting toward another.
+   * The payload holds the player whose setting changed.
+   * @native TriggerRegisterPlayerAllianceChange
+   */
   allianceChanged: {
+    /** Registers the changes of `player`'s `allianceType` on the Trigger. */
     register: (
       trigger: Trigger,
       player: MapPlayer,
@@ -183,12 +241,19 @@ export const PlayerEvents = eventRows("PlayerEvents", {
     ) => {
       trigger.registerPlayerAllianceChange(player, allianceType);
     },
+    /** Reads the player whose setting changed. */
     read: readPlayer,
   },
 
-  /** A player wins the game. */
+  /**
+   * A player wins the game.
+   * @native TriggerRegisterPlayerEvent
+   */
   victory: slotRow(EVENT_PLAYER_VICTORY),
 
-  /** A player loses the game. */
+  /**
+   * A player loses the game.
+   * @native TriggerRegisterPlayerEvent
+   */
   defeat: slotRow(EVENT_PLAYER_DEFEAT),
 });

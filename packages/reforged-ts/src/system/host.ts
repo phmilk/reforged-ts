@@ -32,7 +32,7 @@ export interface HostDetection {
    * stage, or at the call when the game already started. Call it on every
    * client, in the same order relative to the other sync requests, as
    * `SyncRequest` requires.
-   * @param options The timeout; ten seconds by default.
+   * @param options - The timeout; ten seconds by default.
    * @returns A `Promise` that resolves with the elected player, the same on
    * every client, and rejects only when no lobby time arrived.
    */
@@ -93,7 +93,7 @@ class Election {
 
   private reject?: (reason: string) => void;
 
-  /** @param timeout Seconds before the election settles; zero, never. */
+  /** @param timeout - Seconds before the election settles; zero, never. */
   public constructor(timeout: number) {
     this.promise = new Promise<MapPlayer>((resolve, reject) => {
       this.resolve = resolve;
@@ -249,7 +249,7 @@ class HostObject implements HostDetection {
  * game is a human step, tracked in its own ticket.
  *
  * @example
- * {@includeCode ../../examples/host-detect-host.ts}
+ * {@includeCode ../../examples/harness/host-detect-host.ts}
  */
 export const Host: HostDetection = new HostObject();
 

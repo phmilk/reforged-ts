@@ -81,15 +81,19 @@ export interface DebugReport {
  */
 export interface ReforgedDebug {
   /**
-   * Prints the report, one line per row after a header, and returns it: the
-   * Wrappers created, destroyed and live per class, most live first, then
-   * the callbacks that failed and how many times each failed with the same
-   * message. A repeated failure is reported on screen once, then only
-   * counted here. The Wrapper counts are a heuristic, and the report says
-   * so in a line of its own: only the creations and destructions the
-   * library saw.
+   * Prints what Dev mode counted, one line per row after a header, and
+   * returns it.
+   * @remarks
+   * The Wrappers created, destroyed and live per class come first, most live
+   * first, then the callbacks that failed and how many times each failed
+   * with the same message. A repeated failure is reported on screen once,
+   * then only counted here. The Wrapper counts are a heuristic, and the
+   * report says so in a line of its own: only the creations and
+   * destructions the library saw.
    * @example
-   * {@includeCode ../../examples/debug-report.ts}
+   * {@includeCode ../../examples/harness/debug-report.ts}
+   * @returns The Wrapper rows and the failures; both empty with Dev mode
+   * off, when it prints only that Dev mode is off.
    */
   report(): DebugReport;
   /**
@@ -104,17 +108,22 @@ export interface ReforgedDebug {
 /** The type of `Reforged`: the configuration call, its read, and `debug`. */
 export interface ReforgedEntry {
   /**
-   * Records the configuration. An absent `devMode` means off: `configure({})`
-   * after `configure({ devMode: true })` turns Dev mode off. Call it once,
-   * first thing in the entry point: in Dev mode (on before the call or
-   * after it), a call after the Map project registered a callback (through
-   * `Init`, `addScriptHook` or a member that hands a function to a Native,
-   * such as `Timer.start`; the library's own registrations do not count)
-   * prints a warning naming the first registration, and records the values
-   * anyway. A changed `devMode` affects only later registrations: a callback
-   * keeps the mode it was registered under. An absent `damageDepthLimit`
-   * keeps the current limit (eight until set); it is read when damage is
-   * dealt, so a new one applies at once.
+   * Records the configuration: Dev mode, and the damage depth limit it
+   * enforces.
+   * @remarks
+   * Call it once, first thing in the entry point. In Dev mode (on before the
+   * call or after it), a call after the Map project registered a callback
+   * (through `Init`, `addScriptHook` or a member that hands a function to a
+   * Native, such as `Timer.start`; the library's own registrations do not
+   * count) prints a warning naming the first registration, and records the
+   * values anyway:
+   * `reforged-ts: Reforged.configure({ devMode: <value> }) called after a callback was registered (the first: <registration>): call it first in the entry point; a callback keeps the mode it was registered under`.
+   * A changed `devMode` affects only later registrations: a callback keeps
+   * the mode it was registered under.
+   * @param options - The configuration. An absent `devMode` means off:
+   * `configure({})` after `configure({ devMode: true })` turns Dev mode off.
+   * An absent `damageDepthLimit` keeps the current limit (eight until set);
+   * it is read when damage is dealt, so a new one applies at once.
    */
   configure(options: ReforgedOptions): void;
   /** Whether the library is in Dev mode: false until `configure` sets it. */
@@ -206,5 +215,9 @@ class ReforgedObject implements ReforgedEntry {
   }
 }
 
-/** The library's entry point: `configure`, what it recorded, and `debug`. */
+/**
+ * The library's entry point: `configure`, what it recorded, and `debug`.
+ * @example
+ * {@includeCode ../../examples/harness/reforged-configure.ts}
+ */
 export const Reforged: ReforgedEntry = new ReforgedObject();

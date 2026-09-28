@@ -12,6 +12,8 @@ export const summonRows = unitEventRows({
    * unverified in-game (the Patch documents only the player-unit event), so
    * its payload reads the summoner and the summoned unit from the Natives, as
    * `summon` does.
+   * @native TriggerRegisterPlayerUnitEvent
+   * @native TriggerRegisterUnitEvent
    */
   summon: {
     event: EVENT_PLAYER_UNIT_SUMMON,

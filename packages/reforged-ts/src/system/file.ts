@@ -1,9 +1,11 @@
 /** @noSelfInFile */
 
 /**
- * A system which provides the ability to read and write files. There are no standard IO natives
- * so this system relies on an exploit which ended up being sanctioned by Blizzard, and because of this
- * there are some caveats.
+ * Reads and writes text files in the player's `CustomMapData` folder.
+ *
+ * @remarks
+ * The game has no file Natives, so `File` relies on the Preload generator,
+ * an exploit Blizzard ended up sanctioning, with its caveats:
  *
  * - All files are confined to the `Documents\Warcraft III\CustomMapData` folder.
  * - The only allowed file extensions are `.txt` and `.pld`.
@@ -43,7 +45,7 @@
  * state per object, and `File.read` and `File.write` keep their w3ts names.
  *
  * @example
- * {@includeCode ../../examples/file-write-read.ts}
+ * {@includeCode ../../examples/harness/file-write-read.ts}
  */
 export class File {
   // The ability used to read and write data.
@@ -101,9 +103,19 @@ export class File {
   }
 
   /**
-   * Read text from a file inside of the CustomMapData folder.
-   * @param filename The name of the file to read.
-   * @returns Returns undefined when the file could not be read.
+   * Reads the text of a file `File.write` wrote in the `CustomMapData`
+   * folder.
+   * @remarks
+   * The contents come from this client's disk, so they can differ between
+   * clients: make them known to every client with {@link SyncRequest}
+   * before they reach game state.
+   * @param filename - The file's path inside `CustomMapData`, such as
+   * `"MyMap\\save.txt"`.
+   * @returns The contents, or `undefined` when the file is missing or was
+   * written by `writeRaw` without reading.
+   * @native BlzGetAbilityIcon
+   * @native BlzSetAbilityIcon
+   * @native Preloader
    */
   public static read(filename: string): string | undefined {
     const originalIcon = BlzGetAbilityIcon(this.dummyAbility);
@@ -121,10 +133,21 @@ export class File {
   }
 
   /**
-   * Write text to a file with the option to not include boilerplate for reading the file back.
-   * @param filename The name of the file to write to. Supported extensions are `.txt` and `.pld`.
-   * @param contents The contents to write to the file.
-   * @param allowReading If set to true, boilerplate code will be included for reading the file with `File.read`.
+   * Writes text to a file in the `CustomMapData` folder, with or without
+   * the code `File.read` needs to read it back.
+   * @remarks
+   * Returns nothing, where w3ts returned the `File` class.
+   * @param filename - The file's path inside `CustomMapData`; its extension
+   * `.txt` or `.pld`.
+   * @param contents - The text to write, in chunks of at most 259 bytes, one
+   * `Preload` call each.
+   * @param allowReading - True to include the code `File.read` runs to read
+   * the file back, and escape the contents for it; false, the default, to
+   * write the contents raw, unreadable by `File.read`.
+   * @native PreloadGenClear
+   * @native PreloadGenStart
+   * @native Preload
+   * @native PreloadGenEnd
    */
   public static writeRaw(
     filename: string,
@@ -157,9 +180,20 @@ export class File {
   }
 
   /**
-   * Write text to a file inside. All files are placed within the CustomMapData folder.
-   * @param filename The name of the file to write to. Supported extensions are `.txt` and `.pld`.
-   * @param contents The contents to write to the file.
+   * Writes text to a file in the `CustomMapData` folder, for `File.read` to
+   * read back: `writeRaw` with reading allowed.
+   * @remarks
+   * Returns nothing, where w3ts returned the `File` class. Contents holding
+   * the escape character followed by `q` now read back as written, where
+   * w3ts read a `"` in their place.
+   * @param filename - The file's path inside `CustomMapData`; its extension
+   * `.txt` or `.pld`.
+   * @param contents - The text to write: any characters, double quotes and
+   * backslashes included.
+   * @native PreloadGenClear
+   * @native PreloadGenStart
+   * @native Preload
+   * @native PreloadGenEnd
    */
   public static write(filename: string, contents: string): void {
     this.writeRaw(filename, contents, true);

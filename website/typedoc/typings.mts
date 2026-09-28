@@ -1,8 +1,8 @@
-// The Typings' reference (#40): where each entry of a Patch's manifest has
-// its page. The site's TypeDoc plugin checks every Typings reference against
-// it, and the `@native` links of the library's reference (#183) are built
-// from it. TypeDoc imports it from source with the plugin: erasable syntax
-// only.
+// The Typings' reference (#40): where each entry of a Patch's manifest, and
+// each Handle type its Jass files declare, has its page. The site's TypeDoc
+// plugin checks every Typings reference against it, and the `@native` links
+// of the library's reference (#183) are built from it. TypeDoc imports it
+// from source with the plugin: erasable syntax only.
 import { readFileSync } from "node:fs";
 
 /** The kinds of entry a manifest holds (reforged-types' `src/artefacts.ts`). */
@@ -62,6 +62,43 @@ export function entryPage(entry: TypingsEntry): string {
     case "global":
       return `variables/${entry.name}`;
   }
+}
+
+/**
+ * The Jass file of a Game version that declares its Handle types, next to
+ * its `manifest.json`: the manifest lists no type.
+ */
+export const HANDLE_TYPES_FILE = "common.j.d.ts";
+
+/**
+ * A Handle type's page in the Typings reference of its Game version,
+ * relative to the reference's folder, without `.md`: `interfaces/<name>`,
+ * where TypeDoc puts the interface the Typings declare it as.
+ */
+export function handleTypePage(name: string): string {
+  return `interfaces/${name}`;
+}
+
+/**
+ * Reads the Handle types a Game version's `common.j.d.ts` declares: `handle`
+ * and each interface that extends it, directly or through another one, in
+ * the file's order.
+ */
+export function readHandleTypes(file: string): string[] {
+  const declared = new Map<string, string | undefined>();
+  for (const [, name, base] of readFileSync(file, "utf8").matchAll(
+    /^declare interface (\w+)(?:\s+extends\s+(\w+))?/gm,
+  )) {
+    if (name !== undefined) declared.set(name, base);
+  }
+  const isHandle = (name: string, seen = new Set<string>()): boolean => {
+    if (name === "handle") return true;
+    const base = declared.get(name);
+    if (base === undefined || seen.has(name)) return false;
+    seen.add(name);
+    return isHandle(base, seen);
+  };
+  return [...declared.keys()].filter((name) => isHandle(name));
 }
 
 /** Reads a Patch's `manifest.json`, which the Typings generator writes. */

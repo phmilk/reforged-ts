@@ -16,14 +16,18 @@
 // queues. The anchor takes one entry per module family (`anchored`): the
 // `reforged` module keeps the dev-mode flag on it the same way.
 //
-// Package-internal: nothing here is exported from the library index.
+// Package-internal but for two types: the library index exports `InitStage`
+// (init/index.ts) and `EntryPoint` (hooks/index.ts), which public signatures
+// use.
 
 /** One of the four Init stages, named after the Blizzard function it wraps. */
 export type InitStage = "globals" | "triggers" | "initTriggers" | "gameStart";
 
 /**
- * An entry point of the deprecated alias: before or after the map script's
- * `main` or `config`.
+ * An entry point of the deprecated {@link addScriptHook}: before or after the
+ * map script's `main` or `config`.
+ * @remarks
+ * Removed in 2.0.0 with {@link addScriptHook}.
  */
 export type EntryPoint =
   "main::before" | "main::after" | "config::before" | "config::after";
@@ -35,7 +39,9 @@ export type EntryPoint =
  * @noSelf
  */
 export interface Registration {
+  /** The function registered. */
   readonly callback: () => void;
+  /** Its name in a failure line: `"<label>"`, or `#n`. */
   readonly name: string;
 }
 
@@ -47,13 +53,17 @@ export type Origin = "library" | "project";
  * @noSelf
  */
 export interface Around {
+  /** What runs before the original, if anything. */
   readonly before?: () => void;
+  /** What runs after the original returned, if anything. */
   readonly after?: () => void;
 }
 
 /** A global that was nil when the library asked to wrap it. */
 export interface PendingGlobal {
+  /** The global's name. */
   readonly name: string;
+  /** What its wrapper runs around it once it is assigned. */
   readonly around: Around;
 }
 
@@ -66,7 +76,9 @@ export type Globals = Record<string, unknown>;
  * @noSelf
  */
 export interface GlobalsMetatable {
+  /** The lookup of a key `_G` does not hold: a function or a table. */
   __index?: ((table: Globals, key: string) => unknown) | object;
+  /** The assignment of a key `_G` does not hold: a function or a table. */
   __newindex?: ((table: Globals, key: string, value: unknown) => void) | object;
 }
 
@@ -96,6 +108,7 @@ export interface InitState {
   readonly pending: PendingGlobal[];
   /** The interception of `_G` while a name is pending; undefined when it is off. */
   interception: Interception | undefined;
+  /** The queues of each stage and whether it started. */
   readonly stages: Record<InitStage, StageState>;
   /** The deprecated alias's queues, one per entry point, run in order. */
   readonly entryPoints: Record<EntryPoint, Registration[]>;
@@ -113,10 +126,13 @@ export const globals = _G as unknown as Record<string, unknown>;
 type Anchor = Record<string, unknown>;
 
 /**
- * The value an earlier load anchored under `key` on the library's global, or
- * the one `create` makes, anchored now. Raw reads and writes, so a `_G`
- * metatable a map installed (an undeclared-global warner) never sees the
- * library's own global.
+ * Gets the value an earlier load anchored under `key` on the library's
+ * global, or anchors the one `create` makes now. Raw reads and writes, so a
+ * `_G` metatable a map installed (an undeclared-global warner) never sees
+ * the library's own global.
+ * @param key - The module family's entry on the anchor, such as `"init"`.
+ * @param create - Makes the value when no load anchored one yet.
+ * @returns The anchored value, shared by every load in the Lua state.
  */
 export function anchored<T extends object>(key: string, create: () => T): T {
   let anchor = rawget(globals, LIBRARY) as Anchor | undefined;

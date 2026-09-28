@@ -15,23 +15,55 @@ import type { InitStage } from "./state";
 
 export type { InitStage } from "./state";
 
-/** The type of `Init`: the four registrars and the two reads. */
+/**
+ * The type of {@link Init}: the four registrars and the two reads.
+ * @remarks
+ * Every callback runs under pcall, after the library's own callbacks for the
+ * stage, in registration order. A failure prints one line naming the stage
+ * and the callback, such as
+ * `reforged-ts: globals callback "spawn" failed: <message>`, and the next
+ * callback still runs. A callback registered after its stage ran runs at
+ * once.
+ */
 export interface InitStages {
-  /** Registers `callback` for the `globals` stage, after `InitGlobals`. */
+  /**
+   * Registers `callback` for the `globals` stage, right after `InitGlobals`:
+   * the first moment to create Handles, with `Players` filled.
+   * @param callback - The function the stage runs once, under pcall.
+   * @param label - Its name in a failure line; its ordinal in the stage,
+   * `#n`, when left out.
+   */
   onGlobals(callback: () => void, label?: string): void;
-  /** Registers `callback` for the `triggers` stage, after `InitCustomTriggers`. */
+  /**
+   * Registers `callback` for the `triggers` stage, after
+   * `InitCustomTriggers` created the editor's triggers.
+   * @param callback - The function the stage runs once, under pcall.
+   * @param label - Its name in a failure line; its ordinal in the stage,
+   * `#n`, when left out.
+   */
   onTriggers(callback: () => void, label?: string): void;
   /**
    * Registers `callback` for the `initTriggers` stage, after
-   * `RunInitializationTriggers`.
+   * `RunInitializationTriggers`: the end of `main`.
+   * @param callback - The function the stage runs once, under pcall.
+   * @param label - Its name in a failure line; its ordinal in the stage,
+   * `#n`, when left out.
    */
   onInitTriggers(callback: () => void, label?: string): void;
-  /** Registers `callback` for the `gameStart` stage, after `MarkGameStarted`. */
+  /**
+   * Registers `callback` for the `gameStart` stage, after `MarkGameStarted`:
+   * the game has started, and Timers tick.
+   * @param callback - The function the stage runs once, under pcall.
+   * @param label - Its name in a failure line; its ordinal in the stage,
+   * `#n`, when left out.
+   */
   onGameStart(callback: () => void, label?: string): void;
   /**
-   * Whether `stage` ran: its Blizzard function returned and the stage's
-   * callbacks began, or finished. Inside one of the stage's own callbacks it
-   * is already true, and `current` names the stage.
+   * Tells whether `stage` ran.
+   * @param stage - The stage to ask about.
+   * @returns True once its Blizzard function returned and its callbacks
+   * began: already true inside one of the stage's own callbacks, where
+   * `current` names the stage.
    */
   hasRun(stage: InitStage): boolean;
   /**
@@ -68,5 +100,10 @@ class InitObject implements InitStages {
   }
 }
 
-/** The Init stages: where a Map project registers its initialization. */
+/**
+ * The Init stages: where a Map project registers its initialization, each
+ * stage right after one of the Blizzard functions the editor's `main` calls.
+ * @example
+ * {@includeCode ../../examples/harness/init-stages.ts}
+ */
 export const Init: InitStages = new InitObject();
