@@ -64,6 +64,12 @@ export interface Reference {
    * are left as written.
    */
   readonly nativeTypings?: Reference;
+  /**
+   * The names of types its declarations reference but its entry points
+   * leave unexported on purpose: TypeDoc's `intentionallyNotExported`, so
+   * they raise no notExported warning.
+   */
+  readonly intentionallyNotExported?: readonly string[];
 }
 
 /** jassbot's page of a Native is this followed by the Native's name. */
@@ -76,6 +82,19 @@ export const LIBRARY_REFERENCE: Reference = {
   dir: "api/reforged-ts",
   entryPoints: [join(WORKSPACE, "packages/reforged-ts/src/index.ts")],
   tsconfig: join(WORKSPACE, "packages/reforged-ts/tsconfig.json"),
+  // Type-level helpers a public type is computed from: exporting one would
+  // publish machinery, and TypeDoc would document what it expands to. One
+  // name per line.
+  intentionallyNotExported: [
+    // events/unit: the groups of rows `UnitEvents` is built from.
+    "Groups",
+    // events/unit: the groups' rows as one table.
+    "TableOf",
+    // events/unit: the payload type of a row.
+    "PayloadOf",
+    // utils/color: the numbers below a bound, behind `NumberRange`.
+    "Enumerate",
+  ],
 };
 
 /**
@@ -259,6 +278,9 @@ export function referenceTypedocOptions(
     excludeProtected: true,
     validation: { notDocumented: true },
     treatValidationWarningsAsErrors: options.strict,
+    ...(reference.intentionallyNotExported === undefined
+      ? {}
+      : { intentionallyNotExported: [...reference.intentionallyNotExported] }),
     ...(reference.typingsManifest === undefined
       ? {}
       : {

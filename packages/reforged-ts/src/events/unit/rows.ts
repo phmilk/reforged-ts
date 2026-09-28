@@ -50,12 +50,8 @@ export interface UnitEventRow<P, U extends string = keyof P & string> {
   readonly damage?: true;
 }
 
-/**
- * The payload a UnitEvents row reads: what its `read` returns.
- * @typeParam R - The row.
- */
-export type PayloadOf<R> = R extends {
-  /** The row's reader, whose return type is the payload. */
+/** The payload a row reads. */
+type PayloadOf<R> = R extends {
   readonly read: (unit: Unit, event: string) => infer P;
 }
   ? P

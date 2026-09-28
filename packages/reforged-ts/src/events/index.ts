@@ -37,4 +37,4 @@ export { TimerEvents } from "./timer";
 export type { TrackablePayload } from "./trackable";
 export { TrackableEvents } from "./trackable";
 export { UnitEvents } from "./unit/index";
-export type { PayloadOf, UnitEventDescriptors } from "./unit/rows";
+export type { UnitEventDescriptors } from "./unit/rows";
