@@ -70,7 +70,7 @@ Creating a frame inside `runLocal` allocates a Handle id on one client, and so d
 
 The frame getters (`text`, `value`, `visible`, `alpha`, `enabled`, `width`, `height`, `children`) read this client's interface: the Natives behind them are marked `@async` in the [Typings](typings.md), since one player's edit box or slider has its own value on each client. Never let them change game state.
 
-What a player did reaches every client through a frame event. [`FrameEvents.of(frame, frameEventType)`](../api/reforged-ts/variables/FrameEvents.md) subscribes to one event of one frame, and the game delivers it to every client, so the handler may change game state. Its payload holds the `frame`, the `event` type, the `value` (a slider's) and the `text` (an edit box's, `undefined` for an event with none); the player who acted is `MapPlayer.fromEvent()`:
+What a player did reaches every client through a frame event. [`FrameEvents.of(frame, frameEventType)`](../api/reforged-ts/reforged-ts/namespaces/FrameEvents/index.md) subscribes to one event of one frame, and the game delivers it to every client, so the handler may change game state. Its payload holds the `frame`, the `event` type, the `value` (a slider's) and the `text` (an edit box's, `undefined` for an event with none); the player who acted is `MapPlayer.fromEvent()`:
 
 ```ts
 import { Frame, Init, MapPlayer, on, FrameEvents } from "reforged-ts";
@@ -104,7 +104,7 @@ For a value no event carries, send it with the [sync System](systems.md#sync).
 
 ## Other UI Wrappers
 
-Before custom frames, the game had fixed UI objects, and each has its Wrapper: [`Dialog`](../api/reforged-ts/classes/Dialog.md) and [`DialogButton`](../api/reforged-ts/classes/DialogButton.md) for a modal menu of buttons (with [`DialogEvents`](../api/reforged-ts/variables/DialogEvents.md)), [`Multiboard`](../api/reforged-ts/classes/Multiboard.md) and [`Leaderboard`](../api/reforged-ts/classes/Leaderboard.md) for score tables, [`TextTag`](../api/reforged-ts/classes/TextTag.md) for floating text, [`TimerDialog`](../api/reforged-ts/classes/TimerDialog.md) for a countdown, and [`Quest`](../api/reforged-ts/classes/Quest.md) for the quest log.
+Before custom frames, the game had fixed UI objects, and each has its Wrapper: [`Dialog`](../api/reforged-ts/classes/Dialog.md) and [`DialogButton`](../api/reforged-ts/classes/DialogButton.md) for a modal menu of buttons (with [`DialogEvents`](../api/reforged-ts/reforged-ts/namespaces/DialogEvents/index.md)), [`Multiboard`](../api/reforged-ts/classes/Multiboard.md) and [`Leaderboard`](../api/reforged-ts/classes/Leaderboard.md) for score tables, [`TextTag`](../api/reforged-ts/classes/TextTag.md) for floating text, [`TimerDialog`](../api/reforged-ts/classes/TimerDialog.md) for a countdown, and [`Quest`](../api/reforged-ts/classes/Quest.md) for the quest log.
 
 The 3.0.0 frame additions (pixel to frame unit conversions, text area auto-scroll) are part of the [3.0.0 systems](3-0-0-systems.md).
 

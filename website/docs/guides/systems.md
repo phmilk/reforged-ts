@@ -51,7 +51,7 @@ Init.onGameStart(() => {
 - **The response.** `data` is the sender's data, `from` the sender, `time` the game time when the last packet arrived. The data given on the other clients is ignored.
 - **Failure.** The `Promise` rejects with a message naming the request on a timeout (`options.timeout`, in seconds; none by default), on `cancel()`, and when the game refused to send a packet. `status` tells where a request stands.
 - **Size.** The data is split into packets of 244 bytes, up to 65,535 of them, and joined back. The game cuts a packet at a zero byte, so the data must hold none: encode binary data with `base64Encode` first. `start` throws on the sender's client for data with a zero byte or too long.
-- **The prefix.** The System's packets carry the sync prefix `rts`. A Map project using the raw `BlzSendSyncData` or [`PlayerEvents.syncData`](../api/reforged-ts/variables/PlayerEvents.md) picks another prefix.
+- **The prefix.** The System's packets carry the sync prefix `rts`. A Map project using the raw `BlzSendSyncData` or [`PlayerEvents.syncData`](../api/reforged-ts/reforged-ts/namespaces/PlayerEvents/index.md) picks another prefix.
 
 `SyncRequest.send(from, data, options)` creates and starts a request at once; `new SyncRequest(from, options)` then `start(data)` keeps the request for `cancel()` or `status`.
 

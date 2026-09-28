@@ -142,6 +142,7 @@ function keyRow(
  * field of a player event's payload is ever `undefined`.
  * @example Listening for a chat command
  * {@includeCode ../../examples/harness/events-on.ts#subscription}
+ * @namespace
  */
 export const PlayerEvents = eventRows("PlayerEvents", {
   /**

@@ -25,6 +25,7 @@ function readTrackable(event: string): TrackablePayload {
  * The trackable Event descriptors: `TrackableEvents.hit(trackable)` and
  * `TrackableEvents.track(trackable)` for one Trackable. The payload is a
  * {@link TrackablePayload}.
+ * @namespace
  */
 export const TrackableEvents = eventRows("TrackableEvents", {
   /**

@@ -59,6 +59,7 @@ const groups: Groups = {
  *   `Unit.damageTarget` checks.
  * @example A handler with a filter
  * {@includeCode ../../../examples/harness/events-on.ts#on}
+ * @namespace
  */
 export const UnitEvents: UnitEventDescriptors<TableOf<Groups>> =
   unitEvents(groups);
