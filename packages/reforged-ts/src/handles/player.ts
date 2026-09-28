@@ -14,7 +14,10 @@ import type { Rectangle } from "./rect";
  * the subclass.
  */
 export class MapPlayer extends Handle<player> {
-  /** The difficulty of the player's computer AI, through `GetAIDifficulty`. */
+  /**
+   * The difficulty of the player's computer AI, through `GetAIDifficulty`.
+   * @native GetAIDifficulty
+   */
   public get aiDifficulty() {
     return GetAIDifficulty(this.handle);
   }
@@ -87,7 +90,10 @@ export class MapPlayer extends Handle<player> {
     return GetPlayerSlotState(this.handle);
   }
 
-  /** The index of the player's start location. */
+  /**
+   * The index of the player's start location.
+   * @native GetPlayerStartLocation
+   */
   public get startLocation() {
     return GetPlayerStartLocation(this.handle);
   }
@@ -116,7 +122,10 @@ export class MapPlayer extends Handle<player> {
     SetPlayerTeam(this.handle, whichTeam);
   }
 
-  /** The player's score in a tournament game, through `GetTournamentScore`. */
+  /**
+   * The player's score in a tournament game, through `GetTournamentScore`.
+   * @native GetTournamentScore
+   */
   public get tournamentScore() {
     return GetTournamentScore(this.handle);
   }
@@ -129,6 +138,7 @@ export class MapPlayer extends Handle<player> {
    * In upgrades that have multiple levels, it will research the upgrade by the number of levels specified.
    * @param techId - The four digit rawcode ID of the upgrade.
    * @param levels - The number of levels to add to the current research level of the upgrade.
+   * @native AddPlayerTechResearched
    */
   public addTechResearched(techId: number, levels: number) {
     AddPlayerTechResearched(this.handle, techId, levels);
@@ -140,6 +150,7 @@ export class MapPlayer extends Handle<player> {
 
   /**
    * Used to store hero level data for the scorescreen, before units are moved to neutral passive in melee games.
+   * @native CachePlayerHeroData
    */
   public cacheHeroData() {
     CachePlayerHeroData(this.handle);
@@ -148,6 +159,7 @@ export class MapPlayer extends Handle<player> {
   /**
    * Sends a command to the player's AI script, which reads it with
    * `GetLastCommand` and `GetLastData`.
+   * @native CommandAI
    */
   public commandAI(command: number, data: number) {
     CommandAI(this.handle, command, data);
@@ -183,6 +195,7 @@ export class MapPlayer extends Handle<player> {
    * @param toWhichPlayers - The players who will see whichPlayer's buildings.
    * @param flag - If true, the buildings will be revealed. If false, the buildings will not be revealed.
    * Note that if you set it to false, it will not hide the buildings with a black mask.
+   * @native CripplePlayer
    */
   public cripple(toWhichPlayers: Force, flag: boolean) {
     CripplePlayer(this.handle, toWhichPlayers.handle, flag);
@@ -194,6 +207,7 @@ export class MapPlayer extends Handle<player> {
    * viewer: the message shows on every client that runs the call, so
    * `MapPlayer.runLocal` shows it to one player. `recipient` is the chat
    * audience the message is labelled with, as the Native's number.
+   * @native BlzDisplayChatMessage
    */
   public displayChatMessage(recipient: number, message: string) {
     BlzDisplayChatMessage(this.handle, recipient, message);
@@ -203,6 +217,7 @@ export class MapPlayer extends Handle<player> {
    * Shows `message` on the player's screen at the offset `x`, `y`, through
    * `DisplayTextToPlayer`. The game formats the string: a lone `%` garbles
    * it.
+   * @native DisplayTextToPlayer
    */
   public displayText(x: number, y: number, message: string) {
     DisplayTextToPlayer(this.handle, x, y, message);
@@ -212,6 +227,7 @@ export class MapPlayer extends Handle<player> {
    * Shows `message` on the player's screen for `duration` seconds, through
    * `DisplayTimedTextToPlayer`. The game formats the string: a lone `%`
    * garbles it.
+   * @native DisplayTimedTextToPlayer
    */
   public displayTimedText(
     x: number,
@@ -227,6 +243,7 @@ export class MapPlayer extends Handle<player> {
    * `DisplayTimedTextFromPlayer`. The game formats the string: a lone `%`
    * garbles it, and jassdoc reports that a `%s` shows garbage or, in Lua,
    * crashes the game.
+   * @native DisplayTimedTextFromPlayer
    */
   public displayTimedTextFrom(
     x: number,
@@ -355,7 +372,10 @@ export class MapPlayer extends Handle<player> {
     );
   }
 
-  /** Adds or removes blight in a circle, through `SetBlight`. */
+  /**
+   * Adds or removes blight in a circle, through `SetBlight`.
+   * @native SetBlight
+   */
   public setBlight(x: number, y: number, radius: number, addBlight: boolean) {
     SetBlight(this.handle, x, y, radius, addBlight);
   }
@@ -363,17 +383,24 @@ export class MapPlayer extends Handle<player> {
   /**
    * Adds or removes blight in a circle around `where`, through
    * `SetBlightLoc`.
+   * @native SetBlightLoc
    */
   public setBlightAtPoint(where: Point, radius: number, addBlight: boolean) {
     SetBlightLoc(this.handle, where.handle, radius, addBlight);
   }
 
-  /** Adds or removes blight at one point, through `SetBlightPoint`. */
+  /**
+   * Adds or removes blight at one point, through `SetBlightPoint`.
+   * @native SetBlightPoint
+   */
   public setBlightPoint(x: number, y: number, addBlight: boolean) {
     SetBlightPoint(this.handle, x, y, addBlight);
   }
 
-  /** Adds or removes blight over `where`, through `SetBlightRect`. */
+  /**
+   * Adds or removes blight over `where`, through `SetBlightRect`.
+   * @native SetBlightRect
+   */
   public setBlightRect(where: Rectangle, addBlight: boolean) {
     SetBlightRect(this.handle, where.handle, addBlight);
   }
@@ -381,6 +408,7 @@ export class MapPlayer extends Handle<player> {
   /**
    * Sets the fog state over a circle for the player, through
    * `SetFogStateRadius`.
+   * @native SetFogStateRadius
    */
   public setFogStateRadius(
     whichState: fogstate,
@@ -402,6 +430,7 @@ export class MapPlayer extends Handle<player> {
   /**
    * Sets the fog state over a circle around `center` for the player, through
    * `SetFogStateRadiusLoc`.
+   * @native SetFogStateRadiusLoc
    */
   public setFogStateRadiusAtPoint(
     whichState: fogstate,
@@ -421,6 +450,7 @@ export class MapPlayer extends Handle<player> {
   /**
    * Sets the fog state over `where` for the player, through
    * `SetFogStateRect`.
+   * @native SetFogStateRect
    */
   public setFogStateRect(
     whichState: fogstate,
@@ -438,7 +468,10 @@ export class MapPlayer extends Handle<player> {
     SetPlayerRacePreference(this.handle, whichRacePreference);
   }
 
-  /** Sets whether the player may choose a race; `isSelectable` reads it. */
+  /**
+   * Sets whether the player may choose a race; `isSelectable` reads it.
+   * @native SetPlayerRaceSelectable
+   */
   public setRaceSelectable(value: boolean) {
     SetPlayerRaceSelectable(this.handle, value);
   }
@@ -446,6 +479,7 @@ export class MapPlayer extends Handle<player> {
   /**
    * Sets the player's race skin, such as `RACE_PREF_FORSAKEN`, through
    * `SetPlayerRaceSkin` (3.0.0).
+   * @native SetPlayerRaceSkin
    */
   public setRaceSkin(pref: racepreference) {
     SetPlayerRaceSkin(this.handle, pref);
@@ -475,12 +509,18 @@ export class MapPlayer extends Handle<player> {
     SetPlayerUnitsOwner(this.handle, newOwner);
   }
 
-  /** Starts the campaign AI script `script` for the player. */
+  /**
+   * Starts the campaign AI script `script` for the player.
+   * @native StartCampaignAI
+   */
   public startCampaignAI(script: string) {
     StartCampaignAI(this.handle, script);
   }
 
-  /** Starts the melee AI script `script` for the player. */
+  /**
+   * Starts the melee AI script `script` for the player.
+   * @native StartMeleeAI
+   */
   public startMeleeAI(script: string) {
     StartMeleeAI(this.handle, script);
   }
@@ -488,6 +528,7 @@ export class MapPlayer extends Handle<player> {
   /**
    * The player detecting a unit, or undefined outside a detection event,
    * through `GetEventDetectingPlayer`.
+   * @native GetEventDetectingPlayer
    */
   public static fromDetecting(): MapPlayer | undefined {
     return this.fromHandle(GetEventDetectingPlayer());
@@ -508,6 +549,7 @@ export class MapPlayer extends Handle<player> {
   /**
    * The player in slot `index`, or undefined for a slot the game has no
    * player for.
+   * @native Player
    */
   public static fromIndex(index: number): MapPlayer | undefined {
     return this.fromHandle(Player(index));
@@ -519,6 +561,7 @@ export class MapPlayer extends Handle<player> {
    * lookup helper: typed non-null, and should the game ever break that invariant it
    * throws `reforged-ts: failed to create MapPlayer` instead of returning
    * undefined.
+   * @native GetLocalPlayer
    * @async
    */
   public static fromLocal(): MapPlayer {
@@ -528,6 +571,7 @@ export class MapPlayer extends Handle<player> {
   /**
    * The owner a unit had before an ownership change, or undefined outside
    * one, through `GetChangingUnitPrevOwner`.
+   * @native GetChangingUnitPrevOwner
    */
   public static fromPreviousOwner(): MapPlayer | undefined {
     return this.fromHandle(GetChangingUnitPrevOwner());
@@ -536,6 +580,7 @@ export class MapPlayer extends Handle<player> {
   /**
    * The player who ended a tournament game early, or undefined outside that
    * event, through `GetTournamentFinishNowPlayer`.
+   * @native GetTournamentFinishNowPlayer
    */
   public static fromTournamentFinishNow(): MapPlayer | undefined {
     return this.fromHandle(GetTournamentFinishNowPlayer());
@@ -544,6 +589,7 @@ export class MapPlayer extends Handle<player> {
   /**
    * The winning player, or undefined outside a victory event, through
    * `GetWinningPlayer`.
+   * @native GetWinningPlayer
    */
   public static fromWinning(): MapPlayer | undefined {
     return this.fromHandle(GetWinningPlayer());
@@ -573,6 +619,7 @@ export class MapPlayer extends Handle<player> {
    * {@includeCode ../../examples/game/run-local-frame.ts}
    * @param player - The player whose client runs `fn`.
    * @param fn - What to run there: visuals only.
+   * @native GetLocalPlayer
    */
   public static runLocal(player: MapPlayer, fn: () => void): void {
     if (GetLocalPlayer() !== player.handle) {

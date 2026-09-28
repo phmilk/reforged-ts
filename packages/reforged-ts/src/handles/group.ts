@@ -34,6 +34,7 @@ export class Group extends Handle<group> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyGroup
    */
   public destroy() {
     DestroyGroup(this.handle);
@@ -56,6 +57,7 @@ export class Group extends Handle<group> {
   }
 
   /**
+   * @native GroupEnumUnitsInRangeCounted
    * @bug Causes irregular behavior when used with large numbers
    */
   public enumUnitsInRangeCounted(
@@ -89,6 +91,7 @@ export class Group extends Handle<group> {
   }
 
   /**
+   * @native GroupEnumUnitsInRangeOfLocCounted
    * @bug Causes irregular behavior when used with large numbers
    */
   public enumUnitsInRangeOfPointCounted(
@@ -115,6 +118,7 @@ export class Group extends Handle<group> {
   }
 
   /**
+   * @native GroupEnumUnitsInRectCounted
    * @bug Causes irregular behavior when used with large numbers
    */
   public enumUnitsInRectCounted(
@@ -132,6 +136,7 @@ export class Group extends Handle<group> {
 
   /**
    * @remarks In contrast to other Enum-functions this function enumarates units with locust.
+   * @native GroupEnumUnitsOfPlayer
    */
   public enumUnitsOfPlayer(
     whichPlayer: MapPlayer,
@@ -153,6 +158,7 @@ export class Group extends Handle<group> {
   }
 
   /**
+   * @native GroupEnumUnitsOfTypeCounted
    * @bug Causes irregular behavior when used with large numbers
    */
   public enumUnitsOfTypeCounted(
@@ -185,6 +191,7 @@ export class Group extends Handle<group> {
    * @remarks In Dev mode the callback runs under `pcall`: a call that throws
    * is reported as `Group#<id> Group.for` and the enumeration continues with
    * the next unit. With Dev mode off `ForGroup` receives `callback` itself.
+   * @native ForGroup
    */
   public for(callback: () => void) {
     assertNotLocal("Group.for", 2);
@@ -192,6 +199,7 @@ export class Group extends Handle<group> {
   }
 
   /**
+   * @native FirstOfGroup
    * @bug May return `null` even if there are still units in the group.
    * This happens when a unit in the group dies and decays since the group still
    * holds a reference to that unit but that unit is pretty much null.

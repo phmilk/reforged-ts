@@ -21,6 +21,7 @@ export class Effect extends Handle<effect> {
    * @param modelName - The path of the model that the effect will use.
    * @param x -
    * @param y -
+   * @native AddSpecialEffect
    */
   public static create(modelName: string, x: number, y: number): Effect {
     return this.expect(AddSpecialEffect(modelName, x, y), modelName);
@@ -29,6 +30,7 @@ export class Effect extends Handle<effect> {
   /**
    * Creates a special effect at `where`, through `AddSpecialEffectLoc`.
    * @param modelName - The path of the model that the effect will use.
+   * @native AddSpecialEffectLoc
    */
   public static createAtPoint(modelName: string, where: Point): Effect {
     return this.expect(AddSpecialEffectLoc(modelName, where.handle), modelName);
@@ -42,6 +44,7 @@ export class Effect extends Handle<effect> {
    * be placed. Attachment points are points in a model that can be referenced to as
    * areas for effects to be attached, whether it be from a spell or this function.
    * If the attachment point does not exist, it will attach the effect to the model's origin.
+   * @native AddSpecialEffectTarget
    */
   public static createAttachment(
     modelName: string,
@@ -65,6 +68,8 @@ export class Effect extends Handle<effect> {
    * // Create Thunder Clap's caster art effect at [0,0]
    * const clap = Effect.createSpell(FourCC("AHtz"), EFFECT_TYPE_CASTER, 0, 0);
    * ```
+   * @native AddSpellEffectById
+   * @native AddSpellEffect
    * @bug jassdoc documents `AddSpellEffect` as doing nothing, because no one
    * knows what its ability string is: pass the ability id.
    */
@@ -85,6 +90,8 @@ export class Effect extends Handle<effect> {
   /**
    * Creates a spell visual effect at `where`, through `AddSpellEffectByIdLoc`
    * for an ability id and `AddSpellEffectLoc` for an ability string.
+   * @native AddSpellEffectByIdLoc
+   * @native AddSpellEffectLoc
    * @bug jassdoc documents `AddSpellEffect` as doing nothing, because no one
    * knows what its ability string is; `AddSpellEffectLoc` takes the same
    * string. Pass the ability id.
@@ -114,6 +121,8 @@ export class Effect extends Handle<effect> {
    * const clap = Effect.createSpellAttachment(FourCC("AHtc"), EFFECT_TYPE_CASTER, peasant, "origin");
    * clap.destroy();
    * ```
+   * @native AddSpellEffectTargetById
+   * @native AddSpellEffectTarget
    */
   public static createSpellAttachment(
     ability: number | string,
@@ -153,6 +162,7 @@ export class Effect extends Handle<effect> {
 
   /**
    * Warning: asynchronous
+   * @native BlzGetLocalSpecialEffectX
    * @async
    */
   public get x() {
@@ -165,6 +175,7 @@ export class Effect extends Handle<effect> {
 
   /**
    * Warning: asynchronous
+   * @native BlzGetLocalSpecialEffectY
    * @async
    */
   public get y() {
@@ -177,6 +188,7 @@ export class Effect extends Handle<effect> {
 
   /**
    * Warning: asynchronous
+   * @native BlzGetLocalSpecialEffectZ
    * @async
    */
   public get z() {
@@ -202,6 +214,7 @@ export class Effect extends Handle<effect> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyEffect
    */
   public destroy() {
     DestroyEffect(this.handle);
@@ -219,6 +232,7 @@ export class Effect extends Handle<effect> {
   /**
    * Queues the named animation after the current one, through
    * `BlzQueueSpecialEffectAnimation` (3.0.0).
+   * @native BlzQueueSpecialEffectAnimation
    */
   public queueAnimation(name: string) {
     BlzQueueSpecialEffectAnimation(this.handle, name);
@@ -239,6 +253,7 @@ export class Effect extends Handle<effect> {
   /**
    * Plays the named animation, through `BlzSetSpecialEffectAnimation`
    * (3.0.0).
+   * @native BlzSetSpecialEffectAnimation
    */
   public setAnimation(name: string) {
     BlzSetSpecialEffectAnimation(this.handle, name);
@@ -247,6 +262,7 @@ export class Effect extends Handle<effect> {
   /**
    * Sets the time in seconds the effect takes to blend into its next
    * animation, through `BlzSetSpecialEffectAnimationBlendTime` (3.0.0).
+   * @native BlzSetSpecialEffectAnimationBlendTime
    */
   public setAnimationBlendTime(seconds: number) {
     BlzSetSpecialEffectAnimationBlendTime(this.handle, seconds);

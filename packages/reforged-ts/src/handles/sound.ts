@@ -19,6 +19,7 @@ export class Sound extends Handle<sound> {
    * @param fadeInRate - How quickly the sound fades in. The higher the number, the faster the sound fades in. Maximum number is 127.
    * @param fadeOutRate - How quickly the sound fades out. The higher the number, the faster the sound fades out. Maximum number is 127.
    * @param eaxSetting - EAX is an acronym for environmental audio extensions. In the sound editor, this corresponds to the "Effect" setting.
+   * @native CreateSound
    */
   public static create(
     fileName: string,
@@ -47,6 +48,7 @@ export class Sound extends Handle<sound> {
    * Creates a sound handle playing `fileName` with the settings of the SLK
    * entry `slkEntryName`, through `CreateSoundFilenameWithLabel`; the other
    * parameters are `create`'s.
+   * @native CreateSoundFilenameWithLabel
    */
   public static createFilenameWithLabel(
     fileName: string,
@@ -75,6 +77,7 @@ export class Sound extends Handle<sound> {
    * Creates a sound handle from the SLK entry `soundLabel`, which names the
    * file and its settings, through `CreateSoundFromLabel`; the other
    * parameters are `create`'s.
+   * @native CreateSoundFromLabel
    */
   public static createFromLabel(
     soundLabel: string,
@@ -100,6 +103,7 @@ export class Sound extends Handle<sound> {
   /**
    * Creates a MIDI sound handle from the SLK entry `soundLabel`, through
    * `CreateMIDISound`; the fade rates are `create`'s.
+   * @native CreateMIDISound
    */
   public static createMIDI(
     soundLabel: string,
@@ -162,6 +166,7 @@ export class Sound extends Handle<sound> {
 
   /**
    * @remarks This call is only valid if the sound was created with 3d enabled
+   * @native SetSoundConeAngles
    */
   public setConeAngles(inside: number, outside: number, outsideVolume: number) {
     SetSoundConeAngles(this.handle, inside, outside, outsideVolume);
@@ -169,6 +174,7 @@ export class Sound extends Handle<sound> {
 
   /**
    * @remarks This call is only valid if the sound was created with 3d enabled
+   * @native SetSoundConeOrientation
    */
   public setConeOrientation(x: number, y: number, z: number) {
     SetSoundConeOrientation(this.handle, x, y, z);
@@ -180,6 +186,7 @@ export class Sound extends Handle<sound> {
 
   /**
    * @remarks This call is only valid if the sound was created with 3d enabled
+   * @native SetSoundDistances
    */
   public setDistances(minDist: number, maxDist: number) {
     SetSoundDistances(this.handle, minDist, maxDist);
@@ -200,6 +207,7 @@ export class Sound extends Handle<sound> {
   /**
    * pplies default settings to the sound.
    * @param soundLabel - The label out of one of the SLK-files, whose settings should be used, e.g. values like volume, pitch, pitch variance, priority, channel, min distance, max distance, distance cutoff or eax.
+   * @native SetSoundParamsFromLabel
    */
   public setParamsFromLabel(soundLabel: string) {
     SetSoundParamsFromLabel(this.handle, soundLabel);
@@ -209,6 +217,7 @@ export class Sound extends Handle<sound> {
    * Tones the pitch of the sound, default value is 1.
    * Increasing it you get the chipmunk version and the sound becomes shorter, when decremented the sound becomes low-pitched and longer.
    * @param pitch -
+   * @native SetSoundPitch
    * @bug This native has very weird behaviour.
    * See [this](http://www.hiveworkshop.com/threads/setsoundpitch-weirdness.215743/#post-2145419) for an explenation
    * and [this](http://www.hiveworkshop.com/threads/snippet-rapidsound.258991/#post-2611724) for a non-bugged implementation.
@@ -220,6 +229,7 @@ export class Sound extends Handle<sound> {
   /**
    * Must be called immediately after starting the sound
    * @param millisecs -
+   * @native SetSoundPlayPosition
    */
   public setPlayPosition(millisecs: number) {
     SetSoundPlayPosition(this.handle, millisecs);
@@ -227,6 +237,7 @@ export class Sound extends Handle<sound> {
 
   /**
    * @remarks This call is only valid if the sound was created with 3d enabled
+   * @native SetSoundPosition
    */
   public setPosition(x: number, y: number, z: number) {
     SetSoundPosition(this.handle, x, y, z);
@@ -234,6 +245,7 @@ export class Sound extends Handle<sound> {
 
   /**
    * @remarks This call is only valid if the sound was created with 3d enabled
+   * @native SetSoundVelocity
    */
   public setVelocity(x: number, y: number, z: number) {
     SetSoundVelocity(this.handle, x, y, z);
@@ -242,6 +254,7 @@ export class Sound extends Handle<sound> {
   /**
    * Sets the sounds volume
    * @param volume - Volume, between 0 and 127
+   * @native SetSoundVolume
    */
   public setVolume(volume: number) {
     SetSoundVolume(this.handle, volume);
@@ -258,6 +271,8 @@ export class Sound extends Handle<sound> {
    * @param fadeIn - Whether the sound fades in at the `fadeInRate` given to
    * `create`, through `StartSoundEx`; left out, the sound starts through
    * `StartSound`.
+   * @native StartSound
+   * @native StartSoundEx
    */
   public start(fadeIn?: boolean) {
     if (fadeIn === undefined) {
@@ -271,6 +286,7 @@ export class Sound extends Handle<sound> {
    * Stops the sound.
    * @param killWhenDone - The sound gets destroyed if true.
    * @param fadeOut - Turns down the volume with `fadeOutRate` as stated in constructor.
+   * @native StopSound
    */
   public stop(killWhenDone: boolean, fadeOut: boolean) {
     StopSound(this.handle, killWhenDone, fadeOut);
@@ -290,6 +306,7 @@ export class Sound extends Handle<sound> {
 
   /**
    * Stops the thematic music, through `EndThematicMusic`.
+   * @native EndThematicMusic
    */
   public static endThematicMusic() {
     EndThematicMusic();
@@ -298,6 +315,7 @@ export class Sound extends Handle<sound> {
   /**
    * Sets whether the thematic music pauses while the game window has lost
    * focus, through `BlzPauseThematicMusicOnFocusLost` (3.0.0).
+   * @native BlzPauseThematicMusicOnFocusLost
    */
   public static pauseThematicMusicOnFocusLost(pause: boolean) {
     BlzPauseThematicMusicOnFocusLost(pause);
@@ -307,6 +325,8 @@ export class Sound extends Handle<sound> {
    * Plays a music file as the thematic music, through `PlayThematicMusic`, or
    * through `PlayThematicMusicEx` from `fromMs` milliseconds into the file
    * when it is given.
+   * @native PlayThematicMusic
+   * @native PlayThematicMusicEx
    */
   public static playThematicMusic(file: string, fromMs?: number) {
     if (fromMs === undefined) {
@@ -318,6 +338,7 @@ export class Sound extends Handle<sound> {
 
   /**
    * Sets the volume of the thematic music, through `SetThematicMusicVolume`.
+   * @native SetThematicMusicVolume
    */
   public static setThematicMusicVolume(volume: number) {
     SetThematicMusicVolume(volume);

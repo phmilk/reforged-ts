@@ -53,6 +53,7 @@ export class Region extends Handle<region> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native RemoveRegion
    */
   public destroy() {
     RemoveRegion(this.handle);

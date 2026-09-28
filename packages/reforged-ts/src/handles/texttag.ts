@@ -15,6 +15,7 @@ export class TextTag extends Handle<texttag> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyTextTag
    */
   public destroy() {
     DestroyTextTag(this.handle);

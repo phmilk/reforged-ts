@@ -52,6 +52,38 @@ export class Destructable extends Widget {
    * @example
    * {@includeCode ../../examples/harness/destructable-create.ts}
    * @param options - The rawcode and the position, and the optional axes.
+   * @native CreateDeadDestructable
+   * @native CreateDestructable
+   * @native CreateDeadDestructableZ
+   * @native CreateDestructableZ
+   * @native BlzCreateDeadDestructablePitchRoll
+   * @native BlzCreateDestructablePitchRoll
+   * @native BlzCreateDeadDestructableZPitchRoll
+   * @native BlzCreateDestructableZPitchRoll
+   * @native BlzCreateDeadDestructableWithSkin
+   * @native BlzCreateDestructableWithSkin
+   * @native BlzCreateDeadDestructableZWithSkin
+   * @native BlzCreateDestructableZWithSkin
+   * @native BlzCreateDeadDestructableWithSkinPitchRoll
+   * @native BlzCreateDestructableWithSkinPitchRoll
+   * @native BlzCreateDeadDestructableZWithSkinPitchRoll
+   * @native BlzCreateDestructableZWithSkinPitchRoll
+   * @native BlzCreateDeadDestructableWithColor
+   * @native BlzCreateDestructableWithColor
+   * @native BlzCreateDeadDestructableZWithColor
+   * @native BlzCreateDestructableZWithColor
+   * @native BlzCreateDeadDestructablePitchRollWithColor
+   * @native BlzCreateDestructablePitchRollWithColor
+   * @native BlzCreateDeadDestructableZPitchRollWithColor
+   * @native BlzCreateDestructableZPitchRollWithColor
+   * @native BlzCreateDeadDestructableWithSkinColor
+   * @native BlzCreateDestructableWithSkinColor
+   * @native BlzCreateDeadDestructableZWithSkinColor
+   * @native BlzCreateDestructableZWithSkinColor
+   * @native BlzCreateDeadDestructableWithSkinPitchRollColor
+   * @native BlzCreateDestructableWithSkinPitchRollColor
+   * @native BlzCreateDeadDestructableZWithSkinPitchRollColor
+   * @native BlzCreateDestructableZWithSkinPitchRollColor
    */
   public static create(options: DestructableOptions): Destructable {
     return this.expect(
@@ -459,6 +491,7 @@ export class Destructable extends Widget {
 
   /**
    * This will return different values depending on the locale.
+   * @native GetDestructableName
    */
   public get name() {
     return GetDestructableName(this.handle);
@@ -491,6 +524,7 @@ export class Destructable extends Widget {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native RemoveDestructable
    */
   public destroy() {
     RemoveDestructable(this.handle);
@@ -504,6 +538,7 @@ export class Destructable extends Widget {
    * will give the Destructable its maximum HP (as defined in the object editor).
    * Any value below 0.5 will give the Destructable 0.5 hit points.
    * @param birth - If true, the Destructable will play its birth animation upon resurrection.
+   * @native DestructableRestoreLife
    */
   public heal(life: number, birth: boolean) {
     DestructableRestoreLife(this.handle, life, birth);
@@ -529,6 +564,7 @@ export class Destructable extends Widget {
    * Sets the team colour of the model, through `SetDestructableColor`
    * (3.0.0).
    * @param color - The player colour to tint it with.
+   * @native SetDestructableColor
    */
   public setColor(color: playercolor) {
     SetDestructableColor(this.handle, color);
@@ -541,6 +577,7 @@ export class Destructable extends Widget {
    * @param green - The green channel.
    * @param blue - The blue channel.
    * @param alpha - The opacity, 0 transparent and 255 opaque.
+   * @native SetDestructableVertexColor
    */
   public setVertexColor(
     red: number,
@@ -558,6 +595,7 @@ export class Destructable extends Widget {
   /**
    * The destructable an enumeration is at, or undefined outside one, through
    * `GetEnumDestructable`.
+   * @native GetEnumDestructable
    */
   public static fromEnum(): Destructable | undefined {
     return this.fromHandle(GetEnumDestructable());
@@ -570,6 +608,7 @@ export class Destructable extends Widget {
   /**
    * The destructable an enumeration's filter is at, or undefined outside
    * one, through `GetFilterDestructable`.
+   * @native GetFilterDestructable
    */
   public static fromFilter(): Destructable | undefined {
     return this.fromHandle(GetFilterDestructable());
@@ -579,6 +618,7 @@ export class Destructable extends Widget {
    * The destructable a target order targets, or undefined outside a target
    * order or when the target is not a destructable, through
    * `GetOrderTargetDestructable`.
+   * @native GetOrderTargetDestructable
    */
   public static override fromOrderTarget(): Destructable | undefined {
     return this.fromHandle(GetOrderTargetDestructable());
@@ -587,6 +627,7 @@ export class Destructable extends Widget {
   /**
    * The spell's target destructable, or undefined when the spell targets
    * none.
+   * @native GetSpellTargetDestructable
    */
   public static fromSpellTarget(): Destructable | undefined {
     return this.fromHandle(GetSpellTargetDestructable());

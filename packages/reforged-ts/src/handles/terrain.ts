@@ -14,6 +14,7 @@ export class Terrain {
    * the answer of `IsTerrainPathable`, passed through unchanged.
    * @remarks The answer is the inverse of what the name says (jassdoc,
    * `IsTerrainPathable`).
+   * @native IsTerrainPathable
    * @see https://lep.duckdns.org/jassbot/doc/IsTerrainPathable
    */
   public static isPathable(x: number, y: number, type: pathingtype) {
@@ -25,6 +26,7 @@ export class Terrain {
    * pathing type, passed through unchanged.
    * @remarks jassdoc does not document its answer; whether it keeps the inversion
    * of `IsTerrainPathable` is not measured.
+   * @native BlzIsTerrainPathableEx
    */
   public static isPathableEx(x: number, y: number, type: pathingtype) {
     return BlzIsTerrainPathableEx(x, y, type);

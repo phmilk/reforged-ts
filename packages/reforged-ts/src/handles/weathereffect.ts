@@ -14,6 +14,7 @@ export class WeatherEffect extends Handle<weathereffect> {
    *   CryoniC's article about custom weather effects: [http://www.wc3c.net/showthread.php?t=67949](https://web.archive.org/web/20180507060112/http://www.wc3c.net/showthread.php?t=67949).
    * @param where - The rect to apply the WeatherEffect to.
    * @param effectID - Which effect to apply.
+   * @native AddWeatherEffect
    */
   public static create(where: Rectangle, effectID: number): WeatherEffect {
     return this.expect(
@@ -29,6 +30,7 @@ export class WeatherEffect extends Handle<weathereffect> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native RemoveWeatherEffect
    */
   public destroy() {
     RemoveWeatherEffect(this.handle);

@@ -7,6 +7,7 @@ export class Leaderboard extends Handle<leaderboard> {
   /**
    * Create a Leaderboard object
    * @remarks Leaderboards initially have 0 rows, 0 columns, and no label.
+   * @native CreateLeaderboard
    * @bug Do not use this in a global initialisation as it crashes the game there.
    */
   public static create(): Leaderboard {
@@ -28,6 +29,7 @@ export class Leaderboard extends Handle<leaderboard> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyLeaderboard
    */
   public destroy() {
     DestroyLeaderboard(this.handle);

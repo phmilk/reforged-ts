@@ -38,6 +38,7 @@ export class Image extends Handle<image> {
    * @param originY - Moves the origin (bottom left corner) of the image from posY in negative Y-direction.
    * @param originZ - Moves the origin (bottom left corner) of the image from posZ in negative Z-direction.
    * @param imageType -
+   * @native CreateImage
    */
   public static create(
     file: string,
@@ -77,6 +78,7 @@ export class Image extends Handle<image> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyImage
    * @bug May crash the game if an invalid image is used (null, before the first image is created).
    */
   public destroy() {
@@ -88,6 +90,7 @@ export class Image extends Handle<image> {
    * Every ImageType other than Selection doesnt seem to appear above water.
    * @param flag - Draws the specified image above the water if the flag is true.
    * @param useWaterAlpha -
+   * @native SetImageAboveWater
    */
   public setAboveWater(flag: boolean, useWaterAlpha: boolean) {
     SetImageAboveWater(this.handle, flag, useWaterAlpha);
@@ -95,6 +98,7 @@ export class Image extends Handle<image> {
 
   /**
    * Valid values for all channels range from 0 to 255.
+   * @native SetImageColor
    */
   public setColor(red: number, green: number, blue: number, alpha: number) {
     SetImageColor(this.handle, red, green, blue, alpha);
@@ -104,6 +108,7 @@ export class Image extends Handle<image> {
    * This is the only function that is able to modify an image's z-offset.
    * @param flag -
    * @param height - The z-offset of the image.
+   * @native SetImageConstantHeight
    */
   public setConstantHeight(flag: boolean, height: number) {
     SetImageConstantHeight(this.handle, flag, height);
@@ -113,6 +118,7 @@ export class Image extends Handle<image> {
    * Sets the X/Y position of the provided image. This is the bottom left corner of the image, unless you used values
    * form originX/Y/Z in the constructor other than 0, in which case the bottom left corner is moved further into negative
    * X/Y/Z direction.
+   * @native SetImagePosition
    */
   public setPosition(x: number, y: number, z: number) {
     SetImagePosition(this.handle, x, y, z);
@@ -121,6 +127,7 @@ export class Image extends Handle<image> {
   /**
    * Enable or disable the rendering of the image.
    * @param flag - render if true, don't render if false
+   * @native SetImageRenderAlways
    */
   public setRender(flag: boolean) {
     SetImageRenderAlways(this.handle, flag);
@@ -129,6 +136,7 @@ export class Image extends Handle<image> {
   /**
    * Change image's type.
    * @param imageType - Influence the order in which images are drawn above one another.
+   * @native SetImageType
    */
   public setType(imageType: ImageType) {
     SetImageType(this.handle, imageType);
@@ -138,6 +146,7 @@ export class Image extends Handle<image> {
    * Show or hide the image depending on boolean flag.
    * Seems like a redundant function in the light of SetImageRender(Always).
    * @param flag - true shows, false hides
+   * @native ShowImage
    */
   public show(flag: boolean) {
     ShowImage(this.handle, flag);

@@ -8,7 +8,10 @@ import { Handle } from "./handle";
  * has no `destroy`.
  */
 export class Trackable extends Handle<trackable> {
-  /** A new trackable showing `modelPath` at (`x`, `y`), facing `facing`. */
+  /**
+   * A new trackable showing `modelPath` at (`x`, `y`), facing `facing`.
+   * @native CreateTrackable
+   */
   public static create(
     modelPath: string,
     x: number,
@@ -18,7 +21,10 @@ export class Trackable extends Handle<trackable> {
     return this.expect(CreateTrackable(modelPath, x, y, facing), modelPath);
   }
 
-  /** The hit or tracked trackable, or undefined outside a trackable event. */
+  /**
+   * The hit or tracked trackable, or undefined outside a trackable event.
+   * @native GetTriggeringTrackable
+   */
   public static fromEvent(): Trackable | undefined {
     return this.fromHandle(GetTriggeringTrackable());
   }

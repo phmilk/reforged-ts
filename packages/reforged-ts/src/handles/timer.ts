@@ -13,6 +13,7 @@ export class Timer extends Handle<timer> {
   }
 
   /**
+   * @native TimerGetRemaining
    * @bug This might not return the correct value if the timer was paused and restarted at one point. See http://www.wc3c.net/showthread.php?t=95756.
    */
   public get remaining(): number {
@@ -30,6 +31,7 @@ export class Timer extends Handle<timer> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @native DestroyTimer
    */
   public destroy() {
     DestroyTimer(this.handle);
@@ -55,6 +57,7 @@ export class Timer extends Handle<timer> {
    * thread survives it. The mode is the one in force when `start` is called.
    * With Dev mode off the handler runs unprotected, as the game runs any
    * function.
+   * @native TimerStart
    */
   public start(
     timeout: number,
@@ -72,6 +75,7 @@ export class Timer extends Handle<timer> {
    * @remarks In Dev mode the handler is protected as `start`'s is, and its
    * failure is reported as `Timer#<id> Timer.after`; the Timer is destroyed
    * first.
+   * @native TimerStart
    */
   public static after(timeout: number, handler: () => void): void {
     const timer = this.create();
@@ -90,6 +94,7 @@ export class Timer extends Handle<timer> {
    * @remarks In Dev mode the handler is protected as `start`'s is, and its
    * failure is reported as `Timer#<id> Timer.every`: a handler failing on
    * every tick is reported once and counted after that.
+   * @native TimerStart
    */
   public static every(
     interval: number,
@@ -123,6 +128,7 @@ export class Timer extends Handle<timer> {
    * The Timer whose expiry is running, or undefined when the game has none.
    * A handler receives its Timer; this lookup stays for parity with the
    * Natives.
+   * @native GetExpiredTimer
    */
   public static fromExpired(): Timer | undefined {
     return this.fromHandle(GetExpiredTimer());

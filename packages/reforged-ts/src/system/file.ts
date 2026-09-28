@@ -104,6 +104,9 @@ export class File {
    * Read text from a file inside of the CustomMapData folder.
    * @param filename - The name of the file to read.
    * @returns Returns undefined when the file could not be read.
+   * @native BlzGetAbilityIcon
+   * @native BlzSetAbilityIcon
+   * @native Preloader
    */
   public static read(filename: string): string | undefined {
     const originalIcon = BlzGetAbilityIcon(this.dummyAbility);
@@ -125,6 +128,10 @@ export class File {
    * @param filename - The name of the file to write to. Supported extensions are `.txt` and `.pld`.
    * @param contents - The contents to write to the file.
    * @param allowReading - If set to true, boilerplate code will be included for reading the file with `File.read`.
+   * @native PreloadGenClear
+   * @native PreloadGenStart
+   * @native Preload
+   * @native PreloadGenEnd
    */
   public static writeRaw(
     filename: string,
