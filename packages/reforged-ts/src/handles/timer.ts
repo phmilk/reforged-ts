@@ -129,7 +129,7 @@ export class Timer extends Handle<timer> {
    * failure is reported as `Timer#<id> Timer.after`; the Timer is destroyed
    * first.
    * @param timeout - The delay, in seconds.
-   * @param handler - The function to run.
+   * @param handler - The function to run once the delay is over.
    * @throws In Dev mode, when called before the globals Init stage or inside
    * `MapPlayer.runLocal`, as `create` does.
    * @native CreateTimer

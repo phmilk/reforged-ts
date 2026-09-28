@@ -43,7 +43,7 @@ export class BinaryWriter {
   /**
    * Writes a double-precision float in eight bytes, the lossless pair of
    * `readDouble`.
-   * @param value - The value to write.
+   * @param value - Any number, read back exactly.
    */
   public writeDouble(value: number): void {
     this.push(FIELDS.double, value);
@@ -52,7 +52,8 @@ export class BinaryWriter {
   /**
    * Writes a single-precision float in four bytes, so the value is rounded to
    * single precision. `writeDouble` is the lossless pair.
-   * @param value - The value to write.
+   * @param value - Any number; `readFloat` gives back its nearest
+   * single-precision value.
    */
   public writeFloat(value: number): void {
     this.push(FIELDS.float, value);

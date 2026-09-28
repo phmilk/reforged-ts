@@ -41,10 +41,10 @@ const registeringMember: Record<Where, string> = {
  * @param queue - The queue to append to.
  * @param where - The stage or entry point the queue runs at.
  * @param origin - Who registers: the library or the Map project.
- * @param callback - The function to run.
+ * @param callback - The function the queue runs, under pcall.
  * @param label - Its name in failure lines; `#n`, its ordinal in the queue,
  * when left out.
- * @returns The registration appended.
+ * @returns The registration, the callback with its name, as appended.
  */
 export function enqueue(
   queue: Registration[],

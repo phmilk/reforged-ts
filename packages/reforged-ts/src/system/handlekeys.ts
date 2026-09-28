@@ -31,7 +31,8 @@ const holdersOf = new WeakMap<handle, Set<HandleHolder>>();
 /**
  * Registers `holder` as holding `handle`: `set` and `add` call it.
  * @param handle - The Handle a collection now holds.
- * @param holder - The collection.
+ * @param holder - The collection holding it, whose `drop` runs when the
+ * Handle is released.
  */
 export function hold(handle: handle, holder: HandleHolder): void {
   let holders = holdersOf.get(handle);
@@ -45,7 +46,7 @@ export function hold(handle: handle, holder: HandleHolder): void {
 /**
  * Unregisters `holder` for `handle`: `delete` and `clear` call it.
  * @param handle - The Handle the collection no longer holds.
- * @param holder - The collection.
+ * @param holder - The collection that let go of it.
  */
 export function unhold(handle: handle, holder: HandleHolder): void {
   const holders = holdersOf.get(handle);

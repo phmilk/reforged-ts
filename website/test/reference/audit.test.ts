@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Linter } from "eslint";
 import { describe, expect, it } from "vitest";
-import { type AuditSubject, main } from "../../audit";
+import { type AuditSubject, DOC_RULES, main } from "../../audit";
 import type { Reference } from "../../reference";
 
 const WORKSPACE_URL = new URL("../../../", import.meta.url);
@@ -45,6 +45,7 @@ const SUBJECT: AuditSubject = {
 /** Runs `docs:audit` with `args` on the fixture: its exit code and output. */
 async function run(
   args: readonly string[],
+  subject: AuditSubject = SUBJECT,
 ): Promise<{ code: number; stdout: string; stderr: string }> {
   let stdout = "";
   let stderr = "";
@@ -54,7 +55,7 @@ async function run(
       stdout: (text) => (stdout += text),
       stderr: (text) => (stderr += text),
     },
-    () => SUBJECT,
+    () => subject,
   );
   return { code, stdout, stderr };
 }
@@ -111,6 +112,38 @@ describe("docs:audit", () => {
       ),
     );
     expect(stdout).not.toContain("undocumentedFarewell");
+  });
+
+  it("counts the doc comment rules of eslint.config.mjs", () => {
+    expect([...DOC_RULES].sort()).toEqual(
+      Object.keys(docComments.rules ?? {}).sort(),
+    );
+  });
+
+  it("leaves out the findings of the other lint rules", async () => {
+    // A rule outside the doc comment rules that fires on every function of
+    // the fixture: `pnpm lint` would report it, the audit does not.
+    const withOtherRule: AuditSubject = {
+      ...SUBJECT,
+      eslint: {
+        ...SUBJECT.eslint,
+        overrideConfig: [
+          {
+            files: ["website/test/reference/fixtures/library/src/**/*.ts"],
+            ...docComments,
+          },
+          {
+            files: ["website/test/reference/fixtures/library/src/**/*.ts"],
+            rules: { "no-restricted-syntax": ["error", "FunctionDeclaration"] },
+          },
+        ],
+      },
+    };
+
+    const { stdout } = await run([], withOtherRule);
+
+    expect(stdout).toContain("jsdoc/require-jsdoc");
+    expect(stdout).not.toContain("no-restricted-syntax");
   });
 
   it("rejects an unknown option", async () => {

@@ -73,10 +73,31 @@ describe("the examples in the emitted declarations", () => {
       await hoverExamples(
         project,
         "dist/handles/trigger.d.ts",
-        "Trigger",
-        "addCondition",
+        "Trigger.addCondition",
       ),
     ).toEqual(["```ts\n" + code.replaceAll("\r\n", "\n").trimEnd() + "\n```"]);
+  });
+
+  it("show on()'s example region in the hover, as a fenced block without its markers", async () => {
+    const code = (
+      await readFile(join(packageRoot, "examples/harness/events-on.ts"), "utf8")
+    ).replaceAll("\r\n", "\n");
+    const start = "// #region on\n";
+    const from = code.indexOf(start);
+    const to = code.indexOf("// #endregion on\n");
+    expect(from).not.toBe(-1);
+    expect(to).toBeGreaterThan(from);
+    const region = code.slice(from + start.length, to);
+    // TypeScript reads a titled `@example` with the indentation of each line
+    // cut up to the title's column, so the lines are compared unindented.
+    const unindented = (text: string) => text.replaceAll(/^ +/gm, "");
+    expect(
+      (await hoverExamples(project, "dist/events/descriptor.d.ts", "on")).map(
+        unindented,
+      ),
+    ).toEqual([
+      unindented("A handler with a filter\n```ts\n" + region + "```"),
+    ]);
   });
 });
 

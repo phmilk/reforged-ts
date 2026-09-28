@@ -19,6 +19,8 @@ export class WeatherEffect extends Handle<weathereffect> {
    * @remarks
    * - How weather effects work: Ammorth's article on wc3c, [http://www.wc3c.net/showthread.php?t=91176](https://web.archive.org/web/20180130202056/http://www.wc3c.net/showthread.php?t=91176).
    * - Making weather effects of your own: CryoniC's article on wc3c, [http://www.wc3c.net/showthread.php?t=67949](https://web.archive.org/web/20180507060112/http://www.wc3c.net/showthread.php?t=67949).
+   * - The error message names the WeatherEffect. In w3ts 3.x it read
+   *   `w3ts failed to create unit handle.`, naming the wrong Handle type.
    * @param where - The rectangle the weather shows over.
    * @param effectID - The weather type's rawcode, such as `FourCC("RAhr")`
    * for Ashenvale heavy rain.

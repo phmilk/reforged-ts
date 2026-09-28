@@ -26,7 +26,8 @@ export class GameCache extends Handle<gamecache> {
    * @remarks The game allows at most 255 game caches.
    * @param campaignFile - The cache's file name, such as `"MyCampaign.w3v"`;
    * two calls with one name give caches of the same data.
-   * @returns The game cache.
+   * @returns The game cache, holding what was saved under `campaignFile`, or
+   * empty when nothing was.
    * @throws When the game returns no handle:
    * `reforged-ts: failed to create GameCache (<campaignFile>)`, at the
    * calling line. In Dev mode, also when called before the globals Init stage
@@ -50,7 +51,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Removes the boolean stored under the key.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @native FlushStoredBoolean
    */
   public flushBoolean(missionKey: string, key: string) {
@@ -60,7 +61,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Removes the integer stored under the key.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @native FlushStoredInteger
    */
   public flushInteger(missionKey: string, key: string) {
@@ -69,7 +70,8 @@ export class GameCache extends Handle<gamecache> {
 
   /**
    * Removes every value stored under a mission key.
-   * @param missionKey - The mission key.
+   * @param missionKey - The mission key whose keys to empty, of every value
+   * type.
    * @native FlushStoredMission
    */
   public flushMission(missionKey: string) {
@@ -79,7 +81,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Removes the number stored under the key.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @native FlushStoredReal
    */
   public flushNumber(missionKey: string, key: string) {
@@ -89,7 +91,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Removes the string stored under the key.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @native FlushStoredString
    */
   public flushString(missionKey: string, key: string) {
@@ -99,7 +101,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Removes the unit stored under the key.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @native FlushStoredUnit
    */
   public flushUnit(missionKey: string, key: string) {
@@ -109,7 +111,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Gets the boolean stored under the key.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @returns The boolean, or `false` when none is stored under the key.
    * @native GetStoredBoolean
    */
@@ -120,7 +122,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Gets the integer stored under the key by `storeInteger`.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @returns The integer, or 0 when none is stored under the key.
    * @native GetStoredInteger
    */
@@ -131,7 +133,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Gets the number stored under the key by `store`.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @returns The number, or 0 when none is stored under the key.
    * @native GetStoredReal
    */
@@ -142,7 +144,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Gets the string stored under the key.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @returns The string, or `""` when none is stored under the key; the
    * Typings also allow `undefined`.
    * @native GetStoredString
@@ -154,7 +156,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Checks whether a boolean is stored under the key.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @returns `true` when one is stored.
    * @native HaveStoredBoolean
    */
@@ -165,7 +167,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Checks whether an integer is stored under the key.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @returns `true` when one is stored.
    * @native HaveStoredInteger
    */
@@ -176,7 +178,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Checks whether a number is stored under the key.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @returns `true` when one is stored.
    * @native HaveStoredReal
    */
@@ -187,7 +189,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Checks whether a string is stored under the key.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @returns `true` when one is stored.
    * @native HaveStoredString
    */
@@ -198,7 +200,7 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Checks whether a unit is stored under the key, through `HaveStoredUnit`.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @returns `true` when one is stored.
    * @native HaveStoredUnit
    */
@@ -212,7 +214,7 @@ export class GameCache extends Handle<gamecache> {
    * It returns the Native `unit`, not a `Unit`: wrap it with
    * `Unit.fromHandle`.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @param forWhichPlayer - The player who owns the new unit.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
@@ -258,7 +260,7 @@ export class GameCache extends Handle<gamecache> {
    * A stored unit keeps its type, and for a hero its level, experience,
    * attributes, items and skills.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @param value - The value: a number, a string, a boolean, or a Native
    * `unit` (a `Unit`'s `handle`).
    * @native StoreString
@@ -286,8 +288,9 @@ export class GameCache extends Handle<gamecache> {
    * Stores `value` as an integer, through `StoreInteger`, where `getInteger`
    * reads it; `store` stores a number as a real.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
-   * @param value - The integer.
+   * @param key - The value's name within the mission key.
+   * @param value - The whole number to store, within the 32-bit integer
+   * range.
    * @native StoreInteger
    */
   public storeInteger(missionKey: string, key: string, value: number) {
@@ -298,7 +301,7 @@ export class GameCache extends Handle<gamecache> {
    * Sends the boolean stored under the key to every player: the game keeps
    * the first value to arrive, often the host's.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @native SyncStoredBoolean
    */
   public syncBoolean(missionKey: string, key: string) {
@@ -309,7 +312,7 @@ export class GameCache extends Handle<gamecache> {
    * Sends the integer stored under the key to every player: the game keeps
    * the first value to arrive, often the host's.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @native SyncStoredInteger
    */
   public syncInteger(missionKey: string, key: string) {
@@ -320,7 +323,7 @@ export class GameCache extends Handle<gamecache> {
    * Sends the number stored under the key to every player: the game keeps
    * the first value to arrive, often the host's.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @native SyncStoredReal
    */
   public syncNumber(missionKey: string, key: string) {
@@ -331,7 +334,7 @@ export class GameCache extends Handle<gamecache> {
    * Sends the string stored under the key to every player: the game keeps
    * the first value to arrive, often the host's.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @native SyncStoredString
    */
   public syncString(missionKey: string, key: string) {
@@ -342,7 +345,7 @@ export class GameCache extends Handle<gamecache> {
    * Sends the unit stored under the key to every player: the game keeps the
    * first value to arrive, often the host's.
    * @param missionKey - The mission key, the group the key belongs to.
-   * @param key - The key.
+   * @param key - The value's name within the mission key.
    * @native SyncStoredUnit
    */
   public syncUnit(missionKey: string, key: string) {

@@ -20,8 +20,10 @@ export class Point extends Handle<location> {
   /**
    * Creates a point at the given coordinates.
    * @remarks
-   * Prefer raw coordinates where a Native takes them: a Point is kept until
-   * `destroy()`.
+   * - Prefer raw coordinates where a Native takes them: a Point is kept until
+   *   `destroy()`.
+   * - The error message names the Point. In w3ts 3.x it read
+   *   `w3ts failed to create player handle.`, naming the wrong Handle type.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @returns The new point.

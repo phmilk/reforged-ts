@@ -46,7 +46,7 @@ export class HandleSet<K extends Handle<handle>> {
    * constructor of `Set`, so swapping a `Set` of Wrappers for a `HandleSet`
    * is a change of the class name only.
    *
-   * @param values - The first members.
+   * @param values - The Wrappers to add at once, in the iteration order.
    */
   public constructor(values?: Iterable<K> | null) {
     if (values !== undefined && values !== null) {
@@ -57,12 +57,13 @@ export class HandleSet<K extends Handle<handle>> {
   }
 
   /**
-   * The number of members.
+   * Counts the members: `delete`, `clear` and a member's `destroy()` lower
+   * it.
    *
    * @remarks
    * Kept in step on every client by the same additions, deletions and
    * destructions, so it is safe to branch on in multiplayer.
-   * @returns The member count.
+   * @returns The number of members, 0 for an empty set.
    */
   public get size(): number {
     return this.memberOf.size;

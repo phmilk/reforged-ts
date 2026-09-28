@@ -147,7 +147,7 @@ export class Group extends Handle<group> {
    * Fills the group with the units within `radius` of a Point.
    * @remarks
    * Clears the group first: it holds only the units found afterwards.
-   * @param whichPoint - The center.
+   * @param whichPoint - The center of the circle searched.
    * @param radius - The radius, in world units.
    * @param filter - Keeps a unit when it returns true; inside it,
    * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
@@ -173,7 +173,7 @@ export class Group extends Handle<group> {
    * of a Point.
    * @remarks
    * Clears the group first: it holds only the units found afterwards.
-   * @param whichPoint - The center.
+   * @param whichPoint - The center of the circle searched.
    * @param radius - The radius, in world units.
    * @param filter - Keeps a unit when it returns true; inside it,
    * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
@@ -248,7 +248,7 @@ export class Group extends Handle<group> {
    * Fills the group with the units a player owns.
    * @remarks Units with the Locust ability are included, unlike the
    * enumerations by area.
-   * @param whichPlayer - The owner.
+   * @param whichPlayer - The player whose units to collect.
    * @param filter - Keeps a unit when it returns true; inside it,
    * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
    * `Filter` for the call.
@@ -374,8 +374,9 @@ export class Group extends Handle<group> {
   }
 
   /**
-   * Gets the number of units in the group.
-   * @returns The number of units.
+   * Counts the units the group holds.
+   * @returns The unit count, 0 for an empty group; `getUnitAt` takes the
+   * positions 0 to `size - 1`.
    * @native BlzGroupGetSize
    */
   public get size(): number {
@@ -459,7 +460,7 @@ export class Group extends Handle<group> {
    * Orders every unit of the group to a Point.
    * @param order - The order's name, such as `"move"`, or its id, such as
    * one of `tsGlobals.OrderId`.
-   * @param whichPoint - The target point.
+   * @param whichPoint - The point the order targets.
    * @native GroupPointOrderLoc
    * @native GroupPointOrderByIdLoc
    */
@@ -476,7 +477,7 @@ export class Group extends Handle<group> {
    * destructable.
    * @param order - The order's name, such as `"move"`, or its id, such as
    * one of `tsGlobals.OrderId`.
-   * @param targetWidget - The target.
+   * @param targetWidget - The unit, item or destructable the order targets.
    * @native GroupTargetOrder
    * @native GroupTargetOrderById
    */

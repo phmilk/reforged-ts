@@ -135,7 +135,7 @@ export class FogModifier extends Handle<fogmodifier> {
    * @param forWhichPlayer - The player whose fog it changes.
    * @param whichState - The fog state forced on the area, such as
    * `FOG_OF_WAR_VISIBLE`.
-   * @param where - The area.
+   * @param where - The rectangle the fog state is forced on.
    * @param useSharedVision - Whether the players sharing vision with
    * `forWhichPlayer` get the change too.
    * @param afterUnits - Whether a masking state also hides what the player's

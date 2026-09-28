@@ -1,8 +1,8 @@
 /** @noSelfInFile */
 
-// Every tag the workspace tsdoc.json declares, in a library comment, and a
-// Typings header as reforged-types writes one: TSDoc reports nothing on
-// either.
+// Every tag the workspace tsdoc.json declares, in a library comment: TSDoc
+// reports nothing on it. The generated Typings headers are linted from
+// packages/reforged-types itself (../../doc-lint.test.ts).
 
 /**
  * Counts `seconds` down on a Timer.
@@ -31,14 +31,3 @@ export interface Callbacks {
   /** Runs on expiry. */
   readonly expire: () => void;
 }
-
-/**
- * @param key - oskeytype
- * @returns boolean
- * @patch 3.0.0.24268
- * @async
- * @deprecated Use BlzIsKeyPressed.
- * @remarks Pressed on the local client only.
- * @see {@link https://lep.duckdns.org/jassbot/doc/BlzIsKeyPressed}
- */
-export declare function IsKeyPressed(key: number): boolean;

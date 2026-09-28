@@ -241,12 +241,20 @@ export function referencePluginOptions(
   reference: Reference,
   options: ReferenceOptions,
 ): ReferencePluginOptions {
-  const docsPath = options.docsPath ?? reference.docsPath ?? join(SITE, "docs");
+  const docsPath = referenceDocsPath(reference, options);
   return {
     id: reference.id,
     docsPath,
     ...referenceTypedocOptions(reference, { ...options, docsPath }),
   };
+}
+
+/** Where a reference's docs tree is: the option's, the reference's, or the site's `docs`. */
+function referenceDocsPath(
+  reference: Reference,
+  options: ReferenceOptions,
+): string {
+  return options.docsPath ?? reference.docsPath ?? join(SITE, "docs");
 }
 
 /**
@@ -257,7 +265,7 @@ export function referenceTypedocOptions(
   reference: Reference,
   options: ReferenceOptions,
 ): ReferenceTypedocOptions {
-  const docsPath = options.docsPath ?? reference.docsPath ?? join(SITE, "docs");
+  const docsPath = referenceDocsPath(reference, options);
   return {
     // TypeDoc reads entry points as globs, which take POSIX slashes only.
     entryPoints: reference.entryPoints.map((path) =>

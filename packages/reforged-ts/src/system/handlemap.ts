@@ -65,12 +65,12 @@ export class HandleMap<K extends Handle<handle>, V> {
   }
 
   /**
-   * The number of entries.
+   * Counts the entries: `delete`, `clear` and a key's `destroy()` lower it.
    *
    * @remarks
    * Kept in step on every client by the same insertions, deletions and
    * destructions, so it is safe to branch on in multiplayer.
-   * @returns The entry count.
+   * @returns The number of entries, 0 for an empty map.
    */
   public get size(): number {
     return this.entryOf.size;
@@ -113,7 +113,7 @@ export class HandleMap<K extends Handle<handle>, V> {
    * clients.
    * @param key - A Wrapper of the game object; the canonical one is
    * returned in loops.
-   * @param value - The value to store.
+   * @param value - The value to store, replacing the Handle's previous one.
    * @returns This map, for chaining.
    */
   public set(key: K, value: V): this {

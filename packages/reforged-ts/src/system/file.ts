@@ -139,7 +139,8 @@ export class File {
    * Returns nothing, where w3ts returned the `File` class.
    * @param filename - The file's path inside `CustomMapData`; its extension
    * `.txt` or `.pld`.
-   * @param contents - The text to write.
+   * @param contents - The text to write, in chunks of at most 259 bytes, one
+   * `Preload` call each.
    * @param allowReading - True to include the code `File.read` runs to read
    * the file back, and escape the contents for it; false, the default, to
    * write the contents raw, unreadable by `File.read`.

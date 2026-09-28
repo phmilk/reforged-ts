@@ -74,7 +74,7 @@ export const enum OrderId {
    */
   Battleroar = 852099,
   /** The id of the `battlestations` order. */
-  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values -- Battleroar holds this id by mistake: its doc comment gives the game's id
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values -- Battleroar holds this id by mistake; fixing its value (#255) removes it
   Battlestations = 852099,
   /** The id of the `bearform` order. */
   Bearform = 852138,
@@ -275,7 +275,7 @@ export const enum OrderId {
    * @remarks
    * The value is wrong: it is 852586, the id of `elementalfury` ({@link OrderId.Elementalfury}), where the game gives `forkedlightning` the id 852587. Issue the order by its string until the value is fixed.
    */
-  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values -- this id is Elementalfury's, by mistake: the doc comment gives the game's id
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values -- this id is Elementalfury's, by mistake; fixing the value (#255) removes it
   Forkedlightning = 852586,
   /** The id of the `freezingbreath` order. */
   Freezingbreath = 852195,

@@ -35,14 +35,16 @@ export enum W3TS_HOOK {
   MAIN_AFTER = "main::after",
   /**
    * Before the map script's `config`, in the lobby.
-   * @deprecated No Init stage has this timing in 1.x: stay on
-   * {@link addScriptHook}. Removed in 2.0.0.
+   * @deprecated With no replacement: no Init stage runs at the lobby's
+   * timing. It still works in 1.x and is removed in 2.0.0, with the rest of
+   * `W3TS_HOOK`.
    */
   CONFIG_BEFORE = "config::before",
   /**
    * After the map script's `config`, in the lobby.
-   * @deprecated No Init stage has this timing in 1.x: stay on
-   * {@link addScriptHook}. Removed in 2.0.0.
+   * @deprecated With no replacement: no Init stage runs at the lobby's
+   * timing. It still works in 1.x and is removed in 2.0.0, with the rest of
+   * `W3TS_HOOK`.
    */
   CONFIG_AFTER = "config::after",
 }
@@ -60,7 +62,7 @@ export enum W3TS_HOOK {
  * for the next run.
  * @param entryPoint - When the hook runs: `"main::before"`, `"main::after"`,
  * `"config::before"` or `"config::after"`, or the {@link W3TS_HOOK} value.
- * @param hook - The function to run.
+ * @param hook - The function the entry point runs, under pcall.
  * @returns True when `entryPoint` is one of the four and the hook was
  * registered; false otherwise, and nothing is registered.
  * @deprecated Register for an Init stage instead:

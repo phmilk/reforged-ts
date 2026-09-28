@@ -497,8 +497,9 @@ export class Destructable extends Widget {
   }
 
   /**
-   * Gets the destructable's hit points.
-   * @returns The current hit points.
+   * Gets how many hit points the destructable has left.
+   * @returns The hit points left, an amount rather than a percentage; 0 once
+   * it is dead.
    * @native GetDestructableLife
    */
   public override get life() {
@@ -515,8 +516,9 @@ export class Destructable extends Widget {
   }
 
   /**
-   * Gets the destructable's maximum hit points.
-   * @returns The maximum hit points.
+   * Gets the most hit points the destructable can have.
+   * @returns The maximum, its type's Hit Points field until the `maxLife`
+   * setter changes it for this destructable.
    * @native GetDestructableMaxLife
    */
   public get maxLife() {
@@ -524,7 +526,8 @@ export class Destructable extends Widget {
   }
 
   /**
-   * The destructable's maximum hit points.
+   * The most hit points the destructable can have, for this destructable
+   * only: others of its type keep the maximum their object data gives.
    * @native SetDestructableMaxLife
    */
   public set maxLife(value: number) {
@@ -545,8 +548,9 @@ export class Destructable extends Widget {
   }
 
   /**
-   * Gets the destructable's occluder height.
-   * @returns The occluder height.
+   * Gets how high the destructable blocks line of sight.
+   * @returns The height, in world units; its type's Occlusion Height field
+   * until the `occluderHeight` setter changes it.
    * @native GetDestructableOccluderHeight
    */
   public get occluderHeight() {
@@ -554,7 +558,8 @@ export class Destructable extends Widget {
   }
 
   /**
-   * The destructable's occluder height.
+   * The height, in world units, up to which the destructable blocks line of
+   * sight; 0 blocks none.
    * @native SetDestructableOccluderHeight
    */
   public set occluderHeight(value: number) {

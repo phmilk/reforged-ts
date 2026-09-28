@@ -187,8 +187,9 @@ export class MapPlayer extends Handle<player> {
   }
 
   /**
-   * Gets the player's race.
-   * @returns The race, such as `RACE_HUMAN`.
+   * Gets the race the player plays in this game.
+   * @returns The race, such as `RACE_HUMAN`; for a player who picked random
+   * in the lobby, the race the game drew.
    * @native GetPlayerRace
    */
   public get race() {
@@ -282,8 +283,9 @@ export class MapPlayer extends Handle<player> {
   }
 
   /**
-   * Gets the player's score in a tournament game.
-   * @returns The score.
+   * Gets the player's tournament score, which the melee rules compare to pick
+   * the winner when a tournament game's time limit runs out.
+   * @returns The score, a whole number.
    * @native GetTournamentScore
    */
   public get tournamentScore() {
@@ -992,7 +994,8 @@ export class MapPlayer extends Handle<player> {
   /**
    * Sets the research level of one of the player's upgrades.
    * @param techId - The upgrade's rawcode, such as `FourCC("Rhar")`.
-   * @param setToLevel - The level to set.
+   * @param setToLevel - The research level the upgrade gets, whatever its
+   * current level.
    * @native SetPlayerTechResearched
    */
   public setTechResearched(techId: number, setToLevel: number) {

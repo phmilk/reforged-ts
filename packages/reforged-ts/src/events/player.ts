@@ -21,7 +21,7 @@ import { eventRows } from "./rows";
  * the base of every player event's payload. The player is always set.
  */
 export interface PlayerPayload {
-  /** The triggering player. */
+  /** The player the event is about, such as the one who chatted or left. */
   readonly player: MapPlayer;
 }
 
@@ -62,9 +62,9 @@ export interface MousePayload extends PlayerPayload {
  * player being the one who sent the data.
  */
 export interface SyncPayload extends PlayerPayload {
-  /** The prefix the data was sent with. */
+  /** The prefix the sender passed to `BlzSendSyncData`. */
   readonly prefix: string;
-  /** The data sent. */
+  /** The data the sender's client sent, the same string on every client. */
   readonly data: string;
 }
 

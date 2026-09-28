@@ -56,7 +56,7 @@ export function base64Encode(input: string): string {
  * and returned an empty string, which a caller could not tell from an empty
  * payload.
  * @param input - The base64 string to decode.
- * @returns The bytes it encodes.
+ * @returns The decoded bytes, one character of the string per byte.
  * @throws When the input is malformed, at the calling line, with one message
  * per case, the offset counted from zero:
  * - a length that is not a multiple of four:

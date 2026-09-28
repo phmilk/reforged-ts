@@ -437,8 +437,8 @@ export class Sound extends Handle<sound> {
   }
 
   /**
-   * Sets the loudness of the sound.
-   * @param volume - The volume, from 0 to 127.
+   * Sets how loud the sound plays, from silent to the file's full volume.
+   * @param volume - The volume, from 0 (silent) to 127 (full).
    * @native SetSoundVolume
    */
   public setVolume(volume: number) {
@@ -510,7 +510,7 @@ export class Sound extends Handle<sound> {
   }
 
   /**
-   * Stops the thematic music, through `EndThematicMusic`.
+   * Stops the thematic music, so the map's music it interrupted plays again.
    * @native EndThematicMusic
    */
   public static endThematicMusic() {
@@ -549,8 +549,8 @@ export class Sound extends Handle<sound> {
   }
 
   /**
-   * Sets the volume of the thematic music, through `SetThematicMusicVolume`.
-   * @param volume - The volume, from 0 to 127.
+   * Sets how loud the thematic music plays, from silent to full volume.
+   * @param volume - The volume, from 0 (silent) to 127 (full).
    * @native SetThematicMusicVolume
    */
   public static setThematicMusicVolume(volume: number) {

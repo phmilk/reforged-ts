@@ -53,7 +53,7 @@ export class SyncedSet<T extends AnyNotNil> {
    * @remarks
    * The comparator must be a total order that gives the same answer on every
    * client, or the sorted order is not the same everywhere.
-   * @param values - The first values.
+   * @param values - The values to add at once; the set sorts them.
    * @param comparator - Orders two values: negative, zero or positive, as
    * for `Array.prototype.sort`.
    */
@@ -78,12 +78,12 @@ export class SyncedSet<T extends AnyNotNil> {
   }
 
   /**
-   * The number of values.
+   * Counts the values the set holds.
    *
    * @remarks
    * Kept as a count, so reading it walks nothing and is the same on every
    * client.
-   * @returns The value count.
+   * @returns The number of values, 0 for an empty set.
    */
   public get size(): number {
     return this.order.size;
