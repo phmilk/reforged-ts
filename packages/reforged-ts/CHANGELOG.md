@@ -1,5 +1,11 @@
 # reforged-ts
 
+## 1.0.0-alpha.2
+
+### Patch Changes
+
+- [#227](https://github.com/phmilk/reforged-ts/pull/227) [`d861008`](https://github.com/phmilk/reforged-ts/commit/d8610085834eee66b43fc627ba888b654bab4139) Thanks [@phmilk](https://github.com/phmilk)! - `File.read` now reads back a file whose contents equal the icon path of the `Amls` ability (`ReplaceableTextures\CommandButtons\BTNMagicLariet.blp`). It used to return `undefined` for such a file, as for a missing one; a missing file still reads `undefined`.
+
 ## 1.0.0-alpha.1
 
 ### Major Changes
