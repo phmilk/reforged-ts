@@ -12,9 +12,9 @@ import { Widget } from "./widget";
 export interface DestructableOptions {
   /** The rawcode of the destructable type. */
   readonly typeId: number;
-  /** The x-coordinate. */
+  /** The x-coordinate, in world units. */
   readonly x: number;
-  /** The y-coordinate. */
+  /** The y-coordinate, in world units. */
   readonly y: number;
   /** The z-coordinate; left out, the game places it on the ground. */
   readonly z?: number;
@@ -36,7 +36,18 @@ export interface DestructableOptions {
   readonly dead?: boolean;
 }
 
+/**
+ * A destructable: a tree, a gate, a bridge or another object placed on the
+ * map that has hit points and can die, but is not a unit.
+ * @example A tree that grows back a minute after it falls
+ * {@includeCode ../../examples/harness/destructable-regrow.ts}
+ * @native destructable
+ */
 export class Destructable extends Widget {
+  /**
+   * The Handle this Wrapper owns, to pass to a Native the library does not
+   * wrap.
+   */
   declare public readonly handle: destructable;
 
   /** The skin the Destructable was created with, when one was given. */
@@ -47,11 +58,14 @@ export class Destructable extends Widget {
    * on five independent axes: `dead` true creates a dead one, `z` places it
    * at that height, `pitch` or `roll` tilts it (the absent one 0), `skin`
    * gives it a skin and `color` a team colour.
-   * Throws `reforged-ts: failed to create Destructable (<rawcode>)` at the
-   * calling line when the game creates nothing.
    * @example
    * {@includeCode ../../examples/harness/destructable-create.ts}
    * @param options - The rawcode and the position, and the optional axes.
+   * @returns The new destructable.
+   * @throws When the game returns no handle, for example an unknown rawcode:
+   * `reforged-ts: failed to create Destructable (<rawcode>)`, at the calling line.
+   * In Dev mode, also when called before the globals Init stage or inside
+   * `MapPlayer.runLocal`.
    * @native CreateDeadDestructable
    * @native CreateDestructable
    * @native CreateDeadDestructableZ
@@ -465,54 +479,111 @@ export class Destructable extends Widget {
         );
   }
 
+  /**
+   * Whether the destructable ignores damage: true makes it invulnerable.
+   * @native SetDestructableInvulnerable
+   */
   public set invulnerable(flag: boolean) {
     SetDestructableInvulnerable(this.handle, flag);
   }
 
+  /**
+   * Gets whether the destructable ignores damage.
+   * @returns True when it is invulnerable.
+   * @native IsDestructableInvulnerable
+   */
   public get invulnerable() {
     return IsDestructableInvulnerable(this.handle);
   }
 
+  /**
+   * Gets the destructable's hit points.
+   * @returns The current hit points.
+   * @native GetDestructableLife
+   */
   public override get life() {
     return GetDestructableLife(this.handle);
   }
 
+  /**
+   * The destructable's current hit points, an amount rather than a
+   * percentage.
+   * @native SetDestructableLife
+   */
   public override set life(value: number) {
     SetDestructableLife(this.handle, value);
   }
 
+  /**
+   * Gets the destructable's maximum hit points.
+   * @returns The maximum hit points.
+   * @native GetDestructableMaxLife
+   */
   public get maxLife() {
     return GetDestructableMaxLife(this.handle);
   }
 
+  /**
+   * The destructable's maximum hit points.
+   * @native SetDestructableMaxLife
+   */
   public set maxLife(value: number) {
     SetDestructableMaxLife(this.handle, value);
   }
 
   /**
-   * This will return different values depending on the locale.
+   * Gets the name of the destructable's type, in the local client's
+   * language.
+   * @remarks
+   * The value can differ between clients: never let it decide game state.
+   * @returns The localized name.
    * @native GetDestructableName
+   * @async
    */
   public get name() {
     return GetDestructableName(this.handle);
   }
 
+  /**
+   * Gets the destructable's occluder height.
+   * @returns The occluder height.
+   * @native GetDestructableOccluderHeight
+   */
   public get occluderHeight() {
     return GetDestructableOccluderHeight(this.handle);
   }
 
+  /**
+   * The destructable's occluder height.
+   * @native SetDestructableOccluderHeight
+   */
   public set occluderHeight(value: number) {
     SetDestructableOccluderHeight(this.handle, value);
   }
 
+  /**
+   * Gets the rawcode of the destructable's type.
+   * @returns The type's rawcode, such as `FourCC("LTlt")`.
+   * @native GetDestructableTypeId
+   */
   public get typeId() {
     return GetDestructableTypeId(this.handle);
   }
 
+  /**
+   * Gets the x-coordinate of the destructable's position.
+   * @returns The x-coordinate, in world units.
+   * @native GetDestructableX
+   */
   public override get x() {
     return GetDestructableX(this.handle);
   }
 
+  /**
+   * Gets the y-coordinate of the destructable's position.
+   * @returns The y-coordinate, in world units.
+   * @native GetDestructableY
+   */
   public override get y() {
     return GetDestructableY(this.handle);
   }
@@ -524,6 +595,8 @@ export class Destructable extends Widget {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @throws In Dev mode, when called inside `MapPlayer.runLocal`: a Handle
+   * freed on one client desyncs the game.
    * @native RemoveDestructable
    */
   public destroy() {
@@ -544,18 +617,38 @@ export class Destructable extends Widget {
     DestructableRestoreLife(this.handle, life, birth);
   }
 
+  /**
+   * Kills the destructable, which plays its death animation.
+   * @native KillDestructable
+   */
   public kill() {
     KillDestructable(this.handle);
   }
 
+  /**
+   * Queues an animation to play after the current one.
+   * @param whichAnimation - The animation's name, such as `"stand"`.
+   * @native QueueDestructableAnimation
+   */
   public queueAnim(whichAnimation: string) {
     QueueDestructableAnimation(this.handle, whichAnimation);
   }
 
+  /**
+   * Plays an animation at once.
+   * @param whichAnimation - The animation's name, such as `"death"`.
+   * @native SetDestructableAnimation
+   */
   public setAnim(whichAnimation: string) {
     SetDestructableAnimation(this.handle, whichAnimation);
   }
 
+  /**
+   * Sets the speed of the destructable's animations.
+   * @param speedFactor - The multiplier of the normal speed: 1 is normal, 2
+   * twice as fast, 0.5 half as fast.
+   * @native SetDestructableAnimationSpeed
+   */
   public setAnimSpeed(speedFactor: number) {
     SetDestructableAnimationSpeed(this.handle, speedFactor);
   }
@@ -588,26 +681,41 @@ export class Destructable extends Widget {
     SetDestructableVertexColor(this.handle, red, green, blue, alpha);
   }
 
+  /**
+   * Shows or hides the destructable.
+   * @param flag - True to show it, false to hide it.
+   * @native ShowDestructable
+   */
   public show(flag: boolean) {
     ShowDestructable(this.handle, flag);
   }
 
   /**
-   * The destructable an enumeration is at, or undefined outside one, through
-   * `GetEnumDestructable`.
+   * Gets the destructable an enumeration's action is running for, such as
+   * `Rectangle.enumDestructables`.
+   * @returns The destructable, or `undefined` outside an enumeration's
+   * action.
    * @native GetEnumDestructable
    */
   public static fromEnum(): Destructable | undefined {
     return this.fromHandle(GetEnumDestructable());
   }
 
+  /**
+   * Gets the destructable a trigger event is about, such as the one that
+   * died in a death event (`Trigger.registerDeathEvent`).
+   * @returns The destructable, or `undefined` outside an event about one.
+   * @native GetTriggerDestructable
+   */
   public static override fromEvent(): Destructable | undefined {
     return this.fromHandle(GetTriggerDestructable());
   }
 
   /**
-   * The destructable an enumeration's filter is at, or undefined outside
-   * one, through `GetFilterDestructable`.
+   * Gets the destructable an enumeration's filter is testing, such as the
+   * filter of `Rectangle.enumDestructables`.
+   * @returns The destructable, or `undefined` outside an enumeration's
+   * filter.
    * @native GetFilterDestructable
    */
   public static fromFilter(): Destructable | undefined {
@@ -615,9 +723,9 @@ export class Destructable extends Widget {
   }
 
   /**
-   * The destructable a target order targets, or undefined outside a target
-   * order or when the target is not a destructable, through
-   * `GetOrderTargetDestructable`.
+   * Gets the destructable targeted by the order being issued.
+   * @returns The destructable, or `undefined` outside a target order or when
+   * the target is not a destructable.
    * @native GetOrderTargetDestructable
    */
   public static override fromOrderTarget(): Destructable | undefined {
@@ -625,8 +733,9 @@ export class Destructable extends Widget {
   }
 
   /**
-   * The spell's target destructable, or undefined when the spell targets
-   * none.
+   * Gets the destructable targeted by the spell event being handled.
+   * @returns The destructable, or `undefined` outside a spell event or when
+   * the spell targets none.
    * @native GetSpellTargetDestructable
    */
   public static fromSpellTarget(): Destructable | undefined {

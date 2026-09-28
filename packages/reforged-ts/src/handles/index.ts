@@ -12,7 +12,8 @@ export * from "./frame";
 export * from "./gamecache";
 export * from "./group";
 // Not `export *`: `expectWrapper` stays package-internal (Camera's creation route).
-export { Handle } from "./handle";
+// `WrapperClass` is exported because `Handle.fromHandle`'s signature names it.
+export { Handle, type WrapperClass } from "./handle";
 export * from "./image";
 export * from "./input";
 export * from "./item";
