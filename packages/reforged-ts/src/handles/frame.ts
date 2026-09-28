@@ -51,10 +51,10 @@ function unlessNotFound<H extends handle>(
 export class Frame extends Handle<framehandle> {
   /**
    * Creates a Frame.
-   * @param name The name of the frame to be accessed with `Frame.fromName`.
-   * @param owner The parent frame.
-   * @param priority Should be a natural number (greater equal to 0).
-   * @param createContext The ID assigned to a frame to be accessed with `Frame.fromName`. This value does not have to be unique and can be overwritten.
+   * @param name - The name of the frame to be accessed with `Frame.fromName`.
+   * @param owner - The parent frame.
+   * @param priority - Should be a natural number (greater equal to 0).
+   * @param createContext - The ID assigned to a frame to be accessed with `Frame.fromName`. This value does not have to be unique and can be overwritten.
    */
   public static create(
     name: string,
@@ -74,9 +74,9 @@ export class Frame extends Handle<framehandle> {
    * Creates a SimpleFrame.
    *
    * https://www.hiveworkshop.com/threads/ui-simpleframes.320385/
-   * @param name The name of the frame to be accessed with `Frame.fromName`.
-   * @param owner The parent frame.
-   * @param createContext The ID assigned to a frame to be accessed with `Frame.fromName`. This value does not have to be unique and can be overwritten.
+   * @param name - The name of the frame to be accessed with `Frame.fromName`.
+   * @param owner - The parent frame.
+   * @param createContext - The ID assigned to a frame to be accessed with `Frame.fromName`. This value does not have to be unique and can be overwritten.
    */
   public static createSimple(
     name: string,
@@ -91,11 +91,11 @@ export class Frame extends Handle<framehandle> {
 
   /**
    * Create a Frame by type.
-   * @param name The name of the frame to be accessed with `Frame.fromName`.
-   * @param owner The parent frame.
-   * @param createContext The ID assigned to a frame to be accessed with `Frame.fromName`. This value does not have to be unique and can be overwritten.
-   * @param typeName The type of Frame.
-   * @param inherits The name of the Frame it inherits.
+   * @param name - The name of the frame to be accessed with `Frame.fromName`.
+   * @param owner - The parent frame.
+   * @param createContext - The ID assigned to a frame to be accessed with `Frame.fromName`. This value does not have to be unique and can be overwritten.
+   * @param typeName - The type of Frame.
+   * @param inherits - The name of the Frame it inherits.
    */
   public static createType(
     name: string,

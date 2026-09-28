@@ -49,11 +49,12 @@ export class Timer extends Handle<timer> {
   /**
    * Starts the Timer; each expiry runs `handler` with this Timer.
    * @remarks In Dev mode the handler runs under `pcall`: a failure is shown on
-   * screen and printed as `reforged-ts: Timer#<id> Timer.start failed:
-   * <error>`, once per distinct message (repeats are counted in
-   * `Reforged.debug.report()`), and the game thread survives it. The mode is
-   * the one in force when `start` is called. With Dev mode off the handler
-   * runs unprotected, as the game runs any function.
+   * screen and printed as
+   * `reforged-ts: Timer#<id> Timer.start failed: <error>`, once per distinct
+   * message (repeats are counted in `Reforged.debug.report()`), and the game
+   * thread survives it. The mode is the one in force when `start` is called.
+   * With Dev mode off the handler runs unprotected, as the game runs any
+   * function.
    */
   public start(
     timeout: number,

@@ -127,8 +127,8 @@ export class MapPlayer extends Handle<player> {
 
   /**
    * In upgrades that have multiple levels, it will research the upgrade by the number of levels specified.
-   * @param techId The four digit rawcode ID of the upgrade.
-   * @param levels The number of levels to add to the current research level of the upgrade.
+   * @param techId - The four digit rawcode ID of the upgrade.
+   * @param levels - The number of levels to add to the current research level of the upgrade.
    */
   public addTechResearched(techId: number, levels: number) {
     AddPlayerTechResearched(this.handle, techId, levels);
@@ -180,8 +180,8 @@ export class MapPlayer extends Handle<player> {
    * Reveals a player's remaining buildings to a force.
    * The black mask over the buildings will be removed as if the territory had been discovered
    * @remarks his function will not check whether the player has a town hall before revealing.
-   * @param toWhichPlayers The players who will see whichPlayer's buildings.
-   * @param flag If true, the buildings will be revealed. If false, the buildings will not be revealed.
+   * @param toWhichPlayers - The players who will see whichPlayer's buildings.
+   * @param flag - If true, the buildings will be revealed. If false, the buildings will not be revealed.
    * Note that if you set it to false, it will not hide the buildings with a black mask.
    */
   public cripple(toWhichPlayers: Force, flag: boolean) {
@@ -559,15 +559,15 @@ export class MapPlayer extends Handle<player> {
    * changes game state runs on one client only and desyncs the game. With
    * Dev mode off this is the bare local-player comparison. In Dev mode `fn`
    * runs under pcall, so an error inside is reported on screen and printed
-   * like a failing callback's (`reforged-ts: MapPlayer#<id>
-   * MapPlayer.runLocal failed: <error>`), once per function and message,
-   * and does not escape; and inside it creating or destroying a Wrapper,
-   * `Group.for`, `Force.for` and the first `Frame.fromName` of a frame raise
-   * `reforged-ts: <action> inside MapPlayer.runLocal changes game state for
-   * one client, which desyncs the game: only visuals belong inside
-   * runLocal`. A creation or destruction raises after its Native ran, so the
-   * Guard does not undo it: it names the offending line while you test in
-   * Dev mode, so the bug is found before a release build reaches a lobby.
+   * like a failing callback's
+   * (`reforged-ts: MapPlayer#<id> MapPlayer.runLocal failed: <error>`), once
+   * per function and message, and does not escape; and inside it creating or
+   * destroying a Wrapper, `Group.for`, `Force.for` and the first
+   * `Frame.fromName` of a frame raise
+   * `reforged-ts: <action> inside MapPlayer.runLocal changes game state for one client, which desyncs the game: only visuals belong inside runLocal`.
+   * A creation or destruction raises after its Native ran, so the Guard does
+   * not undo it: it names the offending line while you test in Dev mode, so
+   * the bug is found before a release build reaches a lobby.
    * Create what `fn` needs before calling `runLocal`, on every client.
    * @example
    * {@includeCode ../../examples/game/run-local-frame.ts}

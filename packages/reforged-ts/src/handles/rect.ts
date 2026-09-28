@@ -97,7 +97,7 @@ export class Rectangle extends Handle<rect> {
   /**
    * Sets the animation of every doodad of type `doodadId` in the rect,
    * through `SetDoodadAnimationRect`.
-   * @param animRandom Plays a random animation of that name.
+   * @param animRandom - Plays a random animation of that name.
    */
   public setDoodadAnimation(
     doodadId: number,

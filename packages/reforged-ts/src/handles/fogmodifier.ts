@@ -7,13 +7,13 @@ import type { Rectangle } from "./rect";
 
 export class FogModifier extends Handle<fogmodifier> {
   /**
-   * @param forWhichPlayer
-   * @param whichState Determines what type of fog the area is being modified to.
-   * @param centerX The x-coordinate where the fog modifier begins.
-   * @param centerY The y-coordinate where the fog modifier begins.
-   * @param radius Determines the extent that the fog travels (expanding from the coordinates ( centerx , centery )).
-   * @param useSharedVision Determines whether or not the fog modifier will be applied to allied players with shared vision.
-   * @param afterUnits Will determine whether or not units in that area will be masked by the fog.
+   * @param forWhichPlayer -
+   * @param whichState - Determines what type of fog the area is being modified to.
+   * @param centerX - The x-coordinate where the fog modifier begins.
+   * @param centerY - The y-coordinate where the fog modifier begins.
+   * @param radius - Determines the extent that the fog travels (expanding from the coordinates ( centerx , centery )).
+   * @param useSharedVision - Determines whether or not the fog modifier will be applied to allied players with shared vision.
+   * @param afterUnits - Will determine whether or not units in that area will be masked by the fog.
    * If it is set to true and the fogstate is masked, it will hide all the units in the fog modifier's radius and mask the area.
    * If set to false, it will only mask the areas that are not visible to the units.
    */

@@ -5,8 +5,8 @@ import { expectUnwrapped, Handle } from "./handle";
 export class Point extends Handle<location> {
   /**
    * Creates a new location handle. Generally, raw coordinates should be used instead.
-   * @param x
-   * @param y
+   * @param x -
+   * @param y -
    */
   public static create(x: number, y: number): Point {
     return this.expect(Location(x, y));
@@ -44,11 +44,11 @@ export class Point extends Handle<location> {
    * and returns the game's `minimapicon`, which the library does not wrap.
    * Throws `reforged-ts: failed to create minimapicon (<pingPath>)` when the
    * game creates none.
-   * @param red An integer from 0-255 determining the amount of red color.
-   * @param green An integer from 0-255 determining the amount of green color.
-   * @param blue An integer from 0-255 determining the amount of blue color.
-   * @param pingPath The model of the icon.
-   * @param fogVisibility The fog state in which the icon is visible.
+   * @param red - An integer from 0-255 determining the amount of red color.
+   * @param green - An integer from 0-255 determining the amount of green color.
+   * @param blue - An integer from 0-255 determining the amount of blue color.
+   * @param pingPath - The model of the icon.
+   * @param fogVisibility - The fog state in which the icon is visible.
    */
   public createMinimapIcon(
     red: number,

@@ -113,10 +113,10 @@ export function originOf(
  *   function.
  * - In Dev mode, a new function that runs `callback` under pcall with the
  *   arguments it was called with and returns its result. On failure it
- *   reports once per distinct message (`reforged-ts: <origin> failed:
- *   <message>`), counts every failure, and returns `failed`: the value the
- *   engine produces for a crashed callback, `false` for a condition or a
- *   filter, nothing for an action or a handler.
+ *   reports once per distinct message
+ *   (`reforged-ts: <origin> failed: <message>`), counts every failure, and
+ *   returns `failed`: the value the engine produces for a crashed callback,
+ *   `false` for a condition or a filter, nothing for an action or a handler.
  *
  * Either way the registration is remembered as the first one if it is, so
  * `Reforged.configure` can name it, unless it is the library's own

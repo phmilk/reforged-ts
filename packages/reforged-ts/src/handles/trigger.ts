@@ -125,15 +125,15 @@ export class Trigger extends Handle<trigger> {
    *
    * Adding more conditions later wil join them by AND (that means all conditions need to evaluate to `true`)
    *
-   * @example
-   * {@includeCode ../../examples/harness/trigger-add-condition.ts}
-   * @param condition The condition which must evaluate to true in order to run the trigger's actions.
    * @remarks In Dev mode a function condition runs under `pcall`: one that
    * throws is reported as `Trigger#<id> Trigger.addCondition` and evaluates
    * false, as the game evaluates a crashed condition. The same holds for the
    * function filters of the `register*` members, reported under the member.
    * On a Trigger carrying a damage event a function condition also runs one
    * level deeper in the damage depth `Unit.damageTarget` checks.
+   * @example
+   * {@includeCode ../../examples/harness/trigger-add-condition.ts}
+   * @param condition - The condition which must evaluate to true in order to run the trigger's actions.
    */
   public addCondition(condition: boolexpr | (() => boolean)) {
     TriggerAddCondition(
@@ -179,13 +179,13 @@ export class Trigger extends Handle<trigger> {
 
   /**
    * Destroys the Trigger through its Native.
-   * @bug Do not destroy the current running Trigger (when waits are involved)
-   * as it can cause handle stack corruption as documented [here](http://www.wc3c.net/showthread.php?t=110519).
    * @remarks
    * In Dev mode the destroyed Wrapper becomes a tombstone: any later access,
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @bug Do not destroy the current running Trigger (when waits are involved)
+   * as it can cause handle stack corruption as documented [here](http://www.wc3c.net/showthread.php?t=110519).
    */
   public destroy() {
     DestroyTrigger(this.handle);

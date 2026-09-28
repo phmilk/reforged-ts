@@ -28,7 +28,7 @@ function byte(block: number, divisor: number): string {
 /**
  * Encode a byte string to base64 (RFC 4648, with padding). Any byte string
  * is accepted, including zero bytes and bytes that are not UTF-8.
- * @param input The byte string to encode.
+ * @param input - The byte string to encode.
  */
 export function base64Encode(input: string): string {
   const output: string[] = [];
@@ -50,7 +50,7 @@ export function base64Encode(input: string): string {
 
 /**
  * Decode a base64 string (RFC 4648, with padding) back to its bytes.
- * @param input The base64 string to decode.
+ * @param input - The base64 string to decode.
  * @throws When the length is not a multiple of four, when a character is
  * outside the alphabet, or when padding is anywhere but the last one or two
  * characters. Each case has its own message, with the offset of the

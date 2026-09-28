@@ -17,10 +17,10 @@ export class Item extends Widget {
 
   /**
    * Creates an item object at the specified coordinates.
-   * @param itemId The rawcode of the item.
-   * @param x The x-coordinate of the item
-   * @param y The y-coordinate of the item
-   * @param skinId  The skin ID of the item.
+   * @param itemId - The rawcode of the item.
+   * @param x - The x-coordinate of the item
+   * @param y - The y-coordinate of the item
+   * @param skinId - The skin ID of the item.
    */
   public static create(
     itemId: number,
