@@ -266,6 +266,9 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: read
+    env:
+      # The Template, a repository of this one's owner.
+      TEMPLATE: reforged-ts-template
     steps:
       # Checked out first: the App token step is a local action.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -297,10 +300,11 @@ jobs:
         with:
           client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          repository: reforged-ts-template
+          repository: ${{ env.TEMPLATE }}
           permission-contents: write
       - name: Dispatch to the Template
         if: needs.select.outputs.dry-run != 'true'
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
-        run: gh api --method POST repos/phmilk/reforged-ts-template/dispatches --input "$RUNNER_TEMP/dispatch.json"
+          OWNER: ${{ github.repository_owner }}
+        run: gh api --method POST "repos/$OWNER/$TEMPLATE/dispatches" --input "$RUNNER_TEMP/dispatch.json"

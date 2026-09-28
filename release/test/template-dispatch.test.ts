@@ -4,38 +4,19 @@ import { describe, expect, it } from "vitest";
 import { main } from "../src/cli/template-dispatch.js";
 import { awaitOnNpm, templateDispatch } from "../src/template-dispatch.js";
 import {
-  PACKAGES,
-  tempDir,
-  writeText,
-  writeWorkspace,
-} from "./support/workspace.js";
+  publishEntry,
+  publishPlan,
+  writePackDir,
+} from "./support/publish-plan.js";
+import { PACKAGES, tempDir, writeWorkspace } from "./support/workspace.js";
 
 const RAW = "https://raw.githubusercontent.com/phmilk/reforged-ts";
 
-function entry(name: string, version: string) {
-  return {
-    kind: "publish",
-    name,
-    version,
-    access: "public",
-    tag: "next",
-    tarball: {
-      path: `packages/${name}-${version}.tgz`,
-      integrity: "sha256-AAAA",
-    },
-  };
-}
+const entry = (name: string, version: string) =>
+  publishEntry(name, version, "next");
 
 /** A `changeset pack` output folder whose plan publishes `entries`. */
-async function packDir(...entries: unknown[]): Promise<string> {
-  const dir = await tempDir("pack");
-  await writeText(
-    dir,
-    "publish-plan.json",
-    JSON.stringify({ version: 1, plan: [entries] }),
-  );
-  return dir;
-}
+const packDir = (...entries: unknown[]) => writePackDir(publishPlan(entries));
 
 /** The fixture workspace, each package at the version `versions` gives. */
 function workspace(versions: Readonly<Record<string, string>>) {

@@ -3,28 +3,17 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { main } from "../src/cli/dist-tag.js";
 import { formatReleases, NEXT_TAG, setDistTags } from "../src/dist-tag.js";
+import {
+  publishEntry,
+  publishPlan as plan,
+  writePackDir,
+} from "./support/publish-plan.js";
 import { tempDir, writeText, writeWorkspace } from "./support/workspace.js";
 
 const ALPHA = "1.0.0-alpha.1";
 
-function entry(name: string, version = ALPHA, tag = "alpha") {
-  return {
-    kind: "publish",
-    name,
-    version,
-    access: "public",
-    tag,
-    tarball: {
-      path: `packages/${name}-${version}.tgz`,
-      integrity: "sha256-AAAA",
-    },
-  };
-}
-
-/** A plan as `changeset pack` writes it, in dependency-ordered chunks. */
-function plan(...chunks: unknown[][]) {
-  return { version: 1, plan: chunks };
-}
+const entry = (name: string, version = ALPHA, tag = "alpha") =>
+  publishEntry(name, version, tag);
 
 describe("setDistTags", () => {
   it("sets next on every publish entry in pre mode, whatever Changesets wrote", () => {
@@ -138,12 +127,7 @@ describe("release:dist-tag", () => {
   }
 
   it("rewrites the plan file in pre mode and writes the plan to the job summary", async () => {
-    const packDir = await tempDir("pack");
-    await writeText(
-      packDir,
-      "publish-plan.json",
-      JSON.stringify(plan([entry("reforged-ts")])),
-    );
+    const packDir = await writePackDir(plan([entry("reforged-ts")]));
     const summaryDir = await tempDir("summary");
     const summary = join(summaryDir, "summary.md");
     await writeText(summaryDir, "summary.md", "# Earlier\n");
@@ -166,11 +150,8 @@ describe("release:dist-tag", () => {
   });
 
   it("keeps the tags outside pre mode", async () => {
-    const packDir = await tempDir("pack");
-    await writeText(
-      packDir,
-      "publish-plan.json",
-      JSON.stringify(plan([entry("reforged-ts", "1.0.0", "latest")])),
+    const packDir = await writePackDir(
+      plan([entry("reforged-ts", "1.0.0", "latest")]),
     );
     expect(
       await runCli(["--pack-dir", packDir], await workspace("none")),

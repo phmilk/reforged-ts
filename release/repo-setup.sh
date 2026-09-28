@@ -564,15 +564,18 @@ else
   step "Repository access: ${BOLD}Only select repositories${RESET} → ${BOLD}$REPO_NAME${RESET} and ${BOLD}$TEMPLATE_NAME${RESET}, and nothing else."
   step "Install."
   pause "Press Enter once it is installed"
-  if $DRY_RUN; then
-    run pnpm --silent github-app check --repo "$REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed
-  else
-    printf '  %s$ pnpm --silent github-app check ... --installed%s\n' "$BOLD" "$RESET"
-    REPORT=$(pnpm --silent github-app check --repo "$REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed) ||
-      fail "The installation is not as the workflows need it (above)." "Fix it, then re-run. The account's installations: https://github.com/settings/installations"
-    while IFS= read -r line; do note "  $line"; done <<<"$REPORT"
-    ok "installed on $REPO_OWNER, on selected repositories, with the permissions accepted"
-  fi
+  # This repository, then the Template, which the release dispatches to.
+  for INSTALLED_REPO in "$REPO" "$REPO_OWNER/$TEMPLATE_NAME"; do
+    if $DRY_RUN; then
+      run pnpm --silent github-app check --repo "$INSTALLED_REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed
+    else
+      printf '  %s$ pnpm --silent github-app check --repo %s ... --installed%s\n' "$BOLD" "$INSTALLED_REPO" "$RESET"
+      REPORT=$(pnpm --silent github-app check --repo "$INSTALLED_REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed) ||
+        fail "The installation on $INSTALLED_REPO is not as the workflows need it (above)." "Fix it, then re-run. The account's installations: https://github.com/settings/installations"
+      while IFS= read -r line; do note "  $line"; done <<<"$REPORT"
+      ok "installed on $INSTALLED_REPO, on selected repositories, with the permissions accepted"
+    fi
+  done
   note "Which repositories an installation reaches, only its settings page shows."
   confirm "Does its Repository access list $REPO_NAME and $TEMPLATE_NAME only?" ||
     fail "The App reaches other repositories." "Remove them under Repository access: https://github.com/settings/installations"
