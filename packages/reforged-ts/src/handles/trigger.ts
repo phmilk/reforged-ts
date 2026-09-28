@@ -126,7 +126,7 @@ export class Trigger extends Handle<trigger> {
    * Adding more conditions later wil join them by AND (that means all conditions need to evaluate to `true`)
    *
    * @example
-   * {@includeCode ../../examples/trigger-add-condition.ts}
+   * {@includeCode ../../examples/harness/trigger-add-condition.ts}
    * @param condition The condition which must evaluate to true in order to run the trigger's actions.
    * @remarks In Dev mode a function condition runs under `pcall`: one that
    * throws is reported as `Trigger#<id> Trigger.addCondition` and evaluates

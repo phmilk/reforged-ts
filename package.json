@@ -20,6 +20,7 @@
     "typings:check": "pnpm --filter reforged-types typings:check",
     "coverage:report": "pnpm --filter reforged-ts-wrapper-coverage coverage:report",
     "data:check": "pnpm --filter reforged-ts build && pnpm --filter reforged-ts-release data:check",
+    "examples:build": "pnpm --filter reforged-ts examples:build",
     "changeset": "changeset",
     "release:check-changeset": "pnpm --filter reforged-ts-release release:check-changeset",
     "release:check-patches": "pnpm --filter reforged-ts-release release:check-patches",

@@ -36,7 +36,7 @@ interface Entry<K, V> {
  * synchronous code (not inside `MapPlayer.runLocal`).
  *
  * @example
- * {@includeCode ../../examples/handle-map-kills.ts}
+ * {@includeCode ../../examples/harness/handle-map-kills.ts}
  * @typeParam K - The Wrapper class of the keys, `Unit` or `Widget`.
  * @typeParam V - The type of the values.
  */

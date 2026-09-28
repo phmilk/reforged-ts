@@ -570,7 +570,7 @@ export class MapPlayer extends Handle<player> {
    * Dev mode, so the bug is found before a release build reaches a lobby.
    * Create what `fn` needs before calling `runLocal`, on every client.
    * @example
-   * {@includeCode ../../examples/run-local-frame.ts}
+   * {@includeCode ../../examples/game/run-local-frame.ts}
    * @param player - The player whose client runs `fn`.
    * @param fn - What to run there: visuals only.
    */

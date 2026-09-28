@@ -28,7 +28,7 @@ import { type HandleHolder, hold, iterateHandles, unhold } from "./handlekeys";
  * synchronous code (not inside `MapPlayer.runLocal`).
  *
  * @example
- * {@includeCode ../../examples/handle-map-kills.ts}
+ * {@includeCode ../../examples/harness/handle-map-kills.ts}
  * @typeParam K - The Wrapper class of the members, `Unit` or `Widget`.
  */
 export class HandleSet<K extends Handle<handle>> {

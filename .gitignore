@@ -109,8 +109,10 @@ packages/reforged-types/build/
 # reforged-test build output: the glue in dist/ (ignored above) and the runner's Lua
 packages/reforged-test/lua/
 
-# reforged-ts test build output: the library and its tests compiled to Lua
+# reforged-ts test build output: the library and its tests compiled to Lua,
+# and the library and its examples
 packages/reforged-ts/dist-test/
+packages/reforged-ts/dist-examples/
 
 # The release scripts' build output
 release/build/

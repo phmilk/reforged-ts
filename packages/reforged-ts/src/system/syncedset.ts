@@ -27,7 +27,7 @@ import { SortedKeys, type KeyComparator } from "./sortedkeys";
  * mutations, not per insertion.
  *
  * @example
- * {@includeCode ../../examples/synced-map-scores.ts}
+ * {@includeCode ../../examples/harness/synced-map-scores.ts}
  */
 export class SyncedSet<T extends AnyNotNil> {
   private readonly order: SortedKeys<T>;

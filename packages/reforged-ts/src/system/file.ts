@@ -43,7 +43,7 @@
  * state per object, and `File.read` and `File.write` keep their w3ts names.
  *
  * @example
- * {@includeCode ../../examples/file-write-read.ts}
+ * {@includeCode ../../examples/harness/file-write-read.ts}
  */
 export class File {
   // The ability used to read and write data.

@@ -89,7 +89,7 @@ export interface ReforgedDebug {
    * so in a line of its own: only the creations and destructions the
    * library saw.
    * @example
-   * {@includeCode ../../examples/debug-report.ts}
+   * {@includeCode ../../examples/harness/debug-report.ts}
    */
   report(): DebugReport;
   /**
