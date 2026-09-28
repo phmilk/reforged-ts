@@ -11,10 +11,11 @@ Two gates, run by different tools, count the same symbols:
 - **Lint.** `tsdoc/syntax` ([eslint-plugin-tsdoc](https://www.npmjs.com/package/eslint-plugin-tsdoc)) checks the syntax and the tag vocabulary. Four rules of [eslint-plugin-jsdoc](https://www.npmjs.com/package/eslint-plugin-jsdoc) check the rest: `require-jsdoc` (a comment is present), `require-param`, `require-returns` and `sort-tags` (the tag order). Its tag-name and type checks are off: TypeScript gives the types and `tsdoc/syntax` the tags.
 - **TypeDoc.** The docs site's `pnpm docs:check` builds the API reference from `packages/reforged-ts/src/index.ts` with the `notDocumented` and `invalidLink` validations on. It also fails on an `{@includeCode}` whose file or region is missing, and on an `@native` naming neither a Native in the Typings manifest nor a Handle type the Typings declare. CI runs it on ubuntu; it runs locally too, after `pnpm build`.
 
-**During the documentation pass**, the lint rules sit in `eslint.docs.config.mjs` at warn, and TypeDoc's validation findings are logged without failing the site build. Run the rules on the sources with:
+**During the documentation pass**, the lint rules sit in `eslint.docs.config.mjs` at warn, and TypeDoc's validation findings are logged without failing the site build. `pnpm docs:audit` runs both gates without the site build, in `pnpm check` and on both CI legs, and lists the findings per file, largest first ([The docs audit](../website/README.md#the-docs-audit)):
 
 ```sh
-pnpm exec eslint -c eslint.docs.config.mjs packages/reforged-ts/src         # the findings, as warnings
+pnpm docs:audit                              # every file, then the total
+pnpm docs:audit --strict handles/unit.ts     # one file; exit code 1 on any finding
 pnpm exec eslint -c eslint.docs.config.mjs --fix packages/reforged-ts/src   # fixes the tag order, nothing else
 ```
 
