@@ -230,8 +230,8 @@ jobs:
         with:
           persist-credentials: false
       # Tags and releases go through the App, so the reforged-ts tags can
-      # trigger the docs workflow the workflows spec (#48) plans, docs.yml
-      # (tags created with the default token trigger no workflow).
+      # trigger docs.yml, which cuts a docs version on each minor (tags
+      # created with the default token trigger no workflow).
       - id: app
         uses: ./.github/actions/app-token
         with:

@@ -364,7 +364,7 @@ Fixes land only on the latest minor of the latest major. There are no maintenanc
 
 The bytes published are the bytes the Template gate tested: the publish job downloads the artifact the gate downloaded, by its id, and `changeset publish --from-pack-dir` uploads those tarballs as they are. Provenance comes with trusted publishing, because the repository is public.
 
-The tags and the releases are created with the App's token, not the job's default one: a tag created with the default token triggers no workflow, and the `reforged-ts@<major>.<minor>.0` tags must be able to trigger `docs.yml`, the workflow that will cut the docs version, which the workflows spec plans ([#48](https://github.com/phmilk/reforged-ts/issues/48)).
+The tags and the releases are created with the App's token, not the job's default one: a tag created with the default token triggers no workflow, and the `reforged-ts@<major>.<minor>.0` tags must be able to trigger `docs.yml`, the workflow that cuts the docs version ([The docs workflow](#the-docs-workflow)).
 
 ### The dist-tag
 
@@ -422,10 +422,10 @@ It never runs the publish job, never opens a pull request and never dispatches t
 
 ### Repository variables and secrets
 
-| Name              | Kind     | Read by                                                    | What                                                                                                   |
-| ----------------- | -------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `APP_CLIENT_ID`   | variable | `version`, `publish`, `template-dispatch`, the Patch watch | The client ID of the repository's GitHub App ([#48](https://github.com/phmilk/reforged-ts/issues/48)). |
-| `APP_PRIVATE_KEY` | secret   | `version`, `publish`, `template-dispatch`, the Patch watch | A private key of that App.                                                                             |
+| Name              | Kind     | Read by                                                                   | What                                                                                                   |
+| ----------------- | -------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `APP_CLIENT_ID`   | variable | `version`, `publish`, `template-dispatch`, the Patch watch, `cut-version` | The client ID of the repository's GitHub App ([#48](https://github.com/phmilk/reforged-ts/issues/48)). |
+| `APP_PRIVATE_KEY` | secret   | `version`, `publish`, `template-dispatch`, the Patch watch, `cut-version` | A private key of that App.                                                                             |
 
 No npm token exists anywhere. A job that needs a missing one fails at its first step, naming it: the App steps name `APP_CLIENT_ID` or `APP_PRIVATE_KEY`. The Template is public, so the Template clone needs no token.
 
@@ -472,6 +472,27 @@ Merge it once the release run of the latest push to `master` has finished: that 
 - `template-gate`: nothing was published. A fix in this repository lands on `master` and its push runs everything again; after a fix in the Template, or a moved Template ref, re-run the failed jobs of the run.
 - `publish`: re-run the failed job. The packages the failed attempt did publish got their tags and releases then; npm refuses them a second time and Changesets skips them.
 - `template-dispatch`: the release is on npm, and the Template has no sync pull request. Re-run the failed job: it sends the same payload. Or run the Template's sync by hand with the payload of the job's log: `gh workflow run sync.yml --repo phmilk/reforged-ts-template --ref main -f payload='<json>'`.
+
+## The docs workflow
+
+`.github/workflows/docs.yml` keeps the docs site at https://phmilk.github.io/reforged-ts/ as `master` has it, and cuts a docs version on each minor of the library without anyone remembering ([#196](https://github.com/phmilk/reforged-ts/issues/196)). Two jobs, `contents: read` for the workflow:
+
+| Job           | Runs when                                                          | Permissions                                         | What it does                                                                                                                                                                                                                                                                                             |
+| ------------- | ------------------------------------------------------------------ | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `deploy-next` | a push to `master`                                                 | `contents: read`, `pages: write`, `id-token: write` | Builds the packages the site reads (`pnpm --filter "reforged-ts-website^..." build`), runs `pnpm docs:build`, uploads `website/build` as the Pages artifact and deploys it to the `github-pages` environment. Concurrency group `pages`, never cancelled: deployments serialise, the newest push last.   |
+| `cut-version` | a tag `reforged-ts@*`; a dispatch with a `version`, to rehearse it | `contents: read`, the App                           | Mints the App's token, installs, then `pnpm release:docs-cut <tag>` decides. Only `reforged-ts@<major>.<minor>.0` goes on: builds, runs `pnpm docs:version <major.minor>` (which also prunes), commits the cut on `docs-version/<version>` and opens "docs: version <version>" with auto-merge (squash). |
+
+The tags are the publish job's, pushed with the App's token (a tag pushed with the default token triggers no workflow). A tag filter cannot say "ends in `.0` without a prerelease suffix", so every `reforged-ts@` tag starts `cut-version`, and `pnpm release:docs-cut <tag>` (`release/src/docs-cut.ts`, programmatic entry `docsCut(tag)`) prints its decision as one JSON object: `{"cut":true,"version":"1.1.0","label":"1.1"}`, or `{"cut":false,"reason":"…"}` for a prerelease (`reforged-ts@1.0.0-alpha.3`: its docs are Next), a patch (`reforged-ts@1.0.1`: the docs version `1.0` is cut on `1.0.0`), build metadata or a tag that names no version. A tag that cuts nothing ends the job with a notice, green. Exit codes: 0 the decision, 2 usage.
+
+The cut starts from the tag's commit, so the docs are frozen as the release left them. The App opens the pull request, so CI runs on it, and its auto-merge merges it once both CI legs pass; it changes no publishable package, so it needs no changeset. The App's merge is a push to `master`, which runs `deploy-next`: the new version is live a few minutes later. The site's side of the cut, the retention rule included, is in [`website/README.md`, "Docs versions"](../website/README.md#docs-versions).
+
+**Rehearsal.** A dispatch cuts the version it is given from the dispatched ref and opens the same pull request, then turns auto-merge off again at once: the rehearsal proves the step and never merges a throwaway version. Use a version the site does not keep yet and whose label the retention rule keeps (such as `1.99.0`), then close the pull request and delete its branch:
+
+```sh
+gh workflow run docs.yml --ref master -f version=1.99.0
+```
+
+**When a job fails.** `deploy-next`: the site keeps the previous deployment; fix the cause on `master`, or re-run the job. `cut-version`: nothing is merged. Delete the branch `docs-version/<version>` if it was pushed (a re-run pushes it again), close its pull request if one was opened, then re-run the job.
 
 ## Human steps
 
