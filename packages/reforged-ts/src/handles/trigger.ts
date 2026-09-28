@@ -65,26 +65,76 @@ function isDamageEvent(event: playerunitevent | unitevent): boolean {
  */
 const damageTriggers = new WeakSet<trigger>();
 
-/** What one `addCondition` call added. */
-interface AddedCondition {
+/**
+ * A `Condition` the Trigger made for a function. It wraps a closure of its
+ * own, in both modes, so each `addCondition` owns a distinct handle: JASS
+ * caches one `boolexpr` per code, so the game may hand back the handle it
+ * made for the same function before, and the Trigger would then destroy a
+ * handle shared with another add or with the caller. Removed while it is
+ * being evaluated, it is destroyed when that evaluation returns.
+ */
+class MadeCondition {
+  /** The `Condition` the Trigger hands `TriggerAddCondition`. */
+  public readonly expr: conditionfunc;
+  /** How many evaluations of the condition are running. */
+  private running = 0;
+  /** Whether it was destroyed while running: the last evaluation destroys it. */
+  private doomed = false;
+
+  /** @param run - The condition as the Trigger runs it. */
+  public constructor(run: () => boolean) {
+    this.expr = Condition(() => this.evaluate(run));
+  }
+
+  /**
+   * Runs `run`, counted, under `pcall` so that an error, with Dev mode off,
+   * leaves the count right before it propagates unchanged.
+   */
+  private evaluate(run: () => boolean): boolean {
+    this.running++;
+    const [ok, result] = pcall(run);
+    this.running--;
+    if (this.doomed && this.running === 0) {
+      this.doomed = false;
+      DestroyCondition(this.expr);
+    }
+    if (!ok) {
+      error(result, 0);
+    }
+    return result;
+  }
+
+  /** Destroys the `Condition`, or, while it is evaluated, when that returns. */
+  public destroy(): void {
+    if (this.running > 0) {
+      this.doomed = true;
+    } else {
+      DestroyCondition(this.expr);
+    }
+  }
+}
+
+/** The handles one `addCondition` call produced. */
+interface ConditionHandles {
   /** The handle `TriggerAddCondition` returned. */
   readonly condition: triggercondition;
   /**
-   * The `Condition` the Trigger made from a function, which it destroys when
-   * the condition is removed; undefined for a `boolexpr` the caller passed.
+   * The `Condition` the Trigger made from a function, destroyed when the
+   * condition is removed; undefined for a `boolexpr` the caller passed.
    */
-  readonly created: conditionfunc | undefined;
+  readonly made: MadeCondition | undefined;
 }
 
 /**
- * What the `addAction` and `addCondition` calls of one Trigger added, by the
- * value each was given, so the remove members can take that value back.
+ * The handles the `addAction` and `addCondition` calls of one Trigger
+ * produced, by the value each was given, so the remove members can take
+ * that value back.
  */
-interface Added {
+interface TriggerRecord {
   /** The handles `TriggerAddAction` returned, per action function. */
   readonly actions: Map<() => void, triggeraction[]>;
-  /** What `addCondition` added, per function or `boolexpr`. */
-  readonly conditions: Map<BoolexprInput, AddedCondition[]>;
+  /** What `addCondition` produced, per function or `boolexpr`. */
+  readonly conditions: Map<BoolexprInput, ConditionHandles[]>;
 }
 
 /**
@@ -92,7 +142,7 @@ interface Added {
  * a subclass's `fromHandle` puts in place of a cached one keeps it. Made on
  * the first `addAction` or `addCondition`, dropped by `destroy`.
  */
-const addedTo = new WeakMap<trigger, Added>();
+const records = new WeakMap<trigger, TriggerRecord>();
 
 /** Whether `value` is a `triggercondition`, not a `boolexpr`, by its handle type. */
 function isTriggerCondition(
@@ -101,13 +151,43 @@ function isTriggerCondition(
   return handleTypeOf(value) === "triggercondition";
 }
 
-/** Destroys the `Condition`s the Trigger made among `conditions`. */
-function destroyCreated(conditions: readonly AddedCondition[]): void {
-  for (const { created } of conditions) {
-    if (created !== undefined) {
-      DestroyCondition(created);
+/** Destroys the `Condition` the Trigger made for a condition, if it made one. */
+function destroyMade({ made }: ConditionHandles): void {
+  made?.destroy();
+}
+
+/** Takes the list `map` holds for `key` out of it, handing `each` its values. */
+function take<K, V>(
+  map: Map<K, V[]> | undefined,
+  key: K,
+  each: (value: V) => void,
+): void {
+  const list = map?.get(key);
+  if (map === undefined || list === undefined) {
+    return;
+  }
+  map.delete(key);
+  for (const value of list) {
+    each(value);
+  }
+}
+
+/** Empties `map`, handing `each` the values of every list it held. */
+function drain<K, V>(
+  map: Map<K, V[]> | undefined,
+  each?: (value: V) => void,
+): void {
+  if (map === undefined) {
+    return;
+  }
+  if (each !== undefined) {
+    for (const [, list] of map) {
+      for (const value of list) {
+        each(value);
+      }
     }
   }
+  map.clear();
 }
 
 /** Appends `value` to the list `map` holds for `key`, making the list. */
@@ -267,7 +347,7 @@ export class Trigger extends Handle<trigger> {
     );
     // The Typings type the result non-null; a failed add keeps nothing.
     if ((action as triggeraction | undefined) !== undefined) {
-      append(this.added().actions, actionFunc, action);
+      append(this.record().actions, actionFunc, action);
     }
     return this;
   }
@@ -285,6 +365,11 @@ export class Trigger extends Handle<trigger> {
    *   the function filters of the `register*` members, reported under the
    *   member. On a Trigger carrying a damage event a function condition also
    *   runs one level deeper in the damage depth `Unit.damageTarget` checks.
+   * - In both modes `Condition` receives a closure the Trigger makes around
+   *   a function condition, so every add owns its own `Condition`: the game
+   *   may return one `boolexpr` for the same function, and the Trigger never
+   *   destroys one it shares with another add or with a `Condition(fn)` of
+   *   yours.
    * - The Trigger keeps the `triggercondition` the Native returns under
    *   `condition`: `removeCondition(condition)` removes this condition, and
    *   destroys the `Condition` made for a function. Adding the same value
@@ -297,59 +382,39 @@ export class Trigger extends Handle<trigger> {
    * @native Condition
    * @native DestroyCondition
    */
-  public addCondition(condition: boolexpr | (() => boolean)) {
-    let created: conditionfunc | undefined;
+  public addCondition(condition: BoolexprInput) {
+    let made: MadeCondition | undefined;
     let expr: boolexpr;
     if (typeof condition === "function") {
-      created = Condition(
+      made = new MadeCondition(
         // The damage nesting goes outside the protection, so what it wraps
-        // never throws.
+        // never throws in Dev mode.
         this.damageNesting(
           protect(this, "Trigger.addCondition", condition, false),
         ),
       );
-      expr = created;
+      expr = made.expr;
     } else {
       expr = condition;
     }
-    const added = TriggerAddCondition(this.handle, expr);
-    if (added !== undefined) {
-      append(this.added().conditions, condition, { condition: added, created });
-    } else if (created !== undefined) {
+    const handle = TriggerAddCondition(this.handle, expr);
+    if (handle !== undefined) {
+      append(this.record().conditions, condition, { condition: handle, made });
+    } else {
       // A failed add keeps nothing, not even the Condition made for it.
-      DestroyCondition(created);
+      made?.destroy();
     }
     return this;
   }
 
-  /** The record of what this Trigger's add members added, made on first use. */
-  private added(): Added {
-    let added = addedTo.get(this.handle);
-    if (added === undefined) {
-      added = { actions: new Map(), conditions: new Map() };
-      addedTo.set(this.handle, added);
+  /** The record of the handles this Trigger's add members produced, made on first use. */
+  private record(): TriggerRecord {
+    let record = records.get(this.handle);
+    if (record === undefined) {
+      record = { actions: new Map(), conditions: new Map() };
+      records.set(this.handle, record);
     }
-    return added;
-  }
-
-  /** Forgets the actions `addAction` added, after `removeActions`. */
-  private forgetActions(): void {
-    addedTo.get(this.handle)?.actions.clear();
-  }
-
-  /**
-   * Forgets the conditions `addCondition` added, after `removeConditions`,
-   * destroying the `Condition`s the Trigger made.
-   */
-  private forgetConditions(): void {
-    const conditions = addedTo.get(this.handle)?.conditions;
-    if (conditions === undefined) {
-      return;
-    }
-    for (const [, list] of conditions) {
-      destroyCreated(list);
-    }
-    conditions.clear();
+    return record;
   }
 
   /**
@@ -396,8 +461,8 @@ export class Trigger extends Handle<trigger> {
    */
   public destroy() {
     DestroyTrigger(this.handle);
-    this.forgetConditions();
-    addedTo.delete(this.handle);
+    drain(records.get(this.handle)?.conditions, destroyMade);
+    records.delete(this.handle);
     this.release();
   }
 
@@ -1003,6 +1068,8 @@ export class Trigger extends Handle<trigger> {
    *   added.
    * - A function never added to this Trigger, or already removed, changes
    *   nothing.
+   * - Called from inside the action it removes, the action finishes its run
+   *   and does not run at the next firing.
    * - A `triggeraction` that `TriggerAddAction` returned when called directly
    *   goes to the Native as is.
    * @example Removing an action by the function added
@@ -1017,15 +1084,9 @@ export class Trigger extends Handle<trigger> {
       TriggerRemoveAction(this.handle, action);
       return this;
     }
-    const actions = addedTo.get(this.handle)?.actions;
-    const added = actions?.get(action);
-    if (actions === undefined || added === undefined) {
-      return this;
-    }
-    actions.delete(action);
-    for (const handle of added) {
+    take(records.get(this.handle)?.actions, action, (handle) => {
       TriggerRemoveAction(this.handle, handle);
-    }
+    });
     return this;
   }
 
@@ -1038,7 +1099,7 @@ export class Trigger extends Handle<trigger> {
    */
   public removeActions() {
     TriggerClearActions(this.handle);
-    this.forgetActions();
+    drain(records.get(this.handle)?.actions);
     return this;
   }
 
@@ -1048,6 +1109,9 @@ export class Trigger extends Handle<trigger> {
    * @remarks
    * - The `Condition` the Trigger made for a function is destroyed with it.
    *   A `boolexpr` the caller passed is never destroyed: the caller owns it.
+   * - Called from inside the condition it removes, the condition is removed
+   *   at once and its `Condition` is destroyed when that evaluation returns,
+   *   never while it runs. `removeConditions` and `destroy` do the same.
    * - The same value added more than once is removed every time it was
    *   added.
    * - A value never added to this Trigger, or already removed, changes
@@ -1061,23 +1125,15 @@ export class Trigger extends Handle<trigger> {
    * @native TriggerRemoveCondition
    * @native DestroyCondition
    */
-  public removeCondition(
-    condition: boolexpr | (() => boolean) | triggercondition,
-  ) {
+  public removeCondition(condition: BoolexprInput | triggercondition) {
     if (typeof condition !== "function" && isTriggerCondition(condition)) {
       TriggerRemoveCondition(this.handle, condition);
       return this;
     }
-    const conditions = addedTo.get(this.handle)?.conditions;
-    const added = conditions?.get(condition);
-    if (conditions === undefined || added === undefined) {
-      return this;
-    }
-    conditions.delete(condition);
-    for (const { condition: handle } of added) {
-      TriggerRemoveCondition(this.handle, handle);
-    }
-    destroyCreated(added);
+    take(records.get(this.handle)?.conditions, condition, (handles) => {
+      TriggerRemoveCondition(this.handle, handles.condition);
+      destroyMade(handles);
+    });
     return this;
   }
 
@@ -1094,7 +1150,7 @@ export class Trigger extends Handle<trigger> {
    */
   public removeConditions() {
     TriggerClearConditions(this.handle);
-    this.forgetConditions();
+    drain(records.get(this.handle)?.conditions, destroyMade);
     return this;
   }
 

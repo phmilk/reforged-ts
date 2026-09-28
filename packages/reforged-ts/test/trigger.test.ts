@@ -428,9 +428,13 @@ describe("Trigger.addAction", () => {
 });
 
 describe("Trigger.addCondition", () => {
-  it("wraps a function with Condition and returns the Trigger", () => {
+  it("wraps a closure of its own around a function with Condition and returns the Trigger", () => {
     const trigger = Trigger.create();
-    const condition = () => false;
+    let ran = 0;
+    const condition = () => {
+      ran++;
+      return false;
+    };
     const expr = Condition(condition);
     let wrapped: (() => boolean) | undefined;
     const returned = withNative(
@@ -442,7 +446,10 @@ describe("Trigger.addCondition", () => {
       () => trigger.addCondition(condition),
     );
     expect(returned).toBe(trigger);
-    expect(wrapped).toBe(condition);
+    const closure = defined(wrapped, "the function Condition received");
+    expect(closure === condition).toEqual(false);
+    expect(closure()).toEqual(false);
+    expect(ran).toEqual(1);
     expect(callsOn(trigger, "TriggerAddCondition")).toEqual([
       `TriggerAddCondition(${handleRef("trigger", trigger.handle)}, ${handleRef("conditionfunc", expr)})`,
     ]);
@@ -553,6 +560,12 @@ function destroyed(expr: handle): boolean {
   return stubCalls().includes(line);
 }
 
+/** How many `DestroyCondition` calls of `expr` the call log holds. */
+function destroyedTimes(expr: handle): number {
+  const line = `DestroyCondition(${handleRef("conditionfunc", expr)})`;
+  return stubCalls().filter((call) => call === line).length;
+}
+
 let globalsEntered = false;
 
 /**
@@ -641,6 +654,23 @@ for (const devMode of [false, true]) {
       });
     });
 
+    it("lets an action that removes itself finish its run, and not run again", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        const steps: string[] = [];
+        const once = () => {
+          steps.push("before");
+          trigger.removeAction(once);
+          steps.push("after");
+        };
+        trigger.addAction(once);
+        __stub_fire_trigger(trigger.handle);
+        __stub_fire_trigger(trigger.handle);
+        expect(steps).toEqual(["before", "after"]);
+        expect(callsOn(trigger, "TriggerRemoveAction").length).toEqual(1);
+      });
+    });
+
     it("forgets the actions after removeActions", () => {
       inMode(devMode, () => {
         const trigger = Trigger.create();
@@ -709,6 +739,101 @@ for (const devMode of [false, true]) {
           ),
         );
         expect(created.map((expr) => destroyed(expr))).toEqual([true, true]);
+      });
+    });
+
+    it("gives every add of a function a Condition of its own, never the caller's", () => {
+      inMode(devMode, () => {
+        // The harness's Condition returns one handle per function, as JASS
+        // caches one per code: handing it the caller's function would make
+        // the adds share the caller's handle.
+        const trigger = Trigger.create();
+        const shared = () => true;
+        const mine = Condition(shared);
+        const created = returnedBy("Condition", () => {
+          trigger.addCondition(shared).addCondition(shared);
+        });
+        expect(created.length).toEqual(2);
+        expect(created[0] === created[1]).toEqual(false);
+        expect(created.includes(mine)).toEqual(false);
+        const before = stubCalls().length;
+        trigger.removeCondition(shared);
+        expect(
+          stubCalls()
+            .slice(before)
+            .filter((line) => line.startsWith("DestroyCondition")),
+        ).toEqual(
+          created.map(
+            (expr) => `DestroyCondition(${handleRef("conditionfunc", expr)})`,
+          ),
+        );
+        expect(destroyed(mine)).toEqual(false);
+      });
+    });
+
+    it("destroys the Condition of a condition that removes itself only when its evaluation returns", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        let made: handle[] = [];
+        let destroyedWhileRunning: boolean | undefined;
+        let evaluated = 0;
+        const once = () => {
+          evaluated++;
+          trigger.removeCondition(once);
+          destroyedWhileRunning = destroyed(made[0]);
+          return false;
+        };
+        made = returnedBy("Condition", () => {
+          trigger.addCondition(once);
+        });
+        expect(__stub_fire_trigger(trigger.handle)).toEqual(false);
+        expect(destroyedWhileRunning).toEqual(false);
+        expect(destroyedTimes(made[0])).toEqual(1);
+        // Removed at once: the next firing no longer evaluates it.
+        expect(__stub_fire_trigger(trigger.handle)).toEqual(true);
+        expect(evaluated).toEqual(1);
+      });
+    });
+
+    it("destroys the Condition of a condition that removes itself and then throws", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        const failing = (): boolean => {
+          trigger.removeCondition(failing);
+          error("removed, then failed", 0);
+        };
+        const [made] = returnedBy("Condition", () => {
+          trigger.addCondition(failing);
+        });
+        if (devMode) {
+          // Reported and evaluated false.
+          expect(__stub_fire_trigger(trigger.handle)).toEqual(false);
+        } else {
+          expect(() => {
+            __stub_fire_trigger(trigger.handle);
+          }).toThrow("removed, then failed");
+        }
+        expect(destroyedTimes(made)).toEqual(1);
+      });
+    });
+
+    it("defers destroying the Conditions removeConditions removes from inside one of them", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        let destroyedWhileRunning: boolean | undefined;
+        let made: handle[] = [];
+        made = returnedBy("Condition", () => {
+          trigger
+            .addCondition(() => {
+              trigger.removeConditions();
+              destroyedWhileRunning = destroyed(made[0]);
+              return true;
+            })
+            .addCondition(() => true);
+        });
+        __stub_fire_trigger(trigger.handle);
+        expect(destroyedWhileRunning).toEqual(false);
+        expect(made.map((expr) => destroyedTimes(expr))).toEqual([1, 1]);
       });
     });
 
