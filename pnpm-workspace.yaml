@@ -55,6 +55,10 @@ catalog:
   "@typescript-eslint/utils": ^8.70.1
   "@typescript-eslint/rule-tester": ^8.70.1
   eslint-plugin-import-x: ^4.17.1
+  # The doc comments' lint (#43): tsdoc/syntax checks them against the
+  # workspace tsdoc.json, and eslint-plugin-jsdoc lists what they lack.
+  eslint-plugin-tsdoc: ^0.5.3
+  eslint-plugin-jsdoc: ^64.5.4
   eslint-import-resolver-typescript: ^4.4.5
   eslint-plugin-prettier: ^5.5.6
   eslint-config-prettier: ^10.1.8
@@ -101,3 +105,9 @@ packageExtensions:
   docusaurus-plugin-llms:
     peerDependencies:
       "@docusaurus/types": "*"
+
+overrides:
+  # eslint-plugin-tsdoc pins @typescript-eslint/utils to 8.56, whose
+  # TypeScript peer stops below 6: it runs on the catalog's version instead,
+  # the one typescript-eslint brings.
+  "eslint-plugin-tsdoc>@typescript-eslint/utils": "catalog:"
