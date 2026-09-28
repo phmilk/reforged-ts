@@ -3,8 +3,6 @@
 /**
  * A color of four components, red, green, blue and alpha, each from 0 to
  * 255, with what the game makes of it: a text color code and a player color.
- * @remarks
- * An `alpha` of 0 is taken as left out, so the color comes out opaque (255).
  * @example
  * {@includeCode ../../examples/harness/color-text.ts}
  */
@@ -23,13 +21,9 @@ export class Color {
     readonly red: ColorValue,
     readonly green: ColorValue,
     readonly blue: ColorValue,
-    alpha?: ColorValue,
+    alpha: ColorValue = 255,
   ) {
-    if (alpha) {
-      this.alpha = alpha;
-    } else {
-      this.alpha = 255;
-    }
+    this.alpha = alpha;
   }
 
   /**
