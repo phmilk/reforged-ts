@@ -1,0 +1,29 @@
+---
+name: add-wrapper
+description: Cover a Native in the library end to end, from its owner to the changeset. Use when asked to cover a Native, to add a member to a Wrapper, or to close a Native the Wrapper coverage report lists as missing.
+---
+
+# Add a Wrapper member
+
+One member covers one Native, or one family of Natives that differ only by optional parameters (ADR 0008). The rules each step applies live behind its pointers: [ADR 0008](../../../docs/adr/0008-wrapper-coverage-rule-and-no-bj-mirroring.md) and its amendment for ownership and exclusions; the "Wrappers" section of `CONTRIBUTING.md`, the doc comment of `Handle` in `packages/reforged-ts/src/handles/handle.ts` and the README's "Rules for library code" for the member's shape; [ADR 0003](../../../docs/adr/0003-creation-throws-lookup-returns-undefined.md) for its error mode; [ADR 0004](../../../docs/adr/0004-tsdoc-standard-with-compiled-examples.md) and [`docs/documentation.md`](../../../docs/documentation.md) for its doc comment and example; `packages/reforged-ts/test/README.md` for its test. Work on a branch from `master` and run every command from the repository root.
+
+## Steps
+
+1. **Find the owner.** Run `pnpm coverage:report`. While a Native is missing it exits 1 and prints it as `missing: <Wrapper> (<handle type>): <Jass declaration>`: that Wrapper owns it, by the amendment of ADR 0008, which reads the Native's entry in `packages/reforged-types/<Game version>/manifest.json`. Done when the Native is printed as missing under its Wrapper. When `wrapper-coverage/report.md` lists it as covered, a class already calls it and nothing is added; when it is unowned, it is for a System or stays in the Typings: stop and say so.
+2. **Check the Overlay entry.** Read `packages/reforged-types/overlay/<source>/functions/<Native>.json` against the Curation rules of `packages/reforged-types/AGENTS.md`: the return's and each parameter's `nullable`, and `async` (absent means not async). When one is wrong or missing, fix the entry first and regenerate as steps 3 and 4 of its New Patch loop say. Done when the entry states nullability and `async` as the rules set them and `pnpm typings:check` exits 0.
+3. **Add the member.** Put it on the class that the amendment's "Covered by any class" names: the owner's, or, for a creation, the class of the Wrapper it creates (`CreateUnit`, owned by `MapPlayer`, is `Unit.create`). Find that class's file under `packages/reforged-ts/src/` by the `@native <handle type>` of its doc comment; when no class carries it, the handle type has no Wrapper yet, and the new one is named by the naming rule of the Handle base. Then:
+   - name the member as its neighbours in that class are named after their Natives;
+   - shape it by the Handle base and ADR 0003: a lookup through `fromHandle`, a creation through `expect`;
+   - give its doc comment the tags the [required-tag matrix](../../../docs/documentation.md#required-tags-per-symbol-kind) sets for its kind, `@native` on every one.
+
+   Done when `pnpm typecheck` exits 0 and `pnpm docs:audit <path under packages/reforged-ts/src/>` reports no finding.
+
+4. **Write its example.** When the member is of a kind the [required-tag matrix](../../../docs/documentation.md#required-tags-per-symbol-kind) asks an `@example` of (a factory taking an options object, an `@async` member, an Event descriptor or `on()`, a lifecycle member such as `destroy`), write or extend a region of its class's example under `packages/reforged-ts/examples/harness/` and include it in the member's `@example`, as [Examples](../../../docs/documentation.md#examples) says; members of one feature may include the same region. What the example shows for each kind is in the list under the matrix. A new Wrapper also carries its class `@example`. A plain getter, setter, action or lookup needs none. Done when `pnpm examples:build` exits 0, or the member needs no example.
+5. **Test it on the harness.** Add one `nativeCase` for the Native to the `describeNatives` table at the end of the class's test file under `packages/reforged-ts/test/`, starting the table when the file has none ("The gap suites"): its `line` asserts the arguments the member passes to the stubbed Native. A lookup's case sets `returns` to the Wrapper, asserting registry identity, and a second case has the Native answer nil; a creation adds a `raisedIn` test beside the table. Run the file's tests as `CONTRIBUTING.md` shows: `pnpm --filter reforged-ts test -t <file>.test.ts`. Done when that run passes, counts the new case, and fails with the member's Native call removed.
+6. **Close the report.** Run `pnpm coverage:report`; it rewrites `wrapper-coverage/report.json` and `report.md`, which the pull request commits. A Native that cannot be wrapped is excluded instead, in `wrapper-coverage/exclusions.json` with the source the amendment of ADR 0008 requires, and gets no member. Done when the report no longer prints the Native as missing and `report.md` names the member's class as covering it, or names its exclusion.
+7. **Add the changeset** without the prompt, as "Adding a changeset" of `docs/release.md` shows. It names `reforged-ts` at `minor` for a new member or `patch` for a fix of one, and `reforged-types` at `patch` when step 2 changed its Overlay; its text says what the member does for a Map project author. Done when `.changeset/` holds the new file. When [new-patch](../new-patch/SKILL.md) called this skill, skip this step: its step 8 writes the changesets.
+8. **Check.** Run `pnpm check`. Done when it exits 0. When new-patch called this skill and other Natives are still missing, `pnpm check` fails on them in `coverage:report`: return to new-patch, whose step 9 runs the check.
+
+## Done
+
+The Native is covered when `pnpm coverage:report` lists it as covered by the member's class (or excluded with its source), `pnpm check` exits 0, and the changeset of step 7 is committed.
