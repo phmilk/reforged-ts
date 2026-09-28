@@ -198,10 +198,11 @@ export class Trigger extends Handle<trigger> {
    * Returns the boolean value of the return value from the condition-function.
    * So if 0/0.0/null would be returned in the condition-function, `eval`
    * would return false. Note that `""` would return `true`.
-   * @note If a condition-function crashes the thread or does not return any value `eval` will return false.
-   * @note If you want to return false for a condition-function that returns string (for whatever reason) return `null` instead of `""`
-   * @note *All* functions added via `addCondition` are run. There is no short-circuting. If you want short-circuting use `And` or `Or`.
-   * @note All functions added via `addCondition` are run in the order they were added.
+   * @remarks
+   * - If a condition-function crashes the thread or does not return any value `eval` will return false.
+   * - If you want to return false for a condition-function that returns string (for whatever reason) return `null` instead of `""`
+   * - *All* functions added via `addCondition` are run. There is no short-circuting. If you want short-circuting use `And` or `Or`.
+   * - All functions added via `addCondition` are run in the order they were added.
    */
   public eval() {
     return TriggerEvaluate(this.handle);

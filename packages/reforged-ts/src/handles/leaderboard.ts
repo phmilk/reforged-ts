@@ -6,7 +6,7 @@ import { MapPlayer } from "./player";
 export class Leaderboard extends Handle<leaderboard> {
   /**
    * Create a Leaderboard object
-   * @note Leaderboards initially have 0 rows, 0 columns, and no label.
+   * @remarks Leaderboards initially have 0 rows, 0 columns, and no label.
    * @bug Do not use this in a global initialisation as it crashes the game there.
    */
   public static create(): Leaderboard {

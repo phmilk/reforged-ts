@@ -179,10 +179,10 @@ export class MapPlayer extends Handle<player> {
   /**
    * Reveals a player's remaining buildings to a force.
    * The black mask over the buildings will be removed as if the territory had been discovered
+   * @remarks his function will not check whether the player has a town hall before revealing.
    * @param toWhichPlayers The players who will see whichPlayer's buildings.
    * @param flag If true, the buildings will be revealed. If false, the buildings will not be revealed.
    * Note that if you set it to false, it will not hide the buildings with a black mask.
-   * @note his function will not check whether the player has a town hall before revealing.
    */
   public cripple(toWhichPlayers: Force, flag: boolean) {
     CripplePlayer(this.handle, toWhichPlayers.handle, flag);

@@ -131,7 +131,7 @@ export class Group extends Handle<group> {
   }
 
   /**
-   * @note In contrast to other Enum-functions this function enumarates units with locust.
+   * @remarks In contrast to other Enum-functions this function enumarates units with locust.
    */
   public enumUnitsOfPlayer(
     whichPlayer: MapPlayer,

@@ -112,7 +112,7 @@ export class Multiboard extends Handle<multiboard> {
   }
 
   /**
-   * @note Multiboards can not be shown at map-init. Use a wait or a zero-timer to display as soon as possible.
+   * @remarks Multiboards can not be shown at map-init. Use a wait or a zero-timer to display as soon as possible.
    */
   public display(show: boolean) {
     MultiboardDisplay(this.handle, show);
