@@ -50,19 +50,31 @@ export interface UnitEventRow<P, U extends string = keyof P & string> {
   readonly damage?: true;
 }
 
-/** The payload a row reads. */
-type PayloadOf<R> = R extends {
+/**
+ * The payload a UnitEvents row reads: what its `read` returns.
+ * @typeParam R - The row.
+ */
+export type PayloadOf<R> = R extends {
+  /** The row's reader, whose return type is the payload. */
   readonly read: (unit: Unit, event: string) => infer P;
 }
   ? P
   : never;
 
-/** The descriptors a table gives: `name` per row, `nameOf` per twin. */
+/**
+ * The descriptors a table gives: `name` per row, registered for every
+ * player's units, and `nameOf(unit)` per row with a twin, registered on one
+ * Unit. It is the type of `UnitEvents`.
+ * @typeParam T - The table: one row per `name`.
+ */
 export type UnitEventDescriptors<T> = {
   readonly [K in keyof T]: EventDescriptor<PayloadOf<T[K]>>;
 } & {
   readonly [
-    K in keyof T as T[K] extends { readonly twin: unitevent }
+    K in keyof T as T[K] extends {
+      /** Set on a row with a twin. */
+      readonly twin: unitevent;
+    }
       ? `${K & string}Of`
       : never
   ]: (unit: Unit) => EventDescriptor<PayloadOf<T[K]>>;
@@ -71,6 +83,8 @@ export type UnitEventDescriptors<T> = {
 /**
  * A group of rows, as it is written: types each row's `read` and keeps the
  * payload it returns.
+ * @param rows - The group's rows, by event name.
+ * @returns `rows`, unchanged.
  */
 export function unitEventRows<
   T extends { readonly [K in keyof T]: UnitEventRow<PayloadOf<T[K]>> },
@@ -135,7 +149,12 @@ type Intersection<U> = (
 /** The rows of every group, as one table. */
 export type TableOf<G> = Intersection<G[keyof G]>;
 
-/** `UnitEvents` from the groups of rows, keyed by group name. */
+/**
+ * `UnitEvents` from the groups of rows, keyed by group name.
+ * @param groups - The groups of rows, by group name.
+ * @returns The descriptors: `name` for every row, `nameOf` for every row
+ * with a twin.
+ */
 export function unitEvents<
   G extends {
     readonly [K in keyof G]: Readonly<

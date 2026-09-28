@@ -13,6 +13,8 @@ export const transportRows = unitEventRows({
    * in-game (the Patch documents only the player-unit event), so its payload
    * reads the loaded unit and the transport from the Natives, as `loaded`
    * does.
+   * @native TriggerRegisterPlayerUnitEvent
+   * @native TriggerRegisterUnitEvent
    */
   loaded: {
     event: EVENT_PLAYER_UNIT_LOADED,

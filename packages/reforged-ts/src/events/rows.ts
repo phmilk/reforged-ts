@@ -13,8 +13,12 @@ import type { Trigger } from "../handles/trigger";
 import type { EventDescriptor } from "./descriptor";
 
 /**
- * One row of an events namespace. Its functions take no `self`, as the arrows
- * of a row written under `@noSelfInFile` do.
+ * One row of an events namespace (`PlayerEvents`, `DialogEvents` and the
+ * others): how its event registers and how its payload is read. Its
+ * functions take no `self`, as the arrows of a row written under
+ * `@noSelfInFile` do.
+ * @typeParam A - The arguments the member takes, after the Trigger.
+ * @typeParam P - The payload the event gives.
  * @noSelf
  */
 export interface EventRow<A extends readonly unknown[], P> {
@@ -29,16 +33,28 @@ export interface EventRow<A extends readonly unknown[], P> {
   readonly fixed?: true;
 }
 
-/** A row whose member is the descriptor itself. */
-export type FixedRow<P> = EventRow<[], P> & { readonly fixed: true };
+/**
+ * A row whose member is the descriptor itself, registered with no arguments
+ * (`PlayerEvents.leave`).
+ * @typeParam P - The payload the event gives.
+ */
+export type FixedRow<P> = EventRow<[], P> & {
+  /** Set: the member is the descriptor. */
+  readonly fixed: true;
+};
 
 /**
  * The members a table gives: the descriptor for a fixed row, a function of
- * the row's arguments for any other.
+ * the row's arguments for any other. It is the type of each events
+ * namespace but `UnitEvents`, and each member keeps its row's doc comment.
+ * @typeParam T - The table: one row per member.
  */
 export type EventDescriptors<T> = {
   readonly [K in keyof T]: T[K] extends EventRow<infer A, infer P>
-    ? T[K] extends { readonly fixed: true }
+    ? T[K] extends {
+        /** Set on a fixed row. */
+        readonly fixed: true;
+      }
       ? EventDescriptor<P>
       : (...args: A) => EventDescriptor<P>
     : never;
@@ -47,6 +63,10 @@ export type EventDescriptors<T> = {
 /**
  * The members of the namespace `namespace` (`PlayerEvents`) from its rows,
  * each descriptor named `namespace.member` in its `required` errors.
+ * @param namespace - The namespace's name, as a Map project writes it.
+ * @param rows - The rows, one per member.
+ * @returns The namespace: a descriptor per fixed row, a function returning
+ * one per other row.
  */
 export function eventRows<
   T extends { readonly [K in keyof T]: EventRow<never[], unknown> },

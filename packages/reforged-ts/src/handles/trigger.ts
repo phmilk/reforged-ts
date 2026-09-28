@@ -17,11 +17,20 @@ import { Widget } from "./widget";
 
 /** The mouse events `Trigger.registerPlayerMouseEvent` registers. */
 export const enum MouseEventKind {
-  /** A mouse button is pressed. */
+  /**
+   * A mouse button is pressed.
+   * @native EVENT_PLAYER_MOUSE_DOWN
+   */
   Down = "down",
-  /** A mouse button is released. */
+  /**
+   * A mouse button is released.
+   * @native EVENT_PLAYER_MOUSE_UP
+   */
   Up = "up",
-  /** The mouse moves. */
+  /**
+   * The mouse moves.
+   * @native EVENT_PLAYER_MOUSE_MOVE
+   */
   Move = "move",
 }
 
@@ -55,11 +64,44 @@ function isDamageEvent(event: playerunitevent | unitevent): boolean {
  */
 const damageTriggers = new WeakSet<trigger>();
 
+/**
+ * A game trigger: when one of the events registered on it fires, it
+ * evaluates its conditions, and runs its actions when they all hold.
+ * @remarks
+ * - `on()` creates one Trigger per handler from an Event descriptor, with a
+ *   typed payload. Use a Trigger directly for an event no descriptor covers,
+ *   or for several events sharing one action.
+ * - The `register*` members, `addAction` and `addCondition` return the
+ *   Trigger, so calls chain. An event cannot be unregistered: disable the
+ *   Trigger or destroy it.
+ * - In Dev mode every function a Trigger receives (action, condition,
+ *   filter) runs under `pcall`, and a failure is reported naming the
+ *   Trigger and the member that received it.
+ * @example Registering an event, a condition and an action
+ * {@includeCode ../../examples/harness/trigger-create.ts}
+ * @native trigger
+ */
 export class Trigger extends Handle<trigger> {
+  /**
+   * Creates a Trigger with no event, condition or action.
+   * @returns The new Trigger, enabled.
+   * @throws When the game returns no handle:
+   * `reforged-ts: failed to create Trigger`, at the calling line. In Dev
+   * mode also when called before the globals Init stage or inside
+   * `MapPlayer.runLocal`.
+   * @native CreateTrigger
+   */
   public static create(): Trigger {
     return this.expect(CreateTrigger());
   }
 
+  /**
+   * Whether the Trigger responds to its events: false disables it until it
+   * is set back to true. A disabled Trigger keeps its events, conditions and
+   * actions.
+   * @native EnableTrigger
+   * @native DisableTrigger
+   */
   public set enabled(flag: boolean) {
     if (flag) {
       EnableTrigger(this.handle);
@@ -68,24 +110,52 @@ export class Trigger extends Handle<trigger> {
     }
   }
 
+  /**
+   * Gets whether the Trigger responds to its events.
+   * @returns True unless it was disabled; a new Trigger is enabled.
+   * @native IsTriggerEnabled
+   */
   public get enabled() {
     return IsTriggerEnabled(this.handle);
   }
 
+  /**
+   * Gets how many times the Trigger's conditions were evaluated since it
+   * was created or last `reset`.
+   * @returns The number of evaluations, 0 or more.
+   * @native GetTriggerEvalCount
+   */
   public get evalCount() {
     return GetTriggerEvalCount(this.handle);
   }
 
+  /**
+   * Gets the event that fired the running Trigger.
+   * @returns The event's id, to compare with the `EVENT_*` constant it was
+   * registered with; meaningful only inside a Trigger's condition or action.
+   * @native GetTriggerEventId
+   */
   public static get eventId() {
     return GetTriggerEventId();
   }
 
+  /**
+   * Gets how many times the Trigger's actions ran since it was created or
+   * last `reset`.
+   * @returns The number of runs, 0 or more: a firing whose conditions fail
+   * counts in `evalCount`, not here.
+   * @native GetTriggerExecCount
+   */
   public get execCount() {
     return GetTriggerExecCount(this.handle);
   }
 
   /**
-   * Whether the Trigger is running, through `BlzTriggerIsRunning` (3.0.0).
+   * Gets whether the Trigger is running.
+   * @remarks
+   * The Native, added in 3.0.0, comes with no documentation from the Patch
+   * beyond its name.
+   * @returns True while the game reports the Trigger as running.
    * @native BlzTriggerIsRunning
    */
   public get isRunning(): boolean {
@@ -93,27 +163,41 @@ export class Trigger extends Handle<trigger> {
   }
 
   /**
-   * Marks the given trigger to wait/no longer wait for `TriggerSleepAction`s in sub trigger executions started via `TriggerExecuteWait`.
-   * Since this is an attribute of the execution rather than the trigger object, this affects future runs of the given trigger, and not
-   * those already started.
+   * Whether an `execWait` made by the Trigger's actions also waits for the
+   * `TriggerSleepAction` waits of the Trigger it runs. It is a mark on the
+   * Trigger read when a run starts: runs already going keep the value they
+   * started with.
    * @native TriggerWaitOnSleeps
    */
   public set waitOnSleeps(flag: boolean) {
     TriggerWaitOnSleeps(this.handle, flag);
   }
 
+  /**
+   * Gets whether an `execWait` made by the Trigger's actions waits for the
+   * sleeps of the Trigger it runs.
+   * @returns The value `waitOnSleeps` was last set to.
+   * @native IsTriggerWaitOnSleeps
+   */
   public get waitOnSleeps() {
     return IsTriggerWaitOnSleeps(this.handle);
   }
 
   /**
-   * Adds an action to the trigger.
-   * @remarks In Dev mode the action runs under `pcall`: one that throws is
-   * reported as `Trigger#<id> Trigger.addAction` and the trigger's next
-   * action still runs. On a Trigger carrying a damage event it also runs
-   * one level deeper in the damage depth `Unit.damageTarget` checks, the
-   * registration made before or after. With Dev mode off `TriggerAddAction`
-   * receives `actionFunc` itself.
+   * Adds a function the Trigger runs each time it fires and its conditions
+   * hold, after the actions added before it.
+   * @remarks
+   * - In Dev mode the action runs under `pcall`: one that throws is
+   *   reported as `Trigger#<id> Trigger.addAction` and the trigger's next
+   *   action still runs. On a Trigger carrying a damage event it also runs
+   *   one level deeper in the damage depth `Unit.damageTarget` checks, the
+   *   registration made before or after. With Dev mode off `TriggerAddAction`
+   *   receives `actionFunc` itself.
+   * - The `triggeraction` the Native returns is not kept, so `removeAction`
+   *   cannot remove this action: `removeActions` removes every action.
+   * @param actionFunc - The action; it reads the event through the lookups,
+   * such as `Unit.fromEvent()`.
+   * @returns The Trigger, for chaining.
    * @native TriggerAddAction
    */
   public addAction(actionFunc: () => void) {
@@ -125,20 +209,25 @@ export class Trigger extends Handle<trigger> {
   }
 
   /**
-   * Adds a new condition to the trigger: a `boolexpr`, or a function the
-   * trigger wraps with `Condition`.
-   *
-   * Adding more conditions later wil join them by AND (that means all conditions need to evaluate to `true`)
-   *
-   * @remarks In Dev mode a function condition runs under `pcall`: one that
-   * throws is reported as `Trigger#<id> Trigger.addCondition` and evaluates
-   * false, as the game evaluates a crashed condition. The same holds for the
-   * function filters of the `register*` members, reported under the member.
-   * On a Trigger carrying a damage event a function condition also runs one
-   * level deeper in the damage depth `Unit.damageTarget` checks.
+   * Adds a condition the Trigger evaluates when it fires: its actions run
+   * only when every condition returns true. A condition is a `boolexpr`, or
+   * a function the Trigger wraps with `Condition`.
+   * @remarks
+   * - Every condition is evaluated, in the order added, without
+   *   short-circuiting: join them with `And` or `Or` for that.
+   * - In Dev mode a function condition runs under `pcall`: one that throws
+   *   is reported as `Trigger#<id> Trigger.addCondition` and evaluates
+   *   false, as the game evaluates a crashed condition. The same holds for
+   *   the function filters of the `register*` members, reported under the
+   *   member. On a Trigger carrying a damage event a function condition also
+   *   runs one level deeper in the damage depth `Unit.damageTarget` checks.
+   * - The `triggercondition` the Native returns is not kept, so
+   *   `removeCondition` cannot remove this condition: `removeConditions`
+   *   removes every condition.
    * @example
    * {@includeCode ../../examples/harness/trigger-add-condition.ts}
    * @param condition - The condition which must evaluate to true in order to run the trigger's actions.
+   * @returns The Trigger, for chaining.
    * @native TriggerAddCondition
    * @native Condition
    */
@@ -201,16 +290,15 @@ export class Trigger extends Handle<trigger> {
   }
 
   /**
-   * Evaluates all functions that were added to the trigger via `addCondition`.
-   * All return-values from all added condition-functions are `and`ed together as the final return-value.
-   * Returns the boolean value of the return value from the condition-function.
-   * So if 0/0.0/null would be returned in the condition-function, `eval`
-   * would return false. Note that `""` would return `true`.
+   * Evaluates the Trigger's conditions now, without running its actions.
    * @remarks
+   * - All return-values from all added condition-functions are `and`ed together as the final return-value.
+   * - So if 0/0.0/null would be returned in the condition-function, `eval` would return false. Note that `""` would return `true`.
    * - If a condition-function crashes the thread or does not return any value `eval` will return false.
    * - If you want to return false for a condition-function that returns string (for whatever reason) return `null` instead of `""`
    * - *All* functions added via `addCondition` are run. There is no short-circuting. If you want short-circuting use `And` or `Or`.
    * - All functions added via `addCondition` are run in the order they were added.
+   * @returns True when every condition holds, or when the Trigger has none.
    * @native TriggerEvaluate
    */
   public eval() {
@@ -218,8 +306,11 @@ export class Trigger extends Handle<trigger> {
   }
 
   /**
-   * Calls the actions of a trigger in a new execution context.
-   * Control will return to the caller when the trigger has finished or has been suspended via TriggerSleepAction.
+   * Runs the Trigger's actions now, in a new thread, without evaluating its
+   * conditions.
+   * @remarks
+   * The call returns when the actions finish, or as soon as one of them
+   * sleeps with `TriggerSleepAction`: `execWait` can wait for the sleeps.
    * @native TriggerExecute
    */
   public exec() {
@@ -227,9 +318,11 @@ export class Trigger extends Handle<trigger> {
   }
 
   /**
-   * Does the same as `exec` but if the caller has been marked with `waitOnSleeps` before its
-   * execution, it will additionally wait for `TriggerSleepAction`s of the callee, so this really ensures that
-   * the callee has finished. If there was a `TriggerSleepAction`, there will be a short delay before returning.
+   * Runs the Trigger's actions as `exec` does and, when the running Trigger
+   * has `waitOnSleeps` set, waits for them to finish their
+   * `TriggerSleepAction` waits too.
+   * @remarks
+   * After a sleep in the actions, the call returns with a short delay.
    * @native TriggerExecuteWait
    */
   public execWait() {
@@ -237,7 +330,10 @@ export class Trigger extends Handle<trigger> {
   }
 
   /**
-   * Interrupts the Trigger, through `BlzTriggerInterrupt` (3.0.0).
+   * Interrupts the Trigger.
+   * @remarks
+   * The Native, added in 3.0.0, comes with no documentation from the Patch
+   * beyond its name.
    * @native BlzTriggerInterrupt
    */
   public interrupt() {
@@ -245,7 +341,14 @@ export class Trigger extends Handle<trigger> {
   }
 
   /**
-   * Registers the player unit event for the player in every slot, with no filter.
+   * Registers a player-unit event for the units of every player slot, with
+   * no filter.
+   * @remarks
+   * The players are read when it is called. A damage event marks the Trigger
+   * for the Dev-mode damage depth (see `addAction`).
+   * @param whichPlayerUnitEvent - The event, such as
+   * `EVENT_PLAYER_UNIT_DEATH`.
+   * @returns The Trigger, for chaining.
    * @native TriggerRegisterPlayerUnitEvent
    */
   public registerAnyUnitEvent(whichPlayerUnitEvent: playerunitevent) {
@@ -260,26 +363,68 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers a click on the command button of an ability, identified by
+   * the ability and its order string.
+   * @param whichAbility - The ability's rawcode, such as `FourCC("AHbz")`.
+   * @param order - The order string of the button, such as `"blizzard"`.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterCommandEvent
+   */
   public registerCommandEvent(whichAbility: number, order: string) {
     TriggerRegisterCommandEvent(this.handle, whichAbility, order);
     return this;
   }
 
+  /**
+   * Registers the death of a widget: a unit, an item or a destructable.
+   * @param whichWidget - The widget whose death fires the Trigger; read it
+   * back with `Widget.fromEvent()`.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterDeathEvent
+   */
   public registerDeathEvent(whichWidget: Widget) {
     TriggerRegisterDeathEvent(this.handle, whichWidget.handle);
     return this;
   }
 
+  /**
+   * Registers a click on one dialog button.
+   * @param whichButton - The button; read it back with
+   * `DialogButton.fromEvent()`.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterDialogButtonEvent
+   */
   public registerDialogButtonEvent(whichButton: DialogButton) {
     TriggerRegisterDialogButtonEvent(this.handle, whichButton.handle);
     return this;
   }
 
+  /**
+   * Registers a click on any button of a dialog.
+   * @param whichDialog - The dialog; read the clicked button with
+   * `DialogButton.fromEvent()`.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterDialogEvent
+   */
   public registerDialogEvent(whichDialog: Dialog) {
     TriggerRegisterDialogEvent(this.handle, whichDialog.handle);
     return this;
   }
 
+  /**
+   * Registers a unit entering a region, for the units the filter accepts.
+   * @remarks
+   * In Dev mode a function filter runs under `pcall`: one that throws is
+   * reported as `Trigger#<id> Trigger.registerEnterRegion` and rejects the
+   * unit.
+   * @param whichRegion - The region; read the entering unit with
+   * `Unit.fromEntering()`.
+   * @param filter - A `boolexpr`, or a function returning whether the unit
+   * counts, read with `Unit.fromFilter()`; every unit when left out.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterEnterRegion
+   */
   public registerEnterRegion(
     whichRegion: Region,
     filter?: boolexpr | (() => boolean),
@@ -292,6 +437,20 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers a unit event on one unit, when the filter accepts it.
+   * @remarks
+   * A damage event marks the Trigger for the Dev-mode damage depth (see
+   * `addAction`). In Dev mode a function filter runs under `pcall`: one that
+   * throws is reported as `Trigger#<id> Trigger.registerFilterUnitEvent` and
+   * evaluates false.
+   * @param whichUnit - The unit the event is registered on.
+   * @param whichEvent - The event, such as `EVENT_UNIT_DAMAGED`.
+   * @param filter - A `boolexpr`, or a function returning whether the event
+   * counts; every event when left out.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterFilterUnitEvent
+   */
   public registerFilterUnitEvent(
     whichUnit: Unit,
     whichEvent: unitevent,
@@ -309,6 +468,9 @@ export class Trigger extends Handle<trigger> {
 
   /**
    * Registers the frame event `event` of `frame`.
+   * @param frame - The Frame; read it back with `Frame.fromEvent()`.
+   * @param event - The frame event type, such as `FRAMEEVENT_CONTROL_CLICK`.
+   * @returns The Trigger, for chaining.
    * @native BlzTriggerRegisterFrameEvent
    */
   public registerFrameEvent(frame: Frame, event: frameeventtype) {
@@ -316,11 +478,26 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers a game event.
+   * @param whichGameEvent - The event, such as `EVENT_GAME_BUILD_SUBMENU`.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterGameEvent
+   */
   public registerGameEvent(whichGameEvent: gameevent) {
     TriggerRegisterGameEvent(this.handle, whichGameEvent);
     return this;
   }
 
+  /**
+   * Registers a game state reaching a limit.
+   * @param whichState - The state, such as `GAME_STATE_TIME_OF_DAY`.
+   * @param opcode - How the state compares with the limit, such as
+   * `GREATER_THAN_OR_EQUAL`.
+   * @param limitval - The limit.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterGameStateEvent
+   */
   public registerGameStateEvent(
     whichState: gamestate,
     opcode: limitop,
@@ -330,6 +507,19 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers a unit leaving a region, for the units the filter accepts.
+   * @remarks
+   * In Dev mode a function filter runs under `pcall`: one that throws is
+   * reported as `Trigger#<id> Trigger.registerLeaveRegion` and rejects the
+   * unit.
+   * @param whichRegion - The region; read the leaving unit with
+   * `Unit.fromLeaving()`.
+   * @param filter - A `boolexpr`, or a function returning whether the unit
+   * counts, read with `Unit.fromFilter()`; every unit when left out.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterLeaveRegion
+   */
   public registerLeaveRegion(
     whichRegion: Region,
     filter?: boolexpr | (() => boolean),
@@ -342,6 +532,14 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers a player changing one of its alliance settings toward another
+   * player.
+   * @param whichPlayer - The player whose setting changes.
+   * @param whichAlliance - The setting, such as `ALLIANCE_SHARED_VISION`.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterPlayerAllianceChange
+   */
   public registerPlayerAllianceChange(
     whichPlayer: MapPlayer,
     whichAlliance: alliancetype,
@@ -354,6 +552,16 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers a chat message of a player that contains a text, or equals it.
+   * @param whichPlayer - The player whose messages are watched.
+   * @param chatMessageToDetect - The text to detect; `""` detects every
+   * message.
+   * @param exactMatchOnly - True to fire only when the message equals the
+   * text, false when it contains it.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterPlayerChatEvent
+   */
   public registerPlayerChatEvent(
     whichPlayer: MapPlayer,
     chatMessageToDetect: string,
@@ -368,6 +576,14 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers a player event of one player.
+   * @param whichPlayer - The player; read it back with
+   * `MapPlayer.fromEvent()`.
+   * @param whichPlayerEvent - The event, such as `EVENT_PLAYER_LEAVE`.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterPlayerEvent
+   */
   public registerPlayerEvent(
     whichPlayer: MapPlayer,
     whichPlayerEvent: playerevent,
@@ -380,6 +596,18 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers a player pressing or releasing a key while holding modifier
+   * keys. The game syncs key events between players.
+   * @param whichPlayer - The player at the keyboard.
+   * @param whichKey - The key, such as `OSKEY_ESCAPE`.
+   * @param metaKey - The modifier keys that must be held, as a bit set: 0
+   * none, 1 Shift, 2 Ctrl, 4 Alt, 8 the Windows key; add them to combine.
+   * @param fireOnKeyDown - True to fire when the key goes down, repeatedly
+   * while it is held; false to fire once when it is released.
+   * @returns The Trigger, for chaining.
+   * @native BlzTriggerRegisterPlayerKeyEvent
+   */
   public registerPlayerKeyEvent(
     whichPlayer: MapPlayer,
     whichKey: oskeytype,
@@ -398,6 +626,10 @@ export class Trigger extends Handle<trigger> {
 
   /**
    * Registers the player event of the mouse event `kind` for the player.
+   * @param whichPlayer - The player at the mouse.
+   * @param kind - The mouse event: a button pressed, released, or the mouse
+   * moving.
+   * @returns The Trigger, for chaining.
    * @native TriggerRegisterPlayerEvent
    */
   public registerPlayerMouseEvent(
@@ -412,6 +644,16 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers a player state of one player reaching a limit.
+   * @param whichPlayer - The player whose state is watched.
+   * @param whichState - The state, such as `PLAYER_STATE_RESOURCE_GOLD`.
+   * @param opcode - How the state compares with the limit, such as
+   * `GREATER_THAN_OR_EQUAL`.
+   * @param limitval - The limit.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterPlayerStateEvent
+   */
   public registerPlayerStateEvent(
     whichPlayer: MapPlayer,
     whichState: playerstate,
@@ -428,6 +670,15 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers the arrival, at every player, of the data a player sent with
+   * `BlzSendSyncData` under a prefix.
+   * @param whichPlayer - The player who sends the data.
+   * @param prefix - The prefix the data is sent with.
+   * @param fromServer - Pass false: the data comes from `whichPlayer`.
+   * @returns The Trigger, for chaining.
+   * @native BlzTriggerRegisterPlayerSyncEvent
+   */
   public registerPlayerSyncEvent(
     whichPlayer: MapPlayer,
     prefix: string,
@@ -442,6 +693,22 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers a player-unit event for the units of one player, for the
+   * units the filter accepts.
+   * @remarks
+   * A damage event marks the Trigger for the Dev-mode damage depth (see
+   * `addAction`). In Dev mode a function filter runs under `pcall`: one that
+   * throws is reported as `Trigger#<id> Trigger.registerPlayerUnitEvent`
+   * and rejects the unit.
+   * @param whichPlayer - The player whose units are watched.
+   * @param whichPlayerUnitEvent - The event, such as
+   * `EVENT_PLAYER_UNIT_DEATH`.
+   * @param filter - A `boolexpr`, or a function returning whether the unit
+   * counts, read with `Unit.fromFilter()`; every unit when left out.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterPlayerUnitEvent
+   */
   public registerPlayerUnitEvent(
     whichPlayer: MapPlayer,
     whichPlayerUnitEvent: playerunitevent,
@@ -457,7 +724,18 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
-  // Creates it's own timer and triggers when it expires
+  /**
+   * Registers a timeout: the game runs a timer of its own for the Trigger,
+   * firing it once or periodically.
+   * @remarks
+   * Since Patch 1.32 a periodic registration fires at most about 100 times a
+   * second, whatever its timeout; a Timer has no such limit.
+   * @param timeout - The time before the Trigger fires, in seconds.
+   * @param periodic - True to fire every `timeout` seconds, false to fire
+   * once.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterTimerEvent
+   */
   public registerTimerEvent(timeout: number, periodic: boolean) {
     TriggerRegisterTimerEvent(this.handle, timeout, periodic);
     return this;
@@ -465,6 +743,8 @@ export class Trigger extends Handle<trigger> {
 
   /**
    * Registers the expiry of `timer`.
+   * @param timer - The Timer; read it back with `Timer.fromExpired()`.
+   * @returns The Trigger, for chaining.
    * @native TriggerRegisterTimerExpireEvent
    */
   public registerTimerExpire(timer: Timer) {
@@ -474,6 +754,9 @@ export class Trigger extends Handle<trigger> {
 
   /**
    * Registers a click on `trackable`.
+   * @param trackable - The Trackable; read it back with
+   * `Trackable.fromEvent()`.
+   * @returns The Trigger, for chaining.
    * @native TriggerRegisterTrackableHitEvent
    */
   public registerTrackableHit(trackable: Trackable) {
@@ -483,6 +766,9 @@ export class Trigger extends Handle<trigger> {
 
   /**
    * Registers the mouse moving over `trackable`.
+   * @param trackable - The Trackable; read it back with
+   * `Trackable.fromEvent()`.
+   * @returns The Trigger, for chaining.
    * @native TriggerRegisterTrackableTrackEvent
    */
   public registerTrackableTrack(trackable: Trackable) {
@@ -490,12 +776,37 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers a unit event on one unit.
+   * @remarks
+   * A damage event marks the Trigger for the Dev-mode damage depth (see
+   * `addAction`).
+   * @param whichUnit - The unit the event is registered on.
+   * @param whichEvent - The event, such as `EVENT_UNIT_DEATH`.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterUnitEvent
+   */
   public registerUnitEvent(whichUnit: Unit, whichEvent: unitevent) {
     this.noteEvent(whichEvent);
     TriggerRegisterUnitEvent(this.handle, whichUnit.handle, whichEvent);
     return this;
   }
 
+  /**
+   * Registers a unit coming within a distance of another unit, for the
+   * units the filter accepts.
+   * @remarks
+   * In Dev mode a function filter runs under `pcall`: one that throws is
+   * reported as `Trigger#<id> Trigger.registerUnitInRange` and rejects the
+   * unit.
+   * @param whichUnit - The unit others approach.
+   * @param range - The distance, in world units.
+   * @param filter - A `boolexpr`, or a function returning whether the
+   * approaching unit counts, read with `Unit.fromFilter()`; every unit when
+   * left out.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterUnitInRange
+   */
   public registerUnitInRange(
     whichUnit: Unit,
     range: number,
@@ -510,6 +821,16 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers a unit state of one unit reaching a limit.
+   * @param whichUnit - The unit whose state is watched.
+   * @param whichState - The state, such as `UNIT_STATE_LIFE`.
+   * @param opcode - How the state compares with the limit, such as
+   * `LESS_THAN`.
+   * @param limitval - The limit.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterUnitStateEvent
+   */
   public registerUnitStateEvent(
     whichUnit: Unit,
     whichState: unitstate,
@@ -526,11 +847,27 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Registers a click on the command button of an upgrade.
+   * @param whichUpgrade - The upgrade's rawcode, such as `FourCC("Rhme")`.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterUpgradeCommandEvent
+   */
   public registerUpgradeCommandEvent(whichUpgrade: number) {
     TriggerRegisterUpgradeCommandEvent(this.handle, whichUpgrade);
     return this;
   }
 
+  /**
+   * Registers a global real variable, named as the map script names it,
+   * reaching a limit.
+   * @param varName - The variable's name, such as `"udg_Score"`.
+   * @param opcode - How the variable compares with the limit, such as
+   * `EQUAL`.
+   * @param limitval - The limit.
+   * @returns The Trigger, for chaining.
+   * @native TriggerRegisterVariableEvent
+   */
   public registerVariableEvent(
     varName: string,
     opcode: limitop,
@@ -540,26 +877,62 @@ export class Trigger extends Handle<trigger> {
     return this;
   }
 
+  /**
+   * Removes one action from the Trigger.
+   * @remarks
+   * `addAction` does not return the `triggeraction` this takes: only an
+   * action added with `TriggerAddAction` directly can be removed.
+   * @param whichAction - The action, as `TriggerAddAction` returned it.
+   * @native TriggerRemoveAction
+   */
   public removeAction(whichAction: triggeraction) {
     TriggerRemoveAction(this.handle, whichAction);
   }
 
+  /**
+   * Removes every action of the Trigger; its events and conditions stay.
+   * @native TriggerClearActions
+   */
   public removeActions() {
     TriggerClearActions(this.handle);
   }
 
+  /**
+   * Removes one condition from the Trigger.
+   * @remarks
+   * `addCondition` does not return the `triggercondition` this takes: only a
+   * condition added with `TriggerAddCondition` directly can be removed.
+   * @param whichCondition - The condition, as `TriggerAddCondition` returned
+   * it.
+   * @native TriggerRemoveCondition
+   */
   public removeCondition(whichCondition: triggercondition) {
     TriggerRemoveCondition(this.handle, whichCondition);
   }
 
+  /**
+   * Removes every condition of the Trigger, so its actions run each time it
+   * fires; its events and actions stay.
+   * @native TriggerClearConditions
+   */
   public removeConditions() {
     TriggerClearConditions(this.handle);
   }
 
+  /**
+   * Resets `evalCount` and `execCount` to zero.
+   * @native ResetTrigger
+   */
   public reset() {
     ResetTrigger(this.handle);
   }
 
+  /**
+   * Gets the Trigger whose condition or action is running.
+   * @returns The running Trigger, or `undefined` outside a Trigger's
+   * condition or action.
+   * @native GetTriggeringTrigger
+   */
   public static fromEvent(): Trigger | undefined {
     return this.fromHandle(GetTriggeringTrigger());
   }
