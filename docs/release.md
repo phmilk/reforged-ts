@@ -386,7 +386,7 @@ Once a release is on npm, the `template-dispatch` job sends the Template (`phmil
 
 Every release dispatches, the ones that do not publish `reforged-ts` too: a release of the Typings, the harness or the lint plugin alone changes the Template's ranges. A dry run never dispatches.
 
-`pnpm release:template-dispatch --pack-dir <dir> --out <file>` (`release/src/template-dispatch.ts`, programmatic entry `templateDispatch(packDir, root)`) writes the request body from the publish plan of the `changeset pack` output and the workspace, prints the payload and writes it to the job summary; the job posts the body with `gh api`. The payload is the one the Template's `parsePayload` accepts, and the Template computes none of it:
+`pnpm release:template-dispatch --pack-dir <dir> --out <file> [--await-npm <minutes>]` (`release/src/template-dispatch.ts`, programmatic entries `templateDispatch(packDir, root)` and `awaitOnNpm(versions, wait)`) writes the request body from the publish plan of the `changeset pack` output and the workspace, prints the payload and writes it to the job summary; the job posts the body with `gh api`. The payload is the one the Template's `parsePayload` accepts, and the Template computes none of it:
 
 | Field        | Value                                                                                                                                                                                                                              |
 | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -396,7 +396,9 @@ Every release dispatches, the ones that do not publish `reforged-ts` too: a rele
 | `matrixUrl`  | `https://raw.githubusercontent.com/phmilk/reforged-ts/<tag>/release/compatibility/matrix.md`, [the compatibility matrix](#the-compatibility-matrix) fragment at the tag.                                                           |
 | `llmsUrl`    | `https://phmilk.github.io/reforged-ts/docs/<label>/llms.txt`, where the label is the library's docs version as [the docs version stamp](#the-version-step-releaseversion) names it: its `major.minor`, or `next` for a prerelease. |
 
-It fails, sending nothing, when the plan publishes none of the four packages, one of them is in neither the plan nor the workspace, or the library version is not a semantic version. Exit codes: 0 written, 1 a plan it cannot read or dispatch, 2 usage.
+**Waiting for npm.** npm lists a version it accepted after a delay, and the Template's sync installs the payload's versions as soon as it starts: dispatched too early, it would install the versions before them. With `--await-npm <minutes>` the body is written only once the registry's install metadata (the document `pnpm update` resolves from) lists every version of the payload, asked every 15 seconds. The job waits up to 10 minutes in a release, and not at all in the dry run, whose versions are not published.
+
+It fails, writing and sending nothing, when the plan publishes none of the four packages, one of them is in neither the plan nor the workspace, the library version is not a semantic version, or npm does not list a version in time. Exit codes: 0 written, 1 a plan it cannot read or dispatch, or a release npm does not list in time, 2 usage.
 
 The request needs Contents write on the Template: the job mints the App's token for the Template, where the App is installed too ([its prerequisites](#prerequisites-outside-this-repository)), through `.github/actions/app-token` with `repository: reforged-ts-template`.
 

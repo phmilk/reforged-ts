@@ -19,6 +19,7 @@ import { repositoryRoot } from "../workspace.js";
 import {
   errorMessage,
   invokedDirectly,
+  parseOptions,
   PROCESS_OUTPUT,
   type Output,
 } from "./common.js";
@@ -33,30 +34,6 @@ export interface Context {
   git: GitRunner;
 }
 
-function parseArgs(
-  args: readonly string[],
-): { packDir: string; into: string } | undefined {
-  const options = new Map<string, string>();
-  for (let i = 0; i < args.length; i += 2) {
-    const [option, value] = [args[i], args.at(i + 1)];
-    if (
-      (option !== "--pack-dir" && option !== "--into") ||
-      options.has(option) ||
-      value === undefined ||
-      value === "" ||
-      value.startsWith("--")
-    ) {
-      return undefined;
-    }
-    options.set(option, value);
-  }
-  const packDir = options.get("--pack-dir");
-  const into = options.get("--into");
-  return packDir === undefined || into === undefined
-    ? undefined
-    : { packDir, into };
-}
-
 export async function main(
   args: readonly string[],
   output: Output,
@@ -67,16 +44,20 @@ export async function main(
     git: runGit,
   },
 ): Promise<number> {
-  const options = parseArgs(args);
+  const options = parseOptions(
+    args,
+    ["--pack-dir", "--into"],
+    ["--pack-dir", "--into"],
+  );
   if (options === undefined) {
     output.stderr(USAGE);
     return 2;
   }
-  const into = resolve(context.cwd, options.into);
+  const into = resolve(context.cwd, options["--into"]);
 
   try {
     const ref = await releaseTemplateRef(
-      resolve(context.cwd, options.packDir),
+      resolve(context.cwd, options["--pack-dir"]),
       context.root,
     );
     const result = await cloneTemplate({

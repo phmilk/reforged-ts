@@ -263,7 +263,7 @@ jobs:
       (needs.publish.result == 'success' ||
       (needs.publish.result == 'skipped' && needs.select.outputs.dry-run == 'true'))
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     permissions:
       contents: read
     steps:
@@ -279,9 +279,16 @@ jobs:
           artifact-ids: ${{ needs.pack.outputs.artifact-id }}
           path: ${{ runner.temp }}/pack
       # The versions of the plan, the workspace's for a package the release
-      # does not publish; the tag and the URLs follow from them.
+      # does not publish; the tag and the URLs follow from them. A release
+      # waits until npm lists them: the Template's sync installs them as soon
+      # as it starts.
       - name: Payload
-        run: pnpm release:template-dispatch --pack-dir "$RUNNER_TEMP/pack" --out "$RUNNER_TEMP/dispatch.json"
+        env:
+          DRY_RUN: ${{ needs.select.outputs.dry-run }}
+        run: |
+          wait=(--await-npm 10)
+          if [ "$DRY_RUN" = true ]; then wait=(); fi
+          pnpm release:template-dispatch --pack-dir "$RUNNER_TEMP/pack" --out "$RUNNER_TEMP/dispatch.json" "${wait[@]}"
       # repository_dispatch needs Contents write on the Template, where the
       # App is installed too.
       - id: app
