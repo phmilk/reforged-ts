@@ -12,6 +12,7 @@ import {
   Frame,
   MapPlayer,
   MouseEventKind,
+  Reforged,
   Region,
   Timer,
   Trackable,
@@ -20,7 +21,7 @@ import {
 } from "../src/index";
 import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
-import { withNative } from "./support/native-override";
+import { type NativeName, withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
 const player = defined(MapPlayer.fromIndex(0), "the player in slot 0");
@@ -447,6 +448,21 @@ describe("Trigger.addCondition", () => {
     ]);
   });
 
+  it("destroys the Condition it made when TriggerAddCondition returns nil", () => {
+    const trigger = Trigger.create();
+    const condition = () => true;
+    const created = returnedBy("Condition", () => {
+      withNative(
+        "TriggerAddCondition",
+        () => undefined,
+        () => trigger.addCondition(condition),
+      );
+    });
+    expect(destroyed(created[0])).toEqual(true);
+    trigger.removeCondition(condition);
+    expect(callsOn(trigger, "TriggerRemoveCondition")).toEqual([]);
+  });
+
   it("passes a boolexpr as is", () => {
     const trigger = Trigger.create();
     const expr = Filter(() => true);
@@ -506,3 +522,276 @@ describe("Trigger.isRunning and Trigger.interrupt", () => {
     );
   });
 });
+
+/**
+ * What each call of the Native `name` returned while `body` ran, in order,
+ * the stub still running (and recording) for each.
+ */
+function returnedBy(name: NativeName, body: () => void): handle[] {
+  const globals = _G as unknown as Record<
+    string,
+    (...args: unknown[]) => handle
+  >;
+  const stub = globals[name];
+  const returned: handle[] = [];
+  globals[name] = (...args: unknown[]) => {
+    const result = stub(...args);
+    returned.push(result);
+    return result;
+  };
+  try {
+    body();
+  } finally {
+    globals[name] = stub;
+  }
+  return returned;
+}
+
+/** Whether the call log holds a `DestroyCondition` of `expr`. */
+function destroyed(expr: handle): boolean {
+  const line = `DestroyCondition(${handleRef("conditionfunc", expr)})`;
+  return stubCalls().includes(line);
+}
+
+let globalsEntered = false;
+
+/**
+ * Runs `body` with Dev mode on or off, Dev mode off again afterwards. In Dev
+ * mode a Trigger is created only after the globals Init stage, entered once.
+ */
+function inMode(devMode: boolean, body: () => void): void {
+  if (devMode && !globalsEntered) {
+    __stub_init_globals();
+    globalsEntered = true;
+  }
+  Reforged.configure({ devMode });
+  try {
+    body();
+  } finally {
+    Reforged.configure({ devMode: false });
+  }
+}
+
+for (const devMode of [false, true]) {
+  const mode = devMode ? "in Dev mode" : "with Dev mode off";
+
+  describe(`Trigger.removeAction ${mode}`, () => {
+    it("removes the action TriggerAddAction returned for the function, and returns the Trigger", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        let removedRan = 0;
+        let keptRan = 0;
+        const removed = () => {
+          removedRan++;
+        };
+        const [action] = returnedBy("TriggerAddAction", () => {
+          trigger.addAction(removed);
+        });
+        trigger.addAction(() => {
+          keptRan++;
+        });
+        expect(trigger.removeAction(removed)).toBe(trigger);
+        expect(callsOn(trigger, "TriggerRemoveAction")).toEqual([
+          `TriggerRemoveAction(${handleRef("trigger", trigger.handle)}, ${handleRef("triggeraction", action)})`,
+        ]);
+        __stub_fire_trigger(trigger.handle);
+        expect(removedRan).toEqual(0);
+        expect(keptRan).toEqual(1);
+      });
+    });
+
+    it("removes every action a function added twice, and nothing on a second removal", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        const twice = () => undefined;
+        const actions = returnedBy("TriggerAddAction", () => {
+          trigger.addAction(twice).addAction(twice);
+        });
+        expect(actions.length).toEqual(2);
+        trigger.removeAction(twice).removeAction(twice);
+        const ref = handleRef("trigger", trigger.handle);
+        expect(callsOn(trigger, "TriggerRemoveAction")).toEqual(
+          actions.map(
+            (action) =>
+              `TriggerRemoveAction(${ref}, ${handleRef("triggeraction", action)})`,
+          ),
+        );
+      });
+    });
+
+    it("calls no Native for a function never added", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create().addAction(() => undefined);
+        const empty = Trigger.create();
+        expect(trigger.removeAction(() => undefined)).toBe(trigger);
+        expect(empty.removeAction(() => undefined)).toBe(empty);
+        expect(callsOn(trigger, "TriggerRemoveAction")).toEqual([]);
+        expect(callsOn(empty, "TriggerRemoveAction")).toEqual([]);
+      });
+    });
+
+    it("passes a triggeraction straight to the Native", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        const raw = TriggerAddAction(trigger.handle, () => undefined);
+        expect(trigger.removeAction(raw)).toBe(trigger);
+        expect(callsOn(trigger, "TriggerRemoveAction")).toEqual([
+          `TriggerRemoveAction(${handleRef("trigger", trigger.handle)}, ${handleRef("triggeraction", raw)})`,
+        ]);
+      });
+    });
+
+    it("forgets the actions after removeActions", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        const action = () => undefined;
+        expect(trigger.addAction(action).removeActions()).toBe(trigger);
+        trigger.removeAction(action);
+        expect(callsOn(trigger, "TriggerClearActions").length).toEqual(1);
+        expect(callsOn(trigger, "TriggerRemoveAction")).toEqual([]);
+      });
+    });
+  });
+
+  describe(`Trigger.removeCondition ${mode}`, () => {
+    it("removes the condition added for a function and destroys its Condition", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        const condition = () => false;
+        let conditions: handle[] = [];
+        const created = returnedBy("Condition", () => {
+          conditions = returnedBy("TriggerAddCondition", () => {
+            trigger.addCondition(condition);
+          });
+        });
+        expect(trigger.removeCondition(condition)).toBe(trigger);
+        expect(callsOn(trigger, "TriggerRemoveCondition")).toEqual([
+          `TriggerRemoveCondition(${handleRef("trigger", trigger.handle)}, ${handleRef("triggercondition", conditions[0])})`,
+        ]);
+        expect(destroyed(created[0])).toEqual(true);
+        // With the condition gone, the actions run.
+        expect(__stub_fire_trigger(trigger.handle)).toEqual(true);
+      });
+    });
+
+    it("removes a caller's boolexpr without destroying it", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        const expr = Condition(() => false);
+        const conditions = returnedBy("TriggerAddCondition", () => {
+          trigger.addCondition(expr);
+        });
+        expect(trigger.removeCondition(expr)).toBe(trigger);
+        expect(callsOn(trigger, "TriggerRemoveCondition")).toEqual([
+          `TriggerRemoveCondition(${handleRef("trigger", trigger.handle)}, ${handleRef("triggercondition", conditions[0])})`,
+        ]);
+        expect(destroyed(expr)).toEqual(false);
+      });
+    });
+
+    it("removes every condition a value added twice, and nothing on a second removal", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        const twice = () => true;
+        let conditions: handle[] = [];
+        const created = returnedBy("Condition", () => {
+          conditions = returnedBy("TriggerAddCondition", () => {
+            trigger.addCondition(twice).addCondition(twice);
+          });
+        });
+        expect(conditions.length).toEqual(2);
+        trigger.removeCondition(twice).removeCondition(twice);
+        const ref = handleRef("trigger", trigger.handle);
+        expect(callsOn(trigger, "TriggerRemoveCondition")).toEqual(
+          conditions.map(
+            (condition) =>
+              `TriggerRemoveCondition(${ref}, ${handleRef("triggercondition", condition)})`,
+          ),
+        );
+        expect(created.map((expr) => destroyed(expr))).toEqual([true, true]);
+      });
+    });
+
+    it("calls no Native for a function or boolexpr never added", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create().addCondition(() => true);
+        const empty = Trigger.create();
+        const unknown = Filter(() => true);
+        const before = stubCalls().length;
+        expect(trigger.removeCondition(() => true)).toBe(trigger);
+        expect(trigger.removeCondition(unknown)).toBe(trigger);
+        expect(empty.removeCondition(() => true)).toBe(empty);
+        expect(
+          stubCalls()
+            .slice(before)
+            .filter(
+              (line) =>
+                line.startsWith("TriggerRemoveCondition") ||
+                line.startsWith("DestroyCondition"),
+            ),
+        ).toEqual([]);
+      });
+    });
+
+    it("passes a triggercondition straight to the Native", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        const expr = Condition(() => true);
+        const raw = defined(
+          TriggerAddCondition(trigger.handle, expr),
+          "the triggercondition",
+        );
+        expect(trigger.removeCondition(raw)).toBe(trigger);
+        expect(callsOn(trigger, "TriggerRemoveCondition")).toEqual([
+          `TriggerRemoveCondition(${handleRef("trigger", trigger.handle)}, ${handleRef("triggercondition", raw)})`,
+        ]);
+        expect(destroyed(expr)).toEqual(false);
+      });
+    });
+
+    it("destroys the created Conditions on removeConditions, and forgets them", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        const condition = () => true;
+        const expr = Condition(() => true);
+        const created = returnedBy("Condition", () => {
+          trigger.addCondition(condition).addCondition(expr);
+        });
+        expect(trigger.removeConditions()).toBe(trigger);
+        expect(destroyed(created[0])).toEqual(true);
+        expect(destroyed(expr)).toEqual(false);
+        trigger.removeCondition(condition).removeCondition(expr);
+        expect(callsOn(trigger, "TriggerClearConditions").length).toEqual(1);
+        expect(callsOn(trigger, "TriggerRemoveCondition")).toEqual([]);
+      });
+    });
+  });
+
+  describe(`Trigger.destroy ${mode}`, () => {
+    it("destroys the created Conditions and forgets what was added", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        const handle = trigger.handle;
+        const action = () => undefined;
+        const condition = () => true;
+        const expr = Condition(() => true);
+        const created = returnedBy("Condition", () => {
+          trigger.addAction(action).addCondition(condition).addCondition(expr);
+        });
+        trigger.destroy();
+        expect(destroyed(created[0])).toEqual(true);
+        expect(destroyed(expr)).toEqual(false);
+        // The registry forgot the destroyed Wrapper: a lookup makes a new
+        // one, which has nothing left to remove.
+        const again = defined(Trigger.fromHandle(handle), "the new Wrapper");
+        const before = stubCalls().length;
+        again.removeAction(action).removeCondition(condition);
+        expect(
+          stubCalls()
+            .slice(before)
+            .filter((line) => line.startsWith("TriggerRemove")),
+        ).toEqual([]);
+      });
+    });
+  });
+}

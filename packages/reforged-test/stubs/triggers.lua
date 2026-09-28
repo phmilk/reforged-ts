@@ -275,6 +275,12 @@ function Filter(func)
   return expr
 end
 
+-- DestroyCondition records its call and marks the conditionfunc destroyed.
+function DestroyCondition(c)
+  __stub_record("DestroyCondition", c)
+  c.destroyed = true
+end
+
 -- The damage exception: a registration for a damage event also keeps its
 -- trigger, its unit or player, its event and its filter, in registration
 -- order, because UnitDamageTarget dispatches the damage to the triggers the

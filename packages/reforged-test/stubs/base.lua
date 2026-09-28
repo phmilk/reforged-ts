@@ -60,10 +60,19 @@ function __stub_args(name)
   return table.move(calls, 1, #calls, 1, {})
 end
 
+-- What every handle's tostring gives, as the game's does: its kind, a colon
+-- and a number (the game writes the address, the stubs the handle id), so
+-- code reading a handle's type from tostring works on the stubs.
+local handleMetatable = {
+  __tostring = function(handle)
+    return handle.__kind .. ": " .. tostring(handle.__handleId)
+  end,
+}
+
 -- A new handle of the given kind with the next id.
 function __stub_new_handle(kind)
   nextHandleId = nextHandleId + 1
-  return { __kind = kind, __handleId = nextHandleId }
+  return setmetatable({ __kind = kind, __handleId = nextHandleId }, handleMetatable)
 end
 
 -- A constant of the game (PLAYER_SLOT_STATE_PLAYING, MAP_CONTROL_USER): an
