@@ -20,14 +20,22 @@ import { enqueue, runQueue } from "./queue";
 import { type EntryPoint, type Origin, state } from "./state";
 import { wrapGlobal } from "./wrapping";
 
-/** Whether `name` is one of the four entry points. */
+/**
+ * Tells whether `name` is one of the four entry points.
+ * @param name - The name to check, such as `"main::before"`.
+ * @returns True for an entry point, which narrows `name` to it.
+ */
 export function isEntryPoint(name: string): name is EntryPoint {
   return name in state.entryPoints;
 }
 
 /**
  * Registers `callback` for `entryPoint`, in the library's name or the Map
- * project's, named `label` in failure lines.
+ * project's.
+ * @param entryPoint - When it runs: before or after `main` or `config`.
+ * @param origin - Who registers it: the library or the Map project.
+ * @param callback - The function to run.
+ * @param label - Its name in failure lines; its ordinal, `#n`, when left out.
  */
 export function onEntryPoint(
   entryPoint: EntryPoint,

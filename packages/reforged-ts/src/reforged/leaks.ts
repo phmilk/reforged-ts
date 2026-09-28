@@ -75,6 +75,8 @@ function rowOf(className: string): CountRow {
 /**
  * Counts `handle` created as a `className` Wrapper, once. Called in Dev mode
  * only.
+ * @param className - The Wrapper's class name, such as `"Timer"`.
+ * @param handle - The Handle the Wrapper was created for.
  */
 export function countCreated(className: string, handle: handle): void {
   const counted = store().counted;
@@ -89,6 +91,7 @@ export function countCreated(className: string, handle: handle): void {
  * Counts `handle` destroyed, under the class it was counted created as, when
  * it was counted created since the last reset; otherwise counts nothing.
  * Called in Dev mode only.
+ * @param handle - The Handle whose Wrapper was destroyed.
  */
 export function countDestroyed(handle: handle): void {
   const counted = store().counted;
@@ -101,9 +104,9 @@ export function countDestroyed(handle: handle): void {
 }
 
 /**
- * The counts since the last reset, one row per class, sorted by live
- * descending, then by class name so equal rows come in the same order on
- * every run.
+ * Lists the counts since the last reset.
+ * @returns One row per class, sorted by live descending, then by class name
+ * so equal rows come in the same order on every run.
  */
 export function wrapperCounts(): WrapperCount[] {
   const counts: WrapperCount[] = [];

@@ -127,6 +127,8 @@ function intercept(): void {
  * Wraps the global function `name` in place, or, when the global is nil now,
  * on its first assignment. A global that already is a wrapper is left as it
  * is.
+ * @param name - The global's name, such as `"InitGlobals"`.
+ * @param around - What the wrapper runs before and after the original.
  */
 export function wrapGlobal(name: string, around: Around): void {
   const current = rawget(globals, name);

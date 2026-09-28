@@ -27,6 +27,7 @@ type KeyKind = "number" | "string";
 /**
  * The present keys of one collection and their sorted order. Internal to the
  * two synced collections; not exported from the library.
+ * @typeParam K - The type of the keys.
  */
 export class SortedKeys<K extends AnyNotNil> {
   private readonly present = new LuaSet<K>();
@@ -42,18 +43,33 @@ export class SortedKeys<K extends AnyNotNil> {
     private readonly comparator: KeyComparator<K> | undefined,
   ) {}
 
+  /**
+   * The number of present keys.
+   * @returns The count, kept as the keys come and go.
+   */
   public get size(): number {
     return this.count;
   }
 
+  /**
+   * Tells whether `key` is present.
+   * @param key - The key to look up.
+   * @returns True when it is present.
+   */
   public has(key: K): boolean {
     return this.present.has(key);
   }
 
   /**
-   * Adds `key` when it is absent; returns whether it was. In Dev mode, a key
-   * a comparator-less instance cannot order against the present keys raises,
-   * aimed at the line that called the collection's inserting member.
+   * Adds `key` when it is absent.
+   * @param key - The key to add.
+   * @returns True when it was absent and is now present.
+   * @throws In Dev mode, without a comparator, when `key` is neither a number
+   * nor a string, or not of the kind of the present keys, aimed at the line
+   * that called the collection's inserting member:
+   * `reforged-ts: <owner> without a comparator takes number or string keys, got a <kind>: pass a comparator to the constructor to order other keys`,
+   * or
+   * `reforged-ts: <owner> without a comparator takes keys of one kind, got a <kind> after <kind> keys: the sorted order that keeps iteration identical on every client cannot compare them`.
    */
   public add(key: K): boolean {
     if (this.present.has(key)) {
@@ -72,7 +88,11 @@ export class SortedKeys<K extends AnyNotNil> {
     return true;
   }
 
-  /** Removes `key`; returns whether it was present. */
+  /**
+   * Removes `key`; it stays in the sorted array until the next sort.
+   * @param key - The key to remove.
+   * @returns True when it was present.
+   */
   public remove(key: K): boolean {
     if (!this.present.has(key)) {
       return false;
@@ -86,6 +106,7 @@ export class SortedKeys<K extends AnyNotNil> {
     return true;
   }
 
+  /** Removes every key, walking the array by index. */
   public clear(): void {
     const list = this.list;
     for (const key of list) {
@@ -99,8 +120,10 @@ export class SortedKeys<K extends AnyNotNil> {
   }
 
   /**
-   * A copy of the present keys in sorted order, taken now: the caller walks
-   * it by index, so mutations during the walk never shift it.
+   * Copies the present keys in sorted order, sorting first when a mutation
+   * came since the last sort.
+   * @returns A copy taken now: the caller walks it by index, so mutations
+   * during the walk never shift it.
    */
   public snapshot(): K[] {
     this.sort();

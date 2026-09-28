@@ -82,9 +82,13 @@ function catchUpTo(stage: InitStage): void {
 
 /**
  * Registers `callback` for `stage`, in the library's queue or the Map
- * project's, named `label` in failure lines. A stage that already ran runs
- * the callback at once under pcall; a stage running now takes it into the
- * run.
+ * project's. A stage that already ran runs the callback at once under pcall;
+ * a stage running now takes it into the run.
+ * @param stage - The stage to run it at.
+ * @param origin - Whose queue: the library's, run first, or the Map
+ * project's.
+ * @param callback - The function to run.
+ * @param label - Its name in failure lines; its ordinal, `#n`, when left out.
  */
 export function onStage(
   stage: InitStage,
@@ -100,16 +104,19 @@ export function onStage(
 }
 
 /**
- * Whether the stage's run started: its Blizzard function returned and its
- * callbacks began, or finished. True inside the stage's own callbacks.
+ * Tells whether the stage's run started.
+ * @param stage - The stage to ask about.
+ * @returns True once its Blizzard function returned and its callbacks began,
+ * so already inside the stage's own callbacks.
  */
 export function hasRun(stage: InitStage): boolean {
   return state.stages[stage].started;
 }
 
 /**
- * The stage whose run is in progress, or undefined. The immediate run of a
- * late registration does not set it.
+ * Gets the stage whose run is in progress. The immediate run of a late
+ * registration does not set it.
+ * @returns The stage, or `undefined` between stages and once all ran.
  */
 export function currentStage(): InitStage | undefined {
   return state.current;
