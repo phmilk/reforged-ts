@@ -4,7 +4,12 @@
 
 import type { MapPlayer } from "../handles/player";
 
-/** Whether `player` is a user who is playing. */
+/**
+ * Tells whether `player` is a user who is playing: a human in a slot whose
+ * state is playing.
+ * @param player - The player to check, if any.
+ * @returns True for a playing user, which narrows `player` to a `MapPlayer`.
+ */
 export function isPlayingUser(
   player: MapPlayer | undefined,
 ): player is MapPlayer {

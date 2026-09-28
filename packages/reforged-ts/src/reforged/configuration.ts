@@ -44,6 +44,8 @@ export const configuration = anchored<Configuration>("configuration", () => ({
  * Remembers `name` as the first registration, unless one came before. The
  * name is built by the caller only when `configuration.firstRegistration` is
  * undefined, so a registration after the first costs one read.
+ * @param name - The registration as a warning names it, such as
+ * `Init.onGlobals "spawn"`.
  */
 export function noteRegistration(name: string): void {
   configuration.firstRegistration ??= name;

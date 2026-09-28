@@ -21,9 +21,12 @@ import { configuration } from "./configuration";
 const damage = anchored<{ depth: number }>("damage", () => ({ depth: 0 }));
 
 /**
- * `fn` run one level deeper, then back at the depth it started at. `fn`
- * must not throw (a protected callback in Dev mode never does), or the
- * depth is not restored.
+ * Runs `fn` one level deeper in the damage depth, then goes back to the
+ * depth it started at. `fn` must not throw (a protected callback in Dev mode
+ * never does), or the depth is not restored.
+ * @typeParam R - What `fn` returns.
+ * @param fn - The damage-trigger action or condition.
+ * @returns What `fn` returned.
  */
 export function damageNested<R>(fn: () => R): R {
   damage.depth++;
@@ -34,8 +37,12 @@ export function damageNested<R>(fn: () => R): R {
 
 /**
  * Raises when damage handlers nest deeper than the configured limit: `unit`
- * dealing damage now would dispatch the damage events once more. `level` is
- * the one the caller would give `error` to name the Map project's line.
+ * dealing damage now would dispatch the damage events once more.
+ * @param unit - The unit about to deal damage, which the message names.
+ * @param level - The level the caller would give `error` to name the Map
+ * project's line.
+ * @throws When the damage depth is past `damageDepthLimit`, at `level`:
+ * `reforged-ts: Unit#<id> Unit.damageTarget at damage depth <depth>, past the limit of <limit>: a damage handler that deals damage fires the damage events again, which loops until the client crashes`.
  */
 export function assertDamageDepth(unit: Handle<handle>, level: number): void {
   const limit = configuration.damageDepthLimit;

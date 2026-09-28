@@ -13,7 +13,10 @@ import { onHandleReleased } from "../handles/handle";
 
 /** One collection as the registration sees it: how to drop a Handle. */
 export interface HandleHolder {
-  /** Removes the entry of `handle`, which the release step just released. */
+  /**
+   * Removes the entry of `handle`, which the release step just released.
+   * @param handle - The released Handle.
+   */
   drop(handle: handle): void;
 }
 
@@ -25,7 +28,11 @@ export interface HandleHolder {
  */
 const holdersOf = new WeakMap<handle, Set<HandleHolder>>();
 
-/** Registers `holder` as holding `handle`: `set` and `add` call it. */
+/**
+ * Registers `holder` as holding `handle`: `set` and `add` call it.
+ * @param handle - The Handle a collection now holds.
+ * @param holder - The collection.
+ */
 export function hold(handle: handle, holder: HandleHolder): void {
   let holders = holdersOf.get(handle);
   if (holders === undefined) {
@@ -35,7 +42,11 @@ export function hold(handle: handle, holder: HandleHolder): void {
   holders.add(holder);
 }
 
-/** Unregisters `holder` for `handle`: `delete` and `clear` call it. */
+/**
+ * Unregisters `holder` for `handle`: `delete` and `clear` call it.
+ * @param handle - The Handle the collection no longer holds.
+ * @param holder - The collection.
+ */
 export function unhold(handle: handle, holder: HandleHolder): void {
   const holders = holdersOf.get(handle);
   if (holders === undefined) {
@@ -48,9 +59,11 @@ export function unhold(handle: handle, holder: HandleHolder): void {
 }
 
 /**
- * The number of collections registered as holding `handle`: what its
- * `destroy()` would notify. 0 once every holder deleted it, cleared or was
- * told of its release; how a test sees that nothing is left to notify.
+ * Counts the collections registered as holding `handle`: what its
+ * `destroy()` would notify. How a test sees that nothing is left to notify.
+ * @param handle - The Handle to ask about.
+ * @returns The count; 0 once every holder deleted it, cleared or was told of
+ * its release.
  */
 export function holderCount(handle: handle): number {
   return holdersOf.get(handle)?.size ?? 0;
@@ -70,13 +83,18 @@ onHandleReleased(({ handle }) => {
 });
 
 /**
- * An iterator over the Handles `entries` holds now, in insertion order, each
- * read through `read` with what `entries` stores for it (an object, never
- * undefined, so a missing entry is one deleted). It walks a snapshot of the keys, so an entry deleted
- * during the loop (by `delete`, `clear` or a `destroy()`) is skipped when
- * the loop reaches it and the loop goes on, and an entry added during the
- * loop is not visited. typescript-to-lua's own `Map` iterator stops at an
- * entry deleted under it.
+ * Iterates over the Handles `entries` holds now, in insertion order. It
+ * walks a snapshot of the keys, so an entry deleted during the loop (by
+ * `delete`, `clear` or a `destroy()`) is skipped when the loop reaches it and
+ * the loop goes on, and an entry added during the loop is not visited.
+ * typescript-to-lua's own `Map` iterator stops at an entry deleted under it.
+ * @typeParam T - What `entries` stores per Handle: an object, never
+ * undefined, so a missing entry is one deleted.
+ * @typeParam R - What the iterator yields.
+ * @param entries - The collection's store, keyed by Handle.
+ * @param read - Turns a Handle and what `entries` stores for it into the
+ * value yielded.
+ * @returns The iterator, also iterable.
  */
 export function iterateHandles<T extends object, R>(
   entries: ReadonlyMap<handle, T>,

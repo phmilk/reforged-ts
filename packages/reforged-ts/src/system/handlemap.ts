@@ -70,41 +70,51 @@ export class HandleMap<K extends Handle<handle>, V> {
    * @remarks
    * Kept in step on every client by the same insertions, deletions and
    * destructions, so it is safe to branch on in multiplayer.
+   * @returns The entry count.
    */
   public get size(): number {
     return this.entryOf.size;
   }
 
   /**
-   * The value stored for `key`'s Handle, or undefined when there is none.
+   * Gets the value stored for `key`'s Handle.
    *
    * @remarks
    * Looks up by Handle, so any Wrapper of the same game object finds the
    * entry, on every client alike.
+   * @param key - A Wrapper of the game object.
+   * @returns The value, or `undefined` when no entry is stored for the
+   * Handle.
    */
   public get(key: K): V | undefined {
     return this.entryOf.get(key.handle)?.value;
   }
 
   /**
-   * Whether an entry is stored for `key`'s Handle.
+   * Tells whether an entry is stored for `key`'s Handle.
    *
    * @remarks
    * Looks up by Handle, so any Wrapper of the same game object answers the
    * same, on every client alike.
+   * @param key - A Wrapper of the game object.
+   * @returns True when an entry is stored.
    */
   public has(key: K): boolean {
     return this.entryOf.has(key.handle);
   }
 
   /**
-   * Stores `value` for `key`'s Handle and returns this map. A new key goes
-   * last in the iteration order; an existing one keeps its place.
+   * Stores `value` for `key`'s Handle. A new key goes last in the iteration
+   * order; an existing one keeps its place.
    *
    * @remarks
    * The insertion order is the iteration order, so call it from synchronous
    * code, never inside `MapPlayer.runLocal`, for loops to agree across
    * clients.
+   * @param key - A Wrapper of the game object; the canonical one is
+   * returned in loops.
+   * @param value - The value to store.
+   * @returns This map, for chaining.
    */
   public set(key: K, value: V): this {
     const handle = key.handle;
@@ -120,12 +130,14 @@ export class HandleMap<K extends Handle<handle>, V> {
   }
 
   /**
-   * Removes the entry of `key`'s Handle; returns whether there was one.
-   * After it, destroying the key has nothing left to do for this map.
+   * Removes the entry of `key`'s Handle. After it, destroying the key has
+   * nothing left to do for this map.
    *
    * @remarks
    * Deleting is a game-state change like `set`: call it from synchronous
    * code, never inside `MapPlayer.runLocal`.
+   * @param key - A Wrapper of the game object.
+   * @returns True when there was an entry to remove.
    */
   public delete(key: K): boolean {
     const handle = key.handle;
@@ -151,15 +163,16 @@ export class HandleMap<K extends Handle<handle>, V> {
   }
 
   /**
-   * Calls `callback` for each entry, in insertion order, with the value, the
-   * canonical Wrapper of the key and this map. An entry deleted during the
-   * loop, by `delete` or by destroying its key, is skipped if not yet
-   * reached, and the loop goes on; an entry added during the loop is not
+   * Calls `callback` for each entry, in insertion order. An entry deleted
+   * during the loop, by `delete` or by destroying its key, is skipped if not
+   * yet reached, and the loop goes on; an entry added during the loop is not
    * visited.
    *
    * @remarks
    * Insertion order, never `pairs`: the loop runs in the same order on every
    * client, so it may change game state in multiplayer.
+   * @param callback - Called with the value, the canonical Wrapper of the
+   * key and this map.
    */
   public forEach(callback: (value: V, key: K, map: this) => void): void {
     for (const [key, value] of this.entries()) {
@@ -168,12 +181,13 @@ export class HandleMap<K extends Handle<handle>, V> {
   }
 
   /**
-   * The keys, in insertion order, each the canonical Wrapper of its Handle
-   * when the iteration reaches it. Deleting during the iteration is safe, as
-   * for `forEach`.
+   * Iterates over the keys, in insertion order. Deleting during the
+   * iteration is safe, as for `forEach`.
    *
    * @remarks
    * Insertion order, never `pairs`: safe to iterate in multiplayer.
+   * @returns An iterator of the keys, each the canonical Wrapper of its
+   * Handle when the iteration reaches it.
    */
   public keys(): IterableIterator<K> {
     return iterateHandles(this.entryOf, (handle, entry) =>
@@ -182,23 +196,25 @@ export class HandleMap<K extends Handle<handle>, V> {
   }
 
   /**
-   * The values, in insertion order. Deleting during the iteration is safe,
-   * as for `forEach`.
+   * Iterates over the values, in insertion order. Deleting during the
+   * iteration is safe, as for `forEach`.
    *
    * @remarks
    * Insertion order, never `pairs`: safe to iterate in multiplayer.
+   * @returns An iterator of the values.
    */
   public values(): IterableIterator<V> {
     return iterateHandles(this.entryOf, (_, entry) => entry.value);
   }
 
   /**
-   * The `[key, value]` pairs, in insertion order, each key the canonical
-   * Wrapper of its Handle when the iteration reaches it. Deleting during the
+   * Iterates over the entries, in insertion order. Deleting during the
    * iteration is safe, as for `forEach`.
    *
    * @remarks
    * Insertion order, never `pairs`: safe to iterate in multiplayer.
+   * @returns An iterator of `[key, value]` pairs, each key the canonical
+   * Wrapper of its Handle when the iteration reaches it.
    */
   public entries(): IterableIterator<[K, V]> {
     return iterateHandles(this.entryOf, (handle, entry): [K, V] => [
@@ -208,10 +224,12 @@ export class HandleMap<K extends Handle<handle>, V> {
   }
 
   /**
-   * The same as `entries()`: `for (const [unit, state] of map)`.
+   * Iterates over the entries, as `entries()` does:
+   * `for (const [unit, state] of map)`.
    *
    * @remarks
    * Insertion order, never `pairs`: safe to iterate in multiplayer.
+   * @returns An iterator of `[key, value]` pairs.
    */
   public [Symbol.iterator](): IterableIterator<[K, V]> {
     return this.entries();

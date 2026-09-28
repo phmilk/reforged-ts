@@ -225,22 +225,36 @@ export class SyncRequest {
     SyncRequest.init();
   }
 
-  /** The elapsed game time when the request started. */
+  /**
+   * The elapsed game time when the request started.
+   * @returns The time, in seconds, as {@link getElapsedTime} read it; 0
+   * until `start`.
+   */
   public get startTime(): number {
     return this._startTime;
   }
 
-  /** Where the request stands. */
+  /**
+   * Where the request stands.
+   * @returns The status: `None` until `start`, `Syncing` while it waits,
+   * then how it settled.
+   */
   public get status(): SyncStatus {
     return this._status;
   }
 
   /**
-   * Creates a request and starts it; throws as `start` does.
+   * Creates a request and starts it, as `new SyncRequest(from, options)`
+   * then `start(data)` do.
    * @param from - The player whose client sends the data.
    * @param data - The data to send, with no zero byte; ignored on the other
    * clients.
    * @param options - The timeout; none by default.
+   * @returns The `Promise` `start` returns.
+   * @throws On the sender's client, as `start` does, at the calling line:
+   * `reforged-ts: sync request <id> has a zero byte at position <position>: encode binary data first, for example with base64Encode`,
+   * or `reforged-ts: sync request <id> has <length> bytes, more than the 15990540 a request carries`.
+   * @native BlzSendSyncData
    */
   public static send(
     from: MapPlayer,
@@ -253,8 +267,9 @@ export class SyncRequest {
   }
 
   /**
-   * Rejects the request's `Promise` if it is still syncing; does nothing on a
-   * request not started or already settled.
+   * Rejects the request's `Promise` with
+   * `reforged-ts: sync request <id> was cancelled` if it is still syncing;
+   * does nothing on a request not started or already settled.
    */
   public cancel(): void {
     this.fail(SyncStatus.Cancelled, "was cancelled");
@@ -263,14 +278,25 @@ export class SyncRequest {
   /**
    * Starts the request: the sender's client sends the data, one packet per
    * chunk, in order. Call it once per request, on every client.
-   *
-   * Throws, before the request starts, on a second call, and on the sender's
-   * client when the data holds a zero byte or needs more than 65,535 chunks.
+   * @remarks
+   * A rejection's reason is a string, like every error the library raises,
+   * where w3ts rejected with an `Error` object:
+   * `reforged-ts: sync request <id> timed out after <seconds> seconds`,
+   * `reforged-ts: sync request <id> was cancelled` or
+   * `reforged-ts: sync request <id> could not be sent (network error)`. A
+   * network failure rejects on the sender's client, where w3ts printed
+   * `SyncData: Network Error`.
    * @param data - The data to send, with no zero byte (encode binary data
    * first, for example with `base64Encode`); ignored on the other clients.
    * @returns A `Promise` that resolves with the sender's data when every
    * chunk has arrived, and rejects with a message naming the request on a
    * timeout, a cancellation or a packet the game refused to send.
+   * @throws Before the request starts, at the calling line: on a second
+   * call, `reforged-ts: sync request <id> was already started`; on the
+   * sender's client, when the data holds a zero byte,
+   * `reforged-ts: sync request <id> has a zero byte at position <position>: encode binary data first, for example with base64Encode`,
+   * or needs more than 65,535 chunks,
+   * `reforged-ts: sync request <id> has <length> bytes, more than the 15990540 a request carries`.
    * @native BlzSendSyncData
    */
   public start(data: string): Promise<SyncResponse> {
