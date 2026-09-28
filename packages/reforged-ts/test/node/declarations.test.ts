@@ -88,16 +88,9 @@ describe("the examples in the emitted declarations", () => {
     expect(from).not.toBe(-1);
     expect(to).toBeGreaterThan(from);
     const region = code.slice(from + start.length, to);
-    // TypeScript reads a titled `@example` with the indentation of each line
-    // cut up to the title's column, so the lines are compared unindented.
-    const unindented = (text: string) => text.replaceAll(/^ +/gm, "");
     expect(
-      (await hoverExamples(project, "dist/events/descriptor.d.ts", "on")).map(
-        unindented,
-      ),
-    ).toEqual([
-      unindented("A handler with a filter\n```ts\n" + region + "```"),
-    ]);
+      await hoverExamples(project, "dist/events/descriptor.d.ts", "on"),
+    ).toEqual(["A handler with a filter\n```ts\n" + region + "```"]);
   });
 });
 
