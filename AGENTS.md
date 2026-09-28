@@ -25,18 +25,19 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `website/`: the pages of the docs site.
 - `docs/adr/`: the decisions, numbered. `docs/research/`: the research they rely on (the probe map of the game's Lua).
 - `docs/release.md`: changesets, versions and the release workflow.
+- `docs/documentation.md`: the doc comment standard: tags, their order, the required-tag matrix, the style rules and the examples.
 - `release/`: the release scripts, a private workspace package.
 - `test/`: the workspace-level tests: the tarballs, and under `conventions/` the checks on this file and the editor settings.
 - `.claude/skills/`: the Agent skills, listed under "Agent skills".
 
 ## Rules
 
-- Every public symbol carries TSDoc with the tags the [required-tag matrix](https://github.com/phmilk/reforged-ts/issues/18) sets for its kind (ADR 0004).
+- Every public symbol carries TSDoc with the tags the [required-tag matrix](docs/documentation.md#required-tags-per-symbol-kind) sets for its kind, written to the style rules of `docs/documentation.md` (ADR 0004).
 - Every member backed by a Native carries `@native` naming the Natives behind it.
 - `*BJ` functions are never mirrored: what one offers is reimplemented over Natives (ADR 0008).
 - A Wrapper covers every Native whose first parameter is its Handle type, or excludes it with a reason (ADR 0008).
 - Every pull request carries a changeset, the empty one when nothing published changes (`docs/release.md`).
-- Every `@example` is included with `{@includeCode}` from a compiled file under `packages/reforged-ts/examples/` (ADR 0004).
+- Every `@example` is included with `{@includeCode}` from a compiled file under `packages/reforged-ts/examples/`, `harness/` or `game/` ([Examples](docs/documentation.md#examples), ADR 0004).
 - Library code follows the README's "Rules for library code": read them before writing a Wrapper or a System.
 
 ## Runtime constraints
