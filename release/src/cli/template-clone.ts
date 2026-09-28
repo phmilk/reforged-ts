@@ -3,9 +3,8 @@
  * Template at the ref the release in the `changeset pack` output `<dir>` is
  * gated against (`v<major>` of the library version, as
  * `release:template-gate --print-ref` prints it) into a new folder, shallow.
- * The token that reads the Template, while it is private, comes from the
- * environment variable `TEMPLATE_READ_TOKEN`. Fails naming the missing
- * prerequisite when the Template cannot be read or has no such ref.
+ * The Template is public: git reads it without a token. Fails naming the
+ * ref when the Template has no such ref, and saying so when git cannot read it.
  *
  * Clone outside the repository: a Template without its own
  * `pnpm-workspace.yaml` would otherwise be installed as part of this
@@ -14,11 +13,7 @@
  */
 import { resolve } from "node:path";
 import { runGit, type GitRunner } from "../git.js";
-import {
-  cloneTemplate,
-  TEMPLATE_REPOSITORY,
-  TOKEN_VARIABLE,
-} from "../template-clone.js";
+import { cloneTemplate, TEMPLATE_REPOSITORY } from "../template-clone.js";
 import { releaseTemplateRef } from "../template-gate.js";
 import { repositoryRoot } from "../workspace.js";
 import {
@@ -35,7 +30,6 @@ export interface Context {
   cwd: string;
   /** The workspace, for the library version when the plan lacks it. */
   root: string;
-  env: Readonly<Record<string, string | undefined>>;
   git: GitRunner;
 }
 
@@ -70,7 +64,6 @@ export async function main(
     // pnpm starts the script in release/; INIT_CWD is where it was typed.
     cwd: process.env.INIT_CWD ?? process.cwd(),
     root: repositoryRoot,
-    env: process.env,
     git: runGit,
   },
 ): Promise<number> {
@@ -89,7 +82,6 @@ export async function main(
     const result = await cloneTemplate({
       ref,
       into,
-      token: context.env[TOKEN_VARIABLE],
       git: context.git,
     });
     if (!result.ok) {

@@ -207,8 +207,6 @@ jobs:
       # Outside the repository checkout: a Template without its own
       # pnpm-workspace.yaml would otherwise install as part of this workspace.
       - name: Clone the Template
-        env:
-          TEMPLATE_READ_TOKEN: ${{ secrets.TEMPLATE_READ_TOKEN }}
         run: pnpm release:template-clone --pack-dir "$RUNNER_TEMP/pack" --into "$RUNNER_TEMP/template"
       - name: Template gate
         run: pnpm release:template-gate --template "$RUNNER_TEMP/template" --pack-dir "$RUNNER_TEMP/pack"
