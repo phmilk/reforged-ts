@@ -49,14 +49,17 @@ async function put(file: string, text: string): Promise<void> {
   await writeFile(join(dir, file), text);
 }
 
-/** A declaration file of src/handles/, one doc comment holding `line`. */
-function declaration(line: string): string {
+/**
+ * A declaration file of src/handles/, one doc comment holding `line` after
+ * an `@example` tag, titled `title` when one is given.
+ */
+function declaration(line: string, title?: string): string {
   return [
     "export declare class Trigger {",
     "    /**",
     "     * Enables the trigger.",
     "     *",
-    "     * @example",
+    title === undefined ? "     * @example" : `     * @example ${title}`,
     `     * ${line}`,
     "     */",
     "    enable(): void;",
@@ -65,14 +68,18 @@ function declaration(line: string): string {
   ].join("\n");
 }
 
-/** Expands `line` as the comment of src/handles/trigger.ts; the comment's lines. */
-function expand(line: string): string[] {
-  const text = expandIncludeCode(
-    declaration(line),
+/** Expands a declaration file of src/handles/ as the build does. */
+function expandFile(text: string): string {
+  return expandIncludeCode(
+    text,
     join(dir, "src", "handles"),
     "handles/trigger.d.ts",
   );
-  const lines = text.split("\n");
+}
+
+/** Expands `line` as the comment of src/handles/trigger.ts; the comment's lines. */
+function expand(line: string): string[] {
+  const lines = expandFile(declaration(line)).split("\n");
   return lines.slice(5, lines.indexOf("     */"));
 }
 
@@ -120,6 +127,56 @@ describe("expandIncludeCode", () => {
       "     * ```ts",
       "     * // Creates a Trigger.",
       '     * import { Trigger } from "reforged-ts";',
+      "     * trigger.destroy();",
+      "     * ```",
+    ]);
+  });
+
+  it("puts a titled example's title on a line of its own, keeping the code's indentation", () => {
+    const lines = expandFile(
+      declaration(
+        "{@includeCode ../../examples/example.ts#create}",
+        "Enabling a trigger",
+      ),
+    ).split("\n");
+    expect(lines.slice(4, lines.indexOf("     */"))).toEqual([
+      "     * @example",
+      "     * Enabling a trigger",
+      "     * ```ts",
+      "     * const trigger = Trigger.create();",
+      "     *   trigger.enable();",
+      "     * ```",
+    ]);
+  });
+
+  it("leaves an untitled example's lines as they are", () => {
+    const text = declaration("{@includeCode ../../examples/example.ts#create}");
+    expect(expandFile(text)).toBe(
+      text.replace(
+        "{@includeCode ../../examples/example.ts#create}",
+        "```ts\n     * const trigger = Trigger.create();\n     *   trigger.enable();\n     * ```",
+      ),
+    );
+  });
+
+  it("leaves the title of an example without an include on its tag's line", () => {
+    const text = declaration("`trigger.enable();`", "Enabling a trigger");
+    expect(expandFile(text)).toBe(text);
+  });
+
+  it("expands an include standing where a titled example's title would", () => {
+    const lines = expandFile(
+      declaration(
+        "{@includeCode ../../examples/example.ts:9}",
+        "{@includeCode ../../examples/example.ts:9}",
+      ),
+    ).split("\n");
+    expect(lines.slice(4, lines.indexOf("     */"))).toEqual([
+      "     * @example",
+      "     * ```ts",
+      "     * trigger.destroy();",
+      "     * ```",
+      "     * ```ts",
       "     * trigger.destroy();",
       "     * ```",
     ]);

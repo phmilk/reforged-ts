@@ -33,6 +33,12 @@ const TAG = /\{@includeCode(?:\s+([^}]*))?\}/g;
 /** A line inside a multi-line doc comment: its prefix, as `     * `. */
 const COMMENT_LINE = /^\s*\*(?!\/) ?/;
 
+/** A titled `@example` tag line: the prefix is group 1, the title group 2. */
+const TITLED_EXAMPLE = /^(\s*\* ?)@example\s+(\S.*?)\s*$/;
+
+/** A line ending the body of a tag: the next block tag or the comment end. */
+const BODY_END = /^\s*(?:\*\s*@|\*\/)/;
+
 /**
  * TypeDoc's region markers for TypeScript, `// #region name` and
  * `// #endregion name`: the name is required on both, the marker lines are
@@ -76,8 +82,11 @@ export async function expandDeclarations(
 /**
  * Replaces each `{@includeCode}` of a declaration file's doc comments with
  * a fenced block of the included code, every line carrying the comment's
- * prefix. `sourceDir` is the folder the include paths resolve against;
- * `label` names the file in errors.
+ * prefix. The title of an `@example` whose body holds an include moves to
+ * the next line: TypeScript cuts each line after `@example <title>` up to
+ * the title's column, which would drop the code's indentation in the hover.
+ * `sourceDir` is the folder the include paths resolve against; `label`
+ * names the file in errors.
  */
 export function expandIncludeCode(
   text: string,
@@ -87,7 +96,16 @@ export function expandIncludeCode(
   const newline = text.includes("\r\n") ? "\r\n" : "\n";
   return text
     .split(/\r?\n/)
-    .flatMap((line, index) => {
+    .flatMap((line, index, lines) => {
+      const titled = TITLED_EXAMPLE.exec(line);
+      if (
+        titled !== null &&
+        !line.includes("@includeCode") &&
+        includesCode(lines, index + 1)
+      ) {
+        const [, prefix = "", title = ""] = titled;
+        return [prefix + "@example", prefix + title];
+      }
       if (!line.includes("@includeCode")) return [line];
       const where = `${label}:${String(index + 1)}`;
       const prefix = COMMENT_LINE.exec(line)?.[0];
@@ -111,6 +129,15 @@ export function expandIncludeCode(
       });
     })
     .join(newline);
+}
+
+/** Whether the tag body starting at line `from` holds an `{@includeCode}`. */
+function includesCode(lines: readonly string[], from: number): boolean {
+  for (const line of lines.slice(from)) {
+    if (BODY_END.test(line)) return false;
+    if (line.includes("@includeCode")) return true;
+  }
+  return false;
 }
 
 interface IncludedCode {
