@@ -198,16 +198,23 @@ export interface ReferenceOptions {
 }
 
 /**
- * The options of a reference's TypeDoc run, as docusaurus-plugin-typedoc
- * takes them, with the one the site's TypeDoc plugin declares.
+ * The options of a reference's TypeDoc run: TypeDoc's, with the ones the
+ * site's TypeDoc plugin declares.
  */
-export type ReferencePluginOptions = Partial<TypeDocOptions> &
+export type ReferenceTypedocOptions = Partial<TypeDocOptions> & {
+  readonly typingsManifest?: string;
+  readonly nativeManifest?: string;
+  readonly nativeRoute?: string;
+  readonly nativeJassbot?: string;
+};
+
+/**
+ * The options of a reference's TypeDoc run as docusaurus-plugin-typedoc
+ * takes them: with its instance's id and the Markdown theme's options.
+ */
+export type ReferencePluginOptions = ReferenceTypedocOptions &
   Partial<MarkdownOptions> & {
     readonly id: string;
-    readonly typingsManifest?: string;
-    readonly nativeManifest?: string;
-    readonly nativeRoute?: string;
-    readonly nativeJassbot?: string;
   };
 
 export function referencePluginOptions(
@@ -217,6 +224,21 @@ export function referencePluginOptions(
   const docsPath = options.docsPath ?? reference.docsPath ?? join(SITE, "docs");
   return {
     id: reference.id,
+    docsPath,
+    ...referenceTypedocOptions(reference, { ...options, docsPath }),
+  };
+}
+
+/**
+ * The options of a reference's TypeDoc run that TypeDoc itself and the
+ * site's TypeDoc plugin take: the docs audit runs TypeDoc with these alone.
+ */
+export function referenceTypedocOptions(
+  reference: Reference,
+  options: ReferenceOptions,
+): ReferenceTypedocOptions {
+  const docsPath = options.docsPath ?? reference.docsPath ?? join(SITE, "docs");
+  return {
     // TypeDoc reads entry points as globs, which take POSIX slashes only.
     entryPoints: reference.entryPoints.map((path) =>
       path.replaceAll("\\", "/"),
@@ -224,13 +246,16 @@ export function referencePluginOptions(
     name: reference.label,
     tsconfig: reference.tsconfig,
     out: join(docsPath, reference.dir),
-    docsPath,
     plugin: [SITE_TYPEDOC_PLUGIN],
     readme: "none",
     // An `@example` whose body is only an `{@includeCode}` is parsed as
     // TSDoc, not taken as literal code the JSDoc way: TypeDoc then expands the
     // include into a fenced block. The line on the tag is the example's title.
     jsDocCompatibility: { exampleTag: false },
+    // A Map project sees neither private nor protected members (#43): they
+    // are left off the pages, and the docs audit lists the same members.
+    excludePrivate: true,
+    excludeProtected: true,
     validation: { notDocumented: true },
     treatValidationWarningsAsErrors: options.strict,
     ...(reference.typingsManifest === undefined
