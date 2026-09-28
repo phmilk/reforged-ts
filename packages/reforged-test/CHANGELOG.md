@@ -1,5 +1,11 @@
 # reforged-test
 
+## 1.0.0-alpha.2
+
+### Minor Changes
+
+- [#267](https://github.com/phmilk/reforged-ts/pull/267) [`6aee802`](https://github.com/phmilk/reforged-ts/commit/6aee802a12d2ad0f735ac168a324d0ae83e2ca75) Thanks [@phmilk](https://github.com/phmilk)! - Stubs for `BlzGroupAddGroupFast` and `BlzGroupRemoveGroupFast`, which change their second group as the game does, so a test can call `Group.addGroupFast` and `Group.removeGroupFast` on the harness.
+
 ## 1.0.0-alpha.1
 
 ### Minor Changes
