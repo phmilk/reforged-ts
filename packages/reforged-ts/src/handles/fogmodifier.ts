@@ -19,14 +19,16 @@ export class FogModifier extends Handle<fogmodifier> {
   /**
    * Creates a stopped fog modifier over a circle.
    * @param forWhichPlayer - The player whose fog it changes.
-   * @param whichState - Determines what type of fog the area is being modified to.
-   * @param centerX - The x-coordinate where the fog modifier begins.
-   * @param centerY - The y-coordinate where the fog modifier begins.
-   * @param radius - Determines the extent that the fog travels (expanding from the coordinates ( centerx , centery )).
-   * @param useSharedVision - Determines whether or not the fog modifier will be applied to allied players with shared vision.
-   * @param afterUnits - Will determine whether or not units in that area will be masked by the fog.
-   * If it is set to true and the fogstate is masked, it will hide all the units in the fog modifier's radius and mask the area.
-   * If set to false, it will only mask the areas that are not visible to the units.
+   * @param whichState - The fog state forced on the area, such as
+   * `FOG_OF_WAR_VISIBLE`.
+   * @param centerX - The x-coordinate of the circle's centre, in world units.
+   * @param centerY - The y-coordinate of the circle's centre, in world units.
+   * @param radius - The radius of the circle, in world units.
+   * @param useSharedVision - Whether the players sharing vision with
+   * `forWhichPlayer` get the change too.
+   * @param afterUnits - Whether a masking state also hides what the player's
+   * units see in the area, units included; `false` masks only what they do
+   * not see.
    * @returns The new fog modifier.
    * @throws When the game returns no handle:
    * `reforged-ts: failed to create FogModifier`, at the calling line. In Dev

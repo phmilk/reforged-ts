@@ -17,12 +17,12 @@ import { MapPlayer } from "./player";
 export class Leaderboard extends Handle<leaderboard> {
   /**
    * Creates an empty leaderboard, which no player sees yet.
-   * @remarks Leaderboards initially have 0 rows, 0 columns, and no label.
+   * @remarks It starts with no row, no column and no label.
    * @returns The new leaderboard.
    * @throws When the game returns no handle: `reforged-ts: failed to create Leaderboard`, at the calling line.
    * In Dev mode, also when called before the globals Init stage or inside `MapPlayer.runLocal`.
    * @native CreateLeaderboard
-   * @bug Do not use this in a global initialisation as it crashes the game there.
+   * @bug Called from a global variable's initial value, it crashes the game.
    */
   public static create(): Leaderboard {
     return this.expect(CreateLeaderboard());

@@ -75,8 +75,9 @@ export class Point extends Handle<location> {
    * Gets the height of the terrain at the point.
    * @remarks
    * The value can differ between clients: never let it decide game state.
-   * Reasons for returning different values might be terrain-deformations caused by spells/abilities and different graphic settings.
-   * Other reasons could be the rendering state of destructables and visibility differences.
+   * Terrain deformed by spells or abilities, the graphics settings, whether
+   * destructables are rendered, and what each client sees can all change the
+   * value.
    * @returns The terrain height, in world units.
    * @native GetLocationZ
    * @async
@@ -90,9 +91,9 @@ export class Point extends Handle<location> {
    * @remarks
    * The library does not wrap the `minimapicon` Native type: pass the result
    * to its Natives, such as `DestroyMinimapIcon`.
-   * @param red - An integer from 0-255 determining the amount of red color.
-   * @param green - An integer from 0-255 determining the amount of green color.
-   * @param blue - An integer from 0-255 determining the amount of blue color.
+   * @param red - The red channel, from 0 to 255.
+   * @param green - The green channel, from 0 to 255.
+   * @param blue - The blue channel, from 0 to 255.
    * @param pingPath - The model of the icon.
    * @param fogVisibility - The fog state in which the icon is visible.
    * @returns The game's new minimap icon.

@@ -281,8 +281,9 @@ export class Trigger extends Handle<trigger> {
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
    * @native DestroyTrigger
-   * @bug Do not destroy the current running Trigger (when waits are involved)
-   * as it can cause handle stack corruption as documented [here](http://www.wc3c.net/showthread.php?t=110519).
+   * @bug Destroying the Trigger that is running, while waits are involved,
+   * can corrupt the handle stack:
+   * http://www.wc3c.net/showthread.php?t=110519.
    */
   public destroy() {
     DestroyTrigger(this.handle);
@@ -292,12 +293,15 @@ export class Trigger extends Handle<trigger> {
   /**
    * Evaluates the Trigger's conditions now, without running its actions.
    * @remarks
-   * - All return-values from all added condition-functions are `and`ed together as the final return-value.
-   * - So if 0/0.0/null would be returned in the condition-function, `eval` would return false. Note that `""` would return `true`.
-   * - If a condition-function crashes the thread or does not return any value `eval` will return false.
-   * - If you want to return false for a condition-function that returns string (for whatever reason) return `null` instead of `""`
-   * - *All* functions added via `addCondition` are run. There is no short-circuting. If you want short-circuting use `And` or `Or`.
-   * - All functions added via `addCondition` are run in the order they were added.
+   * - The result is the logical and of what every condition returns.
+   * - A condition that returns `0`, `0.0` or `null` counts as false, while
+   *   one returning `""` counts as true: a condition returning a string
+   *   gives `null` for false.
+   * - A condition that crashes its thread, or returns nothing, makes `eval`
+   *   return false.
+   * - Every condition runs, in the order `addCondition` added them, even
+   *   after one returned false; to stop at the first false, combine them
+   *   into one with `And` or `Or`.
    * @returns True when every condition holds, or when the Trigger has none.
    * @native TriggerEvaluate
    */

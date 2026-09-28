@@ -50,8 +50,8 @@ export class Group extends Handle<group> {
   /**
    * Adds a unit at the end of the group.
    * @param whichUnit - The unit to add.
-   * @returns True when the unit was added; false when it already was in the
-   * group, or the group is destroyed.
+   * @returns True when the group gained the unit; false when the unit was in
+   * it already, or the group is destroyed.
    * @native GroupAddUnit
    */
   public addUnit(whichUnit: Unit): boolean {
@@ -124,7 +124,7 @@ export class Group extends Handle<group> {
    * @param countLimit - The most units the group receives.
    * @native GroupEnumUnitsInRangeCounted
    * @native Filter
-   * @bug Causes irregular behavior when used with large numbers
+   * @bug Its behaviour turns erratic with large numbers.
    */
   public enumUnitsInRangeCounted(
     x: number,
@@ -181,7 +181,7 @@ export class Group extends Handle<group> {
    * @param countLimit - The most units the group receives.
    * @native GroupEnumUnitsInRangeOfLocCounted
    * @native Filter
-   * @bug Causes irregular behavior when used with large numbers
+   * @bug Its behaviour turns erratic with large numbers.
    */
   public enumUnitsInRangeOfPointCounted(
     whichPoint: Point,
@@ -229,7 +229,7 @@ export class Group extends Handle<group> {
    * @param countLimit - The most units the group receives.
    * @native GroupEnumUnitsInRectCounted
    * @native Filter
-   * @bug Causes irregular behavior when used with large numbers
+   * @bug Its behaviour turns erratic with large numbers.
    */
   public enumUnitsInRectCounted(
     r: Rectangle,
@@ -246,7 +246,8 @@ export class Group extends Handle<group> {
 
   /**
    * Fills the group with the units a player owns.
-   * @remarks In contrast to other Enum-functions this function enumarates units with locust.
+   * @remarks Units with the Locust ability are included, unlike the
+   * enumerations by area.
    * @param whichPlayer - The owner.
    * @param filter - Keeps a unit when it returns true; inside it,
    * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
@@ -305,7 +306,7 @@ export class Group extends Handle<group> {
    * @param countLimit - The most units the group receives.
    * @native GroupEnumUnitsOfTypeCounted
    * @native Filter
-   * @bug Causes irregular behavior when used with large numbers
+   * @bug Its behaviour turns erratic with large numbers.
    */
   public enumUnitsOfTypeCounted(
     unitName: string,
@@ -363,10 +364,10 @@ export class Group extends Handle<group> {
    * Gets the unit at the head of the group.
    * @returns The first unit, or `undefined` when the group is empty.
    * @native FirstOfGroup
-   * @bug May return `null` even if there are still units in the group.
-   * This happens when a unit in the group dies and decays since the group still
-   * holds a reference to that unit but that unit is pretty much null.
-   * See http://wc3c.net/showthread.php?t=104464.
+   * @bug Gives `undefined` while the group still holds units when its head
+   * is a unit removed from the game, such as a decayed corpse: the group
+   * keeps that dead entry until it is cleared. The GroupUtils thread on wc3c
+   * covers it: http://wc3c.net/showthread.php?t=104464.
    */
   public get first(): Unit | undefined {
     return Unit.fromHandle(FirstOfGroup(this.handle));

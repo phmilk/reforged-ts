@@ -908,7 +908,8 @@ export class CameraSetup extends Handle<camerasetup> {
    * its own in place of the setup's.
    * @param zDestOffset - The z-offset the camera moves to, in world units.
    * @native CameraSetupApplyWithZ
-   * @bug If a player pauses the game after the CameraSetup has been applied, the z-offset of the game camera will change to the z-offset of the CameraSetup for that player.
+   * @bug A player who pauses the game after the call gets the setup's own
+   * z-offset on their game camera, in place of `zDestOffset`.
    */
   public applyZ(zDestOffset: number) {
     CameraSetupApplyWithZ(this.handle, zDestOffset);
@@ -916,7 +917,8 @@ export class CameraSetup extends Handle<camerasetup> {
 
   /**
    * Gets the value the camera setup holds for one field.
-   * @remarks The angle of attack, field of view, roll, and rotation are all returned in degrees.
+   * @remarks The four angle fields (angle of attack, field of view, roll
+   * and rotation) come back in degrees.
    * @param whichField - The field, such as `CAMERA_FIELD_ANGLE_OF_ATTACK`.
    * @returns The value: degrees for an angle, unlike the radians of
    * {@link Camera.getField}; world units for a distance.

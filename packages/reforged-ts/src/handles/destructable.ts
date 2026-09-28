@@ -605,12 +605,12 @@ export class Destructable extends Widget {
   }
 
   /**
-   * Resurrects a Destructable with the specified hit points.
-   * @param life - The amount of hit points the Destructable will have when it is
-   * resurrected. A value of 0, or any value above the Destructable's maximum HP,
-   * will give the Destructable its maximum HP (as defined in the object editor).
-   * Any value below 0.5 will give the Destructable 0.5 hit points.
-   * @param birth - If true, the Destructable will play its birth animation upon resurrection.
+   * Brings a dead destructable back to life with the given hit points; a live
+   * one is left as it is.
+   * @param life - The hit points it comes back with. 0, or more than its
+   * maximum, gives it the maximum its object data sets; less than 0.5 gives
+   * it 0.5.
+   * @param birth - `true` to play its birth animation as it comes back.
    * @native DestructableRestoreLife
    */
   public heal(life: number, birth: boolean) {

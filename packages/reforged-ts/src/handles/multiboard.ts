@@ -127,7 +127,7 @@ export class Multiboard extends Handle<multiboard> {
    * @throws When the game returns no handle: `reforged-ts: failed to create Multiboard`, at the calling line.
    * In Dev mode, also when called before the globals Init stage or inside `MapPlayer.runLocal`.
    * @native CreateMultiboard
-   * @bug Do not use this in a global initialisation as it crashes the game there.
+   * @bug Called from a global variable's initial value, it crashes the game.
    */
   public static create(): Multiboard {
     return this.expect(CreateMultiboard());
@@ -171,7 +171,8 @@ export class Multiboard extends Handle<multiboard> {
   /**
    * The number of rows of cells.
    * @native MultiboardSetRowCount
-   * @bug It is only safe to change the row count by one. Use multiple calls for bigger values.
+   * @bug Only a change of one row at a time is safe: to add or remove
+   * several, set the count once per row.
    */
   public set rows(count: number) {
     MultiboardSetRowCount(this.handle, count);
@@ -235,7 +236,9 @@ export class Multiboard extends Handle<multiboard> {
   /**
    * Shows or hides the multiboard for every player; showing it again redraws
    * it.
-   * @remarks Multiboards can not be shown at map-init. Use a wait or a zero-timer to display as soon as possible.
+   * @remarks A multiboard does not appear when shown during map
+   * initialisation: show it after a wait, or from a Timer of zero seconds, to
+   * have it up as early as the game allows.
    * @param show - True to show it, false to hide it.
    * @native MultiboardDisplay
    */

@@ -118,9 +118,9 @@ export class Force extends Handle<force> {
    * @remarks
    * The filter reads the candidate with {@link MapPlayer.fromFilter}. In Dev
    * mode a function filter runs under `pcall`: one that throws is reported
-   * as `Force#<id> Force.enumPlayers` and leaves its candidate out. To run
-   * code once per player of the force without changing it, use
-   * {@link Force.for}.
+   * as `Force#<id> Force.enumPlayers` and leaves its candidate out.
+   * {@link Force.for} visits the players of the force and leaves it as it
+   * is.
    * @param filter - A `boolexpr`, or a function returning `true` to add the
    * candidate.
    * @native ForceEnumPlayers

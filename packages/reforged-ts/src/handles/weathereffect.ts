@@ -17,11 +17,9 @@ export class WeatherEffect extends Handle<weathereffect> {
   /**
    * Adds a weather effect.
    * @remarks
-   * - To understand more about weather effects nature, I advise to read
-   *   Ammorth's article about weather effects: [http://www.wc3c.net/showthread.php?t=91176](https://web.archive.org/web/20180130202056/http://www.wc3c.net/showthread.php?t=91176).
-   * - To get an idea on how to add your own weather effects, you may read
-   *   CryoniC's article about custom weather effects: [http://www.wc3c.net/showthread.php?t=67949](https://web.archive.org/web/20180507060112/http://www.wc3c.net/showthread.php?t=67949).
-   * @param where - The rect to apply the WeatherEffect to.
+   * - How weather effects work: Ammorth's article on wc3c, [http://www.wc3c.net/showthread.php?t=91176](https://web.archive.org/web/20180130202056/http://www.wc3c.net/showthread.php?t=91176).
+   * - Making weather effects of your own: CryoniC's article on wc3c, [http://www.wc3c.net/showthread.php?t=67949](https://web.archive.org/web/20180507060112/http://www.wc3c.net/showthread.php?t=67949).
+   * @param where - The rectangle the weather shows over.
    * @param effectID - The weather type's rawcode, such as `FourCC("RAhr")`
    * for Ashenvale heavy rain.
    * @returns The new weather effect, turned off.
