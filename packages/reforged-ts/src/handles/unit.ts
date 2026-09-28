@@ -16,17 +16,33 @@ import { Point } from "./point";
 import { Sound } from "./sound";
 import { Widget } from "./widget";
 
+/**
+ * A unit on the map: a soldier, a hero, a structure, a worker or a critter.
+ * @remarks
+ * A unit is a widget: its `life` comes from `Widget`, and `Unit.fromHandle`
+ * upgrades the Wrapper that a widget lookup made earlier for it. The
+ * hero members (`agility`, `experience`, `setHeroLevel` and the like) act on
+ * heroes only: on another unit they read 0 and change nothing.
+ * @example Creating units, reading an inventory slot and the owner
+ * {@includeCode ../../examples/harness/unit-create.ts}
+ * @native unit
+ */
 export class Unit extends Widget {
+  /** The game's `unit` Handle this Wrapper owns. */
   declare public readonly handle: unit;
 
   /**
-   * Creates a unit.
-   * @param owner - The owner of the unit.
-   * @param unitId - The rawcode of the unit.
-   * @param x - The x-coordinate of the unit.
-   * @param y - The y-coordinate of the unit.
-   * @param face - The direction that the unit will be facing in degrees.
-   * @param skinId - The skin of the unit.
+   * Creates a unit for `owner` at the given point, facing `face`.
+   * @param owner - The player who owns the unit.
+   * @param unitId - The unit type's rawcode, such as `FourCC("hfoo")`.
+   * @param x - The x-coordinate, in world units.
+   * @param y - The y-coordinate, in world units.
+   * @param face - The facing, in degrees; 270 (`bj_UNIT_FACING`) when left out.
+   * @param skinId - The skin's rawcode; the unit type's own model when left out.
+   * @returns The new unit.
+   * @throws When the game returns no handle, for example an unknown rawcode:
+   * `reforged-ts: failed to create Unit (<rawcode>)`, at the calling line. In Dev
+   * mode, also before the globals Init stage and inside `MapPlayer.runLocal`.
    * @native CreateUnit
    * @native BlzCreateUnitWithSkin
    */
@@ -47,11 +63,15 @@ export class Unit extends Widget {
   }
 
   /**
-   * Creates a unit at `where`, through `CreateUnitAtLoc`.
-   * @param owner - The owner of the unit.
-   * @param unitId - The rawcode of the unit.
+   * Creates a unit for `owner` at a point, facing `face`.
+   * @param owner - The player who owns the unit.
+   * @param unitId - The unit type's rawcode, such as `FourCC("hfoo")`.
    * @param where - Where the unit stands.
-   * @param face - The direction that the unit will be facing in degrees.
+   * @param face - The facing, in degrees; 270 (`bj_UNIT_FACING`) when left out.
+   * @returns The new unit.
+   * @throws When the game returns no handle, for example an unknown rawcode:
+   * `reforged-ts: failed to create Unit (<rawcode>)`, at the calling line. In Dev
+   * mode, also before the globals Init stage and inside `MapPlayer.runLocal`.
    * @native CreateUnitAtLoc
    */
   public static createAtPoint(
@@ -67,12 +87,15 @@ export class Unit extends Widget {
   }
 
   /**
-   * Creates a unit at `where` from the unit type's name, through
-   * `CreateUnitAtLocByName`.
-   * @param owner - The owner of the unit.
-   * @param unitName - The name of the unit type (`"footman"`).
+   * Creates a unit for `owner` at a point from the unit type's order name.
+   * @param owner - The player who owns the unit.
+   * @param unitName - The unit type's order name, such as `"footman"`.
    * @param where - Where the unit stands.
-   * @param face - The direction that the unit will be facing in degrees.
+   * @param face - The facing, in degrees; 270 (`bj_UNIT_FACING`) when left out.
+   * @returns The new unit.
+   * @throws When the game returns no handle, for example an unknown name:
+   * `reforged-ts: failed to create Unit (<unitName>)`, at the calling line. In Dev
+   * mode, also before the globals Init stage and inside `MapPlayer.runLocal`.
    * @native CreateUnitAtLocByName
    */
   public static createAtPointByName(
@@ -88,12 +111,18 @@ export class Unit extends Widget {
   }
 
   /**
-   * Creates an undead gold mine and the blight around it, through
-   * `CreateBlightedGoldmine`.
-   * @param owner - The owner of the gold mine.
-   * @param x - The x-coordinate of the gold mine.
-   * @param y - The y-coordinate of the gold mine.
-   * @param face - The direction that the gold mine will be facing in degrees.
+   * Creates an undead haunted gold mine, which spreads blight around it.
+   * @remarks
+   * The mine holds the gold that the Gold Mine ability (`'Agld'`) sets, and it
+   * turns back into a normal gold mine when it is destroyed.
+   * @param owner - The player who owns the gold mine.
+   * @param x - The x-coordinate, in world units.
+   * @param y - The y-coordinate, in world units.
+   * @param face - The facing, in degrees; 270 (`bj_UNIT_FACING`) when left out.
+   * @returns The new gold mine.
+   * @throws When the game returns no handle: `reforged-ts: failed to create Unit`,
+   * at the calling line. In Dev mode, also before the globals Init stage and
+   * inside `MapPlayer.runLocal`.
    * @native CreateBlightedGoldmine
    */
   public static createBlightedGoldmine(
@@ -106,12 +135,16 @@ export class Unit extends Widget {
   }
 
   /**
-   * Creates a unit from the unit type's name, through `CreateUnitByName`.
-   * @param owner - The owner of the unit.
-   * @param unitName - The name of the unit type (`"footman"`).
-   * @param x - The x-coordinate of the unit.
-   * @param y - The y-coordinate of the unit.
-   * @param face - The direction that the unit will be facing in degrees.
+   * Creates a unit for `owner` from the unit type's order name.
+   * @param owner - The player who owns the unit.
+   * @param unitName - The unit type's order name, such as `"footman"`.
+   * @param x - The x-coordinate, in world units.
+   * @param y - The y-coordinate, in world units.
+   * @param face - The facing, in degrees; 270 (`bj_UNIT_FACING`) when left out.
+   * @returns The new unit.
+   * @throws When the game returns no handle, for example an unknown name:
+   * `reforged-ts: failed to create Unit (<unitName>)`, at the calling line. In Dev
+   * mode, also before the globals Init stage and inside `MapPlayer.runLocal`.
    * @native CreateUnitByName
    */
   public static createByName(
@@ -128,12 +161,20 @@ export class Unit extends Widget {
   }
 
   /**
-   * Creates the corpse of a unit, through `CreateCorpse`.
-   * @param owner - The owner of the corpse.
-   * @param unitId - The rawcode of the unit.
-   * @param x - The x-coordinate of the corpse.
-   * @param y - The y-coordinate of the corpse.
-   * @param face - The direction that the corpse will be facing in degrees.
+   * Creates the corpse of a unit type for `owner`.
+   * @remarks
+   * The unit dies as it spawns and plays its decay animation, so it becomes a
+   * corpse only once that animation has run.
+   * @param owner - The player who owns the corpse.
+   * @param unitId - The unit type's rawcode, such as `FourCC("hfoo")`.
+   * @param x - The x-coordinate, in world units.
+   * @param y - The y-coordinate, in world units.
+   * @param face - The facing, in degrees; 270 (`bj_UNIT_FACING`) when left out.
+   * @returns The new corpse.
+   * @throws When the game returns no handle, for example an unknown rawcode or a
+   * unit type that leaves no corpse: `reforged-ts: failed to create Unit (<rawcode>)`,
+   * at the calling line. In Dev mode, also before the globals Init stage and inside
+   * `MapPlayer.runLocal`.
    * @native CreateCorpse
    */
   public static createCorpse(
@@ -164,63 +205,127 @@ export class Unit extends Widget {
     SetUnitAcquireRange(this.handle, value);
   }
 
+  /**
+   * Gets the range within which the unit picks targets to engage, in world units.
+   * @returns The current acquire range.
+   * @native GetUnitAcquireRange
+   */
   public get acquireRange() {
     return GetUnitAcquireRange(this.handle);
   }
 
+  /**
+   * Gets the hero's agility without the bonuses of items and buffs.
+   * @returns The base agility; 0 for a unit that is not a hero.
+   * @native GetHeroAgi
+   */
   public get agility() {
     return GetHeroAgi(this.handle, false);
   }
 
+  /**
+   * The hero's base agility; the change is permanent.
+   * @native SetHeroAgi
+   */
   public set agility(value: number) {
     SetHeroAgi(this.handle, value, true);
   }
 
+  /**
+   * Gets the unit's total armor, bonuses from auras, buffs, agility and items included.
+   * @returns The total armor.
+   * @native BlzGetUnitArmor
+   */
   public get armor() {
     return BlzGetUnitArmor(this.handle);
   }
 
+  /**
+   * The unit's total armor, which may be negative: the game changes the base armor
+   * so that base and bonus armor add up to the value.
+   * @native BlzSetUnitArmor
+   */
   public set armor(armorAmount: number) {
     BlzSetUnitArmor(this.handle, armorAmount);
   }
 
   /**
-   * The size of the unit's bag, its extended inventory, through
-   * `UnitExtendedInventorySize` (3.0.0).
+   * Gets the size of the unit's bag, its extended inventory.
+   * @returns The number of bag slots.
    * @native UnitExtendedInventorySize
    */
   public get bagSize() {
     return UnitExtendedInventorySize(this.handle);
   }
 
+  /**
+   * Whether the unit may sleep at night, as creeps do.
+   * @native UnitAddSleep
+   */
   public set canSleep(flag: boolean) {
     UnitAddSleep(this.handle, flag);
   }
 
+  /**
+   * Gets whether the unit may sleep at night.
+   * @returns True when the unit may sleep.
+   * @native UnitCanSleep
+   */
   public get canSleep() {
     return UnitCanSleep(this.handle);
   }
 
+  /**
+   * Gets the radius the unit occupies for collision, in world units: 16 for a
+   * Peasant, 48 for a Mountain Giant.
+   * @returns The collision size.
+   * @native BlzGetUnitCollisionSize
+   */
   public get collisionSize() {
     return BlzGetUnitCollisionSize(this.handle);
   }
 
+  /**
+   * The team colour accent of the unit's model, such as `PLAYER_COLOR_RED`; the
+   * effects attached to the unit take it too.
+   * @native SetUnitColor
+   */
   public set color(whichColor: playercolor) {
     SetUnitColor(this.handle, whichColor);
   }
 
+  /**
+   * Gets the id of the order the unit is carrying out.
+   * @returns The order id, or 0 when the unit has no order.
+   * @native GetUnitCurrentOrder
+   */
   public get currentOrder() {
     return GetUnitCurrentOrder(this.handle);
   }
 
+  /**
+   * Gets the acquire range the unit type defines, in world units.
+   * @returns The default acquire range.
+   * @native GetUnitDefaultAcquireRange
+   */
   public get defaultAcquireRange() {
     return GetUnitDefaultAcquireRange(this.handle);
   }
 
+  /**
+   * Gets the flying height the unit type defines, in world units.
+   * @returns The default flying height.
+   * @native GetUnitDefaultFlyHeight
+   */
   public get defaultFlyHeight() {
     return GetUnitDefaultFlyHeight(this.handle);
   }
 
+  /**
+   * Gets the movement speed the unit type defines, in world units per second.
+   * @returns The default movement speed.
+   * @native GetUnitDefaultMoveSpeed
+   */
   public get defaultMoveSpeed() {
     return GetUnitDefaultMoveSpeed(this.handle);
   }
@@ -229,56 +334,106 @@ export class Unit extends Widget {
    * Returns a unit's default propulsion window angle in degrees.
    * @remarks This function is the odd case in the asymmetric prop window API, since the
    * other prop window natives use radians.
+   * @returns The default propulsion window, in degrees.
    * @native GetUnitDefaultPropWindow
    */
   public get defaultPropWindow() {
     return GetUnitDefaultPropWindow(this.handle);
   }
 
+  /**
+   * Gets the turn rate the unit type defines.
+   * @returns The default turn rate.
+   * @native GetUnitDefaultTurnSpeed
+   */
   public get defaultTurnSpeed() {
     return GetUnitDefaultTurnSpeed(this.handle);
   }
 
+  /**
+   * Gets the hero's experience points.
+   * @returns The experience; 0 for a unit that is not a hero.
+   * @native GetHeroXP
+   */
   public get experience() {
     return GetHeroXP(this.handle);
   }
 
+  /**
+   * The hero's experience points; a level gained this way shows its effects.
+   * @native SetHeroXP
+   */
   public set experience(newXpVal: number) {
     SetHeroXP(this.handle, newXpVal, true);
   }
 
+  /**
+   * The direction the unit turns to face, in degrees (0 east, 90 north); it turns
+   * at its turn rate, and a moving unit ignores the change.
+   * @native SetUnitFacing
+   */
   public set facing(value: number) {
     SetUnitFacing(this.handle, value);
   }
 
   /**
-   * @returns The units facing in degrees.
+   * Gets the direction the unit faces, in degrees.
+   * @returns The facing, in degrees.
    * @native GetUnitFacing
    */
   public get facing() {
     return GetUnitFacing(this.handle);
   }
 
+  /**
+   * Gets the food the unit provides to its owner, such as a farm's.
+   * @returns The food provided.
+   * @native GetUnitFoodMade
+   */
   public get foodMade() {
     return GetUnitFoodMade(this.handle);
   }
 
+  /**
+   * Gets the food the unit costs its owner.
+   * @returns The food used.
+   * @native GetUnitFoodUsed
+   */
   public get foodUsed() {
     return GetUnitFoodUsed(this.handle);
   }
 
+  /**
+   * Gets whether the unit raises no alarm, the "under attack" warning, when it is attacked.
+   * @returns True when the unit raises no alarm.
+   * @native UnitIgnoreAlarmToggled
+   */
   public get ignoreAlarmToggled() {
     return UnitIgnoreAlarmToggled(this.handle);
   }
 
+  /**
+   * Gets the hero's intelligence without the bonuses of items and buffs.
+   * @returns The base intelligence; 0 for a unit that is not a hero.
+   * @native GetHeroInt
+   */
   public get intelligence() {
     return GetHeroInt(this.handle, false);
   }
 
+  /**
+   * The hero's base intelligence; the change is permanent.
+   * @native SetHeroInt
+   */
   public set intelligence(value: number) {
     SetHeroInt(this.handle, value, true);
   }
 
+  /**
+   * Gets the number of slots of the unit's inventory.
+   * @returns The slot count, from 0 to 6; 0 for a unit with no inventory.
+   * @native UnitInventorySize
+   */
   public get inventorySize() {
     return UnitInventorySize(this.handle);
   }
@@ -294,59 +449,119 @@ export class Unit extends Widget {
     SetUnitInvulnerable(this.handle, flag);
   }
 
+  /**
+   * Gets whether the unit is invulnerable.
+   * @returns True when the unit is invulnerable.
+   * @native BlzIsUnitInvulnerable
+   */
   public get invulnerable() {
     return BlzIsUnitInvulnerable(this.handle);
   }
 
   /**
-   * Whether the hero glow is allowed on the unit, through `HeroGlowIsAllowedOnUnit` (3.0.0).
+   * Gets whether the hero glow may show on the unit.
+   * @returns True when the hero glow is allowed.
    * @native HeroGlowIsAllowedOnUnit
    */
   public get isHeroGlowAllowed() {
     return HeroGlowIsAllowedOnUnit(this.handle);
   }
 
+  /**
+   * Gets the unit's level: the level its type defines, or a hero's current level.
+   * @returns The level.
+   * @native GetUnitLevel
+   */
   public get level() {
     return GetUnitLevel(this.handle);
   }
 
+  /**
+   * Gets the height of the unit's position, as the local client sees it.
+   * @remarks
+   * The value can differ between clients: never let it decide game state. It is
+   * the same value as `z` today.
+   * @returns The height, in world units.
+   * @native BlzGetLocalUnitZ
+   * @async
+   */
   public get localZ() {
     return BlzGetLocalUnitZ(this.handle);
   }
 
+  /**
+   * Gets the unit's current mana.
+   * @returns The mana.
+   * @native GetUnitState
+   */
   public get mana() {
     return this.getState(UNIT_STATE_MANA);
   }
 
+  /**
+   * The unit's current mana.
+   * @native SetUnitState
+   */
   public set mana(value: number) {
     this.setState(UNIT_STATE_MANA, value);
   }
 
+  /**
+   * Gets the unit's maximum life.
+   * @returns The maximum life.
+   * @native BlzGetUnitMaxHP
+   */
   public get maxLife() {
     return BlzGetUnitMaxHP(this.handle);
   }
 
+  /**
+   * The unit's maximum life.
+   * @native BlzSetUnitMaxHP
+   */
   public set maxLife(value: number) {
     BlzSetUnitMaxHP(this.handle, value);
   }
 
+  /**
+   * Gets the unit's maximum mana.
+   * @returns The maximum mana.
+   * @native BlzGetUnitMaxMana
+   */
   public get maxMana() {
     return BlzGetUnitMaxMana(this.handle);
   }
 
+  /**
+   * The unit's maximum mana.
+   * @native BlzSetUnitMaxMana
+   */
   public set maxMana(value: number) {
     BlzSetUnitMaxMana(this.handle, value);
   }
 
+  /**
+   * The unit's movement speed, in world units per second.
+   * @native SetUnitMoveSpeed
+   */
   public set moveSpeed(value: number) {
     SetUnitMoveSpeed(this.handle, value);
   }
 
+  /**
+   * Gets the unit's movement speed, in world units per second.
+   * @returns The movement speed.
+   * @native GetUnitMoveSpeed
+   */
   public get moveSpeed() {
     return GetUnitMoveSpeed(this.handle);
   }
 
   /**
+   * Gets the unit's name as the local client's language shows it.
+   * @remarks
+   * The value can differ between clients: never let it decide game state.
+   * @returns The localized name, or an empty string when the game returns none.
    * @native GetUnitName
    * @async
    */
@@ -354,10 +569,19 @@ export class Unit extends Widget {
     return GetUnitName(this.handle) ?? "";
   }
 
+  /**
+   * The unit's own name, which replaces its type's name at once.
+   * @native BlzSetUnitName
+   * @bug Setting an empty name crashes the game.
+   */
   set name(value: string) {
     BlzSetUnitName(this.handle, value);
   }
 
+  /**
+   * The hero's proper name, the name shown above its experience bar.
+   * @native BlzSetHeroProperName
+   */
   public set nameProper(value: string) {
     BlzSetHeroProperName(this.handle, value);
   }
@@ -368,6 +592,7 @@ export class Unit extends Widget {
    * @remarks
    * - Will return 'null' on non-hero units.
    * - Will return 'null' on illusions.
+   * @returns The proper name, or an empty string for a unit that is not a hero or an illusion.
    * @native GetHeroProperName
    */
   public get nameProper() {
@@ -375,8 +600,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * The number of orders the unit has, the current one and the queued ones,
-   * through `BlzGetUnitOrderCount`.
+   * Gets the number of orders the unit has, the current one and the queued ones.
+   * @returns The order count.
    * @native BlzGetUnitOrderCount
    */
   public get orderCount() {
@@ -395,13 +620,19 @@ export class Unit extends Widget {
   }
 
   /**
-   * @returns true if the unit is paused
+   * Gets whether the unit is paused.
+   * @returns True when the `paused` setter paused the unit; `pauseEx` leaves it false.
    * @native IsUnitPaused
    */
   public get paused() {
     return IsUnitPaused(this.handle);
   }
 
+  /**
+   * Gets the point value the unit type defines, which the score screen counts.
+   * @returns The point value.
+   * @native GetUnitPointValue
+   */
   public get pointValue() {
     return GetUnitPointValue(this.handle);
   }
@@ -417,8 +648,6 @@ export class Unit extends Widget {
    * unit's prop window to 0 will prevent it from attacking.
    *
    * http://www.hiveworkshop.com/forums/2391397-post20.html
-
-   * @param newPropWindowAngle - The propulsion window angle to assign. Should be in radians.
    * @native SetUnitPropWindow
    */
   public set propWindow(newPropWindowAngle: number) {
@@ -427,16 +656,27 @@ export class Unit extends Widget {
 
   /**
    * Returns a unit's propulsion window angle in radians.
+   * @returns The propulsion window, in radians.
    * @native GetUnitPropWindow
    */
   public get propWindow() {
     return GetUnitPropWindow(this.handle);
   }
 
+  /**
+   * Gets the race of the unit's type.
+   * @returns The race, such as `RACE_HUMAN`.
+   * @native GetUnitRace
+   */
   public get race() {
     return GetUnitRace(this.handle);
   }
 
+  /**
+   * Gets the destructable the unit's rally point is set on.
+   * @returns The destructable, or `undefined` when the rally point is not on a destructable.
+   * @native GetUnitRallyDestructable
+   */
   public get rallyDestructable(): Destructable | undefined {
     return Destructable.fromHandle(GetUnitRallyDestructable(this.handle));
   }
@@ -444,55 +684,105 @@ export class Unit extends Widget {
   /**
    * The unit's rally point, or undefined for a unit that has none: a lookup,
    * although the game allocates a new location each time it returns one.
+   * @returns The rally point, or `undefined` when the unit has none.
    * @native GetUnitRallyPoint
    */
   public get rallyPoint(): Point | undefined {
     return Point.fromHandle(GetUnitRallyPoint(this.handle));
   }
 
+  /**
+   * Gets the unit the unit's rally point is set on.
+   * @returns The unit, or `undefined` when the rally point is not on a unit.
+   * @native GetUnitRallyUnit
+   */
   public get rallyUnit(): Unit | undefined {
     return Unit.fromHandle(GetUnitRallyUnit(this.handle));
   }
 
+  /**
+   * The gold left in the gold mine; a negative amount counts as 0.
+   * @native SetResourceAmount
+   */
   public set resourceAmount(amount: number) {
     SetResourceAmount(this.handle, amount);
   }
 
+  /**
+   * Gets the gold left in the gold mine.
+   * @returns The gold amount; 0 for a unit that is not a gold mine.
+   * @native GetResourceAmount
+   */
   public get resourceAmount() {
     return GetResourceAmount(this.handle);
   }
 
+  /**
+   * Gets whether a player can select the unit.
+   * @returns True when the unit is selectable.
+   * @native BlzIsUnitSelectable
+   */
   public get selectable() {
     return BlzIsUnitSelectable(this.handle);
   }
 
+  /**
+   * The scale of the unit's selection circle, where 1 is its type's size.
+   * @native BlzSetUnitRealField
+   */
   public set selectionScale(scale: number) {
     this.setField(UNIT_RF_SELECTION_SCALE, scale);
   }
 
+  /**
+   * Gets the scale of the unit's selection circle.
+   * @returns The selection scale, or 0 when the game returns none.
+   * @native BlzGetUnitRealField
+   */
   public get selectionScale() {
     const result = this.getField(UNIT_RF_SELECTION_SCALE);
     return typeof result === "number" ? result : 0;
   }
 
+  /**
+   * Whether the unit is shown; a hidden unit is not drawn, cannot be selected and
+   * takes no part in the game until it is shown again.
+   * @native ShowUnit
+   */
   public set show(flag: boolean) {
     ShowUnit(this.handle, flag);
   }
 
+  /**
+   * Gets whether the unit is shown.
+   * @returns True when the unit is shown, false when it is hidden.
+   * @native IsUnitHidden
+   */
   public get show() {
     return !IsUnitHidden(this.handle);
   }
 
+  /**
+   * Gets the rawcode of the unit type whose model the unit uses.
+   * @returns The skin's rawcode.
+   * @native BlzGetUnitSkin
+   */
   public get skin() {
     return BlzGetUnitSkin(this.handle);
   }
 
+  /**
+   * The rawcode of the unit type whose model, scale and sounds the unit uses; a
+   * change removes every effect attached to the unit.
+   * @native BlzSetUnitSkin
+   */
   public set skin(skinId: number) {
     BlzSetUnitSkin(this.handle, skinId);
   }
 
   /**
    * Returns the units available skill points.
+   * @returns The unspent skill points; 0 for a unit that is not a hero.
    * @native GetHeroSkillPoints
    */
   public get skillPoints() {
@@ -514,30 +804,64 @@ export class Unit extends Widget {
     UnitModifySkillPoints(this.handle, skillPointDelta);
   }
 
+  /**
+   * Gets whether the unit is asleep.
+   * @returns True when the unit sleeps.
+   * @native UnitIsSleeping
+   */
   public get sleeping() {
     return UnitIsSleeping(this.handle);
   }
 
+  /**
+   * Gets the hero's strength without the bonuses of items and buffs.
+   * @returns The base strength; 0 for a unit that is not a hero.
+   * @native GetHeroStr
+   */
   public get strength() {
     return GetHeroStr(this.handle, false);
   }
 
+  /**
+   * The hero's base strength; the change is permanent, and lowering it lowers the
+   * hero's life.
+   * @native SetHeroStr
+   */
   public set strength(value: number) {
     SetHeroStr(this.handle, value, true);
   }
 
+  /**
+   * The unit's turn rate.
+   * @native SetUnitTurnSpeed
+   */
   public set turnSpeed(value: number) {
     SetUnitTurnSpeed(this.handle, value);
   }
 
+  /**
+   * Gets the unit's turn rate.
+   * @returns The turn rate.
+   * @native GetUnitTurnSpeed
+   */
   public get turnSpeed() {
     return GetUnitTurnSpeed(this.handle);
   }
 
+  /**
+   * Gets the rawcode of the unit's type.
+   * @returns The rawcode, such as `FourCC("hfoo")`.
+   * @native GetUnitTypeId
+   */
   public get typeId() {
     return GetUnitTypeId(this.handle);
   }
 
+  /**
+   * Gets the custom integer stored on the unit.
+   * @returns The value, 0 until one is set.
+   * @native GetUnitUserData
+   */
   public get userData() {
     return GetUnitUserData(this.handle);
   }
@@ -552,15 +876,26 @@ export class Unit extends Widget {
     SetUnitUserData(this.handle, value);
   }
 
+  /**
+   * Whether the unit works as a waygate; it needs the Waygate ability (`'Awrp'`).
+   * @native WaygateActivate
+   */
   public set waygateActive(flag: boolean) {
     WaygateActivate(this.handle, flag);
   }
 
+  /**
+   * Gets whether the unit works as a waygate.
+   * @returns True when the unit has the Waygate ability and is activated.
+   * @native WaygateIsActive
+   */
   public get waygateActive() {
     return WaygateIsActive(this.handle);
   }
 
   /**
+   * Gets the unit's x-coordinate, alive or dead.
+   * @returns The x-coordinate, in world units.
    * @native GetUnitX
    * @bug If the unit is loaded into a zeppelin this will not return the position
    * of the zeppelin but the last position of the unit before it was loaded into
@@ -571,6 +906,7 @@ export class Unit extends Widget {
   }
 
   /**
+   * The unit's x-coordinate: the unit moves at once, ignoring pathing.
    * @remarks
    * - If the unit has movementspeed of zero the unit will be moved but the model of the unit will not move.
    * - This does not cancel orders of the unit. `setPosition` does cancel orders.
@@ -580,11 +916,19 @@ export class Unit extends Widget {
     SetUnitX(this.handle, value);
   }
 
+  /**
+   * Gets the unit's y-coordinate, alive or dead.
+   * @returns The y-coordinate, in world units.
+   * @native GetUnitY
+   * @bug For a unit loaded into a zeppelin, it returns where the unit boarded,
+   * not the zeppelin's position.
+   */
   public override get y() {
     return GetUnitY(this.handle);
   }
 
   /**
+   * The unit's y-coordinate: the unit moves at once, ignoring pathing.
    * @remarks
    * - If the unit has movementspeed of zero the unit will be moved but the model of the unit will not move.
    * - This does not cancel orders of the unit. `setPosition` does cancel orders.
@@ -595,6 +939,11 @@ export class Unit extends Widget {
   }
 
   /**
+   * Gets the height of the unit's position: the ground, water or walkable
+   * destructable below it plus the unit's own height.
+   * @remarks
+   * The value can differ between clients: never let it decide game state.
+   * @returns The height, in world units.
    * @native BlzGetUnitZ
    * @async
    */
