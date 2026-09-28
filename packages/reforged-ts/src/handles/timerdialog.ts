@@ -17,6 +17,9 @@ export class TimerDialog extends Handle<timerdialog> {
   /**
    * Creates a hidden timer dialog that counts down with a Timer, titled
    * "Remaining" in the player's language.
+   * @remarks
+   * The error message names the TimerDialog. In w3ts 3.x it read
+   * `w3ts failed to create timer handle.`, naming the wrong Handle type.
    * @param t - The Timer whose remaining time it shows.
    * @returns The new timer dialog.
    * @throws When the game returns no handle: `reforged-ts: failed to create TimerDialog`, at the calling line.

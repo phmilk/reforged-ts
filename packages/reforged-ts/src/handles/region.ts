@@ -18,6 +18,9 @@ import { Unit } from "./unit";
 export class Region extends Handle<region> {
   /**
    * Creates a region that holds no cell yet.
+   * @remarks
+   * The error message names the Region. In w3ts 3.x it read
+   * `w3ts failed to create rect handle.`, naming the wrong Handle type.
    * @returns The new region.
    * @throws When the game returns no handle:
    * `reforged-ts: failed to create Region`, at the calling line. In Dev
