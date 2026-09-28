@@ -8,12 +8,21 @@ export const deathRows = unitEventRows({
   /**
    * A unit dies; `killer` is undefined when nothing killed it.
    * @native TriggerRegisterPlayerUnitEvent
-   * @native TriggerRegisterUnitEvent
    */
   death: {
     event: EVENT_PLAYER_UNIT_DEATH,
-    twin: EVENT_UNIT_DEATH,
     unit: "unit",
-    read: (unit) => ({ unit, killer: Unit.fromKilling() }),
+    read: (unit) => ({
+      /** The dying unit. */
+      unit,
+      /** The killing unit, undefined when nothing killed it. */
+      killer: Unit.fromKilling(),
+    }),
   },
+  /**
+   * The event of `death` on one Unit: `unit` dies; `killer` is undefined when
+   * nothing killed it.
+   * @native TriggerRegisterUnitEvent
+   */
+  deathOf: { twinOf: "death", event: EVENT_UNIT_DEATH },
 });

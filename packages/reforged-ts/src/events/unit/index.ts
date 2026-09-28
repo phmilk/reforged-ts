@@ -14,8 +14,8 @@ import type { TableOf, UnitEventDescriptors } from "./rows";
 import { unitEvents } from "./rows";
 
 /**
- * The groups of UnitEvents rows, in alphabetical order: a new group is one
- * line here and one in `groups`.
+ * The groups of UnitEvents rows and twins, in alphabetical order: a new
+ * group is one line here and one in `groups`.
  */
 interface Groups {
   readonly combat: typeof combatRows;
