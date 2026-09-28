@@ -7,7 +7,12 @@ import { unitEventRows } from "./rows";
 
 /** The ownership row of UnitEvents: `changeOwner`. */
 export const ownershipRows = unitEventRows({
-  /** A unit changes owner; `previousOwner` is the player it had. */
+  /**
+   * A unit changes owner; `previousOwner` is the player it had.
+   * Every field is set.
+   * @native TriggerRegisterPlayerUnitEvent
+   * @native TriggerRegisterUnitEvent
+   */
   changeOwner: {
     event: EVENT_PLAYER_UNIT_CHANGE_OWNER,
     twin: EVENT_UNIT_CHANGE_OWNER,

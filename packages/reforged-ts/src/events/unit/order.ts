@@ -54,7 +54,12 @@ function readTarget(unit: Unit): OrderPayload {
  * `orderUnit`.
  */
 export const orderRows = unitEventRows({
-  /** A unit is given an order with no target. */
+  /**
+   * A unit is given an order with no target.
+   * The four target fields are undefined.
+   * @native TriggerRegisterPlayerUnitEvent
+   * @native TriggerRegisterUnitEvent
+   */
   orderIssued: {
     event: EVENT_PLAYER_UNIT_ISSUED_ORDER,
     twin: EVENT_UNIT_ISSUED_ORDER,
@@ -62,7 +67,12 @@ export const orderRows = unitEventRows({
     from: () => Unit.fromOrdered(),
     read: (unit) => readOrder(unit, {}),
   },
-  /** A unit is ordered to a point; `targetX` and `targetY` are that point. */
+  /**
+   * A unit is ordered to a point; `targetX` and `targetY` are that point.
+   * `targetUnit` and `targetWidget` are undefined.
+   * @native TriggerRegisterPlayerUnitEvent
+   * @native TriggerRegisterUnitEvent
+   */
   orderPoint: {
     event: EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER,
     twin: EVENT_UNIT_ISSUED_POINT_ORDER,
@@ -73,7 +83,9 @@ export const orderRows = unitEventRows({
   },
   /**
    * A unit is ordered to target a widget; `targetUnit` is set when the target
-   * is a unit.
+   * is a unit. `targetX` and `targetY` are undefined.
+   * @native TriggerRegisterPlayerUnitEvent
+   * @native TriggerRegisterUnitEvent
    */
   orderTarget: {
     event: EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER,
@@ -86,6 +98,7 @@ export const orderRows = unitEventRows({
    * The event of `orderTarget` under its compatibility name: the Patch gives
    * `EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER` the same id and no unit event, so
    * there is no `orderUnitOf`.
+   * @native TriggerRegisterPlayerUnitEvent
    */
   orderUnit: {
     event: EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER,
