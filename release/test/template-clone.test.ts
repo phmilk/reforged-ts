@@ -3,10 +3,9 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { main } from "../src/cli/template-clone.js";
 import type { GitCommand } from "../src/git.js";
-import { cloneTemplate, gitEnvironment } from "../src/template-clone.js";
+import { cloneTemplate, GIT_ENVIRONMENT } from "../src/template-clone.js";
 import { tempDir, writeText, writeWorkspace } from "./support/workspace.js";
 
-const TOKEN = "github_pat_secret";
 const URL = "https://github.com/phmilk/reforged-ts-template.git";
 
 /** A git that records its commands and answers with `codes` per command. */
@@ -22,44 +21,24 @@ function fakeGit(codes: { "ls-remote"?: number; clone?: number } = {}) {
   };
 }
 
-describe("gitEnvironment", () => {
-  it("authenticates through configuration variables, never interactively", () => {
-    const basic = Buffer.from(`x-access-token:${TOKEN}`).toString("base64");
-    expect(gitEnvironment(TOKEN)).toEqual({
-      GIT_TERMINAL_PROMPT: "0",
-      GIT_CONFIG_COUNT: "1",
-      GIT_CONFIG_KEY_0: "http.https://github.com/.extraheader",
-      GIT_CONFIG_VALUE_0: `AUTHORIZATION: basic ${basic}`,
-    });
-    expect(gitEnvironment(undefined)).toEqual({ GIT_TERMINAL_PROMPT: "0" });
-    expect(gitEnvironment("")).toEqual({ GIT_TERMINAL_PROMPT: "0" });
-  });
-});
-
 describe("cloneTemplate", () => {
-  it("looks the ref up, then clones it shallow, with the token out of every argument", async () => {
+  it("looks the ref up, then clones it shallow, never interactively", async () => {
     const { commands, git } = fakeGit();
-    expect(
-      await cloneTemplate({ ref: "v1", into: "/tmp/t", token: TOKEN, git }),
-    ).toEqual({ ok: true });
+    expect(await cloneTemplate({ ref: "v1", into: "/tmp/t", git })).toEqual({
+      ok: true,
+    });
     expect(commands.map(({ args }) => args)).toEqual([
       ["ls-remote", "--exit-code", URL, "refs/tags/v1", "refs/heads/v1"],
       ["clone", "--quiet", "--depth", "1", "--branch", "v1", URL, "/tmp/t"],
     ]);
-    for (const { args, env } of commands) {
-      expect(args.join(" ")).not.toContain(TOKEN);
-      expect(env).toEqual(gitEnvironment(TOKEN));
+    for (const { env } of commands) {
+      expect(env).toEqual({ GIT_TERMINAL_PROMPT: "0" });
     }
   });
 
   it("names the missing ref and does not clone", async () => {
     const { commands, git } = fakeGit({ "ls-remote": 2 });
-    const result = await cloneTemplate({
-      ref: "v1",
-      into: "/tmp/t",
-      token: TOKEN,
-      git,
-    });
+    const result = await cloneTemplate({ ref: "v1", into: "/tmp/t", git });
     expect(result).toEqual({
       ok: false,
       message: expect.stringContaining(
@@ -69,40 +48,20 @@ describe("cloneTemplate", () => {
     expect(commands).toHaveLength(1);
   });
 
-  it("names the missing token when the Template cannot be read without one", async () => {
-    const { git } = fakeGit({ "ls-remote": 128 });
-    expect(
-      await cloneTemplate({ ref: "v1", into: "/tmp/t", token: undefined, git }),
-    ).toEqual({
+  it("says it cannot read the Template, and does not clone", async () => {
+    const { commands, git } = fakeGit({ "ls-remote": 128 });
+    expect(await cloneTemplate({ ref: "v1", into: "/tmp/t", git })).toEqual({
       ok: false,
-      message: expect.stringContaining(
-        "set the repository secret TEMPLATE_READ_TOKEN",
-      ) as unknown,
+      message:
+        "Cannot read the Template (phmilk/reforged-ts-template), git ls-remote exit code 128. " +
+        "The gate clones it without a token: check that the repository exists and is public.",
     });
-  });
-
-  it("names the token when it cannot read the Template", async () => {
-    const { git } = fakeGit({ "ls-remote": 128 });
-    const result = await cloneTemplate({
-      ref: "v1",
-      into: "/tmp/t",
-      token: TOKEN,
-      git,
-    });
-    expect(result).toEqual({
-      ok: false,
-      message: expect.stringContaining(
-        "The token in TEMPLATE_READ_TOKEN cannot read the Template",
-      ) as unknown,
-    });
-    expect(JSON.stringify(result)).not.toContain(TOKEN);
+    expect(commands).toHaveLength(1);
   });
 
   it("reports a failed clone", async () => {
     const { git } = fakeGit({ clone: 128 });
-    expect(
-      await cloneTemplate({ ref: "v1", into: "/tmp/t", token: TOKEN, git }),
-    ).toEqual({
+    expect(await cloneTemplate({ ref: "v1", into: "/tmp/t", git })).toEqual({
       ok: false,
       message:
         "git clone of the Template (phmilk/reforged-ts-template) at v1 into /tmp/t failed with exit code 128.",
@@ -134,11 +93,7 @@ describe("release:template-clone", () => {
     return dir;
   }
 
-  async function runCli(
-    args: string[],
-    fake = fakeGit(),
-    env: Record<string, string> = { TEMPLATE_READ_TOKEN: TOKEN },
-  ) {
+  async function runCli(args: string[], fake = fakeGit()) {
     let stdout = "";
     let stderr = "";
     const cwd = await tempDir("cwd");
@@ -148,7 +103,7 @@ describe("release:template-clone", () => {
         stdout: (text) => (stdout += text),
         stderr: (text) => (stderr += text),
       },
-      { cwd, root: await writeWorkspace(), env, git: fake.git },
+      { cwd, root: await writeWorkspace(), git: fake.git },
     );
     return { status, stdout, stderr, cwd };
   }
@@ -173,7 +128,7 @@ describe("release:template-clone", () => {
       URL,
       into,
     ]);
-    expect(fake.commands[0]?.env).toEqual(gitEnvironment(TOKEN));
+    expect(fake.commands[0]?.env).toEqual(GIT_ENVIRONMENT);
   });
 
   it("exits 1 with the message of a missing prerequisite", async () => {

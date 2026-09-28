@@ -1,17 +1,14 @@
 /**
  * `release:template-clone`, programmatic entry point: a throwaway clone of
  * the Template at the ref a release is gated against, for the Template
- * gate. Before cloning it asks the remote for the ref, so the two missing
- * prerequisites fail with a message naming them: read access to the
- * Template while it is private, and its `v<major>` ref.
+ * gate. Before cloning it asks the remote for the ref, so a missing
+ * `v<major>` ref fails with a message naming it. The Template is public:
+ * git reads it without a token.
  */
 import type { GitRunner } from "./git.js";
 
 /** The Template repository, on GitHub. */
 export const TEMPLATE_REPOSITORY = "phmilk/reforged-ts-template";
-
-/** The environment variable holding the token that reads the Template. */
-export const TOKEN_VARIABLE = "TEMPLATE_READ_TOKEN";
 
 const TEMPLATE_URL = `https://github.com/${TEMPLATE_REPOSITORY}.git`;
 
@@ -23,40 +20,25 @@ export interface CloneInput {
   ref: string;
   /** The folder to clone into. */
   into: string;
-  /** A token that reads the Template; none while it is public. */
-  token: string | undefined;
   git: GitRunner;
 }
 
 export type CloneResult = { ok: true } | { ok: false; message: string };
 
 /**
- * The environment that authenticates git to github.com with `token`,
- * through configuration variables rather than the command line or the URL,
- * so the token appears in no argument and no message. It is never
- * interactive.
+ * The environment of the git commands: never interactive, so a Template git
+ * cannot read fails instead of prompting for credentials.
  */
-export function gitEnvironment(
-  token: string | undefined,
-): Record<string, string> {
-  const env: Record<string, string> = { GIT_TERMINAL_PROMPT: "0" };
-  if (token === undefined || token === "") return env;
-  const basic = Buffer.from(`x-access-token:${token}`).toString("base64");
-  return {
-    ...env,
-    GIT_CONFIG_COUNT: "1",
-    GIT_CONFIG_KEY_0: "http.https://github.com/.extraheader",
-    GIT_CONFIG_VALUE_0: `AUTHORIZATION: basic ${basic}`,
-  };
-}
+export const GIT_ENVIRONMENT: Readonly<Record<string, string>> = {
+  GIT_TERMINAL_PROMPT: "0",
+};
 
 /**
- * Clones the Template at `ref` into `into`, shallow. Fails naming the
- * missing prerequisite when the Template cannot be read (no token, or one
- * that lacks access) or has no such ref.
+ * Clones the Template at `ref` into `into`, shallow. Fails naming the ref
+ * when the Template has no such ref, and saying so when git cannot read it.
  */
 export async function cloneTemplate(input: CloneInput): Promise<CloneResult> {
-  const env = gitEnvironment(input.token);
+  const env = GIT_ENVIRONMENT;
   const lookup = await input.git({
     args: [
       "ls-remote",
@@ -78,17 +60,11 @@ export async function cloneTemplate(input: CloneInput): Promise<CloneResult> {
     };
   }
   if (lookup !== 0) {
-    const hasToken = input.token !== undefined && input.token !== "";
     return {
       ok: false,
-      message: hasToken
-        ? `The token in ${TOKEN_VARIABLE} cannot read the Template (${TEMPLATE_REPOSITORY}), ` +
-          `git ls-remote exit code ${String(lookup)}: check that it grants Contents: read ` +
-          "on that repository and has not expired."
-        : `Cannot read the Template (${TEMPLATE_REPOSITORY}) without a token, ` +
-          `git ls-remote exit code ${String(lookup)}. While the Template is private, ` +
-          `set the repository secret ${TOKEN_VARIABLE} to a fine-grained token with ` +
-          "Contents: read on it.",
+      message:
+        `Cannot read the Template (${TEMPLATE_REPOSITORY}), git ls-remote exit code ${String(lookup)}. ` +
+        "The gate clones it without a token: check that the repository exists and is public.",
     };
   }
   const clone = await input.git({
