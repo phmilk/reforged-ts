@@ -2,9 +2,18 @@
 
 import { Handle } from "./handle";
 
+/**
+ * A game object that has hit points and a position: a unit, an item or a
+ * destructable. The base of `Unit`, `Item` and `Destructable`, and what a
+ * Native taking any of them (a death event, a target order) gives back.
+ * @example Reacting to the death of a unit or a destructable alike
+ * {@includeCode ../../examples/harness/widget-death.ts}
+ * @native widget
+ */
 export class Widget extends Handle<widget> {
   /**
-   * Get the Widget's life.
+   * Gets the widget's hit points.
+   * @returns The current hit points.
    * @native GetWidgetLife
    */
   public get life() {
@@ -12,7 +21,7 @@ export class Widget extends Handle<widget> {
   }
 
   /**
-   * Set the Widget's life.
+   * The widget's current hit points, an amount rather than a percentage.
    * @native SetWidgetLife
    */
   public set life(value: number) {
@@ -20,7 +29,8 @@ export class Widget extends Handle<widget> {
   }
 
   /**
-   * Get the Widget's x-coordinate
+   * Gets the x-coordinate of the widget's position.
+   * @returns The x-coordinate, in world units.
    * @native GetWidgetX
    */
   public get x() {
@@ -28,7 +38,8 @@ export class Widget extends Handle<widget> {
   }
 
   /**
-   * Get the Widget's y-coordinate
+   * Gets the y-coordinate of the widget's position.
+   * @returns The y-coordinate, in world units.
    * @native GetWidgetY
    */
   public get y() {
@@ -47,13 +58,20 @@ export class Widget extends Handle<widget> {
     AddIndicator(this.handle, red, green, blue, alpha);
   }
 
+  /**
+   * Gets the widget a trigger event is about, such as the one that died in
+   * a death event (`Trigger.registerDeathEvent`).
+   * @returns The widget, or `undefined` outside an event about one.
+   * @native GetTriggerWidget
+   */
   public static fromEvent(): Widget | undefined {
     return this.fromHandle(GetTriggerWidget());
   }
 
   /**
-   * The widget a target order targets, or undefined outside a target order,
-   * through `GetOrderTarget`.
+   * Gets the target of the order being issued.
+   * @returns The unit, item or destructable the order targets, or
+   * `undefined` outside a target order.
    * @native GetOrderTarget
    */
   public static fromOrderTarget(): Widget | undefined {

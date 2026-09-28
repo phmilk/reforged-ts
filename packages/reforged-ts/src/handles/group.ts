@@ -10,19 +10,58 @@ import { Rectangle } from "./rect";
 import { Unit } from "./unit";
 import { Widget } from "./widget";
 
+/**
+ * A set of units: the result of an enumeration, by area, owner or type, and
+ * a way to order its units together.
+ * @remarks
+ * A group keeps holding a unit that was removed from the game, such as a
+ * decayed corpse, until the group is cleared or refilled.
+ * @example Collecting units and ordering them together
+ * {@includeCode ../../examples/harness/group-units.ts}
+ * @native group
+ */
 export class Group extends Handle<group> {
+  /**
+   * Creates an empty group.
+   * @returns The new group.
+   * @throws When the game returns no handle:
+   * `reforged-ts: failed to create Group`, at the calling line. In Dev mode,
+   * also when called before the globals Init stage or inside
+   * `MapPlayer.runLocal`.
+   * @native CreateGroup
+   */
   public static create(): Group {
     return this.expect(CreateGroup());
   }
 
+  /**
+   * Adds every unit of this group to `addGroup`, in one Native call.
+   * @remarks
+   * The Native iterates its first group, this one, and adds to its second:
+   * despite its name, `addGroup` is the group that changes.
+   * @param addGroup - The group the units are added to.
+   * @returns The number of units added, or 0 on an error.
+   * @native BlzGroupAddGroupFast
+   */
   public addGroupFast(addGroup: Group): number {
     return BlzGroupAddGroupFast(this.handle, addGroup.handle);
   }
 
+  /**
+   * Adds a unit at the end of the group.
+   * @param whichUnit - The unit to add.
+   * @returns True when the unit was added; false when it already was in the
+   * group, or the group is destroyed.
+   * @native GroupAddUnit
+   */
   public addUnit(whichUnit: Unit): boolean {
     return GroupAddUnit(this.handle, whichUnit.handle);
   }
 
+  /**
+   * Removes every unit from the group.
+   * @native GroupClear
+   */
   public clear() {
     GroupClear(this.handle);
   }
@@ -34,6 +73,8 @@ export class Group extends Handle<group> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @throws In Dev mode, when called inside `MapPlayer.runLocal`: a Handle
+   * freed on one client desyncs the game.
    * @native DestroyGroup
    */
   public destroy() {
@@ -41,6 +82,19 @@ export class Group extends Handle<group> {
     this.release();
   }
 
+  /**
+   * Fills the group with the units within `radius` of a point.
+   * @remarks
+   * Clears the group first: it holds only the units found afterwards.
+   * @param x - The x-coordinate of the center, in world units.
+   * @param y - The y-coordinate of the center, in world units.
+   * @param radius - The radius, in world units.
+   * @param filter - Keeps a unit when it returns true; inside it,
+   * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
+   * `Filter` for the call.
+   * @native GroupEnumUnitsInRange
+   * @native Filter
+   */
   public enumUnitsInRange(
     x: number,
     y: number,
@@ -57,7 +111,19 @@ export class Group extends Handle<group> {
   }
 
   /**
+   * Fills the group with at most `countLimit` of the units within `radius`
+   * of a point.
+   * @remarks
+   * Clears the group first: it holds only the units found afterwards.
+   * @param x - The x-coordinate of the center, in world units.
+   * @param y - The y-coordinate of the center, in world units.
+   * @param radius - The radius, in world units.
+   * @param filter - Keeps a unit when it returns true; inside it,
+   * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
+   * `Filter` for the call.
+   * @param countLimit - The most units the group receives.
    * @native GroupEnumUnitsInRangeCounted
+   * @native Filter
    * @bug Causes irregular behavior when used with large numbers
    */
   public enumUnitsInRangeCounted(
@@ -77,6 +143,18 @@ export class Group extends Handle<group> {
     );
   }
 
+  /**
+   * Fills the group with the units within `radius` of a Point.
+   * @remarks
+   * Clears the group first: it holds only the units found afterwards.
+   * @param whichPoint - The center.
+   * @param radius - The radius, in world units.
+   * @param filter - Keeps a unit when it returns true; inside it,
+   * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
+   * `Filter` for the call.
+   * @native GroupEnumUnitsInRangeOfLoc
+   * @native Filter
+   */
   public enumUnitsInRangeOfPoint(
     whichPoint: Point,
     radius: number,
@@ -91,7 +169,18 @@ export class Group extends Handle<group> {
   }
 
   /**
+   * Fills the group with at most `countLimit` of the units within `radius`
+   * of a Point.
+   * @remarks
+   * Clears the group first: it holds only the units found afterwards.
+   * @param whichPoint - The center.
+   * @param radius - The radius, in world units.
+   * @param filter - Keeps a unit when it returns true; inside it,
+   * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
+   * `Filter` for the call.
+   * @param countLimit - The most units the group receives.
    * @native GroupEnumUnitsInRangeOfLocCounted
+   * @native Filter
    * @bug Causes irregular behavior when used with large numbers
    */
   public enumUnitsInRangeOfPointCounted(
@@ -109,6 +198,17 @@ export class Group extends Handle<group> {
     );
   }
 
+  /**
+   * Fills the group with the units inside a Rectangle.
+   * @remarks
+   * Clears the group first: it holds only the units found afterwards.
+   * @param r - The area to search.
+   * @param filter - Keeps a unit when it returns true; inside it,
+   * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
+   * `Filter` for the call.
+   * @native GroupEnumUnitsInRect
+   * @native Filter
+   */
   public enumUnitsInRect(r: Rectangle, filter: boolexpr | (() => boolean)) {
     GroupEnumUnitsInRect(
       this.handle,
@@ -118,7 +218,17 @@ export class Group extends Handle<group> {
   }
 
   /**
+   * Fills the group with at most `countLimit` of the units inside a
+   * Rectangle.
+   * @remarks
+   * Clears the group first: it holds only the units found afterwards.
+   * @param r - The area to search.
+   * @param filter - Keeps a unit when it returns true; inside it,
+   * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
+   * `Filter` for the call.
+   * @param countLimit - The most units the group receives.
    * @native GroupEnumUnitsInRectCounted
+   * @native Filter
    * @bug Causes irregular behavior when used with large numbers
    */
   public enumUnitsInRectCounted(
@@ -135,8 +245,14 @@ export class Group extends Handle<group> {
   }
 
   /**
+   * Fills the group with the units a player owns.
    * @remarks In contrast to other Enum-functions this function enumarates units with locust.
+   * @param whichPlayer - The owner.
+   * @param filter - Keeps a unit when it returns true; inside it,
+   * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
+   * `Filter` for the call.
    * @native GroupEnumUnitsOfPlayer
+   * @native Filter
    */
   public enumUnitsOfPlayer(
     whichPlayer: MapPlayer,
@@ -149,6 +265,22 @@ export class Group extends Handle<group> {
     );
   }
 
+  /**
+   * Fills the group with the units of one unit type, found by its internal
+   * name.
+   * @remarks
+   * - Clears the group first: it holds only the units found afterwards.
+   * - Units with the Locust ability are included, unlike the enumerations by
+   *   area.
+   * @param unitName - The type's internal name, such as `"footman"`; a
+   * custom type's is `"custom_"` followed by its rawcode, such as
+   * `"custom_h000"`.
+   * @param filter - Keeps a unit when it returns true; inside it,
+   * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
+   * `Filter` for the call.
+   * @native GroupEnumUnitsOfType
+   * @native Filter
+   */
   public enumUnitsOfType(unitName: string, filter: boolexpr | (() => boolean)) {
     GroupEnumUnitsOfType(
       this.handle,
@@ -158,7 +290,21 @@ export class Group extends Handle<group> {
   }
 
   /**
+   * Fills the group with at most `countLimit` of the units of one unit type,
+   * found by its internal name.
+   * @remarks
+   * - Clears the group first: it holds only the units found afterwards.
+   * - Units with the Locust ability are included, unlike the enumerations by
+   *   area.
+   * @param unitName - The type's internal name, such as `"footman"`; a
+   * custom type's is `"custom_"` followed by its rawcode, such as
+   * `"custom_h000"`.
+   * @param filter - Keeps a unit when it returns true; inside it,
+   * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
+   * `Filter` for the call.
+   * @param countLimit - The most units the group receives.
    * @native GroupEnumUnitsOfTypeCounted
+   * @native Filter
    * @bug Causes irregular behavior when used with large numbers
    */
   public enumUnitsOfTypeCounted(
@@ -174,6 +320,18 @@ export class Group extends Handle<group> {
     );
   }
 
+  /**
+   * Fills the group with the units a player has selected.
+   * @remarks
+   * The game knows another client's selection only as last synchronized:
+   * call `SyncSelections` first for an up-to-date one.
+   * @param whichPlayer - The player whose selection is read.
+   * @param filter - Keeps a unit when it returns true; inside it,
+   * `Unit.fromFilter()` gives the unit. A plain function is wrapped in a
+   * `Filter` for the call.
+   * @native GroupEnumUnitsSelected
+   * @native Filter
+   */
   public enumUnitsSelected(
     whichPlayer: MapPlayer,
     filter: boolexpr | (() => boolean),
@@ -191,6 +349,9 @@ export class Group extends Handle<group> {
    * @remarks In Dev mode the callback runs under `pcall`: a call that throws
    * is reported as `Group#<id> Group.for` and the enumeration continues with
    * the next unit. With Dev mode off `ForGroup` receives `callback` itself.
+   * @param callback - Runs once per unit, before `for` returns.
+   * @throws In Dev mode, when called inside `MapPlayer.runLocal`:
+   * `reforged-ts: Group.for inside MapPlayer.runLocal changes game state for one client, which desyncs the game: only visuals belong inside runLocal`.
    * @native ForGroup
    */
   public for(callback: () => void) {
@@ -199,6 +360,8 @@ export class Group extends Handle<group> {
   }
 
   /**
+   * Gets the unit at the head of the group.
+   * @returns The first unit, or `undefined` when the group is empty.
    * @native FirstOfGroup
    * @bug May return `null` even if there are still units in the group.
    * This happens when a unit in the group dies and decays since the group still
@@ -209,10 +372,23 @@ export class Group extends Handle<group> {
     return Unit.fromHandle(FirstOfGroup(this.handle));
   }
 
+  /**
+   * Gets the number of units in the group.
+   * @returns The number of units.
+   * @native BlzGroupGetSize
+   */
   public get size(): number {
     return BlzGroupGetSize(this.handle);
   }
 
+  /**
+   * Gets the units of the group, in the group's order.
+   * @returns A new array, which later changes to the group do not affect.
+   * @throws In Dev mode, when called inside `MapPlayer.runLocal`, as `for`
+   * does.
+   * @native ForGroup
+   * @native GetEnumUnit
+   */
   public getUnits(): Unit[] {
     const units: Unit[] = [];
     this.for(() => {
@@ -224,14 +400,36 @@ export class Group extends Handle<group> {
     return units;
   }
 
+  /**
+   * Gets the unit at one position of the group.
+   * @param index - The position, from 0 to `size - 1`.
+   * @returns The unit, or `undefined` when `index` is out of range or the
+   * unit there was removed from the game.
+   * @native BlzGroupUnitAt
+   */
   public getUnitAt(index: number): Unit | undefined {
     return Unit.fromHandle(BlzGroupUnitAt(this.handle, index));
   }
 
+  /**
+   * Tests whether a unit is in the group.
+   * @param whichUnit - The unit to look for.
+   * @returns True when the group holds the unit.
+   * @native IsUnitInGroup
+   */
   public hasUnit(whichUnit: Unit) {
     return IsUnitInGroup(whichUnit.handle, this.handle);
   }
 
+  /**
+   * Orders every unit of the group to a point given by its coordinates.
+   * @param order - The order's name, such as `"move"`, or its id, such as
+   * one of `tsGlobals.OrderId`.
+   * @param x - The target's x-coordinate, in world units.
+   * @param y - The target's y-coordinate, in world units.
+   * @native GroupPointOrder
+   * @native GroupPointOrderById
+   */
   public orderCoords(order: string | number, x: number, y: number) {
     if (typeof order === "string") {
       GroupPointOrder(this.handle, order, x, y);
@@ -240,6 +438,14 @@ export class Group extends Handle<group> {
     }
   }
 
+  /**
+   * Gives every unit of the group an order that takes no target, such as
+   * `"stop"`.
+   * @param order - The order's name, such as `"move"`, or its id, such as
+   * one of `tsGlobals.OrderId`.
+   * @native GroupImmediateOrder
+   * @native GroupImmediateOrderById
+   */
   public orderImmediate(order: string | number) {
     if (typeof order === "string") {
       GroupImmediateOrder(this.handle, order);
@@ -248,6 +454,14 @@ export class Group extends Handle<group> {
     }
   }
 
+  /**
+   * Orders every unit of the group to a Point.
+   * @param order - The order's name, such as `"move"`, or its id, such as
+   * one of `tsGlobals.OrderId`.
+   * @param whichPoint - The target point.
+   * @native GroupPointOrderLoc
+   * @native GroupPointOrderByIdLoc
+   */
   public orderPoint(order: string | number, whichPoint: Point) {
     if (typeof order === "string") {
       GroupPointOrderLoc(this.handle, order, whichPoint.handle);
@@ -256,6 +470,15 @@ export class Group extends Handle<group> {
     }
   }
 
+  /**
+   * Orders every unit of the group to target a unit, an item or a
+   * destructable.
+   * @param order - The order's name, such as `"move"`, or its id, such as
+   * one of `tsGlobals.OrderId`.
+   * @param targetWidget - The target.
+   * @native GroupTargetOrder
+   * @native GroupTargetOrderById
+   */
   public orderTarget(order: string | number, targetWidget: Widget | Unit) {
     if (typeof order === "string") {
       GroupTargetOrder(this.handle, order, targetWidget.handle);
@@ -264,10 +487,26 @@ export class Group extends Handle<group> {
     }
   }
 
+  /**
+   * Removes every unit of this group from `removeGroup`, in one Native call.
+   * @remarks
+   * The Native iterates its first group, this one, and removes from its
+   * second: despite its name, `removeGroup` is the group that changes.
+   * @param removeGroup - The group the units are removed from.
+   * @returns The number of units removed, or 0 on an error.
+   * @native BlzGroupRemoveGroupFast
+   */
   public removeGroupFast(removeGroup: Group): number {
     return BlzGroupRemoveGroupFast(this.handle, removeGroup.handle);
   }
 
+  /**
+   * Removes a unit from the group.
+   * @param whichUnit - The unit to remove.
+   * @returns True when the unit was removed; false when it was not in the
+   * group.
+   * @native GroupRemoveUnit
+   */
   public removeUnit(whichUnit: Unit): boolean {
     return GroupRemoveUnit(this.handle, whichUnit.handle);
   }

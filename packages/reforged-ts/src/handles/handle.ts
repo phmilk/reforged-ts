@@ -14,6 +14,7 @@ const registry = new WeakMap<handle, Handle<handle>>();
  * Handle, read before the Wrapper forgets it.
  */
 export interface Released {
+  /** The Handle of the destroyed Wrapper. */
   readonly handle: handle;
 }
 
@@ -26,8 +27,9 @@ const releaseListeners: ((released: Released) => void)[] = [];
 /**
  * Registers `listener` to run in every release step, after the registry
  * entry is gone: how a collection holding Handles drops the entries of a
- * destroyed one. Package-internal: `handles/index.ts` re-exports only
- * `Handle` from this module.
+ * destroyed one. Package-internal: `handles/index.ts` does not re-export
+ * it.
+ * @param listener - Called once per destroyed Wrapper, with its Handle.
  */
 export function onHandleReleased(listener: (released: Released) => void) {
   releaseListeners.push(listener);
@@ -38,23 +40,38 @@ export function onHandleReleased(listener: (released: Released) => void) {
  * after any upgrade (`Unit` over `Widget`), or undefined when the registry
  * holds none. How a collection keyed by Handles returns keys without asking
  * for a class. Package-internal, like `onHandleReleased`.
+ * @param handle - The Handle to look up.
+ * @returns The Wrapper the registry holds, or `undefined` when it holds none
+ * for `handle`.
  */
 export function canonicalWrapper(handle: handle): Handle<handle> | undefined {
   return registry.get(handle);
 }
 
 /**
- * A Wrapper class as its static members see it: `this` inside a static. The
- * abstract base itself is not one: `typeof Handle` has a `Handle<any>`
+ * A Wrapper class as its static members see it: the type of `this` inside a
+ * static member such as `fromHandle`.
+ * @remarks
+ * The abstract base itself is not one: `typeof Handle` has a `Handle<any>`
  * prototype, and `0 extends 1 & H` holds only when `H` is `any`, so
  * `Handle.fromHandle(h)` asks for a property `typeof Handle` lacks and does
- * not compile. Package-internal: `handles/index.ts` re-exports only `Handle`.
+ * not compile. The library exports the type because `fromHandle`'s
+ * signature names it; Map project code has no need to write it.
+ * @typeParam C - The Wrapper the class creates.
  */
 export type WrapperClass<C extends Handle<handle>> = {
+  /** The class's prototype: its instances are the Wrappers it returns. */
   readonly prototype: C;
+  /** The class's name, which a creation error names. */
   readonly name: string;
 } & (0 extends 1 & C["handle"]
-  ? { readonly "the abstract Handle base wraps nothing": never }
+  ? {
+      /**
+       * Required of the abstract base only, which lacks it, so that calling
+       * a static member on the base does not compile.
+       */
+      readonly "the abstract Handle base wraps nothing": never;
+    }
   : unknown);
 
 /** A fresh Wrapper as the creation helper's `init` sees it: fields writable. */
@@ -100,8 +117,18 @@ type Initialising<C> = { -readonly [K in keyof C]: C[K] };
  * Native function; then it takes a descriptive noun instead (`rect` is
  * `Rectangle`, because `Rect` is a Native; `player` is `MapPlayer`, because
  * `Player` is one).
+ * @example Wrapping a Handle a Native returned
+ * {@includeCode ../../examples/harness/handle-from-handle.ts}
+ * @typeParam T - The Native Handle type the Wrapper owns.
+ * @native handle
  */
 export abstract class Handle<T extends handle> {
+  /**
+   * The Handle this Wrapper owns, to pass to a Native the library does not
+   * wrap.
+   * @remarks
+   * Do not keep it after `destroy()`: the game frees the object behind it.
+   */
   public readonly handle: T;
 
   protected constructor(handle: T) {
@@ -109,10 +136,13 @@ export abstract class Handle<T extends handle> {
   }
 
   /**
-   * Get the unique ID of the handle. IDs are not recycled immediately when
-   * the object is destroyed (a new Handle created right after gets the next
-   * ID), and they are allocated deterministically from map start.
-   * @returns The unique ID of a handle object.
+   * Gets the game's numeric id of the Handle.
+   * @remarks
+   * Ids are not recycled immediately when the object is destroyed (a new
+   * Handle created right after gets the next id), and they are allocated
+   * deterministically from map start. An id is never data: key a collection
+   * on the Handle (or use `HandleMap` and `HandleSet`), never on its id.
+   * @returns The id, unique among the live Handles.
    * @native GetHandleId
    */
   public get id() {
@@ -150,11 +180,17 @@ export abstract class Handle<T extends handle> {
   }
 
   /**
-   * The Wrapper for `handle`, or undefined for an undefined Handle. The same
-   * Handle always gives the same object; when the object cached for it is of
-   * a less specific class than the one asked for (a `Timer` cached,
+   * Gets the Wrapper for `handle`, making it on first use. The same Handle
+   * always gives the same object; when the object cached for it is of a less
+   * specific class than the one asked for (a `Timer` cached,
    * `MyTimer.fromHandle` asked), a new object of the class asked for replaces
    * it. `Unit.fromHandle(h)` is typed `Unit | undefined`.
+   * @remarks
+   * It creates no Handle, so none of the creation Guards of Dev mode apply:
+   * wrap a Handle that Native code outside the library returned.
+   * @typeParam C - The Wrapper of the class it is called on.
+   * @param handle - A Handle of the class's Native type.
+   * @returns The Wrapper, or `undefined` when `handle` is undefined.
    */
   public static fromHandle<C extends Handle<handle>>(
     this: WrapperClass<C>,
@@ -264,8 +300,15 @@ function entomb(wrapper: Handle<handle>, name: string): void {
  * error level, same tail-position rule as `expect`:
  * `return expectWrapper(Point, GetCameraEyePositionLoc())`.
  *
- * Package-internal: `handles/index.ts` re-exports only `Handle` from this
- * module, so the library's entry file does not reach it.
+ * Package-internal: `handles/index.ts` does not re-export it, so the
+ * library's entry file does not reach it.
+ * @param cls - The Wrapper class to wrap the Handle in.
+ * @param handle - The Handle the creation Native returned.
+ * @param detail - The identifying argument the message names; none when
+ * left out.
+ * @returns The Wrapper for `handle`.
+ * @throws When `handle` is undefined:
+ * `reforged-ts: failed to create <Wrapper> (<detail>)`, at the calling line.
  */
 export function expectWrapper<C extends Handle<handle>>(
   cls: WrapperClass<C>,
@@ -284,6 +327,13 @@ export function expectWrapper<C extends Handle<handle>>(
  * `return expectUnwrapped(CreateMinimapIconAtLoc(...), "minimapicon", pingPath)`.
  * The Dev-mode creation Guards and counts apply to Wrappers only, so none
  * runs here. Package-internal, like `expectWrapper`.
+ * @param handle - The Handle the creation Native returned.
+ * @param typeName - The Native type the message names.
+ * @param detail - The identifying argument the message names; none when
+ * left out.
+ * @returns `handle`, known to be defined.
+ * @throws When `handle` is undefined:
+ * `reforged-ts: failed to create <typeName> (<detail>)`, at the calling line.
  */
 export function expectUnwrapped<T extends handle>(
   handle: T | undefined,
