@@ -20,7 +20,7 @@ From the workspace root:
 
 Build the packages first (`pnpm build`): `docs:collect` checks the rename map against the library's built declarations, `packages/reforged-ts/dist/index.d.ts`, and fails without them.
 
-Every build generates the API reference first, with TypeDoc, from the library's sources and from the Typings of each Game version `reforged-types` ships: no package needs to be built for it. The Typings' reference is a page per entry of a Game version's manifest (its functions, Blizzard.j functions and globals), about 5,700 per Game version, and most of the build's time: `docs:check` takes about 90 s on Windows, against 10 s without it. TypeDoc's validation warnings (an undocumented member, a broken `{@link}`) are printed and the build goes on; they fail `docs:check` once `STRICT_REFERENCE` in `config.ts` is on, which build step 8 ([#43](https://github.com/phmilk/reforged-ts/issues/43)) does when every member is documented. TypeDoc's errors always fail the build.
+Every build generates the API reference first, with TypeDoc, from the library's sources and from the Typings of each Game version `reforged-types` ships: no package needs to be built for it. The Typings' reference is a page per entry of a Game version's manifest (its functions, Blizzard.j functions and globals), about 5,700 per Game version, and most of the build's time: `docs:check` takes about 90 s on Windows, against 10 s without it. TypeDoc's validation warnings (an undocumented member, a broken `{@link}`) are printed and `docs:build` goes on; they fail `docs:check`, since `STRICT_REFERENCE` in `config.ts` is on (build step 8, [#43](https://github.com/phmilk/reforged-ts/issues/43), turned it on once every member was documented). TypeDoc's errors always fail the build.
 
 ## Layout
 
@@ -38,11 +38,11 @@ Every build generates the API reference first, with TypeDoc, from the library's 
 
 ## The docs audit
 
-`pnpm docs:audit` (`audit.ts`, [#43](https://github.com/phmilk/reforged-ts/issues/43)) lists what the library's doc comments still lack, so the documentation pass goes file by file. It runs TypeDoc on the library with the options of its reference (`referencePluginOptions`, the site's TypeDoc plugin included, so a `@native` naming no Native fails it as it fails the build) and writes no page, then ESLint with the docs configuration, `eslint.docs.config.mjs` at the root, on `packages/reforged-ts/src`. It prints each file, largest first, with its findings: `undocumented`, TypeDoc's `notDocumented` (the warnings `docs:check` logs for the library); `typedoc`, TypeDoc's other warnings (an unresolved `{@link}`, a type referenced but not exported), under the file they name or under `(no file)`; `lint`, the rule and its message at a line. Then the total.
+`pnpm docs:audit` (`audit.ts`, [#43](https://github.com/phmilk/reforged-ts/issues/43)) lists what the library's doc comments lack, per file. It runs TypeDoc on the library with the options of its reference (`referencePluginOptions`, the site's TypeDoc plugin included, so a `@native` naming no Native fails it as it fails the build) and writes no page, then ESLint with the workspace's configuration, `eslint.config.mjs` at the root, whose doc comment rules are those `pnpm lint` fails on, on `packages/reforged-ts/src`. It prints each file, largest first, with its findings: `undocumented`, TypeDoc's `notDocumented` (the warnings `docs:check` logs for the library); `typedoc`, TypeDoc's other warnings (an unresolved `{@link}`, a type referenced but not exported), under the file they name or under `(no file)`; `lint`, the rule and its message at a line. Then the total.
 
 - `pnpm docs:audit handles/unit.ts`: the files whose path ends with an argument, the total counting them alone.
 - `pnpm docs:audit --summary`: the counts per file, without the findings.
-- `pnpm docs:audit --strict`: exit code 1 on any finding (of the files kept). Without it, 0: the gates are at warn until the gate switch turns `--strict` on. A TypeDoc error fails either way.
+- The root script passes `--strict`: exit code 1 on any finding (of the files kept). The site's own script, `pnpm --filter reforged-ts-website docs:audit`, without it, exits 0 on findings. A TypeDoc error fails either way.
 
 It runs in `pnpm check` and on both CI legs, in about 10 s; `docs:check` runs on ubuntu alone. Node runs it from source; it sits next to `reference.ts`, whose compiler options it shares.
 

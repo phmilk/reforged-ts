@@ -11,15 +11,13 @@ Two gates, run by different tools, count the same symbols:
 - **Lint.** `tsdoc/syntax` ([eslint-plugin-tsdoc](https://www.npmjs.com/package/eslint-plugin-tsdoc)) checks the syntax and the tag vocabulary. Four rules of [eslint-plugin-jsdoc](https://www.npmjs.com/package/eslint-plugin-jsdoc) check the rest: `require-jsdoc` (a comment is present), `require-param`, `require-returns` and `sort-tags` (the tag order). Its tag-name and type checks are off: TypeScript gives the types and `tsdoc/syntax` the tags.
 - **TypeDoc.** The docs site's `pnpm docs:check` builds the API reference from `packages/reforged-ts/src/index.ts` with the `notDocumented` and `invalidLink` validations on. It also fails on an `{@includeCode}` whose file or region is missing, and on an `@native` naming neither a Native in the Typings manifest nor a Handle type the Typings declare. CI runs it on ubuntu; it runs locally too, after `pnpm build`.
 
-**During the documentation pass**, the lint rules sit in `eslint.docs.config.mjs` at warn, and TypeDoc's validation findings are logged without failing the site build. `pnpm docs:audit` runs both gates without the site build, in `pnpm check` and on both CI legs, and lists the findings per file, largest first ([The docs audit](../website/README.md#the-docs-audit)):
+**Both gates fail on a finding.** The lint rules sit in `eslint.config.mjs` at error, on `packages/reforged-ts/src/`, so `pnpm lint` and `pnpm check` fail on an undocumented public member. `docs:check` fails on TypeDoc's validation warnings (`STRICT_REFERENCE` in `website/config.ts`). `pnpm docs:audit` runs both gates without the site build, in `pnpm check` and on both CI legs, lists the findings per file, largest first, and exits 1 on any finding ([The docs audit](../website/README.md#the-docs-audit)):
 
 ```sh
 pnpm docs:audit                              # every file, then the total
-pnpm docs:audit --strict handles/unit.ts     # one file; exit code 1 on any finding
-pnpm exec eslint -c eslint.docs.config.mjs --fix packages/reforged-ts/src   # fixes the tag order, nothing else
+pnpm docs:audit handles/unit.ts              # one file
+pnpm exec eslint --fix packages/reforged-ts/src   # fixes the tag order; the other findings need a sentence
 ```
-
-At the end of the pass both gates switch to error: the rules move into `eslint.config.mjs`, and `pnpm check` fails on an undocumented public member.
 
 The matrix below marks what lint checks. The rest (the `@native`, `@throws`, `@async` and `@example` tags, and what the sentences say) is checked in review.
 

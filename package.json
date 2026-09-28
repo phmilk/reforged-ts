@@ -36,7 +36,7 @@
     "docs:start": "pnpm --filter reforged-ts-website docs:start",
     "docs:build": "pnpm --filter reforged-ts-website docs:build",
     "docs:check": "pnpm --filter reforged-ts-website docs:check",
-    "docs:audit": "pnpm --filter reforged-ts-website docs:audit",
+    "docs:audit": "pnpm --filter reforged-ts-website docs:audit --strict",
     "docs:version": "pnpm --filter reforged-ts-website docs:version",
     "docs:prune": "pnpm --filter reforged-ts-website docs:prune",
     "actionlint": "pnpm --filter reforged-ts-release actionlint",
