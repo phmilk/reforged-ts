@@ -56,6 +56,8 @@ export class TimerDialog extends Handle<timerdialog> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example Tearing down a round's interface
+   * {@includeCode ../../examples/game/destroy-ui.ts}
    * @native DestroyTimerDialog
    */
   public destroy() {

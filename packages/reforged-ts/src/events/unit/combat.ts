@@ -26,6 +26,8 @@ export const combatRows = unitEventRows({
   /**
    * A unit is attacked; `attacker` is the attacking unit.
    * Every field is set.
+   * @example A boss's shield, ended when it dies
+   * {@includeCode ../../../examples/harness/unit-events.ts#combat}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */
@@ -41,6 +43,8 @@ export const combatRows = unitEventRows({
   /**
    * A unit has taken damage; `source` is undefined when no unit dealt it.
    * `damagedOf(unit)` fires for the damage `unit` takes.
+   * @example A boss's shield, ended when it dies
+   * {@includeCode ../../../examples/harness/unit-events.ts#combat}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */
@@ -55,6 +59,8 @@ export const combatRows = unitEventRows({
    * A unit is about to take damage; `source` is undefined when no unit deals
    * it. `damagingOf(unit)` fires for the damage `unit` is about to take, not
    * the damage it deals: the Patch fires the unit event on the target.
+   * @example A boss's shield, ended when it dies
+   * {@includeCode ../../../examples/harness/unit-events.ts#combat}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */

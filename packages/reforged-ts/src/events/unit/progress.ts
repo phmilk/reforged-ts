@@ -12,6 +12,8 @@ export const progressRows = unitEventRows({
   /**
    * A unit finishes training `trained`.
    * Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */
@@ -27,6 +29,8 @@ export const progressRows = unitEventRows({
   /**
    * A structure finishes construction.
    * Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */
@@ -40,6 +44,8 @@ export const progressRows = unitEventRows({
   /**
    * A unit finishes a research; `researched` is its id.
    * Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */
@@ -52,6 +58,8 @@ export const progressRows = unitEventRows({
   /**
    * A unit finishes upgrading.
    * Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */
@@ -64,6 +72,8 @@ export const progressRows = unitEventRows({
   /**
    * A hero gains a level; `level` is its level after the gain.
    * Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */
@@ -77,6 +87,8 @@ export const progressRows = unitEventRows({
   /**
    * A hero learns the skill `abilityId`.
    * Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */

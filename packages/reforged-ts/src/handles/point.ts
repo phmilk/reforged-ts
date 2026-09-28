@@ -80,6 +80,8 @@ export class Point extends Handle<location> {
    * Terrain deformed by spells or abilities, the graphics settings, whether
    * destructables are rendered, and what each client sees can all change the
    * value.
+   * @example Placing visuals from local heights
+   * {@includeCode ../../examples/harness/local-heights.ts}
    * @returns The terrain height, in world units.
    * @native GetLocationZ
    * @async
@@ -131,6 +133,8 @@ export class Point extends Handle<location> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example Handles made for one computation
+   * {@includeCode ../../examples/game/destroy-scratch.ts}
    * @throws In Dev mode, when called inside `MapPlayer.runLocal`: a Handle
    * freed on one client desyncs the game.
    * @native RemoveLocation

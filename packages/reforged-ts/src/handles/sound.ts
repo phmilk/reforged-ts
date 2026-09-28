@@ -222,6 +222,8 @@ export class Sound extends Handle<sound> {
    * @remarks
    * The value can differ between clients, for a voice file whose length
    * depends on the game's language: never let it decide game state.
+   * @example A subtitle as long as the local voice line
+   * {@includeCode ../../examples/harness/sound-local.ts}
    * @returns The length, in milliseconds.
    * @native GetSoundDuration
    * @async
@@ -252,6 +254,8 @@ export class Sound extends Handle<sound> {
    * @remarks
    * The value can differ between clients: never let it decide game state.
    * Right after `start` it is still `false`.
+   * @example A subtitle as long as the local voice line
+   * {@includeCode ../../examples/harness/sound-local.ts}
    * @returns `true` while the sound plays.
    * @native GetSoundIsPlaying
    * @async
@@ -262,6 +266,8 @@ export class Sound extends Handle<sound> {
 
   /**
    * Makes the game destroy the sound once it has finished playing.
+   * @example A sound destroyed once it has played
+   * {@includeCode ../../examples/harness/sound-create.ts}
    * @native KillSoundWhenDone
    */
   public killWhenDone() {
@@ -500,6 +506,8 @@ export class Sound extends Handle<sound> {
    * @remarks
    * The value can differ between clients, for a voice file whose length
    * depends on the game's language: never let it decide game state.
+   * @example A subtitle as long as the local voice line
+   * {@includeCode ../../examples/harness/sound-local.ts}
    * @param fileName - The sound file's path.
    * @returns The length, in milliseconds.
    * @native GetSoundFileDuration

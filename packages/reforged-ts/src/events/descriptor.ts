@@ -65,6 +65,8 @@ export interface Subscription {
    * Ends the Subscription: destroys its Trigger, with the event
    * registration, the `when` condition and the handler, and no other
    * Trigger. The handler never runs again.
+   * @example Ending a Subscription from its own handler
+   * {@includeCode ../../examples/harness/events-on.ts#subscription}
    */
   destroy(): void;
 }

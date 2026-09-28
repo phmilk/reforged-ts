@@ -22,10 +22,14 @@ export interface RegionCrossing {
  * `RegionEvents.leave(region, filter?)` for one Region. The filter, a
  * `boolexpr` or a plain function, is handed to the registration. The
  * payload, a {@link RegionCrossing}, always holds the unit and the region.
+ * @example Heroes entering and leaving a camp
+ * {@includeCode ../../examples/game/region-events.ts}
  */
 export const RegionEvents = eventRows("RegionEvents", {
   /**
    * A unit enters `region`, when `filter` (if given) accepts it.
+   * @example Heroes entering and leaving a camp
+   * {@includeCode ../../examples/game/region-events.ts}
    * @native TriggerRegisterEnterRegion
    */
   enter: {
@@ -45,6 +49,8 @@ export const RegionEvents = eventRows("RegionEvents", {
   },
   /**
    * A unit leaves `region`, when `filter` (if given) accepts it.
+   * @example Heroes entering and leaving a camp
+   * {@includeCode ../../examples/game/region-events.ts}
    * @native TriggerRegisterLeaveRegion
    */
   leave: {

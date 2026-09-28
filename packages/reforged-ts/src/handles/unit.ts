@@ -483,6 +483,8 @@ export class Unit extends Widget {
    * @remarks
    * The value can differ between clients: never let it decide game state. It is
    * the same value as `z` today.
+   * @example Placing visuals from local heights
+   * {@includeCode ../../examples/harness/local-heights.ts}
    * @returns The height, in world units.
    * @native BlzGetLocalUnitZ
    * @async
@@ -567,6 +569,8 @@ export class Unit extends Widget {
    * Gets the unit's name as the local client's language shows it.
    * @remarks
    * The value can differ between clients: never let it decide game state.
+   * @example Showing names in the local language
+   * {@includeCode ../../examples/game/local-names.ts}
    * @returns The localized name, or an empty string when the game returns none.
    * @native GetUnitName
    * @async
@@ -951,6 +955,8 @@ export class Unit extends Widget {
    * destructable below it plus the unit's own height.
    * @remarks
    * The value can differ between clients: never let it decide game state.
+   * @example Placing visuals from local heights
+   * {@includeCode ../../examples/harness/local-heights.ts}
    * @returns The height, in world units.
    * @native BlzGetUnitZ
    * @async
@@ -1368,6 +1374,8 @@ export class Unit extends Widget {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example Removing game objects without a death
+   * {@includeCode ../../examples/game/destroy-units.ts}
    * @throws In Dev mode, inside `MapPlayer.runLocal`:
    * `reforged-ts: destroying Unit#<id> inside MapPlayer.runLocal changes game state for one client, which desyncs the game: only visuals belong inside runLocal`
    * @native RemoveUnit
@@ -3866,6 +3874,8 @@ export class Unit extends Widget {
    * Gets the unit under the local player's mouse cursor.
    * @remarks
    * The value differs between clients: never let it decide game state.
+   * @example A tooltip following the local mouse
+   * {@includeCode ../../examples/harness/cursor-tooltip.ts}
    * @returns The unit, or `undefined` when the cursor is over none.
    * @native BlzGetMouseFocusUnit
    * @async

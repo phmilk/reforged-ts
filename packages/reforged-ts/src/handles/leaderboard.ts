@@ -57,6 +57,8 @@ export class Leaderboard extends Handle<leaderboard> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example Tearing down a round's interface
+   * {@includeCode ../../examples/game/destroy-ui.ts}
    * @native DestroyLeaderboard
    */
   public destroy() {

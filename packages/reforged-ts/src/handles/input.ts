@@ -52,6 +52,8 @@ export class Input {
   /**
    * Checks whether the local player holds the key down, through
    * `BlzIsKeyPressed` (3.0.0).
+   * @example Panning the local camera while a key is held
+   * {@includeCode ../../examples/harness/input-hold-key.ts}
    * @param key - The key, such as `OSKEY_SPACE`.
    * @returns `true` while the key is down on the local client.
    * @native BlzIsKeyPressed
@@ -64,6 +66,8 @@ export class Input {
   /**
    * Checks whether the local player holds the mouse button down, through
    * `BlzIsMouseButtonPressed` (3.0.0).
+   * @example A tooltip following the local mouse
+   * {@includeCode ../../examples/harness/cursor-tooltip.ts}
    * @param button - The button, such as `MOUSE_BUTTON_TYPE_LEFT`.
    * @returns `true` while the button is down on the local client.
    * @native BlzIsMouseButtonPressed
@@ -76,6 +80,8 @@ export class Input {
   /**
    * Checks whether the local player holds the meta keys down, through
    * `BlzIsMetaKeyPressed` (3.0.0).
+   * @example Panning the local camera while a key is held
+   * {@includeCode ../../examples/harness/input-hold-key.ts}
    * @param keys - The meta keys, one {@link MetaKey} or several combined
    * with `|`.
    * @returns `true` while the keys are down on the local client.
@@ -89,6 +95,8 @@ export class Input {
   /**
    * Gets the horizontal position of the local mouse on the screen, through
    * `BlzGetMouseScreenPosX` (3.0.0).
+   * @example A tooltip following the local mouse
+   * {@includeCode ../../examples/harness/cursor-tooltip.ts}
    * @returns The x-coordinate on the screen, in pixels.
    * @native BlzGetMouseScreenPosX
    * @async
@@ -100,6 +108,8 @@ export class Input {
   /**
    * Gets the vertical position of the local mouse on the screen, through
    * `BlzGetMouseScreenPosY` (3.0.0).
+   * @example A tooltip following the local mouse
+   * {@includeCode ../../examples/harness/cursor-tooltip.ts}
    * @returns The y-coordinate on the screen, in pixels.
    * @native BlzGetMouseScreenPosY
    * @async

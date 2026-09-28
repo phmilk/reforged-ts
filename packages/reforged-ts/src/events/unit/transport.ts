@@ -13,6 +13,8 @@ export const transportRows = unitEventRows({
    * in-game (the Patch documents only the player-unit event), so its payload
    * reads the loaded unit and the transport from the Natives, as `loaded`
    * does.
+   * @example Reporting units boarding a transport
+   * {@includeCode ../../../examples/harness/unit-events.ts#transport}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */

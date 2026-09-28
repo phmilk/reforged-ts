@@ -148,6 +148,8 @@ export const PlayerEvents = eventRows("PlayerEvents", {
    * A player sends a chat message containing `text`, or equal to it when
    * `exactMatch`; `message` is the whole message, `matched` is `text`.
    * The payload is a {@link ChatPayload}.
+   * @example A chat command with an argument
+   * {@includeCode ../../examples/harness/player-events.ts#chat}
    * @native TriggerRegisterPlayerChatEvent
    */
   chat: {
@@ -170,6 +172,8 @@ export const PlayerEvents = eventRows("PlayerEvents", {
 
   /**
    * A player leaves the game.
+   * @example Announcing how players leave the game
+   * {@includeCode ../../examples/harness/player-events.ts#outcome}
    * @native TriggerRegisterPlayerEvent
    */
   leave: slotRow(EVENT_PLAYER_LEAVE),
@@ -177,6 +181,8 @@ export const PlayerEvents = eventRows("PlayerEvents", {
   /**
    * A player presses `key` with the modifiers `metaKey`, and again
    * repeatedly while holding it. The payload is a {@link KeyPayload}.
+   * @example Sprinting while a key is held
+   * {@includeCode ../../examples/harness/player-events.ts#keys}
    * @native BlzTriggerRegisterPlayerKeyEvent
    */
   keyDown: keyRow(true),
@@ -184,6 +190,8 @@ export const PlayerEvents = eventRows("PlayerEvents", {
   /**
    * A player releases `key` with the modifiers `metaKey`. The payload is a
    * {@link KeyPayload}.
+   * @example Sprinting while a key is held
+   * {@includeCode ../../examples/harness/player-events.ts#keys}
    * @native BlzTriggerRegisterPlayerKeyEvent
    */
   keyUp: keyRow(false),
@@ -191,6 +199,8 @@ export const PlayerEvents = eventRows("PlayerEvents", {
   /**
    * A player presses a mouse button; `x` and `y` are the world point. The payload is a
    * {@link MousePayload}.
+   * @example Following mouse drags
+   * {@includeCode ../../examples/harness/player-events.ts#mouse}
    * @native TriggerRegisterPlayerEvent
    */
   mouseDown: mouseRow(MouseEventKind.Down),
@@ -198,6 +208,8 @@ export const PlayerEvents = eventRows("PlayerEvents", {
   /**
    * A player releases a mouse button; `x` and `y` are the world point. The payload is a
    * {@link MousePayload}.
+   * @example Following mouse drags
+   * {@includeCode ../../examples/harness/player-events.ts#mouse}
    * @native TriggerRegisterPlayerEvent
    */
   mouseUp: mouseRow(MouseEventKind.Up),
@@ -205,6 +217,8 @@ export const PlayerEvents = eventRows("PlayerEvents", {
   /**
    * A player moves the mouse; `x` and `y` are the world point. The payload is a
    * {@link MousePayload}.
+   * @example Following mouse drags
+   * {@includeCode ../../examples/harness/player-events.ts#mouse}
    * @native TriggerRegisterPlayerEvent
    */
   mouseMove: mouseRow(MouseEventKind.Move),
@@ -212,6 +226,8 @@ export const PlayerEvents = eventRows("PlayerEvents", {
   /**
    * A player's synced data with `prefix` arrives at every player. The
    * payload is a {@link SyncPayload}.
+   * @example Sending one player's pick to every client
+   * {@includeCode ../../examples/harness/player-events.ts#sync}
    * @native BlzTriggerRegisterPlayerSyncEvent
    */
   syncData: {
@@ -230,6 +246,8 @@ export const PlayerEvents = eventRows("PlayerEvents", {
   /**
    * A player changes its `allianceType` alliance setting toward another.
    * The payload holds the player whose setting changed.
+   * @example Watching a player's alliances
+   * {@includeCode ../../examples/harness/player-events.ts#alliance}
    * @native TriggerRegisterPlayerAllianceChange
    */
   allianceChanged: {
@@ -247,12 +265,16 @@ export const PlayerEvents = eventRows("PlayerEvents", {
 
   /**
    * A player wins the game.
+   * @example Announcing how players leave the game
+   * {@includeCode ../../examples/harness/player-events.ts#outcome}
    * @native TriggerRegisterPlayerEvent
    */
   victory: slotRow(EVENT_PLAYER_VICTORY),
 
   /**
    * A player loses the game.
+   * @example Announcing how players leave the game
+   * {@includeCode ../../examples/harness/player-events.ts#outcome}
    * @native TriggerRegisterPlayerEvent
    */
   defeat: slotRow(EVENT_PLAYER_DEFEAT),

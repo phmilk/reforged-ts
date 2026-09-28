@@ -10,6 +10,8 @@ export const ownershipRows = unitEventRows({
   /**
    * A unit changes owner; `previousOwner` is the player it had.
    * Every field is set.
+   * @example Telling a player their unit was taken
+   * {@includeCode ../../../examples/harness/unit-events.ts#ownership}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */

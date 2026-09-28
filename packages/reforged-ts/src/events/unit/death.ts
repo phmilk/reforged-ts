@@ -7,6 +7,8 @@ import { unitEventRows } from "./rows";
 export const deathRows = unitEventRows({
   /**
    * A unit dies; `killer` is undefined when nothing killed it.
+   * @example A bounty paid to the killer's owner
+   * {@includeCode ../../../examples/harness/unit-events.ts#death}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */

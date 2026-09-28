@@ -9,6 +9,8 @@ export const selectionRows = unitEventRows({
   /**
    * `player` selects a unit.
    * Every field is set.
+   * @example Counting who selects a unit
+   * {@includeCode ../../../examples/harness/unit-events.ts#selection}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */
@@ -24,6 +26,8 @@ export const selectionRows = unitEventRows({
   /**
    * `player` deselects a unit.
    * Every field is set.
+   * @example Counting who selects a unit
+   * {@includeCode ../../../examples/harness/unit-events.ts#selection}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */

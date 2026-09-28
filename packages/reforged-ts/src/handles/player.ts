@@ -643,6 +643,8 @@ export class MapPlayer extends Handle<player> {
    * @remarks
    * The result differs between clients: let it decide visuals only, never
    * game state. {@link MapPlayer.runLocal} runs code for one player.
+   * @example A text tag its owner alone sees
+   * {@includeCode ../../examples/game/local-player.ts}
    * @returns `true` on this player's client, `false` on every other.
    * @native GetLocalPlayer
    * @async
@@ -1093,6 +1095,8 @@ export class MapPlayer extends Handle<player> {
    *   it throws instead of returning undefined.
    * - It prints nothing. In w3ts 3.x it printed ten lines on screen when the
    *   Native returned nothing; it throws now.
+   * @example A text tag its owner alone sees
+   * {@includeCode ../../examples/game/local-player.ts}
    * @returns The local player, never `undefined`.
    * @throws Should the game ever return no player:
    * `reforged-ts: failed to create MapPlayer`, at the calling line.

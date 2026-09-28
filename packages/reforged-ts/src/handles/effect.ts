@@ -241,6 +241,8 @@ export class Effect extends Handle<effect> {
    * @remarks
    * The value can differ between clients: never let it decide game state.
    * An attached effect reports 0.
+   * @example Placing visuals from local heights
+   * {@includeCode ../../examples/harness/local-heights.ts}
    * @returns The x-coordinate, in world units.
    * @native BlzGetLocalSpecialEffectX
    * @async
@@ -263,6 +265,8 @@ export class Effect extends Handle<effect> {
    * @remarks
    * The value can differ between clients: never let it decide game state.
    * An attached effect reports 0.
+   * @example Placing visuals from local heights
+   * {@includeCode ../../examples/harness/local-heights.ts}
    * @returns The y-coordinate, in world units.
    * @native BlzGetLocalSpecialEffectY
    * @async
@@ -285,6 +289,8 @@ export class Effect extends Handle<effect> {
    * @remarks
    * The value can differ between clients: never let it decide game state.
    * An attached effect reports 0.
+   * @example Placing visuals from local heights
+   * {@includeCode ../../examples/harness/local-heights.ts}
    * @returns The z-coordinate, in world units above the map's zero level,
    * not above the ground.
    * @native BlzGetLocalSpecialEffectZ
@@ -331,6 +337,8 @@ export class Effect extends Handle<effect> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example The handles a feature owns, destroyed when it ends
+   * {@includeCode ../../examples/game/destroy-owned.ts}
    * @native DestroyEffect
    */
   public destroy() {

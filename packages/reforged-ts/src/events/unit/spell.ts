@@ -27,6 +27,8 @@ export const spellRows = unitEventRows({
    * A unit starts channeling a spell: the first of the five spell events.
    * `targetUnit`, `targetItem` and `targetDestructable` are undefined
    * unless the spell targets one of that kind.
+   * @example Following a spell from channel to end
+   * {@includeCode ../../../examples/harness/unit-events.ts#spell}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */
@@ -40,6 +42,8 @@ export const spellRows = unitEventRows({
    * A unit begins casting a spell, before the spell takes effect.
    * `targetUnit`, `targetItem` and `targetDestructable` are undefined
    * unless the spell targets one of that kind.
+   * @example Following a spell from channel to end
+   * {@includeCode ../../../examples/harness/unit-events.ts#spell}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */
@@ -53,6 +57,8 @@ export const spellRows = unitEventRows({
    * A spell takes effect: its cost is paid and its cooldown starts.
    * `targetUnit`, `targetItem` and `targetDestructable` are undefined
    * unless the spell targets one of that kind.
+   * @example Following a spell from channel to end
+   * {@includeCode ../../../examples/harness/unit-events.ts#spell}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */
@@ -66,6 +72,8 @@ export const spellRows = unitEventRows({
    * A unit finishes casting a spell.
    * `targetUnit`, `targetItem` and `targetDestructable` are undefined
    * unless the spell targets one of that kind.
+   * @example Following a spell from channel to end
+   * {@includeCode ../../../examples/harness/unit-events.ts#spell}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */
@@ -79,6 +87,8 @@ export const spellRows = unitEventRows({
    * A unit stops casting a spell, finished or interrupted.
    * `targetUnit`, `targetItem` and `targetDestructable` are undefined
    * unless the spell targets one of that kind.
+   * @example Following a spell from channel to end
+   * {@includeCode ../../../examples/harness/unit-events.ts#spell}
    * @native TriggerRegisterPlayerUnitEvent
    * @native TriggerRegisterUnitEvent
    */

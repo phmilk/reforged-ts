@@ -26,11 +26,15 @@ export interface FramePayload {
 /**
  * The frame Event descriptors: `FrameEvents.of(frame, frameEventType)` for
  * one event of one Frame. The payload is a {@link FramePayload}.
+ * @example A slider and an edit box
+ * {@includeCode ../../examples/harness/frame-events.ts}
  */
 export const FrameEvents = eventRows("FrameEvents", {
   /**
    * `frameEventType` happens on `frame`; `text` is undefined when the event
    * carries none.
+   * @example A slider and an edit box
+   * {@includeCode ../../examples/harness/frame-events.ts}
    * @native BlzTriggerRegisterFrameEvent
    */
   of: {
