@@ -11,11 +11,12 @@ From the workspace root:
 | `pnpm docs:start`           | Collects, then serves the site with live reload at http://localhost:3000/reforged-ts/.                                               |
 | `pnpm docs:build`           | Collects, then builds the site into `website/build/`. Broken links fail it; broken anchors are warnings.                             |
 | `pnpm docs:check`           | The CI gate: `docs:build` with the strict configuration, where broken anchors fail too.                                              |
+| `pnpm docs:audit`           | Lists what the library's doc comments lack, per file, without the build. See [The docs audit](#the-docs-audit).                      |
 | `pnpm docs:collect`         | Copies the parts of the docs tree that come from elsewhere in the repository. The commands above it and `docs:version` run it first. |
 | `pnpm docs:version <label>` | Cuts the docs version of a library release, labelled by its `major.minor` (`1.0`), then prunes. See [Docs versions](#docs-versions). |
 | `pnpm docs:prune`           | Applies the retention rule alone: the last three minors of each major stay.                                                          |
 
-`pnpm check` does not build the site: `docs:check` is a CI step of its own, in the workflows of [#48](https://github.com/phmilk/reforged-ts/issues/48).
+`pnpm check` does not build the site, but runs `docs:audit`: `docs:check` is a CI step of its own, in the workflows of [#48](https://github.com/phmilk/reforged-ts/issues/48).
 
 Build the packages first (`pnpm build`): `docs:collect` checks the rename map against the library's built declarations, `packages/reforged-ts/dist/index.d.ts`, and fails without them.
 
@@ -30,9 +31,20 @@ Every build generates the API reference first, with TypeDoc, from the library's 
 - `llms.ts`: the files for AI agents, `llms.txt` and `llms-full.txt` per docs version and a Markdown copy of each page ([Search and LLM files](#search-and-llm-files)).
 - `config.ts`: the configuration, built by `docusaurus.config.ts` and, strict, by `docusaurus.check.config.ts`.
 - `reference.ts`: the API reference, one docusaurus-plugin-typedoc instance per entry of `siteReferences()` (the library: `docs/api/reforged-ts/`; the Typings: `typings/<Game version>/`, one per folder of `reforged-types` with a `manifest.json`; all git-ignored, rewritten at every build), the docs tree's sidebar generator, which puts the library's sidebar under the API section followed by a link to the Typings, and the Typings' own. The Typings are a docs instance of their own (id `typings`, folder `typings/`, whose `index.mdx` is committed), not versioned: served at `/typings`, a Game version's reference at `/typings/<Game version>/overview` (a route ending in `3.0.0` would be taken for a file by a static server) and an entry's page at `/typings/<Game version>/functions/<Name>` or `/typings/<Game version>/variables/<Name>`, whatever the docs version. A Game version's reference is its index page alone in the sidebar: a sidebar of its thousands of pages would be rendered into each of them. Each Game version's TypeDoc run compiles its Jass files with a tsconfig written to `node_modules/.cache/typings-reference/`.
+- `audit.ts`: `docs:audit`, the library's reference run as an audit ([The docs audit](#the-docs-audit)).
 - `typedoc/`: the site's TypeDoc plugin, which every reference instance loads from source (TypeDoc imports it inside the Docusaurus process, where only Node's own type stripping runs it, without a flag from Node 22.18 on: the package's `engines` floor): the validation gate, the custom tags of `typedoc/tsdoc.json` when the library has no `tsdoc.json` of its own yet, and, for the Typings, their Jass files merged into one page set and the check that every entry of the manifest has its page, and, for the library, each `@native` tag as a link to the Native's page in the Typings of the newest Game version and to jassbot (`JASSBOT` in `reference.ts`), a tag naming no entry of that manifest failing the build. `typedoc/typings.mts` holds the Typings' routes, the one source of them: the instance's route base path, a Game version's route, its index page's slug, and an entry's page from its name and kind alone (`functions/<Name>` for the manifest kinds `native` and `function`, `variables/<Name>` for `global`): the `@native` links are built from it.
 - `scripts/`: the site's Node scripts (`.mts`), run from source by Node's type stripping and type-checked by `scripts/tsconfig.json`.
 - `test/`: the site's tests, the `website` project of the root vitest configuration (`pnpm test`): the scripts' tests on fixture repositories they write to a temporary folder, under `test/reference/` the reference tests (their own `tsconfig.json`, the site's compiler options) on the fixture library and the fixture Game version of the Typings in `test/reference/fixtures/`, and under `test/site/` the tests of the site's configuration with what the collector writes (their own `tsconfig.json`, the same options): every lint rule's `meta.docs.url`, from the plugin's sources, is the route of a collected page.
+
+## The docs audit
+
+`pnpm docs:audit` (`audit.ts`, [#43](https://github.com/phmilk/reforged-ts/issues/43)) lists what the library's doc comments still lack, so the documentation pass goes file by file. It runs TypeDoc on the library with the options of its reference (`referencePluginOptions`, the site's TypeDoc plugin included, so a `@native` naming no Native fails it as it fails the build) and writes no page, then ESLint with the docs configuration, `eslint.docs.config.mjs` at the root, on `packages/reforged-ts/src`. It prints each file, largest first, with its findings: `undocumented`, TypeDoc's `notDocumented` (the warnings `docs:check` logs for the library); `typedoc`, TypeDoc's other warnings (an unresolved `{@link}`, a type referenced but not exported), under the file they name or under `(no file)`; `lint`, the rule and its message at a line. Then the total.
+
+- `pnpm docs:audit handles/unit.ts`: the files whose path ends with an argument, the total counting them alone.
+- `pnpm docs:audit --summary`: the counts per file, without the findings.
+- `pnpm docs:audit --strict`: exit code 1 on any finding (of the files kept). Without it, 0: the gates are at warn until the gate switch turns `--strict` on. A TypeDoc error fails either way.
+
+It runs in `pnpm check` and on both CI legs, in about 10 s; `docs:check` runs on ubuntu alone. Node runs it from source; it sits next to `reference.ts`, whose compiler options it shares.
 
 ## Collected pages
 

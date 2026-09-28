@@ -83,6 +83,10 @@ jobs:
         run: pnpm run data:check
       - name: examples:build
         run: pnpm run examples:build
+      # What the library's doc comments lack, per file (#43); docs:check
+      # runs the same TypeDoc validation on ubuntu alone.
+      - name: docs:audit
+        run: pnpm run docs:audit
       - name: docs:check
         if: matrix.os == 'ubuntu'
         run: pnpm run docs:check
