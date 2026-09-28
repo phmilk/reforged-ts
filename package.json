@@ -30,6 +30,7 @@
     "release:dist-tag": "pnpm --filter reforged-ts-release release:dist-tag",
     "release:template-clone": "pnpm --filter reforged-ts-release release:template-clone",
     "release:publish-check": "pnpm --filter reforged-ts-release release:publish-check",
+    "release:template-dispatch": "pnpm --filter reforged-ts-release release:template-dispatch",
     "docs:collect": "pnpm --filter reforged-ts-website docs:collect",
     "docs:start": "pnpm --filter reforged-ts-website docs:start",
     "docs:build": "pnpm --filter reforged-ts-website docs:build",

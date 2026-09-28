@@ -1,7 +1,8 @@
 name: Mint the repository's GitHub App token
 description: >
   A short-lived installation token of the repository's GitHub App, scoped to
-  this repository and to the permissions given. Fails naming the repository
+  this repository (or to another one of its owner the App is installed on)
+  and to the permissions given. Fails naming the repository
   variable or secret that is missing before trying.
 inputs:
   client-id:
@@ -10,6 +11,12 @@ inputs:
   private-key:
     description: The App's private key, from the repository secret APP_PRIVATE_KEY.
     required: true
+  repository:
+    description: >
+      The name of another repository of this one's owner to scope the token
+      to, instead of this one (reforged-ts-template); empty for this one.
+    required: false
+    default: ""
   permission-contents:
     description: read or write.
     required: true
@@ -50,6 +57,8 @@ runs:
       with:
         client-id: ${{ inputs.client-id }}
         private-key: ${{ inputs.private-key }}
+        # Empty: this repository.
+        repositories: ${{ inputs.repository }}
         permission-contents: ${{ inputs.permission-contents }}
         permission-pull-requests: ${{ inputs.permission-pull-requests }}
         permission-issues: ${{ inputs.permission-issues }}

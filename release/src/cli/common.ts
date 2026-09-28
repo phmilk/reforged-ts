@@ -62,6 +62,35 @@ export function parseBaseArgs(
 }
 
 /**
+ * The arguments as `--option value` pairs: each option one of `options`,
+ * given at most once, with a value neither empty nor another option.
+ * `undefined` on anything else, or when an option of `required` is missing.
+ */
+export function parseOptions<Option extends string, Required extends Option>(
+  args: readonly string[],
+  options: readonly Option[],
+  required: readonly Required[],
+): (Record<Required, string> & Partial<Record<Option, string>>) | undefined {
+  const values = new Map<string, string>();
+  for (let i = 0; i < args.length; i += 2) {
+    const [option, value] = [args.at(i) ?? "", args.at(i + 1)];
+    if (
+      !(options as readonly string[]).includes(option) ||
+      values.has(option) ||
+      value === undefined ||
+      value === "" ||
+      value.startsWith("--")
+    ) {
+      return undefined;
+    }
+    values.set(option, value);
+  }
+  if (required.some((option) => !values.has(option))) return undefined;
+  return Object.fromEntries(values) as Record<Required, string> &
+    Partial<Record<Option, string>>;
+}
+
+/**
  * Writes `text` at the `/`-separated `path` under `root` unless the file
  * already holds it; resolves with whether it wrote.
  */
