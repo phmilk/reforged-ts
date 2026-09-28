@@ -1,7 +1,7 @@
 // Removing a unit, an item or a destructable from the game at once with
 // destroy(), where kill() would let it die. A destroyed unit fires no death
 // event, leaves no corpse and gives no bounty, so call destroy() for what
-// must vanish without a trace, such as a dummy caster or a used token.
+// must vanish without a trace, such as a dummy unit or a used token.
 // Every reference to it is dead afterwards: remove it from the maps and
 // groups that hold it, since in Dev mode any use of a destroyed Wrapper
 // raises `reforged-ts: used after destroy: <Class>#<id>`.
@@ -30,10 +30,12 @@ export function spendToken(hero: Unit): void {
 Init.onTriggers(() => {
   const owner = tsGlobals.Players[0];
   const hero = Unit.create(owner, FourCC("Hpal"), 0, 0);
-  tokens.set(hero, Item.create(FourCC("ratf"), 64, 0));
+  const token = Item.create(FourCC("ratf"), 64, 0);
+  hero.addItem(token);
+  tokens.set(hero, token);
   spendToken(hero);
 
-  // A dummy caster, removed once its work is done: no death, no corpse.
+  // A dummy unit, removed once its work is done: no death, no corpse.
   const dummy = Unit.create(owner, FourCC("hfoo"), 128, 0);
   dummy.destroy();
 

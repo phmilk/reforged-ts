@@ -59,9 +59,9 @@ export function startBounties(): Subscription {
 
 // #region item
 /**
- * Reports what one hero does with its items, until the returned
- * Subscriptions end. Every field of an item payload is set; for a shop,
- * `sellItem`'s `unit` is the shop that sold the item.
+ * Reports what one hero does with its items, and every sale of any shop,
+ * until the returned Subscriptions end. Every field of an item payload is
+ * set; `sellItem`'s `unit` is the shop that sold the item.
  */
 export function watchInventory(hero: Unit): Subscription[] {
   return [
@@ -95,15 +95,21 @@ export function watchInventory(hero: Unit): Subscription[] {
  * Prints each order a player's units get, with the targets the order
  * carries: a point order sets `targetX` and `targetY`, a target order sets
  * `targetWidget`, and `targetUnit` too when the target is a unit. The others
- * are undefined. `orderUnit` is `orderTarget` under its old name.
+ * are undefined, all four for an order with no target. `orderUnit` is
+ * `orderTarget` under its old name, the same event: subscribe to one of the
+ * two, or the handler runs twice.
  */
 export function logOrders(player: MapPlayer): Subscription[] {
   const ofPlayer = ({ unit }: { unit: Unit }) => unit.getOwner() === player;
   return [
     on(
       UnitEvents.orderIssued,
-      ({ orderId }) => {
-        print(`Order ${OrderId2String(orderId) ?? String(orderId)}`);
+      ({ orderId, targetX, targetWidget }) => {
+        // An order with no target, such as stop: no target field is set.
+        const noTarget = targetX === undefined && targetWidget === undefined;
+        print(
+          `Order ${OrderId2String(orderId) ?? String(orderId)}, no target: ${String(noTarget)}`,
+        );
       },
       ofPlayer,
     ),

@@ -3,7 +3,15 @@
 // unit and the region it crossed. The filter, a plain function or a
 // boolexpr, is handed to the registration and decides which units fire the
 // event at all; on() returns the Subscription whose destroy() ends it.
-import { Init, on, Rectangle, Region, RegionEvents, Unit } from "reforged-ts";
+import {
+  Init,
+  on,
+  Rectangle,
+  Region,
+  RegionEvents,
+  Timer,
+  Unit,
+} from "reforged-ts";
 
 Init.onTriggers(() => {
   const area = Rectangle.create(-512, -512, 512, 512);
@@ -13,10 +21,21 @@ Init.onTriggers(() => {
 
   // Only heroes fire the event: the filter reads the entering unit.
   const heroesOnly = () => Unit.fromFilter()?.isHero() === true;
-  on(RegionEvents.enter(camp, heroesOnly), ({ unit }) => {
+  const arrivals = on(RegionEvents.enter(camp, heroesOnly), ({ unit }) => {
     print(`${unit.name} rests at the camp`);
   });
-  on(RegionEvents.leave(camp, heroesOnly), ({ unit, region }) => {
-    print(`${unit.name} leaves region ${String(region.id)}`);
+  const departures = on(
+    RegionEvents.leave(camp, heroesOnly),
+    ({ unit, region }) => {
+      print(`${unit.name} leaves region ${String(region.id)}`);
+    },
+  );
+
+  // The camp closes after ten minutes: the Subscriptions end, then the
+  // Region they were registered on.
+  Timer.after(600, () => {
+    arrivals.destroy();
+    departures.destroy();
+    camp.destroy();
   });
 });

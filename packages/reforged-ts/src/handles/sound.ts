@@ -266,8 +266,8 @@ export class Sound extends Handle<sound> {
 
   /**
    * Makes the game destroy the sound once it has finished playing.
-   * @example A sound destroyed once it has played
-   * {@includeCode ../../examples/harness/sound-create.ts}
+   * @example Sounds the game destroys itself
+   * {@includeCode ../../examples/harness/sound-end.ts}
    * @native KillSoundWhenDone
    */
   public killWhenDone() {
@@ -476,6 +476,8 @@ export class Sound extends Handle<sound> {
 
   /**
    * Stops the sound.
+   * @example Sounds the game destroys itself
+   * {@includeCode ../../examples/harness/sound-end.ts}
    * @param killWhenDone - `true` to destroy the sound as well.
    * @param fadeOut - `true` to lower the volume at the `fadeOutRate` given
    * to `create`.

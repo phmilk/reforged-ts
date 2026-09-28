@@ -47,8 +47,12 @@ export function endRound(players: MapPlayer[]): void {
     vote.display(player, false);
   }
   vote.destroy();
+  objective.enabled = false;
   objective.destroy();
-  banner?.destroy();
+  if (banner !== undefined) {
+    banner.visible = false;
+    banner.destroy();
+  }
 }
 
 /** Starts a two-minute round, with its interface. */

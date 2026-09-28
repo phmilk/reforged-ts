@@ -18,7 +18,9 @@ import type { KeyPayload, Subscription } from "reforged-ts";
 // #region chat
 /**
  * A "-kick <name>" command for `host`: `message` is the whole line typed,
- * `matched` the text the descriptor was registered with.
+ * `matched` the text the descriptor was registered with. Without an exact
+ * match the event fires on any message containing the text, so `when` keeps
+ * those that start with it.
  */
 export function kickCommand(host: MapPlayer): Subscription {
   return on(
@@ -31,6 +33,7 @@ export function kickCommand(host: MapPlayer): Subscription {
         }
       }
     },
+    ({ message, matched }) => message.startsWith(matched),
   );
 }
 // #endregion chat
@@ -72,8 +75,8 @@ export function sprintKey(player: MapPlayer, hero: Unit): Subscription[] {
 
 // #region mouse
 /**
- * Draws a line of footprints where each player drags the mouse with a
- * button held: `x` and `y` are the world point under the mouse. The mouse
+ * Reports where each player drags the mouse with a button held: `x` and
+ * `y` are the world point under the mouse. The mouse
  * events are synced, and fire for every player once registered.
  */
 export function trackDrags(): Subscription[] {

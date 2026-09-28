@@ -6,4 +6,4 @@ Every `@async` member, Event descriptor and lifecycle member now shows a compile
 
 - An `@async` member's example feeds its local value to visuals only, such as the local camera, a frame or a text tag, never to game state.
 - An Event descriptor's example shows its payload, the fields that can be `undefined`, and the Subscription `on()` returns.
-- A `destroy()` example shows when to call it and what becomes of the references to a destroyed Wrapper. `Sound.killWhenDone` and `Subscription.destroy` show theirs too.
+- A `destroy()` example shows when to call it and what becomes of the references to a destroyed Wrapper. `Sound.killWhenDone`, `Sound.stop` and `Subscription.destroy` show theirs too.
