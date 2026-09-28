@@ -1,8 +1,9 @@
 /**
- * Whether a tag cuts a docs version (#196): the first step of `docs.yml`'s
- * `cut-version` job. A docs version is cut on each stable minor of the
- * library, `reforged-ts@<major>.<minor>.0`; its patches keep the docs
- * version of their minor and a prerelease's docs are Next. The tag filter
+ * `release:docs-cut`, programmatic entry point: whether a tag cuts a docs
+ * version (#196), the check of `docs.yml`'s `cut-version` job. A docs
+ * version is cut on each stable minor of the library,
+ * `reforged-ts@<major>.<minor>.0`; its patches keep the docs version of
+ * their minor and a prerelease's docs are Next. The tag filter
  * of the workflow cannot say "ends in `.0` without a prerelease suffix", so
  * every `reforged-ts@` tag starts the job and this decides.
  */

@@ -95,7 +95,7 @@ jobs:
       - uses: ./.github/actions/setup-workspace
       # Only reforged-ts@<major>.<minor>.0 cuts a docs version; any other
       # tag ends the job here with a notice.
-      - id: check
+      - id: cut
         name: release:docs-cut
         env:
           INPUT_VERSION: ${{ inputs.version }}
@@ -122,24 +122,24 @@ jobs:
             printf '## No docs version\n\n%s\n' "$reason" >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Build the packages the site reads
-        if: steps.check.outputs.version != ''
+        if: steps.cut.outputs.version != ''
         run: pnpm --filter "reforged-ts-website^..." build
       # Freezes Next as the docs version, then keeps the last three minors
       # of each major.
       - name: docs:version
-        if: steps.check.outputs.version != ''
+        if: steps.cut.outputs.version != ''
         env:
-          LABEL: ${{ steps.check.outputs.label }}
+          LABEL: ${{ steps.cut.outputs.label }}
         run: pnpm run docs:version "$LABEL"
       - name: Push the branch
-        if: steps.check.outputs.version != ''
+        if: steps.cut.outputs.version != ''
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           APP_TOKEN: ${{ steps.app.outputs.token }}
           APP_SLUG: ${{ steps.app.outputs.app-slug }}
-          BRANCH: ${{ steps.check.outputs.branch }}
-          VERSION: ${{ steps.check.outputs.version }}
-          LABEL: ${{ steps.check.outputs.label }}
+          BRANCH: ${{ steps.cut.outputs.branch }}
+          VERSION: ${{ steps.cut.outputs.version }}
+          LABEL: ${{ steps.cut.outputs.label }}
         run: |
           git switch --create "$BRANCH"
           # The three paths a cut writes, the pruned versions' removals
@@ -159,12 +159,12 @@ jobs:
           git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $header" \
             push origin "HEAD:refs/heads/$BRANCH"
       - name: Open the pull request
-        if: steps.check.outputs.version != ''
+        if: steps.cut.outputs.version != ''
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
-          BRANCH: ${{ steps.check.outputs.branch }}
-          VERSION: ${{ steps.check.outputs.version }}
-          LABEL: ${{ steps.check.outputs.label }}
+          BRANCH: ${{ steps.cut.outputs.branch }}
+          VERSION: ${{ steps.cut.outputs.version }}
+          LABEL: ${{ steps.cut.outputs.label }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           body="The docs version $LABEL of reforged-ts $VERSION: \`pnpm docs:version $LABEL\` froze Next, from $GITHUB_SHA, into \`website/versioned_docs/version-$LABEL\`, and kept the last three minors of each major. Its merge deploys the site. Opened by [docs.yml]($RUN_URL)."
