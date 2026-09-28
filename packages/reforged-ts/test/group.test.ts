@@ -7,6 +7,7 @@
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Group, MapPlayer, Unit } from "../src/index";
 import { defined } from "./support/defined";
+import { handleRef } from "./support/handle-ref";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -89,5 +90,53 @@ describe("Group enumeration", () => {
 
   it("Unit.fromEnum is undefined outside an enumeration", () => {
     expect(Unit.fromEnum()).toBeUndefined();
+  });
+});
+
+// The game's BlzGroupAddGroupFast and BlzGroupRemoveGroupFast change their
+// second group (measured in 3.0.0, #260); the members change `this`.
+describe("Group.addGroupFast", () => {
+  it("adds every unit of the argument to this group, and leaves the argument as it was", () => {
+    const [source, first, second] = groupOfTwo();
+    const target = Group.create();
+    expect(target.addGroupFast(source)).toEqual(2);
+    expect(target.size).toEqual(2);
+    expect(target.getUnitAt(0)).toBe(first);
+    expect(target.getUnitAt(1)).toBe(second);
+    expect(source.size).toEqual(2);
+    expect(source.getUnitAt(0)).toBe(first);
+    expect(source.getUnitAt(1)).toBe(second);
+  });
+
+  it("calls the Native with the argument first and this group second", () => {
+    const [source] = groupOfTwo();
+    const target = Group.create();
+    target.addGroupFast(source);
+    expect(stubCalls()).toContainCall(
+      `BlzGroupAddGroupFast(${handleRef("group", source.handle)}, ${handleRef("group", target.handle)})`,
+    );
+  });
+});
+
+describe("Group.removeGroupFast", () => {
+  it("removes every unit of the argument from this group, and leaves the argument as it was", () => {
+    const [target, first, second] = groupOfTwo();
+    const source = Group.create();
+    source.addUnit(first);
+    expect(target.removeGroupFast(source)).toEqual(1);
+    expect(target.size).toEqual(1);
+    expect(target.getUnitAt(0)).toBe(second);
+    expect(source.size).toEqual(1);
+    expect(source.getUnitAt(0)).toBe(first);
+  });
+
+  it("calls the Native with the argument first and this group second", () => {
+    const [target, first] = groupOfTwo();
+    const source = Group.create();
+    source.addUnit(first);
+    target.removeGroupFast(source);
+    expect(stubCalls()).toContainCall(
+      `BlzGroupRemoveGroupFast(${handleRef("group", source.handle)}, ${handleRef("group", target.handle)})`,
+    );
   });
 });

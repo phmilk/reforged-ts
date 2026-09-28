@@ -35,16 +35,18 @@ export class Group extends Handle<group> {
   }
 
   /**
-   * Adds every unit of this group to `addGroup`, in one Native call.
+   * Adds every unit of `source` to this group, in one Native call; `source`
+   * is left as it was.
    * @remarks
-   * The Native iterates its first group, this one, and adds to its second:
-   * despite its name, `addGroup` is the group that changes.
-   * @param addGroup - The group the units are added to.
+   * The Native adds the units of its first group to its second, so the
+   * member passes `source` first. In w3ts 3.x it passed this group first:
+   * `a.addGroupFast(b)` added the units of `a` to `b`.
+   * @param source - The group whose units are added.
    * @returns The number of units added, or 0 on an error.
    * @native BlzGroupAddGroupFast
    */
-  public addGroupFast(addGroup: Group): number {
-    return BlzGroupAddGroupFast(this.handle, addGroup.handle);
+  public addGroupFast(source: Group): number {
+    return BlzGroupAddGroupFast(source.handle, this.handle);
   }
 
   /**
@@ -490,16 +492,18 @@ export class Group extends Handle<group> {
   }
 
   /**
-   * Removes every unit of this group from `removeGroup`, in one Native call.
+   * Removes every unit of `source` from this group, in one Native call;
+   * `source` is left as it was.
    * @remarks
-   * The Native iterates its first group, this one, and removes from its
-   * second: despite its name, `removeGroup` is the group that changes.
-   * @param removeGroup - The group the units are removed from.
+   * The Native removes the units of its first group from its second, so the
+   * member passes `source` first. In w3ts 3.x it passed this group first:
+   * `a.removeGroupFast(b)` removed the units of `a` from `b`.
+   * @param source - The group whose units are removed.
    * @returns The number of units removed, or 0 on an error.
    * @native BlzGroupRemoveGroupFast
    */
-  public removeGroupFast(removeGroup: Group): number {
-    return BlzGroupRemoveGroupFast(this.handle, removeGroup.handle);
+  public removeGroupFast(source: Group): number {
+    return BlzGroupRemoveGroupFast(source.handle, this.handle);
   }
 
   /**
