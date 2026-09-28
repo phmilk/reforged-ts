@@ -951,13 +951,20 @@ export class Unit extends Widget {
     return BlzGetUnitZ(this.handle);
   }
 
+  /**
+   * Adds an ability to the unit, at level 1 and off cooldown.
+   * @param abilityId - The ability's rawcode, such as `FourCC("AHbz")`.
+   * @returns True when the ability was added, false when the unit already has it.
+   * @native UnitAddAbility
+   */
   public addAbility(abilityId: number) {
     return UnitAddAbility(this.handle, abilityId);
   }
 
   /**
-   * Adjusts the remaining cooldown of the ability by `delta`, a percentage of
-   * its full cooldown, through `BlzAdjustUnitAbilityCooldownPercent` (3.0.0).
+   * Adjusts the remaining cooldown of one of the unit's abilities by a share of its full cooldown.
+   * @param abilId - The ability's rawcode.
+   * @param delta - The share of the full cooldown to add; negative to shorten the cooldown.
    * @native BlzAdjustUnitAbilityCooldownPercent
    */
   public adjustAbilityCooldownPercent(abilId: number, delta: number) {
@@ -965,14 +972,22 @@ export class Unit extends Widget {
   }
 
   /**
-   * Adjusts the remaining cooldown of the ability by `delta` seconds, through
-   * `BlzAdjustUnitAbilityCooldownRemaining` (3.0.0).
+   * Adjusts the remaining cooldown of one of the unit's abilities by a number of seconds.
+   * @param abilId - The ability's rawcode.
+   * @param delta - The seconds to add; negative to shorten the cooldown.
    * @native BlzAdjustUnitAbilityCooldownRemaining
    */
   public adjustAbilityCooldownRemaining(abilId: number, delta: number) {
     BlzAdjustUnitAbilityCooldownRemaining(this.handle, abilId, delta);
   }
 
+  /**
+   * Adds or removes animation tags, such as `"alternate"` or `"defend"`, that the
+   * game adds to every animation the unit plays.
+   * @param animProperties - The tags, separated by spaces.
+   * @param add - True to add the tags, false to remove them.
+   * @native AddUnitAnimationProperties
+   */
   public addAnimationProps(animProperties: string, add: boolean) {
     AddUnitAnimationProperties(this.handle, animProperties, add);
   }
@@ -998,6 +1013,14 @@ export class Unit extends Widget {
     AddHeroXP(this.handle, xpToAdd, showEyeCandy);
   }
 
+  /**
+   * Flashes a coloured indicator on the unit, as the game does on a unit that is attacked.
+   * @param red - The red component, from 0 to 255.
+   * @param green - The green component, from 0 to 255.
+   * @param blue - The blue component, from 0 to 255.
+   * @param alpha - The opacity, from 0 (invisible) to 255 (opaque).
+   * @native UnitAddIndicator
+   */
   public override addIndicator(
     red: number,
     green: number,
@@ -1007,10 +1030,31 @@ export class Unit extends Widget {
     UnitAddIndicator(this.handle, red, green, blue, alpha);
   }
 
+  /**
+   * Puts an item in the unit's inventory.
+   * @param whichItem - The item to put in the inventory.
+   * @returns True when the item is now in the inventory, it was already there
+   * included; false when the unit has no inventory or no free slot.
+   * @native UnitAddItem
+   */
   public addItem(whichItem: Item) {
     return UnitAddItem(this.handle, whichItem.handle);
   }
 
+  /**
+   * Creates an item of a type in the unit's inventory.
+   * @remarks
+   * When the inventory is full or the unit cannot carry items, the game drops the
+   * new item at the unit's feet and returns nothing, so this throws although an
+   * item was created.
+   * @param itemId - The item type's rawcode, such as `FourCC("rde1")`.
+   * @returns The new item.
+   * @throws When the game returns no handle, for example an unknown rawcode or a
+   * full inventory: `reforged-ts: failed to create Item (<rawcode>)`, at the calling
+   * line. In Dev mode, also before the globals Init stage and inside
+   * `MapPlayer.runLocal`.
+   * @native UnitAddItemById
+   */
   public addItemById(itemId: number): Item {
     return Item.expect(
       UnitAddItemById(this.handle, itemId),
@@ -1018,10 +1062,27 @@ export class Unit extends Widget {
     );
   }
 
+  /**
+   * Creates an item of a type in one slot of the unit's inventory.
+   * @remarks
+   * When the slot is taken or does not exist, the game drops the new item at the
+   * unit's feet.
+   * @param itemId - The item type's rawcode, such as `FourCC("rde1")`.
+   * @param itemSlot - The slot, from 0 to 5.
+   * @returns True when the item landed in the slot.
+   * @native UnitAddItemToSlotById
+   */
   public addItemToSlotById(itemId: number, itemSlot: number) {
     return UnitAddItemToSlotById(this.handle, itemId, itemSlot);
   }
 
+  /**
+   * Adds an item type to the stock of the shop.
+   * @param itemId - The item type's rawcode.
+   * @param currentStock - The number of items in stock now.
+   * @param stockMax - The most items the stock holds.
+   * @native AddItemToStock
+   */
   public addItemToStock(
     itemId: number,
     currentStock: number,
@@ -1044,14 +1105,32 @@ export class Unit extends Widget {
     AddResourceAmount(this.handle, amount);
   }
 
+  /**
+   * Sets whether the unit sleeps at all times, by day as well as at night.
+   * @param add - True to make the unit sleep at all times.
+   * @native UnitAddSleepPerm
+   */
   public addSleepPerm(add: boolean) {
     UnitAddSleepPerm(this.handle, add);
   }
 
+  /**
+   * Adds a classification to the unit, such as `UNIT_TYPE_UNDEAD`.
+   * @param whichUnitType - The classification to add.
+   * @returns True when the game added it.
+   * @native UnitAddType
+   */
   public addType(whichUnitType: unittype) {
     return UnitAddType(this.handle, whichUnitType);
   }
 
+  /**
+   * Adds a unit type to the stock of the shop.
+   * @param unitId - The unit type's rawcode.
+   * @param currentStock - The number of units in stock now.
+   * @param stockMax - The most units the stock holds.
+   * @native AddUnitToStock
+   */
   public addUnitToStock(
     unitId: number,
     currentStock: number,
@@ -1061,8 +1140,8 @@ export class Unit extends Widget {
   }
 
   /**
-   * Allows or disallows the hero glow on the unit, through
-   * `AllowHeroGlowOnUnit` or `DisallowHeroGlowOnUnit` (3.0.0).
+   * Allows or disallows the hero glow on the unit.
+   * @param allow - True to allow the glow, false to disallow it.
    * @native AllowHeroGlowOnUnit
    * @native DisallowHeroGlowOnUnit
    */
@@ -1074,30 +1153,49 @@ export class Unit extends Widget {
     }
   }
 
+  /**
+   * Gives the unit a timed life: it dies once the duration has passed, and its
+   * interface shows the time left.
+   * @param buffId - The timed-life buff's rawcode, such as `FourCC("BTLF")` (the
+   * generic one); an unknown buff falls back to it.
+   * @param duration - The time left to live, in seconds.
+   * @native UnitApplyTimedLife
+   */
   public applyTimedLife(buffId: number, duration: number) {
     UnitApplyTimedLife(this.handle, buffId, duration);
   }
 
+  /**
+   * Attaches a 3D sound to the unit, so that it plays from the unit's position.
+   * @param sound - The sound, which must have been created as a 3D sound.
+   * @native AttachSoundToUnit
+   */
   public attachSound(sound: Sound) {
     AttachSoundToUnit(sound.handle, this.handle);
   }
 
   /**
-   * The item at `index` in the unit's bag, or undefined for an empty index,
-   * through `UnitItemInBagSlot` (3.0.0).
+   * Gets the item in one slot of the unit's bag, its extended inventory.
+   * @param index - The bag slot, from 0.
+   * @returns The item, or `undefined` when the slot is empty.
    * @native UnitItemInBagSlot
    */
   public bagItem(index: number): Item | undefined {
     return Item.fromHandle(UnitItemInBagSlot(this.handle, index));
   }
 
+  /**
+   * Removes the unit's timed life, which kills it; does nothing to a unit without one.
+   * @native BlzUnitCancelTimedLife
+   */
   public cancelTimedLife() {
     BlzUnitCancelTimedLife(this.handle);
   }
 
   /**
-   * Whether the unit can equip items of the equipment type, through
-   * `UnitCanEquipItemOfEquipmentType` (3.0.0).
+   * Checks whether the unit can equip items of an equipment type.
+   * @param equipmentType - The equipment type.
+   * @returns True when the unit can equip such items.
    * @native UnitCanEquipItemOfEquipmentType
    * @native ConvertEquipmentType
    */
@@ -1108,10 +1206,32 @@ export class Unit extends Widget {
     );
   }
 
+  /**
+   * Checks whether the unit sleeps at all times, by day as well as at night.
+   * @returns True when the unit sleeps at all times.
+   * @native UnitCanSleepPerm
+   */
   public canSleepPerm() {
     return UnitCanSleepPerm(this.handle);
   }
 
+  /**
+   * Counts the buffs on the unit that match the filters.
+   * @remarks
+   * The filters combine differently here than in `removeBuffsEx`: see
+   * [the Native's reference](https://lep.duckdns.org/jassbot/doc/UnitCountBuffsEx).
+   * @param removePositive - Counts positive buffs; with `removeNegative`, both
+   * false counts positive and negative buffs.
+   * @param removeNegative - Counts negative buffs.
+   * @param magic - Counts only magical buffs, unless `physical` is true too, which
+   * matches none; both false counts magical and physical buffs.
+   * @param physical - Counts only physical buffs, unless `magic` is true too.
+   * @param timedLife - Includes timed-life buffs; false leaves them out.
+   * @param aura - Includes aura buffs; false leaves them out.
+   * @param autoDispel - Counts only the buffs that dispelling removes.
+   * @returns The number of matching buffs.
+   * @native UnitCountBuffsEx
+   */
   public countBuffs(
     removePositive: boolean,
     removeNegative: boolean,
@@ -1133,6 +1253,22 @@ export class Unit extends Widget {
     );
   }
 
+  /**
+   * Deals damage from the unit to everything in a circle, after a delay.
+   * @param delay - The delay before the damage, in seconds.
+   * @param radius - The circle's radius, in world units.
+   * @param x - The x-coordinate of the circle's centre.
+   * @param y - The y-coordinate of the circle's centre.
+   * @param amount - The damage dealt to each target.
+   * @param attack - Deals the damage as an attack.
+   * @param ranged - Deals the damage as a ranged one.
+   * @param attackType - The attack type, such as `ATTACK_TYPE_NORMAL`.
+   * @param damageType - The damage type, such as `DAMAGE_TYPE_NORMAL`.
+   * @param weaponType - The weapon type, which picks the impact sound, such as
+   * `WEAPON_TYPE_WHOKNOWS`.
+   * @returns True when the game scheduled the damage.
+   * @native UnitDamagePoint
+   */
   public damageAt(
     delay: number,
     radius: number,
@@ -1180,9 +1316,13 @@ export class Unit extends Widget {
    * @param amount - How much damage is being dealt.
    * @param attack - Consider the damage dealt as being an attack.
    * @param ranged - Consider the damage dealt as being from a ranged source.
-   * @param attackType -
-   * @param damageType -
-   * @param weaponType -
+   * @param attackType - The attack type, such as `ATTACK_TYPE_NORMAL`.
+   * @param damageType - The damage type, such as `DAMAGE_TYPE_NORMAL`.
+   * @param weaponType - The weapon type, which picks the impact sound, such as
+   * `WEAPON_TYPE_WHOKNOWS`.
+   * @returns True when the game dealt the damage.
+   * @throws In Dev mode, past the damage depth limit:
+   * `reforged-ts: Unit#<id> Unit.damageTarget at damage depth <depth>, past the limit of <limit>: ...`
    * @native UnitDamageTarget
    */
   public damageTarget(
@@ -1226,6 +1366,8 @@ export class Unit extends Widget {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @throws In Dev mode, inside `MapPlayer.runLocal`:
+   * `reforged-ts: destroying Unit#<id> inside MapPlayer.runLocal changes game state for one client, which desyncs the game: only visuals belong inside runLocal`
    * @native RemoveUnit
    */
   public destroy() {
@@ -1233,18 +1375,58 @@ export class Unit extends Widget {
     this.release();
   }
 
+  /**
+   * Disables or enables one of the unit's abilities, and hides or shows its icon.
+   * @remarks
+   * A disabled ability that stays visible shows its disabled icon.
+   * @param abilId - The ability's rawcode.
+   * @param flag - True to disable the ability, false to enable it.
+   * @param hideUI - True to hide the ability's icon, false to show it.
+   * @native BlzUnitDisableAbility
+   * @bug The game counts the calls instead of storing the flags: after hiding an
+   * icon several times, as many calls are needed to show it again
+   * ([report](https://www.hiveworkshop.com/threads/blzunithideability-and-blzunitdisableability-dont-work.312477/)).
+   */
   public disableAbility(abilId: number, flag: boolean, hideUI: boolean) {
     BlzUnitDisableAbility(this.handle, abilId, flag, hideUI);
   }
 
+  /**
+   * Orders the unit to walk to a point and drop one of its items there.
+   * @remarks
+   * A unit that cannot reach the point stops as close as it gets and keeps the item.
+   * @param whichItem - The item, in the unit's inventory.
+   * @param x - The x-coordinate, in world units.
+   * @param y - The y-coordinate, in world units.
+   * @returns True when the unit carries the item and took the order.
+   * @native UnitDropItemPoint
+   */
   public dropItem(whichItem: Item, x: number, y: number) {
     return UnitDropItemPoint(this.handle, whichItem.handle, x, y);
   }
 
+  /**
+   * Moves one of the unit's items to another slot of its inventory, swapping it
+   * with the item already there.
+   * @param whichItem - The item, in the unit's inventory.
+   * @param slot - The slot to move it to, from 0 to 5.
+   * @returns True when the item was moved, or was already in that slot.
+   * @native UnitDropItemSlot
+   */
   public dropItemFromSlot(whichItem: Item, slot: number) {
     return UnitDropItemSlot(this.handle, whichItem.handle, slot);
   }
 
+  /**
+   * Orders the unit to walk to a target and give it one of its items.
+   * @remarks
+   * A target with no free inventory slot gets the item dropped at its feet. A unit
+   * that cannot reach the target stops as close as it gets and keeps the item.
+   * @param whichItem - The item, in the unit's inventory.
+   * @param target - The widget to give the item to, usually a unit.
+   * @returns True when the unit carries the item and took the order.
+   * @native UnitDropItemTarget
+   */
   public dropItemTarget(
     whichItem: Item,
     target: Widget /* | Unit | Item | Destructable */,
@@ -1253,21 +1435,28 @@ export class Unit extends Widget {
   }
 
   /**
-   * Enables or disables the unit's auras, through `BlzUnitEnableAuras`
-   * (3.0.0).
+   * Enables or disables the unit's auras.
+   * @param enable - True to enable the auras, false to disable them.
+   * @param affectsUI - Whether the change also shows in the unit's interface.
    * @native BlzUnitEnableAuras
    */
   public enableAuras(enable: boolean, affectsUI: boolean) {
     BlzUnitEnableAuras(this.handle, enable, affectsUI);
   }
 
+  /**
+   * Ends the cooldown of one of the unit's abilities at once.
+   * @param abilCode - The ability's rawcode.
+   * @native BlzEndUnitAbilityCooldown
+   */
   public endAbilityCooldown(abilCode: number) {
     BlzEndUnitAbilityCooldown(this.handle, abilCode);
   }
 
   /**
-   * Equips the item on the unit and returns whether it was equipped, through
-   * `UnitEquipItem` (3.0.0).
+   * Equips an item on the unit.
+   * @param whichItem - The item to equip.
+   * @returns True when the item was equipped.
    * @native UnitEquipItem
    */
   public equip(whichItem: Item): boolean {
@@ -1275,8 +1464,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * The item equipped in the loadout slot, or undefined for an empty slot,
-   * through `UnitItemInEquipmentSlot` (3.0.0).
+   * Gets the item equipped in one of the unit's loadout slots.
+   * @param slot - The loadout slot.
+   * @returns The item, or `undefined` when the slot is empty.
    * @native UnitItemInEquipmentSlot
    * @native ConvertLoadoutSlot
    */
@@ -1286,27 +1476,54 @@ export class Unit extends Widget {
     );
   }
 
+  /**
+   * Gets the unit's instance of an ability, for the ability Natives.
+   * @param abilId - The ability's rawcode.
+   * @returns The game's `ability` Handle, or `undefined` when the unit lacks the ability.
+   * @native BlzGetUnitAbility
+   */
   public getAbility(abilId: number) {
     return BlzGetUnitAbility(this.handle, abilId);
   }
 
+  /**
+   * Gets one of the unit's ability instances by its index, buffs included.
+   * @param index - The index, from 0: the ability added last is at 0.
+   * @returns The game's `ability` Handle, or `undefined` past the last index.
+   * @native BlzGetUnitAbilityByIndex
+   */
   public getAbilityByIndex(index: number) {
     return BlzGetUnitAbilityByIndex(this.handle, index);
   }
 
+  /**
+   * Gets the full cooldown of one of the unit's abilities at a level, not the time remaining.
+   * @param abilId - The ability's rawcode.
+   * @param level - The ability level, counted from 0 (level 1 is 0).
+   * @returns The cooldown, in seconds.
+   * @native BlzGetUnitAbilityCooldown
+   */
   public getAbilityCooldown(abilId: number, level: number) {
     return BlzGetUnitAbilityCooldown(this.handle, abilId, level);
   }
 
   /**
-   * The remaining cooldown of the ability as a percentage of its full
-   * cooldown, through `BlzGetUnitAbilityCooldownPercent` (3.0.0).
+   * Gets the remaining cooldown of one of the unit's abilities as a share of its full cooldown.
+   * @param abilId - The ability's rawcode.
+   * @returns The share of the cooldown left.
    * @native BlzGetUnitAbilityCooldownPercent
    */
   public getAbilityCooldownPercent(abilId: number) {
     return BlzGetUnitAbilityCooldownPercent(this.handle, abilId);
   }
 
+  /**
+   * Gets the remaining cooldown of one of the unit's abilities.
+   * @param abilId - The ability's rawcode.
+   * @returns The time left, in seconds; 0 when the ability is ready.
+   * @native BlzGetUnitAbilityCooldownRemaining
+   * @bug It can return 0 for an ability based on Channel while it is on cooldown.
+   */
   public getAbilityCooldownRemaining(abilId: number) {
     return BlzGetUnitAbilityCooldownRemaining(this.handle, abilId);
   }
@@ -1314,24 +1531,39 @@ export class Unit extends Widget {
   /**
    * Returns the level of the ability for the unit.
    * @remarks This function is **not** zero indexed.
+   * @param abilCode - The ability's rawcode.
+   * @returns The level, from 1; 0 when the unit lacks the ability.
    * @native GetUnitAbilityLevel
    */
   public getAbilityLevel(abilCode: number) {
     return GetUnitAbilityLevel(this.handle, abilCode);
   }
 
+  /**
+   * Gets the mana cost of one of the unit's abilities at a level.
+   * @param abilId - The ability's rawcode.
+   * @param level - The ability level, counted from 0 (level 1 is 0).
+   * @returns The mana cost.
+   * @native BlzGetUnitAbilityManaCost
+   */
   public getAbilityManaCost(abilId: number, level: number) {
     return BlzGetUnitAbilityManaCost(this.handle, abilId, level);
   }
 
+  /**
+   * Gets the hero's agility.
+   * @param includeBonuses - True to add the bonuses of items and buffs.
+   * @returns The agility; 0 for a unit that is not a hero.
+   * @native GetHeroAgi
+   */
   public getAgility(includeBonuses: boolean) {
     return GetHeroAgi(this.handle, includeBonuses);
   }
 
   /**
-   * The duration of an animation of the unit's model, by name or by index,
-   * through `BlzGetUnitAnimationDuration` or
-   * `BlzGetUnitAnimationDurationByIndex` (3.0.0).
+   * Gets the duration of one of the animations of the unit's model.
+   * @param animation - The animation's name, or its index in the model.
+   * @returns The duration, in seconds.
    * @native BlzGetUnitAnimationDuration
    * @native BlzGetUnitAnimationDurationByIndex
    */
@@ -1342,22 +1574,59 @@ export class Unit extends Widget {
     return BlzGetUnitAnimationDurationByIndex(this.handle, animation);
   }
 
+  /**
+   * Gets the base cooldown of one of the unit's attacks, without the bonuses of
+   * items, agility and buffs.
+   * @param weaponIndex - The attack, 0 or 1.
+   * @returns The cooldown, in seconds.
+   * @native BlzGetUnitAttackCooldown
+   */
   public getAttackCooldown(weaponIndex: number) {
     return BlzGetUnitAttackCooldown(this.handle, weaponIndex);
   }
 
+  /**
+   * Gets the base damage of one of the unit's attacks, added to the dice roll.
+   * @param weaponIndex - The attack, 0 or 1.
+   * @returns The base damage.
+   * @native BlzGetUnitBaseDamage
+   */
   public getBaseDamage(weaponIndex: number) {
     return BlzGetUnitBaseDamage(this.handle, weaponIndex);
   }
 
+  /**
+   * Gets the number of dice one of the unit's attacks rolls for its damage.
+   * @param weaponIndex - The attack, 0 or 1.
+   * @returns The number of dice.
+   * @native BlzGetUnitDiceNumber
+   */
   public getDiceNumber(weaponIndex: number) {
     return BlzGetUnitDiceNumber(this.handle, weaponIndex);
   }
 
+  /**
+   * Gets the number of sides of the dice one of the unit's attacks rolls for its damage.
+   * @param weaponIndex - The attack, 0 or 1.
+   * @returns The number of sides.
+   * @native BlzGetUnitDiceSides
+   */
   public getDiceSides(weaponIndex: number) {
     return BlzGetUnitDiceSides(this.handle, weaponIndex);
   }
 
+  /**
+   * Reads one of the unit's fields, through the Native of the field's type.
+   * @remarks
+   * Many fields do not work: the game ignores them.
+   * @param field - A field constant of any of the four types, such as `UNIT_RF_SELECTION_SCALE`.
+   * @returns The field's value, as a boolean, a number or a string, or 0 for a
+   * constant of no known field type.
+   * @native BlzGetUnitBooleanField
+   * @native BlzGetUnitIntegerField
+   * @native BlzGetUnitRealField
+   * @native BlzGetUnitStringField
+   */
   public getField(
     field:
       unitbooleanfield | unitintegerfield | unitrealfield | unitstringfield,
@@ -1390,37 +1659,80 @@ export class Unit extends Widget {
     }
   }
 
+  /**
+   * Gets the unit's flying height above the ground.
+   * @returns The height, in world units.
+   * @native GetUnitFlyHeight
+   */
   public getflyHeight() {
     return GetUnitFlyHeight(this.handle);
   }
 
+  /**
+   * Gets the hero's level.
+   * @returns The level; 0 for a unit that is not a hero.
+   * @native GetHeroLevel
+   */
   public getHeroLevel() {
     return GetHeroLevel(this.handle);
   }
 
+  /**
+   * Sets whether the unit raises no alarm, the "under attack" warning, when it is
+   * attacked; despite its name it changes the setting, which `ignoreAlarmToggled` reads.
+   * @param flag - True for no alarm, false for the usual one.
+   * @returns The boolean the game returns for the call.
+   * @native UnitIgnoreAlarm
+   */
   public getIgnoreAlarm(flag: boolean) {
     return UnitIgnoreAlarm(this.handle, flag);
   }
 
+  /**
+   * Gets the hero's intelligence.
+   * @param includeBonuses - True to add the bonuses of items and buffs.
+   * @returns The intelligence; 0 for a unit that is not a hero.
+   * @native GetHeroInt
+   */
   public getIntelligence(includeBonuses: boolean) {
     return GetHeroInt(this.handle, includeBonuses);
   }
 
+  /**
+   * Gets the item in one of the unit's inventory slots.
+   * @param slot - The slot, from 0 to 5.
+   * @returns The item, or `undefined` when the slot is empty or the unit has no such slot.
+   * @native UnitItemInSlot
+   */
   public getItemInSlot(slot: number): Item | undefined {
     return Item.fromHandle(UnitItemInSlot(this.handle, slot));
   }
 
+  /**
+   * Gets one of the unit's states, such as its life or mana.
+   * @param whichUnitState - The state, such as `UNIT_STATE_LIFE` or `UNIT_STATE_MAX_MANA`.
+   * @returns The state's value.
+   * @native GetUnitState
+   */
   public getState(whichUnitState: unitstate) {
     return GetUnitState(this.handle, whichUnitState);
   }
 
+  /**
+   * Gets the hero's strength.
+   * @param includeBonuses - True to add the bonuses of items and buffs.
+   * @returns The strength; 0 for a unit that is not a hero.
+   * @native GetHeroStr
+   */
   public getStrength(includeBonuses: boolean) {
     return GetHeroStr(this.handle, includeBonuses);
   }
 
   /**
-   * Whether the unit has any item equipped, through `UnitHasAnyItemEquiped`
-   * (3.0.0). The Native's name is misspelt.
+   * Checks whether the unit has any item equipped.
+   * @remarks
+   * The Native's name is misspelt: `UnitHasAnyItemEquiped`.
+   * @returns True when an item is equipped.
    * @native UnitHasAnyItemEquiped
    */
   public hasAnyEquipped() {
@@ -1428,13 +1740,31 @@ export class Unit extends Widget {
   }
 
   /**
-   * Whether the item is in the unit's bag, through `UnitHasItemBagged` (3.0.0).
+   * Checks whether an item is in the unit's bag.
+   * @param whichItem - The item.
+   * @returns True when the item is in the bag.
    * @native UnitHasItemBagged
    */
   public hasBagged(whichItem: Item) {
     return UnitHasItemBagged(this.handle, whichItem.handle);
   }
 
+  /**
+   * Checks whether the unit has any buff that matches the filters.
+   * @remarks
+   * The filters combine as in `countBuffs`.
+   * @param removePositive - Matches positive buffs; with `removeNegative`, both
+   * false matches positive and negative buffs.
+   * @param removeNegative - Matches negative buffs.
+   * @param magic - Matches only magical buffs, unless `physical` is true too, which
+   * matches none; both false matches magical and physical buffs.
+   * @param physical - Matches only physical buffs, unless `magic` is true too.
+   * @param timedLife - Includes timed-life buffs; false leaves them out.
+   * @param aura - Includes aura buffs; false leaves them out.
+   * @param autoDispel - Matches only the buffs that dispelling removes.
+   * @returns True when a buff matches.
+   * @native UnitHasBuffsEx
+   */
   public hasBuffs(
     removePositive: boolean,
     removeNegative: boolean,
@@ -1457,8 +1787,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * Whether the unit's loadout slot is empty, through
-   * `UnitHasLoadoutSlotEmpty` (3.0.0).
+   * Checks whether one of the unit's loadout slots is empty.
+   * @param slot - The loadout slot.
+   * @returns True when the slot is empty.
    * @native UnitHasLoadoutSlotEmpty
    * @native ConvertLoadoutSlot
    */
@@ -1467,8 +1798,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * Whether the unit has an item of the equipment type equipped, through
-   * `UnitHasItemEquipmentOfType` (3.0.0).
+   * Checks whether the unit has an item of an equipment type equipped.
+   * @param equipmentType - The equipment type.
+   * @returns True when such an item is equipped.
    * @native UnitHasItemEquipmentOfType
    * @native ConvertEquipmentType
    */
@@ -1480,17 +1812,33 @@ export class Unit extends Widget {
   }
 
   /**
-   * Whether the unit has the item equipped, through `UnitHasItemEquipped` (3.0.0).
+   * Checks whether the unit has an item equipped.
+   * @param whichItem - The item.
+   * @returns True when the item is equipped.
    * @native UnitHasItemEquipped
    */
   public hasEquipped(whichItem: Item) {
     return UnitHasItemEquipped(this.handle, whichItem.handle);
   }
 
+  /**
+   * Checks whether an item is in the unit's inventory.
+   * @param whichItem - The item.
+   * @returns True when the unit carries the item.
+   * @native UnitHasItem
+   */
   public hasItem(whichItem: Item) {
     return UnitHasItem(this.handle, whichItem.handle);
   }
 
+  /**
+   * Hides or shows the icon of one of the unit's abilities.
+   * @param abilId - The ability's rawcode.
+   * @param flag - True to hide the icon, false to show it.
+   * @native BlzUnitHideAbility
+   * @bug The game counts the calls instead of storing the flag: after hiding an
+   * icon several times, as many calls are needed to show it again.
+   */
   public hideAbility(abilId: number, flag: boolean) {
     BlzUnitHideAbility(this.handle, abilId, flag);
   }
