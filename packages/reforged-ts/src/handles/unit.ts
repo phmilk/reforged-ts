@@ -2622,13 +2622,23 @@ export class Unit extends Widget {
     SelectHeroSkill(this.handle, abilCode);
   }
 
+  /**
+   * Sets the full cooldown of one of the unit's abilities at a level.
+   * @remarks
+   * A cooldown that is running keeps its length: the new one applies from the next use.
+   * @param abilId - The ability's rawcode.
+   * @param level - The ability level, counted from 0 (level 1 is 0).
+   * @param cooldown - The cooldown, in seconds.
+   * @native BlzSetUnitAbilityCooldown
+   */
   public setAbilityCooldown(abilId: number, level: number, cooldown: number) {
     BlzSetUnitAbilityCooldown(this.handle, abilId, level, cooldown);
   }
 
   /**
-   * Sets the remaining cooldown of the ability as a percentage of its full
-   * cooldown, through `BlzSetUnitAbilityCooldownPercent` (3.0.0).
+   * Sets the remaining cooldown of one of the unit's abilities as a share of its full cooldown.
+   * @param abilId - The ability's rawcode.
+   * @param percent - The share of the full cooldown left.
    * @native BlzSetUnitAbilityCooldownPercent
    */
   public setAbilityCooldownPercent(abilId: number, percent: number) {
@@ -2636,26 +2646,56 @@ export class Unit extends Widget {
   }
 
   /**
-   * Sets the remaining cooldown of the ability in seconds, through
-   * `BlzSetUnitAbilityCooldownRemaining` (3.0.0).
+   * Sets the remaining cooldown of one of the unit's abilities.
+   * @param abilId - The ability's rawcode.
+   * @param seconds - The time left, in seconds.
    * @native BlzSetUnitAbilityCooldownRemaining
    */
   public setAbilityCooldownRemaining(abilId: number, seconds: number) {
     BlzSetUnitAbilityCooldownRemaining(this.handle, abilId, seconds);
   }
 
+  /**
+   * Sets the level of an ability the unit has, without spending or refunding skill points.
+   * @remarks
+   * A level below 1 sets level 1, and one above the ability's highest sets the highest.
+   * @param abilCode - The ability's rawcode.
+   * @param level - The new level, from 1.
+   * @returns The new level, or 0 when the unit lacks the ability.
+   * @native SetUnitAbilityLevel
+   */
   public setAbilityLevel(abilCode: number, level: number) {
     return SetUnitAbilityLevel(this.handle, abilCode, level);
   }
 
+  /**
+   * Sets the mana cost of one of the unit's abilities at a level.
+   * @param abilId - The ability's rawcode.
+   * @param level - The ability level, counted from 0 (level 1 is 0).
+   * @param manaCost - The mana cost.
+   * @native BlzSetUnitAbilityManaCost
+   */
   public setAbilityManaCost(abilId: number, level: number, manaCost: number) {
     BlzSetUnitAbilityManaCost(this.handle, abilId, level, manaCost);
   }
 
+  /**
+   * Sets the hero's base agility.
+   * @param value - The agility.
+   * @param permanent - True for a permanent change, as the `agility` setter makes.
+   * @native SetHeroAgi
+   */
   public setAgility(value: number, permanent: boolean) {
     SetHeroAgi(this.handle, value, permanent);
   }
 
+  /**
+   * Plays one of the animations of the unit's model at once, cutting the current one.
+   * @param whichAnimation - The animation's name, such as `"attack slam"`, in any
+   * case; or its index in the model.
+   * @native SetUnitAnimation
+   * @native SetUnitAnimationByIndex
+   */
   public setAnimation(whichAnimation: string | number) {
     if (typeof whichAnimation === "string") {
       SetUnitAnimation(this.handle, whichAnimation);
@@ -2664,50 +2704,124 @@ export class Unit extends Widget {
     }
   }
 
+  /**
+   * Plays one of the animations of the unit's model, picking among its variations by rarity.
+   * @param whichAnimation - The animation's name, in any case.
+   * @param rarity - The variations to pick from, `RARITY_FREQUENT` or `RARITY_RARE`.
+   * @native SetUnitAnimationWithRarity
+   */
   public setAnimationWithRarity(whichAnimation: string, rarity: raritycontrol) {
     SetUnitAnimationWithRarity(this.handle, whichAnimation, rarity);
   }
 
+  /**
+   * Sets the base cooldown of one of the unit's attacks.
+   * @param cooldown - The cooldown, in seconds.
+   * @param weaponIndex - The attack, 0 or 1.
+   * @native BlzSetUnitAttackCooldown
+   */
   public setAttackCooldown(cooldown: number, weaponIndex: number) {
     BlzSetUnitAttackCooldown(this.handle, cooldown, weaponIndex);
   }
 
+  /**
+   * Sets the base damage of one of the unit's attacks, added to the dice roll.
+   * @param baseDamage - The base damage.
+   * @param weaponIndex - The attack, 0 or 1.
+   * @native BlzSetUnitBaseDamage
+   */
   public setBaseDamage(baseDamage: number, weaponIndex: number) {
     BlzSetUnitBaseDamage(this.handle, baseDamage, weaponIndex);
   }
 
+  /**
+   * Sets the time the unit's model takes to blend from one animation into the next.
+   * @param timeScale - The blend time, in seconds.
+   * @native SetUnitBlendTime
+   */
   public setBlendTime(timeScale: number) {
     SetUnitBlendTime(this.handle, timeScale);
   }
 
+  /**
+   * Sets how far the construction of the structure has progressed.
+   * @param constructionPercentage - The progress, from 0 to 100.
+   * @native UnitSetConstructionProgress
+   */
   public setConstructionProgress(constructionPercentage: number) {
     UnitSetConstructionProgress(this.handle, constructionPercentage);
   }
 
+  /**
+   * Sets whether the unit keeps to its guard position, as creeps do.
+   * @param creepGuard - True to keep the unit at its guard position.
+   * @native SetUnitCreepGuard
+   */
   public setCreepGuard(creepGuard: boolean) {
     SetUnitCreepGuard(this.handle, creepGuard);
   }
 
+  /**
+   * Sets the number of dice one of the unit's attacks rolls for its damage.
+   * @param diceNumber - The number of dice.
+   * @param weaponIndex - The attack, 0 or 1.
+   * @native BlzSetUnitDiceNumber
+   */
   public setDiceNumber(diceNumber: number, weaponIndex: number) {
     BlzSetUnitDiceNumber(this.handle, diceNumber, weaponIndex);
   }
 
+  /**
+   * Sets the number of sides of the dice one of the unit's attacks rolls for its damage.
+   * @param diceSides - The number of sides.
+   * @param weaponIndex - The attack, 0 or 1.
+   * @native BlzSetUnitDiceSides
+   */
   public setDiceSides(diceSides: number, weaponIndex: number) {
     BlzSetUnitDiceSides(this.handle, diceSides, weaponIndex);
   }
 
+  /**
+   * Sets the hero's experience points.
+   * @param newXpVal - The experience.
+   * @param showEyeCandy - True to show the effects of a level gained this way.
+   * @native SetHeroXP
+   */
   public setExperience(newXpVal: number, showEyeCandy: boolean) {
     SetHeroXP(this.handle, newXpVal, showEyeCandy);
   }
 
+  /**
+   * Sets whether the unit explodes when it dies, leaving no corpse.
+   * @param exploded - True to make the unit explode on death.
+   * @native SetUnitExploded
+   */
   public setExploded(exploded: boolean) {
     SetUnitExploded(this.handle, exploded);
   }
 
+  /**
+   * Turns the unit to face an angle at once, where the `facing` setter turns it gradually.
+   * @param facingAngle - The facing, in degrees (0 east, 90 north).
+   * @native BlzSetUnitFacingEx
+   */
   public setFacingEx(facingAngle: number) {
     BlzSetUnitFacingEx(this.handle, facingAngle);
   }
 
+  /**
+   * Writes one of the unit's fields, through the Native of the field's type.
+   * @remarks
+   * Many fields do not work: the game can report a write that changes nothing.
+   * @param field - A field constant of any of the four types, such as `UNIT_RF_SELECTION_SCALE`.
+   * @param value - The value, of the field's type: a boolean, a number or a string.
+   * @returns True when the game wrote the field; false when the value is not of
+   * the field's type.
+   * @native BlzSetUnitBooleanField
+   * @native BlzSetUnitIntegerField
+   * @native BlzSetUnitRealField
+   * @native BlzSetUnitStringField
+   */
   public setField(
     field:
       unitbooleanfield | unitintegerfield | unitrealfield | unitstringfield,
@@ -2743,42 +2857,88 @@ export class Unit extends Widget {
     return false;
   }
 
+  /**
+   * Changes the unit's flying height above the ground.
+   * @param value - The height, in world units.
+   * @param rate - The speed of the change, in world units per second; 0 changes it at once.
+   * @native SetUnitFlyHeight
+   */
   public setflyHeight(value: number, rate: number) {
     SetUnitFlyHeight(this.handle, value, rate);
   }
 
+  /**
+   * Raises the hero to a level; a lower level than the current one does nothing.
+   * @remarks
+   * The level stops at the hero's maximum level.
+   * @param level - The new level.
+   * @param showEyeCandy - True to show the level-up text, sound and effect.
+   * @native SetHeroLevel
+   */
   public setHeroLevel(level: number, showEyeCandy: boolean) {
     SetHeroLevel(this.handle, level, showEyeCandy);
   }
 
+  /**
+   * Sets the hero's base intelligence.
+   * @param value - The intelligence.
+   * @param permanent - True for a permanent change, as the `intelligence` setter makes.
+   * @native SetHeroInt
+   */
   public setIntelligence(value: number, permanent: boolean) {
     SetHeroInt(this.handle, value, permanent);
   }
 
+  /**
+   * Sets the number of item types the shop can offer.
+   * @param slots - The number of slots.
+   * @native SetItemTypeSlots
+   */
   public setItemTypeSlots(slots: number) {
     SetItemTypeSlots(this.handle, slots);
   }
 
+  /**
+   * Gives the unit to another player.
+   * @param whichPlayer - The new owner.
+   * @param changeColor - True to give the unit the new owner's colour, when the
+   * owner changes; true when left out.
+   * @native SetUnitOwner
+   */
   public setOwner(whichPlayer: MapPlayer, changeColor = true) {
     SetUnitOwner(this.handle, whichPlayer.handle, changeColor);
   }
 
   /**
-   * The unit's owner. A live unit always has one, which the Typings cannot
-   * express for the Wrapper, so this goes through the non-null lookup helper:
-   * typed non-null, and should the game ever break that invariant it throws
-   * `reforged-ts: failed to create MapPlayer` instead of returning undefined.
+   * Gets the player who owns the unit.
+   * @remarks
+   * A live unit always has an owner, which the Typings cannot express for the
+   * Wrapper, so this goes through the non-null lookup helper: typed non-null,
+   * and not counted as a creation.
+   * @returns The owner, never `undefined`.
+   * @throws Should the game ever break that invariant:
+   * `reforged-ts: failed to create MapPlayer`, at the calling line.
    * @native GetOwningPlayer
    */
   public getOwner(): MapPlayer {
     return MapPlayer.expectFound(GetOwningPlayer(this.handle));
   }
 
+  /**
+   * Moves the unit to a point, to the nearest spot its pathing allows, cancelling its orders.
+   * @param point - The point.
+   * @native SetUnitPositionLoc
+   */
   public setPoint(point: Point) {
     SetUnitPositionLoc(this.handle, point.handle);
   }
 
   /**
+   * Gets the unit's position as a new point, which the caller destroys.
+   * @returns A new point at the unit's position.
+   * @throws When the game returns no handle: `reforged-ts: failed to create Point`,
+   * at the calling line. In Dev mode, also before the globals Init stage and
+   * inside `MapPlayer.runLocal`.
    * @native GetUnitLoc
    * @bug If the unit is loaded into a zeppelin this will not return the position
    * of the zeppelin but the last position of the unit before it was loaded into
@@ -2788,27 +2948,47 @@ export class Unit extends Widget {
     return Point.expect(GetUnitLoc(this.handle));
   }
 
+  /**
+   * Sets whether the unit follows pathing, or walks through anything.
+   * @param flag - True to follow pathing, false to ignore it.
+   * @native SetUnitPathing
+   */
   public setPathing(flag: boolean) {
     SetUnitPathing(this.handle, flag);
   }
 
   /**
+   * Moves the unit to a point, to the nearest spot its pathing allows.
    * @remarks This cancels the orders of the unit. If you want to move a unit without canceling its orders set `x`/`y`.
+   * @param x - The x-coordinate, in world units.
+   * @param y - The y-coordinate, in world units.
    * @native SetUnitPosition
    */
   public setPosition(x: number, y: number) {
     SetUnitPosition(this.handle, x, y);
   }
 
+  /**
+   * Sets whether a player can rescue the unit, taking it over by coming near it.
+   * @param byWhichPlayer - The player.
+   * @param flag - True to make the unit rescuable by that player.
+   * @native SetUnitRescuable
+   */
   public setRescuable(byWhichPlayer: MapPlayer, flag: boolean) {
     SetUnitRescuable(this.handle, byWhichPlayer.handle, flag);
   }
 
+  /**
+   * Sets how near a rescuing unit must come to rescue the unit.
+   * @param range - The range, in world units.
+   * @native SetUnitRescueRange
+   */
   public setRescueRange(range: number) {
     SetUnitRescueRange(this.handle, range);
   }
 
   /**
+   * Scales the unit's model.
    * @param scaleX - This is actually the scale for *all* dimensions
    * @param scaleY - This parameter is not taken into account
    * @param scaleZ - This parameter is not taken into account
@@ -2819,34 +2999,77 @@ export class Unit extends Widget {
     SetUnitScale(this.handle, scaleX, scaleY, scaleZ);
   }
 
+  /**
+   * Sets one of the unit's states, such as its life or mana.
+   * @param whichUnitState - The state, such as `UNIT_STATE_LIFE` or `UNIT_STATE_MAX_MANA`.
+   * @param newVal - The state's new value.
+   * @native SetUnitState
+   */
   public setState(whichUnitState: unitstate, newVal: number) {
     SetUnitState(this.handle, whichUnitState, newVal);
   }
 
+  /**
+   * Sets the hero's base strength; lowering it lowers the hero's life.
+   * @param value - The strength.
+   * @param permanent - True for a permanent change, as the `strength` setter makes.
+   * @native SetHeroStr
+   */
   public setStrength(value: number, permanent: boolean) {
     SetHeroStr(this.handle, value, permanent);
   }
 
+  /**
+   * Sets the speed of the unit's animations.
+   * @param timeScale - The speed factor: 1 for the normal speed, 2 for twice as fast.
+   * @native SetUnitTimeScale
+   */
   public setTimeScale(timeScale: number) {
     SetUnitTimeScale(this.handle, timeScale);
   }
 
+  /**
+   * Sets the base cooldown of one of the unit's attacks, as `setAttackCooldown` does.
+   * @param cooldown - The cooldown, in seconds.
+   * @param weaponIndex - The attack, 0 or 1.
+   * @native BlzSetUnitAttackCooldown
+   */
   public setUnitAttackCooldown(cooldown: number, weaponIndex: number) {
     BlzSetUnitAttackCooldown(this.handle, cooldown, weaponIndex);
   }
 
+  /**
+   * Sets the number of unit types the shop can offer.
+   * @param slots - The number of slots.
+   * @native SetUnitTypeSlots
+   */
   public setUnitTypeSlots(slots: number) {
     SetUnitTypeSlots(this.handle, slots);
   }
 
+  /**
+   * Sets how far the upgrade of the structure has progressed.
+   * @param upgradePercentage - The progress, from 0 to 100.
+   * @native UnitSetUpgradeProgress
+   */
   public setUpgradeProgress(upgradePercentage: number) {
     UnitSetUpgradeProgress(this.handle, upgradePercentage);
   }
 
+  /**
+   * Sets whether the minimap shows the unit with the alternate icon.
+   * @param flag - True to use the alternate icon.
+   * @native UnitSetUsesAltIcon
+   */
   public setUseAltIcon(flag: boolean) {
     UnitSetUsesAltIcon(this.handle, flag);
   }
 
+  /**
+   * Sets whether the unit counts in its owner's food.
+   * @param useFood - True to count the unit's food.
+   * @native SetUnitUseFood
+   */
   public setUseFood(useFood: boolean) {
     SetUnitUseFood(this.handle, useFood);
   }
@@ -2868,32 +3091,67 @@ export class Unit extends Widget {
     SetUnitVertexColor(this.handle, red, green, blue, alpha);
   }
 
+  /**
+   * Shares, or stops sharing, the unit's vision with a player.
+   * @param whichPlayer - The player.
+   * @param share - True to share the vision, false to stop.
+   * @native UnitShareVision
+   */
   public shareVision(whichPlayer: MapPlayer, share: boolean) {
     UnitShareVision(this.handle, whichPlayer.handle, share);
   }
 
+  /**
+   * Shows or hides the team-coloured glow of the unit, a hero's glow included.
+   * @param show - True to show the glow, false to hide it.
+   * @native BlzShowUnitTeamGlow
+   */
   public showTeamGlow(show: boolean) {
     BlzShowUnitTeamGlow(this.handle, show);
   }
 
+  /**
+   * Starts the cooldown of one of the unit's abilities.
+   * @param abilCode - The ability's rawcode.
+   * @param cooldown - The cooldown, in seconds.
+   * @native BlzStartUnitAbilityCooldown
+   */
   public startAbilityCooldown(abilCode: number, cooldown: number) {
     BlzStartUnitAbilityCooldown(this.handle, abilCode, cooldown);
   }
 
+  /**
+   * Takes levels away from the hero, down to level 1, with the attributes and
+   * skill points they gave.
+   * @param howManyLevels - The number of levels to take away.
+   * @returns True when a level was taken away.
+   * @native UnitStripHeroLevel
+   */
   public stripLevels(howManyLevels: number) {
     return UnitStripHeroLevel(this.handle, howManyLevels);
   }
 
+  /**
+   * Stops, or resumes, the decay of the unit's corpse.
+   * @param suspend - True to stop the decay.
+   * @native UnitSuspendDecay
+   */
   public suspendDecay(suspend: boolean) {
     UnitSuspendDecay(this.handle, suspend);
   }
 
+  /**
+   * Stops, or resumes, the hero's experience gain.
+   * @param flag - True to stop the gain.
+   * @native SuspendHeroXP
+   */
   public suspendExperience(flag: boolean) {
     SuspendHeroXP(this.handle, flag);
   }
 
   /**
-   * Unequips the item from the unit, through `UnitUnequipItem` (3.0.0).
+   * Unequips an item from the unit.
+   * @param whichItem - The item to unequip.
    * @native UnitUnequipItem
    */
   public unequip(whichItem: Item) {
@@ -2901,8 +3159,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * Unequips the item in the loadout slot and returns it, or undefined for an
-   * empty slot, through `UnitUnequipItemFromSlot` (3.0.0).
+   * Unequips the item in one of the unit's loadout slots.
+   * @param slot - The loadout slot.
+   * @returns The unequipped item, or `undefined` when the slot is empty.
    * @native UnitUnequipItemFromSlot
    * @native ConvertLoadoutSlot
    */
@@ -2912,30 +3171,75 @@ export class Unit extends Widget {
     );
   }
 
+  /**
+   * Orders the unit to use one of its items, as a click on it in the inventory does.
+   * @param whichItem - The item, in the unit's inventory.
+   * @returns True when the unit took the order.
+   * @native UnitUseItem
+   */
   public useItem(whichItem: Item) {
     return UnitUseItem(this.handle, whichItem.handle);
   }
 
+  /**
+   * Orders the unit to use one of its items at a point.
+   * @param whichItem - The item, in the unit's inventory.
+   * @param x - The x-coordinate, in world units.
+   * @param y - The y-coordinate, in world units.
+   * @returns The boolean the game returns.
+   * @native UnitUseItemPoint
+   * @bug The game returns false even when the unit uses the item.
+   */
   public useItemAt(whichItem: Item, x: number, y: number) {
     return UnitUseItemPoint(this.handle, whichItem.handle, x, y);
   }
 
+  /**
+   * Orders the unit to use one of its items on a target.
+   * @param whichItem - The item, in the unit's inventory.
+   * @param target - The target.
+   * @returns True when the unit took the order.
+   * @native UnitUseItemTarget
+   */
   public useItemTarget(whichItem: Item, target: Widget) {
     return UnitUseItemTarget(this.handle, whichItem.handle, target.handle);
   }
 
+  /**
+   * Wakes the unit up.
+   * @native UnitWakeUp
+   */
   public wakeUp() {
     UnitWakeUp(this.handle);
   }
 
+  /**
+   * Gets the x-coordinate the waygate sends units to.
+   * @returns The x-coordinate, in world units; 0 for a unit without the Waygate ability.
+   * @native WaygateGetDestinationX
+   */
   public waygateGetDestinationX() {
     return WaygateGetDestinationX(this.handle);
   }
 
+  /**
+   * Gets the y-coordinate the waygate sends units to.
+   * @returns The y-coordinate, in world units; 0 for a unit without the Waygate ability.
+   * @native WaygateGetDestinationY
+   */
   public waygateGetDestinationY() {
     return WaygateGetDestinationY(this.handle);
   }
 
+  /**
+   * Sets the point the waygate sends units to; the unit needs the Waygate ability (`'Awrp'`).
+   * @remarks
+   * The game rounds each coordinate to the grid of 64 offset by 32: 0 becomes 32,
+   * 64 becomes 96.
+   * @param x - The x-coordinate, in world units.
+   * @param y - The y-coordinate, in world units.
+   * @native WaygateSetDestination
+   */
   public waygateSetDestination(x: number, y: number) {
     WaygateSetDestination(this.handle, x, y);
   }
@@ -2950,15 +3254,16 @@ export class Unit extends Widget {
   }
 
   /**
-   * Creates a minimap icon over the unit, through `CreateMinimapIconOnUnit`,
-   * and returns the game's `minimapicon`, which the library does not wrap.
-   * Throws `reforged-ts: failed to create minimapicon (<pingPath>)` when the
-   * game creates none.
+   * Creates a minimap icon at the unit's position, and returns the game's
+   * `minimapicon`, which the library does not wrap.
    * @param red - An integer from 0-255 determining the amount of red color.
    * @param green - An integer from 0-255 determining the amount of green color.
    * @param blue - An integer from 0-255 determining the amount of blue color.
    * @param pingPath - The model of the icon.
    * @param fogVisibility - The fog state in which the icon is visible.
+   * @returns The new minimap icon.
+   * @throws When the game creates none:
+   * `reforged-ts: failed to create minimapicon (<pingPath>)`, at the calling line.
    * @native CreateMinimapIconOnUnit
    */
   public createMinimapIcon(
@@ -2996,10 +3301,13 @@ export class Unit extends Widget {
    * `BlzGetUnitWeapon*Field` Native of the field's type.
    * @param field - A weapon field constant of any of the four field types.
    * @param index - The weapon's index.
+   * @returns The field's value, as a boolean, a number or a string, or 0 for a
+   * constant of no known field type.
    * @native BlzGetUnitWeaponBooleanField
    * @native BlzGetUnitWeaponIntegerField
    * @native BlzGetUnitWeaponRealField
    * @native BlzGetUnitWeaponStringField
+   * @bug It can crash the game on a unit that has no attack.
    */
   public getWeaponField(
     field:
@@ -3042,7 +3350,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * Whether the player detects the unit, through `IsUnitDetected`.
+   * Checks whether a player detects the unit, as a detector reveals an invisible unit.
+   * @param whichPlayer - The player.
+   * @returns True when the player detects the unit.
    * @native IsUnitDetected
    */
   public isDetected(whichPlayer: MapPlayer) {
@@ -3050,7 +3360,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * Whether the unit is invisible to the player, through `IsUnitInvisible`.
+   * Checks whether the unit is invisible to a player.
+   * @param whichPlayer - The player.
+   * @returns True when the unit is invisible to the player.
    * @native IsUnitInvisible
    */
   public isInvisible(whichPlayer: MapPlayer) {
@@ -3058,7 +3370,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * Whether the player owns the unit, through `IsUnitOwnedByPlayer`.
+   * Checks whether a player owns the unit.
+   * @param whichPlayer - The player.
+   * @returns True when the player owns the unit.
    * @native IsUnitOwnedByPlayer
    */
   public isOwnedByPlayer(whichPlayer: MapPlayer) {
@@ -3066,7 +3380,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * Whether the unit is of the race, through `IsUnitRace`.
+   * Checks whether the unit's type is of a race.
+   * @param whichRace - The race, such as `RACE_HUMAN`.
+   * @returns True when the unit is of the race.
    * @native IsUnitRace
    */
   public isRace(whichRace: race) {
@@ -3074,17 +3390,23 @@ export class Unit extends Widget {
   }
 
   /**
-   * Queues a build order, by unit type id, after the unit's current orders,
-   * through `BlzQueueBuildOrderById`.
+   * Queues an order to build a structure at a point, after the unit's current orders.
+   * @param unitId - The structure's unit type rawcode.
+   * @param x - The x-coordinate, in world units.
+   * @param y - The y-coordinate, in world units.
+   * @returns True when the unit took the order.
    * @native BlzQueueBuildOrderById
+   * @bug It returns true for a structure the unit can build on a free spot, even
+   * when the player cannot afford it.
    */
   public queueBuildOrder(unitId: number, x: number, y: number) {
     return BlzQueueBuildOrderById(this.handle, unitId, x, y);
   }
 
   /**
-   * Queues an order with no target, by order id, after the unit's current
-   * orders, through `BlzQueueImmediateOrderById`.
+   * Queues an order that takes no target, after the unit's current orders.
+   * @param order - The order's id.
+   * @returns True when the unit took the order.
    * @native BlzQueueImmediateOrderById
    */
   public queueImmediateOrder(order: OrderId) {
@@ -3092,8 +3414,12 @@ export class Unit extends Widget {
   }
 
   /**
-   * Queues an order to a point, by order id, with an instant target, after the
-   * unit's current orders, through `BlzQueueInstantPointOrderById`.
+   * Queues an order at a point, with a widget as its instant target, after the unit's current orders.
+   * @param order - The order's id.
+   * @param x - The x-coordinate, in world units.
+   * @param y - The y-coordinate, in world units.
+   * @param instantTargetWidget - The instant target.
+   * @returns True when the unit took the order.
    * @native BlzQueueInstantPointOrderById
    */
   public queueInstantOrderAt(
@@ -3112,8 +3438,12 @@ export class Unit extends Widget {
   }
 
   /**
-   * Queues an order on a target, by order id, with an instant target, after
-   * the unit's current orders, through `BlzQueueInstantTargetOrderById`.
+   * Queues an order on a target, with another widget as its instant target, after
+   * the unit's current orders.
+   * @param order - The order's id.
+   * @param targetWidget - The order's target.
+   * @param instantTargetWidget - The instant target.
+   * @returns True when the unit took the order.
    * @native BlzQueueInstantTargetOrderById
    */
   public queueInstantTargetOrder(
@@ -3130,17 +3460,23 @@ export class Unit extends Widget {
   }
 
   /**
-   * Queues an order to a point, by order id, after the unit's current orders,
-   * through `BlzQueuePointOrderById`.
+   * Queues an order at a point, after the unit's current orders.
+   * @param order - The order's id.
+   * @param x - The x-coordinate, in world units.
+   * @param y - The y-coordinate, in world units.
+   * @returns True when the unit took the order.
    * @native BlzQueuePointOrderById
+   * @bug It returns false for an order to build a structure, even when the unit takes it.
    */
   public queueOrderAt(order: OrderId, x: number, y: number) {
     return BlzQueuePointOrderById(this.handle, order, x, y);
   }
 
   /**
-   * Queues an order on a target, by order id, after the unit's current orders,
-   * through `BlzQueueTargetOrderById`.
+   * Queues an order on a target, after the unit's current orders.
+   * @param order - The order's id.
+   * @param targetWidget - The order's target.
+   * @returns True when the unit took the order.
    * @native BlzQueueTargetOrderById
    */
   public queueTargetOrder(order: OrderId, targetWidget: Widget) {
@@ -3148,9 +3484,13 @@ export class Unit extends Widget {
   }
 
   /**
-   * Turns the unit to face the angle, in degrees, over `duration` seconds,
-   * through `SetUnitFacingTimed`.
+   * Turns the unit to face an angle, at a speed that `duration` can slow down.
+   * @remarks
+   * The turn ignores the unit's turn rate (`turnSpeed`).
+   * @param facingAngle - The facing, in degrees (0 east, 90 north).
+   * @param duration - Below 1, the usual turn speed; from 1, a factor that slows the turn down.
    * @native SetUnitFacingTimed
+   * @bug With a duration other than 0, the unit ends a few degrees off the angle asked for.
    */
   public setFacingTimed(facingAngle: number, duration: number) {
     SetUnitFacingTimed(this.handle, facingAngle, duration);
@@ -3158,10 +3498,14 @@ export class Unit extends Widget {
 
   /**
    * Writes a field of one of the unit's weapons, through the
-   * `BlzSetUnitWeapon*Field` Native of the field's type, and returns whether
-   * it was written: false when the value is not of the field's type.
+   * `BlzSetUnitWeapon*Field` Native of the field's type.
+   * @remarks
+   * Some fields do not work: the game can report a write that changes nothing.
    * @param field - A weapon field constant of any of the four field types.
    * @param index - The weapon's index.
+   * @param value - The value, of the field's type: a boolean, a number or a string.
+   * @returns True when the game wrote the field; false when the value is not of
+   * the field's type.
    * @native BlzSetUnitWeaponBooleanField
    * @native BlzSetUnitWeaponIntegerField
    * @native BlzSetUnitWeaponRealField
