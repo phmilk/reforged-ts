@@ -8,7 +8,7 @@
  * Counts `seconds` down on a Timer.
  * @remarks A remark, with a {@link countdown} link.
  * @example A countdown
- * {@includeCode ../../../../examples/destructable-create.ts}
+ * {@includeCode ../../../../examples/harness/destructable-create.ts}
  * @param seconds - How long, in seconds.
  * @returns The seconds left.
  * @native CreateTimer
