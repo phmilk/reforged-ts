@@ -502,8 +502,8 @@ export class CameraSetup extends Handle<camerasetup> {
   /**
    * Returns the value of the specified field for a CameraSetup. The angle of attack,
    * field of view, roll, and rotation are all returned in degrees, unlike `Camera.getField`.
+   * @remarks The angle of attack, field of view, roll, and rotation are all returned in degrees.
    * @param whichField The field of the CameraSetup.
-   * @note The angle of attack, field of view, roll, and rotation are all returned in degrees.
    */
   public getField(whichField: camerafield) {
     return CameraSetupGetField(this.handle, whichField);

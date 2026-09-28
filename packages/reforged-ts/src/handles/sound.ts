@@ -5,12 +5,13 @@ import { Handle } from "./handle";
 export class Sound extends Handle<sound> {
   /**
    * Creates a sound handle.
-   * @note You can only play the same sound handle once.
-   * @note You can only play the same sound filepath four times.
-   * @note You can only play 16 sounds in general.
-   * @note Sounds of the same filepath (on different sound handles) must have a delay
-   * of at least 0.1 seconds inbetween them to be played.
-   * You can overcome this by starting one earlier and then using `SetSoundPosition`.
+   * @remarks
+   * - You can only play the same sound handle once.
+   * - You can only play the same sound filepath four times.
+   * - You can only play 16 sounds in general.
+   * - Sounds of the same filepath (on different sound handles) must have a delay
+   *   of at least 0.1 seconds inbetween them to be played.
+   *   You can overcome this by starting one earlier and then using `SetSoundPosition`.
    * @param fileName The path to the file.
    * @param looping Looping sounds will restart once the sound duration has finished.
    * @param is3D 3D Sounds can be played on particular areas of the map. They are at their loudest when the camera is close to the sound's coordinates.
@@ -160,14 +161,14 @@ export class Sound extends Handle<sound> {
   }
 
   /**
-   * @note This call is only valid if the sound was created with 3d enabled
+   * @remarks This call is only valid if the sound was created with 3d enabled
    */
   public setConeAngles(inside: number, outside: number, outsideVolume: number) {
     SetSoundConeAngles(this.handle, inside, outside, outsideVolume);
   }
 
   /**
-   * @note This call is only valid if the sound was created with 3d enabled
+   * @remarks This call is only valid if the sound was created with 3d enabled
    */
   public setConeOrientation(x: number, y: number, z: number) {
     SetSoundConeOrientation(this.handle, x, y, z);
@@ -178,7 +179,7 @@ export class Sound extends Handle<sound> {
   }
 
   /**
-   * @note This call is only valid if the sound was created with 3d enabled
+   * @remarks This call is only valid if the sound was created with 3d enabled
    */
   public setDistances(minDist: number, maxDist: number) {
     SetSoundDistances(this.handle, minDist, maxDist);
@@ -225,14 +226,14 @@ export class Sound extends Handle<sound> {
   }
 
   /**
-   * @note This call is only valid if the sound was created with 3d enabled
+   * @remarks This call is only valid if the sound was created with 3d enabled
    */
   public setPosition(x: number, y: number, z: number) {
     SetSoundPosition(this.handle, x, y, z);
   }
 
   /**
-   * @note This call is only valid if the sound was created with 3d enabled
+   * @remarks This call is only valid if the sound was created with 3d enabled
    */
   public setVelocity(x: number, y: number, z: number) {
     SetSoundVelocity(this.handle, x, y, z);
@@ -249,10 +250,11 @@ export class Sound extends Handle<sound> {
   /**
    * Starts the sound, through `StartSound`, or `StartSoundEx` when `fadeIn` is
    * given.
-   * @note You can only play the same sound handle once.
-   * @note You can only play 16 sounds in general.
-   * @note Sounds of the same filepath (on different sound handles) must have a delay of at least 0.1 seconds inbetween them to be played.
-   * You can overcome this by starting one earlier and then using `setPosition`.
+   * @remarks
+   * - You can only play the same sound handle once.
+   * - You can only play 16 sounds in general.
+   * - Sounds of the same filepath (on different sound handles) must have a delay of at least 0.1 seconds inbetween them to be played.
+   *   You can overcome this by starting one earlier and then using `setPosition`.
    * @param fadeIn Whether the sound fades in at the `fadeInRate` given to
    * `create`, through `StartSoundEx`; left out, the sound starts through
    * `StartSound`.

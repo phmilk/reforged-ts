@@ -77,7 +77,7 @@ export class Dialog extends Handle<dialog> {
   }
 
   /**
-   * @note Dialogs can not be shown at map-init. Use a wait or a zero-timer to display as soon as possible.
+   * @remarks Dialogs can not be shown at map-init. Use a wait or a zero-timer to display as soon as possible.
    */
   public display(whichPlayer: MapPlayer, flag: boolean) {
     DialogDisplay(whichPlayer.handle, this.handle, flag);

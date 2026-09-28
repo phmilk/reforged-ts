@@ -150,7 +150,7 @@ export class Unit extends Widget {
    * unit's attack range to the acquisition range, but changing a unit's acquisition range
    * with this native does not change its attack range, nor the value displayed in the UI.
    *
-   * @note It is a myth that reducing acquire range with this native can limit a unit's attack range.
+   * @remarks It is a myth that reducing acquire range with this native can limit a unit's attack range.
    */
   public set acquireRange(value: number) {
     SetUnitAcquireRange(this.handle, value);
@@ -218,7 +218,7 @@ export class Unit extends Widget {
 
   /**
    * Returns a unit's default propulsion window angle in degrees.
-   * @note This function is the odd case in the asymmetric prop window API, since the
+   * @remarks This function is the odd case in the asymmetric prop window API, since the
    * other prop window natives use radians.
    */
   public get defaultPropWindow() {
@@ -275,7 +275,7 @@ export class Unit extends Widget {
   /**
    * Renders a unit invulnerable/lifts that specific invulnerability.
    *
-   * @note The native seems to employ the `'Avul'` ability, which is defined in the default AbilityData.slk.
+   * @remarks The native seems to employ the `'Avul'` ability, which is defined in the default AbilityData.slk.
    * If there is no `'Avul'` defined, this will crash the game.
    */
   public set invulnerable(flag: boolean) {
@@ -349,8 +349,9 @@ export class Unit extends Widget {
   /**
    * Returns the hero's "Proper Name", which is the name displayed above the level bar.
    *
-   * @note Will return 'null' on non-hero units.
-   * @note Will return 'null' on illusions.
+   * @remarks
+   * - Will return 'null' on non-hero units.
+   * - Will return 'null' on illusions.
    */
   public get nameProper() {
     return GetHeroProperName(this.handle) ?? "";
@@ -480,7 +481,7 @@ export class Unit extends Widget {
    * Returns false if the amount of available skill points is already zero and
    * if it's called with any non-positive number.
    * Returns true in any other case.
-   * @note If `skillPointDelta` is greater than the amount of skillpoints the hero
+   * @remarks If `skillPointDelta` is greater than the amount of skillpoints the hero
    * actually can spend (like 9 for three 3-level abilities) only that amount will
    * be added. Negative `skillPointDelta` works as expected.
    */
@@ -519,7 +520,7 @@ export class Unit extends Widget {
   /**
    * Sets a single custom integer for a unit.
    *
-   * @note This value is not used by any standard mechanisms in Warcraft III.
+   * @remarks This value is not used by any standard mechanisms in Warcraft III.
    */
   public set userData(value: number) {
     SetUnitUserData(this.handle, value);
@@ -543,8 +544,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * @note If the unit has movementspeed of zero the unit will be moved but the model of the unit will not move.
-   * @note This does not cancel orders of the unit. `setPosition` does cancel orders.
+   * @remarks
+   * - If the unit has movementspeed of zero the unit will be moved but the model of the unit will not move.
+   * - This does not cancel orders of the unit. `setPosition` does cancel orders.
    */
   public override set x(value: number) {
     SetUnitX(this.handle, value);
@@ -555,8 +557,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * @note If the unit has movementspeed of zero the unit will be moved but the model of the unit will not move.
-   * @note This does not cancel orders of the unit. `setPosition` does cancel orders.
+   * @remarks
+   * - If the unit has movementspeed of zero the unit will be moved but the model of the unit will not move.
+   * - This does not cancel orders of the unit. `setPosition` does cancel orders.
    */
   public override set y(value: number) {
     SetUnitY(this.handle, value);
@@ -772,14 +775,6 @@ export class Unit extends Widget {
   /**
    * Deals damage to target widget from a source unit.
    *
-   * @note For some insight about the different configurations of the different types see [this post](http://www.wc3c.net/showpost.php?p=1030046&postcount=19).
-   * @param target The target being damaged.
-   * @param amount How much damage is being dealt.
-   * @param attack Consider the damage dealt as being an attack.
-   * @param ranged Consider the damage dealt as being from a ranged source.
-   * @param attackType
-   * @param damageType
-   * @param weaponType
    * @remarks
    * Dealing damage inside a damage handler fires the damage events again, so
    * a handler that damages back without a stop loops until the client
@@ -791,6 +786,15 @@ export class Unit extends Widget {
    * nested dispatches by default, `Reforged.configure({ damageDepthLimit })`
    * to change it. A single bounce (reflect damage) passes. With Dev mode off
    * nothing is counted and nothing raises.
+   *
+   * - For some insight about the different configurations of the different types see [this post](http://www.wc3c.net/showpost.php?p=1030046&postcount=19).
+   * @param target The target being damaged.
+   * @param amount How much damage is being dealt.
+   * @param attack Consider the damage dealt as being an attack.
+   * @param ranged Consider the damage dealt as being from a ranged source.
+   * @param attackType
+   * @param damageType
+   * @param weaponType
    */
   public damageTarget(
     target: widget,
@@ -913,7 +917,7 @@ export class Unit extends Widget {
 
   /**
    * Returns the level of the ability for the unit.
-   * @note This function is **not** zero indexed.
+   * @remarks This function is **not** zero indexed.
    */
   public getAbilityLevel(abilCode: number) {
     return GetUnitAbilityLevel(this.handle, abilCode);
@@ -1083,13 +1087,12 @@ export class Unit extends Widget {
 
   /**
    * Increases the level of a unit's ability by 1.
-   * @param abilCode The four digit rawcode representation of the ability.
-   * @returns The new ability level.
-   *
-   * @note `incAbilityLevel` can increase an abilities level to maxlevel+1. On maxlevel+1 all ability fields are 0.
+   * @remarks `incAbilityLevel` can increase an abilities level to maxlevel+1. On maxlevel+1 all ability fields are 0.
    *
    * http://www.wc3c.net/showthread.php?p=1029039#post1029039
    * http://www.hiveworkshop.com/forums/lab-715/silenceex-everything-you-dont-know-about-silence-274351/.
+   * @param abilCode The four digit rawcode representation of the ability.
+   * @returns The new ability level.
    */
   public incAbilityLevel(abilCode: number) {
     return IncUnitAbilityLevel(this.handle, abilCode);
@@ -1299,17 +1302,18 @@ export class Unit extends Widget {
   }
 
   /**
-   * @note Useless. Use operator == instead.
+   * @remarks Useless. Use operator == instead.
    */
   public isUnit(whichSpecifiedUnit: Unit) {
     return IsUnit(this.handle, whichSpecifiedUnit.handle);
   }
 
   /**
-   * @note This native returns a boolean, which when typecasted to integer might be greater than 1. It's probably implemented via a bitset.
-   * @note In past patches this native bugged when used in conditionfuncs.
-   * The fix back then was to compare with true (`==true`).
-   * I cannot reproduce the faulty behaviour in patch 1.27 so this is only a note.
+   * @remarks
+   * - This native returns a boolean, which when typecasted to integer might be greater than 1. It's probably implemented via a bitset.
+   * - In past patches this native bugged when used in conditionfuncs.
+   *   The fix back then was to compare with true (`==true`).
+   *   I cannot reproduce the faulty behaviour in patch 1.27 so this is only a note.
    * @param whichUnitType
    */
   public isUnitType(whichUnitType: unittype) {
@@ -1333,6 +1337,13 @@ export class Unit extends Widget {
    * The offset coordinates ( X, Y, Z ) are taken from the target's origin.
    * The bones will lock to the lookAtTarget, offset by those coordinates. You can't
    * have both the head and the chest locked to the target at the same time.
+   * @remarks
+   * - The parameter `whichBone` can only move the head bones and the chest bones.
+   *   All other input will default to the head bone. However, the function only looks
+   *   for the helper named `"Bone_Head"` (or `"Bone_Chest"`) in the MDL, so you can just
+   *   rename a helper so that it will move that set of bones instead.
+   * - SetUnitLookAt is affected by animation speed and blend time.
+   * - [How to instantly set a unit's facing](http://www.wc3c.net/showthread.php?t=105830)
    * @param whichBone The bone to lock onto the target. The engine only supports
    * locking the head and the chest. To lock the head, you can put in any input
    * except a null string. To lock the chest, the string must start with `"bone_chest"`.
@@ -1342,12 +1353,6 @@ export class Unit extends Widget {
    * @param offsetX The x-offset from lookAtTarget's origin point.
    * @param offsetY The y-offset from lookAtTarget's origin point.
    * @param offsetZ The z-offset from lookAtTarget's origin point (this already factors in the terrain Z).
-   * @note The parameter `whichBone` can only move the head bones and the chest bones.
-   * All other input will default to the head bone. However, the function only looks
-   * for the helper named `"Bone_Head"` (or `"Bone_Chest"`) in the MDL, so you can just
-   * rename a helper so that it will move that set of bones instead.
-   * @note SetUnitLookAt is affected by animation speed and blend time.
-   * @note [How to instantly set a unit's facing](http://www.wc3c.net/showthread.php?t=105830)
    */
   public lookAt(
     whichBone: string,
@@ -1706,7 +1711,7 @@ export class Unit extends Widget {
   }
 
   /**
-   * @note This cancels the orders of the unit. If you want to move a unit without canceling its orders set `x`/`y`.
+   * @remarks This cancels the orders of the unit. If you want to move a unit without canceling its orders set `x`/`y`.
    */
   public setPosition(x: number, y: number) {
     SetUnitPosition(this.handle, x, y);

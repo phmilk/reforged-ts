@@ -7,7 +7,7 @@ export class GameCache extends Handle<gamecache> {
   public readonly filename?: string;
 
   /**
-   * @note You cannot create more than 255 gamecaches
+   * @remarks You cannot create more than 255 gamecaches
    */
   public static create(campaignFile: string): GameCache {
     return this.expect(InitGameCache(campaignFile), campaignFile, (cache) => {
