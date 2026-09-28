@@ -64,12 +64,6 @@ export interface Reference {
    * are left as written.
    */
   readonly nativeTypings?: Reference;
-  /**
-   * The types a public signature uses that are left unexported on purpose,
-   * by name: TypeDoc's `intentionallyNotExported`, so the notExported
-   * validation does not report them.
-   */
-  readonly intentionallyNotExported?: readonly string[];
 }
 
 /** jassbot's page of a Native is this followed by the Native's name. */
@@ -82,11 +76,6 @@ export const LIBRARY_REFERENCE: Reference = {
   dir: "api/reforged-ts",
   entryPoints: [join(WORKSPACE, "packages/reforged-ts/src/index.ts")],
   tsconfig: join(WORKSPACE, "packages/reforged-ts/tsconfig.json"),
-  intentionallyNotExported: [
-    // The recursion behind `NumberRange` (utils/color.ts): a type-level
-    // helper, not a type a Map project names.
-    "Enumerate",
-  ],
 };
 
 /**
@@ -270,9 +259,6 @@ export function referenceTypedocOptions(
     excludeProtected: true,
     validation: { notDocumented: true },
     treatValidationWarningsAsErrors: options.strict,
-    ...(reference.intentionallyNotExported === undefined
-      ? {}
-      : { intentionallyNotExported: [...reference.intentionallyNotExported] }),
     ...(reference.typingsManifest === undefined
       ? {}
       : {
