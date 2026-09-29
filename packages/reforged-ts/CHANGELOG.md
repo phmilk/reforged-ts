@@ -1,5 +1,17 @@
 # reforged-ts
 
+## 1.0.0-alpha.8
+
+### Major Changes
+
+- [#302](https://github.com/phmilk/reforged-ts/pull/302) [`c055b24`](https://github.com/phmilk/reforged-ts/commit/c055b248b658b36f6ba11b8edc13ceb09ac60cfc) Thanks [@wyller](https://github.com/wyller)! - `Unit.skillPoints = n` sets the hero's unspent skill points to `n`, where it added `n` before; `Unit.modifySkillPoints` still adds. `Unit.addItemById` returns the item it created when the inventory has no room, the item then lying at the unit's feet, where it threw before: it calls `CreateItem` and `UnitAddItem` instead of `UnitAddItemById`, which returns nothing for that item, and still throws for a removed unit. The test harness stubs `GetUnitX`, `GetUnitY`, `UnitAddItem`, `UnitModifySkillPoints` and `GetHeroSkillPoints`.
+
+### Patch Changes
+
+- [#304](https://github.com/phmilk/reforged-ts/pull/304) [`be027ab`](https://github.com/phmilk/reforged-ts/commit/be027ab19ba3193da82a2a1630d35350f5004a1c) Thanks [@wyller](https://github.com/wyller)! - `Region.containsPoint` and `Leaderboard.hasPlayerItem` return the boolean of their Native (`IsLocationInRegion`, `LeaderboardHasPlayerItem`), where they returned nothing.
+- Updated dependencies [[`c055b24`](https://github.com/phmilk/reforged-ts/commit/c055b248b658b36f6ba11b8edc13ceb09ac60cfc)]:
+  - reforged-test@1.0.0-alpha.4
+
 ## 1.0.0-alpha.7
 
 ### Patch Changes
