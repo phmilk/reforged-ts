@@ -1,5 +1,15 @@
 # reforged-ts
 
+## 1.0.0-alpha.10
+
+### Major Changes
+
+- [#314](https://github.com/phmilk/reforged-ts/pull/314) [`5678711`](https://github.com/phmilk/reforged-ts/commit/56787119433ac5778cdb871ce1bdcbd99f0af05c) Thanks [@wyller](https://github.com/wyller)! - `Item.invulnerable` sets the value it is given ([#256](https://github.com/phmilk/reforged-ts/issues/256)).
+
+  **Breaking change** (detailed in `migration/behaviour-changes.md`): the setter passed `true` to `SetItemInvulnerable` whatever the value, so `item.invulnerable = false` made the item invulnerable. It now passes its value: `item.invulnerable = false` makes the item vulnerable again. Code that set `false` and relied on the item becoming invulnerable sets `true`.
+
+- [#317](https://github.com/phmilk/reforged-ts/pull/317) [`bc110a5`](https://github.com/phmilk/reforged-ts/commit/bc110a524f604182d73a72ede454ba96dfef3bce) Thanks [@wyller](https://github.com/wyller)! - `Item.player` is renamed `Item.getOwner()`, named like `Item.setOwner` and `Unit.getOwner`; it returns the owner as a `MapPlayer`, or `undefined`, as `Item.player` did. The rename map lists `Item.player` as an accessor whose getter is `Item.getOwner`, so `no-legacy-w3ts-names` suggests the call `item.getOwner()` for a read of `item.player`. `Camera.setCameraOrientController` is renamed `Camera.setOrientController`, like its twin `Camera.setTargetController`; it takes the same arguments. The lint plugin's `local-safe.json` lists `Camera.setOrientController` in place of the old name, so `no-game-state-in-local-branch` still lets it through inside a local branch.
+
 ## 1.0.0-alpha.9
 
 ### Major Changes
