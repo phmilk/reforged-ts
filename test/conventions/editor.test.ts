@@ -135,33 +135,46 @@ describe(".vscode/tasks.json", () => {
     return found;
   }
 
-  // The workspace packages, from pnpm-workspace.yaml, that have a `build` or
-  // `typecheck` script: `pnpm --recursive` prints their type errors behind a
-  // `<package path> <script>: ` prefix.
-  const typedPackages = (() => {
+  // The workspace packages, from pnpm-workspace.yaml, with their scripts.
+  const workspacePackages = (() => {
     const { packages: patterns } = parse(read("pnpm-workspace.yaml")) as {
       packages: string[];
     };
     return globSync(patterns, { cwd: root })
       .map((path) => path.replaceAll("\\", "/"))
       .filter((path) => existsSync(posix.join(root, path, "package.json")))
-      .filter((path) => {
+      .map((path) => {
         const { scripts = {} } = JSON.parse(
           read(posix.join(path, "package.json")),
         ) as { scripts?: Record<string, string> };
-        return "build" in scripts || "typecheck" in scripts;
+        return { path, scripts };
       })
-      .sort();
+      .sort((a, b) => (a.path < b.path ? -1 : 1));
   })();
 
-  // The typed packages whose `build` runs typescript-to-lua, which prints its
-  // own diagnostics as `error TSTL: ` (#291).
-  const tstlPackages = typedPackages.filter((path) => {
-    const { scripts = {} } = JSON.parse(
-      read(posix.join(path, "package.json")),
-    ) as { scripts?: Record<string, string> };
-    return /\btstl\b/.test(scripts.build ?? "");
-  });
+  // The packages that have a `build` or `typecheck` script: `pnpm
+  // --recursive` prints their type errors behind a `<package path>
+  // <script>: ` prefix.
+  const typedPackages = workspacePackages
+    .filter(({ scripts }) => "build" in scripts || "typecheck" in scripts)
+    .map(({ path }) => path);
+
+  // The packages whose `build` runs typescript-to-lua as one of its
+  // commands, which prints its own diagnostics as `error TSTL: ` (#291).
+  const tstlPackages = workspacePackages
+    .filter(({ scripts }) =>
+      /(?:^|&&|\|\||;)\s*tstl(?:\s|$)/.test(scripts.build ?? ""),
+    )
+    .map(({ path }) => path);
+
+  // The matcher of tstl's own diagnostics, as each tstl package has one: the
+  // prefixed `$tsc` pattern with the code `TSTL`, under its own owner and on
+  // every document, since no language server reports these.
+  const tstl: ProblemMatcher = {
+    owner: "typescript-to-lua",
+    source: "tstl",
+    applyTo: "allDocuments",
+  };
 
   // `$tsc`, as the TypeScript extension of VS Code contributes it
   // (extensions/typescript-language-features/package.json in
@@ -191,14 +204,17 @@ describe(".vscode/tasks.json", () => {
   interface TscMatcher {
     // `$tsc`, or the folder an inline matcher resolves files from.
     name: string;
+    // `typescript` for `$tsc` and a package's type errors,
+    // `typescript-to-lua` for its tstl diagnostics.
+    owner: string;
     // The folder its fileLocation resolves files from, from the workspace
     // root; "" when it is not relative to the workspace folder.
     folder: string;
     matcher: ProblemMatcher;
   }
 
-  // The matchers of a task that read tsc's output, in the task's order:
-  // `$tsc` and the matchers the task defines inline.
+  // The matchers of a task that read tsc's or tstl's output, in the task's
+  // order: `$tsc` and the matchers the task defines inline.
   function tscMatchers(label: string): TscMatcher[] {
     const { problemMatcher = [] } = task(label);
     return [problemMatcher].flat().flatMap((entry) => {
@@ -213,18 +229,27 @@ describe(".vscode/tasks.json", () => {
         typeof entry === "string"
           ? entry
           : (folder ?? `(fileLocation ${JSON.stringify(entry.fileLocation)})`);
-      return [{ name, folder: folder ?? "", matcher }];
+      return [
+        { name, owner: matcher.owner ?? "", folder: folder ?? "", matcher },
+      ];
     });
   }
 
-  // The matchers a task defines inline, one per package.
-  function packageMatchers(label: string): TscMatcher[] {
-    return tscMatchers(label).filter(({ name }) => name !== "$tsc");
+  // The matchers a task defines inline under `owner`, one per package.
+  function packageMatchers(
+    label: string,
+    owner: string = tsc.owner ?? "",
+  ): TscMatcher[] {
+    return tscMatchers(label).filter(
+      (matcher) => matcher.name !== "$tsc" && matcher.owner === owner,
+    );
   }
 
   interface Problem {
     // The matcher that read the line: `$tsc` or a package folder.
     matcher: string;
+    // That matcher's owner.
+    owner: string;
     // The file from the workspace root, as the matcher's fileLocation
     // resolves it.
     path: string;
@@ -235,7 +260,7 @@ describe(".vscode/tasks.json", () => {
   // matchers in order and keeps the first that matches (tryMatchers in
   // src/vs/workbench/contrib/tasks/common/problemCollectors.ts).
   function problemOf(label: string, line: string): Problem | undefined {
-    for (const { name, folder, matcher } of tscMatchers(label)) {
+    for (const { name, owner, folder, matcher } of tscMatchers(label)) {
       const { regexp = "", ...groups } = matcher.pattern ?? {};
       const match = new RegExp(regexp).exec(line);
       if (!match) continue;
@@ -244,6 +269,7 @@ describe(".vscode/tasks.json", () => {
       );
       return {
         matcher: name,
+        owner,
         path: posix.join(folder, fields.file ?? ""),
         fields,
       };
@@ -251,14 +277,35 @@ describe(".vscode/tasks.json", () => {
     return undefined;
   }
 
-  it("finds the packages whose build runs typescript-to-lua", () => {
-    expect(tstlPackages).toEqual(
-      expect.arrayContaining([
-        "packages/reforged-test",
-        "packages/reforged-ts",
-      ]),
-    );
-  });
+  it.each(["build", "check"])(
+    "gives the %s task one tstl matcher per workspace package whose build runs tstl",
+    (label) => {
+      expect(
+        tstlPackages,
+        "the packages of pnpm-workspace.yaml whose build runs tstl",
+      ).toEqual(
+        expect.arrayContaining([
+          "packages/reforged-test",
+          "packages/reforged-ts",
+        ]),
+      );
+      const matchers = packageMatchers(label, tstl.owner);
+      expect(
+        matchers.map(({ name }) => name).sort(),
+        `the package folders of the ${label} task's tstl matchers`,
+      ).toEqual(tstlPackages);
+      for (const { name, matcher } of matchers) {
+        expect(
+          {
+            owner: matcher.owner,
+            source: matcher.source,
+            applyTo: matcher.applyTo,
+          },
+          `the owner, source and applyTo of the ${name} tstl matcher`,
+        ).toEqual(tstl);
+      }
+    },
+  );
 
   it.each(["build", "check"])(
     "gives the %s task one matcher per workspace package that builds or type-checks",
@@ -292,6 +339,7 @@ describe(".vscode/tasks.json", () => {
           const line = `${path} ${script}: src/x.ts(1,14): error TS2322: Type 'string' is not assignable to type 'number'.`;
           expect(problemOf(label, line), line).toEqual({
             matcher: path,
+            owner: tsc.owner,
             path: `${path}/src/x.ts`,
             fields: {
               file: "src/x.ts",
@@ -328,13 +376,14 @@ describe(".vscode/tasks.json", () => {
         const line = `${path} build: src/x.ts(1,22): error TSTL: Unsupported node kind RegularExpressionLiteral`;
         expect(problemOf(label, line), line).toEqual({
           matcher: path,
+          owner: tstl.owner,
           path: `${path}/src/x.ts`,
           fields: {
             file: "src/x.ts",
             line: "1",
             column: "22",
             severity: "error",
-            code: "TL",
+            code: "TSTL",
             message: "Unsupported node kind RegularExpressionLiteral",
           },
         });
@@ -349,7 +398,7 @@ describe(".vscode/tasks.json", () => {
       expect(problem?.matcher, line).toBe("$tsc");
       expect(problem?.path, line).toBe("test/x.ts");
       expect(
-        packageMatchers(label)
+        [...packageMatchers(label), ...packageMatchers(label, tstl.owner)]
           .filter(({ matcher: { pattern } }) =>
             new RegExp(pattern?.regexp ?? "").test(line),
           )
