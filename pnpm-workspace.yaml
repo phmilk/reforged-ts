@@ -37,7 +37,8 @@ catalog:
   # and for the issue forms (.github/ISSUE_TEMPLATE), in the release tests.
   ajv: ^8.20.0
   # YAML parser: the Template gate sets its overrides in the Template's
-  # pnpm-workspace.yaml with it, and the release tests read the issue forms.
+  # pnpm-workspace.yaml with it, the release tests read the issue forms, and
+  # the conventions tests read this file's package list.
   yaml: ^2.9.1
   # Node built-ins for the generator (fs, path); major follows .node-version.
   "@types/node": ^24.0.0

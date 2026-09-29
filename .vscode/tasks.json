@@ -1,6 +1,15 @@
 // The root scripts of package.json. `build` and `test` are the default build and
 // test tasks; `check` is `pnpm check`, whose type and lint findings reach the
 // Problems panel. vitest reports in its own panel, so `test` scans nothing.
+//
+// `pnpm --recursive` prints a package's type errors behind a
+// `<package path> <script>: ` prefix, with the file relative to the package
+// (#212). Each package that builds or type-checks has its own matcher: its
+// regexp is `$tsc`'s behind that prefix, and its fileLocation is the
+// package's folder. VS Code keeps the first matcher that matches a line, so
+// they come before `$tsc`, which reads the root's unprefixed `tsc` errors.
+// The `build` and `check` tasks hold the same list;
+// test/conventions/editor.test.ts checks both against pnpm-workspace.yaml.
 {
   "version": "2.0.0",
   "tasks": [
@@ -9,7 +18,126 @@
       "type": "shell",
       "command": "pnpm build",
       "group": { "kind": "build", "isDefault": true },
-      "problemMatcher": "$tsc"
+      "problemMatcher": [
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}/packages/eslint-plugin-reforged"
+          ],
+          "pattern": {
+            "regexp": "^packages/eslint-plugin-reforged \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}/packages/reforged-test"
+          ],
+          "pattern": {
+            "regexp": "^packages/reforged-test \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}/packages/reforged-ts"
+          ],
+          "pattern": {
+            "regexp": "^packages/reforged-ts \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}/packages/reforged-types"
+          ],
+          "pattern": {
+            "regexp": "^packages/reforged-types \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": ["relative", "${workspaceFolder}/release"],
+          "pattern": {
+            "regexp": "^release \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": ["relative", "${workspaceFolder}/website"],
+          "pattern": {
+            "regexp": "^website \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": ["relative", "${workspaceFolder}/wrapper-coverage"],
+          "pattern": {
+            "regexp": "^wrapper-coverage \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        "$tsc"
+      ]
     },
     {
       "label": "test",
@@ -22,7 +150,127 @@
       "label": "check",
       "type": "shell",
       "command": "pnpm check",
-      "problemMatcher": ["$tsc", "$eslint-stylish"]
+      "problemMatcher": [
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}/packages/eslint-plugin-reforged"
+          ],
+          "pattern": {
+            "regexp": "^packages/eslint-plugin-reforged \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}/packages/reforged-test"
+          ],
+          "pattern": {
+            "regexp": "^packages/reforged-test \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}/packages/reforged-ts"
+          ],
+          "pattern": {
+            "regexp": "^packages/reforged-ts \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}/packages/reforged-types"
+          ],
+          "pattern": {
+            "regexp": "^packages/reforged-types \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": ["relative", "${workspaceFolder}/release"],
+          "pattern": {
+            "regexp": "^release \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": ["relative", "${workspaceFolder}/website"],
+          "pattern": {
+            "regexp": "^website \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": ["relative", "${workspaceFolder}/wrapper-coverage"],
+          "pattern": {
+            "regexp": "^wrapper-coverage \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        "$tsc",
+        "$eslint-stylish"
+      ]
     }
   ]
 }

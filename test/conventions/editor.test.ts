@@ -1,10 +1,12 @@
 import { execFileSync } from "node:child_process";
+import { existsSync, globSync } from "node:fs";
 import { posix } from "node:path";
 import {
   flattenDiagnosticMessageText,
   parseConfigFileTextToJson,
 } from "typescript";
 import { describe, expect, it } from "vitest";
+import { parse } from "yaml";
 
 import { read, root } from "./repository.js";
 
@@ -109,5 +111,212 @@ describe(".vscode/settings.json", () => {
       problems,
       "the files of reforged-types against files.readonlyInclude in .vscode/settings.json",
     ).toEqual([]);
+  });
+});
+
+describe(".vscode/tasks.json", () => {
+  interface ProblemMatcher {
+    owner?: string;
+    source?: string;
+    applyTo?: string;
+    fileLocation?: string | string[];
+    pattern?: { regexp?: string } & Record<string, unknown>;
+  }
+  interface Task {
+    label: string;
+    problemMatcher?: string | (string | ProblemMatcher)[];
+  }
+
+  const { tasks } = readJsonc(".vscode/tasks.json") as { tasks: Task[] };
+
+  function task(label: string): Task {
+    const found = tasks.find((candidate) => candidate.label === label);
+    if (!found) throw new Error(`.vscode/tasks.json has no ${label} task`);
+    return found;
+  }
+
+  // The workspace packages, from pnpm-workspace.yaml, that have a `build` or
+  // `typecheck` script: `pnpm --recursive` prints their type errors behind a
+  // `<package path> <script>: ` prefix.
+  const typedPackages = (() => {
+    const { packages: patterns } = parse(read("pnpm-workspace.yaml")) as {
+      packages: string[];
+    };
+    return globSync(patterns, { cwd: root })
+      .map((path) => path.replaceAll("\\", "/"))
+      .filter((path) => existsSync(posix.join(root, path, "package.json")))
+      .filter((path) => {
+        const { scripts = {} } = JSON.parse(
+          read(posix.join(path, "package.json")),
+        ) as { scripts?: Record<string, string> };
+        return "build" in scripts || "typecheck" in scripts;
+      })
+      .sort();
+  })();
+
+  // `$tsc`, as the TypeScript extension of VS Code contributes it
+  // (extensions/typescript-language-features/package.json in
+  // microsoft/vscode): the matcher and its pattern.
+  const tsc: ProblemMatcher = {
+    owner: "typescript",
+    source: "ts",
+    applyTo: "closedDocuments",
+    fileLocation: ["relative", "${cwd}"],
+    pattern: {
+      regexp:
+        "^([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+      file: 1,
+      line: 2,
+      column: 3,
+      severity: 4,
+      code: 5,
+      message: 6,
+    },
+  };
+  const tscFields = ["file", "line", "column", "severity", "code", "message"];
+
+  // The variables a fileLocation starts with for the workspace folder: a
+  // shell task's `${cwd}` is the workspace folder too.
+  const workspaceFolderVariable = /^\$\{(?:workspaceFolder|cwd)\}/;
+
+  interface TscMatcher {
+    // `$tsc`, or the folder an inline matcher resolves files from.
+    name: string;
+    // The folder its fileLocation resolves files from, from the workspace
+    // root; "" when it is not relative to the workspace folder.
+    folder: string;
+    matcher: ProblemMatcher;
+  }
+
+  // The matchers of a task that read tsc's output, in the task's order:
+  // `$tsc` and the matchers the task defines inline.
+  function tscMatchers(label: string): TscMatcher[] {
+    const { problemMatcher = [] } = task(label);
+    return [problemMatcher].flat().flatMap((entry) => {
+      if (typeof entry === "string" && entry !== "$tsc") return [];
+      const matcher = typeof entry === "string" ? tsc : entry;
+      const [kind, location = ""] = [matcher.fileLocation ?? []].flat();
+      const folder =
+        kind === "relative" && workspaceFolderVariable.test(location)
+          ? posix.join(location.replace(workspaceFolderVariable, "."))
+          : undefined;
+      const name =
+        typeof entry === "string"
+          ? entry
+          : (folder ?? `(fileLocation ${JSON.stringify(entry.fileLocation)})`);
+      return [{ name, folder: folder ?? "", matcher }];
+    });
+  }
+
+  // The matchers a task defines inline, one per package.
+  function packageMatchers(label: string): TscMatcher[] {
+    return tscMatchers(label).filter(({ name }) => name !== "$tsc");
+  }
+
+  interface Problem {
+    // The matcher that read the line: `$tsc` or a package folder.
+    matcher: string;
+    // The file from the workspace root, as the matcher's fileLocation
+    // resolves it.
+    path: string;
+    fields: Record<string, string | undefined>;
+  }
+
+  // The problem a task reports for an output line: VS Code tries the task's
+  // matchers in order and keeps the first that matches (tryMatchers in
+  // src/vs/workbench/contrib/tasks/common/problemCollectors.ts).
+  function problemOf(label: string, line: string): Problem | undefined {
+    for (const { name, folder, matcher } of tscMatchers(label)) {
+      const { regexp = "", ...groups } = matcher.pattern ?? {};
+      const match = new RegExp(regexp).exec(line);
+      if (!match) continue;
+      const fields = Object.fromEntries(
+        tscFields.map((field) => [field, match[groups[field] as number]]),
+      );
+      return {
+        matcher: name,
+        path: posix.join(folder, fields.file ?? ""),
+        fields,
+      };
+    }
+    return undefined;
+  }
+
+  it.each(["build", "check"])(
+    "gives the %s task one matcher per workspace package that builds or type-checks",
+    (label) => {
+      expect(
+        typedPackages,
+        "the packages of pnpm-workspace.yaml that build or type-check",
+      ).toEqual(
+        expect.arrayContaining([
+          "packages/reforged-ts",
+          "packages/reforged-types",
+          "website",
+        ]),
+      );
+      expect(
+        packageMatchers(label)
+          .map(({ name }) => name)
+          .sort(),
+        `the package folders of the ${label} task's matchers`,
+      ).toEqual(typedPackages);
+    },
+  );
+
+  describe.each(["build", "check"])("the %s task", (label) => {
+    it.each(typedPackages)(
+      "reports a type error pnpm prints for %s in that package",
+      (path) => {
+        // The line as the root script prints it, prefixed by pnpm; the
+        // script name varies (build, typecheck, a nested script).
+        for (const script of ["build", "typecheck", "typings:typecheck"]) {
+          const line = `${path} ${script}: src/x.ts(1,14): error TS2322: Type 'string' is not assignable to type 'number'.`;
+          expect(problemOf(label, line), line).toEqual({
+            matcher: path,
+            path: `${path}/src/x.ts`,
+            fields: {
+              file: "src/x.ts",
+              line: "1",
+              column: "14",
+              severity: "error",
+              code: "2322",
+              message: "Type 'string' is not assignable to type 'number'.",
+            },
+          });
+        }
+        const { matcher } =
+          packageMatchers(label).find(({ name }) => name === path) ?? {};
+        expect(
+          {
+            owner: matcher?.owner,
+            source: matcher?.source,
+            applyTo: matcher?.applyTo,
+          },
+          `the owner, source and applyTo of the ${path} matcher, as $tsc's`,
+        ).toEqual({
+          owner: tsc.owner,
+          source: tsc.source,
+          applyTo: tsc.applyTo,
+        });
+      },
+    );
+
+    it("reports the root's unprefixed type errors through $tsc alone", () => {
+      // The root `tsc -p test/tsconfig.json`, which pnpm does not prefix.
+      const line =
+        "test/x.ts(1,1): error TS2322: Type 'string' is not assignable to type 'number'.";
+      const problem = problemOf(label, line);
+      expect(problem?.matcher, line).toBe("$tsc");
+      expect(problem?.path, line).toBe("test/x.ts");
+      expect(
+        packageMatchers(label)
+          .filter(({ matcher: { pattern } }) =>
+            new RegExp(pattern?.regexp ?? "").test(line),
+          )
+          .map(({ name }) => name),
+        "the package matchers that match an unprefixed line",
+      ).toEqual([]);
+    });
   });
 });
