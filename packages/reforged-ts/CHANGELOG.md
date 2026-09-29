@@ -1,5 +1,24 @@
 # reforged-ts
 
+## 1.0.0-alpha.9
+
+### Major Changes
+
+- [#310](https://github.com/phmilk/reforged-ts/pull/310) [`0640604`](https://github.com/phmilk/reforged-ts/commit/064060406607068564994b44bdec8b63f3b6402e) Thanks [@wyller](https://github.com/wyller)! - `Camera.SetCinematicScene` is renamed `Camera.setCinematicScene`. `Camera.pan` and `Camera.panTimed` take `zOffsetDest` as an optional last parameter: left out, they call `PanCameraTo` and `PanCameraToTimed` as passing `undefined` did. `Camera.setCameraOrientController` and `Camera.setTargetController` take a `Unit` instead of the raw `unit` handle.
+
+- [#310](https://github.com/phmilk/reforged-ts/pull/310) [`0640604`](https://github.com/phmilk/reforged-ts/commit/064060406607068564994b44bdec8b63f3b6402e) Thanks [@wyller](https://github.com/wyller)! - `Unit.getflyHeight` and `Unit.setflyHeight` are renamed `Unit.getFlyHeight` and `Unit.setFlyHeight`. `Unit.getIgnoreAlarm` is renamed `Unit.setIgnoreAlarm`, since it changes the setting. `Unit.dropItemFromSlot` is renamed `Unit.moveItemToSlot`, since it moves the item to another inventory slot. `Unit.setUnitAttackCooldown` is removed: `Unit.setAttackCooldown` does the same. Each renamed member calls the same Native with the same arguments. `Unit.removeUnitFromStock` names its parameter `unitId`, the unit type it takes.
+
+- [#310](https://github.com/phmilk/reforged-ts/pull/310) [`0640604`](https://github.com/phmilk/reforged-ts/commit/064060406607068564994b44bdec8b63f3b6402e) Thanks [@wyller](https://github.com/wyller)! - `Item.player` returns the owner as a `MapPlayer`, or `undefined`, instead of the raw `player` handle. `MapPlayer.getTaxRate` takes the other player as a `MapPlayer`, as `MapPlayer.setTaxRate` does, instead of the raw `player` handle.
+
+- [#310](https://github.com/phmilk/reforged-ts/pull/310) [`0640604`](https://github.com/phmilk/reforged-ts/commit/064060406607068564994b44bdec8b63f3b6402e) Thanks [@wyller](https://github.com/wyller)! - `GameCache.restoreUnit` returns the restored unit as a `Unit`, and throws `reforged-ts: failed to create Unit (<key>)` when the game creates none, instead of returning the raw `unit` handle or `undefined`. `GameCache.store` takes a `Unit` instead of the raw `unit` handle. `GetStoredString` is typed `string`, not `string | undefined`: the game returns `""` for a missing key.
+
+- [#310](https://github.com/phmilk/reforged-ts/pull/310) [`0640604`](https://github.com/phmilk/reforged-ts/commit/064060406607068564994b44bdec8b63f3b6402e) Thanks [@wyller](https://github.com/wyller)! - `Frame.setTextAlignment` returns the `Frame`, as the other `Frame` setters do, instead of nothing. `MultiboardItem.create` and `Multiboard.createItem` name their parameters `row` and `column` instead of `x` and `y`, in the same order and with the same behaviour.
+
+### Patch Changes
+
+- Updated dependencies [[`0640604`](https://github.com/phmilk/reforged-ts/commit/064060406607068564994b44bdec8b63f3b6402e)]:
+  - reforged-types@1.0.0-alpha.2
+
 ## 1.0.0-alpha.8
 
 ### Major Changes
