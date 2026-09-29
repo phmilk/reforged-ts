@@ -9,7 +9,7 @@ Init.onGameStart(() => {
       Input.isKeyPressed(OSKEY_SPACE) &&
       Input.isMetaKeyPressed(MetaKey.Shift)
     ) {
-      Camera.pan(0, 0, undefined);
+      Camera.pan(0, 0);
     }
   });
 });

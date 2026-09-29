@@ -268,15 +268,15 @@ export class Item extends Widget {
   }
 
   /**
-   * Gets the player who owns the item, as the game's `player` Handle.
+   * Gets the player who owns the item.
    * @remarks
-   * It returns the Handle, not a `MapPlayer`: wrap it with
-   * `MapPlayer.fromHandle`.
-   * @returns The owner's Handle, or `undefined` when the game gives none.
+   * In w3ts 3.x this returned the raw `player` Handle, which the caller
+   * wrapped with `MapPlayer.fromHandle`; it now returns that `MapPlayer`.
+   * @returns The owner, or `undefined` when the game gives none.
    * @native GetItemPlayer
    */
-  public get player() {
-    return GetItemPlayer(this.handle);
+  public get player(): MapPlayer | undefined {
+    return MapPlayer.fromHandle(GetItemPlayer(this.handle));
   }
 
   /**

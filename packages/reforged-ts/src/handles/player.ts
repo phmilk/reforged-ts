@@ -539,15 +539,17 @@ export class MapPlayer extends Handle<player> {
   /**
    * Gets the share of one resource the player gathers that goes to
    * `otherPlayer`.
-   * @param otherPlayer - The player who receives it, as the Native `player`
-   * (`other.handle`), where {@link MapPlayer.setTaxRate} takes a `MapPlayer`.
+   * @remarks
+   * In w3ts 3.x `otherPlayer` was the raw `player` Handle; it is now the
+   * `MapPlayer`, as {@link MapPlayer.setTaxRate} takes it.
+   * @param otherPlayer - The player who receives it.
    * @param whichResource - `PLAYER_STATE_RESOURCE_GOLD` or
    * `PLAYER_STATE_RESOURCE_LUMBER`.
    * @returns The rate, in percent.
    * @native GetPlayerTaxRate
    */
-  public getTaxRate(otherPlayer: player, whichResource: playerstate) {
-    return GetPlayerTaxRate(this.handle, otherPlayer, whichResource);
+  public getTaxRate(otherPlayer: MapPlayer, whichResource: playerstate) {
+    return GetPlayerTaxRate(this.handle, otherPlayer.handle, whichResource);
   }
 
   /**

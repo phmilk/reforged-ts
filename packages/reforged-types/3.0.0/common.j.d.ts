@@ -18672,9 +18672,10 @@ declare function GetStoredBoolean(cache: gamecache, missionKey: string, key: str
  * @param missionKey - string
  * @param key - string
  * @returns string
+ * @remarks Typed non-null, unlike the other string-returning Natives: the game gives an empty string when the cache holds no string under the key (jassdoc, `GetStoredString`).
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetStoredString}
  */
-declare function GetStoredString(cache: gamecache, missionKey: string, key: string): string | undefined;
+declare function GetStoredString(cache: gamecache, missionKey: string, key: string): string;
 
 /**
  * @param cache - gamecache

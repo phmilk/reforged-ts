@@ -1,7 +1,8 @@
 /** @noSelfInFile */
 
 import { Handle } from "./handle";
-import { MapPlayer } from "./player";
+import type { MapPlayer } from "./player";
+import { Unit } from "./unit";
 
 /**
  * A game cache: values stored under a mission key and a key, which a
@@ -143,13 +144,15 @@ export class GameCache extends Handle<gamecache> {
 
   /**
    * Gets the string stored under the key.
+   * @remarks
+   * A missing key reads `""`, not `undefined`: in w3ts 3.x the Typings
+   * allowed `undefined`, which the game never returns.
    * @param missionKey - The mission key, the group the key belongs to.
    * @param key - The value's name within the mission key.
-   * @returns The string, or `""` when none is stored under the key; the
-   * Typings also allow `undefined`.
+   * @returns The string, or `""` when none is stored under the key.
    * @native GetStoredString
    */
-  public getString(missionKey: string, key: string) {
+  public getString(missionKey: string, key: string): string {
     return GetStoredString(this.handle, missionKey, key);
   }
 
@@ -211,16 +214,21 @@ export class GameCache extends Handle<gamecache> {
   /**
    * Creates a unit from the description `store` stored under the key.
    * @remarks
-   * It returns the Native `unit`, not a `Unit`: wrap it with
-   * `Unit.fromHandle`.
+   * In w3ts 3.x this returned the raw `unit` Handle, or `undefined` when no
+   * unit was stored under the key; it now returns the `Unit`, and throws
+   * when the game creates none. Check `hasUnit` first when the key may be
+   * empty.
    * @param missionKey - The mission key, the group the key belongs to.
    * @param key - The value's name within the mission key.
    * @param forWhichPlayer - The player who owns the new unit.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @param face - The facing, in degrees.
-   * @returns The new unit, or `undefined` when no unit is stored under the
-   * key.
+   * @returns The new unit.
+   * @throws When the game returns no handle, for example when no unit is
+   * stored under the key: `reforged-ts: failed to create Unit (<key>)`, at
+   * the calling line. In Dev mode, also before the globals Init stage and
+   * inside `MapPlayer.runLocal`.
    * @native RestoreUnit
    */
   public restoreUnit(
@@ -230,15 +238,18 @@ export class GameCache extends Handle<gamecache> {
     x: number,
     y: number,
     face: number,
-  ) {
-    return RestoreUnit(
-      this.handle,
-      missionKey,
+  ): Unit {
+    return Unit.expect(
+      RestoreUnit(
+        this.handle,
+        missionKey,
+        key,
+        forWhichPlayer.handle,
+        x,
+        y,
+        face,
+      ),
       key,
-      forWhichPlayer.handle,
-      x,
-      y,
-      face,
     );
   }
 
@@ -258,11 +269,11 @@ export class GameCache extends Handle<gamecache> {
    * which `restoreUnit` recreates.
    * @remarks
    * A stored unit keeps its type, and for a hero its level, experience,
-   * attributes, items and skills.
+   * attributes, items and skills. In w3ts 3.x a unit was passed as its raw
+   * `unit` Handle; it is now passed as the `Unit`.
    * @param missionKey - The mission key, the group the key belongs to.
    * @param key - The value's name within the mission key.
-   * @param value - The value: a number, a string, a boolean, or a Native
-   * `unit` (a `Unit`'s `handle`).
+   * @param value - The value: a number, a string, a boolean, or a `Unit`.
    * @native StoreString
    * @native StoreBoolean
    * @native StoreReal
@@ -271,7 +282,7 @@ export class GameCache extends Handle<gamecache> {
   public store(
     missionKey: string,
     key: string,
-    value: number | string | boolean | unit,
+    value: number | string | boolean | Unit,
   ) {
     if (typeof value === "string") {
       StoreString(this.handle, missionKey, key, value);
@@ -280,7 +291,7 @@ export class GameCache extends Handle<gamecache> {
     } else if (typeof value === "number") {
       StoreReal(this.handle, missionKey, key, value);
     } else {
-      StoreUnit(this.handle, missionKey, key, value);
+      StoreUnit(this.handle, missionKey, key, value.handle);
     }
   }
 

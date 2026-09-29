@@ -128,7 +128,7 @@ ruleTester.run("allowlist entry", entryProbe, {
     },
     {
       name: "instance methods, a static and accessor assignments",
-      code: `${frame}frame.setVisible(true);\nframe.setText("a");\nCamera.pan(0, 0, undefined);\nframe.visible = false;\nframe.text = "a";`,
+      code: `${frame}frame.setVisible(true);\nframe.setText("a");\nCamera.pan(0, 0);\nframe.visible = false;\nframe.text = "a";`,
       errors: [
         {
           messageId: "entry",

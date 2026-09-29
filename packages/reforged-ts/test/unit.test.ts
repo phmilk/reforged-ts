@@ -858,3 +858,76 @@ describe("Unit equipment and bag", () => {
     }),
   ]);
 }
+
+// The members #306 renamed from their w3ts 3.x names, one case each: every
+// one calls the Native it called under its old name, with the same
+// arguments. setAttackCooldown is the one member over
+// BlzSetUnitAttackCooldown now that setUnitAttackCooldown is gone.
+{
+  const unit = Unit.create(owner, footman, 0, 0);
+  const unitRef = handleRef("unit", unit.handle);
+  const item = unit.addItemById(ration);
+  const itemRef = handleRef("item", item.handle);
+
+  describeNatives("Unit members renamed from w3ts 3.x", [
+    nativeCase({
+      native: "GetUnitFlyHeight",
+      answer: () => 150,
+      member: () => unit.getFlyHeight(),
+      line: `GetUnitFlyHeight(${unitRef})`,
+      returns: 150,
+    }),
+    nativeCase({
+      native: "SetUnitFlyHeight",
+      answer: () => undefined,
+      member: () => {
+        unit.setFlyHeight(200, 50);
+      },
+      line: `SetUnitFlyHeight(${unitRef}, 200, 50)`,
+    }),
+    nativeCase({
+      native: "UnitIgnoreAlarm",
+      answer: () => true,
+      member: () => unit.setIgnoreAlarm(true),
+      line: `UnitIgnoreAlarm(${unitRef}, true)`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "UnitDropItemSlot",
+      answer: () => true,
+      member: () => unit.moveItemToSlot(item, 3),
+      line: `UnitDropItemSlot(${unitRef}, ${itemRef}, 3)`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "BlzSetUnitAttackCooldown",
+      answer: () => undefined,
+      member: () => {
+        unit.setAttackCooldown(1.5, 1);
+      },
+      line: `BlzSetUnitAttackCooldown(${unitRef}, 1.5, 1)`,
+    }),
+    nativeCase({
+      native: "RemoveUnitFromStock",
+      answer: () => undefined,
+      member: () => {
+        unit.removeUnitFromStock(footman);
+      },
+      line: `RemoveUnitFromStock(${unitRef}, 1751543663)`,
+    }),
+  ]);
+
+  describe("Unit w3ts 3.x names", () => {
+    it("has none of the names #306 replaced", () => {
+      for (const old of [
+        "getflyHeight",
+        "setflyHeight",
+        "getIgnoreAlarm",
+        "dropItemFromSlot",
+        "setUnitAttackCooldown",
+      ]) {
+        expect(old in unit).toBe(false);
+      }
+    });
+  });
+}

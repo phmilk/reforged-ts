@@ -53,7 +53,7 @@ describe("MultiboardItem", () => {
 describe("MultiboardItem.create", () => {
   const board = Multiboard.create();
 
-  it("wraps the handle MultiboardGetItem returns, and a lookup finds it", () => {
+  it("passes row - 1 and column - 1 to MultiboardGetItem, in that order", () => {
     const item = MultiboardItem.create(board, 2, 3);
     expect(stubCalls()).toContainCall(
       `MultiboardGetItem(${handleRef("multiboard", board.handle)}, 1, 2)`,
@@ -77,7 +77,7 @@ describe("MultiboardItem.create", () => {
 describe("multiboard.createItem", () => {
   const board = Multiboard.create();
 
-  it("wraps the handle MultiboardGetItem returns, and a lookup finds it", () => {
+  it("passes row - 1 and column - 1 to MultiboardGetItem, in that order", () => {
     const item = board.createItem(2, 3);
     expect(stubCalls()).toContainCall(
       `MultiboardGetItem(${handleRef("multiboard", board.handle)}, 1, 2)`,

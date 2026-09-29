@@ -7,7 +7,8 @@
 // the Native for one no constant names.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
-import { EquipmentType, Item, ItemTag } from "../src/index";
+import { EquipmentType, Item, ItemTag, MapPlayer } from "../src/index";
+import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
 import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
@@ -76,6 +77,33 @@ describe("Item.fromEvent", () => {
         () => Item.fromEvent(),
       ),
     ).toBe(item);
+  });
+});
+
+describe("Item.player", () => {
+  it("is the MapPlayer MapPlayer.fromHandle gives for the owner GetItemPlayer returns", () => {
+    const item = Item.create(ration, 0, 0);
+    const owner = defined(Player(4), "Player(4)");
+    const player = withNative(
+      "GetItemPlayer",
+      () => owner,
+      () => item.player,
+    );
+    expect(player).toBe(MapPlayer.fromHandle(owner));
+    expect(stubCalls()).toContainCall(
+      `GetItemPlayer(${handleRef("item", item.handle)})`,
+    );
+  });
+
+  it("is undefined when GetItemPlayer returns nil", () => {
+    const item = Item.create(ration, 0, 0);
+    expect(
+      withNative(
+        "GetItemPlayer",
+        () => undefined,
+        () => item.player,
+      ),
+    ).toBeUndefined();
   });
 });
 

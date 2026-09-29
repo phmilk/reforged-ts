@@ -739,5 +739,170 @@
     },
     "oneToOne": false,
     "note": "`Destructable.create` takes the z coordinate as its `z` option, `Destructable.create({ typeId, x, y, z })`, next to the facing, scale, variation and skin `createZ` took in order."
+  },
+  {
+    "old": "Camera.SetCinematicScene",
+    "new": "Camera.setCinematicScene",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The cinematic scene is camelCase like every other member of `Camera`; it takes the same arguments."
+  },
+  {
+    "old": "Camera.pan",
+    "new": "Camera.pan",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: `zOffsetDest` is optional, so `Camera.pan(x, y)` pans without a z-offset where w3ts 3.x needed `Camera.pan(x, y, undefined)`, which still compiles. The parameters keep their order."
+  },
+  {
+    "old": "Camera.panTimed",
+    "new": "Camera.panTimed",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: `zOffsetDest` is optional and stays last, after `duration`, so `Camera.panTimed(x, y, duration)` pans without a z-offset where w3ts 3.x needed `Camera.panTimed(x, y, duration, undefined)`, which still compiles. The parameters keep their order."
+  },
+  {
+    "old": "Camera.setCameraOrientController",
+    "new": "Camera.setCameraOrientController",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: the first argument is the `Unit` Wrapper instead of the raw `unit` handle, so the argument `unit.handle` becomes `unit`."
+  },
+  {
+    "old": "Camera.setTargetController",
+    "new": "Camera.setTargetController",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: the first argument is the `Unit` Wrapper instead of the raw `unit` handle, so the argument `unit.handle` becomes `unit`."
+  },
+  {
+    "old": "Unit.getflyHeight",
+    "new": "Unit.getFlyHeight",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The flying height is camelCase with a capital `F`, like every other member of `Unit`."
+  },
+  {
+    "old": "Unit.setflyHeight",
+    "new": "Unit.setFlyHeight",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The flying height is camelCase with a capital `F`, like every other member of `Unit`; it takes the same arguments."
+  },
+  {
+    "old": "Unit.getIgnoreAlarm",
+    "new": "Unit.setIgnoreAlarm",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The member changes the setting through `UnitIgnoreAlarm` and reads nothing, so it is a setter; it takes the same argument. `ignoreAlarmToggled` reads the setting."
+  },
+  {
+    "old": "Unit.dropItemFromSlot",
+    "new": "Unit.moveItemToSlot",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The member moves the item to another slot of the inventory (`UnitDropItemSlot`); it drops nothing on the ground. It takes the same arguments."
+  },
+  {
+    "old": "Unit.setUnitAttackCooldown",
+    "new": "Unit.setAttackCooldown",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The attack cooldown has one setter instead of two names for one Native; it takes the same arguments."
+  },
+  {
+    "old": "Item.player",
+    "new": "Item.player",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: `item.player` returns the `MapPlayer` Wrapper, or `undefined`, instead of the raw `player` handle, so `MapPlayer.fromHandle(item.player)` becomes `item.player`."
+  },
+  {
+    "old": "MapPlayer.getTaxRate",
+    "new": "MapPlayer.getTaxRate",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: the first argument is the `MapPlayer` Wrapper instead of the raw `player` handle, as `MapPlayer.setTaxRate` takes it, so the argument `other.handle` becomes `other`."
+  },
+  {
+    "old": "GameCache.restoreUnit",
+    "new": "GameCache.restoreUnit",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: `cache.restoreUnit(...)` returns the `Unit` Wrapper instead of the raw `unit` handle, so `Unit.fromHandle(cache.restoreUnit(...))` becomes `cache.restoreUnit(...)`. It throws `reforged-ts: failed to create Unit (<key>)` where it returned `undefined`: check `cache.hasUnit(missionKey, key)` first when the key may hold no unit."
+  },
+  {
+    "old": "GameCache.store",
+    "new": "GameCache.store",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: a unit is passed as the `Unit` Wrapper instead of the raw `unit` handle, so the argument `unit.handle` becomes `unit`."
+  },
+  {
+    "old": "Frame.setTextAlignment",
+    "new": "Frame.setTextAlignment",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: it takes the same arguments and returns the Frame instead of nothing, as the other `Frame` setters do, so it no longer ends a chain."
   }
 ]
