@@ -55,22 +55,23 @@ describe("Region.fromEvent", () => {
 {
   const region = Region.create();
   const regionRef = handleRef("region", region.handle);
-  const inside = Point.create(0, 0);
-  const outside = Point.create(512, 512);
+  // The Native's answer is stubbed: the points only tell the calls apart.
+  const first = Point.create(0, 0);
+  const second = Point.create(512, 512);
 
   describeNatives("Region.containsPoint", [
     nativeCase({
       native: "IsLocationInRegion",
       answer: () => true,
-      member: () => region.containsPoint(inside),
-      line: `IsLocationInRegion(${regionRef}, ${handleRef("location", inside.handle)})`,
+      member: () => region.containsPoint(first),
+      line: `IsLocationInRegion(${regionRef}, ${handleRef("location", first.handle)})`,
       returns: true,
     }),
     nativeCase({
       native: "IsLocationInRegion",
       answer: () => false,
-      member: () => region.containsPoint(outside),
-      line: `IsLocationInRegion(${regionRef}, ${handleRef("location", outside.handle)})`,
+      member: () => region.containsPoint(second),
+      line: `IsLocationInRegion(${regionRef}, ${handleRef("location", second.handle)})`,
       returns: false,
     }),
   ]);

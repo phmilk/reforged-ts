@@ -119,6 +119,9 @@ export class Leaderboard extends Handle<leaderboard> {
 
   /**
    * Tests whether a player has an item on the leaderboard.
+   * @remarks
+   * In w3ts 3.x it returned nothing: it called `LeaderboardHasPlayerItem`
+   * without returning its answer.
    * @param p - The player to look for.
    * @returns True when the player has an item on the leaderboard.
    * @native LeaderboardHasPlayerItem

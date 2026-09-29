@@ -70,22 +70,23 @@ describe("Leaderboard.fromPlayer", () => {
 {
   const board = Leaderboard.create();
   const boardRef = handleRef("leaderboard", board.handle);
-  const listed = defined(MapPlayer.fromIndex(0), "player 0");
-  const unlisted = defined(MapPlayer.fromIndex(1), "player 1");
+  // The Native's answer is stubbed: the players only tell the calls apart.
+  const first = defined(MapPlayer.fromIndex(0), "player 0");
+  const second = defined(MapPlayer.fromIndex(1), "player 1");
 
   describeNatives("Leaderboard.hasPlayerItem", [
     nativeCase({
       native: "LeaderboardHasPlayerItem",
       answer: () => true,
-      member: () => board.hasPlayerItem(listed),
-      line: `LeaderboardHasPlayerItem(${boardRef}, ${handleRef("player", listed.handle)})`,
+      member: () => board.hasPlayerItem(first),
+      line: `LeaderboardHasPlayerItem(${boardRef}, ${handleRef("player", first.handle)})`,
       returns: true,
     }),
     nativeCase({
       native: "LeaderboardHasPlayerItem",
       answer: () => false,
-      member: () => board.hasPlayerItem(unlisted),
-      line: `LeaderboardHasPlayerItem(${boardRef}, ${handleRef("player", unlisted.handle)})`,
+      member: () => board.hasPlayerItem(second),
+      line: `LeaderboardHasPlayerItem(${boardRef}, ${handleRef("player", second.handle)})`,
       returns: false,
     }),
   ]);

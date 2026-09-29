@@ -117,6 +117,9 @@ export class Region extends Handle<region> {
 
   /**
    * Tests whether the cell holding a Point is in the region.
+   * @remarks
+   * In w3ts 3.x it returned nothing: it called `IsLocationInRegion` without
+   * returning its answer.
    * @param whichPoint - The point to test.
    * @returns True when the region holds the cell.
    * @native IsLocationInRegion
