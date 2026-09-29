@@ -2,7 +2,7 @@
   "name": "GetStoredString",
   "source": "common.j",
   "returns": {
-    "nullable": true
+    "nullable": false
   },
   "params": [
     {

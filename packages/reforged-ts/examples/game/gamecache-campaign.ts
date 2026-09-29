@@ -9,7 +9,7 @@ const CHAPTER = "chapter1";
 /** Stores the hero and the gold, and saves the cache to disk. */
 export function saveProgress(hero: Unit, gold: number): void {
   const cache = GameCache.create(CAMPAIGN);
-  cache.store(CHAPTER, "hero", hero.handle);
+  cache.store(CHAPTER, "hero", hero);
   cache.storeInteger(CHAPTER, "gold", gold);
   cache.save();
 }
@@ -19,12 +19,15 @@ Init.onGameStart(() => {
   if (!cache.hasUnit(CHAPTER, "hero")) {
     return;
   }
-  const hero = Unit.fromHandle(
-    cache.restoreUnit(CHAPTER, "hero", tsGlobals.Players[0], 0, 0, 270),
+  const hero = cache.restoreUnit(
+    CHAPTER,
+    "hero",
+    tsGlobals.Players[0],
+    0,
+    0,
+    270,
   );
-  if (hero !== undefined) {
-    print(
-      `The hero returns with ${String(cache.getInteger(CHAPTER, "gold"))} gold`,
-    );
-  }
+  print(
+    `${hero.name} returns with ${String(cache.getInteger(CHAPTER, "gold"))} gold`,
+  );
 });

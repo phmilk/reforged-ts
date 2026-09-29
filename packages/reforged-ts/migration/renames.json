@@ -871,5 +871,27 @@
     },
     "oneToOne": false,
     "note": "Not a rename: the first argument is the `MapPlayer` Wrapper instead of the raw `player` handle, as `MapPlayer.setTaxRate` takes it, so the argument `other.handle` becomes `other`."
+  },
+  {
+    "old": "GameCache.restoreUnit",
+    "new": "GameCache.restoreUnit",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: `cache.restoreUnit(...)` returns the `Unit` Wrapper instead of the raw `unit` handle, so `Unit.fromHandle(cache.restoreUnit(...))` becomes `cache.restoreUnit(...)`. It throws `reforged-ts: failed to create Unit (<key>)` where it returned `undefined`: check `cache.hasUnit(missionKey, key)` first when the key may hold no unit."
+  },
+  {
+    "old": "GameCache.store",
+    "new": "GameCache.store",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: a unit is passed as the `Unit` Wrapper instead of the raw `unit` handle, so the argument `unit.handle` becomes `unit`."
   }
 ]

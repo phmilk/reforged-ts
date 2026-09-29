@@ -18674,7 +18674,7 @@ declare function GetStoredBoolean(cache: gamecache, missionKey: string, key: str
  * @returns string
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetStoredString}
  */
-declare function GetStoredString(cache: gamecache, missionKey: string, key: string): string | undefined;
+declare function GetStoredString(cache: gamecache, missionKey: string, key: string): string;
 
 /**
  * @param cache - gamecache
