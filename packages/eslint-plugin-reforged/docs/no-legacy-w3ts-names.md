@@ -11,8 +11,8 @@ Members and constructors are matched through the type checker: the object must b
 Some entries of the map keep their name and change what the member takes or gives: `GameCache.store` takes the `Unit` Wrapper where w3ts took the raw `unit` handle, and `GameCache.restoreUnit` returns the `Unit` and throws where it returned `undefined`. The name alone says nothing about such a call, so the rule reports one only where the type checker shows the w3ts use, with the entry's note:
 
 - an argument the new parameter does not take, such as `hero.handle` where the `Unit` is taken;
-- a result used where the new type does not fit, such as `Unit.fromHandle(cache.restoreUnit(...))`;
-- a result checked for a missing value (`=== undefined`, `!`, `??`, `?.`, a condition) when the new type cannot be missing, directly or through the `const` that holds it. Such a check never catches the failure the member now throws.
+- a result used where the new type does not fit, such as `Unit.fromHandle(cache.restoreUnit(...))` or `const u: unit = cache.restoreUnit(...)`;
+- a result checked for a missing value when its type where it is checked cannot be missing, directly or through the `const` that holds it. Such a check never catches the failure the member now throws. A check is `=== undefined`, `== null`, `typeof x === "undefined"`, `??` or `?.`; on an object result, a truthiness test too (`!x`, `x && y`, `x || y`, a condition). A number or a string is also falsy at `0` or `""`, so its truthiness test is not a missing-value check and is not reported. A cast to a type that can be missing, such as `(cache.restoreUnit(...) as Unit | undefined) ?? spare`, makes the check deliberate and is not reported.
 
 A call written for the new signature is never reported. An entry whose w3ts use still compiles and still works, such as `Camera.pan(x, y, undefined)` now that the last parameter is optional, or `Frame.setTextAlignment`, which now returns the Frame, reports nothing.
 

@@ -43,6 +43,10 @@ const restoreNote =
   "Fixture entry: it returns the Unit and throws where it returned undefined.";
 const storeNote = "Fixture entry: a unit is passed as the Unit.";
 const targetNote = "Fixture entry: it takes the Unit instead of the raw unit.";
+const taxNote =
+  "Fixture entry: it takes the MapPlayer instead of the raw player.";
+const mouseNote =
+  "Fixture entry: the kind is a MouseEventKind instead of a number.";
 
 /** A report on a member that kept its name. */
 function kept(
@@ -86,8 +90,28 @@ ruleTester.run("no-legacy-w3ts-names", ruleOf("no-legacy-w3ts-names"), {
       code: `${cacheHeader}declare const hero: Unit;\nCamera.setTargetController(hero, 0, 0, false);\ncache.store("m", "k", hero);\ncache.store("m", "n", 1);\nif (cache.hasUnit("m", "k")) {\n  const restored = cache.restoreUnit("m", "k", owner, 0, 0, 0);\n  restored.kill();\n  Group.create().addUnit(cache.restoreUnit("m", "k", owner, 0, 0, 0));\n}`,
     },
     {
-      name: "a check of a kept member's result that can be missing, or of another value",
-      code: `${cacheHeader}declare const other: Unit | undefined;\nconst found = MapPlayer.fromIndex(0);\nif (found !== undefined && other) {\n  print("found");\n}\nconst restored = cache.restoreUnit("m", "k", owner, 0, 0, 0);\nif (restored.name === "") {\n  print("unnamed");\n}`,
+      name: "a check of a kept member's result that can be missing",
+      code: `import { Frame } from "reforged-ts";\nconst frame = Frame.fromName("f", 0);\nif (frame !== undefined) {\n  frame.setVisible(true);\n}\nif (!Frame.fromName("g", 0)) {\n  print("none");\n}\nFrame.fromName("h", 0)?.setVisible(true);\nconst shown = Frame.fromName("i", 0) ?? frame;\nif (typeof Frame.fromName("j", 0) === "undefined") {\n  print("none");\n}`,
+    },
+    {
+      name: "a check of another value, or a comparison of a kept member's result",
+      code: `${cacheHeader}declare const other: Unit | undefined;\nif (other !== undefined && other) {\n  print("found");\n}\nconst restored = cache.restoreUnit("m", "k", owner, 0, 0, 0);\nif (restored.name === "") {\n  print("unnamed");\n}`,
+    },
+    {
+      name: "a truthiness test of a kept member's primitive result",
+      code: `${cacheHeader}const other = MapPlayer.fromIndex(1)!;\nif (owner.getTaxRate(other, PLAYER_STATE_RESOURCE_GOLD)) {\n  print("taxed");\n}\nconst none = !owner.getTaxRate(other, PLAYER_STATE_RESOURCE_GOLD);\nconst rate = owner.getTaxRate(other, PLAYER_STATE_RESOURCE_GOLD) || 0;\nconst shown = owner.getTaxRate(other, PLAYER_STATE_RESOURCE_GOLD) ? "taxed" : "free";\nwhile (owner.getTaxRate(other, PLAYER_STATE_RESOURCE_GOLD) && rate > 0) {\n  break;\n}`,
+    },
+    {
+      name: "a kept member's result cast to a type that can be missing, then checked",
+      code: `${cacheHeader}declare const spare: Unit;\nconst hero = (cache.restoreUnit("m", "k", owner, 0, 0, 0) as Unit | undefined) ?? spare;\nif ((cache.restoreUnit("m", "n", owner, 0, 0, 0) as Unit | undefined) === undefined) {\n  print("none");\n}`,
+    },
+    {
+      name: "a kept member's result in an annotated variable of its new type",
+      code: `${cacheHeader}const hero: Unit = cache.restoreUnit("m", "k", owner, 0, 0, 0);\nlet other: Unit | undefined = cache.restoreUnit("m", "n", owner, 0, 0, 0);\nother = hero;`,
+    },
+    {
+      name: "the mouse event kind passed as the enum",
+      code: 'import { MapPlayer, MouseEventKind, Trigger } from "reforged-ts";\nTrigger.create().registerPlayerMouseEvent(MapPlayer.fromIndex(0)!, MouseEventKind.Down);',
     },
     {
       name: "a project member named like a kept member",
@@ -378,6 +402,30 @@ ruleTester.run("no-legacy-w3ts-names", ruleOf("no-legacy-w3ts-names"), {
       ],
     },
     {
+      name: "a raw player passed to a kept member that takes the MapPlayer",
+      code: `${cacheHeader}const other = MapPlayer.fromIndex(1)!;\nconst rate = owner.getTaxRate(other.handle, PLAYER_STATE_RESOURCE_GOLD);`,
+      output: null,
+      errors: [
+        {
+          ...kept("oldArgument", "MapPlayer.getTaxRate", taxNote),
+          line: 5,
+          column: 31,
+        },
+      ],
+    },
+    {
+      name: "Blizzard.j's number passed where the mouse event kind is taken",
+      code: 'import { MapPlayer, Trigger } from "reforged-ts";\nTrigger.create().registerPlayerMouseEvent(MapPlayer.fromIndex(0)!, bj_MOUSEEVENTTYPE_DOWN);',
+      output: null,
+      errors: [
+        {
+          ...kept("oldArgument", "Trigger.registerPlayerMouseEvent", mouseNote),
+          line: 2,
+          column: 68,
+        },
+      ],
+    },
+    {
       name: "a kept member's result checked for a missing value, directly and through a const",
       code: `${cacheHeader}const hero = cache.restoreUnit("m", "k", owner, 0, 0, 0);\nif (hero !== undefined) {\n  hero.kill();\n}\nif (!cache.restoreUnit("m", "n", owner, 0, 0, 0)) {\n  print("none");\n}\ncache.restoreUnit("m", "o", owner, 0, 0, 0)?.kill();\nconst other = cache.restoreUnit("m", "p", owner, 0, 0, 0) ?? hero;`,
       output: null,
@@ -385,18 +433,56 @@ ruleTester.run("no-legacy-w3ts-names", ruleOf("no-legacy-w3ts-names"), {
         {
           ...kept("checkedResult", "GameCache.restoreUnit", restoreNote),
           line: 5,
+          column: 5,
+          endColumn: 9,
         },
         {
           ...kept("checkedResult", "GameCache.restoreUnit", restoreNote),
           line: 8,
+          column: 6,
         },
         {
           ...kept("checkedResult", "GameCache.restoreUnit", restoreNote),
           line: 11,
+          column: 1,
         },
         {
           ...kept("checkedResult", "GameCache.restoreUnit", restoreNote),
           line: 12,
+          column: 15,
+        },
+      ],
+    },
+    {
+      name: "a kept member's result checked in a condition, a ternary, && and ||, == null and typeof",
+      code: `${cacheHeader}declare const spare: Unit;\nif (cache.restoreUnit("m", "a", owner, 0, 0, 0)) {\n  print("a");\n}\nconst b = cache.restoreUnit("m", "b", owner, 0, 0, 0) ? 1 : 0;\ncache.restoreUnit("m", "c", owner, 0, 0, 0) && print("c");\nconst d = cache.restoreUnit("m", "d", owner, 0, 0, 0) || spare;\nif (cache.restoreUnit("m", "e", owner, 0, 0, 0) == null) {\n  print("e");\n}\nif (typeof cache.restoreUnit("m", "f", owner, 0, 0, 0) === "undefined") {\n  print("f");\n}`,
+      output: null,
+      errors: [
+        { line: 5, column: 5 },
+        { line: 8, column: 11 },
+        { line: 9, column: 1 },
+        { line: 10, column: 11 },
+        { line: 11, column: 5 },
+        { line: 14, column: 12 },
+      ].map((position) => ({
+        ...kept("checkedResult", "GameCache.restoreUnit", restoreNote),
+        ...position,
+      })),
+    },
+    {
+      name: "a kept member's result in a variable annotated with the old type",
+      code: `${cacheHeader}const hero: unit = cache.restoreUnit("m", "k", owner, 0, 0, 0);\nlet other: unit = cache.restoreUnit("m", "n", owner, 0, 0, 0);\nother = hero;`,
+      output: null,
+      errors: [
+        {
+          ...kept("oldResult", "GameCache.restoreUnit", restoreNote),
+          line: 4,
+          column: 20,
+        },
+        {
+          ...kept("oldResult", "GameCache.restoreUnit", restoreNote),
+          line: 5,
+          column: 19,
         },
       ],
     },

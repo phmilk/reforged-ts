@@ -13,11 +13,15 @@
 // its signature or behaviour (#311). The name is no signal, so a call of it
 // is reported only where the checker shows the w3ts shape: an argument the
 // new parameter does not take (a raw handle where the Wrapper is taken), or
-// a result used as the old one was, passed where the new type is not taken
-// or checked for a missing value when the new type cannot be missing. Code
-// on the new signature compiles, so it is never reported; an entry with no
-// such use (a parameter made optional, a setter that now returns its
-// Wrapper) reports nothing.
+// a result used as the old one was: passed, or assigned to an annotated
+// variable, where the new type is not taken, or checked for a missing value
+// when its type where it is checked cannot be missing. A check is explicit
+// (`=== undefined`, `== null`, `typeof x === "undefined"`, `??`, `?.`) or,
+// for an object only, a truthiness test (`!x`, `x && y`, `x || y`, a
+// condition): a number or a string is also falsy at 0 or "". Code on the new
+// signature compiles, so it is never reported; an entry with no such use (a
+// parameter made optional, a setter that now returns its Wrapper) reports
+// nothing.
 import {
   AST_NODE_TYPES,
   ASTUtils,
@@ -26,9 +30,12 @@ import {
   type TSESTree,
 } from "@typescript-eslint/utils";
 
-import * as ts from "typescript";
-
 import { libraryClassesOf, libraryClassOf } from "../classify/library-class.js";
+import {
+  isObjectTyped,
+  mayBeMissing,
+  misfitsContext,
+} from "../classify/result-type.js";
 import { through, walkValueFlow } from "../classify/value-flow.js";
 import { createRule } from "../create-rule.js";
 import type { RenameEntry, RenameName } from "../data/index.js";
@@ -69,6 +76,22 @@ interface Index {
 interface MemberEntry {
   readonly className: string;
   readonly entry: RenameEntry;
+}
+
+/** Where the result of a member that kept its name shows the w3ts use. */
+interface KeptUse {
+  readonly node: TSESTree.Node;
+  readonly messageId: "oldResult" | "checkedResult";
+}
+
+/** The message data every report of `entry` carries. */
+function dataOf(entry: RenameEntry) {
+  return {
+    old: entry.old.text,
+    from: entry.versions.from,
+    to: entry.versions.to,
+    note: entry.note,
+  };
 }
 
 function add(
@@ -130,19 +153,6 @@ function indexOf(entries: readonly RenameEntry[]): Index {
   };
 }
 
-/** Whether `type` holds undefined, null or void, or is not checked at all. */
-function mayBeMissing(type: ts.Type): boolean {
-  const loose =
-    ts.TypeFlags.Undefined |
-    ts.TypeFlags.Null |
-    ts.TypeFlags.Void |
-    ts.TypeFlags.Any |
-    ts.TypeFlags.Unknown;
-  return (type.isUnion() ? type.types : [type]).some(
-    (each) => (each.flags & loose) !== 0,
-  );
-}
-
 function isMissingLiteral(node: TSESTree.Node): boolean {
   return (
     (node.type === AST_NODE_TYPES.Identifier && node.name === "undefined") ||
@@ -150,33 +160,69 @@ function isMissingLiteral(node: TSESTree.Node): boolean {
   );
 }
 
-/** Whether `parent` checks its child `child` for a missing value. */
-function checksForMissing(
+const equalities: ReadonlySet<string> = new Set(["==", "!=", "===", "!=="]);
+
+/** The other operand of an equality `node` is an operand of, or undefined. */
+function comparedWith(node: TSESTree.Node): TSESTree.Node | undefined {
+  const { parent } = node;
+  if (
+    parent?.type !== AST_NODE_TYPES.BinaryExpression ||
+    !equalities.has(parent.operator)
+  ) {
+    return undefined;
+  }
+  return parent.left === node ? parent.right : parent.left;
+}
+
+/**
+ * How `parent` checks its child `child` for a missing value: `explicit`
+ * (`=== undefined`, `== null`, `typeof x === "undefined"`, `??`, `?.`), a
+ * truthiness test (`!x`, `x && y`, `x || y`, a condition), which is a
+ * missing-value check only for an object, or not at all.
+ */
+function missingCheckOf(
   parent: TSESTree.Node,
   child: TSESTree.Node,
-): boolean {
+): "explicit" | "truthiness" | undefined {
   switch (parent.type) {
-    case AST_NODE_TYPES.BinaryExpression:
-      return (
-        ["==", "!=", "===", "!=="].includes(parent.operator) &&
-        isMissingLiteral(parent.left === child ? parent.right : parent.left)
-      );
-    case AST_NODE_TYPES.UnaryExpression:
-      return parent.operator === "!";
+    case AST_NODE_TYPES.BinaryExpression: {
+      const other = comparedWith(child);
+      return other !== undefined && isMissingLiteral(other)
+        ? "explicit"
+        : undefined;
+    }
+    case AST_NODE_TYPES.UnaryExpression: {
+      if (parent.operator === "!") {
+        return "truthiness";
+      }
+      const other =
+        parent.operator === "typeof" ? comparedWith(parent) : undefined;
+      return other?.type === AST_NODE_TYPES.Literal &&
+        other.value === "undefined"
+        ? "explicit"
+        : undefined;
+    }
     case AST_NODE_TYPES.LogicalExpression:
-      return parent.left === child;
+      if (parent.left !== child) {
+        return undefined;
+      }
+      return parent.operator === "??" ? "explicit" : "truthiness";
     case AST_NODE_TYPES.IfStatement:
     case AST_NODE_TYPES.WhileStatement:
     case AST_NODE_TYPES.DoWhileStatement:
     case AST_NODE_TYPES.ForStatement:
     case AST_NODE_TYPES.ConditionalExpression:
-      return parent.test === child;
+      return parent.test === child ? "truthiness" : undefined;
     case AST_NODE_TYPES.MemberExpression:
-      return parent.optional && parent.object === child;
+      return parent.optional && parent.object === child
+        ? "explicit"
+        : undefined;
     case AST_NODE_TYPES.CallExpression:
-      return parent.optional && parent.callee === child;
+      return parent.optional && parent.callee === child
+        ? "explicit"
+        : undefined;
     default:
-      return false;
+      return undefined;
   }
 }
 
@@ -220,10 +266,7 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
         edit: (replacement: RenameName) => Edit | undefined,
       ): void {
         const data = {
-          old: entry.old.text,
-          from: entry.versions.from,
-          to: entry.versions.to,
-          note: entry.note,
+          ...dataOf(entry),
           replacement: entry.replacements
             .map((each) => `\`${each.text}\``)
             .join(" or "),
@@ -296,23 +339,25 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
         ];
       }
 
-      const checker = services.program.getTypeChecker();
-
-      /** Whether `node` does not fit the type the checker expects where it stands. */
-      function misfits(node: TSESTree.Node): boolean {
-        const tsNode = services.esTreeNodeToTSNodeMap.get(node);
-        if (!ts.isExpression(tsNode)) {
-          return false;
+      /**
+       * The entry of `candidates` for the library class (or a class it
+       * extends) that `object` stands for, with that class chain.
+       */
+      function findEntry(
+        candidates: readonly MemberEntry[] | undefined,
+        object: TSESTree.Node,
+      ): { entry: RenameEntry; chain: readonly string[] } | undefined {
+        if (candidates === undefined) {
+          return undefined;
         }
-        const expected = checker.getContextualType(tsNode);
-        return (
-          expected !== undefined &&
-          !checker.isTypeAssignableTo(
-            checker.getTypeAtLocation(tsNode),
-            expected,
-          )
+        const chain = libraryClassesOf(services, object, index.libraryPackages);
+        const found = candidates.find(({ className }) =>
+          chain.includes(className),
         );
+        return found === undefined ? undefined : { entry: found.entry, chain };
       }
+
+      const misfits = (node: TSESTree.Node) => misfitsContext(services, node);
 
       /**
        * A call of a member that kept its name (see the file comment): its
@@ -327,28 +372,14 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
         ) {
           return;
         }
-        const candidates = index.kept.get(callee.property.name);
-        if (candidates === undefined) {
-          return;
-        }
-        const chain = libraryClassesOf(
-          services,
+        const found = findEntry(
+          index.kept.get(callee.property.name),
           callee.object,
-          index.libraryPackages,
-        );
-        const found = candidates.find(({ className }) =>
-          chain.includes(className),
         );
         if (found === undefined) {
           return;
         }
-        const { entry } = found;
-        const data = {
-          old: entry.old.text,
-          from: entry.versions.from,
-          to: entry.versions.to,
-          note: entry.note,
-        };
+        const data = dataOf(found.entry);
         const argument = node.arguments.find(
           (each) => each.type !== AST_NODE_TYPES.SpreadElement && misfits(each),
         );
@@ -356,11 +387,7 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
           context.report({ node: argument, messageId: "oldArgument", data });
           return;
         }
-        const missable = mayBeMissing(services.getTypeAtLocation(node));
-        const use = walkValueFlow<{
-          node: TSESTree.Node;
-          messageId: "oldResult" | "checkedResult";
-        }>(
+        const use = walkValueFlow<KeptUse>(
           {
             context,
             services,
@@ -372,11 +399,27 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
               ) {
                 return through;
               }
-              if (!missable && checksForMissing(parent, child)) {
-                return { node: parent, messageId: "checkedResult" };
+              // The type where the value is checked: a cast to a type that
+              // can be missing makes the check deliberate.
+              const check = missingCheckOf(parent, child);
+              if (
+                (check === "explicit" ||
+                  (check === "truthiness" && isObjectTyped(services, child))) &&
+                !mayBeMissing(services, child)
+              ) {
+                return { node: child, messageId: "checkedResult" };
               }
               return misfits(child)
                 ? { node: child, messageId: "oldResult" }
+                : undefined;
+            },
+            declared(declarator) {
+              // `const u: unit = cache.restoreUnit(...)`: the annotation is
+              // the old type.
+              return declarator.id.typeAnnotation !== undefined &&
+                declarator.init !== null &&
+                misfits(declarator.init)
+                ? { node: declarator.init, messageId: "oldResult" }
                 : undefined;
             },
           },
@@ -507,21 +550,14 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
           ) {
             return;
           }
-          const candidates = index.members.get(node.property.name);
-          if (candidates === undefined) {
-            return;
-          }
-          const chain = libraryClassesOf(
-            services,
+          const found = findEntry(
+            index.members.get(node.property.name),
             node.object,
-            index.libraryPackages,
-          );
-          const found = candidates.find(({ className }) =>
-            chain.includes(className),
           );
           if (found === undefined) {
             return;
           }
+          const { chain } = found;
           const { property } = node;
           const { parent } = node;
           const assigned =
