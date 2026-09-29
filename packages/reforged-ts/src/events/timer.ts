@@ -10,6 +10,7 @@ import { eventRows } from "./rows";
  * The payload's `timer` is always set.
  * @example A second listener on a Timer
  * {@includeCode ../../examples/harness/timer-events.ts}
+ * @namespace
  */
 export const TimerEvents = eventRows("TimerEvents", {
   /**

@@ -11,12 +11,22 @@ import { unitEventRows } from "./rows";
  */
 function readSpell(caster: Unit) {
   return {
+    /** The unit casting the spell. */
     caster,
+    /** The spell's ability id. */
     abilityId: GetSpellAbilityId(),
+    /** The target unit, undefined unless the spell targets a unit. */
     targetUnit: Unit.fromSpellTarget(),
+    /** The target item, undefined unless the spell targets an item. */
     targetItem: Item.fromSpellTarget(),
+    /**
+     * The target destructable, undefined unless the spell targets a
+     * destructable.
+     */
     targetDestructable: Destructable.fromSpellTarget(),
+    /** The x coordinate of the spell's target point. */
     targetX: GetSpellTargetX(),
+    /** The y coordinate of the spell's target point. */
     targetY: GetSpellTargetY(),
   };
 }
@@ -30,14 +40,21 @@ export const spellRows = unitEventRows({
    * @example Following a spell from channel to end
    * {@includeCode ../../../examples/harness/unit-events.ts#spell}
    * @native TriggerRegisterPlayerUnitEvent
-   * @native TriggerRegisterUnitEvent
    */
   spellChannel: {
     event: EVENT_PLAYER_UNIT_SPELL_CHANNEL,
-    twin: EVENT_UNIT_SPELL_CHANNEL,
     unit: "caster",
     read: readSpell,
   },
+  /**
+   * The event of `spellChannel` on one Unit: `unit` starts channeling a
+   * spell. `targetUnit`, `targetItem` and `targetDestructable` are undefined
+   * unless the spell targets one of that kind.
+   * @example Following a spell from channel to end
+   * {@includeCode ../../../examples/harness/unit-events.ts#spell}
+   * @native TriggerRegisterUnitEvent
+   */
+  spellChannelOf: { twinOf: "spellChannel", event: EVENT_UNIT_SPELL_CHANNEL },
   /**
    * A unit begins casting a spell, before the spell takes effect.
    * `targetUnit`, `targetItem` and `targetDestructable` are undefined
@@ -45,14 +62,21 @@ export const spellRows = unitEventRows({
    * @example Following a spell from channel to end
    * {@includeCode ../../../examples/harness/unit-events.ts#spell}
    * @native TriggerRegisterPlayerUnitEvent
-   * @native TriggerRegisterUnitEvent
    */
   spellCast: {
     event: EVENT_PLAYER_UNIT_SPELL_CAST,
-    twin: EVENT_UNIT_SPELL_CAST,
     unit: "caster",
     read: readSpell,
   },
+  /**
+   * The event of `spellCast` on one Unit: `unit` begins casting a spell.
+   * `targetUnit`, `targetItem` and `targetDestructable` are undefined
+   * unless the spell targets one of that kind.
+   * @example Following a spell from channel to end
+   * {@includeCode ../../../examples/harness/unit-events.ts#spell}
+   * @native TriggerRegisterUnitEvent
+   */
+  spellCastOf: { twinOf: "spellCast", event: EVENT_UNIT_SPELL_CAST },
   /**
    * A spell takes effect: its cost is paid and its cooldown starts.
    * `targetUnit`, `targetItem` and `targetDestructable` are undefined
@@ -60,14 +84,21 @@ export const spellRows = unitEventRows({
    * @example Following a spell from channel to end
    * {@includeCode ../../../examples/harness/unit-events.ts#spell}
    * @native TriggerRegisterPlayerUnitEvent
-   * @native TriggerRegisterUnitEvent
    */
   spellEffect: {
     event: EVENT_PLAYER_UNIT_SPELL_EFFECT,
-    twin: EVENT_UNIT_SPELL_EFFECT,
     unit: "caster",
     read: readSpell,
   },
+  /**
+   * The event of `spellEffect` on one Unit: a spell `unit` casts takes
+   * effect. `targetUnit`, `targetItem` and `targetDestructable` are
+   * undefined unless the spell targets one of that kind.
+   * @example Following a spell from channel to end
+   * {@includeCode ../../../examples/harness/unit-events.ts#spell}
+   * @native TriggerRegisterUnitEvent
+   */
+  spellEffectOf: { twinOf: "spellEffect", event: EVENT_UNIT_SPELL_EFFECT },
   /**
    * A unit finishes casting a spell.
    * `targetUnit`, `targetItem` and `targetDestructable` are undefined
@@ -75,14 +106,21 @@ export const spellRows = unitEventRows({
    * @example Following a spell from channel to end
    * {@includeCode ../../../examples/harness/unit-events.ts#spell}
    * @native TriggerRegisterPlayerUnitEvent
-   * @native TriggerRegisterUnitEvent
    */
   spellFinish: {
     event: EVENT_PLAYER_UNIT_SPELL_FINISH,
-    twin: EVENT_UNIT_SPELL_FINISH,
     unit: "caster",
     read: readSpell,
   },
+  /**
+   * The event of `spellFinish` on one Unit: `unit` finishes casting a spell.
+   * `targetUnit`, `targetItem` and `targetDestructable` are undefined
+   * unless the spell targets one of that kind.
+   * @example Following a spell from channel to end
+   * {@includeCode ../../../examples/harness/unit-events.ts#spell}
+   * @native TriggerRegisterUnitEvent
+   */
+  spellFinishOf: { twinOf: "spellFinish", event: EVENT_UNIT_SPELL_FINISH },
   /**
    * A unit stops casting a spell, finished or interrupted.
    * `targetUnit`, `targetItem` and `targetDestructable` are undefined
@@ -90,12 +128,20 @@ export const spellRows = unitEventRows({
    * @example Following a spell from channel to end
    * {@includeCode ../../../examples/harness/unit-events.ts#spell}
    * @native TriggerRegisterPlayerUnitEvent
-   * @native TriggerRegisterUnitEvent
    */
   spellEndcast: {
     event: EVENT_PLAYER_UNIT_SPELL_ENDCAST,
-    twin: EVENT_UNIT_SPELL_ENDCAST,
     unit: "caster",
     read: readSpell,
   },
+  /**
+   * The event of `spellEndcast` on one Unit: `unit` stops casting a spell,
+   * finished or interrupted. `targetUnit`, `targetItem` and
+   * `targetDestructable` are undefined unless the spell targets one of that
+   * kind.
+   * @example Following a spell from channel to end
+   * {@includeCode ../../../examples/harness/unit-events.ts#spell}
+   * @native TriggerRegisterUnitEvent
+   */
+  spellEndcastOf: { twinOf: "spellEndcast", event: EVENT_UNIT_SPELL_ENDCAST },
 });

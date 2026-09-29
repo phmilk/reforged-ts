@@ -27,6 +27,7 @@ function readTrackable(event: string): TrackablePayload {
  * {@link TrackablePayload}.
  * @example A chest to hover over and click
  * {@includeCode ../../examples/harness/trackable-events.ts}
+ * @namespace
  */
 export const TrackableEvents = eventRows("TrackableEvents", {
   /**

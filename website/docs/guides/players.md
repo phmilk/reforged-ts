@@ -86,7 +86,7 @@ Init.onGameStart(() => {
 
 ## Player events
 
-[`PlayerEvents`](../api/reforged-ts/variables/PlayerEvents.md) holds the player Event descriptors: `chat(player, text, exactMatch)`, `leave`, `keyDown(player, key, metaKey)` and `keyUp`, the three mouse events, `syncData(player, prefix)`, `allianceChanged(player, allianceType)`, `victory` and `defeat`. Each payload's `player` is the triggering player ([Events](events.md)):
+[`PlayerEvents`](../api/reforged-ts/reforged-ts/namespaces/PlayerEvents/index.md) holds the player Event descriptors: `chat(player, text, exactMatch)`, `leave`, `keyDown(player, key, metaKey)` and `keyUp`, the three mouse events, `syncData(player, prefix)`, `allianceChanged(player, allianceType)`, `victory` and `defeat`. Each payload's `player` is the triggering player ([Events](events.md)):
 
 ```ts
 import { Init, on, PlayerEvents, tsGlobals } from "reforged-ts";

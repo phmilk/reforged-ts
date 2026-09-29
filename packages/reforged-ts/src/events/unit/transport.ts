@@ -7,26 +7,35 @@ import { unitEventRows } from "./rows";
 /** The transport row of UnitEvents: `loaded`. */
 export const transportRows = unitEventRows({
   /**
-   * A unit is loaded into `transport`. `loadedOf(unit)` registers
-   * `EVENT_UNIT_LOADED` on `unit`, meant as the loaded unit; which unit the
-   * game fires it for (the loaded unit or the transport) is unverified
-   * in-game (the Patch documents only the player-unit event), so its payload
-   * reads the loaded unit and the transport from the Natives, as `loaded`
-   * does.
+   * A unit is loaded into `transport`.
    * @example Reporting units boarding a transport
    * {@includeCode ../../../examples/harness/unit-events.ts#transport}
    * @native TriggerRegisterPlayerUnitEvent
-   * @native TriggerRegisterUnitEvent
    */
   loaded: {
     event: EVENT_PLAYER_UNIT_LOADED,
-    twin: EVENT_UNIT_LOADED,
     unit: "unit",
     from: () => Unit.fromLoaded(),
-    twinReadsUnit: true,
     read: (unit, event) => ({
+      /** The loaded unit. */
       unit,
+      /** The transport it is loaded into. */
       transport: required(Unit.fromTransport(), "transport", event),
     }),
+  },
+  /**
+   * The event of `loaded` on one Unit: registers `EVENT_UNIT_LOADED` on
+   * `unit`, meant as the loaded unit. Which unit the game fires it for (the
+   * loaded unit or the transport) is unverified in-game (the Patch documents
+   * only the player-unit event), so its payload reads the loaded unit and
+   * the transport from the Natives, as `loaded` does.
+   * @example Reporting units boarding a transport
+   * {@includeCode ../../../examples/harness/unit-events.ts#transport}
+   * @native TriggerRegisterUnitEvent
+   */
+  loadedOf: {
+    twinOf: "loaded",
+    event: EVENT_UNIT_LOADED,
+    twinReadsUnit: true,
   },
 });

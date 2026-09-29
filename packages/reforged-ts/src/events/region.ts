@@ -24,6 +24,7 @@ export interface RegionCrossing {
  * payload, a {@link RegionCrossing}, always holds the unit and the region.
  * @example Heroes entering and leaving a camp
  * {@includeCode ../../examples/game/region-events.ts}
+ * @namespace
  */
 export const RegionEvents = eventRows("RegionEvents", {
   /**

@@ -7,25 +7,35 @@ import { unitEventRows } from "./rows";
 /** The summon row of UnitEvents: `summon`. */
 export const summonRows = unitEventRows({
   /**
-   * A unit summons `summoned`. `summonOf(unit)` registers `EVENT_UNIT_SUMMON`
-   * on `unit`, meant as the summoner; which unit the game fires it for is
-   * unverified in-game (the Patch documents only the player-unit event), so
-   * its payload reads the summoner and the summoned unit from the Natives, as
-   * `summon` does.
+   * A unit summons `summoned`.
    * @example Colouring summoned units
    * {@includeCode ../../../examples/harness/unit-events.ts#summon}
    * @native TriggerRegisterPlayerUnitEvent
-   * @native TriggerRegisterUnitEvent
    */
   summon: {
     event: EVENT_PLAYER_UNIT_SUMMON,
-    twin: EVENT_UNIT_SUMMON,
     unit: "summoner",
     from: () => Unit.fromSummoning(),
-    twinReadsUnit: true,
     read: (summoner, event) => ({
+      /** The summoning unit. */
       summoner,
+      /** The summoned unit. */
       summoned: required(Unit.fromSummoned(), "summoned", event),
     }),
+  },
+  /**
+   * The event of `summon` on one Unit: registers `EVENT_UNIT_SUMMON` on
+   * `unit`, meant as the summoner. Which unit the game fires it for is
+   * unverified in-game (the Patch documents only the player-unit event), so
+   * its payload reads the summoner and the summoned unit from the Natives,
+   * as `summon` does.
+   * @example Colouring summoned units
+   * {@includeCode ../../../examples/harness/unit-events.ts#summon}
+   * @native TriggerRegisterUnitEvent
+   */
+  summonOf: {
+    twinOf: "summon",
+    event: EVENT_UNIT_SUMMON,
+    twinReadsUnit: true,
   },
 });

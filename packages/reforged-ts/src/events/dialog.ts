@@ -31,6 +31,7 @@ function readClick(event: string): DialogClick {
  * button.
  * @example A vote dialog
  * {@includeCode ../../examples/harness/dialog-events.ts}
+ * @namespace
  */
 export const DialogEvents = eventRows("DialogEvents", {
   /**

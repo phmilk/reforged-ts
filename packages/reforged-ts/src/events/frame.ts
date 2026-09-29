@@ -28,6 +28,7 @@ export interface FramePayload {
  * one event of one Frame. The payload is a {@link FramePayload}.
  * @example A slider and an edit box
  * {@includeCode ../../examples/harness/frame-events.ts}
+ * @namespace
  */
 export const FrameEvents = eventRows("FrameEvents", {
   /**
