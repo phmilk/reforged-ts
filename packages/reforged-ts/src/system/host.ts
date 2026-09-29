@@ -233,6 +233,7 @@ class HostObject implements HostDetection {
  * Elects one player as the host, the same on every client, so a Map project
  * can give one player a role without desyncing.
  *
+ * @remarks
  * The heuristic: the host created the lobby, so the host's client has sat in
  * the lobby the longest. Each client measures its own lobby time with
  * `os.clock`, from `config` to the `gameStart` stage, and the election makes
