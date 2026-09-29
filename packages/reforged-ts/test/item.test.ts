@@ -242,6 +242,23 @@ describe("Item.color", () => {
   });
 });
 
+{
+  const item = Item.create(ration, 0, 0);
+  describeNatives(
+    "Item.invulnerable",
+    [false, true].map((value) =>
+      nativeCase({
+        native: "SetItemInvulnerable",
+        answer: () => undefined,
+        member: () => {
+          item.invulnerable = value;
+        },
+        line: `SetItemInvulnerable(${handleRef("item", item.handle)}, ${value ? "true" : "false"})`,
+      }),
+    ),
+  );
+}
+
 describe("Item.chooseRandomWithFilter", () => {
   it("passes the item type, the level and the converted enums, and returns the item type id", () => {
     const id = withNative(
