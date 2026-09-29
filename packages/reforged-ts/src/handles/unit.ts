@@ -800,17 +800,20 @@ export class Unit extends Widget {
   }
 
   /**
-   * Adds `skillPointDelta` to the hero's unspent skill points; a negative
-   * delta takes that many away.
+   * Sets the hero's unspent skill points, by the difference from the points
+   * it has; nothing for a unit that is not a hero.
    * @remarks
-   * - The hero gains no more points than it has left to spend: 9 at most
-   *   for three abilities of 3 levels each.
-   * - The Native reports false when the hero has no unspent point and the
-   *   delta is 0 or less, and true otherwise; the setter drops that result.
+   * The game never goes below 0, nor above the points the hero has left to
+   * spend on its abilities (9 at most for three abilities of 3 levels each),
+   * so the count read back can be lower than the one set.
+   * @native GetHeroSkillPoints
    * @native UnitModifySkillPoints
    */
-  public set skillPoints(skillPointDelta: number) {
-    UnitModifySkillPoints(this.handle, skillPointDelta);
+  public set skillPoints(skillPoints: number) {
+    UnitModifySkillPoints(
+      this.handle,
+      skillPoints - GetHeroSkillPoints(this.handle),
+    );
   }
 
   /**
@@ -1051,23 +1054,29 @@ export class Unit extends Widget {
   }
 
   /**
-   * Creates an item of a type in the unit's inventory.
+   * Creates an item of a type at the unit's position and puts it in the
+   * unit's inventory.
    * @remarks
-   * When the inventory is full or the unit cannot carry items, the game drops the
-   * new item at the unit's feet and returns nothing, so this throws although an
-   * item was created.
+   * When the inventory is full, the unit cannot carry items or it is dead,
+   * the item stays on the ground at the unit's position and is returned all
+   * the same; `hasItem` tells the two apart. `UnitAddItemById` is not used:
+   * it returns nothing for the item it drops.
    * @param itemId - The item type's rawcode, such as `FourCC("rde1")`.
-   * @returns The new item.
-   * @throws When the game returns no handle, for example an unknown rawcode or a
-   * full inventory: `reforged-ts: failed to create Item (<rawcode>)`, at the calling
+   * @returns The new item, in the inventory or at the unit's feet.
+   * @throws When the game creates no item, for example for an unknown
+   * rawcode: `reforged-ts: failed to create Item (<rawcode>)`, at the calling
    * line. In Dev mode, also before the globals Init stage and inside
    * `MapPlayer.runLocal`.
-   * @native UnitAddItemById
+   * @native CreateItem
+   * @native UnitAddItem
    */
   public addItemById(itemId: number): Item {
     return Item.expect(
-      UnitAddItemById(this.handle, itemId),
+      CreateItem(itemId, GetUnitX(this.handle), GetUnitY(this.handle)),
       rawcodeToString(itemId),
+      (item) => {
+        UnitAddItem(this.handle, item.handle);
+      },
     );
   }
 

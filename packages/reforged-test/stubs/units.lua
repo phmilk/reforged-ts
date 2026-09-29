@@ -35,6 +35,16 @@ function BlzCreateUnitWithSkin(id, unitid, x, y, face, skinId)
 end
 
 -- A new location per call, at the unit's coordinates.
+function GetUnitX(whichUnit)
+  __stub_record("GetUnitX", whichUnit)
+  return whichUnit.x
+end
+
+function GetUnitY(whichUnit)
+  __stub_record("GetUnitY", whichUnit)
+  return whichUnit.y
+end
+
 function GetUnitLoc(whichUnit)
   __stub_record("GetUnitLoc", whichUnit)
   local location = __stub_new_handle("location")
@@ -74,6 +84,22 @@ function UnitAddItemById(whichUnit, itemId)
   return item
 end
 
+-- UnitAddItem puts a given item in the next slot, as UnitAddItemById does,
+-- and returns true; an item already in the inventory stays where it is.
+function UnitAddItem(whichUnit, whichItem)
+  __stub_record("UnitAddItem", whichUnit, whichItem)
+  whichUnit.inventory = whichUnit.inventory or {}
+  for _, held in pairs(whichUnit.inventory) do
+    if held == whichItem then
+      return true
+    end
+  end
+  local slot = whichUnit.itemCount or 0
+  whichUnit.itemCount = slot + 1
+  whichUnit.inventory[slot] = whichItem
+  return true
+end
+
 function UnitItemInSlot(whichUnit, itemSlot)
   __stub_record("UnitItemInSlot", whichUnit, itemSlot)
   return (whichUnit.inventory or {})[itemSlot]
@@ -96,6 +122,19 @@ end
 function GetHeroLevel(whichHero)
   __stub_record("GetHeroLevel", whichHero)
   return whichHero.heroLevel or 0
+end
+
+-- A hero's unspent skill points: UnitModifySkillPoints adds its delta to
+-- them, 0 before any, and returns true; GetHeroSkillPoints reads them.
+function UnitModifySkillPoints(whichHero, skillPointDelta)
+  __stub_record("UnitModifySkillPoints", whichHero, skillPointDelta)
+  whichHero.skillPoints = (whichHero.skillPoints or 0) + skillPointDelta
+  return true
+end
+
+function GetHeroSkillPoints(whichHero)
+  __stub_record("GetHeroSkillPoints", whichHero)
+  return whichHero.skillPoints or 0
 end
 
 function RemoveUnit(whichUnit)

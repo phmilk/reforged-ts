@@ -10,5 +10,11 @@
     "reason": "It does nothing; Image#setRender calls SetImageRenderAlways, the working Native, instead.",
     "source": "jassdoc bug note on SetImageRender: \"Does not work. Use SetImageRenderAlways instead.\" (https://lep.duckdns.org/jassbot/doc/SetImageRender)",
     "date": "2026-09-26"
+  },
+  {
+    "native": "UnitAddItemById",
+    "reason": "It returns nothing for the item it creates when the inventory is full, the unit cannot carry items or it is dead, although the item exists on the ground; Unit#addItemById calls CreateItem and UnitAddItem instead, so it returns that item (#261).",
+    "source": "jassdoc on UnitAddItemById: \"If inventory is full or unit is dead then the item is dropped on the ground at unit position\", returning \"null if inventory is full, unit cannot carry items\" (https://lep.duckdns.org/jassbot/doc/UnitAddItemById)",
+    "date": "2026-09-29"
   }
 ]

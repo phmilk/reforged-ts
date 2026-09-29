@@ -394,19 +394,34 @@ describe("Unit rally lookups", () => {
 });
 
 describe("Unit inventory", () => {
-  it("addItemById wraps the new item UnitAddItemById returns", () => {
-    const unit = Unit.create(owner, footman, 0, 0);
+  it("addItemById creates the item at the unit's position and puts it in the inventory", () => {
+    const unit = Unit.create(owner, footman, 10, 20);
     const item: Item = unit.addItemById(ration);
-    expect(stubCalls()).toContainCall(
-      `UnitAddItemById(${handleRef("unit", unit.handle)}, ${String(ration)})`,
-    );
+    const unitRef = handleRef("unit", unit.handle);
+    const itemRef = handleRef("item", item.handle);
+    expect(stubCalls()).toContainCall(`CreateItem(${String(ration)}, 10, 20)`);
+    expect(stubCalls()).toContainCall(`UnitAddItem(${unitRef}, ${itemRef})`);
     expect(Item.fromHandle(item.handle)).toBe(item);
+    expect(unit.getItemInSlot(0)).toBe(item);
   });
 
-  it("addItemById throws naming the rawcode when UnitAddItemById returns nil", () => {
+  it("addItemById returns the item it created when the inventory has no room", () => {
     const unit = Unit.create(owner, footman, 0, 0);
+    const item = withNative(
+      "UnitAddItem",
+      () => false,
+      () => unit.addItemById(ration),
+    );
+    expect(Item.fromHandle(item.handle)).toBe(item);
+    expect(stubCalls()).toContainCall(`CreateItem(${String(ration)}, 0, 0)`);
+    expect(unit.getItemInSlot(0)).toBeUndefined();
+  });
+
+  it("addItemById throws naming the rawcode when CreateItem returns nil", () => {
+    const unit = Unit.create(owner, footman, 0, 0);
+    const before = stubCalls().length;
     const message = withNative(
-      "UnitAddItemById",
+      "CreateItem",
       () => undefined,
       () =>
         raisedIn(() => {
@@ -414,6 +429,11 @@ describe("Unit inventory", () => {
         }),
     );
     expect(message).toEqual("reforged-ts: failed to create Item (ratf)");
+    expect(
+      stubCalls()
+        .slice(before)
+        .filter((line) => line.startsWith("UnitAddItem(")),
+    ).toEqual([]);
   });
 
   it("getItemInSlot is the item in the slot, undefined for an empty one", () => {
@@ -432,6 +452,24 @@ describe("Unit inventory", () => {
     expect(unit.getItemInSlot(0)).toBeUndefined();
     expect(unit.removeItemFromSlot(0)).toBeUndefined();
   });
+});
+
+describe("Unit.skillPoints", () => {
+  const cases: [had: number, delta: number][] = [
+    [2, 3],
+    [7, -2],
+  ];
+  for (const [had, delta] of cases) {
+    it(`sets 5 points on a hero with ${String(had)} by a delta of ${String(delta)}`, () => {
+      const hero = Unit.create(owner, footman, 0, 0);
+      hero.skillPoints = had;
+      hero.skillPoints = 5;
+      expect(stubCalls()).toContainCall(
+        `UnitModifySkillPoints(${handleRef("unit", hero.handle)}, ${String(delta)})`,
+      );
+      expect(hero.skillPoints).toEqual(5);
+    });
+  }
 });
 
 describe("Unit equipment and bag", () => {
