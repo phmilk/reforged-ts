@@ -81,17 +81,34 @@ export type UnitEventDescriptors<T> = {
     : EventDescriptor<PayloadOf<T[K]>>;
 };
 
+/** The names of a group's rows: its entries without `twinOf`. */
+type RowNames<T> = {
+  [K in keyof T]: T[K] extends { readonly twinOf: unknown } ? never : K;
+}[keyof T] &
+  string;
+
+/**
+ * The row the twin keyed `K` may name: `name` when `K` is `nameOf` and the
+ * group has a row `name`, never otherwise, so that its `twinOf` fails.
+ */
+type TwinRow<T, K> = K extends `${infer R}Of`
+  ? R extends RowNames<T>
+    ? R
+    : never
+  : never;
+
 /**
  * A group of entries, as it is written: types each row's `read` and keeps
- * the payload it returns, and checks that each twin, keyed `nameOf`, names
- * the row `name` of the group.
+ * the payload it returns, and checks that each twin, an entry with `twinOf`,
+ * is keyed `nameOf` after the row `name` of the group it names. A row's key
+ * may be any name, one ending in `Of` included.
  * @param rows - The group's rows and twins, by member name.
  * @returns `rows`, unchanged.
  */
 export function unitEventRows<
   T extends {
-    readonly [K in keyof T]: K extends `${infer R}Of`
-      ? UnitEventTwin<R & keyof T>
+    readonly [K in keyof T]: T[K] extends { readonly twinOf: unknown }
+      ? UnitEventTwin<TwinRow<T, K>>
       : UnitEventRow<PayloadOf<T[K]>>;
   },
 >(rows: T): T {
