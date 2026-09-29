@@ -242,11 +242,14 @@ class HostObject implements HostDetection {
  * before answering is dropped at the leave event; the timeout settles the
  * election with the times received so far.
  *
- * It assumes that `config` runs once per client when the map loads in the
- * lobby and `main` at the game start, and that `os.clock` grows with wall
- * time while the client sits in the lobby. Neither assumption was measured by
- * the probe map (#9), so the heuristic is unverified: its verification in the
- * game is a human step, tracked in its own ticket.
+ * Verified in game on 3.0.0.24268 (#131):
+ * - `config` runs when the map loads in the lobby, and `os.clock` tracks
+ *   wall time while the client sits there.
+ * - The lobby time runs to the `gameStart` stage, so it also counts the
+ *   countdown and the loading screen. That part is common to every client
+ *   and cancels out in the comparison.
+ * - With two clients, the lobby creator was elected and both clients agreed,
+ *   also when the creator sat in slot 1 and the other player in slot 0.
  *
  * @example
  * {@includeCode ../../examples/harness/host-detect-host.ts}

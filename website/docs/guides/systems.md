@@ -80,7 +80,7 @@ Init.onGameStart(() => {
 
 The heuristic: the host created the lobby, so the host's client sat in the lobby the longest. Each client measures its own lobby time with `os.clock`, from the editor's `config` to the `gameStart` stage, and sends it through `SyncRequest`; the longest time wins, and a tie goes to the lowest slot. A player who leaves before answering is dropped, and the timeout (ten seconds by default) settles the election with the times received. Every call returns the same `Promise`, which rejects only when no time arrived; `Host.host` is the elected player once it resolved.
 
-The heuristic's assumptions (`config` runs once per client in the lobby, `os.clock` grows while the client waits there) have not been measured in the game yet: treat the result as the likely host, not a guarantee.
+The heuristic was verified in game on 3.0.0.24268 ([#131](https://github.com/phmilk/reforged-ts/issues/131)): `config` runs when the map loads in the lobby, and `os.clock` tracks wall time while the client sits there. The lobby time runs to the `gameStart` stage, so it also counts the countdown and the loading screen; that part is common to every client and cancels out in the comparison. With two clients, the lobby creator was elected and both clients agreed, also when the creator sat in slot 1 and the other player in slot 0.
 
 ## File
 
