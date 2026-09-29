@@ -116,16 +116,13 @@ export class Region extends Handle<region> {
   }
 
   /**
-   * Asks the game whether the cell holding a Point is in the region, and
-   * discards the answer.
-   * @remarks
-   * The method does not return the Native's result: it returns nothing. Use
-   * `containsCoords(whichPoint.x, whichPoint.y)` to get the answer.
+   * Tests whether the cell holding a Point is in the region.
    * @param whichPoint - The point to test.
+   * @returns True when the region holds the cell.
    * @native IsLocationInRegion
    */
   public containsPoint(whichPoint: Point) {
-    IsLocationInRegion(this.handle, whichPoint.handle);
+    return IsLocationInRegion(this.handle, whichPoint.handle);
   }
 
   /**

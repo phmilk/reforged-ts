@@ -7,6 +7,7 @@ import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Leaderboard, MapPlayer } from "../src/index";
 import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
+import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
@@ -64,3 +65,28 @@ describe("Leaderboard.fromPlayer", () => {
     expect(Leaderboard.fromHandle(handle)).toBe(board);
   });
 });
+
+// hasPlayerItem returns LeaderboardHasPlayerItem's answer (#259).
+{
+  const board = Leaderboard.create();
+  const boardRef = handleRef("leaderboard", board.handle);
+  const listed = defined(MapPlayer.fromIndex(0), "player 0");
+  const unlisted = defined(MapPlayer.fromIndex(1), "player 1");
+
+  describeNatives("Leaderboard.hasPlayerItem", [
+    nativeCase({
+      native: "LeaderboardHasPlayerItem",
+      answer: () => true,
+      member: () => board.hasPlayerItem(listed),
+      line: `LeaderboardHasPlayerItem(${boardRef}, ${handleRef("player", listed.handle)})`,
+      returns: true,
+    }),
+    nativeCase({
+      native: "LeaderboardHasPlayerItem",
+      answer: () => false,
+      member: () => board.hasPlayerItem(unlisted),
+      line: `LeaderboardHasPlayerItem(${boardRef}, ${handleRef("player", unlisted.handle)})`,
+      returns: false,
+    }),
+  ]);
+}
