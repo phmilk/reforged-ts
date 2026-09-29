@@ -1,5 +1,17 @@
 # reforged-ts
 
+## 1.0.0-alpha.5
+
+### Minor Changes
+
+- [#275](https://github.com/phmilk/reforged-ts/pull/275) [`c48d56a`](https://github.com/phmilk/reforged-ts/commit/c48d56a54a92c5bb4d06be7cecec9416f4adc928) Thanks [@wyller](https://github.com/wyller)! - The Trigger remove members take what the add members were given: `trigger.removeAction(fn)` removes the actions `trigger.addAction(fn)` added, and `trigger.removeCondition(fnOrBoolexpr)` the conditions `addCondition` added, destroying the `Condition` the Trigger made for a function (never a `boolexpr` you passed). `removeActions()`, `removeConditions()` and `destroy()` also destroy those `Condition`s, which used to leak. Every function condition now gets a `Condition` of its own, around a closure the Trigger makes with Dev mode on or off, so two adds of one function never share a handle, and a `Condition(fn)` of yours is never destroyed. A condition removed from inside its own evaluation has its `Condition` destroyed when that evaluation returns. A raw `triggeraction` or `triggercondition` still goes straight to the Native, and every remove member now returns the Trigger. The `BoolexprInput` type the condition members name is exported. The test harness stubs `DestroyCondition`; its `Condition` and `Filter` return the same handle for the same function until it is destroyed, as JASS caches one per code; and a stub handle's `tostring` now begins with its kind and a colon, as in the game.
+
+### Patch Changes
+
+- [#273](https://github.com/phmilk/reforged-ts/pull/273) [`3b7cd90`](https://github.com/phmilk/reforged-ts/commit/3b7cd909d86b4f1e3481efb6fb9307c76be7b43d) Thanks [@wyller](https://github.com/wyller)! - Document the events namespaces member by member. `UnitEvents`, `PlayerEvents`, `DialogEvents`, `FrameEvents`, `RegionEvents`, `TimerEvents` and `TrackableEvents` show on the docs site as namespaces, each member with its summary and `@native` tags, instead of a variable of a computed type. Each `UnitEvents` twin (`attackedOf(unit)`, `deathOf(unit)` and the others) now has a doc comment of its own, with its `@native TriggerRegisterUnitEvent`, in the editor hover as on the site, and the fields of every `UnitEvents` payload are documented. The members, their registrations and their payloads are unchanged.
+- Updated dependencies [[`c48d56a`](https://github.com/phmilk/reforged-ts/commit/c48d56a54a92c5bb4d06be7cecec9416f4adc928)]:
+  - reforged-test@1.0.0-alpha.3
+
 ## 1.0.0-alpha.4
 
 ### Major Changes
