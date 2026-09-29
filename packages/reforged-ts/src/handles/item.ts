@@ -7,7 +7,7 @@ import {
   ItemTag,
   itemTagOf,
 } from "./equipment";
-import { fieldTypeOf } from "./fields";
+import { handleTypeOf } from "./handle-type";
 import { MapPlayer } from "./player";
 import { Point } from "./point";
 import { Widget } from "./widget";
@@ -485,7 +485,7 @@ export class Item extends Widget {
     field:
       itembooleanfield | itemintegerfield | itemrealfield | itemstringfield,
   ) {
-    const fieldType = fieldTypeOf(field);
+    const fieldType = handleTypeOf(field);
 
     switch (fieldType) {
       case "itembooleanfield":
@@ -591,7 +591,7 @@ export class Item extends Widget {
       itembooleanfield | itemintegerfield | itemrealfield | itemstringfield,
     value: boolean | number | string,
   ) {
-    const fieldType = fieldTypeOf(field);
+    const fieldType = handleTypeOf(field);
 
     if (fieldType === "itembooleanfield" && typeof value === "boolean") {
       return BlzSetItemBooleanField(

@@ -7,7 +7,7 @@ import { rawcodeToString } from "../utils/rawcode";
 import { Destructable } from "./destructable";
 import type { EquipmentType, LoadoutSlot } from "./equipment";
 import { Force } from "./force";
-import { fieldTypeOf } from "./fields";
+import { handleTypeOf } from "./handle-type";
 import { expectUnwrapped } from "./handle";
 import type { Group } from "./group";
 import { Item } from "./item";
@@ -1642,7 +1642,7 @@ export class Unit extends Widget {
     field:
       unitbooleanfield | unitintegerfield | unitrealfield | unitstringfield,
   ) {
-    const fieldType = fieldTypeOf(field);
+    const fieldType = handleTypeOf(field);
 
     switch (fieldType) {
       case "unitbooleanfield": {
@@ -2851,7 +2851,7 @@ export class Unit extends Widget {
       unitbooleanfield | unitintegerfield | unitrealfield | unitstringfield,
     value: boolean | number | string,
   ) {
-    const fieldType = fieldTypeOf(field);
+    const fieldType = handleTypeOf(field);
 
     if (fieldType === "unitbooleanfield" && typeof value === "boolean") {
       return BlzSetUnitBooleanField(
@@ -3346,7 +3346,7 @@ export class Unit extends Widget {
       | unitweaponstringfield,
     index: number,
   ) {
-    const fieldType = fieldTypeOf(field);
+    const fieldType = handleTypeOf(field);
 
     switch (fieldType) {
       case "unitweaponbooleanfield":
@@ -3549,7 +3549,7 @@ export class Unit extends Widget {
     index: number,
     value: boolean | number | string,
   ) {
-    const fieldType = fieldTypeOf(field);
+    const fieldType = handleTypeOf(field);
 
     if (fieldType === "unitweaponbooleanfield" && typeof value === "boolean") {
       return BlzSetUnitWeaponBooleanField(

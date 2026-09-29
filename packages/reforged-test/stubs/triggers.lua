@@ -258,21 +258,41 @@ for i = 1, #responses do
   __stub_response(responses[i])
 end
 
--- Condition and Filter record their call and return a new boolexpr handle
--- (of kind conditionfunc or filterfunc) that remembers its function, so the
--- conditions of a trigger can run it.
+-- Condition and Filter record their call and return a boolexpr handle (of
+-- kind conditionfunc or filterfunc) that remembers its function, so the
+-- conditions of a trigger can run it. As JASS caches one boolexpr per code,
+-- the same function gets the same handle back, until it is destroyed: code
+-- that destroys what it made must hand each call a function of its own.
+local function cachedBoolexpr(kind)
+  local cache = setmetatable({}, { __mode = "k" })
+  return function(func)
+    local expr = cache[func]
+    if expr == nil or expr.destroyed then
+      expr = __stub_new_handle(kind)
+      expr.func = func
+      cache[func] = expr
+    end
+    return expr
+  end
+end
+
+local conditionOf = cachedBoolexpr("conditionfunc")
+local filterOf = cachedBoolexpr("filterfunc")
+
 function Condition(func)
   __stub_record("Condition", func)
-  local expr = __stub_new_handle("conditionfunc")
-  expr.func = func
-  return expr
+  return conditionOf(func)
 end
 
 function Filter(func)
   __stub_record("Filter", func)
-  local expr = __stub_new_handle("filterfunc")
-  expr.func = func
-  return expr
+  return filterOf(func)
+end
+
+-- DestroyCondition records its call and marks the conditionfunc destroyed.
+function DestroyCondition(c)
+  __stub_record("DestroyCondition", c)
+  c.destroyed = true
 end
 
 -- The damage exception: a registration for a damage event also keeps its

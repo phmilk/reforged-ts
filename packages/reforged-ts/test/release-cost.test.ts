@@ -5,15 +5,17 @@
 // off:
 //
 // - every function the library hands a Native is the very function the Map
-//   project passed, at every wrapping site: `TriggerAddAction`, `Condition`,
-//   `Filter` (every registration and enumeration member taking a filter),
-//   `ForGroup`, `ForForce` and the actions of the `Rectangle` enumerations.
-//   The one exception is `TimerStart`: `Timer.start`, `Timer.after` and
+//   project passed, at every wrapping site: `TriggerAddAction`, `Filter`
+//   (every registration and enumeration member taking a filter), `ForGroup`,
+//   `ForForce` and the actions of the `Rectangle` enumerations. One
+//   exception is `TimerStart`: `Timer.start`, `Timer.after` and
 //   `Timer.every` hand their handler its Timer (#104), so the Native gets a
 //   small closure around the handler in both modes; for them the test
 //   asserts the release behaviour instead: no pcall, the error propagates
 //   and nothing is reported. `on()` handlers get the same assertion, their
-//   payload adapter being the library's own function;
+//   payload adapter being the library's own function, and so do the
+//   conditions of `Trigger.addCondition`, whose `Condition` gets a closure
+//   of its own in both modes so that each add owns a distinct handle (#262);
 // - `MapPlayer.runLocal` is the bare local-player comparison: one
 //   `GetLocalPlayer` call, `fn` called directly, no Guard inside;
 // - `destroy()` is its Native plus the release step: no other Native call,
@@ -124,21 +126,6 @@ const sites: readonly Site[] = [
       Trigger.create()
         .registerUnitEvent(target, EVENT_UNIT_DAMAGED)
         .addAction(fn),
-  },
-  {
-    member: "Trigger.addCondition",
-    native: "TriggerAddCondition",
-    receiver: { name: "Condition", index: 0 },
-    call: (fn) => Trigger.create().addCondition(fn),
-  },
-  {
-    member: "Trigger.addCondition (damage trigger)",
-    native: "TriggerAddCondition",
-    receiver: { name: "Condition", index: 0 },
-    call: (fn) =>
-      Trigger.create()
-        .registerUnitEvent(target, EVENT_UNIT_DAMAGED)
-        .addCondition(fn),
   },
   {
     member: "Trigger.registerEnterRegion",
@@ -372,6 +359,25 @@ describe("callbacks with Dev mode off", () => {
         expect(() => {
           __stub_fire_timer(started);
         }).toThrow(`Timer.${member} handler failed`);
+      });
+      expect(reported).toEqual([]);
+    });
+  }
+
+  for (const damage of [false, true]) {
+    it(`Trigger.addCondition${damage ? " (damage trigger)" : ""} runs its condition unprotected: the error propagates and nothing is reported`, () => {
+      Reforged.configure({ devMode: false });
+      const trigger = Trigger.create();
+      if (damage) {
+        trigger.registerUnitEvent(target, EVENT_UNIT_DAMAGED);
+      }
+      trigger.addCondition((): boolean => {
+        error("Trigger.addCondition condition failed", 0);
+      });
+      const reported = reportedDuring(() => {
+        expect(() => {
+          __stub_fire_trigger(trigger.handle);
+        }).toThrow("Trigger.addCondition condition failed");
       });
       expect(reported).toEqual([]);
     });
