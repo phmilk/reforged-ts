@@ -95,13 +95,10 @@ export class Item extends Widget {
 
   /**
    * Whether the item cannot be attacked or destroyed.
-   * @remarks
-   * The setter passes `true` to the Native whatever the value: it makes an
-   * item invulnerable, but cannot make one vulnerable again.
    * @native SetItemInvulnerable
    */
   public set invulnerable(flag: boolean) {
-    SetItemInvulnerable(this.handle, true);
+    SetItemInvulnerable(this.handle, flag);
   }
 
   /**

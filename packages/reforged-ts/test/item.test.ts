@@ -242,6 +242,36 @@ describe("Item.color", () => {
   });
 });
 
+describe("Item.invulnerable", () => {
+  it("passes false to SetItemInvulnerable when set to false", () => {
+    const item = Item.create(ration, 0, 0);
+    withNative(
+      "SetItemInvulnerable",
+      () => undefined,
+      () => {
+        item.invulnerable = false;
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `SetItemInvulnerable(${handleRef("item", item.handle)}, false)`,
+    );
+  });
+
+  it("passes true to SetItemInvulnerable when set to true", () => {
+    const item = Item.create(ration, 0, 0);
+    withNative(
+      "SetItemInvulnerable",
+      () => undefined,
+      () => {
+        item.invulnerable = true;
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `SetItemInvulnerable(${handleRef("item", item.handle)}, true)`,
+    );
+  });
+});
+
 describe("Item.chooseRandomWithFilter", () => {
   it("passes the item type, the level and the converted enums, and returns the item type id", () => {
     const id = withNative(
