@@ -12,6 +12,7 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
+    "noUnusedParameters": true,
     "sourceMap": true,
     "newLine": "lf"
   },

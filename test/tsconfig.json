@@ -12,6 +12,7 @@
     "types": ["node"],
     "noEmit": true,
     "strict": true,
+    "noUnusedParameters": true,
     "noUncheckedIndexedAccess": true,
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,
