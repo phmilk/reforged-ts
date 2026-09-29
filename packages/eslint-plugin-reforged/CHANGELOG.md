@@ -1,5 +1,13 @@
 # eslint-plugin-reforged
 
+## 1.0.0-alpha.2
+
+### Patch Changes
+
+- [#317](https://github.com/phmilk/reforged-ts/pull/317) [`bc110a5`](https://github.com/phmilk/reforged-ts/commit/bc110a524f604182d73a72ede454ba96dfef3bce) Thanks [@wyller](https://github.com/wyller)! - `Item.player` is renamed `Item.getOwner()`, named like `Item.setOwner` and `Unit.getOwner`; it returns the owner as a `MapPlayer`, or `undefined`, as `Item.player` did. The rename map lists `Item.player` as an accessor whose getter is `Item.getOwner`, so `no-legacy-w3ts-names` suggests the call `item.getOwner()` for a read of `item.player`. `Camera.setCameraOrientController` is renamed `Camera.setOrientController`, like its twin `Camera.setTargetController`; it takes the same arguments. The lint plugin's `local-safe.json` lists `Camera.setOrientController` in place of the old name, so `no-game-state-in-local-branch` still lets it through inside a local branch.
+- Updated dependencies [[`5678711`](https://github.com/phmilk/reforged-ts/commit/56787119433ac5778cdb871ce1bdcbd99f0af05c), [`bc110a5`](https://github.com/phmilk/reforged-ts/commit/bc110a524f604182d73a72ede454ba96dfef3bce)]:
+  - reforged-ts@1.0.0-alpha.10
+
 ## 1.0.0-alpha.1
 
 ### Patch Changes
