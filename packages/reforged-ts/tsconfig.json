@@ -23,6 +23,9 @@
     "noImplicitThis": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
+    // A setter that never reads its value fails the build (#256):
+    // @typescript-eslint/no-unused-vars skips setter parameters.
+    "noUnusedParameters": true,
     "newLine": "lf"
   },
   "include": ["src"],

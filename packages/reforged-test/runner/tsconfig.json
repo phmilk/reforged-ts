@@ -15,6 +15,7 @@
     "strict": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
+    "noUnusedParameters": true,
     "noImplicitThis": true,
     "forceConsistentCasingInFileNames": true,
     "newLine": "lf"

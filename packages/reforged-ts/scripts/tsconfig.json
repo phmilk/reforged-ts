@@ -20,6 +20,7 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
+    "noUnusedParameters": true,
     "newLine": "lf"
   },
   "include": ["."]

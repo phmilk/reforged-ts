@@ -11,6 +11,7 @@
     "ignoreDeprecations": "6.0",
     "types": ["node", "@docusaurus/module-type-aliases"],
     "strict": true,
+    "noUnusedParameters": true,
     "verbatimModuleSyntax": true,
     // reference.ts and config.ts import the Typings routes from
     // typedoc/typings.mts, which TypeDoc imports from source too.

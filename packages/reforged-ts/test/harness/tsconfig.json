@@ -14,6 +14,7 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
+    "noUnusedParameters": true,
     "newLine": "lf",
     // vitest's declarations pull in tinybench's, which name DOM types a Node
     // program does not have.

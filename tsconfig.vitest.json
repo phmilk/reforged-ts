@@ -12,6 +12,7 @@
     "types": [],
     "noEmit": true,
     "strict": true,
+    "noUnusedParameters": true,
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,
     "newLine": "lf",

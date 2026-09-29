@@ -19,6 +19,7 @@
       "reforged-types/3.0.0/common.ai"
     ],
     "strict": true,
+    "noUnusedParameters": true,
     "noEmit": true,
     "paths": { "reforged-ts": ["../src/index.ts"] }
   },
