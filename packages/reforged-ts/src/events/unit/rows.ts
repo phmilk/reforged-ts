@@ -84,14 +84,15 @@ export type UnitEventDescriptors<T> = {
 /**
  * A group of entries, as it is written: types each row's `read` and keeps
  * the payload it returns, and checks that each twin, keyed `nameOf`, names
- * the row `name` of the group.
+ * the row `name` of the group. An entry is a twin by its `twinOf` field, not
+ * by its key, so a row may have a name ending in `Of`.
  * @param rows - The group's rows and twins, by member name.
  * @returns `rows`, unchanged.
  */
 export function unitEventRows<
   T extends {
-    readonly [K in keyof T]: K extends `${infer R}Of`
-      ? UnitEventTwin<R & keyof T>
+    readonly [K in keyof T]: T[K] extends { readonly twinOf: unknown }
+      ? UnitEventTwin<K extends `${infer R}Of` ? R & keyof T : never>
       : UnitEventRow<PayloadOf<T[K]>>;
   },
 >(rows: T): T {
