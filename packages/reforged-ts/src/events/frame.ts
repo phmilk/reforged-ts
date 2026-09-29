@@ -26,6 +26,7 @@ export interface FramePayload {
 /**
  * The frame Event descriptors: `FrameEvents.of(frame, frameEventType)` for
  * one event of one Frame. The payload is a {@link FramePayload}.
+ * @namespace
  */
 export const FrameEvents = eventRows("FrameEvents", {
   /**

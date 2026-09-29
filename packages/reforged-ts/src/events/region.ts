@@ -22,6 +22,7 @@ export interface RegionCrossing {
  * `RegionEvents.leave(region, filter?)` for one Region. The filter, a
  * `boolexpr` or a plain function, is handed to the registration. The
  * payload, a {@link RegionCrossing}, always holds the unit and the region.
+ * @namespace
  */
 export const RegionEvents = eventRows("RegionEvents", {
   /**

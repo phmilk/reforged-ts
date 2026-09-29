@@ -8,6 +8,7 @@ import { eventRows } from "./rows";
 /**
  * The timer Event descriptors: `TimerEvents.expired(timer)` for one Timer.
  * The payload's `timer` is always set.
+ * @namespace
  */
 export const TimerEvents = eventRows("TimerEvents", {
   /**

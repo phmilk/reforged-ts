@@ -74,7 +74,7 @@ export function startCooldown(onReady: () => void): () => void {
 
 `elapsed`, `remaining` and `timeout` read where a Timer stands (`remaining` can be wrong after a pause and resume, a game bug its doc comment links). `Timer.fromExpired()` is the lookup of the expiring Timer, kept for parity with the Natives: a handler already receives its Timer.
 
-A Timer counts as an event too: [`TimerEvents.expired(timer)`](../api/reforged-ts/variables/TimerEvents.md) subscribes a handler to a Timer's expiry through [`on()`](events.md), next to its own handler. To show a Timer on screen, create a [`TimerDialog`](../api/reforged-ts/classes/TimerDialog.md) for it.
+A Timer counts as an event too: [`TimerEvents.expired(timer)`](../api/reforged-ts/reforged-ts/namespaces/TimerEvents/index.md) subscribes a handler to a Timer's expiry through [`on()`](events.md), next to its own handler. To show a Timer on screen, create a [`TimerDialog`](../api/reforged-ts/classes/TimerDialog.md) for it.
 
 ## Waiting in code
 

@@ -29,6 +29,7 @@ function readClick(event: string): DialogClick {
  * of one Dialog, `DialogEvents.buttonClick(button)` for one DialogButton.
  * Their payload, a {@link DialogClick}, always holds the dialog and the
  * button.
+ * @namespace
  */
 export const DialogEvents = eventRows("DialogEvents", {
   /**

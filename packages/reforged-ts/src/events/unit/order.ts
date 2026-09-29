@@ -58,41 +58,58 @@ export const orderRows = unitEventRows({
    * A unit is given an order with no target.
    * The four target fields are undefined.
    * @native TriggerRegisterPlayerUnitEvent
-   * @native TriggerRegisterUnitEvent
    */
   orderIssued: {
     event: EVENT_PLAYER_UNIT_ISSUED_ORDER,
-    twin: EVENT_UNIT_ISSUED_ORDER,
     unit: "unit",
     from: () => Unit.fromOrdered(),
     read: (unit) => readOrder(unit, {}),
   },
   /**
+   * The event of `orderIssued` on one Unit: `unit` is given an order with no
+   * target. The four target fields are undefined.
+   * @native TriggerRegisterUnitEvent
+   */
+  orderIssuedOf: { twinOf: "orderIssued", event: EVENT_UNIT_ISSUED_ORDER },
+  /**
    * A unit is ordered to a point; `targetX` and `targetY` are that point.
    * `targetUnit` and `targetWidget` are undefined.
    * @native TriggerRegisterPlayerUnitEvent
-   * @native TriggerRegisterUnitEvent
    */
   orderPoint: {
     event: EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER,
-    twin: EVENT_UNIT_ISSUED_POINT_ORDER,
     unit: "unit",
     from: () => Unit.fromOrdered(),
     read: (unit) =>
       readOrder(unit, { targetX: GetOrderPointX(), targetY: GetOrderPointY() }),
   },
   /**
+   * The event of `orderPoint` on one Unit: `unit` is ordered to a point;
+   * `targetX` and `targetY` are that point. `targetUnit` and `targetWidget`
+   * are undefined.
+   * @native TriggerRegisterUnitEvent
+   */
+  orderPointOf: { twinOf: "orderPoint", event: EVENT_UNIT_ISSUED_POINT_ORDER },
+  /**
    * A unit is ordered to target a widget; `targetUnit` is set when the target
    * is a unit. `targetX` and `targetY` are undefined.
    * @native TriggerRegisterPlayerUnitEvent
-   * @native TriggerRegisterUnitEvent
    */
   orderTarget: {
     event: EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER,
-    twin: EVENT_UNIT_ISSUED_TARGET_ORDER,
     unit: "unit",
     from: () => Unit.fromOrdered(),
     read: readTarget,
+  },
+  /**
+   * The event of `orderTarget` on one Unit: `unit` is ordered to target a
+   * widget; `targetUnit` is set when the target is a unit. `targetX` and
+   * `targetY` are undefined.
+   * @native TriggerRegisterUnitEvent
+   */
+  orderTargetOf: {
+    twinOf: "orderTarget",
+    event: EVENT_UNIT_ISSUED_TARGET_ORDER,
   },
   /**
    * The event of `orderTarget` under its compatibility name: the Patch gives

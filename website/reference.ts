@@ -86,12 +86,12 @@ export const LIBRARY_REFERENCE: Reference = {
   // publish machinery, and TypeDoc would document what it expands to. One
   // name per line.
   intentionallyNotExported: [
-    // events/unit: the groups of rows `UnitEvents` is built from.
-    "Groups",
-    // events/unit: the groups' rows as one table.
-    "TableOf",
     // events/unit: the payload type of a row.
     "PayloadOf",
+    // events/unit: a twin's entry, which `UnitEventDescriptors` maps.
+    "UnitEventTwin",
+    // events/unit: the payload of the order members.
+    "OrderPayload",
     // utils/color: the numbers below a bound, behind `NumberRange`.
     "Enumerate",
   ],
