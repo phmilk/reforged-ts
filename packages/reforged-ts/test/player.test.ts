@@ -138,6 +138,22 @@ describe("a Map project subclass of MapPlayer", () => {
   });
 });
 
+describe("MapPlayer.getTaxRate", () => {
+  it("passes the other player's Handle to GetPlayerTaxRate", () => {
+    const player = defined(MapPlayer.fromIndex(2), "MapPlayer.fromIndex(2)");
+    const other = defined(MapPlayer.fromIndex(4), "MapPlayer.fromIndex(4)");
+    const rate = withNative(
+      "GetPlayerTaxRate",
+      () => 25,
+      () => player.getTaxRate(other, PLAYER_STATE_RESOURCE_GOLD),
+    );
+    expect(rate).toBe(25);
+    expect(stubCalls()).toContainCall(
+      `GetPlayerTaxRate(${handleRef("player", player.handle)}, ${handleRef("player", other.handle)}, PLAYER_STATE_RESOURCE_GOLD)`,
+    );
+  });
+});
+
 describe("MapPlayer.setRaceSkin", () => {
   it("passes the race preference to SetPlayerRaceSkin", () => {
     const player = defined(MapPlayer.fromIndex(2), "MapPlayer.fromIndex(2)");

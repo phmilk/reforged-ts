@@ -849,5 +849,27 @@
     },
     "oneToOne": true,
     "note": "The attack cooldown has one setter instead of two names for one Native; it takes the same arguments."
+  },
+  {
+    "old": "Item.player",
+    "new": "Item.player",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: `item.player` returns the `MapPlayer` Wrapper, or `undefined`, instead of the raw `player` handle, so `MapPlayer.fromHandle(item.player)` becomes `item.player`."
+  },
+  {
+    "old": "MapPlayer.getTaxRate",
+    "new": "MapPlayer.getTaxRate",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: the first argument is the `MapPlayer` Wrapper instead of the raw `player` handle, as `MapPlayer.setTaxRate` takes it, so the argument `other.handle` becomes `other`."
   }
 ]
