@@ -775,14 +775,14 @@
   },
   {
     "old": "Camera.setCameraOrientController",
-    "new": "Camera.setCameraOrientController",
+    "new": "Camera.setOrientController",
     "kind": "member",
     "versions": {
       "from": "w3ts@3",
       "to": "reforged-ts@1"
     },
     "oneToOne": false,
-    "note": "Not a rename: the first argument is the `Unit` Wrapper instead of the raw `unit` handle, so the argument `unit.handle` becomes `unit`."
+    "note": "The member drops the redundant `Camera` prefix, like its twin `Camera.setTargetController`, and its first argument is the `Unit` Wrapper instead of the raw `unit` handle, so `Camera.setCameraOrientController(unit.handle, x, y)` becomes `Camera.setOrientController(unit, x, y)`."
   },
   {
     "old": "Camera.setTargetController",
@@ -852,14 +852,14 @@
   },
   {
     "old": "Item.player",
-    "new": "Item.player",
+    "new": "Item.getOwner",
     "kind": "member",
     "versions": {
       "from": "w3ts@3",
       "to": "reforged-ts@1"
     },
     "oneToOne": false,
-    "note": "Not a rename: `item.player` returns the `MapPlayer` Wrapper, or `undefined`, instead of the raw `player` handle, so `MapPlayer.fromHandle(item.player)` becomes `item.player`."
+    "note": "The accessor becomes `getOwner()`, named like its setter `Item.setOwner` and like `Unit.getOwner`, and returns the `MapPlayer` Wrapper, or `undefined`, instead of the raw `player` handle, so `MapPlayer.fromHandle(item.player)` becomes `item.getOwner()`."
   },
   {
     "old": "MapPlayer.getTaxRate",

@@ -419,14 +419,14 @@ export class Camera {
   /**
    * Locks the game camera's orientation to a unit, at an offset from it.
    * @remarks
-   * In w3ts 3.x it took the raw `unit` Handle, `unit.handle`; it now takes
-   * the `Unit`.
+   * In w3ts 3.x it was named `setCameraOrientController`, and took the raw
+   * `unit` Handle, `unit.handle`; it now takes the `Unit`.
    * @param whichUnit - The unit.
    * @param xOffset - The offset along the x-axis, in world units.
    * @param yOffset - The offset along the y-axis, in world units.
    * @native SetCameraOrientController
    */
-  public static setCameraOrientController(
+  public static setOrientController(
     whichUnit: Unit,
     xOffset: number,
     yOffset: number,

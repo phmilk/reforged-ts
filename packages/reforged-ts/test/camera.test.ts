@@ -287,12 +287,12 @@ describe("Camera unit controllers", () => {
   const unit = Unit.create(owner, FourCC("hfoo"), 0, 0);
   const unitRef = handleRef("unit", unit.handle);
 
-  it("setCameraOrientController passes the Unit's Handle to SetCameraOrientController", () => {
+  it("setOrientController passes the Unit's Handle to SetCameraOrientController", () => {
     withNative(
       "SetCameraOrientController",
       () => undefined,
       () => {
-        Camera.setCameraOrientController(unit, 16, 32);
+        Camera.setOrientController(unit, 16, 32);
       },
     );
     expect(stubCalls()).toContainCall(
