@@ -1,5 +1,13 @@
 # reforged-ts
 
+## 1.0.0-alpha.7
+
+### Patch Changes
+
+- [#294](https://github.com/phmilk/reforged-ts/pull/294) [`ad09176`](https://github.com/phmilk/reforged-ts/commit/ad0917614b1dfe9ed26cf6a95689c91075f02131) Thanks [@phmilk](https://github.com/phmilk)! - `Host`'s doc comment and the Systems guide no longer call the host election unverified: it was checked in game on 3.0.0.24268 ([#131](https://github.com/phmilk/reforged-ts/issues/131)). A documentation change, with no behavior change in the game. `config` runs when the map loads in the lobby, `os.clock` tracks wall time there, and the countdown and loading screen that every client shares cancel out. With two clients, both elected the lobby creator, also when the creator sat in slot 1 and the other player in slot 0.
+
+- [#290](https://github.com/phmilk/reforged-ts/pull/290) [`50133e7`](https://github.com/phmilk/reforged-ts/commit/50133e7a38c3ded5002368fadfe1b342b3e777ea) Thanks [@wyller](https://github.com/wyller)! - Check the UnitEvents table by the shape of its entries: a row may have a name ending in `Of`, a twin names exactly one row and is keyed after it, and `UnitEvents` raises an error when two groups give the same name.
+
 ## 1.0.0-alpha.6
 
 ### Patch Changes
