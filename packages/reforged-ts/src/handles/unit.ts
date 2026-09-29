@@ -1432,18 +1432,6 @@ export class Unit extends Widget {
   }
 
   /**
-   * Moves one of the unit's items to another slot of its inventory, swapping it
-   * with the item already there.
-   * @param whichItem - The item, in the unit's inventory.
-   * @param slot - The slot to move it to, from 0 to 5.
-   * @returns True when the item was moved, or was already in that slot.
-   * @native UnitDropItemSlot
-   */
-  public dropItemFromSlot(whichItem: Item, slot: number) {
-    return UnitDropItemSlot(this.handle, whichItem.handle, slot);
-  }
-
-  /**
    * Orders the unit to walk to a target and give it one of its items.
    * @remarks
    * A target with no free inventory slot gets the item dropped at its feet. A unit
@@ -1688,10 +1676,12 @@ export class Unit extends Widget {
 
   /**
    * Gets the unit's flying height above the ground.
+   * @remarks
+   * In w3ts 3.x it was named `getflyHeight`, with a lowercase `f`.
    * @returns The height, in world units.
    * @native GetUnitFlyHeight
    */
-  public getflyHeight() {
+  public getFlyHeight() {
     return GetUnitFlyHeight(this.handle);
   }
 
@@ -1702,17 +1692,6 @@ export class Unit extends Widget {
    */
   public getHeroLevel() {
     return GetHeroLevel(this.handle);
-  }
-
-  /**
-   * Sets whether the unit raises no alarm, the "under attack" warning, when it is
-   * attacked; despite its name it changes the setting, which `ignoreAlarmToggled` reads.
-   * @param flag - True for no alarm, false for the usual one.
-   * @returns The boolean the game returns for the call.
-   * @native UnitIgnoreAlarm
-   */
-  public getIgnoreAlarm(flag: boolean) {
-    return UnitIgnoreAlarm(this.handle, flag);
   }
 
   /**
@@ -2374,6 +2353,21 @@ export class Unit extends Widget {
   }
 
   /**
+   * Moves one of the unit's items to another slot of its inventory, swapping it
+   * with the item already there.
+   * @remarks
+   * In w3ts 3.x it was named `dropItemFromSlot`, though it drops nothing on the
+   * ground; it takes the same arguments.
+   * @param whichItem - The item, in the unit's inventory.
+   * @param slot - The slot to move it to, from 0 to 5.
+   * @returns True when the item was moved, or was already in that slot.
+   * @native UnitDropItemSlot
+   */
+  public moveItemToSlot(whichItem: Item, slot: number) {
+    return UnitDropItemSlot(this.handle, whichItem.handle, slot);
+  }
+
+  /**
    * Pauses or unpauses the unit as the `paused` setter does, but keeps its command
    * card visible and leaves the `paused` getter false.
    * @param flag - True to pause the unit, false to unpause it.
@@ -2577,11 +2571,12 @@ export class Unit extends Widget {
 
   /**
    * Removes a unit type from the stock of the shop.
-   * @param itemId - The unit type's rawcode.
+   * @param unitId - The rawcode of the unit type to remove, such as
+   * `FourCC("hfoo")`.
    * @native RemoveUnitFromStock
    */
-  public removeUnitFromStock(itemId: number) {
-    RemoveUnitFromStock(this.handle, itemId);
+  public removeUnitFromStock(unitId: number) {
+    RemoveUnitFromStock(this.handle, unitId);
   }
 
   /**
@@ -2753,6 +2748,8 @@ export class Unit extends Widget {
 
   /**
    * Sets the base cooldown of one of the unit's attacks.
+   * @remarks
+   * w3ts 3.x also had `setUnitAttackCooldown`, a duplicate of this member.
    * @param cooldown - The cooldown, in seconds.
    * @param weaponIndex - The attack, 0 or 1.
    * @native BlzSetUnitAttackCooldown
@@ -2899,11 +2896,14 @@ export class Unit extends Widget {
 
   /**
    * Changes the unit's flying height above the ground.
+   * @remarks
+   * In w3ts 3.x it was named `setflyHeight`, with a lowercase `f`; it takes the
+   * same arguments.
    * @param value - The height, in world units.
    * @param rate - The speed of the change, in world units per second; 0 changes it at once.
    * @native SetUnitFlyHeight
    */
-  public setflyHeight(value: number, rate: number) {
+  public setFlyHeight(value: number, rate: number) {
     SetUnitFlyHeight(this.handle, value, rate);
   }
 
@@ -2917,6 +2917,20 @@ export class Unit extends Widget {
    */
   public setHeroLevel(level: number, showEyeCandy: boolean) {
     SetHeroLevel(this.handle, level, showEyeCandy);
+  }
+
+  /**
+   * Sets whether the unit raises no alarm, the "under attack" warning, when it is
+   * attacked; `ignoreAlarmToggled` reads the setting.
+   * @remarks
+   * In w3ts 3.x it was named `getIgnoreAlarm`, though it changes the setting and
+   * reads nothing; it takes the same argument.
+   * @param flag - True for no alarm, false for the usual one.
+   * @returns The boolean the game returns for the call.
+   * @native UnitIgnoreAlarm
+   */
+  public setIgnoreAlarm(flag: boolean) {
+    return UnitIgnoreAlarm(this.handle, flag);
   }
 
   /**
@@ -3070,16 +3084,6 @@ export class Unit extends Widget {
    */
   public setTimeScale(timeScale: number) {
     SetUnitTimeScale(this.handle, timeScale);
-  }
-
-  /**
-   * Sets the base cooldown of one of the unit's attacks, as `setAttackCooldown` does.
-   * @param cooldown - The cooldown, in seconds.
-   * @param weaponIndex - The attack, 0 or 1.
-   * @native BlzSetUnitAttackCooldown
-   */
-  public setUnitAttackCooldown(cooldown: number, weaponIndex: number) {
-    BlzSetUnitAttackCooldown(this.handle, cooldown, weaponIndex);
   }
 
   /**

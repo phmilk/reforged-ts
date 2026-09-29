@@ -794,5 +794,60 @@
     },
     "oneToOne": false,
     "note": "Not a rename: the first argument is the `Unit` Wrapper instead of the raw `unit` handle, so the argument `unit.handle` becomes `unit`."
+  },
+  {
+    "old": "Unit.getflyHeight",
+    "new": "Unit.getFlyHeight",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The flying height is camelCase with a capital `F`, like every other member of `Unit`."
+  },
+  {
+    "old": "Unit.setflyHeight",
+    "new": "Unit.setFlyHeight",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The flying height is camelCase with a capital `F`, like every other member of `Unit`; it takes the same arguments."
+  },
+  {
+    "old": "Unit.getIgnoreAlarm",
+    "new": "Unit.setIgnoreAlarm",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The member changes the setting through `UnitIgnoreAlarm` and reads nothing, so it is a setter; it takes the same argument. `ignoreAlarmToggled` reads the setting."
+  },
+  {
+    "old": "Unit.dropItemFromSlot",
+    "new": "Unit.moveItemToSlot",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The member moves the item to another slot of the inventory (`UnitDropItemSlot`); it drops nothing on the ground. It takes the same arguments."
+  },
+  {
+    "old": "Unit.setUnitAttackCooldown",
+    "new": "Unit.setAttackCooldown",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The attack cooldown has one setter instead of two names for one Native; it takes the same arguments."
   }
 ]
