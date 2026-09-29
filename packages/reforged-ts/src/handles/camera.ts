@@ -2,6 +2,7 @@
 
 import { expectWrapper, Handle } from "./handle";
 import { Point } from "./point";
+import type { Unit } from "./unit";
 
 /**
  * The game camera and the cinematic filter: a Static namespace, static
@@ -267,7 +268,7 @@ export class Camera {
   }
 
   /**
-   * Ends the cinematic scene {@link Camera.SetCinematicScene} started,
+   * Ends the cinematic scene {@link Camera.setCinematicScene} started,
    * before its duration runs out.
    * @native EndCinematicScene
    */
@@ -332,15 +333,17 @@ export class Camera {
 
   /**
    * Pans the game camera until its target is at the point.
+   * @remarks
+   * In w3ts 3.x `zOffsetDest` was not optional: a pan without a z-offset
+   * passed `undefined`, which still works.
    * @param x - The x-coordinate to pan to, in world units.
    * @param y - The y-coordinate to pan to, in world units.
    * @param zOffsetDest - The z-offset the camera has at the point, in world
-   * units; `undefined` pans without one. The parameter is not optional: pass
-   * `undefined` to leave it out.
+   * units; left out, the camera pans without one.
    * @native PanCameraTo
    * @native PanCameraToWithZ
    */
-  public static pan(x: number, y: number, zOffsetDest: number | undefined) {
+  public static pan(x: number, y: number, zOffsetDest?: number) {
     if (zOffsetDest === undefined) {
       PanCameraTo(x, y);
     } else {
@@ -350,12 +353,14 @@ export class Camera {
 
   /**
    * Pans the game camera until its target is at the point, over `duration`.
+   * @remarks
+   * In w3ts 3.x `zOffsetDest` was not optional: a pan without a z-offset
+   * passed `undefined`, which still works. The parameters keep their order.
    * @param x - The x-coordinate to pan to, in world units.
    * @param y - The y-coordinate to pan to, in world units.
    * @param duration - The time the pan takes, in seconds.
    * @param zOffsetDest - The z-offset the camera has at the point, in world
-   * units; `undefined` pans without one. The parameter is not optional: pass
-   * `undefined` to leave it out.
+   * units; left out, the camera pans without one.
    * @native PanCameraToTimed
    * @native PanCameraToTimedWithZ
    */
@@ -363,7 +368,7 @@ export class Camera {
     x: number,
     y: number,
     duration: number,
-    zOffsetDest: number | undefined,
+    zOffsetDest?: number,
   ) {
     if (zOffsetDest === undefined) {
       PanCameraToTimed(x, y, duration);
@@ -413,17 +418,20 @@ export class Camera {
 
   /**
    * Locks the game camera's orientation to a unit, at an offset from it.
-   * @param whichUnit - The unit's Native handle, `unit.handle`.
+   * @remarks
+   * In w3ts 3.x it took the raw `unit` Handle, `unit.handle`; it now takes
+   * the `Unit`.
+   * @param whichUnit - The unit.
    * @param xOffset - The offset along the x-axis, in world units.
    * @param yOffset - The offset along the y-axis, in world units.
    * @native SetCameraOrientController
    */
   public static setCameraOrientController(
-    whichUnit: unit,
+    whichUnit: Unit,
     xOffset: number,
     yOffset: number,
   ) {
-    SetCameraOrientController(whichUnit, xOffset, yOffset);
+    SetCameraOrientController(whichUnit.handle, xOffset, yOffset);
   }
 
   /**
@@ -561,7 +569,9 @@ export class Camera {
    * Starts a cinematic scene: a unit type's portrait speaking `text` under
    * the speaker's name, in the cinematic panel.
    * @remarks
-   * {@link Camera.endCinematicScene} ends it early.
+   * - {@link Camera.endCinematicScene} ends it early.
+   * - In w3ts 3.x it was named `SetCinematicScene`, the one member not in
+   *   camelCase.
    * @param portraitUnitId - The rawcode of the unit type whose portrait
    * shows, such as `FourCC("Hpal")`.
    * @param color - The player colour the speaker's name shows in.
@@ -571,7 +581,7 @@ export class Camera {
    * @param voiceoverDuration - The length of the spoken line, in seconds.
    * @native SetCinematicScene
    */
-  public static SetCinematicScene(
+  public static setCinematicScene(
     portraitUnitId: number,
     color: playercolor,
     speakerTitle: string,
@@ -704,7 +714,10 @@ export class Camera {
 
   /**
    * Makes the game camera's target follow a unit, at an offset from it.
-   * @param whichUnit - The unit's Native handle, `unit.handle`.
+   * @remarks
+   * In w3ts 3.x it took the raw `unit` Handle, `unit.handle`; it now takes
+   * the `Unit`.
+   * @param whichUnit - The unit.
    * @param xOffset - The offset along the x-axis, in world units.
    * @param yOffset - The offset along the y-axis, in world units.
    * @param inheritOrientation - `true` to turn the camera with the unit's
@@ -712,12 +725,17 @@ export class Camera {
    * @native SetCameraTargetController
    */
   public static setTargetController(
-    whichUnit: unit,
+    whichUnit: Unit,
     xOffset: number,
     yOffset: number,
     inheritOrientation: boolean,
   ) {
-    SetCameraTargetController(whichUnit, xOffset, yOffset, inheritOrientation);
+    SetCameraTargetController(
+      whichUnit.handle,
+      xOffset,
+      yOffset,
+      inheritOrientation,
+    );
   }
 
   /**

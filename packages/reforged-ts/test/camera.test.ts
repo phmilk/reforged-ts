@@ -6,10 +6,13 @@
 // Point when the game returns nothing. `Camera` is a static namespace, not a
 // Wrapper; its accessors reach the same creation code as the Wrappers. The
 // 3.0.0 camera type and field control call their Natives with the value
-// given and answer what the Natives answer.
+// given and answer what the Natives answer. A pan calls its `WithZ` Native
+// only when given a z-offset; the unit controllers take the Unit Wrapper and
+// pass its Handle; the cinematic scene is camelCase like the other members.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
-import { Camera, CameraSetup, Point } from "../src/index";
+import { Camera, CameraSetup, MapPlayer, Point, Unit } from "../src/index";
+import { defined } from "./support/defined";
 import { handleRef } from "./support/handle-ref";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
@@ -203,6 +206,132 @@ describe("cameraSetup.type", () => {
     );
     expect(stubCalls()).toContainCall(
       `BlzCameraSetupSetCameraType(${setupRef}, 1)`,
+    );
+  });
+});
+
+/**
+ * Runs `body` with a pan Native and its `WithZ` twin replaced, and returns
+ * the name of each one it called, in order.
+ */
+function pansCalled(
+  plain: "PanCameraTo" | "PanCameraToTimed",
+  withZ: "PanCameraToWithZ" | "PanCameraToTimedWithZ",
+  body: () => void,
+): string[] {
+  const called: string[] = [];
+  withNative(
+    plain,
+    () => {
+      called.push(plain);
+    },
+    () => {
+      withNative(
+        withZ,
+        () => {
+          called.push(withZ);
+        },
+        body,
+      );
+    },
+  );
+  return called;
+}
+
+describe("Camera.pan", () => {
+  it("calls PanCameraTo when no z-offset is given", () => {
+    const called = pansCalled("PanCameraTo", "PanCameraToWithZ", () => {
+      Camera.pan(128, 256);
+    });
+    expect(called).toEqual(["PanCameraTo"]);
+    expect(stubCalls()).toContainCall("PanCameraTo(128, 256)");
+  });
+
+  it("calls PanCameraToWithZ with the z-offset given", () => {
+    const called = pansCalled("PanCameraTo", "PanCameraToWithZ", () => {
+      Camera.pan(128, 256, 64);
+    });
+    expect(called).toEqual(["PanCameraToWithZ"]);
+    expect(stubCalls()).toContainCall("PanCameraToWithZ(128, 256, 64)");
+  });
+});
+
+describe("Camera.panTimed", () => {
+  it("calls PanCameraToTimed when no z-offset is given", () => {
+    const called = pansCalled(
+      "PanCameraToTimed",
+      "PanCameraToTimedWithZ",
+      () => {
+        Camera.panTimed(128, 256, 2);
+      },
+    );
+    expect(called).toEqual(["PanCameraToTimed"]);
+    expect(stubCalls()).toContainCall("PanCameraToTimed(128, 256, 2)");
+  });
+
+  it("calls PanCameraToTimedWithZ with the z-offset before the duration", () => {
+    const called = pansCalled(
+      "PanCameraToTimed",
+      "PanCameraToTimedWithZ",
+      () => {
+        Camera.panTimed(128, 256, 2, 64);
+      },
+    );
+    expect(called).toEqual(["PanCameraToTimedWithZ"]);
+    expect(stubCalls()).toContainCall("PanCameraToTimedWithZ(128, 256, 64, 2)");
+  });
+});
+
+describe("Camera unit controllers", () => {
+  const owner = defined(MapPlayer.fromIndex(0), "MapPlayer.fromIndex(0)");
+  const unit = Unit.create(owner, FourCC("hfoo"), 0, 0);
+  const unitRef = handleRef("unit", unit.handle);
+
+  it("setCameraOrientController passes the Unit's Handle to SetCameraOrientController", () => {
+    withNative(
+      "SetCameraOrientController",
+      () => undefined,
+      () => {
+        Camera.setCameraOrientController(unit, 16, 32);
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `SetCameraOrientController(${unitRef}, 16, 32)`,
+    );
+  });
+
+  it("setTargetController passes the Unit's Handle to SetCameraTargetController", () => {
+    withNative(
+      "SetCameraTargetController",
+      () => undefined,
+      () => {
+        Camera.setTargetController(unit, 16, 32, true);
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `SetCameraTargetController(${unitRef}, 16, 32, true)`,
+    );
+  });
+});
+
+describe("Camera.setCinematicScene", () => {
+  it("hands its arguments to SetCinematicScene", () => {
+    withNative(
+      "SetCinematicScene",
+      () => undefined,
+      () => {
+        Camera.setCinematicScene(
+          FourCC("Hpal"),
+          PLAYER_COLOR_BLUE,
+          "Uther",
+          "Hold the line.",
+          5,
+          3,
+        );
+      },
+    );
+    expect(stubCalls()).toContainCall(
+      `SetCinematicScene(${tostring(FourCC("Hpal"))}, PLAYER_COLOR_BLUE, "Uther", "Hold the line.", 5, 3)`,
     );
   });
 });

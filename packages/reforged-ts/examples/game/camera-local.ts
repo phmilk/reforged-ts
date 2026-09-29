@@ -17,7 +17,7 @@ export function leashCamera(x: number, y: number, radius: number): Timer {
     const dx = Camera.targetX - centerX;
     const dy = Camera.targetY - centerY;
     if (dx * dx + dy * dy > radius * radius) {
-      Camera.pan(centerX, centerY, undefined);
+      Camera.pan(centerX, centerY);
     }
   });
 }

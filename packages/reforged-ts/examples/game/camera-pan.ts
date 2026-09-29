@@ -15,7 +15,7 @@ export function playIntro(player: MapPlayer, x: number, y: number): void {
     Camera.setCineFilterEndColor(0, 0, 0, 0);
     Camera.setCineFilterDuration(2);
     Camera.visible = true;
-    Camera.panTimed(x, y, 2, undefined);
+    Camera.panTimed(x, y, 2);
     Camera.setField(CAMERA_FIELD_TARGET_DISTANCE, 1200, 2);
   });
   Timer.after(2, () => {

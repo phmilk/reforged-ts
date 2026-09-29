@@ -739,5 +739,60 @@
     },
     "oneToOne": false,
     "note": "`Destructable.create` takes the z coordinate as its `z` option, `Destructable.create({ typeId, x, y, z })`, next to the facing, scale, variation and skin `createZ` took in order."
+  },
+  {
+    "old": "Camera.SetCinematicScene",
+    "new": "Camera.setCinematicScene",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": true,
+    "note": "The cinematic scene is camelCase like every other member of `Camera`; it takes the same arguments."
+  },
+  {
+    "old": "Camera.pan",
+    "new": "Camera.pan",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: `zOffsetDest` is optional, so `Camera.pan(x, y)` pans without a z-offset where w3ts 3.x needed `Camera.pan(x, y, undefined)`, which still compiles. The parameters keep their order."
+  },
+  {
+    "old": "Camera.panTimed",
+    "new": "Camera.panTimed",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: `zOffsetDest` is optional and stays last, after `duration`, so `Camera.panTimed(x, y, duration)` pans without a z-offset where w3ts 3.x needed `Camera.panTimed(x, y, duration, undefined)`, which still compiles. The parameters keep their order."
+  },
+  {
+    "old": "Camera.setCameraOrientController",
+    "new": "Camera.setCameraOrientController",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: the first argument is the `Unit` Wrapper instead of the raw `unit` handle, so the argument `unit.handle` becomes `unit`."
+  },
+  {
+    "old": "Camera.setTargetController",
+    "new": "Camera.setTargetController",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: the first argument is the `Unit` Wrapper instead of the raw `unit` handle, so the argument `unit.handle` becomes `unit`."
   }
 ]
