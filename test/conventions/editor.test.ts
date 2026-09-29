@@ -154,6 +154,15 @@ describe(".vscode/tasks.json", () => {
       .sort();
   })();
 
+  // The typed packages whose `build` runs typescript-to-lua, which prints its
+  // own diagnostics as `error TSTL: ` (#291).
+  const tstlPackages = typedPackages.filter((path) => {
+    const { scripts = {} } = JSON.parse(
+      read(posix.join(path, "package.json")),
+    ) as { scripts?: Record<string, string> };
+    return /\btstl\b/.test(scripts.build ?? "");
+  });
+
   // `$tsc`, as the TypeScript extension of VS Code contributes it
   // (extensions/typescript-language-features/package.json in
   // microsoft/vscode): the matcher and its pattern.
@@ -242,6 +251,15 @@ describe(".vscode/tasks.json", () => {
     return undefined;
   }
 
+  it("finds the packages whose build runs typescript-to-lua", () => {
+    expect(tstlPackages).toEqual(
+      expect.arrayContaining([
+        "packages/reforged-test",
+        "packages/reforged-ts",
+      ]),
+    );
+  });
+
   it.each(["build", "check"])(
     "gives the %s task one matcher per workspace package that builds or type-checks",
     (label) => {
@@ -298,6 +316,27 @@ describe(".vscode/tasks.json", () => {
           owner: tsc.owner,
           source: tsc.source,
           applyTo: tsc.applyTo,
+        });
+      },
+    );
+
+    it.each(tstlPackages)(
+      "reports a typescript-to-lua diagnostic pnpm prints for %s in that package",
+      (path) => {
+        // The line as `pnpm build` printed it for a regular expression in
+        // packages/reforged-ts/src (#291).
+        const line = `${path} build: src/x.ts(1,22): error TSTL: Unsupported node kind RegularExpressionLiteral`;
+        expect(problemOf(label, line), line).toEqual({
+          matcher: path,
+          path: `${path}/src/x.ts`,
+          fields: {
+            file: "src/x.ts",
+            line: "1",
+            column: "22",
+            severity: "error",
+            code: "TL",
+            message: "Unsupported node kind RegularExpressionLiteral",
+          },
         });
       },
     );
