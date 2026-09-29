@@ -145,6 +145,8 @@ export class Item extends Widget {
    * Gets the item's description, in the local client's language.
    * @remarks
    * The value can differ between clients: never let it decide game state.
+   * @example Showing names in the local language
+   * {@includeCode ../../examples/game/local-names.ts}
    * @returns The description; an empty string when the game gives none.
    * @native BlzGetItemDescription
    * @async
@@ -166,6 +168,8 @@ export class Item extends Widget {
    * Gets the item's extended tooltip, in the local client's language.
    * @remarks
    * The value can differ between clients: never let it decide game state.
+   * @example Showing names in the local language
+   * {@includeCode ../../examples/game/local-names.ts}
    * @returns The extended tooltip; an empty string when the game gives none.
    * @native BlzGetItemExtendedTooltip
    * @async
@@ -204,6 +208,8 @@ export class Item extends Widget {
    * Gets the item's name, in the local client's language.
    * @remarks
    * The value can differ between clients: never let it decide game state.
+   * @example Showing names in the local language
+   * {@includeCode ../../examples/game/local-names.ts}
    * @returns The name; an empty string when the game gives none.
    * @native GetItemName
    * @async
@@ -225,6 +231,8 @@ export class Item extends Widget {
    * Gets the item's tooltip, in the local client's language.
    * @remarks
    * The value can differ between clients: never let it decide game state.
+   * @example Showing names in the local language
+   * {@includeCode ../../examples/game/local-names.ts}
    * @returns The tooltip; an empty string when the game gives none.
    * @native BlzGetItemTooltip
    * @async
@@ -448,6 +456,8 @@ export class Item extends Widget {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example Removing game objects without a death
+   * {@includeCode ../../examples/game/destroy-units.ts}
    * @native RemoveItem
    */
   public destroy() {

@@ -104,6 +104,8 @@ export class FogModifier extends Handle<fogmodifier> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example The handles a feature owns, destroyed when it ends
+   * {@includeCode ../../examples/game/destroy-owned.ts}
    * @native DestroyFogModifier
    */
   public destroy() {

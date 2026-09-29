@@ -155,6 +155,8 @@ export class Frame extends Handle<framehandle> {
 
   /**
    * Gets the frame's opacity on the local client.
+   * @example Showing a panel to one player
+   * {@includeCode ../../examples/game/frame-local.ts#toggle}
    * @returns The opacity, from 0 (transparent) to 255 (opaque).
    * @native BlzFrameGetAlpha
    * @async
@@ -165,6 +167,8 @@ export class Frame extends Handle<framehandle> {
 
   /**
    * Gets the frame's children on the local client.
+   * @example Walking the local frame tree
+   * {@includeCode ../../examples/game/frame-local.ts#tree}
    * @returns The children, in the game's order; empty when the frame has
    * none.
    * @native BlzFrameGetChildrenCount
@@ -185,6 +189,8 @@ export class Frame extends Handle<framehandle> {
 
   /**
    * Gets how many children the frame has on the local client.
+   * @example Walking the local frame tree
+   * {@includeCode ../../examples/game/frame-local.ts#tree}
    * @returns The number of children, 0 or more.
    * @native BlzFrameGetChildrenCount
    * @async
@@ -204,6 +210,8 @@ export class Frame extends Handle<framehandle> {
 
   /**
    * Gets whether the frame takes input on the local client.
+   * @example Showing a panel to one player
+   * {@includeCode ../../examples/game/frame-local.ts#toggle}
    * @returns `true` when the frame is enabled.
    * @native BlzFrameGetEnable
    * @async
@@ -217,6 +225,8 @@ export class Frame extends Handle<framehandle> {
    * @remarks
    * It sets the size, keeping the width the local client reads through the
    * `width` getter.
+   * @example Sizing a frame from its local size
+   * {@includeCode ../../examples/game/frame-local.ts#size}
    * @native BlzFrameSetSize
    * @native BlzFrameGetWidth
    * @async
@@ -227,6 +237,8 @@ export class Frame extends Handle<framehandle> {
 
   /**
    * Gets the frame's height on the local client.
+   * @example Sizing a frame from its local size
+   * {@includeCode ../../examples/game/frame-local.ts#size}
    * @returns The height, in frame units.
    * @native BlzFrameGetHeight
    * @async
@@ -257,6 +269,8 @@ export class Frame extends Handle<framehandle> {
   /**
    * Gets the frame's text on the local client, which includes what the local
    * player typed in an edit box.
+   * @example Echoing the local player's input
+   * {@includeCode ../../examples/game/frame-local.ts#input}
    * @returns The text, or `""` when the frame has none.
    * @native BlzFrameGetText
    * @async
@@ -294,6 +308,8 @@ export class Frame extends Handle<framehandle> {
   /**
    * Gets the value of a slider or a status bar on the local client, which
    * includes where the local player dragged a slider.
+   * @example Echoing the local player's input
+   * {@includeCode ../../examples/game/frame-local.ts#input}
    * @returns The value, within the range {@link Frame.setMinMaxValue} sets.
    * @native BlzFrameGetValue
    * @async
@@ -312,6 +328,8 @@ export class Frame extends Handle<framehandle> {
 
   /**
    * Gets whether the frame is shown on the local client.
+   * @example Showing a panel to one player
+   * {@includeCode ../../examples/game/frame-local.ts#toggle}
    * @returns `true` when the frame is shown.
    * @native BlzFrameIsVisible
    * @async
@@ -325,6 +343,8 @@ export class Frame extends Handle<framehandle> {
    * @remarks
    * It sets the size, keeping the height the local client reads through the
    * `height` getter.
+   * @example Sizing a frame from its local size
+   * {@includeCode ../../examples/game/frame-local.ts#size}
    * @native BlzFrameSetSize
    * @native BlzFrameGetHeight
    * @async
@@ -335,6 +355,8 @@ export class Frame extends Handle<framehandle> {
 
   /**
    * Gets the frame's width on the local client.
+   * @example Sizing a frame from its local size
+   * {@includeCode ../../examples/game/frame-local.ts#size}
    * @returns The width, in frame units.
    * @native BlzFrameGetWidth
    * @async
@@ -394,6 +416,8 @@ export class Frame extends Handle<framehandle> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example Tearing down a round's interface
+   * {@includeCode ../../examples/game/destroy-ui.ts}
    * @returns This Frame, which must not be used again.
    * @native BlzDestroyFrame
    */
@@ -405,6 +429,8 @@ export class Frame extends Handle<framehandle> {
 
   /**
    * Gets one of the frame's children on the local client.
+   * @example Walking the local frame tree
+   * {@includeCode ../../examples/game/frame-local.ts#tree}
    * @param index - The child's index, from 0 to `childrenCount - 1`.
    * @returns The child, or `undefined` when the index is past the last child.
    * @native BlzFrameGetChild
@@ -493,6 +519,8 @@ export class Frame extends Handle<framehandle> {
   /**
    * Sets the frame's height, keeping the width the local client reads through
    * the `width` getter.
+   * @example Sizing a frame from its local size
+   * {@includeCode ../../examples/game/frame-local.ts#size}
    * @param height - The height, in frame units.
    * @returns This Frame, for chaining.
    * @native BlzFrameSetSize
@@ -556,6 +584,8 @@ export class Frame extends Handle<framehandle> {
 
   /**
    * Gets the frame's parent on the local client.
+   * @example Walking the local frame tree
+   * {@includeCode ../../examples/game/frame-local.ts#tree}
    * @returns The parent, or `undefined` when the frame has none.
    * @native BlzFrameGetParent
    * @async
@@ -756,6 +786,8 @@ export class Frame extends Handle<framehandle> {
   /**
    * Sets the frame's width, keeping the height the local client reads through
    * the `height` getter.
+   * @example Sizing a frame from its local size
+   * {@includeCode ../../examples/game/frame-local.ts#size}
    * @param width - The width, in frame units.
    * @returns This Frame, for chaining.
    * @native BlzFrameSetSize
@@ -783,6 +815,8 @@ export class Frame extends Handle<framehandle> {
    * screen.
    * @remarks
    * It depends on the local resolution, so it differs between clients.
+   * @example A tooltip following the local mouse
+   * {@includeCode ../../examples/harness/cursor-tooltip.ts}
    * @param frameX - The x-coordinate, in frame units.
    * @returns The x-coordinate, in pixels.
    * @native BlzFrameToPixelX
@@ -797,6 +831,8 @@ export class Frame extends Handle<framehandle> {
    * screen.
    * @remarks
    * It depends on the local resolution, so it differs between clients.
+   * @example A tooltip following the local mouse
+   * {@includeCode ../../examples/harness/cursor-tooltip.ts}
    * @param frameY - The y-coordinate, in frame units.
    * @returns The y-coordinate, in pixels.
    * @native BlzFrameToPixelY
@@ -937,6 +973,8 @@ export class Frame extends Handle<framehandle> {
    * units.
    * @remarks
    * It depends on the local resolution, so it differs between clients.
+   * @example A tooltip following the local mouse
+   * {@includeCode ../../examples/harness/cursor-tooltip.ts}
    * @param pixelX - The x-coordinate, in pixels.
    * @returns The x-coordinate, in frame units.
    * @native BlzPixelToFrameX
@@ -951,6 +989,8 @@ export class Frame extends Handle<framehandle> {
    * units.
    * @remarks
    * It depends on the local resolution, so it differs between clients.
+   * @example A tooltip following the local mouse
+   * {@includeCode ../../examples/harness/cursor-tooltip.ts}
    * @param pixelY - The y-coordinate, in pixels.
    * @returns The y-coordinate, in frame units.
    * @native BlzPixelToFrameY

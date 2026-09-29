@@ -57,6 +57,8 @@ export const orderRows = unitEventRows({
   /**
    * A unit is given an order with no target.
    * The four target fields are undefined.
+   * @example Logging a player's orders and their targets
+   * {@includeCode ../../../examples/harness/unit-events.ts#order}
    * @native TriggerRegisterPlayerUnitEvent
    */
   orderIssued: {
@@ -68,12 +70,16 @@ export const orderRows = unitEventRows({
   /**
    * The event of `orderIssued` on one Unit: `unit` is given an order with no
    * target. The four target fields are undefined.
+   * @example Logging a player's orders and their targets
+   * {@includeCode ../../../examples/harness/unit-events.ts#order}
    * @native TriggerRegisterUnitEvent
    */
   orderIssuedOf: { twinOf: "orderIssued", event: EVENT_UNIT_ISSUED_ORDER },
   /**
    * A unit is ordered to a point; `targetX` and `targetY` are that point.
    * `targetUnit` and `targetWidget` are undefined.
+   * @example Logging a player's orders and their targets
+   * {@includeCode ../../../examples/harness/unit-events.ts#order}
    * @native TriggerRegisterPlayerUnitEvent
    */
   orderPoint: {
@@ -87,12 +93,16 @@ export const orderRows = unitEventRows({
    * The event of `orderPoint` on one Unit: `unit` is ordered to a point;
    * `targetX` and `targetY` are that point. `targetUnit` and `targetWidget`
    * are undefined.
+   * @example Logging a player's orders and their targets
+   * {@includeCode ../../../examples/harness/unit-events.ts#order}
    * @native TriggerRegisterUnitEvent
    */
   orderPointOf: { twinOf: "orderPoint", event: EVENT_UNIT_ISSUED_POINT_ORDER },
   /**
    * A unit is ordered to target a widget; `targetUnit` is set when the target
    * is a unit. `targetX` and `targetY` are undefined.
+   * @example Logging a player's orders and their targets
+   * {@includeCode ../../../examples/harness/unit-events.ts#order}
    * @native TriggerRegisterPlayerUnitEvent
    */
   orderTarget: {
@@ -105,6 +115,8 @@ export const orderRows = unitEventRows({
    * The event of `orderTarget` on one Unit: `unit` is ordered to target a
    * widget; `targetUnit` is set when the target is a unit. `targetX` and
    * `targetY` are undefined.
+   * @example Logging a player's orders and their targets
+   * {@includeCode ../../../examples/harness/unit-events.ts#order}
    * @native TriggerRegisterUnitEvent
    */
   orderTargetOf: {
@@ -115,6 +127,8 @@ export const orderRows = unitEventRows({
    * The event of `orderTarget` under its compatibility name: the Patch gives
    * `EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER` the same id and no unit event, so
    * there is no `orderUnitOf`.
+   * @example Logging a player's orders and their targets
+   * {@includeCode ../../../examples/harness/unit-events.ts#order}
    * @native TriggerRegisterPlayerUnitEvent
    */
   orderUnit: {

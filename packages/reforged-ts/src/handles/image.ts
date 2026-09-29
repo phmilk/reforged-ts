@@ -106,6 +106,8 @@ export class Image extends Handle<image> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example The handles a feature owns, destroyed when it ends
+   * {@includeCode ../../examples/game/destroy-owned.ts}
    * @native DestroyImage
    * @bug Given an invalid image, such as `null` or one from before any image
    * was created, it can crash the game.

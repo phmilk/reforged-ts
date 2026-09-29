@@ -7,6 +7,8 @@ import { unitEventRows } from "./rows";
 export const deathRows = unitEventRows({
   /**
    * A unit dies; `killer` is undefined when nothing killed it.
+   * @example A bounty paid to the killer's owner
+   * {@includeCode ../../../examples/harness/unit-events.ts#death}
    * @native TriggerRegisterPlayerUnitEvent
    */
   death: {
@@ -22,6 +24,8 @@ export const deathRows = unitEventRows({
   /**
    * The event of `death` on one Unit: `unit` dies; `killer` is undefined when
    * nothing killed it.
+   * @example A bounty paid to the killer's owner
+   * {@includeCode ../../../examples/harness/unit-events.ts#death}
    * @native TriggerRegisterUnitEvent
    */
   deathOf: { twinOf: "death", event: EVENT_UNIT_DEATH },

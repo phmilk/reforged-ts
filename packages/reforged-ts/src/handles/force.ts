@@ -57,6 +57,8 @@ export class Force extends Handle<force> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example Handles made for one computation
+   * {@includeCode ../../examples/game/destroy-scratch.ts}
    * @throws In Dev mode, inside `MapPlayer.runLocal`:
    * `reforged-ts: destroying Force#<id> inside MapPlayer.runLocal changes game state for one client, which desyncs the game: only visuals belong inside runLocal`.
    * @native DestroyForce

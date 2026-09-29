@@ -12,6 +12,8 @@ export const progressRows = unitEventRows({
   /**
    * A unit finishes training `trained`.
    * Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterPlayerUnitEvent
    */
   trainFinish: {
@@ -27,12 +29,16 @@ export const progressRows = unitEventRows({
   /**
    * The event of `trainFinish` on one Unit: `unit` finishes training
    * `trained`. Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterUnitEvent
    */
   trainFinishOf: { twinOf: "trainFinish", event: EVENT_UNIT_TRAIN_FINISH },
   /**
    * A structure finishes construction.
    * Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterPlayerUnitEvent
    */
   constructFinish: {
@@ -47,6 +53,8 @@ export const progressRows = unitEventRows({
   /**
    * The event of `constructFinish` on one Unit: the structure `unit` finishes
    * construction. Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterUnitEvent
    */
   constructFinishOf: {
@@ -56,6 +64,8 @@ export const progressRows = unitEventRows({
   /**
    * A unit finishes a research; `researched` is its id.
    * Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterPlayerUnitEvent
    */
   researchFinish: {
@@ -71,6 +81,8 @@ export const progressRows = unitEventRows({
   /**
    * The event of `researchFinish` on one Unit: `unit` finishes a research;
    * `researched` is its id. Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterUnitEvent
    */
   researchFinishOf: {
@@ -80,6 +92,8 @@ export const progressRows = unitEventRows({
   /**
    * A unit finishes upgrading.
    * Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterPlayerUnitEvent
    */
   upgradeFinish: {
@@ -93,6 +107,8 @@ export const progressRows = unitEventRows({
   /**
    * The event of `upgradeFinish` on one Unit: `unit` finishes upgrading.
    * Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterUnitEvent
    */
   upgradeFinishOf: {
@@ -102,6 +118,8 @@ export const progressRows = unitEventRows({
   /**
    * A hero gains a level; `level` is its level after the gain.
    * Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterPlayerUnitEvent
    */
   heroLevel: {
@@ -118,12 +136,16 @@ export const progressRows = unitEventRows({
   /**
    * The event of `heroLevel` on one Unit: the hero `unit` gains a level;
    * `level` is its level after the gain. Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterUnitEvent
    */
   heroLevelOf: { twinOf: "heroLevel", event: EVENT_UNIT_HERO_LEVEL },
   /**
    * A hero learns the skill `abilityId`.
    * Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterPlayerUnitEvent
    */
   heroSkill: {
@@ -139,6 +161,8 @@ export const progressRows = unitEventRows({
   /**
    * The event of `heroSkill` on one Unit: the hero `unit` learns the skill
    * `abilityId`. Every field is set.
+   * @example Announcing a player's progress
+   * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterUnitEvent
    */
   heroSkillOf: { twinOf: "heroSkill", event: EVENT_UNIT_HERO_SKILL },

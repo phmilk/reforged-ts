@@ -8,6 +8,8 @@ import { unitEventRows } from "./rows";
 export const transportRows = unitEventRows({
   /**
    * A unit is loaded into `transport`.
+   * @example Reporting units boarding a transport
+   * {@includeCode ../../../examples/harness/unit-events.ts#transport}
    * @native TriggerRegisterPlayerUnitEvent
    */
   loaded: {
@@ -27,6 +29,8 @@ export const transportRows = unitEventRows({
    * loaded unit or the transport) is unverified in-game (the Patch documents
    * only the player-unit event), so its payload reads the loaded unit and
    * the transport from the Natives, as `loaded` does.
+   * @example Reporting units boarding a transport
+   * {@includeCode ../../../examples/harness/unit-events.ts#transport}
    * @native TriggerRegisterUnitEvent
    */
   loadedOf: {

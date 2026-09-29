@@ -29,12 +29,16 @@ function readClick(event: string): DialogClick {
  * of one Dialog, `DialogEvents.buttonClick(button)` for one DialogButton.
  * Their payload, a {@link DialogClick}, always holds the dialog and the
  * button.
+ * @example A vote dialog
+ * {@includeCode ../../examples/harness/dialog-events.ts}
  * @namespace
  */
 export const DialogEvents = eventRows("DialogEvents", {
   /**
    * A button of `dialog` is clicked; the payload holds the dialog and the
    * button.
+   * @example A vote dialog
+   * {@includeCode ../../examples/harness/dialog-events.ts}
    * @native TriggerRegisterDialogEvent
    */
   click: {
@@ -47,6 +51,8 @@ export const DialogEvents = eventRows("DialogEvents", {
   },
   /**
    * `button` is clicked; the payload holds it and its dialog.
+   * @example A vote dialog
+   * {@includeCode ../../examples/harness/dialog-events.ts}
    * @native TriggerRegisterDialogButtonEvent
    */
   buttonClick: {

@@ -41,6 +41,8 @@ export class Camera {
    * move in.
    * @remarks
    * The value is the local client's own: it can differ between clients.
+   * @example Keeping the local camera near a point
+   * {@includeCode ../../examples/game/camera-local.ts#position}
    * @returns The smallest x-coordinate of the camera bounds, in world units.
    * @native GetCameraBoundMinX
    * @async
@@ -54,6 +56,8 @@ export class Camera {
    * move in.
    * @remarks
    * The value is the local client's own: it can differ between clients.
+   * @example Keeping the local camera near a point
+   * {@includeCode ../../examples/game/camera-local.ts#position}
    * @returns The smallest y-coordinate of the camera bounds, in world units.
    * @native GetCameraBoundMinY
    * @async
@@ -67,6 +71,8 @@ export class Camera {
    * move in.
    * @remarks
    * The value is the local client's own: it can differ between clients.
+   * @example Keeping the local camera near a point
+   * {@includeCode ../../examples/game/camera-local.ts#position}
    * @returns The largest x-coordinate of the camera bounds, in world units.
    * @native GetCameraBoundMaxX
    * @async
@@ -80,6 +86,8 @@ export class Camera {
    * move in.
    * @remarks
    * The value is the local client's own: it can differ between clients.
+   * @example Keeping the local camera near a point
+   * {@includeCode ../../examples/game/camera-local.ts#position}
    * @returns The largest y-coordinate of the camera bounds, in world units.
    * @native GetCameraBoundMaxY
    * @async
@@ -93,6 +101,8 @@ export class Camera {
    * camera looks at.
    * @remarks
    * The value is the local client's own: it can differ between clients.
+   * @example Keeping the local camera near a point
+   * {@includeCode ../../examples/game/camera-local.ts#position}
    * @returns The x-coordinate, in world units.
    * @native GetCameraTargetPositionX
    * @async
@@ -106,6 +116,8 @@ export class Camera {
    * camera looks at.
    * @remarks
    * The value is the local client's own: it can differ between clients.
+   * @example Keeping the local camera near a point
+   * {@includeCode ../../examples/game/camera-local.ts#position}
    * @returns The y-coordinate, in world units.
    * @native GetCameraTargetPositionY
    * @async
@@ -119,6 +131,8 @@ export class Camera {
    * camera looks at.
    * @remarks
    * The value is the local client's own: it can differ between clients.
+   * @example Measuring the local camera's height
+   * {@includeCode ../../examples/game/camera-local.ts#eye}
    * @returns The z-coordinate, in world units.
    * @native GetCameraTargetPositionZ
    * @async
@@ -132,6 +146,8 @@ export class Camera {
    * camera looks from.
    * @remarks
    * The value is the local client's own: it can differ between clients.
+   * @example Measuring the local camera's height
+   * {@includeCode ../../examples/game/camera-local.ts#eye}
    * @returns The x-coordinate, in world units.
    * @native GetCameraEyePositionX
    * @async
@@ -145,6 +161,8 @@ export class Camera {
    * camera looks from.
    * @remarks
    * The value is the local client's own: it can differ between clients.
+   * @example Measuring the local camera's height
+   * {@includeCode ../../examples/game/camera-local.ts#eye}
    * @returns The y-coordinate, in world units.
    * @native GetCameraEyePositionY
    * @async
@@ -158,6 +176,8 @@ export class Camera {
    * looks from.
    * @remarks
    * The value is the local client's own: it can differ between clients.
+   * @example Measuring the local camera's height
+   * {@includeCode ../../examples/game/camera-local.ts#eye}
    * @returns The z-coordinate, in world units.
    * @native GetCameraEyePositionZ
    * @async
@@ -172,6 +192,8 @@ export class Camera {
    * @remarks
    * - The position is the local client's own: it can differ between clients.
    * - Each read creates a Point: destroy it when done.
+   * @example Measuring the local camera's height
+   * {@includeCode ../../examples/game/camera-local.ts#eye}
    * @returns A new Point at the camera eye.
    * @throws When the game returns no location:
    * `reforged-ts: failed to create Point`, at the calling line. In Dev mode
@@ -190,6 +212,8 @@ export class Camera {
    * @remarks
    * - The position is the local client's own: it can differ between clients.
    * - Each read creates a Point: destroy it when done.
+   * @example Measuring the local camera's height
+   * {@includeCode ../../examples/game/camera-local.ts#eye}
    * @returns A new Point at the camera target.
    * @throws When the game returns no location:
    * `reforged-ts: failed to create Point`, at the calling line. In Dev mode
@@ -207,6 +231,8 @@ export class Camera {
    * (3.0.0): an integer the Patch does not name.
    * @remarks
    * The value is the local player's own.
+   * @example Zooming the local camera out
+   * {@includeCode ../../examples/game/camera-local.ts#fields}
    * @returns The camera type, as the bare integer the Native gives.
    * @native BlzCameraGetCameraType
    * @async
@@ -265,6 +291,8 @@ export class Camera {
    * @remarks
    * - The value is the local client's own: it can differ between clients.
    * - An angle comes back in radians, while {@link Camera.setField} and {@link CameraSetup.getField} use degrees.
+   * @example Zooming the local camera out
+   * {@includeCode ../../examples/game/camera-local.ts#fields}
    * @param field - The field, such as `CAMERA_FIELD_ANGLE_OF_ATTACK`.
    * @returns The value: radians for an angle, world units for a distance.
    * @native GetCameraField
@@ -291,6 +319,8 @@ export class Camera {
    * through `GetCameraFieldControlledByInput` (3.0.0).
    * @remarks
    * The value is the local player's own.
+   * @example Zooming the local camera out
+   * {@includeCode ../../examples/game/camera-local.ts#fields}
    * @param field - The field, such as `CAMERA_FIELD_ROTATION`.
    * @returns `true` when player input controls the field.
    * @native GetCameraFieldControlledByInput

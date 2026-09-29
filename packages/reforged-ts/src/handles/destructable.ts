@@ -539,6 +539,8 @@ export class Destructable extends Widget {
    * language.
    * @remarks
    * The value can differ between clients: never let it decide game state.
+   * @example Showing names in the local language
+   * {@includeCode ../../examples/game/local-names.ts}
    * @returns The localized name.
    * @native GetDestructableName
    * @async
@@ -600,6 +602,8 @@ export class Destructable extends Widget {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example Removing game objects without a death
+   * {@includeCode ../../examples/game/destroy-units.ts}
    * @throws In Dev mode, when called inside `MapPlayer.runLocal`: a Handle
    * freed on one client desyncs the game.
    * @native RemoveDestructable

@@ -10,6 +10,8 @@ export const ownershipRows = unitEventRows({
   /**
    * A unit changes owner; `previousOwner` is the player it had.
    * Every field is set.
+   * @example Telling a player their unit was taken
+   * {@includeCode ../../../examples/harness/unit-events.ts#ownership}
    * @native TriggerRegisterPlayerUnitEvent
    */
   changeOwner: {
@@ -30,6 +32,8 @@ export const ownershipRows = unitEventRows({
   /**
    * The event of `changeOwner` on one Unit: `unit` changes owner;
    * `previousOwner` is the player it had. Every field is set.
+   * @example Telling a player their unit was taken
+   * {@includeCode ../../../examples/harness/unit-events.ts#ownership}
    * @native TriggerRegisterUnitEvent
    */
   changeOwnerOf: { twinOf: "changeOwner", event: EVENT_UNIT_CHANGE_OWNER },

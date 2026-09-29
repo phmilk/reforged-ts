@@ -147,6 +147,8 @@ export class Region extends Handle<region> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example The handles a feature owns, destroyed when it ends
+   * {@includeCode ../../examples/game/destroy-owned.ts}
    * @throws In Dev mode, when called inside `MapPlayer.runLocal`: a Handle
    * freed on one client desyncs the game.
    * @native RemoveRegion

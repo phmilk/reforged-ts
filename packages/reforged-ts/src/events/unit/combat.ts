@@ -33,6 +33,8 @@ export const combatRows = unitEventRows({
   /**
    * A unit is attacked; `attacker` is the attacking unit.
    * Every field is set.
+   * @example A boss's shield, ended when it dies
+   * {@includeCode ../../../examples/harness/unit-events.ts#combat}
    * @native TriggerRegisterPlayerUnitEvent
    */
   attacked: {
@@ -48,11 +50,15 @@ export const combatRows = unitEventRows({
   /**
    * The event of `attacked` on one Unit: `unit` is attacked.
    * Every field is set.
+   * @example A boss's shield, ended when it dies
+   * {@includeCode ../../../examples/harness/unit-events.ts#combat}
    * @native TriggerRegisterUnitEvent
    */
   attackedOf: { twinOf: "attacked", event: EVENT_UNIT_ATTACKED },
   /**
    * A unit has taken damage; `source` is undefined when no unit dealt it.
+   * @example A boss's shield, ended when it dies
+   * {@includeCode ../../../examples/harness/unit-events.ts#combat}
    * @native TriggerRegisterPlayerUnitEvent
    */
   damaged: {
@@ -64,12 +70,16 @@ export const combatRows = unitEventRows({
   /**
    * The event of `damaged` on one Unit: fires for the damage `unit` takes;
    * `source` is undefined when no unit dealt it.
+   * @example A boss's shield, ended when it dies
+   * {@includeCode ../../../examples/harness/unit-events.ts#combat}
    * @native TriggerRegisterUnitEvent
    */
   damagedOf: { twinOf: "damaged", event: EVENT_UNIT_DAMAGED },
   /**
    * A unit is about to take damage; `source` is undefined when no unit deals
    * it.
+   * @example A boss's shield, ended when it dies
+   * {@includeCode ../../../examples/harness/unit-events.ts#combat}
    * @native TriggerRegisterPlayerUnitEvent
    */
   damaging: {
@@ -82,6 +92,8 @@ export const combatRows = unitEventRows({
    * The event of `damaging` on one Unit: fires for the damage `unit` is about
    * to take, not the damage it deals, since the Patch fires the unit event on
    * the target; `source` is undefined when no unit deals it.
+   * @example A boss's shield, ended when it dies
+   * {@includeCode ../../../examples/harness/unit-events.ts#combat}
    * @native TriggerRegisterUnitEvent
    */
   damagingOf: { twinOf: "damaging", event: EVENT_UNIT_DAMAGING },

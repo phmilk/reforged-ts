@@ -25,11 +25,15 @@ function readTrackable(event: string): TrackablePayload {
  * The trackable Event descriptors: `TrackableEvents.hit(trackable)` and
  * `TrackableEvents.track(trackable)` for one Trackable. The payload is a
  * {@link TrackablePayload}.
+ * @example A chest to hover over and click
+ * {@includeCode ../../examples/harness/trackable-events.ts}
  * @namespace
  */
 export const TrackableEvents = eventRows("TrackableEvents", {
   /**
    * `trackable` is clicked; the payload reads it back as the hit one.
+   * @example A chest to hover over and click
+   * {@includeCode ../../examples/harness/trackable-events.ts}
    * @native TriggerRegisterTrackableHitEvent
    */
   hit: {
@@ -42,6 +46,8 @@ export const TrackableEvents = eventRows("TrackableEvents", {
   },
   /**
    * The mouse moves over `trackable`; the payload reads it back.
+   * @example A chest to hover over and click
+   * {@includeCode ../../examples/harness/trackable-events.ts}
    * @native TriggerRegisterTrackableTrackEvent
    */
   track: {

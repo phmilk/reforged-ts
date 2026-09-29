@@ -23,6 +23,8 @@ export const itemRows = unitEventRows({
   /**
    * A unit picks up an item.
    * `unit` and `item` are always set.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterPlayerUnitEvent
    */
   pickupItem: {
@@ -33,12 +35,16 @@ export const itemRows = unitEventRows({
   /**
    * The event of `pickupItem` on one Unit: `unit` picks up an item.
    * `unit` and `item` are always set.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterUnitEvent
    */
   pickupItemOf: { twinOf: "pickupItem", event: EVENT_UNIT_PICKUP_ITEM },
   /**
    * A unit drops an item.
    * `unit` and `item` are always set.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterPlayerUnitEvent
    */
   dropItem: {
@@ -49,12 +55,16 @@ export const itemRows = unitEventRows({
   /**
    * The event of `dropItem` on one Unit: `unit` drops an item.
    * `unit` and `item` are always set.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterUnitEvent
    */
   dropItemOf: { twinOf: "dropItem", event: EVENT_UNIT_DROP_ITEM },
   /**
    * A unit uses an item.
    * `unit` and `item` are always set.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterPlayerUnitEvent
    */
   useItem: {
@@ -65,6 +75,8 @@ export const itemRows = unitEventRows({
   /**
    * The event of `useItem` on one Unit: `unit` uses an item.
    * `unit` and `item` are always set.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterUnitEvent
    */
   useItemOf: { twinOf: "useItem", event: EVENT_UNIT_USE_ITEM },
@@ -72,6 +84,8 @@ export const itemRows = unitEventRows({
    * A shop sells an item: `unit` is the shop, the selling unit the event
    * fires for, and `item` the sold item, read with `GetSoldItem`, the one
    * response the Patch lists for this event.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterPlayerUnitEvent
    */
   sellItem: {
@@ -82,6 +96,8 @@ export const itemRows = unitEventRows({
   /**
    * The event of `sellItem` on one Unit: the shop `unit` sells an item.
    * `unit` and `item` are always set.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterUnitEvent
    */
   sellItemOf: { twinOf: "sellItem", event: EVENT_UNIT_SELL_ITEM },
@@ -89,6 +105,8 @@ export const itemRows = unitEventRows({
    * A unit pawns an item to a shop: `unit` is the pawning unit and `item` the
    * pawned item, read with `GetSoldItem`: the Patch lists no response for
    * this event, and a pawn is the item sale seen from the unit.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterPlayerUnitEvent
    */
   pawnItem: {
@@ -99,12 +117,16 @@ export const itemRows = unitEventRows({
   /**
    * The event of `pawnItem` on one Unit: `unit` pawns an item to a shop.
    * `unit` and `item` are always set.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterUnitEvent
    */
   pawnItemOf: { twinOf: "pawnItem", event: EVENT_UNIT_PAWN_ITEM },
   /**
    * A unit equips an item (3.0.0).
    * `unit` and `item` are always set.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterPlayerUnitEvent
    */
   equip: {
@@ -115,12 +137,16 @@ export const itemRows = unitEventRows({
   /**
    * The event of `equip` on one Unit: `unit` equips an item (3.0.0).
    * `unit` and `item` are always set.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterUnitEvent
    */
   equipOf: { twinOf: "equip", event: EVENT_UNIT_EQUIP_ITEM },
   /**
    * A unit unequips an item (3.0.0).
    * `unit` and `item` are always set.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterPlayerUnitEvent
    */
   unequip: {
@@ -131,6 +157,8 @@ export const itemRows = unitEventRows({
   /**
    * The event of `unequip` on one Unit: `unit` unequips an item (3.0.0).
    * `unit` and `item` are always set.
+   * @example Watching a hero's items
+   * {@includeCode ../../../examples/harness/unit-events.ts#item}
    * @native TriggerRegisterUnitEvent
    */
   unequipOf: { twinOf: "unequip", event: EVENT_UNIT_UNEQUIP_ITEM },

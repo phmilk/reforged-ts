@@ -9,6 +9,8 @@ export const selectionRows = unitEventRows({
   /**
    * `player` selects a unit.
    * Every field is set.
+   * @example Counting who selects a unit
+   * {@includeCode ../../../examples/harness/unit-events.ts#selection}
    * @native TriggerRegisterPlayerUnitEvent
    */
   selected: {
@@ -24,12 +26,16 @@ export const selectionRows = unitEventRows({
   /**
    * The event of `selected` on one Unit: `player` selects `unit`.
    * Every field is set.
+   * @example Counting who selects a unit
+   * {@includeCode ../../../examples/harness/unit-events.ts#selection}
    * @native TriggerRegisterUnitEvent
    */
   selectedOf: { twinOf: "selected", event: EVENT_UNIT_SELECTED },
   /**
    * `player` deselects a unit.
    * Every field is set.
+   * @example Counting who selects a unit
+   * {@includeCode ../../../examples/harness/unit-events.ts#selection}
    * @native TriggerRegisterPlayerUnitEvent
    */
   deselected: {
@@ -45,6 +51,8 @@ export const selectionRows = unitEventRows({
   /**
    * The event of `deselected` on one Unit: `player` deselects `unit`.
    * Every field is set.
+   * @example Counting who selects a unit
+   * {@includeCode ../../../examples/harness/unit-events.ts#selection}
    * @native TriggerRegisterUnitEvent
    */
   deselectedOf: { twinOf: "deselected", event: EVENT_UNIT_DESELECTED },

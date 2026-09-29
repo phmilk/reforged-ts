@@ -109,6 +109,8 @@ export class Rectangle extends Handle<rect> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example Handles made for one computation
+   * {@includeCode ../../examples/game/destroy-scratch.ts}
    * @throws In Dev mode, when called inside `MapPlayer.runLocal`: a Handle
    * freed on one client desyncs the game.
    * @native RemoveRect

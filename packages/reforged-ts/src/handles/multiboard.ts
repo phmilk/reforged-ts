@@ -40,6 +40,8 @@ export class MultiboardItem extends Handle<multiboarditem> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example Tearing down a round's interface
+   * {@includeCode ../../examples/game/destroy-ui.ts}
    * @native MultiboardReleaseItem
    */
   public destroy() {
@@ -229,6 +231,8 @@ export class Multiboard extends Handle<multiboard> {
    * a second `destroy()` included, raises
    * `reforged-ts: used after destroy: <Class>#<id>`, and
    * `Reforged.debug.report()` counts it destroyed.
+   * @example Tearing down a round's interface
+   * {@includeCode ../../examples/game/destroy-ui.ts}
    * @native DestroyMultiboard
    */
   public destroy() {
@@ -264,6 +268,8 @@ export class Multiboard extends Handle<multiboard> {
    * @remarks
    * A player can minimize or open the board themselves, so the value can
    * differ between clients: never let it decide game state.
+   * @example Reopening a minimized board for one player
+   * {@includeCode ../../examples/harness/multiboard-minimized.ts}
    * @returns True when it is minimized, false when its cells show.
    * @native IsMultiboardMinimized
    * @async
