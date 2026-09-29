@@ -1,5 +1,8 @@
 /** @noSelfInFile */
 
+// Not `export *`: `filterOf` stays package-internal. `BoolexprInput` is
+// exported because `Trigger.addCondition`'s signature names it.
+export { type BoolexprInput } from "./boolexpr";
 export * from "./camera";
 export * from "./destructable";
 export * from "./dialog";

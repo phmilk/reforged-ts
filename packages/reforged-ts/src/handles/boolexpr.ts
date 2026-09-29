@@ -6,12 +6,13 @@
 // passes unchanged. (`Trigger.addCondition`, the one member taking a
 // condition, builds its `Condition` itself: it adds the damage nesting.)
 //
-// Package-internal: nothing here is exported from the library index.
+// Package-internal but for `BoolexprInput`, which `Trigger.addCondition`'s
+// signature names.
 
 import { protect } from "../reforged/protect";
 import type { Handle } from "./handle";
 
-/** A filter: a `boolexpr`, or a plain function. */
+/** A filter or a condition: a `boolexpr`, or a plain function returning a boolean. */
 export type BoolexprInput = boolexpr | (() => boolean);
 
 /**

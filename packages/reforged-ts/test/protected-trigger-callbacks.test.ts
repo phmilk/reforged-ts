@@ -5,7 +5,9 @@
 // `Force.for`, and the handlers and `when` predicates of `on()`. In Dev mode
 // each runs under pcall and a failure is reported naming its Wrapper and
 // member (the descriptor for `on()`); a condition or filter that throws
-// evaluates false. With Dev mode off the Natives receive the very functions.
+// evaluates false. With Dev mode off the Natives receive the very functions,
+// but for `Trigger.addCondition`, whose `Condition` gets a closure of its own
+// in both modes; a throwing condition's error still goes through unchanged.
 
 import { describe, expect, it } from "reforged-test/lua";
 import {
@@ -228,16 +230,13 @@ describe("on() subscriptions in Dev mode", () => {
 });
 
 describe("release mode", () => {
-  it("hands TriggerAddAction, Condition and Filter the very functions", () => {
+  it("hands TriggerAddAction and Filter the very functions", () => {
     Reforged.configure({ devMode: false });
     const trigger = Trigger.create();
     const action = () => undefined;
-    const condition = () => true;
     const filter = () => true;
     trigger.addAction(action);
     expect(lastArg("TriggerAddAction", 1)).toBe(action);
-    trigger.addCondition(condition);
-    expect(lastArg("Condition", 0)).toBe(condition);
     trigger.registerPlayerUnitEvent(owner, EVENT_PLAYER_UNIT_DEATH, filter);
     expect(lastArg("Filter", 0)).toBe(filter);
     const group = Group.create();
@@ -270,6 +269,20 @@ describe("release mode", () => {
       expect(() => {
         __stub_fire_trigger(trigger.handle);
       }).toThrow("unprotected action");
+    });
+    expect(printed).toEqual([]);
+  });
+
+  it("lets a throwing condition's error through with Dev mode off", () => {
+    Reforged.configure({ devMode: false });
+    const trigger = Trigger.create();
+    trigger.addCondition((): boolean => {
+      error("unprotected condition", 0);
+    });
+    const printed = printedBy(() => {
+      expect(() => {
+        __stub_fire_trigger(trigger.handle);
+      }).toThrow("unprotected condition");
     });
     expect(printed).toEqual([]);
   });
