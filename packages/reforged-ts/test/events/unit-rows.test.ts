@@ -1,10 +1,12 @@
 /** @noSelfInFile */
 
-// The UnitEvents table itself: an entry is a twin by its shape, not by its
+// The UnitEvents table itself: an entry is a twin by its `twinOf`, not by its
 // key, so a row whose name ends in `Of` is a row, and its twin is keyed
-// `nameOfOf`. The `@ts-expect-error` lines are the groups `unitEventRows`
-// rejects; the suites run the descriptors of a group it takes.
+// `nameOfOf`. Each `@ts-expect-error` group breaks one rule of
+// `unitEventRows`; the suites run the descriptors of a group it takes, its
+// row written inline as the groups of the library are.
 
+import { describe, expect, it } from "reforged-test/lua";
 import { MapPlayer, Unit } from "../../src/index";
 import { unitEventRows, unitEvents } from "../../src/events/unit/rows";
 import { defined } from "../support/defined";
@@ -14,39 +16,51 @@ import { handleRef } from "../support/handle-ref";
 const owner = defined(MapPlayer.fromIndex(0), "the player in slot 0");
 const dying = Unit.create(owner, FourCC("hfoo"), 0, 0);
 
-const handOf = {
+const hand = unitEventRows({
+  handOf: {
+    event: EVENT_PLAYER_UNIT_DEATH,
+    unit: "unit",
+    read: (unit) => ({ unit }),
+  },
+  handOfOf: { twinOf: "handOf", event: EVENT_UNIT_DEATH },
+});
+const events = unitEvents({ hand });
+
+const row = {
   event: EVENT_PLAYER_UNIT_DEATH,
   unit: "unit",
   read: (unit: Unit) => ({ unit }),
 } as const;
 
-const events = unitEvents({
-  hand: unitEventRows({
-    handOf,
-    handOfOf: { twinOf: "handOf", event: EVENT_UNIT_DEATH },
-  }),
-});
-
 unitEventRows({
-  handOf,
+  row,
   // @ts-expect-error: `twinOf` names no entry of the group.
-  handOfOf: { twinOf: "hand", event: EVENT_UNIT_DEATH },
+  nothingOf: { twinOf: "nothing", event: EVENT_UNIT_DEATH },
 });
 unitEventRows({
-  handOf,
-  handOfOf: { twinOf: "handOf", event: EVENT_UNIT_DEATH },
+  row,
+  rowOf: { twinOf: "row", event: EVENT_UNIT_DEATH },
   // @ts-expect-error: `twinOf` names a twin, not a row.
-  handOfOfOf: { twinOf: "handOfOf", event: EVENT_UNIT_DEATH },
+  rowOfOf: { twinOf: "rowOf", event: EVENT_UNIT_DEATH },
 });
 unitEventRows({
-  handOf,
+  row,
   // @ts-expect-error: a twin's key is its row's name followed by `Of`.
-  handTwin: { twinOf: "handOf", event: EVENT_UNIT_DEATH },
+  rowTwin: { twinOf: "row", event: EVENT_UNIT_DEATH },
 });
+/** A twin naming either of two rows, never called. */
+export function eitherRow(twinOf: "row" | "other"): void {
+  unitEventRows({
+    row,
+    other: row,
+    // @ts-expect-error: a twin names one row.
+    rowOf: { twinOf, event: EVENT_UNIT_DEATH },
+  });
+}
 unitEventRows({
-  handOf,
-  // @ts-expect-error: a unit event makes the entry a twin, lacking `twinOf`.
-  handOfOf: { twinof: "handOf", event: EVENT_UNIT_DEATH },
+  row,
+  // @ts-expect-error: a twin reads its row's payload, not its own.
+  rowOf: { twinOf: "row", event: EVENT_UNIT_DEATH, read: row.read },
 });
 
 describeDescriptor({
@@ -70,4 +84,15 @@ describeDescriptor({
   ],
   context: {},
   payload: { unit: dying },
+});
+
+describe("unitEvents", () => {
+  it("raises an error when two groups give the same name", () => {
+    expect(() =>
+      unitEvents({
+        mine: unitEventRows({ handOf: row }),
+        hand,
+      }),
+    ).toThrow("reforged-ts: UnitEvents.handOf is in two groups");
+  });
 });
