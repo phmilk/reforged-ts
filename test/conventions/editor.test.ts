@@ -135,9 +135,9 @@ describe(".vscode/tasks.json", () => {
     return found;
   }
 
-  // The workspace packages, from pnpm-workspace.yaml, whose `build` or
-  // `typecheck` script runs tsc or tstl: `pnpm --recursive` prints their
-  // errors behind a `<package path> <script>: ` prefix.
+  // The workspace packages, from pnpm-workspace.yaml, that have a `build` or
+  // `typecheck` script: `pnpm --recursive` prints their type errors behind a
+  // `<package path> <script>: ` prefix.
   const typedPackages = (() => {
     const { packages: patterns } = parse(read("pnpm-workspace.yaml")) as {
       packages: string[];
@@ -153,25 +153,6 @@ describe(".vscode/tasks.json", () => {
       })
       .sort();
   })();
-
-  const workspaceFolder = "${workspaceFolder}/";
-
-  // The matchers a task defines inline, keyed by the package folder their
-  // fileLocation resolves files from.
-  function packageMatchers(label: string): [string, ProblemMatcher][] {
-    const { problemMatcher = [] } = task(label);
-    return [problemMatcher]
-      .flat()
-      .filter((matcher) => typeof matcher !== "string")
-      .map((matcher) => {
-        const [kind, folder = ""] = [matcher.fileLocation ?? []].flat();
-        const path =
-          kind === "relative" && folder.startsWith(workspaceFolder)
-            ? folder.slice(workspaceFolder.length)
-            : `(fileLocation ${JSON.stringify(matcher.fileLocation)})`;
-        return [path, matcher];
-      });
-  }
 
   // `$tsc`, as the TypeScript extension of VS Code contributes it
   // (extensions/typescript-language-features/package.json in
@@ -194,11 +175,49 @@ describe(".vscode/tasks.json", () => {
   };
   const tscFields = ["file", "line", "column", "severity", "code", "message"];
 
+  // The variables a fileLocation starts with for the workspace folder: a
+  // shell task's `${cwd}` is the workspace folder too.
+  const workspaceFolderVariable = /^\$\{(?:workspaceFolder|cwd)\}/;
+
+  interface TscMatcher {
+    // `$tsc`, or the folder an inline matcher resolves files from.
+    name: string;
+    // The folder its fileLocation resolves files from, from the workspace
+    // root; "" when it is not relative to the workspace folder.
+    folder: string;
+    matcher: ProblemMatcher;
+  }
+
+  // The matchers of a task that read tsc's output, in the task's order:
+  // `$tsc` and the matchers the task defines inline.
+  function tscMatchers(label: string): TscMatcher[] {
+    const { problemMatcher = [] } = task(label);
+    return [problemMatcher].flat().flatMap((entry) => {
+      if (typeof entry === "string" && entry !== "$tsc") return [];
+      const matcher = typeof entry === "string" ? tsc : entry;
+      const [kind, location = ""] = [matcher.fileLocation ?? []].flat();
+      const folder =
+        kind === "relative" && workspaceFolderVariable.test(location)
+          ? posix.join(location.replace(workspaceFolderVariable, "."))
+          : undefined;
+      const name =
+        typeof entry === "string"
+          ? entry
+          : (folder ?? `(fileLocation ${JSON.stringify(entry.fileLocation)})`);
+      return [{ name, folder: folder ?? "", matcher }];
+    });
+  }
+
+  // The matchers a task defines inline, one per package.
+  function packageMatchers(label: string): TscMatcher[] {
+    return tscMatchers(label).filter(({ name }) => name !== "$tsc");
+  }
+
   interface Problem {
     // The matcher that read the line: `$tsc` or a package folder.
     matcher: string;
     // The file from the workspace root, as the matcher's fileLocation
-    // resolves it (a shell task's `${cwd}` is the workspace folder).
+    // resolves it.
     path: string;
     fields: Record<string, string | undefined>;
   }
@@ -207,48 +226,38 @@ describe(".vscode/tasks.json", () => {
   // matchers in order and keeps the first that matches (tryMatchers in
   // src/vs/workbench/contrib/tasks/common/problemCollectors.ts).
   function problemOf(label: string, line: string): Problem | undefined {
-    const inline = new Map(
-      packageMatchers(label).map(([path, matcher]) => [matcher, path]),
-    );
-    const { problemMatcher = [] } = task(label);
-    for (const entry of [problemMatcher].flat()) {
-      if (typeof entry === "string" && entry !== "$tsc") continue;
-      const matcher = typeof entry === "string" ? tsc : entry;
+    for (const { name, folder, matcher } of tscMatchers(label)) {
       const { regexp = "", ...groups } = matcher.pattern ?? {};
       const match = new RegExp(regexp).exec(line);
       if (!match) continue;
       const fields = Object.fromEntries(
         tscFields.map((field) => [field, match[groups[field] as number]]),
       );
-      const folder = [matcher.fileLocation ?? []].flat()[1] ?? "";
       return {
-        matcher: typeof entry === "string" ? entry : (inline.get(entry) ?? ""),
-        path: posix.join(
-          folder.replace(/^\$\{(?:workspaceFolder|cwd)\}/, "."),
-          fields.file ?? "",
-        ),
+        matcher: name,
+        path: posix.join(folder, fields.file ?? ""),
         fields,
       };
     }
     return undefined;
   }
 
-  it("finds the workspace packages that build or type-check", () => {
-    expect(typedPackages, "the typed packages of pnpm-workspace.yaml").toEqual(
-      expect.arrayContaining([
-        "packages/reforged-ts",
-        "packages/reforged-types",
-        "website",
-      ]),
-    );
-  });
-
   it.each(["build", "check"])(
     "gives the %s task one matcher per workspace package that builds or type-checks",
     (label) => {
       expect(
+        typedPackages,
+        "the packages of pnpm-workspace.yaml that build or type-check",
+      ).toEqual(
+        expect.arrayContaining([
+          "packages/reforged-ts",
+          "packages/reforged-types",
+          "website",
+        ]),
+      );
+      expect(
         packageMatchers(label)
-          .map(([path]) => path)
+          .map(({ name }) => name)
           .sort(),
         `the package folders of the ${label} task's matchers`,
       ).toEqual(typedPackages);
@@ -263,8 +272,7 @@ describe(".vscode/tasks.json", () => {
         // script name varies (build, typecheck, a nested script).
         for (const script of ["build", "typecheck", "typings:typecheck"]) {
           const line = `${path} ${script}: src/x.ts(1,14): error TS2322: Type 'string' is not assignable to type 'number'.`;
-          const problem = problemOf(label, line);
-          expect(problem, line).toEqual({
+          expect(problemOf(label, line), line).toEqual({
             matcher: path,
             path: `${path}/src/x.ts`,
             fields: {
@@ -277,8 +285,8 @@ describe(".vscode/tasks.json", () => {
             },
           });
         }
-        const [, matcher] =
-          packageMatchers(label).find(([folder]) => folder === path) ?? [];
+        const { matcher } =
+          packageMatchers(label).find(({ name }) => name === path) ?? {};
         expect(
           {
             owner: matcher?.owner,
@@ -298,14 +306,15 @@ describe(".vscode/tasks.json", () => {
       // The root `tsc -p test/tsconfig.json`, which pnpm does not prefix.
       const line =
         "test/x.ts(1,1): error TS2322: Type 'string' is not assignable to type 'number'.";
-      expect(problemOf(label, line)?.matcher, line).toBe("$tsc");
-      expect(problemOf(label, line)?.path, line).toBe("test/x.ts");
+      const problem = problemOf(label, line);
+      expect(problem?.matcher, line).toBe("$tsc");
+      expect(problem?.path, line).toBe("test/x.ts");
       expect(
         packageMatchers(label)
-          .filter(([, { pattern }]) =>
+          .filter(({ matcher: { pattern } }) =>
             new RegExp(pattern?.regexp ?? "").test(line),
           )
-          .map(([path]) => path),
+          .map(({ name }) => name),
         "the package matchers that match an unprefixed line",
       ).toEqual([]);
     });
