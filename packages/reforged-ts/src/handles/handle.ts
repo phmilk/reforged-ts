@@ -235,6 +235,10 @@ export abstract class Handle<T extends handle> {
    * `init` runs on the Wrapper before it is returned, with its fields
    * writable, for a Wrapper that keeps a creation argument in a field:
    * `return this.expect(QuestCreateItem(quest.handle), "", (item) => { item.quest = quest; })`.
+   * It may also finish the creation with a Native that has effects, events
+   * included, as `Unit.addItemById` puts the new item in the inventory; it
+   * runs after the Dev-mode Guards, so a Guard that raises leaves the
+   * created Handle unfinished.
    */
   protected static expect<C extends Handle<handle>>(
     this: WrapperClass<C>,
