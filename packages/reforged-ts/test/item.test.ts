@@ -80,14 +80,14 @@ describe("Item.fromEvent", () => {
   });
 });
 
-describe("Item.player", () => {
+describe("Item.getOwner", () => {
   it("is the MapPlayer MapPlayer.fromHandle gives for the owner GetItemPlayer returns", () => {
     const item = Item.create(ration, 0, 0);
     const owner = defined(Player(4), "Player(4)");
     const player = withNative(
       "GetItemPlayer",
       () => owner,
-      () => item.player,
+      () => item.getOwner(),
     );
     expect(player).toBe(MapPlayer.fromHandle(owner));
     expect(stubCalls()).toContainCall(
@@ -101,7 +101,7 @@ describe("Item.player", () => {
       withNative(
         "GetItemPlayer",
         () => undefined,
-        () => item.player,
+        () => item.getOwner(),
       ),
     ).toBeUndefined();
   });

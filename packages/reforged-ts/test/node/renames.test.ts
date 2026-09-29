@@ -4,8 +4,8 @@
 // library's emitted declarations and cover every member step 3 removes, every
 // entry point, enum and helper step 4 removes or replaces, every Trigger
 // registration step 5 renames or changes, every member of the sync, host
-// and binary Systems step 6 removes or renames, and every member step 7
-// removes.
+// and binary Systems step 6 removes or renames, every member step 7
+// removes, and the two members #312 renames.
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
@@ -147,6 +147,16 @@ const REMOVED_IN_STEP_6: [old: string, kind: RenameEntry["kind"]][] = [
  */
 const REMOVED_IN_STEP_7: [old: string, kind: RenameEntry["kind"]][] = [
   ["Destructable.createZ", "member"],
+];
+
+/**
+ * What #312 renames, with its kind: the getter-only accessor `Item.player`,
+ * whose read becomes the call `item.getOwner()`, and the static
+ * `Camera.setCameraOrientController`, which drops its `Camera` prefix.
+ */
+const RENAMED_IN_312: [old: string, kind: RenameEntry["kind"]][] = [
+  ["Item.player", "accessor"],
+  ["Camera.setCameraOrientController", "member"],
 ];
 
 const valid: RenameEntry = {
@@ -397,12 +407,38 @@ describe("migration/renames.json", () => {
     ).toEqual([]);
   });
 
-  it("names both halves of an accessor's get/set pair", async () => {
+  it("has an entry for every member #312 renames, of its kind", async () => {
     const entries = await loadRenames();
+    const kinds = new Map(entries.map((entry) => [entry.old, entry.kind]));
+    expect(
+      RENAMED_IN_312.filter(([old, kind]) => kinds.get(old) !== kind),
+    ).toEqual([]);
+  });
+
+  it("renames Item.player to the getter Item.getOwner and Camera.setCameraOrientController to Camera.setOrientController", async () => {
+    const entries = await loadRenames();
+    const replaced = new Map(
+      entries.map((entry) => [entry.old, replacements(entry)]),
+    );
+    expect(replaced.get("Item.player")).toEqual(["Item.getOwner"]);
+    expect(replaced.get("Camera.setCameraOrientController")).toEqual([
+      "Camera.setOrientController",
+    ]);
+  });
+
+  // The lint rule turns a read of an accessor into a call of its getter and
+  // an assignment into a call of its setter; a getter-only accessor
+  // (`Item.player`) names its getter alone.
+  it("names an accessor's getter, then its setter when it has one", async () => {
+    const entries = await loadRenames();
+    const shape = (names: string[]) =>
+      names.map((each) => /\.([gs]et)[A-Z]/.exec(each)?.[1]).join(",");
     expect(
       entries
         .filter((entry) => entry.kind === "accessor" && entry.new !== null)
-        .filter((entry) => replacements(entry).length !== 2),
+        .filter(
+          (entry) => !["get", "get,set"].includes(shape(replacements(entry))),
+        ),
     ).toEqual([]);
   });
 

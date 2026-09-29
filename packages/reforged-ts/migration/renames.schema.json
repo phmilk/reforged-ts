@@ -71,7 +71,7 @@
           ]
         },
         "new": {
-          "description": "The replacement as the author will write it; several when the old symbol splits (a get/set pair, overloads mapped by argument shape); null when there is none. For kind `package`, the new package name.",
+          "description": "The replacement as the author will write it; several when the old symbol splits (a get/set pair, overloads mapped by argument shape); null when there is none. An `accessor` names its `get*` method, then its `set*` method when the old accessor had a setter. For kind `package`, the new package name.",
           "anyOf": [
             { "$ref": "#/$defs/symbol" },
             { "$ref": "#/$defs/packageName" },

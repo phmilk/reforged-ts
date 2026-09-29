@@ -865,7 +865,7 @@
     "reason": "the Camera System's static member over a camera Native of the local player."
   },
   {
-    "name": "Camera.setCameraOrientController",
+    "name": "Camera.setOrientController",
     "kind": "visual",
     "reason": "the Camera System's static member over a camera Native of the local player."
   },
