@@ -1,5 +1,11 @@
 # eslint-plugin-reforged
 
+## 1.0.0-alpha.3
+
+### Minor Changes
+
+- [#319](https://github.com/phmilk/reforged-ts/pull/319) [`eb8f2ae`](https://github.com/phmilk/reforged-ts/commit/eb8f2aebe652b333c4b9206ac7f5cb953febae53) Thanks [@wyller](https://github.com/wyller)! - `no-legacy-w3ts-names` reports the w3ts use of a member that kept its name but not its signature (the rename map's entries whose new name is the old one), with the entry's note: an argument the new parameter does not take (`cache.store(missionKey, key, hero.handle)`), a result used where the new type does not fit (`Unit.fromHandle(cache.restoreUnit(...))`), and a result checked for a missing value when the new type cannot be missing (`restoreUnit` now throws where it returned `undefined`). A call written for the new signature is not reported.
+
 ## 1.0.0-alpha.2
 
 ### Patch Changes
