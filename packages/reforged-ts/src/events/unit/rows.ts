@@ -82,16 +82,50 @@ export type UnitEventDescriptors<T> = {
 };
 
 /**
+ * Whether an entry is a twin: it has `twinOf`, as `unitEvents` and
+ * `UnitEventDescriptors` read it. The tuples keep a union entry whole.
+ */
+type IsTwin<E> = [E] extends [{ readonly twinOf: unknown }] ? true : false;
+
+/** The keys of a group's rows: its entries that are not twins. */
+type RowKeys<T> = {
+  [K in keyof T]: IsTwin<T[K]> extends true ? never : K;
+}[keyof T] &
+  string;
+
+/**
+ * What a twin keyed `K`, of the row `R`, adds to `UnitEventTwin`: when `K`
+ * is not exactly `R` followed by `Of`, a property the entry lacks, whose name
+ * is the error; and `never` for every field a twin does not have, since
+ * `unitEvents` reads the row's own.
+ */
+type TwinCheck<E, K, R> = ([K] extends [`${R & string}Of`]
+  ? [`${R & string}Of`] extends [K]
+    ? unknown
+    : Readonly<Record<`the twin keyed ${K & string} names one row`, never>>
+  : Readonly<
+      Record<`the twin of ${R & string} is keyed ${R & string}Of`, never>
+    >) &
+  Readonly<Record<Exclude<keyof E, keyof UnitEventTwin>, never>>;
+
+/**
  * A group of entries, as it is written: types each row's `read` and keeps
- * the payload it returns, and checks that each twin, keyed `nameOf`, names
- * the row `name` of the group.
+ * the payload it returns, and checks that each twin names one row of the
+ * group, is keyed by that row's name followed by `Of`, and has no field of
+ * its own besides a twin's. An entry is a twin by its `twinOf`, not by its
+ * key, so a row may have a name ending in `Of`.
  * @param rows - The group's rows and twins, by member name.
  * @returns `rows`, unchanged.
  */
 export function unitEventRows<
   T extends {
-    readonly [K in keyof T]: K extends `${infer R}Of`
-      ? UnitEventTwin<R & keyof T>
+    readonly [K in keyof T]: IsTwin<T[K]> extends true
+      ? UnitEventTwin<RowKeys<T>> &
+          TwinCheck<
+            T[K],
+            K,
+            T[K] extends { readonly twinOf: infer R } ? R : never
+          >
       : UnitEventRow<PayloadOf<T[K]>>;
   },
 >(rows: T): T {
@@ -163,6 +197,8 @@ type UnitEventEntry = UnitEventRow<unknown, string> | UnitEventTwin;
  * `UnitEvents` from the groups of entries, keyed by group name.
  * @param groups - The groups of rows and twins, by group name.
  * @returns The descriptors: `name` for every row, `nameOf` for every twin.
+ * @throws Raises `reforged-ts: UnitEvents.<name> is in two groups` at the
+ * calling line when two groups give the same name.
  */
 export function unitEvents<
   G extends {
@@ -172,6 +208,10 @@ export function unitEvents<
   const events: Record<string, unknown> = {};
   for (const entries of Object.values<Record<string, UnitEventEntry>>(groups)) {
     for (const [name, entry] of Object.entries(entries)) {
+      // A row may be named `xOf`, so a name can come from two groups.
+      if (events[name] !== undefined) {
+        error(`reforged-ts: UnitEvents.${name} is in two groups`, 2);
+      }
       if (!("twinOf" in entry)) {
         events[name] = anyUnit(name, entry);
         continue;
