@@ -16,9 +16,12 @@ import { Handle } from "./handle";
 export class MultiboardItem extends Handle<multiboarditem> {
   /**
    * Gets a handle to one cell of a multiboard.
+   * @remarks
+   * In w3ts 3.x the row and the column were named `x` and `y`; they keep
+   * their order, so `row` is still the first.
    * @param board - The multiboard that holds the cell.
-   * @param x - The cell's row, counted from 1 at the top.
-   * @param y - The cell's column, counted from 1 on the left.
+   * @param row - The cell's row, counted from 1 at the top.
+   * @param column - The cell's column, counted from 1 on the left.
    * @returns A new handle to the cell.
    * @throws When the game returns no handle: `reforged-ts: failed to create MultiboardItem`, at the calling line.
    * In Dev mode, also when called before the globals Init stage or inside `MapPlayer.runLocal`.
@@ -26,10 +29,10 @@ export class MultiboardItem extends Handle<multiboarditem> {
    */
   public static create(
     board: Multiboard,
-    x: number,
-    y: number,
+    row: number,
+    column: number,
   ): MultiboardItem {
-    return this.expect(MultiboardGetItem(board.handle, x - 1, y - 1));
+    return this.expect(MultiboardGetItem(board.handle, row - 1, column - 1));
   }
 
   /**
@@ -213,15 +216,18 @@ export class Multiboard extends Handle<multiboard> {
 
   /**
    * Gets a handle to one cell, as {@link MultiboardItem.create} does.
-   * @param x - The cell's row, counted from 1 at the top.
-   * @param y - The cell's column, counted from 1 on the left.
+   * @remarks
+   * In w3ts 3.x the row and the column were named `x` and `y`; they keep
+   * their order, so `row` is still the first.
+   * @param row - The cell's row, counted from 1 at the top.
+   * @param column - The cell's column, counted from 1 on the left.
    * @returns A new handle to the cell.
    * @throws When the game returns no handle: `reforged-ts: failed to create MultiboardItem`, at the calling line.
    * In Dev mode, also when called before the globals Init stage or inside `MapPlayer.runLocal`.
    * @native MultiboardGetItem
    */
-  public createItem(x: number, y: number): MultiboardItem {
-    return MultiboardItem.create(this, x, y);
+  public createItem(row: number, column: number): MultiboardItem {
+    return MultiboardItem.create(this, row, column);
   }
 
   /**

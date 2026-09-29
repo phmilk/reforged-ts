@@ -560,13 +560,16 @@ export class Frame extends Handle<framehandle> {
   /**
    * Aligns the frame's text vertically and horizontally.
    * @remarks
-   * Unlike the other setters, it returns nothing, so it ends a chain.
+   * In w3ts 3.x this returned nothing and ended a chain; it now returns the
+   * Frame, as the other setters do.
    * @param vert - The vertical alignment, such as `TEXT_JUSTIFY_MIDDLE`.
    * @param horz - The horizontal alignment, such as `TEXT_JUSTIFY_CENTER`.
+   * @returns This Frame, for chaining.
    * @native BlzFrameSetTextAlignment
    */
   public setTextAlignment(vert: textaligntype, horz: textaligntype) {
     BlzFrameSetTextAlignment(this.handle, vert, horz);
+    return this;
   }
 
   /**

@@ -893,5 +893,16 @@
     },
     "oneToOne": false,
     "note": "Not a rename: a unit is passed as the `Unit` Wrapper instead of the raw `unit` handle, so the argument `unit.handle` becomes `unit`."
+  },
+  {
+    "old": "Frame.setTextAlignment",
+    "new": "Frame.setTextAlignment",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: it takes the same arguments and returns the Frame instead of nothing, as the other `Frame` setters do, so it no longer ends a chain."
   }
 ]
