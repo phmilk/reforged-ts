@@ -343,6 +343,26 @@ describe("Frame.setTextAreaAutoScroll", () => {
   });
 });
 
+describe("Frame.setTextAlignment", () => {
+  // The harness defines no textaligntype constant: sentinels the call log
+  // renders by name, as it renders the game's constants.
+  const middle = { __name: "TEXT_JUSTIFY_MIDDLE" } as unknown as textaligntype;
+  const center = { __name: "TEXT_JUSTIFY_CENTER" } as unknown as textaligntype;
+
+  it("passes both alignments to BlzFrameSetTextAlignment and returns the Frame", () => {
+    const frame = gameUi();
+    const returned = withNative(
+      "BlzFrameSetTextAlignment",
+      () => undefined,
+      () => frame.setTextAlignment(middle, center),
+    );
+    expect(returned).toBe(frame);
+    expect(stubCalls()).toContainCall(
+      `BlzFrameSetTextAlignment(${handleRef("framehandle", frame.handle)}, TEXT_JUSTIFY_MIDDLE, TEXT_JUSTIFY_CENTER)`,
+    );
+  });
+});
+
 describe("Frame pixel conversions", () => {
   it("pixelToFrameX and pixelToFrameY are what their Natives answer", () => {
     const x = withNative(

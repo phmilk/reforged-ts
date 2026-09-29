@@ -871,5 +871,16 @@
     },
     "oneToOne": false,
     "note": "Not a rename: the first argument is the `MapPlayer` Wrapper instead of the raw `player` handle, as `MapPlayer.setTaxRate` takes it, so the argument `other.handle` becomes `other`."
+  },
+  {
+    "old": "Frame.setTextAlignment",
+    "new": "Frame.setTextAlignment",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: it takes the same arguments and returns the Frame instead of nothing, as the other `Frame` setters do, so it no longer ends a chain."
   }
 ]
