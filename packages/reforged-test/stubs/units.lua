@@ -34,7 +34,7 @@ function BlzCreateUnitWithSkin(id, unitid, x, y, face, skinId)
   return unit
 end
 
--- A new location per call, at the unit's coordinates.
+-- The coordinates the unit was created at.
 function GetUnitX(whichUnit)
   __stub_record("GetUnitX", whichUnit)
   return whichUnit.x
@@ -45,6 +45,7 @@ function GetUnitY(whichUnit)
   return whichUnit.y
 end
 
+-- A new location per call, at the unit's coordinates.
 function GetUnitLoc(whichUnit)
   __stub_record("GetUnitLoc", whichUnit)
   local location = __stub_new_handle("location")

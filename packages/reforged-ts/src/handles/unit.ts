@@ -1057,27 +1057,34 @@ export class Unit extends Widget {
    * Creates an item of a type at the unit's position and puts it in the
    * unit's inventory.
    * @remarks
-   * When the inventory is full, the unit cannot carry items or it is dead,
-   * the item stays on the ground at the unit's position and is returned all
-   * the same; `hasItem` tells the two apart. `UnitAddItemById` is not used:
-   * it returns nothing for the item it drops.
+   * - When the inventory is full, the unit cannot carry items or it is dead,
+   *   the item stays on the ground at the unit's position (for a unit loaded
+   *   into a zeppelin, where it boarded, as `x` and `y` read) and is returned
+   *   all the same.
+   * - `hasItem` is false for the returned item in that case, and also when
+   *   the game used it at once (a powerup such as a tome) or merged its
+   *   charges into an item the unit holds: the item is then removed.
+   * - `UnitAddItemById` is not used: it returns nothing for the item it
+   *   drops.
    * @param itemId - The item type's rawcode, such as `FourCC("rde1")`.
-   * @returns The new item, in the inventory or at the unit's feet.
-   * @throws When the game creates no item, for example for an unknown
-   * rawcode: `reforged-ts: failed to create Item (<rawcode>)`, at the calling
-   * line. In Dev mode, also before the globals Init stage and inside
+   * @returns The new item.
+   * @throws When no item is created, for example for an unknown rawcode or a
+   * removed unit: `reforged-ts: failed to create Item (<rawcode>)`, at the
+   * calling line. In Dev mode, also before the globals Init stage and inside
    * `MapPlayer.runLocal`.
+   * @native GetUnitTypeId
+   * @native GetUnitX
+   * @native GetUnitY
    * @native CreateItem
    * @native UnitAddItem
    */
   public addItemById(itemId: number): Item {
-    return Item.expect(
-      CreateItem(itemId, GetUnitX(this.handle), GetUnitY(this.handle)),
-      rawcodeToString(itemId),
-      (item) => {
-        UnitAddItem(this.handle, item.handle);
-      },
-    );
+    // A removed unit has no type and reads 0 for its position: no item.
+    const created =
+      this.typeId === 0 ? undefined : CreateItem(itemId, this.x, this.y);
+    return Item.expect(created, rawcodeToString(itemId), (item) => {
+      UnitAddItem(this.handle, item.handle);
+    });
   }
 
   /**

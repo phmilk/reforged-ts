@@ -417,6 +417,25 @@ describe("Unit inventory", () => {
     expect(unit.getItemInSlot(0)).toBeUndefined();
   });
 
+  it("addItemById creates no item for a removed unit, and throws", () => {
+    const unit = Unit.create(owner, footman, 0, 0);
+    const before = stubCalls().length;
+    const message = withNative(
+      "GetUnitTypeId",
+      () => 0,
+      () =>
+        raisedIn(() => {
+          unit.addItemById(ration);
+        }),
+    );
+    expect(message).toEqual("reforged-ts: failed to create Item (ratf)");
+    expect(
+      stubCalls()
+        .slice(before)
+        .filter((line) => line.startsWith("CreateItem(")),
+    ).toEqual([]);
+  });
+
   it("addItemById throws naming the rawcode when CreateItem returns nil", () => {
     const unit = Unit.create(owner, footman, 0, 0);
     const before = stubCalls().length;
@@ -458,6 +477,7 @@ describe("Unit.skillPoints", () => {
   const cases: [had: number, delta: number][] = [
     [2, 3],
     [7, -2],
+    [5, 0],
   ];
   for (const [had, delta] of cases) {
     it(`sets 5 points on a hero with ${String(had)} by a delta of ${String(delta)}`, () => {
