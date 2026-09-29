@@ -853,7 +853,7 @@
   {
     "old": "Item.player",
     "new": "Item.getOwner",
-    "kind": "member",
+    "kind": "accessor",
     "versions": {
       "from": "w3ts@3",
       "to": "reforged-ts@1"

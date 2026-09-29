@@ -34,6 +34,8 @@ const enumNote = "The enumerated unit is read from the Unit class.";
 const getObjectNote = "`fromHandle` returns undefined for a missing handle.";
 const initNote = "Wrappers are made by the Handle base only.";
 const ownerNote = "The accessor pair is two methods.";
+const itemOwnerNote = "A getter-only accessor becomes its getter.";
+const orientNote = "The static drops its prefix and takes the Unit Wrapper.";
 
 const header = 'import { Group, MapPlayer, Unit } from "reforged-ts";\n';
 
@@ -270,6 +272,52 @@ ruleTester.run("no-legacy-w3ts-names", ruleOf("no-legacy-w3ts-names"), {
           ),
           line: 5,
           suggestions: [],
+        },
+      ],
+    },
+    {
+      name: "a getter-only accessor suggests the call of its getter on a read, nothing on an assignment",
+      code: 'import { Item, MapPlayer } from "reforged-ts";\ndeclare const item: Item;\nconst owner = item.player;\nitem.player = MapPlayer.fromIndex(0);',
+      output: null,
+      errors: [
+        {
+          ...renamed("Item.player", "`Item.getOwner`", itemOwnerNote),
+          line: 3,
+          suggestions: [
+            {
+              messageId: "useReplacement",
+              data: { replacement: "Item.getOwner" },
+              output:
+                'import { Item, MapPlayer } from "reforged-ts";\ndeclare const item: Item;\nconst owner = item.getOwner();\nitem.player = MapPlayer.fromIndex(0);',
+            },
+          ],
+        },
+        {
+          ...renamed("Item.player", "`Item.getOwner`", itemOwnerNote),
+          line: 4,
+          suggestions: [],
+        },
+      ],
+    },
+    {
+      name: "a renamed static member suggests the new name",
+      code: 'import { Camera, Unit } from "reforged-ts";\ndeclare const unit: Unit;\nCamera.setCameraOrientController(unit, 0, 0);',
+      output: null,
+      errors: [
+        {
+          ...renamed(
+            "Camera.setCameraOrientController",
+            "`Camera.setOrientController`",
+            orientNote,
+          ),
+          suggestions: [
+            {
+              messageId: "useReplacement",
+              data: { replacement: "Camera.setOrientController" },
+              output:
+                'import { Camera, Unit } from "reforged-ts";\ndeclare const unit: Unit;\nCamera.setOrientController(unit, 0, 0);',
+            },
+          ],
         },
       ],
     },
