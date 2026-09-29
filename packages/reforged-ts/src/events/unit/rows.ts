@@ -81,18 +81,43 @@ export type UnitEventDescriptors<T> = {
     : EventDescriptor<PayloadOf<T[K]>>;
 };
 
+/** Whether an entry is a twin: it names its row, or registers a unit event. */
+type IsTwin<E> = E extends { readonly twinOf: unknown }
+  ? true
+  : E extends { readonly event: unitevent }
+    ? true
+    : false;
+
+/** The keys of a group's rows: its entries that are not twins. */
+type RowKeys<T> = {
+  [K in keyof T]: IsTwin<T[K]> extends true ? never : K;
+}[keyof T] &
+  string;
+
+/**
+ * What a twin keyed `K` adds when its key is not the name of its row `R`
+ * followed by `Of`: a property the entry lacks, whose name is the error.
+ */
+type TwinKey<K, R> = K extends `${R & string}Of`
+  ? unknown
+  : Readonly<
+      Record<`the twin of ${R & string} is keyed ${R & string}Of`, never>
+    >;
+
 /**
  * A group of entries, as it is written: types each row's `read` and keeps
- * the payload it returns, and checks that each twin, keyed `nameOf`, names
- * the row `name` of the group. An entry is a twin by its `twinOf` field, not
- * by its key, so a row may have a name ending in `Of`.
+ * the payload it returns, and checks that each twin names a row of the group
+ * and is keyed by that row's name followed by `Of`. An entry is a twin by its
+ * shape (a `twinOf`, or a unit event), not by its key, so a row may have a
+ * name ending in `Of`.
  * @param rows - The group's rows and twins, by member name.
  * @returns `rows`, unchanged.
  */
 export function unitEventRows<
   T extends {
-    readonly [K in keyof T]: T[K] extends { readonly twinOf: unknown }
-      ? UnitEventTwin<K extends `${infer R}Of` ? R & keyof T : never>
+    readonly [K in keyof T]: IsTwin<T[K]> extends true
+      ? UnitEventTwin<RowKeys<T>> &
+          TwinKey<K, T[K] extends { readonly twinOf: infer R } ? R : never>
       : UnitEventRow<PayloadOf<T[K]>>;
   },
 >(rows: T): T {
