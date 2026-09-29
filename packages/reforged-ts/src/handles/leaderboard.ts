@@ -118,16 +118,16 @@ export class Leaderboard extends Handle<leaderboard> {
   }
 
   /**
-   * Asks the game whether a player has an item on the leaderboard, and drops
-   * the answer.
+   * Tests whether a player has an item on the leaderboard.
    * @remarks
-   * This method returns nothing: the answer of its Native is lost. Call
-   * `LeaderboardHasPlayerItem(board.handle, player.handle)` to read it.
+   * In w3ts 3.x it returned nothing: it called `LeaderboardHasPlayerItem`
+   * without returning its answer.
    * @param p - The player to look for.
+   * @returns True when the player has an item on the leaderboard.
    * @native LeaderboardHasPlayerItem
    */
   public hasPlayerItem(p: MapPlayer) {
-    LeaderboardHasPlayerItem(this.handle, p.handle);
+    return LeaderboardHasPlayerItem(this.handle, p.handle);
   }
 
   /**
