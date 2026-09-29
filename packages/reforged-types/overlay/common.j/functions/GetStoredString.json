@@ -18,5 +18,5 @@
       "nullable": false
     }
   ],
-  "origin": "war3-types-strict"
+  "notes": "Typed non-null, unlike the other string-returning Natives: the game gives an empty string when the cache holds no string under the key (jassdoc, `GetStoredString`)."
 }

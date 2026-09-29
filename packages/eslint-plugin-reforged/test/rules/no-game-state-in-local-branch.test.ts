@@ -125,7 +125,7 @@ const memberFamilies: readonly { family: string; code: string }[] = [
   },
   {
     family: "Camera",
-    code: "Camera.pan(0, 0, undefined);\n  Camera.setPos(0, 0);",
+    code: "Camera.pan(0, 0);\n  Camera.setPos(0, 0);",
   },
   { family: "CameraSetup", code: "setup.apply(true, false);" },
   {
