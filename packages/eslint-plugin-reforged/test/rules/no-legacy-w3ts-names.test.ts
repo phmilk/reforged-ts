@@ -39,6 +39,22 @@ const orientNote = "The static drops its prefix and takes the Unit Wrapper.";
 
 const header = 'import { Group, MapPlayer, Unit } from "reforged-ts";\n';
 
+const restoreNote =
+  "Fixture entry: it returns the Unit and throws where it returned undefined.";
+const storeNote = "Fixture entry: a unit is passed as the Unit.";
+const targetNote = "Fixture entry: it takes the Unit instead of the raw unit.";
+
+/** A report on a member that kept its name. */
+function kept(
+  messageId: "oldArgument" | "oldResult" | "checkedResult",
+  old: string,
+  note: string,
+) {
+  return { messageId, data: { old, note, ...versions } };
+}
+
+const cacheHeader = `import { Camera, GameCache, Group, MapPlayer, Unit } from "reforged-ts";\ndeclare const cache: GameCache;\ndeclare const owner: MapPlayer;\n`;
+
 ruleTester.run("no-legacy-w3ts-names", ruleOf("no-legacy-w3ts-names"), {
   valid: [
     {
@@ -64,6 +80,18 @@ ruleTester.run("no-legacy-w3ts-names", ruleOf("no-legacy-w3ts-names"), {
     {
       name: "an entry whose new name is its old one is a note, not a rename",
       code: `${header}Unit.create(MapPlayer.fromIndex(0)!, 0, 0, 0).kill();`,
+    },
+    {
+      name: "a member that kept its name, used with its new signature",
+      code: `${cacheHeader}declare const hero: Unit;\nCamera.setTargetController(hero, 0, 0, false);\ncache.store("m", "k", hero);\ncache.store("m", "n", 1);\nif (cache.hasUnit("m", "k")) {\n  const restored = cache.restoreUnit("m", "k", owner, 0, 0, 0);\n  restored.kill();\n  Group.create().addUnit(cache.restoreUnit("m", "k", owner, 0, 0, 0));\n}`,
+    },
+    {
+      name: "a check of a kept member's result that can be missing, or of another value",
+      code: `${cacheHeader}declare const other: Unit | undefined;\nconst found = MapPlayer.fromIndex(0);\nif (found !== undefined && other) {\n  print("found");\n}\nconst restored = cache.restoreUnit("m", "k", owner, 0, 0, 0);\nif (restored.name === "") {\n  print("unnamed");\n}`,
+    },
+    {
+      name: "a project member named like a kept member",
+      code: "export class Cache {\n  restoreUnit(): number | undefined { return undefined; }\n}\nconst value = new Cache().restoreUnit();\nif (value !== undefined) {\n  print(value);\n}",
     },
     {
       name: "an entry point is not code",
@@ -329,6 +357,58 @@ ruleTester.run("no-legacy-w3ts-names", ruleOf("no-legacy-w3ts-names"), {
         {
           ...removed("Handle.initFromHandle", initNote),
           suggestions: [],
+        },
+      ],
+    },
+    {
+      name: "a raw handle passed to a kept member that takes the Wrapper",
+      code: `${cacheHeader}declare const hero: Unit;\nCamera.setTargetController(hero.handle, 0, 0, false);\ncache.store("m", "k", hero.handle);`,
+      output: null,
+      errors: [
+        {
+          ...kept("oldArgument", "Camera.setTargetController", targetNote),
+          line: 5,
+          column: 28,
+        },
+        {
+          ...kept("oldArgument", "GameCache.store", storeNote),
+          line: 6,
+          column: 23,
+        },
+      ],
+    },
+    {
+      name: "a kept member's result checked for a missing value, directly and through a const",
+      code: `${cacheHeader}const hero = cache.restoreUnit("m", "k", owner, 0, 0, 0);\nif (hero !== undefined) {\n  hero.kill();\n}\nif (!cache.restoreUnit("m", "n", owner, 0, 0, 0)) {\n  print("none");\n}\ncache.restoreUnit("m", "o", owner, 0, 0, 0)?.kill();\nconst other = cache.restoreUnit("m", "p", owner, 0, 0, 0) ?? hero;`,
+      output: null,
+      errors: [
+        {
+          ...kept("checkedResult", "GameCache.restoreUnit", restoreNote),
+          line: 5,
+        },
+        {
+          ...kept("checkedResult", "GameCache.restoreUnit", restoreNote),
+          line: 8,
+        },
+        {
+          ...kept("checkedResult", "GameCache.restoreUnit", restoreNote),
+          line: 11,
+        },
+        {
+          ...kept("checkedResult", "GameCache.restoreUnit", restoreNote),
+          line: 12,
+        },
+      ],
+    },
+    {
+      name: "a kept member's result passed where the old type was taken",
+      code: `${cacheHeader}const hero = Unit.fromHandle(cache.restoreUnit("m", "k", owner, 0, 0, 0));`,
+      output: null,
+      errors: [
+        {
+          ...kept("oldResult", "GameCache.restoreUnit", restoreNote),
+          line: 4,
+          column: 30,
         },
       ],
     },

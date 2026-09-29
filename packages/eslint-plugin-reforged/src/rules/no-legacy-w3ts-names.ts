@@ -7,8 +7,17 @@
 // library class (or an instance, or a subclass), never a project class of the
 // same name. One-to-one entries are fixed; the others are suggested, one
 // suggestion per replacement; a removed symbol gets neither. Entries of kind
-// `entryPoint` (the `W3TS_HOOK` values) are not code the rule can find, and
-// an entry whose new name is its old one is a note, not a rename.
+// `entryPoint` (the `W3TS_HOOK` values) are not code the rule can find.
+//
+// A member entry whose new name is its old one keeps its name and changes
+// its signature or behaviour (#311). The name is no signal, so a call of it
+// is reported only where the checker shows the w3ts shape: an argument the
+// new parameter does not take (a raw handle where the Wrapper is taken), or
+// a result used as the old one was, passed where the new type is not taken
+// or checked for a missing value when the new type cannot be missing. Code
+// on the new signature compiles, so it is never reported; an entry with no
+// such use (a parameter made optional, a setter that now returns its
+// Wrapper) reports nothing.
 import {
   AST_NODE_TYPES,
   ASTUtils,
@@ -17,14 +26,23 @@ import {
   type TSESTree,
 } from "@typescript-eslint/utils";
 
+import * as ts from "typescript";
+
 import { libraryClassesOf, libraryClassOf } from "../classify/library-class.js";
+import { through, walkValueFlow } from "../classify/value-flow.js";
 import { createRule } from "../create-rule.js";
 import type { RenameEntry, RenameName } from "../data/index.js";
 import { defineRuleEntry } from "../rule-entry.js";
 
 export const name = "no-legacy-w3ts-names";
 
-type MessageIds = "renamed" | "removed" | "useReplacement";
+type MessageIds =
+  | "renamed"
+  | "removed"
+  | "useReplacement"
+  | "oldArgument"
+  | "oldResult"
+  | "checkedResult";
 
 type Edit = (
   fixer: TSESLint.RuleFixer,
@@ -43,36 +61,46 @@ interface Index {
   /** Constructor entries by class name. */
   readonly constructors: ReadonlyMap<string, RenameEntry>;
   /** Member and accessor entries by member name. */
-  readonly members: ReadonlyMap<
-    string,
-    readonly { className: string; entry: RenameEntry }[]
-  >;
+  readonly members: ReadonlyMap<string, readonly MemberEntry[]>;
+  /** Member entries that keep their name, by member name. */
+  readonly kept: ReadonlyMap<string, readonly MemberEntry[]>;
+}
+
+interface MemberEntry {
+  readonly className: string;
+  readonly entry: RenameEntry;
+}
+
+function add(
+  map: Map<string, MemberEntry[]>,
+  member: string,
+  each: MemberEntry,
+): void {
+  map.set(member, [...(map.get(member) ?? []), each]);
 }
 
 function indexOf(entries: readonly RenameEntry[]): Index {
   const packages = new Map<string, RenameEntry>();
   const exports = new Map<string, RenameEntry>();
   const constructors = new Map<string, RenameEntry>();
-  const members = new Map<
-    string,
-    { className: string; entry: RenameEntry }[]
-  >();
+  const members = new Map<string, MemberEntry[]>();
+  const kept = new Map<string, MemberEntry[]>();
   for (const entry of entries) {
     if (entry.kind === "package") {
       packages.set(entry.old.text, entry);
       continue;
     }
-    // An entry point is not code; an entry that keeps its name (a note on
-    // changed arguments, `Trigger.registerPlayerMouseEvent`) has no old name
-    // to find.
-    if (
-      entry.kind === "entryPoint" ||
-      entry.replacements.some((each) => each.text === entry.old.text)
-    ) {
+    // An entry point is not code.
+    const { symbol } = entry.old;
+    if (entry.kind === "entryPoint" || symbol === undefined) {
       continue;
     }
-    const { symbol } = entry.old;
-    if (symbol === undefined) {
+    // An entry that keeps its name (`GameCache.restoreUnit`) is found by the
+    // shape of its use, not by its name.
+    if (entry.replacements.some((each) => each.text === entry.old.text)) {
+      if (symbol.member !== undefined) {
+        add(kept, symbol.member, { className: symbol.className, entry });
+      }
       continue;
     }
     if (entry.kind === "constructor") {
@@ -80,10 +108,7 @@ function indexOf(entries: readonly RenameEntry[]): Index {
     } else if (symbol.member === undefined) {
       exports.set(symbol.className, entry);
     } else {
-      members.set(symbol.member, [
-        ...(members.get(symbol.member) ?? []),
-        { className: symbol.className, entry },
-      ]);
+      add(members, symbol.member, { className: symbol.className, entry });
     }
   }
   const renamed = [...packages.values()];
@@ -101,7 +126,58 @@ function indexOf(entries: readonly RenameEntry[]): Index {
     exports,
     constructors,
     members,
+    kept,
   };
+}
+
+/** Whether `type` holds undefined, null or void, or is not checked at all. */
+function mayBeMissing(type: ts.Type): boolean {
+  const loose =
+    ts.TypeFlags.Undefined |
+    ts.TypeFlags.Null |
+    ts.TypeFlags.Void |
+    ts.TypeFlags.Any |
+    ts.TypeFlags.Unknown;
+  return (type.isUnion() ? type.types : [type]).some(
+    (each) => (each.flags & loose) !== 0,
+  );
+}
+
+function isMissingLiteral(node: TSESTree.Node): boolean {
+  return (
+    (node.type === AST_NODE_TYPES.Identifier && node.name === "undefined") ||
+    (node.type === AST_NODE_TYPES.Literal && node.value === null)
+  );
+}
+
+/** Whether `parent` checks its child `child` for a missing value. */
+function checksForMissing(
+  parent: TSESTree.Node,
+  child: TSESTree.Node,
+): boolean {
+  switch (parent.type) {
+    case AST_NODE_TYPES.BinaryExpression:
+      return (
+        ["==", "!=", "===", "!=="].includes(parent.operator) &&
+        isMissingLiteral(parent.left === child ? parent.right : parent.left)
+      );
+    case AST_NODE_TYPES.UnaryExpression:
+      return parent.operator === "!";
+    case AST_NODE_TYPES.LogicalExpression:
+      return parent.left === child;
+    case AST_NODE_TYPES.IfStatement:
+    case AST_NODE_TYPES.WhileStatement:
+    case AST_NODE_TYPES.DoWhileStatement:
+    case AST_NODE_TYPES.ForStatement:
+    case AST_NODE_TYPES.ConditionalExpression:
+      return parent.test === child;
+    case AST_NODE_TYPES.MemberExpression:
+      return parent.optional && parent.object === child;
+    case AST_NODE_TYPES.CallExpression:
+      return parent.optional && parent.callee === child;
+    default:
+      return false;
+  }
 }
 
 export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
@@ -122,6 +198,12 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
         removed:
           "`{{old}}` is from {{from}} and has no replacement in {{to}}, so the map no longer compiles against it. {{note}}",
         useReplacement: "Use `{{replacement}}`.",
+        oldArgument:
+          "`{{old}}` keeps its name in {{to}} but not its {{from}} parameters: this argument does not fit the new one, so the map no longer compiles. {{note}}",
+        oldResult:
+          "`{{old}}` keeps its name in {{to}} but not its {{from}} result: it is used here where the new one does not fit, so the map no longer compiles. {{note}}",
+        checkedResult:
+          "`{{old}}` keeps its name in {{to}} but not its {{from}} result: the new one is never missing, so this check never catches a failure. {{note}}",
       },
       schema: [],
       defaultOptions: [],
@@ -214,6 +296,97 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
         ];
       }
 
+      const checker = services.program.getTypeChecker();
+
+      /** Whether `node` does not fit the type the checker expects where it stands. */
+      function misfits(node: TSESTree.Node): boolean {
+        const tsNode = services.esTreeNodeToTSNodeMap.get(node);
+        if (!ts.isExpression(tsNode)) {
+          return false;
+        }
+        const expected = checker.getContextualType(tsNode);
+        return (
+          expected !== undefined &&
+          !checker.isTypeAssignableTo(
+            checker.getTypeAtLocation(tsNode),
+            expected,
+          )
+        );
+      }
+
+      /**
+       * A call of a member that kept its name (see the file comment): its
+       * arguments first, then where its result goes.
+       */
+      function checkKept(node: TSESTree.CallExpression): void {
+        const { callee } = node;
+        if (
+          callee.type !== AST_NODE_TYPES.MemberExpression ||
+          callee.computed ||
+          callee.property.type !== AST_NODE_TYPES.Identifier
+        ) {
+          return;
+        }
+        const candidates = index.kept.get(callee.property.name);
+        if (candidates === undefined) {
+          return;
+        }
+        const chain = libraryClassesOf(
+          services,
+          callee.object,
+          index.libraryPackages,
+        );
+        const found = candidates.find(({ className }) =>
+          chain.includes(className),
+        );
+        if (found === undefined) {
+          return;
+        }
+        const { entry } = found;
+        const data = {
+          old: entry.old.text,
+          from: entry.versions.from,
+          to: entry.versions.to,
+          note: entry.note,
+        };
+        const argument = node.arguments.find(
+          (each) => each.type !== AST_NODE_TYPES.SpreadElement && misfits(each),
+        );
+        if (argument !== undefined) {
+          context.report({ node: argument, messageId: "oldArgument", data });
+          return;
+        }
+        const missable = mayBeMissing(services.getTypeAtLocation(node));
+        const use = walkValueFlow<{
+          node: TSESTree.Node;
+          messageId: "oldResult" | "checkedResult";
+        }>(
+          {
+            context,
+            services,
+            step(parent, child) {
+              if (
+                parent.type === AST_NODE_TYPES.TSNonNullExpression ||
+                parent.type === AST_NODE_TYPES.TSAsExpression ||
+                parent.type === AST_NODE_TYPES.TSSatisfiesExpression
+              ) {
+                return through;
+              }
+              if (!missable && checksForMissing(parent, child)) {
+                return { node: parent, messageId: "checkedResult" };
+              }
+              return misfits(child)
+                ? { node: child, messageId: "oldResult" }
+                : undefined;
+            },
+          },
+          node,
+        );
+        if (use !== undefined) {
+          context.report({ node: use.node, messageId: use.messageId, data });
+        }
+      }
+
       function checkSource(node: TSESTree.Node | null | undefined): void {
         if (node?.type !== AST_NODE_TYPES.Literal) {
           return;
@@ -262,6 +435,7 @@ export function createNoLegacyW3tsNames(renames: readonly RenameEntry[]) {
       }
 
       return {
+        CallExpression: checkKept,
         ImportDeclaration(node) {
           checkSource(node.source);
           if (!index.libraryPackages.has(node.source.value)) {
