@@ -269,7 +269,9 @@ export class Item extends Widget {
    * @remarks
    * In w3ts 3.x this was the `player` accessor, which returned the raw
    * `player` Handle the caller wrapped with `MapPlayer.fromHandle`; it now
-   * returns that `MapPlayer`.
+   * returns that `MapPlayer`. Unlike `Unit.getOwner`, it does not throw
+   * when there is no owner: an item need not have one, so `undefined` is
+   * an answer, not a failure.
    * @returns The owner, or `undefined` when the game gives none.
    * @native GetItemPlayer
    */
