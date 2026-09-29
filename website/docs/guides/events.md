@@ -127,7 +127,8 @@ Init.onTriggers(() => {
 
 - `addCondition` takes a plain function (or a `boolexpr`) and wraps it itself; conditions join by AND.
 - `addAction` adds an action; a Trigger can have several, run in order.
-- `enabled`, `eval()`, `exec()`, `reset()`, `removeActions()` and the counters follow the Natives. `interrupt()` and `isRunning()` are the 3.0.0 additions.
+- `removeAction(fn)` and `removeCondition(fn)` take back what `addAction(fn)` and `addCondition(fn)` added, given the same function (or `boolexpr`), as `removeEventListener` does. Removing a condition destroys the `Condition` the Trigger made for a function, never a `boolexpr` you passed. `removeActions()` and `removeConditions()` remove them all. Every remove member returns the Trigger.
+- `enabled`, `eval()`, `exec()`, `reset()` and the counters follow the Natives. `interrupt()` and `isRunning()` are the 3.0.0 additions.
 - `destroy()` destroys the Trigger. Do not destroy a Trigger from its own action while it waits: the game's handle stack can break.
 
 ## In Dev mode
