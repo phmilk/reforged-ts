@@ -154,6 +154,48 @@ describe("MapPlayer.getTaxRate", () => {
   });
 });
 
+describe("MapPlayer.getStartLocationPoint", () => {
+  const player = defined(MapPlayer.fromIndex(2), "MapPlayer.fromIndex(2)");
+
+  // The harness stubs neither Native: the player's start location is 4, and
+  // the game answers what `answer` gives for it.
+  function withStartLocation<R>(
+    answer: () => location | undefined,
+    body: () => R,
+  ): R {
+    return withNative(
+      "GetPlayerStartLocation",
+      () => 4,
+      () => withNative("GetStartLocationLoc", answer, body),
+    );
+  }
+
+  it("wraps the location GetStartLocationLoc returns for the player's start location", () => {
+    const point = withStartLocation(
+      () => Location(64, -32),
+      () => player.getStartLocationPoint(),
+    );
+    expect(stubCalls()).toContainCall(
+      `GetPlayerStartLocation(${handleRef("player", player.handle)})`,
+    );
+    expect(stubCalls()).toContainCall("GetStartLocationLoc(4)");
+    expect(Point.fromHandle(point.handle)).toBe(point);
+  });
+
+  it("throws naming Point when GetStartLocationLoc returns nil", () => {
+    let point: Point | undefined;
+    const message = withStartLocation(
+      () => undefined,
+      () =>
+        raisedIn(() => {
+          point = player.getStartLocationPoint();
+        }),
+    );
+    expect(message).toEqual("reforged-ts: failed to create Point");
+    expect(point).toBeUndefined();
+  });
+});
+
 describe("MapPlayer.setRaceSkin", () => {
   it("passes the race preference to SetPlayerRaceSkin", () => {
     const player = defined(MapPlayer.fromIndex(2), "MapPlayer.fromIndex(2)");
