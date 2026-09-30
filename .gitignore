@@ -144,6 +144,11 @@ website/typings/*/
 # The Wrapper coverage report script's build output
 wrapper-coverage/build/
 
+# The Probe runner's build output, and its local state: each Probe's builds
+# and staged map folders, its last runId, the compiled Lua tests
+probe/build/
+probe/.probe/
+
 # Claude Code local settings, worktrees and session state; the Agent skills
 # under .claude/skills/ are committed.
 .claude/*

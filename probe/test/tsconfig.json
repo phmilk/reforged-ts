@@ -1,0 +1,15 @@
+{
+  // The Node tests, under the runner's compiler options. Named tsconfig.json
+  // so the lint's project service finds it from any test file; vitest itself
+  // runs the tests from source. vitest's own declarations need the DOM lib,
+  // so library files are not checked. The Lua tests (lua/) compile with
+  // typescript-to-lua through their own tsconfig.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": ["."],
+  "exclude": ["lua"]
+}

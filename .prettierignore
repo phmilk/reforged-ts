@@ -10,6 +10,8 @@ website/.docusaurus/
 website/docs/api/reforged-ts/
 website/typings/*/
 wrapper-coverage/build/
+probe/build/
+probe/.probe/
 
 # What tools own: the Overlay JSON files, the generated Typings, the vendored
 # Patch files, the record the seed script writes and the pnpm lockfile.
@@ -40,6 +42,9 @@ wrapper-coverage/report.md
 # Agent worktrees and local state; the Agent skills are formatted.
 .claude/*
 !.claude/skills/
+
+# The Probe runner's map folder, a copy of the Template's editor-saved files.
+probe/probe.w3m/
 
 # SchemaStore's schemas, vendored byte for byte for the issue form tests.
 release/test/schemas/*.json

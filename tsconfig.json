@@ -12,6 +12,8 @@
     { "path": "packages/reforged-types/tsconfig.scripts.json" },
     // The generated Typings.
     { "path": "packages/reforged-types/tsconfig.typings.json" },
+    // The Probe runner's in-game module, through the Probes' project.
+    { "path": "probe/probes/tsconfig.json" },
     // The hand-written Lua runtime file, through the Map project fixtures.
     {
       "path": "packages/reforged-types/test/fixtures/map-project/tsconfig.json"
