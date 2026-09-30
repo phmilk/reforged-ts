@@ -61,8 +61,9 @@ export interface ReadContext {
 /**
  * Reads the Probe run of `probe`: `not-started` when there is no Result
  * file, or when it holds another run than the Probe's last build;
- * `finished` when it ends with `END status=ok`. A bad name, a Probe never
- * built or a file the game did not write is an AuthorError.
+ * `finished` when it ends with `END status=ok`. Of a file of another run,
+ * only the BEGIN line is parsed. A bad name, a Probe never built or a file
+ * the game did not write is an AuthorError.
  */
 export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
   checkProbeName(probe);
@@ -79,17 +80,19 @@ export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
     return { ...run, state: "not-started", records: [] };
   }
 
-  const lines = joinContinuationLines(unwrapPreloadFile(text)).map(
-    parseResultLine,
-  );
-  const begin = lines.at(0);
+  // Only the BEGIN line is parsed before the runId is compared: the rest of
+  // a file of another run, maybe written by an older runner, is not read.
+  const texts = joinContinuationLines(unwrapPreloadFile(text));
+  const first = texts.at(0);
+  const begin = first === undefined ? undefined : parseResultLine(first);
   const runId = begin?.kind === "BEGIN" ? field(begin, "run") : undefined;
-  if (runId === undefined) {
+  if (begin === undefined || runId === undefined) {
     throw new AuthorError(`${file} does not start with a BEGIN line.`);
   }
   if (runId !== state.runId) {
     return { ...run, runId, state: "not-started", records: [] };
   }
+  const lines = [begin, ...texts.slice(1).map(parseResultLine)];
   const last = lines.at(-1);
   if (last?.kind !== "END" || field(last, "status") !== "ok") {
     throw new AuthorError(
@@ -164,34 +167,129 @@ export function joinContinuationLines(strings: readonly string[]): string[] {
 }
 
 /**
- * A value as the writer encodes it: `%XX` escapes and the bytes it keeps as
- * they are, printable ASCII without space, `=`, `%`, `"` or `\`.
+ * The bytes the writer keeps as they are, as a regular expression character
+ * class: printable ASCII without space, `=`, `%`, `"` or `\`. A kind or a
+ * key is made of them only, a value of them and `ESCAPE`s.
  */
-const ENCODED_VALUE = /^(?:[!#$&-<>-[\]-~]|%[0-9A-Fa-f]{2})*$/;
+const KEPT = String.raw`[!#$&-<>-[\]-~]`;
 
 /**
- * A kind or a key as the writer writes it: printable ASCII without space,
- * `=`, `%`, `"` or `\`, not empty.
+ * A `%XX` escape as the writer writes it: two uppercase hexadecimal digits,
+ * of a byte it escapes (one outside printable ASCII, space, `"`, `%`, `=`
+ * or `\`), never of a byte of `KEPT`.
  */
-const SAFE_NAME = /^[!#$&-<>-[\]-~]+$/;
+const ESCAPE = "%(?:[01][0-9A-F]|2[025]|3D|5C|7F|[89A-F][0-9A-F])";
+
+/** A value as the writer encodes it: bytes of `KEPT` and `ESCAPE`s. */
+const ENCODED_VALUE = new RegExp(`^(?:${KEPT}|${ESCAPE})*$`);
+
+/** A kind or a key as the writer writes it: bytes of `KEPT`, not empty. */
+const SAFE_NAME = new RegExp(`^${KEPT}+$`);
 
 /**
  * The value the writer percent-encoded: each `%XX` back to its byte, then
- * the bytes read as UTF-8, where a byte that is not UTF-8 reads as U+FFFD.
- * Undefined when a `%` is not followed by two hexadecimal digits, or when
- * the value holds a character the writer always escapes.
+ * the bytes read as UTF-8, where each byte outside a valid UTF-8 sequence
+ * reads as its `%XX` escape, in uppercase, so no byte is lost. Undefined
+ * when the value holds anything the writer does not write: a character it
+ * always escapes, a `%` without two uppercase hexadecimal digits, or the
+ * escape of a byte it keeps as it is.
  */
 export function decodeValue(value: string): string | undefined {
   if (!ENCODED_VALUE.test(value)) return undefined;
   // What is left besides the escapes is ASCII, one byte per character.
   const bytes = value
-    .split(/(%[0-9A-Fa-f]{2})/)
+    .split(/(%[0-9A-F]{2})/)
     .flatMap((part) =>
       part.startsWith("%")
         ? [Number.parseInt(part.slice(1), 16)]
         : [...Buffer.from(part, "ascii")],
     );
-  return Buffer.from(bytes).toString("utf8");
+  return decodeUtf8(bytes);
+}
+
+type ByteRange = readonly [low: number, high: number];
+
+/**
+ * The well-formed UTF-8 sequences, as the Unicode Standard's table 3-7
+ * lists them (no overlong form, no surrogate, nothing above U+10FFFF): the
+ * range of the first byte, then the range of each byte after it.
+ */
+const UTF8_SEQUENCES: readonly (readonly [ByteRange, ...ByteRange[]])[] = [
+  [[0x00, 0x7f]],
+  [
+    [0xc2, 0xdf],
+    [0x80, 0xbf],
+  ],
+  [
+    [0xe0, 0xe0],
+    [0xa0, 0xbf],
+    [0x80, 0xbf],
+  ],
+  [
+    [0xe1, 0xec],
+    [0x80, 0xbf],
+    [0x80, 0xbf],
+  ],
+  [
+    [0xed, 0xed],
+    [0x80, 0x9f],
+    [0x80, 0xbf],
+  ],
+  [
+    [0xee, 0xef],
+    [0x80, 0xbf],
+    [0x80, 0xbf],
+  ],
+  [
+    [0xf0, 0xf0],
+    [0x90, 0xbf],
+    [0x80, 0xbf],
+    [0x80, 0xbf],
+  ],
+  [
+    [0xf1, 0xf3],
+    [0x80, 0xbf],
+    [0x80, 0xbf],
+    [0x80, 0xbf],
+  ],
+  [
+    [0xf4, 0xf4],
+    [0x80, 0x8f],
+    [0x80, 0xbf],
+    [0x80, 0xbf],
+  ],
+];
+
+/** The length of the well-formed UTF-8 sequence at `index`, or 0 when none starts there. */
+function utf8SequenceLength(bytes: readonly number[], index: number): number {
+  const sequence = UTF8_SEQUENCES.find((ranges) =>
+    ranges.every(([low, high], offset) => {
+      const byte = bytes.at(index + offset);
+      return byte !== undefined && byte >= low && byte <= high;
+    }),
+  );
+  return sequence?.length ?? 0;
+}
+
+/**
+ * The bytes as UTF-8 text, each byte outside a well-formed UTF-8 sequence
+ * as its `%XX` escape, two uppercase hexadecimal digits.
+ */
+function decodeUtf8(bytes: readonly number[]): string {
+  let text = "";
+  let index = 0;
+  while (index < bytes.length) {
+    const length = utf8SequenceLength(bytes, index);
+    if (length === 0) {
+      const byte = bytes[index] ?? 0;
+      text += `%${byte.toString(16).toUpperCase().padStart(2, "0")}`;
+      index++;
+    } else {
+      text += Buffer.from(bytes.slice(index, index + length)).toString("utf8");
+      index += length;
+    }
+  }
+  return text;
 }
 
 /**
@@ -284,5 +382,5 @@ function statusLine(run: ProbeRun): string {
   }
   return run.runId === undefined
     ? `not-started: no Result file at ${run.file}`
-    : `not-started: the Result file is from run ${run.runId}, not from this build's run ${run.expectedRunId}`;
+    : `not-started: the Result file is from run ${formatValue(run.runId)}, not from this build's run ${run.expectedRunId}`;
 }

@@ -172,6 +172,56 @@ describe("probe:read", () => {
     });
   });
 
+  it("gives not-started, exit code 3, for the Result file of another run, without reading past its BEGIN line", async () => {
+    const { context, resultFile } = await setup("newer-build");
+    await writeResult(
+      resultFile,
+      preloadFile([
+        "1 BEGIN probe=hello run=older-build",
+        "2 note value=50%",
+        "3 note value=%c3%a9 other",
+        "3+ orphan",
+      ]),
+    );
+
+    expect(read([BRIDGE_PROBE], context)).toEqual({
+      code: 3,
+      stdout:
+        "not-started: the Result file is from run older-build, not from this build's run newer-build\n",
+      stderr: "",
+    });
+  });
+
+  it("still refuses the same lines in a Result file of the expected run", async () => {
+    const { context, resultFile } = await setup();
+    await writeResult(
+      resultFile,
+      preloadFile(["1 BEGIN probe=hello run=bridge", "2 note value=50%"]),
+    );
+
+    const { code, stderr } = read([BRIDGE_PROBE], context);
+    expect(code).toBe(4);
+    expect(stderr).toBe(
+      'probe:read failed: Not a Result file line: "2 note value=50%".\n',
+    );
+  });
+
+  it("prints the runId of another run on one line, quoted when it holds a control character", async () => {
+    const { context, resultFile } = await setup("newer-build");
+    await writeResult(
+      resultFile,
+      preloadFile(["1 BEGIN probe=hello run=a%0Ab%1B[m"]),
+    );
+
+    expect(read([BRIDGE_PROBE], context)).toEqual({
+      code: 3,
+      stdout:
+        String.raw`not-started: the Result file is from run "a\nb\u001b[m", not from this build's run newer-build` +
+        "\n",
+      stderr: "",
+    });
+  });
+
   it.each([["Hello"], ["hello_world"], ["../hello"], ["hello.txt"]])(
     "refuses the Probe name %s with a one-line author error and exit code 4",
     async (name) => {
@@ -271,8 +321,44 @@ describe("decodeValue", () => {
     expect(decodeValue("h%C3%A9llo%20%E6%97%A5")).toBe("héllo 日");
   });
 
-  it("accepts lowercase hexadecimal digits", () => {
-    expect(decodeValue("%c3%a9")).toBe("é");
+  it("gives undefined for an escape with a lowercase hexadecimal digit, which the writer does not write", () => {
+    expect(decodeValue("%c3%a9")).toBeUndefined();
+    expect(decodeValue("%C3%a9")).toBeUndefined();
+    expect(decodeValue("%0a")).toBeUndefined();
+  });
+
+  it("accepts the escape of each byte the writer escapes, and of no byte it keeps", () => {
+    for (let byte = 0; byte < 256; byte++) {
+      const escape = `%${byte.toString(16).toUpperCase().padStart(2, "0")}`;
+      const kept =
+        byte > 32 && byte < 127 && !'=%"\\'.includes(String.fromCharCode(byte));
+      expect(decodeValue(escape) === undefined, escape).toBe(kept);
+    }
+    expect(decodeValue("%41")).toBeUndefined();
+    expect(decodeValue("a%2Db")).toBeUndefined();
+  });
+
+  it("decodes a byte outside a valid UTF-8 sequence to its escape, in uppercase, so no byte is lost", () => {
+    expect(decodeValue("%C8%C9")).toBe("%C8%C9");
+    expect(decodeValue("a%E2%9C")).toBe("a%E2%9C");
+    expect(decodeValue("%E2%9C%93%FF%E2%9C%93")).toBe("✓%FF✓");
+    expect(decodeValue("%E2%9Cb")).toBe("%E2%9Cb");
+    expect(decodeValue("%80")).toBe("%80");
+  });
+
+  it("decodes an overlong form, a surrogate or a code point above U+10FFFF to escapes", () => {
+    expect(decodeValue("%C0%AF")).toBe("%C0%AF");
+    expect(decodeValue("%E0%80%AF")).toBe("%E0%80%AF");
+    expect(decodeValue("%ED%A0%80")).toBe("%ED%A0%80");
+    expect(decodeValue("%F4%90%80%80")).toBe("%F4%90%80%80");
+  });
+
+  it("decodes every well-formed UTF-8 sequence to its character", () => {
+    expect(decodeValue("%7F%C2%80%DF%BF")).toBe("\u007f\u0080\u07ff");
+    expect(decodeValue("%E0%A0%80%ED%9F%BF%EE%80%80%EF%BF%BF")).toBe(
+      "\u0800\ud7ff\ue000\uffff",
+    );
+    expect(decodeValue("%F0%9F%98%80%F4%8F%BF%BF")).toBe("😀\u{10ffff}");
   });
 
   it("gives undefined for a % without two hexadecimal digits", () => {
