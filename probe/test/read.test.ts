@@ -4,7 +4,16 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { main, type Context } from "../src/cli/read.js";
 import { systemMachine } from "../src/machine.js";
-import { unwrapPreloadFile } from "../src/read.js";
+import {
+  decodeValue,
+  field,
+  formatLine,
+  formatValue,
+  joinContinuationLines,
+  parseResultLine,
+  readProbeRun,
+  unwrapPreloadFile,
+} from "../src/read.js";
 import { stateFile } from "../src/state.js";
 import { USER_FOLDER_VARIABLE } from "../src/user-folder.js";
 import {
@@ -13,6 +22,14 @@ import {
   bridgeLines,
   preloadFile,
 } from "./support/bridge.js";
+
+/** The hello Probe's `ascii` value: every byte of ASCII the writer escapes. */
+const ESCAPED_ASCII = `${String.fromCharCode(
+  ...Array.from({ length: 32 }, (_, byte) => byte),
+)} "%=\\\u007f`;
+
+/** The hello Probe's `utf8` value. */
+const UTF8_TEXT = "héllo, wörld: ✓ 日本語";
 
 interface Setup {
   context: Context;
@@ -79,12 +96,58 @@ describe("probe:read", () => {
     expect(read([BRIDGE_PROBE], context)).toEqual({
       code: 0,
       stdout: [
-        "finished: Probe hello, run bridge, 1 record",
+        "finished: Probe hello, run bridge, 2 records",
         "greeting count=1 word=hello",
+        String.raw`encoded ascii="\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f \"%=\\\u007f" utf8="héllo, wörld: ✓ 日本語"`,
         "",
       ].join("\n"),
       stderr: "",
     });
+  });
+
+  it("decodes the bridge fixture's records back to the values the hello Probe recorded", async () => {
+    const { context, resultFile } = await setup();
+    await writeResult(resultFile, preloadFile(bridgeLines()));
+
+    expect(readProbeRun(BRIDGE_PROBE, context).records).toEqual([
+      {
+        seq: 2,
+        kind: "greeting",
+        fields: [
+          ["count", "1"],
+          ["word", "hello"],
+        ],
+      },
+      {
+        seq: 3,
+        kind: "encoded",
+        fields: [
+          ["ascii", ESCAPED_ASCII],
+          ["utf8", UTF8_TEXT],
+        ],
+      },
+    ]);
+  });
+
+  it("joins a value of exactly 200 bytes once encoded from its continuation line", async () => {
+    const { context, resultFile } = await setup();
+    const value = `${"é".repeat(33)}ab`;
+    const encoded = `${"%C3%A9".repeat(33)}ab`;
+    expect(encoded).toHaveLength(200);
+    const line = `2 long value=${encoded}`;
+    await writeResult(
+      resultFile,
+      preloadFile([
+        "1 BEGIN probe=hello run=bridge",
+        line.slice(0, 200),
+        `2+ ${line.slice(200)}`,
+        "3 END status=ok",
+      ]),
+    );
+
+    expect(readProbeRun(BRIDGE_PROBE, context).records).toEqual([
+      { seq: 2, kind: "long", fields: [["value", value]] },
+    ]);
   });
 
   it("gives not-started, exit code 3, when there is no Result file", async () => {
@@ -109,6 +172,56 @@ describe("probe:read", () => {
     });
   });
 
+  it("gives not-started, exit code 3, for the Result file of another run, without reading past its BEGIN line", async () => {
+    const { context, resultFile } = await setup("newer-build");
+    await writeResult(
+      resultFile,
+      preloadFile([
+        "1 BEGIN probe=hello run=older-build",
+        "2 note value=50%",
+        "3 note value=%c3%a9 other",
+        "3+ orphan",
+      ]),
+    );
+
+    expect(read([BRIDGE_PROBE], context)).toEqual({
+      code: 3,
+      stdout:
+        "not-started: the Result file is from run older-build, not from this build's run newer-build\n",
+      stderr: "",
+    });
+  });
+
+  it("still refuses the same lines in a Result file of the expected run", async () => {
+    const { context, resultFile } = await setup();
+    await writeResult(
+      resultFile,
+      preloadFile(["1 BEGIN probe=hello run=bridge", "2 note value=50%"]),
+    );
+
+    const { code, stderr } = read([BRIDGE_PROBE], context);
+    expect(code).toBe(4);
+    expect(stderr).toBe(
+      'probe:read failed: Not a Result file line: "2 note value=50%".\n',
+    );
+  });
+
+  it("prints the runId of another run on one line, quoted when it holds a control character", async () => {
+    const { context, resultFile } = await setup("newer-build");
+    await writeResult(
+      resultFile,
+      preloadFile(["1 BEGIN probe=hello run=a%0Ab%1B[m"]),
+    );
+
+    expect(read([BRIDGE_PROBE], context)).toEqual({
+      code: 3,
+      stdout:
+        String.raw`not-started: the Result file is from run "a\nb\u001b[m", not from this build's run newer-build` +
+        "\n",
+      stderr: "",
+    });
+  });
+
   it.each([["Hello"], ["hello_world"], ["../hello"], ["hello.txt"]])(
     "refuses the Probe name %s with a one-line author error and exit code 4",
     async (name) => {
@@ -119,6 +232,21 @@ describe("probe:read", () => {
       expect(stderr).toMatch(/^probe:read failed: .*kebab-case.*\n$/);
     },
   );
+
+  it("prints a Result file it does not classify on one line, a newline and an escape of its values quoted", async () => {
+    const { context, resultFile } = await setup();
+    await writeResult(
+      resultFile,
+      preloadFile(["1 BEGIN probe=hello run=bridge", "2 note text=a%0Ab%1B[m"]),
+    );
+
+    const { code, stdout, stderr } = read([BRIDGE_PROBE], context);
+    expect(code).toBe(4);
+    expect(stdout).toBe("");
+    expect(stderr).toBe(
+      `probe:read failed: ${resultFile} ends with ${JSON.stringify(String.raw`note text="a\nb\u001b[m"`)}, which this reader does not classify yet.\n`,
+    );
+  });
 
   it("fails with exit code 4 when the Probe was never built", async () => {
     const { context } = await setup();
@@ -149,5 +277,181 @@ describe("unwrapPreloadFile", () => {
     expect(() => unwrapPreloadFile("1 BEGIN probe=a run=b\n")).toThrow(
       /not a file the game's Preload wrote/,
     );
+  });
+});
+
+describe("joinContinuationLines", () => {
+  it("appends each continuation line to its line before decoding, a split escape included", () => {
+    const lines = joinContinuationLines([
+      "1 BEGIN probe=a run=b",
+      "2 note text=a%E2%9C",
+      "2+ %93b",
+      "2+ %20c",
+      "3 END status=ok",
+    ]);
+    expect(lines).toEqual([
+      "1 BEGIN probe=a run=b",
+      "2 note text=a%E2%9C%93b%20c",
+      "3 END status=ok",
+    ]);
+    expect(field(parseResultLine(lines[1] ?? ""), "text")).toBe("a✓b c");
+  });
+
+  it("rejects a continuation line that does not follow its line", () => {
+    expect(() =>
+      joinContinuationLines(["1 BEGIN probe=a run=b", "2+ more"]),
+    ).toThrow(/The continuation line "2\+ more" does not follow the line 2/);
+    expect(() => joinContinuationLines(["1+ more"])).toThrow(
+      /does not follow the line 1/,
+    );
+  });
+});
+
+describe("decodeValue", () => {
+  it("decodes a literal % from its escape", () => {
+    expect(decodeValue("100%25")).toBe("100%");
+    expect(decodeValue("%25%25")).toBe("%%");
+    expect(decodeValue("%2525")).toBe("%25");
+  });
+
+  it("decodes every escaped byte of ASCII, and UTF-8 bytes to their characters", () => {
+    expect(decodeValue("%00%09%0A%0D%1F%20%22%25%3D%5C%7F")).toBe(
+      '\0\t\n\r\u001f "%=\\\u007f',
+    );
+    expect(decodeValue("h%C3%A9llo%20%E6%97%A5")).toBe("héllo 日");
+  });
+
+  it("gives undefined for an escape with a lowercase hexadecimal digit, which the writer does not write", () => {
+    expect(decodeValue("%c3%a9")).toBeUndefined();
+    expect(decodeValue("%C3%a9")).toBeUndefined();
+    expect(decodeValue("%0a")).toBeUndefined();
+  });
+
+  it("accepts the escape of each byte the writer escapes, and of no byte it keeps", () => {
+    for (let byte = 0; byte < 256; byte++) {
+      const escape = `%${byte.toString(16).toUpperCase().padStart(2, "0")}`;
+      const kept =
+        byte > 32 && byte < 127 && !'=%"\\'.includes(String.fromCharCode(byte));
+      expect(decodeValue(escape) === undefined, escape).toBe(kept);
+    }
+    expect(decodeValue("%41")).toBeUndefined();
+    expect(decodeValue("a%2Db")).toBeUndefined();
+  });
+
+  it("decodes a byte outside a valid UTF-8 sequence to its escape, in uppercase, so no byte is lost", () => {
+    expect(decodeValue("%C8%C9")).toBe("%C8%C9");
+    expect(decodeValue("a%E2%9C")).toBe("a%E2%9C");
+    expect(decodeValue("%E2%9C%93%FF%E2%9C%93")).toBe("✓%FF✓");
+    expect(decodeValue("%E2%9Cb")).toBe("%E2%9Cb");
+    expect(decodeValue("%80")).toBe("%80");
+  });
+
+  it("decodes an overlong form, a surrogate or a code point above U+10FFFF to escapes", () => {
+    expect(decodeValue("%C0%AF")).toBe("%C0%AF");
+    expect(decodeValue("%E0%80%AF")).toBe("%E0%80%AF");
+    expect(decodeValue("%ED%A0%80")).toBe("%ED%A0%80");
+    expect(decodeValue("%F4%90%80%80")).toBe("%F4%90%80%80");
+  });
+
+  it("decodes every well-formed UTF-8 sequence to its character", () => {
+    expect(decodeValue("%7F%C2%80%DF%BF")).toBe("\u007f\u0080\u07ff");
+    expect(decodeValue("%E0%A0%80%ED%9F%BF%EE%80%80%EF%BF%BF")).toBe(
+      "\u0800\ud7ff\ue000\uffff",
+    );
+    expect(decodeValue("%F0%9F%98%80%F4%8F%BF%BF")).toBe("😀\u{10ffff}");
+  });
+
+  it("gives undefined for a % without two hexadecimal digits", () => {
+    expect(decodeValue("100%")).toBeUndefined();
+    expect(decodeValue("%2")).toBeUndefined();
+    expect(decodeValue("%G0")).toBeUndefined();
+  });
+
+  it("makes parseResultLine reject a value with a bad escape", () => {
+    expect(() => parseResultLine("2 note text=100%")).toThrow(
+      /Not a Result file line/,
+    );
+  });
+
+  it("gives undefined for a character the writer always escapes, found unescaped", () => {
+    for (const character of ["=", '"', "\\", "\t", "\u007f", "é", "✓"]) {
+      expect(decodeValue(`a${character}b`), character).toBeUndefined();
+    }
+  });
+
+  it("keeps every printable ASCII character the writer keeps", () => {
+    const kept = Array.from({ length: 94 }, (_, index) =>
+      String.fromCharCode(33 + index),
+    )
+      .filter((character) => !'=%"\\'.includes(character))
+      .join("");
+    expect(kept).toHaveLength(90);
+    expect(decodeValue(kept)).toBe(kept);
+  });
+});
+
+describe("parseResultLine", () => {
+  it("parses the seq, the kind and the fields, in the order written", () => {
+    expect(parseResultLine("7 note b=2 a=x%20y")).toEqual({
+      seq: 7,
+      kind: "note",
+      fields: [
+        ["b", "2"],
+        ["a", "x y"],
+      ],
+    });
+  });
+
+  it("rejects a pair without its =, or without a key, before decoding it", () => {
+    expect(() => parseResultLine("2 note text")).toThrow(
+      'Not a Result file line: "2 note text".',
+    );
+    expect(() => parseResultLine("2 note =x")).toThrow(/Not a Result file/);
+    expect(() => parseResultLine("2 note %=x")).toThrow(/Not a Result file/);
+  });
+
+  it("rejects a kind or a key outside the safe alphabet", () => {
+    expect(() => parseResultLine("2 n%C3%A9 a=1")).toThrow(/Not a Result file/);
+    expect(() => parseResultLine("2 note k\u001b=1")).toThrow(
+      String.raw`Not a Result file line: "2 note k\u001b=1".`,
+    );
+  });
+});
+
+describe("formatValue", () => {
+  it("prints a value of printable characters without space or quote as it is", () => {
+    expect(formatValue("hello")).toBe("hello");
+    expect(formatValue("a=b\\c%25")).toBe("a=b\\c%25");
+    expect(formatValue("héllo✓日本語")).toBe("héllo✓日本語");
+  });
+
+  it("prints the empty value, and one holding a space or a quote, as a JSON string", () => {
+    expect(formatValue("")).toBe('""');
+    expect(formatValue("a b")).toBe('"a b"');
+    expect(formatValue('say "hi"')).toBe(String.raw`"say \"hi\""`);
+  });
+
+  it("escapes every control and format character, so a value prints on one line and moves no terminal", () => {
+    const value = "a\nb\r\u001b[31m\u007f\u009b\u200e\u2028\u00a0\u{e0001}";
+    const printed = formatValue(value);
+    expect(printed).toBe(
+      String.raw`"a\nb\r\u001b[31m\u007f\u009b\u200e\u2028\u00a0\udb40\udc01"`,
+    );
+    expect(JSON.parse(printed)).toBe(value);
+  });
+});
+
+describe("formatLine", () => {
+  it("prints the kind, then each field with its value as formatValue gives it", () => {
+    expect(
+      formatLine({
+        seq: 3,
+        kind: "note",
+        fields: [
+          ["word", "hi"],
+          ["text", "two words"],
+        ],
+      }),
+    ).toBe('note word=hi text="two words"');
   });
 });

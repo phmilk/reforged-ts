@@ -57,10 +57,40 @@ describe("the hello Probe's bundle", () => {
     expect(calls).toEqual([
       "PreloadGenClear()",
       "PreloadGenStart()",
-      'Preload("1 BEGIN probe=hello run=bridge")',
-      'Preload("2 greeting count=1 word=hello")',
-      'Preload("3 END status=ok")',
+      ...(globals.require("bridge_fixture") as string[]).map(
+        (line) => `Preload("${line}")`,
+      ),
       'PreloadGenEnd("reforged-ts\\\\probes\\\\hello.txt")',
     ]);
+  });
+
+  it("writes no line longer than 200 bytes, nor any holding a quote or a backslash", () => {
+    const lines = __stub_preload_file(RESULT_FILE) ?? [];
+    expect(lines.length).toEqual(
+      (globals.require("bridge_fixture") as string[]).length,
+    );
+    for (const line of lines) {
+      expect(line.length <= 200).toEqual(true);
+      expect(string.find(line, '["\\]')[0]).toBeUndefined();
+    }
+  });
+
+  it("splits a record longer than 200 bytes into continuation lines of its seq", () => {
+    const lines = __stub_preload_file(RESULT_FILE) ?? [];
+    let continuations = 0;
+    let seq = "";
+    for (const [index, line] of lines.entries()) {
+      // `string.match` gives nil when the line does not match.
+      const continued = string.match(line, "^(%d+)%+ ")[0] as
+        string | undefined;
+      if (continued === undefined) {
+        seq = string.match(line, "^(%d+) ")[0];
+        continue;
+      }
+      continuations++;
+      expect(continued).toEqual(seq);
+      expect(lines[index - 1]?.length).toEqual(200);
+    }
+    expect(continuations > 0).toEqual(true);
   });
 });
