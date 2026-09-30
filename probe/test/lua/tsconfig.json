@@ -3,7 +3,9 @@
   // compiles these tests to ../../.probe/lua-test, where the vitest global
   // setup (../support/lua-setup.ts) adds the hello Probe's bundle, built with
   // the bridge fixture's runId, and the fixture's lines as a Lua module. The
-  // default build mode copies the harness runner to lua_modules.
+  // tests import the in-game module's encoding (../../game/encoding.ts), so
+  // the root is the package folder. The default build mode copies the
+  // harness runner to lua_modules.
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext"],
@@ -16,10 +18,10 @@
     ],
     "strict": true,
     "noUnusedParameters": true,
-    "rootDir": ".",
+    "rootDir": "../..",
     "outDir": "../../.probe/lua-test"
   },
-  "include": ["."],
+  "include": [".", "../../game/encoding.ts"],
   "tstl": {
     "buildMode": "default",
     // Modules the global setup writes next to the compiled tests.

@@ -1,3 +1,5 @@
 1 BEGIN probe=hello run=bridge
 2 greeting count=1 word=hello
-3 END status=ok
+3 encoded ascii=%00%01%02%03%04%05%06%07%08%09%0A%0B%0C%0D%0E%0F%10%11%12%13%14%15%16%17%18%19%1A%1B%1C%1D%1E%1F%20%22%25%3D%5C%7F utf8=h%C3%A9llo,%20w%C3%B6rld:%20%E2%9C%93%20%E6%97%A5%E6%9C%AC%E8%AA
+3+ %9E
+4 END status=ok

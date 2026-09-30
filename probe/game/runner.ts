@@ -6,6 +6,7 @@
 // library without the library writing its results.
 
 import { run } from "@probe/current";
+import { encodeValue, splitLine } from "./encoding";
 import type { FieldValue, ProbeContext } from "./probe";
 
 /** The Probe's `run`, which may leave `p` out: checked against what the runner passes. */
@@ -22,7 +23,10 @@ const RESULT_FILE = `reforged-ts\\probes\\${PROBE}.txt`;
 /** How long the message at the end stays on screen, in seconds. */
 const END_MESSAGE_SECONDS = 3600;
 
-/** The Result file's lines so far, `<seq> <kind> <key>=<value> ...`. */
+/**
+ * The Result file's lines so far, `<seq> <kind> <key>=<value> ...`, each
+ * before its split into continuation lines.
+ */
 const lines: string[] = [];
 
 /** The number of the Probe's own records so far. */
@@ -32,21 +36,29 @@ function addLine(kind: string, fields: string): void {
   lines.push(`${String(lines.length + 1)} ${kind}${fields}`);
 }
 
-/** The fields as ` <key>=<value>` each, sorted by key: Lua tables keep no order. */
+/**
+ * The fields as ` <key>=<value>` each, sorted by key: Lua tables keep no
+ * order. Each value is percent-encoded.
+ */
 function formatFields(fields: Readonly<Record<string, FieldValue>>): string {
   return Object.keys(fields)
     .sort()
-    .map((key) => ` ${key}=${tostring(fields[key])}`)
+    .map((key) => ` ${key}=${encodeValue(tostring(fields[key]))}`)
     .join("");
 }
 
-/** Writes every line so far to the Result file, replacing what it held. */
+/**
+ * Writes every line so far to the Result file, replacing what it held, a
+ * line longer than 200 bytes as continuation lines.
+ */
 function writeResultFile(): void {
   PreloadGenClear();
   PreloadGenStart();
-  for (const line of lines) {
-    Preload(line);
-  }
+  lines.forEach((line, index) => {
+    for (const part of splitLine(line, index + 1)) {
+      Preload(part);
+    }
+  });
   PreloadGenEnd(RESULT_FILE);
 }
 

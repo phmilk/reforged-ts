@@ -12,7 +12,10 @@ export type FieldValue = string | number | boolean;
 export interface ProbeContext {
   /**
    * Adds one record to the Result file: the line
-   * `<seq> <kind> <key>=<value> ...`, its fields sorted by key.
+   * `<seq> <kind> <key>=<value> ...`, its fields sorted by key. A value
+   * may be any string: the writer percent-encodes it and splits a long line
+   * into continuation lines. The kind and the keys stay in the safe
+   * alphabet: printable ASCII without space, `=`, `%`, `"` or `\`.
    */
   record(kind: string, fields: Readonly<Record<string, FieldValue>>): void;
 }

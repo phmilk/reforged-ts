@@ -1,7 +1,8 @@
 /**
  * `probe:read`, and the reader the package's other scripts import: finds a
  * Probe's Result file in the game's `CustomMapData` folder, undoes the
- * game's `Preload` wrapper, parses the lines and classifies the Probe run
+ * game's `Preload` wrapper, joins the continuation lines, parses the lines,
+ * decodes their values and classifies the Probe run
  * against the runId of the Probe's last build. Read-only.
  */
 import { AuthorError } from "./errors.js";
@@ -28,11 +29,11 @@ export const RESERVED_KINDS: readonly string[] = [
   "END",
 ];
 
-/** One line of a Result file: `<seq> <kind> <key>=<value> ...`. */
+/** One line of a Result file, `<seq> <kind> <key>=<value> ...`, its continuation lines joined. */
 export interface ResultLine {
   seq: number;
   kind: string;
-  /** The fields, in the order written. */
+  /** The fields, in the order written, each value decoded. */
   fields: readonly (readonly [key: string, value: string])[];
 }
 
@@ -78,7 +79,9 @@ export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
     return { ...run, state: "not-started", records: [] };
   }
 
-  const lines = unwrapPreloadFile(text).map(parseResultLine);
+  const lines = joinContinuationLines(unwrapPreloadFile(text)).map(
+    parseResultLine,
+  );
   const begin = lines.at(0);
   const runId = begin?.kind === "BEGIN" ? field(begin, "run") : undefined;
   if (runId === undefined) {
@@ -133,15 +136,66 @@ export function unwrapPreloadFile(text: string): string[] {
   });
 }
 
-/** Parses one Result file line, `<seq> <kind> <key>=<value> ...`. */
+const CONTINUATION_LINE = /^([1-9][0-9]*)\+ (.*)$/s;
+
+/**
+ * The Result file's lines with each continuation line, `<seq>+ <bytes>`,
+ * appended to the line before it, which must be the line `<seq>`. The
+ * writer splits a line longer than 200 bytes this way before any decoding,
+ * so the bytes are joined as they are, a split `%XX` included.
+ */
+export function joinContinuationLines(strings: readonly string[]): string[] {
+  const lines: string[] = [];
+  for (const text of strings) {
+    const match = CONTINUATION_LINE.exec(text);
+    if (!match) {
+      lines.push(text);
+      continue;
+    }
+    const previous = lines.at(-1);
+    if (previous?.split(" ", 1)[0] !== match[1]) {
+      throw new AuthorError(
+        `The continuation line "${text}" does not follow the line ${match[1]}.`,
+      );
+    }
+    lines[lines.length - 1] = previous + match[2];
+  }
+  return lines;
+}
+
+const ENCODED_VALUE = /^(?:[^%]|%[0-9A-Fa-f]{2})*$/;
+
+/**
+ * The value the writer percent-encoded: each `%XX` back to its byte, then
+ * the bytes read as UTF-8, where a byte that is not UTF-8 reads as U+FFFD.
+ * Undefined when a `%` is not followed by two hexadecimal digits.
+ */
+export function decodeValue(value: string): string | undefined {
+  if (!ENCODED_VALUE.test(value)) return undefined;
+  const bytes = value
+    .split(/(%[0-9A-Fa-f]{2})/)
+    .flatMap((part) =>
+      part.startsWith("%")
+        ? [Number.parseInt(part.slice(1), 16)]
+        : [...Buffer.from(part, "latin1")],
+    );
+  return Buffer.from(bytes).toString("utf8");
+}
+
+/**
+ * Parses one Result file line, `<seq> <kind> <key>=<value> ...`, its
+ * continuation lines joined, and decodes its values.
+ */
 export function parseResultLine(text: string): ResultLine {
   const [seq = "", kind = "", ...pairs] = text.split(" ");
   const fields = pairs.map((pair) => {
-    // A pair without its `=`, or without a key, gets the empty key refused below.
+    // A pair without its `=`, without a key or with a bad escape gets the
+    // empty key refused below.
     const equals = pair.indexOf("=");
-    return equals < 1
+    const value = decodeValue(pair.slice(equals + 1));
+    return equals < 1 || value === undefined
       ? (["", pair] as const)
-      : ([pair.slice(0, equals), pair.slice(equals + 1)] as const);
+      : ([pair.slice(0, equals), value] as const);
   });
   if (
     !/^[1-9][0-9]*$/.test(seq) ||
