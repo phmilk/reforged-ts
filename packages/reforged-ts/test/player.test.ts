@@ -154,7 +154,7 @@ describe("MapPlayer.getTaxRate", () => {
   });
 });
 
-describe("MapPlayer.startLocationPoint", () => {
+describe("MapPlayer.getStartLocationPoint", () => {
   const player = defined(MapPlayer.fromIndex(2), "MapPlayer.fromIndex(2)");
 
   // The harness stubs neither Native: the player's start location is 4, and
@@ -173,7 +173,7 @@ describe("MapPlayer.startLocationPoint", () => {
   it("wraps the location GetStartLocationLoc returns for the player's start location", () => {
     const point = withStartLocation(
       () => Location(64, -32),
-      () => player.startLocationPoint,
+      () => player.getStartLocationPoint(),
     );
     expect(stubCalls()).toContainCall(
       `GetPlayerStartLocation(${handleRef("player", player.handle)})`,
@@ -188,7 +188,7 @@ describe("MapPlayer.startLocationPoint", () => {
       () => undefined,
       () =>
         raisedIn(() => {
-          point = player.startLocationPoint;
+          point = player.getStartLocationPoint();
         }),
     );
     expect(message).toEqual("reforged-ts: failed to create Point");

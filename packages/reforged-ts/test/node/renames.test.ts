@@ -5,7 +5,7 @@
 // entry point, enum and helper step 4 removes or replaces, every Trigger
 // registration step 5 renames or changes, every member of the sync, host
 // and binary Systems step 6 removes or renames, every member step 7
-// removes, and the two members #312 renames.
+// removes, the two members #312 renames, and the accessor #258 renames.
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
@@ -157,6 +157,15 @@ const REMOVED_IN_STEP_7: [old: string, kind: RenameEntry["kind"]][] = [
 const RENAMED_IN_312: [old: string, kind: RenameEntry["kind"]][] = [
   ["Item.player", "accessor"],
   ["Camera.setCameraOrientController", "member"],
+];
+
+/**
+ * What #258 renames, with its kind: the getter-only accessor
+ * `MapPlayer.startLocationPoint`, whose read becomes the call
+ * `player.getStartLocationPoint()`, like `Unit.point` becomes `getPoint()`.
+ */
+const RENAMED_IN_258: [old: string, kind: RenameEntry["kind"]][] = [
+  ["MapPlayer.startLocationPoint", "accessor"],
 ];
 
 const valid: RenameEntry = {
@@ -413,6 +422,24 @@ describe("migration/renames.json", () => {
     expect(
       RENAMED_IN_312.filter(([old, kind]) => kinds.get(old) !== kind),
     ).toEqual([]);
+  });
+
+  it("has an entry for every member #258 renames, of its kind", async () => {
+    const entries = await loadRenames();
+    const kinds = new Map(entries.map((entry) => [entry.old, entry.kind]));
+    expect(
+      RENAMED_IN_258.filter(([old, kind]) => kinds.get(old) !== kind),
+    ).toEqual([]);
+  });
+
+  it("renames MapPlayer.startLocationPoint to the getter MapPlayer.getStartLocationPoint", async () => {
+    const entries = await loadRenames();
+    const replaced = new Map(
+      entries.map((entry) => [entry.old, replacements(entry)]),
+    );
+    expect(replaced.get("MapPlayer.startLocationPoint")).toEqual([
+      "MapPlayer.getStartLocationPoint",
+    ]);
   });
 
   it("renames Item.player to the getter Item.getOwner and Camera.setCameraOrientController to Camera.setOrientController", async () => {

@@ -874,14 +874,14 @@
   },
   {
     "old": "MapPlayer.startLocationPoint",
-    "new": "MapPlayer.startLocationPoint",
-    "kind": "member",
+    "new": "MapPlayer.getStartLocationPoint",
+    "kind": "accessor",
     "versions": {
       "from": "w3ts@3",
       "to": "reforged-ts@1"
     },
     "oneToOne": false,
-    "note": "Not a rename: the accessor returns a new `Point` instead of the raw `location` handle, and throws instead of returning `undefined` when the game returns none, so `RemoveLocation(player.startLocationPoint)` becomes `player.startLocationPoint.destroy()`."
+    "note": "The accessor becomes `getStartLocationPoint()`, like `Unit.getPoint`, and returns a new `Point` to destroy instead of the raw `location` handle, and throws instead of returning `undefined` when the game returns none, so `RemoveLocation(player.startLocationPoint)` becomes `player.getStartLocationPoint().destroy()`."
   },
   {
     "old": "GameCache.restoreUnit",

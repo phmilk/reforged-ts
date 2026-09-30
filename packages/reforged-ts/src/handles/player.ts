@@ -3,7 +3,7 @@
 import { configuration } from "../reforged/configuration";
 import { runLocalGuarded } from "../reforged/local";
 import type { Force } from "./force";
-import { expectWrapper, Handle } from "./handle";
+import { Handle } from "./handle";
 import { Point } from "./point";
 import type { Rectangle } from "./rect";
 
@@ -250,24 +250,23 @@ export class MapPlayer extends Handle<player> {
   }
 
   /**
-   * Gets the player's start location as a new Point.
+   * Gets the player's start location as a new point, which the caller destroys.
    * @remarks
-   * - Each read creates a Point: destroy it when done, or read
-   *   {@link MapPlayer.startLocationX} and {@link MapPlayer.startLocationY},
-   *   which create nothing.
-   * - In w3ts 3.x this returned the raw `location` Handle, which the caller
-   *   removed with `RemoveLocation`, or `undefined` when the game returned
-   *   none; it now returns the Point, and throws when the game returns none.
-   * @returns A new Point at the start location.
-   * @throws When the game returns no location:
-   * `reforged-ts: failed to create Point`, at the calling line. In Dev mode
-   * it also raises before the globals Init stage and inside
-   * {@link MapPlayer.runLocal}, as every creation does.
+   * {@link MapPlayer.startLocationX} and {@link MapPlayer.startLocationY}
+   * read the coordinates without creating anything. In w3ts 3.x this was the
+   * `startLocationPoint` accessor, which returned the raw `location` Handle
+   * the caller removed with `RemoveLocation`, or `undefined` when the game
+   * returned none; it now returns a Point, and throws when the game returns
+   * none.
+   * @returns A new point at the player's start location.
+   * @throws When the game returns no handle: `reforged-ts: failed to create Point`,
+   * at the calling line. In Dev mode, also before the globals Init stage and
+   * inside `MapPlayer.runLocal`.
    * @native GetPlayerStartLocation
    * @native GetStartLocationLoc
    */
-  public get startLocationPoint(): Point {
-    return expectWrapper(Point, GetStartLocationLoc(this.startLocation));
+  public getStartLocationPoint(): Point {
+    return Point.expect(GetStartLocationLoc(this.startLocation));
   }
 
   /**

@@ -2,6 +2,9 @@
 // Point itself.
 import { MapPlayer, Point } from "reforged-ts";
 
-const start: Point = MapPlayer.fromLocal().startLocationPoint;
-
-export { start };
+export function firstStart(): Point | undefined {
+  const player = MapPlayer.fromIndex(0);
+  if (player === undefined) return undefined;
+  const start: Point = player.getStartLocationPoint();
+  return start;
+}

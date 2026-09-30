@@ -35,6 +35,7 @@ const getObjectNote = "`fromHandle` returns undefined for a missing handle.";
 const initNote = "Wrappers are made by the Handle base only.";
 const ownerNote = "The accessor pair is two methods.";
 const itemOwnerNote = "A getter-only accessor becomes its getter.";
+const startPointNote = "The accessor becomes a method returning a new Point.";
 const orientNote = "The static drops its prefix and takes the Unit Wrapper.";
 
 const header = 'import { Group, MapPlayer, Unit } from "reforged-ts";\n';
@@ -348,6 +349,28 @@ ruleTester.run("no-legacy-w3ts-names", ruleOf("no-legacy-w3ts-names"), {
           ...renamed("Item.player", "`Item.getOwner`", itemOwnerNote),
           line: 4,
           suggestions: [],
+        },
+      ],
+    },
+    {
+      name: "a getter-only accessor returning a creation suggests the call of its getter",
+      code: 'import { MapPlayer } from "reforged-ts";\ndeclare const player: MapPlayer;\nplayer.startLocationPoint.destroy();',
+      output: null,
+      errors: [
+        {
+          ...renamed(
+            "MapPlayer.startLocationPoint",
+            "`MapPlayer.getStartLocationPoint`",
+            startPointNote,
+          ),
+          suggestions: [
+            {
+              messageId: "useReplacement",
+              data: { replacement: "MapPlayer.getStartLocationPoint" },
+              output:
+                'import { MapPlayer } from "reforged-ts";\ndeclare const player: MapPlayer;\nplayer.getStartLocationPoint().destroy();',
+            },
+          ],
         },
       ],
     },
