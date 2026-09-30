@@ -164,6 +164,21 @@
           "owner": "typescript",
           "source": "ts",
           "applyTo": "closedDocuments",
+          "fileLocation": ["relative", "${workspaceFolder}/probe"],
+          "pattern": {
+            "regexp": "^probe \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
           "fileLocation": ["relative", "${workspaceFolder}/wrapper-coverage"],
           "pattern": {
             "regexp": "^wrapper-coverage \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
@@ -320,6 +335,21 @@
           "fileLocation": ["relative", "${workspaceFolder}/website"],
           "pattern": {
             "regexp": "^website \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": ["relative", "${workspaceFolder}/probe"],
+          "pattern": {
+            "regexp": "^probe \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
             "file": 1,
             "line": 2,
             "column": 3,

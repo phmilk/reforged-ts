@@ -128,6 +128,8 @@ export default defineConfig(
     // The docs versions docs:version cuts: frozen copies of the docs tree.
     "website/versioned_docs/**",
     "wrapper-coverage/build/**",
+    "probe/build/**",
+    "probe/.probe/**",
     "packages/reforged-test/lua/**",
     "packages/reforged-ts/dist-test/**",
     "packages/reforged-ts/dist-examples/**",
@@ -217,6 +219,17 @@ export default defineConfig(
         typescript: {
           project: "packages/reforged-ts/examples/tsconfig.json",
         },
+      },
+    },
+  },
+  // The Probes and the Probe runner's in-game module import `reforged-ts` and
+  // the Probe being built (`@probe/current`) through the paths of their
+  // typescript-to-lua project.
+  {
+    files: ["probe/game/**/*.ts", "probe/probes/**/*.ts"],
+    settings: {
+      "import-x/resolver": {
+        typescript: { project: "probe/probes/tsconfig.json" },
       },
     },
   },

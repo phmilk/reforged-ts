@@ -6,6 +6,8 @@ packages:
   - website
   # The Wrapper coverage report (#163), a private package: never published.
   - wrapper-coverage
+  # The Probe runner (#325), a private package: never published.
+  - probe
 
 # pnpm's wait before it installs a new version, off during the build phase
 # (#221): its default, a day, fails the install of a lockfile that holds a

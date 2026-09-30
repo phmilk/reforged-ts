@@ -6,3 +6,7 @@ packages/reforged-types/vendor/**/*.j -text
 packages/reforged-types/vendor/**/*.ai -text
 packages/reforged-types/test/fixtures/jass-history/**/*.j -text
 packages/reforged-types/test/fixtures/jass-history/**/*.ai -text
+
+# The Probe runner's map folder is a copy of the Template's editor-saved files
+# (probe/PROVENANCE.md): git stores them byte for byte, as the Template does.
+probe/probe.w3m/** -text -diff
