@@ -66,7 +66,11 @@ export const enum OrderId {
   Barkskinoff = 852137,
   /** The id of the `barkskinon` order. */
   Barkskinon = 852136,
-  /** The id of the `battleroar` order. */
+  /**
+   * The id of the `battleroar` order.
+   * @remarks
+   * In w3ts 3.x it was 852099, the id of `battlestations`: issuing it issued `battlestations`, and an incoming order id compared with it matched `battlestations`, not `battleroar`. `Battlestations` is that id.
+   */
   Battleroar = 852599,
   /** The id of the `battlestations` order. */
   Battlestations = 852099,
@@ -264,7 +268,11 @@ export const enum OrderId {
   Forceboard = 852044,
   /** The id of the `forceofnature` order. */
   Forceofnature = 852176,
-  /** The id of the `forkedlightning` order. */
+  /**
+   * The id of the `forkedlightning` order.
+   * @remarks
+   * In w3ts 3.x it was 852586, the id of `elementalfury`: issuing it issued `elementalfury`, and an incoming order id compared with it matched `elementalfury`, not `forkedlightning`. `Elementalfury` is that id.
+   */
   Forkedlightning = 852587,
   /** The id of the `freezingbreath` order. */
   Freezingbreath = 852195,
