@@ -8,12 +8,12 @@ import { OrderId } from "../src/globals/order";
 
 describe("OrderId", () => {
   it("gives battleroar and battlestations their own ids", () => {
-    expect(OrderId.Battleroar).toEqual(852599);
-    expect(OrderId.Battlestations).toEqual(852099);
+    expect<number>(OrderId.Battleroar).toEqual(852599);
+    expect<number>(OrderId.Battlestations).toEqual(852099);
   });
 
   it("gives forkedlightning and elementalfury their own ids", () => {
-    expect(OrderId.Forkedlightning).toEqual(852587);
-    expect(OrderId.Elementalfury).toEqual(852586);
+    expect<number>(OrderId.Forkedlightning).toEqual(852587);
+    expect<number>(OrderId.Elementalfury).toEqual(852586);
   });
 });

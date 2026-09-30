@@ -10,7 +10,7 @@ import { withNative } from "./support/native-override";
 
 describe("MetaKey", () => {
   it("holds the bit flags of METAKEY_NONE to METAKEY_WINKEYS", () => {
-    expect([
+    expect<number[]>([
       MetaKey.None,
       MetaKey.Shift,
       MetaKey.Ctrl,
