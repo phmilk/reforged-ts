@@ -50,7 +50,7 @@ catalog:
   # resolves imports through eslint-import-resolver-typescript.
   eslint: ^10.11.0
   "@eslint/js": ^10.0.1
-  typescript-eslint: ^8.70.1
+  typescript-eslint: ^8.71.0
   # eslint-plugin-reforged: the rule creator and type helpers, and the
   # RuleTester its fixtures run on; they move with typescript-eslint.
   "@typescript-eslint/utils": ^8.70.1
