@@ -14,8 +14,10 @@ export interface ProbeContext {
    * Adds one record to the Result file: the line
    * `<seq> <kind> <key>=<value> ...`, its fields sorted by key. A value
    * may be any string: the writer percent-encodes it and splits a long line
-   * into continuation lines. The kind and the keys stay in the safe
-   * alphabet: printable ASCII without space, `=`, `%`, `"` or `\`.
+   * into continuation lines. The kind and the keys are written as they are,
+   * so they stay in the safe alphabet: printable ASCII without space, `=`,
+   * the percent sign, `"` or `\`, and not empty. Any other kind or key
+   * raises an error, which fails the Probe run.
    */
   record(kind: string, fields: Readonly<Record<string, FieldValue>>): void;
 }

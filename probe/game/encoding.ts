@@ -1,10 +1,12 @@
-// The Result file's encoding, on the writer's side: percent-encoding of a
-// value and the split of a long line into continuation lines, so every line
-// the runner gives `Preload` stays in #298's safe alphabet (printable ASCII
-// without `"` or `\`) and within its 200 bytes. The reader (src/read.ts)
-// undoes both. Plain Lua only: no Native, no library code, and no percent
-// sign in the compiled Lua, comments included, which the World Editor cannot
-// save.
+// The Result file's encoding, on the writer's side: the line of a record,
+// its values percent-encoded, and the split of a long line into continuation
+// lines, so every line the runner gives `Preload` stays in #298's safe
+// alphabet (printable ASCII without `"` or `\`) and within its 200 bytes.
+// The reader (src/read.ts) undoes both. Plain Lua only: no Native, no
+// library code, and no percent sign in the compiled Lua, comments included,
+// which the World Editor cannot save.
+
+import type { FieldValue } from "./probe";
 
 /** The longest line the runner gives `Preload`, in bytes (#298). */
 export const MAX_LINE_BYTES = 200;
@@ -12,28 +14,23 @@ export const MAX_LINE_BYTES = 200;
 /** The percent sign, built at run time so the compiled Lua holds none. */
 const PERCENT = string.char(37);
 
-const HEX_DIGITS = "0123456789ABCDEF";
+/** The `string.format` pattern of a byte as two uppercase hexadecimal digits. */
+const HEX_BYTE = `${PERCENT}02X`;
 
 /** The bytes escaped besides those outside printable ASCII: `=`, the percent sign, `"` and `\`. */
 const ESCAPED_PRINTABLE = [61, 37, 34, 92];
 
 /**
- * Whether `encodeValue` escapes the byte: outside printable ASCII, space,
- * `=`, the percent sign, `"` or `\`.
+ * The escape of each byte `encodeValue` escapes, keyed by the byte as a
+ * one-byte string: each byte outside printable ASCII, space, `=`, the
+ * percent sign, `"` and `\`, as the percent sign and the byte's two
+ * uppercase hexadecimal digits. A byte kept as it is has no entry.
  */
-function isEscaped(byte: number): boolean {
-  return byte <= 32 || byte >= 127 || ESCAPED_PRINTABLE.includes(byte);
-}
-
-/** The byte as its escape: the percent sign, then two uppercase hexadecimal digits. */
-function escape(byte: number): string {
-  const high = Math.floor(byte / 16);
-  const low = byte - high * 16;
-  return (
-    PERCENT +
-    string.sub(HEX_DIGITS, high + 1, high + 1) +
-    string.sub(HEX_DIGITS, low + 1, low + 1)
-  );
+const ESCAPES: Record<string, string> = {};
+for (let byte = 0; byte < 256; byte++) {
+  if (byte <= 32 || byte >= 127 || ESCAPED_PRINTABLE.includes(byte)) {
+    ESCAPES[string.char(byte)] = PERCENT + string.format(HEX_BYTE, byte);
+  }
 }
 
 /**
@@ -44,12 +41,50 @@ function escape(byte: number): string {
  * byte.
  */
 export function encodeValue(value: string): string {
-  const parts: string[] = [];
-  for (let index = 1; index <= value.length; index++) {
-    const byte = string.byte(value, index);
-    parts.push(isEscaped(byte) ? escape(byte) : string.char(byte));
+  // `.` matches every byte; a byte without an entry in ESCAPES is kept.
+  const [encoded] = string.gsub(value, ".", ESCAPES);
+  return encoded;
+}
+
+/**
+ * Whether `name` may be a record's kind or a field's key: not empty, and in
+ * the safe alphabet, printable ASCII without space, `=`, the percent sign,
+ * `"` or `\`. So it is a value `encodeValue` keeps as it is.
+ */
+export function isSafeName(name: string): boolean {
+  return name !== "" && encodeValue(name) === name;
+}
+
+/** Raises an error, without a position, unless `name` is a safe name. */
+function checkName(what: "kind" | "key", name: string): void {
+  if (!isSafeName(name)) {
+    error(
+      `The ${what} "${encodeValue(name)}", percent-encoded here, is not a Result file name: a kind or a key is printable ASCII without space, =, the percent sign, the quote or the backslash, and is not empty.`,
+      0,
+    );
   }
-  return parts.join("");
+}
+
+/**
+ * The line `<seq> <kind> <key>=<value> ...` of a record, its fields sorted
+ * by key, as Lua tables keep no order, and each value percent-encoded.
+ * Raises an error when the kind or a key is not a safe name (`isSafeName`):
+ * the writer encodes values only, so a kind or a key it could not write as
+ * it is fails the Probe run.
+ */
+export function recordLine(
+  seq: number,
+  kind: string,
+  fields: Readonly<Record<string, FieldValue>>,
+): string {
+  checkName("kind", kind);
+  const pairs = Object.keys(fields)
+    .sort()
+    .map((key) => {
+      checkName("key", key);
+      return ` ${key}=${encodeValue(tostring(fields[key]))}`;
+    });
+  return `${String(seq)} ${kind}${pairs.join("")}`;
 }
 
 /**

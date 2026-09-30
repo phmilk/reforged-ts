@@ -112,6 +112,17 @@ describe("buildProbe", () => {
     ).toEqual({ probe: "hello", runId: result.runId });
   });
 
+  it("compiles the runner from sources without a percent sign, which the World Editor could not save", async () => {
+    const game = join(PACKAGE_FOLDER, "game");
+    const sources = (await readdir(game)).filter((name) =>
+      name.endsWith(".ts"),
+    );
+    expect(sources).toContain("encoding.ts");
+    for (const name of sources) {
+      expect(await readFile(join(game, name), "utf8"), name).not.toContain("%");
+    }
+  });
+
   it("gives each build a new runId", async () => {
     const folders = await tempFolders();
     const first = buildProbe("hello", folders);

@@ -66,18 +66,31 @@ describe("the hello Probe's bundle", () => {
 
   it("writes no line longer than 200 bytes, nor any holding a quote or a backslash", () => {
     const lines = __stub_preload_file(RESULT_FILE) ?? [];
-    expect(lines.length).toEqual(5);
+    expect(lines.length).toEqual(
+      (globals.require("bridge_fixture") as string[]).length,
+    );
     for (const line of lines) {
       expect(line.length <= 200).toEqual(true);
       expect(string.find(line, '["\\]')[0]).toBeUndefined();
     }
   });
 
-  it("splits the encoded record into a continuation line", () => {
+  it("splits a record longer than 200 bytes into continuation lines of its seq", () => {
     const lines = __stub_preload_file(RESULT_FILE) ?? [];
-    expect(lines[2]?.length).toEqual(200);
-    expect(string.sub(lines[2] ?? "", 1, 10)).toEqual("3 encoded ");
-    expect(string.sub(lines[3] ?? "", 1, 3)).toEqual("3+ ");
-    expect(string.sub(lines[4] ?? "", 1, 2)).toEqual("4 ");
+    let continuations = 0;
+    let seq = "";
+    for (const [index, line] of lines.entries()) {
+      // `string.match` gives nil when the line does not match.
+      const continued = string.match(line, "^(%d+)%+ ")[0] as
+        string | undefined;
+      if (continued === undefined) {
+        seq = string.match(line, "^(%d+) ")[0];
+        continue;
+      }
+      continuations++;
+      expect(continued).toEqual(seq);
+      expect(lines[index - 1]?.length).toEqual(200);
+    }
+    expect(continuations > 0).toEqual(true);
   });
 });

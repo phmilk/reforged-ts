@@ -6,7 +6,7 @@
 // library without the library writing its results.
 
 import { run } from "@probe/current";
-import { encodeValue, splitLine } from "./encoding";
+import { recordLine, splitLine } from "./encoding";
 import type { FieldValue, ProbeContext } from "./probe";
 
 /** The Probe's `run`, which may leave `p` out: checked against what the runner passes. */
@@ -24,41 +24,41 @@ const RESULT_FILE = `reforged-ts\\probes\\${PROBE}.txt`;
 const END_MESSAGE_SECONDS = 3600;
 
 /**
- * The Result file's lines so far, `<seq> <kind> <key>=<value> ...`, each
- * before its split into continuation lines.
+ * The strings the runner gives `Preload`, so far: each line
+ * `<seq> <kind> <key>=<value> ...`, split into continuation lines when
+ * longer than 200 bytes.
  */
-const lines: string[] = [];
+const preloadLines: string[] = [];
+
+/** The number of lines so far, the runner's and the Probe's. */
+let lineCount = 0;
 
 /** The number of the Probe's own records so far. */
 let recordCount = 0;
 
-function addLine(kind: string, fields: string): void {
-  lines.push(`${String(lines.length + 1)} ${kind}${fields}`);
+/**
+ * Adds the record's line, numbered after the last one. Raises an error, and
+ * adds nothing, when the kind or a key is not a safe name (`recordLine`).
+ */
+function addLine(
+  kind: string,
+  fields: Readonly<Record<string, FieldValue>>,
+): void {
+  const seq = lineCount + 1;
+  const parts = splitLine(recordLine(seq, kind, fields), seq);
+  lineCount = seq;
+  for (const part of parts) {
+    preloadLines.push(part);
+  }
 }
 
-/**
- * The fields as ` <key>=<value>` each, sorted by key: Lua tables keep no
- * order. Each value is percent-encoded.
- */
-function formatFields(fields: Readonly<Record<string, FieldValue>>): string {
-  return Object.keys(fields)
-    .sort()
-    .map((key) => ` ${key}=${encodeValue(tostring(fields[key]))}`)
-    .join("");
-}
-
-/**
- * Writes every line so far to the Result file, replacing what it held, a
- * line longer than 200 bytes as continuation lines.
- */
+/** Writes every line so far to the Result file, replacing what it held. */
 function writeResultFile(): void {
   PreloadGenClear();
   PreloadGenStart();
-  lines.forEach((line, index) => {
-    for (const part of splitLine(line, index + 1)) {
-      Preload(part);
-    }
-  });
+  for (const line of preloadLines) {
+    Preload(line);
+  }
   PreloadGenEnd(RESULT_FILE);
 }
 
@@ -68,13 +68,13 @@ function show(text: string, seconds: number): void {
 
 const p: ProbeContext = {
   record: (kind, fields) => {
+    addLine(kind, fields);
     recordCount++;
-    addLine(kind, formatFields(fields));
   },
 };
 
 function start(): void {
-  addLine("BEGIN", ` probe=${PROBE} run=${RUN_ID}`);
+  addLine("BEGIN", { probe: PROBE, run: RUN_ID });
   const [ok, error] = xpcall(
     () => {
       runProbe(p);
@@ -85,7 +85,7 @@ function start(): void {
     show(`Probe ${PROBE} failed: ${error}`, END_MESSAGE_SECONDS);
     return;
   }
-  addLine("END", " status=ok");
+  addLine("END", { status: "ok" });
   writeResultFile();
   show(
     `Probe ${PROBE} finished: ${String(recordCount)} record${recordCount === 1 ? "" : "s"}. Close the game.`,
