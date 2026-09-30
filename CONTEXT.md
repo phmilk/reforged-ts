@@ -113,5 +113,5 @@ The private workspace package `probe/` and its three commands: `probe:build` com
 _Avoid_: harness (the Lua test harness), launcher, probe map
 
 **Result file**:
-The file a Probe run writes through `Preload` in the game's `CustomMapData` folder, `reforged-ts\probes\<probe>.txt`, one line per record: a `BEGIN` line naming the Probe and its runId, the Probe's records, `PENDING` before a risky step, and last a `CHECKPOINT` line or an `END` line with the run's status. A checkpoint is one full rewrite of the file with everything recorded so far, so a crash loses only what came after the last one.
+The file a Probe run writes through `Preload` in the game's `CustomMapData` folder, `reforged-ts\probes\<probe>.txt`, one line per record: a `BEGIN` line naming the Probe and its runId, the Probe's records, `PENDING` before a risky step, `ERROR` when the Probe throws, and last a `CHECKPOINT` line or an `END` line with the run's status. A checkpoint is one full rewrite of the file with everything recorded so far, so a crash loses only what came after the last one.
 _Avoid_: log, output file, save file

@@ -40,7 +40,7 @@ export const PLACEHOLDERS = {
 } as const;
 
 /** A runId: letters, digits and hyphens, inside the Result file's safe alphabet. */
-const RUN_ID = /^[A-Za-z0-9-]+$/;
+const RUN_ID_PATTERN = /^[A-Za-z0-9-]+$/;
 
 export interface BuildResult {
   probe: string;
@@ -66,7 +66,7 @@ export function buildProbe(
   runId: string = randomUUID(),
 ): BuildResult {
   const source = probeFile(folders.probes, probe);
-  if (!RUN_ID.test(runId)) {
+  if (!RUN_ID_PATTERN.test(runId)) {
     throw new Error(`Not a runId: ${JSON.stringify(runId)}`);
   }
   // Fail on a map folder without the editor script before touching the output folder.

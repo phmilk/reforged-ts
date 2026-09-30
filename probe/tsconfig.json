@@ -11,8 +11,6 @@
     "moduleResolution": "nodenext",
     "rootDir": "src",
     "outDir": "build",
-    // The package's other scripts import the reader, with its declarations.
-    "declaration": true,
     "types": ["node"],
     "strict": true,
     "verbatimModuleSyntax": true,

@@ -26,7 +26,7 @@ const END_MESSAGE_SECONDS = 3600;
 const lines: string[] = [];
 
 /** The number of the Probe's own records so far. */
-let records = 0;
+let recordCount = 0;
 
 function addLine(kind: string, fields: string): void {
   lines.push(`${String(lines.length + 1)} ${kind}${fields}`);
@@ -56,7 +56,7 @@ function show(text: string, seconds: number): void {
 
 const p: ProbeContext = {
   record: (kind, fields) => {
-    records++;
+    recordCount++;
     addLine(kind, formatFields(fields));
   },
 };
@@ -76,7 +76,7 @@ function start(): void {
   addLine("END", " status=ok");
   writeResultFile();
   show(
-    `Probe ${PROBE} finished: ${String(records)} record${records === 1 ? "" : "s"}. Close the game.`,
+    `Probe ${PROBE} finished: ${String(recordCount)} record${recordCount === 1 ? "" : "s"}. Close the game.`,
     END_MESSAGE_SECONDS,
   );
 }
