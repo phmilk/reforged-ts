@@ -1,8 +1,8 @@
-# CI: the checks `pnpm check` composes locally, the data check and the
-# examples build, on ubuntu and windows; the docs check, the release checks,
-# Renovate's validator and actionlint on ubuntu; on every pull request and
-# every push to master, whose tarballs it keeps. Each check step runs one
-# root script and is named after it.
+# CI: the checks `pnpm check` composes locally, the data check, the
+# examples build and the Probe build, on ubuntu and windows; the docs check,
+# the release checks, Renovate's validator and actionlint on ubuntu; on every
+# pull request and every push to master, whose tarballs it keeps. Each check
+# step runs one root script and is named after it.
 name: ci
 
 on:
@@ -83,6 +83,11 @@ jobs:
         run: pnpm run data:check
       - name: examples:build
         run: pnpm run examples:build
+      # Every Probe of the Probe runner, compiled, composed and staged into
+      # the map folder the game loads (#325), without the game: a library
+      # change that breaks a Probe fails here.
+      - name: probe:build
+        run: pnpm run probe:build
       # What the library's doc comments lack, per file (#43); docs:check
       # runs the same TypeDoc validation on ubuntu alone.
       - name: docs:audit

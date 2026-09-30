@@ -126,6 +126,25 @@ export default defineConfig({
           environment: "node",
         },
       },
+      {
+        // The Probe runner: its commands in Node, through their programmatic
+        // entry points, on the package's Probes, fixture Probes the tests
+        // create and a fake machine; its in-game module compiled with the
+        // hello Probe and run on the reforged-test harness (lua.spec.ts),
+        // which the global setup compiles. The Lua tests under test/lua are
+        // compiled by typescript-to-lua, not run by vitest.
+        test: {
+          name: "probe",
+          root: "probe",
+          // A build runs typescript-to-lua on the Probe: a second or more
+          // each, cold.
+          testTimeout: 30_000,
+          include: ["test/**/*.test.ts", "test/lua.spec.ts"],
+          exclude: ["test/lua/**"],
+          environment: "node",
+          globalSetup: ["test/support/lua-setup.ts"],
+        },
+      },
     ],
     // Neither the library's Lua tests and examples nor the sources, fixtures
     // and rename map the Node tests read are in the vitest module graph: a

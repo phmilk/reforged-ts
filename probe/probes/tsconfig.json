@@ -1,0 +1,38 @@
+{
+  // The Probes, one file per Probe named `<probe>.ts`, and the runner's
+  // in-game module (../game), as typescript-to-lua compiles them into a
+  // Probe's bundle. `probe:build` reads these options, maps `@probe/current`
+  // to the Probe it builds and bundles that Probe with ../game/runner.ts as
+  // the entry, into the output folder. Here, where the package type-checks
+  // them, `@probe/current` is any Probe (../game/current.d.ts). `reforged-ts`
+  // resolves to the workspace sources, as in the library's examples, so a
+  // Probe checks the library before it is released.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [
+      "@typescript-to-lua/language-extensions",
+      "lua-types/5.3",
+      "reforged-types/3.0.0",
+      "reforged-types/3.0.0/common.ai"
+    ],
+    "strict": true,
+    "noUnusedParameters": true,
+    "noEmit": true,
+    "paths": {
+      "reforged-ts": ["../../packages/reforged-ts/src/index.ts"],
+      "@probe/current": ["../game/current.d.ts"]
+    }
+  },
+  "include": [".", "../game"],
+  // The library's own options: a Probe that imports the library compiles
+  // the sources with it, as the library's build compiles them.
+  "tstl": {
+    "luaTarget": "5.3",
+    "noHeader": true,
+    "noImplicitSelf": true,
+    "sourceMapTraceback": false
+  }
+}

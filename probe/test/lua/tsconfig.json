@@ -1,0 +1,32 @@
+{
+  // The runner's in-game module on the reforged-test harness: typescript-to-lua
+  // compiles these tests to ../../.probe/lua-test, where the vitest global
+  // setup (../support/lua-setup.ts) adds the hello Probe's bundle, built with
+  // the bridge fixture's runId, and the fixture's lines as a Lua module. The
+  // default build mode copies the harness runner to lua_modules.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [
+      "@typescript-to-lua/language-extensions",
+      "lua-types/5.3",
+      "reforged-types/3.0.0"
+    ],
+    "strict": true,
+    "noUnusedParameters": true,
+    "rootDir": ".",
+    "outDir": "../../.probe/lua-test"
+  },
+  "include": ["."],
+  "tstl": {
+    "buildMode": "default",
+    // Modules the global setup writes next to the compiled tests.
+    "noResolvePaths": ["hello_bundle", "bridge_fixture"],
+    "luaTarget": "5.3",
+    "noHeader": true,
+    "noImplicitSelf": true,
+    "sourceMapTraceback": false
+  }
+}

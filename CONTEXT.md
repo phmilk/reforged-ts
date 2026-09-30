@@ -99,3 +99,19 @@ _Avoid_: version (alone), Patch (one Game version can span several Builds)
 **Agent skill**:
 A folder holding a `SKILL.md` that scripts one workflow for an AI coding agent to follow when invoked (`add-wrapper`, `map-feature`).
 _Avoid_: prompt, recipe, playbook
+
+**Probe**:
+A TypeScript file of the Probe runner (`probe/probes/<probe>.ts`, named in kebab-case) that runs in the real game to measure what only the game can tell (whether a Native returns nothing, what a `Preload` line survives), and writes what it measures as records of its Result file. It exports `run(p)` and may import the library.
+_Avoid_: probe map (the Lua pasted into the World Editor, #9), test, script
+
+**Probe run**:
+One run of a built Probe in the game: the build bakes a fresh runId, a human launches the game on it and closes it, and the agent reads the Result file. A Result file whose runId is not the last build's belongs to no current Probe run.
+_Avoid_: session, execution, test run
+
+**Probe runner**:
+The private workspace package `probe/` and its three commands: `probe:build` compiles a Probe into a map folder, `probe:launch` starts the game on it, `probe:read` reads its Result file and says how the Probe run ended.
+_Avoid_: harness (the Lua test harness), launcher, probe map
+
+**Result file**:
+The file a Probe run writes through `Preload` in the game's `CustomMapData` folder, `reforged-ts\probes\<probe>.txt`, one line per record: a `BEGIN` line naming the Probe and its runId, the Probe's records, `PENDING` before a risky step, `ERROR` when the Probe throws, and last a `CHECKPOINT` line or an `END` line with the run's status. A checkpoint is one full rewrite of the file with everything recorded so far, so a crash loses only what came after the last one.
+_Avoid_: log, output file, save file
