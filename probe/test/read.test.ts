@@ -7,6 +7,8 @@ import { systemMachine } from "../src/machine.js";
 import {
   decodeValue,
   field,
+  formatLine,
+  formatValue,
   joinContinuationLines,
   parseResultLine,
   readProbeRun,
@@ -96,7 +98,7 @@ describe("probe:read", () => {
       stdout: [
         "finished: Probe hello, run bridge, 2 records",
         "greeting count=1 word=hello",
-        `encoded ascii=${ESCAPED_ASCII} utf8=${UTF8_TEXT}`,
+        String.raw`encoded ascii="\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f \"%=\\\u007f" utf8="héllo, wörld: ✓ 日本語"`,
         "",
       ].join("\n"),
       stderr: "",
@@ -180,6 +182,21 @@ describe("probe:read", () => {
       expect(stderr).toMatch(/^probe:read failed: .*kebab-case.*\n$/);
     },
   );
+
+  it("prints a Result file it does not classify on one line, a newline and an escape of its values quoted", async () => {
+    const { context, resultFile } = await setup();
+    await writeResult(
+      resultFile,
+      preloadFile(["1 BEGIN probe=hello run=bridge", "2 note text=a%0Ab%1B[m"]),
+    );
+
+    const { code, stdout, stderr } = read([BRIDGE_PROBE], context);
+    expect(code).toBe(4);
+    expect(stdout).toBe("");
+    expect(stderr).toBe(
+      `probe:read failed: ${resultFile} ends with ${JSON.stringify(String.raw`note text="a\nb\u001b[m"`)}, which this reader does not classify yet.\n`,
+    );
+  });
 
   it("fails with exit code 4 when the Probe was never built", async () => {
     const { context } = await setup();
@@ -268,5 +285,87 @@ describe("decodeValue", () => {
     expect(() => parseResultLine("2 note text=100%")).toThrow(
       /Not a Result file line/,
     );
+  });
+
+  it("gives undefined for a character the writer always escapes, found unescaped", () => {
+    for (const character of ["=", '"', "\\", "\t", "\u007f", "é", "✓"]) {
+      expect(decodeValue(`a${character}b`), character).toBeUndefined();
+    }
+  });
+
+  it("keeps every printable ASCII character the writer keeps", () => {
+    const kept = Array.from({ length: 94 }, (_, index) =>
+      String.fromCharCode(33 + index),
+    )
+      .filter((character) => !'=%"\\'.includes(character))
+      .join("");
+    expect(kept).toHaveLength(90);
+    expect(decodeValue(kept)).toBe(kept);
+  });
+});
+
+describe("parseResultLine", () => {
+  it("parses the seq, the kind and the fields, in the order written", () => {
+    expect(parseResultLine("7 note b=2 a=x%20y")).toEqual({
+      seq: 7,
+      kind: "note",
+      fields: [
+        ["b", "2"],
+        ["a", "x y"],
+      ],
+    });
+  });
+
+  it("rejects a pair without its =, or without a key, before decoding it", () => {
+    expect(() => parseResultLine("2 note text")).toThrow(
+      'Not a Result file line: "2 note text".',
+    );
+    expect(() => parseResultLine("2 note =x")).toThrow(/Not a Result file/);
+    expect(() => parseResultLine("2 note %=x")).toThrow(/Not a Result file/);
+  });
+
+  it("rejects a kind or a key outside the safe alphabet", () => {
+    expect(() => parseResultLine("2 n%C3%A9 a=1")).toThrow(/Not a Result file/);
+    expect(() => parseResultLine("2 note k\u001b=1")).toThrow(
+      String.raw`Not a Result file line: "2 note k\u001b=1".`,
+    );
+  });
+});
+
+describe("formatValue", () => {
+  it("prints a value of printable characters without space or quote as it is", () => {
+    expect(formatValue("hello")).toBe("hello");
+    expect(formatValue("a=b\\c%25")).toBe("a=b\\c%25");
+    expect(formatValue("héllo✓日本語")).toBe("héllo✓日本語");
+  });
+
+  it("prints the empty value, and one holding a space or a quote, as a JSON string", () => {
+    expect(formatValue("")).toBe('""');
+    expect(formatValue("a b")).toBe('"a b"');
+    expect(formatValue('say "hi"')).toBe(String.raw`"say \"hi\""`);
+  });
+
+  it("escapes every control and format character, so a value prints on one line and moves no terminal", () => {
+    const value = "a\nb\r\u001b[31m\u007f\u009b\u200e\u2028\u00a0\u{e0001}";
+    const printed = formatValue(value);
+    expect(printed).toBe(
+      String.raw`"a\nb\r\u001b[31m\u007f\u009b\u200e\u2028\u00a0\udb40\udc01"`,
+    );
+    expect(JSON.parse(printed)).toBe(value);
+  });
+});
+
+describe("formatLine", () => {
+  it("prints the kind, then each field with its value as formatValue gives it", () => {
+    expect(
+      formatLine({
+        seq: 3,
+        kind: "note",
+        fields: [
+          ["word", "hi"],
+          ["text", "two words"],
+        ],
+      }),
+    ).toBe('note word=hi text="two words"');
   });
 });

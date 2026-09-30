@@ -93,7 +93,7 @@ export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
   const last = lines.at(-1);
   if (last?.kind !== "END" || field(last, "status") !== "ok") {
     throw new AuthorError(
-      `${file} ends with "${last ? formatLine(last) : ""}", which this reader does not classify yet.`,
+      `${file} ends with ${quote(last ? formatLine(last) : "")}, which this reader does not classify yet.`,
     );
   }
   return {
@@ -155,7 +155,7 @@ export function joinContinuationLines(strings: readonly string[]): string[] {
     const previous = lines.at(-1);
     if (previous?.split(" ", 1)[0] !== match[1]) {
       throw new AuthorError(
-        `The continuation line "${text}" does not follow the line ${match[1]}.`,
+        `The continuation line ${quote(text)} does not follow the line ${match[1]}.`,
       );
     }
     lines[lines.length - 1] = previous + match[2];
@@ -163,21 +163,33 @@ export function joinContinuationLines(strings: readonly string[]): string[] {
   return lines;
 }
 
-const ENCODED_VALUE = /^(?:[^%]|%[0-9A-Fa-f]{2})*$/;
+/**
+ * A value as the writer encodes it: `%XX` escapes and the bytes it keeps as
+ * they are, printable ASCII without space, `=`, `%`, `"` or `\`.
+ */
+const ENCODED_VALUE = /^(?:[!#$&-<>-[\]-~]|%[0-9A-Fa-f]{2})*$/;
+
+/**
+ * A kind or a key as the writer writes it: printable ASCII without space,
+ * `=`, `%`, `"` or `\`, not empty.
+ */
+const SAFE_NAME = /^[!#$&-<>-[\]-~]+$/;
 
 /**
  * The value the writer percent-encoded: each `%XX` back to its byte, then
  * the bytes read as UTF-8, where a byte that is not UTF-8 reads as U+FFFD.
- * Undefined when a `%` is not followed by two hexadecimal digits.
+ * Undefined when a `%` is not followed by two hexadecimal digits, or when
+ * the value holds a character the writer always escapes.
  */
 export function decodeValue(value: string): string | undefined {
   if (!ENCODED_VALUE.test(value)) return undefined;
+  // What is left besides the escapes is ASCII, one byte per character.
   const bytes = value
     .split(/(%[0-9A-Fa-f]{2})/)
     .flatMap((part) =>
       part.startsWith("%")
         ? [Number.parseInt(part.slice(1), 16)]
-        : [...Buffer.from(part, "latin1")],
+        : [...Buffer.from(part, "ascii")],
     );
   return Buffer.from(bytes).toString("utf8");
 }
@@ -189,20 +201,21 @@ export function decodeValue(value: string): string | undefined {
 export function parseResultLine(text: string): ResultLine {
   const [seq = "", kind = "", ...pairs] = text.split(" ");
   const fields = pairs.map((pair) => {
-    // A pair without its `=`, without a key or with a bad escape gets the
+    // A pair without its `=`, without a key or with a bad value gets the
     // empty key refused below.
     const equals = pair.indexOf("=");
+    if (equals < 1) return ["", pair] as const;
     const value = decodeValue(pair.slice(equals + 1));
-    return equals < 1 || value === undefined
+    return value === undefined
       ? (["", pair] as const)
       : ([pair.slice(0, equals), value] as const);
   });
   if (
     !/^[1-9][0-9]*$/.test(seq) ||
-    kind === "" ||
-    fields.some(([key]) => key === "")
+    !SAFE_NAME.test(kind) ||
+    fields.some(([key]) => !SAFE_NAME.test(key))
   ) {
-    throw new AuthorError(`Not a Result file line: "${text}".`);
+    throw new AuthorError(`Not a Result file line: ${quote(text)}.`);
   }
   return { seq: Number(seq), kind, fields };
 }
@@ -212,11 +225,48 @@ export function field(line: ResultLine, key: string): string | undefined {
   return line.fields.find(([name]) => name === key)?.[1];
 }
 
-/** A record as `probe:read` prints it: `<kind> <key>=<value> ...`. */
+/**
+ * A character that `probe:read` does not print as it is: a control or
+ * format character, a line or paragraph separator, or a space other than
+ * U+0020.
+ */
+const UNPRINTED = /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]|(?! )\p{Zs}/u;
+
+/**
+ * `text` as a JSON string, each character of `UNPRINTED` that JSON leaves
+ * as it is escaped as `\uXXXX` too: one line, with no character a terminal
+ * acts on, which `JSON.parse` gives back.
+ */
+export function quote(text: string): string {
+  return JSON.stringify(text).replace(
+    new RegExp(UNPRINTED.source, "gu"),
+    (character) =>
+      character
+        .split("")
+        .map((unit) => `\\u${unit.charCodeAt(0).toString(16).padStart(4, "0")}`)
+        .join(""),
+  );
+}
+
+/**
+ * A value as `probe:read` prints it: as it is, or as a JSON string
+ * (`quote`) when it is empty or holds a `"`, a space or a character of
+ * `UNPRINTED`, so each record stays one line whose fields split on spaces.
+ */
+export function formatValue(value: string): string {
+  return value === "" || /[ "]/.test(value) || UNPRINTED.test(value)
+    ? quote(value)
+    : value;
+}
+
+/**
+ * A record as `probe:read` prints it: `<kind> <key>=<value> ...`, each value
+ * as `formatValue` gives it.
+ */
 export function formatLine(line: ResultLine): string {
   return [
     line.kind,
-    ...line.fields.map(([key, value]) => `${key}=${value}`),
+    ...line.fields.map(([key, value]) => `${key}=${formatValue(value)}`),
   ].join(" ");
 }
 
