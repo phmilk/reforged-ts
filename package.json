@@ -4,7 +4,7 @@
   "description": "Workspace root of reforged-ts: the library, its Typings and its Lua test harness.",
   "license": "MIT",
   "type": "module",
-  "packageManager": "pnpm@12.6.0",
+  "packageManager": "pnpm@12.8.1",
   "engines": {
     "node": ">=22.13"
   },
@@ -45,7 +45,7 @@
     "patch-watch:report": "pnpm --filter reforged-ts-release patch-watch:report",
     "repo:settings": "pnpm --filter reforged-ts-release repo:settings",
     "github-app": "pnpm --filter reforged-ts-release github-app",
-    "renovate:check": "pnpm --package=renovate@44.115.13 dlx renovate-config-validator --strict",
+    "renovate:check": "pnpm --package=renovate@44.121.4 dlx renovate-config-validator --strict",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run typings:check && pnpm run test && pnpm run coverage:report && pnpm run docs:audit"
   },
   "devDependencies": {

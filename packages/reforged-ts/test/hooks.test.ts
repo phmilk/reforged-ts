@@ -28,7 +28,7 @@ let printed: string[] = [];
 describe("addScriptHook in the bundle position", () => {
   it("refuses an entry point it does not know", () => {
     expect(
-      // eslint-disable-next-line @typescript-eslint/no-deprecated -- the deprecated alias is what this test drives; its removal in 2.0 removes the file
+      // eslint-disable-next-line @typescript-eslint/no-deprecated, @typescript-eslint/no-unsafe-enum-assignment -- the deprecated alias and a name outside W3TS_HOOK are what this test drives; its removal in 2.0 removes the file
       addScriptHook("main::during" as W3TS_HOOK, mark("never")),
     ).toBeFalsy();
   });
