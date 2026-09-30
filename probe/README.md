@@ -1,17 +1,30 @@
 # The Probe runner
 
-A private workspace package, never published. A **Probe** is a TypeScript file that runs in the real game and records what only the game can tell. The runner builds a Probe into a map folder, and reads back the **Result file** the Probe run writes in the game's `CustomMapData` folder. The terms are defined in [`CONTEXT.md`](../CONTEXT.md); why this package copies the Template's pipeline is [ADR 0010](../docs/adr/0010-probe-runner-copies-the-template-pipeline.md).
+A private workspace package, never published. A **Probe** is a TypeScript file that runs in the real game and records what only the game can tell. The runner builds a Probe into a map folder, starts the game on it, and reads back the **Result file** the Probe run writes in the game's `CustomMapData` folder. The terms are defined in [`CONTEXT.md`](../CONTEXT.md); why this package copies the Template's pipeline is [ADR 0010](../docs/adr/0010-probe-runner-copies-the-template-pipeline.md).
 
 ## Commands
 
 Run from the repository root:
 
-| Command                       | What it does                                                                                                                                                                                                                                                                       |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm probe:build [<probe>…]` | Builds each Probe named, or every Probe when none is: compiles it with typescript-to-lua, bakes a fresh runId into the bundle, composes the map script and stages the map folder in `.probe/build/<probe>/staging/probe.w3m`. Needs no game; CI runs it. Exit code 1 on a failure. |
-| `pnpm probe:read <probe>`     | Reads the Probe's Result file, prints the state of its last run on one line, then its records, one per line. Read-only.                                                                                                                                                            |
+| Command                       | What it does                                                                                                                                                                                                                                                                                                                  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm probe:build [<probe>…]` | Builds each Probe named, or every Probe when none is: compiles it with typescript-to-lua, bakes a fresh runId into the bundle, composes the map script and stages the map folder in `.probe/build/<probe>/staging/probe.w3m`. Needs no game; CI runs it. Exit code 1 on a failure.                                            |
+| `pnpm probe:launch <probe>`   | Run by the human, as `! pnpm probe:launch <probe>` in the agent's session; the agent never runs it. Finds the game, fails before building when it is not found, builds the Probe as `probe:build` does, starts the game detached on the staged folder and prints the human's part of the Probe run. Exit code 1 on a failure. |
+| `pnpm probe:read <probe>`     | Reads the Probe's Result file, prints the state of its last run on one line, then its records, one per line. Read-only.                                                                                                                                                                                                       |
 
-A known failure (a bad Probe name, a type error in a Probe, no `CustomMapData` folder found) prints one line, `<command> failed: <message>`; a bug prints its stack.
+A known failure (a bad Probe name, a type error in a Probe, no game or no `CustomMapData` folder found) prints one line, `<command> failed: <message>`; a bug prints its stack.
+
+### Launching a Probe run
+
+`probe:launch` finds the game in this order, as the Template's `pnpm test:map` does:
+
+1. `--game-executable <file>`, relative to the repository root;
+2. `WC3_EXECUTABLE`, naming the game's executable;
+3. the Battle.net install locations: `Warcraft III\_retail_\x86_64\Warcraft III.exe` under `Program Files (x86)`, then `Program Files`, on Windows; the `.app`'s inner binary under `/Applications` on macOS.
+
+It starts the game with `-loadfile <staged folder> -launch -editor -windowmode windowed`: no menu, and the saved Battle.net login. The command returns once the game has started, and prints what to do next: wait until the game shows "Probe `<probe>` finished", close it, then say "done", or "crashed" if the game died before that message. The agent then reads the run with `probe:read`.
+
+`--wine-path <wine>` starts the game through Wine, with the staged folder as a `Z:` path, `--game-executable` as a path Wine understands and `--wine-prefix <folder>` as `WINEPREFIX`. This form is copied from the Template and not guaranteed.
 
 ### States of a Probe run
 
@@ -60,6 +73,6 @@ The Result file of a finished run of `hello`:
 - `probes/`: the Probes, and `tsconfig.json`, the typescript-to-lua project every Probe compiles with.
 - `game/`: the in-game module (`runner.ts`, the entry of every bundle) and the types a Probe sees (`probe.ts`).
 - `probe.w3m/`: the map folder, a copy of the Template's; `PROVENANCE.md` lists every file copied from the Template.
-- `src/`: the commands, compiled to `build/`. `src/read.ts` is the reader the package's other scripts import.
+- `src/`: the commands, compiled to `build/`; `src/machine.ts` is the one way they reach the machine, which the tests replace with a fake. `src/read.ts` is the reader the package's other scripts import.
 - `test/`: the Node tests of the commands, and under `lua/` the in-game module's tests on the `reforged-test` harness. `test/fixtures/bridge/hello.txt` is the bridge: the lines of the hello Probe's Result file, which the Lua test asserts the runner writes and the Node test asserts the reader reads back.
 - `.probe/`: ignored: the builds, the state files and the compiled Lua tests.

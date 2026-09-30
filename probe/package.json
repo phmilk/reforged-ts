@@ -1,7 +1,7 @@
 {
   "name": "reforged-ts-probe",
   "private": true,
-  "description": "The Probe runner of the reforged-ts workspace: builds a Probe, a TypeScript file that runs in the real game, into a map folder, and reads the Result file it writes. Node programs behind the root probe:* scripts, and the reader module the package's other scripts import. Never published.",
+  "description": "The Probe runner of the reforged-ts workspace: builds a Probe, a TypeScript file that runs in the real game, into a map folder, starts the game on it, and reads the Result file it writes. Node programs behind the root probe:* scripts, and the reader module the package's other scripts import. Never published.",
   "license": "MIT",
   "type": "module",
   "engines": {
@@ -12,6 +12,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json && tsc -p probes/tsconfig.json && tsc -p test/lua/tsconfig.json --noEmit",
     "test": "vitest run --root .. --project probe",
     "probe:build": "tsc -p tsconfig.json && node build/cli/build.js",
+    "probe:launch": "tsc -p tsconfig.json && node build/cli/launch.js",
     "probe:read": "tsc -p tsconfig.json && node build/cli/read.js"
   },
   "dependencies": {

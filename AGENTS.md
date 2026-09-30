@@ -27,7 +27,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `docs/release.md`: changesets, versions and the release workflow.
 - `docs/documentation.md`: the doc comment standard: tags, their order, the required-tag matrix, the style rules and the examples.
 - `release/`: the release scripts, a private workspace package.
-- `probe/`: the Probe runner, a private workspace package: Probes that run in the real game, `probe:build` and `probe:read`. Read its `README.md` before writing a Probe or checking a fact in game.
+- `probe/`: the Probe runner, a private workspace package: Probes that run in the real game, `probe:build`, `probe:launch` and `probe:read`. Read its `README.md` before writing a Probe or checking a fact in game.
 - `test/`: the workspace-level tests: the tarballs, and under `conventions/` the checks on this file and the editor settings.
 - `.claude/skills/`: the Agent skills, listed under "Agent skills".
 
