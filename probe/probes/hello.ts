@@ -7,8 +7,7 @@ import type { ProbeContext } from "../game/probe";
 
 /**
  * Every byte of ASCII the writer escapes, in order: the control characters,
- * space, `"`, the percent sign, `=`, `\` and DEL. The percent sign is built
- * at run time, so the compiled Lua holds none.
+ * space, `"`, the percent sign, `=`, `\` and DEL.
  */
 function escapedAscii(): string {
   let bytes = "";

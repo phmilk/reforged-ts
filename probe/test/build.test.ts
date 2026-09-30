@@ -112,7 +112,13 @@ describe("buildProbe", () => {
     ).toEqual({ probe: "hello", runId: result.runId });
   });
 
-  it("compiles the runner from sources without a percent sign, which the World Editor could not save", async () => {
+  // The runner's in-game source keeps the rule of game-side Lua that may be
+  // pasted into the World Editor, which crashes on saving a script holding a
+  // percent sign. Neither a Probe nor the bundle is checked: the World
+  // Editor never saves them (probe:build composes the bundle into the staged
+  // map script, which the game loads with -loadfile), and the
+  // typescript-to-lua library functions the bundle holds use percent signs.
+  it("compiles the runner from in-game sources without a percent sign", async () => {
     const game = join(PACKAGE_FOLDER, "game");
     const sources = (await readdir(game)).filter((name) =>
       name.endsWith(".ts"),

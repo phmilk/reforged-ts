@@ -45,7 +45,7 @@ function addLine(
   fields: Readonly<Record<string, FieldValue>>,
 ): void {
   const seq = lineCount + 1;
-  const parts = splitLine(recordLine(seq, kind, fields), seq);
+  const parts = splitLine(recordLine(seq, kind, fields));
   lineCount = seq;
   for (const part of parts) {
     preloadLines.push(part);

@@ -103,6 +103,13 @@ describe("recordLine", () => {
     expect(recordLine(1, "empty", {})).toEqual("1 empty");
   });
 
+  it("writes a numeric key as tostring gives it, sorted with the other keys by name", () => {
+    expect(recordLine(2, "list", { 0: "a", 1: "b" })).toEqual("2 list 0=a 1=b");
+    expect(recordLine(3, "mixed", { b: 2, 10: "x", 9: "y" })).toEqual(
+      "3 mixed 10=x 9=y b=2",
+    );
+  });
+
   it("raises an error for a kind outside the safe alphabet", () => {
     expect(() => recordLine(1, "my kind", {})).toThrow(
       `The kind "my${PERCENT}20kind", percent-encoded here, is not a Result file name`,
@@ -125,17 +132,30 @@ describe("splitLine", () => {
   it("keeps a line of 200 bytes whole", () => {
     const line = `7 x v=${string.rep("a", MAX_LINE_BYTES - 6)}`;
     expect(line.length).toEqual(200);
-    expect(splitLine(line, 7)).toEqual([line]);
+    expect(splitLine(line)).toEqual([line]);
   });
 
   it("splits a line of 201 bytes into 200 bytes and a continuation line", () => {
     const line = `7 x v=${string.rep("a", MAX_LINE_BYTES - 6)}b`;
-    expect(splitLine(line, 7)).toEqual([string.sub(line, 1, 200), "7+ b"]);
+    expect(splitLine(line)).toEqual([string.sub(line, 1, 200), "7+ b"]);
+  });
+
+  it("reads the seq of its continuation lines from the start of the line", () => {
+    const line = recordLine(345, "x", { v: string.rep("a", MAX_LINE_BYTES) });
+    const parts = splitLine(line);
+    expect(parts.length).toEqual(2);
+    expect(string.sub(parts[1] ?? "", 1, 5)).toEqual("345+ ");
+  });
+
+  it("raises an error for a long line that does not start with its seq", () => {
+    expect(() => splitLine(string.rep("a", MAX_LINE_BYTES + 1))).toThrow(
+      "does not start with its seq",
+    );
   });
 
   it("splits a long record into continuation lines of at most 200 bytes, which join back to it", () => {
     const line = `12 x v=${encodeValue(bytesBetween(0, 255))}`;
-    const parts = splitLine(line, 12);
+    const parts = splitLine(line);
     expect(parts.length).toEqual(4);
     let joined = parts[0] ?? "";
     for (const [index, part] of parts.entries()) {

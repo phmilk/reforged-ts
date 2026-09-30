@@ -17,7 +17,8 @@ export interface ProbeContext {
    * into continuation lines. The kind and the keys are written as they are,
    * so they stay in the safe alphabet: printable ASCII without space, `=`,
    * the percent sign, `"` or `\`, and not empty. Any other kind or key
-   * raises an error, which fails the Probe run.
+   * raises an error, which fails the Probe run. A numeric key is written
+   * as `tostring` gives it: `{ 0: "a" }` records the key `0`.
    */
   record(kind: string, fields: Readonly<Record<string, FieldValue>>): void;
 }
