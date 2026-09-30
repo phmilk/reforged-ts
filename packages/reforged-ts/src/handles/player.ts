@@ -3,8 +3,8 @@
 import { configuration } from "../reforged/configuration";
 import { runLocalGuarded } from "../reforged/local";
 import type { Force } from "./force";
-import { Handle } from "./handle";
-import type { Point } from "./point";
+import { expectWrapper, Handle } from "./handle";
+import { Point } from "./point";
 import type { Rectangle } from "./rect";
 
 /**
@@ -250,19 +250,24 @@ export class MapPlayer extends Handle<player> {
   }
 
   /**
-   * Gets the player's start location as a new `location`.
+   * Gets the player's start location as a new Point.
    * @remarks
-   * It returns the Native `location` itself, not a `Point`, and the game
-   * allocates a new one on each read: remove it with `RemoveLocation` when
-   * done, or read {@link MapPlayer.startLocationX} and
-   * {@link MapPlayer.startLocationY} instead.
-   * @returns A new `location` at the start location, or `undefined` when the
-   * game returns none.
+   * - Each read creates a Point: destroy it when done, or read
+   *   {@link MapPlayer.startLocationX} and {@link MapPlayer.startLocationY},
+   *   which create nothing.
+   * - In w3ts 3.x this returned the raw `location` Handle, which the caller
+   *   removed with `RemoveLocation`, or `undefined` when the game returned
+   *   none; it now returns the Point, and throws when the game returns none.
+   * @returns A new Point at the start location.
+   * @throws When the game returns no location:
+   * `reforged-ts: failed to create Point`, at the calling line. In Dev mode
+   * it also raises before the globals Init stage and inside
+   * {@link MapPlayer.runLocal}, as every creation does.
    * @native GetPlayerStartLocation
    * @native GetStartLocationLoc
    */
-  public get startLocationPoint() {
-    return GetStartLocationLoc(this.startLocation);
+  public get startLocationPoint(): Point {
+    return expectWrapper(Point, GetStartLocationLoc(this.startLocation));
   }
 
   /**

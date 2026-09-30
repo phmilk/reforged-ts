@@ -873,6 +873,17 @@
     "note": "Not a rename: the first argument is the `MapPlayer` Wrapper instead of the raw `player` handle, as `MapPlayer.setTaxRate` takes it, so the argument `other.handle` becomes `other`."
   },
   {
+    "old": "MapPlayer.startLocationPoint",
+    "new": "MapPlayer.startLocationPoint",
+    "kind": "member",
+    "versions": {
+      "from": "w3ts@3",
+      "to": "reforged-ts@1"
+    },
+    "oneToOne": false,
+    "note": "Not a rename: the accessor returns a new `Point` instead of the raw `location` handle, and throws instead of returning `undefined` when the game returns none, so `RemoveLocation(player.startLocationPoint)` becomes `player.startLocationPoint.destroy()`."
+  },
+  {
     "old": "GameCache.restoreUnit",
     "new": "GameCache.restoreUnit",
     "kind": "member",
