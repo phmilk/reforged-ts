@@ -81,14 +81,19 @@ export function compileBundle(project: BundleProject): Bundle {
  * `target` as a `paths` target of the tsconfig: relative to its folder, where
  * TypeScript resolves `paths` without a baseUrl, and starting with `./` or
  * `../` as it requires. typescript-to-lua joins each target to that folder,
- * so an absolute one would not resolve.
+ * so an absolute one would not resolve, nor a file on another Windows drive,
+ * which no relative path reaches: that one is an AuthorError.
  */
 function pathsTarget(tsconfig: string, target: string): string {
-  const relative = path
-    .relative(path.dirname(path.resolve(tsconfig)), target)
-    .split(path.sep)
-    .join("/");
-  return relative.startsWith("../") ? relative : `./${relative}`;
+  const folder = path.dirname(path.resolve(tsconfig));
+  const relative = path.relative(folder, target);
+  if (path.isAbsolute(relative)) {
+    throw new AuthorError(
+      `${target} is on another drive than ${folder}: typescript-to-lua cannot compile it with the Probes' project. Move it to the drive of the workspace.`,
+    );
+  }
+  const posix = relative.split(path.sep).join("/");
+  return posix.startsWith("../") ? posix : `./${posix}`;
 }
 
 function errorsOf(diagnostics: readonly ts.Diagnostic[]): ts.Diagnostic[] {

@@ -1,12 +1,34 @@
-import { mkdir, mkdtemp, readdir, readFile, writeFile } from "node:fs/promises";
+import {
+  mkdir,
+  mkdtemp,
+  readdir,
+  readFile,
+  rm,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it } from "vitest";
 import { buildProbe } from "../src/build.js";
 import { main } from "../src/cli/build.js";
 import { AuthorError } from "../src/errors.js";
-import { PROBE_FOLDERS, type ProbeFolders } from "../src/folders.js";
+import {
+  PACKAGE_FOLDER,
+  PROBE_FOLDERS,
+  type ProbeFolders,
+} from "../src/folders.js";
 import { stateFile } from "../src/state.js";
+
+/** The fixture Probes folders this file made, removed after its tests. */
+const createdProbesFolders: string[] = [];
+
+afterAll(async () => {
+  await Promise.all(
+    createdProbesFolders.map((dir) =>
+      rm(dir, { recursive: true, force: true }),
+    ),
+  );
+});
 
 /** The package's Probes and map folder, built into a temporary folder. */
 async function tempFolders(
@@ -21,9 +43,17 @@ async function tempFolders(
   };
 }
 
-/** A Probes folder holding one Probe, `<name>.ts`, of this source. */
+/**
+ * A Probes folder holding one Probe, `<name>.ts`, of this source. It is made
+ * in the package's ignored `.probe/` folder, not the system's temporary one,
+ * which can be on another Windows drive than the workspace (the CI runner's
+ * is), where no relative path reaches the Probe.
+ */
 async function probesFolder(name: string, source: string): Promise<string> {
-  const dir = await mkdtemp(join(tmpdir(), "probe-probes-"));
+  const parent = join(PACKAGE_FOLDER, ".probe", "test-probes");
+  await mkdir(parent, { recursive: true });
+  const dir = await mkdtemp(join(parent, "probes-"));
+  createdProbesFolders.push(dir);
   await writeFile(join(dir, `${name}.ts`), source);
   return dir;
 }
