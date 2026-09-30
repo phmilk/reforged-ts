@@ -84,7 +84,7 @@ export const systemMachine: Machine = {
         reject(
           error.code === "ENOENT"
             ? new AuthorError(
-                `Could not start "${command.command}": no such file.`,
+                `Could not start "${command.command}": no such file. Check --game-executable, WC3_EXECUTABLE or --wine-path.`,
               )
             : error,
         );

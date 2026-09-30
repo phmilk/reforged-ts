@@ -4,7 +4,7 @@
  * runId it bakes. Stops at the first failure. Exit codes: 0 built; 1 a
  * failure, an author error printed on one line.
  */
-import { buildProbe } from "../build.js";
+import { buildProbe, builtMessage } from "../build.js";
 import { PROBE_FOLDERS, type ProbeFolders } from "../folders.js";
 import { listProbes } from "../probes.js";
 import {
@@ -27,8 +27,7 @@ export function main(
   try {
     const probes = args.length > 0 ? args : listProbes(context.folders.probes);
     for (const probe of probes) {
-      const { runId, stagingFolder } = buildProbe(probe, context.folders);
-      output.stdout(`Built Probe ${probe}, run ${runId}: ${stagingFolder}\n`);
+      output.stdout(`${builtMessage(buildProbe(probe, context.folders))}\n`);
     }
     return 0;
   } catch (error) {
