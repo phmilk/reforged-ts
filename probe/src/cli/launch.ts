@@ -7,6 +7,7 @@
  */
 import { parseArgs } from "node:util";
 import { PROBE_FOLDERS, WORKSPACE_FOLDER } from "../folders.js";
+import { builtMessage } from "../build.js";
 import { OPTION_FLAGS, type GameOptions } from "../game.js";
 import { launchProbe, type LaunchContext } from "../launch.js";
 import { systemMachine } from "../machine.js";
@@ -38,15 +39,11 @@ export async function main(
   }
   const { probe, options } = parsed;
   try {
-    const { runId, stagingFolder, game } = await launchProbe(
-      probe,
-      options,
-      context,
-    );
+    const launched = await launchProbe(probe, options, context);
     output.stdout(
       [
-        `Built Probe ${probe}, run ${runId}: ${stagingFolder}`,
-        `Started ${game.executable} on it.`,
+        builtMessage(launched),
+        `Started ${launched.game.executable} on it.`,
         "",
         "Now:",
         `1. Wait until the game shows "Probe ${probe} finished" (or "Probe ${probe} failed").`,
@@ -62,6 +59,11 @@ export async function main(
   }
 }
 
+/** The game options, each named by its flag without the leading `--`. */
+const FIELDS = Object.keys(OPTION_FLAGS) as (keyof GameOptions)[];
+const optionName = (field: keyof GameOptions) =>
+  OPTION_FLAGS[field].slice("--".length);
+
 /** The Probe and the game options; undefined for arguments the usage does not allow. */
 function parseCommandLine(
   args: readonly string[],
@@ -70,26 +72,23 @@ function parseCommandLine(
   try {
     parsed = parseArgs({
       args: [...args],
-      options: {
-        "game-executable": { type: "string" },
-        "wine-path": { type: "string" },
-        "wine-prefix": { type: "string" },
-      },
+      options: Object.fromEntries(
+        FIELDS.map((field) => [optionName(field), { type: "string" as const }]),
+      ),
       strict: true,
       allowPositionals: true,
     });
   } catch {
     return undefined;
   }
-  const { positionals, values } = parsed;
+  const { positionals } = parsed;
+  const values = parsed.values as Record<string, string | undefined>;
   if (positionals.length !== 1) return undefined;
   return {
     probe: positionals[0],
-    options: {
-      gameExecutable: values["game-executable"],
-      winePath: values["wine-path"],
-      winePrefix: values["wine-prefix"],
-    },
+    options: Object.fromEntries(
+      FIELDS.map((field) => [field, values[optionName(field)]]),
+    ),
   };
 }
 

@@ -12,7 +12,7 @@ import {
   wellKnownExecutables,
 } from "../src/game.js";
 import { LAUNCH_ARGS } from "../src/launch.js";
-import type { SpawnCommand } from "../src/machine.js";
+import type { Machine, SpawnCommand } from "../src/machine.js";
 import { stateFile } from "../src/state.js";
 import { fakeMachine, type FakeMachineOptions } from "./support/machine.js";
 
@@ -33,7 +33,7 @@ const root = path.resolve("fake-workspace");
 const ELSEWHERE = path.resolve("elsewhere", "wc3");
 
 /** A fake machine where exactly `existing` exist, recording what was asked. */
-function probeMachine(
+function recordingMachine(
   platform: NodeJS.Platform,
   existing: string[],
   env: Record<string, string> = {},
@@ -59,7 +59,7 @@ function probeMachine(
 describe("resolveGameLaunch", () => {
   it("takes --game-executable before WC3_EXECUTABLE and the well-known locations, resolved against the root", () => {
     const override = path.join(root, "game", "wc3.exe");
-    const { machine, asked } = probeMachine("win32", [override, X86], {
+    const { machine, asked } = recordingMachine("win32", [override, X86], {
       ...windowsEnv,
       [EXECUTABLE_ENV]: X86,
     });
@@ -70,7 +70,7 @@ describe("resolveGameLaunch", () => {
   });
 
   it("reports a --game-executable that does not exist", () => {
-    const { machine } = probeMachine("win32", [X86], windowsEnv);
+    const { machine } = recordingMachine("win32", [X86], windowsEnv);
     expect(() =>
       resolveGameLaunch({ gameExecutable: "missing.exe" }, root, machine),
     ).toThrow(
@@ -81,7 +81,7 @@ describe("resolveGameLaunch", () => {
   });
 
   it("takes WC3_EXECUTABLE before the well-known locations", () => {
-    const { machine } = probeMachine("win32", [ELSEWHERE, X86], {
+    const { machine } = recordingMachine("win32", [ELSEWHERE, X86], {
       ...windowsEnv,
       [EXECUTABLE_ENV]: ELSEWHERE,
     });
@@ -90,8 +90,17 @@ describe("resolveGameLaunch", () => {
     });
   });
 
+  it("resolves a relative WC3_EXECUTABLE against the root, as --game-executable", () => {
+    const executable = path.join(root, "game", "wc3.exe");
+    const { machine } = recordingMachine("win32", [executable], {
+      ...windowsEnv,
+      [EXECUTABLE_ENV]: path.join("game", "wc3.exe"),
+    });
+    expect(resolveGameLaunch({}, root, machine)).toEqual({ executable });
+  });
+
   it("passes over a WC3_EXECUTABLE that does not exist", () => {
-    const { machine } = probeMachine("win32", [X64], {
+    const { machine } = recordingMachine("win32", [X64], {
       ...windowsEnv,
       [EXECUTABLE_ENV]: ELSEWHERE,
     });
@@ -99,7 +108,7 @@ describe("resolveGameLaunch", () => {
   });
 
   it("looks at the well-known locations in order: Program Files (x86), then Program Files", () => {
-    const both = probeMachine("win32", [X86, X64], windowsEnv);
+    const both = recordingMachine("win32", [X86, X64], windowsEnv);
     expect(resolveGameLaunch({}, root, both.machine)).toEqual({
       executable: X86,
     });
@@ -109,20 +118,20 @@ describe("resolveGameLaunch", () => {
   });
 
   it("fails with one line naming WC3_EXECUTABLE and where it looked when no game is found", () => {
-    const { machine } = probeMachine("win32", [], windowsEnv);
+    const { machine } = recordingMachine("win32", [], windowsEnv);
     expect(() => resolveGameLaunch({}, root, machine)).toThrow(
       new AuthorError(
         `Warcraft III was not found. Set the ${EXECUTABLE_ENV} environment variable (or pass --game-executable) to the game's executable. Looked at: "${X86}", "${X64}".`,
       ),
     );
-    const linux = probeMachine("linux", []);
+    const linux = recordingMachine("linux", []);
     expect(() => resolveGameLaunch({}, root, linux.machine)).toThrow(
       /^Warcraft III was not found\. Set the WC3_EXECUTABLE environment variable [^\n]*executable\.$/,
     );
   });
 
   it("through Wine, takes --game-executable as the Windows side's path, unchecked, and resolves the prefix", () => {
-    const { machine, asked } = probeMachine("linux", []);
+    const { machine, asked } = recordingMachine("linux", []);
     expect(
       resolveGameLaunch(
         { gameExecutable: X86, winePath: "wine", winePrefix: "wine-wc3" },
@@ -138,7 +147,7 @@ describe("resolveGameLaunch", () => {
   });
 
   it("refuses an empty option", () => {
-    const { machine } = probeMachine("linux", []);
+    const { machine } = recordingMachine("linux", []);
     expect(() => resolveGameLaunch({ winePath: "" }, root, machine)).toThrow(
       new AuthorError("--wine-path must not be empty."),
     );
@@ -158,10 +167,14 @@ interface Launch {
   context: Context;
 }
 
-/** Runs `probe:launch` with `args` on a fake machine, building into a temporary folder. */
+/**
+ * Runs `probe:launch` with `args` on a fake machine of `machine`, its
+ * members replaced by `overrides`, building into a temporary folder.
+ */
 async function launch(
   args: string[],
   machine: FakeMachineOptions = {},
+  overrides: Partial<Machine> = {},
 ): Promise<Launch> {
   const dir = await mkdtemp(path.join(tmpdir(), "probe-launch-"));
   const spawned: SpawnCommand[] = [];
@@ -171,7 +184,7 @@ async function launch(
       output: path.join(dir, "output"),
       state: path.join(dir, "state"),
     },
-    machine: fakeMachine({ ...machine, spawned }),
+    machine: { ...fakeMachine({ ...machine, spawned }), ...overrides },
     root,
   };
   let stdout = "";
@@ -300,34 +313,17 @@ describe("probe:launch", () => {
   });
 
   it("reports a game that cannot be started on one line, with exit code 1", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "probe-launch-"));
-    let stderr = "";
-    const code = await main(
+    const cannotStart = new AuthorError(
+      `Could not start "${ELSEWHERE}": no such file.`,
+    );
+    const { code, stderr } = await launch(
       ["hello"],
-      { stdout: () => undefined, stderr: (text) => (stderr += text) },
-      {
-        folders: {
-          ...PROBE_FOLDERS,
-          output: path.join(dir, "output"),
-          state: path.join(dir, "state"),
-        },
-        machine: {
-          ...fakeMachine({
-            env: { [EXECUTABLE_ENV]: ELSEWHERE },
-            files: { [ELSEWHERE]: "" },
-          }),
-          spawnDetached: () =>
-            Promise.reject(
-              new AuthorError(`Could not start "${ELSEWHERE}": no such file.`),
-            ),
-        },
-        root,
-      },
+      { env: { [EXECUTABLE_ENV]: ELSEWHERE }, files: { [ELSEWHERE]: "" } },
+      { spawnDetached: () => Promise.reject(cannotStart) },
     );
     expect(code).toBe(1);
-    expect(stderr).toBe(
-      `probe:launch failed: Could not start "${ELSEWHERE}": no such file.\n`,
-    );
+    expect(stderr).toBe(`probe:launch failed: ${cannotStart.message}
+`);
   });
 
   it("refuses a bad Probe name with a one-line author error", async () => {

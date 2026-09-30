@@ -52,6 +52,11 @@ export interface BuildResult {
   bundleFile: string;
 }
 
+/** The line a command prints for a build: the Probe, its runId and where it was staged. */
+export function builtMessage(result: BuildResult): string {
+  return `Built Probe ${result.probe}, run ${result.runId}: ${result.stagingFolder}`;
+}
+
 /**
  * Builds the Probe `probe` of `folders.probes` into
  * `<folders.output>/<probe>/`, emptied first: the bundle, then the staged

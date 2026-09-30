@@ -19,7 +19,7 @@ A known failure (a bad Probe name, a type error in a Probe, no game or no `Custo
 `probe:launch` finds the game in this order, as the Template's `pnpm test:map` does:
 
 1. `--game-executable <file>`, relative to the repository root;
-2. `WC3_EXECUTABLE`, naming the game's executable;
+2. `WC3_EXECUTABLE`, naming the game's executable, also relative to the repository root;
 3. the Battle.net install locations: `Warcraft III\_retail_\x86_64\Warcraft III.exe` under `Program Files (x86)`, then `Program Files`, on Windows; the `.app`'s inner binary under `/Applications` on macOS.
 
 It starts the game with `-loadfile <staged folder> -launch -editor -windowmode windowed`: no menu, and the saved Battle.net login. The command returns once the game has started, and prints what to do next: wait until the game shows "Probe `<probe>` finished", close it, then say "done", or "crashed" if the game died before that message. The agent then reads the run with `probe:read`.

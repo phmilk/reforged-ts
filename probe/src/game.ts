@@ -27,11 +27,11 @@ export const OPTION_FLAGS: Readonly<Record<keyof GameOptions, string>> = {
   winePrefix: "--wine-prefix",
 };
 
-/** Names the game's executable when it is somewhere the well-known locations do not cover. */
+/** Names the game's executable when it is somewhere the well-known locations do not cover; relative to the root. */
 export const EXECUTABLE_ENV = "WC3_EXECUTABLE";
 
 /**
- * The default install locations of the game, probed in order. NOT verified
+ * The default install locations of the game, looked at in order. NOT verified
  * against a real 3.0 install: they follow the Battle.net layout since 1.32
  * (`_retail_\x86_64` on Windows; on macOS the inner binary of the `.app`,
  * since the bundle folder itself cannot be executed), as other templates and
@@ -75,7 +75,9 @@ export interface GameLaunch {
 
 /**
  * Finds the game: `gameExecutable` if set, else the `WC3_EXECUTABLE`
- * environment variable, else the first existing well-known location. Nothing
+ * environment variable, else the first existing well-known location. Both
+ * resolve against `root`, as the Template's did against the folder its
+ * scripts run in, since `pnpm --dir probe` runs this one in `probe/`. Nothing
  * found is an AuthorError naming `WC3_EXECUTABLE`.
  */
 export function resolveGameLaunch(
@@ -114,7 +116,7 @@ export function resolveGameLaunch(
 
   const fromEnv = machine.env[EXECUTABLE_ENV];
   const candidates = [
-    ...(fromEnv ? [fromEnv] : []),
+    ...(fromEnv ? [path.resolve(root, fromEnv)] : []),
     ...wellKnownExecutables(machine.platform, machine.env),
   ];
   const executable = candidates.find((file) => machine.exists(file));
