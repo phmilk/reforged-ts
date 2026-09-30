@@ -5,7 +5,6 @@
  * @remarks
  * - A member is named after its order string, with the first letter capitalised: `OrderId.Attack` is the id of the `attack` order.
  * - Some orders have no order string, such as `Moveslot1` to `Moveslot6` and `Useslot1` to `Useslot6`: those are issued and recognised by id only.
- * - `Battleroar` and `Forkedlightning` hold the ids of other orders: see their comments.
  * - `OrderId` is a `const enum`: each use compiles to the number, and the emitted Lua holds no `OrderId` table to look a name up in.
  */
 export const enum OrderId {
@@ -67,14 +66,9 @@ export const enum OrderId {
   Barkskinoff = 852137,
   /** The id of the `barkskinon` order. */
   Barkskinon = 852136,
-  /**
-   * A wrong id for the `battleroar` order: it holds the id of `battlestations`.
-   * @remarks
-   * The value is wrong: it is 852099, the id of `battlestations` ({@link OrderId.Battlestations}), where the game gives `battleroar` the id 852599. Issue the order by its string until the value is fixed.
-   */
-  Battleroar = 852099,
+  /** The id of the `battleroar` order. */
+  Battleroar = 852599,
   /** The id of the `battlestations` order. */
-  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values -- Battleroar holds this id by mistake; fixing its value (#255) removes it
   Battlestations = 852099,
   /** The id of the `bearform` order. */
   Bearform = 852138,
@@ -270,13 +264,8 @@ export const enum OrderId {
   Forceboard = 852044,
   /** The id of the `forceofnature` order. */
   Forceofnature = 852176,
-  /**
-   * A wrong id for the `forkedlightning` order: it holds the id of `elementalfury`.
-   * @remarks
-   * The value is wrong: it is 852586, the id of `elementalfury` ({@link OrderId.Elementalfury}), where the game gives `forkedlightning` the id 852587. Issue the order by its string until the value is fixed.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values -- this id is Elementalfury's, by mistake; fixing the value (#255) removes it
-  Forkedlightning = 852586,
+  /** The id of the `forkedlightning` order. */
+  Forkedlightning = 852587,
   /** The id of the `freezingbreath` order. */
   Freezingbreath = 852195,
   /** The id of the `frenzy` order. */
