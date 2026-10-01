@@ -2,9 +2,10 @@
  * `probe:read <probe>`: prints the state of the Probe's last run on one line,
  * then its records, one per line. Read-only: it writes, starts and stops
  * nothing, and on Windows only reads the process list. Exit codes:
- * 0 `finished`, 2 `incomplete`, `running` or `crashed`, 3 `not-started`;
- * 4 when the command itself fails (a usage or author error, printed on one
- * line, or a bug), so a failure never reads as a state.
+ * 0 `finished`, 1 `failed`, 2 `incomplete`, `running` or `crashed`,
+ * 3 `not-started`; 4 when the command itself fails (a usage or author
+ * error, printed on one line, or a bug), so a failure never reads as a
+ * state.
  */
 import { PROBE_FOLDERS } from "../folders.js";
 import { systemMachine } from "../machine.js";
