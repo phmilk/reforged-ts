@@ -10,7 +10,7 @@ Run from the repository root:
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `pnpm probe:build [<probe>…]` | Builds each Probe named, or every Probe when none is: compiles it with typescript-to-lua, bakes a fresh runId into the bundle, composes the map script and stages the map folder in `.probe/build/<probe>/staging/probe.w3m`. Needs no game; CI runs it. Exit code 1 on a failure.                                            |
 | `pnpm probe:launch <probe>`   | Run by the human, as `! pnpm probe:launch <probe>` in the agent's session; the agent never runs it. Finds the game, fails before building when it is not found, builds the Probe as `probe:build` does, starts the game detached on the staged folder and prints the human's part of the Probe run. Exit code 1 on a failure. |
-| `pnpm probe:read <probe>`     | Reads the Probe's Result file, prints the state of its last run on one line, then its records, one per line. Read-only.                                                                                                                                                                                                       |
+| `pnpm probe:read <probe>`     | Reads the Probe's Result file, prints the state of its last run on one line, then its records, one per line. Read-only: it writes, starts and stops nothing, and on Windows reads the process list.                                                                                                                           |
 
 A known failure (a bad Probe name, a type error in a Probe, no game or no `CustomMapData` folder found) prints one line, `<command> failed: <message>`; a bug prints its stack.
 
@@ -30,10 +30,15 @@ It starts the game with `-loadfile <staged folder> -launch -editor -windowmode w
 
 `probe:read` compares the Result file with the runId of the Probe's last build, kept in `.probe/<probe>.json`:
 
-| State         | When                                                                | Exit code |
-| ------------- | ------------------------------------------------------------------- | --------- |
-| `finished`    | the file holds the last build's runId and ends with `END status=ok` | 0         |
-| `not-started` | there is no file, or it holds another runId, which the status shows | 3         |
+| State         | When                                                                                                          | Exit code |
+| ------------- | ------------------------------------------------------------------------------------------------------------- | --------- |
+| `finished`    | the file holds the last build's runId and ends with `END status=ok`                                           | 0         |
+| `running`     | the file holds the last build's runId and ends with `CHECKPOINT`, and `Warcraft III.exe` runs (Windows)       | 2         |
+| `crashed`     | the file holds the last build's runId and ends with `CHECKPOINT`, and no `Warcraft III.exe` runs (Windows)    | 2         |
+| `incomplete`  | the file holds the last build's runId and ends with `CHECKPOINT`, off Windows, where no process is looked for | 2         |
+| `not-started` | there is no file, or it holds another runId, which the status shows                                           | 3         |
+
+A run that ends with a checkpoint shows the label of its last `PENDING` line, the step it was in, or "no pending step". On Windows the game's process is looked for with `tasklist /FI "IMAGENAME eq Warcraft III.exe"`, a query of the process list that stops nothing; elsewhere the run stays `incomplete`, and the human's "done" or "crashed" decides.
 
 Exit code 4 is the command's own failure (usage, a known failure or a bug), so a failure never reads as a state. The root scripts run the package's with `pnpm --dir probe`, not `pnpm --filter`, which would turn every non-zero exit code into 1.
 
@@ -58,17 +63,23 @@ export function run(p: ProbeContext): void {
 }
 ```
 
+`p.pending(label)` adds the line `<seq> PENDING label=<label>` before a risky step, so a crash in that step names it. `p.checkpoint()` puts every line so far on disk: it rewrites the Result file in full, `PreloadGenClear`, `PreloadGenStart`, one `Preload` per line and `PreloadGenEnd`, ending with the line `<seq> CHECKPOINT`, and shows "Probe `<probe>`: checkpoint N, M records so far." on screen. The Probe chooses when: a line reaches the disk only at the next checkpoint or at the end, so a crash loses what came after the last checkpoint. The `CHECKPOINT` line ends its rewrite only: the next line added takes its seq, and the file at the end holds no `CHECKPOINT` line.
+
 `p.record(kind, fields)` adds one line, `<seq> <kind> <key>=<value> ...`, its fields sorted by key. A value may be any string, an error message or the `tostring` of a Handle: the writer percent-encodes every byte outside printable ASCII, and every space, `=`, `%`, `"` and `\`, as `%XX` in uppercase hexadecimal. Kinds and keys are written as they are: one outside the safe alphabet, printable ASCII without space, `=`, `%`, `"` or `\`, or an empty one, raises an error that fails the Probe run; a numeric key is written as `tostring` gives it, so `{ 0: "a" }` records the key `0`. So every line stays inside #298's limits, printable ASCII without `"` or `\`, and the writer splits a line longer than 200 bytes into continuation lines `<seq>+ <next bytes>`, at most 200 bytes each. `probe:read` joins the continuation lines, then decodes the values, reading their bytes as UTF-8: a byte outside a valid UTF-8 sequence, such as `string.char(200)` or a character cut in the middle, reads as its `%XX` escape, so no byte is lost. A line holding anything the writer does not write, a character it always escapes, a lowercase escape or the escape of a byte it keeps, is not a Result file line, and the read fails; of a Result file of another run, only the BEGIN line is read. `probe:read` prints a value as it is, or as a JSON string when the value is empty or holds a space, a `"`, or a control or format character, so each record stays on one line. A Probe may import `reforged-ts`, which resolves to the workspace sources; the runner itself calls Natives only.
 
-The Result file of a finished run of `hello`, whose second record holds every byte of ASCII the writer escapes and some UTF-8:
+The Result file of a finished run of `hello`, which records each step after its `PENDING` line and checkpoints after each, and whose second record holds every byte of ASCII the writer escapes and some UTF-8:
 
 ```text
 1 BEGIN probe=hello run=<runId>
-2 greeting count=1 word=hello
-3 encoded ascii=%00%01%02%03%04%05%06%07%08%09%0A%0B%0C%0D%0E%0F%10%11%12%13%14%15%16%17%18%19%1A%1B%1C%1D%1E%1F%20%22%25%3D%5C%7F utf8=h%C3%A9llo,%20w%C3%B6rld:%20%E2%9C%93%20%E6%97%A5%E6%9C%AC%E8%AA
-3+ %9E
-4 END status=ok
+2 PENDING label=greet
+3 greeting count=1 word=hello
+4 PENDING label=encode
+5 encoded ascii=%00%01%02%03%04%05%06%07%08%09%0A%0B%0C%0D%0E%0F%10%11%12%13%14%15%16%17%18%19%1A%1B%1C%1D%1E%1F%20%22%25%3D%5C%7F utf8=h%C3%A9llo,%20w%C3%B6rld:%20%E2%9C%93%20%E6%97%A5%E6%9C%AC%E8%AA
+5+ %9E
+6 END status=ok
 ```
+
+Its second checkpoint left the same lines with `6 CHECKPOINT` last in place of the `END` line; a crash there reads as `crashed`, pending step `encode`.
 
 ## Layout
 
@@ -76,5 +87,5 @@ The Result file of a finished run of `hello`, whose second record holds every by
 - `game/`: the in-game module (`runner.ts`, the entry of every bundle) and the types a Probe sees (`probe.ts`).
 - `probe.w3m/`: the map folder, a copy of the Template's; `PROVENANCE.md` lists every file copied from the Template.
 - `src/`: the commands, compiled to `build/`; `src/machine.ts` is the one way they reach the machine, which the tests replace with a fake. `src/read.ts` is the reader the package's other scripts import.
-- `test/`: the Node tests of the commands, and under `lua/` the in-game module's tests on the `reforged-test` harness. `test/fixtures/bridge/hello.txt` is the bridge: the lines of the hello Probe's Result file, encoded values and a continuation line included, which the Lua test asserts the runner writes and the Node test asserts the reader decodes back.
+- `test/`: the Node tests of the commands, and under `lua/` the in-game module's tests on the `reforged-test` harness. `test/fixtures/bridge/` is the bridge: the lines of the hello Probe's Result file, `hello.txt` as the finished run leaves it and `hello-checkpoint.txt` as its second checkpoint does, `PENDING` lines, encoded values and a continuation line included, which the Lua test asserts the runner writes and the Node test asserts the reader decodes back.
 - `.probe/`: ignored: the builds, the state files and the compiled Lua tests.

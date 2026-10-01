@@ -31,7 +31,11 @@ export interface Machine {
    * Windows.
    */
   queryRegistry(key: string, value: string): string | undefined;
-  /** Whether a process of this image name runs (`tasklist`); false off Windows. */
+  /**
+   * Whether a process of this image name runs, from the process list
+   * (`tasklist`, `tasklistArgs`), which it only reads: it stops no process.
+   * False off Windows.
+   */
   isRunning(imageName: string): boolean;
   /** Starts the program detached: it outlives the command. */
   spawnDetached(command: SpawnCommand): Promise<void>;
@@ -64,14 +68,12 @@ export const systemMachine: Machine = {
   },
   isRunning: (imageName) => {
     if (process.platform !== "win32") return false;
-    const output = execFileSync(
-      "tasklist",
-      ["/FI", `IMAGENAME eq ${imageName}`, "/FO", "CSV", "/NH"],
-      { encoding: "utf8", windowsHide: true },
-    );
-    return output
-      .split(/\r?\n/)
-      .some((line) => line.startsWith(`"${imageName}",`));
+    const output = execFileSync("tasklist", tasklistArgs(imageName), {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+      windowsHide: true,
+    });
+    return listsImage(output, imageName);
   },
   spawnDetached: (command) =>
     new Promise((resolve, reject) => {
@@ -95,6 +97,28 @@ export const systemMachine: Machine = {
       });
     }),
 };
+
+/**
+ * The arguments of the `tasklist` that lists the processes of the image
+ * `imageName`, one CSV line each without a header: a query of the process
+ * list, which reads and never stops a process.
+ */
+export function tasklistArgs(imageName: string): string[] {
+  return ["/FI", `IMAGENAME eq ${imageName}`, "/FO", "CSV", "/NH"];
+}
+
+/**
+ * Whether the output of `tasklist` with `tasklistArgs(imageName)` lists a
+ * process of `imageName`: a line `"<imageName>","<pid>",...`, the name
+ * compared as Windows does, ignoring case. The line `tasklist` prints when
+ * no process matches lists none.
+ */
+export function listsImage(output: string, imageName: string): boolean {
+  const start = `"${imageName.toLowerCase()}",`;
+  return output
+    .split(/\r?\n/)
+    .some((line) => line.toLowerCase().startsWith(start));
+}
 
 /**
  * The data of `value` in the output of `reg query <key> /v <value>`: the

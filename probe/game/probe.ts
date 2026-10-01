@@ -21,4 +21,21 @@ export interface ProbeContext {
    * as `tostring` gives it: `{ 0: "a" }` records the key `0`.
    */
   record(kind: string, fields: Readonly<Record<string, FieldValue>>): void;
+
+  /**
+   * Adds the line `<seq> PENDING label=<label>` before a risky step, so a
+   * crash in that step names it: `probe:read` reports the last `PENDING`
+   * of an incomplete run. The label is encoded like a record's value. It
+   * reaches the disk with the next checkpoint, as every line does.
+   */
+  pending(label: string): void;
+
+  /**
+   * Puts every line so far on disk: rewrites the Result file in full with
+   * them, then a last line `<seq> CHECKPOINT`, and shows a progress message
+   * on screen. A crash after it loses only what comes after it. The
+   * `CHECKPOINT` line ends this rewrite only: the next line added takes its
+   * seq.
+   */
+  checkpoint(): void;
 }

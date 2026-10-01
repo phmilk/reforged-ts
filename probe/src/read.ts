@@ -3,20 +3,33 @@
  * Probe's Result file in the game's `CustomMapData` folder, undoes the
  * game's `Preload` wrapper, joins the continuation lines, parses the lines,
  * decodes their values and classifies the Probe run
- * against the runId of the Probe's last build. Read-only.
+ * against the runId of the Probe's last build. Read-only: it reads the file,
+ * and on Windows the process list, and writes or stops nothing.
  */
 import { AuthorError } from "./errors.js";
+import { GAME_IMAGE_NAME } from "./game.js";
 import type { Machine } from "./machine.js";
 import { checkProbeName } from "./probes.js";
 import { readState } from "./state.js";
 import { customMapDataFolder, pathsOf } from "./user-folder.js";
 
-/** How a Probe run ended, as far as its Result file tells. */
-export type RunState = "finished" | "not-started";
+/**
+ * How a Probe run ended, as far as its Result file tells. A run whose file
+ * ends with its last checkpoint is `incomplete`; on Windows, the process
+ * list refines it to `running` or `crashed`.
+ */
+export type RunState =
+  "finished" | "incomplete" | "running" | "crashed" | "not-started";
 
-/** The exit code of `probe:read` for each state. */
+/**
+ * The exit code of `probe:read` for each state: `incomplete`, `running`
+ * and `crashed` share 2.
+ */
 export const EXIT_CODES: Readonly<Record<RunState, number>> = {
   finished: 0,
+  incomplete: 2,
+  running: 2,
+  crashed: 2,
   "not-started": 3,
 };
 
@@ -49,6 +62,12 @@ export interface ProbeRun {
   runId?: string;
   /** The Probe's own records, in order; empty unless the run is the expected one. */
   records: readonly ResultLine[];
+  /**
+   * The label of the file's last `PENDING` line, the step a crash stopped
+   * in; undefined when there is none, and unless the run is the expected
+   * one.
+   */
+  pending?: string;
 }
 
 /** Where `readProbeRun` looks. */
@@ -61,9 +80,14 @@ export interface ReadContext {
 /**
  * Reads the Probe run of `probe`: `not-started` when there is no Result
  * file, or when it holds another run than the Probe's last build;
- * `finished` when it ends with `END status=ok`. Of a file of another run,
- * only the BEGIN line is parsed. A bad name, a Probe never built or a file
- * the game did not write is an AuthorError.
+ * `finished` when it ends with `END status=ok`; when it ends with
+ * `CHECKPOINT`, `running` or `crashed` on Windows, as a process of
+ * `Warcraft III.exe` runs or not, and `incomplete` elsewhere, with the
+ * label of the last `PENDING` line. Of a file of another run, only the
+ * BEGIN line is parsed. A bad name, a Probe never built or a file the game
+ * did not write is an AuthorError. Reads only: the file, the Probe's state
+ * file and, for a run that ends with a checkpoint on Windows, the process
+ * list.
  */
 export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
   checkProbeName(probe);
@@ -93,18 +117,35 @@ export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
     return { ...run, runId, state: "not-started", records: [] };
   }
   const lines = [begin, ...texts.slice(1).map(parseResultLine)];
+  const records = lines.filter((line) => !RESERVED_KINDS.includes(line.kind));
   const last = lines.at(-1);
-  if (last?.kind !== "END" || field(last, "status") !== "ok") {
-    throw new AuthorError(
-      `${file} ends with ${quote(last ? formatLine(last) : "")}, which this reader does not classify yet.`,
-    );
+  if (last?.kind === "END" && field(last, "status") === "ok") {
+    return { ...run, runId, state: "finished", records };
   }
-  return {
-    ...run,
-    runId,
-    state: "finished",
-    records: lines.filter((line) => !RESERVED_KINDS.includes(line.kind)),
-  };
+  if (last?.kind === "CHECKPOINT") {
+    const pendingLine = lines.findLast((line) => line.kind === "PENDING");
+    const pending = pendingLine && field(pendingLine, "label");
+    return {
+      ...run,
+      runId,
+      state: incompleteState(context.machine),
+      records,
+      ...(pending !== undefined && { pending }),
+    };
+  }
+  throw new AuthorError(
+    `${file} ends with ${quote(last ? formatLine(last) : "")}, which this reader does not classify yet.`,
+  );
+}
+
+/**
+ * The state of a run whose Result file ends with a checkpoint: on Windows,
+ * `running` while a process of the game's image runs, else `crashed`;
+ * elsewhere `incomplete`, as no process is looked for there.
+ */
+function incompleteState(machine: Machine): RunState {
+  if (machine.platform !== "win32") return "incomplete";
+  return machine.isRunning(GAME_IMAGE_NAME) ? "running" : "crashed";
 }
 
 /** The Result file of `probe`: `reforged-ts\probes\<probe>.txt` in `CustomMapData`. */
@@ -375,10 +416,26 @@ export function formatProbeRun(run: ProbeRun): string {
     .join("");
 }
 
+/** What the status line says of each state a checkpoint leaves. */
+const CHECKPOINT_STATES: Readonly<Partial<Record<RunState, string>>> = {
+  incomplete: `the game's process is looked for on Windows only`,
+  running: `${GAME_IMAGE_NAME} is running`,
+  crashed: `${GAME_IMAGE_NAME} is not running`,
+};
+
 function statusLine(run: ProbeRun): string {
+  const count = run.records.length;
+  const records = `${String(count)} record${count === 1 ? "" : "s"}`;
+  const game = CHECKPOINT_STATES[run.state];
   if (run.state === "finished") {
-    const count = run.records.length;
-    return `finished: Probe ${run.probe}, run ${run.expectedRunId}, ${String(count)} record${count === 1 ? "" : "s"}`;
+    return `finished: Probe ${run.probe}, run ${run.expectedRunId}, ${records}`;
+  }
+  if (game !== undefined) {
+    const pending =
+      run.pending === undefined
+        ? "no pending step"
+        : `pending step ${formatValue(run.pending)}`;
+    return `${run.state}: Probe ${run.probe}, run ${run.expectedRunId}, ${records} to its last checkpoint, ${pending}; ${game}`;
   }
   return run.runId === undefined
     ? `not-started: no Result file at ${run.file}`

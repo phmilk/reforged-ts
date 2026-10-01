@@ -1,25 +1,34 @@
-// The bridge between the writer and the reader: one fixture holds the lines
-// of the hello Probe's Result file. The Lua test asserts that the writer
-// produces exactly these lines; the Node test wraps them as the game writes
-// them to disk and asserts that the reader decodes them back.
+// The bridge between the writer and the reader: two fixtures hold the lines
+// of the hello Probe's Result file, as its run finishes and as its second
+// checkpoint leaves it. The Lua test asserts that the writer produces
+// exactly these lines; the Node test wraps them as the game writes them to
+// disk and asserts that the reader decodes them back.
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-/** The fixture: one Result file line per line. */
-export const BRIDGE_FIXTURE = fileURLToPath(
-  new URL("../fixtures/bridge/hello.txt", import.meta.url),
-);
+/** A bridge fixture: the Result file as the finished run leaves it, or as the last checkpoint does. */
+export type BridgeFixture = "finished" | "checkpoint";
 
-/** The Probe the fixture is the Result file of. */
+/** The fixtures: one Result file line per line. */
+export const BRIDGE_FIXTURES: Readonly<Record<BridgeFixture, string>> = {
+  finished: fileURLToPath(
+    new URL("../fixtures/bridge/hello.txt", import.meta.url),
+  ),
+  checkpoint: fileURLToPath(
+    new URL("../fixtures/bridge/hello-checkpoint.txt", import.meta.url),
+  ),
+};
+
+/** The Probe the fixtures are the Result file of. */
 export const BRIDGE_PROBE = "hello";
 
-/** The runId in the fixture's `BEGIN` line, which the Lua test's build bakes. */
+/** The runId in the fixtures' `BEGIN` line, which the Lua test's build bakes. */
 export const BRIDGE_RUN_ID = "bridge";
 
-/** The fixture's lines, in order. */
-export function bridgeLines(): string[] {
-  const lines = readFileSync(BRIDGE_FIXTURE, "utf8").split("\n");
+/** The lines of a fixture, the finished run's by default, in order. */
+export function bridgeLines(fixture: BridgeFixture = "finished"): string[] {
+  const lines = readFileSync(BRIDGE_FIXTURES[fixture], "utf8").split("\n");
   return lines.at(-1) === "" ? lines.slice(0, -1) : lines;
 }
 
