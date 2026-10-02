@@ -28,7 +28,7 @@ const USAGE = "Usage: probe:nullability-report <probe>\n";
 /** The machine and the files the command reads and writes, and its clock. */
 export type Context = NullabilityReportContext;
 
-export function main(
+export async function main(
   args: readonly string[],
   output: Output,
   context: Context = {
@@ -38,14 +38,14 @@ export function main(
     reportFile: NULLABILITY_REPORT,
     clock: () => new Date(),
   },
-): number {
+): Promise<number> {
   if (args.length !== 1) {
     output.stderr(USAGE);
     return 1;
   }
   const [probe] = args;
   try {
-    output.stdout(summary(writeNullabilityReport(probe, context)));
+    output.stdout(summary(await writeNullabilityReport(probe, context)));
     return 0;
   } catch (error) {
     output.stderr(failure("probe:nullability-report", error));
@@ -67,5 +67,5 @@ function summary({ file, slice }: NullabilityReport): string {
 }
 
 if (invokedDirectly(import.meta.url)) {
-  process.exitCode = main(process.argv.slice(2), PROCESS_OUTPUT);
+  process.exitCode = await main(process.argv.slice(2), PROCESS_OUTPUT);
 }

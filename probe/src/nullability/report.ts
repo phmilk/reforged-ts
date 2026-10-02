@@ -68,10 +68,10 @@ export interface NullabilityReport {
  * entry, or a record the report does not read, is an AuthorError, and the
  * report is then left as it was.
  */
-export function writeNullabilityReport(
+export async function writeNullabilityReport(
   probe: string,
   context: NullabilityReportContext,
-): NullabilityReport {
+): Promise<NullabilityReport> {
   const run = readProbeRun(probe, context);
   const runId = acceptedRunId(run);
   const patch = builtPatch(run);
@@ -99,14 +99,12 @@ export function writeNullabilityReport(
     runId,
     natives,
   };
+  const section = await formatSection(slice);
   const report = fs.statSync(context.reportFile, { throwIfNoEntry: false })
     ? fs.readFileSync(context.reportFile, "utf8")
     : undefined;
   fs.mkdirSync(path.dirname(context.reportFile), { recursive: true });
-  fs.writeFileSync(
-    context.reportFile,
-    replaceSection(report, probe, formatSection(slice)),
-  );
+  fs.writeFileSync(context.reportFile, replaceSection(report, probe, section));
   return { file: context.reportFile, slice };
 }
 

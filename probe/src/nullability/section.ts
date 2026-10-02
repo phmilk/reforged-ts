@@ -2,10 +2,12 @@
  * The Nullability sweep's report, `nullability-sweep.md` in the research
  * docs: a header, then one section per Slice, headed `## <probe>` with the
  * Probe's name in a code span. This module writes a Slice's section as
- * Markdown that Prettier leaves as it is, and puts it into the report in
- * place of the Slice's previous one, keeping every other section. Pure: the
- * report's text in, its new text out.
+ * Markdown, formatted by Prettier itself, so the report passes the
+ * workspace's Prettier check, and puts it into the report in place of the
+ * Slice's previous one, keeping every other section. Pure: the report's
+ * text in, its new text out.
  */
+import { format } from "prettier";
 import type { CaseResult, Comparison, Verdict } from "./verdict.js";
 
 /** One Native of a Slice: its cases in the order they ran, and the conclusions. */
@@ -67,51 +69,52 @@ const COLUMNS: readonly Column[] = [
 ];
 
 /**
- * Text in a table cell: each `\`, `|` and character Markdown could read as
- * formatting escaped, so a label shows as it is.
+ * A value on one line: each line break as a space, since a table cell or a
+ * list item cannot hold one.
  */
-function text(value: string): string {
-  return value.replace(/[\\`*_[\]<>|#]/g, (character) => `\\${character}`);
+function oneLine(value: string): string {
+  return value.replace(/\r\n|\r|\n/g, " ");
 }
 
 /**
- * A value in a code span inside a table cell, with its `|` escaped as GFM
- * tables require; a backtick in the value lengthens the span's fences.
+ * Text in a table cell or a list item, on one line: each `\`, `|` and
+ * character Markdown could read as formatting escaped, so a label shows as
+ * it is.
+ */
+function text(value: string): string {
+  return oneLine(value).replace(
+    /[\\`*_[\]<>|#]/g,
+    (character) => `\\${character}`,
+  );
+}
+
+/**
+ * A value in a code span inside a table cell, on one line, with its `|`
+ * escaped as GFM tables require; a backtick in the value lengthens the
+ * span's fences.
  */
 function code(value: string): string {
+  const line = oneLine(value);
   const longest = Math.max(
     0,
-    ...(value.match(/`+/g) ?? []).map((run) => run.length),
+    ...(line.match(/`+/g) ?? []).map((run) => run.length),
   );
   const fence = "`".repeat(longest + 1);
   const padded =
-    value.startsWith("`") || value.endsWith("`") ? ` ${value} ` : value;
+    line.startsWith("`") || line.endsWith("`") ? ` ${line} ` : line;
   return `${fence}${padded.replaceAll("|", "\\|")}${fence}`;
 }
 
 /**
- * A Markdown table as Prettier writes it: each column as wide as its
- * widest cell, at least 3, the cells padded with spaces, the delimiter row
- * of dashes.
+ * A Markdown table, unaligned: Prettier pads each column to its widest
+ * cell as it measures it, wide characters counted twice.
  */
 function table(
   headers: readonly string[],
   rows: readonly (readonly string[])[],
 ): string[] {
-  const widths = headers.map((header, column) =>
-    Math.max(
-      3,
-      header.length,
-      ...rows.map((row) => (row[column] ?? "").length),
-    ),
-  );
-  const line = (cells: readonly string[]) =>
-    `| ${cells.map((cell, column) => cell.padEnd(widths[column] ?? 0)).join(" | ")} |`;
-  return [
-    line(headers),
-    line(widths.map((width) => "-".repeat(width))),
-    ...rows.map(line),
-  ];
+  const line = (cells: readonly string[]) => `| ${cells.join(" | ")} |`;
+  return [line(headers), line(headers.map(() => "---")), ...rows.map(line)];
 }
 
 /** The lines of one Native's part of a section: its heading, its table and its conclusions. */
@@ -136,8 +139,12 @@ function sectionHeading(probe: string): string {
   return `## \`${probe}\``;
 }
 
-/** A Slice's section: its heading, the run it reports, then each Native. */
-export function formatSection(slice: SliceSection): string {
+/**
+ * A Slice's section: its heading, the run it reports, then each Native,
+ * formatted by Prettier with its defaults, the workspace's, so it passes
+ * the Prettier check as it is.
+ */
+export async function formatSection(slice: SliceSection): Promise<string> {
   const lines = [
     sectionHeading(slice.probe),
     "",
@@ -147,7 +154,7 @@ export function formatSection(slice: SliceSection): string {
     `- Run: \`${slice.runId}\``,
     ...slice.natives.flatMap((native) => ["", ...nativeLines(native)]),
   ];
-  return `${lines.join("\n")}\n`;
+  return format(`${lines.join("\n")}\n`, { parser: "markdown" });
 }
 
 /**

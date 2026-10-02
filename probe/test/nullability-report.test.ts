@@ -281,10 +281,10 @@ async function snapshot(folder: string): Promise<Record<string, string>> {
 }
 
 /** Runs the command on `context`, and what it printed. */
-function runMain(context: Context) {
+async function runMain(context: Context) {
   const stdout: string[] = [];
   const stderr: string[] = [];
-  const code = main(
+  const code = await main(
     [PROBE],
     {
       stdout: (text) => stdout.push(text),
@@ -300,7 +300,7 @@ function runMain(context: Context) {
  * `message` and writes no report.
  */
 async function expectRefusal(context: Context, message: string) {
-  expect(runMain(context)).toEqual({
+  expect(await runMain(context)).toEqual({
     code: 1,
     stdout: [],
     stderr: [`probe:nullability-report failed: ${message}\n`],
@@ -312,7 +312,7 @@ describe("the nullability report", () => {
   it("creates the report with its header and the Slice's section from a finished run", async () => {
     const { context, resultFile } = await setup();
     await writeResultFile(resultFile, FINISHED);
-    writeNullabilityReport(PROBE, context);
+    await writeNullabilityReport(PROBE, context);
     expect(await readFile(context.reportFile, "utf8")).toBe(
       `${REPORT_HEADER}\n${SECTION}`,
     );
@@ -321,7 +321,7 @@ describe("the nullability report", () => {
   it("gives each Native its verdict, comparison and proposed notes", async () => {
     const { context, resultFile } = await setup();
     await writeResultFile(resultFile, FINISHED);
-    const { slice } = writeNullabilityReport(PROBE, context);
+    const { slice } = await writeNullabilityReport(PROBE, context);
     expect(
       slice.natives.map(({ native, verdict, overlayNullable, comparison }) => [
         native,
@@ -339,7 +339,7 @@ describe("the nullability report", () => {
   it("reports an error with its message, an odd value with its type, and a skipped case as crashed", async () => {
     const { context, resultFile } = await setup();
     await writeResultFile(resultFile, OUTCOMES);
-    writeNullabilityReport(PROBE, context);
+    await writeNullabilityReport(PROBE, context);
     const report = await readFile(context.reportFile, "utf8");
     expect(report).toContain(`### \`CreateTimer\`
 
@@ -384,7 +384,7 @@ describe("the nullability report", () => {
   it("proves a Native nullable from a nil next to a crash, and gives no notes to unsafe and review", async () => {
     const { context, resultFile } = await setup();
     await writeResultFile(resultFile, OUTCOMES);
-    const { slice } = writeNullabilityReport(PROBE, context);
+    const { slice } = await writeNullabilityReport(PROBE, context);
     expect(
       slice.natives.map(({ native, verdict, comparison, notes }) => [
         native,
@@ -407,7 +407,7 @@ describe("the nullability report", () => {
   it("reports a run a crash ended: the trailing PENDING case crashed, the cases after it not run", async () => {
     const { context, resultFile } = await setup();
     await writeResultFile(resultFile, CRASHED);
-    const { slice } = writeNullabilityReport(PROBE, context);
+    const { slice } = await writeNullabilityReport(PROBE, context);
     const report = await readFile(context.reportFile, "utf8");
     expect(report)
       .toContain(`| Case         | Group | Outcome | Id  | Type | Message                      |
@@ -435,7 +435,7 @@ describe("the nullability report", () => {
 
   it("reports a crashed run on Windows as it does an incomplete one", async () => {
     const { context } = await windowsSetup(CRASHED, false);
-    const { slice } = writeNullabilityReport(PROBE, context);
+    const { slice } = await writeNullabilityReport(PROBE, context);
     expect(slice.natives[1]?.cases.map(({ outcome }) => outcome)).toEqual([
       "crashed",
       "not run",
@@ -445,7 +445,7 @@ describe("the nullability report", () => {
   it("takes the Patch from the run's BEGIN line, not from the Typings' manifest, and the date from the clock, in UTC", async () => {
     const { context, resultFile } = await setup();
     await writeResultFile(resultFile, FINISHED);
-    const { slice } = writeNullabilityReport(PROBE, context);
+    const { slice } = await writeNullabilityReport(PROBE, context);
     const { patch } = JSON.parse(await readFile(TYPINGS_MANIFEST, "utf8")) as {
       patch: string;
     };
@@ -471,6 +471,32 @@ describe("the nullability report", () => {
     );
   });
 
+  it("keeps each table row on one line and aligned as Prettier aligns it, line breaks, pipes and wide characters included", async () => {
+    const { context, resultFile } = await setup();
+    await writeResultFile(
+      resultFile,
+      numbered([
+        "CASE case=%E6%97%A5%E6%9C%AC%E8%AA%9E%20unit group=a native=Location",
+        "CASE case=two%0Alines group=b native=Location",
+        "PENDING label=Location%20%E6%97%A5%E6%9C%AC%E8%AA%9E%20unit",
+        "CALL case=%E6%97%A5%E6%9C%AC%E8%AA%9E%20unit group=a id=1 native=Location outcome=handle type=location:%20%E6%97%A5",
+        "PENDING label=Location%20two%0Alines",
+        "CALL case=two%0Alines group=b message=line%20one%0D%0Aline%20|%20two native=Location outcome=error",
+        "END status=ok",
+      ]),
+    );
+    await writeNullabilityReport(PROBE, context);
+    const report = await readFile(context.reportFile, "utf8");
+    expect(await format(report, { parser: "markdown" })).toBe(report);
+    // 日本語 is 6 columns wide, as Prettier measures it.
+    expect(report)
+      .toContain(`| Case        | Group | Outcome | Id  | Type           | Message                |
+| ----------- | ----- | ------- | --- | -------------- | ---------------------- |
+| 日本語 unit | (a)   | handle  | 1   | \`location: 日\` |                        |
+| two lines   | (b)   | error   |     |                | \`line one line \\| two\` |
+`);
+  });
+
   it("writes Markdown that Prettier leaves as it is, labels and types holding Markdown's own characters included", async () => {
     const { context, resultFile } = await setup();
     await writeResultFile(
@@ -483,7 +509,7 @@ describe("the nullability report", () => {
         "END status=ok",
       ]),
     );
-    writeNullabilityReport(PROBE, context);
+    await writeNullabilityReport(PROBE, context);
     const report = await readFile(context.reportFile, "utf8");
     expect(await format(report, { parser: "markdown" })).toBe(report);
     expect(report).toContain(
@@ -509,7 +535,7 @@ describe("the nullability report", () => {
         ),
       ),
     );
-    writeNullabilityReport(PROBE, context);
+    await writeNullabilityReport(PROBE, context);
     const report = await readFile(context.reportFile, "utf8");
     const sections = report.split(/^(?=## )/m);
     expect(sections[0]).toBe(`${REPORT_HEADER}\n`);
@@ -531,7 +557,7 @@ describe("the nullability report", () => {
       `${REPORT_HEADER}\n${otherSection("nullability-slice-0")}`,
     );
     await writeResultFile(resultFile, FINISHED);
-    writeNullabilityReport(PROBE, context);
+    await writeNullabilityReport(PROBE, context);
     expect(await readFile(context.reportFile, "utf8")).toBe(
       `${REPORT_HEADER}\n${otherSection("nullability-slice-0")}\n${SECTION}`,
     );
@@ -541,7 +567,7 @@ describe("the nullability report", () => {
     const before = await snapshot(OVERLAY_FOLDER);
     const { context, resultFile } = await setup();
     await writeResultFile(resultFile, FINISHED);
-    writeNullabilityReport(PROBE, context);
+    await writeNullabilityReport(PROBE, context);
     expect(await snapshot(OVERLAY_FOLDER)).toEqual(before);
     expect(Object.keys(before).length).toBe(3);
   });
@@ -649,7 +675,7 @@ describe("the nullability report", () => {
   it("prints the section it wrote, one line per Native", async () => {
     const { context, resultFile } = await setup();
     await writeResultFile(resultFile, FINISHED);
-    const { code, stdout } = runMain(context);
+    const { code, stdout } = await runMain(context);
     expect(code).toBe(0);
     expect(stdout.join("")).toBe(
       [
