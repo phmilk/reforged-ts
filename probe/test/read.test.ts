@@ -29,7 +29,7 @@ import {
   bridgeLines,
   preloadFile,
 } from "./support/bridge.js";
-import { fakeMachine } from "./support/machine.js";
+import { fakeMachine, fakeWsl } from "./support/machine.js";
 
 /** The hello Probe's `ascii` value: every byte of ASCII the writer escapes. */
 const ESCAPED_ASCII = `${String.fromCharCode(
@@ -405,7 +405,7 @@ describe("probe:read of a Result file that ends with a checkpoint", () => {
     expect(read([BRIDGE_PROBE], context)).toEqual({
       code: 2,
       stdout: [
-        "incomplete: Probe hello, run bridge, 2 records to its last checkpoint, pending step encode; the game's process is looked for on Windows only",
+        "incomplete: Probe hello, run bridge, 2 records to its last checkpoint, pending step encode; the game's process is looked for on Windows and WSL only",
         ...CHECKPOINT_RECORDS,
         "",
       ].join("\n"),
@@ -461,6 +461,27 @@ describe("probe:read of a Result file that ends with a checkpoint", () => {
     });
   });
 
+  it("gives running and crashed under WSL, exit code 2, from tasklist.exe through interop", () => {
+    const running = fakeRun("linux", ["Warcraft III.exe"]);
+    const crashed = fakeRun("linux", []);
+    const onWsl = ({ context }: FakeRun): FakeRun["context"] => ({
+      ...context,
+      machine: { ...context.machine, wsl: fakeWsl() },
+    });
+
+    expect(read([BRIDGE_PROBE], onWsl(running))).toMatchObject({
+      code: 2,
+      stdout: expect.stringMatching(
+        /^running: Probe hello, run bridge, 2 records to its last checkpoint, pending step encode; Warcraft III\.exe is running\n/,
+      ) as string,
+    });
+    expect(running.processQueries).toEqual(["Warcraft III.exe"]);
+    expect(read([BRIDGE_PROBE], onWsl(crashed))).toMatchObject({
+      code: 2,
+      stdout: expect.stringMatching(/^crashed: /) as string,
+    });
+  });
+
   it("reports the last PENDING line, and says so when there is none", () => {
     const withTwo = fakeRun(
       "linux",
@@ -475,7 +496,7 @@ describe("probe:read of a Result file that ends with a checkpoint", () => {
     const { code, stdout } = read([BRIDGE_PROBE], withTwo.context);
     expect(code).toBe(2);
     expect(stdout).toBe(
-      `incomplete: Probe hello, run bridge, 0 records to its last checkpoint, pending step "second step"; the game's process is looked for on Windows only\n`,
+      `incomplete: Probe hello, run bridge, 0 records to its last checkpoint, pending step "second step"; the game's process is looked for on Windows and WSL only\n`,
     );
 
     const withNone = fakeRun(

@@ -21,9 +21,11 @@ A known failure (a bad Probe name, a type error in a Probe, no game or no `Custo
 
 1. `--game-executable <file>`, relative to the repository root;
 2. `WC3_EXECUTABLE`, naming the game's executable, also relative to the repository root;
-3. the Battle.net install locations: `Warcraft III\_retail_\x86_64\Warcraft III.exe` under `Program Files (x86)`, then `Program Files`, on Windows; the `.app`'s inner binary under `/Applications` on macOS.
+3. the Battle.net install locations: `Warcraft III\_retail_\x86_64\Warcraft III.exe` under `Program Files (x86)`, then `Program Files`, on Windows, and under WSL at their `/mnt/c/` paths; the `.app`'s inner binary under `/Applications` on macOS.
 
 It starts the game with `-loadfile <staged folder> -launch -editor -windowmode windowed`: no menu, and the saved Battle.net login. The command returns once the game has started, and prints what to do next: wait until the game shows "Probe `<probe>` finished", close it, then say "done", or "crashed" if the game died before that message. The agent then reads the run with `probe:read`.
+
+Under WSL (Node's platform is `linux`, with `WSL_DISTRO_NAME` set or a Microsoft kernel), the game is a Windows program reached through interop (#347). The staged folder is copied to `%TEMP%\reforged-ts-probe\<probe>\` on the Windows side, that Probe's folder emptied first, since the game cannot open a WSL path. The game starts on the copy's Windows path, and the command prints where the copy is. An interop step that fails (`wslpath`, `cmd.exe`, `powershell.exe`) is a one-line error naming the step and what to set instead.
 
 `--wine-path <wine>` starts the game through Wine, with the staged folder as a `Z:` path, `--game-executable` as a path Wine understands and `--wine-prefix <folder>` as `WINEPREFIX`. This form is copied from the Template and not guaranteed.
 
@@ -31,16 +33,16 @@ It starts the game with `-loadfile <staged folder> -launch -editor -windowmode w
 
 `probe:read` compares the Result file with the runId of the Probe's last build, kept in `.probe/<probe>.json`:
 
-| State         | When                                                                                                          | Exit code |
-| ------------- | ------------------------------------------------------------------------------------------------------------- | --------- |
-| `finished`    | the file holds the last build's runId and ends with `END status=ok`                                           | 0         |
-| `failed`      | the file holds the last build's runId and ends with `END status=failed`; the status shows `ERROR`             | 1         |
-| `running`     | the file holds the last build's runId and ends with `CHECKPOINT`, and `Warcraft III.exe` runs (Windows)       | 2         |
-| `crashed`     | the file holds the last build's runId and ends with `CHECKPOINT`, and no `Warcraft III.exe` runs (Windows)    | 2         |
-| `incomplete`  | the file holds the last build's runId and ends with `CHECKPOINT`, off Windows, where no process is looked for | 2         |
-| `not-started` | there is no file, or it holds another runId, which the status shows                                           | 3         |
+| State         | When                                                                                                            | Exit code |
+| ------------- | --------------------------------------------------------------------------------------------------------------- | --------- |
+| `finished`    | the file holds the last build's runId and ends with `END status=ok`                                             | 0         |
+| `failed`      | the file holds the last build's runId and ends with `END status=failed`; the status shows `ERROR`               | 1         |
+| `running`     | the file holds the last build's runId and ends with `CHECKPOINT`, and `Warcraft III.exe` runs (Windows, WSL)    | 2         |
+| `crashed`     | the file holds the last build's runId and ends with `CHECKPOINT`, and no `Warcraft III.exe` runs (Windows, WSL) | 2         |
+| `incomplete`  | the file holds the last build's runId and ends with `CHECKPOINT`, elsewhere, where no process is looked for     | 2         |
+| `not-started` | there is no file, or it holds another runId, which the status shows                                             | 3         |
 
-A run that ends with a checkpoint shows the label of its last `PENDING` line, the step it was in, or "no pending step". On Windows the game's process is looked for with `tasklist /FI "IMAGENAME eq Warcraft III.exe"`, a query of the process list that stops nothing; elsewhere the run stays `incomplete`, and the human's "done" or "crashed" decides.
+A run that ends with a checkpoint shows the label of its last `PENDING` line, the step it was in, or "no pending step". On Windows the game's process is looked for with `tasklist /FI "IMAGENAME eq Warcraft III.exe"`, a query of the process list that stops nothing, and under WSL with the same `tasklist.exe` through interop; elsewhere the run stays `incomplete`, and the human's "done" or "crashed" decides.
 
 Exit code 4 is the command's own failure (usage, a known failure or a bug), so a failure never reads as a state. The root scripts run the package's with `pnpm --dir probe`, not `pnpm --filter`, which would turn every non-zero exit code into 1.
 
@@ -49,7 +51,8 @@ Exit code 4 is the command's own failure (usage, a known failure or a bug), so a
 `<CustomMapData>\reforged-ts\probes\<probe>.txt`, where `CustomMapData` is found in this order:
 
 1. `WC3_USER_FOLDER`, naming the game's user folder (the `Warcraft III` folder that holds `CustomMapData`);
-2. on Windows, the `Personal` value of `HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders` (the Documents known folder, which may be redirected to OneDrive), with its `%VAR%`s expanded, then `Warcraft III\CustomMapData`.
+2. on Windows, the `Personal` value of `HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders` (the Documents known folder, which may be redirected to OneDrive), with its `%VAR%`s expanded, then `Warcraft III\CustomMapData`;
+3. under WSL, the Documents known folder as Windows gives it (`[Environment]::GetFolderPath('MyDocuments')` through `powershell.exe`, redirection included), at its `wslpath -u` path, then `Warcraft III/CustomMapData`.
 
 The home folder's `Documents` is never used: it can exist and not be the folder the game writes to. Elsewhere, set `WC3_USER_FOLDER`.
 
