@@ -1,7 +1,9 @@
 // The global setup of the probe vitest project: compiles the Lua tests
 // (../lua) with typescript-to-lua, builds the hello, failing, held,
-// failing-later and calibration Probes with the bridge fixtures' runId, and puts their bundles and the fixtures'
-// lines next to the tests as Lua modules: `<probe>_bundle`, `bridge_fixture`
+// failing-later and calibration Probes and the Probes of the Lua tests
+// (../lua/probes) with the bridge fixtures' runId, and puts their bundles
+// and the fixtures' lines next to the tests as Lua modules: `<probe>_bundle`,
+// `bridge_fixture`
 // (hello's, the table `{ finished = {...}, checkpoint = {...} }`) and
 // `failing_fixture`. Before the
 // first run and before every watch rerun; a failed compile or build fails
@@ -33,6 +35,17 @@ const BUNDLED_PROBES = [
   "calibration",
 ];
 
+/**
+ * The Probes of the Lua tests, in ../lua/probes and never in probe/probes,
+ * each loaded as the module `<probe>_bundle`.
+ */
+const TEST_PROBES = ["nullability-cases"];
+
+/** The folder of the Lua tests' own Probes. */
+const testProbesFolder = fileURLToPath(
+  new URL("../lua/probes/", import.meta.url),
+);
+
 declare module "vitest" {
   export interface ProvidedContext {
     /** The output folder of the Lua tests' compile, where the glue finds them. */
@@ -58,12 +71,19 @@ function compile(): string {
 
   const dir = mkdtempSync(join(tmpdir(), "probe-lua-"));
   try {
-    for (const probe of BUNDLED_PROBES) {
-      const { bundleFile } = buildProbe(
-        probe,
-        { ...PROBE_FOLDERS, output: join(dir, "output"), state: dir },
-        BRIDGE_RUN_ID,
-      );
+    const folders = {
+      ...PROBE_FOLDERS,
+      output: join(dir, "output"),
+      state: dir,
+    };
+    const probes = [
+      ...BUNDLED_PROBES.map((probe) => [probe, folders] as const),
+      ...TEST_PROBES.map(
+        (probe) => [probe, { ...folders, probes: testProbesFolder }] as const,
+      ),
+    ];
+    for (const [probe, probeFolders] of probes) {
+      const { bundleFile } = buildProbe(probe, probeFolders, BRIDGE_RUN_ID);
       copyFileSync(bundleFile, join(outDir, `${probe}_bundle.lua`));
     }
   } catch (error) {

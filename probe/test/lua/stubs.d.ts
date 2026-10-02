@@ -15,3 +15,6 @@ declare function __stub_displayed(): { duration?: number; text: string }[];
 
 /** Sets what `os.clock` answers from now on; returns what it answered before. */
 declare function __stub_set_clock(seconds: number): number;
+
+/** A new stub handle of the type `kind`, with the next handle id. */
+declare function __stub_new_handle(kind: string): handle;

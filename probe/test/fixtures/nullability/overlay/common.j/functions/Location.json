@@ -1,0 +1,8 @@
+{
+  "name": "Location",
+  "source": "common.j",
+  "returns": {
+    "nullable": true
+  },
+  "params": []
+}

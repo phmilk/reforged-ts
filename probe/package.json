@@ -13,7 +13,8 @@
     "test": "vitest run --root .. --project probe",
     "probe:build": "tsc -p tsconfig.json && node build/cli/build.js",
     "probe:launch": "tsc -p tsconfig.json && node build/cli/launch.js",
-    "probe:read": "tsc -p tsconfig.json && node build/cli/read.js"
+    "probe:read": "tsc -p tsconfig.json && node build/cli/read.js",
+    "probe:nullability-report": "tsc -p tsconfig.json && node build/cli/nullability-report.js"
   },
   "dependencies": {
     "@typescript-to-lua/language-extensions": "catalog:",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "prettier": "catalog:",
     "reforged-test": "workspace:^",
     "vitest": "catalog:"
   }
