@@ -12,7 +12,13 @@
 
 import type { FieldValue } from "./probe";
 
-/** The longest line the runner gives `Preload`, in bytes (#298). */
+/**
+ * The longest line the runner gives `Preload`, in bytes (#298). The
+ * calibration run on 3.0.0.24268 (#326) measured 259: a longer string is
+ * cut there with no error, and a backslash counts twice. The writer keeps
+ * 200, since a cut would lose a record's end without a trace and the limit
+ * is measured on one Patch only.
+ */
 export const MAX_LINE_BYTES = 200;
 
 /** The percent sign, built at run time so this source holds none. */

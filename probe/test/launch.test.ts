@@ -304,7 +304,7 @@ describe("probe:launch", () => {
         `Started ${ELSEWHERE} on it.`,
         "",
         "Now:",
-        '1. Wait until the game shows "Probe hello finished" (or "Probe hello failed").',
+        '1. Wait until the game shows "Probe hello finished" (or "Probe hello failed"), with the game\'s window in focus: game time, and the Probe\'s timers with it, stops while another window has it.',
         "2. Close the game.",
         '3. Say "done", or "crashed" if the game crashed or froze before that message.',
         "",
