@@ -5,7 +5,7 @@
  */
 import path from "node:path";
 import { AuthorError } from "./errors.js";
-import type { Machine } from "./machine.js";
+import type { Machine, Wsl } from "./machine.js";
 
 /** What the command line may set: the Template's configuration fields of the same names. */
 export interface GameOptions {
@@ -37,7 +37,8 @@ export const EXECUTABLE_ENV = "WC3_EXECUTABLE";
 export const GAME_IMAGE_NAME = "Warcraft III.exe";
 
 /**
- * The default install locations of the game, looked at in order. NOT verified
+ * The default install locations of the game, looked at in order; under WSL
+ * the Windows ones at their WSL paths (`wsl`). NOT verified
  * against a real 3.0 install: they follow the Battle.net layout since 1.32
  * (`_retail_\x86_64` on Windows; on macOS the inner binary of the `.app`,
  * since the bundle folder itself cannot be executed), as other templates and
@@ -46,21 +47,13 @@ export const GAME_IMAGE_NAME = "Warcraft III.exe";
 export function wellKnownExecutables(
   platform: NodeJS.Platform,
   env: Machine["env"],
+  wsl?: Wsl,
 ): string[] {
-  if (platform === "win32") {
-    const programFolders = [
-      env["ProgramFiles(x86)"] ?? "C:\\Program Files (x86)",
-      env.ProgramFiles ?? "C:\\Program Files",
-    ];
-    return [...new Set(programFolders)].map((folder) =>
-      path.win32.join(
-        folder,
-        "Warcraft III",
-        "_retail_",
-        "x86_64",
-        GAME_IMAGE_NAME,
-      ),
-    );
+  if (platform === "win32") return windowsExecutables(env);
+  // Under WSL the Windows locations, at their WSL paths; WSL's environment
+  // has no ProgramFiles, so the defaults stand.
+  if (wsl !== undefined) {
+    return windowsExecutables({}).map((file) => wsl.toWsl(file));
   }
   if (platform === "darwin") {
     return [
@@ -68,6 +61,23 @@ export function wellKnownExecutables(
     ];
   }
   return [];
+}
+
+/** The Windows install locations, from `ProgramFiles(x86)` and `ProgramFiles` or their defaults. */
+function windowsExecutables(env: Machine["env"]): string[] {
+  const programFolders = [
+    env["ProgramFiles(x86)"] ?? "C:\\Program Files (x86)",
+    env.ProgramFiles ?? "C:\\Program Files",
+  ];
+  return [...new Set(programFolders)].map((folder) =>
+    path.win32.join(
+      folder,
+      "Warcraft III",
+      "_retail_",
+      "x86_64",
+      GAME_IMAGE_NAME,
+    ),
+  );
 }
 
 /** How `probe:launch` starts the game. */
@@ -89,7 +99,7 @@ export interface GameLaunch {
 export function resolveGameLaunch(
   options: GameOptions,
   root: string,
-  machine: Pick<Machine, "platform" | "env" | "exists">,
+  machine: Pick<Machine, "platform" | "env" | "exists" | "wsl">,
 ): GameLaunch {
   const optionalString = (field: keyof GameOptions) => {
     const value = options[field];
@@ -123,7 +133,7 @@ export function resolveGameLaunch(
   const fromEnv = machine.env[EXECUTABLE_ENV];
   const candidates = [
     ...(fromEnv ? [path.resolve(root, fromEnv)] : []),
-    ...wellKnownExecutables(machine.platform, machine.env),
+    ...wellKnownExecutables(machine.platform, machine.env, machine.wsl),
   ];
   const executable = candidates.find((file) => machine.exists(file));
   if (executable === undefined) {

@@ -163,7 +163,9 @@ export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
  * elsewhere `incomplete`, as no process is looked for there.
  */
 function incompleteState(machine: Machine): RunState {
-  if (machine.platform !== "win32") return "incomplete";
+  if (machine.platform !== "win32" && machine.wsl === undefined) {
+    return "incomplete";
+  }
   return machine.isRunning(GAME_IMAGE_NAME) ? "running" : "crashed";
 }
 
@@ -453,7 +455,7 @@ export function formatProbeRun(run: ProbeRun): string {
 
 /** What the status line says of each state a checkpoint leaves. */
 const CHECKPOINT_STATES: Readonly<Partial<Record<RunState, string>>> = {
-  incomplete: `the game's process is looked for on Windows only`,
+  incomplete: `the game's process is looked for on Windows and WSL only`,
   running: `${GAME_IMAGE_NAME} is running`,
   crashed: `${GAME_IMAGE_NAME} is not running`,
 };

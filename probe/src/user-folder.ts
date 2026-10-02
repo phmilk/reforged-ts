@@ -2,8 +2,9 @@
  * Where the game writes its files: the `CustomMapData` folder of its user
  * folder. The game follows the Documents known folder, which Windows may
  * redirect (to OneDrive, `OneDrive\Documentos`), so the lookup reads that
- * folder from the registry and never takes the home folder's `Documents`,
- * which can exist and be the wrong one (#298, section 2.1).
+ * folder from the registry, or under WSL from Windows through interop, and
+ * never takes the home folder's `Documents`, which can exist and be the
+ * wrong one (#298, section 2.1).
  */
 import path from "node:path";
 import { AuthorError } from "./errors.js";
@@ -27,8 +28,9 @@ export function pathsOf(machine: Machine): path.PlatformPath {
 /**
  * The game's `CustomMapData` folder: in `WC3_USER_FOLDER` when it is set;
  * else, on Windows, in `Warcraft III` of the Documents known folder, read
- * from the registry with its `%VAR%`s expanded. Anything else is an
- * AuthorError that says to set `WC3_USER_FOLDER`.
+ * from the registry with its `%VAR%`s expanded; under WSL, in that folder as
+ * Windows gives it, at its WSL path. Anything else is an AuthorError that
+ * says to set `WC3_USER_FOLDER`.
  */
 export function customMapDataFolder(machine: Machine): string {
   const paths = pathsOf(machine);
@@ -37,9 +39,17 @@ export function customMapDataFolder(machine: Machine): string {
     return paths.join(userFolder, "CustomMapData");
   }
   const setIt = `Set ${USER_FOLDER_VARIABLE} to the game's user folder, the "Warcraft III" folder that holds CustomMapData`;
+  if (machine.wsl !== undefined) {
+    const { wsl } = machine;
+    return paths.join(
+      wsl.toWsl(wsl.documentsFolder()),
+      "Warcraft III",
+      "CustomMapData",
+    );
+  }
   if (machine.platform !== "win32") {
     throw new AuthorError(
-      `${setIt}: the runner finds it by itself only on Windows, from the Documents known folder.`,
+      `${setIt}: the runner finds it by itself only on Windows and under WSL, from the Documents known folder.`,
     );
   }
   const documents = machine.queryRegistry(DOCUMENTS_KEY, DOCUMENTS_VALUE);

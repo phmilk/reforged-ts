@@ -1,4 +1,4 @@
-import { mkdtemp, readFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -14,7 +14,11 @@ import {
 import { LAUNCH_ARGS } from "../src/launch.js";
 import type { Machine, SpawnCommand } from "../src/machine.js";
 import { stateFile } from "../src/state.js";
-import { fakeMachine, type FakeMachineOptions } from "./support/machine.js";
+import {
+  fakeMachine,
+  fakeWsl,
+  type FakeMachineOptions,
+} from "./support/machine.js";
 
 const X86 =
   "C:\\Program Files (x86)\\Warcraft III\\_retail_\\x86_64\\Warcraft III.exe";
@@ -114,6 +118,25 @@ describe("resolveGameLaunch", () => {
     });
     expect(wellKnownExecutables("win32", {})).toEqual([X86, X64]);
     expect(wellKnownExecutables("darwin", {})).toEqual([MAC]);
+    expect(wellKnownExecutables("linux", {})).toEqual([]);
+  });
+
+  it("under WSL, looks at the Windows locations at their WSL paths", () => {
+    const wslX86 =
+      "/mnt/c/Program Files (x86)/Warcraft III/_retail_/x86_64/Warcraft III.exe";
+    const wslX64 =
+      "/mnt/c/Program Files/Warcraft III/_retail_/x86_64/Warcraft III.exe";
+    expect(wellKnownExecutables("linux", {}, fakeWsl())).toEqual([
+      wslX86,
+      wslX64,
+    ]);
+    const machine = fakeMachine({ wsl: {}, files: { [wslX64]: "" } });
+    expect(resolveGameLaunch({}, root, machine)).toEqual({
+      executable: wslX64,
+    });
+  });
+
+  it("on plain Linux, has no well-known location", () => {
     expect(wellKnownExecutables("linux", {})).toEqual([]);
   });
 
@@ -249,6 +272,32 @@ describe("probe:launch", () => {
     ]);
     expect(existsSync(path.join(staging, "war3map.lua"))).toBe(true);
     expect(await builtRunId(context, "hello")).toMatch(/\S/);
+  });
+
+  it("under WSL, copies the staged folder to the Windows TEMP, emptied first, and starts the game on the copy's Windows path", async () => {
+    const temp = await mkdtemp(path.join(tmpdir(), "probe-wsl-temp-"));
+    const stale = path.join(temp, "reforged-ts-probe", "hello", "stale.txt");
+    await mkdir(path.dirname(stale), { recursive: true });
+    await writeFile(stale, "");
+    const game =
+      "/mnt/c/Program Files (x86)/Warcraft III/_retail_/x86_64/Warcraft III.exe";
+    const windowsTemp = "C:\\Users\\me\\AppData\\Local\\Temp";
+    const copy = `${windowsTemp}\\reforged-ts-probe\\hello\\probe.w3m`;
+
+    const { code, stdout, stderr, spawned } = await launch(["hello"], {
+      files: { [game]: "" },
+      wsl: { temp: windowsTemp, roots: { [windowsTemp]: temp } },
+    });
+
+    expect(stderr).toBe("");
+    expect(code).toBe(0);
+    expect(spawned).toEqual([
+      { command: game, args: ["-loadfile", copy, ...LAUNCH_ARGS], env: {} },
+    ]);
+    const copyHere = path.join(temp, "reforged-ts-probe", "hello", "probe.w3m");
+    expect(existsSync(path.join(copyHere, "war3map.lua"))).toBe(true);
+    expect(existsSync(stale)).toBe(false);
+    expect(stdout).toContain(`Copied it for the game to ${copy}.\n`);
   });
 
   it("starts the game through Wine with the folder as a Z: path and the prefix set", async () => {

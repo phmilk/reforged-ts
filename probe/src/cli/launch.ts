@@ -43,6 +43,9 @@ export async function main(
     output.stdout(
       [
         builtMessage(launched),
+        ...(launched.mapFolder === launched.stagingFolder
+          ? []
+          : [`Copied it for the game to ${launched.mapFolder}.`]),
         `Started ${launched.game.executable} on it.`,
         "",
         "Now:",

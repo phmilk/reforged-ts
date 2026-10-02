@@ -89,6 +89,39 @@ describe("customMapDataFolder", () => {
     });
   });
 
+  it("under WSL, finds the Windows Documents folder, redirection included, at its WSL path", () => {
+    const machine = fakeMachine({
+      wsl: { documents: "C:\\Users\\me\\OneDrive\\Documentos" },
+    });
+    expect(customMapDataFolder(machine)).toBe(
+      "/mnt/c/Users/me/OneDrive/Documentos/Warcraft III/CustomMapData",
+    );
+  });
+
+  it("under WSL, takes WC3_USER_FOLDER before the Windows Documents folder", () => {
+    const machine = fakeMachine({
+      env: { [USER_FOLDER_VARIABLE]: "/mnt/d/Warcraft III" },
+      wsl: { documents: "C:\\Users\\me\\Documents" },
+    });
+    expect(customMapDataFolder(machine)).toBe(
+      "/mnt/d/Warcraft III/CustomMapData",
+    );
+  });
+
+  it("never reads the home folder's Documents under WSL", () => {
+    const machine = fakeMachine({
+      env: { HOME: "/home/me" },
+      files: {
+        "/home/me/Documents/Warcraft III/CustomMapData/reforged-ts/probes/hello.txt":
+          "",
+      },
+      wsl: { documents: "C:\\Users\\me\\Documents" },
+    });
+    expect(customMapDataFolder(machine)).toBe(
+      "/mnt/c/Users/me/Documents/Warcraft III/CustomMapData",
+    );
+  });
+
   it("off Windows without WC3_USER_FOLDER, fails with an author error naming it", () => {
     const machine = fakeMachine({
       platform: "darwin",
