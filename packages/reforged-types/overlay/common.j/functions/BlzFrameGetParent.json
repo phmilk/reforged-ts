@@ -2,7 +2,7 @@
   "name": "BlzFrameGetParent",
   "source": "common.j",
   "returns": {
-    "nullable": false
+    "nullable": true
   },
   "params": [
     {
@@ -10,6 +10,7 @@
       "nullable": false
     }
   ],
+  "notes": "Returns nothing for destroyed frame (nullability sweep, 3.0.0.24268).",
   "async": true,
   "origin": "war3-types-strict"
 }

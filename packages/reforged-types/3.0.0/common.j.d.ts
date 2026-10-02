@@ -13662,6 +13662,7 @@ declare function GetPlayerName(whichPlayer: player): string | undefined;
 
 /**
  * @returns timer
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateTimer}
  */
 declare function CreateTimer(): timer;
@@ -14071,6 +14072,7 @@ declare function ForForce(whichForce: force, callback: code): void;
  * @param maxx - real
  * @param maxy - real
  * @returns rect
+ * @remarks Returned a handle in every case of the nullability sweep (normal rect, inverted rect, zero area rect, rect outside the world) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/Rect}
  */
 declare function Rect(minx: number, miny: number, maxx: number, maxy: number): rect;
@@ -14171,6 +14173,7 @@ declare function GetRectMaxY(whichRect: rect): number;
 
 /**
  * @returns region
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateRegion}
  */
 declare function CreateRegion(): region;
@@ -14236,6 +14239,7 @@ declare function RegionClearCellAtLoc(whichRegion: region, whichLocation: locati
  * @param x - real
  * @param y - real
  * @returns location
+ * @remarks Returned a handle in every case of the nullability sweep (origin, outside the world) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/Location}
  */
 declare function Location(x: number, y: number): location;
@@ -14311,6 +14315,7 @@ declare function GetWorldBounds(): rect | undefined;
 
 /**
  * @returns trigger
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateTrigger}
  */
 declare function CreateTrigger(): trigger;
@@ -14457,6 +14462,7 @@ declare function ExecuteFunc(funcName: string): void;
  * @param operandA - boolexpr
  * @param operandB - boolexpr
  * @returns boolexpr
+ * @remarks Returned a handle in every case of the nullability sweep (two live operands, condition and filter, destroyed condition operand) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/And}
  */
 declare function And(operandA: boolexpr, operandB: boolexpr): boolexpr;
@@ -14465,6 +14471,7 @@ declare function And(operandA: boolexpr, operandB: boolexpr): boolexpr;
  * @param operandA - boolexpr
  * @param operandB - boolexpr
  * @returns boolexpr
+ * @remarks Returned a handle in every case of the nullability sweep (two live operands, condition and filter, destroyed boolexpr operand) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/Or}
  */
 declare function Or(operandA: boolexpr, operandB: boolexpr): boolexpr;
@@ -14472,6 +14479,7 @@ declare function Or(operandA: boolexpr, operandB: boolexpr): boolexpr;
 /**
  * @param operand - boolexpr
  * @returns boolexpr
+ * @remarks Returned a handle in every case of the nullability sweep (live operand, destroyed operand) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/Not}
  */
 declare function Not(operand: boolexpr): boolexpr;
@@ -14479,6 +14487,7 @@ declare function Not(operand: boolexpr): boolexpr;
 /**
  * @param func - code
  * @returns conditionfunc
+ * @remarks Returned a handle in every case of the nullability sweep (TypeScript function) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/Condition}
  */
 declare function Condition(func: boolcode): conditionfunc;
@@ -14493,6 +14502,7 @@ declare function DestroyCondition(c: conditionfunc): void;
 /**
  * @param func - code
  * @returns filterfunc
+ * @remarks Returned a handle in every case of the nullability sweep (TypeScript function) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/Filter}
  */
 declare function Filter(func: boolcode): filterfunc;
@@ -15224,6 +15234,7 @@ declare function TriggerClearConditions(whichTrigger: trigger): void;
  * @param whichTrigger - trigger
  * @param actionFunc - code
  * @returns triggeraction
+ * @remarks On a destroyed trigger it returned a `triggeraction` whose `GetHandleId` is 0, not nothing; it returned a handle in every case of the nullability sweep (live trigger, destroyed trigger) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerAddAction}
  */
 declare function TriggerAddAction(whichTrigger: trigger, actionFunc: code): triggeraction;
@@ -16761,6 +16772,7 @@ declare function GetUnitY(whichUnit: unit): number;
 /**
  * @param whichUnit - unit
  * @returns location
+ * @remarks Returned a handle in every case of the nullability sweep (live unit, dead unit, removed unit) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitLoc}
  */
 declare function GetUnitLoc(whichUnit: unit): location;
@@ -16797,6 +16809,7 @@ declare function GetUnitState(whichUnit: unit, whichUnitState: unitstate): numbe
 /**
  * @param whichUnit - unit
  * @returns player
+ * @remarks Returned a handle in every case of the nullability sweep (unit of player 0, Neutral Passive unit, dead unit, removed unit) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetOwningPlayer}
  */
 declare function GetOwningPlayer(whichUnit: unit): player;
@@ -17696,6 +17709,7 @@ declare function Player(number: number): player | undefined;
 /**
  * @returns player
  * @async
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetLocalPlayer}
  */
 declare function GetLocalPlayer(): player;
@@ -21333,6 +21347,7 @@ declare function BlzCameraGetCameraType(): number;
 
 /**
  * @returns camerasetup
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateCameraSetup}
  */
 declare function CreateCameraSetup(): camerasetup;
@@ -21368,6 +21383,7 @@ declare function CameraSetupSetDestPosition(whichSetup: camerasetup, x: number, 
 /**
  * @param whichSetup - camerasetup
  * @returns location
+ * @remarks Returned a handle in every case of the nullability sweep (fresh setup, positioned setup) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CameraSetupGetDestPositionLoc}
  */
 declare function CameraSetupGetDestPositionLoc(whichSetup: camerasetup): location;
@@ -24612,9 +24628,10 @@ declare function BlzFrameSetParent(frame: framehandle, parent: framehandle): voi
  * @param frame - framehandle
  * @returns framehandle
  * @async
+ * @remarks Returns nothing for destroyed frame (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzFrameGetParent}
  */
-declare function BlzFrameGetParent(frame: framehandle): framehandle;
+declare function BlzFrameGetParent(frame: framehandle): framehandle | undefined;
 
 /**
  * @param frame - framehandle
