@@ -102,7 +102,7 @@ step name=before
 
 ## Layout
 
-- `probes/`: the Probes, and `tsconfig.json`, the typescript-to-lua project every Probe compiles with.
+- `probes/`: the Probes, and `tsconfig.json`, the typescript-to-lua project every Probe compiles with. `calibration.ts` measures the Preload limits the Result file's format was frozen on, checks C1 to C8 of #298, in test files of its own under `CustomMapData\reforged-ts\calibration\`; its doc comment lists what it records, and its last step, C8, calls `EndGame(false)` 3 seconds after `END`. `hello`, `failing` and `held` exist for the runner's own tests.
 - `game/`: the in-game module (`runner.ts`, the entry of every bundle) and the types a Probe sees (`probe.ts`).
 - `probe.w3m/`: the map folder, a copy of the Template's; `PROVENANCE.md` lists every file copied from the Template.
 - `src/`: the commands, compiled to `build/`; `src/machine.ts` is the one way they reach the machine, which the tests replace with a fake. `src/read.ts` is the reader the package's other scripts import.

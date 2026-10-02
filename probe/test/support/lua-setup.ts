@@ -1,6 +1,6 @@
 // The global setup of the probe vitest project: compiles the Lua tests
-// (../lua) with typescript-to-lua, builds the hello, failing and held Probes
-// with the bridge fixtures' runId, and puts their bundles and the fixtures'
+// (../lua) with typescript-to-lua, builds the hello, failing, held and
+// calibration Probes with the bridge fixtures' runId, and puts their bundles and the fixtures'
 // lines next to the tests as Lua modules: `<probe>_bundle`, `bridge_fixture`
 // (hello's, the table `{ finished = {...}, checkpoint = {...} }`) and
 // `failing_fixture`. Before the
@@ -25,7 +25,7 @@ import {
 } from "./bridge.js";
 
 /** The Probes whose bundles the Lua tests load, each as the module `<probe>_bundle`. */
-const BUNDLED_PROBES = [BRIDGE_PROBE, FAILING_PROBE, "held"];
+const BUNDLED_PROBES = [BRIDGE_PROBE, FAILING_PROBE, "held", "calibration"];
 
 declare module "vitest" {
   export interface ProvidedContext {
