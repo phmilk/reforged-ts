@@ -10,6 +10,7 @@ import { describe, expect, it, stubCalls } from "reforged-test/lua";
 declare function __stub_preload_file(filename: string): string[] | undefined;
 declare function __stub_fire_timer(whichTimer: timer): void;
 declare function __stub_args(name: string): (unknown[] & { n: number })[];
+declare function __stub_displayed(): { duration?: number; text: string }[];
 
 /**
  * The editor's entry point, which the runner wraps, and Lua's `require`,
@@ -156,6 +157,16 @@ describe("the hello Probe's bundle", () => {
       "DisplayTimedTextToPlayer",
       "PreloadGenEnd",
       "DisplayTimedTextToPlayer",
+    ]);
+  });
+
+  it("shows each progress message for 10 seconds, and the end message with the number of records for an hour", () => {
+    expect(
+      __stub_displayed().map(({ duration, text }) => [duration, text]),
+    ).toEqual([
+      [10, "Probe hello: checkpoint 1, 1 record so far."],
+      [10, "Probe hello: checkpoint 2, 2 records so far."],
+      [3600, "Probe hello finished: 2 records. Close the game."],
     ]);
   });
 

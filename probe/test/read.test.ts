@@ -25,6 +25,7 @@ import { USER_FOLDER_VARIABLE } from "../src/user-folder.js";
 import {
   BRIDGE_PROBE,
   BRIDGE_RUN_ID,
+  FAILING_PROBE,
   bridgeLines,
   preloadFile,
 } from "./support/bridge.js";
@@ -49,14 +50,17 @@ interface Setup {
  * machine, and a state folder holding a build of the bridge Probe with
  * `runId`.
  */
-async function setup(runId = BRIDGE_RUN_ID): Promise<Setup> {
+async function setup(
+  runId = BRIDGE_RUN_ID,
+  probe = BRIDGE_PROBE,
+): Promise<Setup> {
   const dir = await mkdtemp(join(tmpdir(), "probe-read-"));
   const userFolder = join(dir, "Warcraft III");
   const stateFolder = join(dir, "state");
   await mkdir(stateFolder);
   await writeFile(
-    stateFile(stateFolder, BRIDGE_PROBE),
-    JSON.stringify({ probe: BRIDGE_PROBE, runId }),
+    stateFile(stateFolder, probe),
+    JSON.stringify({ probe, runId }),
   );
   return {
     context: {
@@ -71,7 +75,7 @@ async function setup(runId = BRIDGE_RUN_ID): Promise<Setup> {
       "CustomMapData",
       "reforged-ts",
       "probes",
-      `${BRIDGE_PROBE}.txt`,
+      `${probe}.txt`,
     ),
   };
 }
@@ -155,6 +159,60 @@ describe("probe:read", () => {
     expect(readProbeRun(BRIDGE_PROBE, context).records).toEqual([
       { seq: 2, kind: "long", fields: [["value", value]] },
     ]);
+  });
+
+  it("prints failed, the ERROR message and the records of the failing bridge fixture, with exit code 1", async () => {
+    const { context, resultFile } = await setup(BRIDGE_RUN_ID, FAILING_PROBE);
+    await writeResult(resultFile, preloadFile(bridgeLines("failed")));
+
+    expect(read([FAILING_PROBE], context)).toEqual({
+      code: 1,
+      stdout: [
+        String.raw`failed: Probe failing, run bridge, 1 record, then the error "Error: The step \"after\" broke."`,
+        "step name=before",
+        "",
+      ].join("\n"),
+      stderr: "",
+    });
+    expect(readProbeRun(FAILING_PROBE, context)).toMatchObject({
+      state: "failed",
+      error: 'Error: The step "after" broke.',
+      records: [{ seq: 2, kind: "step", fields: [["name", "before"]] }],
+    });
+  });
+
+  it("prints an ERROR message on one line, a newline and an escape quoted", async () => {
+    const { context, resultFile } = await setup();
+    await writeResult(
+      resultFile,
+      preloadFile([
+        "1 BEGIN probe=hello run=bridge",
+        "2 ERROR message=a%0Ab%1B[m",
+        "3 END status=failed",
+      ]),
+    );
+
+    expect(read([BRIDGE_PROBE], context)).toEqual({
+      code: 1,
+      stdout:
+        String.raw`failed: Probe hello, run bridge, 0 records, then the error "a\nb\u001b[m"` +
+        "\n",
+      stderr: "",
+    });
+  });
+
+  it("fails with exit code 4 on END status=failed without an ERROR line", async () => {
+    const { context, resultFile } = await setup();
+    await writeResult(
+      resultFile,
+      preloadFile(["1 BEGIN probe=hello run=bridge", "2 END status=failed"]),
+    );
+
+    expect(read([BRIDGE_PROBE], context)).toEqual({
+      code: 4,
+      stdout: "",
+      stderr: `probe:read failed: ${resultFile} ends with END status=failed but holds no ERROR line with a message.\n`,
+    });
   });
 
   it("gives not-started, exit code 3, when there is no Result file", async () => {

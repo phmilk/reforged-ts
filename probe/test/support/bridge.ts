@@ -1,14 +1,17 @@
-// The bridge between the writer and the reader: two fixtures hold the lines
-// of the hello Probe's Result file, as its run finishes and as its second
-// checkpoint leaves it. The Lua test asserts that the writer produces
-// exactly these lines; the Node test wraps them as the game writes them to
-// disk and asserts that the reader decodes them back.
+// The bridge between the writer and the reader: each fixture holds the lines
+// of a Probe's Result file: the hello Probe's as its run finishes and as its
+// second checkpoint leaves it, and the failing Probe's. The Lua tests assert
+// that the writer produces exactly these lines; the Node tests wrap them as
+// the game writes them to disk and assert that the reader decodes them back.
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-/** A bridge fixture: the Result file as the finished run leaves it, or as the last checkpoint does. */
-export type BridgeFixture = "finished" | "checkpoint";
+/**
+ * A bridge fixture: the hello Probe's Result file as the finished run leaves
+ * it, or as the last checkpoint does, or the failing Probe's.
+ */
+export type BridgeFixture = "finished" | "checkpoint" | "failed";
 
 /** The fixtures: one Result file line per line. */
 export const BRIDGE_FIXTURES: Readonly<Record<BridgeFixture, string>> = {
@@ -18,10 +21,19 @@ export const BRIDGE_FIXTURES: Readonly<Record<BridgeFixture, string>> = {
   checkpoint: fileURLToPath(
     new URL("../fixtures/bridge/hello-checkpoint.txt", import.meta.url),
   ),
+  failed: fileURLToPath(
+    new URL("../fixtures/bridge/failing.txt", import.meta.url),
+  ),
 };
 
-/** The Probe the fixtures are the Result file of. */
+/** The Probe the `finished` and `checkpoint` fixtures are the Result file of. */
 export const BRIDGE_PROBE = "hello";
+
+/**
+ * The failing Probe, whose Result file is the `failed` fixture: a run that
+ * throws, so ends with `ERROR` and `END status=failed`.
+ */
+export const FAILING_PROBE = "failing";
 
 /** The runId in the fixtures' `BEGIN` line, which the Lua test's build bakes. */
 export const BRIDGE_RUN_ID = "bridge";

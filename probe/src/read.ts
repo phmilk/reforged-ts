@@ -19,7 +19,7 @@ import { customMapDataFolder, pathsOf } from "./user-folder.js";
  * list refines it to `running` or `crashed`.
  */
 export type RunState =
-  "finished" | "incomplete" | "running" | "crashed" | "not-started";
+  "finished" | "failed" | "incomplete" | "running" | "crashed" | "not-started";
 
 /**
  * The exit code of `probe:read` for each state: `incomplete`, `running`
@@ -27,6 +27,7 @@ export type RunState =
  */
 export const EXIT_CODES: Readonly<Record<RunState, number>> = {
   finished: 0,
+  failed: 1,
   incomplete: 2,
   running: 2,
   crashed: 2,
@@ -68,6 +69,8 @@ export interface ProbeRun {
    * one.
    */
   pending?: string;
+  /** The message of the `ERROR` line, decoded; set on a `failed` run only. */
+  error?: string;
 }
 
 /** Where `readProbeRun` looks. */
@@ -80,8 +83,9 @@ export interface ReadContext {
 /**
  * Reads the Probe run of `probe`: `not-started` when there is no Result
  * file, or when it holds another run than the Probe's last build;
- * `finished` when it ends with `END status=ok`; when it ends with
- * `CHECKPOINT`, `running` or `crashed` on Windows, as a process of
+ * `finished` when it ends with `END status=ok`; `failed`, with the message
+ * of its `ERROR` line, when it ends with `END status=failed`; when it ends
+ * with `CHECKPOINT`, `running` or `crashed` on Windows, as a process of
  * `Warcraft III.exe` runs or not, and `incomplete` elsewhere, with the
  * label of the last `PENDING` line. Of a file of another run, only the
  * BEGIN line is parsed. A bad name, a Probe never built or a file the game
@@ -122,6 +126,15 @@ export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
   if (last?.kind === "END" && field(last, "status") === "ok") {
     return { ...run, runId, state: "finished", records };
   }
+  if (last?.kind === "END" && field(last, "status") === "failed") {
+    return {
+      ...run,
+      runId,
+      state: "failed",
+      records,
+      error: errorOf(file, lines),
+    };
+  }
   if (last?.kind === "CHECKPOINT") {
     const pendingLine = lines.findLast((line) => line.kind === "PENDING");
     const pending = pendingLine && field(pendingLine, "label");
@@ -146,6 +159,22 @@ export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
 function incompleteState(machine: Machine): RunState {
   if (machine.platform !== "win32") return "incomplete";
   return machine.isRunning(GAME_IMAGE_NAME) ? "running" : "crashed";
+}
+
+/**
+ * The message of the last `ERROR` line of a run that ends with
+ * `END status=failed`, which the runner writes right before it. A failed
+ * run without one is an AuthorError: the runner never writes it.
+ */
+function errorOf(file: string, lines: readonly ResultLine[]): string {
+  const line = lines.findLast((candidate) => candidate.kind === "ERROR");
+  const message = line && field(line, "message");
+  if (message === undefined) {
+    throw new AuthorError(
+      `${file} ends with END status=failed but holds no ERROR line with a message.`,
+    );
+  }
+  return message;
 }
 
 /** The Result file of `probe`: `reforged-ts\probes\<probe>.txt` in `CustomMapData`. */
@@ -436,6 +465,9 @@ function statusLine(run: ProbeRun): string {
         ? "no pending step"
         : `pending step ${formatValue(run.pending)}`;
     return `${run.state}: Probe ${run.probe}, run ${run.expectedRunId}, ${records} to its last checkpoint, ${pending}; ${game}`;
+  }
+  if (run.state === "failed") {
+    return `failed: Probe ${run.probe}, run ${run.expectedRunId}, ${records}, then the error ${quote(run.error ?? "")}`;
   }
   return run.runId === undefined
     ? `not-started: no Result file at ${run.file}`

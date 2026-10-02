@@ -38,4 +38,21 @@ export interface ProbeContext {
    * seq.
    */
   checkpoint(): void;
+
+  /**
+   * Keeps the Probe run going after `run` returns: `END` then waits for
+   * `finish()`, which a timer or an event the Probe set up calls once its
+   * work is done. An error `run` throws still ends the run at once, as a
+   * failed one; an error thrown later, from a timer or an event, is not
+   * caught, and the run never ends.
+   */
+  hold(): void;
+
+  /**
+   * Ends the Probe run: adds `END status=ok`, writes the Result file and
+   * shows the end message with the number of records. The run ends when it
+   * is called, `hold()` or not; once it has ended, `finish()` does nothing
+   * and `record`, `pending` and `checkpoint` raise an error.
+   */
+  finish(): void;
 }
