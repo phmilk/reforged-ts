@@ -8,10 +8,10 @@
 // the Fixtures (./nullability/fixtures.ts), built before the cases run.
 //
 // Every (a) case runs before any (b) case, so a crash on a stale handle
-// cannot hide the live results, and the (a) group goes on disk before the
-// first (b) case. The (b) cases run from least to most risky, the destroyed
-// boolexprs and frame last, each risky one after a checkpoint, so a crash
-// keeps every result before it.
+// cannot hide the live results. The (b) cases run from least to most risky,
+// the destroyed boolexprs and frame last. The case runner puts every line
+// on disk before each case's call, so a crash keeps every result before it
+// and names the case.
 
 import type { ProbeContext } from "../game/probe";
 import { runCases, type Case } from "./nullability/case-runner";
@@ -62,7 +62,6 @@ function sliceCases(): readonly Case[] {
   const removed = removedUnit();
   const destroyed = destroyedTrigger();
   const frame = destroyedFrame();
-  const live = liveCondition();
   const destroyedAndOperand = destroyedCondition();
   const destroyedOrOperand = destroyedBoolExpr();
   const destroyedNotOperand = destroyedCondition();
@@ -236,7 +235,6 @@ function sliceCases(): readonly Case[] {
       native: "GetOwningPlayer",
       label: "dead unit",
       group: "b",
-      checkpoint: true,
       call: () => GetOwningPlayer(dead),
     },
     {
@@ -249,49 +247,42 @@ function sliceCases(): readonly Case[] {
       native: "GetOwningPlayer",
       label: "removed unit",
       group: "b",
-      checkpoint: true,
       call: () => GetOwningPlayer(removed),
     },
     {
       native: "GetUnitLoc",
       label: "removed unit",
       group: "b",
-      checkpoint: true,
       call: () => GetUnitLoc(removed),
     },
     {
       native: "TriggerAddAction",
       label: "destroyed trigger",
       group: "b",
-      checkpoint: true,
       call: () => TriggerAddAction(destroyed, noAction),
     },
     {
       native: "And",
       label: "destroyed condition operand",
       group: "b",
-      checkpoint: true,
-      call: () => And(destroyedAndOperand, live),
+      call: () => And(destroyedAndOperand, condition),
     },
     {
       native: "Or",
       label: "destroyed boolexpr operand",
       group: "b",
-      checkpoint: true,
-      call: () => Or(live, destroyedOrOperand),
+      call: () => Or(condition, destroyedOrOperand),
     },
     {
       native: "Not",
       label: "destroyed operand",
       group: "b",
-      checkpoint: true,
       call: () => Not(destroyedNotOperand),
     },
     {
       native: "BlzFrameGetParent",
       label: "destroyed frame",
       group: "b",
-      checkpoint: true,
       call: () => BlzFrameGetParent(frame),
     },
   ];

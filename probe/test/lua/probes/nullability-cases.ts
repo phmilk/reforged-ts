@@ -23,12 +23,9 @@ declare function StandInNotFound(): handle;
 declare function StandInNumber(): handle;
 
 /**
- * A stand-in Native that returns a stub handle and keeps the Result file as
- * it is on disk when it is called.
+ * The cases, in the order they run: each outcome, and the first (b) case
+ * on the skip list.
  */
-declare function StandInSnapshot(): handle;
-
-/** The cases, in the order they run: each outcome, a skipped case and a checkpointed one. */
 const CASES: readonly Case[] = [
   {
     native: "StandInHandle",
@@ -41,6 +38,12 @@ const CASES: readonly Case[] = [
     label: "a number",
     group: "a",
     call: () => StandInNumber(),
+  },
+  {
+    native: "StandInHandle",
+    label: "crashing call",
+    group: "b",
+    call: () => StandInHandle(),
   },
   {
     native: "StandInNil",
@@ -59,19 +62,6 @@ const CASES: readonly Case[] = [
     label: "not found frame",
     group: "b",
     call: () => StandInNotFound(),
-  },
-  {
-    native: "StandInHandle",
-    label: "crashing call",
-    group: "b",
-    call: () => StandInHandle(),
-  },
-  {
-    native: "StandInSnapshot",
-    label: "risky call",
-    group: "b",
-    call: () => StandInSnapshot(),
-    checkpoint: true,
   },
 ];
 

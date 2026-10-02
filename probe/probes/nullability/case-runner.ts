@@ -1,21 +1,23 @@
 // The Nullability sweep's case runner, shared by every Slice: records a
 // Slice's case list up front, then runs it in order, each case after its
-// PENDING line and under `pcall`, and records what the Native returned as
-// one CALL record, or one SKIP record for a case of the skip list, which
-// `probe:nullability-report` reads back (src/nullability/). It reaches the
+// PENDING line and a checkpoint and under `pcall`, and records what the
+// Native returned as one CALL record, or one SKIP record for a case of the
+// skip list, which `probe:nullability-report` reads back
+// (src/nullability/). The records' format is ./records.d.ts. It reaches the
 // Result file through the runner's `p` only, and the game through Natives
 // only, never the library, so no Wrapper hides the `nil` being measured. A
 // Slice's Probe holds its own case list and skip list; this module holds
 // no case.
 
+import { describe, errorMessage } from "../../game/errors";
 import type { ProbeContext } from "../../game/probe";
-
-/**
- * The group of a case: `a` for live arguments, odd but well-typed ones
- * included; `b` for stale handles, arguments whose object is dead, removed
- * or destroyed. A Slice lists every `a` case before any `b` case.
- */
-export type CaseGroup = "a" | "b";
+import type {
+  CallFields,
+  CaseFields,
+  CaseGroup,
+  PendingLabel,
+  SkipFields,
+} from "./records";
 
 /**
  * One case of a Slice: one direct call of one Native with arguments in a
@@ -34,13 +36,6 @@ export interface Case {
   readonly group: CaseGroup;
   /** Calls the Native once and returns what it returned; called under `pcall`. */
   readonly call: () => unknown;
-  /**
-   * Puts every line on disk right before the call, the case's PENDING line
-   * included, so a crash in the call keeps every result before it and names
-   * the case. A Slice sets it on its first `b` case, which ends the `a`
-   * group, and on each risky `b` case.
-   */
-  readonly checkpoint?: true;
 }
 
 /**
@@ -62,40 +57,6 @@ export interface RunOptions {
   readonly isHandle?: (value: unknown) => boolean;
 }
 
-/**
- * What a case's call gave, as its CALL record holds it: the `outcome` and
- * the fields that go with it, `id` (from `GetHandleId`) and `type` (from
- * `tostring`) for a `handle`, `type` for an `odd` value, `message` for an
- * `error`.
- */
-type OutcomeFields =
-  | { outcome: "nil" }
-  | { outcome: "handle"; id: number; type: string }
-  | { outcome: "odd"; type: string }
-  | { outcome: "error"; message: string };
-
-/** A value as `tostring` gives it, or a description when `tostring` fails. */
-function describe(value: unknown): string {
-  const [ok, text] = pcall(tostring, value);
-  return ok ? text : `a ${type(value)} whose tostring failed`;
-}
-
-/**
- * The message of what a call raised: `<name>: <message>` for an Error
- * thrown from TypeScript, whose `__tostring` reads the `debug` library the
- * game does not have (as the runner's `errorMessage` does), else what
- * `describe` gives.
- */
-function errorText(raised: unknown): string {
-  if (type(raised) === "table") {
-    const { name, message } = raised as { name?: unknown; message?: unknown };
-    if (typeof name === "string" && typeof message === "string") {
-      return message === "" ? name : `${name}: ${message}`;
-    }
-  }
-  return describe(raised);
-}
-
 /** A handle in the game: a userdata. */
 function isUserdata(value: unknown): boolean {
   return type(value) === "userdata";
@@ -109,7 +70,7 @@ function isUserdata(value: unknown): boolean {
 function classify(
   value: unknown,
   isHandle: (value: unknown) => boolean,
-): OutcomeFields {
+): CallFields {
   if (value === undefined) return { outcome: "nil" };
   if (!isHandle(value)) return { outcome: "odd", type: describe(value) };
   const id = GetHandleId(value as handle);
@@ -119,12 +80,12 @@ function classify(
 }
 
 /** The PENDING label of a case, which names it in a skip list. */
-function pendingLabel(testCase: Case): string {
+function pendingLabel(testCase: Case): PendingLabel {
   return `${testCase.native} ${testCase.label}`;
 }
 
 /** The fields that name a case in its CASE, CALL and SKIP records. */
-function caseFields(testCase: Case) {
+function caseFields(testCase: Case): CaseFields {
   return {
     native: testCase.native,
     case: testCase.label,
@@ -133,8 +94,9 @@ function caseFields(testCase: Case) {
 }
 
 /**
- * Runs one case: the line `PENDING label=<native> <case>`, a checkpoint
- * when the case asks for one, then the call under `pcall`, then the record
+ * Runs one case: the line `PENDING label=<native> <case>`, a checkpoint,
+ * so a crash in the call leaves that line last on disk and names the case,
+ * then the call under `pcall`, then the record
  * `CALL case=<label> group=<group> native=<native> outcome=<outcome>`, with
  * the outcome's fields.
  */
@@ -144,24 +106,24 @@ function runCase(
   isHandle: (value: unknown) => boolean,
 ): void {
   p.pending(pendingLabel(testCase));
-  if (testCase.checkpoint) p.checkpoint();
+  p.checkpoint();
   const [ok, value] = pcall(testCase.call);
-  p.record("CALL", {
-    ...caseFields(testCase),
-    ...(ok
-      ? classify(value, isHandle)
-      : { outcome: "error", message: errorText(value) }),
-  });
+  const outcome: CallFields = ok
+    ? classify(value, isHandle)
+    : { outcome: "error", message: errorMessage(value) };
+  p.record("CALL", { ...caseFields(testCase), ...outcome });
 }
 
 /**
  * Runs a Slice's whole case list. First one record
  * `CASE case=<label> group=<group> native=<native>` per case, in order, so
- * the report lists the cases a crash left unrun; then each case in order
- * (`runCase`), except a case of `options.skip`, which is not called and
- * gets the record `SKIP case=<label> group=<group> native=<native>
- * reason=crashed` in its place. Two cases with one PENDING label, or a
- * skip label that names no case, fail the run before any case runs.
+ * the report lists the cases a crash left unrun, and a checkpoint; then
+ * each case in order (`runCase`), except a case of `options.skip`, which
+ * is not called and gets the record `SKIP case=<label> group=<group>
+ * native=<native> reason=crashed` in its place, and a checkpoint. So the
+ * last PENDING line on disk is always the case a crash stopped in, with
+ * every result before it. Two cases with one PENDING label, or a skip
+ * label that names no case, fail the run before any case runs.
  */
 export function runCases(
   p: ProbeContext,
@@ -184,11 +146,14 @@ export function runCases(
   }
   const isHandle = options.isHandle ?? isUserdata;
   for (const testCase of cases) {
-    p.record("CASE", caseFields(testCase));
+    p.record("CASE", { ...caseFields(testCase) });
   }
+  p.checkpoint();
   for (const testCase of cases) {
     if (skip.has(pendingLabel(testCase))) {
-      p.record("SKIP", { ...caseFields(testCase), reason: "crashed" });
+      const skipped: SkipFields = { reason: "crashed" };
+      p.record("SKIP", { ...caseFields(testCase), ...skipped });
+      p.checkpoint();
     } else {
       runCase(p, testCase, isHandle);
     }
