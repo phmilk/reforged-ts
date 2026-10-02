@@ -160,10 +160,14 @@ describe("the hello Probe's bundle", () => {
     ]);
   });
 
-  it("shows the end message with the number of records, for an hour", () => {
+  it("shows each progress message for 10 seconds, and the end message with the number of records for an hour", () => {
     expect(
       __stub_displayed().map(({ duration, text }) => [duration, text]),
-    ).toEqual([[3600, "Probe hello finished: 2 records. Close the game."]]);
+    ).toEqual([
+      [10, "Probe hello: checkpoint 1, 1 record so far."],
+      [10, "Probe hello: checkpoint 2, 2 records so far."],
+      [3600, "Probe hello finished: 2 records. Close the game."],
+    ]);
   });
 
   it("writes no line longer than 200 bytes, nor any holding a quote or a backslash", () => {
