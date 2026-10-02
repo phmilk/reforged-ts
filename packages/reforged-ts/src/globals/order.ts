@@ -340,13 +340,25 @@ export const enum OrderId {
   Innerfireon = 852067,
   /** The id of the `instant` order. */
   Instant = 852200,
-  /** The id of an order the game issues itself, which has no order string: the game's internal order table calls it `ORDER_PATROL2`. */
+  /**
+   * The id of an order the game issues itself, which has no order string: the game's internal order table calls it `ORDER_PATROL2`.
+   * @remarks Unconfirmed: none of the public order tables (UjAPI, WarRaft/Order, WurstStdlib2) lists this id.
+   */
   Instant1 = 851991,
-  /** The id of an order the game issues itself, which has no order string: the game's internal order table calls it `ORDER_GUARD_RETURN`. */
+  /**
+   * The id of an order the game issues itself, which has no order string: the game's internal order table calls it `ORDER_GUARD_RETURN`.
+   * @remarks Unconfirmed: none of the public order tables (UjAPI, WarRaft/Order, WurstStdlib2) lists this id.
+   */
   Instant2 = 851987,
-  /** The id of the generic cancel order, which has no order string: the game's internal order table calls it `ORDER_CANCEL`. */
+  /**
+   * The id of the generic cancel order, which has no order string: the game's internal order table calls it `ORDER_CANCEL`.
+   * @remarks UjAPI's order table gives this id to `cmdcancel`; the other public order tables (WarRaft/Order, WurstStdlib2) do not list it.
+   */
   Instant3 = 851975,
-  /** The id of an order the game issues itself, which has no order string: the game's internal order table calls it `ORDER_HARVEST_AGAIN`. */
+  /**
+   * The id of an order the game issues itself, which has no order string: the game's internal order table calls it `ORDER_HARVEST_AGAIN`.
+   * @remarks Unconfirmed: none of the public order tables (UjAPI, WarRaft/Order, WurstStdlib2) lists this id.
+   */
   Instant4 = 852019,
   /** The id of the `invisibility` order. */
   Invisibility = 852069,
