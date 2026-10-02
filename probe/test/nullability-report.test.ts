@@ -13,7 +13,8 @@ import { format } from "prettier";
 import { describe, expect, it } from "vitest";
 import { main, type Context } from "../src/cli/nullability-report.js";
 import { TYPINGS_MANIFEST } from "../src/folders.js";
-import { systemMachine } from "../src/machine.js";
+import { systemMachine, type Machine } from "../src/machine.js";
+import { resultFile } from "../src/read.js";
 import { writeNullabilityReport } from "../src/nullability/report.js";
 import { REPORT_HEADER } from "../src/nullability/section.js";
 import { stateFile } from "../src/state.js";
@@ -205,26 +206,22 @@ async function setup(): Promise<Setup> {
     stateFile(stateFolder, PROBE),
     JSON.stringify({ probe: PROBE, runId: RUN_ID }),
   );
-  const resultFile = join(
-    userFolder,
-    "CustomMapData",
-    "reforged-ts",
-    "probes",
-    `${PROBE}.txt`,
-  );
+  // The fake machine is linux on every host, so its paths join with "/":
+  // the reader's own resultFile gives the path it reads.
+  const machine: Machine = {
+    ...systemMachine,
+    platform: "linux",
+    env: { [USER_FOLDER_VARIABLE]: userFolder },
+  };
   return {
     context: {
-      machine: {
-        ...systemMachine,
-        platform: "linux",
-        env: { [USER_FOLDER_VARIABLE]: userFolder },
-      },
+      machine,
       stateFolder,
       overlayFolder: OVERLAY_FOLDER,
       reportFile: join(dir, "docs", "nullability-sweep.md"),
       clock: () => NOW,
     },
-    resultFile,
+    resultFile: resultFile(machine, PROBE),
   };
 }
 
