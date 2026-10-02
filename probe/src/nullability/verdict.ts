@@ -4,9 +4,10 @@
  * the verdict is compared with the Overlay's `returns.nullable` and gives a
  * proposed `notes` text. Pure: no file is read here.
  */
-
-/** The group of a case: `a` for live arguments, `b` for stale handles. */
-export type CaseGroup = "a" | "b";
+import type {
+  CallOutcome,
+  CaseGroup,
+} from "../../probes/nullability/records.js";
 
 /**
  * What a case gave: what its call returned, as its CALL record says
@@ -14,8 +15,7 @@ export type CaseGroup = "a" | "b";
  * that crashed the game, in this run (the trailing PENDING) or in an
  * earlier one (its SKIP record); `not run` for a case after a crash.
  */
-export type Outcome =
-  "handle" | "nil" | "odd" | "error" | "crashed" | "not run";
+export type Outcome = CallOutcome | "crashed" | "not run";
 
 /** One case of a Native, as the Probe run recorded it. */
 export interface CaseResult {

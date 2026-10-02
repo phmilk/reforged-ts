@@ -2,13 +2,21 @@
  * `probe:nullability-report`'s entry point: reads a Slice's Probe run
  * through the runner's reader (../read.ts), gives each Native a verdict from
  * the CASE, CALL and SKIP records of the case runner
- * (probes/nullability/case-runner.ts), compares it with the Native's
+ * (probes/nullability/case-runner.ts, in the format of
+ * probes/nullability/records.d.ts), compares it with the Native's
  * Overlay entry, read as JSON with no build of the Typings, and writes the
  * Slice's section of the sweep report. It reads the Overlay and the
  * Typings' manifest and writes the report file only: never the Overlay.
  */
 import fs from "node:fs";
 import path from "node:path";
+import type {
+  CallOutcome,
+  CaseFields,
+  CaseGroup,
+  PendingLabel,
+  SkipFields,
+} from "../../probes/nullability/records.js";
 import { AuthorError } from "../errors.js";
 import {
   field,
@@ -29,9 +37,7 @@ import {
   compare,
   proposedNotes,
   verdictOf,
-  type CaseGroup,
   type CaseResult,
-  type Outcome,
 } from "./verdict.js";
 
 /** Where the report reads and writes, and its clock. */
@@ -136,10 +142,7 @@ function acceptedRunId(run: ProbeRun): string {
 }
 
 /** A record of the case runner read: the case it names, and what it gave. */
-interface CaseRecord {
-  native: string;
-  label: string;
-  group: CaseGroup;
+interface CaseRecord extends CaseFields {
   /** What the case gave; undefined for a CASE record, which plans it. */
   result?: Omit<CaseResult, "label" | "group">;
 }
@@ -154,11 +157,30 @@ const RECORD_READERS: Readonly<Partial<Record<string, RecordReader>>> = {
   SKIP: readSkip,
 };
 
-/** The outcomes a CALL record may hold. */
-const CALL_OUTCOMES: readonly Outcome[] = ["handle", "nil", "odd", "error"];
+/**
+ * The outcomes a CALL record may hold, each keyed once, so an outcome
+ * added to the format is a type error here until it is read.
+ */
+const CALL_OUTCOMES: Readonly<Record<CallOutcome, true>> = {
+  handle: true,
+  nil: true,
+  odd: true,
+  error: true,
+};
 
-/** The groups a case may be in. */
-const GROUPS: readonly CaseGroup[] = ["a", "b"];
+/** The groups a case may be in, each keyed once. */
+const GROUPS: Readonly<Record<CaseGroup, true>> = { a: true, b: true };
+
+/** The reason of a SKIP record, the only one the case runner writes. */
+const SKIP_REASON: SkipFields["reason"] = "crashed";
+
+/** Whether `value` is a key of `keys`. */
+function isKeyOf<Key extends string>(
+  keys: Readonly<Record<Key, true>>,
+  value: string | undefined,
+): value is Key {
+  return value !== undefined && Object.hasOwn(keys, value);
+}
 
 /**
  * The case a record `<kind> native=<native> case=<label> group=<group>`
@@ -168,16 +190,11 @@ const GROUPS: readonly CaseGroup[] = ["a", "b"];
 function readCase(record: ResultLine): CaseRecord {
   const native = field(record, "native");
   const label = field(record, "case");
-  const group = field(record, "group") as CaseGroup | undefined;
-  if (
-    native === undefined ||
-    label === undefined ||
-    group === undefined ||
-    !GROUPS.includes(group)
-  ) {
+  const group = field(record, "group");
+  if (native === undefined || label === undefined || !isKeyOf(GROUPS, group)) {
     throw notRead(record);
   }
-  return { native, label, group };
+  return { native, case: label, group };
 }
 
 /**
@@ -187,10 +204,8 @@ function readCase(record: ResultLine): CaseRecord {
  * runner never writes is an AuthorError.
  */
 function readCall(record: ResultLine): CaseRecord {
-  const outcome = field(record, "outcome") as Outcome | undefined;
-  if (outcome === undefined || !CALL_OUTCOMES.includes(outcome)) {
-    throw notRead(record);
-  }
+  const outcome = field(record, "outcome");
+  if (!isKeyOf(CALL_OUTCOMES, outcome)) throw notRead(record);
   const id = field(record, "id");
   const type = field(record, "type");
   const message = field(record, "message");
@@ -211,7 +226,7 @@ function readCall(record: ResultLine): CaseRecord {
  * `crashed`.
  */
 function readSkip(record: ResultLine): CaseRecord {
-  if (field(record, "reason") !== "crashed") throw notRead(record);
+  if (field(record, "reason") !== SKIP_REASON) throw notRead(record);
   return {
     ...readCase(record),
     result: {
@@ -227,9 +242,12 @@ function notRead(record: ResultLine): AuthorError {
   );
 }
 
-/** A case as its PENDING line labels it: `<native> <case>`. */
-function pendingLabel({ native, label }: CaseRecord): string {
-  return `${native} ${label}`;
+/**
+ * A case as its PENDING line labels it, `<native> <case>`, as the case
+ * runner writes it (`PendingLabel`).
+ */
+function pendingLabel(testCase: CaseFields): PendingLabel {
+  return `${testCase.native} ${testCase.case}`;
 }
 
 /**
@@ -261,7 +279,7 @@ function casesByNative(run: ProbeRun): Map<string, CaseResult[]> {
   for (const [key, testCase] of planned) {
     const cases = natives.get(testCase.native) ?? [];
     cases.push({
-      label: testCase.label,
+      label: testCase.case,
       group: testCase.group,
       ...(given.get(key) ?? unrecorded(run, key)),
     });
@@ -297,8 +315,8 @@ function readPatch(manifestFile: string): string {
 /**
  * The `returns.nullable` of the Overlay entry of `native`, found as
  * `<source>/functions/<native>.json` under any source of the Overlay. A
- * Native without an entry, or whose entry has no boolean
- * `returns.nullable`, is an AuthorError.
+ * Native without an entry, with entries under several sources, or whose
+ * entry has no boolean `returns.nullable`, is an AuthorError.
  */
 function readReturnsNullable(overlayFolder: string, native: string): boolean {
   const files = fs
@@ -307,11 +325,17 @@ function readReturnsNullable(overlayFolder: string, native: string): boolean {
     .map((entry) =>
       path.join(overlayFolder, entry.name, "functions", `${native}.json`),
     )
-    .filter((file) => fs.statSync(file, { throwIfNoEntry: false })?.isFile());
+    .filter((file) => fs.statSync(file, { throwIfNoEntry: false })?.isFile())
+    .sort();
   const file = files.at(0);
   if (file === undefined) {
     throw new AuthorError(
       `${native} has no Overlay entry in ${overlayFolder}: the report compares each verdict with one.`,
+    );
+  }
+  if (files.length > 1) {
+    throw new AuthorError(
+      `${native} has an Overlay entry under several sources, ${files.join(", ")}: the report compares each verdict with one.`,
     );
   }
   const { returns } = readJson(file) as { returns?: { nullable?: unknown } };

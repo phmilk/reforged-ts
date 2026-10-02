@@ -1,4 +1,11 @@
-import { mkdir, mkdtemp, readFile, readdir, writeFile } from "node:fs/promises";
+import {
+  cp,
+  mkdir,
+  mkdtemp,
+  readFile,
+  readdir,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -578,6 +585,25 @@ describe("the nullability report", () => {
     await expectRefusal(
       context,
       `Rect has no Overlay entry in ${OVERLAY_FOLDER}: the report compares each verdict with one.`,
+    );
+  });
+
+  it("refuses a Native with Overlay entries under several sources", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = join(context.reportFile, "..", "..", "overlay");
+    await cp(OVERLAY_FOLDER, overlayFolder, { recursive: true });
+    const duplicate = join(
+      overlayFolder,
+      "blizzard.j",
+      "functions",
+      "CreateTimer.json",
+    );
+    await mkdir(join(duplicate, ".."), { recursive: true });
+    await writeFile(duplicate, JSON.stringify({ returns: { nullable: true } }));
+    await writeResultFile(resultFile, FINISHED);
+    await expectRefusal(
+      { ...context, overlayFolder },
+      `CreateTimer has an Overlay entry under several sources, ${join(overlayFolder, "blizzard.j", "functions", "CreateTimer.json")}, ${join(overlayFolder, "common.j", "functions", "CreateTimer.json")}: the report compares each verdict with one.`,
     );
   });
 
