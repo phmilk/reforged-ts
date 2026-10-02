@@ -1,7 +1,8 @@
 // The Probe runner's in-game module: the entry of every Probe's bundle. It
 // wraps the editor's `main` to start a 0-second timer, calls the Probe's
 // `run(p)` from it under `xpcall`, ends the run when `run` returns or
-// throws, or, after `p.hold()`, when the Probe calls `p.finish()`, and
+// throws, or, after `p.hold()`, when the Probe calls `p.finish()` or a
+// callback of `p.after` throws, and
 // writes the Result file,
 // `reforged-ts\probes\<probe>.txt` under CustomMapData, through the Preload
 // Natives: a full rewrite at each checkpoint the Probe asks for, and one at
@@ -199,6 +200,17 @@ const p: ProbeContext = {
     held = true;
   },
   finish,
+  after: (seconds, callback) => {
+    const timer = CreateTimer();
+    TimerStart(timer, seconds, false, () => {
+      DestroyTimer(timer);
+      const [ok, message] = xpcall(() => {
+        callback();
+      }, errorMessage);
+      if (!ok) fail(message);
+    });
+  },
+  show,
 };
 
 function start(): void {

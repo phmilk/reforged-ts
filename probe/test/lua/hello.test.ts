@@ -6,23 +6,7 @@
 // then the end.
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
-
-declare function __stub_preload_file(filename: string): string[] | undefined;
-declare function __stub_fire_timer(whichTimer: timer): void;
-declare function __stub_args(name: string): (unknown[] & { n: number })[];
-declare function __stub_displayed(): { duration?: number; text: string }[];
-
-/**
- * The editor's entry point, which the runner wraps, and Lua's `require`,
- * which loads the modules the global setup wrote next to this test.
- * @noSelf
- */
-interface Globals {
-  main?: () => void;
-  require: (module: string) => unknown;
-}
-
-const globals = _G as unknown as Globals;
+import { globals, startedTimer } from "./bundle";
 
 /** The bridge fixtures' lines, as the global setup wrote them. */
 interface BridgeFixtures {
@@ -86,7 +70,7 @@ describe("the hello Probe's bundle", () => {
   });
 
   it("writes the bridge fixture's lines to the Result file when the timer fires", () => {
-    __stub_fire_timer(__stub_args("TimerStart")[0]?.[0] as timer);
+    __stub_fire_timer(startedTimer(0));
     expect(__stub_preload_file(RESULT_FILE)).toEqual(bridge().finished);
   });
 
