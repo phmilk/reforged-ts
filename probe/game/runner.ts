@@ -11,6 +11,7 @@
 
 import { run } from "@probe/current";
 import { recordLine, splitLine } from "./encoding";
+import { errorMessage } from "./errors";
 import type { FieldValue, ProbeContext } from "./probe";
 
 /** The Probe's `run`, which may leave `p` out: checked against what the runner passes. */
@@ -138,31 +139,6 @@ function fail(message: string): void {
     `Probe ${PROBE} failed after ${records(recordCount)}. Close the game.\n${message}`,
     END_MESSAGE_SECONDS,
   );
-}
-
-/** An Error thrown from TypeScript: a table with a name and a message. */
-interface ThrownError {
-  name?: unknown;
-  message?: unknown;
-}
-
-/**
- * The message of what `run` threw, as `xpcall`'s handler receives it. An
- * Error thrown from TypeScript is a table whose `__tostring`, from
- * typescript-to-lua's library, reads the `debug` library, which the game
- * does not have: it gives `<name>: <message>` as that `__tostring` does,
- * without calling it. Anything else gives what `tostring` gives, or a
- * description when `tostring` itself fails.
- */
-function errorMessage(thrown: unknown): string {
-  if (type(thrown) === "table") {
-    const { name, message } = thrown as ThrownError;
-    if (typeof name === "string" && typeof message === "string") {
-      return message === "" ? name : `${name}: ${message}`;
-    }
-  }
-  const [ok, text] = pcall(tostring, thrown);
-  return ok ? text : `a ${type(thrown)} whose tostring failed`;
 }
 
 /**
