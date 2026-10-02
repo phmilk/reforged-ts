@@ -1,0 +1,133 @@
+// The Nullability sweep's Fixtures, shared by every Slice: one factory per
+// handle type and state, each returning a new Handle in that state. A
+// factory calls Natives only, never the library, so building an argument
+// never goes through a Wrapper. A Probe builds its Fixtures before the
+// cases that use them, outside their calls, so a factory that fails fails
+// the run instead of reading as the Native's outcome. The catalogue grows
+// per type and state with the Slices.
+//
+// A stale handle is one whose object is dead, removed or destroyed: the
+// factories named `dead…`, `removed…` and `destroyed…` return one.
+
+/** `value`, or an error naming the Fixture when a Native returned nothing for it. */
+function built<T>(value: T | undefined, fixture: string): T {
+  if (value === undefined) {
+    error(`Fixture ${fixture}: the Native returned nothing`, 0);
+  }
+  return value;
+}
+
+// Units
+
+/** A unit, live: a `'hfoo'` of `Player(0)` at the map's origin (`CreateUnit`). */
+export function liveUnit(): unit {
+  const owner = built(Player(0), "liveUnit");
+  return built(CreateUnit(owner, FourCC("hfoo"), 0, 0, 0), "liveUnit");
+}
+
+/** A unit, live: a `'hfoo'` of Neutral Passive at the map's origin (`CreateUnit`). */
+export function neutralPassiveUnit(): unit {
+  const owner = built(Player(PLAYER_NEUTRAL_PASSIVE), "neutralPassiveUnit");
+  return built(
+    CreateUnit(owner, FourCC("hfoo"), 0, 0, 0),
+    "neutralPassiveUnit",
+  );
+}
+
+/** A unit, dead: a live `'hfoo'` of `Player(0)` after `KillUnit`, its corpse still in the game. */
+export function deadUnit(): unit {
+  const footman = liveUnit();
+  KillUnit(footman);
+  return footman;
+}
+
+/** A unit, removed: a live `'hfoo'` of `Player(0)` after `RemoveUnit`, a stale handle. */
+export function removedUnit(): unit {
+  const footman = liveUnit();
+  RemoveUnit(footman);
+  return footman;
+}
+
+// Boolexprs
+
+/**
+ * A boolexpr, live: a `Condition` of a function that returns `true`, a new
+ * one each call, so no two Fixtures share their function.
+ */
+export function liveCondition(): conditionfunc {
+  return Condition(() => true);
+}
+
+/** A boolexpr, live: a `Filter` of a new function that returns `true`, as `liveCondition`. */
+export function liveFilter(): filterfunc {
+  return Filter(() => true);
+}
+
+/** A boolexpr, destroyed: a live `Condition` after `DestroyCondition`, a stale handle. */
+export function destroyedCondition(): conditionfunc {
+  const condition = liveCondition();
+  DestroyCondition(condition);
+  return condition;
+}
+
+/** A boolexpr, destroyed: a live `Filter` after `DestroyBoolExpr`, a stale handle. */
+export function destroyedBoolExpr(): boolexpr {
+  const filter = liveFilter();
+  DestroyBoolExpr(filter);
+  return filter;
+}
+
+// Frames
+
+/** A frame, top-level: the game UI, `BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)`. */
+export function gameUiFrame(): framehandle {
+  return built(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), "gameUiFrame");
+}
+
+/** A frame, top-level: the world frame, `BlzGetOriginFrame(ORIGIN_FRAME_WORLD_FRAME, 0)`. */
+export function worldFrame(): framehandle {
+  return built(BlzGetOriginFrame(ORIGIN_FRAME_WORLD_FRAME, 0), "worldFrame");
+}
+
+/** A frame, live child: a `"FRAME"` made with `BlzCreateFrameByType` on the game UI, inheriting nothing. */
+export function childFrame(): framehandle {
+  return built(
+    BlzCreateFrameByType("FRAME", "NullabilityFixture", gameUiFrame(), "", 0),
+    "childFrame",
+  );
+}
+
+/** A frame, destroyed: a live child frame after `BlzDestroyFrame`, a stale handle. */
+export function destroyedFrame(): framehandle {
+  const frame = childFrame();
+  BlzDestroyFrame(frame);
+  return frame;
+}
+
+// Triggers
+
+/** A trigger, live: `CreateTrigger`. */
+export function liveTrigger(): trigger {
+  return CreateTrigger();
+}
+
+/** A trigger, destroyed: a live trigger after `DestroyTrigger`, a stale handle. */
+export function destroyedTrigger(): trigger {
+  const live = liveTrigger();
+  DestroyTrigger(live);
+  return live;
+}
+
+// Camera setups: no Native destroys one, so none is stale.
+
+/** A camera setup, fresh: `CreateCameraSetup`, nothing set. */
+export function freshCameraSetup(): camerasetup {
+  return CreateCameraSetup();
+}
+
+/** A camera setup, positioned: a fresh setup after `CameraSetupSetDestPosition` to `(512, 512)`. */
+export function positionedCameraSetup(): camerasetup {
+  const setup = freshCameraSetup();
+  CameraSetupSetDestPosition(setup, 512, 512, 0);
+  return setup;
+}

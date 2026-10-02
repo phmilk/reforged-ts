@@ -113,5 +113,17 @@ The private workspace package `probe/` and its three commands: `probe:build` com
 _Avoid_: harness (the Lua test harness), launcher, probe map
 
 **Result file**:
-The file a Probe run writes through `Preload` in the game's `CustomMapData` folder, `reforged-ts\probes\<probe>.txt`, one line per record: a `BEGIN` line naming the Probe and its runId, the Probe's records, `PENDING` before a risky step, `ERROR` when the Probe throws, and last a `CHECKPOINT` line or an `END` line with the run's status. A checkpoint is one full rewrite of the file with everything recorded so far, so a crash loses only what came after the last one.
+The file a Probe run writes through `Preload` in the game's `CustomMapData` folder, `reforged-ts\probes\<probe>.txt`, one line per record: a `BEGIN` line naming the Probe, its runId and the Patch of the Typings it was built against, the Probe's records, `PENDING` before a risky step, `ERROR` when the Probe throws, and last a `CHECKPOINT` line or an `END` line with the run's status. A checkpoint is one full rewrite of the file with everything recorded so far, so a crash loses only what came after the last one.
 _Avoid_: log, output file, save file
+
+**Nullability sweep**:
+Measuring in the game the `returns.nullable` of the 394 handle-returning Natives, in Slices, each reported against the Overlay in `docs/research/nullability-sweep.md` by `pnpm probe:nullability-report <probe>`, which never writes the Overlay.
+_Avoid_: nullability audit, null check, nullability test
+
+**Slice**:
+One batch of the Nullability sweep: one Probe (`nullability-slice-1`), which calls its Natives in hand-listed cases, and one section of the sweep's report.
+_Avoid_: batch, phase, chunk
+
+**Fixture**:
+A factory, inside a Probe, for a Handle in a known state (live, dead, removed, destroyed), built with Natives only, so a case names the state it tests. A **stale handle** is one whose object is dead, removed or destroyed: the Handle is still held, and the object behind it is no longer alive or no longer there.
+_Avoid_: setup, mock, stub (the Lua test harness's stand-ins); test fixture (a file a vitest test reads)

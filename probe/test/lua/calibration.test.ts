@@ -33,7 +33,7 @@ const REWRITE_END =
  * write, which reach the disk only with its second.
  */
 const UNTIL_C5 = [
-  "1 BEGIN probe=calibration run=bridge",
+  "1 BEGIN patch=3.0.0.12345 probe=calibration run=bridge",
   "2 PENDING label=C1,C2,C6",
   "3 C1 file=preload-chars.txt length=200 preload=1",
   "4 C1 file=preload-chars.txt length=238 preload=2",

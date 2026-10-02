@@ -1,14 +1,16 @@
 /**
  * `probe:build`: compiles a Probe with the runner's in-game module as the
- * bundle's entry, bakes the Probe's name and a fresh runId into the bundle,
- * composes the editor script and the bundle into the map script and stages
- * the map folder. Needs no game.
+ * bundle's entry, bakes the Probe's name, a fresh runId and the Patch of the
+ * Typings it compiles against into the bundle, composes the editor script
+ * and the bundle into the map script and stages the map folder. Needs no
+ * game.
  */
 import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { compileBundle } from "./compile.js";
 import { composeMapScript } from "./compose.js";
+import { AuthorError } from "./errors.js";
 import {
   PROBE_FOLDERS,
   PROBES_TSCONFIG,
@@ -31,21 +33,27 @@ export const CURRENT_PROBE = "@probe/current";
 
 /**
  * The string literals of the in-game module (game/runner.ts) that a build
- * replaces in the bundle, quotes included, with the Probe's name and the
- * build's runId.
+ * replaces in the bundle, quotes included, with the Probe's name, the
+ * build's runId and the Patch of the Typings.
  */
 export const PLACEHOLDERS = {
   probe: '"$PROBE_NAME$"',
   runId: '"$PROBE_RUN_ID$"',
+  patch: '"$PROBE_PATCH$"',
 } as const;
 
 /** A runId: letters, digits and hyphens, inside the Result file's safe alphabet. */
 const RUN_ID_PATTERN = /^[A-Za-z0-9-]+$/;
 
+/** A Patch, as its Build names it: `3.0.0.24268`. */
+const PATCH_PATTERN = /^[0-9]+(\.[0-9]+)*$/;
+
 export interface BuildResult {
   probe: string;
   /** The runId baked into the bundle and stored in the state file. */
   runId: string;
+  /** The Patch of the Typings' manifest, baked into the bundle. */
+  patch: string;
   /** The staged copy of the map folder, holding the composed script. */
   stagingFolder: string;
   /** The bundle, as baked and composed. */
@@ -61,9 +69,11 @@ export function builtMessage(result: BuildResult): string {
  * Builds the Probe `probe` of `folders.probes` into
  * `<folders.output>/<probe>/`, emptied first: the bundle, then the staged
  * map folder whose `war3map.lua` is the editor script, one newline and the
- * bundle. Stores the runId in the Probe's state file last, so a failed
- * build leaves the previous one's. A bad name, a missing Probe or a compile
- * error is an AuthorError of one line.
+ * bundle. The runner writes the Patch of `folders.manifest` in the run's
+ * `BEGIN` line, so the run names the Typings it was built against. Stores
+ * the runId in the Probe's state file last, so a failed build leaves the
+ * previous one's. A bad name, a missing Probe, a manifest without a Patch
+ * or a compile error is an AuthorError of one line.
  */
 export function buildProbe(
   probe: string,
@@ -74,6 +84,7 @@ export function buildProbe(
   if (!RUN_ID_PATTERN.test(runId)) {
     throw new Error(`Not a runId: ${JSON.stringify(runId)}`);
   }
+  const patch = readPatch(folders.manifest);
   // Fail on a map folder without the editor script before touching the output folder.
   const editorScript = readEditorScript(folders.map);
 
@@ -92,6 +103,7 @@ export function buildProbe(
   const baked = bake(bundle.bytes, {
     [PLACEHOLDERS.probe]: JSON.stringify(probe),
     [PLACEHOLDERS.runId]: JSON.stringify(runId),
+    [PLACEHOLDERS.patch]: JSON.stringify(patch),
   });
   fs.writeFileSync(bundle.file, baked);
   fs.writeFileSync(
@@ -100,7 +112,28 @@ export function buildProbe(
   );
 
   writeState(folders.state, { probe, runId });
-  return { probe, runId, stagingFolder, bundleFile: bundle.file };
+  return { probe, runId, patch, stagingFolder, bundleFile: bundle.file };
+}
+
+/**
+ * The Patch the Typings' manifest names, its `patch`. A manifest that
+ * cannot be read, or whose `patch` is not a Build, is an AuthorError.
+ */
+function readPatch(manifest: string): string {
+  let patch: unknown;
+  try {
+    ({ patch } = JSON.parse(fs.readFileSync(manifest, "utf8")) as {
+      patch?: unknown;
+    });
+  } catch (error) {
+    throw new AuthorError(
+      `${manifest} could not be read as JSON: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+  if (typeof patch !== "string" || !PATCH_PATTERN.test(patch)) {
+    throw new AuthorError(`${manifest} names no Patch, such as 3.0.0.24268.`);
+  }
+  return patch;
 }
 
 /** The deepest folder holding both folders. */

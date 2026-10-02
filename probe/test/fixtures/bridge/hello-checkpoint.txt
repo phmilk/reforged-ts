@@ -1,4 +1,4 @@
-1 BEGIN probe=hello run=bridge
+1 BEGIN patch=3.0.0.12345 probe=hello run=bridge
 2 PENDING label=greet
 3 greeting count=1 word=hello
 4 PENDING label=encode

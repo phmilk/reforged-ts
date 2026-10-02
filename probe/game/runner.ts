@@ -11,15 +11,18 @@
 
 import { run } from "@probe/current";
 import { recordLine, splitLine } from "./encoding";
+import { errorMessage } from "./errors";
 import type { FieldValue, ProbeContext } from "./probe";
 
 /** The Probe's `run`, which may leave `p` out: checked against what the runner passes. */
 const runProbe: (p: ProbeContext) => void = run;
 
 // Replaced in the bundle by probe:build (src/build.ts, PLACEHOLDERS) with the
-// Probe's name and the build's runId. Each literal must appear here once.
+// Probe's name, the build's runId and the Patch of the Typings the Probe was
+// built against. Each literal must appear here once.
 const PROBE = "$PROBE_NAME$";
 const RUN_ID = "$PROBE_RUN_ID$";
+const PATCH = "$PROBE_PATCH$";
 
 /** The Result file, under CustomMapData. */
 const RESULT_FILE = `reforged-ts\\probes\\${PROBE}.txt`;
@@ -140,31 +143,6 @@ function fail(message: string): void {
   );
 }
 
-/** An Error thrown from TypeScript: a table with a name and a message. */
-interface ThrownError {
-  name?: unknown;
-  message?: unknown;
-}
-
-/**
- * The message of what `run` threw, as `xpcall`'s handler receives it. An
- * Error thrown from TypeScript is a table whose `__tostring`, from
- * typescript-to-lua's library, reads the `debug` library, which the game
- * does not have: it gives `<name>: <message>` as that `__tostring` does,
- * without calling it. Anything else gives what `tostring` gives, or a
- * description when `tostring` itself fails.
- */
-function errorMessage(thrown: unknown): string {
-  if (type(thrown) === "table") {
-    const { name, message } = thrown as ThrownError;
-    if (typeof name === "string" && typeof message === "string") {
-      return message === "" ? name : `${name}: ${message}`;
-    }
-  }
-  const [ok, text] = pcall(tostring, thrown);
-  return ok ? text : `a ${type(thrown)} whose tostring failed`;
-}
-
 /**
  * Raises an error once the run has ended: a line added then, or a
  * checkpoint, would rewrite the Result file without its `END` line.
@@ -214,7 +192,7 @@ const p: ProbeContext = {
 };
 
 function start(): void {
-  addLine("BEGIN", { probe: PROBE, run: RUN_ID });
+  addLine("BEGIN", { patch: PATCH, probe: PROBE, run: RUN_ID });
   const [ok, message] = xpcall(() => {
     runProbe(p);
   }, errorMessage);

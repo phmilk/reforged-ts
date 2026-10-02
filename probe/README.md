@@ -6,11 +6,12 @@ A private workspace package, never published. A **Probe** is a TypeScript file t
 
 Run from the repository root:
 
-| Command                       | What it does                                                                                                                                                                                                                                                                                                                  |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm probe:build [<probe>…]` | Builds each Probe named, or every Probe when none is: compiles it with typescript-to-lua, bakes a fresh runId into the bundle, composes the map script and stages the map folder in `.probe/build/<probe>/staging/probe.w3m`. Needs no game; CI runs it. Exit code 1 on a failure.                                            |
-| `pnpm probe:launch <probe>`   | Run by the human, as `! pnpm probe:launch <probe>` in the agent's session; the agent never runs it. Finds the game, fails before building when it is not found, builds the Probe as `probe:build` does, starts the game detached on the staged folder and prints the human's part of the Probe run. Exit code 1 on a failure. |
-| `pnpm probe:read <probe>`     | Reads the Probe's Result file, prints the state of its last run on one line, then its records, one per line. Read-only: it writes, starts and stops nothing, and on Windows reads the process list.                                                                                                                           |
+| Command                                 | What it does                                                                                                                                                                                                                                                                                                                  |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm probe:build [<probe>…]`           | Builds each Probe named, or every Probe when none is: compiles it with typescript-to-lua, bakes a fresh runId and the Patch of the Typings' manifest into the bundle, composes the map script and stages the map folder in `.probe/build/<probe>/staging/probe.w3m`. Needs no game; CI runs it. Exit code 1 on a failure.     |
+| `pnpm probe:launch <probe>`             | Run by the human, as `! pnpm probe:launch <probe>` in the agent's session; the agent never runs it. Finds the game, fails before building when it is not found, builds the Probe as `probe:build` does, starts the game detached on the staged folder and prints the human's part of the Probe run. Exit code 1 on a failure. |
+| `pnpm probe:read <probe>`               | Reads the Probe's Result file, prints the state of its last run on one line, then its records, one per line. Read-only: it writes, starts and stops nothing, and on Windows reads the process list.                                                                                                                           |
+| `pnpm probe:nullability-report <probe>` | Writes the section of the Nullability sweep's Slice `<probe>` into `docs/research/nullability-sweep.md` from the Probe's last run, in place of its previous one: see [The Nullability sweep](#the-nullability-sweep). Reads the Overlay and never writes it. Exit code 1 on a failure.                                        |
 
 A known failure (a bad Probe name, a type error in a Probe, no game or no `CustomMapData` folder found) prints one line, `<command> failed: <message>`; a bug prints its stack.
 
@@ -75,7 +76,7 @@ When `run` throws, held or not, the runner catches the error with `xpcall`, adds
 The Result file of a finished run of `hello`, which records each step after its `PENDING` line and checkpoints after each, and whose second record holds every byte of ASCII the writer escapes and some UTF-8:
 
 ```text
-1 BEGIN probe=hello run=<runId>
+1 BEGIN patch=<patch> probe=hello run=<runId>
 2 PENDING label=greet
 3 greeting count=1 word=hello
 4 PENDING label=encode
@@ -89,7 +90,7 @@ Its second checkpoint left the same lines with `6 CHECKPOINT` last in place of t
 The Result file of `failing`, which records one line, then throws, and what `probe:read failing` prints of it, with exit code 1:
 
 ```text
-1 BEGIN probe=failing run=<runId>
+1 BEGIN patch=<patch> probe=failing run=<runId>
 2 step name=before
 3 ERROR message=Error:%20The%20step%20%22after%22%20broke.
 4 END status=failed
@@ -100,11 +101,28 @@ failed: Probe failing, run <runId>, 1 record, then the error "Error: The step \"
 step name=before
 ```
 
+## The Nullability sweep
+
+The [Nullability sweep](../CONTEXT.md) measures the `returns.nullable` of the handle-returning Natives in Slices, each a Probe named `nullability-slice-<n>` (#327). A Slice's Probe lists its cases, one direct call of one Native each, and hands them to the case runner, `probes/nullability/case-runner.ts`, which every Slice shares, with its `skip` list: `runCases(p, CASES, { skip: SKIP })`. The case runner first records the whole case list, one `CASE` record per case, so the report knows the cases a crash left unrun, and puts it on disk with a checkpoint. Then, for each case in order, it adds `PENDING label=<native> <case>`, puts every line on disk with a checkpoint, calls the Native under `pcall` and records what it returned:
+
+```text
+<seq> CASE case=<label> group=a|b native=<native>
+<seq> CALL case=<label> group=a|b native=<native> outcome=handle id=<GetHandleId> type=<tostring>
+<seq> CALL case=<label> group=a|b native=<native> outcome=nil
+<seq> CALL case=<label> group=a|b native=<native> outcome=odd type=<tostring>
+<seq> CALL case=<label> group=a|b message=<error> native=<native> outcome=error
+<seq> SKIP case=<label> group=a|b native=<native> reason=crashed
+```
+
+Group `a` is a case of live arguments, `b` one of a stale handle. `odd` is a handle whose `GetHandleId` is 0, or a value that is neither `nil` nor a userdata; `error` is a call that raised. A case's checkpoint comes after its `PENDING` line, so a crash in the call, in either group, leaves that line last on disk, with every result before it, and names the case; a Slice never calls `p.checkpoint()` itself. After a crash, add the pending step `probe:read` names, `<native> <case>`, to the Probe's `skip` list and run it again: the case is not called, and its `SKIP` line, put on disk with a checkpoint of its own, keeps the crash in the result. A skip entry that names no case fails the run.
+
+`pnpm probe:nullability-report <probe>` reads the Probe's last run through the reader of `probe:read`. It reports a `finished` run, and an `incomplete` or `crashed` one, whose last `PENDING` case without a `CALL` is `crashed` and whose cases after it are `not run`. It refuses, on one line, a `running` run (close the game first), a `failed` one (with its `ERROR` message) and a `not-started` one (with the stale runId of the Result file, when there is one). Each Native, in the order of the case list, gets a verdict from its cases, the first of these that holds: `nullable (proved)` when a case returned `nil`; `unsafe` when a case crashed, was skipped or raised an error; `review` when a case was `odd` or not run; `non-null (evidence)` when every case returned a handle. The verdict is compared with the `returns.nullable` of the Native's Overlay entry, read as JSON from `packages/reforged-types/overlay/`: `mismatch` when the Overlay says `false` and the verdict is `nullable (proved)`, `consistent` otherwise; a Native with no entry fails the command. The command writes the Slice's section of `docs/research/nullability-sweep.md`, headed by the Probe, the Patch the run's `BEGIN` line names (the one its build compiled against, whatever the manifest says by the time of the report), the date and the runId, with one table per Native and a proposed `notes` text below it, or only "review" for `unsafe` and `review`, and replaces only that section when it runs again.
+
 ## Layout
 
-- `probes/`: the Probes, and `tsconfig.json`, the typescript-to-lua project every Probe compiles with. `calibration.ts` measures the Preload limits the Result file's format was frozen on, checks C1 to C8 of #298, in test files of its own under `CustomMapData\reforged-ts\calibration\`; its doc comment lists what it records, and its last step, C8, calls `EndGame(false)` 3 seconds after `END`. `hello`, `failing`, `held` and `failing-later` exist for the runner's own tests.
-- `game/`: the in-game module (`runner.ts`, the entry of every bundle) and the types a Probe sees (`probe.ts`).
+- `probes/`: the Probes, and `tsconfig.json`, the typescript-to-lua project every Probe compiles with. `calibration.ts` measures the Preload limits the Result file's format was frozen on, checks C1 to C8 of #298, in test files of its own under `CustomMapData\reforged-ts\calibration\`; its doc comment lists what it records, and its last step, C8, calls `EndGame(false)` 3 seconds after `END`. `hello`, `failing`, `held` and `failing-later` exist for the runner's own tests. `probes/nullability/` holds what the Slices of the Nullability sweep share, `records.d.ts`, the format of the case runner's records, which the report imports too, included.
+- `game/`: the in-game module (`runner.ts`, the entry of every bundle), what it shares with the Probes (`errors.ts`, the message of a raised value) and the types a Probe sees (`probe.ts`).
 - `probe.w3m/`: the map folder, a copy of the Template's; `PROVENANCE.md` lists every file copied from the Template.
-- `src/`: the commands, compiled to `build/`; `src/machine.ts` is the one way they reach the machine, which the tests replace with a fake. `src/read.ts` is the reader the package's other scripts import.
-- `test/`: the Node tests of the commands, and under `lua/` the in-game module's tests, and those of the Probes' bundles, on the `reforged-test` harness, which share `lua/bundle.ts` and `lua/stubs.d.ts`, the stub helpers they call. `test/fixtures/bridge/` is the bridge: the lines of the hello Probe's Result file, `hello.txt` as the finished run leaves it and `hello-checkpoint.txt` as its second checkpoint does, `PENDING` lines, encoded values and a continuation line included, and `failing.txt`, those of the failing Probe's, ending in `ERROR` and `END status=failed`. The Lua tests assert the runner writes them and the Node tests assert the reader decodes them back.
+- `src/`: the commands, compiled to `build/`; `src/machine.ts` is the one way they reach the machine, which the tests replace with a fake. `src/read.ts` is the reader the package's other scripts import. `src/nullability/` is the Nullability sweep's report.
+- `test/`: the Node tests of the commands, and under `lua/` the in-game module's tests, and those of the Probes' bundles, on the `reforged-test` harness, which share `lua/bundle.ts` and `lua/stubs.d.ts`, the stub helpers they call, with `lua/probes/`, Probes of those tests only. `test/fixtures/nullability/` is the report's fixture Overlay. `test/fixtures/bridge/` is the bridge: `manifest.json`, whose Patch the Lua tests' builds bake, and the lines of the hello Probe's Result file, `hello.txt` as the finished run leaves it and `hello-checkpoint.txt` as its second checkpoint does, `PENDING` lines, encoded values and a continuation line included, and `failing.txt`, those of the failing Probe's, ending in `ERROR` and `END status=failed`. The Lua tests assert the runner writes them and the Node tests assert the reader decodes them back.
 - `.probe/`: ignored: the builds, the state files and the compiled Lua tests.

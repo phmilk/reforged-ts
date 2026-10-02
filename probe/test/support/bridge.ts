@@ -38,6 +38,15 @@ export const FAILING_PROBE = "failing";
 /** The runId in the fixtures' `BEGIN` line, which the Lua test's build bakes. */
 export const BRIDGE_RUN_ID = "bridge";
 
+/**
+ * The manifest the Lua test's build reads, whose `patch`, 3.0.0.12345, is
+ * the Patch in the fixtures' `BEGIN` line: not the Typings' own, so a new
+ * Patch changes no fixture.
+ */
+export const BRIDGE_MANIFEST = fileURLToPath(
+  new URL("../fixtures/bridge/manifest.json", import.meta.url),
+);
+
 /** The lines of a fixture, the finished run's by default, in order. */
 export function bridgeLines(fixture: BridgeFixture = "finished"): string[] {
   const lines = readFileSync(BRIDGE_FIXTURES[fixture], "utf8").split("\n");
