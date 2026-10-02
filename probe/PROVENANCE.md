@@ -7,7 +7,7 @@ The Probe runner copies the parts of the Template's pipeline a Probe run needs, 
 
 ## The map folder
 
-`maps/reforged-ts-template.w3m/` is copied to `probe.w3m/`, byte for byte: each file's git blob hash is the Template's. `.gitattributes` keeps git from changing them (`-text -diff`), as the Template's does.
+`maps/reforged-ts-template.w3m/` is copied to `probe.w3m/`, byte for byte: each file's git blob hash is the Template's. `.gitattributes` keeps git from changing them (`-text -diff`), as the Template's does. The map runs as the Template's with one exception, made by the runner and not in these files, so they stay the Template's: `MeleeInitVictoryDefeat` is a no-op during a Probe run (`game/runner.ts`, #348).
 
 | Template file                                     | Copy                          |
 | ------------------------------------------------- | ----------------------------- |

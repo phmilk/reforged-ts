@@ -205,9 +205,18 @@ function start(): void {
 
 // The editor's script defines `main` before the bundle runs; Natives wait for
 // it. The timer fires once the map is initialised.
-const globals = _G as unknown as { main?: () => void };
+const globals = _G as unknown as {
+  main?: () => void;
+  MeleeInitVictoryDefeat?: () => void;
+};
 const editorMain = globals.main;
 globals.main = () => {
+  // The map's Melee Initialization, the Template's, ends a game with no
+  // enemy player in victory within seconds, and its dialog's Quit Game would
+  // end the Probe run with it (#348). Only the game ends a Probe run: the
+  // Probe or the human. Replaced here, not in the map, so the map folder
+  // stays the Template's; blizzard.j defines it by the time `main` runs.
+  globals.MeleeInitVictoryDefeat = () => undefined;
   editorMain?.();
   const timer = CreateTimer();
   TimerStart(timer, 0, false, () => {

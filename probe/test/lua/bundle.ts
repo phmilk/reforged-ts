@@ -5,7 +5,8 @@
  * The globals the tests reach: the editor's entry point, which the runner
  * wraps; Lua's `require`, which loads the modules the global setup wrote
  * next to the tests; the `debug` library, which the game does not have;
- * and `EndGame`, which the shipped stubs do not define.
+ * and `EndGame` and `MeleeInitVictoryDefeat`, which the shipped stubs do
+ * not define.
  * @noSelf
  */
 export interface Globals {
@@ -13,6 +14,7 @@ export interface Globals {
   require: (module: string) => unknown;
   debug: unknown;
   EndGame?: (doScoreScreen: boolean) => void;
+  MeleeInitVictoryDefeat?: () => void;
 }
 
 export const globals = _G as unknown as Globals;

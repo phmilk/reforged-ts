@@ -55,7 +55,7 @@ The home folder's `Documents` is never used: it can exist and not be the folder 
 
 ## Writing a Probe
 
-A Probe is `probes/<probe>.ts`, named in kebab-case ASCII (`hello`, `native-nullability`). Every TypeScript file directly in `probes/` is a Probe; a module Probes share goes in a subfolder. It exports `run`, which the runner calls once the map is initialised, from a 0-second timer under `xpcall`:
+A Probe is `probes/<probe>.ts`, named in kebab-case ASCII (`hello`, `native-nullability`). Every TypeScript file directly in `probes/` is a Probe; a module Probes share goes in a subfolder. It exports `run`, which the runner calls once the map is initialised, from a 0-second timer under `xpcall`. The map's Melee Initialization runs as the Template's does, except `MeleeInitVictoryDefeat`, which the runner replaces with a no-op: with no enemy player, the game would end in victory within seconds, and its Quit Game would end the Probe run (#348). Only the Probe or the human ends a game:
 
 ```ts
 import type { ProbeContext } from "../game/probe";
