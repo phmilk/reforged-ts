@@ -18,3 +18,6 @@ declare function __stub_set_clock(seconds: number): number;
 
 /** A new stub handle of the type `kind`, with the next handle id. */
 declare function __stub_new_handle(kind: string): handle;
+
+/** The frame stub's "not found" frame, whose handle id is 0. */
+declare function __stub_frame_not_found(): framehandle;

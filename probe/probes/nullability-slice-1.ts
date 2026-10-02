@@ -40,20 +40,13 @@ function noAction(): void {
 }
 
 /**
- * A case of this Slice, and whether the case runner puts every line on
- * disk right before its call, its PENDING line included: set on the first
- * (b) case, which puts the (a) group on disk, and on each risky (b) case.
- */
-type SliceCase = Case & { readonly checkpoint?: true };
-
-/**
  * The cases, in the order they run, with the Fixtures they use, built
  * before any case runs: the (a) cases, live arguments, odd but well-typed
  * ones included; then the (b) cases, stale handles, from least to most
  * risky, a dead unit (still in the game) first, the destroyed boolexprs and
  * frame last.
  */
-function sliceCases(): readonly SliceCase[] {
+function sliceCases(): readonly Case[] {
   const footman = liveUnit();
   const neutral = neutralPassiveUnit();
   const child = childFrame();
@@ -304,8 +297,12 @@ function sliceCases(): readonly SliceCase[] {
   ];
 }
 
-// The skip list (#336) starts empty.
+/**
+ * The cases not to call, each as `<native> <case>`: a case that crashed the
+ * game in an earlier run, named by the pending step `probe:read` printed.
+ */
+const SKIP: readonly string[] = [];
 
 export function run(p: ProbeContext): void {
-  runCases(p, sliceCases());
+  runCases(p, sliceCases(), { skip: SKIP });
 }

@@ -103,16 +103,20 @@ step name=before
 
 ## The Nullability sweep
 
-The [Nullability sweep](../CONTEXT.md) measures the `returns.nullable` of the handle-returning Natives in Slices, each a Probe named `nullability-slice-<n>` (#327). A Slice's Probe lists its cases, one direct call of one Native each, and hands them to the case runner, `probes/nullability/case-runner.ts`, which every Slice shares. For each case, in order, the case runner adds `PENDING label=<native> <case>`, calls the Native under `pcall` and records what it returned:
+The [Nullability sweep](../CONTEXT.md) measures the `returns.nullable` of the handle-returning Natives in Slices, each a Probe named `nullability-slice-<n>` (#327). A Slice's Probe lists its cases, one direct call of one Native each, and hands them to the case runner, `probes/nullability/case-runner.ts`, which every Slice shares, with its `skip` list: `runCases(p, CASES, { skip: SKIP })`. The case runner first records the whole case list, one `CASE` record per case, so the report knows the cases a crash left unrun. Then, for each case in order, it adds `PENDING label=<native> <case>`, puts every line on disk when the case sets `checkpoint: true`, calls the Native under `pcall` and records what it returned:
 
 ```text
+<seq> CASE case=<label> group=a|b native=<native>
 <seq> CALL case=<label> group=a|b native=<native> outcome=handle id=<GetHandleId> type=<tostring>
 <seq> CALL case=<label> group=a|b native=<native> outcome=nil
+<seq> CALL case=<label> group=a|b native=<native> outcome=odd type=<tostring>
+<seq> CALL case=<label> group=a|b message=<error> native=<native> outcome=error
+<seq> SKIP case=<label> group=a|b native=<native> reason=crashed
 ```
 
-Group `a` is a case of live arguments, `b` one of a stale handle. An error the call raises fails the Probe run for now.
+Group `a` is a case of live arguments, `b` one of a stale handle. `odd` is a handle whose `GetHandleId` is 0, or a value that is neither `nil` nor a userdata; `error` is a call that raised. A case's checkpoint comes after its `PENDING` line, so a crash in the call leaves that line last on disk: a Slice sets `checkpoint: true` on its first `b` case and on each risky one, never calling `p.checkpoint()` between cases itself. After a crash, add the pending step `probe:read` names, `<native> <case>`, to the Probe's `skip` list and run it again: the case is not called, and its `SKIP` line keeps the crash in the result. A skip entry that names no case fails the run.
 
-`pnpm probe:nullability-report <probe>` reads the Probe's last run through the reader of `probe:read`, and refuses one that is not `finished`. Each Native, in the order the Probe first called it, gets a verdict from its cases: `nullable (proved)` when a case returned `nil`, `non-null (evidence)` when every case returned a handle. The verdict is compared with the `returns.nullable` of the Native's Overlay entry, read as JSON from `packages/reforged-types/overlay/`: `mismatch` when the Overlay says `false` and the verdict is `nullable (proved)`, `consistent` otherwise; a Native with no entry fails the command. The command writes the Slice's section of `docs/research/nullability-sweep.md`, headed by the Probe, the Patch of the Typings' manifest, the date and the runId, with one table per Native and a proposed `notes` text below it, and replaces only that section when it runs again.
+`pnpm probe:nullability-report <probe>` reads the Probe's last run through the reader of `probe:read`. It reports a `finished` run, and an `incomplete` or `crashed` one, whose last `PENDING` case without a `CALL` is `crashed` and whose cases after it are `not run`. It refuses, on one line, a `running` run (close the game first), a `failed` one (with its `ERROR` message) and a `not-started` one (with the stale runId of the Result file, when there is one). Each Native, in the order of the case list, gets a verdict from its cases, the first of these that holds: `nullable (proved)` when a case returned `nil`; `unsafe` when a case crashed, was skipped or raised an error; `review` when a case was `odd` or not run; `non-null (evidence)` when every case returned a handle. The verdict is compared with the `returns.nullable` of the Native's Overlay entry, read as JSON from `packages/reforged-types/overlay/`: `mismatch` when the Overlay says `false` and the verdict is `nullable (proved)`, `consistent` otherwise; a Native with no entry fails the command. The command writes the Slice's section of `docs/research/nullability-sweep.md`, headed by the Probe, the Patch of the Typings' manifest, the date and the runId, with one table per Native and a proposed `notes` text below it, or only "review" for `unsafe` and `review`, and replaces only that section when it runs again.
 
 ## Layout
 
