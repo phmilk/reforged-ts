@@ -148,6 +148,35 @@ describe("buildProbe", () => {
     expect(await readFile(result.bundleFile, "utf8")).toContain(`"given-run"`);
   });
 
+  it("bakes the Patch of the Typings' manifest into the bundle", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "probe-manifest-"));
+    const manifest = join(dir, "manifest.json");
+    await writeFile(manifest, JSON.stringify({ patch: "3.0.0.11111" }));
+    const result = buildProbe("hello", await tempFolders({ manifest }));
+
+    expect(result.patch).toBe("3.0.0.11111");
+    expect(await readFile(result.bundleFile, "utf8")).toContain(
+      `"3.0.0.11111"`,
+    );
+  });
+
+  it.each([
+    ["no patch", "{}"],
+    ["a patch that is no Build", JSON.stringify({ patch: 'a"b' })],
+  ])(
+    "refuses a manifest with %s, with a one-line author error, before touching the output folder",
+    async (_, text) => {
+      const dir = await mkdtemp(join(tmpdir(), "probe-manifest-"));
+      const manifest = join(dir, "manifest.json");
+      await writeFile(manifest, text);
+      const folders = await tempFolders({ manifest });
+      expect(() => buildProbe("hello", folders)).toThrow(
+        new AuthorError(`${manifest} names no Patch, such as 3.0.0.24268.`),
+      );
+      await expect(readdir(folders.output)).rejects.toThrow();
+    },
+  );
+
   it.each([
     ["Hello"],
     ["hello_world"],

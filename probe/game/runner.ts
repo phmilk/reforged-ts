@@ -18,9 +18,11 @@ import type { FieldValue, ProbeContext } from "./probe";
 const runProbe: (p: ProbeContext) => void = run;
 
 // Replaced in the bundle by probe:build (src/build.ts, PLACEHOLDERS) with the
-// Probe's name and the build's runId. Each literal must appear here once.
+// Probe's name, the build's runId and the Patch of the Typings the Probe was
+// built against. Each literal must appear here once.
 const PROBE = "$PROBE_NAME$";
 const RUN_ID = "$PROBE_RUN_ID$";
+const PATCH = "$PROBE_PATCH$";
 
 /** The Result file, under CustomMapData. */
 const RESULT_FILE = `reforged-ts\\probes\\${PROBE}.txt`;
@@ -190,7 +192,7 @@ const p: ProbeContext = {
 };
 
 function start(): void {
-  addLine("BEGIN", { probe: PROBE, run: RUN_ID });
+  addLine("BEGIN", { patch: PATCH, probe: PROBE, run: RUN_ID });
   const [ok, message] = xpcall(() => {
     runProbe(p);
   }, errorMessage);

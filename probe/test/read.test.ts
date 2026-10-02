@@ -140,6 +140,13 @@ describe("probe:read", () => {
     ]);
   });
 
+  it("gives the Patch of the bridge fixture's BEGIN line, the one its build baked", async () => {
+    const { context, resultFile } = await setup();
+    await writeResult(resultFile, preloadFile(bridgeLines()));
+
+    expect(readProbeRun(BRIDGE_PROBE, context).patch).toBe("3.0.0.12345");
+  });
+
   it("joins a value of exactly 200 bytes once encoded from its continuation line", async () => {
     const { context, resultFile } = await setup();
     const value = `${"é".repeat(33)}ab`;

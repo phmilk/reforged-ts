@@ -9,7 +9,6 @@ import {
   NULLABILITY_REPORT,
   OVERLAY_FOLDER,
   PROBE_FOLDERS,
-  TYPINGS_MANIFEST,
 } from "../folders.js";
 import { systemMachine } from "../machine.js";
 import {
@@ -36,7 +35,6 @@ export function main(
     machine: systemMachine,
     stateFolder: PROBE_FOLDERS.state,
     overlayFolder: OVERLAY_FOLDER,
-    manifestFile: TYPINGS_MANIFEST,
     reportFile: NULLABILITY_REPORT,
     clock: () => new Date(),
   },

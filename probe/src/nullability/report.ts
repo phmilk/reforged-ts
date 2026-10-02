@@ -5,8 +5,9 @@
  * (probes/nullability/case-runner.ts, in the format of
  * probes/nullability/records.d.ts), compares it with the Native's
  * Overlay entry, read as JSON with no build of the Typings, and writes the
- * Slice's section of the sweep report. It reads the Overlay and the
- * Typings' manifest and writes the report file only: never the Overlay.
+ * Slice's section of the sweep report, under the Patch the run's `BEGIN`
+ * line names, the one its build compiled against. It reads the Overlay and
+ * writes the report file only: never the Overlay.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -44,8 +45,6 @@ import {
 export interface NullabilityReportContext extends ReadContext {
   /** The Overlay folder: `<source>/functions/<native>.json`. */
   overlayFolder: string;
-  /** The Typings' manifest, whose `patch` names the Build. */
-  manifestFile: string;
   /** The sweep report, created when it does not exist. */
   reportFile: string;
   /** Now: the report's date is its day, in UTC. */
@@ -75,7 +74,7 @@ export function writeNullabilityReport(
 ): NullabilityReport {
   const run = readProbeRun(probe, context);
   const runId = acceptedRunId(run);
-  const patch = readPatch(context.manifestFile);
+  const patch = builtPatch(run);
   const natives = [...casesByNative(run)].map(
     ([native, cases]): NativeSection => {
       const verdict = verdictOf(cases);
@@ -303,13 +302,18 @@ function unrecorded(
     : { outcome: "not run" };
 }
 
-/** The Build in the Typings' manifest, its `patch`. */
-function readPatch(manifestFile: string): string {
-  const { patch } = readJson(manifestFile) as { patch?: unknown };
-  if (typeof patch !== "string" || patch === "") {
-    throw new AuthorError(`${manifestFile} names no patch.`);
+/**
+ * The Patch the run's build compiled against, as its `BEGIN` line names
+ * it. A run whose `BEGIN` line names none, from a build older than the
+ * line's `patch`, is an AuthorError.
+ */
+function builtPatch(run: ProbeRun): string {
+  if (run.patch === undefined) {
+    throw new AuthorError(
+      `Probe ${run.probe}'s last run names no Patch in its BEGIN line: build it with \`pnpm probe:build ${run.probe}\` and run it again.`,
+    );
   }
-  return patch;
+  return run.patch;
 }
 
 /**

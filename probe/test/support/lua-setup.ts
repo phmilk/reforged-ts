@@ -1,7 +1,7 @@
 // The global setup of the probe vitest project: compiles the Lua tests
 // (../lua) with typescript-to-lua, builds the hello, failing, held,
 // failing-later and calibration Probes and the Probes of the Lua tests
-// (../lua/probes) with the bridge fixtures' runId, and puts their bundles
+// (../lua/probes) with the bridge fixtures' runId and Patch, and puts their bundles
 // and the fixtures' lines next to the tests as Lua modules: `<probe>_bundle`,
 // `bridge_fixture`
 // (hello's, the table `{ finished = {...}, checkpoint = {...} }`) and
@@ -19,6 +19,7 @@ import { buildProbe } from "../../src/build.js";
 import { AuthorError } from "../../src/errors.js";
 import { PROBE_FOLDERS } from "../../src/folders.js";
 import {
+  BRIDGE_MANIFEST,
   BRIDGE_PROBE,
   BRIDGE_RUN_ID,
   FAILING_PROBE,
@@ -75,6 +76,7 @@ function compile(): string {
       ...PROBE_FOLDERS,
       output: join(dir, "output"),
       state: dir,
+      manifest: BRIDGE_MANIFEST,
     };
     const probes = [
       ...BUNDLED_PROBES.map((probe) => [probe, folders] as const),

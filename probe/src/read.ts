@@ -61,6 +61,12 @@ export interface ProbeRun {
   expectedRunId: string;
   /** The runId of the Result file; undefined when there is no file. */
   runId?: string;
+  /**
+   * The Patch of the Typings the run's build compiled against, from its
+   * `BEGIN` line; undefined unless the run is the expected one, and for a
+   * run of a runner that did not write it.
+   */
+  patch?: string;
   /** The Probe's own records, in order; empty unless the run is the expected one. */
   records: readonly ResultLine[];
   /**
@@ -120,16 +126,17 @@ export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
   if (runId !== state.runId) {
     return { ...run, runId, state: "not-started", records: [] };
   }
+  const patch = field(begin, "patch");
+  const expected = { ...run, runId, ...(patch !== undefined && { patch }) };
   const lines = [begin, ...texts.slice(1).map(parseResultLine)];
   const records = lines.filter((line) => !RESERVED_KINDS.includes(line.kind));
   const last = lines.at(-1);
   if (last?.kind === "END" && field(last, "status") === "ok") {
-    return { ...run, runId, state: "finished", records };
+    return { ...expected, state: "finished", records };
   }
   if (last?.kind === "END" && field(last, "status") === "failed") {
     return {
-      ...run,
-      runId,
+      ...expected,
       state: "failed",
       records,
       error: errorOf(file, lines),
@@ -139,8 +146,7 @@ export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
     const pendingLine = lines.findLast((line) => line.kind === "PENDING");
     const pending = pendingLine && field(pendingLine, "label");
     return {
-      ...run,
-      runId,
+      ...expected,
       state: incompleteState(context.machine),
       records,
       ...(pending !== undefined && { pending }),

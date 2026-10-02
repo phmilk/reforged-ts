@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 import { format } from "prettier";
 import { describe, expect, it } from "vitest";
 import { main, type Context } from "../src/cli/nullability-report.js";
+import { TYPINGS_MANIFEST } from "../src/folders.js";
 import { systemMachine } from "../src/machine.js";
 import { writeNullabilityReport } from "../src/nullability/report.js";
 import { REPORT_HEADER } from "../src/nullability/section.js";
@@ -30,17 +31,18 @@ const OVERLAY_FOLDER = fileURLToPath(
   new URL("fixtures/nullability/overlay/", import.meta.url),
 );
 
-/** The fixture manifest, whose `patch` is 3.0.0.12345. */
-const MANIFEST_FILE = fileURLToPath(
-  new URL("fixtures/nullability/manifest.json", import.meta.url),
-);
+/**
+ * The Patch the Slice's build baked, in the Result files' `BEGIN` line: not
+ * the Typings' own.
+ */
+const PATCH = "3.0.0.12345";
 
 /** The clock's now: late on 2 October 2026, in UTC. */
 const NOW = new Date("2026-10-02T23:30:00Z");
 
 /** The lines of a Result file: `BEGIN`, then `records`, each numbered. */
 function numbered(records: readonly string[]): string[] {
-  return [`BEGIN probe=${PROBE} run=${RUN_ID}`, ...records].map(
+  return [`BEGIN patch=${PATCH} probe=${PROBE} run=${RUN_ID}`, ...records].map(
     (line, index) => `${String(index + 1)} ${line}`,
   );
 }
@@ -191,8 +193,8 @@ interface Setup {
 /**
  * A temporary Warcraft III user folder, named by WC3_USER_FOLDER on the real
  * machine, a state folder holding the Slice's build with `RUN_ID`, and a
- * report file not written yet, with the fixture Overlay and manifest and
- * the fixed clock.
+ * report file not written yet, with the fixture Overlay and the fixed
+ * clock.
  */
 async function setup(): Promise<Setup> {
   const dir = await mkdtemp(join(tmpdir(), "probe-nullability-"));
@@ -219,7 +221,6 @@ async function setup(): Promise<Setup> {
       },
       stateFolder,
       overlayFolder: OVERLAY_FOLDER,
-      manifestFile: MANIFEST_FILE,
       reportFile: join(dir, "docs", "nullability-sweep.md"),
       clock: () => NOW,
     },
@@ -441,15 +442,33 @@ describe("the nullability report", () => {
     ]);
   });
 
-  it("takes the Patch from the Typings' manifest and the date from the clock, in UTC", async () => {
+  it("takes the Patch from the run's BEGIN line, not from the Typings' manifest, and the date from the clock, in UTC", async () => {
     const { context, resultFile } = await setup();
     await writeResultFile(resultFile, FINISHED);
     const { slice } = writeNullabilityReport(PROBE, context);
+    const { patch } = JSON.parse(await readFile(TYPINGS_MANIFEST, "utf8")) as {
+      patch: string;
+    };
+    expect(patch).not.toBe(PATCH);
     expect([slice.patch, slice.date, slice.runId]).toEqual([
-      "3.0.0.12345",
+      PATCH,
       "2026-10-02",
       RUN_ID,
     ]);
+  });
+
+  it("refuses a run whose BEGIN line names no Patch", async () => {
+    const { context, resultFile } = await setup();
+    await writeResultFile(
+      resultFile,
+      FINISHED.map((line, index) =>
+        index === 0 ? `1 BEGIN probe=${PROBE} run=${RUN_ID}` : line,
+      ),
+    );
+    await expectRefusal(
+      context,
+      `Probe ${PROBE}'s last run names no Patch in its BEGIN line: build it with \`pnpm probe:build ${PROBE}\` and run it again.`,
+    );
   });
 
   it("writes Markdown that Prettier leaves as it is, labels and types holding Markdown's own characters included", async () => {

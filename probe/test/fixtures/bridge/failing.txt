@@ -1,4 +1,4 @@
-1 BEGIN probe=failing run=bridge
+1 BEGIN patch=3.0.0.12345 probe=failing run=bridge
 2 step name=before
 3 ERROR message=Error:%20The%20step%20%22after%22%20broke.
 4 END status=failed
