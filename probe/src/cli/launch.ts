@@ -46,7 +46,7 @@ export async function main(
         `Started ${launched.game.executable} on it.`,
         "",
         "Now:",
-        `1. Wait until the game shows "Probe ${probe} finished" (or "Probe ${probe} failed").`,
+        `1. Wait until the game shows "Probe ${probe} finished" (or "Probe ${probe} failed"), with the game's window in focus: game time, and the Probe's timers with it, stops while another window has it.`,
         "2. Close the game.",
         '3. Say "done", or "crashed" if the game crashed or froze before that message.',
         "",
