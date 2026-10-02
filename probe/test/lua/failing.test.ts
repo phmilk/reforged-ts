@@ -4,39 +4,19 @@
 // run in order.
 
 import { describe, expect, it } from "reforged-test/lua";
-
-declare function __stub_preload_file(filename: string): string[] | undefined;
-declare function __stub_fire_timer(whichTimer: timer): void;
-declare function __stub_args(name: string): (unknown[] & { n: number })[];
-declare function __stub_displayed(): { duration?: number; text: string }[];
-
-/**
- * The editor's entry point, which the runner wraps, Lua's `require`, which
- * loads the modules the global setup wrote next to this test, and the
- * `debug` library, which the game does not have.
- * @noSelf
- */
-interface Globals {
-  main?: () => void;
-  require: (module: string) => unknown;
-  debug: unknown;
-}
-
-const globals = _G as unknown as Globals;
+import { globals, loadBundle, startedTimer } from "./bundle";
 
 /** The Result file of the failing Probe, under CustomMapData. */
 const RESULT_FILE = "reforged-ts\\probes\\failing.txt";
 
 describe("the failing Probe's bundle", () => {
   it("catches the error run throws and writes the failing bridge fixture's lines when the timer fires, without the debug library, as in the game", () => {
-    globals.main = () => undefined;
-    globals.require("failing_bundle");
-    globals.main();
+    loadBundle("failing");
     // The Error's own __tostring reads `debug`, which the game lacks.
     const debugLibrary = globals.debug;
     globals.debug = undefined;
     try {
-      __stub_fire_timer(__stub_args("TimerStart")[0]?.[0] as timer);
+      __stub_fire_timer(startedTimer(0));
     } finally {
       globals.debug = debugLibrary;
     }

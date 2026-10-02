@@ -2,7 +2,7 @@
   // The runner's in-game module on the reforged-test harness: typescript-to-lua
   // compiles these tests to ../../.probe/lua-test, where the vitest global
   // setup (../support/lua-setup.ts) adds the bundles of the hello, failing,
-  // held and calibration Probes, built with the bridge fixtures' runId, and the
+  // held, failing-later and calibration Probes, built with the bridge fixtures' runId, and the
   // fixtures' lines as Lua modules. The
   // tests import the in-game module's encoding (../../game/encoding.ts), so
   // the root is the package folder. The default build mode copies the
@@ -32,6 +32,7 @@
       "failing_bundle",
       "failing_fixture",
       "held_bundle",
+      "failing-later_bundle",
       "calibration_bundle"
     ],
     "luaTarget": "5.3",

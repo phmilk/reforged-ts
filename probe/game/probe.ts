@@ -43,8 +43,9 @@ export interface ProbeContext {
    * Keeps the Probe run going after `run` returns: `END` then waits for
    * `finish()`, which a timer or an event the Probe set up calls once its
    * work is done. An error `run` throws still ends the run at once, as a
-   * failed one; an error thrown later, from a timer or an event, is not
-   * caught, and the run never ends.
+   * failed one, and so does one thrown from `after`'s callback; an error
+   * thrown from a timer or an event the Probe started itself is not caught,
+   * and the run never ends.
    */
   hold(): void;
 
@@ -55,4 +56,20 @@ export interface ProbeContext {
    * and `record`, `pending` and `checkpoint` raise an error.
    */
   finish(): void;
+
+  /**
+   * Calls `callback` once, `seconds` after now, from a timer of its own,
+   * under `xpcall`, as the runner calls `run`: an error it throws adds
+   * `ERROR message=<message>`, then `END status=failed`, and shows the
+   * failure, unless the run has ended, when only the screen shows it. It
+   * works after the end too, for a step that must come after `END`.
+   */
+  after(seconds: number, callback: () => void): void;
+
+  /**
+   * Shows `text` on screen for `seconds`, as the runner's own messages are:
+   * what the human must know or do during a step. It writes nothing to the
+   * Result file, and works after the end too.
+   */
+  show(text: string, seconds: number): void;
 }
