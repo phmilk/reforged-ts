@@ -19,6 +19,12 @@ const CASES: readonly Case[] = [
   },
 ];
 
+/**
+ * The cases not to call, each as `<native> <case>`: a case that crashed the
+ * game in an earlier run, named by the pending step `probe:read` printed.
+ */
+const SKIP: readonly string[] = [];
+
 export function run(p: ProbeContext): void {
-  runCases(p, CASES);
+  runCases(p, CASES, { skip: SKIP });
 }

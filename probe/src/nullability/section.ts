@@ -16,7 +16,7 @@ export interface NativeSection {
   /** The Overlay's `returns.nullable` for the Native. */
   overlayNullable: boolean;
   comparison: Comparison;
-  /** The proposed `notes` text. */
+  /** The proposed `notes` text, or "review" when there is none. */
   notes: string;
 }
 
@@ -54,6 +54,15 @@ const COLUMNS: readonly Column[] = [
   {
     header: "Type",
     cell: ({ type }) => (type === undefined ? "" : code(type)),
+  },
+  {
+    header: "Message",
+    // An error's message is the Native's own text, shown as it is in a
+    // code span; a crash's is the report's words.
+    cell: ({ outcome, message }) => {
+      if (message === undefined) return "";
+      return outcome === "error" ? code(message) : text(message);
+    },
   },
 ];
 
