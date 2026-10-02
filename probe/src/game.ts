@@ -31,6 +31,12 @@ export const OPTION_FLAGS: Readonly<Record<keyof GameOptions, string>> = {
 export const EXECUTABLE_ENV = "WC3_EXECUTABLE";
 
 /**
+ * The file name of the game's Windows executable: the image name its
+ * process runs under, which `probe:read` looks for in the process list.
+ */
+export const GAME_IMAGE_NAME = "Warcraft III.exe";
+
+/**
  * The default install locations of the game, looked at in order. NOT verified
  * against a real 3.0 install: they follow the Battle.net layout since 1.32
  * (`_retail_\x86_64` on Windows; on macOS the inner binary of the `.app`,
@@ -52,7 +58,7 @@ export function wellKnownExecutables(
         "Warcraft III",
         "_retail_",
         "x86_64",
-        "Warcraft III.exe",
+        GAME_IMAGE_NAME,
       ),
     );
   }

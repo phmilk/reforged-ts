@@ -1,7 +1,9 @@
-// The smallest Probe: two records, no Native. Its Result file is the bridge
-// fixture of the runner's tests (test/fixtures/bridge/hello.txt): a plain
-// record, then one whose values the writer percent-encodes and whose line it
-// splits into a continuation line.
+// The smallest Probe: two records, no Native, each after its PENDING line
+// and followed by a checkpoint. Its Result files are the bridge fixtures of
+// the runner's tests (test/fixtures/bridge/): hello.txt when it finishes,
+// hello-checkpoint.txt as its second checkpoint leaves it. A plain record,
+// then one whose values the writer percent-encodes and whose line it splits
+// into a continuation line.
 
 import type { ProbeContext } from "../game/probe";
 
@@ -18,9 +20,13 @@ function escapedAscii(): string {
 }
 
 export function run(p: ProbeContext): void {
+  p.pending("greet");
   p.record("greeting", { word: "hello", count: 1 });
+  p.checkpoint();
+  p.pending("encode");
   p.record("encoded", {
     ascii: escapedAscii(),
     utf8: "héllo, wörld: ✓ 日本語",
   });
+  p.checkpoint();
 }

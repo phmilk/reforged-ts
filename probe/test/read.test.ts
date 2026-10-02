@@ -3,7 +3,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { main, type Context } from "../src/cli/read.js";
-import { systemMachine } from "../src/machine.js";
+import {
+  listsImage,
+  systemMachine,
+  tasklistArgs,
+  type SpawnCommand,
+} from "../src/machine.js";
 import {
   decodeValue,
   field,
@@ -12,6 +17,7 @@ import {
   joinContinuationLines,
   parseResultLine,
   readProbeRun,
+  resultFile,
   unwrapPreloadFile,
 } from "../src/read.js";
 import { stateFile } from "../src/state.js";
@@ -22,6 +28,7 @@ import {
   bridgeLines,
   preloadFile,
 } from "./support/bridge.js";
+import { fakeMachine } from "./support/machine.js";
 
 /** The hello Probe's `ascii` value: every byte of ASCII the writer escapes. */
 const ESCAPED_ASCII = `${String.fromCharCode(
@@ -111,7 +118,7 @@ describe("probe:read", () => {
 
     expect(readProbeRun(BRIDGE_PROBE, context).records).toEqual([
       {
-        seq: 2,
+        seq: 3,
         kind: "greeting",
         fields: [
           ["count", "1"],
@@ -119,7 +126,7 @@ describe("probe:read", () => {
         ],
       },
       {
-        seq: 3,
+        seq: 5,
         kind: "encoded",
         fields: [
           ["ascii", ESCAPED_ASCII],
@@ -265,6 +272,227 @@ describe("probe:read", () => {
       stderr: "Usage: probe:read <probe>\n",
     });
   });
+});
+
+/** The state folder of the fake machines' builds. */
+const FAKE_STATE_FOLDER = join(tmpdir(), "probe-read-fake-state");
+
+/** The user folder WC3_USER_FOLDER names on each fake machine. */
+const FAKE_USER_FOLDERS = {
+  win32: "C:\\Users\\me\\Documents\\Warcraft III",
+  linux: "/home/me/Warcraft III",
+} as const;
+
+interface FakeRun {
+  context: Context;
+  /** The fake machine's files, by path: the state file and the Result file. */
+  files: Record<string, string>;
+  /** The image names the process list was asked about. */
+  processQueries: string[];
+  /** The programs the machine was asked to start. */
+  spawned: SpawnCommand[];
+}
+
+/**
+ * A fake machine of `platform`, whose process list holds `processes`,
+ * holding a build of the bridge Probe and the Result file `strings`, the
+ * bridge's checkpoint fixture by default, as the game writes them.
+ */
+function fakeRun(
+  platform: keyof typeof FAKE_USER_FOLDERS,
+  processes: readonly string[] = [],
+  strings: readonly string[] = bridgeLines("checkpoint"),
+): FakeRun {
+  const files: Record<string, string> = {};
+  const processQueries: string[] = [];
+  const spawned: SpawnCommand[] = [];
+  const machine = fakeMachine({
+    platform,
+    env: { [USER_FOLDER_VARIABLE]: FAKE_USER_FOLDERS[platform] },
+    files,
+    processes,
+    processQueries,
+    spawned,
+  });
+  files[stateFile(FAKE_STATE_FOLDER, BRIDGE_PROBE)] = JSON.stringify({
+    probe: BRIDGE_PROBE,
+    runId: BRIDGE_RUN_ID,
+  });
+  files[resultFile(machine, BRIDGE_PROBE)] = preloadFile(strings);
+  return {
+    context: { machine, stateFolder: FAKE_STATE_FOLDER },
+    files,
+    processQueries,
+    spawned,
+  };
+}
+
+/** The records of the bridge's checkpoint fixture, as probe:read prints them. */
+const CHECKPOINT_RECORDS = [
+  "greeting count=1 word=hello",
+  String.raw`encoded ascii="\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f \"%=\\\u007f" utf8="héllo, wörld: ✓ 日本語"`,
+];
+
+describe("probe:read of a Result file that ends with a checkpoint", () => {
+  it("gives incomplete off Windows, exit code 2, with the last PENDING label and the records, without looking for the game's process", () => {
+    const { context, processQueries } = fakeRun("linux", ["Warcraft III.exe"]);
+
+    expect(read([BRIDGE_PROBE], context)).toEqual({
+      code: 2,
+      stdout: [
+        "incomplete: Probe hello, run bridge, 2 records to its last checkpoint, pending step encode; the game's process is looked for on Windows only",
+        ...CHECKPOINT_RECORDS,
+        "",
+      ].join("\n"),
+      stderr: "",
+    });
+    expect(processQueries).toEqual([]);
+  });
+
+  it("decodes the bridge's checkpoint fixture back to the records and the last PENDING label", () => {
+    const { context } = fakeRun("linux");
+
+    const run = readProbeRun(BRIDGE_PROBE, context);
+    expect(run.state).toBe("incomplete");
+    expect(run.pending).toBe("encode");
+    expect(run.records.map((record) => [record.seq, record.kind])).toEqual([
+      [3, "greeting"],
+      [5, "encoded"],
+    ]);
+    expect(
+      field(run.records[1] ?? { seq: 0, kind: "", fields: [] }, "utf8"),
+    ).toBe(UTF8_TEXT);
+  });
+
+  it("gives running on Windows, exit code 2, while the process list holds Warcraft III.exe", () => {
+    const { context, processQueries } = fakeRun("win32", [
+      "explorer.exe",
+      "Warcraft III.exe",
+    ]);
+
+    expect(read([BRIDGE_PROBE], context)).toEqual({
+      code: 2,
+      stdout: [
+        "running: Probe hello, run bridge, 2 records to its last checkpoint, pending step encode; Warcraft III.exe is running",
+        ...CHECKPOINT_RECORDS,
+        "",
+      ].join("\n"),
+      stderr: "",
+    });
+    expect(processQueries).toEqual(["Warcraft III.exe"]);
+  });
+
+  it("gives crashed on Windows, exit code 2, when the process list lacks Warcraft III.exe", () => {
+    const { context } = fakeRun("win32", ["explorer.exe"]);
+
+    expect(read([BRIDGE_PROBE], context)).toEqual({
+      code: 2,
+      stdout: [
+        "crashed: Probe hello, run bridge, 2 records to its last checkpoint, pending step encode; Warcraft III.exe is not running",
+        ...CHECKPOINT_RECORDS,
+        "",
+      ].join("\n"),
+      stderr: "",
+    });
+  });
+
+  it("reports the last PENDING line, and says so when there is none", () => {
+    const withTwo = fakeRun(
+      "linux",
+      [],
+      [
+        "1 BEGIN probe=hello run=bridge",
+        "2 PENDING label=first%20step",
+        "3 PENDING label=second%20step",
+        "4 CHECKPOINT",
+      ],
+    );
+    const { code, stdout } = read([BRIDGE_PROBE], withTwo.context);
+    expect(code).toBe(2);
+    expect(stdout).toBe(
+      `incomplete: Probe hello, run bridge, 0 records to its last checkpoint, pending step "second step"; the game's process is looked for on Windows only\n`,
+    );
+
+    const withNone = fakeRun(
+      "win32",
+      [],
+      ["1 BEGIN probe=hello run=bridge", "2 note a=1", "3 CHECKPOINT"],
+    );
+    expect(read([BRIDGE_PROBE], withNone.context)).toEqual({
+      code: 2,
+      stdout:
+        "crashed: Probe hello, run bridge, 1 record to its last checkpoint, no pending step; Warcraft III.exe is not running\nnote a=1\n",
+      stderr: "",
+    });
+    expect(
+      readProbeRun(BRIDGE_PROBE, withNone.context).pending,
+    ).toBeUndefined();
+  });
+
+  it("gives not-started, not crashed, for the checkpoint of another run", () => {
+    const { context, processQueries } = fakeRun(
+      "win32",
+      [],
+      ["1 BEGIN probe=hello run=older-build", "2 CHECKPOINT"],
+    );
+
+    expect(read([BRIDGE_PROBE], context)).toEqual({
+      code: 3,
+      stdout:
+        "not-started: the Result file is from run older-build, not from this build's run bridge\n",
+      stderr: "",
+    });
+    expect(processQueries).toEqual([]);
+  });
+
+  it("writes, starts and stops nothing: it only reads the files and the process list", () => {
+    const { context, files, processQueries, spawned } = fakeRun("win32", [
+      "Warcraft III.exe",
+    ]);
+    const before = { ...files };
+
+    expect(read([BRIDGE_PROBE], context).code).toBe(2);
+    expect(files).toEqual(before);
+    expect(spawned).toEqual([]);
+    expect(processQueries).toEqual(["Warcraft III.exe"]);
+  });
+});
+
+describe("the process-list query", () => {
+  it("runs tasklist as a query of one image name, which stops no process", () => {
+    expect(tasklistArgs("Warcraft III.exe")).toEqual([
+      "/FI",
+      "IMAGENAME eq Warcraft III.exe",
+      "/FO",
+      "CSV",
+      "/NH",
+    ]);
+  });
+
+  it("finds the image in tasklist's CSV output, ignoring case, and not in its line for no match", () => {
+    const listed = '"Warcraft III.exe","4242","Console","1","1,234,567 K"\r\n';
+    expect(listsImage(listed, "Warcraft III.exe")).toBe(true);
+    expect(listsImage(listed.toUpperCase(), "Warcraft III.exe")).toBe(true);
+    expect(
+      listsImage(
+        "INFO: No tasks are running which match the specified criteria.\r\n",
+        "Warcraft III.exe",
+      ),
+    ).toBe(false);
+    expect(
+      listsImage(
+        '"Warcraft III.exe.bak","1","Console","1","1 K"\r\n',
+        "Warcraft III.exe",
+      ),
+    ).toBe(false);
+  });
+
+  it.runIf(process.platform === "win32")(
+    "reads the real process list on Windows",
+    () => {
+      expect(systemMachine.isRunning("no-such-probe-image.exe")).toBe(false);
+    },
+  );
 });
 
 describe("unwrapPreloadFile", () => {

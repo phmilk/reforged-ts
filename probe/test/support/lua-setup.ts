@@ -1,7 +1,8 @@
 // The global setup of the probe vitest project: compiles the Lua tests
 // (../lua) with typescript-to-lua, builds the hello Probe with the bridge
-// fixture's runId, and puts its bundle and the fixture's lines next to the
-// tests as the Lua modules `hello_bundle` and `bridge_fixture`. Before the
+// fixtures' runId, and puts its bundle and the fixtures' lines next to the
+// tests as the Lua modules `hello_bundle` and `bridge_fixture`, the table
+// `{ finished = {...}, checkpoint = {...} }`. Before the
 // first run and before every watch rerun; a failed compile or build fails
 // the run of ../lua.spec.ts with its message.
 
@@ -14,7 +15,12 @@ import type { TestProject } from "vitest/node";
 import { buildProbe } from "../../src/build.js";
 import { AuthorError } from "../../src/errors.js";
 import { PROBE_FOLDERS } from "../../src/folders.js";
-import { BRIDGE_PROBE, BRIDGE_RUN_ID, bridgeLines } from "./bridge.js";
+import {
+  BRIDGE_PROBE,
+  BRIDGE_RUN_ID,
+  bridgeLines,
+  type BridgeFixture,
+} from "./bridge.js";
 
 declare module "vitest" {
   export interface ProvidedContext {
@@ -53,11 +59,13 @@ function compile(): string {
   }
   copyFileSync(bundleFile, join(outDir, `${BRIDGE_PROBE}_bundle.lua`));
   // JSON strings of printable ASCII are Lua strings too.
+  const luaList = (fixture: BridgeFixture) =>
+    `{ ${bridgeLines(fixture)
+      .map((line) => JSON.stringify(line))
+      .join(", ")} }`;
   writeFileSync(
     join(outDir, "bridge_fixture.lua"),
-    `return { ${bridgeLines()
-      .map((line) => JSON.stringify(line))
-      .join(", ")} }\n`,
+    `return { finished = ${luaList("finished")}, checkpoint = ${luaList("checkpoint")} }\n`,
   );
   rmSync(dir, { recursive: true, force: true });
   return "";
