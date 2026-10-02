@@ -345,10 +345,7 @@ export class Trigger extends Handle<trigger> {
       this.handle,
       this.damageNesting(protect(this, "Trigger.addAction", actionFunc)),
     );
-    // The Typings type the result non-null; a failed add keeps nothing.
-    if ((action as triggeraction | undefined) !== undefined) {
-      append(this.record().actions, actionFunc, action);
-    }
+    append(this.record().actions, actionFunc, action);
     return this;
   }
 

@@ -97,6 +97,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
         "/**",
         " * @returns player",
         " * @async",
+        " * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.",
         " * @see {@link https://lep.duckdns.org/jassbot/doc/GetLocalPlayer}",
         " */",
         "declare function GetLocalPlayer(): player;",
