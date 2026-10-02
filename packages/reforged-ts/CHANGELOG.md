@@ -1,5 +1,13 @@
 # reforged-ts
 
+## 1.0.0-alpha.12
+
+### Major Changes
+
+- [#324](https://github.com/phmilk/reforged-ts/pull/324) [`7a64295`](https://github.com/phmilk/reforged-ts/commit/7a642954f76364491b8672238b067a09121184cd) Thanks [@wyller](https://github.com/wyller)! - `MapPlayer.getStartLocationPoint()` returns a `Point` ([#258](https://github.com/phmilk/reforged-ts/issues/258)).
+
+  **Breaking change** (detailed in `migration/behaviour-changes.md`): the `MapPlayer.startLocationPoint` accessor returned the raw `location` handle `GetStartLocationLoc` allocates on each read, or `undefined` when the game returned none. It becomes the method `getStartLocationPoint()`, like `Unit.getPoint()`, which returns a new `Point` wrapping that location and throws `reforged-ts: failed to create Point` when the game returns none. `RemoveLocation(player.startLocationPoint)` becomes `player.getStartLocationPoint().destroy()`.
+
 ## 1.0.0-alpha.11
 
 ### Major Changes
