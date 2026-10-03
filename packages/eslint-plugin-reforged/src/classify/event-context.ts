@@ -6,53 +6,85 @@
 // - module top level (the Lua root), as `top-level.ts` defines it;
 // - the body of a function literal passed directly as the callback of an
 //   Init stage (`Init.onGlobals`, `Init.onTriggers`, `Init.onInitTriggers`,
-//   `Init.onGameStart`): it runs from the map's init, in no event;
+//   `Init.onGameStart`), when that registration is itself at module top
+//   level: no stage has run yet, so the stage runs the callback later, from
+//   the map's initialization. A registration anywhere else may come after
+//   its stage ran, and the library then runs the callback at once, inside
+//   the caller and its context (`init/stages.ts`). `Init.onGameStart` runs
+//   its callbacks after `MarkGameStarted`, the callback of blizzard.j's
+//   `bj_gameStartedTimer`: a Timer's expiry holds there. The other three
+//   stages run from `main`, in no event;
 // - the body of a function literal passed directly as a timer's callback
 //   (`TimerStart`, `Timer.after`, `Timer.every`, `timer.start`): it runs
-//   later, in its own thread, after the handler that started the timer has
-//   returned. Only a Timer's expiry holds there.
+//   later, in its own thread, where only a Timer's expiry holds.
 // The innermost enclosing function literal decides; an immediately invoked
-// function is transparent.
+// function is transparent. A type assertion (`as`, `satisfies`, `!`) between
+// the literal and the call does not change where it is passed.
 import {
   AST_NODE_TYPES,
   type ParserServicesWithTypeInformation,
   type TSESTree,
 } from "@typescript-eslint/utils";
-import * as ts from "typescript";
 
+import { invokedName } from "./allowlist.js";
 import { type FunctionNode, isFunction } from "./function.js";
-import { memberName } from "./member.js";
-import { resolveNative } from "./native.js";
-import { isDeclaredIn } from "./package.js";
+import { propertyName } from "./member-access.js";
 import { isAtModuleTopLevel, isImmediatelyInvoked } from "./top-level.js";
-import { resolveWrapperMember } from "./wrapper-member.js";
 
-/** A place where no event context holds. */
+/** A place where no event context holds, but maybe a Timer's expiry. */
 export type ContextFreePlace =
-  | { readonly kind: "topLevel" }
+  | { readonly kind: "topLevel"; readonly timerExpiry: false }
   /** `callee`: the stage, `Init.onGameStart`. */
-  | { readonly kind: "initStage"; readonly callee: string }
+  | {
+      readonly kind: "initStage";
+      readonly callee: string;
+      readonly timerExpiry: boolean;
+    }
   /** `callee`: `TimerStart`, `Timer.after`, `Timer.every` or `Timer#start`. */
-  | { readonly kind: "timerCallback"; readonly callee: string };
+  | {
+      readonly kind: "timerCallback";
+      readonly callee: string;
+      readonly timerExpiry: true;
+    };
 
-/** The Init stages, by member name. */
-const initStages: ReadonlySet<string> = new Set([
-  "onGlobals",
-  "onTriggers",
-  "onInitTriggers",
-  "onGameStart",
+/** A function a callback is passed to, by the name `invokedName` resolves. */
+interface CallbackTaker {
+  /** The index of the callback among the arguments. */
+  readonly index: number;
+  /** The place the callback runs in. */
+  readonly place: Exclude<ContextFreePlace, { kind: "topLevel" }>;
+}
+
+function initStage(stage: string, timerExpiry: boolean): CallbackTaker {
+  return {
+    index: 0,
+    place: { kind: "initStage", callee: `Init.${stage}`, timerExpiry },
+  };
+}
+
+function timerCallback(callee: string, index: number): CallbackTaker {
+  return { index, place: { kind: "timerCallback", callee, timerExpiry: true } };
+}
+
+/** The callback takers, by resolved name. */
+const callbackTakers: ReadonlyMap<string, CallbackTaker> = new Map([
+  ["InitStages#onGlobals", initStage("onGlobals", false)],
+  ["InitStages#onTriggers", initStage("onTriggers", false)],
+  ["InitStages#onInitTriggers", initStage("onInitTriggers", false)],
+  ["InitStages#onGameStart", initStage("onGameStart", true)],
+  ["TimerStart", timerCallback("TimerStart", 3)],
+  ["Timer.after", timerCallback("Timer.after", 1)],
+  ["Timer.every", timerCallback("Timer.every", 1)],
+  ["Timer#start", timerCallback("Timer#start", 2)],
 ]);
 
-/** The timer members, by the name of the member, with the index of their callback. */
-const timerMembers: ReadonlyMap<string, { name: string; index: number }> =
-  new Map([
-    ["after", { name: "Timer.after", index: 1 }],
-    ["every", { name: "Timer.every", index: 1 }],
-    ["start", { name: "Timer#start", index: 2 }],
-  ]);
-
-/** The index of `TimerStart`'s callback. */
-const timerStartCallback = 3;
+/** The last segment of each taker's name, with its callback index, for the syntactic pre-match. */
+const takerIndexes: ReadonlyMap<string, number> = new Map(
+  [...callbackTakers].map(([name, taker]) => [
+    name.split(/[#.]/).pop() ?? name,
+    taker.index,
+  ]),
+);
 
 /** The innermost enclosing function that is not immediately invoked. */
 function innermostFunction(node: TSESTree.Node): FunctionNode | undefined {
@@ -66,9 +98,18 @@ function innermostFunction(node: TSESTree.Node): FunctionNode | undefined {
   return undefined;
 }
 
+/** The type assertions that leave a value as it is. */
+const transparentWrappers: ReadonlySet<string> = new Set([
+  AST_NODE_TYPES.TSAsExpression,
+  AST_NODE_TYPES.TSSatisfiesExpression,
+  AST_NODE_TYPES.TSNonNullExpression,
+  AST_NODE_TYPES.TSTypeAssertion,
+]);
+
 /**
- * The call a function literal is passed to directly, and its argument
- * index; undefined for a declaration, a method or any other position.
+ * The call a function literal is passed to directly (through type
+ * assertions; parentheses leave no node), and its argument index; undefined
+ * for a declaration, a method or any other position.
  */
 function passedTo(
   fn: FunctionNode,
@@ -76,42 +117,34 @@ function passedTo(
   if (fn.type === AST_NODE_TYPES.FunctionDeclaration) {
     return undefined;
   }
-  const { parent } = fn;
-  if (parent.type !== AST_NODE_TYPES.CallExpression) {
+  let argument: TSESTree.Node = fn;
+  let parent: TSESTree.Node | undefined = fn.parent;
+  while (parent !== undefined && transparentWrappers.has(parent.type)) {
+    argument = parent;
+    parent = parent.parent;
+  }
+  if (parent?.type !== AST_NODE_TYPES.CallExpression) {
     return undefined;
   }
-  const index = parent.arguments.indexOf(fn);
+  const index = parent.arguments.indexOf(argument as TSESTree.Expression);
   return index < 0 ? undefined : { call: parent, index };
 }
 
-function propertyName(member: TSESTree.MemberExpression): string | undefined {
-  return !member.computed && member.property.type === AST_NODE_TYPES.Identifier
-    ? member.property.name
+/** The name a callee names syntactically: `TimerStart`, or `after` for `Timer.after`. */
+function shortName(callee: TSESTree.Expression): string | undefined {
+  if (callee.type === AST_NODE_TYPES.Identifier) {
+    return callee.name;
+  }
+  return callee.type === AST_NODE_TYPES.MemberExpression
+    ? propertyName(callee)
     : undefined;
-}
-
-/** Whether an Init stage call resolves to the library's `InitStages`. */
-function isInitStage(
-  services: ParserServicesWithTypeInformation,
-  callee: TSESTree.MemberExpression,
-  stage: string,
-): boolean {
-  const checker = services.program.getTypeChecker();
-  const symbol = checker.getSymbolAtLocation(
-    services.esTreeNodeToTSNodeMap.get(callee.property),
-  );
-  return (symbol?.declarations ?? []).some(
-    (each) =>
-      (ts.isMethodSignature(each) || ts.isMethodDeclaration(each)) &&
-      isDeclaredIn(each, "reforged-ts") &&
-      memberName(each, stage) === `InitStages#${stage}`,
-  );
 }
 
 /**
  * The context-free place a function literal's body is, when the literal is
- * passed directly to an Init stage or as a timer's callback. Matches
- * syntactically, then asks the checker for the call it is passed to.
+ * passed directly to an Init stage registered at module top level, or as a
+ * timer's callback. Matches syntactically, then asks the checker for the
+ * call it is passed to.
  */
 function placeOfCallback(
   services: ParserServicesWithTypeInformation,
@@ -122,33 +155,18 @@ function placeOfCallback(
     return undefined;
   }
   const { call, index } = passed;
-  const { callee } = call;
-  if (callee.type === AST_NODE_TYPES.Identifier) {
-    return callee.name === "TimerStart" &&
-      index === timerStartCallback &&
-      resolveNative(services, call)?.name === "TimerStart"
-      ? { kind: "timerCallback", callee: "TimerStart" }
-      : undefined;
-  }
-  if (callee.type !== AST_NODE_TYPES.MemberExpression) {
+  const short = shortName(call.callee);
+  if (short === undefined || takerIndexes.get(short) !== index) {
     return undefined;
   }
-  const property = propertyName(callee);
-  if (property === undefined) {
+  const name = invokedName(services, call);
+  const taker = name === undefined ? undefined : callbackTakers.get(name);
+  if (taker?.index !== index) {
     return undefined;
   }
-  if (initStages.has(property)) {
-    return index === 0 && isInitStage(services, callee, property)
-      ? { kind: "initStage", callee: `Init.${property}` }
-      : undefined;
-  }
-  const timer = timerMembers.get(property);
-  if (timer?.index !== index) {
-    return undefined;
-  }
-  return resolveWrapperMember(services, call)?.name === timer.name
-    ? { kind: "timerCallback", callee: timer.name }
-    : undefined;
+  return taker.place.kind === "initStage" && !isAtModuleTopLevel(call)
+    ? undefined
+    : taker.place;
 }
 
 /**
@@ -164,7 +182,9 @@ export function contextFreePlaceOf(
 ): ContextFreePlace | undefined {
   const fn = innermostFunction(node);
   if (fn === undefined) {
-    return isAtModuleTopLevel(node) ? { kind: "topLevel" } : undefined;
+    return isAtModuleTopLevel(node)
+      ? { kind: "topLevel", timerExpiry: false }
+      : undefined;
   }
   if (!cache.has(fn)) {
     cache.set(fn, placeOfCallback(services, fn));

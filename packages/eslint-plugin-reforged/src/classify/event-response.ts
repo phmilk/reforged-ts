@@ -10,18 +10,22 @@
 import {
   AST_NODE_TYPES,
   type ParserServicesWithTypeInformation,
-  type TSESTree,
 } from "@typescript-eslint/utils";
 import * as ts from "typescript";
 
 import type { EventResponse } from "../data/index.js";
 import { memberName } from "./member.js";
-import { calleeName, resolveNative } from "./native.js";
-import { isDeclaredIn } from "./package.js";
+import {
+  type InvocationCandidate,
+  mayInvokeListed,
+  propertyName,
+  resolvedDeclarations,
+} from "./member-access.js";
+import { resolveNative } from "./native.js";
+import { isDeclaredIn, packageNameOf } from "./package.js";
 
 /** A node that can read an event response: a call, or a member read (a getter). */
-export type EventResponseCandidate =
-  TSESTree.CallExpression | TSESTree.MemberExpression;
+export type EventResponseCandidate = InvocationCandidate;
 
 /** A classified event response read. */
 export interface EventResponseRead {
@@ -31,40 +35,57 @@ export interface EventResponseRead {
   readonly response: EventResponse;
 }
 
-function propertyName(member: TSESTree.MemberExpression): string | undefined {
-  return !member.computed && member.property.type === AST_NODE_TYPES.Identifier
-    ? member.property.name
-    : undefined;
+/**
+ * The names of the library members that may read an event response: every
+ * method or getter declared in reforged-ts whose `@native` tags all name
+ * listed event responses. Read from the program's reforged-ts declarations,
+ * for the syntactic pre-match only (`classifyEventResponse` decides).
+ */
+export function eventResponseMemberNames(
+  program: ts.Program,
+  responses: ReadonlyMap<string, EventResponse>,
+): ReadonlySet<string> {
+  const names = new Set<string>();
+  const visit = (node: ts.Node): void => {
+    if (ts.isClassDeclaration(node) || ts.isInterfaceDeclaration(node)) {
+      for (const member of node.members) {
+        if (
+          (ts.isMethodDeclaration(member) ||
+            ts.isMethodSignature(member) ||
+            ts.isGetAccessorDeclaration(member)) &&
+          ts.isIdentifier(member.name) &&
+          responseOfTags(member, responses) !== undefined
+        ) {
+          names.add(member.name.text);
+        }
+      }
+    } else if (ts.isModuleDeclaration(node) || ts.isModuleBlock(node)) {
+      ts.forEachChild(node, visit);
+    }
+  };
+  for (const file of program.getSourceFiles()) {
+    if (packageNameOf(file.fileName) === "reforged-ts") {
+      file.statements.forEach(visit);
+    }
+  }
+  return names;
 }
 
 /**
  * Whether a node may read an event response, without the checker: a plain
- * call to a listed name, a call to a non-computed member, or a non-computed
- * member read that is not itself the callee of a call.
+ * call to a listed Native, or a call to (or a read of) a non-computed member
+ * named in `memberNames` (`eventResponseMemberNames`).
  */
 export function mayReadEventResponse(
   node: EventResponseCandidate,
   responses: ReadonlyMap<string, EventResponse>,
+  memberNames: ReadonlySet<string>,
 ): boolean {
-  if (node.type === AST_NODE_TYPES.MemberExpression) {
-    const { parent } = node;
-    return (
-      propertyName(node) !== undefined &&
-      !(parent.type === AST_NODE_TYPES.CallExpression && parent.callee === node)
-    );
-  }
-  const callee = calleeName(node);
-  if (callee !== undefined) {
-    return responses.has(callee);
-  }
-  return (
-    node.callee.type === AST_NODE_TYPES.MemberExpression &&
-    propertyName(node.callee) !== undefined
-  );
+  return mayInvokeListed(node, responses, memberNames);
 }
 
 /** The Natives a declaration's `@native` tags name, in order. */
-export function nativeTags(declaration: ts.Declaration): string[] {
+function nativeTags(declaration: ts.Declaration): string[] {
   return ts
     .getJSDocTags(declaration)
     .filter((tag) => tag.tagName.text === "native")
@@ -88,20 +109,6 @@ function responseOfTags(
   return responses.get(tags[0]);
 }
 
-function resolvedDeclarations(
-  services: ParserServicesWithTypeInformation,
-  node: TSESTree.Node,
-): readonly ts.Declaration[] {
-  const checker = services.program.getTypeChecker();
-  let symbol = checker.getSymbolAtLocation(
-    services.esTreeNodeToTSNodeMap.get(node),
-  );
-  if (symbol !== undefined && symbol.flags & ts.SymbolFlags.Alias) {
-    symbol = checker.getAliasedSymbol(symbol);
-  }
-  return symbol?.declarations ?? [];
-}
-
 /**
  * The event response a call or member read reads, or undefined. Asks the
  * checker: pre-match with `mayReadEventResponse`.
@@ -111,15 +118,15 @@ export function classifyEventResponse(
   node: EventResponseCandidate,
   responses: ReadonlyMap<string, EventResponse>,
 ): EventResponseRead | undefined {
-  const isRead = node.type === AST_NODE_TYPES.MemberExpression;
-  if (!isRead && node.callee.type === AST_NODE_TYPES.Identifier) {
+  const isGetter = node.type === AST_NODE_TYPES.MemberExpression;
+  if (!isGetter && node.callee.type === AST_NODE_TYPES.Identifier) {
     const native = resolveNative(services, node);
     const response = native && responses.get(native.name);
     return response === undefined
       ? undefined
       : { name: response.name, response };
   }
-  const target = isRead ? node : node.callee;
+  const target = isGetter ? node : node.callee;
   if (target.type !== AST_NODE_TYPES.MemberExpression) {
     return undefined;
   }
@@ -128,7 +135,7 @@ export function classifyEventResponse(
     return undefined;
   }
   for (const declaration of resolvedDeclarations(services, target.property)) {
-    const kindMatches = isRead
+    const kindMatches = isGetter
       ? ts.isGetAccessorDeclaration(declaration)
       : ts.isMethodDeclaration(declaration) ||
         ts.isMethodSignature(declaration);

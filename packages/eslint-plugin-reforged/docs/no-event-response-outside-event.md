@@ -1,6 +1,6 @@
 # no-event-response-outside-event
 
-Reports an event response (`GetTriggerUnit`, `GetEnumUnit`, `GetEventDamage`, `Unit.fromEvent()`, ...) called where its context certainly does not hold: at module top level, in an Init stage callback, or in a timer's callback. A warning in the recommended config; read the value in the handler and capture it, or take it from the `on()` payload.
+Reports an event response (`GetTriggerUnit`, `GetEnumUnit`, `GetEventDamage`, `Unit.fromEvent()`, ...) called where its context certainly does not hold: at module top level, in the callback of an Init stage registered at module top level, or in a timer's callback. A warning in the recommended config; read the value where its context holds: a trigger's response in the handler (captured, or from the `on()` payload), an enumeration's or a filter's in its callback, a timer's in the timer's callback.
 
 ## Why
 
@@ -9,10 +9,12 @@ Pitfall C1 of the catalogue (#15). An event response answers only inside the eve
 The context of an event holds through every synchronous call from its handler, so a helper function the handler calls reads it fine. The rule reports only the places where no context can hold:
 
 - module top level, as [`no-handles-at-module-top-level`](no-handles-at-module-top-level.md) defines it: no event runs while the module loads;
-- the body of a function literal passed directly to an Init stage (`Init.onGlobals`, `Init.onTriggers`, `Init.onInitTriggers`, `Init.onGameStart`): it runs from the map's init, in no event;
+- the body of a function literal passed directly to an Init stage (`Init.onGlobals`, `Init.onTriggers`, `Init.onInitTriggers`, `Init.onGameStart`) by a registration at module top level: no stage has run yet, so the callback runs later, from the map's initialization. `Init.onGameStart` runs it after `MarkGameStarted`, which blizzard.j calls from a timer, so `GetExpiredTimer` and `Timer.fromExpired()` answer there, and nothing else does. A registration inside a function may come after its stage ran, and the library then runs the callback at once, inside the caller's context: it is never reported;
 - the body of a function literal passed directly as a timer's callback (`TimerStart`, `Timer.after`, `Timer.every`, `timer.start`): it runs later, in its own thread, after the handler that started the timer has returned. Only `GetExpiredTimer` and `Timer.fromExpired()` answer there.
 
-The innermost enclosing function literal decides: `ForGroup(group, () => GetEnumUnit())` inside a timer's callback is fine. A call in a named function, a method, or a literal passed anywhere else is never reported.
+The innermost enclosing function literal decides: `ForGroup(group, () => GetEnumUnit())` inside a timer's callback is fine. A type assertion around the literal (`(() => ...) as () => void`) does not hide it. A call in a named function, a method, or a literal passed anywhere else is never reported.
+
+The message names the response, its context, and where to read it instead: a trigger's response in the handler, captured before a timer starts or taken from the `on()` payload; an enumeration's response inside the enumeration callback; a filter's inside the filter function; a timer's inside the timer's callback.
 
 An event response is a Native listed in the plugin's `data/event-responses.json`, every event response of `common.j` with its context: `trigger` (a trigger's event), `timer` (a Timer's expiry), `enum` (the callback of `ForGroup`, `ForForce`, `EnumItemsInRect`, `EnumDestructablesInRect`) or `filter` (a filter function). A library member is one when the `@native` tags of its declaration all name listed Natives (`Unit.fromEvent()`, `Unit.fromFilter()`, `Trigger.eventId`); `group.getUnits()`, which opens its own `ForGroup`, is not.
 

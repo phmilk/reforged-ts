@@ -12,10 +12,25 @@ const imports =
 const unitEvent = "any unit event";
 const trigger = "the context of a trigger's event";
 
+/** The replacement each context kind advises, as the rule words it. */
+const advice = {
+  trigger:
+    "read it in the event's handler and capture the value (`const unit = Unit.fromEvent()` before the timer starts), or take it from the `on()` payload",
+  timer: "call it inside the timer's callback",
+  enum: "call it inside the enumeration callback (`ForGroup`, `ForForce`, `EnumItemsInRect`, `EnumDestructablesInRect`)",
+  filter: "call it inside the filter function",
+};
+
 function atTopLevel(name: string, line = 3) {
   return {
     messageId: "atTopLevel" as const,
-    data: { name, context: trigger, event: unitEvent, callee: "" },
+    data: {
+      name,
+      context: trigger,
+      event: unitEvent,
+      callee: "",
+      advice: advice.trigger,
+    },
     line,
   };
 }
@@ -57,6 +72,18 @@ ruleTester.run(
         name: "an Init callback that is not passed directly, and the timer callback's other arguments",
         code: `${imports}const onStart = () => GetTriggerUnit();\nInit.onGameStart(onStart);\ndeclare const t: timer;\nTimerStart(t, 1, false, onStart);`,
       },
+      {
+        name: "an Init stage registered inside a handler, which runs the callback at once once the stage ran",
+        code: `${imports}on(death, () => {\n  Init.onGameStart(() => print(GetTriggerUnit()));\n});\nexport function later(): void {\n  Init.onGlobals(() => print(Unit.fromEvent()));\n}`,
+      },
+      {
+        name: "a timer response inside Init.onGameStart, whose callback runs in the expiry of blizzard.j's game-started timer",
+        code: `${imports}Init.onGameStart(() => {\n  print(GetExpiredTimer());\n  print(Timer.fromExpired());\n});`,
+      },
+      {
+        name: "an event-response getter as an assignment target or the operand of ++ and --",
+        code: `${imports}declare const id: eventid;\nTrigger.eventId = id;\nTrigger.eventId++;\nTrigger.eventId--;`,
+      },
     ],
     invalid: [
       {
@@ -75,6 +102,7 @@ ruleTester.run(
               context: trigger,
               event: unitEvent,
               callee: "Init.onGameStart",
+              advice: advice.trigger,
             },
             line: 4,
           },
@@ -91,6 +119,7 @@ ruleTester.run(
               context: trigger,
               event: unitEvent,
               callee: "Timer.after",
+              advice: advice.trigger,
             },
             line: 5,
           },
@@ -107,6 +136,7 @@ ruleTester.run(
               context: "the context of an enumeration callback",
               event: "ForGroup",
               callee: "TimerStart",
+              advice: advice.enum,
             },
             line: 5,
           },
@@ -123,6 +153,7 @@ ruleTester.run(
               context: trigger,
               event: unitEvent,
               callee: "Timer.every",
+              advice: advice.trigger,
             },
             line: 4,
           },
@@ -144,6 +175,7 @@ ruleTester.run(
               context: trigger,
               event: "any run of a trigger",
               callee: "",
+              advice: advice.trigger,
             },
             line: 3,
           },
@@ -155,6 +187,7 @@ ruleTester.run(
               event:
                 "the filter of GroupEnumUnits* and of the unit event registrations",
               callee: "Timer#start",
+              advice: advice.filter,
             },
             line: 4,
           },
@@ -165,6 +198,7 @@ ruleTester.run(
               context: "the context of a Timer's expiry",
               event: "TimerStart",
               callee: "Init.onGlobals",
+              advice: advice.timer,
             },
             line: 5,
           },
@@ -181,10 +215,85 @@ ruleTester.run(
               context: trigger,
               event: "EVENT_PLAYER_UNIT_SPELL_*, EVENT_UNIT_SPELL_*",
               callee: "",
+              advice: advice.trigger,
             },
             line: 4,
           },
           atTopLevel("GetTriggerUnit", 7),
+        ],
+      },
+      {
+        name: "a timer callback wrapped in as, satisfies and a non-null assertion",
+        code: `${imports}Timer.after(1, (() => {\n  print(GetTriggerUnit());\n}) as () => void);\nTimer.every(1, (() => print(GetEnumUnit())) satisfies () => void);\ndeclare const t: timer;\nTimerStart(t, 1, false, (() => print(GetFilterUnit()))!);`,
+        errors: [
+          {
+            messageId: "inTimerCallback",
+            data: {
+              name: "GetTriggerUnit",
+              context: trigger,
+              event: unitEvent,
+              callee: "Timer.after",
+              advice: advice.trigger,
+            },
+            line: 4,
+          },
+          {
+            messageId: "inTimerCallback",
+            data: {
+              name: "GetEnumUnit",
+              context: "the context of an enumeration callback",
+              event: "ForGroup",
+              callee: "Timer.every",
+              advice: advice.enum,
+            },
+            line: 6,
+          },
+          {
+            messageId: "inTimerCallback",
+            data: {
+              name: "GetFilterUnit",
+              context: "the context of a filter function",
+              event:
+                "the filter of GroupEnumUnits* and of the unit event registrations",
+              callee: "TimerStart",
+              advice: advice.filter,
+            },
+            line: 8,
+          },
+        ],
+      },
+      {
+        name: "an Init stage registered inside an immediately invoked function at top level",
+        code: `${imports}(() => {\n  Init.onTriggers(() => print(GetTriggerUnit()));\n})();`,
+        errors: [
+          {
+            messageId: "inInitStage",
+            data: {
+              name: "GetTriggerUnit",
+              context: trigger,
+              event: unitEvent,
+              callee: "Init.onTriggers",
+              advice: advice.trigger,
+            },
+            line: 4,
+          },
+        ],
+      },
+      {
+        name: "a trigger response inside Init.onGameStart, whose callback runs in a Timer's expiry",
+        code: `${imports}Init.onGameStart(() => print(Unit.fromEvent()));`,
+        errors: [
+          {
+            messageId: "inInitStage",
+            data: {
+              name: "Unit.fromEvent (GetTriggerUnit)",
+              context: trigger,
+              event: unitEvent,
+              callee: "Init.onGameStart",
+              advice: advice.trigger,
+            },
+            line: 3,
+          },
         ],
       },
     ],

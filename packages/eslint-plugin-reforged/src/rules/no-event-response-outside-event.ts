@@ -1,12 +1,16 @@
 // Asked for by #367 (pitfall C1): an event response called where its context
 // certainly does not hold. An event response (`GetTriggerUnit`,
 // `GetEnumUnit`, `GetExpiredTimer`, `Unit.fromEvent()`) answers only inside
-// the event or callback it belongs to; at module top level, in an Init stage
-// callback or in a timer's callback opened from a handler it returns nothing,
-// and the code goes on with a nil Handle. The rule reports only those places:
+// the event or callback it belongs to; at module top level, in the callback
+// of an Init stage registered at module top level or in a timer's callback
+// opened from a handler it returns nothing, and the code goes on with a nil
+// Handle. Only a Timer's expiry holds in a timer's callback and in the
+// callback of `Init.onGameStart` (blizzard.j runs `MarkGameStarted` from a
+// timer), so `GetExpiredTimer` answers there. The rule reports only those places:
 // the context of an event holds through every synchronous call from its
 // handler, so a helper, a method or any other callback is never reported.
 import { ESLintUtils } from "@typescript-eslint/utils";
+import type * as ts from "typescript";
 
 import {
   type ContextFreePlace,
@@ -15,6 +19,7 @@ import {
 import {
   type EventResponseCandidate,
   classifyEventResponse,
+  eventResponseMemberNames,
   mayReadEventResponse,
 } from "../classify/event-response.js";
 import type { FunctionNode } from "../classify/function.js";
@@ -41,24 +46,45 @@ const messageIds: Readonly<Record<ContextFreePlace["kind"], MessageIds>> = {
   timerCallback: "inTimerCallback",
 };
 
-const replacement =
-  "read it in the handler and capture the value (`const unit = payload.unit`, or `Unit.fromEvent()` before the timer starts), or take it from the `on()` payload";
+/** The replacement each context kind advises. */
+const advice: Readonly<Record<EventContextKind, string>> = {
+  trigger:
+    "read it in the event's handler and capture the value (`const unit = Unit.fromEvent()` before the timer starts), or take it from the `on()` payload",
+  timer: "call it inside the timer's callback",
+  enum: "call it inside the enumeration callback (`ForGroup`, `ForForce`, `EnumItemsInRect`, `EnumDestructablesInRect`)",
+  filter: "call it inside the filter function",
+};
 
 export function createNoEventResponseOutsideEvent(
   eventResponses: readonly EventResponse[],
 ) {
+  const responses = new Map(eventResponses.map((entry) => [entry.name, entry]));
+  // The member names of the pre-match, built on the first file of each
+  // program.
+  const memberNamesByProgram = new WeakMap<ts.Program, ReadonlySet<string>>();
+  const memberNamesOf = (program: ts.Program): ReadonlySet<string> => {
+    let names = memberNamesByProgram.get(program);
+    if (names === undefined) {
+      names = eventResponseMemberNames(program, responses);
+      memberNamesByProgram.set(program, names);
+    }
+    return names;
+  };
   return createRule<Options, MessageIds>({
     name,
     meta: {
       type: "problem",
       docs: {
         description:
-          "Disallow an event response where its context certainly does not hold: module top level, an Init stage callback, a timer's callback",
+          "Disallow an event response where its context certainly does not hold: module top level, a top-level Init stage callback, a timer's callback",
       },
       messages: {
-        atTopLevel: `{{name}} reads {{context}} ({{event}}), and no event runs at module top level: it returns nothing there. To use it, ${replacement}.`,
-        inInitStage: `{{name}} reads {{context}} ({{event}}), and no event runs in the callback of {{callee}}: it returns nothing there. To use it, ${replacement}.`,
-        inTimerCallback: `{{name}} reads {{context}} ({{event}}), and the callback of {{callee}} runs later, in its own thread, after that context has ended: it returns nothing there. Instead, ${replacement}.`,
+        atTopLevel:
+          "{{name}} reads {{context}} ({{event}}), and no event or callback runs at module top level: it returns nothing there. Instead, {{advice}}.",
+        inInitStage:
+          "{{name}} reads {{context}} ({{event}}), and {{callee}}, registered at module top level, runs its callback from the map's initialization, where that context does not hold: it returns nothing there. Instead, {{advice}}.",
+        inTimerCallback:
+          "{{name}} reads {{context}} ({{event}}), and the callback of {{callee}} runs later, in its own thread, where only a Timer's expiry holds: it returns nothing there. Instead, {{advice}}.",
       },
       schema: [],
       defaultOptions: [],
@@ -67,13 +93,11 @@ export function createNoEventResponseOutsideEvent(
       // Asked first, so a configuration without type information fails at
       // the first file with typescript-eslint's own error.
       const services = ESLintUtils.getParserServices(context);
-      const responses = new Map(
-        eventResponses.map((entry) => [entry.name, entry]),
-      );
+      const memberNames = memberNamesOf(services.program);
       const places = new Map<FunctionNode, ContextFreePlace | undefined>();
 
       function check(node: EventResponseCandidate): void {
-        if (!mayReadEventResponse(node, responses)) {
+        if (!mayReadEventResponse(node, responses, memberNames)) {
           return;
         }
         const place = contextFreePlaceOf(services, node, places);
@@ -85,7 +109,7 @@ export function createNoEventResponseOutsideEvent(
           return;
         }
         const { response } = read;
-        if (place.kind === "timerCallback" && response.context === "timer") {
+        if (place.timerExpiry && response.context === "timer") {
           return;
         }
         context.report({
@@ -99,6 +123,7 @@ export function createNoEventResponseOutsideEvent(
             context: contextNames[response.context],
             event: response.event,
             callee: place.kind === "topLevel" ? "" : place.callee,
+            advice: advice[response.context],
           },
         });
       }
