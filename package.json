@@ -11,9 +11,9 @@
   "scripts": {
     "build": "pnpm --recursive build",
     "lint": "pnpm run lint:eslint && pnpm run lint:prettier",
-    "lint:eslint": "eslint --max-warnings 0 .",
+    "lint:eslint": "node scripts/eslint.mjs --max-warnings 0",
     "lint:prettier": "prettier --check \"**/*.{json,md,yaml,yml}\"",
-    "format": "eslint --fix . && prettier --write \"**/*.{json,md,yaml,yml}\"",
+    "format": "node scripts/eslint.mjs --fix && prettier --write \"**/*.{json,md,yaml,yml}\"",
     "typecheck": "pnpm --recursive typecheck && tsc -p test/tsconfig.json",
     "test": "vitest run",
     "typings:generate": "pnpm --filter reforged-types typings:generate",

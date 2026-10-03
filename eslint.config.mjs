@@ -148,6 +148,8 @@ export default defineConfig(
   eslint.configs.recommended,
   // Every TypeScript file belongs to one tsconfig; the project service finds
   // it (see tsconfig.json at the root for the ones not named tsconfig.json).
+  // It keeps every program it opens until the process exits: `pnpm lint`
+  // runs one process per group of packages (scripts/eslint.mjs, #377).
   {
     files: ["**/*.{ts,tsx,mts,cts}"],
     extends: [
