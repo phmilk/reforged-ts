@@ -14,7 +14,8 @@
     "probe:build": "tsc -p tsconfig.json && node build/cli/build.js",
     "probe:run": "tsc -p tsconfig.json && node build/cli/run.js",
     "probe:read": "tsc -p tsconfig.json && node build/cli/read.js",
-    "probe:nullability-report": "tsc -p tsconfig.json && node build/cli/nullability-report.js"
+    "probe:nullability-report": "tsc -p tsconfig.json && node build/cli/nullability-report.js",
+    "probe:nullability-converters": "tsc -p tsconfig.json && node build/cli/nullability-converters.js"
   },
   "dependencies": {
     "@typescript-to-lua/language-extensions": "catalog:",

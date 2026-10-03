@@ -17,6 +17,30 @@ function built<T>(value: T | undefined, fixture: string): T {
   return value;
 }
 
+// Players: a player is never stale.
+
+/** A player, a user slot: `Player(0)`, the slot the Probe run plays. */
+export function userSlotPlayer(): player {
+  return built(Player(0), "userSlotPlayer");
+}
+
+/**
+ * A player, an empty slot: the last slot, `Player(GetBJMaxPlayers() - 1)`,
+ * which the Probe's map leaves empty; the Fixture fails when it is not.
+ */
+export function emptySlotPlayer(): player {
+  const last = built(Player(GetBJMaxPlayers() - 1), "emptySlotPlayer");
+  if (GetPlayerSlotState(last) !== PLAYER_SLOT_STATE_EMPTY) {
+    error("Fixture emptySlotPlayer: the last slot is not empty", 0);
+  }
+  return last;
+}
+
+/** A player, neutral: Neutral Passive, `Player(PLAYER_NEUTRAL_PASSIVE)`. */
+export function neutralPassivePlayer(): player {
+  return built(Player(PLAYER_NEUTRAL_PASSIVE), "neutralPassivePlayer");
+}
+
 // Units
 
 /** A unit, live: a `'hfoo'` of `Player(0)` at the map's origin (`CreateUnit`). */

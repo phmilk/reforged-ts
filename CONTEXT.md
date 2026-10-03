@@ -125,7 +125,7 @@ The kind of handle-returning Native the curation rule types by: whether it may b
 _Avoid_: category, kind, group (a Slice's case group)
 
 **Slice**:
-One batch of the Nullability sweep: one Probe (`nullability-slice-1`), which calls its Natives in hand-listed cases, and one section of the sweep's report.
+One batch of the Nullability sweep: one Probe, named by what it holds, `nullability-<family>[-<part>]` (`nullability-converters-1`, `nullability-filters`), which declares its Natives of one Nullability family and runs the cases its family's case generator expands, and one section of the sweep's report. `nullability-slice-1`, the first, keeps its older name and its hand-listed cases until `nullability-constructors-game` retires it.
 _Avoid_: batch, phase, chunk
 
 **Fixture**:
