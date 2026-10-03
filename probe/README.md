@@ -1,16 +1,17 @@
 # The Probe runner
 
-A private workspace package, never published. A **Probe** is a TypeScript file that runs in the real game and records what only the game can tell. A fact to check in game is a Probe run by default: what stays for a human is [listed below](#what-stays-for-a-human). The runner builds a Probe into a map folder, starts the game on it, and reads back the **Result file** the Probe run writes in the game's `CustomMapData` folder. The terms are defined in [`CONTEXT.md`](../CONTEXT.md); why this package copies the Template's pipeline is [ADR 0010](../docs/adr/0010-probe-runner-copies-the-template-pipeline.md).
+A private workspace package, never published. A **Probe** is a TypeScript file that runs in the real game and records what only the game can tell. Who checks a fact in game: [What stays for a human](#what-stays-for-a-human). The runner builds a Probe into a map folder, starts the game on it, and reads back the **Result file** the Probe run writes in the game's `CustomMapData` folder. The terms are defined in [`CONTEXT.md`](../CONTEXT.md); why this package copies the Template's pipeline is [ADR 0010](../docs/adr/0010-probe-runner-copies-the-template-pipeline.md).
 
 ## What stays for a human
 
 A fact to check in game is a Probe run the agent writes and runs itself, by default. A human gets only:
 
 - **a check made by looking at the screen:** a visual result, a frame's layout, an effect, a sound;
-- **multiplayer:** two or more clients, such as host election (#131);
-- **the Battle.net login**, when a run's notification asks (step 3 of [Running a Probe run](#running-a-probe-run)).
+- **multiplayer:** two or more clients, such as host election (#131).
 
-Such a check is an issue labelled `ready-for-human`, naming which of these it is.
+Such a check is an issue labelled `ready-for-human`, naming which of these it is. During a run, a human also logs in to Battle.net when the run's notification asks (the step "No `BEGIN` after `--begin-timeout` seconds" of [Running a Probe run](#running-a-probe-run)).
+
+`probe:run` needs native Windows with the game installed. An agent without them stops at a `ready-for-agent` check in game: it reports the fact as unverified, says in the issue that the check needs a machine with the game, and leaves the label for an agent on one.
 
 ## Commands
 

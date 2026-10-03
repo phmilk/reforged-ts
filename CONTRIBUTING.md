@@ -63,13 +63,13 @@ Open an issue with one of the forms: **Bug report**, **Feature request** or **Ne
 
 Each form applies its kind label (`bug`, `enhancement` or `game-patch`) and `needs-triage`. The triage label then tells you where your issue stands:
 
-| Label             | What it means for you                                                                                       |
-| ----------------- | ----------------------------------------------------------------------------------------------------------- |
-| `needs-triage`    | New: the maintainer has not evaluated it yet.                                                               |
-| `needs-info`      | The maintainer is waiting for you. Answer the question in the comments and the issue goes back to triage.   |
-| `ready-for-agent` | Accepted and specified in full; an AI coding agent will implement it.                                       |
-| `ready-for-human` | Accepted, and it needs a person: a judgement call, or testing in the game. Comment before you start on one. |
-| `wontfix`         | It will not be done; the closing comment says why.                                                          |
+| Label             | What it means for you                                                                                                                                                         |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `needs-triage`    | New: the maintainer has not evaluated it yet.                                                                                                                                 |
+| `needs-info`      | The maintainer is waiting for you. Answer the question in the comments and the issue goes back to triage.                                                                     |
+| `ready-for-agent` | Accepted and specified in full; an AI coding agent will implement it.                                                                                                         |
+| `ready-for-human` | Accepted, and it needs a person: a judgement call, or a check in the game [a Probe run cannot make](probe/README.md#what-stays-for-a-human). Comment before you start on one. |
+| `wontfix`         | It will not be done; the closing comment says why.                                                                                                                            |
 
 The `spec` and `ticket` labels mark the maintainer's planning issues (a spec and the tickets it is split into). [`docs/agents/triage-labels.md`](docs/agents/triage-labels.md) is the reference.
 
