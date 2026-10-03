@@ -1063,6 +1063,37 @@ describe("the nullability report", () => {
       "Crashes the game for dead trigger (nullability sweep, 3.0.0.12345). May return nothing outside its event.",
     ]);
   });
+
+  it("names every crashed case of an unsafe Native in its crash sentence, a second crash included", async () => {
+    const { context, resultFile } = await setup();
+    await writeResultFile(
+      resultFile,
+      numbered([
+        "CASE case=one%20call group=a native=CreateTimer",
+        "CASE case=second%20call group=b native=CreateTimer",
+        "CASE case=third%20call group=b native=CreateTimer",
+        "PENDING label=CreateTimer%20one%20call",
+        "CALL case=one%20call group=a id=1048577 native=CreateTimer outcome=handle type=timer:%200000020C",
+        "SKIP case=second%20call group=b native=CreateTimer reason=crashed",
+        "PENDING label=CreateTimer%20third%20call",
+        "CHECKPOINT",
+      ]),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, context);
+    expect(
+      slice.natives.map(({ verdict, comparison, notes }) => [
+        verdict,
+        comparison,
+        notes,
+      ]),
+    ).toEqual([
+      [
+        "unsafe",
+        "mismatch",
+        "Crashes the game for second call, third call (nullability sweep, 3.0.0.12345). Returned a handle in every other case (one call).",
+      ],
+    ]);
+  });
 });
 
 describe("the nullability report's parameter section", () => {
@@ -1209,6 +1240,43 @@ describe("the nullability report's parameter section", () => {
     expect(slice.params[0]?.cases.map(({ outcome }) => outcome)).toEqual([
       "completed",
       "crashed",
+    ]);
+  });
+
+  it("reviews a filter whose live or always-true case was skipped, never non-null, even when its nil filter completed", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWithFilters(context, {
+      GroupEnumUnitsInRect: true,
+      ForceEnumPlayers: true,
+    });
+    await writeResultFile(
+      resultFile,
+      callRun([
+        callCase("GroupEnumUnitsInRect", "nil filter", "nil", "completed", 4),
+        callCase("GroupEnumUnitsInRect", "footmen only", "live", "skipped"),
+        callCase("ForceEnumPlayers", "nil filter", "nil", "completed", 2),
+        callCase(
+          "ForceEnumPlayers",
+          "always-true filter",
+          "always-true",
+          "skipped",
+        ),
+      ]),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    expect(
+      slice.params.map(({ native, verdict, comparison, notes }) => [
+        native,
+        verdict,
+        comparison,
+        notes,
+      ]),
+    ).toEqual([
+      ["GroupEnumUnitsInRect", "review", "consistent", "review"],
+      ["ForceEnumPlayers", "review", "consistent", "review"],
     ]);
   });
 

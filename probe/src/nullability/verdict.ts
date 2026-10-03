@@ -241,12 +241,13 @@ function crashSentence(cases: readonly CaseResult[], patch: string): string[] {
 
 /**
  * The `notes` of an `unsafe` Native, which the report proposes nullable
- * whatever its family: the crash, then the sentence its other cases give,
+ * whatever its family: the crash, naming every crashed case, then the
+ * sentence its other cases give,
  * `Returned a handle in every other case (<cases>).`, then
  * `For <cases>, a handle of id 0.` when one gave a handle of id 0; for a
  * Native of a nullable family, what it may have nothing for comes before
- * that sentence. "review" when another case gave anything but a handle, an
- * error, an odd value, a second crash or a case not run, which leaves no
+ * that sentence. "review" when a case that did not crash gave anything but
+ * a handle, an error, an odd value or a case not run, which leaves no
  * checked sentence to follow the crash.
  */
 function unsafeNotes(

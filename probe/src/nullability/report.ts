@@ -416,6 +416,7 @@ function sameCall(
   );
 }
 
+/** The refusal of a Native planned with both return cases and call cases. */
 function bothKinds(native: string): AuthorError {
   return new AuthorError(
     `${native} has both return cases and call cases: a Native that returns a value has return cases only, one that returns nothing call cases only.`,
