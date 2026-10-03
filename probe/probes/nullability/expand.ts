@@ -16,8 +16,8 @@ export const ONE_CALL_LABEL = "one call";
  * The cases of `native`, which `call` calls with one tuple of arguments:
  * with no parameter, one call (`one call`); else the typical arguments
  * (`typical arguments`), then, one parameter at a time, the others typical,
- * each value of `live` for that parameter (group a), then each value of
- * `stale` (group b), each labelled `<param>: <phrase>`. A value equal to
+ * each value of `live` for that parameter (group a), then each stale state
+ * it declares (group b), each labelled `<param>: <phrase>`. A value equal to
  * the parameter's typical one is not run again. Every (a) case comes
  * before any (b) case.
  */
@@ -26,7 +26,6 @@ export function expandCases<const P extends readonly Param<unknown>[]>(
   params: P,
   call: (args: ParamValues<P>) => unknown,
   live: (param: Param<unknown>) => readonly Variant<unknown>[],
-  stale: (param: Param<unknown>) => readonly Variant<unknown>[],
 ): Case[] {
   if (params.length === 0) {
     return [
@@ -44,7 +43,7 @@ export function expandCases<const P extends readonly Param<unknown>[]>(
   ];
   const groups = [
     ["a", live],
-    ["b", stale],
+    ["b", (param: Param<unknown>) => param.stale],
   ] as const;
   for (const [group, variants] of groups) {
     params.forEach((param, index) => {

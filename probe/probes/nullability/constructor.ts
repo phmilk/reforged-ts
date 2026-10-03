@@ -44,11 +44,6 @@ function oddValues(param: Param<unknown>): readonly Variant<unknown>[] {
   }
 }
 
-/** Each stale state a parameter declares, a destroyed trigger included. */
-function staleStates(param: Param<unknown>): readonly Variant<unknown>[] {
-  return param.stale;
-}
-
 /**
  * The cases of a constructor `native`, which `call` calls with one tuple of
  * arguments in the order of `params`: one call with typical arguments, or
@@ -64,7 +59,7 @@ export function constructorCases<const P extends readonly Param<unknown>[]>(
   params: P,
   call: (args: ParamValues<P>) => unknown,
 ): Case[] {
-  return expandCases(native, params, call, oddValues, staleStates);
+  return expandCases(native, params, call, oddValues);
 }
 
 /**
@@ -83,5 +78,5 @@ export function registrationCases<const P extends readonly Param<unknown>[]>(
   }
   const live = (param: Param<unknown>): readonly Variant<unknown>[] =>
     param.kind === "filter" ? [["nil", undefined]] : oddValues(param);
-  return expandCases(native, params, call, live, staleStates);
+  return expandCases(native, params, call, live);
 }

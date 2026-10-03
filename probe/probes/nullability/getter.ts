@@ -21,11 +21,6 @@ function liveValues(param: Param<unknown>): readonly Variant<unknown>[] {
   ];
 }
 
-/** Each stale state a parameter declares. */
-function staleStates(param: Param<unknown>): readonly Variant<unknown>[] {
-  return param.stale;
-}
-
 /**
  * The cases of a getter: one call with every parameter live, a player as
  * `Player(0)` (`typical arguments`), or `one call` with no parameter; per
@@ -38,7 +33,7 @@ function getterCases<const P extends readonly Param<unknown>[]>(
   params: P,
   call: (args: ParamValues<P>) => unknown,
 ): Case[] {
-  return expandCases(native, params, call, liveValues, staleStates);
+  return expandCases(native, params, call, liveValues);
 }
 
 /** The cases of an enum-getter `native`, by the getters' rule (`getterCases`). */
