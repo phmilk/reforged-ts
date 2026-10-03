@@ -1,0 +1,11 @@
+packages/reforged-test typecheck$ tsc -p tsconfig.json --noEmit && tsc -p runner/tsconfig.json --noEmit && tsc -p test/tsconfig.json
+packages/reforged-types typecheck$ tsc -p tsconfig.json --noEmit && pnpm run typings:typecheck && pnpm run scripts:typecheck
+packages/reforged-test typecheck: src/zz-broken.ts(1,101): error TS2322: Type 'string' is not assignable to type 'ATypeWhoseNameRunsWellPastTheEightyColumnsOfATerminal'.
+packages/reforged-test typecheck: Failed
+[ELIFECYCLE] Command failed with exit code 2.
+packages/reforged-types typecheck: $ tsc -p tsconfig.typings.json
+packages/reforged-types typecheck: $ tsc -p tsconfig.scripts.json
+packages/reforged-types typecheck: scripts/zz-broken.ts(1,101): error TS2322: Type 'string' is not assignable to type 'ATypeWhoseNameRunsWellPastTheEightyColumnsOfATerminal'.
+packages/reforged-types typecheck: [ELIFECYCLE] Command failed with exit code 2.
+packages/reforged-types typecheck: Failed
+[ELIFECYCLE] Command failed with exit code 2.
