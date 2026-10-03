@@ -422,4 +422,112 @@ describe(".vscode/tasks.json", () => {
       ).toEqual([]);
     });
   });
+
+  // pnpm's output as a task's terminal shows it (#357), recorded from real
+  // runs rather than run here: CI has no terminal to give pnpm, and on
+  // Windows no `script` to fake one. Each was recorded on Linux with pnpm
+  // 12.8.1 from the repository root, under `script -qec "<command>"
+  // /dev/null`, its escape sequences stripped with `sed
+  // 's/\x1b\[[0-9;?]*[a-zA-Z]//g'` and its carriage returns removed; the
+  // summary from `Error: ERR_PNPM_...` on is cut, and the repository root
+  // removed from the paths. A recursive run needs two packages that do not
+  // depend on each other for pnpm to print a prefix at all.
+  //
+  // The typecheck recordings ran
+  //   pnpm --recursive --no-bail --filter reforged-test --filter reforged-types typecheck
+  // with this line in packages/reforged-test/src/zz-broken.ts and
+  // packages/reforged-types/scripts/zz-broken.ts:
+  //   interface ATypeWhoseNameRunsWellPastTheEightyColumnsOfATerminal { readonly n: number } export const x: ATypeWhoseNameRunsWellPastTheEightyColumnsOfATerminal = "s";
+  // pnpm-tty-append-only-typecheck.txt with `pnpm_config_reporter=append-only`
+  // in the environment, as the tasks set it, pnpm-tty-default-typecheck.txt
+  // without it. pnpm-tty-append-only-build.txt is `pnpm build` with the
+  // variable and this line in packages/reforged-ts/src/zz-broken.ts:
+  //   export const zzBroken = /a regular expression whose diagnostic runs past eighty columns/;
+  describe("pnpm's output in a terminal", () => {
+    const typeError =
+      "Type 'string' is not assignable to type 'ATypeWhoseNameRunsWellPastTheEightyColumnsOfATerminal'.";
+
+    // The lines of a recording that carry a tsc or tstl diagnostic.
+    function errorLines(fixture: string): string[] {
+      return read(`test/conventions/fixtures/${fixture}`)
+        .split("\n")
+        .filter((line) => /\berror TS(?:\d+|TL)\b/.test(line));
+    }
+
+    function summary(problem: Problem | undefined) {
+      return problem && { matcher: problem.matcher, path: problem.path };
+    }
+
+    describe.each(["build", "check"])("the %s task", (label) => {
+      it("reports each type error of a recursive run with the append-only reporter at its file, in full", () => {
+        const lines = errorLines("pnpm-tty-append-only-typecheck.txt");
+        expect(
+          lines.map((line) => problemOf(label, line)),
+          "the problems of pnpm-tty-append-only-typecheck.txt",
+        ).toEqual([
+          {
+            matcher: "packages/reforged-test",
+            owner: tsc.owner,
+            path: "packages/reforged-test/src/zz-broken.ts",
+            fields: {
+              file: "src/zz-broken.ts",
+              line: "1",
+              column: "101",
+              severity: "error",
+              code: "2322",
+              message: typeError,
+            },
+          },
+          {
+            matcher: "packages/reforged-types",
+            owner: tsc.owner,
+            path: "packages/reforged-types/scripts/zz-broken.ts",
+            fields: {
+              file: "scripts/zz-broken.ts",
+              line: "1",
+              column: "101",
+              severity: "error",
+              code: "2322",
+              message: typeError,
+            },
+          },
+        ]);
+      });
+
+      it("reports a typescript-to-lua diagnostic of pnpm build with the append-only reporter at its file", () => {
+        const lines = errorLines("pnpm-tty-append-only-build.txt");
+        expect(
+          lines.map((line) => problemOf(label, line)),
+          "the problems of pnpm-tty-append-only-build.txt",
+        ).toEqual([
+          {
+            matcher: "packages/reforged-ts",
+            owner: tstl.owner,
+            path: "packages/reforged-ts/src/zz-broken.ts",
+            fields: {
+              file: "src/zz-broken.ts",
+              line: "1",
+              column: "25",
+              severity: "error",
+              code: "TSTL",
+              message: "Unsupported node kind RegularExpressionLiteral",
+            },
+          },
+        ]);
+      });
+
+      it("misreads the boxed lines of pnpm's default reporter, which the tasks avoid", () => {
+        // Without the variable: no prefix, so only `$tsc` matches, at a file
+        // that does not exist, and the message is cut at the terminal width.
+        const lines = errorLines("pnpm-tty-default-typecheck.txt");
+        expect(
+          lines.map((line) => summary(problemOf(label, line))),
+          "the problems of pnpm-tty-default-typecheck.txt",
+        ).toEqual([
+          { matcher: "$tsc", path: "│ src/zz-broken.ts" },
+          { matcher: "$tsc", path: "│ scripts/zz-broken.ts" },
+        ]);
+      });
+    });
+  });
 });

@@ -1,0 +1,17 @@
+$ pnpm --recursive build
+packages/reforged-test build$ tsc -p tsconfig.json && tstl -p runner/tsconfig.json
+packages/reforged-types build$ tsc -p tsconfig.json && pnpm run typings:typecheck && pnpm run scripts:typecheck
+release build$ tsc -p tsconfig.json
+wrapper-coverage build$ tsc -p tsconfig.json
+packages/reforged-types build: $ tsc -p tsconfig.typings.json
+wrapper-coverage build: Done
+packages/reforged-test build: Done
+release build: Done
+packages/reforged-types build: $ tsc -p tsconfig.scripts.json
+packages/reforged-types build: Done
+packages/reforged-ts build$ tstl -p tsconfig.json && node --experimental-strip-types scripts/include-code.mts dist src
+probe build$ tsc -p tsconfig.json
+probe build: Done
+packages/reforged-ts build: src/zz-broken.ts(1,25): error TSTL: Unsupported node kind RegularExpressionLiteral
+packages/reforged-ts build: Failed
+[ELIFECYCLE] Command failed with exit code 2.
