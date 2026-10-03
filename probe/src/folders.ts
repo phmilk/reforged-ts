@@ -61,6 +61,20 @@ export const RUNNER_MODULE = join(PACKAGE_FOLDER, "game", "runner.ts");
  */
 export const OVERLAY_FOLDER = join(TYPES_FOLDER, "overlay");
 
+/** The vendored Patch files of reforged-types: `<vendor>/<patch>/common.j`. */
+export const VENDOR_FOLDER = join(TYPES_FOLDER, "vendor");
+
+/**
+ * The converter table of the Nullability sweep, a module of the Probes that
+ * `probe:nullability-converters` writes (src/nullability/converters.ts).
+ */
+export const CONVERTER_CONSTANTS_MODULE = join(
+  PACKAGE_FOLDER,
+  "probes",
+  "nullability",
+  "converter-constants.ts",
+);
+
 /** The Nullability sweep's report, one section per Slice, in the research docs. */
 export const NULLABILITY_REPORT = join(
   WORKSPACE_FOLDER,
