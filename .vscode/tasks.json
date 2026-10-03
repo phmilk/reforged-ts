@@ -13,6 +13,12 @@
 // they come before `$tsc`, which reads the root's unprefixed `tsc` errors.
 // The `build` and `check` tasks hold the same list;
 // test/conventions/editor.test.ts checks both against pnpm-workspace.yaml.
+//
+// A task runs in a terminal, where pnpm's TTY reporter prints a nested
+// `pnpm --recursive` in a box: no prefix, each line behind `│ ` and cut to
+// the terminal width, so no package matcher matches (#357). The `build` and
+// `check` tasks set `pnpm_config_reporter` to `append-only`, which every
+// nested pnpm inherits: the lines keep their prefix and their full message.
 {
   "version": "2.0.0",
   "tasks": [
@@ -20,6 +26,7 @@
       "label": "build",
       "type": "shell",
       "command": "pnpm build",
+      "options": { "env": { "pnpm_config_reporter": "append-only" } },
       "group": { "kind": "build", "isDefault": true },
       "problemMatcher": [
         {
@@ -204,6 +211,7 @@
       "label": "check",
       "type": "shell",
       "command": "pnpm check",
+      "options": { "env": { "pnpm_config_reporter": "append-only" } },
       "problemMatcher": [
         {
           "owner": "typescript-to-lua",

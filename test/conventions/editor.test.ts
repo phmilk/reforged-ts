@@ -124,6 +124,7 @@ describe(".vscode/tasks.json", () => {
   }
   interface Task {
     label: string;
+    options?: { env?: Record<string, string> };
     problemMatcher?: string | (string | ProblemMatcher)[];
   }
 
@@ -276,6 +277,20 @@ describe(".vscode/tasks.json", () => {
     }
     return undefined;
   }
+
+  it.each(["build", "check"])(
+    "runs the %s task with pnpm's append-only reporter",
+    (label) => {
+      // A task runs in a terminal, where pnpm's TTY reporter prints a nested
+      // `pnpm --recursive` in a box: no prefix, lines cut to the terminal
+      // width (#357). Every nested pnpm reads the reporter from this
+      // variable, so the matchers read the prefixed lines.
+      expect(
+        task(label).options?.env?.pnpm_config_reporter,
+        `options.env.pnpm_config_reporter of the ${label} task`,
+      ).toBe("append-only");
+    },
+  );
 
   it.each(["build", "check"])(
     "gives the %s task one tstl matcher per workspace package whose build runs tstl",
