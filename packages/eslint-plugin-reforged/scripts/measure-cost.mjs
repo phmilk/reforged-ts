@@ -5,7 +5,7 @@
 // after it. Prints the median wall-clock times and the overhead.
 //
 // The corpus is every TypeScript block of the docs pages (the incorrect and
-// correct examples of the twelve rules), written as modules to a temporary
+// correct examples of every rule), written as modules to a temporary
 // folder of the fixture project and removed afterwards.
 //
 // Usage (builds first; 10 rounds by default, about a minute):

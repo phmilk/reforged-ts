@@ -3,6 +3,7 @@
 import type { RuleEntry } from "../rule-entry.js";
 import noAsyncValueAsState from "./no-async-value-as-state.js";
 import noDottedAssetPaths from "./no-dotted-asset-paths.js";
+import noEventResponseOutsideEvent from "./no-event-response-outside-event.js";
 import noGameStateInLocalBranch from "./no-game-state-in-local-branch.js";
 import noHandleIdAsData from "./no-handle-id-as-data.js";
 import noHandlesAtModuleTopLevel from "./no-handles-at-module-top-level.js";
@@ -17,6 +18,7 @@ import preferHandleMap from "./prefer-handle-map.js";
 export const ruleEntries: readonly RuleEntry[] = [
   noAsyncValueAsState,
   noDottedAssetPaths,
+  noEventResponseOutsideEvent,
   noGameStateInLocalBranch,
   noHandleIdAsData,
   noHandlesAtModuleTopLevel,
