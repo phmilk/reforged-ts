@@ -18,20 +18,26 @@ export const UNKNOWN_RAWCODE = 0x7a7a7a7a;
 export const UNKNOWN_NAME = "ReforgedTsUnknownName";
 
 /**
+ * The odd values of a numeric parameter, an integer or a real: `0`, a
+ * negative (`-1`), a coordinate outside the world and `2147483647`. The
+ * constructor's rule runs them, and the getters' rule too (./getter.ts).
+ */
+export const NUMERIC_ODD_VALUES: readonly Variant<number>[] = [
+  ["0", 0],
+  ["negative", -1],
+  ["outside the world", OUTSIDE_THE_WORLD],
+  ["2147483647", 2147483647],
+];
+
+/**
  * The odd values of a parameter by the constructor's rule: a numeric
- * parameter's `0`, a negative (`-1`), a coordinate outside the world and
- * `2147483647`; a rawcode's unknown rawcode; a string's `""` and an
- * unknown name. Any other kind has none.
+ * parameter's (`NUMERIC_ODD_VALUES`); a rawcode's unknown rawcode; a
+ * string's `""` and an unknown name. Any other kind has none.
  */
 function oddValues(param: Param<unknown>): readonly Variant<unknown>[] {
   switch (param.kind) {
     case "numeric":
-      return [
-        ["0", 0],
-        ["negative", -1],
-        ["outside the world", OUTSIDE_THE_WORLD],
-        ["2147483647", 2147483647],
-      ];
+      return NUMERIC_ODD_VALUES;
     case "rawcode":
       return [["unknown rawcode", UNKNOWN_RAWCODE]];
     case "string":

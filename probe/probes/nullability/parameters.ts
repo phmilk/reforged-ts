@@ -18,10 +18,12 @@ export type Variant<T> = readonly [label: string, value: T];
  * What a parameter is to the generators, which decides the values they
  * vary it through:
  * - `numeric`: an integer or a real, varied through `0`, a negative, a
- *   coordinate outside the world and `2147483647` by the constructor's rule;
+ *   coordinate outside the world and `2147483647` by the constructor's and
+ *   the getters' rules;
  * - `rawcode`: an integer naming an object type, varied through an unknown
- *   rawcode;
- * - `string`: varied through `""` and an unknown name;
+ *   rawcode by the constructor's rule;
+ * - `string`: varied through `""` and an unknown name by the constructor's
+ *   rule;
  * - `handle`: varied through each of its stale states;
  * - `trigger`: a registration's trigger, a handle varied through the
  *   trigger destroyed;

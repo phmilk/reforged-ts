@@ -354,7 +354,36 @@ describe("enumGetterCases and intrinsicPropertyCases", () => {
     expect(callsOf(cases)).toEqual(["0", "23", "15"]);
   });
 
-  it("run each handle parameter live and in every stale state, with no odd value", () => {
+  it("run each numeric parameter through the constructor's odd values, one at a time", () => {
+    const cases = enumGetterCases(
+      "GetStartLocPrio",
+      [numeric("whichStartLoc", 0), numeric("prioSlotIndex", 1)],
+      ([whichStartLoc, prioSlotIndex]) =>
+        `${tostring(whichStartLoc)} ${tostring(prioSlotIndex)}`,
+    );
+    expect(labels(cases)).toEqual([
+      "a typical arguments",
+      "a whichStartLoc: negative",
+      "a whichStartLoc: outside the world",
+      "a whichStartLoc: 2147483647",
+      "a prioSlotIndex: 0",
+      "a prioSlotIndex: negative",
+      "a prioSlotIndex: outside the world",
+      "a prioSlotIndex: 2147483647",
+    ]);
+    expect(callsOf(cases)).toEqual([
+      "0 1",
+      "-1 1",
+      `${tostring(OUTSIDE_THE_WORLD)} 1`,
+      "2147483647 1",
+      "0 0",
+      "0 -1",
+      `0 ${tostring(OUTSIDE_THE_WORLD)}`,
+      "0 2147483647",
+    ]);
+  });
+
+  it("run each handle parameter live and in every stale state, with no rawcode or string odd value", () => {
     const live = __stub_new_handle("unit");
     const dead = __stub_new_handle("unit");
     const removed = __stub_new_handle("unit");
@@ -365,7 +394,8 @@ describe("enumGetterCases and intrinsicPropertyCases", () => {
           ["dead unit", dead],
           ["removed unit", removed],
         ]),
-        numeric("unused", 3),
+        rawcode("unusedRawcode", FourCC("hfoo")),
+        text("unusedName", "footman"),
       ],
       ([whichUnit]) => whichUnit,
     );
