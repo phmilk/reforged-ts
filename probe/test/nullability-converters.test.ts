@@ -4,7 +4,7 @@
 // `probe:nullability-converters` renders from the Typings' Patch and the
 // Overlay.
 
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -84,6 +84,15 @@ describe("converterTable", () => {
     ).toThrow("common.j declares no converter ConvertNothing.");
   });
 
+  it("fails on two converters of one return type", () => {
+    const commonJ = `constant native ConvertRaceAgain takes integer i returns race\n${COMMON_J}`;
+    expect(() =>
+      converterTable(commonJ, new Set(["ConvertRace", "ConvertRaceAgain"])),
+    ).toThrow(
+      "ConvertRace and ConvertRaceAgain both return race: the table cannot tell their constants apart.",
+    );
+  });
+
   it("fails on a constant of a converter's type made by another Native", () => {
     const commonJ = `${COMMON_J}\n    constant race RACE_ODD = ConvertOther(3)`;
     expect(() => converterTable(commonJ, new Set(["ConvertRace"]))).toThrow(
@@ -148,6 +157,63 @@ describe("probe:nullability-converters", () => {
       expect(await readFile(module, "utf8")).toBe(
         await renderConverterModule(SOURCES, module),
       );
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  /**
+   * The command run on `context` in place of the real files: its exit code
+   * and what it printed on stderr.
+   */
+  async function failingRun(
+    context: Context,
+  ): Promise<{ code: number; stderr: string }> {
+    let stderr = "";
+    const code = await main(
+      [],
+      { stdout: () => undefined, stderr: (text) => (stderr += text) },
+      context,
+    );
+    return { code, stderr };
+  }
+
+  it("fails on one line when a source cannot be read", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "probe-converters-"));
+    try {
+      const module = join(dir, "converter-constants.ts");
+      const manifest = join(dir, "manifest.json");
+      const overlayFolder = join(dir, "overlay");
+      const functions = join(overlayFolder, "common.j", "functions");
+      await mkdir(functions, { recursive: true });
+
+      expect(await failingRun({ ...SOURCES, manifest, module })).toEqual({
+        code: 1,
+        stderr: expect.stringMatching(
+          /^probe:nullability-converters failed: [^\n]*manifest\.json could not be read as JSON[^\n]*\n$/,
+        ),
+      });
+
+      await writeFile(manifest, JSON.stringify({ patch: "latest" }));
+      expect(await failingRun({ ...SOURCES, manifest, module })).toEqual({
+        code: 1,
+        stderr: `probe:nullability-converters failed: ${manifest} names no Patch, such as 3.0.0.24268.\n`,
+      });
+
+      await writeFile(manifest, JSON.stringify({ patch: "9.9.9.1" }));
+      expect(await failingRun({ ...SOURCES, manifest, module })).toEqual({
+        code: 1,
+        stderr: `probe:nullability-converters failed: ${join(VENDOR_FOLDER, "9.9.9.1", "common.j")} could not be read: the Patch 9.9.9.1 is not vendored.\n`,
+      });
+
+      const entry = join(functions, "ConvertRace.json");
+      await writeFile(entry, "{ not json");
+      expect(await failingRun({ ...SOURCES, overlayFolder, module })).toEqual({
+        code: 1,
+        stderr: expect.stringMatching(
+          /^probe:nullability-converters failed: [^\n]*ConvertRace\.json could not be read as JSON[^\n]*\n$/,
+        ),
+      });
     } finally {
       await rm(dir, { recursive: true, force: true });
     }

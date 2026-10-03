@@ -18,6 +18,7 @@ import {
   WORKSPACE_FOLDER,
   type ProbeFolders,
 } from "./folders.js";
+import { readPatch } from "./manifest.js";
 import { probeFile } from "./probes.js";
 import {
   EDITOR_SCRIPT,
@@ -44,9 +45,6 @@ export const PLACEHOLDERS = {
 
 /** A runId: letters, digits and hyphens, inside the Result file's safe alphabet. */
 const RUN_ID_PATTERN = /^[A-Za-z0-9-]+$/;
-
-/** A Patch, as its Build names it: `3.0.0.24268`. */
-const PATCH_PATTERN = /^[0-9]+(\.[0-9]+)*$/;
 
 export interface BuildResult {
   probe: string;
@@ -113,27 +111,6 @@ export function buildProbe(
 
   writeState(folders.state, { probe, runId });
   return { probe, runId, patch, stagingFolder, bundleFile: bundle.file };
-}
-
-/**
- * The Patch the Typings' manifest names, its `patch`. A manifest that
- * cannot be read, or whose `patch` is not a Build, is an AuthorError.
- */
-function readPatch(manifest: string): string {
-  let patch: unknown;
-  try {
-    ({ patch } = JSON.parse(fs.readFileSync(manifest, "utf8")) as {
-      patch?: unknown;
-    });
-  } catch (error) {
-    throw new AuthorError(
-      `${manifest} could not be read as JSON: ${error instanceof Error ? error.message : String(error)}`,
-    );
-  }
-  if (typeof patch !== "string" || !PATCH_PATTERN.test(patch)) {
-    throw new AuthorError(`${manifest} names no Patch, such as 3.0.0.24268.`);
-  }
-  return patch;
 }
 
 /** The deepest folder holding both folders. */

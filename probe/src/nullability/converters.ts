@@ -12,6 +12,7 @@ import fs from "node:fs";
 import path from "node:path";
 import * as prettier from "prettier";
 import { AuthorError } from "../errors.js";
+import { readPatch } from "../manifest.js";
 
 /** One constant of a converter's return type: its name and its integer. */
 export type ConverterConstant = readonly [name: string, value: number];
@@ -78,6 +79,12 @@ export function converterTable(
   const byType = new Map<string, Converter>();
   for (const [, native, returnType] of commonJ.matchAll(CONVERTER_NATIVE)) {
     if (!converters.has(native)) continue;
+    const other = byType.get(returnType);
+    if (other !== undefined) {
+      throw new AuthorError(
+        `${native} and ${other.native} both return ${returnType}: the table cannot tell their constants apart.`,
+      );
+    }
     const converter: Converter = { native, constants: [] };
     table.push(converter);
     byType.set(returnType, converter);
@@ -114,19 +121,40 @@ export function overlayConverters(overlayFolder: string): Set<string> {
     if (!fs.existsSync(functions)) continue;
     for (const file of fs.readdirSync(functions)) {
       if (!file.endsWith(".json")) continue;
-      const entry = JSON.parse(
-        fs.readFileSync(path.join(functions, file), "utf8"),
-      ) as { name: string; returns?: { family?: string } };
+      const entry = readJson(path.join(functions, file)) as {
+        name: string;
+        returns?: { family?: string };
+      };
       if (entry.returns?.family === "converter") converters.add(entry.name);
     }
   }
   return converters;
 }
 
-/** The Patch of the Typings' manifest. */
-function manifestPatch(manifest: string): string {
-  return (JSON.parse(fs.readFileSync(manifest, "utf8")) as { patch: string })
-    .patch;
+/** An Overlay entry, parsed; one that cannot be read is an AuthorError. */
+function readJson(file: string): unknown {
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch (error) {
+    throw new AuthorError(
+      `${file} could not be read as JSON: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+}
+
+/**
+ * The text of the vendored `common.j` of `patch`; a Patch the vendor folder
+ * does not hold is an AuthorError.
+ */
+function readCommonJ(vendorFolder: string, patch: string): string {
+  const file = path.join(vendorFolder, patch, "common.j");
+  try {
+    return fs.readFileSync(file, "utf8");
+  } catch {
+    throw new AuthorError(
+      `${file} could not be read: the Patch ${patch} is not vendored.`,
+    );
+  }
 }
 
 /**
@@ -138,11 +166,8 @@ export async function renderConverterModule(
   sources: ConverterSources,
   file: string,
 ): Promise<string> {
-  const patch = manifestPatch(sources.manifest);
-  const commonJ = fs.readFileSync(
-    path.join(sources.vendorFolder, patch, "common.j"),
-    "utf8",
-  );
+  const patch = readPatch(sources.manifest);
+  const commonJ = readCommonJ(sources.vendorFolder, patch);
   const table = converterTable(
     commonJ,
     overlayConverters(sources.overlayFolder),
