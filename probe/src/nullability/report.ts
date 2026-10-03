@@ -41,8 +41,8 @@ import {
 } from "./section.js";
 import {
   compare,
+  compareCounts,
   compareParam,
-  countDifference,
   FAMILIES,
   paramVerdictOf,
   proposedNotes,
@@ -94,8 +94,7 @@ export async function writeNullabilityReport(
   const { returnCases, callCases } = casesByNative(run);
   const natives = [...returnCases].map(([native, cases]): NativeSection => {
     const { nullable: overlayNullable, family } = readReturns(
-      context.overlayFolder,
-      native,
+      readEntry(context.overlayFolder, native),
     );
     const verdict = verdictOf(cases, family);
     return {
@@ -108,14 +107,12 @@ export async function writeNullabilityReport(
       notes: proposedNotes(verdict, cases, family, patch),
     };
   });
-  const params = [...callCases].flatMap(([native, byParam]) =>
-    [...byParam].map(([param, cases]): ParamSection => {
-      const overlayNullable = readParamNullable(
-        context.overlayFolder,
-        native,
-        param,
-      );
+  const params = [...callCases].flatMap(([native, byParam]) => {
+    const entry = readEntry(context.overlayFolder, native);
+    return [...byParam].map(([param, cases]): ParamSection => {
+      const overlayNullable = readParamNullable(entry, param);
       const verdict = paramVerdictOf(cases);
+      const counts = compareCounts(cases);
       return {
         native,
         param,
@@ -123,11 +120,12 @@ export async function writeNullabilityReport(
         verdict,
         overlayNullable,
         comparison: compareParam(verdict, overlayNullable),
-        countDifference: countDifference(cases),
-        notes: proposedParamNotes(verdict, cases, param, patch),
+        countDifference:
+          counts.kind === "different" ? counts.difference : undefined,
+        notes: proposedParamNotes(verdict, cases, counts, param, patch),
       };
-    }),
-  );
+    });
+  });
   const slice: SliceSection = {
     probe,
     patch,
@@ -309,6 +307,7 @@ function readSkip(record: ResultLine): CaseRecord {
     result: {
       outcome: "crashed",
       message: "skipped: crashed in an earlier run",
+      skipped: true,
     },
   };
 }
@@ -458,15 +457,19 @@ interface OverlayEntry {
   params?: unknown;
 }
 
+/** An Overlay entry, with the file it was read from. */
+interface ReadEntry {
+  file: string;
+  entry: OverlayEntry;
+}
+
 /**
  * The Overlay entry of `native`, found as `<source>/functions/<native>.json`
- * under any source of the Overlay, with its file. A Native without an
- * entry, or with entries under several sources, is an AuthorError.
+ * under any source of the Overlay, with its file; read once per Native. A
+ * Native without an entry, or with entries under several sources, is an
+ * AuthorError.
  */
-function readEntry(
-  overlayFolder: string,
-  native: string,
-): { file: string; entry: OverlayEntry } {
+function readEntry(overlayFolder: string, native: string): ReadEntry {
   const files = fs
     .readdirSync(overlayFolder, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
@@ -490,18 +493,14 @@ function readEntry(
 }
 
 /**
- * The `returns.nullable` and `returns.family` of the Overlay entry of
- * `native` (`readEntry`). An entry with no boolean `returns.nullable` or
- * no Nullability family is an AuthorError.
+ * The `returns.nullable` and `returns.family` of a Native's Overlay entry.
+ * An entry with no boolean `returns.nullable` or no Nullability family is
+ * an AuthorError.
  */
-function readReturns(
-  overlayFolder: string,
-  native: string,
-): { nullable: boolean; family: Family } {
-  const {
-    file,
-    entry: { returns },
-  } = readEntry(overlayFolder, native);
+function readReturns({ file, entry: { returns } }: ReadEntry): {
+  nullable: boolean;
+  family: Family;
+} {
   if (typeof returns?.nullable !== "boolean") {
     throw new AuthorError(`${file} has no boolean returns.nullable.`);
   }
@@ -514,16 +513,11 @@ function readReturns(
 }
 
 /**
- * The `nullable` of the parameter `param` in the `params` of the Overlay
- * entry of `native` (`readEntry`). An entry that lists no such parameter
- * with a boolean `nullable` is an AuthorError.
+ * The `nullable` of the parameter `param` in the `params` of a Native's
+ * Overlay entry. An entry that lists no such parameter with a boolean
+ * `nullable` is an AuthorError.
  */
-function readParamNullable(
-  overlayFolder: string,
-  native: string,
-  param: string,
-): boolean {
-  const { file, entry } = readEntry(overlayFolder, native);
+function readParamNullable({ file, entry }: ReadEntry, param: string): boolean {
   const params = Array.isArray(entry.params)
     ? (entry.params as readonly { name?: unknown; nullable?: unknown }[])
     : [];

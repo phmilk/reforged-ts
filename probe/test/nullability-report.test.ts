@@ -315,8 +315,8 @@ async function overlayWithFilters(
 /**
  * The records of one call case of `native`'s `filter`: its CASE, then its
  * PENDING and CALL with `outcome` (and `count` on a `completed`), or its
- * SKIP for the outcome `skipped`. The CASE records come first in a run:
- * `callCase` returns them apart.
+ * SKIP for the outcome `skipped`, in `group`. The CASE records come first
+ * in a run: `callCase` returns them apart.
  */
 function callCase(
   native: string,
@@ -324,17 +324,18 @@ function callCase(
   argument: "nil" | "always-true" | "live",
   outcome: "completed" | "error" | "skipped",
   count = 0,
+  group: "a" | "b" = "a",
 ): { plan: string; records: string[] } {
   const encoded = label.replaceAll(" ", "%20");
-  const fields = `argument=${argument} case=${encoded} counted=unit group=a native=${native}`;
+  const fields = `argument=${argument} case=${encoded} counted=unit group=${group} native=${native}`;
   const records =
     outcome === "skipped"
       ? [`SKIP ${fields} param=filter reason=crashed`]
       : [
           `PENDING label=${native}%20${encoded}`,
           outcome === "completed"
-            ? `CALL argument=${argument} case=${encoded} count=${String(count)} counted=unit group=a native=${native} outcome=completed param=filter`
-            : `CALL argument=${argument} case=${encoded} counted=unit group=a message=bad%20filter native=${native} outcome=error param=filter`,
+            ? `CALL argument=${argument} case=${encoded} count=${String(count)} counted=unit group=${group} native=${native} outcome=completed param=filter`
+            : `CALL argument=${argument} case=${encoded} counted=unit group=${group} message=bad%20filter native=${native} outcome=error param=filter`,
         ];
   return { plan: `CASE ${fields} param=filter`, records };
 }
@@ -1105,7 +1106,7 @@ describe("the nullability report's parameter section", () => {
 - Verdict: nullable (completed)
 - Overlay \`params[].nullable\`: \`true\`
 - Comparison: consistent
-- Proposed \`notes\`: A nil filter keeps every unit (nullability sweep, 3.0.0.12345).
+- Proposed sentence of the Native's \`notes\`: A nil filter keeps every unit (nullability sweep, 3.0.0.12345).
 `);
     expect(await format(report, { parser: "markdown" })).toBe(report);
   });
@@ -1138,11 +1139,11 @@ describe("the nullability report's parameter section", () => {
 - Overlay \`params[].nullable\`: \`true\`
 - Comparison: consistent
 - Count difference: nil: nil filter 3; always-true: always-true filter 5
-- Proposed \`notes\`: A nil filter is accepted (nullability sweep, 3.0.0.12345).
+- Proposed sentence of the Native's \`notes\`: A nil filter is accepted (nullability sweep, 3.0.0.12345).
 `);
   });
 
-  it("makes a filter non-null when a nil filter crashed the game, in this run or an earlier one, with the crash in its notes and a mismatch with a nullable Overlay", async () => {
+  it("makes a filter non-null only when a nil filter was skipped, a crash the crash loop confirmed, and reviews one that crashed in this run only", async () => {
     const { context, resultFile } = await setup();
     const overlayFolder = await overlayWithFilters(context, {
       GroupEnumUnitsInRect: true,
@@ -1190,18 +1191,102 @@ describe("the nullability report's parameter section", () => {
         comparison,
         notes,
       ]),
-    ).toEqual(
-      ["GroupEnumUnitsInRect", "ForceEnumPlayers"].map((native) => [
-        native,
+    ).toEqual([
+      ["GroupEnumUnitsInRect", "review", "consistent", "review"],
+      [
+        "ForceEnumPlayers",
         "non-null (crashed)",
         "mismatch",
         "Crashes the game with a nil filter (nullability sweep, 3.0.0.12345).",
-      ]),
-    );
+      ],
+    ]);
     expect(slice.params[0]?.cases.map(({ outcome }) => outcome)).toEqual([
       "completed",
       "crashed",
     ]);
+  });
+
+  it("compares a nil filter's count with the always-true filter's of the same group only", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWithFilters(context, {
+      GroupEnumUnitsInRect: true,
+    });
+    await writeResultFile(
+      resultFile,
+      callRun([
+        callCase(
+          "GroupEnumUnitsInRect",
+          "always-true filter",
+          "always-true",
+          "completed",
+          3,
+        ),
+        callCase("GroupEnumUnitsInRect", "nil filter", "nil", "completed", 3),
+        callCase(
+          "GroupEnumUnitsInRect",
+          "always-true filter on removed units",
+          "always-true",
+          "completed",
+          0,
+          "b",
+        ),
+        callCase(
+          "GroupEnumUnitsInRect",
+          "nil filter on removed units",
+          "nil",
+          "completed",
+          0,
+          "b",
+        ),
+      ]),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    expect(
+      slice.params.map(({ verdict, countDifference, notes }) => [
+        verdict,
+        countDifference,
+        notes,
+      ]),
+    ).toEqual([
+      [
+        "nullable (completed)",
+        undefined,
+        "A nil filter keeps every unit (nullability sweep, 3.0.0.12345).",
+      ],
+    ]);
+  });
+
+  it("prints no count difference when no always-true filter completed, and words the notes as accepted", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWithFilters(context, {
+      GroupEnumUnitsInRect: true,
+    });
+    await writeResultFile(
+      resultFile,
+      callRun([
+        callCase("GroupEnumUnitsInRect", "nil filter", "nil", "completed", 3),
+        callCase(
+          "GroupEnumUnitsInRect",
+          "footmen only",
+          "live",
+          "completed",
+          2,
+        ),
+      ]),
+    );
+    const { code, stdout } = await runMain({ ...context, overlayFolder });
+    expect(code).toBe(0);
+    expect(stdout.join("")).toContain(
+      "GroupEnumUnitsInRect parameter filter: nullable (completed), consistent\n",
+    );
+    const report = await readFile(context.reportFile, "utf8");
+    expect(report).not.toContain("Count difference");
+    expect(report).toContain(
+      "A nil filter is accepted (nullability sweep, 3.0.0.12345).",
+    );
   });
 
   it("reviews a filter whose case raised an error, and reports a mismatch when a nil filter completes on a filter the Overlay types non-null", async () => {

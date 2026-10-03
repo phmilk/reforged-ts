@@ -35,6 +35,12 @@ export interface CaseResult {
   /** The count a call case reported, on a `completed`. */
   count?: string;
   /**
+   * `true` on a `crashed` case of the skip list (its SKIP record): a crash
+   * the crash loop confirmed. Absent on a case that crashed in this run
+   * only.
+   */
+  skipped?: true;
+  /**
    * What the call raised, on an `error`; how the case crashed, on a
    * `crashed`.
    */
@@ -288,10 +294,13 @@ function passedNil(testCase: ParamCaseResult): boolean {
 /**
  * The verdicts of a parameter, checked in this order, each with the
  * condition its call cases meet: the first that holds is the parameter's.
- * A `nil` case that crashed, in this run or in an earlier one, makes it
+ * A `nil` case that was skipped, a crash the crash loop confirmed, makes it
  * non-null, whatever the other cases gave; every case completed, a `nil`
- * one at least, keeps it nullable; anything else, an `error`, a crash with
- * a live value, a case not run or no `nil` case, gives `review`.
+ * one at least, keeps it nullable; anything else gives `review`: an
+ * `error`, a crash with a live value, a case not run, no `nil` case, or a
+ * `nil` case that crashed in this run only, since making a parameter
+ * non-null narrows it, which is breaking, and a crash not yet confirmed is
+ * no ground for it.
  */
 const PARAM_VERDICTS: readonly (readonly [
   verdict: ParamVerdict,
@@ -301,7 +310,10 @@ const PARAM_VERDICTS: readonly (readonly [
     "non-null (crashed)",
     (cases) =>
       cases.some(
-        (testCase) => passedNil(testCase) && testCase.outcome === "crashed",
+        (testCase) =>
+          passedNil(testCase) &&
+          testCase.outcome === "crashed" &&
+          testCase.skipped === true,
       ),
   ],
   [
@@ -319,7 +331,12 @@ export function paramVerdictOf(
   cases: readonly ParamCaseResult[],
 ): ParamVerdict {
   const found = PARAM_VERDICTS.find(([, holds]) => holds(cases));
-  return found === undefined ? "review" : found[0];
+  if (found === undefined) {
+    throw new Error(
+      `No parameter verdict holds for the outcomes ${cases.map(({ outcome }) => outcome).join(", ")}.`,
+    );
+  }
+  return found[0];
 }
 
 /**
@@ -339,45 +356,69 @@ export function compareParam(
 }
 
 /**
- * How the counts of a parameter's completed `nil` cases differ from its
- * completed `always-true` cases', in words for the report's section and
- * the pull request: `nil: <case> <count>; always-true: <case> <count>`.
- * Undefined when no `nil` case completed, or when every one of those cases
- * has the same count. With no `always-true` case completed, the `nil`
- * counts have nothing to compare with, which the words say.
+ * How the counts of a parameter's completed `nil` cases stand against its
+ * completed `always-true` cases', group by group: `nothing to compare`
+ * when no group has both; `same` when every group that has both has one
+ * count; `different` otherwise, with the difference in words for the
+ * report's section and the pull request,
+ * `nil: <case> <count>; always-true: <case> <count>`, naming the cases of
+ * the groups whose counts differ.
  */
-export function countDifference(
+export type CountComparison =
+  | { kind: "nothing to compare" }
+  | { kind: "same" }
+  | { kind: "different"; difference: string };
+
+/**
+ * The comparison of a parameter's `nil` counts with its always-true
+ * counts (`CountComparison`). A `nil` case is compared with the
+ * always-true cases of its own group only, since a stale handle may leave
+ * fewer objects to enumerate than a live one.
+ */
+export function compareCounts(
   cases: readonly ParamCaseResult[],
-): string | undefined {
+): CountComparison {
   const completed = cases.filter(gave("completed"));
-  const of = (argument: CallArgument) =>
-    completed.filter((testCase) => testCase.argument === argument);
+  const of = (group: CaseGroup, argument: CallArgument) =>
+    completed.filter(
+      (testCase) => testCase.group === group && testCase.argument === argument,
+    );
+  const compared = [...new Set(cases.map(({ group }) => group))]
+    .map((group) => ({
+      nil: of(group, "nil"),
+      alwaysTrue: of(group, "always-true"),
+    }))
+    .filter(({ nil, alwaysTrue }) => nil.length > 0 && alwaysTrue.length > 0);
+  if (compared.length === 0) return { kind: "nothing to compare" };
+  const differing = compared.filter(
+    ({ nil, alwaysTrue }) =>
+      new Set([...nil, ...alwaysTrue].map(({ count }) => count)).size > 1,
+  );
+  if (differing.length === 0) return { kind: "same" };
   const counts = (selected: readonly ParamCaseResult[]) =>
     selected.map(({ label, count }) => `${label} ${count ?? ""}`).join(", ");
-  const nil = of("nil");
-  const alwaysTrue = of("always-true");
-  if (nil.length === 0) return undefined;
-  if (alwaysTrue.length === 0) {
-    return `nil: ${counts(nil)}; no always-true case completed to compare with`;
-  }
-  const values = new Set([...nil, ...alwaysTrue].map(({ count }) => count));
-  return values.size === 1
-    ? undefined
-    : `nil: ${counts(nil)}; always-true: ${counts(alwaysTrue)}`;
+  return {
+    kind: "different",
+    difference: `nil: ${counts(differing.flatMap(({ nil }) => nil))}; always-true: ${counts(differing.flatMap(({ alwaysTrue }) => alwaysTrue))}`,
+  };
 }
 
 /**
- * The `notes` text proposed for a parameter's Overlay entry, citing the
- * Patch and the sweep as `proposedNotes` does: for `nullable (completed)`,
+ * The sentence proposed for the `notes` of a parameter's Native, naming
+ * the parameter, since the Overlay has no `notes` of a parameter: `notes`
+ * is the Native's, rendered as its `@remarks`. It cites the Patch and the
+ * sweep as `proposedNotes` does: for `nullable (completed)`,
  * `A nil <param> keeps every <counted>` when the `nil` counts equal the
- * always-true cases', or `A nil <param> is accepted` when they differ
- * (`countDifference`), the difference left to the report's section and the
- * pull request; for `non-null (crashed)`, `Crashes the game with a nil
- * <param>`; for `review`, only "review".
+ * always-true cases' (`counts` is `same`), or `A nil <param> is accepted`
+ * when they differ or there is nothing to compare them with, the
+ * difference left to the report's section and the pull request; for
+ * `non-null (crashed)`, `Crashes the game with a nil <param>`; for
+ * `review`, only "review".
  */
 export function proposedParamNotes(
   verdict: ParamVerdict,
   cases: readonly ParamCaseResult[],
+  counts: CountComparison,
   param: string,
   patch: string,
 ): string {
@@ -387,7 +428,7 @@ export function proposedParamNotes(
       return `Crashes the game with a nil ${param} ${sweep}.`;
     case "nullable (completed)": {
       const counted = cases.find(passedNil)?.counted;
-      return countDifference(cases) === undefined && counted !== undefined
+      return counts.kind === "same" && counted !== undefined
         ? `A nil ${param} keeps every ${counted} ${sweep}.`
         : `A nil ${param} is accepted ${sweep}.`;
     }

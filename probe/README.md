@@ -147,7 +147,7 @@ Group `a` is a case of live arguments, `b` one of a stale handle. A `handle` may
 
 `probe:run` exits 2, `crashed` (a stall included), naming the pending case `<native> <case>`. Then:
 
-1. **Confirm.** Run the Slice again, unchanged. A case is skipped only when it crashes twice in a row.
+1. **Confirm.** Run the Slice again, unchanged. A case is skipped only when it crashes twice in a row. Until it is skipped, the report gives a `nil` call case that crashed `review`, never `non-null (crashed)`: narrowing a parameter is breaking, so only a confirmed crash narrows it.
 2. **Skip.** Add the case's label, `<native> <case>`, to the Slice's `skip` list and run it again. Each crash skips one case, so the loop ends.
 3. **Stop and ask the human** when:
    - the run names no pending case, or a pending step that is not a case (a crash while building the Fixtures, before the cases);
@@ -175,7 +175,7 @@ A Native that returns nothing has no return value to measure: its call cases mea
 <seq> SKIP argument=<argument> case=<label> counted=<counted> group=a|b native=<native> param=<param> reason=crashed
 ```
 
-A call that returned no integer, a float or no number at all, records an `error`. A Native has return cases or call cases, never both. Each parameter gets a verdict from its cases, the first of these that holds: `non-null (crashed)` when a `nil` case crashed or was skipped; `nullable (completed)` when every case completed, a `nil` one at least; `review` otherwise (an error, a crash with a live filter, a case not run, no `nil` case). It is compared with the entry's `params[].nullable`, `mismatch` when they disagree, and gets a proposed `notes`. When the counts of the `nil` cases differ from the `always-true` cases', the section prints the difference, `Count difference: nil: <case> <count>; always-true: <case> <count>`, for the pull request. Making a parameter non-null narrows it, which is breaking: hence before 1.0.0.
+A call that returned no integer, a float or no number at all, records an `error`. A Native has return cases or call cases, never both. Each parameter gets a verdict from its cases, the first of these that holds: `non-null (crashed)` when a `nil` case was skipped, a crash [the crash loop](#the-crash-loop) confirmed; `nullable (completed)` when every case completed, a `nil` one at least; `review` otherwise (an error, a crash with a live filter, a case not run, no `nil` case, a `nil` case that crashed in this run only). Making a parameter non-null narrows it, which is breaking: hence before 1.0.0, and only for a confirmed crash. The verdict is compared with the entry's `params[].nullable`, `mismatch` when they disagree, and gets a proposed sentence for the Native's `notes`, naming the parameter: the Overlay has no `params[].notes`, so the sentence joins the Native's `notes`, its `@remarks`. A `nil` case's count is compared with the counts of the `always-true` cases of its own group: when they differ, the section prints the difference, `Count difference: nil: <case> <count>; always-true: <case> <count>`, for the pull request. When no group has both a completed `nil` case and a completed `always-true` case, there is nothing to compare and no difference is printed.
 
 ### The cases per family
 
@@ -203,7 +203,7 @@ Every handle-returning Native of `common.j` names its Nullability family in its 
 
 A Slice that leaves a required case unrun (no Fixture for a stale state, say) cannot make that Native non-null: its verdict is `review`.
 
-The proposed `notes`, published as `@remarks`, give the reason in game terms, never the family's name:
+The proposed `notes`, published as `@remarks`, give the reason in game terms, never the family's name. A parameter's text is a sentence of its Native's `notes`, since the Overlay has no `params[].notes`:
 
 | Verdict                                 | Proposed `notes`                                                                                                                                                                                                                                                                                      |
 | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -213,7 +213,7 @@ The proposed `notes`, published as `@remarks`, give the reason in game terms, ne
 | `nullable (rule)`                       | `May return nothing <reason>. Returned a handle in every case of the nullability sweep (<cases>) on <Patch>.`                                                                                                                                                                                         |
 | `unsafe`                                | `Crashes the game for <cases> (nullability sweep, <Patch>).`, then, for a nullable family, `May return nothing <reason>.`, then `Returned a handle in every other case (<cases>).` and, when one was of id 0, `For <cases>, a handle of id 0.`; "review" when another case gave anything but a handle |
 | `nullable (proved)` with a crashed case | `Crashes the game for <cases> (nullability sweep, <Patch>).`, then the `nullable (proved)` text                                                                                                                                                                                                       |
-| parameter `nullable (completed)`        | `A nil <param> keeps every <counted> (nullability sweep, <Patch>).`; when the counts differ, `A nil <param> is accepted (nullability sweep, <Patch>).`, the difference going in the pull request                                                                                                      |
+| parameter `nullable (completed)`        | `A nil <param> keeps every <counted> (nullability sweep, <Patch>).`; when the counts differ, or when there is nothing to compare them with, `A nil <param> is accepted (nullability sweep, <Patch>).`, a difference going in the pull request                                                         |
 | parameter `non-null (crashed)`          | `Crashes the game with a nil <param> (nullability sweep, <Patch>).`                                                                                                                                                                                                                                   |
 
 The `<reason>` per family: "outside its event" (event-response), "outside its enum or filter callback" (callback-getter), "when nothing is found" (lookup), "when the object has none" (optional-property).

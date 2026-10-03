@@ -45,11 +45,16 @@ export interface ParamSection {
   overlayNullable: boolean;
   comparison: Comparison;
   /**
-   * How the counts with `nil` differ from the always-true ones, for the
-   * pull request; undefined when they are the same.
+   * How the counts with `nil` differ from the always-true ones of the same
+   * group, for the pull request; undefined when they are the same or there
+   * is nothing to compare.
    */
   countDifference: string | undefined;
-  /** The proposed `notes` text, or "review" when there is none. */
+  /**
+   * The proposed sentence of the Native's `notes`, naming the parameter,
+   * since the Overlay has no `params[].notes`; or "review" when there is
+   * none.
+   */
   notes: string;
 }
 
@@ -74,17 +79,20 @@ export interface SliceSection {
 /** What the report starts with when the command creates it. */
 export const REPORT_HEADER = `# Nullability sweep
 
-The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, written by \`pnpm probe:nullability-report <probe>\` from the Result file of the Slice's last Probe run, and replaced, alone, each time the command runs again. Each Native gets a verdict from its cases and its Nullability family, compared with the Overlay's \`returns.nullable\`, and a proposed \`notes\` text; an \`unsafe\` Native, one with a case that crashed the game, is proposed nullable. Each parameter measured by call cases gets a verdict from them, compared with the Overlay's \`params[].nullable\`. The command never writes the Overlay: every change to it goes through review.
+The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, written by \`pnpm probe:nullability-report <probe>\` from the Result file of the Slice's last Probe run, and replaced, alone, each time the command runs again. Each Native gets a verdict from its cases and its Nullability family, compared with the Overlay's \`returns.nullable\`, and a proposed \`notes\` text; an \`unsafe\` Native, one with a case that crashed the game, is proposed nullable. Each parameter measured by call cases gets a verdict from them, compared with the Overlay's \`params[].nullable\`, and a proposed sentence of its Native's \`notes\`, since the Overlay has no \`params[].notes\`. The command never writes the Overlay: every change to it goes through review.
 `;
 
-/** One column of a Native's table: its header and each case's cell, as Markdown. */
-interface Column {
+/**
+ * One column of a table of cases, a Native's or a parameter's: its header
+ * and each case's cell, as Markdown.
+ */
+interface Column<Case extends CaseResult> {
   header: string;
-  cell: (testCase: CaseResult) => string;
+  cell: (testCase: Case) => string;
 }
 
 /** The Message column: an error's message as a code span, a crash's as text. */
-const MESSAGE: Column = {
+const MESSAGE: Column<CaseResult> = {
   header: "Message",
   // An error's message is the Native's own text, shown as it is in a
   // code span; a crash's is the report's words.
@@ -95,7 +103,7 @@ const MESSAGE: Column = {
 };
 
 /** The columns of a Native's table, left to right. */
-const COLUMNS: readonly Column[] = [
+const COLUMNS: readonly Column<CaseResult>[] = [
   { header: "Case", cell: ({ label }) => text(label) },
   { header: "Group", cell: ({ group }) => `(${group})` },
   { header: "Outcome", cell: ({ outcome }) => outcome },
@@ -107,14 +115,8 @@ const COLUMNS: readonly Column[] = [
   MESSAGE,
 ];
 
-/** One column of a parameter's table: its header and each case's cell. */
-interface ParamColumn {
-  header: string;
-  cell: (testCase: ParamCaseResult) => string;
-}
-
 /** The columns of a parameter's table, left to right. */
-const PARAM_COLUMNS: readonly ParamColumn[] = [
+const PARAM_COLUMNS: readonly Column<ParamCaseResult>[] = [
   { header: "Case", cell: ({ label }) => text(label) },
   { header: "Group", cell: ({ group }) => `(${group})` },
   { header: "Argument", cell: ({ argument }) => argument },
@@ -214,7 +216,7 @@ function paramLines(param: ParamSection): string[] {
     ...(param.countDifference === undefined
       ? []
       : [`- Count difference: ${text(param.countDifference)}`]),
-    `- Proposed \`notes\`: ${text(param.notes)}`,
+    `- Proposed sentence of the Native's \`notes\`: ${text(param.notes)}`,
   ];
 }
 
