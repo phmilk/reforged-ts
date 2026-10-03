@@ -20,7 +20,10 @@ import {
 import { systemMachine, type Machine } from "../src/machine.js";
 import { resultFile } from "../src/read.js";
 import { writeNullabilityReport } from "../src/nullability/report.js";
-import { REPORT_HEADER } from "../src/nullability/section.js";
+import {
+  REPORT_HEADER,
+  type SliceSection,
+} from "../src/nullability/section.js";
 import { FAMILIES, proposedNotes } from "../src/nullability/verdict.js";
 import { stateFile } from "../src/state.js";
 import { USER_FOLDER_VARIABLE } from "../src/user-folder.js";
@@ -350,6 +353,58 @@ function callRun(cases: readonly ReturnType<typeof callCase>[]): string[] {
   ]);
 }
 
+/**
+ * Reports a finished run whose six Natives give the six verdicts, one
+ * each, in the order of the `Verdict` type, against an Overlay that types every
+ * one of them nullable, or every one non-null, as `nullable` says:
+ * GetOwningPlayer returns nothing; GetTriggerUnit, of a nullable family, a
+ * handle; CreateTimer's case was skipped after a crash; CreateUnit's
+ * raised an error; Location returns a handle; TriggerAddAction a handle of
+ * id 0. Returns the Slice's section.
+ */
+async function reportEveryVerdict(
+  context: Context,
+  file: string,
+  nullable: boolean,
+): Promise<SliceSection> {
+  const overlayFolder = await overlayWith(context, {
+    GetOwningPlayer: { nullable, family: "intrinsic-property" },
+    GetTriggerUnit: { nullable, family: "event-response" },
+    CreateTimer: { nullable, family: "constructor" },
+    CreateUnit: { nullable, family: "constructor" },
+    Location: { nullable, family: "constructor" },
+    TriggerAddAction: { nullable, family: "registration" },
+  });
+  await writeResultFile(
+    file,
+    numbered([
+      "CASE case=removed%20unit group=b native=GetOwningPlayer",
+      "CASE case=outside%20its%20event group=a native=GetTriggerUnit",
+      "CASE case=one%20call group=a native=CreateTimer",
+      "CASE case=one%20call group=a native=CreateUnit",
+      "CASE case=origin group=a native=Location",
+      "CASE case=destroyed%20trigger group=b native=TriggerAddAction",
+      "PENDING label=GetOwningPlayer%20removed%20unit",
+      "CALL case=removed%20unit group=b native=GetOwningPlayer outcome=nil",
+      "PENDING label=GetTriggerUnit%20outside%20its%20event",
+      "CALL case=outside%20its%20event group=a id=1048577 native=GetTriggerUnit outcome=handle type=unit:%200000020C",
+      "SKIP case=one%20call group=a native=CreateTimer reason=crashed",
+      "PENDING label=CreateUnit%20one%20call",
+      "CALL case=one%20call group=a message=bad%20arg native=CreateUnit outcome=error",
+      "PENDING label=Location%20origin",
+      "CALL case=origin group=a id=1048578 native=Location outcome=handle type=location:%200000020D",
+      "PENDING label=TriggerAddAction%20destroyed%20trigger",
+      "CALL case=destroyed%20trigger group=b id=0 native=TriggerAddAction outcome=handle type=triggeraction:%200000020E",
+      "END status=ok",
+    ]),
+  );
+  const { slice } = await writeNullabilityReport(PROBE, {
+    ...context,
+    overlayFolder,
+  });
+  return slice;
+}
+
 /** Writes the Result file as the game does, its lines through `Preload`. */
 async function writeResultFile(file: string, lines: readonly string[]) {
   await mkdir(join(file, ".."), { recursive: true });
@@ -444,7 +499,7 @@ describe("the nullability report", () => {
 - Family: \`constructor\`
 - Verdict: review
 - Overlay \`returns.nullable\`: \`false\`
-- Comparison: consistent
+- Comparison: mismatch
 - Proposed \`notes\`: review
 `);
     expect(report).toContain(`### \`GetOwningPlayer\`
@@ -458,7 +513,7 @@ describe("the nullability report", () => {
 - Family: \`intrinsic-property\`
 - Verdict: review
 - Overlay \`returns.nullable\`: \`false\`
-- Comparison: consistent
+- Comparison: mismatch
 - Proposed \`notes\`: review
 `);
     expect(report).toContain(`### \`Location\`
@@ -489,8 +544,8 @@ describe("the nullability report", () => {
         notes,
       ]),
     ).toEqual([
-      ["CreateTimer", "review", "consistent", "review"],
-      ["GetOwningPlayer", "review", "consistent", "review"],
+      ["CreateTimer", "review", "mismatch", "review"],
+      ["GetOwningPlayer", "review", "mismatch", "review"],
       [
         "Location",
         "nullable (proved)",
@@ -816,27 +871,34 @@ describe("the nullability report", () => {
     ]);
   });
 
-  it("reports a mismatch when the Overlay types a Native of a nullable family non-null", async () => {
+  it("reports a mismatch whenever the Overlay types a Native non-null without evidence: unsafe, review and both nullable verdicts", async () => {
     const { context, resultFile } = await setup();
-    const overlayFolder = await overlayWith(context, {
-      GetTriggerUnit: { nullable: false, family: "event-response" },
-    });
-    await writeResultFile(
-      resultFile,
-      numbered([
-        "CASE case=outside%20its%20event group=a native=GetTriggerUnit",
-        "PENDING label=GetTriggerUnit%20outside%20its%20event",
-        "CALL case=outside%20its%20event group=a id=1048577 native=GetTriggerUnit outcome=handle type=unit:%200000020C",
-        "END status=ok",
-      ]),
-    );
-    const { slice } = await writeNullabilityReport(PROBE, {
-      ...context,
-      overlayFolder,
-    });
+    const slice = await reportEveryVerdict(context, resultFile, false);
     expect(
       slice.natives.map(({ verdict, comparison }) => [verdict, comparison]),
-    ).toEqual([["nullable (rule)", "mismatch"]]);
+    ).toEqual([
+      ["nullable (proved)", "mismatch"],
+      ["nullable (rule)", "mismatch"],
+      ["unsafe", "mismatch"],
+      ["review", "mismatch"],
+      ["non-null (evidence)", "consistent"],
+      ["non-null (evidence, handle id 0)", "consistent"],
+    ]);
+  });
+
+  it("finds an Overlay nullable consistent whatever the verdict", async () => {
+    const { context, resultFile } = await setup();
+    const slice = await reportEveryVerdict(context, resultFile, true);
+    expect(
+      slice.natives.map(({ verdict, comparison }) => [verdict, comparison]),
+    ).toEqual([
+      ["nullable (proved)", "consistent"],
+      ["nullable (rule)", "consistent"],
+      ["unsafe", "consistent"],
+      ["review", "consistent"],
+      ["non-null (evidence)", "consistent"],
+      ["non-null (evidence, handle id 0)", "consistent"],
+    ]);
   });
 
   it("refuses to word a nullable (rule) verdict for a family whose Natives may be non-null", () => {
@@ -969,7 +1031,7 @@ describe("the nullability report", () => {
         comparison,
         notes,
       ]),
-    ).toEqual([["review", "consistent", "review"]]);
+    ).toEqual([["review", "mismatch", "review"]]);
   });
 
   it("gives a skipped case unsafe, proposed nullable with the crash first in its notes, for a family that may be non-null and a nullable one", async () => {
