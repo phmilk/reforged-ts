@@ -2,7 +2,8 @@
   "name": "Or",
   "source": "common.j",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "family": "constructor"
   },
   "params": [
     {

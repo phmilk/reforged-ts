@@ -2,7 +2,8 @@
   "name": "GetCameraEyePositionLoc",
   "source": "common.j",
   "returns": {
-    "nullable": true
+    "nullable": true,
+    "family": "intrinsic-property"
   },
   "params": [],
   "async": true,

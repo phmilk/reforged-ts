@@ -2,7 +2,8 @@
   "name": "GetWorldBounds",
   "source": "common.j",
   "returns": {
-    "nullable": true
+    "nullable": true,
+    "family": "intrinsic-property"
   },
   "params": [],
   "origin": "war3-types-strict"

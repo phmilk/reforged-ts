@@ -4,15 +4,19 @@
  * names), every global needs one entry, and a type may have one. The kind
  * folder an entry lives in decides which declarations it can match. An entry
  * that no vendored Patch declares is an orphan warning, not an error, because
- * the Overlay is shared by all vendored Patches.
+ * the Overlay is shared by all vendored Patches. A function's entry also
+ * names the Nullability family of a handle-returning common.j Native, and
+ * only of one, and a Native of a nullable family is typed nullable.
  */
 import { patchList } from "./build.js";
 import type { Diagnostic } from "./diagnostics.js";
-import type {
-  BaseEntry,
-  FunctionEntry,
-  GlobalEntry,
-  TypeEntry,
+import {
+  NULLABLE_FAMILIES,
+  NULLABILITY_FAMILIES,
+  type BaseEntry,
+  type FunctionEntry,
+  type GlobalEntry,
+  type TypeEntry,
 } from "./entry.js";
 import {
   jassDeclaration,
@@ -62,6 +66,10 @@ export function resolve(
 ): Resolution {
   const resolved: Resolved[] = [];
   const diagnostics: Diagnostic[] = [];
+  const handleTypes = new Set([
+    "handle",
+    ...declarations.filter((d) => d.kind === "type").map((d) => d.name),
+  ]);
 
   for (const declaration of declarations) {
     const key = overlayKey(declaration.source, declaration.name);
@@ -89,6 +97,11 @@ export function resolve(
     }
     if (!sameParameters(declaration, entry)) {
       diagnostics.push(mismatch(declaration, entry));
+      continue;
+    }
+    const familyProblem = checkFamily(declaration, entry, handleTypes);
+    if (familyProblem) {
+      diagnostics.push(familyProblem);
       continue;
     }
     resolved.push({ ...declaration, overlay: entry });
@@ -121,6 +134,54 @@ export function orphans(
 function expectedPath(declaration: Declaration): string {
   const { source, name } = declaration;
   return entryPath(source, kindFolder(declaration), name);
+}
+
+/**
+ * The problem with a function's `returns.family`, if any: a handle-returning
+ * common.j Native without one, one on any other function, or a Native of a
+ * nullable family typed non-null.
+ */
+function checkFamily(
+  fn: FunctionDeclaration,
+  entry: FunctionEntry,
+  handleTypes: ReadonlySet<string>,
+): Diagnostic | undefined {
+  const { family, nullable } = entry.returns;
+  const returnsHandle = handleTypes.has(fn.returns);
+  const named = fn.source === "common.j" && fn.kind === "native";
+  const problem = (message: string): Diagnostic => ({
+    severity: "error",
+    kind: "nullability-family",
+    file: entry.file,
+    name: fn.name,
+    message: `${entry.file}: ${message}`,
+  });
+  if (family === undefined) {
+    return named && returnsHandle
+      ? problem(
+          `${fn.name} returns a handle (${fn.returns}) but has no returns.family; ` +
+            `name its Nullability family, one of ${NULLABILITY_FAMILIES.join(", ")}`,
+        )
+      : undefined;
+  }
+  if (!returnsHandle) {
+    return problem(
+      `returns.family on ${fn.name}, which returns ${fn.returns}, not a handle; remove it`,
+    );
+  }
+  if (!named) {
+    return problem(
+      `returns.family on ${fn.name}, a ${fn.source} ${fn.kind}; ` +
+        "only a common.j Native has one, remove it",
+    );
+  }
+  if (NULLABLE_FAMILIES.includes(family) && !nullable) {
+    return problem(
+      `${fn.name} is of the family ${family}, which may have nothing to return, ` +
+        "but returns.nullable is false; make it true",
+    );
+  }
+  return undefined;
 }
 
 function sameParameters(

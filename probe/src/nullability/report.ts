@@ -3,8 +3,9 @@
  * through the runner's reader (../read.ts), gives each Native a verdict from
  * the CASE, CALL and SKIP records of the case runner
  * (probes/nullability/case-runner.ts, in the format of
- * probes/nullability/records.d.ts), compares it with the Native's
- * Overlay entry, read as JSON with no build of the Typings, and writes the
+ * probes/nullability/records.d.ts) and the Nullability family its Overlay
+ * entry names, compares it with that entry, read as JSON with no build of
+ * the Typings, and writes the
  * Slice's section of the sweep report, under the Patch the run's `BEGIN`
  * line names, the one its build compiled against. It reads the Overlay and
  * writes the report file only: never the Overlay.
@@ -36,9 +37,12 @@ import {
 } from "./section.js";
 import {
   compare,
+  FAMILIES,
+  isFamily,
   proposedNotes,
   verdictOf,
   type CaseResult,
+  type Family,
 } from "./verdict.js";
 
 /** Where the report reads and writes, and its clock. */
@@ -62,11 +66,11 @@ export interface NullabilityReport {
  * of its previous one, from the Probe's last run: a `finished` one, or an
  * `incomplete` or `crashed` one, whose trailing PENDING case is `crashed`
  * and whose cases after it are `not run`; any other is an AuthorError.
- * Each Native, in the order of the case list, gets a table of its cases, a
- * verdict, its Overlay `returns.nullable` and the comparison of the two,
- * and a proposed `notes` text or "review". A Native without an Overlay
- * entry, or a record the report does not read, is an AuthorError, and the
- * report is then left as it was.
+ * Each Native, in the order of the case list, gets a table of its cases,
+ * its family, a verdict, its Overlay `returns.nullable` and the comparison
+ * of the two, and a proposed `notes` text or "review". A Native without an
+ * Overlay entry or a family, or a record the report does not read, is an
+ * AuthorError, and the report is then left as it was.
  */
 export async function writeNullabilityReport(
   probe: string,
@@ -77,18 +81,19 @@ export async function writeNullabilityReport(
   const patch = builtPatch(run);
   const natives = [...casesByNative(run)].map(
     ([native, cases]): NativeSection => {
-      const verdict = verdictOf(cases);
-      const overlayNullable = readReturnsNullable(
+      const { nullable: overlayNullable, family } = readReturns(
         context.overlayFolder,
         native,
       );
+      const verdict = verdictOf(cases, family);
       return {
         native,
         cases,
+        family,
         verdict,
         overlayNullable,
         comparison: compare(verdict, overlayNullable),
-        notes: proposedNotes(verdict, cases, patch),
+        notes: proposedNotes(verdict, cases, family, patch),
       };
     },
   );
@@ -315,12 +320,16 @@ function builtPatch(run: ProbeRun): string {
 }
 
 /**
- * The `returns.nullable` of the Overlay entry of `native`, found as
- * `<source>/functions/<native>.json` under any source of the Overlay. A
- * Native without an entry, with entries under several sources, or whose
- * entry has no boolean `returns.nullable`, is an AuthorError.
+ * The `returns.nullable` and `returns.family` of the Overlay entry of
+ * `native`, found as `<source>/functions/<native>.json` under any source of
+ * the Overlay. A Native without an entry, with entries under several
+ * sources, or whose entry has no boolean `returns.nullable` or no
+ * Nullability family, is an AuthorError.
  */
-function readReturnsNullable(overlayFolder: string, native: string): boolean {
+function readReturns(
+  overlayFolder: string,
+  native: string,
+): { nullable: boolean; family: Family } {
   const files = fs
     .readdirSync(overlayFolder, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
@@ -340,11 +349,18 @@ function readReturnsNullable(overlayFolder: string, native: string): boolean {
       `${native} has an Overlay entry under several sources, ${files.join(", ")}: the report compares each verdict with one.`,
     );
   }
-  const { returns } = readJson(file) as { returns?: { nullable?: unknown } };
+  const { returns } = readJson(file) as {
+    returns?: { nullable?: unknown; family?: unknown };
+  };
   if (typeof returns?.nullable !== "boolean") {
     throw new AuthorError(`${file} has no boolean returns.nullable.`);
   }
-  return returns.nullable;
+  if (!isFamily(returns.family)) {
+    throw new AuthorError(
+      `${file} names no Nullability family in returns.family (${Object.keys(FAMILIES).join(", ")}): the verdict depends on it.`,
+    );
+  }
+  return { nullable: returns.nullable, family: returns.family };
 }
 
 function readJson(file: string): unknown {

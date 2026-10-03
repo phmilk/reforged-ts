@@ -12,10 +12,13 @@ import { join } from "node:path";
 import { isBuild } from "./build.js";
 import type { Diagnostic } from "./diagnostics.js";
 import {
+  NULLABILITY_FAMILIES,
   SEED_ORIGIN,
   type FunctionEntry,
   type GlobalEntry,
+  type NullabilityFamily,
   type OverlayParam,
+  type OverlayReturns,
   type TypeEntry,
 } from "./entry.js";
 import { SOURCES, type Declaration, type SourceName } from "./model.js";
@@ -229,7 +232,20 @@ const FIELDS = {
     if (!isObject(value) || typeof value.nullable !== "boolean") {
       return new Problem("returns.nullable must be a boolean");
     }
-    return { nullable: value.nullable };
+    const unknown = unknownField(value, RETURNS_FIELDS);
+    if (unknown) return new Problem(`unknown field "returns.${unknown}"`);
+    const returns: OverlayReturns = { nullable: value.nullable };
+    if (value.family !== undefined) {
+      if (!isFamily(value.family)) {
+        return new Problem(
+          `returns.family must be one of ${NULLABILITY_FAMILIES.join(
+            ", ",
+          )}, found ${show(value.family)}`,
+        );
+      }
+      returns.family = value.family;
+    }
+    return returns;
   },
   params: (value) => {
     if (!Array.isArray(value)) return new Problem("params must be an array");
@@ -345,6 +361,12 @@ function readEntry(
 }
 
 const PARAM_FIELDS: readonly string[] = ["name", "nullable", "type"];
+
+const RETURNS_FIELDS: readonly string[] = ["nullable", "family"];
+
+function isFamily(value: unknown): value is NullabilityFamily {
+  return (NULLABILITY_FAMILIES as readonly unknown[]).includes(value);
+}
 
 /**
  * Free text a header renders. It may link with `{@link ...}` but neither

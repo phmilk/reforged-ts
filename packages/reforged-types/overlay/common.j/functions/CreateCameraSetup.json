@@ -2,7 +2,8 @@
   "name": "CreateCameraSetup",
   "source": "common.j",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "family": "constructor"
   },
   "params": [],
   "notes": "Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.",

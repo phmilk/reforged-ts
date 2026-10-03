@@ -2,7 +2,8 @@
   "name": "GetUnitRallyDestructable",
   "source": "common.j",
   "returns": {
-    "nullable": true
+    "nullable": true,
+    "family": "optional-property"
   },
   "params": [
     {

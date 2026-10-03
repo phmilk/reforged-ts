@@ -8,12 +8,14 @@
  * text in, its new text out.
  */
 import { format } from "prettier";
-import type { CaseResult, Comparison, Verdict } from "./verdict.js";
+import type { CaseResult, Comparison, Family, Verdict } from "./verdict.js";
 
 /** One Native of a Slice: its cases in the order they ran, and the conclusions. */
 export interface NativeSection {
   native: string;
   cases: readonly CaseResult[];
+  /** The Nullability family its Overlay entry names. */
+  family: Family;
   verdict: Verdict;
   /** The Overlay's `returns.nullable` for the Native. */
   overlayNullable: boolean;
@@ -38,7 +40,7 @@ export interface SliceSection {
 /** What the report starts with when the command creates it. */
 export const REPORT_HEADER = `# Nullability sweep
 
-The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, written by \`pnpm probe:nullability-report <probe>\` from the Result file of the Slice's last Probe run, and replaced, alone, each time the command runs again. Each Native gets a verdict from its cases, compared with the Overlay's \`returns.nullable\`, and a proposed \`notes\` text. The command never writes the Overlay: every change to it goes through review.
+The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, written by \`pnpm probe:nullability-report <probe>\` from the Result file of the Slice's last Probe run, and replaced, alone, each time the command runs again. Each Native gets a verdict from its cases and its Nullability family, compared with the Overlay's \`returns.nullable\`, and a proposed \`notes\` text. The command never writes the Overlay: every change to it goes through review.
 `;
 
 /** One column of a Native's table: its header and each case's cell, as Markdown. */
@@ -127,6 +129,7 @@ function nativeLines(native: NativeSection): string[] {
       native.cases.map((testCase) => COLUMNS.map(({ cell }) => cell(testCase))),
     ),
     "",
+    `- Family: \`${native.family}\``,
     `- Verdict: ${native.verdict}`,
     `- Overlay \`returns.nullable\`: \`${String(native.overlayNullable)}\``,
     `- Comparison: ${native.comparison}`,

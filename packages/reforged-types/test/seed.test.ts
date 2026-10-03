@@ -188,6 +188,7 @@ const handWritten = entry(
   "CreateUnit",
   ["id", "unitid", "x", "y", "face"],
   true,
+  "constructor",
 );
 
 async function runSeed() {
@@ -335,13 +336,15 @@ describe("seed from war3-types-strict", () => {
     expect(report.commit).toBe("0123456789abcdef0123456789abcdef01234567");
   });
 
-  it("leaves the generator only the declarations without a record to report", async () => {
+  it("leaves the generator the declarations without a record and the family of each seeded handle return to report", async () => {
     const { patchDir, overlayDir } = await runSeed();
 
     const result = await generate({ patchDir, overlayDir });
 
     expect(result.ok).toBe(false);
+    // The seed predates the Nullability families: it names none.
     expect(result.diagnostics.map((d) => [d.kind, d.name])).toEqual([
+      ["nullability-family", "GetLocalPlayer"],
       ["missing-entry", "Reshaped"],
       ["missing-entry", "BlzNewIn300"],
     ]);

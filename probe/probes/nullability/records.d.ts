@@ -23,9 +23,10 @@ export interface CaseFields {
 
 /**
  * What a case's call gave, as its `CALL` record holds it: the `outcome` and
- * the fields that go with it, `id` (from `GetHandleId`) and `type` (from
- * `tostring`) for a `handle`, `type` for an `odd` value, `message` for an
- * `error`.
+ * the fields that go with it, `id` (from `GetHandleId`, 0 for a handle the
+ * game hands back in place of nothing) and `type` (from `tostring`) for a
+ * `handle`, `type` for an `odd` value, one that is no handle at all,
+ * `message` for an `error`.
  */
 export type CallFields =
   | { outcome: "nil" }

@@ -120,6 +120,10 @@ _Avoid_: log, output file, save file
 Measuring in the game the `returns.nullable` of the 394 handle-returning Natives, in Slices, each reported against the Overlay in `docs/research/nullability-sweep.md` by `pnpm probe:nullability-report <probe>`, which never writes the Overlay.
 _Avoid_: nullability audit, null check, nullability test
 
+**Nullability family**:
+The kind of handle-returning Native the curation rule types by: whether it may be typed non-null at all, and which cases the Nullability sweep runs before it is. A converter, enum-getter, constructor, registration or intrinsic-property Native may be non-null; an event-response, callback-getter, lookup or optional-property Native is nullable, since by its nature it may have nothing to return.
+_Avoid_: category, kind, group (a Slice's case group)
+
 **Slice**:
 One batch of the Nullability sweep: one Probe (`nullability-slice-1`), which calls its Natives in hand-listed cases, and one section of the sweep's report.
 _Avoid_: batch, phase, chunk

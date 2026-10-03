@@ -1,6 +1,6 @@
 # Nullability sweep
 
-The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, written by `pnpm probe:nullability-report <probe>` from the Result file of the Slice's last Probe run, and replaced, alone, each time the command runs again. Each Native gets a verdict from its cases, compared with the Overlay's `returns.nullable`, and a proposed `notes` text. The command never writes the Overlay: every change to it goes through review.
+The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, written by `pnpm probe:nullability-report <probe>` from the Result file of the Slice's last Probe run, and replaced, alone, each time the command runs again. Each Native gets a verdict from its cases and its Nullability family, compared with the Overlay's `returns.nullable`, and a proposed `notes` text. The command never writes the Overlay: every change to it goes through review.
 
 ## `nullability-slice-1`
 

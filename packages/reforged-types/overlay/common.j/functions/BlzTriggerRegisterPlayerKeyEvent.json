@@ -2,7 +2,8 @@
   "name": "BlzTriggerRegisterPlayerKeyEvent",
   "source": "common.j",
   "returns": {
-    "nullable": true
+    "nullable": true,
+    "family": "registration"
   },
   "params": [
     {

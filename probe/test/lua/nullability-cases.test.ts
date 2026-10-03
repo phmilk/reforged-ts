@@ -124,11 +124,11 @@ describe("the Nullability sweep's case runner", () => {
     expect(records.length).toBe(5);
   });
 
-  it("records the frame stub's id-0 frame as odd, with its tostring", () => {
+  it("records the frame stub's id-0 frame as a handle of id 0, with its tostring", () => {
     // The not-found frame has no metatable: its tostring is a table's.
     expect(
       (linesOfKind("CALL")[4] ?? "").startsWith(
-        "18 CALL case=not%20found%20frame group=b native=StandInNotFound outcome=odd type=table:%20",
+        "18 CALL case=not%20found%20frame group=b id=0 native=StandInNotFound outcome=handle type=table:%20",
       ),
     ).toBe(true);
   });

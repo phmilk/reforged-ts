@@ -264,7 +264,7 @@ describe("typings:generate <tag>", () => {
     await runCli([TAG, ...folders], network);
     await writeOverlay(overlayDir, [
       {
-        ...entry("common.j", "GetTriggerUnit", [], true),
+        ...entry("common.j", "GetTriggerUnit", [], true, "event-response"),
         since: "9.9.9.12345",
       },
       globalEntry("blizzard.j", "bj_forLoopAIndex", false, {

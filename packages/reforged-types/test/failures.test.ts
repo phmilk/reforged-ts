@@ -119,6 +119,132 @@ describe("generate: parameter mismatch", () => {
   });
 });
 
+describe("generate: Nullability families", () => {
+  const commonJ = [
+    "type unit extends handle",
+    "native GetTriggerUnit takes nothing returns unit",
+    "native GetUnitX takes unit whichUnit returns real",
+  ].join("\n");
+
+  it("fails on a handle-returning common.j Native without returns.family", async () => {
+    const result = await run({ "common.j": commonJ }, [
+      entry("common.j", "GetTriggerUnit", [], true),
+      entry("common.j", "GetUnitX", ["whichUnit"]),
+    ]);
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics).toEqual([
+      {
+        severity: "error",
+        kind: "nullability-family",
+        file: "common.j/functions/GetTriggerUnit.json",
+        name: "GetTriggerUnit",
+        message:
+          "common.j/functions/GetTriggerUnit.json: GetTriggerUnit returns a handle (unit) but has no returns.family; " +
+          "name its Nullability family, one of converter, enum-getter, constructor, registration, " +
+          "intrinsic-property, optional-property, event-response, callback-getter, lookup",
+      },
+    ]);
+  });
+
+  it("fails on returns.family on a Native that returns no handle", async () => {
+    const result = await run({ "common.j": commonJ }, [
+      entry("common.j", "GetTriggerUnit", [], true, "event-response"),
+      entry("common.j", "GetUnitX", ["whichUnit"], false, "intrinsic-property"),
+    ]);
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics).toEqual([
+      {
+        severity: "error",
+        kind: "nullability-family",
+        file: "common.j/functions/GetUnitX.json",
+        name: "GetUnitX",
+        message:
+          "common.j/functions/GetUnitX.json: returns.family on GetUnitX, which returns real, not a handle; remove it",
+      },
+    ]);
+  });
+
+  it("fails on returns.family on a handle-returning function outside common.j", async () => {
+    const result = await run(
+      {
+        "common.j": "type unit extends handle",
+        "blizzard.j":
+          "function GetLastCreatedUnit takes nothing returns unit\nendfunction\n",
+      },
+      [entry("blizzard.j", "GetLastCreatedUnit", [], true, "lookup")],
+    );
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics.map((d) => d.message)).toEqual([
+      "blizzard.j/functions/GetLastCreatedUnit.json: returns.family on GetLastCreatedUnit, a blizzard.j function; only a common.j Native has one, remove it",
+    ]);
+  });
+
+  it.each(["optional-property", "event-response", "callback-getter", "lookup"])(
+    "fails on a Native of the nullable family %s typed non-null",
+    async (family) => {
+      const result = await run({ "common.j": commonJ }, [
+        entry("common.j", "GetTriggerUnit", [], false, family),
+        entry("common.j", "GetUnitX", ["whichUnit"]),
+      ]);
+
+      expect(result.ok).toBe(false);
+      expect(result.diagnostics).toEqual([
+        {
+          severity: "error",
+          kind: "nullability-family",
+          file: "common.j/functions/GetTriggerUnit.json",
+          name: "GetTriggerUnit",
+          message:
+            `common.j/functions/GetTriggerUnit.json: GetTriggerUnit is of the family ${family}, ` +
+            "which may have nothing to return, but returns.nullable is false; make it true",
+        },
+      ]);
+    },
+  );
+
+  it.each([
+    "converter",
+    "enum-getter",
+    "constructor",
+    "registration",
+    "intrinsic-property",
+  ])(
+    "lets a Native of the family %s be non-null, rendering no family",
+    async (family) => {
+      const result = await run({ "common.j": commonJ }, [
+        entry("common.j", "GetTriggerUnit", [], false, family),
+        entry("common.j", "GetUnitX", ["whichUnit"]),
+      ]);
+
+      expect(result.ok).toBe(true);
+      const text = result.ok ? result.files.get("3.0.0/common.j.d.ts") : "";
+      expect(text).toContain("declare function GetTriggerUnit(): unit;");
+      expect(text).not.toContain(family);
+    },
+  );
+
+  it("leaves a handle-returning blizzard.j function and common.ai Native without a family", async () => {
+    const result = await run(
+      {
+        "common.j": "type unit extends handle",
+        "blizzard.j":
+          "function GetLastCreatedUnit takes nothing returns unit\nendfunction\n",
+        "common.ai": "native GetBuildingUnit takes nothing returns unit",
+      },
+      [
+        entry("blizzard.j", "GetLastCreatedUnit", [], true),
+        entry("common.ai", "GetBuildingUnit", [], true),
+      ],
+    );
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+  });
+});
+
 describe("generate: unknown lines", () => {
   it.each([
     ["a statement outside a function", "call DoNothing()"],
@@ -209,6 +335,16 @@ describe("generate: invalid inputs", () => {
       "source",
     ],
     ["a missing returns.nullable", { returns: {} }, "returns.nullable"],
+    [
+      "a family that is none of the nine",
+      { returns: { nullable: true, family: "getter" } },
+      "returns.family",
+    ],
+    [
+      "an unknown returns field",
+      { returns: { nullable: true, kind: "lookup" } },
+      'unknown field "returns.kind"',
+    ],
     [
       "a non-boolean parameter nullable",
       { params: [{ name: "x", nullable: "no" }] },

@@ -27,6 +27,43 @@ export interface TrackedEntry extends BaseEntry {
   origin?: typeof SEED_ORIGIN;
 }
 
+/**
+ * The Nullability families, the kinds of handle-returning Native the
+ * curation rule types by: the first five may be non-null, the last four
+ * are nullable by their nature.
+ */
+export const NULLABILITY_FAMILIES = [
+  "converter",
+  "enum-getter",
+  "constructor",
+  "registration",
+  "intrinsic-property",
+  "optional-property",
+  "event-response",
+  "callback-getter",
+  "lookup",
+] as const;
+
+export type NullabilityFamily = (typeof NULLABILITY_FAMILIES)[number];
+
+/** The families whose Natives may have nothing to return: always nullable. */
+export const NULLABLE_FAMILIES: readonly NullabilityFamily[] = [
+  "optional-property",
+  "event-response",
+  "callback-getter",
+  "lookup",
+];
+
+/** A function's return facts. */
+export interface OverlayReturns {
+  nullable: boolean;
+  /**
+   * The Nullability family of a handle-returning common.j Native; read by
+   * the Nullability sweep's report, never rendered.
+   */
+  family?: NullabilityFamily;
+}
+
 export interface OverlayParam {
   name: string;
   nullable: boolean;
@@ -36,7 +73,7 @@ export interface OverlayParam {
 
 /** A function's entry, mandatory for every `native` and `function`. */
 export interface FunctionEntry extends TrackedEntry {
-  returns: { nullable: boolean };
+  returns: OverlayReturns;
   params: OverlayParam[];
   /** The value is only valid for the local player; `false` when absent. */
   async: boolean;

@@ -130,7 +130,13 @@ describe("generate: the manifest of the Patch", () => {
         globalEntry("common.j", "MAX", false, { since: "3.0.0.24268" }),
         entry("common.j", "ConvertRace", ["i"]),
         {
-          ...entry("common.j", "CreateUnit", ["id", "unitid?"], true),
+          ...entry(
+            "common.j",
+            "CreateUnit",
+            ["id", "unitid?"],
+            true,
+            "constructor",
+          ),
           deprecated: "Use CreateUnitEx.",
           since: "3.0.0.24268",
         },

@@ -2,7 +2,8 @@
   "name": "BlzGetAbsorbingItem",
   "source": "common.j",
   "returns": {
-    "nullable": true
+    "nullable": true,
+    "family": "event-response"
   },
   "params": [],
   "origin": "war3-types-strict"
