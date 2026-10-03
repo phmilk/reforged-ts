@@ -6,11 +6,7 @@
 // A declaration holds values only, Fixtures built before the cases run,
 // never a call.
 
-import {
-  emptySlotPlayer,
-  neutralPassivePlayer,
-  userSlotPlayer,
-} from "./fixtures";
+import { userSlotPlayer } from "./fixtures";
 
 /**
  * A value a case gives a parameter in place of its typical value, and the
@@ -55,11 +51,6 @@ export interface Param<T> {
   readonly kind: ParamKind;
   /** The value of the typical call, live. */
   readonly typical: T;
-  /**
-   * The (a) values of the parameter's kind beyond the typical one: a
-   * player's empty slot and neutral player.
-   */
-  readonly live: readonly Variant<T>[];
   /** The (b) values: each stale state the parameter's type has. */
   readonly stale: readonly Variant<T>[];
 }
@@ -71,17 +62,17 @@ export type ParamValues<P extends readonly Param<unknown>[]> = {
 
 /** An integer or a real: `x`, `face`, `duration`. */
 export function numeric(name: string, typical: number): Param<number> {
-  return { name, kind: "numeric", typical, live: [], stale: [] };
+  return { name, kind: "numeric", typical, stale: [] };
 }
 
 /** An integer naming an object type: `unitid`, typically `FourCC("hfoo")`. */
 export function rawcode(name: string, typical: number): Param<number> {
-  return { name, kind: "rawcode", typical, live: [], stale: [] };
+  return { name, kind: "rawcode", typical, stale: [] };
 }
 
 /** A string: a name, a label, a file. */
 export function text(name: string, typical: string): Param<string> {
-  return { name, kind: "string", typical, live: [], stale: [] };
+  return { name, kind: "string", typical, stale: [] };
 }
 
 /**
@@ -93,7 +84,7 @@ export function handle<T>(
   typical: T,
   stale: readonly Variant<T>[] = [],
 ): Param<T> {
-  return { name, kind: "handle", typical, live: [], stale };
+  return { name, kind: "handle", typical, stale };
 }
 
 /** A registration's trigger: `typical` live, and `destroyed` after `DestroyTrigger`. */
@@ -106,7 +97,6 @@ export function trigger(
     name,
     kind: "trigger",
     typical,
-    live: [],
     stale: [["destroyed trigger", destroyed]],
   };
 }
@@ -120,27 +110,19 @@ export function filter(
   typical: boolexpr,
   stale: readonly Variant<boolexpr>[] = [],
 ): Param<boolexpr | undefined> {
-  return { name, kind: "filter", typical, live: [], stale };
+  return { name, kind: "filter", typical, stale };
 }
 
 /**
- * A player, typically a user slot, `Player(0)`; also an empty slot and
- * Neutral Passive, from the Fixtures, built here.
+ * A player, typically a user slot, `Player(0)`, from the Fixtures. The
+ * getters' rule also runs it as an empty slot and Neutral Passive
+ * (./getter.ts), which only the getters build.
  */
 export function player(name: string): Param<player> {
-  return {
-    name,
-    kind: "player",
-    typical: userSlotPlayer(),
-    live: [
-      ["empty slot", emptySlotPlayer()],
-      ["neutral player", neutralPassivePlayer()],
-    ],
-    stale: [],
-  };
+  return { name, kind: "player", typical: userSlotPlayer(), stale: [] };
 }
 
 /** A value never varied: a boolean, a callback, an enum constant. */
 export function fixed<T>(name: string, typical: T): Param<T> {
-  return { name, kind: "fixed", typical, live: [], stale: [] };
+  return { name, kind: "fixed", typical, stale: [] };
 }

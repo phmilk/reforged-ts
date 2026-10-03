@@ -49,6 +49,7 @@ interface Globals {
   ConvertAbilityBooleanField?: (i: number) => unknown;
   ConvertMapSetting?: (i: number) => unknown;
   GetBJMaxPlayers?: () => number;
+  GetPlayerSlotState?: (whichPlayer: player) => playerslotstate;
   PLAYER_NEUTRAL_PASSIVE?: number;
 }
 
@@ -240,6 +241,28 @@ describe("constructorCases", () => {
       dead,
       removed,
     ]);
+  });
+
+  it("runs a player parameter as Player(0) only, building no getter Fixture", () => {
+    const slotState = globals.GetPlayerSlotState;
+    globals.GetPlayerSlotState = () => PLAYER_SLOT_STATE_PLAYING;
+    try {
+      const cases = constructorCases(
+        "CreateUnit",
+        [player("id"), rawcode("unitid", FourCC("hfoo"))],
+        ([id]) => GetPlayerId(id),
+      );
+      expect(labels(cases)).toEqual([
+        "a typical arguments",
+        "a unitid: unknown rawcode",
+      ]);
+      expect(callsOf(cases)).toEqual(["0", "0"]);
+      expect(() =>
+        enumGetterCases("GetPlayerRace", [player("whichPlayer")], () => 0),
+      ).toThrow("Fixture emptySlotPlayer: the last slot is not empty");
+    } finally {
+      globals.GetPlayerSlotState = slotState;
+    }
   });
 
   it("runs one call for a constructor with no parameter", () => {

@@ -6,11 +6,19 @@
 
 import type { Case } from "./case-runner";
 import { expandCases } from "./expand";
+import { emptySlotPlayer, neutralPassivePlayer } from "./fixtures";
 import type { Param, ParamValues, Variant } from "./parameters";
 
-/** A player parameter's empty slot and neutral player; nothing for any other kind. */
+/**
+ * A player parameter's empty slot and neutral player, Fixtures built here,
+ * before the cases run, and only for a getter; nothing for any other kind.
+ */
 function liveValues(param: Param<unknown>): readonly Variant<unknown>[] {
-  return param.kind === "player" ? param.live : [];
+  if (param.kind !== "player") return [];
+  return [
+    ["empty slot", emptySlotPlayer()],
+    ["neutral player", neutralPassivePlayer()],
+  ];
 }
 
 /** Each stale state a parameter declares. */
