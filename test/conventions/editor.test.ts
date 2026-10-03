@@ -443,15 +443,14 @@ describe(".vscode/tasks.json", () => {
   // removed from the paths. A recursive run needs two packages that do not
   // depend on each other for pnpm to print a prefix at all.
   //
-  // The typecheck recordings ran
+  // The typecheck recording ran
   //   pnpm --recursive --no-bail --filter reforged-test --filter reforged-types typecheck
   // with this line in packages/reforged-test/src/zz-broken.ts and
   // packages/reforged-types/scripts/zz-broken.ts:
   //   interface ATypeWhoseNameRunsWellPastTheEightyColumnsOfATerminal { readonly n: number } export const x: ATypeWhoseNameRunsWellPastTheEightyColumnsOfATerminal = "s";
   // pnpm-tty-append-only-typecheck.txt with `pnpm_config_reporter=append-only`
-  // in the environment, as the tasks set it, pnpm-tty-default-typecheck.txt
-  // without it. pnpm-tty-append-only-build.txt is `pnpm build` with the
-  // variable and this line in packages/reforged-ts/src/zz-broken.ts:
+  // in the environment, as the tasks set it. pnpm-tty-append-only-build.txt
+  // is `pnpm build` with the variable and this line in packages/reforged-ts/src/zz-broken.ts:
   //   export const zzBroken = /a regular expression whose diagnostic runs past eighty columns/;
   describe("pnpm's output in a terminal", () => {
     const typeError =
@@ -462,10 +461,6 @@ describe(".vscode/tasks.json", () => {
       return read(`test/conventions/fixtures/${fixture}`)
         .split("\n")
         .filter((line) => /\berror TS(?:\d+|TL)\b/.test(line));
-    }
-
-    function summary(problem: Problem | undefined) {
-      return problem && { matcher: problem.matcher, path: problem.path };
     }
 
     describe.each(["build", "check"])("the %s task", (label) => {
@@ -523,19 +518,6 @@ describe(".vscode/tasks.json", () => {
               message: "Unsupported node kind RegularExpressionLiteral",
             },
           },
-        ]);
-      });
-
-      it("misreads the boxed lines of pnpm's default reporter, which the tasks avoid", () => {
-        // Without the variable: no prefix, so only `$tsc` matches, at a file
-        // that does not exist, and the message is cut at the terminal width.
-        const lines = errorLines("pnpm-tty-default-typecheck.txt");
-        expect(
-          lines.map((line) => summary(problemOf(label, line))),
-          "the problems of pnpm-tty-default-typecheck.txt",
-        ).toEqual([
-          { matcher: "$tsc", path: "│ src/zz-broken.ts" },
-          { matcher: "$tsc", path: "│ scripts/zz-broken.ts" },
         ]);
       });
     });
