@@ -35,7 +35,8 @@
       "held_bundle",
       "failing-later_bundle",
       "calibration_bundle",
-      "nullability-cases_bundle"
+      "nullability-cases_bundle",
+      "nullability-call-cases_bundle"
     ],
     "luaTarget": "5.3",
     "noHeader": true,

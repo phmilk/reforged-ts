@@ -53,13 +53,21 @@ export async function main(
   }
 }
 
-/** What the command prints: the section it wrote, then one line per Native. */
+/**
+ * What the command prints: the section it wrote, then one line per Native,
+ * then one per parameter of call cases, with how its `nil` counts differ
+ * from the always-true ones when they do.
+ */
 function summary({ file, slice }: NullabilityReport): string {
   return [
     `Wrote the section of Probe ${slice.probe}, run ${slice.runId}, to ${file}:`,
     ...slice.natives.map(
       ({ native, verdict, comparison }) =>
         `${native}: ${verdict}, ${comparison}`,
+    ),
+    ...slice.params.map(
+      ({ native, param, verdict, comparison, countDifference }) =>
+        `${native} parameter ${param}: ${verdict}, ${comparison}${countDifference === undefined ? "" : `; count difference: ${countDifference}`}`,
     ),
   ]
     .map((line) => `${line}\n`)

@@ -1,7 +1,8 @@
 // The Nullability sweep's case runner, shared by every Slice: records a
 // Slice's case list up front, then runs it in order, each case after its
 // PENDING line and a checkpoint and under `pcall`, and records what the
-// Native returned as one CALL record, or one SKIP record for a case of the
+// Native returned, or for a call case whether the call completed and the
+// count it reports, as one CALL record, or one SKIP record for a case of the
 // skip list, which `probe:nullability-report` reads back
 // (src/nullability/). The records' format is ./records.d.ts. It reaches the
 // Result file through the runner's `p` only, and the game through Natives
@@ -12,6 +13,8 @@
 import { describe, errorMessage } from "../../game/errors";
 import type { ProbeContext } from "../../game/probe";
 import type {
+  CallArgument,
+  CallCaseFields,
   CallFields,
   CaseFields,
   CaseGroup,
@@ -20,11 +23,11 @@ import type {
 } from "./records";
 
 /**
- * One case of a Slice: one direct call of one Native with arguments in a
- * known state.
+ * A return case of a Slice: one direct call of one Native with arguments in
+ * a known state, recording what it returned.
  * @noSelf
  */
-export interface Case {
+export interface ReturnCase {
   /** The Native called, as the Typings name it: `CreateTimer`. */
   readonly native: string;
   /**
@@ -36,7 +39,41 @@ export interface Case {
   readonly group: CaseGroup;
   /** Calls the Native once and returns what it returned; called under `pcall`. */
   readonly call: () => unknown;
+  /** No parameter: a return case measures the return value. */
+  readonly param?: undefined;
 }
+
+/**
+ * A call case of a Slice: one direct call of a Native that returns nothing,
+ * with one parameter given `argument`, recording whether the call completed
+ * and the count it reports.
+ * @noSelf
+ */
+export interface CallCase {
+  /** The Native called, as the Typings name it: `GroupEnumUnitsInRect`. */
+  readonly native: string;
+  /**
+   * What the case calls it with, as `ReturnCase.label`: `nil filter`.
+   * Unique among the Native's cases.
+   */
+  readonly label: string;
+  readonly group: CaseGroup;
+  /** The parameter measured, as the Overlay's `params[].name` names it: `filter`. */
+  readonly param: string;
+  /** What the case passes for `param`. */
+  readonly argument: CallArgument;
+  /** What `call` counts, singular: `unit`, `player`, `item` or `destructable`. */
+  readonly counted: string;
+  /**
+   * Calls the Native once and returns how many objects the call enumerated,
+   * an integer, the units of the group it filled, say; called under
+   * `pcall`.
+   */
+  readonly call: () => number;
+}
+
+/** One case of a Slice: a return case or a call case. */
+export type Case = ReturnCase | CallCase;
 
 /**
  * How `runCases` runs a case list besides the cases.
@@ -82,12 +119,38 @@ function pendingLabel(testCase: Case): PendingLabel {
   return `${testCase.native} ${testCase.label}`;
 }
 
-/** The fields that name a case in its CASE, CALL and SKIP records. */
-function caseFields(testCase: Case): CaseFields {
+/**
+ * What a call case's call returned, which should be its count, an integer:
+ * `completed` with the count, or an `error` naming what it returned
+ * instead, a float or a value that is no number, so a case that counts
+ * nothing is reviewed.
+ */
+function completed(value: unknown): CallFields {
+  if (type(value) === "number" && math.type(value as number) === "integer") {
+    return { outcome: "completed", count: value as number };
+  }
   return {
+    outcome: "error",
+    message: `The case reported no integer count: it returned ${describe(value)}.`,
+  };
+}
+
+/**
+ * The fields that name a case in its CASE, CALL and SKIP records, a call
+ * case's `param`, `argument` and `counted` included.
+ */
+function caseFields(testCase: Case): CaseFields | CallCaseFields {
+  const fields: CaseFields = {
     native: testCase.native,
     case: testCase.label,
     group: testCase.group,
+  };
+  if (testCase.param === undefined) return fields;
+  return {
+    ...fields,
+    param: testCase.param,
+    argument: testCase.argument,
+    counted: testCase.counted,
   };
 }
 
@@ -96,7 +159,7 @@ function caseFields(testCase: Case): CaseFields {
  * so a crash in the call leaves that line last on disk and names the case,
  * then the call under `pcall`, then the record
  * `CALL case=<label> group=<group> native=<native> outcome=<outcome>`, with
- * the outcome's fields.
+ * the case's call-case fields and the outcome's fields.
  */
 function runCase(
   p: ProbeContext,
@@ -106,15 +169,17 @@ function runCase(
   p.pending(pendingLabel(testCase));
   p.checkpoint();
   const [ok, value] = pcall(testCase.call);
-  const outcome: CallFields = ok
-    ? classify(value, isHandle)
-    : { outcome: "error", message: errorMessage(value) };
+  let outcome: CallFields;
+  if (!ok) outcome = { outcome: "error", message: errorMessage(value) };
+  else if (testCase.param === undefined) outcome = classify(value, isHandle);
+  else outcome = completed(value);
   p.record("CALL", { ...caseFields(testCase), ...outcome });
 }
 
 /**
- * Runs a Slice's whole case list. First one record
- * `CASE case=<label> group=<group> native=<native>` per case, in order, so
+ * Runs a Slice's whole case list, return cases and call cases alike. First
+ * one record `CASE case=<label> group=<group> native=<native>` per case,
+ * with a call case's `argument`, `counted` and `param`, in order, so
  * the report lists the cases a crash left unrun, and a checkpoint; then
  * each case in order (`runCase`), except a case of `options.skip`, which
  * is not called and gets the record `SKIP case=<label> group=<group>
