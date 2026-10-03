@@ -128,7 +128,10 @@ describe(".vscode/tasks.json", () => {
     problemMatcher?: string | (string | ProblemMatcher)[];
   }
 
-  const { tasks } = readJsonc(".vscode/tasks.json") as { tasks: Task[] };
+  const { options, tasks } = readJsonc(".vscode/tasks.json") as {
+    options?: Task["options"];
+    tasks: Task[];
+  };
 
   function task(label: string): Task {
     const found = tasks.find((candidate) => candidate.label === label);
@@ -278,19 +281,26 @@ describe(".vscode/tasks.json", () => {
     return undefined;
   }
 
-  it.each(["build", "check"])(
-    "runs the %s task with pnpm's append-only reporter",
-    (label) => {
-      // A task runs in a terminal, where pnpm's TTY reporter prints a nested
-      // `pnpm --recursive` in a box: no prefix, lines cut to the terminal
-      // width (#357). Every nested pnpm reads the reporter from this
-      // variable, so the matchers read the prefixed lines.
-      expect(
-        task(label).options?.env?.pnpm_config_reporter,
-        `options.env.pnpm_config_reporter of the ${label} task`,
-      ).toBe("append-only");
-    },
-  );
+  it("runs every task with pnpm's append-only reporter", () => {
+    // A task runs in a terminal, where pnpm's TTY reporter prints a nested
+    // `pnpm --recursive` in a box: no prefix, lines cut to the terminal
+    // width (#357). Every nested pnpm reads the reporter from this
+    // variable, so the matchers read the prefixed lines. Set at the top
+    // level, it reaches every task, a new one included.
+    expect(
+      options?.env?.pnpm_config_reporter,
+      "the top-level options.env.pnpm_config_reporter",
+    ).toBe("append-only");
+    expect(
+      tasks
+        .filter(
+          (candidate) =>
+            candidate.options?.env?.pnpm_config_reporter !== undefined,
+        )
+        .map(({ label }) => label),
+      "the tasks that override options.env.pnpm_config_reporter",
+    ).toEqual([]);
+  });
 
   it.each(["build", "check"])(
     "gives the %s task one tstl matcher per workspace package whose build runs tstl",
