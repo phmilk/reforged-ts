@@ -11,6 +11,7 @@ import {
   type CreationNative,
   parseCreationNatives,
 } from "./creation-natives.js";
+import { type EventResponse, parseEventResponses } from "./event-responses.js";
 import { readDataFile, ownDataFile } from "./load.js";
 import { parseLocalSafe, type LocalSafeEntry } from "./local-safe.js";
 import {
@@ -29,6 +30,8 @@ export interface PluginData {
   readonly localSafe: readonly LocalSafeEntry[];
   /** The creation Natives (the plugin's data/creation-natives.json). */
   readonly creationNatives: readonly CreationNative[];
+  /** The event responses (the plugin's data/event-responses.json). */
+  readonly eventResponses: readonly EventResponse[];
   /** The rename map of `no-legacy-w3ts-names` (reforged-ts's migration/renames.json). */
   readonly renames: readonly RenameEntry[];
   /** The async Natives of `no-async-value-as-state` (reforged-types's async-natives.json). */
@@ -45,6 +48,8 @@ export interface DataFiles {
   readonly localSafe?: string;
   /** Defaults to the plugin's own data/creation-natives.json. */
   readonly creationNatives?: string;
+  /** Defaults to the plugin's own data/event-responses.json. */
+  readonly eventResponses?: string;
   /** Defaults to reforged-ts's migration/renames.json, found from the project root. */
   readonly renames?: string;
   /** Defaults to reforged-types's async-natives.json, found from the project root. */
@@ -81,6 +86,10 @@ export function loadPluginData(
       files.creationNatives ?? ownDataFile("creation-natives.json"),
       parseCreationNatives,
     ),
+    eventResponses: readDataFile(
+      files.eventResponses ?? ownDataFile("event-responses.json"),
+      parseEventResponses,
+    ),
     renames: optional(renamesFile, files.renames, []),
     asyncNatives: optional(asyncNativesFile, files.asyncNatives, []),
     unavailable,
@@ -97,4 +106,5 @@ export type {
 export type { UnsafeNative } from "./unsafe-natives.js";
 export type { LocalSafeEntry, LocalSafeKind } from "./local-safe.js";
 export type { CreationNative } from "./creation-natives.js";
+export type { EventContextKind, EventResponse } from "./event-responses.js";
 export { DataFileError } from "./schema.js";

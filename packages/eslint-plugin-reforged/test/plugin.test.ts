@@ -24,6 +24,7 @@ const decidedTable: Readonly<Record<string, "error" | "warn">> = {
   "no-percent-in-display-strings": "warn",
   "prefer-handle-map": "warn",
   "no-self-recursion": "warn",
+  "no-event-response-outside-event": "warn",
 };
 
 /** The one rule allowed to fix code (spec #50: rule 6, one-to-one renames). */
@@ -59,6 +60,7 @@ const ticker = CreateTimer();
 export const kills = new Map<Unit, number>();
 export const slot = GetHandleId(ticker) % 12;
 export let zoom = 0;
+export const dying = GetTriggerUnit();
 
 function onTick(): void {
   TriggerSleepAction(1);
@@ -94,14 +96,14 @@ describe("the plugin object", () => {
   });
 
   it("exports every rule of the decided table, and only those", () => {
-    expect(Object.keys(decidedTable)).toHaveLength(12);
+    expect(Object.keys(decidedTable)).toHaveLength(13);
     expect([...ruleNames].sort()).toEqual(Object.keys(decidedTable).sort());
   });
 
-  it("decides six errors and six warnings", () => {
+  it("decides six errors and seven warnings", () => {
     const severities = Object.values(decidedTable);
     expect(severities.filter((each) => each === "error")).toHaveLength(6);
-    expect(severities.filter((each) => each === "warn")).toHaveLength(6);
+    expect(severities.filter((each) => each === "warn")).toHaveLength(7);
   });
 });
 

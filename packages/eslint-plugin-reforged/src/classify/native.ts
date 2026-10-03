@@ -8,6 +8,7 @@ import {
 } from "@typescript-eslint/utils";
 import * as ts from "typescript";
 
+import { resolvedDeclarations } from "./member-access.js";
 import { isDeclaredIn } from "./package.js";
 
 /** A call the checker resolved to a Native of the Typings. */
@@ -28,14 +29,7 @@ export function resolveNative(
   services: ParserServicesWithTypeInformation,
   call: TSESTree.CallExpression,
 ): NativeCall | undefined {
-  const checker = services.program.getTypeChecker();
-  let symbol = checker.getSymbolAtLocation(
-    services.esTreeNodeToTSNodeMap.get(call.callee),
-  );
-  if (symbol !== undefined && symbol.flags & ts.SymbolFlags.Alias) {
-    symbol = checker.getAliasedSymbol(symbol);
-  }
-  const declaration = symbol?.declarations?.find(
+  const declaration = resolvedDeclarations(services, call.callee).find(
     (each): each is ts.FunctionDeclaration =>
       ts.isFunctionDeclaration(each) &&
       each.name !== undefined &&
