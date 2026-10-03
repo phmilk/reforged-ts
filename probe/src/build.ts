@@ -10,7 +10,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { compileBundle } from "./compile.js";
 import { composeMapScript } from "./compose.js";
-import { AuthorError } from "./errors.js";
 import {
   PROBE_FOLDERS,
   PROBES_TSCONFIG,

@@ -163,19 +163,17 @@ describe("probe:nullability-converters", () => {
   });
 
   /**
-   * The command run on `context` in place of the real files: its exit code
-   * and what it printed on stderr.
+   * The command run on `context` in place of the real files: its exit code,
+   * a space, then what it printed on stderr.
    */
-  async function failingRun(
-    context: Context,
-  ): Promise<{ code: number; stderr: string }> {
+  async function failingRun(context: Context): Promise<string> {
     let stderr = "";
     const code = await main(
       [],
       { stdout: () => undefined, stderr: (text) => (stderr += text) },
       context,
     );
-    return { code, stderr };
+    return `${String(code)} ${stderr}`;
   }
 
   it("fails on one line when a source cannot be read", async () => {
@@ -187,33 +185,25 @@ describe("probe:nullability-converters", () => {
       const functions = join(overlayFolder, "common.j", "functions");
       await mkdir(functions, { recursive: true });
 
-      expect(await failingRun({ ...SOURCES, manifest, module })).toEqual({
-        code: 1,
-        stderr: expect.stringMatching(
-          /^probe:nullability-converters failed: [^\n]*manifest\.json could not be read as JSON[^\n]*\n$/,
-        ),
-      });
+      expect(await failingRun({ ...SOURCES, manifest, module })).toMatch(
+        /^1 probe:nullability-converters failed: [^\n]*manifest\.json could not be read as JSON[^\n]*\n$/,
+      );
 
       await writeFile(manifest, JSON.stringify({ patch: "latest" }));
-      expect(await failingRun({ ...SOURCES, manifest, module })).toEqual({
-        code: 1,
-        stderr: `probe:nullability-converters failed: ${manifest} names no Patch, such as 3.0.0.24268.\n`,
-      });
+      expect(await failingRun({ ...SOURCES, manifest, module })).toBe(
+        `1 probe:nullability-converters failed: ${manifest} names no Patch, such as 3.0.0.24268.\n`,
+      );
 
       await writeFile(manifest, JSON.stringify({ patch: "9.9.9.1" }));
-      expect(await failingRun({ ...SOURCES, manifest, module })).toEqual({
-        code: 1,
-        stderr: `probe:nullability-converters failed: ${join(VENDOR_FOLDER, "9.9.9.1", "common.j")} could not be read: the Patch 9.9.9.1 is not vendored.\n`,
-      });
+      expect(await failingRun({ ...SOURCES, manifest, module })).toBe(
+        `1 probe:nullability-converters failed: ${join(VENDOR_FOLDER, "9.9.9.1", "common.j")} could not be read: the Patch 9.9.9.1 is not vendored.\n`,
+      );
 
       const entry = join(functions, "ConvertRace.json");
       await writeFile(entry, "{ not json");
-      expect(await failingRun({ ...SOURCES, overlayFolder, module })).toEqual({
-        code: 1,
-        stderr: expect.stringMatching(
-          /^probe:nullability-converters failed: [^\n]*ConvertRace\.json could not be read as JSON[^\n]*\n$/,
-        ),
-      });
+      expect(await failingRun({ ...SOURCES, overlayFolder, module })).toMatch(
+        /^1 probe:nullability-converters failed: [^\n]*ConvertRace\.json could not be read as JSON[^\n]*\n$/,
+      );
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
