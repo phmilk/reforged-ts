@@ -20,7 +20,10 @@ import {
 import { systemMachine, type Machine } from "../src/machine.js";
 import { resultFile } from "../src/read.js";
 import { writeNullabilityReport } from "../src/nullability/report.js";
-import { REPORT_HEADER } from "../src/nullability/section.js";
+import {
+  REPORT_HEADER,
+  type SliceSection,
+} from "../src/nullability/section.js";
 import { FAMILIES, proposedNotes } from "../src/nullability/verdict.js";
 import { stateFile } from "../src/state.js";
 import { USER_FOLDER_VARIABLE } from "../src/user-folder.js";
@@ -352,14 +355,18 @@ function callRun(cases: readonly ReturnType<typeof callCase>[]): string[] {
 
 /**
  * Reports a finished run whose six Natives give the six verdicts, one
- * each, in the order of the verdicts, against an Overlay that types every
+ * each, in the order of the `Verdict` type, against an Overlay that types every
  * one of them nullable, or every one non-null, as `nullable` says:
  * GetOwningPlayer returns nothing; GetTriggerUnit, of a nullable family, a
  * handle; CreateTimer's case was skipped after a crash; CreateUnit's
  * raised an error; Location returns a handle; TriggerAddAction a handle of
  * id 0. Returns the Slice's section.
  */
-async function everyVerdict(context: Context, file: string, nullable: boolean) {
+async function reportEveryVerdict(
+  context: Context,
+  file: string,
+  nullable: boolean,
+): Promise<SliceSection> {
   const overlayFolder = await overlayWith(context, {
     GetOwningPlayer: { nullable, family: "intrinsic-property" },
     GetTriggerUnit: { nullable, family: "event-response" },
@@ -866,7 +873,7 @@ describe("the nullability report", () => {
 
   it("reports a mismatch whenever the Overlay types a Native non-null without evidence: unsafe, review and both nullable verdicts", async () => {
     const { context, resultFile } = await setup();
-    const slice = await everyVerdict(context, resultFile, false);
+    const slice = await reportEveryVerdict(context, resultFile, false);
     expect(
       slice.natives.map(({ verdict, comparison }) => [verdict, comparison]),
     ).toEqual([
@@ -881,7 +888,7 @@ describe("the nullability report", () => {
 
   it("finds an Overlay nullable consistent whatever the verdict", async () => {
     const { context, resultFile } = await setup();
-    const slice = await everyVerdict(context, resultFile, true);
+    const slice = await reportEveryVerdict(context, resultFile, true);
     expect(
       slice.natives.map(({ verdict, comparison }) => [verdict, comparison]),
     ).toEqual([
