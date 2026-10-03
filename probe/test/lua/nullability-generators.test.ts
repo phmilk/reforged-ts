@@ -166,7 +166,7 @@ describe("constructorCases", () => {
     const cases = constructorCases(
       "CreateUnitByName",
       [
-        handle("whichPlayer", owner),
+        handle("whichPlayer", owner, []),
         text("unitname", "footman"),
         rawcode("unitid", FourCC("hfoo")),
         numeric("x", 0),
@@ -263,6 +263,21 @@ describe("constructorCases", () => {
     } finally {
       globals.GetPlayerSlotState = slotState;
     }
+  });
+
+  it("runs no stale case for a handle that declares its type has none", () => {
+    const setup = __stub_new_handle("camerasetup");
+    // A handle always names its stale states, `[]` when its type has none,
+    // so a Slice cannot leave them out by mistake.
+    // @ts-expect-error: the stale states are a required argument.
+    const undeclared = (): unknown => handle("whichSetup", setup);
+    expect(typeof undeclared).toBe("function");
+    const cases = constructorCases(
+      "CameraSetupGetDestPositionLoc",
+      [handle("whichSetup", setup, [])],
+      ([whichSetup]) => whichSetup,
+    );
+    expect(labels(cases)).toEqual(["a typical arguments"]);
   });
 
   it("runs one call for a constructor with no parameter", () => {

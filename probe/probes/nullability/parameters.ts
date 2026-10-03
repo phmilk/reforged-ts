@@ -76,13 +76,14 @@ export function text(name: string, typical: string): Param<string> {
 }
 
 /**
- * A handle, `typical` live, with each stale state its type has: none for
- * a type no Native destroys, such as a camera setup.
+ * A handle, `typical` live, with each stale state its type has, always
+ * named so a Slice cannot leave them out by mistake: `[]` for a type no
+ * Native destroys, such as a camera setup.
  */
 export function handle<T>(
   name: string,
   typical: T,
-  stale: readonly Variant<T>[] = [],
+  stale: readonly Variant<T>[],
 ): Param<T> {
   return { name, kind: "handle", typical, stale };
 }
@@ -108,7 +109,7 @@ export function trigger(
 export function filter(
   name: string,
   typical: boolexpr,
-  stale: readonly Variant<boolexpr>[] = [],
+  stale: readonly Variant<boolexpr>[],
 ): Param<boolexpr | undefined> {
   return { name, kind: "filter", typical, stale };
 }
