@@ -8,7 +8,14 @@
  * text in, its new text out.
  */
 import { format } from "prettier";
-import type { CaseResult, Comparison, Family, Verdict } from "./verdict.js";
+import type {
+  CaseResult,
+  Comparison,
+  Family,
+  ParamCaseResult,
+  ParamVerdict,
+  Verdict,
+} from "./verdict.js";
 
 /** One Native of a Slice: its cases in the order they ran, and the conclusions. */
 export interface NativeSection {
@@ -24,6 +31,28 @@ export interface NativeSection {
   notes: string;
 }
 
+/**
+ * One parameter of a Native that returns nothing, measured by call cases:
+ * its cases in the order they ran, and the conclusions.
+ */
+export interface ParamSection {
+  native: string;
+  /** The parameter, as the Overlay's `params[].name` names it: `filter`. */
+  param: string;
+  cases: readonly ParamCaseResult[];
+  verdict: ParamVerdict;
+  /** The Overlay's `params[].nullable` for the parameter. */
+  overlayNullable: boolean;
+  comparison: Comparison;
+  /**
+   * How the counts with `nil` differ from the always-true ones, for the
+   * pull request; undefined when they are the same.
+   */
+  countDifference: string | undefined;
+  /** The proposed `notes` text, or "review" when there is none. */
+  notes: string;
+}
+
 /** One Slice's section of the report. */
 export interface SliceSection {
   probe: string;
@@ -33,14 +62,19 @@ export interface SliceSection {
   date: string;
   /** The runId of the Probe run read. */
   runId: string;
-  /** The Natives, in the order the Probe first called them. */
+  /** The Natives of return cases, in the order the Probe first called them. */
   natives: readonly NativeSection[];
+  /**
+   * The parameters of call cases, in the order the Probe first called
+   * them: one per Native and parameter.
+   */
+  params: readonly ParamSection[];
 }
 
 /** What the report starts with when the command creates it. */
 export const REPORT_HEADER = `# Nullability sweep
 
-The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, written by \`pnpm probe:nullability-report <probe>\` from the Result file of the Slice's last Probe run, and replaced, alone, each time the command runs again. Each Native gets a verdict from its cases and its Nullability family, compared with the Overlay's \`returns.nullable\`, and a proposed \`notes\` text. The command never writes the Overlay: every change to it goes through review.
+The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, written by \`pnpm probe:nullability-report <probe>\` from the Result file of the Slice's last Probe run, and replaced, alone, each time the command runs again. Each Native gets a verdict from its cases and its Nullability family, compared with the Overlay's \`returns.nullable\`, and a proposed \`notes\` text; an \`unsafe\` Native, one with a case that crashed the game, is proposed nullable. Each parameter measured by call cases gets a verdict from them, compared with the Overlay's \`params[].nullable\`. The command never writes the Overlay: every change to it goes through review.
 `;
 
 /** One column of a Native's table: its header and each case's cell, as Markdown. */
@@ -48,6 +82,17 @@ interface Column {
   header: string;
   cell: (testCase: CaseResult) => string;
 }
+
+/** The Message column: an error's message as a code span, a crash's as text. */
+const MESSAGE: Column = {
+  header: "Message",
+  // An error's message is the Native's own text, shown as it is in a
+  // code span; a crash's is the report's words.
+  cell: ({ outcome, message }) => {
+    if (message === undefined) return "";
+    return outcome === "error" ? code(message) : text(message);
+  },
+};
 
 /** The columns of a Native's table, left to right. */
 const COLUMNS: readonly Column[] = [
@@ -59,15 +104,26 @@ const COLUMNS: readonly Column[] = [
     header: "Type",
     cell: ({ type }) => (type === undefined ? "" : code(type)),
   },
+  MESSAGE,
+];
+
+/** One column of a parameter's table: its header and each case's cell. */
+interface ParamColumn {
+  header: string;
+  cell: (testCase: ParamCaseResult) => string;
+}
+
+/** The columns of a parameter's table, left to right. */
+const PARAM_COLUMNS: readonly ParamColumn[] = [
+  { header: "Case", cell: ({ label }) => text(label) },
+  { header: "Group", cell: ({ group }) => `(${group})` },
+  { header: "Argument", cell: ({ argument }) => argument },
+  { header: "Outcome", cell: ({ outcome }) => outcome },
   {
-    header: "Message",
-    // An error's message is the Native's own text, shown as it is in a
-    // code span; a crash's is the report's words.
-    cell: ({ outcome, message }) => {
-      if (message === undefined) return "";
-      return outcome === "error" ? code(message) : text(message);
-    },
+    header: "Count",
+    cell: ({ count }) => (count === undefined ? "" : text(count)),
   },
+  MESSAGE,
 ];
 
 /**
@@ -137,13 +193,39 @@ function nativeLines(native: NativeSection): string[] {
   ];
 }
 
+/**
+ * The lines of one parameter's part of a section: its heading, its table
+ * and its conclusions, with the count difference when there is one.
+ */
+function paramLines(param: ParamSection): string[] {
+  return [
+    `### \`${param.native}\` parameter \`${param.param}\``,
+    "",
+    ...table(
+      PARAM_COLUMNS.map(({ header }) => header),
+      param.cases.map((testCase) =>
+        PARAM_COLUMNS.map(({ cell }) => cell(testCase)),
+      ),
+    ),
+    "",
+    `- Verdict: ${param.verdict}`,
+    `- Overlay \`params[].nullable\`: \`${String(param.overlayNullable)}\``,
+    `- Comparison: ${param.comparison}`,
+    ...(param.countDifference === undefined
+      ? []
+      : [`- Count difference: ${text(param.countDifference)}`]),
+    `- Proposed \`notes\`: ${text(param.notes)}`,
+  ];
+}
+
 /** The heading of the Slice of `probe`, which keys its section. */
 function sectionHeading(probe: string): string {
   return `## \`${probe}\``;
 }
 
 /**
- * A Slice's section: its heading, the run it reports, then each Native,
+ * A Slice's section: its heading, the run it reports, then each Native of
+ * return cases, then each parameter of call cases,
  * formatted by Prettier with its defaults, the workspace's, so it passes
  * the Prettier check as it is.
  */
@@ -156,6 +238,7 @@ export async function formatSection(slice: SliceSection): Promise<string> {
     `- Date: ${slice.date}`,
     `- Run: \`${slice.runId}\``,
     ...slice.natives.flatMap((native) => ["", ...nativeLines(native)]),
+    ...slice.params.flatMap((param) => ["", ...paramLines(param)]),
   ];
   return format(`${lines.join("\n")}\n`, { parser: "markdown" });
 }

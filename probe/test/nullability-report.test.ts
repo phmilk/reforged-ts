@@ -284,6 +284,70 @@ async function overlayWith(
   return overlayFolder;
 }
 
+/**
+ * A copy of the fixture Overlay next to the context's report, with an
+ * entry for each Native of `filters`, one that returns nothing and whose
+ * parameter `filter` has that `nullable`. Returns the copy's folder.
+ */
+async function overlayWithFilters(
+  context: Context,
+  filters: Readonly<Record<string, boolean>>,
+): Promise<string> {
+  const overlayFolder = join(context.reportFile, "..", "..", "overlay");
+  await cp(OVERLAY_FOLDER, overlayFolder, { recursive: true });
+  for (const [name, nullable] of Object.entries(filters)) {
+    await writeFile(
+      join(overlayFolder, "common.j", "functions", `${name}.json`),
+      JSON.stringify({
+        name,
+        source: "common.j",
+        returns: { nullable: false },
+        params: [
+          { name: "whichGroup", nullable: false },
+          { name: "filter", nullable },
+        ],
+      }),
+    );
+  }
+  return overlayFolder;
+}
+
+/**
+ * The records of one call case of `native`'s `filter`: its CASE, then its
+ * PENDING and CALL with `outcome` (and `count` on a `completed`), or its
+ * SKIP for the outcome `skipped`. The CASE records come first in a run:
+ * `callCase` returns them apart.
+ */
+function callCase(
+  native: string,
+  label: string,
+  argument: "nil" | "always-true" | "live",
+  outcome: "completed" | "error" | "skipped",
+  count = 0,
+): { plan: string; records: string[] } {
+  const encoded = label.replaceAll(" ", "%20");
+  const fields = `argument=${argument} case=${encoded} counted=unit group=a native=${native}`;
+  const records =
+    outcome === "skipped"
+      ? [`SKIP ${fields} param=filter reason=crashed`]
+      : [
+          `PENDING label=${native}%20${encoded}`,
+          outcome === "completed"
+            ? `CALL argument=${argument} case=${encoded} count=${String(count)} counted=unit group=a native=${native} outcome=completed param=filter`
+            : `CALL argument=${argument} case=${encoded} counted=unit group=a message=bad%20filter native=${native} outcome=error param=filter`,
+        ];
+  return { plan: `CASE ${fields} param=filter`, records };
+}
+
+/** A finished run of `cases`: their CASE records, then their other records. */
+function callRun(cases: readonly ReturnType<typeof callCase>[]): string[] {
+  return numbered([
+    ...cases.map(({ plan }) => plan),
+    ...cases.flatMap(({ records }) => records),
+    "END status=ok",
+  ]);
+}
+
 /** Writes the Result file as the game does, its lines through `Preload`. */
 async function writeResultFile(file: string, lines: readonly string[]) {
   await mkdir(join(file, ".."), { recursive: true });
@@ -376,7 +440,7 @@ describe("the nullability report", () => {
 | raising call | (a)   | error   |         |                   | \`\` bad \\| \`arg\` \`\` |
 
 - Family: \`constructor\`
-- Verdict: unsafe
+- Verdict: review
 - Overlay \`returns.nullable\`: \`false\`
 - Comparison: consistent
 - Proposed \`notes\`: review
@@ -406,12 +470,12 @@ describe("the nullability report", () => {
 - Verdict: nullable (proved)
 - Overlay \`returns.nullable\`: \`true\`
 - Comparison: consistent
-- Proposed \`notes\`: Returns nothing for outside the world (nullability sweep, 3.0.0.12345).
+- Proposed \`notes\`: Crashes the game for destroyed frame (nullability sweep, 3.0.0.12345). Returns nothing for outside the world (nullability sweep, 3.0.0.12345).
 `);
     expect(await format(report, { parser: "markdown" })).toBe(report);
   });
 
-  it("proves a Native nullable from a nil next to a crash, and gives no notes to unsafe and review", async () => {
+  it("proves a Native nullable from a nil next to a crash, the crash first in its notes, and reviews an error and an odd value", async () => {
     const { context, resultFile } = await setup();
     await writeResultFile(resultFile, OUTCOMES);
     const { slice } = await writeNullabilityReport(PROBE, context);
@@ -423,13 +487,13 @@ describe("the nullability report", () => {
         notes,
       ]),
     ).toEqual([
-      ["CreateTimer", "unsafe", "consistent", "review"],
+      ["CreateTimer", "review", "consistent", "review"],
       ["GetOwningPlayer", "review", "consistent", "review"],
       [
         "Location",
         "nullable (proved)",
         "consistent",
-        "Returns nothing for outside the world (nullability sweep, 3.0.0.12345).",
+        "Crashes the game for destroyed frame (nullability sweep, 3.0.0.12345). Returns nothing for outside the world (nullability sweep, 3.0.0.12345).",
       ],
     ]);
   });
@@ -877,6 +941,362 @@ describe("the nullability report", () => {
         "Location: nullable (proved), consistent",
         "",
       ].join("\n"),
+    );
+  });
+
+  it("reviews a Native whose only case raised an error, never unsafe", async () => {
+    const { context, resultFile } = await setup();
+    await writeResultFile(
+      resultFile,
+      numbered([
+        "CASE case=one%20call group=a native=CreateTimer",
+        "PENDING label=CreateTimer%20one%20call",
+        "CALL case=one%20call group=a message=bad%20arg native=CreateTimer outcome=error",
+        "END status=ok",
+      ]),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, context);
+    expect(
+      slice.natives.map(({ verdict, comparison, notes }) => [
+        verdict,
+        comparison,
+        notes,
+      ]),
+    ).toEqual([["review", "consistent", "review"]]);
+  });
+
+  it("gives a skipped case unsafe, proposed nullable with the crash first in its notes, for a family that may be non-null and a nullable one", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWith(context, {
+      GetTriggerUnit: { nullable: true, family: "event-response" },
+    });
+    await writeResultFile(
+      resultFile,
+      numbered([
+        "CASE case=one%20call group=a native=CreateTimer",
+        "CASE case=outside%20its%20event group=a native=GetTriggerUnit",
+        "CASE case=second%20call group=b native=CreateTimer",
+        "CASE case=dead%20trigger group=b native=GetTriggerUnit",
+        "PENDING label=CreateTimer%20one%20call",
+        "CALL case=one%20call group=a id=1048577 native=CreateTimer outcome=handle type=timer:%200000020C",
+        "PENDING label=GetTriggerUnit%20outside%20its%20event",
+        "CALL case=outside%20its%20event group=a id=0 native=GetTriggerUnit outcome=handle type=unit:%2000000000",
+        "SKIP case=second%20call group=b native=CreateTimer reason=crashed",
+        "SKIP case=dead%20trigger group=b native=GetTriggerUnit reason=crashed",
+        "END status=ok",
+      ]),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    expect(
+      slice.natives.map(({ native, verdict, comparison, notes }) => [
+        native,
+        verdict,
+        comparison,
+        notes,
+      ]),
+    ).toEqual([
+      [
+        "CreateTimer",
+        "unsafe",
+        "mismatch",
+        "Crashes the game for second call (nullability sweep, 3.0.0.12345). Returned a handle in every other case (one call).",
+      ],
+      [
+        "GetTriggerUnit",
+        "unsafe",
+        "consistent",
+        "Crashes the game for dead trigger (nullability sweep, 3.0.0.12345). May return nothing outside its event. Returned a handle in every other case (outside its event). For outside its event, a handle of id 0.",
+      ],
+    ]);
+  });
+
+  it("gives a case that crashed the game in this run unsafe, proposed nullable with the crash in its notes, for a family that may be non-null and a nullable one", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWith(context, {
+      GetTriggerUnit: { nullable: true, family: "event-response" },
+    });
+    const crashedOn = async (native: string, label: string) => {
+      await writeResultFile(
+        resultFile,
+        numbered([
+          "CASE case=one%20call group=a native=CreateTimer",
+          `CASE case=${label.replaceAll(" ", "%20")} group=b native=${native}`,
+          "PENDING label=CreateTimer%20one%20call",
+          "CALL case=one%20call group=a id=1048577 native=CreateTimer outcome=handle type=timer:%200000020C",
+          `PENDING label=${native}%20${label.replaceAll(" ", "%20")}`,
+          "CHECKPOINT",
+        ]),
+      );
+      const { slice } = await writeNullabilityReport(PROBE, {
+        ...context,
+        overlayFolder,
+      });
+      return slice.natives.map(({ native, verdict, comparison, notes }) => [
+        native,
+        verdict,
+        comparison,
+        notes,
+      ]);
+    };
+    expect(await crashedOn("CreateTimer", "second call")).toEqual([
+      [
+        "CreateTimer",
+        "unsafe",
+        "mismatch",
+        "Crashes the game for second call (nullability sweep, 3.0.0.12345). Returned a handle in every other case (one call).",
+      ],
+    ]);
+    expect((await crashedOn("GetTriggerUnit", "dead trigger"))[1]).toEqual([
+      "GetTriggerUnit",
+      "unsafe",
+      "consistent",
+      "Crashes the game for dead trigger (nullability sweep, 3.0.0.12345). May return nothing outside its event.",
+    ]);
+  });
+});
+
+describe("the nullability report's parameter section", () => {
+  it("keeps a filter nullable when a nil filter completes with the always-true filter's count, in a section of its own after the Natives", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWithFilters(context, {
+      GroupEnumUnitsInRect: true,
+    });
+    await writeResultFile(
+      resultFile,
+      callRun([
+        callCase(
+          "GroupEnumUnitsInRect",
+          "always-true filter",
+          "always-true",
+          "completed",
+          4,
+        ),
+        callCase("GroupEnumUnitsInRect", "nil filter", "nil", "completed", 4),
+        callCase(
+          "GroupEnumUnitsInRect",
+          "footmen only",
+          "live",
+          "completed",
+          2,
+        ),
+      ]),
+    );
+    await writeNullabilityReport(PROBE, { ...context, overlayFolder });
+    const report = await readFile(context.reportFile, "utf8");
+    expect(report).toBe(`${REPORT_HEADER}
+## \`${PROBE}\`
+
+- Probe: \`${PROBE}\`
+- Patch: 3.0.0.12345
+- Date: 2026-10-02
+- Run: \`${RUN_ID}\`
+
+### \`GroupEnumUnitsInRect\` parameter \`filter\`
+
+| Case               | Group | Argument    | Outcome   | Count | Message |
+| ------------------ | ----- | ----------- | --------- | ----- | ------- |
+| always-true filter | (a)   | always-true | completed | 4     |         |
+| nil filter         | (a)   | nil         | completed | 4     |         |
+| footmen only       | (a)   | live        | completed | 2     |         |
+
+- Verdict: nullable (completed)
+- Overlay \`params[].nullable\`: \`true\`
+- Comparison: consistent
+- Proposed \`notes\`: A nil filter keeps every unit (nullability sweep, 3.0.0.12345).
+`);
+    expect(await format(report, { parser: "markdown" })).toBe(report);
+  });
+
+  it("shows how a nil filter's count differs from the always-true filter's, in the section and the summary, and words its notes as accepted", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWithFilters(context, {
+      GroupEnumUnitsInRect: true,
+    });
+    await writeResultFile(
+      resultFile,
+      callRun([
+        callCase(
+          "GroupEnumUnitsInRect",
+          "always-true filter",
+          "always-true",
+          "completed",
+          5,
+        ),
+        callCase("GroupEnumUnitsInRect", "nil filter", "nil", "completed", 3),
+      ]),
+    );
+    const { code, stdout } = await runMain({ ...context, overlayFolder });
+    expect(code).toBe(0);
+    expect(stdout.join("")).toContain(
+      "GroupEnumUnitsInRect parameter filter: nullable (completed), consistent; count difference: nil: nil filter 3; always-true: always-true filter 5\n",
+    );
+    const report = await readFile(context.reportFile, "utf8");
+    expect(report).toContain(`- Verdict: nullable (completed)
+- Overlay \`params[].nullable\`: \`true\`
+- Comparison: consistent
+- Count difference: nil: nil filter 3; always-true: always-true filter 5
+- Proposed \`notes\`: A nil filter is accepted (nullability sweep, 3.0.0.12345).
+`);
+  });
+
+  it("makes a filter non-null when a nil filter crashed the game, in this run or an earlier one, with the crash in its notes and a mismatch with a nullable Overlay", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWithFilters(context, {
+      GroupEnumUnitsInRect: true,
+      ForceEnumPlayers: true,
+    });
+    const alwaysTrue = callCase(
+      "GroupEnumUnitsInRect",
+      "always-true filter",
+      "always-true",
+      "completed",
+      4,
+    );
+    const crashing = callCase(
+      "GroupEnumUnitsInRect",
+      "nil filter",
+      "nil",
+      "completed",
+    );
+    const skipped = callCase(
+      "ForceEnumPlayers",
+      "nil filter",
+      "nil",
+      "skipped",
+    );
+    await writeResultFile(
+      resultFile,
+      numbered([
+        alwaysTrue.plan,
+        skipped.plan,
+        crashing.plan,
+        ...alwaysTrue.records,
+        ...skipped.records,
+        crashing.records[0] ?? "",
+        "CHECKPOINT",
+      ]),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    expect(
+      slice.params.map(({ native, verdict, comparison, notes }) => [
+        native,
+        verdict,
+        comparison,
+        notes,
+      ]),
+    ).toEqual(
+      ["GroupEnumUnitsInRect", "ForceEnumPlayers"].map((native) => [
+        native,
+        "non-null (crashed)",
+        "mismatch",
+        "Crashes the game with a nil filter (nullability sweep, 3.0.0.12345).",
+      ]),
+    );
+    expect(slice.params[0]?.cases.map(({ outcome }) => outcome)).toEqual([
+      "completed",
+      "crashed",
+    ]);
+  });
+
+  it("reviews a filter whose case raised an error, and reports a mismatch when a nil filter completes on a filter the Overlay types non-null", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWithFilters(context, {
+      GroupEnumUnitsInRect: true,
+      ForceEnumPlayers: false,
+    });
+    await writeResultFile(
+      resultFile,
+      callRun([
+        callCase("GroupEnumUnitsInRect", "nil filter", "nil", "error"),
+        callCase(
+          "ForceEnumPlayers",
+          "always-true filter",
+          "always-true",
+          "completed",
+          1,
+        ),
+        callCase("ForceEnumPlayers", "nil filter", "nil", "completed", 1),
+      ]),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    expect(
+      slice.params.map(
+        ({ native, verdict, overlayNullable, comparison, notes }) => [
+          native,
+          verdict,
+          overlayNullable,
+          comparison,
+          notes,
+        ],
+      ),
+    ).toEqual([
+      ["GroupEnumUnitsInRect", "review", true, "consistent", "review"],
+      [
+        "ForceEnumPlayers",
+        "nullable (completed)",
+        false,
+        "mismatch",
+        "A nil filter keeps every unit (nullability sweep, 3.0.0.12345).",
+      ],
+    ]);
+  });
+
+  it("refuses a Native with both return cases and call cases, a call case's outcome on a return case, and a parameter the Overlay entry does not list", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWithFilters(context, {
+      GroupEnumUnitsInRect: true,
+    });
+    const nilFilter = callCase(
+      "GroupEnumUnitsInRect",
+      "nil filter",
+      "nil",
+      "completed",
+      1,
+    );
+    await writeResultFile(
+      resultFile,
+      numbered([
+        nilFilter.plan,
+        "CASE case=one%20call group=a native=GroupEnumUnitsInRect",
+        ...nilFilter.records,
+        "PENDING label=GroupEnumUnitsInRect%20one%20call",
+        "CALL case=one%20call group=a native=GroupEnumUnitsInRect outcome=nil",
+        "END status=ok",
+      ]),
+    );
+    await expectRefusal(
+      { ...context, overlayFolder },
+      "GroupEnumUnitsInRect has both return cases and call cases: a Native that returns a value has return cases only, one that returns nothing call cases only.",
+    );
+    await writeResultFile(
+      resultFile,
+      numbered([
+        "CASE case=one%20call group=a native=CreateTimer",
+        "PENDING label=CreateTimer%20one%20call",
+        "CALL case=one%20call count=1 group=a native=CreateTimer outcome=completed",
+        "END status=ok",
+      ]),
+    );
+    await expectRefusal(
+      { ...context, overlayFolder },
+      'The record CALL case="one call" count=1 group=a native=CreateTimer outcome=completed is not one the nullability report reads.',
+    );
+    await writeResultFile(
+      resultFile,
+      callRun([callCase("CreateTimer", "nil filter", "nil", "completed", 1)]),
+    );
+    await expectRefusal(
+      { ...context, overlayFolder },
+      `${join(overlayFolder, "common.j", "functions", "CreateTimer.json")} has no parameter filter with a boolean nullable in params.`,
     );
   });
 });
