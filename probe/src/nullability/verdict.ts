@@ -36,30 +36,39 @@ export interface CaseResult {
 }
 
 /**
+ * What a Nullability family allows: its Natives may be typed non-null, or
+ * they are nullable by their nature, which `reason` gives as `notes` words
+ * it ("outside its event").
+ */
+export type FamilyRule =
+  { mayBeNonNull: true } | { mayBeNonNull: false; reason: string };
+
+/**
  * The Nullability families, as the Overlay's `returns.family` names them,
- * each keyed once with what its Natives may have nothing for: `undefined`
- * for a family whose Natives may be non-null, the reason, as `notes` gives
- * it, for a family whose Natives are nullable by their nature.
+ * each keyed once with its rule. The same families as
+ * `NULLABILITY_FAMILIES` in `packages/reforged-types/src/entry.ts`, which
+ * the Typings' package does not publish, so it is not imported.
  */
 export const FAMILIES = {
-  converter: undefined,
-  "enum-getter": undefined,
-  constructor: undefined,
-  registration: undefined,
-  "intrinsic-property": undefined,
-  "optional-property": "when the object has none",
-  "event-response": "outside its event",
-  "callback-getter": "outside its enum or filter callback",
-  lookup: "when nothing is found",
-} as const satisfies Record<string, string | undefined>;
+  converter: { mayBeNonNull: true },
+  "enum-getter": { mayBeNonNull: true },
+  constructor: { mayBeNonNull: true },
+  registration: { mayBeNonNull: true },
+  "intrinsic-property": { mayBeNonNull: true },
+  "optional-property": {
+    mayBeNonNull: false,
+    reason: "when the object has none",
+  },
+  "event-response": { mayBeNonNull: false, reason: "outside its event" },
+  "callback-getter": {
+    mayBeNonNull: false,
+    reason: "outside its enum or filter callback",
+  },
+  lookup: { mayBeNonNull: false, reason: "when nothing is found" },
+} as const satisfies Record<string, FamilyRule>;
 
 /** A Nullability family. */
 export type Family = keyof typeof FAMILIES;
-
-/** Whether `value` names a Nullability family. */
-export function isFamily(value: unknown): value is Family {
-  return typeof value === "string" && Object.hasOwn(FAMILIES, value);
-}
 
 /** A Native's verdict, from its cases and its family. */
 export type Verdict =
@@ -95,7 +104,7 @@ const VERDICTS: readonly (readonly [
   ["unsafe", (cases) => cases.some(gave("crashed", "error"))],
   // A case left unrun by a crash leaves the evidence short of every case.
   ["review", (cases) => cases.some(gave("odd", "not run"))],
-  ["nullable (rule)", (_cases, family) => FAMILIES[family] !== undefined],
+  ["nullable (rule)", (_cases, family) => !FAMILIES[family].mayBeNonNull],
   [
     "non-null (evidence, handle id 0)",
     (cases) => cases.every(gave("handle")) && cases.some(gaveIdZero),
@@ -125,15 +134,22 @@ export function verdictOf(
 /** How a verdict stands against the Overlay's `returns.nullable`. */
 export type Comparison = "mismatch" | "consistent";
 
+/** The verdicts that make a Native nullable: proved, or by its family. */
+const NULLABLE_VERDICTS: readonly Verdict[] = [
+  "nullable (proved)",
+  "nullable (rule)",
+];
+
 /**
  * `mismatch` when the Overlay says the Native never returns nothing and
- * the verdict proves it does; `consistent` otherwise.
+ * the verdict makes it nullable, by proof or by its family; `consistent`
+ * otherwise.
  */
 export function compare(
   verdict: Verdict,
   overlayNullable: boolean,
 ): Comparison {
-  return !overlayNullable && verdict === "nullable (proved)"
+  return !overlayNullable && NULLABLE_VERDICTS.includes(verdict)
     ? "mismatch"
     : "consistent";
 }
@@ -147,7 +163,8 @@ export function compare(
  * handle of id 0; for `nullable (rule)`, what the family may have nothing
  * for, then every case. Labels are joined with commas. `unsafe` and
  * `review` get no text, only "review", so no unchecked text reaches
- * `@remarks`.
+ * `@remarks`. `nullable (rule)` for a family whose Natives may be
+ * non-null, a pair `verdictOf` never gives, throws.
  */
 export function proposedNotes(
   verdict: Verdict,
@@ -165,8 +182,15 @@ export function proposedNotes(
       return `Returned a handle in ${everyCase}; evidence, not proof.`;
     case "non-null (evidence, handle id 0)":
       return `Returned a handle in ${everyCase}; evidence, not proof. For ${labels(cases.filter(gaveIdZero))}, a handle of id 0.`;
-    case "nullable (rule)":
-      return `May return nothing ${FAMILIES[family] ?? ""}. Returned a handle in ${everyCase}.`;
+    case "nullable (rule)": {
+      const rule: FamilyRule = FAMILIES[family];
+      if (rule.mayBeNonNull) {
+        throw new Error(
+          `The family ${family} may be non-null: it gives no verdict of nullable (rule).`,
+        );
+      }
+      return `May return nothing ${rule.reason}. Returned a handle in ${everyCase}.`;
+    }
     default:
       return "review";
   }

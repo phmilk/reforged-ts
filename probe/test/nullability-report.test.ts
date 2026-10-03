@@ -12,11 +12,15 @@ import { fileURLToPath } from "node:url";
 import { format } from "prettier";
 import { describe, expect, it } from "vitest";
 import { main, type Context } from "../src/cli/nullability-report.js";
-import { TYPINGS_MANIFEST } from "../src/folders.js";
+import {
+  OVERLAY_FOLDER as TYPINGS_OVERLAY_FOLDER,
+  TYPINGS_MANIFEST,
+} from "../src/folders.js";
 import { systemMachine, type Machine } from "../src/machine.js";
 import { resultFile } from "../src/read.js";
 import { writeNullabilityReport } from "../src/nullability/report.js";
 import { REPORT_HEADER } from "../src/nullability/section.js";
+import { FAMILIES, proposedNotes } from "../src/nullability/verdict.js";
 import { stateFile } from "../src/state.js";
 import { USER_FOLDER_VARIABLE } from "../src/user-folder.js";
 import { preloadFile } from "./support/bridge.js";
@@ -744,6 +748,54 @@ describe("the nullability report", () => {
         "Returns nothing for unsaved key (nullability sweep, 3.0.0.12345).",
       ],
     ]);
+  });
+
+  it("reports a mismatch when the Overlay types a Native of a nullable family non-null", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWith(context, {
+      GetTriggerUnit: { nullable: false, family: "event-response" },
+    });
+    await writeResultFile(
+      resultFile,
+      numbered([
+        "CASE case=outside%20its%20event group=a native=GetTriggerUnit",
+        "PENDING label=GetTriggerUnit%20outside%20its%20event",
+        "CALL case=outside%20its%20event group=a id=1048577 native=GetTriggerUnit outcome=handle type=unit:%200000020C",
+        "END status=ok",
+      ]),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    expect(
+      slice.natives.map(({ verdict, comparison }) => [verdict, comparison]),
+    ).toEqual([["nullable (rule)", "mismatch"]]);
+  });
+
+  it("refuses to word a nullable (rule) verdict for a family whose Natives may be non-null", () => {
+    expect(() =>
+      proposedNotes(
+        "nullable (rule)",
+        [{ label: "one call", group: "a", outcome: "handle", id: "1" }],
+        "constructor",
+        PATCH,
+      ),
+    ).toThrow(
+      "The family constructor may be non-null: it gives no verdict of nullable (rule).",
+    );
+  });
+
+  it("knows every family the Typings' Overlay names, and no other", async () => {
+    const folder = join(TYPINGS_OVERLAY_FOLDER, "common.j", "functions");
+    const named = new Set<string>();
+    for (const file of await readdir(folder)) {
+      const { returns } = JSON.parse(
+        await readFile(join(folder, file), "utf8"),
+      ) as { returns?: { family?: string } };
+      if (returns?.family !== undefined) named.add(returns.family);
+    }
+    expect([...named].sort()).toEqual(Object.keys(FAMILIES).sort());
   });
 
   it("lets a handle of id 0 satisfy non-null, naming its cases in the notes", async () => {

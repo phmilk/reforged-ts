@@ -12,11 +12,11 @@ import { join } from "node:path";
 import { isBuild } from "./build.js";
 import type { Diagnostic } from "./diagnostics.js";
 import {
+  isNullabilityFamily,
   NULLABILITY_FAMILIES,
   SEED_ORIGIN,
   type FunctionEntry,
   type GlobalEntry,
-  type NullabilityFamily,
   type OverlayParam,
   type OverlayReturns,
   type TypeEntry,
@@ -236,11 +236,11 @@ const FIELDS = {
     if (unknown) return new Problem(`unknown field "returns.${unknown}"`);
     const returns: OverlayReturns = { nullable: value.nullable };
     if (value.family !== undefined) {
-      if (!isFamily(value.family)) {
+      if (!isNullabilityFamily(value.family)) {
         return new Problem(
-          `returns.family must be one of ${NULLABILITY_FAMILIES.join(
-            ", ",
-          )}, found ${show(value.family)}`,
+          `returns.family must be one of ${Object.keys(
+            NULLABILITY_FAMILIES,
+          ).join(", ")}, found ${show(value.family)}`,
         );
       }
       returns.family = value.family;
@@ -363,10 +363,6 @@ function readEntry(
 const PARAM_FIELDS: readonly string[] = ["name", "nullable", "type"];
 
 const RETURNS_FIELDS: readonly string[] = ["nullable", "family"];
-
-function isFamily(value: unknown): value is NullabilityFamily {
-  return (NULLABILITY_FAMILIES as readonly unknown[]).includes(value);
-}
 
 /**
  * Free text a header renders. It may link with `{@link ...}` but neither

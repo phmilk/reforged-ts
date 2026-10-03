@@ -38,7 +38,6 @@ import {
 import {
   compare,
   FAMILIES,
-  isFamily,
   proposedNotes,
   verdictOf,
   type CaseResult,
@@ -178,10 +177,10 @@ const SKIP_REASON: SkipFields["reason"] = "crashed";
 
 /** Whether `value` is a key of `keys`. */
 function isKeyOf<Key extends string>(
-  keys: Readonly<Record<Key, true>>,
-  value: string | undefined,
+  keys: Readonly<Record<Key, unknown>>,
+  value: unknown,
 ): value is Key {
-  return value !== undefined && Object.hasOwn(keys, value);
+  return typeof value === "string" && Object.hasOwn(keys, value);
 }
 
 /**
@@ -355,7 +354,7 @@ function readReturns(
   if (typeof returns?.nullable !== "boolean") {
     throw new AuthorError(`${file} has no boolean returns.nullable.`);
   }
-  if (!isFamily(returns.family)) {
+  if (!isKeyOf(FAMILIES, returns.family)) {
     throw new AuthorError(
       `${file} names no Nullability family in returns.family (${Object.keys(FAMILIES).join(", ")}): the verdict depends on it.`,
     );

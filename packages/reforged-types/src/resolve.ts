@@ -11,7 +11,6 @@
 import { patchList } from "./build.js";
 import type { Diagnostic } from "./diagnostics.js";
 import {
-  NULLABLE_FAMILIES,
   NULLABILITY_FAMILIES,
   type BaseEntry,
   type FunctionEntry,
@@ -101,7 +100,7 @@ export function resolve(
     }
     const familyProblem = checkFamily(declaration, entry, handleTypes);
     if (familyProblem) {
-      diagnostics.push(familyProblem);
+      diagnostics.push(familyError(entry, familyProblem));
       continue;
     }
     resolved.push({ ...declaration, overlay: entry });
@@ -137,48 +136,40 @@ function expectedPath(declaration: Declaration): string {
 }
 
 /**
- * The problem with a function's `returns.family`, if any: a handle-returning
- * common.j Native without one, one on any other function, or a Native of a
- * nullable family typed non-null.
+ * What is wrong with a function's `returns.family`, as the checklist words
+ * it, if anything: a handle-returning common.j Native without one, one on
+ * any other function, or a Native of a nullable family typed non-null.
+ * Only the common.j Natives name a family: the handle returns of
+ * blizzard.j follow the Natives they call (ADR 0008), and those of
+ * common.ai belong to AI scripts.
  */
 function checkFamily(
   fn: FunctionDeclaration,
   entry: FunctionEntry,
   handleTypes: ReadonlySet<string>,
-): Diagnostic | undefined {
+): string | undefined {
   const { family, nullable } = entry.returns;
   const returnsHandle = handleTypes.has(fn.returns);
-  const named = fn.source === "common.j" && fn.kind === "native";
-  const problem = (message: string): Diagnostic => ({
-    severity: "error",
-    kind: "nullability-family",
-    file: entry.file,
-    name: fn.name,
-    message: `${entry.file}: ${message}`,
-  });
+  const isCommonJNative = fn.source === "common.j" && fn.kind === "native";
   if (family === undefined) {
-    return named && returnsHandle
-      ? problem(
-          `${fn.name} returns a handle (${fn.returns}) but has no returns.family; ` +
-            `name its Nullability family, one of ${NULLABILITY_FAMILIES.join(", ")}`,
-        )
+    return isCommonJNative && returnsHandle
+      ? `${fn.name} returns a handle (${fn.returns}) but has no returns.family; ` +
+          `name its Nullability family, one of ${Object.keys(NULLABILITY_FAMILIES).join(", ")}`
       : undefined;
   }
   if (!returnsHandle) {
-    return problem(
-      `returns.family on ${fn.name}, which returns ${fn.returns}, not a handle; remove it`,
-    );
+    return `returns.family on ${fn.name}, which returns ${fn.returns}, not a handle; remove it`;
   }
-  if (!named) {
-    return problem(
+  if (!isCommonJNative) {
+    return (
       `returns.family on ${fn.name}, a ${fn.source} ${fn.kind}; ` +
-        "only a common.j Native has one, remove it",
+      "only a common.j Native has one, remove it"
     );
   }
-  if (NULLABLE_FAMILIES.includes(family) && !nullable) {
-    return problem(
+  if (!NULLABILITY_FAMILIES[family] && !nullable) {
+    return (
       `${fn.name} is of the family ${family}, which may have nothing to return, ` +
-        "but returns.nullable is false; make it true",
+      "but returns.nullable is false; make it true"
     );
   }
   return undefined;
@@ -221,6 +212,17 @@ function mismatch(fn: FunctionDeclaration, entry: FunctionEntry): Diagnostic {
     message:
       `${entry.file}: parameters do not match the Patch: ` +
       `${jassSignature(fn)}; Overlay has (${overlayParams})`,
+  };
+}
+
+/** The checklist line of an entry whose `returns.family` breaks the rule. */
+function familyError(entry: FunctionEntry, problem: string): Diagnostic {
+  return {
+    severity: "error",
+    kind: "nullability-family",
+    file: entry.file,
+    name: entry.name,
+    message: `${entry.file}: ${problem}`,
   };
 }
 

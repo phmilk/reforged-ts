@@ -28,38 +28,41 @@ export interface TrackedEntry extends BaseEntry {
 }
 
 /**
- * The Nullability families, the kinds of handle-returning Native the
- * curation rule types by: the first five may be non-null, the last four
- * are nullable by their nature.
+ * The Nullability families the curation rule types handle returns by, each
+ * keyed once with whether a Native of it may be typed non-null: `false` for
+ * a family that by its nature may have nothing to return. The report of
+ * the Nullability sweep keeps its own copy (`probe/src/nullability/verdict.ts`).
  */
-export const NULLABILITY_FAMILIES = [
-  "converter",
-  "enum-getter",
-  "constructor",
-  "registration",
-  "intrinsic-property",
-  "optional-property",
-  "event-response",
-  "callback-getter",
-  "lookup",
-] as const;
+export const NULLABILITY_FAMILIES = {
+  converter: true,
+  "enum-getter": true,
+  constructor: true,
+  registration: true,
+  "intrinsic-property": true,
+  "optional-property": false,
+  "event-response": false,
+  "callback-getter": false,
+  lookup: false,
+} as const satisfies Record<string, boolean>;
 
-export type NullabilityFamily = (typeof NULLABILITY_FAMILIES)[number];
+export type NullabilityFamily = keyof typeof NULLABILITY_FAMILIES;
 
-/** The families whose Natives may have nothing to return: always nullable. */
-export const NULLABLE_FAMILIES: readonly NullabilityFamily[] = [
-  "optional-property",
-  "event-response",
-  "callback-getter",
-  "lookup",
-];
+/** Whether `value` names a Nullability family. */
+export function isNullabilityFamily(
+  value: unknown,
+): value is NullabilityFamily {
+  return (
+    typeof value === "string" && Object.hasOwn(NULLABILITY_FAMILIES, value)
+  );
+}
 
 /** A function's return facts. */
 export interface OverlayReturns {
   nullable: boolean;
   /**
-   * The Nullability family of a handle-returning common.j Native; read by
-   * the Nullability sweep's report, never rendered.
+   * The Nullability family of a handle-returning common.j Native, required
+   * there and nowhere else (`resolve.ts`); read by the Nullability sweep's
+   * report, never rendered.
    */
   family?: NullabilityFamily;
 }
