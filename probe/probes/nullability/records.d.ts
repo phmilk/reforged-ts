@@ -1,5 +1,6 @@
 // The records of the Nullability sweep's case runner, `CASE`, `CALL` and
-// `SKIP`, and the PENDING label of a case: the format the case runner
+// `SKIP`, for a return case and a call case, and the PENDING label of a
+// case: the format the case runner
 // (./case-runner.ts) writes and the report (../../src/nullability/) reads.
 // Types only, so the game side and the Node side both import them, with no
 // `require` in a bundle and no file outside the Node side's sources to
@@ -22,16 +23,42 @@ export interface CaseFields {
 }
 
 /**
+ * What a call case passes for the parameter it measures: `nil`; a value
+ * that keeps everything, an `always-true` filter; or another `live` value.
+ */
+export type CallArgument = "nil" | "always-true" | "live";
+
+/**
+ * The fields a call case adds to `CaseFields` in each of its records: a
+ * call case calls a Native that returns nothing, to measure whether one of
+ * its parameters takes `nil`, and reports a count. A record without them
+ * is a return case's, which measures what the Native returns.
+ */
+export interface CallCaseFields extends CaseFields {
+  /** The parameter measured, as the Overlay's `params[].name` names it: `filter`. */
+  param: string;
+  argument: CallArgument;
+  /**
+   * What the case counts, singular, as a `notes` text words it: `unit`,
+   * `player`, `item` or `destructable`.
+   */
+  counted: string;
+}
+
+/**
  * What a case's call gave, as its `CALL` record holds it: the `outcome` and
  * the fields that go with it, `id` (from `GetHandleId`, 0 for a handle the
  * game hands back in place of nothing) and `type` (from `tostring`) for a
  * `handle`, `type` for an `odd` value, one that is no handle at all,
- * `message` for an `error`.
+ * `message` for an `error`. A return case gives `nil`, `handle`, `odd` or
+ * `error`; a call case `completed`, with the `count` it reports, or
+ * `error`.
  */
 export type CallFields =
   | { outcome: "nil" }
   | { outcome: "handle"; id: number; type: string }
   | { outcome: "odd"; type: string }
+  | { outcome: "completed"; count: number }
   | { outcome: "error"; message: string };
 
 /** The outcome of a `CALL` record. */

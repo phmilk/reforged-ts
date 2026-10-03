@@ -40,7 +40,7 @@ const BUNDLED_PROBES = [
  * The Probes of the Lua tests, in ../lua/probes and never in probe/probes,
  * each loaded as the module `<probe>_bundle`.
  */
-const TEST_PROBES = ["nullability-cases"];
+const TEST_PROBES = ["nullability-cases", "nullability-call-cases"];
 
 /** The folder of the Lua tests' own Probes. */
 const testProbesFolder = fileURLToPath(
