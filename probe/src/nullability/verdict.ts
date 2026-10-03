@@ -150,25 +150,26 @@ export function verdictOf(
 export type Comparison = "mismatch" | "consistent";
 
 /**
- * The verdicts that propose a nullable return: proved, by its family, or
- * unsafe, since a crashed case is a required case that returned no handle.
+ * The verdicts that hold a non-null return up: every case returned a
+ * handle, one of id 0 or not.
  */
-const NULLABLE_VERDICTS: readonly Verdict[] = [
-  "nullable (proved)",
-  "nullable (rule)",
-  "unsafe",
+const NON_NULL_VERDICTS: readonly Verdict[] = [
+  "non-null (evidence)",
+  "non-null (evidence, handle id 0)",
 ];
 
 /**
  * `mismatch` when the Overlay says the Native never returns nothing and
- * the verdict proposes it nullable, by proof, by its family or for a
- * crash; `consistent` otherwise.
+ * the verdict is not non-null by evidence: a nullable verdict, by proof or
+ * by its family, an `unsafe` one or a `review`, since a non-null return
+ * without evidence on the adopted Build is the bet that costs a major;
+ * `consistent` otherwise, for an Overlay nullable whatever the verdict.
  */
 export function compare(
   verdict: Verdict,
   overlayNullable: boolean,
 ): Comparison {
-  return !overlayNullable && NULLABLE_VERDICTS.includes(verdict)
+  return !overlayNullable && !NON_NULL_VERDICTS.includes(verdict)
     ? "mismatch"
     : "consistent";
 }
