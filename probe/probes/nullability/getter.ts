@@ -4,7 +4,7 @@
 // stale state, and a player parameter as a user slot, an empty slot and a
 // neutral player, as `probe/README.md` ("The cases per family") requires.
 
-import type { Case } from "./case-runner";
+import type { ReturnCase } from "./case-runner";
 import { expandCases } from "./expand";
 import { emptySlotPlayer, neutralPassivePlayer } from "./fixtures";
 import type { Param, ParamValues, Variant } from "./parameters";
@@ -32,7 +32,7 @@ function getterCases<const P extends readonly Param<unknown>[]>(
   native: string,
   params: P,
   call: (args: ParamValues<P>) => unknown,
-): Case[] {
+): ReturnCase[] {
   return expandCases(native, params, call, liveValues);
 }
 
@@ -41,13 +41,17 @@ export function enumGetterCases<const P extends readonly Param<unknown>[]>(
   native: string,
   params: P,
   call: (args: ParamValues<P>) => unknown,
-): Case[] {
+): ReturnCase[] {
   return getterCases(native, params, call);
 }
 
 /** The cases of an intrinsic-property `native`, by the getters' rule (`getterCases`). */
 export function intrinsicPropertyCases<
   const P extends readonly Param<unknown>[],
->(native: string, params: P, call: (args: ParamValues<P>) => unknown): Case[] {
+>(
+  native: string,
+  params: P,
+  call: (args: ParamValues<P>) => unknown,
+): ReturnCase[] {
   return getterCases(native, params, call);
 }

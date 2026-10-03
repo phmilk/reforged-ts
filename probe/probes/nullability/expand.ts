@@ -3,7 +3,7 @@
 // varied at a time and never the cartesian product, and putting a Slice's
 // cases in group order.
 
-import type { Case } from "./case-runner";
+import type { ReturnCase } from "./case-runner";
 import type { Param, ParamValues, Variant } from "./parameters";
 
 /** The label of the case of a Native's typical arguments. */
@@ -26,7 +26,7 @@ export function expandCases<const P extends readonly Param<unknown>[]>(
   params: P,
   call: (args: ParamValues<P>) => unknown,
   live: (param: Param<unknown>) => readonly Variant<unknown>[],
-): Case[] {
+): ReturnCase[] {
   if (params.length === 0) {
     return [
       {
@@ -38,7 +38,7 @@ export function expandCases<const P extends readonly Param<unknown>[]>(
     ];
   }
   const typical = argumentsWith(params, -1, undefined);
-  const cases: Case[] = [
+  const cases: ReturnCase[] = [
     { native, label: TYPICAL_LABEL, group: "a", call: () => call(typical) },
   ];
   const groups = [
@@ -83,7 +83,9 @@ function argumentsWith<P extends readonly Param<unknown>[]>(
  * case before any (b) case: the (a) cases of each Native in turn, then
  * their (b) cases, so a crash on a stale handle cannot hide a live result.
  */
-export function inGroupOrder(...natives: readonly (readonly Case[])[]): Case[] {
+export function inGroupOrder(
+  ...natives: readonly (readonly ReturnCase[])[]
+): ReturnCase[] {
   const cases = natives.flat();
   return [
     ...cases.filter((testCase) => testCase.group === "a"),

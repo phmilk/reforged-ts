@@ -7,7 +7,7 @@
 // name, so a test fails when one changes.
 
 import { describe, expect, it } from "reforged-test/lua";
-import type { Case } from "../../probes/nullability/case-runner";
+import type { Case, ReturnCase } from "../../probes/nullability/case-runner";
 import {
   constructorCases,
   OUTSIDE_THE_WORLD,
@@ -422,6 +422,28 @@ describe("the cheap case of the four nullable families", () => {
 });
 
 describe("inGroupOrder", () => {
+  it("joins return cases, which every generator produces", () => {
+    // Typed as ReturnCase, which the type checker holds the generators to:
+    // a generator never builds a call case (those of #396 are the Slice's).
+    const cases: readonly ReturnCase[] = inGroupOrder(
+      converterCases("ConvertMapSetting"),
+      constructorCases("CreateTimer", [], () => undefined),
+      enumGetterCases("VersionGet", [], () => undefined),
+      eventResponseCase("GetTriggerUnit", () => undefined),
+    );
+    expect(
+      cases.map((testCase) => `${testCase.native} ${testCase.label}`),
+    ).toEqual([
+      "ConvertMapSetting 0",
+      "ConvertMapSetting 1",
+      "ConvertMapSetting -1",
+      "ConvertMapSetting 2147483647",
+      "CreateTimer one call",
+      "VersionGet one call",
+      "GetTriggerUnit outside its event",
+    ]);
+  });
+
   it("puts every (a) case of a Slice before any (b) case, each group in order", () => {
     const live = __stub_new_handle("unit");
     const dead = __stub_new_handle("unit");

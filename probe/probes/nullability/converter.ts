@@ -4,7 +4,7 @@
 // then the boundary values `probe/README.md` ("The cases per family")
 // requires.
 
-import type { Case } from "./case-runner";
+import type { ReturnCase } from "./case-runner";
 import { CONVERTER_CONSTANTS, type ConverterName } from "./converter-constants";
 
 /** The label of the case of the first integer past the greatest constant. */
@@ -86,7 +86,7 @@ function converterValues(
  * one integer (`converterValues`), labelled by the constants that hold it
  * or by the boundary it is.
  */
-export function converterCases(native: ConverterName): Case[] {
+export function converterCases(native: ConverterName): ReturnCase[] {
   return converterValues(native).map(([label, value]) => ({
     native,
     label,

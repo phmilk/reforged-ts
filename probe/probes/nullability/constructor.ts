@@ -4,7 +4,7 @@
 // rawcodes, the cases `probe/README.md` ("The cases per family") requires,
 // one odd value at a time.
 
-import type { Case } from "./case-runner";
+import type { ReturnCase } from "./case-runner";
 import { expandCases } from "./expand";
 import type { Param, ParamValues, Variant } from "./parameters";
 
@@ -58,7 +58,7 @@ export function constructorCases<const P extends readonly Param<unknown>[]>(
   native: string,
   params: P,
   call: (args: ParamValues<P>) => unknown,
-): Case[] {
+): ReturnCase[] {
   return expandCases(native, params, call, oddValues);
 }
 
@@ -72,7 +72,7 @@ export function registrationCases<const P extends readonly Param<unknown>[]>(
   native: string,
   params: P,
   call: (args: ParamValues<P>) => unknown,
-): Case[] {
+): ReturnCase[] {
   if (!params.some((param) => param.kind === "trigger")) {
     error(`${native}: a registration declares its trigger parameter.`, 0);
   }

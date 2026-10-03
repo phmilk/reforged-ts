@@ -4,15 +4,22 @@
 // nothing, as `probe/README.md` ("The cases per family") requires. Such a
 // Native stays nullable whatever its case returns.
 
-import type { Case } from "./case-runner";
+import type { ReturnCase } from "./case-runner";
 
 /** One cheap case: `call` calls the Native once, with no event Fixture. */
-function cheapCase(native: string, label: string, call: () => unknown): Case[] {
+function cheapCase(
+  native: string,
+  label: string,
+  call: () => unknown,
+): ReturnCase[] {
   return [{ native, label, group: "a", call }];
 }
 
 /** The cheap case of an event-response `native`: called outside its event. */
-export function eventResponseCase(native: string, call: () => unknown): Case[] {
+export function eventResponseCase(
+  native: string,
+  call: () => unknown,
+): ReturnCase[] {
   return cheapCase(native, "outside its event", call);
 }
 
@@ -20,7 +27,7 @@ export function eventResponseCase(native: string, call: () => unknown): Case[] {
 export function callbackGetterCase(
   native: string,
   call: () => unknown,
-): Case[] {
+): ReturnCase[] {
   return cheapCase(native, "outside its callback", call);
 }
 
@@ -32,7 +39,7 @@ export function lookupCase(
   native: string,
   label: string,
   call: () => unknown,
-): Case[] {
+): ReturnCase[] {
   return cheapCase(native, label, call);
 }
 
@@ -44,6 +51,6 @@ export function optionalPropertyCase(
   native: string,
   label: string,
   call: () => unknown,
-): Case[] {
+): ReturnCase[] {
   return cheapCase(native, label, call);
 }
