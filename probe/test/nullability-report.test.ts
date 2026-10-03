@@ -13,6 +13,7 @@ import { format } from "prettier";
 import { describe, expect, it } from "vitest";
 import { main, type Context } from "../src/cli/nullability-report.js";
 import {
+  NULLABILITY_REPORT,
   OVERLAY_FOLDER as TYPINGS_OVERLAY_FOLDER,
   TYPINGS_MANIFEST,
 } from "../src/folders.js";
@@ -861,6 +862,11 @@ describe("the nullability report", () => {
       if (returns?.family !== undefined) named.add(returns.family);
     }
     expect([...named].sort()).toEqual(Object.keys(FAMILIES).sort());
+  });
+
+  it("keeps the committed report's header the one the command writes", async () => {
+    const report = await readFile(NULLABILITY_REPORT, "utf8");
+    expect(report.slice(0, report.indexOf("\n## "))).toBe(REPORT_HEADER);
   });
 
   it("lets a handle of id 0 satisfy non-null, naming its cases in the notes", async () => {
