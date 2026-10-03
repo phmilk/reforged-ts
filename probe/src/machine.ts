@@ -1,10 +1,11 @@
 /**
  * The machine the Probe runner's Node side reaches: its platform and
  * environment, its files, the registry, its processes and the programs it
- * starts. Every command takes one `Machine`, so a test answers with a fake
- * instead of the real machine. The Template's `ExecutableProbe` (platform,
- * environment, file existence), extended. Under WSL the platform is `linux`
- * and `wsl` reaches the Windows side through interop (#347).
+ * starts, its windows and the time. Every command takes one `Machine`, so a
+ * test answers with a fake instead of the real machine. The Template's
+ * `ExecutableProbe` (platform, environment, file existence), extended. Under
+ * WSL the platform is `linux` and `wsl` reaches the Windows side through
+ * interop (#347), for `probe:read` only: `probe:run` runs on native Windows.
  */
 import { execFileSync, spawn } from "node:child_process";
 import fs from "node:fs";
@@ -14,13 +15,18 @@ import { AuthorError } from "./errors.js";
 export interface SpawnCommand {
   command: string;
   args: readonly string[];
-  /** Variables added to the inherited environment. */
-  env: Readonly<Record<string, string>>;
+}
+
+/** A process `startGame` started. */
+export interface GameProcess {
+  pid: number;
+  /** Whether the process has exited, by itself or ended. */
+  exited(): boolean;
 }
 
 /**
  * The Windows side of a WSL machine, reached through interop: the game is a
- * Windows program, so the runner finds, starts and reads it there. Each
+ * Windows program, so the reader finds its files and process there. Each
  * method raises an AuthorError naming the interop step that failed.
  */
 export interface Wsl {
@@ -28,8 +34,6 @@ export interface Wsl {
   toWsl(windowsPath: string): string;
   /** The Windows Documents known folder, as a Windows path, redirection included. */
   documentsFolder(): string;
-  /** The Windows `%TEMP%` folder, as a Windows path. */
-  tempFolder(): string;
 }
 
 export interface Machine {
@@ -55,8 +59,35 @@ export interface Machine {
    * reads: it stops no process. False off Windows and WSL.
    */
   isRunning(imageName: string): boolean;
-  /** Starts the program detached: it outlives the command. */
-  spawnDetached(command: SpawnCommand): Promise<void>;
+  /**
+   * Starts the program, its output ignored, and keeps its process, which
+   * the command ends with `endProcess`. Native Windows only.
+   */
+  startGame(command: SpawnCommand): Promise<GameProcess>;
+  /**
+   * Posts one space key, `WM_KEYDOWN` then `WM_KEYUP`, to the main window of
+   * the process `pid` (`PostMessage`: the window needs no focus, and may be
+   * minimized). False when the process has no window yet. Native Windows
+   * only.
+   */
+  postKey(pid: number): boolean;
+  /**
+   * Captures the main window of the process `pid` to the PNG file `file`
+   * (`PrintWindow` with `PW_RENDERFULLCONTENT`, which reads a DirectX
+   * window). A minimized window has no picture: it is shown first without
+   * being activated (`SW_SHOWNOACTIVATE`), and stays shown, for the human to
+   * log in. An AuthorError when the process has no window or the capture
+   * fails. Native Windows only.
+   */
+  captureWindow(pid: number, file: string): void;
+  /**
+   * Ends the process `pid`, and only it (`taskkill /F /PID <pid>`: the game
+   * ignores a plain `taskkill`). Native Windows only.
+   */
+  endProcess(pid: number): void;
+  /** Milliseconds since the epoch. */
+  now(): number;
+  sleep(milliseconds: number): Promise<void>;
 }
 
 /**
@@ -139,13 +170,6 @@ const interopWsl: Wsl = {
         "[Environment]::GetFolderPath('MyDocuments')",
       ],
     ),
-  tempFolder: () =>
-    interop(
-      "read the Windows TEMP folder",
-      "Check that WSL interop is enabled (cmd.exe runs from WSL).",
-      "cmd.exe",
-      ["/d", "/c", "echo %TEMP%"],
-    ),
 };
 
 const systemWsl: Wsl | undefined = isWsl(
@@ -194,28 +218,160 @@ export const systemMachine: Machine = {
     });
     return listsImage(output, imageName);
   },
-  spawnDetached: (command) =>
+  startGame: (command) =>
     new Promise((resolve, reject) => {
       const child = spawn(command.command, command.args, {
-        detached: true,
         stdio: "ignore",
-        env: { ...process.env, ...command.env },
+      });
+      let exited = false;
+      child.once("exit", () => {
+        exited = true;
       });
       child.once("error", (error: NodeJS.ErrnoException) => {
         reject(
           error.code === "ENOENT"
             ? new AuthorError(
-                `Could not start "${command.command}": no such file. Check --game-executable, WC3_EXECUTABLE or --wine-path.`,
+                `Could not start "${command.command}": no such file. Check --game-executable or WC3_EXECUTABLE.`,
               )
             : error,
         );
       });
       child.once("spawn", () => {
+        // Its exit still sets `exited`; only the command's own end waits on it.
         child.unref();
-        resolve();
+        const { pid } = child;
+        if (pid === undefined) {
+          reject(new Error(`${command.command} started with no pid`));
+          return;
+        }
+        resolve({ pid, exited: () => exited });
       });
     }),
+  postKey: (pid) => runWindowScript(pid, "key", "") === "posted",
+  captureWindow: (pid, file) => {
+    const result = runWindowScript(pid, "capture", file);
+    if (result !== "captured") {
+      throw new AuthorError(
+        `Could not capture the window of process ${String(pid)}: ${result}.`,
+      );
+    }
+  },
+  endProcess: (pid) => {
+    try {
+      execFileSync("taskkill", ["/F", "/PID", String(pid)], {
+        stdio: "ignore",
+        windowsHide: true,
+      });
+    } catch {
+      // taskkill exits non-zero when the process is gone already.
+    }
+  },
+  now: () => Date.now(),
+  sleep: (milliseconds) =>
+    new Promise((resolve) => setTimeout(resolve, milliseconds)),
 };
+
+/**
+ * The window helper's C#, compiled by PowerShell's `Add-Type`: `Key` posts
+ * a space key to the process's main window, `Capture` saves a picture of it
+ * as a PNG. Each returns the one word the machine checks, or the reason it
+ * could not.
+ */
+const WINDOW_HELPER = String.raw`
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
+using System.Threading;
+public static class ProbeWindow {
+  [StructLayout(LayoutKind.Sequential)] struct Rect { public int Left, Top, Right, Bottom; }
+  [DllImport("user32.dll")] static extern bool PostMessage(IntPtr window, uint message, IntPtr wParam, IntPtr lParam);
+  [DllImport("user32.dll")] static extern bool IsIconic(IntPtr window);
+  [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr window, int command);
+  [DllImport("user32.dll")] static extern bool GetWindowRect(IntPtr window, out Rect rect);
+  [DllImport("user32.dll")] static extern bool PrintWindow(IntPtr window, IntPtr hdc, uint flags);
+  static IntPtr MainWindow(int pid) {
+    try { return Process.GetProcessById(pid).MainWindowHandle; } catch (ArgumentException) { return IntPtr.Zero; }
+  }
+  public static string Key(int pid) {
+    IntPtr window = MainWindow(pid);
+    if (window == IntPtr.Zero) return "no window";
+    // VK_SPACE, scan code 0x39: the lParam of a key down, then of a key up.
+    PostMessage(window, 0x0100, new IntPtr(0x20), new IntPtr(0x00390001));
+    PostMessage(window, 0x0101, new IntPtr(0x20), new IntPtr(unchecked((int)0xC0390001)));
+    return "posted";
+  }
+  public static string Capture(int pid, string file) {
+    IntPtr window = MainWindow(pid);
+    if (window == IntPtr.Zero) return "no window";
+    if (IsIconic(window)) {
+      // SW_SHOWNOACTIVATE: a minimized window draws nothing to capture.
+      ShowWindow(window, 4);
+      Thread.Sleep(700);
+    }
+    Rect rect;
+    if (!GetWindowRect(window, out rect)) return "no window rectangle";
+    int width = rect.Right - rect.Left, height = rect.Bottom - rect.Top;
+    if (width <= 0 || height <= 0) return "an empty window";
+    using (Bitmap bitmap = new Bitmap(width, height)) {
+      using (Graphics graphics = Graphics.FromImage(bitmap)) {
+        IntPtr hdc = graphics.GetHdc();
+        // PW_RENDERFULLCONTENT: reads a DirectX window too.
+        bool printed = PrintWindow(window, hdc, 2);
+        graphics.ReleaseHdc(hdc);
+        if (!printed) return "PrintWindow failed";
+      }
+      bitmap.Save(file, ImageFormat.Png);
+    }
+    return "captured";
+  }
+}`;
+
+/** A PowerShell single-quoted string of `text`. */
+const powerShellString = (text: string) => `'${text.replaceAll("'", "''")}'`;
+
+/**
+ * Runs the window helper's `action` on the process `pid` through
+ * `powershell.exe` and gives the word it printed, or why it could not run.
+ */
+function runWindowScript(
+  pid: number,
+  action: "key" | "capture",
+  file: string,
+): string {
+  if (process.platform !== "win32") return "not on Windows";
+  const call =
+    action === "key"
+      ? `[ProbeWindow]::Key(${String(pid)})`
+      : `[ProbeWindow]::Capture(${String(pid)}, ${powerShellString(file)})`;
+  const script = [
+    `Add-Type -ReferencedAssemblies System.Drawing -TypeDefinition ${powerShellString(WINDOW_HELPER)}`,
+    call,
+  ].join("\n");
+  try {
+    return execFileSync(
+      "powershell.exe",
+      [
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-EncodedCommand",
+        Buffer.from(script, "utf16le").toString("base64"),
+      ],
+      {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+        windowsHide: true,
+      },
+    ).trim();
+  } catch (error) {
+    const reason =
+      error instanceof Error ? (error.message.split("\n")[0] ?? "") : "";
+    return `powershell.exe failed${reason ? ` (${reason})` : ""}`;
+  }
+}
 
 /**
  * The arguments of the `tasklist` that lists the processes of the image

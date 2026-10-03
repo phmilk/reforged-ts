@@ -1,11 +1,14 @@
-import type { Machine, SpawnCommand, Wsl } from "../../src/machine.js";
+import type {
+  GameProcess,
+  Machine,
+  SpawnCommand,
+  Wsl,
+} from "../../src/machine.js";
 
 /** The Windows side of a fake WSL machine. */
 export interface FakeWslOptions {
   /** The Windows Documents folder, as a Windows path. */
   documents?: string;
-  /** The Windows `%TEMP%` folder, as a Windows path. */
-  temp?: string;
   /**
    * Windows folders mapped to folders of this machine, by Windows path:
    * `toWsl` gives a path under one of them its local path. Any other path
@@ -19,12 +22,6 @@ export interface FakeWslOptions {
  * folder absent from `options` an AuthorError-like failure.
  */
 export function fakeWsl(options: FakeWslOptions = {}): Wsl {
-  const answer = (value: string | undefined, what: string) => () => {
-    if (value === undefined) {
-      throw new Error(`the fake WSL machine has no ${what}`);
-    }
-    return value;
-  };
   return {
     toWsl: (windowsPath) => {
       for (const [windows, local] of Object.entries(options.roots ?? {})) {
@@ -38,10 +35,21 @@ export function fakeWsl(options: FakeWslOptions = {}): Wsl {
       const [, drive = "", rest = ""] = match;
       return `/mnt/${drive.toLowerCase()}/${rest.split("\\").join("/")}`;
     },
-    documentsFolder: answer(options.documents, "Documents folder"),
-    tempFolder: answer(options.temp, "TEMP folder"),
+    documentsFolder: () => {
+      if (options.documents === undefined) {
+        throw new Error("the fake WSL machine has no Documents folder");
+      }
+      return options.documents;
+    },
   };
 }
+
+/** What a fake machine's game did, in order, with the fake time of each step. */
+export type GameEvent =
+  | { at: number; event: "start"; command: SpawnCommand }
+  | { at: number; event: "key"; pid: number }
+  | { at: number; event: "capture"; pid: number; file: string }
+  | { at: number; event: "end"; pid: number };
 
 export interface FakeMachineOptions {
   platform?: NodeJS.Platform;
@@ -57,20 +65,40 @@ export interface FakeMachineOptions {
   /** Where the process-list query records each image name it is asked about. */
   processQueries?: string[];
   /**
-   * Where the detached spawn records each program it is asked to start.
-   * Without it, the machine starts no program: a spawn is refused.
+   * Where the machine records what it is asked to do to a game: start it,
+   * post it a key, capture its window, end it. Without it, the machine
+   * starts no program: a start is refused.
    */
-  spawned?: SpawnCommand[];
+  game?: GameEvent[];
+  /**
+   * Called each time the fake time moves on (`sleep`), with the new time in
+   * milliseconds from 0 and the game started, if any: a test writes the
+   * Result file or makes the game exit here.
+   */
+  onTime?: (time: number, game: FakeGame | undefined) => void;
+  /** Whether a key can be posted yet: false while the game has no window. Default: always. */
+  hasWindow?: (time: number) => boolean;
+  /** Makes a capture fail with this message. */
+  captureFailure?: string;
+}
+
+/** The game process a fake machine started. */
+export interface FakeGame extends GameProcess {
+  /** Makes the process exit, as a crash or `endProcess` does. */
+  exit(): void;
 }
 
 /**
  * A machine that answers from the options alone: no real file, registry,
- * process or program is reached. Windows unless `platform` says otherwise;
- * WSL, on `linux`, with `wsl`.
+ * process, program, window or clock is reached. Windows unless `platform`
+ * says otherwise; WSL, on `linux`, with `wsl`. Its time starts at 0 and
+ * moves only by `sleep`.
  */
 export function fakeMachine(options: FakeMachineOptions = {}): Machine {
   const files = options.files ?? {};
-  const { spawned } = options;
+  const events = options.game;
+  let time = 0;
+  let game: FakeGame | undefined;
   return {
     platform:
       options.platform ?? (options.wsl === undefined ? "win32" : "linux"),
@@ -83,11 +111,40 @@ export function fakeMachine(options: FakeMachineOptions = {}): Machine {
       options.processQueries?.push(imageName);
       return (options.processes ?? []).includes(imageName);
     },
-    spawnDetached: (command) => {
-      if (spawned === undefined) {
+    startGame: (command) => {
+      if (events === undefined) {
         return Promise.reject(new Error("the fake machine starts no program"));
       }
-      spawned.push(command);
+      events.push({ at: time, event: "start", command });
+      let exited = false;
+      game = {
+        pid: 4242,
+        exited: () => exited,
+        exit: () => {
+          exited = true;
+        },
+      };
+      return Promise.resolve(game);
+    },
+    postKey: (pid) => {
+      if (!(options.hasWindow?.(time) ?? true)) return false;
+      events?.push({ at: time, event: "key", pid });
+      return true;
+    },
+    captureWindow: (pid, file) => {
+      events?.push({ at: time, event: "capture", pid, file });
+      if (options.captureFailure !== undefined) {
+        throw new Error(options.captureFailure);
+      }
+    },
+    endProcess: (pid) => {
+      events?.push({ at: time, event: "end", pid });
+      game?.exit();
+    },
+    now: () => time,
+    sleep: (milliseconds) => {
+      time += milliseconds;
+      options.onTime?.(time, game);
       return Promise.resolve();
     },
   };

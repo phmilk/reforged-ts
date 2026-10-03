@@ -12,11 +12,14 @@ import { loadBundle, startedTimer } from "./bundle";
 const RESULT_FILE = "reforged-ts\\probes\\held.txt";
 
 describe("the held Probe's bundle", () => {
-  it("writes no END, and shows no end message, once run returns", () => {
+  it("writes no END, and shows no end message, once run returns: the Result file holds what main wrote", () => {
     loadBundle("held");
     __stub_fire_timer(startedTimer(0));
     expect(__stub_args("TimerStart").length).toEqual(2);
-    expect(__stub_preload_file(RESULT_FILE)).toBeUndefined();
+    expect(__stub_preload_file(RESULT_FILE)).toEqual([
+      "1 BEGIN patch=3.0.0.12345 probe=held run=bridge",
+      "2 CHECKPOINT",
+    ]);
     expect(__stub_displayed().length).toEqual(0);
   });
 

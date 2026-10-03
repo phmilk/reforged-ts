@@ -12,7 +12,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json && tsc -p probes/tsconfig.json && tsc -p test/lua/tsconfig.json --noEmit",
     "test": "vitest run --root .. --project probe",
     "probe:build": "tsc -p tsconfig.json && node build/cli/build.js",
-    "probe:launch": "tsc -p tsconfig.json && node build/cli/launch.js",
+    "probe:run": "tsc -p tsconfig.json && node build/cli/run.js",
     "probe:read": "tsc -p tsconfig.json && node build/cli/read.js",
     "probe:nullability-report": "tsc -p tsconfig.json && node build/cli/nullability-report.js"
   },
