@@ -1,0 +1,406 @@
+// The Nullability sweep's case generators (probes/nullability/), on the
+// harness: for each family, a sample Native's generated cases against the
+// family's rule in probe/README.md ("The cases per family"). Each test
+// checks the cases' labels, groups and the arguments each call passes, its
+// `call` a recorder in place of the Native, or a stand-in global for a
+// converter. The labels are what a Slice's skip list and the PENDING lines
+// name, so a test fails when one changes.
+
+import { describe, expect, it } from "reforged-test/lua";
+import type { Case } from "../../probes/nullability/case-runner";
+import {
+  constructorCases,
+  OUTSIDE_THE_WORLD,
+  registrationCases,
+  UNKNOWN_NAME,
+  UNKNOWN_RAWCODE,
+} from "../../probes/nullability/constructor";
+import { converterCases } from "../../probes/nullability/converter";
+import { inGroupOrder } from "../../probes/nullability/expand";
+import {
+  enumGetterCases,
+  intrinsicPropertyCases,
+} from "../../probes/nullability/getter";
+import {
+  callbackGetterCase,
+  eventResponseCase,
+  lookupCase,
+  optionalPropertyCase,
+} from "../../probes/nullability/nullable";
+import {
+  filter,
+  fixed,
+  handle,
+  numeric,
+  player,
+  rawcode,
+  text,
+  trigger,
+} from "../../probes/nullability/parameters";
+
+/**
+ * The globals the tests replace: a converter, and what the player
+ * Fixtures read that the shipped stubs do not define.
+ * @noSelf
+ */
+interface Globals {
+  ConvertRace?: (i: number) => unknown;
+  ConvertItemType?: (i: number) => unknown;
+  ConvertAbilityBooleanField?: (i: number) => unknown;
+  ConvertMapSetting?: (i: number) => unknown;
+  GetBJMaxPlayers?: () => number;
+  PLAYER_NEUTRAL_PASSIVE?: number;
+}
+
+const globals = _G as unknown as Globals;
+globals.GetBJMaxPlayers = () => 24;
+globals.PLAYER_NEUTRAL_PASSIVE = 15;
+
+/** Each case as `<group> <label>`, in order. */
+function labels(cases: readonly Case[]): string[] {
+  return cases.map((testCase) => `${testCase.group} ${testCase.label}`);
+}
+
+/** What each case's call passes, as `describe` renders it, in order. */
+function callsOf(cases: readonly Case[]): string[] {
+  return cases.map((testCase) => tostring(testCase.call()));
+}
+
+/**
+ * The integers each case of `native` passes, the converter replaced with a
+ * recorder for the calls.
+ */
+function converterIntegers(
+  native:
+    | "ConvertRace"
+    | "ConvertItemType"
+    | "ConvertAbilityBooleanField"
+    | "ConvertMapSetting",
+): number[] {
+  const seen: number[] = [];
+  globals[native] = (i) => {
+    seen.push(i);
+    return undefined;
+  };
+  for (const testCase of converterCases(native)) testCase.call();
+  return seen;
+}
+
+describe("converterCases", () => {
+  it("calls every constant of the type, then -1, past the last constant, and the integer limits", () => {
+    const cases = converterCases("ConvertRace");
+    expect(labels(cases)).toEqual([
+      "a RACE_HUMAN",
+      "a RACE_ORC",
+      "a RACE_UNDEAD",
+      "a RACE_NIGHTELF",
+      "a RACE_DEMON",
+      "a RACE_OTHER",
+      "a -1",
+      "a past the last constant",
+      "a 2147483647",
+      "a -2147483648",
+    ]);
+    expect(cases.every((testCase) => testCase.native === "ConvertRace")).toBe(
+      true,
+    );
+    expect(converterIntegers("ConvertRace")).toEqual([
+      1, 2, 3, 4, 5, 7, -1, 8, 2147483647, -2147483648,
+    ]);
+    expect(math.type(converterIntegers("ConvertRace")[9])).toBe("integer");
+  });
+
+  it("calls an integer two constants hold once, labelled by both", () => {
+    const cases = converterCases("ConvertItemType");
+    expect(labels(cases)).toEqual([
+      "a ITEM_TYPE_PERMANENT",
+      "a ITEM_TYPE_CHARGED",
+      "a ITEM_TYPE_POWERUP or ITEM_TYPE_TOME",
+      "a ITEM_TYPE_ARTIFACT",
+      "a ITEM_TYPE_PURCHASABLE",
+      "a ITEM_TYPE_CAMPAIGN",
+      "a ITEM_TYPE_MISCELLANEOUS",
+      "a ITEM_TYPE_EQUIPMENT",
+      "a ITEM_TYPE_UNKNOWN",
+      "a ITEM_TYPE_ANY",
+      "a -1",
+      "a past the last constant",
+      "a 2147483647",
+      "a -2147483648",
+    ]);
+    expect(converterIntegers("ConvertItemType")).toEqual([
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1, 10, 2147483647, -2147483648,
+    ]);
+  });
+
+  it("takes the first integer past the greatest constant, whatever its order", () => {
+    expect(converterIntegers("ConvertAbilityBooleanField")).toEqual([
+      1634231666, 1634301029, 1633904740, -1, 1634301030, 2147483647,
+      -2147483648,
+    ]);
+  });
+
+  it("calls 0, 1, -1 and 2147483647 for a type with no constant", () => {
+    expect(labels(converterCases("ConvertMapSetting"))).toEqual([
+      "a 0",
+      "a 1",
+      "a -1",
+      "a 2147483647",
+    ]);
+    expect(converterIntegers("ConvertMapSetting")).toEqual([
+      0, 1, -1, 2147483647,
+    ]);
+  });
+
+  it("raises in the call when the converter is not defined", () => {
+    globals.ConvertRace = undefined;
+    const [first] = converterCases("ConvertRace");
+    expect(() => first.call()).toThrow("ConvertRace is not defined.");
+  });
+});
+
+describe("constructorCases", () => {
+  it("varies each numeric, rawcode and string parameter through its odd values, one at a time", () => {
+    const owner = __stub_new_handle("player");
+    const cases = constructorCases(
+      "CreateUnitByName",
+      [
+        handle("whichPlayer", owner),
+        text("unitname", "footman"),
+        rawcode("unitid", FourCC("hfoo")),
+        numeric("x", 0),
+        fixed("enabled", true),
+      ],
+      ([, unitname, unitid, x, enabled]) =>
+        `${unitname} ${tostring(unitid)} ${tostring(x)} ${tostring(enabled)}`,
+    );
+    expect(labels(cases)).toEqual([
+      "a typical arguments",
+      "a unitname: empty string",
+      "a unitname: unknown name",
+      "a unitid: unknown rawcode",
+      "a x: negative",
+      "a x: outside the world",
+      "a x: 2147483647",
+    ]);
+    const hfoo = tostring(FourCC("hfoo"));
+    expect(callsOf(cases)).toEqual([
+      `footman ${hfoo} 0 true`,
+      ` ${hfoo} 0 true`,
+      `${UNKNOWN_NAME} ${hfoo} 0 true`,
+      `footman ${tostring(UNKNOWN_RAWCODE)} 0 true`,
+      `footman ${hfoo} -1 true`,
+      `footman ${hfoo} ${tostring(OUTSIDE_THE_WORLD)} true`,
+      `footman ${hfoo} 2147483647 true`,
+    ]);
+  });
+
+  it("runs 0 for a numeric parameter whose typical value is another", () => {
+    const cases = constructorCases("Location", [numeric("x", 512)], ([x]) => x);
+    expect(labels(cases)).toEqual([
+      "a typical arguments",
+      "a x: 0",
+      "a x: negative",
+      "a x: outside the world",
+      "a x: 2147483647",
+    ]);
+    expect(callsOf(cases)).toEqual([
+      "512",
+      "0",
+      "-1",
+      tostring(OUTSIDE_THE_WORLD),
+      "2147483647",
+    ]);
+  });
+
+  it("puts each handle parameter in every stale state it declares, after the live cases", () => {
+    const live = __stub_new_handle("unit");
+    const dead = __stub_new_handle("unit");
+    const removed = __stub_new_handle("unit");
+    const cases = constructorCases(
+      "UnitAddItemById",
+      [
+        handle("whichUnit", live, [
+          ["dead unit", dead],
+          ["removed unit", removed],
+        ]),
+        rawcode("itemId", FourCC("ratc")),
+      ],
+      ([whichUnit]) => whichUnit,
+    );
+    expect(labels(cases)).toEqual([
+      "a typical arguments",
+      "a itemId: unknown rawcode",
+      "b whichUnit: dead unit",
+      "b whichUnit: removed unit",
+    ]);
+    expect(cases.map((testCase) => testCase.call())).toEqual([
+      live,
+      live,
+      dead,
+      removed,
+    ]);
+  });
+
+  it("runs one call for a constructor with no parameter", () => {
+    const cases = constructorCases("CreateTimer", [], () => "called");
+    expect(labels(cases)).toEqual(["a one call"]);
+    expect(callsOf(cases)).toEqual(["called"]);
+  });
+});
+
+describe("registrationCases", () => {
+  it("adds the trigger destroyed and a nil filter to the constructor's cases", () => {
+    const live = __stub_new_handle("trigger") as trigger;
+    const destroyed = __stub_new_handle("trigger") as trigger;
+    const condition = __stub_new_handle("boolexpr") as boolexpr;
+    const destroyedCondition = __stub_new_handle("boolexpr") as boolexpr;
+    const event = __stub_new_handle("playerunitevent");
+    const cases = registrationCases(
+      "TriggerRegisterPlayerUnitEvent",
+      [
+        trigger("whichTrigger", live, destroyed),
+        player("whichPlayer"),
+        fixed("whichPlayerUnitEvent", event),
+        filter("filter", condition, [
+          ["destroyed boolexpr", destroyedCondition],
+        ]),
+      ],
+      ([whichTrigger, , , whichFilter]) =>
+        `${tostring(whichTrigger === live)} ${tostring(whichFilter)}`,
+    );
+    expect(labels(cases)).toEqual([
+      "a typical arguments",
+      "a filter: nil",
+      "b whichTrigger: destroyed trigger",
+      "b filter: destroyed boolexpr",
+    ]);
+    expect(callsOf(cases)).toEqual([
+      `true ${tostring(condition)}`,
+      "true nil",
+      `false ${tostring(condition)}`,
+      `true ${tostring(destroyedCondition)}`,
+    ]);
+  });
+
+  it("fails a declaration without its trigger parameter", () => {
+    expect(() =>
+      registrationCases(
+        "TriggerRegisterTimerEvent",
+        [numeric("timeout", 1)],
+        () => undefined,
+      ),
+    ).toThrow(
+      "TriggerRegisterTimerEvent: a registration declares its trigger parameter.",
+    );
+  });
+});
+
+describe("enumGetterCases and intrinsicPropertyCases", () => {
+  it("run a player parameter as a user slot, an empty slot and a neutral player", () => {
+    const cases = enumGetterCases(
+      "GetPlayerRace",
+      [player("whichPlayer")],
+      ([whichPlayer]) => GetPlayerId(whichPlayer),
+    );
+    expect(labels(cases)).toEqual([
+      "a typical arguments",
+      "a whichPlayer: empty slot",
+      "a whichPlayer: neutral player",
+    ]);
+    expect(callsOf(cases)).toEqual(["0", "23", "15"]);
+  });
+
+  it("run each handle parameter live and in every stale state, with no odd value", () => {
+    const live = __stub_new_handle("unit");
+    const dead = __stub_new_handle("unit");
+    const removed = __stub_new_handle("unit");
+    const cases = intrinsicPropertyCases(
+      "GetOwningPlayer",
+      [
+        handle("whichUnit", live, [
+          ["dead unit", dead],
+          ["removed unit", removed],
+        ]),
+        numeric("unused", 3),
+      ],
+      ([whichUnit]) => whichUnit,
+    );
+    expect(labels(cases)).toEqual([
+      "a typical arguments",
+      "b whichUnit: dead unit",
+      "b whichUnit: removed unit",
+    ]);
+    expect(cases.map((testCase) => testCase.call())).toEqual([
+      live,
+      dead,
+      removed,
+    ]);
+  });
+
+  it("run one call with no parameter", () => {
+    expect(labels(enumGetterCases("VersionGet", [], () => undefined))).toEqual([
+      "a one call",
+    ]);
+    expect(
+      labels(intrinsicPropertyCases("GetLocalPlayer", [], () => undefined)),
+    ).toEqual(["a one call"]);
+  });
+});
+
+describe("the cheap case of the four nullable families", () => {
+  it("is one case of group a, named by the family or by the Slice", () => {
+    const cases = [
+      ...eventResponseCase("GetTriggerUnit", () => "event"),
+      ...callbackGetterCase("GetEnumUnit", () => "callback"),
+      ...lookupCase("LoadUnitHandle", "unsaved key", () => "lookup"),
+      ...optionalPropertyCase(
+        "GetUnitRallyUnit",
+        "unit with no rally point",
+        () => "property",
+      ),
+    ];
+    expect(
+      cases.map((testCase) => `${testCase.native} ${testCase.label}`),
+    ).toEqual([
+      "GetTriggerUnit outside its event",
+      "GetEnumUnit outside its callback",
+      "LoadUnitHandle unsaved key",
+      "GetUnitRallyUnit unit with no rally point",
+    ]);
+    expect(labels(cases)).toEqual([
+      "a outside its event",
+      "a outside its callback",
+      "a unsaved key",
+      "a unit with no rally point",
+    ]);
+    expect(callsOf(cases)).toEqual(["event", "callback", "lookup", "property"]);
+  });
+});
+
+describe("inGroupOrder", () => {
+  it("puts every (a) case of a Slice before any (b) case, each group in order", () => {
+    const live = __stub_new_handle("unit");
+    const dead = __stub_new_handle("unit");
+    const cases = inGroupOrder(
+      constructorCases(
+        "UnitAddItemById",
+        [handle("whichUnit", live, [["dead unit", dead]])],
+        () => undefined,
+      ),
+      intrinsicPropertyCases(
+        "GetUnitLoc",
+        [handle("whichUnit", live, [["dead unit", dead]])],
+        () => undefined,
+      ),
+    );
+    expect(
+      cases.map((testCase) => `${testCase.native} ${testCase.label}`),
+    ).toEqual([
+      "UnitAddItemById typical arguments",
+      "GetUnitLoc typical arguments",
+      "UnitAddItemById whichUnit: dead unit",
+      "GetUnitLoc whichUnit: dead unit",
+    ]);
+  });
+});
