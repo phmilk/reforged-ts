@@ -16,8 +16,8 @@ declare function StandInNil(): handle | undefined;
 
 /**
  * The cases, in the order they run: a return case, then call cases that
- * complete with a count, one on the skip list, one that raises and one
- * that reports no count.
+ * complete with a count, one on the skip list, one that raises, one that
+ * reports no count and one that reports a float.
  */
 const CASES: readonly Case[] = [
   {
@@ -84,6 +84,18 @@ const CASES: readonly Case[] = [
     call: () => {
       StandInEnum(undefined);
       return "one" as unknown as number;
+    },
+  },
+  {
+    native: "StandInEnum",
+    label: "float count",
+    group: "b",
+    param: "filter",
+    argument: "always-true",
+    counted: "unit",
+    call: () => {
+      StandInEnum("always true");
+      return 2.5;
     },
   },
 ];

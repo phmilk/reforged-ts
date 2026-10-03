@@ -60,40 +60,44 @@ describe("the Nullability sweep's case runner, on call cases", () => {
       "nil",
       "raising",
       "nil",
+      "always true",
     ]);
-    expect(resultLines().at(-1)).toEqual("19 END status=ok");
+    expect(resultLines().at(-1)).toEqual("22 END status=ok");
   });
 
   it("records every call case up front with its param, argument and what it counts", () => {
-    expect(resultLines().slice(1, 7)).toEqual([
+    expect(resultLines().slice(1, 8)).toEqual([
       "2 CASE case=removed%20unit group=a native=StandInNil",
       "3 CASE argument=always-true case=always-true%20filter counted=unit group=a native=StandInEnum param=filter",
       "4 CASE argument=nil case=nil%20filter counted=unit group=a native=StandInEnum param=filter",
       "5 CASE argument=live case=crashing%20filter counted=unit group=a native=StandInEnum param=filter",
       "6 CASE argument=live case=raising%20filter counted=unit group=b native=StandInEnum param=filter",
       "7 CASE argument=nil case=no%20count counted=unit group=b native=StandInEnum param=filter",
+      "8 CASE argument=always-true case=float%20count counted=unit group=b native=StandInEnum param=filter",
     ]);
   });
 
-  it("records completed with the count the case reports, error for a call that raised or reported no count, and SKIP for a skipped call case", () => {
-    expect(resultLines().slice(7, 18)).toEqual([
-      "8 PENDING label=StandInNil%20removed%20unit",
-      "9 CALL case=removed%20unit group=a native=StandInNil outcome=nil",
-      "10 PENDING label=StandInEnum%20always-true%20filter",
-      "11 CALL argument=always-true case=always-true%20filter count=5 counted=unit group=a native=StandInEnum outcome=completed param=filter",
-      "12 PENDING label=StandInEnum%20nil%20filter",
-      "13 CALL argument=nil case=nil%20filter count=3 counted=unit group=a native=StandInEnum outcome=completed param=filter",
-      "14 SKIP argument=live case=crashing%20filter counted=unit group=a native=StandInEnum param=filter reason=crashed",
-      "15 PENDING label=StandInEnum%20raising%20filter",
-      "16 CALL argument=live case=raising%20filter counted=unit group=b message=the%20filter%20broke native=StandInEnum outcome=error param=filter",
-      "17 PENDING label=StandInEnum%20no%20count",
-      "18 CALL argument=nil case=no%20count counted=unit group=b message=The%20case%20reported%20no%20count:%20it%20returned%20one. native=StandInEnum outcome=error param=filter",
+  it("records completed with the count the case reports, error for a call that raised or reported no integer count, and SKIP for a skipped call case", () => {
+    expect(resultLines().slice(8, 21)).toEqual([
+      "9 PENDING label=StandInNil%20removed%20unit",
+      "10 CALL case=removed%20unit group=a native=StandInNil outcome=nil",
+      "11 PENDING label=StandInEnum%20always-true%20filter",
+      "12 CALL argument=always-true case=always-true%20filter count=5 counted=unit group=a native=StandInEnum outcome=completed param=filter",
+      "13 PENDING label=StandInEnum%20nil%20filter",
+      "14 CALL argument=nil case=nil%20filter count=3 counted=unit group=a native=StandInEnum outcome=completed param=filter",
+      "15 SKIP argument=live case=crashing%20filter counted=unit group=a native=StandInEnum param=filter reason=crashed",
+      "16 PENDING label=StandInEnum%20raising%20filter",
+      "17 CALL argument=live case=raising%20filter counted=unit group=b message=the%20filter%20broke native=StandInEnum outcome=error param=filter",
+      "18 PENDING label=StandInEnum%20no%20count",
+      "19 CALL argument=nil case=no%20count counted=unit group=b message=The%20case%20reported%20no%20integer%20count:%20it%20returned%20one. native=StandInEnum outcome=error param=filter",
+      "20 PENDING label=StandInEnum%20float%20count",
+      "21 CALL argument=always-true case=float%20count counted=unit group=b message=The%20case%20reported%20no%20integer%20count:%20it%20returned%202.5. native=StandInEnum outcome=error param=filter",
     ]);
   });
 
   it("puts every line on disk right before each call, the call case's PENDING line last, as for a return case", () => {
     // The line each call's PENDING line is, in the file at the end.
-    const pendingAt = [8, 10, 12, 15, 17];
+    const pendingAt = [9, 11, 13, 16, 18, 20];
     expect(onDisk).toEqual(
       pendingAt.map((seq) => [
         ...resultLines().slice(0, seq),

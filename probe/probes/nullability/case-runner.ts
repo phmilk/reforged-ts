@@ -66,7 +66,8 @@ export interface CallCase {
   readonly counted: string;
   /**
    * Calls the Native once and returns how many objects the call enumerated,
-   * the units of the group it filled, say; called under `pcall`.
+   * an integer, the units of the group it filled, say; called under
+   * `pcall`.
    */
   readonly call: () => number;
 }
@@ -119,17 +120,18 @@ function pendingLabel(testCase: Case): PendingLabel {
 }
 
 /**
- * What a call case's call returned, which should be its count: `completed`
- * with the count, or an `error` naming what it returned instead, so a case
- * that counts nothing is reviewed.
+ * What a call case's call returned, which should be its count, an integer:
+ * `completed` with the count, or an `error` naming what it returned
+ * instead, a float or a value that is no number, so a case that counts
+ * nothing is reviewed.
  */
 function completed(value: unknown): CallFields {
-  if (type(value) === "number") {
+  if (type(value) === "number" && math.type(value as number) === "integer") {
     return { outcome: "completed", count: value as number };
   }
   return {
     outcome: "error",
-    message: `The case reported no count: it returned ${describe(value)}.`,
+    message: `The case reported no integer count: it returned ${describe(value)}.`,
   };
 }
 

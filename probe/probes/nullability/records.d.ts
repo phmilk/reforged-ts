@@ -58,7 +58,7 @@ export type CallFields =
   | { outcome: "nil" }
   | { outcome: "handle"; id: number; type: string }
   | { outcome: "odd"; type: string }
-  | { outcome: "completed"; count: number }
+  | { outcome: "completed"; /** An integer. */ count: number }
   | { outcome: "error"; message: string };
 
 /** The outcome of a `CALL` record. */
