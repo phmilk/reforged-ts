@@ -15,6 +15,7 @@ import {
   TYPINGS_MANIFEST,
   VENDOR_FOLDER,
 } from "../src/folders.js";
+import { readPatch } from "../src/manifest.js";
 import {
   converterTable,
   jassInteger,
@@ -103,9 +104,7 @@ describe("converterTable", () => {
 
 describe("the converter table of the Typings' Patch", () => {
   it("holds the 88 converters of the Overlay and their 1,724 constants", async () => {
-    const { patch } = JSON.parse(await readFile(TYPINGS_MANIFEST, "utf8")) as {
-      patch: string;
-    };
+    const patch = readPatch(TYPINGS_MANIFEST);
     const commonJ = await readFile(
       join(VENDOR_FOLDER, patch, "common.j"),
       "utf8",
