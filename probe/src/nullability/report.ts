@@ -266,9 +266,9 @@ function readCase(record: ResultLine): CaseRecord {
  * The case of a record `CALL native=<native> case=<label> group=<group>
  * outcome=<outcome>`, with `id` and `type` on a `handle`, `type` on an
  * `odd`, `count` on a `completed` and `message` on an `error`. A record
- * with an outcome the case runner never writes, or one its kind of case
+ * with an outcome the case runner never writes, one its kind of case
  * never gives (`completed` from a return case, a `handle` from a call
- * case), is an AuthorError.
+ * case), or a `completed` without an integer `count`, is an AuthorError.
  */
 function readCall(record: ResultLine): CaseRecord {
   const outcome = field(record, "outcome");
@@ -282,6 +282,9 @@ function readCall(record: ResultLine): CaseRecord {
   const type = field(record, "type");
   const count = field(record, "count");
   const message = field(record, "message");
+  if (outcome === "completed" && !/^-?\d+$/.test(count ?? "")) {
+    throw notRead(record);
+  }
   return {
     ...testCase,
     result: {
@@ -338,8 +341,9 @@ interface RunCases {
  * a crash ended without one is `crashed` when its PENDING line is the
  * run's last, and `not run` otherwise. The Natives, and a Native's
  * parameters, come in the order of their first case. A CALL or SKIP of no
- * planned case, or of a case planned as the other kind, a second one of a
- * case, or a Native planned with both kinds of case, is an AuthorError.
+ * planned case, of a case planned as the other kind or with another
+ * `param`, `argument` or `counted`, a second one of a case, or a Native
+ * planned with both kinds of case, is an AuthorError.
  */
 function casesByNative(run: ProbeRun): RunCases {
   const planned = new Map<string, CaseRecord>();
@@ -357,7 +361,7 @@ function casesByNative(run: ProbeRun): RunCases {
       if (
         plan === undefined ||
         given.has(key) ||
-        (plan.call === undefined) !== (testCase.call === undefined)
+        !sameCall(plan.call, testCase.call)
       ) {
         throw notRead(record);
       }
@@ -392,6 +396,25 @@ function casesByNative(run: ProbeRun): RunCases {
     }
   }
   return cases;
+}
+
+/**
+ * Whether a CALL or SKIP record names its case as its CASE record planned
+ * it: both of a return case, or both of a call case with the same `param`,
+ * `argument` and `counted`.
+ */
+function sameCall(
+  planned: CallCaseExtra | undefined,
+  given: CallCaseExtra | undefined,
+): boolean {
+  if (planned === undefined || given === undefined) {
+    return planned === given;
+  }
+  return (
+    planned.param === given.param &&
+    planned.argument === given.argument &&
+    planned.counted === given.counted
+  );
 }
 
 function bothKinds(native: string): AuthorError {

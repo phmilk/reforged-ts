@@ -1299,4 +1299,39 @@ describe("the nullability report's parameter section", () => {
       `${join(overlayFolder, "common.j", "functions", "CreateTimer.json")} has no parameter filter with a boolean nullable in params.`,
     );
   });
+
+  it("refuses a CALL or SKIP whose param, argument or counted differ from its CASE, and a completed CALL without an integer count", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWithFilters(context, {
+      GroupEnumUnitsInRect: true,
+    });
+    const fields = (argument: string, counted: string, param: string) =>
+      `argument=${argument} case=nil%20filter counted=${counted} group=a native=GroupEnumUnitsInRect param=${param}`;
+    const completed = (fieldsOfCase: string, count: string) =>
+      `CALL ${fieldsOfCase.replace(" group=", ` count=${count} group=`)} outcome=completed`;
+    const refused = [
+      completed(fields("live", "unit", "filter"), "1"),
+      completed(fields("nil", "item", "filter"), "1"),
+      completed(fields("nil", "unit", "whichGroup"), "1"),
+      `SKIP ${fields("always-true", "unit", "filter")} reason=crashed`,
+      `CALL ${fields("nil", "unit", "filter")} outcome=completed`,
+      completed(fields("nil", "unit", "filter"), "many"),
+      completed(fields("nil", "unit", "filter"), "1.5"),
+    ];
+    for (const record of refused) {
+      await writeResultFile(
+        resultFile,
+        numbered([
+          `CASE ${fields("nil", "unit", "filter")}`,
+          "PENDING label=GroupEnumUnitsInRect%20nil%20filter",
+          record,
+          "END status=ok",
+        ]),
+      );
+      await expectRefusal(
+        { ...context, overlayFolder },
+        `The record ${record.replace("nil%20filter", '"nil filter"')} is not one the nullability report reads.`,
+      );
+    }
+  });
 });
