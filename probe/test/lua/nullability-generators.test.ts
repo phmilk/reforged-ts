@@ -108,6 +108,11 @@ describe("converterCases", () => {
     expect(converterIntegers("ConvertRace")).toEqual([
       1, 2, 3, 4, 5, 7, -1, 8, 2147483647, -2147483648,
     ]);
+  });
+
+  // The harness's integers are 64-bit, where the literal -2147483648 is an
+  // integer too, so only a 32-bit run can tell the two spellings apart.
+  it("passes -2147483648 as an integer [32-bit]", () => {
     expect(math.type(converterIntegers("ConvertRace")[9])).toBe("integer");
   });
 
