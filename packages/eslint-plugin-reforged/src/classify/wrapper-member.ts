@@ -9,6 +9,7 @@ import {
 import * as ts from "typescript";
 
 import type { Invocation } from "./allowlist.js";
+import { propertyName } from "./member-access.js";
 import { isDeclaredIn } from "./package.js";
 import { isWrapperClass } from "./wrapper.js";
 
@@ -36,14 +37,13 @@ export function resolveWrapperMember(
 ): WrapperMember | undefined {
   const isCall = node.type === AST_NODE_TYPES.CallExpression;
   const target = isCall ? node.callee : node.left;
-  if (
-    target.type !== AST_NODE_TYPES.MemberExpression ||
-    target.computed ||
-    target.property.type !== AST_NODE_TYPES.Identifier
-  ) {
+  const member =
+    target.type === AST_NODE_TYPES.MemberExpression
+      ? propertyName(target)
+      : undefined;
+  if (target.type !== AST_NODE_TYPES.MemberExpression || member === undefined) {
     return undefined;
   }
-  const member = target.property.name;
   const checker = services.program.getTypeChecker();
   const symbol = checker.getSymbolAtLocation(
     services.esTreeNodeToTSNodeMap.get(target.property),

@@ -20,6 +20,7 @@ import * as ts from "typescript";
 
 import type { LocalSafeEntry, LocalSafeKind } from "../data/index.js";
 import { memberName } from "./member.js";
+import { propertyName, resolvedDeclarations } from "./member-access.js";
 import { isDeclaredIn, packageNameOf } from "./package.js";
 
 /** What can invoke an allowlist entry: a call, or an assignment to an accessor. */
@@ -38,27 +39,9 @@ function syntacticName(node: Invocation): string | undefined {
       ? target.name
       : undefined;
   }
-  if (
-    target.type === AST_NODE_TYPES.MemberExpression &&
-    !target.computed &&
-    target.property.type === AST_NODE_TYPES.Identifier
-  ) {
-    return target.property.name;
-  }
-  return undefined;
-}
-
-function resolvedSymbol(
-  services: ParserServicesWithTypeInformation,
-  node: TSESTree.Node,
-): ts.Symbol | undefined {
-  const checker = services.program.getTypeChecker();
-  const symbol = checker.getSymbolAtLocation(
-    services.esTreeNodeToTSNodeMap.get(node),
-  );
-  return symbol !== undefined && symbol.flags & ts.SymbolFlags.Alias
-    ? checker.getAliasedSymbol(symbol)
-    : symbol;
+  return target.type === AST_NODE_TYPES.MemberExpression
+    ? propertyName(target)
+    : undefined;
 }
 
 /**
@@ -78,7 +61,7 @@ export function invokedName(
   const target =
     node.type === AST_NODE_TYPES.CallExpression ? node.callee : node.left;
   if (target.type === AST_NODE_TYPES.Identifier) {
-    const declaration = resolvedSymbol(services, target)?.declarations?.find(
+    const declaration = resolvedDeclarations(services, target).find(
       (each) =>
         ts.isFunctionDeclaration(each) &&
         globalFunctionPackages.has(
@@ -91,8 +74,7 @@ export function invokedName(
     return undefined;
   }
   const isCall = node.type === AST_NODE_TYPES.CallExpression;
-  for (const declaration of resolvedSymbol(services, target.property)
-    ?.declarations ?? []) {
+  for (const declaration of resolvedDeclarations(services, target.property)) {
     const matches = isCall
       ? ts.isMethodDeclaration(declaration) || ts.isMethodSignature(declaration)
       : ts.isSetAccessorDeclaration(declaration);

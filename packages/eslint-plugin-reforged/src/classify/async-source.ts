@@ -18,6 +18,12 @@ import {
 import * as ts from "typescript";
 
 import { memberName } from "./member.js";
+import {
+  type InvocationCandidate,
+  mayInvokeListed,
+  propertyName,
+  resolvedDeclarations,
+} from "./member-access.js";
 import { isDeclaredIn, packageNameOf } from "./package.js";
 
 /** The `os` functions that read the local clock. */
@@ -29,19 +35,12 @@ export const osClockFunctions: ReadonlySet<string> = new Set([
 ]);
 
 /** A node that can be a source: a call, or a member read (a getter). */
-export type AsyncCandidate =
-  TSESTree.CallExpression | TSESTree.MemberExpression;
+export type AsyncCandidate = InvocationCandidate;
 
 /** A classified source. */
 export interface AsyncSource {
   /** The source as the message names it: `GetLocalPlayer`, `MapPlayer.fromLocal`, `Unit#name`, `os.clock`. */
   readonly name: string;
-}
-
-function propertyName(member: TSESTree.MemberExpression): string | undefined {
-  return !member.computed && member.property.type === AST_NODE_TYPES.Identifier
-    ? member.property.name
-    : undefined;
 }
 
 /** `os.clock` (and the others), syntactically. */
@@ -56,64 +55,22 @@ function isOsClockCallee(
   );
 }
 
-/** Whether a member expression is read as a value (not called, not written). */
-function isRead(member: TSESTree.MemberExpression): boolean {
-  const { parent } = member;
-  if (
-    parent.type === AST_NODE_TYPES.CallExpression &&
-    parent.callee === member
-  ) {
-    return false;
-  }
-  if (parent.type === AST_NODE_TYPES.UpdateExpression) {
-    return false;
-  }
-  return !(
-    parent.type === AST_NODE_TYPES.AssignmentExpression &&
-    parent.left === member
-  );
-}
-
 /**
  * Whether a node may be a source, without the checker: a plain call to a
  * name of `asyncNatives`, a call to a non-computed member (a library member
- * or `os.clock`), or a non-computed member read.
+ * or `os.clock`), or a read of a non-computed member.
  */
 export function mayBeAsyncSource(
   node: AsyncCandidate,
   asyncNatives: ReadonlySet<string>,
 ): boolean {
-  if (node.type === AST_NODE_TYPES.MemberExpression) {
-    return propertyName(node) !== undefined && isRead(node);
-  }
-  const { callee } = node;
-  if (callee.type === AST_NODE_TYPES.Identifier) {
-    return asyncNatives.has(callee.name);
-  }
-  return (
-    callee.type === AST_NODE_TYPES.MemberExpression &&
-    propertyName(callee) !== undefined
-  );
+  return mayInvokeListed(node, asyncNatives, "any");
 }
 
 function hasAsyncTag(declaration: ts.Declaration): boolean {
   return ts
     .getJSDocTags(declaration)
     .some((tag) => tag.tagName.text === "async");
-}
-
-function resolvedDeclarations(
-  services: ParserServicesWithTypeInformation,
-  node: TSESTree.Node,
-): readonly ts.Declaration[] {
-  const checker = services.program.getTypeChecker();
-  let symbol = checker.getSymbolAtLocation(
-    services.esTreeNodeToTSNodeMap.get(node),
-  );
-  if (symbol !== undefined && symbol.flags & ts.SymbolFlags.Alias) {
-    symbol = checker.getAliasedSymbol(symbol);
-  }
-  return symbol?.declarations ?? [];
 }
 
 /**
