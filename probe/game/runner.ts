@@ -1,5 +1,6 @@
 // The Probe runner's in-game module: the entry of every Probe's bundle. It
-// wraps the editor's `main` to start a 0-second timer, calls the Probe's
+// wraps the editor's `main` to write the Result file's BEGIN line, during
+// loading, and start a 0-second timer, calls the Probe's
 // `run(p)` from it under `xpcall`, ends the run when `run` returns or
 // throws, or, after `p.hold()`, when the Probe calls `p.finish()` or a
 // callback of `p.after` throws, and
@@ -192,7 +193,6 @@ const p: ProbeContext = {
 };
 
 function start(): void {
-  addLine("BEGIN", { patch: PATCH, probe: PROBE, run: RUN_ID });
   const [ok, message] = xpcall(() => {
     runProbe(p);
   }, errorMessage);
@@ -217,6 +217,11 @@ globals.main = () => {
   // Probe or the human. Replaced here, not in the map, so the map folder
   // stays the Template's; blizzard.j defines it by the time `main` runs.
   globals.MeleeInitVictoryDefeat = () => undefined;
+  // BEGIN reaches the disk here, during loading, before "Press any key to
+  // continue": probe:run waits for it to post the key that passes that
+  // screen, so no key is ever sent to the Battle.net login (#360).
+  addLine("BEGIN", { patch: PATCH, probe: PROBE, run: RUN_ID });
+  writeResultFile(nextLineParts("CHECKPOINT", {}));
   editorMain?.();
   const timer = CreateTimer();
   TimerStart(timer, 0, false, () => {

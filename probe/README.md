@@ -6,28 +6,48 @@ A private workspace package, never published. A **Probe** is a TypeScript file t
 
 Run from the repository root:
 
-| Command                                 | What it does                                                                                                                                                                                                                                                                                                                  |
-| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm probe:build [<probe>…]`           | Builds each Probe named, or every Probe when none is: compiles it with typescript-to-lua, bakes a fresh runId and the Patch of the Typings' manifest into the bundle, composes the map script and stages the map folder in `.probe/build/<probe>/staging/probe.w3m`. Needs no game; CI runs it. Exit code 1 on a failure.     |
-| `pnpm probe:launch <probe>`             | Run by the human, as `! pnpm probe:launch <probe>` in the agent's session; the agent never runs it. Finds the game, fails before building when it is not found, builds the Probe as `probe:build` does, starts the game detached on the staged folder and prints the human's part of the Probe run. Exit code 1 on a failure. |
-| `pnpm probe:read <probe>`               | Reads the Probe's Result file, prints the state of its last run on one line, then its records, one per line. Read-only: it writes, starts and stops nothing, and on Windows reads the process list.                                                                                                                           |
-| `pnpm probe:nullability-report <probe>` | Writes the section of the Nullability sweep's Slice `<probe>` into `docs/research/nullability-sweep.md` from the Probe's last run, in place of its previous one: see [The Nullability sweep](#the-nullability-sweep). Reads the Overlay and never writes it. Exit code 1 on a failure.                                        |
+| Command                                 | What it does                                                                                                                                                                                                                                                                                                                                                                                  |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm probe:build [<probe>…]`           | Builds each Probe named, or every Probe when none is: compiles it with typescript-to-lua, bakes a fresh runId and the Patch of the Typings' manifest into the bundle, composes the map script and stages the map folder in `.probe/build/<probe>/staging/probe.w3m`. Needs no game; CI runs it. Exit code 1 on a failure.                                                                     |
+| `pnpm probe:run <probe>`                | Run by the agent, on native Windows: finds the game, builds the Probe as `probe:build` does, starts the game on the staged folder, passes the screens before the map, ends the game once the Result file ends or stalls, then prints the run as `probe:read` does. Blocks until the run ends: see [Running a Probe run](#running-a-probe-run). Exit codes are `probe:read`'s; 4 on a failure. |
+| `pnpm probe:read <probe>`               | Reads the Probe's Result file, prints the state of its last run on one line, then its records, one per line. Read-only: it writes, starts and stops nothing, and on Windows reads the process list.                                                                                                                                                                                           |
+| `pnpm probe:nullability-report <probe>` | Writes the section of the Nullability sweep's Slice `<probe>` into `docs/research/nullability-sweep.md` from the Probe's last run, in place of its previous one: see [The Nullability sweep](#the-nullability-sweep). Reads the Overlay and never writes it. Exit code 1 on a failure.                                                                                                        |
 
 A known failure (a bad Probe name, a type error in a Probe, no game or no `CustomMapData` folder found) prints one line, `<command> failed: <message>`; a bug prints its stack.
 
-### Launching a Probe run
+### Running a Probe run
 
-`probe:launch` finds the game in this order, as the Template's `pnpm test:map` does:
+The agent runs Probe runs, end to end, with `pnpm probe:run <probe>`; a human steps in only to log in to Battle.net when the game asks, called by a notification. The command runs on native Windows only (from WSL, run it in a Windows shell) and blocks until the run ends: the agent starts it in the background and follows its output.
+
+It finds the game in this order, as the Template's `pnpm test:map` does, before it builds:
 
 1. `--game-executable <file>`, relative to the repository root;
 2. `WC3_EXECUTABLE`, naming the game's executable, also relative to the repository root;
-3. the Battle.net install locations: `Warcraft III\_retail_\x86_64\Warcraft III.exe` under `Program Files (x86)`, then `Program Files`, on Windows, and under WSL at their `/mnt/c/` paths; the `.app`'s inner binary under `/Applications` on macOS.
+3. the Battle.net install locations: `Warcraft III\_retail_\x86_64\Warcraft III.exe` under `Program Files (x86)`, then `Program Files`.
 
-It starts the game with `-loadfile <staged folder> -launch -editor -windowmode windowed`: no menu, and the saved Battle.net login. The command returns once the game has started, and prints what to do next: wait until the game shows "Probe `<probe>` finished", close it, then say "done", or "crashed" if the game died before that message. The agent then reads the run with `probe:read`.
+It refuses to start while a `Warcraft III.exe` already runs: `probe:read` looks the game up by image name. Then:
 
-Under WSL (Node's platform is `linux`, with `WSL_DISTRO_NAME` set or a Microsoft kernel), the game is a Windows program reached through interop (#347). The staged folder is copied to `%TEMP%\reforged-ts-probe\<probe>\` on the Windows side, that Probe's folder emptied first, since the game cannot open a WSL path. The game starts on the copy's Windows path, and the command prints where the copy is. An interop step that fails (`wslpath`, `cmd.exe`, `powershell.exe`) is a one-line error naming the step and what to set instead.
+1. **Start.** It builds the Probe, with a fresh runId, and starts the game with `-loadfile <staged folder> -launch -editor -windowmode windowed`: no menu, and the game's own saved login. It keeps the game's PID.
+2. **The screens before the map.** The runner writes the Result file's `BEGIN` line, and a `CHECKPOINT` line, in `main`, during loading, before "Press any key to continue". Once the `BEGIN` of the current run is on disk, the command posts a space key to the game's window (`PostMessage`: no focus needed, minimized included), and again every 2 seconds until the Probe writes past what `BEGIN` wrote: the screen may show after `BEGIN`, and a key posted before it is lost (#361). It never sends a key before `BEGIN`, so nothing is ever typed into the Battle.net login; in the game, a space only moves the camera to the last alert.
+3. **No `BEGIN` after `--begin-timeout` seconds (60 by default).** The command captures the game's window to `.probe/<probe>/no-begin.png` (a minimized window is shown first, without being activated, since it has no picture), prints `waiting for a human: no BEGIN after 60s, capture at <png>…` and keeps waiting, up to 15 minutes. The agent reads the capture: when it shows the Battle.net login, the agent sends a push notification, the human logs in, the map loads, and the same command posts the key on `BEGIN` and carries on. When it shows anything else, the agent stops the command, which ends the game, and reports what it saw.
+4. **A stall: the Result file unchanged for `--stall-timeout` seconds (120 by default) after the key.** The command captures the window to `.probe/<probe>/stall.png`, then ends the game; the run reads as `crashed`, its pending step named.
+5. **The end.** Right after reading `END`, `ok` or `failed`, the command ends the game.
 
-`--wine-path <wine>` starts the game through Wine, with the staged folder as a `Z:` path, `--game-executable` as a path Wine understands and `--wine-prefix <folder>` as `WINEPREFIX`. This form is copied from the Template and not guaranteed.
+The command ends the game with `taskkill /F /PID <pid>` (the game ignores a plain `taskkill`), the process it started only, on every way out once the game has started: after `END`, a stall, the end of the human wait, Ctrl+C or a stop of the command, or its own failure. A game that exits by itself is a crash: there is nothing to end. A command killed outright cannot end its game: end it with the `taskkill` of the PID its `started` line printed.
+
+It prints one progress line per event, with the time since the start:
+
+```text
+Built Probe hello, run <runId>: <staged folder>
+started pid=21900
+BEGIN at 12s
+key sent at 13s
+checkpoint at 41s, pending "CreateTimer valid"
+END at 73s status=ok
+killed pid=21900 at 74s after END
+```
+
+Last, it prints exactly what `probe:read` prints for the run and exits with its code: 0 `finished`, 1 `failed`, 2 `crashed` (a stall included), 3 `not-started` (no `BEGIN` ever came); 4 is the command's own failure.
 
 ### States of a Probe run
 
@@ -42,7 +62,7 @@ Under WSL (Node's platform is `linux`, with `WSL_DISTRO_NAME` set or a Microsoft
 | `incomplete`  | the file holds the last build's runId and ends with `CHECKPOINT`, elsewhere, where no process is looked for     | 2         |
 | `not-started` | there is no file, or it holds another runId, which the status shows                                             | 3         |
 
-A run that ends with a checkpoint shows the label of its last `PENDING` line, the step it was in, or "no pending step". On Windows the game's process is looked for with `tasklist /FI "IMAGENAME eq Warcraft III.exe"`, a query of the process list that stops nothing, and under WSL with the same `tasklist.exe` through interop; elsewhere the run stays `incomplete`, and the human's "done" or "crashed" decides.
+A run that ends with a checkpoint shows the label of its last `PENDING` line, the step it was in, or "no pending step". On Windows the game's process is looked for with `tasklist /FI "IMAGENAME eq Warcraft III.exe"`, a query of the process list that stops nothing, and under WSL with the same `tasklist.exe` through interop; elsewhere the run stays `incomplete`. After `probe:run` the game is gone, so a run that ends with a checkpoint reads as `crashed`.
 
 Exit code 4 is the command's own failure (usage, a known failure or a bug), so a failure never reads as a state. The root scripts run the package's with `pnpm --dir probe`, not `pnpm --filter`, which would turn every non-zero exit code into 1.
 
@@ -58,7 +78,7 @@ The home folder's `Documents` is never used: it can exist and not be the folder 
 
 ## Writing a Probe
 
-A Probe is `probes/<probe>.ts`, named in kebab-case ASCII (`hello`, `native-nullability`). Every TypeScript file directly in `probes/` is a Probe; a module Probes share goes in a subfolder. It exports `run`, which the runner calls once the map is initialised, from a 0-second timer under `xpcall`. The map's Melee Initialization runs as the Template's does, except `MeleeInitVictoryDefeat`, which the runner replaces with a no-op: with no enemy player, the game would end in victory within seconds, and its Quit Game would end the Probe run (#348). Only the Probe or the human ends a game:
+A Probe is `probes/<probe>.ts`, named in kebab-case ASCII (`hello`, `native-nullability`). Every TypeScript file directly in `probes/` is a Probe; a module Probes share goes in a subfolder. It exports `run`, which the runner calls once the map is initialised, from a 0-second timer under `xpcall`. The map's Melee Initialization runs as the Template's does, except `MeleeInitVictoryDefeat`, which the runner replaces with a no-op: with no enemy player, the game would end in victory within seconds, and its Quit Game would end the Probe run (#348). Only the Probe, or `probe:run` once the Result file ends or stalls, ends a game:
 
 ```ts
 import type { ProbeContext } from "../game/probe";
@@ -70,7 +90,7 @@ export function run(p: ProbeContext): void {
 
 `p.pending(label)` adds the line `<seq> PENDING label=<label>` before a risky step, so a crash in that step names it. `p.checkpoint()` puts every line so far on disk: it rewrites the Result file in full, `PreloadGenClear`, `PreloadGenStart`, one `Preload` per line and `PreloadGenEnd`, ending with the line `<seq> CHECKPOINT`, and shows "Probe `<probe>`: checkpoint N, M records so far." on screen. The Probe chooses when: a line reaches the disk only at the next checkpoint or at the end, so a crash loses what came after the last checkpoint. The `CHECKPOINT` line ends its rewrite only: the next line added takes its seq, and the file at the end holds no `CHECKPOINT` line.
 
-The run ends when `run` returns: the runner adds `END status=ok`, writes the Result file and shows "Probe `<probe>` finished: N records. Close the game." for an hour. A Probe working on timers or events calls `p.hold()` in `run`, and `END` then waits for `p.finish()`, which it calls once its work is done (`probes/held.ts`). `p.finish()` ends the run whenever it is called, held or not; after the end it does nothing, and `p.record`, `p.pending` and `p.checkpoint` raise an error. Timers run in game time, which stops while another window has the focus: the calibration run (#326) saw a 30-second timer take 40 seconds, so the human keeps the game's window in focus, as `probe:launch` says. The runner never calls `EndGame` at the end: on 3.0 it only takes the client to the main menu (#326), and the human closes the game anyway.
+The run ends when `run` returns: the runner adds `END status=ok`, writes the Result file and shows "Probe `<probe>` finished: N records. Close the game." for an hour. A Probe working on timers or events calls `p.hold()` in `run`, and `END` then waits for `p.finish()`, which it calls once its work is done (`probes/held.ts`). `p.finish()` ends the run whenever it is called, held or not; after the end it does nothing, and `p.record`, `p.pending` and `p.checkpoint` raise an error. Timers run in game time, which slows while another window has the focus: the calibration run (#326) saw a 30-second timer take 40 seconds, so a held Probe checkpoints well within `probe:run`'s stall timeout. The runner never calls `EndGame` at the end: on 3.0 it only takes the client to the main menu (#326), and `probe:run` ends the game anyway.
 
 When `run` throws, held or not, the runner catches the error with `xpcall`, adds `ERROR message=<message>`, then `END status=failed`, writes the Result file and shows "Probe `<probe>` failed after N records. Close the game." with the message (`probes/failing.ts`). An Error thrown from TypeScript is recorded as `<name>: <message>`, without its stack, which the game cannot give: it has no `debug` library. An error thrown later is caught the same way when it comes from a callback of `p.after(seconds, callback)`, the runner's timer for a held Probe's later steps: `ERROR`, then `END status=failed` (`probes/failing-later.ts`), or, once the run has ended, the failure on screen only. One thrown from a timer or an event the Probe started itself is not caught: the run never ends, and reads as `crashed`. `p.after` and `p.show(text, seconds)`, which shows a message as the runner's own are shown, both work after the end, for a step that must come after `END`.
 
@@ -123,7 +143,7 @@ Group `a` is a case of live arguments, `b` one of a stale handle. `odd` is a han
 
 ## Layout
 
-- `probes/`: the Probes, and `tsconfig.json`, the typescript-to-lua project every Probe compiles with. `calibration.ts` measures the Preload limits the Result file's format was frozen on, checks C1 to C8 of #298, in test files of its own under `CustomMapData\reforged-ts\calibration\`; its doc comment lists what it records, and its last step, C8, calls `EndGame(false)` 3 seconds after `END`. `hello`, `failing`, `held` and `failing-later` exist for the runner's own tests. `probes/nullability/` holds what the Slices of the Nullability sweep share, `records.d.ts`, the format of the case runner's records, which the report imports too, included.
+- `probes/`: the Probes, and `tsconfig.json`, the typescript-to-lua project every Probe compiles with. `calibration.ts` measures the Preload limits the Result file's format was frozen on, checks C1 to C8 of #298, in test files of its own under `CustomMapData\reforged-ts\calibration\`; its doc comment lists what it records, and its last step, C8, calls `EndGame(false)` 3 seconds after `END`, which a run of `probe:run` never reaches: it ends the game at `END` (#360). `hello`, `failing`, `held` and `failing-later` exist for the runner's own tests. `probes/nullability/` holds what the Slices of the Nullability sweep share, `records.d.ts`, the format of the case runner's records, which the report imports too, included.
 - `game/`: the in-game module (`runner.ts`, the entry of every bundle), what it shares with the Probes (`errors.ts`, the message of a raised value) and the types a Probe sees (`probe.ts`).
 - `probe.w3m/`: the map folder, a copy of the Template's; `PROVENANCE.md` lists every file copied from the Template.
 - `src/`: the commands, compiled to `build/`; `src/machine.ts` is the one way they reach the machine, which the tests replace with a fake. `src/read.ts` is the reader the package's other scripts import. `src/nullability/` is the Nullability sweep's report.

@@ -22,7 +22,7 @@
     "data:check": "pnpm --filter reforged-ts build && pnpm --filter reforged-ts-release data:check",
     "examples:build": "pnpm --filter reforged-ts examples:build",
     "probe:build": "pnpm --dir probe probe:build",
-    "probe:launch": "pnpm --dir probe probe:launch",
+    "probe:run": "pnpm --dir probe probe:run",
     "probe:read": "pnpm --dir probe probe:read",
     "probe:nullability-report": "pnpm --dir probe probe:nullability-report",
     "changeset": "changeset",

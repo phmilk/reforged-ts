@@ -1,7 +1,8 @@
 // The hello Probe's bundle, as probe:build compiles it with the bridge
 // fixtures' runId, run on the harness with the shipped stubs. The tests share
-// one Lua state and run in order: the bundle loads, the editor's main runs,
-// then the runner's timer fires and the Probe runs: a PENDING line and a
+// one Lua state and run in order: the bundle loads, the runner writes BEGIN
+// and the editor's main runs, then the runner's timer fires and the Probe
+// runs: a PENDING line and a
 // record, a checkpoint, again a PENDING line and a record, a checkpoint,
 // then the end.
 
@@ -50,10 +51,12 @@ function linesOfKind(lines: readonly string[], kind: string): string[] {
 
 describe("the hello Probe's bundle", () => {
   let editorMainRan = false;
+  let fileWhenEditorMainRan: string[] | undefined;
 
   it("calls no Native when it loads", () => {
     globals.main = () => {
       editorMainRan = true;
+      fileWhenEditorMainRan = __stub_preload_file(RESULT_FILE);
     };
     globals.require("hello_bundle");
     expect(stubCalls().length).toEqual(0);
@@ -66,7 +69,16 @@ describe("the hello Probe's bundle", () => {
     expect(starts.length).toEqual(1);
     expect(starts[0]?.[1]).toEqual(0);
     expect(starts[0]?.[2]).toEqual(false);
-    expect(__stub_preload_file(RESULT_FILE)).toBeUndefined();
+  });
+
+  it("writes BEGIN and a CHECKPOINT line in main, before the editor's main and with no message: the line probe:run waits for to post its key", () => {
+    const written = [
+      "1 BEGIN patch=3.0.0.12345 probe=hello run=bridge",
+      "2 CHECKPOINT",
+    ];
+    expect(fileWhenEditorMainRan).toEqual(written);
+    expect(__stub_preload_file(RESULT_FILE)).toEqual(written);
+    expect(__stub_displayed().length).toEqual(0);
   });
 
   it("writes the bridge fixture's lines to the Result file when the timer fires", () => {
@@ -74,10 +86,10 @@ describe("the hello Probe's bundle", () => {
     expect(__stub_preload_file(RESULT_FILE)).toEqual(bridge().finished);
   });
 
-  it("writes the Result file three times through the Preload Natives, each a full rewrite", () => {
+  it("writes the Result file four times through the Preload Natives, each a full rewrite: in main, at each checkpoint and at the end", () => {
     const calls = stubCalls().filter((call) => call.startsWith("Preload"));
     const writes = preloadWrites();
-    expect(writes.length).toEqual(3);
+    expect(writes.length).toEqual(4);
     expect(calls).toEqual(
       writes.flatMap((lines) => [
         "PreloadGenClear()",
@@ -86,15 +98,15 @@ describe("the hello Probe's bundle", () => {
         'PreloadGenEnd("reforged-ts\\\\probes\\\\hello.txt")',
       ]),
     );
-    expect(writes[2]).toEqual(bridge().finished);
+    expect(writes[3]).toEqual(bridge().finished);
   });
 
   it("rewrites at each of its two checkpoints every line so far, then a CHECKPOINT line of the next seq", () => {
     const writes = preloadWrites();
     const finished = bridge().finished;
-    expect(writes[0]).toEqual([...finished.slice(0, 3), "4 CHECKPOINT"]);
-    expect(writes[1]).toEqual([...finished.slice(0, 6), "6 CHECKPOINT"]);
-    for (const lines of writes.slice(0, 2)) {
+    expect(writes[1]).toEqual([...finished.slice(0, 3), "4 CHECKPOINT"]);
+    expect(writes[2]).toEqual([...finished.slice(0, 6), "6 CHECKPOINT"]);
+    for (const lines of writes.slice(1, 3)) {
       expect(linesOfKind(lines, "CHECKPOINT")).toEqual([
         lines[lines.length - 1] ?? "",
       ]);
@@ -102,20 +114,20 @@ describe("the hello Probe's bundle", () => {
   });
 
   it("writes at its second checkpoint the bridge's checkpoint fixture", () => {
-    expect(preloadWrites()[1]).toEqual(bridge().checkpoint);
+    expect(preloadWrites()[2]).toEqual(bridge().checkpoint);
   });
 
   it("writes the PENDING lines in order, each before the record of its step", () => {
     const writes = preloadWrites();
-    expect(linesOfKind(writes[0] ?? [], "PENDING")).toEqual([
+    expect(linesOfKind(writes[1] ?? [], "PENDING")).toEqual([
       "2 PENDING label=greet",
     ]);
-    expect(linesOfKind(writes[2] ?? [], "PENDING")).toEqual([
+    expect(linesOfKind(writes[3] ?? [], "PENDING")).toEqual([
       "2 PENDING label=greet",
       "4 PENDING label=encode",
     ]);
-    expect(writes[2]?.[2]).toEqual("3 greeting count=1 word=hello");
-    expect(string.find(writes[2]?.[4] ?? "", "^5 encoded ")[0]).toEqual(1);
+    expect(writes[3]?.[2]).toEqual("3 greeting count=1 word=hello");
+    expect(string.find(writes[3]?.[4] ?? "", "^5 encoded ")[0]).toEqual(1);
   });
 
   it("shows a progress message after each checkpoint, and the end message after the last write", () => {
@@ -135,6 +147,7 @@ describe("the hello Probe's bundle", () => {
       )
       .map((call) => string.match(call, "^[A-Za-z]+")[0]);
     expect(order).toEqual([
+      "PreloadGenEnd",
       "PreloadGenEnd",
       "DisplayTimedTextToPlayer",
       "PreloadGenEnd",

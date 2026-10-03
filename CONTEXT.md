@@ -105,11 +105,11 @@ A TypeScript file of the Probe runner (`probe/probes/<probe>.ts`, named in kebab
 _Avoid_: probe map (the Lua pasted into the World Editor, #9), test, script
 
 **Probe run**:
-One run of a built Probe in the game: the build bakes a fresh runId, a human launches the game on it and closes it, and the agent reads the Result file. A Result file whose runId is not the last build's belongs to no current Probe run.
+One run of a built Probe in the game, from start to end by the agent: the build bakes a fresh runId, `probe:run` starts the game on it, passes the screens before the map, ends the game once the Result file ends or stalls, and reads it. A human steps in only to log in to Battle.net when the game asks. A Result file whose runId is not the last build's belongs to no current Probe run.
 _Avoid_: session, execution, test run
 
 **Probe runner**:
-The private workspace package `probe/` and its three commands: `probe:build` compiles a Probe into a map folder, `probe:launch` starts the game on it, `probe:read` reads its Result file and says how the Probe run ended.
+The private workspace package `probe/` and its commands: `probe:build` compiles a Probe into a map folder, `probe:run` runs it in the game end to end, `probe:read` reads its Result file and says how the Probe run ended, `probe:nullability-report` reports a Slice.
 _Avoid_: harness (the Lua test harness), launcher, probe map
 
 **Result file**:

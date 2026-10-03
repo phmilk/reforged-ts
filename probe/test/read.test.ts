@@ -3,12 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { main, type Context } from "../src/cli/read.js";
-import {
-  listsImage,
-  systemMachine,
-  tasklistArgs,
-  type SpawnCommand,
-} from "../src/machine.js";
+import { listsImage, systemMachine, tasklistArgs } from "../src/machine.js";
 import {
   decodeValue,
   field,
@@ -29,7 +24,7 @@ import {
   bridgeLines,
   preloadFile,
 } from "./support/bridge.js";
-import { fakeMachine, fakeWsl } from "./support/machine.js";
+import { fakeMachine, fakeWsl, type GameEvent } from "./support/machine.js";
 
 /** The hello Probe's `ascii` value: every byte of ASCII the writer escapes. */
 const ESCAPED_ASCII = `${String.fromCharCode(
@@ -354,8 +349,8 @@ interface FakeRun {
   files: Record<string, string>;
   /** The image names the process list was asked about. */
   processQueries: string[];
-  /** The programs the machine was asked to start. */
-  spawned: SpawnCommand[];
+  /** What the machine was asked to do to a game: start it, post it a key, capture or end it. */
+  game: GameEvent[];
 }
 
 /**
@@ -370,14 +365,14 @@ function fakeRun(
 ): FakeRun {
   const files: Record<string, string> = {};
   const processQueries: string[] = [];
-  const spawned: SpawnCommand[] = [];
+  const game: GameEvent[] = [];
   const machine = fakeMachine({
     platform,
     env: { [USER_FOLDER_VARIABLE]: FAKE_USER_FOLDERS[platform] },
     files,
     processes,
     processQueries,
-    spawned,
+    game,
   });
   files[stateFile(FAKE_STATE_FOLDER, BRIDGE_PROBE)] = JSON.stringify({
     probe: BRIDGE_PROBE,
@@ -388,7 +383,7 @@ function fakeRun(
     context: { machine, stateFolder: FAKE_STATE_FOLDER },
     files,
     processQueries,
-    spawned,
+    game,
   };
 }
 
@@ -532,14 +527,14 @@ describe("probe:read of a Result file that ends with a checkpoint", () => {
   });
 
   it("writes, starts and stops nothing: it only reads the files and the process list", () => {
-    const { context, files, processQueries, spawned } = fakeRun("win32", [
+    const { context, files, processQueries, game } = fakeRun("win32", [
       "Warcraft III.exe",
     ]);
     const before = { ...files };
 
     expect(read([BRIDGE_PROBE], context).code).toBe(2);
     expect(files).toEqual(before);
-    expect(spawned).toEqual([]);
+    expect(game).toEqual([]);
     expect(processQueries).toEqual(["Warcraft III.exe"]);
   });
 });

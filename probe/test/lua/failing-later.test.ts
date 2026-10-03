@@ -11,14 +11,17 @@ import { globals, loadBundle, startedTimer } from "./bundle";
 const RESULT_FILE = "reforged-ts\\probes\\failing-later.txt";
 
 describe("the failing-later Probe's bundle", () => {
-  it("writes nothing once run returns, and starts the Probe's 1-second timer", () => {
+  it("writes nothing once run returns but what main wrote, and starts the Probe's 1-second timer", () => {
     loadBundle("failing-later");
     __stub_fire_timer(startedTimer(0));
     const starts = __stub_args("TimerStart");
     expect(starts.length).toEqual(2);
     expect(starts[1]?.[1]).toEqual(1);
     expect(starts[1]?.[2]).toEqual(false);
-    expect(__stub_preload_file(RESULT_FILE)).toBeUndefined();
+    expect(__stub_preload_file(RESULT_FILE)).toEqual([
+      "1 BEGIN patch=3.0.0.12345 probe=failing-later run=bridge",
+      "2 CHECKPOINT",
+    ]);
   });
 
   it("catches the error the callback throws, without the debug library, and writes ERROR, then END status=failed", () => {
