@@ -14,6 +14,8 @@ When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the 
 
 Edit the right-hand column to match whatever vocabulary you actually use.
 
+A check in game is `ready-for-agent`: the agent settles it with a Probe run. It is `ready-for-human` only for the checks [`probe/README.md`](../../probe/README.md#what-stays-for-a-human) lists, the issue naming which one.
+
 ## Kind labels
 
 Two more labels say what an issue is, next to its triage label. Apply them when creating the issue.

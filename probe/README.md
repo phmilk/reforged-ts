@@ -1,6 +1,16 @@
 # The Probe runner
 
-A private workspace package, never published. A **Probe** is a TypeScript file that runs in the real game and records what only the game can tell. The runner builds a Probe into a map folder, starts the game on it, and reads back the **Result file** the Probe run writes in the game's `CustomMapData` folder. The terms are defined in [`CONTEXT.md`](../CONTEXT.md); why this package copies the Template's pipeline is [ADR 0010](../docs/adr/0010-probe-runner-copies-the-template-pipeline.md).
+A private workspace package, never published. A **Probe** is a TypeScript file that runs in the real game and records what only the game can tell. A fact to check in game is a Probe run by default: what stays for a human is [listed below](#what-stays-for-a-human). The runner builds a Probe into a map folder, starts the game on it, and reads back the **Result file** the Probe run writes in the game's `CustomMapData` folder. The terms are defined in [`CONTEXT.md`](../CONTEXT.md); why this package copies the Template's pipeline is [ADR 0010](../docs/adr/0010-probe-runner-copies-the-template-pipeline.md).
+
+## What stays for a human
+
+A fact to check in game is a Probe run the agent writes and runs itself, by default. A human gets only:
+
+- **a check made by looking at the screen:** a visual result, a frame's layout, an effect, a sound;
+- **multiplayer:** two or more clients, such as host election (#131);
+- **the Battle.net login**, when a run's notification asks (step 3 of [Running a Probe run](#running-a-probe-run)).
+
+Such a check is an issue labelled `ready-for-human`, naming which of these it is.
 
 ## Commands
 
@@ -17,7 +27,7 @@ A known failure (a bad Probe name, a type error in a Probe, no game or no `Custo
 
 ### Running a Probe run
 
-The agent runs Probe runs, end to end, with `pnpm probe:run <probe>`; a human steps in only to log in to Battle.net when the game asks, called by a notification. The command runs on native Windows only (from WSL, run it in a Windows shell) and blocks until the run ends: the agent starts it in the background and follows its output.
+The agent runs Probe runs, end to end, with `pnpm probe:run <probe>`; during a run, a human steps in only to log in to Battle.net when the game asks, called by a notification. The command runs on native Windows only (from WSL, run it in a Windows shell) and blocks until the run ends: the agent starts it in the background and follows its output.
 
 It finds the game in this order, as the Template's `pnpm test:map` does, before it builds:
 

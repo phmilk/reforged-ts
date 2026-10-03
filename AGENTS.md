@@ -27,7 +27,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `docs/release.md`: changesets, versions and the release workflow.
 - `docs/documentation.md`: the doc comment standard: tags, their order, the required-tag matrix, the style rules and the examples.
 - `release/`: the release scripts, a private workspace package.
-- `probe/`: the Probe runner, a private workspace package: Probes that run in the real game, `probe:build`, `probe:run` and `probe:read`. The agent runs Probe runs with `probe:run`, end to end; a human only logs in to Battle.net when notified. Read its `README.md` before writing a Probe or checking a fact in game.
+- `probe/`: the Probe runner, a private workspace package: Probes that run in the real game, `probe:build`, `probe:run` and `probe:read`. Read its `README.md` before writing a Probe or checking a fact in game.
 - `test/`: the workspace-level tests: the tarballs, and under `conventions/` the checks on this file and the editor settings.
 - `.claude/skills/`: the Agent skills, listed under "Agent skills".
 
@@ -40,6 +40,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - Every pull request carries a changeset, the empty one when nothing published changes (`docs/release.md`).
 - Every `@example` is included with `{@includeCode}` from a compiled file under `packages/reforged-ts/examples/`, `harness/` or `game/` ([Examples](docs/documentation.md#examples), ADR 0004).
 - Library code follows the README's "Rules for library code": read them before writing a Wrapper or a System.
+- A fact only the game can settle (a value, a direction, an order, a crash) is checked by a Probe run you write and run with `probe:run`, end to end, in the same piece of work; its result goes where the fact is used (the issue's answer, `docs/research/`, a test's comment). A human gets only the checks [`probe/README.md`](probe/README.md#what-stays-for-a-human) lists.
 
 ## Runtime constraints
 
