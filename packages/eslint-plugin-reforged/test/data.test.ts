@@ -15,6 +15,7 @@ import * as ts from "typescript";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
 import creationNatives from "../data/creation-natives.json" with { type: "json" };
+import eventResponses from "../data/event-responses.json" with { type: "json" };
 import localSafe from "../data/local-safe.json" with { type: "json" };
 import banList from "../data/unsafe-natives.json" with { type: "json" };
 import {
@@ -253,6 +254,99 @@ describe("the creation Natives (data/creation-natives.json)", () => {
         /^(Get|BlzGet|Convert|Load|Player$|GetLocalPlayer$)/.test(name),
       );
     expect(lookups).toEqual([]);
+  });
+});
+
+describe("the event responses (data/event-responses.json)", () => {
+  const entry = {
+    name: "GetTriggerUnit",
+    context: "trigger",
+    event: "any unit event",
+    reason: "r.",
+  };
+
+  it.each([
+    ["not an array", "{}", "the root must be an array"],
+    ["an entry not an object", '["GetTriggerUnit"]', "[0] must be an object"],
+    [
+      "an unknown context",
+      JSON.stringify([{ ...entry, context: "event" }]),
+      '[0].context must be one of "trigger", "timer", "enum", "filter"',
+    ],
+    [
+      "a missing event",
+      JSON.stringify([entry, { name: "GetEnumUnit", context: "enum" }]),
+      "[1].event must be a non-empty string",
+    ],
+    [
+      "a name listed twice",
+      JSON.stringify([entry, entry]),
+      '[1].name must be unique ("GetTriggerUnit" is listed twice)',
+    ],
+  ])("throws at load for %s, naming the field", (_, content, message) => {
+    const file = dataFile("event-responses.json", content);
+    expect(() =>
+      createPlugin({
+        files: { eventResponses: file },
+        projectRoot: fixtureProjectRoot,
+      }),
+    ).toThrow(`${file}: ${message}`);
+  });
+
+  it("names only Natives of the installed Typings that take no parameter", () => {
+    const natives = installedNatives();
+    const wrong = eventResponses
+      .map((each) => each.name)
+      .filter((name) => natives.get(name)?.parameters.length !== 0);
+    expect(wrong).toEqual([]);
+  });
+
+  it("cites, in each reason, the line of the vendored common.j that declares it", () => {
+    const commonJ = readFileSync(
+      fileURLToPath(
+        new URL(
+          "../../reforged-types/vendor/3.0.0.24268/common.j",
+          import.meta.url,
+        ),
+      ),
+      "utf8",
+    ).split("\n");
+    const wrong = eventResponses.filter((each) => {
+      const line = /^common\.j:(\d+), /.exec(each.reason)?.[1];
+      const declaration = line && commonJ[Number(line) - 1];
+      return !new RegExp(`native\\s+${each.name}\\s+takes`).test(
+        declaration ?? "",
+      );
+    });
+    expect(wrong.map((each) => each.name)).toEqual([]);
+  });
+
+  it("gives each context kind its Natives", () => {
+    const byContext = (context: string) =>
+      eventResponses
+        .filter((each) => each.context === context)
+        .map((each) => each.name)
+        .sort();
+    expect(byContext("timer")).toEqual(["GetExpiredTimer"]);
+    expect(byContext("enum")).toEqual([
+      "GetEnumDestructable",
+      "GetEnumItem",
+      "GetEnumPlayer",
+      "GetEnumUnit",
+    ]);
+    expect(byContext("filter")).toEqual([
+      "GetFilterDestructable",
+      "GetFilterItem",
+      "GetFilterPlayer",
+      "GetFilterUnit",
+    ]);
+    expect(byContext("trigger")).toEqual(
+      expect.arrayContaining([
+        "GetTriggerUnit",
+        "GetEventDamage",
+        "GetSpellAbilityId",
+      ]),
+    );
   });
 });
 

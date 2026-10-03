@@ -1,0 +1,656 @@
+[
+  {
+    "name": "GetExpiredTimer",
+    "context": "timer",
+    "event": "TimerStart",
+    "reason": "common.j:2417, in the Timer API, after TimerStart: it answers only in a Timer's expiry."
+  },
+  {
+    "name": "GetFilterUnit",
+    "context": "filter",
+    "event": "the filter of GroupEnumUnits* and of the unit event registrations",
+    "reason": "common.j:2532, in the Native trigger interface, next to GetEnumUnit: it answers only in that filter."
+  },
+  {
+    "name": "GetEnumUnit",
+    "context": "enum",
+    "event": "ForGroup",
+    "reason": "common.j:2533, in the Native trigger interface, next to GetFilterUnit: it answers only in that enumeration's callback."
+  },
+  {
+    "name": "GetFilterDestructable",
+    "context": "filter",
+    "event": "the filter of EnumDestructablesInRect",
+    "reason": "common.j:2535, in the Native trigger interface, next to GetEnumDestructable: it answers only in that filter."
+  },
+  {
+    "name": "GetEnumDestructable",
+    "context": "enum",
+    "event": "EnumDestructablesInRect",
+    "reason": "common.j:2536, in the Native trigger interface, next to GetFilterDestructable: it answers only in that enumeration's callback."
+  },
+  {
+    "name": "GetFilterItem",
+    "context": "filter",
+    "event": "the filter of EnumItemsInRect",
+    "reason": "common.j:2538, in the Native trigger interface, next to GetEnumItem: it answers only in that filter."
+  },
+  {
+    "name": "GetEnumItem",
+    "context": "enum",
+    "event": "EnumItemsInRect",
+    "reason": "common.j:2539, in the Native trigger interface, next to GetFilterItem: it answers only in that enumeration's callback."
+  },
+  {
+    "name": "GetFilterPlayer",
+    "context": "filter",
+    "event": "the filter of ForceEnumPlayers, ForceEnumAllies and ForceEnumEnemies",
+    "reason": "common.j:2543, in the Native trigger interface, next to GetEnumPlayer: it answers only in that filter."
+  },
+  {
+    "name": "GetEnumPlayer",
+    "context": "enum",
+    "event": "ForForce",
+    "reason": "common.j:2544, in the Native trigger interface, next to GetFilterPlayer: it answers only in that enumeration's callback."
+  },
+  {
+    "name": "GetTriggeringTrigger",
+    "context": "trigger",
+    "event": "any run of a trigger",
+    "reason": "common.j:2546, in the Native trigger interface: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetTriggerEventId",
+    "context": "trigger",
+    "event": "any run of a trigger",
+    "reason": "common.j:2547, in the Native trigger interface: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetEventGameState",
+    "context": "trigger",
+    "event": "EVENT_GAME_STATE_LIMIT",
+    "reason": "common.j:2586, under the comment EVENT_GAME_STATE_LIMIT: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetWinningPlayer",
+    "context": "trigger",
+    "event": "EVENT_GAME_VICTORY",
+    "reason": "common.j:2591, under the comment EVENT_GAME_VICTORY: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetTriggeringRegion",
+    "context": "trigger",
+    "event": "EVENT_GAME_ENTER_REGION",
+    "reason": "common.j:2597, under the comment EVENT_GAME_ENTER_REGION: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetEnteringUnit",
+    "context": "trigger",
+    "event": "EVENT_GAME_ENTER_REGION",
+    "reason": "common.j:2598, under the comment EVENT_GAME_ENTER_REGION: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetLeavingUnit",
+    "context": "trigger",
+    "event": "EVENT_GAME_LEAVE_REGION",
+    "reason": "common.j:2603, under the comment EVENT_GAME_LEAVE_REGION: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetTriggeringTrackable",
+    "context": "trigger",
+    "event": "EVENT_GAME_TRACKABLE_HIT, EVENT_GAME_TRACKABLE_TRACK",
+    "reason": "common.j:2614, under the comment EVENT_GAME_TRACKABLE_HIT: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetClickedButton",
+    "context": "trigger",
+    "event": "EVENT_DIALOG_BUTTON_CLICK",
+    "reason": "common.j:2617, under the comment EVENT_DIALOG_BUTTON_CLICK: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetClickedDialog",
+    "context": "trigger",
+    "event": "EVENT_DIALOG_BUTTON_CLICK",
+    "reason": "common.j:2618, under the comment EVENT_DIALOG_BUTTON_CLICK: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetTournamentFinishSoonTimeRemaining",
+    "context": "trigger",
+    "event": "EVENT_GAME_TOURNAMENT_FINISH_SOON",
+    "reason": "common.j:2621, under the comment EVENT_GAME_TOURNAMENT_FINISH_SOON: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetTournamentFinishNowRule",
+    "context": "trigger",
+    "event": "EVENT_GAME_TOURNAMENT_FINISH_SOON",
+    "reason": "common.j:2622, under the comment EVENT_GAME_TOURNAMENT_FINISH_SOON: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetTournamentFinishNowPlayer",
+    "context": "trigger",
+    "event": "EVENT_GAME_TOURNAMENT_FINISH_SOON",
+    "reason": "common.j:2623, under the comment EVENT_GAME_TOURNAMENT_FINISH_SOON: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSaveBasicFilename",
+    "context": "trigger",
+    "event": "EVENT_GAME_SAVE",
+    "reason": "common.j:2627, under the comment EVENT_GAME_SAVE: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetTriggerPlayer",
+    "context": "trigger",
+    "event": "any player event (EVENT_PLAYER_DEFEAT, EVENT_PLAYER_VICTORY, ...)",
+    "reason": "common.j:2637, under the comments EVENT_PLAYER_DEFEAT and EVENT_PLAYER_VICTORY: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetLevelingUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_HERO_LEVEL, EVENT_UNIT_HERO_LEVEL",
+    "reason": "common.j:2643, under the comment EVENT_PLAYER_HERO_LEVEL: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetLearningUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_HERO_SKILL, EVENT_UNIT_HERO_SKILL",
+    "reason": "common.j:2647, under the comment EVENT_PLAYER_HERO_SKILL: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetLearnedSkill",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_HERO_SKILL, EVENT_UNIT_HERO_SKILL",
+    "reason": "common.j:2648, under the comment EVENT_PLAYER_HERO_SKILL: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetLearnedSkillLevel",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_HERO_SKILL, EVENT_UNIT_HERO_SKILL",
+    "reason": "common.j:2649, under the comment EVENT_PLAYER_HERO_SKILL: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetRevivableUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_HERO_REVIVABLE",
+    "reason": "common.j:2652, under the comment EVENT_PLAYER_HERO_REVIVABLE: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetRevivingUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_HERO_REVIVE_*, EVENT_UNIT_HERO_REVIVE_*",
+    "reason": "common.j:2660, under the comment EVENT_PLAYER_HERO_REVIVE_*: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetAttacker",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_ATTACKED, EVENT_UNIT_ATTACKED",
+    "reason": "common.j:2663, under the comment EVENT_PLAYER_UNIT_ATTACKED: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetRescuer",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_RESCUED, EVENT_UNIT_RESCUED",
+    "reason": "common.j:2666, under the comment EVENT_PLAYER_UNIT_RESCUED: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetDyingUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_DEATH, EVENT_UNIT_DEATH",
+    "reason": "common.j:2669, under the comment EVENT_PLAYER_UNIT_DEATH: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetKillingUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_DEATH, EVENT_UNIT_DEATH",
+    "reason": "common.j:2670, under the comment EVENT_PLAYER_UNIT_DEATH: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetDecayingUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_DECAY, EVENT_UNIT_DECAY",
+    "reason": "common.j:2673, under the comment EVENT_PLAYER_UNIT_DECAY: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetConstructingStructure",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_CONSTRUCT_START",
+    "reason": "common.j:2679, under the comment EVENT_PLAYER_UNIT_CONSTRUCT_START: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetCancelledStructure",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL, EVENT_PLAYER_UNIT_CONSTRUCT_FINISH",
+    "reason": "common.j:2683, under the comments EVENT_PLAYER_UNIT_CONSTRUCT_FINISH and _CANCEL: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetConstructedStructure",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL, EVENT_PLAYER_UNIT_CONSTRUCT_FINISH",
+    "reason": "common.j:2684, under the comments EVENT_PLAYER_UNIT_CONSTRUCT_FINISH and _CANCEL: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetResearchingUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_RESEARCH_START, _CANCEL, _FINISH",
+    "reason": "common.j:2689, under the comment EVENT_PLAYER_UNIT_RESEARCH_START: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetResearched",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_RESEARCH_START, _CANCEL, _FINISH",
+    "reason": "common.j:2690, under the comment EVENT_PLAYER_UNIT_RESEARCH_START: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetTrainedUnitType",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_TRAIN_START, EVENT_PLAYER_UNIT_TRAIN_CANCEL",
+    "reason": "common.j:2694, under the comment EVENT_PLAYER_UNIT_TRAIN_START: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetTrainedUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_TRAIN_FINISH",
+    "reason": "common.j:2697, under the comment EVENT_PLAYER_UNIT_TRAIN_FINISH: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetDetectedUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_DETECTED",
+    "reason": "common.j:2700, under the comment EVENT_PLAYER_UNIT_DETECTED: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSummoningUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SUMMONED",
+    "reason": "common.j:2703, under the comment EVENT_PLAYER_UNIT_SUMMONED: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSummonedUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SUMMONED",
+    "reason": "common.j:2704, under the comment EVENT_PLAYER_UNIT_SUMMONED: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetTransportUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_LOADED",
+    "reason": "common.j:2707, under the comment EVENT_PLAYER_UNIT_LOADED: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetLoadedUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_LOADED",
+    "reason": "common.j:2708, under the comment EVENT_PLAYER_UNIT_LOADED: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSellingUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SELL",
+    "reason": "common.j:2711, under the comment EVENT_PLAYER_UNIT_SELL: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSoldUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SELL",
+    "reason": "common.j:2712, under the comment EVENT_PLAYER_UNIT_SELL: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetBuyingUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SELL",
+    "reason": "common.j:2713, under the comment EVENT_PLAYER_UNIT_SELL: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSoldItem",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SELL_ITEM",
+    "reason": "common.j:2716, under the comment EVENT_PLAYER_UNIT_SELL_ITEM: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetChangingUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_CHANGE_OWNER",
+    "reason": "common.j:2719, under the comment EVENT_PLAYER_UNIT_CHANGE_OWNER: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetChangingUnitPrevOwner",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_CHANGE_OWNER",
+    "reason": "common.j:2720, under the comment EVENT_PLAYER_UNIT_CHANGE_OWNER: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetManipulatingUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_DROP_ITEM, _PICKUP_ITEM, _USE_ITEM",
+    "reason": "common.j:2725, under the comment EVENT_PLAYER_UNIT_DROP_ITEM: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetManipulatedItem",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_DROP_ITEM, _PICKUP_ITEM, _USE_ITEM",
+    "reason": "common.j:2726, under the comment EVENT_PLAYER_UNIT_DROP_ITEM: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetEquippedItem",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_EQUIP_ITEM",
+    "reason": "common.j:2729, under the comment EVENT_PLAYER_UNIT_EQUIP_ITEM: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetUnequippedItem",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_UNEQUIP_ITEM",
+    "reason": "common.j:2732, under the comment EVENT_PLAYER_UNIT_UNEQUIP_ITEM: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetAbsorbingItem",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_PICKUP_ITEM",
+    "reason": "common.j:2736, under the comment naming EVENT_PLAYER_UNIT_PICKUP_ITEM: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetManipulatedItemWasAbsorbed",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_PICKUP_ITEM",
+    "reason": "common.j:2737, under the comment naming EVENT_PLAYER_UNIT_PICKUP_ITEM: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetStackingItemSource",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_STACK_ITEM",
+    "reason": "common.j:2741, under the comment EVENT_PLAYER_UNIT_STACK_ITEM: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetStackingItemTarget",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_STACK_ITEM",
+    "reason": "common.j:2742, under the comment EVENT_PLAYER_UNIT_STACK_ITEM: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetStackingItemTargetPreviousCharges",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_STACK_ITEM",
+    "reason": "common.j:2743, under the comment EVENT_PLAYER_UNIT_STACK_ITEM: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetOrderedUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_ISSUED_ORDER (and the point and target orders)",
+    "reason": "common.j:2746, under the comment EVENT_PLAYER_UNIT_ISSUED_ORDER: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetIssuedOrderId",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_ISSUED_ORDER (and the point and target orders)",
+    "reason": "common.j:2747, under the comment EVENT_PLAYER_UNIT_ISSUED_ORDER: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetOrderPointX",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER",
+    "reason": "common.j:2750, under the comment EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetOrderPointY",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER",
+    "reason": "common.j:2751, under the comment EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetOrderPointLoc",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER",
+    "reason": "common.j:2752, under the comment EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetOrderTarget",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER",
+    "reason": "common.j:2755, under the comment EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetOrderTargetDestructable",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER",
+    "reason": "common.j:2756, under the comment EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetOrderTargetItem",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER",
+    "reason": "common.j:2757, under the comment EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetOrderTargetUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER",
+    "reason": "common.j:2758, under the comment EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSpellAbilityUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SPELL_*, EVENT_UNIT_SPELL_*",
+    "reason": "common.j:2770, under the comments EVENT_UNIT_SPELL_* and EVENT_PLAYER_UNIT_SPELL_*: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSpellAbilityId",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SPELL_*, EVENT_UNIT_SPELL_*",
+    "reason": "common.j:2771, under the comments EVENT_UNIT_SPELL_* and EVENT_PLAYER_UNIT_SPELL_*: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSpellAbility",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SPELL_*, EVENT_UNIT_SPELL_*",
+    "reason": "common.j:2772, under the comments EVENT_UNIT_SPELL_* and EVENT_PLAYER_UNIT_SPELL_*: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSpellTargetLoc",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SPELL_*, EVENT_UNIT_SPELL_*",
+    "reason": "common.j:2773, under the comments EVENT_UNIT_SPELL_* and EVENT_PLAYER_UNIT_SPELL_*: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSpellTargetX",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SPELL_*, EVENT_UNIT_SPELL_*",
+    "reason": "common.j:2774, under the comments EVENT_UNIT_SPELL_* and EVENT_PLAYER_UNIT_SPELL_*: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSpellTargetY",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SPELL_*, EVENT_UNIT_SPELL_*",
+    "reason": "common.j:2775, under the comments EVENT_UNIT_SPELL_* and EVENT_PLAYER_UNIT_SPELL_*: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSpellTargetDestructable",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SPELL_*, EVENT_UNIT_SPELL_*",
+    "reason": "common.j:2776, under the comments EVENT_UNIT_SPELL_* and EVENT_PLAYER_UNIT_SPELL_*: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSpellTargetItem",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SPELL_*, EVENT_UNIT_SPELL_*",
+    "reason": "common.j:2777, under the comments EVENT_UNIT_SPELL_* and EVENT_PLAYER_UNIT_SPELL_*: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetSpellTargetUnit",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_UNIT_SPELL_*, EVENT_UNIT_SPELL_*",
+    "reason": "common.j:2778, under the comments EVENT_UNIT_SPELL_* and EVENT_PLAYER_UNIT_SPELL_*: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetEventPlayerState",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_STATE_LIMIT",
+    "reason": "common.j:2784, under the comment EVENT_PLAYER_STATE_LIMIT: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetEventPlayerChatString",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_CHAT",
+    "reason": "common.j:2792, under the comment EVENT_PLAYER_CHAT: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetEventPlayerChatStringMatched",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_CHAT",
+    "reason": "common.j:2795, under the comment EVENT_PLAYER_CHAT: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetTriggerUnit",
+    "context": "trigger",
+    "event": "any unit event",
+    "reason": "common.j:2806, in the Trigger Unit Based Event API, whose comment says it returns a null handle when used incorrectly: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetEventUnitState",
+    "context": "trigger",
+    "event": "EVENT_UNIT_STATE_LIMIT",
+    "reason": "common.j:2811, under the comment EVENT_UNIT_STATE_LIMIT: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetEventDamage",
+    "context": "trigger",
+    "event": "EVENT_UNIT_DAMAGED (and EVENT_PLAYER_UNIT_DAMAGED, _DAMAGING)",
+    "reason": "common.j:2816, under the comment EVENT_UNIT_DAMAGED: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetEventDamageSource",
+    "context": "trigger",
+    "event": "EVENT_UNIT_DAMAGED (and EVENT_PLAYER_UNIT_DAMAGED, _DAMAGING)",
+    "reason": "common.j:2817, under the comment EVENT_UNIT_DAMAGED: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetEventDetectingPlayer",
+    "context": "trigger",
+    "event": "EVENT_UNIT_DETECTED",
+    "reason": "common.j:2824, under the comment EVENT_UNIT_DETECTED: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetEventTargetUnit",
+    "context": "trigger",
+    "event": "EVENT_UNIT_ACQUIRED_TARGET, EVENT_UNIT_TARGET_IN_RANGE",
+    "reason": "common.j:2830, under the comment EVENT_UNIT_ACQUIRED_TARGET: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetTriggerWidget",
+    "context": "trigger",
+    "event": "TriggerRegisterDeathEvent",
+    "reason": "common.j:2892, in the Widget API; the widget whose death TriggerRegisterDeathEvent registers: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "GetTriggerDestructable",
+    "context": "trigger",
+    "event": "TriggerRegisterDeathEvent on a destructable",
+    "reason": "common.j:2922, in the Destructable Object API: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetTriggerPlayerMouseX",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_MOUSE_MOVE",
+    "reason": "common.j:4083, in the JAPI Functions, with no event comment; the event is the constant EVENT_PLAYER_MOUSE_MOVE (common.j:839): it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetTriggerPlayerMouseY",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_MOUSE_MOVE",
+    "reason": "common.j:4084, in the JAPI Functions, with no event comment; the event is the constant EVENT_PLAYER_MOUSE_MOVE (common.j:839): it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetTriggerPlayerMousePosition",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_MOUSE_MOVE",
+    "reason": "common.j:4085, in the JAPI Functions, with no event comment; the event is the constant EVENT_PLAYER_MOUSE_MOVE (common.j:839): it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetTriggerPlayerMouseButton",
+    "context": "trigger",
+    "event": "EVENT_PLAYER_MOUSE_DOWN, EVENT_PLAYER_MOUSE_UP",
+    "reason": "common.j:4086, in the JAPI Functions, with no event comment; the events are the constants EVENT_PLAYER_MOUSE_DOWN and _UP (common.j:837): it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetEventDamageTarget",
+    "context": "trigger",
+    "event": "EVENT_UNIT_DAMAGED (and EVENT_PLAYER_UNIT_DAMAGED, _DAMAGING)",
+    "reason": "common.j:4190, in the JAPI Functions, next to BlzSetEventDamage and the damage event's setters: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetEventAttackType",
+    "context": "trigger",
+    "event": "EVENT_UNIT_DAMAGED (and EVENT_PLAYER_UNIT_DAMAGED, _DAMAGING)",
+    "reason": "common.j:4191, in the JAPI Functions, next to BlzSetEventDamage and the damage event's setters: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetEventDamageType",
+    "context": "trigger",
+    "event": "EVENT_UNIT_DAMAGED (and EVENT_PLAYER_UNIT_DAMAGED, _DAMAGING)",
+    "reason": "common.j:4192, in the JAPI Functions, next to BlzSetEventDamage and the damage event's setters: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetEventWeaponType",
+    "context": "trigger",
+    "event": "EVENT_UNIT_DAMAGED (and EVENT_PLAYER_UNIT_DAMAGED, _DAMAGING)",
+    "reason": "common.j:4193, in the JAPI Functions, next to BlzSetEventDamage and the damage event's setters: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetEventIsAttack",
+    "context": "trigger",
+    "event": "EVENT_UNIT_DAMAGED (and EVENT_PLAYER_UNIT_DAMAGED, _DAMAGING)",
+    "reason": "common.j:4197, in the JAPI Functions, next to BlzSetEventDamage and the damage event's setters: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetTriggerFrame",
+    "context": "trigger",
+    "event": "BlzTriggerRegisterFrameEvent",
+    "reason": "common.j:4264, after BlzTriggerRegisterFrameEvent: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetTriggerFrameEvent",
+    "context": "trigger",
+    "event": "BlzTriggerRegisterFrameEvent",
+    "reason": "common.j:4265, after BlzTriggerRegisterFrameEvent: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetTriggerFrameValue",
+    "context": "trigger",
+    "event": "BlzTriggerRegisterFrameEvent",
+    "reason": "common.j:4266, after BlzTriggerRegisterFrameEvent: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetTriggerFrameText",
+    "context": "trigger",
+    "event": "BlzTriggerRegisterFrameEvent",
+    "reason": "common.j:4267, after BlzTriggerRegisterFrameEvent: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetTriggerSyncPrefix",
+    "context": "trigger",
+    "event": "BlzTriggerRegisterPlayerSyncEvent",
+    "reason": "common.j:4270, after BlzTriggerRegisterPlayerSyncEvent: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetTriggerSyncData",
+    "context": "trigger",
+    "event": "BlzTriggerRegisterPlayerSyncEvent",
+    "reason": "common.j:4271, after BlzTriggerRegisterPlayerSyncEvent: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetTriggerPlayerKey",
+    "context": "trigger",
+    "event": "BlzTriggerRegisterPlayerKeyEvent",
+    "reason": "common.j:4273, after BlzTriggerRegisterPlayerKeyEvent: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetTriggerPlayerMetaKey",
+    "context": "trigger",
+    "event": "BlzTriggerRegisterPlayerKeyEvent",
+    "reason": "common.j:4274, after BlzTriggerRegisterPlayerKeyEvent: it answers only in a run of a trigger on that event."
+  },
+  {
+    "name": "BlzGetTriggerPlayerIsKeyDown",
+    "context": "trigger",
+    "event": "BlzTriggerRegisterPlayerKeyEvent",
+    "reason": "common.j:4275, after BlzTriggerRegisterPlayerKeyEvent: it answers only in a run of a trigger on that event."
+  }
+]
