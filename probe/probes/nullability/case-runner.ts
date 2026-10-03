@@ -64,8 +64,8 @@ function isUserdata(value: unknown): boolean {
 
 /**
  * What a call returned, classified: `nil`; a `handle` with its id and its
- * `tostring`; or `odd`, a disguised null or no handle at all: a handle
- * whose id is 0, or any value that is neither `nil` nor a handle.
+ * `tostring`, a handle of id 0 included, since it is not `nil`; or
+ * `odd`, any value that is neither `nil` nor a handle.
  */
 function classify(
   value: unknown,
@@ -74,9 +74,7 @@ function classify(
   if (value === undefined) return { outcome: "nil" };
   if (!isHandle(value)) return { outcome: "odd", type: describe(value) };
   const id = GetHandleId(value as handle);
-  return id === 0
-    ? { outcome: "odd", type: describe(value) }
-    : { outcome: "handle", id, type: describe(value) };
+  return { outcome: "handle", id, type: describe(value) };
 }
 
 /** The PENDING label of a case, which names it in a skip list. */

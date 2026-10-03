@@ -2,7 +2,8 @@
   "name": "ConvertEquipmentType",
   "source": "common.j",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "family": "converter"
   },
   "params": [
     {

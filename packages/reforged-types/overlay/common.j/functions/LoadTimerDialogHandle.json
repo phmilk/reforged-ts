@@ -2,7 +2,8 @@
   "name": "LoadTimerDialogHandle",
   "source": "common.j",
   "returns": {
-    "nullable": true
+    "nullable": true,
+    "family": "lookup"
   },
   "params": [
     {

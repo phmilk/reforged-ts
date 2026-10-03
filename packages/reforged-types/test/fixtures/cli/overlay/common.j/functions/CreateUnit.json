@@ -1,7 +1,7 @@
 {
   "name": "CreateUnit",
   "source": "common.j",
-  "returns": { "nullable": true },
+  "returns": { "nullable": true, "family": "constructor" },
   "params": [
     { "name": "id", "nullable": false },
     { "name": "unitid", "nullable": false },

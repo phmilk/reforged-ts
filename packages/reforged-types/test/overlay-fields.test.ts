@@ -36,7 +36,7 @@ const getLocalPlayer = [
 describe("generate: Overlay header facts", () => {
   it("marks an async entry with @async", async () => {
     const text = await commonJ(getLocalPlayer, {
-      ...entry("common.j", "GetLocalPlayer"),
+      ...entry("common.j", "GetLocalPlayer", [], false, "intrinsic-property"),
       async: true,
     });
 
@@ -54,12 +54,12 @@ describe("generate: Overlay header facts", () => {
 
   it("emits no @async for async false or an absent field", async () => {
     const off = await commonJ(getLocalPlayer, {
-      ...entry("common.j", "GetLocalPlayer"),
+      ...entry("common.j", "GetLocalPlayer", [], false, "intrinsic-property"),
       async: false,
     });
     const absent = await commonJ(
       getLocalPlayer,
-      entry("common.j", "GetLocalPlayer"),
+      entry("common.j", "GetLocalPlayer", [], false, "intrinsic-property"),
     );
 
     expect(off).not.toContain("@async");
@@ -68,7 +68,7 @@ describe("generate: Overlay header facts", () => {
 
   it("marks a deprecated entry with @deprecated and its text", async () => {
     const text = await commonJ(getLocalPlayer, {
-      ...entry("common.j", "GetLocalPlayer"),
+      ...entry("common.j", "GetLocalPlayer", [], false, "intrinsic-property"),
       deprecated: "Use {@link GetPlayer} instead.",
     });
 
@@ -77,7 +77,7 @@ describe("generate: Overlay header facts", () => {
 
   it("renders notes as @remarks, one comment line per text line", async () => {
     const text = await commonJ(getLocalPlayer, {
-      ...entry("common.j", "GetLocalPlayer"),
+      ...entry("common.j", "GetLocalPlayer", [], false, "intrinsic-property"),
       notes: "Differs per client.\n\nNever branch game state on it.",
     });
 
@@ -93,7 +93,7 @@ describe("generate: Overlay header facts", () => {
 
   it("renders since as @patch", async () => {
     const text = await commonJ(getLocalPlayer, {
-      ...entry("common.j", "GetLocalPlayer"),
+      ...entry("common.j", "GetLocalPlayer", [], false, "intrinsic-property"),
       since: "3.0.0.24268",
     });
 
@@ -104,7 +104,7 @@ describe("generate: Overlay header facts", () => {
     const text = await commonJ(
       "type player extends handle\nnative GetPlayer takes integer id returns player",
       {
-        ...entry("common.j", "GetPlayer", ["id"]),
+        ...entry("common.j", "GetPlayer", ["id"], false, "enum-getter"),
         async: true,
         deprecated: "Gone soon.",
         notes: "A note.",
@@ -131,12 +131,12 @@ describe("generate: Overlay header facts", () => {
 
   it("has no visible effect for origin", async () => {
     const seeded = await commonJ(getLocalPlayer, {
-      ...entry("common.j", "GetLocalPlayer"),
+      ...entry("common.j", "GetLocalPlayer", [], false, "intrinsic-property"),
       origin: "war3-types-strict",
     });
     const handWritten = await commonJ(
       getLocalPlayer,
-      entry("common.j", "GetLocalPlayer"),
+      entry("common.j", "GetLocalPlayer", [], false, "intrinsic-property"),
     );
 
     expect(seeded).toBe(handWritten);
@@ -154,7 +154,7 @@ describe("generate: Overlay header facts", () => {
       },
       [
         {
-          ...entry("common.j", "GetPlayer", ["id", "c?"], true),
+          ...entry("common.j", "GetPlayer", ["id", "c?"], true, "enum-getter"),
           async: true,
           deprecated: "See {@link Helper}.",
           notes: "Line one.\nLine two.",
@@ -232,7 +232,7 @@ describe("generate: boolean callback alias", () => {
   ].join("\n");
 
   function overridden(name: string): OverlayEntryFixture {
-    const overlay = entry("common.j", name, ["func"]);
+    const overlay = entry("common.j", name, ["func"], false, "constructor");
     overlay.params[0].type = "boolcode";
     return overlay;
   }
@@ -287,7 +287,7 @@ describe("generate: boolean callback alias", () => {
         "type conditionfunc extends boolexpr",
         "native Condition takes code func returns conditionfunc",
       ].join("\n"),
-      entry("common.j", "Condition", ["func"]),
+      entry("common.j", "Condition", ["func"], false, "constructor"),
     );
 
     expect(text).toContain(

@@ -4,15 +4,18 @@
  * names), every global needs one entry, and a type may have one. The kind
  * folder an entry lives in decides which declarations it can match. An entry
  * that no vendored Patch declares is an orphan warning, not an error, because
- * the Overlay is shared by all vendored Patches.
+ * the Overlay is shared by all vendored Patches. A function's entry also
+ * names the Nullability family of a handle-returning common.j Native, and
+ * only of one, and a Native of a nullable family is typed nullable.
  */
 import { patchList } from "./build.js";
 import type { Diagnostic } from "./diagnostics.js";
-import type {
-  BaseEntry,
-  FunctionEntry,
-  GlobalEntry,
-  TypeEntry,
+import {
+  NULLABILITY_FAMILIES,
+  type BaseEntry,
+  type FunctionEntry,
+  type GlobalEntry,
+  type TypeEntry,
 } from "./entry.js";
 import {
   jassDeclaration,
@@ -62,6 +65,10 @@ export function resolve(
 ): Resolution {
   const resolved: Resolved[] = [];
   const diagnostics: Diagnostic[] = [];
+  const handleTypes = new Set([
+    "handle",
+    ...declarations.filter((d) => d.kind === "type").map((d) => d.name),
+  ]);
 
   for (const declaration of declarations) {
     const key = overlayKey(declaration.source, declaration.name);
@@ -89,6 +96,11 @@ export function resolve(
     }
     if (!sameParameters(declaration, entry)) {
       diagnostics.push(mismatch(declaration, entry));
+      continue;
+    }
+    const familyProblem = checkFamily(declaration, entry, handleTypes);
+    if (familyProblem) {
+      diagnostics.push(familyError(entry, familyProblem));
       continue;
     }
     resolved.push({ ...declaration, overlay: entry });
@@ -121,6 +133,46 @@ export function orphans(
 function expectedPath(declaration: Declaration): string {
   const { source, name } = declaration;
   return entryPath(source, kindFolder(declaration), name);
+}
+
+/**
+ * What is wrong with a function's `returns.family`, as the checklist words
+ * it, if anything: a handle-returning common.j Native without one, one on
+ * any other function, or a Native of a nullable family typed non-null.
+ * Only the common.j Natives name a family: the handle returns of
+ * blizzard.j follow the Natives they call (ADR 0008), and those of
+ * common.ai belong to AI scripts.
+ */
+function checkFamily(
+  fn: FunctionDeclaration,
+  entry: FunctionEntry,
+  handleTypes: ReadonlySet<string>,
+): string | undefined {
+  const { family, nullable } = entry.returns;
+  const returnsHandle = handleTypes.has(fn.returns);
+  const isCommonJNative = fn.source === "common.j" && fn.kind === "native";
+  if (family === undefined) {
+    return isCommonJNative && returnsHandle
+      ? `${fn.name} returns a handle (${fn.returns}) but has no returns.family; ` +
+          `name its Nullability family, one of ${Object.keys(NULLABILITY_FAMILIES).join(", ")}`
+      : undefined;
+  }
+  if (!returnsHandle) {
+    return `returns.family on ${fn.name}, which returns ${fn.returns}, not a handle; remove it`;
+  }
+  if (!isCommonJNative) {
+    return (
+      `returns.family on ${fn.name}, a ${fn.source} ${fn.kind}; ` +
+      "only a common.j Native has one, remove it"
+    );
+  }
+  if (!NULLABILITY_FAMILIES[family] && !nullable) {
+    return (
+      `${fn.name} is of the family ${family}, which may have nothing to return, ` +
+      "but returns.nullable is false; make it true"
+    );
+  }
+  return undefined;
 }
 
 function sameParameters(
@@ -160,6 +212,17 @@ function mismatch(fn: FunctionDeclaration, entry: FunctionEntry): Diagnostic {
     message:
       `${entry.file}: parameters do not match the Patch: ` +
       `${jassSignature(fn)}; Overlay has (${overlayParams})`,
+  };
+}
+
+/** The checklist line of an entry whose `returns.family` breaks the rule. */
+function familyError(entry: FunctionEntry, problem: string): Diagnostic {
+  return {
+    severity: "error",
+    kind: "nullability-family",
+    file: entry.file,
+    name: entry.name,
+    message: `${entry.file}: ${problem}`,
   };
 }
 

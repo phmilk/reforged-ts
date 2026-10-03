@@ -2,7 +2,8 @@
   "name": "GetOwningPlayer",
   "source": "common.j",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "family": "intrinsic-property"
   },
   "params": []
 }

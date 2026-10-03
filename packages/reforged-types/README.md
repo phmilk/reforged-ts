@@ -46,7 +46,7 @@ What the declarations give you:
 
 ## The Overlay
 
-The Patch files give names, parameters and types, but not whether a Native can return nothing, which Natives are async, or what is deprecated. The Overlay holds those facts: one hand-curated JSON file per Native and global (nullability of the return and of each parameter, async, deprecation, notes, the Patch that added it), kept in the [repository](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-types/overlay). The generator merges it with the Patch files and fails on any declaration without an entry, so every nullable type in these Typings is a reviewed decision. To correct one, change that Native's Overlay file in a pull request.
+The Patch files give names, parameters and types, but not whether a Native can return nothing, which Natives are async, or what is deprecated. The Overlay holds those facts: one hand-curated JSON file per Native and global (nullability of the return and of each parameter, async, deprecation, notes, the Patch that added it), kept in the [repository](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-types/overlay). The generator merges it with the Patch files and fails on any declaration without an entry, so every nullable type in these Typings is a reviewed decision. A handle return is typed non-null only when the Native's family allows it and the game returned a handle in every case the Nullability sweep ran for it; the `@remarks` of each Native name those cases. To correct one, change that Native's Overlay file in a pull request.
 
 ## Attribution
 

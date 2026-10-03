@@ -2,7 +2,8 @@
   "name": "GetAIDifficulty",
   "source": "common.j",
   "returns": {
-    "nullable": true
+    "nullable": true,
+    "family": "enum-getter"
   },
   "params": [
     {

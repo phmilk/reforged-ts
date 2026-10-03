@@ -70,7 +70,7 @@ const OVERLAY = [
   entry("common.j", "KillUnit", ["whichUnit"]),
   entry("common.j", "RequestExtraBooleanData", ["dataType"]),
   {
-    ...entry("common.j", "GetEquippedItem", ["whichUnit"], true),
+    ...entry("common.j", "GetEquippedItem", ["whichUnit"], true, "lookup"),
     since: "3.1.0.25000",
   },
   entry("blizzard.j", "EquipBJ", ["whichUnit"]),

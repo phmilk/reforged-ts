@@ -2,7 +2,8 @@
   "name": "BlzCreateDestructablePitchRollWithColor",
   "source": "common.j",
   "returns": {
-    "nullable": true
+    "nullable": true,
+    "family": "constructor"
   },
   "params": [
     {

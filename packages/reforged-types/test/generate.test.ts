@@ -38,7 +38,13 @@ describe("generate: declaration file shape", () => {
     const result = await generateOk({ "common.j": commonJ }, [
       entry("common.j", "ConvertRace", ["i"]),
       entry("common.j", "GetLocalPlayer"),
-      entry("common.j", "CreateUnit", ["id", "unitid", "x", "y", "face"], true),
+      entry(
+        "common.j",
+        "CreateUnit",
+        ["id", "unitid", "x", "y", "face"],
+        true,
+        "constructor",
+      ),
     ]);
 
     expect(result.files.get("3.0.0/common.j.d.ts")).toBe(
@@ -196,7 +202,10 @@ describe("generate: declaration file shape", () => {
           "type agent extends handle\r\nnative A takes agent a returns agent\r\n",
         "blizzard.j": "function B takes nothing returns nothing\nendfunction\n",
       },
-      [entry("common.j", "A", ["a?"], true), entry("blizzard.j", "B")],
+      [
+        entry("common.j", "A", ["a?"], true, "lookup"),
+        entry("blizzard.j", "B"),
+      ],
     );
 
     const first = await generate(fixture);
@@ -220,10 +229,10 @@ describe("generate: Overlay nullability", () => {
 
   it("appends | undefined to a nullable return only", async () => {
     const nullable = await generateOk({ "common.j": commonJ }, [
-      entry("common.j", "Pick", ["a", "filter", "n"], true),
+      entry("common.j", "Pick", ["a", "filter", "n"], true, "constructor"),
     ]);
     const plain = await generateOk({ "common.j": commonJ }, [
-      entry("common.j", "Pick", ["a", "filter", "n"], false),
+      entry("common.j", "Pick", ["a", "filter", "n"], false, "constructor"),
     ]);
 
     expect(nullable.files.get("3.0.0/common.j.d.ts")).toContain(
@@ -236,7 +245,7 @@ describe("generate: Overlay nullability", () => {
 
   it("makes nullable trailing parameters optional", async () => {
     const result = await generateOk({ "common.j": commonJ }, [
-      entry("common.j", "Pick", ["a", "filter?", "n?"]),
+      entry("common.j", "Pick", ["a", "filter?", "n?"], false, "constructor"),
     ]);
 
     expect(result.files.get("3.0.0/common.j.d.ts")).toContain(
@@ -246,7 +255,7 @@ describe("generate: Overlay nullability", () => {
 
   it("types a nullable parameter before a non-nullable one as T | undefined", async () => {
     const result = await generateOk({ "common.j": commonJ }, [
-      entry("common.j", "Pick", ["a?", "filter?", "n"]),
+      entry("common.j", "Pick", ["a?", "filter?", "n"], false, "constructor"),
     ]);
 
     expect(result.files.get("3.0.0/common.j.d.ts")).toContain(
@@ -256,7 +265,7 @@ describe("generate: Overlay nullability", () => {
 
   it("keeps the Jass type in the header of a nullable parameter", async () => {
     const result = await generateOk({ "common.j": commonJ }, [
-      entry("common.j", "Pick", ["a", "filter?", "n?"], true),
+      entry("common.j", "Pick", ["a", "filter?", "n?"], true, "constructor"),
     ]);
 
     expect(result.files.get("3.0.0/common.j.d.ts")).toContain(

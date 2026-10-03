@@ -2,7 +2,8 @@
   "name": "ConvertVersion",
   "source": "common.j",
   "returns": {
-    "nullable": true
+    "nullable": true,
+    "family": "converter"
   },
   "params": [
     {

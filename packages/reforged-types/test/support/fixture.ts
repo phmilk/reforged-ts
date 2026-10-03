@@ -13,7 +13,7 @@ export interface PatchFiles {
 export interface OverlayEntryFixture {
   name: string;
   source: string;
-  returns: { nullable: boolean };
+  returns: { nullable: boolean; family?: string };
   params: { name: string; nullable: boolean; type?: string }[];
   async?: boolean;
   deprecated?: string;
@@ -53,18 +53,23 @@ export const provenance = {
 
 /**
  * An Overlay entry for `name` in `source`. A parameter written `name?` is
- * nullable; `returnsNullable` sets `returns.nullable`.
+ * nullable; `returnsNullable` sets `returns.nullable` and `family`
+ * `returns.family`, which a common.j Native that returns a handle needs.
  */
 export function entry(
   source: string,
   name: string,
   params: string[] = [],
   returnsNullable = false,
+  family?: string,
 ): OverlayEntryFixture {
   return {
     name,
     source,
-    returns: { nullable: returnsNullable },
+    returns: {
+      nullable: returnsNullable,
+      ...(family !== undefined && { family }),
+    },
     params: params.map((param) =>
       param.endsWith("?")
         ? { name: param.slice(0, -1), nullable: true }

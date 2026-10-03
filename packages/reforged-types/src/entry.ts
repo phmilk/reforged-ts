@@ -27,6 +27,46 @@ export interface TrackedEntry extends BaseEntry {
   origin?: typeof SEED_ORIGIN;
 }
 
+/**
+ * The Nullability families the curation rule types handle returns by, each
+ * keyed once with whether a Native of it may be typed non-null: `false` for
+ * a family that by its nature may have nothing to return. The report of
+ * the Nullability sweep keeps its own copy (`probe/src/nullability/verdict.ts`).
+ */
+export const NULLABILITY_FAMILIES = {
+  converter: true,
+  "enum-getter": true,
+  constructor: true,
+  registration: true,
+  "intrinsic-property": true,
+  "optional-property": false,
+  "event-response": false,
+  "callback-getter": false,
+  lookup: false,
+} as const satisfies Record<string, boolean>;
+
+export type NullabilityFamily = keyof typeof NULLABILITY_FAMILIES;
+
+/** Whether `value` names a Nullability family. */
+export function isNullabilityFamily(
+  value: unknown,
+): value is NullabilityFamily {
+  return (
+    typeof value === "string" && Object.hasOwn(NULLABILITY_FAMILIES, value)
+  );
+}
+
+/** A function's return facts. */
+export interface OverlayReturns {
+  nullable: boolean;
+  /**
+   * The Nullability family of a handle-returning common.j Native, required
+   * there and nowhere else (`resolve.ts`); read by the Nullability sweep's
+   * report, never rendered.
+   */
+  family?: NullabilityFamily;
+}
+
 export interface OverlayParam {
   name: string;
   nullable: boolean;
@@ -36,7 +76,7 @@ export interface OverlayParam {
 
 /** A function's entry, mandatory for every `native` and `function`. */
 export interface FunctionEntry extends TrackedEntry {
-  returns: { nullable: boolean };
+  returns: OverlayReturns;
   params: OverlayParam[];
   /** The value is only valid for the local player; `false` when absent. */
   async: boolean;

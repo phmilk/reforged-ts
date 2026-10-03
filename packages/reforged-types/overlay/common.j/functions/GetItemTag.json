@@ -2,7 +2,8 @@
   "name": "GetItemTag",
   "source": "common.j",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "family": "enum-getter"
   },
   "params": [
     {

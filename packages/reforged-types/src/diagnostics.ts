@@ -14,6 +14,8 @@ export type DiagnosticKind =
   | "missing-entry"
   /** An Overlay entry whose parameters differ from the Patch signature. */
   | "param-mismatch"
+  /** An Overlay entry whose `returns.family` breaks the curation rule. */
+  | "nullability-family"
   /** An Overlay entry that matches no declaration of the Patch. */
   | "orphan"
   /** A declaration named after a TypeScript reserved word. */

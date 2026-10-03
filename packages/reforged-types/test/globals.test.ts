@@ -473,7 +473,7 @@ describe("generate: Overlay layout", () => {
         globalEntry("common.ai", "SLEEP"),
         entry("common.ai", "Sleep", ["seconds"]),
         typeEntry("common.j", "location", { notes: "A point." }),
-        entry("common.j", "Location", ["x", "y"]),
+        entry("common.j", "Location", ["x", "y"], false, "constructor"),
       ],
     );
 

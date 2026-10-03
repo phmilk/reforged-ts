@@ -12,11 +12,15 @@ import { fileURLToPath } from "node:url";
 import { format } from "prettier";
 import { describe, expect, it } from "vitest";
 import { main, type Context } from "../src/cli/nullability-report.js";
-import { TYPINGS_MANIFEST } from "../src/folders.js";
+import {
+  OVERLAY_FOLDER as TYPINGS_OVERLAY_FOLDER,
+  TYPINGS_MANIFEST,
+} from "../src/folders.js";
 import { systemMachine, type Machine } from "../src/machine.js";
 import { resultFile } from "../src/read.js";
 import { writeNullabilityReport } from "../src/nullability/report.js";
 import { REPORT_HEADER } from "../src/nullability/section.js";
+import { FAMILIES, proposedNotes } from "../src/nullability/verdict.js";
 import { stateFile } from "../src/state.js";
 import { USER_FOLDER_VARIABLE } from "../src/user-folder.js";
 import { preloadFile } from "./support/bridge.js";
@@ -27,7 +31,10 @@ const PROBE = "nullability-slice-1";
 /** The runId of the Slice's last build, in the state file and the Result files. */
 const RUN_ID = "slice-run";
 
-/** The fixture Overlay: CreateTimer and GetOwningPlayer non-null, Location nullable. */
+/**
+ * The fixture Overlay: CreateTimer, a constructor, and GetOwningPlayer, an
+ * intrinsic property, non-null; Location, a constructor, nullable.
+ */
 const OVERLAY_FOLDER = fileURLToPath(
   new URL("fixtures/nullability/overlay/", import.meta.url),
 );
@@ -100,6 +107,7 @@ const SECTION = `## \`${PROBE}\`
 | one call    | (a)   | handle  | 1048577 | \`timer: 0000020C\` |         |
 | second call | (a)   | handle  | 1048580 | \`timer: 0000020F\` |         |
 
+- Family: \`constructor\`
 - Verdict: non-null (evidence)
 - Overlay \`returns.nullable\`: \`false\`
 - Comparison: consistent
@@ -112,6 +120,7 @@ const SECTION = `## \`${PROBE}\`
 | live unit    | (a)   | handle  | 1048578 | \`player: 0000020D\` |         |
 | removed unit | (b)   | nil     |         |                    |         |
 
+- Family: \`intrinsic-property\`
 - Verdict: nullable (proved)
 - Overlay \`returns.nullable\`: \`false\`
 - Comparison: mismatch
@@ -124,6 +133,7 @@ const SECTION = `## \`${PROBE}\`
 | outside the world | (a)   | nil     |         |                      |         |
 | origin            | (a)   | handle  | 1048579 | \`location: 0000020E\` |         |
 
+- Family: \`constructor\`
 - Verdict: nullable (proved)
 - Overlay \`returns.nullable\`: \`true\`
 - Comparison: consistent
@@ -152,7 +162,7 @@ const OUTCOMES = numbered([
   "PENDING label=GetOwningPlayer%20a%20number",
   "CALL case=a%20number group=a native=GetOwningPlayer outcome=odd type=42",
   "PENDING label=GetOwningPlayer%20not%20found%20frame",
-  "CALL case=not%20found%20frame group=b native=GetOwningPlayer outcome=odd type=framehandle:%2000000000",
+  "CALL case=not%20found%20frame group=b id=0 native=GetOwningPlayer outcome=handle type=framehandle:%2000000000",
   "SKIP case=destroyed%20frame group=b native=Location reason=crashed",
   "PENDING label=Location%20outside%20the%20world",
   "CALL case=outside%20the%20world group=b native=Location outcome=nil",
@@ -254,6 +264,26 @@ async function windowsSetup(
   };
 }
 
+/**
+ * A copy of the fixture Overlay next to the context's report, with an
+ * entry for each Native of `returns`, holding that `returns`, in place of
+ * the fixture's own. Returns the copy's folder.
+ */
+async function overlayWith(
+  context: Context,
+  returns: Readonly<Record<string, { nullable: boolean; family?: string }>>,
+): Promise<string> {
+  const overlayFolder = join(context.reportFile, "..", "..", "overlay");
+  await cp(OVERLAY_FOLDER, overlayFolder, { recursive: true });
+  for (const [name, entryReturns] of Object.entries(returns)) {
+    await writeFile(
+      join(overlayFolder, "common.j", "functions", `${name}.json`),
+      JSON.stringify({ name, source: "common.j", returns: entryReturns }),
+    );
+  }
+  return overlayFolder;
+}
+
 /** Writes the Result file as the game does, its lines through `Preload`. */
 async function writeResultFile(file: string, lines: readonly string[]) {
   await mkdir(join(file, ".."), { recursive: true });
@@ -345,6 +375,7 @@ describe("the nullability report", () => {
 | one call     | (a)   | handle  | 1048577 | \`timer: 0000020C\` |                    |
 | raising call | (a)   | error   |         |                   | \`\` bad \\| \`arg\` \`\` |
 
+- Family: \`constructor\`
 - Verdict: unsafe
 - Overlay \`returns.nullable\`: \`false\`
 - Comparison: consistent
@@ -356,8 +387,9 @@ describe("the nullability report", () => {
 | --------------- | ----- | ------- | ------- | ----------------------- | ------- |
 | live unit       | (a)   | handle  | 1048578 | \`player: 0000020D\`      |         |
 | a number        | (a)   | odd     |         | \`42\`                    |         |
-| not found frame | (b)   | odd     |         | \`framehandle: 00000000\` |         |
+| not found frame | (b)   | handle  | 0       | \`framehandle: 00000000\` |         |
 
+- Family: \`intrinsic-property\`
 - Verdict: review
 - Overlay \`returns.nullable\`: \`false\`
 - Comparison: consistent
@@ -370,6 +402,7 @@ describe("the nullability report", () => {
 | destroyed frame   | (b)   | crashed |     |      | skipped: crashed in an earlier run |
 | outside the world | (b)   | nil     |     |      |                                    |
 
+- Family: \`constructor\`
 - Verdict: nullable (proved)
 - Overlay \`returns.nullable\`: \`true\`
 - Comparison: consistent
@@ -666,6 +699,168 @@ describe("the nullability report", () => {
     await expectRefusal(
       context,
       'The record CALL case="one call" group=a native=CreateTimer outcome=nil is not one the nullability report reads.',
+    );
+  });
+
+  it("keeps a Native of a nullable family nullable by the rule when every case gave a handle, with the reason in its notes", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWith(context, {
+      GetTriggerUnit: { nullable: true, family: "event-response" },
+      LoadUnitHandle: { nullable: true, family: "lookup" },
+    });
+    await writeResultFile(
+      resultFile,
+      numbered([
+        "CASE case=outside%20its%20event group=a native=GetTriggerUnit",
+        "CASE case=unsaved%20key group=a native=LoadUnitHandle",
+        "PENDING label=GetTriggerUnit%20outside%20its%20event",
+        "CALL case=outside%20its%20event group=a id=1048577 native=GetTriggerUnit outcome=handle type=unit:%200000020C",
+        "PENDING label=LoadUnitHandle%20unsaved%20key",
+        "CALL case=unsaved%20key group=a native=LoadUnitHandle outcome=nil",
+        "END status=ok",
+      ]),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    expect(
+      slice.natives.map(({ native, family, verdict, comparison, notes }) => [
+        native,
+        family,
+        verdict,
+        comparison,
+        notes,
+      ]),
+    ).toEqual([
+      [
+        "GetTriggerUnit",
+        "event-response",
+        "nullable (rule)",
+        "consistent",
+        "May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.12345.",
+      ],
+      [
+        "LoadUnitHandle",
+        "lookup",
+        "nullable (proved)",
+        "consistent",
+        "Returns nothing for unsaved key (nullability sweep, 3.0.0.12345).",
+      ],
+    ]);
+  });
+
+  it("reports a mismatch when the Overlay types a Native of a nullable family non-null", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWith(context, {
+      GetTriggerUnit: { nullable: false, family: "event-response" },
+    });
+    await writeResultFile(
+      resultFile,
+      numbered([
+        "CASE case=outside%20its%20event group=a native=GetTriggerUnit",
+        "PENDING label=GetTriggerUnit%20outside%20its%20event",
+        "CALL case=outside%20its%20event group=a id=1048577 native=GetTriggerUnit outcome=handle type=unit:%200000020C",
+        "END status=ok",
+      ]),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    expect(
+      slice.natives.map(({ verdict, comparison }) => [verdict, comparison]),
+    ).toEqual([["nullable (rule)", "mismatch"]]);
+  });
+
+  it("refuses to word a nullable (rule) verdict for a family whose Natives may be non-null", () => {
+    expect(() =>
+      proposedNotes(
+        "nullable (rule)",
+        [{ label: "one call", group: "a", outcome: "handle", id: "1" }],
+        "constructor",
+        PATCH,
+      ),
+    ).toThrow(
+      "The family constructor may be non-null: it gives no verdict of nullable (rule).",
+    );
+  });
+
+  it("knows every family the Typings' Overlay names, and no other", async () => {
+    const folder = join(TYPINGS_OVERLAY_FOLDER, "common.j", "functions");
+    const named = new Set<string>();
+    for (const file of await readdir(folder)) {
+      const { returns } = JSON.parse(
+        await readFile(join(folder, file), "utf8"),
+      ) as { returns?: { family?: string } };
+      if (returns?.family !== undefined) named.add(returns.family);
+    }
+    expect([...named].sort()).toEqual(Object.keys(FAMILIES).sort());
+  });
+
+  it("lets a handle of id 0 satisfy non-null, naming its cases in the notes", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWith(context, {
+      TriggerAddAction: { nullable: true, family: "registration" },
+    });
+    await writeResultFile(
+      resultFile,
+      numbered([
+        "CASE case=live%20trigger group=a native=TriggerAddAction",
+        "CASE case=destroyed%20trigger group=b native=TriggerAddAction",
+        "PENDING label=TriggerAddAction%20live%20trigger",
+        "CALL case=live%20trigger group=a id=1048577 native=TriggerAddAction outcome=handle type=triggeraction:%200000020C",
+        "PENDING label=TriggerAddAction%20destroyed%20trigger",
+        "CALL case=destroyed%20trigger group=b id=0 native=TriggerAddAction outcome=handle type=triggeraction:%200000020D",
+        "END status=ok",
+      ]),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    expect(slice.natives.map(({ verdict, notes }) => [verdict, notes])).toEqual(
+      [
+        [
+          "non-null (evidence, handle id 0)",
+          "Returned a handle in every case of the nullability sweep (live trigger, destroyed trigger) on 3.0.0.12345; evidence, not proof. For destroyed trigger, a handle of id 0.",
+        ],
+      ],
+    );
+  });
+
+  it("reviews an odd value, one that is no handle, whatever the family", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWith(context, {
+      GetTriggerUnit: { nullable: true, family: "event-response" },
+    });
+    await writeResultFile(
+      resultFile,
+      numbered([
+        "CASE case=outside%20its%20event group=a native=GetTriggerUnit",
+        "PENDING label=GetTriggerUnit%20outside%20its%20event",
+        "CALL case=outside%20its%20event group=a native=GetTriggerUnit outcome=odd type=42",
+        "END status=ok",
+      ]),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    expect(slice.natives.map(({ verdict, notes }) => [verdict, notes])).toEqual(
+      [["review", "review"]],
+    );
+  });
+
+  it("refuses a Native whose Overlay entry names no Nullability family", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWith(context, {
+      CreateTimer: { nullable: false },
+    });
+    await writeResultFile(resultFile, FINISHED);
+    await expectRefusal(
+      { ...context, overlayFolder },
+      `${join(overlayFolder, "common.j", "functions", "CreateTimer.json")} names no Nullability family in returns.family (converter, enum-getter, constructor, registration, intrinsic-property, optional-property, event-response, callback-getter, lookup): the verdict depends on it.`,
     );
   });
 
