@@ -14642,6 +14642,7 @@ declare function DestroyBoolExpr(e: boolexpr): void;
  * @param opcode - limitop
  * @param limitval - real
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterVariableEvent}
  */
 declare function TriggerRegisterVariableEvent(whichTrigger: trigger, varName: string, opcode: limitop, limitval: number): event | undefined;
@@ -14651,6 +14652,7 @@ declare function TriggerRegisterVariableEvent(whichTrigger: trigger, varName: st
  * @param timeout - real
  * @param periodic - boolean
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterTimerEvent}
  */
 declare function TriggerRegisterTimerEvent(whichTrigger: trigger, timeout: number, periodic: boolean): event | undefined;
@@ -14659,6 +14661,7 @@ declare function TriggerRegisterTimerEvent(whichTrigger: trigger, timeout: numbe
  * @param whichTrigger - trigger
  * @param t - timer
  * @returns event
+ * @remarks Returned nothing in 2 cases of the nullability sweep (whichTrigger: destroyed trigger, t: destroyed timer) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterTimerExpireEvent}
  */
 declare function TriggerRegisterTimerExpireEvent(whichTrigger: trigger, t: timer): event | undefined;
@@ -14669,6 +14672,7 @@ declare function TriggerRegisterTimerExpireEvent(whichTrigger: trigger, t: timer
  * @param opcode - limitop
  * @param limitval - real
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterGameStateEvent}
  */
 declare function TriggerRegisterGameStateEvent(whichTrigger: trigger, whichState: gamestate, opcode: limitop, limitval: number): event | undefined;
@@ -14677,6 +14681,7 @@ declare function TriggerRegisterGameStateEvent(whichTrigger: trigger, whichState
  * @param whichTrigger - trigger
  * @param whichDialog - dialog
  * @returns event
+ * @remarks Returned nothing in 2 cases of the nullability sweep (whichTrigger: destroyed trigger, whichDialog: destroyed dialog) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterDialogEvent}
  */
 declare function TriggerRegisterDialogEvent(whichTrigger: trigger, whichDialog: dialog): event | undefined;
@@ -14685,6 +14690,7 @@ declare function TriggerRegisterDialogEvent(whichTrigger: trigger, whichDialog: 
  * @param whichTrigger - trigger
  * @param whichButton - button
  * @returns event
+ * @remarks Returned nothing in 3 cases of the nullability sweep (whichTrigger: destroyed trigger, whichButton: button after DialogDestroy, whichButton: button after DialogClear) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterDialogButtonEvent}
  */
 declare function TriggerRegisterDialogButtonEvent(whichTrigger: trigger, whichButton: button): event | undefined;
@@ -14700,6 +14706,7 @@ declare function GetEventGameState(): gamestate | undefined;
  * @param whichTrigger - trigger
  * @param whichGameEvent - gameevent
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterGameEvent}
  */
 declare function TriggerRegisterGameEvent(whichTrigger: trigger, whichGameEvent: gameevent): event | undefined;
@@ -14716,6 +14723,7 @@ declare function GetWinningPlayer(): player | undefined;
  * @param whichRegion - region
  * @param filter - boolexpr
  * @returns event
+ * @remarks Returned nothing in 2 cases of the nullability sweep (whichTrigger: destroyed trigger, whichRegion: removed region) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterEnterRegion}
  */
 declare function TriggerRegisterEnterRegion(whichTrigger: trigger, whichRegion: region, filter?: boolexpr): event | undefined;
@@ -14739,6 +14747,7 @@ declare function GetEnteringUnit(): unit | undefined;
  * @param whichRegion - region
  * @param filter - boolexpr
  * @returns event
+ * @remarks Returned nothing in 2 cases of the nullability sweep (whichTrigger: destroyed trigger, whichRegion: removed region) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterLeaveRegion}
  */
 declare function TriggerRegisterLeaveRegion(whichTrigger: trigger, whichRegion: region, filter?: boolexpr): event | undefined;
@@ -14754,6 +14763,7 @@ declare function GetLeavingUnit(): unit | undefined;
  * @param whichTrigger - trigger
  * @param t - trackable
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterTrackableHitEvent}
  */
 declare function TriggerRegisterTrackableHitEvent(whichTrigger: trigger, t: trackable): event | undefined;
@@ -14762,6 +14772,7 @@ declare function TriggerRegisterTrackableHitEvent(whichTrigger: trigger, t: trac
  * @param whichTrigger - trigger
  * @param t - trackable
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterTrackableTrackEvent}
  */
 declare function TriggerRegisterTrackableTrackEvent(whichTrigger: trigger, t: trackable): event | undefined;
@@ -14771,6 +14782,7 @@ declare function TriggerRegisterTrackableTrackEvent(whichTrigger: trigger, t: tr
  * @param whichAbility - integer (32-bit)
  * @param order - string
  * @returns event
+ * @remarks Returned nothing in 3 cases of the nullability sweep (order: empty string, order: unknown name, whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterCommandEvent}
  */
 declare function TriggerRegisterCommandEvent(whichTrigger: trigger, whichAbility: number, order: string): event | undefined;
@@ -14779,6 +14791,7 @@ declare function TriggerRegisterCommandEvent(whichTrigger: trigger, whichAbility
  * @param whichTrigger - trigger
  * @param whichUpgrade - integer (32-bit)
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterUpgradeCommandEvent}
  */
 declare function TriggerRegisterUpgradeCommandEvent(whichTrigger: trigger, whichUpgrade: number): event | undefined;
@@ -14841,6 +14854,7 @@ declare function GetSaveBasicFilename(): string | undefined;
  * @param whichPlayer - player
  * @param whichPlayerEvent - playerevent
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterPlayerEvent}
  */
 declare function TriggerRegisterPlayerEvent(whichTrigger: trigger, whichPlayer: player, whichPlayerEvent: playerevent): event | undefined;
@@ -14858,6 +14872,7 @@ declare function GetTriggerPlayer(): player | undefined;
  * @param whichPlayerUnitEvent - playerunitevent
  * @param filter - boolexpr
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterPlayerUnitEvent}
  */
 declare function TriggerRegisterPlayerUnitEvent(whichTrigger: trigger, whichPlayer: player, whichPlayerUnitEvent: playerunitevent, filter?: boolexpr): event | undefined;
@@ -15249,6 +15264,7 @@ declare function GetSpellTargetUnit(): unit | undefined;
  * @param whichPlayer - player
  * @param whichAlliance - alliancetype
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterPlayerAllianceChange}
  */
 declare function TriggerRegisterPlayerAllianceChange(whichTrigger: trigger, whichPlayer: player, whichAlliance: alliancetype): event | undefined;
@@ -15260,6 +15276,7 @@ declare function TriggerRegisterPlayerAllianceChange(whichTrigger: trigger, whic
  * @param opcode - limitop
  * @param limitval - real
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterPlayerStateEvent}
  */
 declare function TriggerRegisterPlayerStateEvent(whichTrigger: trigger, whichPlayer: player, whichState: playerstate, opcode: limitop, limitval: number): event | undefined;
@@ -15277,6 +15294,7 @@ declare function GetEventPlayerState(): playerstate | undefined;
  * @param chatMessageToDetect - string
  * @param exactMatchOnly - boolean
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterPlayerChatEvent}
  */
 declare function TriggerRegisterPlayerChatEvent(whichTrigger: trigger, whichPlayer: player, chatMessageToDetect: string, exactMatchOnly: boolean): event | undefined;
@@ -15297,6 +15315,7 @@ declare function GetEventPlayerChatStringMatched(): string | undefined;
  * @param whichTrigger - trigger
  * @param whichWidget - widget
  * @returns event
+ * @remarks Returned nothing in 3 cases of the nullability sweep (whichTrigger: destroyed trigger, whichWidget: removed destructable, whichWidget: removed item) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterDeathEvent}
  */
 declare function TriggerRegisterDeathEvent(whichTrigger: trigger, whichWidget: widget): event | undefined;
@@ -15315,6 +15334,7 @@ declare function GetTriggerUnit(): unit | undefined;
  * @param opcode - limitop
  * @param limitval - real
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterUnitStateEvent}
  */
 declare function TriggerRegisterUnitStateEvent(whichTrigger: trigger, whichUnit: unit, whichState: unitstate, opcode: limitop, limitval: number): event | undefined;
@@ -15331,6 +15351,7 @@ declare function GetEventUnitState(): unitstate | undefined;
  * @param whichUnit - unit
  * @param whichEvent - unitevent
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterUnitEvent}
  */
 declare function TriggerRegisterUnitEvent(whichTrigger: trigger, whichUnit: unit, whichEvent: unitevent): event | undefined;
@@ -15361,6 +15382,7 @@ declare function GetEventDetectingPlayer(): player | undefined;
  * @param whichEvent - unitevent
  * @param filter - boolexpr
  * @returns event
+ * @remarks Returned nothing in 2 cases of the nullability sweep (whichEvent: EVENT_UNIT_DEATH, whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterFilterUnitEvent}
  */
 declare function TriggerRegisterFilterUnitEvent(whichTrigger: trigger, whichUnit: unit, whichEvent: unitevent, filter?: boolexpr): event | undefined;
@@ -15378,6 +15400,7 @@ declare function GetEventTargetUnit(): unit | undefined;
  * @param range - real
  * @param filter - boolexpr
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterUnitInRange}
  */
 declare function TriggerRegisterUnitInRange(whichTrigger: trigger, whichUnit: unit, range: number, filter?: boolexpr): event | undefined;
@@ -24997,6 +25020,7 @@ declare function BlzFrameGetChild(frame: framehandle, index: number): framehandl
  * @param frame - framehandle
  * @param eventId - frameeventtype
  * @returns event
+ * @remarks Returned nothing in 2 cases of the nullability sweep (whichTrigger: destroyed trigger, frame: destroyed frame) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzTriggerRegisterFrameEvent}
  */
 declare function BlzTriggerRegisterFrameEvent(whichTrigger: trigger, frame: framehandle, eventId: frameeventtype): event | undefined;
@@ -25033,6 +25057,7 @@ declare function BlzGetTriggerFrameText(): string | undefined;
  * @param prefix - string
  * @param fromServer - boolean
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzTriggerRegisterPlayerSyncEvent}
  */
 declare function BlzTriggerRegisterPlayerSyncEvent(whichTrigger: trigger, whichPlayer: player, prefix: string, fromServer: boolean): event | undefined;
@@ -25064,6 +25089,7 @@ declare function BlzGetTriggerSyncData(): string | undefined;
  * @param metaKey - integer (32-bit)
  * @param keyDown - boolean
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzTriggerRegisterPlayerKeyEvent}
  */
 declare function BlzTriggerRegisterPlayerKeyEvent(whichTrigger: trigger, whichPlayer: player, key: oskeytype, metaKey: number, keyDown: boolean): event | undefined;
