@@ -7,7 +7,9 @@
 // per type and state with the Slices.
 //
 // A stale handle is one whose object is dead, removed or destroyed: the
-// factories named `dead…`, `removed…` and `destroyed…` return one.
+// factories named `dead…`, `removed…` and `destroyed…` return one. A
+// factory that takes a Handle, `selectedUnit`, puts it in a state and
+// returns it.
 
 import { CONVERTER_CONSTANTS } from "./converter-constants";
 
@@ -81,6 +83,21 @@ export function removedUnit(): unit {
   return footman;
 }
 
+/** A unit, live: a `'hpea'` (a peasant) of `Player(0)` at the map's origin (`CreateUnit`), another unit type than `liveUnit`'s. */
+export function livePeasant(): unit {
+  const owner = built(Player(0), "livePeasant");
+  return built(CreateUnit(owner, FourCC("hpea"), 0, 0, 0), "livePeasant");
+}
+
+/**
+ * A unit, selected: `unit` after `SelectUnit`, for the local player,
+ * `Player(0)`, adding it to what is selected.
+ */
+export function selectedUnit(unit: unit): unit {
+  SelectUnit(unit, true);
+  return unit;
+}
+
 /**
  * A unit, live: a `'Hpal'` hero of `Player(0)` at the map's origin
  * (`CreateUnit`), its inventory empty.
@@ -152,6 +169,11 @@ export function removedItem(): item {
   return claws;
 }
 
+/** An item, live: a `'rde1'` (Ring of Protection) on the ground at the map's origin (`CreateItem`), another item type than `liveItem`'s. */
+export function liveRing(): item {
+  return built(CreateItem(FourCC("rde1"), 0, 0), "liveRing");
+}
+
 // Item pools
 
 /** An item pool, live: `CreateItemPool` holding the `'ratf'` item type (Claws of Attack) at weight 1. */
@@ -200,6 +222,18 @@ export function removedDestructable(): destructable {
   return tree;
 }
 
+/**
+ * A destructable, live: a `'LTg1'` (a gate) at (512, -512), facing 0,
+ * scale 1, variation 0 (`CreateDestructable`), another destructable type
+ * than `liveDestructable`'s.
+ */
+export function liveGate(): destructable {
+  return built(
+    CreateDestructable(FourCC("LTg1"), 512, -512, 0, 1, 0),
+    "liveGate",
+  );
+}
+
 // Timers
 
 /** A timer, live: `CreateTimer`, never started. */
@@ -240,6 +274,15 @@ export function removedRect(): rect {
   return rect;
 }
 
+/**
+ * A rect, live: `Rect(-768, -768, 768, 768)`, around the map's origin, so
+ * it holds what the unit, item and destructable Fixtures create, and far
+ * from `Player(0)`'s start location, (-1408, 1728), and its units.
+ */
+export function originRect(): rect {
+  return Rect(-768, -768, 768, 768);
+}
+
 // Regions
 
 /** A region, live: `CreateRegion` after `RegionAddRect` of a live rect. */
@@ -276,6 +319,13 @@ export function liveTrackable(): trackable {
 /** A group, empty: `CreateGroup`, no unit added. */
 export function emptyGroup(): group {
   return built(CreateGroup(), "emptyGroup");
+}
+
+// Forces
+
+/** A force, empty: `CreateForce`, no player added. */
+export function emptyForce(): force {
+  return built(CreateForce(), "emptyForce");
 }
 
 // Hashtables and game caches
@@ -405,6 +455,44 @@ export function destroyedBoolExpr(): boolexpr {
   const filter = liveFilter();
   DestroyBoolExpr(filter);
   return filter;
+}
+
+/** A boolexpr, live: a `Filter` that keeps a `'hfoo'` (a footman) only, of the units `GetFilterUnit` gives. */
+export function footmanFilter(): filterfunc {
+  const footman = FourCC("hfoo");
+  return Filter(() => {
+    const unit = GetFilterUnit();
+    return unit !== undefined && GetUnitTypeId(unit) === footman;
+  });
+}
+
+/** A boolexpr, live: a `Filter` that keeps every player but `Player(0)`, of the players `GetFilterPlayer` gives. */
+export function otherPlayerFilter(): filterfunc {
+  const user = userSlotPlayer();
+  return Filter(() => {
+    const player = GetFilterPlayer();
+    return player !== undefined && player !== user;
+  });
+}
+
+/** A boolexpr, live: a `Filter` that keeps a `'ratf'` (Claws of Attack) only, of the items `GetFilterItem` gives. */
+export function clawsFilter(): filterfunc {
+  const claws = FourCC("ratf");
+  return Filter(() => {
+    const item = GetFilterItem();
+    return item !== undefined && GetItemTypeId(item) === claws;
+  });
+}
+
+/** A boolexpr, live: a `Filter` that keeps a `'LTlt'` (a Lordaeron tree) only, of the destructables `GetFilterDestructable` gives. */
+export function treeFilter(): filterfunc {
+  const tree = FourCC("LTlt");
+  return Filter(() => {
+    const destructable = GetFilterDestructable();
+    return (
+      destructable !== undefined && GetDestructableTypeId(destructable) === tree
+    );
+  });
 }
 
 // Frames

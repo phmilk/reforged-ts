@@ -53,7 +53,7 @@ export interface CallCase {
   /** The Native called, as the Typings name it: `GroupEnumUnitsInRect`. */
   readonly native: string;
   /**
-   * What the case calls it with, as `ReturnCase.label`: `nil filter`.
+   * What the case calls it with, as `ReturnCase.label`: `filter: nil`.
    * Unique among the Native's cases.
    */
   readonly label: string;
