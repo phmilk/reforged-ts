@@ -5,7 +5,7 @@
 // `pnpm probe:nullability-report nullability-constructors-destructables`
 // turns its Result file into this Slice's section of the sweep report. The
 // creators take no handle but a `playercolor`, which no Native destroys, so
-// every case is of group a and needs no Fixture.
+// every case is of group a and uses no Fixture.
 
 import type { ProbeContext } from "../game/probe";
 import { type ReturnCase, runCases } from "./nullability/case-runner";
@@ -19,9 +19,9 @@ import { fixed, numeric, rawcode } from "./nullability/parameters";
  * `roll` and `pitch` for a `PitchRoll` one, `scale`, `variation`, then
  * `skinId` for a `Skin` one and `color` for a `Color` one; so each is
  * declared once and shared. The typical call is a `'LTlt'` (a Lordaeron
- * tree, the destructable Fixture's) at (256, 256) on the ground, facing
- * 270, upright, scale 1, variation 0, its own skin, and the colour fixed to
- * red: a `playercolor` is an enum constant, never varied.
+ * tree, the type `liveDestructable` builds) at (256, 256), at z 0, facing
+ * 270, roll and pitch 0, scale 1, variation 0, its own skin, and the colour
+ * fixed to red: a `playercolor` is an enum constant, never varied.
  */
 function sliceCases(): ReturnCase[] {
   const tree = FourCC("LTlt");
