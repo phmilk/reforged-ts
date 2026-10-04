@@ -2,7 +2,9 @@
  * `probe:nullability-report <probe>`: writes the section of the Nullability
  * sweep's Slice `<probe>` into the sweep report,
  * `docs/research/nullability-sweep.md`, from the Probe's last run, and
- * prints what it wrote. Reads the Overlay and never writes it. Exit codes:
+ * prints what it wrote, then, when the section it replaced was written
+ * under another Build, each change from it, which the Patch adoption pull
+ * request carries. Reads the Overlay and never writes it. Exit codes:
  * 0 written; 1 a failure, an author error printed on one line.
  */
 import {
@@ -58,9 +60,10 @@ export async function main(
 /**
  * What the command prints: the section it wrote, then one line per Native,
  * then one per parameter of call cases, with how its `nil` counts differ
- * from the always-true ones when they do.
+ * from the always-true ones when they do; then, when the section replaced
+ * one of another Build, each change from it, or that there is none.
  */
-function summary({ file, slice }: NullabilityReport): string {
+function summary({ file, slice, changes }: NullabilityReport): string {
   return [
     `Wrote the section of Probe ${slice.probe}, run ${slice.runId}, to ${file}:`,
     ...slice.natives.map(
@@ -71,6 +74,14 @@ function summary({ file, slice }: NullabilityReport): string {
       ({ native, param, verdict, comparison, countDifference }) =>
         `${native} parameter ${param}: ${verdict}, ${comparison}${countDifference === undefined ? "" : `; count difference: ${countDifference}`}`,
     ),
+    ...(changes === undefined
+      ? []
+      : changes.lines.length === 0
+        ? [`No change from the section of Build ${changes.from}.`]
+        : [
+            `Changes from the section of Build ${changes.from}:`,
+            ...changes.lines,
+          ]),
   ]
     .map((line) => `${line}\n`)
     .join("");

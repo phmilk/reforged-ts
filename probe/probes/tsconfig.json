@@ -7,6 +7,10 @@
   // them, `@probe/current` is any Probe (../game/current.d.ts). `reforged-ts`
   // resolves to the workspace sources, as in the library's examples, so a
   // Probe checks the library before it is released.
+  // `probe:build` compiles against the Typings of the newest vendored
+  // Build's Game version (src/manifest.ts), in place of the
+  // `reforged-types/<version>` entries of `types`, which only the
+  // type-check here reads.
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext"],

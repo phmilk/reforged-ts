@@ -96,3 +96,54 @@ export function resolveGameExecutable(
   }
   return executable;
 }
+
+/** The file the Battle.net app keeps the installed Build in, at the install's root. */
+export const BUILD_INFO_FILE = ".build.info";
+
+/** The client's Build, and the `.build.info` it was read from. */
+export interface ClientBuild {
+  build: string;
+  file: string;
+}
+
+/**
+ * The Build of the game client the executable belongs to: the `Version`
+ * of the active row (`Active` 1) of the nearest `.build.info` in a folder
+ * above the executable, the install's root (`<install>\_retail_\x86_64`
+ * holds the executable). The file is a table the Battle.net app writes: a
+ * header of `<name>!<type>:<size>` columns separated by `|`, then one row
+ * per region. No such file, or one without an active `Version`, is an
+ * AuthorError.
+ */
+export function readClientBuild(
+  executable: string,
+  machine: Pick<Machine, "readFile">,
+): ClientBuild {
+  const folders: string[] = [];
+  for (
+    let folder = path.dirname(executable);
+    !folders.includes(folder);
+    folder = path.dirname(folder)
+  ) {
+    folders.push(folder);
+    const file = path.join(folder, BUILD_INFO_FILE);
+    const text = machine.readFile(file);
+    if (text === undefined) continue;
+    const [header = "", ...rows] = text.split(/\r?\n/);
+    const columns = header.split("|").map((column) => column.split("!")[0]);
+    const active = columns.indexOf("Active");
+    const version = columns.indexOf("Version");
+    const build = rows
+      .map((row) => row.split("|"))
+      .find((cells) => active === -1 || cells[active] === "1")?.[version];
+    if (version === -1 || build === undefined || build === "") {
+      throw new AuthorError(
+        `${file} names no Version in an active row: probe:run reads the client's Build from it.`,
+      );
+    }
+    return { build, file };
+  }
+  throw new AuthorError(
+    `No ${BUILD_INFO_FILE} above the game's executable ${executable}: probe:run reads the client's Build from it.`,
+  );
+}
