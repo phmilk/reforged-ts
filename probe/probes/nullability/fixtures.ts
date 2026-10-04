@@ -27,7 +27,10 @@ function built<T>(value: T | undefined, fixture: string): T {
  */
 export function unseenPoint(x: number, y: number): readonly [number, number] {
   if (IsVisibleToPlayer(x, y, userSlotPlayer())) {
-    error(`Fixture unseenPoint: Player(0) sees (${x}, ${y})`, 0);
+    error(
+      `Fixture unseenPoint: Player(0) sees (${tostring(x)}, ${tostring(y)})`,
+      0,
+    );
   }
   return [x, y];
 }
