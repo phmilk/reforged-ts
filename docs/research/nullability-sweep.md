@@ -5698,3 +5698,1045 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, abilityId: unknown rawcode) on 3.0.0.24268; evidence, not proof.
+
+## `nullability-constructors-world`
+
+- Probe: `nullability-constructors-world`
+- Patch: 3.0.0.24268
+- Client: 3.0.0.24268
+- Date: 2026-10-04
+- Run: `17c83219-627d-41b0-ba20-f75f4ceb450c`
+
+### `CreateItem`
+
+| Case                    | Group | Outcome | Id      | Type                     | Message |
+| ----------------------- | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments       | (a)   | handle  | 1048812 | `item: 000001C287CB3260` |         |
+| itemid: unknown rawcode | (a)   | nil     |         |                          |         |
+| x: 0                    | (a)   | handle  | 1048813 | `item: 000001C28832EA00` |         |
+| x: negative             | (a)   | handle  | 1048814 | `item: 000001C28833AF40` |         |
+| x: outside the world    | (a)   | handle  | 1048815 | `item: 000001C288DFB870` |         |
+| x: 2147483647           | (a)   | handle  | 1048816 | `item: 000001C28895E680` |         |
+| y: 0                    | (a)   | handle  | 1048817 | `item: 000001C28897AE60` |         |
+| y: negative             | (a)   | handle  | 1048818 | `item: 000001C287BFD0B0` |         |
+| y: outside the world    | (a)   | handle  | 1048819 | `item: 000001C288FEE280` |         |
+| y: 2147483647           | (a)   | handle  | 1048820 | `item: 000001C289C01D50` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (itemid: unknown rawcode) on 3.0.0.24268.
+
+### `CreateUnit`
+
+| Case                    | Group | Outcome | Id      | Type                     | Message |
+| ----------------------- | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments       | (a)   | handle  | 1048821 | `unit: 000001C187B67FC0` |         |
+| unitid: unknown rawcode | (a)   | nil     |         |                          |         |
+| x: 0                    | (a)   | handle  | 1048822 | `unit: 000001C289522690` |         |
+| x: negative             | (a)   | handle  | 1048823 | `unit: 000001C288B4E170` |         |
+| x: outside the world    | (a)   | handle  | 1048824 | `unit: 000001C182572DE0` |         |
+| x: 2147483647           | (a)   | handle  | 1048825 | `unit: 000001C2891414F0` |         |
+| y: 0                    | (a)   | handle  | 1048826 | `unit: 000001C2706D1390` |         |
+| y: negative             | (a)   | handle  | 1048827 | `unit: 000001C287DD2840` |         |
+| y: outside the world    | (a)   | handle  | 1048828 | `unit: 000001C287D4F860` |         |
+| y: 2147483647           | (a)   | handle  | 1048829 | `unit: 000001C289186A40` |         |
+| face: 0                 | (a)   | handle  | 1048830 | `unit: 000001C289E0F930` |         |
+| face: negative          | (a)   | handle  | 1048831 | `unit: 000001C289DEB710` |         |
+| face: outside the world | (a)   | handle  | 1048832 | `unit: 000001C2879B8D30` |         |
+| face: 2147483647        | (a)   | handle  | 1048833 | `unit: 000001C289C904E0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unitid: unknown rawcode) on 3.0.0.24268.
+
+### `CreateUnitByName`
+
+| Case                    | Group | Outcome | Id      | Type                     | Message |
+| ----------------------- | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments       | (a)   | handle  | 1048834 | `unit: 000001C289F357E0` |         |
+| unitname: empty string  | (a)   | nil     |         |                          |         |
+| unitname: unknown name  | (a)   | nil     |         |                          |         |
+| x: 0                    | (a)   | handle  | 1048835 | `unit: 000001C289F50040` |         |
+| x: negative             | (a)   | handle  | 1048836 | `unit: 000001C289F5BF80` |         |
+| x: outside the world    | (a)   | handle  | 1048837 | `unit: 000001C289F73D70` |         |
+| x: 2147483647           | (a)   | handle  | 1048838 | `unit: 000001C289F97CB0` |         |
+| y: 0                    | (a)   | handle  | 1048839 | `unit: 000001C288126E50` |         |
+| y: negative             | (a)   | handle  | 1048840 | `unit: 000001C289FEBD10` |         |
+| y: outside the world    | (a)   | handle  | 1048841 | `unit: 000001C289FE35A0` |         |
+| y: 2147483647           | (a)   | handle  | 1048842 | `unit: 000001C28A025F10` |         |
+| face: 0                 | (a)   | handle  | 1048843 | `unit: 000001C28A10D880` |         |
+| face: negative          | (a)   | handle  | 1048844 | `unit: 000001C28A077730` |         |
+| face: outside the world | (a)   | handle  | 1048845 | `unit: 000001C28A16BA80` |         |
+| face: 2147483647        | (a)   | handle  | 1048846 | `unit: 000001C289C93490` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 2 cases of the nullability sweep (unitname: empty string, unitname: unknown name) on 3.0.0.24268.
+
+### `CreateUnitAtLoc`
+
+| Case                            | Group | Outcome | Id      | Type                     | Message |
+| ------------------------------- | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments               | (a)   | handle  | 1048847 | `unit: 000001C28A1BCC90` |         |
+| unitid: unknown rawcode         | (a)   | nil     |         |                          |         |
+| face: 0                         | (a)   | handle  | 1048848 | `unit: 000001C289DEB6D0` |         |
+| face: negative                  | (a)   | handle  | 1048849 | `unit: 000001C28A0FFAD0` |         |
+| face: outside the world         | (a)   | handle  | 1048850 | `unit: 000001C28A1ECE10` |         |
+| face: 2147483647                | (a)   | handle  | 1048851 | `unit: 000001C28A32E7A0` |         |
+| whichLocation: removed location | (b)   | nil     |         |                          |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 2 cases of the nullability sweep (unitid: unknown rawcode, whichLocation: removed location) on 3.0.0.24268.
+
+### `CreateUnitAtLocByName`
+
+| Case                            | Group | Outcome | Id      | Type                     | Message |
+| ------------------------------- | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments               | (a)   | handle  | 1048852 | `unit: 000001C273B3B380` |         |
+| unitname: empty string          | (a)   | nil     |         |                          |         |
+| unitname: unknown name          | (a)   | nil     |         |                          |         |
+| face: 0                         | (a)   | handle  | 1048853 | `unit: 000001C28A25E7D0` |         |
+| face: negative                  | (a)   | handle  | 1048854 | `unit: 000001C28A4AB670` |         |
+| face: outside the world         | (a)   | handle  | 1048855 | `unit: 000001C28A4D84A0` |         |
+| face: 2147483647                | (a)   | handle  | 1048856 | `unit: 000001C28896CC30` |         |
+| whichLocation: removed location | (b)   | nil     |         |                          |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 3 cases of the nullability sweep (unitname: empty string, unitname: unknown name, whichLocation: removed location) on 3.0.0.24268.
+
+### `CreateCorpse`
+
+| Case                    | Group | Outcome | Id      | Type                     | Message |
+| ----------------------- | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments       | (a)   | handle  | 1048857 | `unit: 000001C28A529A20` |         |
+| unitid: unknown rawcode | (a)   | nil     |         |                          |         |
+| x: 0                    | (a)   | handle  | 1048858 | `unit: 000001C28A56E5B0` |         |
+| x: negative             | (a)   | handle  | 1048859 | `unit: 000001C28A5AAA30` |         |
+| x: outside the world    | (a)   | handle  | 1048860 | `unit: 000001C28A5B8430` |         |
+| x: 2147483647           | (a)   | handle  | 1048861 | `unit: 000001C28A5E2BF0` |         |
+| y: 0                    | (a)   | handle  | 1048862 | `unit: 000001C28A2B5C30` |         |
+| y: negative             | (a)   | handle  | 1048863 | `unit: 000001C28A2ACAF0` |         |
+| y: outside the world    | (a)   | handle  | 1048864 | `unit: 000001C287F88810` |         |
+| y: 2147483647           | (a)   | handle  | 1048865 | `unit: 000001C2889DD940` |         |
+| face: 0                 | (a)   | handle  | 1048866 | `unit: 000001C287BED960` |         |
+| face: negative          | (a)   | handle  | 1048867 | `unit: 000001C28A642060` |         |
+| face: outside the world | (a)   | handle  | 1048868 | `unit: 000001C287D6EF30` |         |
+| face: 2147483647        | (a)   | handle  | 1048869 | `unit: 000001C289862600` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unitid: unknown rawcode) on 3.0.0.24268.
+
+### `UnitAddItemById`
+
+| Case                              | Group | Outcome | Id      | Type                     | Message |
+| --------------------------------- | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments                 | (a)   | handle  | 1048870 | `item: 000001C2886A8590` |         |
+| itemId: unknown rawcode           | (a)   | nil     |         |                          |         |
+| whichUnit: unit with no inventory | (a)   | nil     |         |                          |         |
+| whichUnit: dead hero              | (b)   | nil     |         |                          |         |
+| whichUnit: removed hero           | (b)   | handle  | 1049025 | `item: 000001C28A8C2890` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 3 cases of the nullability sweep (itemId: unknown rawcode, whichUnit: unit with no inventory, whichUnit: dead hero) on 3.0.0.24268.
+
+### `CreateUnitPool`
+
+| Case     | Group | Outcome | Id      | Type                         | Message |
+| -------- | ----- | ------- | ------- | ---------------------------- | ------- |
+| one call | (a)   | handle  | 1048871 | `unitpool: 000001C287D6B270` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `PlaceRandomUnit`
+
+| Case                           | Group | Outcome | Id      | Type                     | Message |
+| ------------------------------ | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments              | (a)   | handle  | 1048872 | `unit: 000001C28959F6D0` |         |
+| x: 0                           | (a)   | handle  | 1048873 | `unit: 000001C287D36580` |         |
+| x: negative                    | (a)   | handle  | 1048874 | `unit: 000001C287D44C30` |         |
+| x: outside the world           | (a)   | handle  | 1048875 | `unit: 000001C2884079C0` |         |
+| x: 2147483647                  | (a)   | handle  | 1048876 | `unit: 000001C289327980` |         |
+| y: 0                           | (a)   | handle  | 1048877 | `unit: 000001C287CE6280` |         |
+| y: negative                    | (a)   | handle  | 1048878 | `unit: 000001C287CEFAF0` |         |
+| y: outside the world           | (a)   | handle  | 1048879 | `unit: 000001C287CFA550` |         |
+| y: 2147483647                  | (a)   | handle  | 1048880 | `unit: 000001C2886A6250` |         |
+| facing: 0                      | (a)   | handle  | 1048881 | `unit: 000001C2878A0AA0` |         |
+| facing: negative               | (a)   | handle  | 1048882 | `unit: 000001C28A10C060` |         |
+| facing: outside the world      | (a)   | handle  | 1048883 | `unit: 000001C287FC6910` |         |
+| facing: 2147483647             | (a)   | handle  | 1048884 | `unit: 000001C288063700` |         |
+| whichPool: empty unit pool     | (a)   | nil     |         |                          |         |
+| whichPool: destroyed unit pool | (b)   | nil     |         |                          |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 2 cases of the nullability sweep (whichPool: empty unit pool, whichPool: destroyed unit pool) on 3.0.0.24268.
+
+### `CreateItemPool`
+
+| Case     | Group | Outcome | Id      | Type                         | Message |
+| -------- | ----- | ------- | ------- | ---------------------------- | ------- |
+| one call | (a)   | handle  | 1048885 | `itempool: 000001C2891AA860` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `PlaceRandomItem`
+
+| Case                               | Group | Outcome | Id      | Type                     | Message |
+| ---------------------------------- | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments                  | (a)   | handle  | 1048886 | `item: 000001C289E14DA0` |         |
+| x: 0                               | (a)   | handle  | 1048887 | `item: 000001C2878A4610` |         |
+| x: negative                        | (a)   | handle  | 1048888 | `item: 000001C288113080` |         |
+| x: outside the world               | (a)   | handle  | 1048889 | `item: 000001C287869E70` |         |
+| x: 2147483647                      | (a)   | handle  | 1048890 | `item: 000001C28A1D11C0` |         |
+| y: 0                               | (a)   | handle  | 1048891 | `item: 000001C287F75FC0` |         |
+| y: negative                        | (a)   | handle  | 1048892 | `item: 000001C28A272010` |         |
+| y: outside the world               | (a)   | handle  | 1048893 | `item: 000001C28A2CDDF0` |         |
+| y: 2147483647                      | (a)   | handle  | 1048894 | `item: 000001C287FF9F80` |         |
+| whichItemPool: empty item pool     | (a)   | nil     |         |                          |         |
+| whichItemPool: destroyed item pool | (b)   | nil     |         |                          |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 2 cases of the nullability sweep (whichItemPool: empty item pool, whichItemPool: destroyed item pool) on 3.0.0.24268.
+
+### `CreateMinimapIconOnUnit`
+
+| Case                     | Group | Outcome | Id  | Type                            | Message |
+| ------------------------ | ----- | ------- | --- | ------------------------------- | ------- |
+| typical arguments        | (a)   | handle  | 1   | `minimapicon: 000001C288912590` |         |
+| red: 0                   | (a)   | handle  | 2   | `minimapicon: 000001C28917E810` |         |
+| red: negative            | (a)   | handle  | 3   | `minimapicon: 000001C2891332A0` |         |
+| red: outside the world   | (a)   | handle  | 4   | `minimapicon: 000001C2879B2C70` |         |
+| red: 2147483647          | (a)   | handle  | 5   | `minimapicon: 000001C287B6A260` |         |
+| green: 0                 | (a)   | handle  | 6   | `minimapicon: 000001C28807BFB0` |         |
+| green: negative          | (a)   | handle  | 7   | `minimapicon: 000001C28A177C70` |         |
+| green: outside the world | (a)   | handle  | 8   | `minimapicon: 000001C288390B30` |         |
+| green: 2147483647        | (a)   | handle  | 9   | `minimapicon: 000001C288912330` |         |
+| blue: 0                  | (a)   | handle  | 10  | `minimapicon: 000001C28A60D330` |         |
+| blue: negative           | (a)   | handle  | 11  | `minimapicon: 000001C2886A19A0` |         |
+| blue: outside the world  | (a)   | handle  | 12  | `minimapicon: 000001C288904EA0` |         |
+| blue: 2147483647         | (a)   | handle  | 13  | `minimapicon: 000001C2891A41A0` |         |
+| pingPath: empty string   | (a)   | handle  | 14  | `minimapicon: 000001C289FA91E0` |         |
+| pingPath: unknown name   | (a)   | handle  | 15  | `minimapicon: 000001C28A56C240` |         |
+| whichUnit: dead unit     | (b)   | handle  | 54  | `minimapicon: 000001C28A8C4320` |         |
+| whichUnit: removed unit  | (b)   | handle  | 55  | `minimapicon: 000001C28A8C58D0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, pingPath: empty string, pingPath: unknown name, whichUnit: dead unit, whichUnit: removed unit) on 3.0.0.24268; evidence, not proof.
+
+### `CreateMinimapIconAtLoc`
+
+| Case                     | Group | Outcome | Id  | Type                            | Message |
+| ------------------------ | ----- | ------- | --- | ------------------------------- | ------- |
+| typical arguments        | (a)   | handle  | 16  | `minimapicon: 000001C28A6960C0` |         |
+| red: 0                   | (a)   | handle  | 17  | `minimapicon: 000001C287895D80` |         |
+| red: negative            | (a)   | handle  | 18  | `minimapicon: 000001C289AC61C0` |         |
+| red: outside the world   | (a)   | handle  | 19  | `minimapicon: 000001C288392390` |         |
+| red: 2147483647          | (a)   | handle  | 20  | `minimapicon: 000001C28A66B2F0` |         |
+| green: 0                 | (a)   | handle  | 21  | `minimapicon: 000001C2891CB760` |         |
+| green: negative          | (a)   | handle  | 22  | `minimapicon: 000001C287C89020` |         |
+| green: outside the world | (a)   | handle  | 23  | `minimapicon: 000001C28787EF20` |         |
+| green: 2147483647        | (a)   | handle  | 24  | `minimapicon: 000001C288ACD290` |         |
+| blue: 0                  | (a)   | handle  | 25  | `minimapicon: 000001C27040E3D0` |         |
+| blue: negative           | (a)   | handle  | 26  | `minimapicon: 000001C270413F20` |         |
+| blue: outside the world  | (a)   | handle  | 27  | `minimapicon: 000001C28879C0E0` |         |
+| blue: 2147483647         | (a)   | handle  | 28  | `minimapicon: 000001C2880726A0` |         |
+| pingPath: empty string   | (a)   | handle  | 29  | `minimapicon: 000001C28A1B1C50` |         |
+| pingPath: unknown name   | (a)   | handle  | 30  | `minimapicon: 000001C28A2F84C0` |         |
+| where: removed location  | (b)   | handle  | 0   | `minimapicon: 000001C28A89AB80` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, pingPath: empty string, pingPath: unknown name, where: removed location) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (where: removed location).
+
+### `CreateMinimapIcon`
+
+| Case                     | Group | Outcome | Id  | Type                            | Message |
+| ------------------------ | ----- | ------- | --- | ------------------------------- | ------- |
+| typical arguments        | (a)   | handle  | 31  | `minimapicon: 000001C288187FC0` |         |
+| x: 0                     | (a)   | handle  | 32  | `minimapicon: 000001C2891247C0` |         |
+| x: negative              | (a)   | handle  | 33  | `minimapicon: 000001C287CF31E0` |         |
+| x: outside the world     | (a)   | handle  | 34  | `minimapicon: 000001C2878BBCC0` |         |
+| x: 2147483647            | (a)   | handle  | 35  | `minimapicon: 000001C288054AA0` |         |
+| y: 0                     | (a)   | handle  | 36  | `minimapicon: 000001C287B09300` |         |
+| y: negative              | (a)   | handle  | 37  | `minimapicon: 000001C287F6C840` |         |
+| y: outside the world     | (a)   | handle  | 38  | `minimapicon: 000001C287CDBCD0` |         |
+| y: 2147483647            | (a)   | handle  | 39  | `minimapicon: 000001C2878BB1C0` |         |
+| red: 0                   | (a)   | handle  | 40  | `minimapicon: 000001C2879A8A90` |         |
+| red: negative            | (a)   | handle  | 41  | `minimapicon: 000001C287DCCBA0` |         |
+| red: outside the world   | (a)   | handle  | 42  | `minimapicon: 000001C287B701F0` |         |
+| red: 2147483647          | (a)   | handle  | 43  | `minimapicon: 000001C288B71140` |         |
+| green: 0                 | (a)   | handle  | 44  | `minimapicon: 000001C2886A2F50` |         |
+| green: negative          | (a)   | handle  | 45  | `minimapicon: 000001C28869E7D0` |         |
+| green: outside the world | (a)   | handle  | 46  | `minimapicon: 000001C287FC6EA0` |         |
+| green: 2147483647        | (a)   | handle  | 47  | `minimapicon: 000001C2897A9010` |         |
+| blue: 0                  | (a)   | handle  | 48  | `minimapicon: 000001C2887960E0` |         |
+| blue: negative           | (a)   | handle  | 49  | `minimapicon: 000001C2893DFF90` |         |
+| blue: outside the world  | (a)   | handle  | 50  | `minimapicon: 000001C288DFEE30` |         |
+| blue: 2147483647         | (a)   | handle  | 51  | `minimapicon: 000001C289FDDFA0` |         |
+| pingPath: empty string   | (a)   | handle  | 52  | `minimapicon: 000001C287D6F1A0` |         |
+| pingPath: unknown name   | (a)   | handle  | 53  | `minimapicon: 000001C28896F8F0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, pingPath: empty string, pingPath: unknown name) on 3.0.0.24268; evidence, not proof.
+
+### `CreateTextTag`
+
+| Case     | Group | Outcome | Id   | Type                        | Message |
+| -------- | ----- | ------- | ---- | --------------------------- | ------- |
+| one call | (a)   | handle  | 9999 | `texttag: 000001C28A2F6140` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `CreateTrackable`
+
+| Case                             | Group | Outcome | Id      | Type                          | Message |
+| -------------------------------- | ----- | ------- | ------- | ----------------------------- | ------- |
+| typical arguments                | (a)   | handle  | 1048895 | `trackable: 000001C287B9AD50` |         |
+| trackableModelPath: empty string | (a)   | handle  | 1048896 | `trackable: 000001C28A272CF0` |         |
+| trackableModelPath: unknown name | (a)   | handle  | 1048897 | `trackable: 000001C28A6B4BF0` |         |
+| x: 0                             | (a)   | handle  | 1048898 | `trackable: 000001C28A1F24B0` |         |
+| x: negative                      | (a)   | handle  | 1048899 | `trackable: 000001C288D92260` |         |
+| x: outside the world             | (a)   | handle  | 1048900 | `trackable: 000001C287D65E80` |         |
+| x: 2147483647                    | (a)   | handle  | 1048901 | `trackable: 000001C2879C0190` |         |
+| y: 0                             | (a)   | handle  | 1048902 | `trackable: 000001C288055E20` |         |
+| y: negative                      | (a)   | handle  | 1048903 | `trackable: 000001C2886AA470` |         |
+| y: outside the world             | (a)   | handle  | 1048904 | `trackable: 000001C28A149BC0` |         |
+| y: 2147483647                    | (a)   | handle  | 1048905 | `trackable: 000001C288067DA0` |         |
+| facing: 0                        | (a)   | handle  | 1048906 | `trackable: 000001C28A1ED6A0` |         |
+| facing: negative                 | (a)   | handle  | 1048907 | `trackable: 000001C288332980` |         |
+| facing: outside the world        | (a)   | handle  | 1048908 | `trackable: 000001C288404390` |         |
+| facing: 2147483647               | (a)   | handle  | 1048909 | `trackable: 000001C28A130DA0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, trackableModelPath: empty string, trackableModelPath: unknown name, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, facing: 0, facing: negative, facing: outside the world, facing: 2147483647) on 3.0.0.24268; evidence, not proof.
+
+### `CreateSound`
+
+| Case                           | Group | Outcome | Id      | Type                      | Message |
+| ------------------------------ | ----- | ------- | ------- | ------------------------- | ------- |
+| typical arguments              | (a)   | handle  | 1048910 | `sound: 000001C289322C40` |         |
+| fileName: empty string         | (a)   | handle  | 1048911 | `sound: 000001C2878A1FA0` |         |
+| fileName: unknown name         | (a)   | handle  | 1048912 | `sound: 000001C28789C0B0` |         |
+| fadeInRate: 0                  | (a)   | handle  | 1048913 | `sound: 000001C28A5DBE40` |         |
+| fadeInRate: negative           | (a)   | handle  | 1048914 | `sound: 000001C28A63A030` |         |
+| fadeInRate: outside the world  | (a)   | handle  | 1048915 | `sound: 000001C28879BC80` |         |
+| fadeInRate: 2147483647         | (a)   | handle  | 1048916 | `sound: 000001C287BE3300` |         |
+| fadeOutRate: 0                 | (a)   | handle  | 1048917 | `sound: 000001C28912C350` |         |
+| fadeOutRate: negative          | (a)   | handle  | 1048918 | `sound: 000001C28A5B58E0` |         |
+| fadeOutRate: outside the world | (a)   | handle  | 1048919 | `sound: 000001C28A51B2A0` |         |
+| fadeOutRate: 2147483647        | (a)   | handle  | 1048920 | `sound: 000001C28A2DAA50` |         |
+| eaxSetting: empty string       | (a)   | handle  | 1048921 | `sound: 000001C287BE2A10` |         |
+| eaxSetting: unknown name       | (a)   | handle  | 1048922 | `sound: 000001C28A018010` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, fileName: empty string, fileName: unknown name, fadeInRate: 0, fadeInRate: negative, fadeInRate: outside the world, fadeInRate: 2147483647, fadeOutRate: 0, fadeOutRate: negative, fadeOutRate: outside the world, fadeOutRate: 2147483647, eaxSetting: empty string, eaxSetting: unknown name) on 3.0.0.24268; evidence, not proof.
+
+### `CreateSoundFilenameWithLabel`
+
+| Case                           | Group | Outcome | Id      | Type                      | Message |
+| ------------------------------ | ----- | ------- | ------- | ------------------------- | ------- |
+| typical arguments              | (a)   | handle  | 1048923 | `sound: 000001C28A29E910` |         |
+| fileName: empty string         | (a)   | handle  | 1048924 | `sound: 000001C28A5F18D0` |         |
+| fileName: unknown name         | (a)   | handle  | 1048925 | `sound: 000001C289F5BE10` |         |
+| fadeInRate: 0                  | (a)   | handle  | 1048926 | `sound: 000001C28A2FA8E0` |         |
+| fadeInRate: negative           | (a)   | handle  | 1048927 | `sound: 000001C28A1C7F90` |         |
+| fadeInRate: outside the world  | (a)   | handle  | 1048928 | `sound: 000001C2886BFB90` |         |
+| fadeInRate: 2147483647         | (a)   | handle  | 1048929 | `sound: 000001C287092E60` |         |
+| fadeOutRate: 0                 | (a)   | handle  | 1048930 | `sound: 000001C28A1751C0` |         |
+| fadeOutRate: negative          | (a)   | handle  | 1048931 | `sound: 000001C287BE4130` |         |
+| fadeOutRate: outside the world | (a)   | handle  | 1048932 | `sound: 000001C28833B150` |         |
+| fadeOutRate: 2147483647        | (a)   | handle  | 1048933 | `sound: 000001C28A6D2530` |         |
+| SLKEntryName: empty string     | (a)   | handle  | 1048934 | `sound: 000001C28838A4C0` |         |
+| SLKEntryName: unknown name     | (a)   | handle  | 1048935 | `sound: 000001C288917C80` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, fileName: empty string, fileName: unknown name, fadeInRate: 0, fadeInRate: negative, fadeInRate: outside the world, fadeInRate: 2147483647, fadeOutRate: 0, fadeOutRate: negative, fadeOutRate: outside the world, fadeOutRate: 2147483647, SLKEntryName: empty string, SLKEntryName: unknown name) on 3.0.0.24268; evidence, not proof.
+
+### `CreateSoundFromLabel`
+
+| Case                           | Group | Outcome | Id      | Type                      | Message |
+| ------------------------------ | ----- | ------- | ------- | ------------------------- | ------- |
+| typical arguments              | (a)   | handle  | 1048936 | `sound: 000001C288389490` |         |
+| soundLabel: empty string       | (a)   | handle  | 1048937 | `sound: 000001C287C0A040` |         |
+| soundLabel: unknown name       | (a)   | handle  | 1048938 | `sound: 000001C28948D160` |         |
+| fadeInRate: 0                  | (a)   | handle  | 1048939 | `sound: 000001C2897577B0` |         |
+| fadeInRate: negative           | (a)   | handle  | 1048940 | `sound: 000001C2878A5540` |         |
+| fadeInRate: outside the world  | (a)   | handle  | 1048941 | `sound: 000001C2883A2360` |         |
+| fadeInRate: 2147483647         | (a)   | handle  | 1048942 | `sound: 000001C289862470` |         |
+| fadeOutRate: 0                 | (a)   | handle  | 1048943 | `sound: 000001C288D97C00` |         |
+| fadeOutRate: negative          | (a)   | handle  | 1048944 | `sound: 000001C28838CDF0` |         |
+| fadeOutRate: outside the world | (a)   | handle  | 1048945 | `sound: 000001C28832ED20` |         |
+| fadeOutRate: 2147483647        | (a)   | handle  | 1048946 | `sound: 000001C28A311CD0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, soundLabel: empty string, soundLabel: unknown name, fadeInRate: 0, fadeInRate: negative, fadeInRate: outside the world, fadeInRate: 2147483647, fadeOutRate: 0, fadeOutRate: negative, fadeOutRate: outside the world, fadeOutRate: 2147483647) on 3.0.0.24268; evidence, not proof.
+
+### `CreateMIDISound`
+
+| Case                           | Group | Outcome | Id      | Type                      | Message |
+| ------------------------------ | ----- | ------- | ------- | ------------------------- | ------- |
+| typical arguments              | (a)   | handle  | 1048947 | `sound: 000001C2876FA4A0` |         |
+| soundLabel: empty string       | (a)   | handle  | 1048948 | `sound: 000001C28A066870` |         |
+| soundLabel: unknown name       | (a)   | handle  | 1048949 | `sound: 000001C2878A4730` |         |
+| fadeInRate: 0                  | (a)   | handle  | 1048950 | `sound: 000001C28A10C410` |         |
+| fadeInRate: negative           | (a)   | handle  | 1048951 | `sound: 000001C28A2E7AD0` |         |
+| fadeInRate: outside the world  | (a)   | handle  | 1048952 | `sound: 000001C2889E0560` |         |
+| fadeInRate: 2147483647         | (a)   | handle  | 1048953 | `sound: 000001C28A10B050` |         |
+| fadeOutRate: 0                 | (a)   | handle  | 1048954 | `sound: 000001C289861E60` |         |
+| fadeOutRate: negative          | (a)   | handle  | 1048955 | `sound: 000001C28789DDC0` |         |
+| fadeOutRate: outside the world | (a)   | handle  | 1048956 | `sound: 000001C28A223940` |         |
+| fadeOutRate: 2147483647        | (a)   | handle  | 1048957 | `sound: 000001C289863C60` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, soundLabel: empty string, soundLabel: unknown name, fadeInRate: 0, fadeInRate: negative, fadeInRate: outside the world, fadeInRate: 2147483647, fadeOutRate: 0, fadeOutRate: negative, fadeOutRate: outside the world, fadeOutRate: 2147483647) on 3.0.0.24268; evidence, not proof.
+
+### `AddWeatherEffect`
+
+| Case                      | Group | Outcome | Id  | Type                              | Message |
+| ------------------------- | ----- | ------- | --- | --------------------------------- | ------- |
+| typical arguments         | (a)   | handle  | 1   | `weathereffect: 000001C289C81570` |         |
+| effectID: unknown rawcode | (a)   | handle  | -1  | `weathereffect: 000001C287BE4EB0` |         |
+| where: removed rect       | (b)   | handle  | 0   | `weathereffect: 000001C28A87D900` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, effectID: unknown rawcode, where: removed rect) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (where: removed rect).
+
+### `TerrainDeformCrater`
+
+| Case                        | Group | Outcome | Id  | Type                                   | Message |
+| --------------------------- | ----- | ------- | --- | -------------------------------------- | ------- |
+| typical arguments           | (a)   | handle  | 0   | `terraindeformation: 000001C2895F8D30` |         |
+| x: 0                        | (a)   | handle  | 1   | `terraindeformation: 000001C28A530370` |         |
+| x: negative                 | (a)   | handle  | 2   | `terraindeformation: 000001C28A6B90B0` |         |
+| x: outside the world        | (a)   | handle  | 3   | `terraindeformation: 000001C287700880` |         |
+| x: 2147483647               | (a)   | handle  | 4   | `terraindeformation: 000001C28879E420` |         |
+| y: 0                        | (a)   | handle  | 5   | `terraindeformation: 000001C273B27390` |         |
+| y: negative                 | (a)   | handle  | 6   | `terraindeformation: 000001C28A29F610` |         |
+| y: outside the world        | (a)   | handle  | 7   | `terraindeformation: 000001C28A146C10` |         |
+| y: 2147483647               | (a)   | handle  | 8   | `terraindeformation: 000001C28A519DD0` |         |
+| radius: 0                   | (a)   | handle  | 9   | `terraindeformation: 000001C287700910` |         |
+| radius: negative            | (a)   | handle  | 10  | `terraindeformation: 000001C287F6DCE0` |         |
+| radius: outside the world   | (a)   | handle  | 11  | `terraindeformation: 000001C289AB3CC0` |         |
+| radius: 2147483647          | (a)   | handle  | 12  | `terraindeformation: 000001C28A1D7F40` |         |
+| depth: 0                    | (a)   | handle  | 13  | `terraindeformation: 000001C28A56EF20` |         |
+| depth: negative             | (a)   | handle  | 14  | `terraindeformation: 000001C28A2DA2C0` |         |
+| depth: outside the world    | (a)   | handle  | 15  | `terraindeformation: 000001C289E1C6E0` |         |
+| depth: 2147483647           | (a)   | handle  | 16  | `terraindeformation: 000001C287DD9000` |         |
+| duration: 0                 | (a)   | handle  | 17  | `terraindeformation: 000001C288335A60` |         |
+| duration: negative          | (a)   | handle  | 18  | `terraindeformation: 000001C2881C5E40` |         |
+| duration: outside the world | (a)   | handle  | 19  | `terraindeformation: 000001C28932A4F0` |         |
+| duration: 2147483647        | (a)   | handle  | 20  | `terraindeformation: 000001C2879A4730` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, depth: 0, depth: negative, depth: outside the world, depth: 2147483647, duration: 0, duration: negative, duration: outside the world, duration: 2147483647) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (typical arguments).
+
+### `TerrainDeformRipple`
+
+| Case                              | Group | Outcome | Id  | Type                                   | Message |
+| --------------------------------- | ----- | ------- | --- | -------------------------------------- | ------- |
+| typical arguments                 | (a)   | handle  | 21  | `terraindeformation: 000001C2883ACA00` |         |
+| x: 0                              | (a)   | handle  | 22  | `terraindeformation: 000001C2879A4850` |         |
+| x: negative                       | (a)   | handle  | 23  | `terraindeformation: 000001C287D6AFA0` |         |
+| x: outside the world              | (a)   | handle  | 24  | `terraindeformation: 000001C28A56EDF0` |         |
+| x: 2147483647                     | (a)   | handle  | 25  | `terraindeformation: 000001C28A0644D0` |         |
+| y: 0                              | (a)   | handle  | 26  | `terraindeformation: 000001C28A04BA90` |         |
+| y: negative                       | (a)   | handle  | 27  | `terraindeformation: 000001C28A692380` |         |
+| y: outside the world              | (a)   | handle  | 28  | `terraindeformation: 000001C2883A2F90` |         |
+| y: 2147483647                     | (a)   | handle  | 29  | `terraindeformation: 000001C289ABE300` |         |
+| radius: 0                         | (a)   | handle  | 30  | `terraindeformation: 000001C2879A4C80` |         |
+| radius: negative                  | (a)   | handle  | 31  | `terraindeformation: 000001C28A3131B0` |         |
+| radius: outside the world         | (a)   | handle  | 32  | `terraindeformation: 000001C28A06ECB0` |         |
+| radius: 2147483647                | (a)   | handle  | 33  | `terraindeformation: 000001C28A561090` |         |
+| depth: 0                          | (a)   | handle  | 34  | `terraindeformation: 000001C28A595AF0` |         |
+| depth: negative                   | (a)   | handle  | 35  | `terraindeformation: 000001C28932A4B0` |         |
+| depth: outside the world          | (a)   | handle  | 36  | `terraindeformation: 000001C2883995B0` |         |
+| depth: 2147483647                 | (a)   | handle  | 37  | `terraindeformation: 000001C289177F20` |         |
+| duration: 0                       | (a)   | handle  | 38  | `terraindeformation: 000001C270413840` |         |
+| duration: negative                | (a)   | handle  | 39  | `terraindeformation: 000001C289F68D60` |         |
+| duration: outside the world       | (a)   | handle  | 40  | `terraindeformation: 000001C28A0605E0` |         |
+| duration: 2147483647              | (a)   | handle  | 41  | `terraindeformation: 000001C28A29A530` |         |
+| count: 0                          | (a)   | handle  | 42  | `terraindeformation: 000001C287FEF2E0` |         |
+| count: negative                   | (a)   | handle  | 43  | `terraindeformation: 000001C287B78900` |         |
+| count: outside the world          | (a)   | handle  | 44  | `terraindeformation: 000001C28A136A60` |         |
+| count: 2147483647                 | (a)   | handle  | 45  | `terraindeformation: 000001C289862B10` |         |
+| spaceWaves: 0                     | (a)   | handle  | 46  | `terraindeformation: 000001C289F46C00` |         |
+| spaceWaves: negative              | (a)   | handle  | 47  | `terraindeformation: 000001C288060930` |         |
+| spaceWaves: outside the world     | (a)   | handle  | 48  | `terraindeformation: 000001C28A187510` |         |
+| spaceWaves: 2147483647            | (a)   | handle  | 49  | `terraindeformation: 000001C28A143370` |         |
+| timeWaves: 0                      | (a)   | handle  | 50  | `terraindeformation: 000001C28805F170` |         |
+| timeWaves: negative               | (a)   | handle  | 51  | `terraindeformation: 000001C28A665770` |         |
+| timeWaves: outside the world      | (a)   | handle  | 52  | `terraindeformation: 000001C28A576930` |         |
+| timeWaves: 2147483647             | (a)   | handle  | 53  | `terraindeformation: 000001C289321690` |         |
+| radiusStartPct: 0                 | (a)   | handle  | 54  | `terraindeformation: 000001C2891A48D0` |         |
+| radiusStartPct: negative          | (a)   | handle  | 55  | `terraindeformation: 000001C28A134B80` |         |
+| radiusStartPct: outside the world | (a)   | handle  | 56  | `terraindeformation: 000001C2881C5F40` |         |
+| radiusStartPct: 2147483647        | (a)   | handle  | 57  | `terraindeformation: 000001C289321C70` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, depth: 0, depth: negative, depth: outside the world, depth: 2147483647, duration: 0, duration: negative, duration: outside the world, duration: 2147483647, count: 0, count: negative, count: outside the world, count: 2147483647, spaceWaves: 0, spaceWaves: negative, spaceWaves: outside the world, spaceWaves: 2147483647, timeWaves: 0, timeWaves: negative, timeWaves: outside the world, timeWaves: 2147483647, radiusStartPct: 0, radiusStartPct: negative, radiusStartPct: outside the world, radiusStartPct: 2147483647) on 3.0.0.24268; evidence, not proof.
+
+### `TerrainDeformWave`
+
+| Case                         | Group | Outcome | Id  | Type                                   | Message |
+| ---------------------------- | ----- | ------- | --- | -------------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 58  | `terraindeformation: 000001C28869B1E0` |         |
+| x: 0                         | (a)   | handle  | 59  | `terraindeformation: 000001C2897A9F00` |         |
+| x: negative                  | (a)   | handle  | 60  | `terraindeformation: 000001C289321A40` |         |
+| x: outside the world         | (a)   | handle  | 61  | `terraindeformation: 000001C28A299E10` |         |
+| x: 2147483647                | (a)   | handle  | 62  | `terraindeformation: 000001C28A2D9C90` |         |
+| y: 0                         | (a)   | handle  | 63  | `terraindeformation: 000001C28A230D70` |         |
+| y: negative                  | (a)   | handle  | 64  | `terraindeformation: 000001C288D92420` |         |
+| y: outside the world         | (a)   | handle  | 65  | `terraindeformation: 000001C28A6942E0` |         |
+| y: 2147483647                | (a)   | handle  | 66  | `terraindeformation: 000001C287897160` |         |
+| dirX: 0                      | (a)   | handle  | 67  | `terraindeformation: 000001C289125B80` |         |
+| dirX: negative               | (a)   | handle  | 68  | `terraindeformation: 000001C288172960` |         |
+| dirX: outside the world      | (a)   | handle  | 69  | `terraindeformation: 000001C289FE0550` |         |
+| dirX: 2147483647             | (a)   | handle  | 70  | `terraindeformation: 000001C2883AD0D0` |         |
+| dirY: 0                      | (a)   | handle  | 71  | `terraindeformation: 000001C28A54ACC0` |         |
+| dirY: negative               | (a)   | handle  | 72  | `terraindeformation: 000001C2886A72F0` |         |
+| dirY: outside the world      | (a)   | handle  | 73  | `terraindeformation: 000001C289FB0490` |         |
+| dirY: 2147483647             | (a)   | handle  | 74  | `terraindeformation: 000001C289F42930` |         |
+| distance: 0                  | (a)   | handle  | 75  | `terraindeformation: 000001C287DDC1D0` |         |
+| distance: negative           | (a)   | handle  | 76  | `terraindeformation: 000001C2893E5840` |         |
+| distance: outside the world  | (a)   | handle  | 77  | `terraindeformation: 000001C28974F780` |         |
+| distance: 2147483647         | (a)   | handle  | 78  | `terraindeformation: 000001C2889164A0` |         |
+| speed: 0                     | (a)   | handle  | 79  | `terraindeformation: 000001C28A328110` |         |
+| speed: negative              | (a)   | handle  | 80  | `terraindeformation: 000001C28A1401B0` |         |
+| speed: outside the world     | (a)   | handle  | 81  | `terraindeformation: 000001C2893189D0` |         |
+| speed: 2147483647            | (a)   | handle  | 82  | `terraindeformation: 000001C287B68810` |         |
+| radius: 0                    | (a)   | handle  | 83  | `terraindeformation: 000001C287B0F6E0` |         |
+| radius: negative             | (a)   | handle  | 84  | `terraindeformation: 000001C28A179CE0` |         |
+| radius: outside the world    | (a)   | handle  | 85  | `terraindeformation: 000001C270417260` |         |
+| radius: 2147483647           | (a)   | handle  | 86  | `terraindeformation: 000001C28931ED20` |         |
+| depth: 0                     | (a)   | handle  | 87  | `terraindeformation: 000001C287D6DFB0` |         |
+| depth: negative              | (a)   | handle  | 88  | `terraindeformation: 000001C273B16E20` |         |
+| depth: outside the world     | (a)   | handle  | 89  | `terraindeformation: 000001C288915390` |         |
+| depth: 2147483647            | (a)   | handle  | 90  | `terraindeformation: 000001C289C822D0` |         |
+| trailTime: 0                 | (a)   | handle  | 91  | `terraindeformation: 000001C287B70900` |         |
+| trailTime: negative          | (a)   | handle  | 92  | `terraindeformation: 000001C287E371D0` |         |
+| trailTime: outside the world | (a)   | handle  | 93  | `terraindeformation: 000001C289123F30` |         |
+| trailTime: 2147483647        | (a)   | handle  | 94  | `terraindeformation: 000001C289AC4E80` |         |
+| count: 0                     | (a)   | handle  | 95  | `terraindeformation: 000001C287FEE040` |         |
+| count: negative              | (a)   | handle  | 96  | `terraindeformation: 000001C270410FD0` |         |
+| count: outside the world     | (a)   | handle  | 97  | `terraindeformation: 000001C28A2D9340` |         |
+| count: 2147483647            | (a)   | handle  | 98  | `terraindeformation: 000001C288D93FF0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, dirX: 0, dirX: negative, dirX: outside the world, dirX: 2147483647, dirY: 0, dirY: negative, dirY: outside the world, dirY: 2147483647, distance: 0, distance: negative, distance: outside the world, distance: 2147483647, speed: 0, speed: negative, speed: outside the world, speed: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, depth: 0, depth: negative, depth: outside the world, depth: 2147483647, trailTime: 0, trailTime: negative, trailTime: outside the world, trailTime: 2147483647, count: 0, count: negative, count: outside the world, count: 2147483647) on 3.0.0.24268; evidence, not proof.
+
+### `TerrainDeformRandom`
+
+| Case                              | Group | Outcome | Id  | Type                                   | Message |
+| --------------------------------- | ----- | ------- | --- | -------------------------------------- | ------- |
+| typical arguments                 | (a)   | handle  | 99  | `terraindeformation: 000001C28A58DC00` |         |
+| x: 0                              | (a)   | handle  | 100 | `terraindeformation: 000001C28A56DA30` |         |
+| x: negative                       | (a)   | handle  | 101 | `terraindeformation: 000001C288070660` |         |
+| x: outside the world              | (a)   | handle  | 102 | `terraindeformation: 000001C288DCA120` |         |
+| x: 2147483647                     | (a)   | handle  | 103 | `terraindeformation: 000001C27040D640` |         |
+| y: 0                              | (a)   | handle  | 104 | `terraindeformation: 000001C287E02EA0` |         |
+| y: negative                       | (a)   | handle  | 105 | `terraindeformation: 000001C28A232370` |         |
+| y: outside the world              | (a)   | handle  | 106 | `terraindeformation: 000001C287D3D340` |         |
+| y: 2147483647                     | (a)   | handle  | 107 | `terraindeformation: 000001C287E3A5B0` |         |
+| radius: 0                         | (a)   | handle  | 108 | `terraindeformation: 000001C28931B9E0` |         |
+| radius: negative                  | (a)   | handle  | 109 | `terraindeformation: 000001C287D40C30` |         |
+| radius: outside the world         | (a)   | handle  | 110 | `terraindeformation: 000001C287CE8930` |         |
+| radius: 2147483647                | (a)   | handle  | 111 | `terraindeformation: 000001C288093430` |         |
+| minDelta: 0                       | (a)   | handle  | 112 | `terraindeformation: 000001C288DFC2A0` |         |
+| minDelta: negative                | (a)   | handle  | 113 | `terraindeformation: 000001C287D33840` |         |
+| minDelta: outside the world       | (a)   | handle  | 114 | `terraindeformation: 000001C287CF9740` |         |
+| minDelta: 2147483647              | (a)   | handle  | 115 | `terraindeformation: 000001C287D3FD30` |         |
+| maxDelta: 0                       | (a)   | handle  | 116 | `terraindeformation: 000001C28A2739E0` |         |
+| maxDelta: negative                | (a)   | handle  | 117 | `terraindeformation: 000001C2876F3C20` |         |
+| maxDelta: outside the world       | (a)   | handle  | 118 | `terraindeformation: 000001C2876FC1A0` |         |
+| maxDelta: 2147483647              | (a)   | handle  | 119 | `terraindeformation: 000001C287724EA0` |         |
+| duration: 0                       | (a)   | handle  | 120 | `terraindeformation: 000001C2704131E0` |         |
+| duration: negative                | (a)   | handle  | 121 | `terraindeformation: 000001C28772C0E0` |         |
+| duration: outside the world       | (a)   | handle  | 122 | `terraindeformation: 000001C2879AB2F0` |         |
+| duration: 2147483647              | (a)   | handle  | 123 | `terraindeformation: 000001C287E17E30` |         |
+| updateInterval: 0                 | (a)   | handle  | 124 | `terraindeformation: 000001C288C50770` |         |
+| updateInterval: negative          | (a)   | handle  | 125 | `terraindeformation: 000001C28917D680` |         |
+| updateInterval: outside the world | (a)   | handle  | 126 | `terraindeformation: 000001C287E43630` |         |
+| updateInterval: 2147483647        | (a)   | handle  | 127 | `terraindeformation: 000001C289F472F0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, minDelta: 0, minDelta: negative, minDelta: outside the world, minDelta: 2147483647, maxDelta: 0, maxDelta: negative, maxDelta: outside the world, maxDelta: 2147483647, duration: 0, duration: negative, duration: outside the world, duration: 2147483647, updateInterval: 0, updateInterval: negative, updateInterval: outside the world, updateInterval: 2147483647) on 3.0.0.24268; evidence, not proof.
+
+### `AddSpecialEffect`
+
+| Case                    | Group | Outcome | Id      | Type                       | Message |
+| ----------------------- | ----- | ------- | ------- | -------------------------- | ------- |
+| typical arguments       | (a)   | handle  | 1048958 | `effect: 000001C287D47770` |         |
+| modelName: empty string | (a)   | handle  | 1048959 | `effect: 000001C28A06C470` |         |
+| modelName: unknown name | (a)   | handle  | 1048960 | `effect: 000001C288069BF0` |         |
+| x: 0                    | (a)   | handle  | 1048961 | `effect: 000001C287D00750` |         |
+| x: negative             | (a)   | handle  | 1048962 | `effect: 000001C289C82C60` |         |
+| x: outside the world    | (a)   | handle  | 1048963 | `effect: 000001C28A543A10` |         |
+| x: 2147483647           | (a)   | handle  | 1048964 | `effect: 000001C28820F8E0` |         |
+| y: 0                    | (a)   | handle  | 1048965 | `effect: 000001C28A4561A0` |         |
+| y: negative             | (a)   | handle  | 1048966 | `effect: 000001C287F68740` |         |
+| y: outside the world    | (a)   | handle  | 1048967 | `effect: 000001C28805DAD0` |         |
+| y: 2147483647           | (a)   | handle  | 1048968 | `effect: 000001C2881B9FA0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, modelName: empty string, modelName: unknown name, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647) on 3.0.0.24268; evidence, not proof.
+
+### `AddSpecialEffectLoc`
+
+| Case                    | Group | Outcome | Id      | Type                       | Message |
+| ----------------------- | ----- | ------- | ------- | -------------------------- | ------- |
+| typical arguments       | (a)   | handle  | 1048969 | `effect: 000001C287F60F40` |         |
+| modelName: empty string | (a)   | handle  | 1048970 | `effect: 000001C2879A24D0` |         |
+| modelName: unknown name | (a)   | handle  | 1048971 | `effect: 000001C28805AAE0` |         |
+| where: removed location | (b)   | nil     |         |                            |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (where: removed location) on 3.0.0.24268.
+
+### `AddSpecialEffectTarget`
+
+| Case                               | Group | Outcome | Id      | Type                       | Message |
+| ---------------------------------- | ----- | ------- | ------- | -------------------------- | ------- |
+| typical arguments                  | (a)   | handle  | 1048972 | `effect: 000001C287D35050` |         |
+| modelName: empty string            | (a)   | handle  | 1048973 | `effect: 000001C2879BA700` |         |
+| modelName: unknown name            | (a)   | handle  | 1048974 | `effect: 000001C289FFCDC0` |         |
+| attachPointName: empty string      | (a)   | nil     |         |                            |         |
+| attachPointName: unknown name      | (a)   | handle  | 1048975 | `effect: 000001C287FF1110` |         |
+| targetWidget: dead unit            | (b)   | handle  | 1049026 | `effect: 000001C28A8C50F0` |         |
+| targetWidget: removed unit         | (b)   | handle  | 1049027 | `effect: 000001C28A8BE390` |         |
+| targetWidget: dead item            | (b)   | handle  | 1049028 | `effect: 000001C28A8BB350` |         |
+| targetWidget: removed item         | (b)   | nil     |         |                            |         |
+| targetWidget: dead destructable    | (b)   | handle  | 1049029 | `effect: 000001C28A8B88D0` |         |
+| targetWidget: removed destructable | (b)   | nil     |         |                            |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 3 cases of the nullability sweep (attachPointName: empty string, targetWidget: removed item, targetWidget: removed destructable) on 3.0.0.24268.
+
+### `AddSpellEffect`
+
+| Case                        | Group | Outcome | Id  | Type | Message |
+| --------------------------- | ----- | ------- | --- | ---- | ------- |
+| typical arguments           | (a)   | nil     |     |      |         |
+| abilityString: empty string | (a)   | nil     |     |      |         |
+| abilityString: unknown name | (a)   | nil     |     |      |         |
+| x: 0                        | (a)   | nil     |     |      |         |
+| x: negative                 | (a)   | nil     |     |      |         |
+| x: outside the world        | (a)   | nil     |     |      |         |
+| x: 2147483647               | (a)   | nil     |     |      |         |
+| y: 0                        | (a)   | nil     |     |      |         |
+| y: negative                 | (a)   | nil     |     |      |         |
+| y: outside the world        | (a)   | nil     |     |      |         |
+| y: 2147483647               | (a)   | nil     |     |      |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 11 cases of the nullability sweep (typical arguments, abilityString: empty string, abilityString: unknown name, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647) on 3.0.0.24268.
+
+### `AddSpellEffectLoc`
+
+| Case                        | Group | Outcome | Id  | Type | Message |
+| --------------------------- | ----- | ------- | --- | ---- | ------- |
+| typical arguments           | (a)   | nil     |     |      |         |
+| abilityString: empty string | (a)   | nil     |     |      |         |
+| abilityString: unknown name | (a)   | nil     |     |      |         |
+| where: removed location     | (b)   | nil     |     |      |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 4 cases of the nullability sweep (typical arguments, abilityString: empty string, abilityString: unknown name, where: removed location) on 3.0.0.24268.
+
+### `AddSpellEffectById`
+
+| Case                       | Group | Outcome | Id      | Type                       | Message |
+| -------------------------- | ----- | ------- | ------- | -------------------------- | ------- |
+| typical arguments          | (a)   | handle  | 1048976 | `effect: 000001C2878ABC50` |         |
+| abilityId: unknown rawcode | (a)   | nil     |         |                            |         |
+| x: 0                       | (a)   | handle  | 1048977 | `effect: 000001C270409880` |         |
+| x: negative                | (a)   | handle  | 1048978 | `effect: 000001C28814E860` |         |
+| x: outside the world       | (a)   | handle  | 1048979 | `effect: 000001C273B28730` |         |
+| x: 2147483647              | (a)   | handle  | 1048980 | `effect: 000001C2877035E0` |         |
+| y: 0                       | (a)   | handle  | 1048981 | `effect: 000001C28A58E600` |         |
+| y: negative                | (a)   | handle  | 1048982 | `effect: 000001C28A067B30` |         |
+| y: outside the world       | (a)   | handle  | 1048983 | `effect: 000001C287731D40` |         |
+| y: 2147483647              | (a)   | handle  | 1048984 | `effect: 000001C28A180F90` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (abilityId: unknown rawcode) on 3.0.0.24268.
+
+### `AddSpellEffectByIdLoc`
+
+| Case                       | Group | Outcome | Id      | Type                       | Message |
+| -------------------------- | ----- | ------- | ------- | -------------------------- | ------- |
+| typical arguments          | (a)   | handle  | 1048985 | `effect: 000001C289AC26B0` |         |
+| abilityId: unknown rawcode | (a)   | nil     |         |                            |         |
+| where: removed location    | (b)   | nil     |         |                            |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 2 cases of the nullability sweep (abilityId: unknown rawcode, where: removed location) on 3.0.0.24268.
+
+### `AddSpellEffectTarget`
+
+| Case                               | Group | Outcome | Id  | Type | Message |
+| ---------------------------------- | ----- | ------- | --- | ---- | ------- |
+| typical arguments                  | (a)   | nil     |     |      |         |
+| modelName: empty string            | (a)   | nil     |     |      |         |
+| modelName: unknown name            | (a)   | nil     |     |      |         |
+| attachPoint: empty string          | (a)   | nil     |     |      |         |
+| attachPoint: unknown name          | (a)   | nil     |     |      |         |
+| targetWidget: dead unit            | (b)   | nil     |     |      |         |
+| targetWidget: removed unit         | (b)   | nil     |     |      |         |
+| targetWidget: dead item            | (b)   | nil     |     |      |         |
+| targetWidget: removed item         | (b)   | nil     |     |      |         |
+| targetWidget: dead destructable    | (b)   | nil     |     |      |         |
+| targetWidget: removed destructable | (b)   | nil     |     |      |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 11 cases of the nullability sweep (typical arguments, modelName: empty string, modelName: unknown name, attachPoint: empty string, attachPoint: unknown name, targetWidget: dead unit, targetWidget: removed unit, targetWidget: dead item, targetWidget: removed item, targetWidget: dead destructable, targetWidget: removed destructable) on 3.0.0.24268.
+
+### `AddSpellEffectTargetById`
+
+| Case                               | Group | Outcome | Id      | Type                       | Message |
+| ---------------------------------- | ----- | ------- | ------- | -------------------------- | ------- |
+| typical arguments                  | (a)   | handle  | 1048986 | `effect: 000001C28A06B7F0` |         |
+| abilityId: unknown rawcode         | (a)   | nil     |         |                            |         |
+| attachPoint: empty string          | (a)   | nil     |         |                            |         |
+| attachPoint: unknown name          | (a)   | handle  | 1048987 | `effect: 000001C2876F1CC0` |         |
+| targetWidget: dead unit            | (b)   | handle  | 1049030 | `effect: 000001C28A8A4CE0` |         |
+| targetWidget: removed unit         | (b)   | handle  | 1049031 | `effect: 000001C28A892DE0` |         |
+| targetWidget: dead item            | (b)   | handle  | 1049032 | `effect: 000001C28A882070` |         |
+| targetWidget: removed item         | (b)   | nil     |         |                            |         |
+| targetWidget: dead destructable    | (b)   | handle  | 1049033 | `effect: 000001C28A8A1F90` |         |
+| targetWidget: removed destructable | (b)   | nil     |         |                            |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 4 cases of the nullability sweep (abilityId: unknown rawcode, attachPoint: empty string, targetWidget: removed item, targetWidget: removed destructable) on 3.0.0.24268.
+
+### `AddLightning`
+
+| Case                   | Group | Outcome | Id      | Type                          | Message |
+| ---------------------- | ----- | ------- | ------- | ----------------------------- | ------- |
+| typical arguments      | (a)   | handle  | 2       | `lightning: 000001C289FA44E0` |         |
+| codeName: empty string | (a)   | handle  | 0       | `lightning: 000001C28A5A5B50` |         |
+| codeName: unknown name | (a)   | handle  | 0       | `lightning: 000001C28A5A5B50` |         |
+| x1: 0                  | (a)   | handle  | 65538   | `lightning: 000001C2800B6A70` |         |
+| x1: negative           | (a)   | handle  | 131074  | `lightning: 000001C2883AEBD0` |         |
+| x1: outside the world  | (a)   | handle  | 196610  | `lightning: 000001C28A52E6E0` |         |
+| x1: 2147483647         | (a)   | handle  | 262146  | `lightning: 000001C28A062560` |         |
+| y1: 0                  | (a)   | handle  | 327682  | `lightning: 000001C270408AF0` |         |
+| y1: negative           | (a)   | handle  | 393218  | `lightning: 000001C28A45E070` |         |
+| y1: outside the world  | (a)   | handle  | 458754  | `lightning: 000001C28A319EB0` |         |
+| y1: 2147483647         | (a)   | handle  | 524290  | `lightning: 000001C289FA6320` |         |
+| x2: 0                  | (a)   | handle  | 589826  | `lightning: 000001C289AC6080` |         |
+| x2: negative           | (a)   | handle  | 655362  | `lightning: 000001C28A5F4DB0` |         |
+| x2: outside the world  | (a)   | handle  | 720898  | `lightning: 000001C28A54F5C0` |         |
+| x2: 2147483647         | (a)   | handle  | 786434  | `lightning: 000001C289FA5EF0` |         |
+| y2: 0                  | (a)   | handle  | 851970  | `lightning: 000001C28772E600` |         |
+| y2: negative           | (a)   | handle  | 917506  | `lightning: 000001C28A57BB10` |         |
+| y2: outside the world  | (a)   | handle  | 983042  | `lightning: 000001C289F8DEF0` |         |
+| y2: 2147483647         | (a)   | handle  | 1048578 | `lightning: 000001C28A54CC10` |         |
+| checkVisibility: true  | (a)   | handle  | 1114114 | `lightning: 000001C28839D4B0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, codeName: empty string, codeName: unknown name, x1: 0, x1: negative, x1: outside the world, x1: 2147483647, y1: 0, y1: negative, y1: outside the world, y1: 2147483647, x2: 0, x2: negative, x2: outside the world, x2: 2147483647, y2: 0, y2: negative, y2: outside the world, y2: 2147483647, checkVisibility: true) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 2 cases (codeName: empty string, codeName: unknown name).
+
+### `AddLightningEx`
+
+| Case                   | Group | Outcome | Id      | Type                          | Message |
+| ---------------------- | ----- | ------- | ------- | ----------------------------- | ------- |
+| typical arguments      | (a)   | handle  | 1179650 | `lightning: 000001C2893D78E0` |         |
+| codeName: empty string | (a)   | handle  | 0       | `lightning: 000001C28A5A5B50` |         |
+| codeName: unknown name | (a)   | handle  | 0       | `lightning: 000001C28A5A5B50` |         |
+| x1: 0                  | (a)   | handle  | 1245186 | `lightning: 000001C289F71520` |         |
+| x1: negative           | (a)   | handle  | 1310722 | `lightning: 000001C28A4D07E0` |         |
+| x1: outside the world  | (a)   | handle  | 1376258 | `lightning: 000001C2895E7BE0` |         |
+| x1: 2147483647         | (a)   | handle  | 1441794 | `lightning: 000001C289C9EA50` |         |
+| y1: 0                  | (a)   | handle  | 1507330 | `lightning: 000001C28A2EA770` |         |
+| y1: negative           | (a)   | handle  | 1572866 | `lightning: 000001C28948AAF0` |         |
+| y1: outside the world  | (a)   | handle  | 1638402 | `lightning: 000001C28A66E7F0` |         |
+| y1: 2147483647         | (a)   | handle  | 1703938 | `lightning: 000001C28A551290` |         |
+| z1: 0                  | (a)   | handle  | 1769474 | `lightning: 000001C2895F99F0` |         |
+| z1: negative           | (a)   | handle  | 1835010 | `lightning: 000001C28A18CD20` |         |
+| z1: outside the world  | (a)   | handle  | 1900546 | `lightning: 000001C28A57AF60` |         |
+| z1: 2147483647         | (a)   | handle  | 1966082 | `lightning: 000001C28A141B00` |         |
+| x2: 0                  | (a)   | handle  | 2031618 | `lightning: 000001C28897C8A0` |         |
+| x2: negative           | (a)   | handle  | 2097154 | `lightning: 000001C289F4FD30` |         |
+| x2: outside the world  | (a)   | handle  | 2162690 | `lightning: 000001C28A66BD10` |         |
+| x2: 2147483647         | (a)   | handle  | 2228226 | `lightning: 000001C28A1AA2B0` |         |
+| y2: 0                  | (a)   | handle  | 2293762 | `lightning: 000001C2883B0300` |         |
+| y2: negative           | (a)   | handle  | 2359298 | `lightning: 000001C2889EC840` |         |
+| y2: outside the world  | (a)   | handle  | 2424834 | `lightning: 000001C2891CAD00` |         |
+| y2: 2147483647         | (a)   | handle  | 2490370 | `lightning: 000001C289F45550` |         |
+| z2: 0                  | (a)   | handle  | 2555906 | `lightning: 000001C28A276AE0` |         |
+| z2: negative           | (a)   | handle  | 2621442 | `lightning: 000001C28A545A40` |         |
+| z2: outside the world  | (a)   | handle  | 2686978 | `lightning: 000001C289DF71C0` |         |
+| z2: 2147483647         | (a)   | handle  | 2752514 | `lightning: 000001C289AC2EF0` |         |
+| checkVisibility: true  | (a)   | handle  | 2818050 | `lightning: 000001C28A13BB00` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, codeName: empty string, codeName: unknown name, x1: 0, x1: negative, x1: outside the world, x1: 2147483647, y1: 0, y1: negative, y1: outside the world, y1: 2147483647, z1: 0, z1: negative, z1: outside the world, z1: 2147483647, x2: 0, x2: negative, x2: outside the world, x2: 2147483647, y2: 0, y2: negative, y2: outside the world, y2: 2147483647, z2: 0, z2: negative, z2: outside the world, z2: 2147483647, checkVisibility: true) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 2 cases (codeName: empty string, codeName: unknown name).
+
+### `CreateImage`
+
+| Case                         | Group | Outcome | Id  | Type                      | Message                            |
+| ---------------------------- | ----- | ------- | --- | ------------------------- | ---------------------------------- |
+| typical arguments            | (a)   | handle  | 144 | `image: 000001C289FE66E0` |                                    |
+| file: empty string           | (a)   | handle  | -1  | `image: 000001C28921BBF0` |                                    |
+| file: unknown name           | (a)   | handle  | -1  | `image: 000001C28921BBF0` |                                    |
+| sizeX: 0                     | (a)   | handle  | 145 | `image: 000001C2891251C0` |                                    |
+| sizeX: negative              | (a)   | handle  | 146 | `image: 000001C289481B70` |                                    |
+| sizeX: outside the world     | (a)   | handle  | 147 | `image: 000001C28A14A7A0` |                                    |
+| sizeX: 2147483647            | (a)   | handle  | 148 | `image: 000001C28A6BE4F0` |                                    |
+| sizeY: 0                     | (a)   | handle  | 149 | `image: 000001C28832F890` |                                    |
+| sizeY: negative              | (a)   | handle  | 150 | `image: 000001C28A673D10` |                                    |
+| sizeY: outside the world     | (a)   | handle  | 151 | `image: 000001C28A1AB210` |                                    |
+| sizeY: 2147483647            | (a)   | handle  | 152 | `image: 000001C2889E9A90` |                                    |
+| sizeZ: 0                     | (a)   | handle  | 153 | `image: 000001C289FA54B0` |                                    |
+| sizeZ: negative              | (a)   | handle  | 154 | `image: 000001C28A2D5150` |                                    |
+| sizeZ: outside the world     | (a)   | handle  | 155 | `image: 000001C289F5E120` |                                    |
+| sizeZ: 2147483647            | (a)   | handle  | 156 | `image: 000001C289211F60` |                                    |
+| posX: 0                      | (a)   | handle  | 157 | `image: 000001C289AC9D40` |                                    |
+| posX: negative               | (a)   | handle  | 158 | `image: 000001C28A10F750` |                                    |
+| posX: outside the world      | (a)   | handle  | 159 | `image: 000001C28A1DBCF0` |                                    |
+| posX: 2147483647             | (a)   | handle  | 160 | `image: 000001C28A22AE10` |                                    |
+| posY: 0                      | (a)   | handle  | 161 | `image: 000001C289AC0B90` |                                    |
+| posY: negative               | (a)   | handle  | 162 | `image: 000001C28A298A80` |                                    |
+| posY: outside the world      | (a)   | handle  | 163 | `image: 000001C28A619540` |                                    |
+| posY: 2147483647             | (a)   | handle  | 164 | `image: 000001C289F37F80` |                                    |
+| posZ: 0                      | (a)   | handle  | 165 | `image: 000001C28A319000` |                                    |
+| posZ: negative               | (a)   | handle  | 166 | `image: 000001C28921C870` |                                    |
+| posZ: outside the world      | (a)   | handle  | 167 | `image: 000001C28A01B520` |                                    |
+| posZ: 2147483647             | (a)   | handle  | 168 | `image: 000001C289F7D060` |                                    |
+| originX: 0                   | (a)   | handle  | 169 | `image: 000001C28A4AD080` |                                    |
+| originX: negative            | (a)   | handle  | 170 | `image: 000001C28A6CA280` |                                    |
+| originX: outside the world   | (a)   | handle  | 171 | `image: 000001C28959D190` |                                    |
+| originX: 2147483647          | (a)   | handle  | 172 | `image: 000001C2891C9BA0` |                                    |
+| originY: 0                   | (a)   | handle  | 173 | `image: 000001C28A149FB0` |                                    |
+| originY: negative            | (a)   | handle  | 174 | `image: 000001C2893D2970` |                                    |
+| originY: outside the world   | (a)   | handle  | 175 | `image: 000001C289C80520` |                                    |
+| originY: 2147483647          | (a)   | handle  | 176 | `image: 000001C273B21EF0` |                                    |
+| originZ: negative            | (a)   | handle  | 177 | `image: 000001C289480E50` |                                    |
+| originZ: outside the world   | (a)   | handle  | 178 | `image: 000001C287CE4670` |                                    |
+| originZ: 2147483647          | (a)   | handle  | 179 | `image: 000001C287D4FF60` |                                    |
+| imageType: 0                 | (a)   | handle  | -1  | `image: 000001C289DF4890` |                                    |
+| imageType: negative          | (a)   | handle  | 180 | `image: 000001C289DF4DD0` |                                    |
+| imageType: outside the world | (a)   | handle  | 181 | `image: 000001C2891CB440` |                                    |
+| imageType: 2147483647        | (a)   | crashed |     |                           | skipped: crashed in an earlier run |
+
+- Family: `constructor`
+- Verdict: unsafe
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Crashed the game in a case of the nullability sweep (imageType: 2147483647) on 3.0.0.24268. Returned a handle in every other case (typical arguments, file: empty string, file: unknown name, sizeX: 0, sizeX: negative, sizeX: outside the world, sizeX: 2147483647, sizeY: 0, sizeY: negative, sizeY: outside the world, sizeY: 2147483647, sizeZ: 0, sizeZ: negative, sizeZ: outside the world, sizeZ: 2147483647, posX: 0, posX: negative, posX: outside the world, posX: 2147483647, posY: 0, posY: negative, posY: outside the world, posY: 2147483647, posZ: 0, posZ: negative, posZ: outside the world, posZ: 2147483647, originX: 0, originX: negative, originX: outside the world, originX: 2147483647, originY: 0, originY: negative, originY: outside the world, originY: 2147483647, originZ: negative, originZ: outside the world, originZ: 2147483647, imageType: 0, imageType: negative, imageType: outside the world).
+
+### `CreateUbersplat`
+
+| Case                     | Group | Outcome | Id  | Type                          | Message |
+| ------------------------ | ----- | ------- | --- | ----------------------------- | ------- |
+| typical arguments        | (a)   | handle  | 1   | `ubersplat: 000001C28826DEB0` |         |
+| x: 0                     | (a)   | handle  | 2   | `ubersplat: 000001C28839CEA0` |         |
+| x: negative              | (a)   | handle  | 3   | `ubersplat: 000001C288D94100` |         |
+| x: outside the world     | (a)   | handle  | 4   | `ubersplat: 000001C287D357A0` |         |
+| x: 2147483647            | (a)   | handle  | 5   | `ubersplat: 000001C28A31EC50` |         |
+| y: 0                     | (a)   | handle  | 6   | `ubersplat: 000001C287D35760` |         |
+| y: negative              | (a)   | handle  | 7   | `ubersplat: 000001C28A185CD0` |         |
+| y: outside the world     | (a)   | handle  | 8   | `ubersplat: 000001C2897526D0` |         |
+| y: 2147483647            | (a)   | handle  | 9   | `ubersplat: 000001C289ABCA90` |         |
+| name: empty string       | (a)   | handle  | -1  | `ubersplat: 000001C289318CC0` |         |
+| name: unknown name       | (a)   | handle  | -1  | `ubersplat: 000001C289318CC0` |         |
+| red: 0                   | (a)   | handle  | 10  | `ubersplat: 000001C289F46A10` |         |
+| red: negative            | (a)   | handle  | 11  | `ubersplat: 000001C28773E480` |         |
+| red: outside the world   | (a)   | handle  | 12  | `ubersplat: 000001C28A175200` |         |
+| red: 2147483647          | (a)   | handle  | 13  | `ubersplat: 000001C2889DEB50` |         |
+| green: 0                 | (a)   | handle  | 14  | `ubersplat: 000001C28A544970` |         |
+| green: negative          | (a)   | handle  | 15  | `ubersplat: 000001C28A1F0260` |         |
+| green: outside the world | (a)   | handle  | 16  | `ubersplat: 000001C288055EE0` |         |
+| green: 2147483647        | (a)   | handle  | 17  | `ubersplat: 000001C28A1C6320` |         |
+| blue: 0                  | (a)   | handle  | 18  | `ubersplat: 000001C289E11930` |         |
+| blue: negative           | (a)   | handle  | 19  | `ubersplat: 000001C28A2EC900` |         |
+| blue: outside the world  | (a)   | handle  | 20  | `ubersplat: 000001C28A1B56F0` |         |
+| blue: 2147483647         | (a)   | handle  | 21  | `ubersplat: 000001C287DD89D0` |         |
+| alpha: 0                 | (a)   | handle  | 22  | `ubersplat: 000001C28A071540` |         |
+| alpha: negative          | (a)   | handle  | 23  | `ubersplat: 000001C287BE4F30` |         |
+| alpha: outside the world | (a)   | handle  | 24  | `ubersplat: 000001C28A2F5DE0` |         |
+| alpha: 2147483647        | (a)   | handle  | 25  | `ubersplat: 000001C28A1EFA50` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, name: empty string, name: unknown name, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, alpha: 0, alpha: negative, alpha: outside the world, alpha: 2147483647) on 3.0.0.24268; evidence, not proof.
+
+### `CreateBlightedGoldmine`
+
+| Case                    | Group | Outcome | Id      | Type                     | Message |
+| ----------------------- | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments       | (a)   | handle  | 1048988 | `unit: 000001C287D09960` |         |
+| x: 0                    | (a)   | handle  | 1048989 | `unit: 000001C287731AD0` |         |
+| x: negative             | (a)   | handle  | 1048990 | `unit: 000001C287D6DCF0` |         |
+| x: outside the world    | (a)   | handle  | 1048991 | `unit: 000001C270412170` |         |
+| x: 2147483647           | (a)   | handle  | 1048992 | `unit: 000001C288384CE0` |         |
+| y: 0                    | (a)   | handle  | 1048993 | `unit: 000001C289FEBEE0` |         |
+| y: negative             | (a)   | handle  | 1048994 | `unit: 000001C287CBE7C0` |         |
+| y: outside the world    | (a)   | handle  | 1048995 | `unit: 000001C2891AA380` |         |
+| y: 2147483647           | (a)   | handle  | 1048996 | `unit: 000001C2883AFC00` |         |
+| face: 0                 | (a)   | handle  | 1048997 | `unit: 000001C289AB1EF0` |         |
+| face: negative          | (a)   | handle  | 1048998 | `unit: 000001C28A012420` |         |
+| face: outside the world | (a)   | handle  | 1048999 | `unit: 000001C27040CF10` |         |
+| face: 2147483647        | (a)   | handle  | 1049000 | `unit: 000001C28A4BEBE0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, face: 0, face: negative, face: outside the world, face: 2147483647) on 3.0.0.24268; evidence, not proof.
+
+### `BlzCreateItemWithSkin`
+
+| Case                    | Group | Outcome | Id      | Type                     | Message |
+| ----------------------- | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments       | (a)   | handle  | 1049001 | `item: 000001C269510410` |         |
+| itemid: unknown rawcode | (a)   | nil     |         |                          |         |
+| x: 0                    | (a)   | handle  | 1049002 | `item: 000001C287E35800` |         |
+| x: negative             | (a)   | handle  | 1049003 | `item: 000001C289F7D1F0` |         |
+| x: outside the world    | (a)   | handle  | 1049004 | `item: 000001C269184260` |         |
+| x: 2147483647           | (a)   | handle  | 1049005 | `item: 000001C270378F70` |         |
+| y: 0                    | (a)   | handle  | 1049006 | `item: 000001C269180CE0` |         |
+| y: negative             | (a)   | handle  | 1049007 | `item: 000001C269185680` |         |
+| y: outside the world    | (a)   | handle  | 1049008 | `item: 000001C269185CE0` |         |
+| y: 2147483647           | (a)   | handle  | 1049009 | `item: 000001C26918EE50` |         |
+| skinId: unknown rawcode | (a)   | handle  | 1049010 | `item: 000001C269185EB0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (itemid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateUnitWithSkin`
+
+| Case                    | Group | Outcome | Id      | Type                     | Message |
+| ----------------------- | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments       | (a)   | handle  | 1049011 | `unit: 000001C26919B6F0` |         |
+| unitid: unknown rawcode | (a)   | nil     |         |                          |         |
+| x: 0                    | (a)   | handle  | 1049012 | `unit: 000001C26BA18D30` |         |
+| x: negative             | (a)   | handle  | 1049013 | `unit: 000001C289315220` |         |
+| x: outside the world    | (a)   | handle  | 1049014 | `unit: 000001C26B8E0C00` |         |
+| x: 2147483647           | (a)   | handle  | 1049015 | `unit: 000001C28AF3A720` |         |
+| y: 0                    | (a)   | handle  | 1049016 | `unit: 000001C26BA1AF50` |         |
+| y: negative             | (a)   | handle  | 1049017 | `unit: 000001C28A634920` |         |
+| y: outside the world    | (a)   | handle  | 1049018 | `unit: 000001C28A268070` |         |
+| y: 2147483647           | (a)   | handle  | 1049019 | `unit: 000001C28AEBED70` |         |
+| face: 0                 | (a)   | handle  | 1049020 | `unit: 000001C28AF30F90` |         |
+| face: negative          | (a)   | handle  | 1049021 | `unit: 000001C287F57B50` |         |
+| face: outside the world | (a)   | handle  | 1049022 | `unit: 000001C28A945390` |         |
+| face: 2147483647        | (a)   | handle  | 1049023 | `unit: 000001C28AF35560` |         |
+| skinId: unknown rawcode | (a)   | handle  | 1049024 | `unit: 000001C28A8992A0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unitid: unknown rawcode) on 3.0.0.24268.
