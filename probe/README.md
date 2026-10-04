@@ -160,7 +160,7 @@ Group `a` is a case of live arguments, `b` one of a stale handle. A `handle` may
 
 `probe:run` exits 2, `crashed` (a stall included), naming the pending case `<native> <case>`. Then:
 
-1. **Confirm.** Run the Slice again, unchanged. A crash is confirmed when a later unchanged run crashes on the same case. When the confirming run does not, the crash may be intermittent: run the Slice once more, unchanged, and a crash there confirms it too (#364, an intermittent crash). Until it is skipped, the report gives a `nil` call case that crashed `review`, never `non-null (crashed)`: narrowing a parameter is breaking, so only a confirmed crash narrows it.
+1. **Confirm.** Run the Slice again, unchanged. A crash is confirmed when a later unchanged run crashes on the same case. When the confirming run does not, the crash may be intermittent: run the Slice once more, unchanged, and a crash there confirms it too (#364). Until it is skipped, the report gives a `nil` call case that crashed `review`, never `non-null (crashed)`: narrowing a parameter is breaking, so only a confirmed crash narrows it.
 2. **Skip.** Add the case's label, `<native> <case>`, to the Slice's `skip` list and run it again. Each crash skips one case, so the loop ends.
 3. **Stop and ask the human** when:
    - the run names no pending case, or a pending step that is not a case (a crash while building the Fixtures, before the cases);
@@ -174,8 +174,8 @@ The `skip` list is committed in the Slice's Probe source, one label per entry, e
 const SKIP = [
   // Crashed on <Patch>, runs <runId> and <runId> (the confirming run).
   "GetExpiredTimer one call",
-  // Crashed on <Patch>, runs <runId> and <runId> (the confirming run), not
-  // run <runId>: intermittent, N of M runs.
+  // Crashed on <Patch>, runs <runId> and <runId> (the second confirming run);
+  // not run <runId> (the first): intermittent, N of M runs.
   "CreateFogModifierRadiusLoc radius: 2147483647",
 ];
 ```
