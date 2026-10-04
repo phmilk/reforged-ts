@@ -4518,14 +4518,15 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Probe: `nullability-lookups-2`
 - Patch: 3.0.0.24268
+- Client: 3.0.0.24268
 - Date: 2026-10-04
-- Run: `6bf9d84e-ee46-4fd3-94f6-6f04b545553b`
+- Run: `e17d6fce-f0fd-4cbd-b538-d152ad330212`
 
 ### `LoadUnitPoolHandle`
 
 | Case        | Group | Outcome | Id  | Type                         | Message |
 | ----------- | ----- | ------- | --- | ---------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `unitpool: 00000126061C8E80` |         |
+| unsaved key | (a)   | handle  | 0   | `unitpool: 000001C60C7AD700` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4537,7 +4538,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case        | Group | Outcome | Id  | Type                         | Message |
 | ----------- | ----- | ------- | --- | ---------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `itempool: 00000127009514D0` |         |
+| unsaved key | (a)   | handle  | 0   | `itempool: 000001C6007FED90` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4669,7 +4670,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case        | Group | Outcome | Id  | Type                        | Message |
 | ----------- | ----- | ------- | --- | --------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `texttag: 000001270F2C76D0` |         |
+| unsaved key | (a)   | handle  | 0   | `texttag: 000001C6007FF810` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4681,7 +4682,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case        | Group | Outcome | Id  | Type                          | Message |
 | ----------- | ----- | ------- | --- | ----------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `lightning: 000001270F2CAB20` |         |
+| unsaved key | (a)   | handle  | 0   | `lightning: 000001C5C4E55CA0` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4693,7 +4694,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case        | Group | Outcome | Id  | Type                      | Message |
 | ----------- | ----- | ------- | --- | ------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `image: 000001270F2CDE70` |         |
+| unsaved key | (a)   | handle  | 0   | `image: 000001C60C7BAFE0` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4705,7 +4706,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case        | Group | Outcome | Id  | Type                          | Message |
 | ----------- | ----- | ------- | --- | ----------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `ubersplat: 000001270F2D1410` |         |
+| unsaved key | (a)   | handle  | 0   | `ubersplat: 000001C60B499BC0` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4729,7 +4730,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case        | Group | Outcome | Id  | Type                         | Message |
 | ----------- | ----- | ------- | --- | ---------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `fogstate: 000001270F2C6C20` |         |
+| unsaved key | (a)   | handle  | 0   | `fogstate: 000001C60B74A800` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4777,7 +4778,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case               | Group | Outcome | Id      | Type                               | Message |
 | ------------------ | ----- | ------- | ------- | ---------------------------------- | ------- |
-| index out of range | (a)   | handle  | 1048781 | `multiboarditem: 0000012700938C60` |         |
+| index out of range | (a)   | handle  | 1048782 | `multiboarditem: 000001C5C4DC37F0` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
