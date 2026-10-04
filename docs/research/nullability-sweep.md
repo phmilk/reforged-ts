@@ -4513,3 +4513,346 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
 - Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+## `nullability-lookups-2`
+
+- Probe: `nullability-lookups-2`
+- Patch: 3.0.0.24268
+- Date: 2026-10-04
+- Run: `6bf9d84e-ee46-4fd3-94f6-6f04b545553b`
+
+### `LoadUnitPoolHandle`
+
+| Case        | Group | Outcome | Id  | Type                         | Message |
+| ----------- | ----- | ------- | --- | ---------------------------- | ------- |
+| unsaved key | (a)   | handle  | 0   | `unitpool: 00000126061C8E80` |         |
+
+- Family: `lookup`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing when nothing is found. Returned a handle in every case of the nullability sweep (unsaved key) on 3.0.0.24268. The handle had id 0 in a case (unsaved key).
+
+### `LoadItemPoolHandle`
+
+| Case        | Group | Outcome | Id  | Type                         | Message |
+| ----------- | ----- | ------- | --- | ---------------------------- | ------- |
+| unsaved key | (a)   | handle  | 0   | `itempool: 00000127009514D0` |         |
+
+- Family: `lookup`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing when nothing is found. Returned a handle in every case of the nullability sweep (unsaved key) on 3.0.0.24268. The handle had id 0 in a case (unsaved key).
+
+### `LoadQuestHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadQuestItemHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadDefeatConditionHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadTimerDialogHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadLeaderboardHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadMultiboardHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadMultiboardItemHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadTrackableHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadDialogHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadButtonHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadTextTagHandle`
+
+| Case        | Group | Outcome | Id  | Type                        | Message |
+| ----------- | ----- | ------- | --- | --------------------------- | ------- |
+| unsaved key | (a)   | handle  | 0   | `texttag: 000001270F2C76D0` |         |
+
+- Family: `lookup`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing when nothing is found. Returned a handle in every case of the nullability sweep (unsaved key) on 3.0.0.24268. The handle had id 0 in a case (unsaved key).
+
+### `LoadLightningHandle`
+
+| Case        | Group | Outcome | Id  | Type                          | Message |
+| ----------- | ----- | ------- | --- | ----------------------------- | ------- |
+| unsaved key | (a)   | handle  | 0   | `lightning: 000001270F2CAB20` |         |
+
+- Family: `lookup`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing when nothing is found. Returned a handle in every case of the nullability sweep (unsaved key) on 3.0.0.24268. The handle had id 0 in a case (unsaved key).
+
+### `LoadImageHandle`
+
+| Case        | Group | Outcome | Id  | Type                      | Message |
+| ----------- | ----- | ------- | --- | ------------------------- | ------- |
+| unsaved key | (a)   | handle  | 0   | `image: 000001270F2CDE70` |         |
+
+- Family: `lookup`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing when nothing is found. Returned a handle in every case of the nullability sweep (unsaved key) on 3.0.0.24268. The handle had id 0 in a case (unsaved key).
+
+### `LoadUbersplatHandle`
+
+| Case        | Group | Outcome | Id  | Type                          | Message |
+| ----------- | ----- | ------- | --- | ----------------------------- | ------- |
+| unsaved key | (a)   | handle  | 0   | `ubersplat: 000001270F2D1410` |         |
+
+- Family: `lookup`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing when nothing is found. Returned a handle in every case of the nullability sweep (unsaved key) on 3.0.0.24268. The handle had id 0 in a case (unsaved key).
+
+### `LoadRegionHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadFogStateHandle`
+
+| Case        | Group | Outcome | Id  | Type                         | Message |
+| ----------- | ----- | ------- | --- | ---------------------------- | ------- |
+| unsaved key | (a)   | handle  | 0   | `fogstate: 000001270F2C6C20` |         |
+
+- Family: `lookup`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing when nothing is found. Returned a handle in every case of the nullability sweep (unsaved key) on 3.0.0.24268. The handle had id 0 in a case (unsaved key).
+
+### `LoadFogModifierHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadHashtableHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadFrameHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `MultiboardGetItem`
+
+| Case               | Group | Outcome | Id      | Type                               | Message |
+| ------------------ | ----- | ------- | ------- | ---------------------------------- | ------- |
+| index out of range | (a)   | handle  | 1048781 | `multiboarditem: 0000012700938C60` |         |
+
+- Family: `lookup`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing when nothing is found. Returned a handle in every case of the nullability sweep (index out of range) on 3.0.0.24268.
+
+### `BlzGetOriginFrame`
+
+| Case                    | Group | Outcome | Id  | Type | Message |
+| ----------------------- | ----- | ------- | --- | ---- | ------- |
+| frame type out of range | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (frame type out of range) on 3.0.0.24268.
+
+### `BlzGetFrameByName`
+
+| Case         | Group | Outcome | Id  | Type | Message |
+| ------------ | ----- | ------- | --- | ---- | ------- |
+| unknown name | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unknown name) on 3.0.0.24268.
+
+### `BlzGetUnitAbility`
+
+| Case             | Group | Outcome | Id  | Type | Message |
+| ---------------- | ----- | ------- | --- | ---- | ------- |
+| ability it lacks | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (ability it lacks) on 3.0.0.24268.
+
+### `BlzGetUnitAbilityByIndex`
+
+| Case               | Group | Outcome | Id  | Type | Message |
+| ------------------ | ----- | ------- | --- | ---- | ------- |
+| index out of range | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (index out of range) on 3.0.0.24268.
+
+### `BlzGetItemAbilityByIndex`
+
+| Case               | Group | Outcome | Id  | Type | Message |
+| ------------------ | ----- | ------- | --- | ---- | ------- |
+| index out of range | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (index out of range) on 3.0.0.24268.
+
+### `BlzGetItemAbility`
+
+| Case             | Group | Outcome | Id  | Type | Message |
+| ---------------- | ----- | ------- | --- | ---- | ------- |
+| ability it lacks | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (ability it lacks) on 3.0.0.24268.

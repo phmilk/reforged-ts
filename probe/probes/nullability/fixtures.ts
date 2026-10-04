@@ -81,6 +81,13 @@ export function liveHero(): unit {
   return built(CreateUnit(owner, FourCC("Hpal"), 0, 0, 0), "liveHero");
 }
 
+// Items
+
+/** An item, live: a `'ratf'` (Claws of Attack) on the ground at the map's origin (`CreateItem`). */
+export function liveItem(): item {
+  return built(CreateItem(FourCC("ratf"), 0, 0), "liveItem");
+}
+
 // Groups
 
 /** A group, empty: `CreateGroup`, no unit added. */
@@ -98,6 +105,19 @@ export function emptyHashtable(): hashtable {
 /** A game cache, empty: `InitGameCache` of a file never saved, nothing stored. */
 export function emptyGameCache(): gamecache {
   return built(InitGameCache("NullabilityFixture.w3v"), "emptyGameCache");
+}
+
+// Multiboards
+
+/**
+ * A multiboard, one cell: `CreateMultiboard` after `MultiboardSetRowCount`
+ * and `MultiboardSetColumnCount` to 1, so its only cell is (0, 0).
+ */
+export function oneCellMultiboard(): multiboard {
+  const board = built(CreateMultiboard(), "oneCellMultiboard");
+  MultiboardSetRowCount(board, 1);
+  MultiboardSetColumnCount(board, 1);
+  return board;
 }
 
 // Boolexprs
