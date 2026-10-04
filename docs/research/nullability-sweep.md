@@ -1225,3 +1225,634 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (ATTACK\_TYPE\_NORMAL, ATTACK\_TYPE\_MELEE, ATTACK\_TYPE\_PIERCE, ATTACK\_TYPE\_SIEGE, ATTACK\_TYPE\_MAGIC, ATTACK\_TYPE\_CHAOS, ATTACK\_TYPE\_HERO, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For ATTACK\_TYPE\_NORMAL, a handle of id 0.
+
+## `nullability-converters-2`
+
+- Probe: `nullability-converters-2`
+- Patch: 3.0.0.24268
+- Date: 2026-10-04
+- Run: `f324589b-8437-43ea-83e0-ae689edb1c27`
+
+### `ConvertDamageType`
+
+| Case                         | Group | Outcome | Id          | Type                           | Message |
+| ---------------------------- | ----- | ------- | ----------- | ------------------------------ | ------- |
+| DAMAGE\_TYPE\_UNKNOWN        | (a)   | handle  | 0           | `damagetype: 000001C6C31E45D0` |         |
+| DAMAGE\_TYPE\_NORMAL         | (a)   | handle  | 4           | `damagetype: 000001C6C31E4610` |         |
+| DAMAGE\_TYPE\_ENHANCED       | (a)   | handle  | 5           | `damagetype: 000001C6C31E46A0` |         |
+| DAMAGE\_TYPE\_FIRE           | (a)   | handle  | 8           | `damagetype: 000001C6C31E4770` |         |
+| DAMAGE\_TYPE\_COLD           | (a)   | handle  | 9           | `damagetype: 000001C6C31E47B0` |         |
+| DAMAGE\_TYPE\_LIGHTNING      | (a)   | handle  | 10          | `damagetype: 000001C6C31E4900` |         |
+| DAMAGE\_TYPE\_POISON         | (a)   | handle  | 11          | `damagetype: 000001C6C31E4940` |         |
+| DAMAGE\_TYPE\_DISEASE        | (a)   | handle  | 12          | `damagetype: 000001C6C31E4980` |         |
+| DAMAGE\_TYPE\_DIVINE         | (a)   | handle  | 13          | `damagetype: 000001C6C31E49C0` |         |
+| DAMAGE\_TYPE\_MAGIC          | (a)   | handle  | 14          | `damagetype: 000001C6C31E4C10` |         |
+| DAMAGE\_TYPE\_SONIC          | (a)   | handle  | 15          | `damagetype: 000001C6C31E4C50` |         |
+| DAMAGE\_TYPE\_ACID           | (a)   | handle  | 16          | `damagetype: 000001C6C31E4C90` |         |
+| DAMAGE\_TYPE\_FORCE          | (a)   | handle  | 17          | `damagetype: 000001C6C31E4CD0` |         |
+| DAMAGE\_TYPE\_DEATH          | (a)   | handle  | 18          | `damagetype: 000001C6C31E4D10` |         |
+| DAMAGE\_TYPE\_MIND           | (a)   | handle  | 19          | `damagetype: 000001C6C31E4D50` |         |
+| DAMAGE\_TYPE\_PLANT          | (a)   | handle  | 20          | `damagetype: 000001C6C31E4D90` |         |
+| DAMAGE\_TYPE\_DEFENSIVE      | (a)   | handle  | 21          | `damagetype: 000001C6C31E4DD0` |         |
+| DAMAGE\_TYPE\_DEMOLITION     | (a)   | handle  | 22          | `damagetype: 000001C6C31E4F20` |         |
+| DAMAGE\_TYPE\_SLOW\_POISON   | (a)   | handle  | 23          | `damagetype: 000001C6C31E4F60` |         |
+| DAMAGE\_TYPE\_SPIRIT\_LINK   | (a)   | handle  | 24          | `damagetype: 000001C6C31E4FA0` |         |
+| DAMAGE\_TYPE\_SHADOW\_STRIKE | (a)   | handle  | 25          | `damagetype: 000001C6C31E5200` |         |
+| DAMAGE\_TYPE\_UNIVERSAL      | (a)   | handle  | 26          | `damagetype: 000001C6C31E5240` |         |
+| -1                           | (a)   | handle  | -1          | `damagetype: 000001C6E05A6830` |         |
+| past the last constant       | (a)   | handle  | 27          | `damagetype: 000001C6E05B10D0` |         |
+| 2147483647                   | (a)   | handle  | 2147483647  | `damagetype: 000001C6E05BC2A0` |         |
+| -2147483648                  | (a)   | handle  | -2147483648 | `damagetype: 000001C6E05C6B60` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (DAMAGE\_TYPE\_UNKNOWN, DAMAGE\_TYPE\_NORMAL, DAMAGE\_TYPE\_ENHANCED, DAMAGE\_TYPE\_FIRE, DAMAGE\_TYPE\_COLD, DAMAGE\_TYPE\_LIGHTNING, DAMAGE\_TYPE\_POISON, DAMAGE\_TYPE\_DISEASE, DAMAGE\_TYPE\_DIVINE, DAMAGE\_TYPE\_MAGIC, DAMAGE\_TYPE\_SONIC, DAMAGE\_TYPE\_ACID, DAMAGE\_TYPE\_FORCE, DAMAGE\_TYPE\_DEATH, DAMAGE\_TYPE\_MIND, DAMAGE\_TYPE\_PLANT, DAMAGE\_TYPE\_DEFENSIVE, DAMAGE\_TYPE\_DEMOLITION, DAMAGE\_TYPE\_SLOW\_POISON, DAMAGE\_TYPE\_SPIRIT\_LINK, DAMAGE\_TYPE\_SHADOW\_STRIKE, DAMAGE\_TYPE\_UNIVERSAL, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For DAMAGE\_TYPE\_UNKNOWN, a handle of id 0.
+
+### `ConvertWeaponType`
+
+| Case                               | Group | Outcome | Id          | Type                           | Message |
+| ---------------------------------- | ----- | ------- | ----------- | ------------------------------ | ------- |
+| WEAPON\_TYPE\_WHOKNOWS             | (a)   | handle  | 0           | `weapontype: 000001C6C31E5280` |         |
+| WEAPON\_TYPE\_METAL\_LIGHT\_CHOP   | (a)   | handle  | 1           | `weapontype: 000001C6C31E52F0` |         |
+| WEAPON\_TYPE\_METAL\_MEDIUM\_CHOP  | (a)   | handle  | 2           | `weapontype: 000001C6C31E5360` |         |
+| WEAPON\_TYPE\_METAL\_HEAVY\_CHOP   | (a)   | handle  | 3           | `weapontype: 000001C6C31E53E0` |         |
+| WEAPON\_TYPE\_METAL\_LIGHT\_SLICE  | (a)   | handle  | 4           | `weapontype: 000001C6C31E53A0` |         |
+| WEAPON\_TYPE\_METAL\_MEDIUM\_SLICE | (a)   | handle  | 5           | `weapontype: 000001C6C31E5420` |         |
+| WEAPON\_TYPE\_METAL\_HEAVY\_SLICE  | (a)   | handle  | 6           | `weapontype: 000001C6C31E5500` |         |
+| WEAPON\_TYPE\_METAL\_MEDIUM\_BASH  | (a)   | handle  | 7           | `weapontype: 000001C6C31E5540` |         |
+| WEAPON\_TYPE\_METAL\_HEAVY\_BASH   | (a)   | handle  | 8           | `weapontype: 000001C6C31E5580` |         |
+| WEAPON\_TYPE\_METAL\_MEDIUM\_STAB  | (a)   | handle  | 9           | `weapontype: 000001C6C31E55C0` |         |
+| WEAPON\_TYPE\_METAL\_HEAVY\_STAB   | (a)   | handle  | 10          | `weapontype: 000001C6C31E5600` |         |
+| WEAPON\_TYPE\_WOOD\_LIGHT\_SLICE   | (a)   | handle  | 11          | `weapontype: 000001C6C31E5640` |         |
+| WEAPON\_TYPE\_WOOD\_MEDIUM\_SLICE  | (a)   | handle  | 12          | `weapontype: 000001C6C31E5680` |         |
+| WEAPON\_TYPE\_WOOD\_HEAVY\_SLICE   | (a)   | handle  | 13          | `weapontype: 000001C6C31E56C0` |         |
+| WEAPON\_TYPE\_WOOD\_LIGHT\_BASH    | (a)   | handle  | 14          | `weapontype: 000001C6C31E5700` |         |
+| WEAPON\_TYPE\_WOOD\_MEDIUM\_BASH   | (a)   | handle  | 15          | `weapontype: 000001C6C31E5740` |         |
+| WEAPON\_TYPE\_WOOD\_HEAVY\_BASH    | (a)   | handle  | 16          | `weapontype: 000001C6C31E5780` |         |
+| WEAPON\_TYPE\_WOOD\_LIGHT\_STAB    | (a)   | handle  | 17          | `weapontype: 000001C6C31E57C0` |         |
+| WEAPON\_TYPE\_WOOD\_MEDIUM\_STAB   | (a)   | handle  | 18          | `weapontype: 000001C6C31E5A20` |         |
+| WEAPON\_TYPE\_CLAW\_LIGHT\_SLICE   | (a)   | handle  | 19          | `weapontype: 000001C6C31E5A60` |         |
+| WEAPON\_TYPE\_CLAW\_MEDIUM\_SLICE  | (a)   | handle  | 20          | `weapontype: 000001C6C31E5AA0` |         |
+| WEAPON\_TYPE\_CLAW\_HEAVY\_SLICE   | (a)   | handle  | 21          | `weapontype: 000001C6C31E5AE0` |         |
+| WEAPON\_TYPE\_AXE\_MEDIUM\_CHOP    | (a)   | handle  | 22          | `weapontype: 000001C6C31E5B20` |         |
+| WEAPON\_TYPE\_ROCK\_HEAVY\_BASH    | (a)   | handle  | 23          | `weapontype: 000001C6C31E5B60` |         |
+| -1                                 | (a)   | handle  | -1          | `weapontype: 000001C6E05E0B70` |         |
+| past the last constant             | (a)   | handle  | 24          | `weapontype: 000001C6E0615EA0` |         |
+| 2147483647                         | (a)   | handle  | 2147483647  | `weapontype: 000001C6E0602AC0` |         |
+| -2147483648                        | (a)   | handle  | -2147483648 | `weapontype: 000001C6E061A160` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (WEAPON\_TYPE\_WHOKNOWS, WEAPON\_TYPE\_METAL\_LIGHT\_CHOP, WEAPON\_TYPE\_METAL\_MEDIUM\_CHOP, WEAPON\_TYPE\_METAL\_HEAVY\_CHOP, WEAPON\_TYPE\_METAL\_LIGHT\_SLICE, WEAPON\_TYPE\_METAL\_MEDIUM\_SLICE, WEAPON\_TYPE\_METAL\_HEAVY\_SLICE, WEAPON\_TYPE\_METAL\_MEDIUM\_BASH, WEAPON\_TYPE\_METAL\_HEAVY\_BASH, WEAPON\_TYPE\_METAL\_MEDIUM\_STAB, WEAPON\_TYPE\_METAL\_HEAVY\_STAB, WEAPON\_TYPE\_WOOD\_LIGHT\_SLICE, WEAPON\_TYPE\_WOOD\_MEDIUM\_SLICE, WEAPON\_TYPE\_WOOD\_HEAVY\_SLICE, WEAPON\_TYPE\_WOOD\_LIGHT\_BASH, WEAPON\_TYPE\_WOOD\_MEDIUM\_BASH, WEAPON\_TYPE\_WOOD\_HEAVY\_BASH, WEAPON\_TYPE\_WOOD\_LIGHT\_STAB, WEAPON\_TYPE\_WOOD\_MEDIUM\_STAB, WEAPON\_TYPE\_CLAW\_LIGHT\_SLICE, WEAPON\_TYPE\_CLAW\_MEDIUM\_SLICE, WEAPON\_TYPE\_CLAW\_HEAVY\_SLICE, WEAPON\_TYPE\_AXE\_MEDIUM\_CHOP, WEAPON\_TYPE\_ROCK\_HEAVY\_BASH, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For WEAPON\_TYPE\_WHOKNOWS, a handle of id 0.
+
+### `ConvertSoundType`
+
+| Case                        | Group | Outcome | Id          | Type                          | Message |
+| --------------------------- | ----- | ------- | ----------- | ----------------------------- | ------- |
+| SOUND\_TYPE\_EFFECT         | (a)   | handle  | 0           | `soundtype: 000001C6C31EE5B0` |         |
+| SOUND\_TYPE\_EFFECT\_LOOPED | (a)   | handle  | 1           | `soundtype: 000001C6C31EE5F0` |         |
+| -1                          | (a)   | handle  | -1          | `soundtype: 000001C6E05C03E0` |         |
+| past the last constant      | (a)   | handle  | 2           | `soundtype: 000001C6E05C3650` |         |
+| 2147483647                  | (a)   | handle  | 2147483647  | `soundtype: 000001C6E05E3EB0` |         |
+| -2147483648                 | (a)   | handle  | -2147483648 | `soundtype: 000001C6E05AC090` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (SOUND\_TYPE\_EFFECT, SOUND\_TYPE\_EFFECT\_LOOPED, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For SOUND\_TYPE\_EFFECT, a handle of id 0.
+
+### `ConvertPathingType`
+
+| Case                              | Group | Outcome | Id          | Type                            | Message |
+| --------------------------------- | ----- | ------- | ----------- | ------------------------------- | ------- |
+| PATHING\_TYPE\_ANY                | (a)   | handle  | 0           | `pathingtype: 000001C6C31E5BA0` |         |
+| PATHING\_TYPE\_WALKABILITY        | (a)   | handle  | 1           | `pathingtype: 000001C6C31E5BE0` |         |
+| PATHING\_TYPE\_FLYABILITY         | (a)   | handle  | 2           | `pathingtype: 000001C6C31E5C50` |         |
+| PATHING\_TYPE\_BUILDABILITY       | (a)   | handle  | 3           | `pathingtype: 000001C6C31E5CD0` |         |
+| PATHING\_TYPE\_PEONHARVESTPATHING | (a)   | handle  | 4           | `pathingtype: 000001C6C31E5C90` |         |
+| PATHING\_TYPE\_BLIGHTPATHING      | (a)   | handle  | 5           | `pathingtype: 000001C6C31E5D10` |         |
+| PATHING\_TYPE\_FLOATABILITY       | (a)   | handle  | 6           | `pathingtype: 000001C6C31E5D50` |         |
+| PATHING\_TYPE\_AMPHIBIOUSPATHING  | (a)   | handle  | 7           | `pathingtype: 000001C6C31E5D90` |         |
+| -1                                | (a)   | handle  | -1          | `pathingtype: 000001C6E060B860` |         |
+| past the last constant            | (a)   | handle  | 8           | `pathingtype: 000001C6E058C0C0` |         |
+| 2147483647                        | (a)   | handle  | 2147483647  | `pathingtype: 000001C6E0611120` |         |
+| -2147483648                       | (a)   | handle  | -2147483648 | `pathingtype: 000001C6E05F8680` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (PATHING\_TYPE\_ANY, PATHING\_TYPE\_WALKABILITY, PATHING\_TYPE\_FLYABILITY, PATHING\_TYPE\_BUILDABILITY, PATHING\_TYPE\_PEONHARVESTPATHING, PATHING\_TYPE\_BLIGHTPATHING, PATHING\_TYPE\_FLOATABILITY, PATHING\_TYPE\_AMPHIBIOUSPATHING, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For PATHING\_TYPE\_ANY, a handle of id 0.
+
+### `ConvertMouseButtonType`
+
+| Case                        | Group | Outcome | Id          | Type                                | Message |
+| --------------------------- | ----- | ------- | ----------- | ----------------------------------- | ------- |
+| MOUSE\_BUTTON\_TYPE\_LEFT   | (a)   | handle  | 1           | `mousebuttontype: 000001C6C31E5DD0` |         |
+| MOUSE\_BUTTON\_TYPE\_MIDDLE | (a)   | handle  | 2           | `mousebuttontype: 000001C6C31E5E10` |         |
+| MOUSE\_BUTTON\_TYPE\_RIGHT  | (a)   | handle  | 4           | `mousebuttontype: 000001C6C31E5E90` |         |
+| -1                          | (a)   | handle  | 1073741824  | `mousebuttontype: 000001C6E05CC580` |         |
+| past the last constant      | (a)   | handle  | 8           | `mousebuttontype: 000001C6E05F6060` |         |
+| 2147483647                  | (a)   | handle  | 1073741824  | `mousebuttontype: 000001C6E05CC580` |         |
+| -2147483648                 | (a)   | handle  | -2147483648 | `mousebuttontype: 000001C6E05D8EF0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (MOUSE\_BUTTON\_TYPE\_LEFT, MOUSE\_BUTTON\_TYPE\_MIDDLE, MOUSE\_BUTTON\_TYPE\_RIGHT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertAnimType`
+
+| Case                   | Group | Outcome | Id          | Type                         | Message |
+| ---------------------- | ----- | ------- | ----------- | ---------------------------- | ------- |
+| ANIM\_TYPE\_BIRTH      | (a)   | handle  | 0           | `animtype: 000001C6C31E5E50` |         |
+| ANIM\_TYPE\_DEATH      | (a)   | handle  | 1           | `animtype: 000001C6C31E5ED0` |         |
+| ANIM\_TYPE\_DECAY      | (a)   | handle  | 2           | `animtype: 000001C6C31E5F40` |         |
+| ANIM\_TYPE\_DISSIPATE  | (a)   | handle  | 3           | `animtype: 000001C6C31E5FC0` |         |
+| ANIM\_TYPE\_STAND      | (a)   | handle  | 4           | `animtype: 000001C6C31E5F80` |         |
+| ANIM\_TYPE\_WALK       | (a)   | handle  | 5           | `animtype: 000001C6C31E6060` |         |
+| ANIM\_TYPE\_ATTACK     | (a)   | handle  | 6           | `animtype: 000001C6C31E6140` |         |
+| ANIM\_TYPE\_MORPH      | (a)   | handle  | 7           | `animtype: 000001C6C31E6180` |         |
+| ANIM\_TYPE\_SLEEP      | (a)   | handle  | 8           | `animtype: 000001C6C31E61C0` |         |
+| ANIM\_TYPE\_SPELL      | (a)   | handle  | 9           | `animtype: 000001C6C31E6200` |         |
+| ANIM\_TYPE\_PORTRAIT   | (a)   | handle  | 10          | `animtype: 000001C6C31E6240` |         |
+| -1                     | (a)   | handle  | -1          | `animtype: 000001C6E05A3D90` |         |
+| past the last constant | (a)   | handle  | 11          | `animtype: 000001C6DA2D67C0` |         |
+| 2147483647             | (a)   | handle  | 2147483647  | `animtype: 000001C6DA2DEEA0` |         |
+| -2147483648            | (a)   | handle  | -2147483648 | `animtype: 000001C6DA2E6040` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ANIM\_TYPE\_BIRTH, ANIM\_TYPE\_DEATH, ANIM\_TYPE\_DECAY, ANIM\_TYPE\_DISSIPATE, ANIM\_TYPE\_STAND, ANIM\_TYPE\_WALK, ANIM\_TYPE\_ATTACK, ANIM\_TYPE\_MORPH, ANIM\_TYPE\_SLEEP, ANIM\_TYPE\_SPELL, ANIM\_TYPE\_PORTRAIT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For ANIM\_TYPE\_BIRTH, a handle of id 0.
+
+### `ConvertSubAnimType`
+
+| Case                          | Group | Outcome | Id          | Type                            | Message |
+| ----------------------------- | ----- | ------- | ----------- | ------------------------------- | ------- |
+| SUBANIM\_TYPE\_ROOTED         | (a)   | handle  | 11          | `subanimtype: 000001C6C31E6280` |         |
+| SUBANIM\_TYPE\_ALTERNATE\_EX  | (a)   | handle  | 12          | `subanimtype: 000001C6C31E62C0` |         |
+| SUBANIM\_TYPE\_LOOPING        | (a)   | handle  | 13          | `subanimtype: 000001C6C31E6300` |         |
+| SUBANIM\_TYPE\_SLAM           | (a)   | handle  | 14          | `subanimtype: 000001C6C31E6340` |         |
+| SUBANIM\_TYPE\_THROW          | (a)   | handle  | 15          | `subanimtype: 000001C6C31E6380` |         |
+| SUBANIM\_TYPE\_SPIKED         | (a)   | handle  | 16          | `subanimtype: 000001C6C31E63C0` |         |
+| SUBANIM\_TYPE\_FAST           | (a)   | handle  | 17          | `subanimtype: 000001C6C31E6400` |         |
+| SUBANIM\_TYPE\_SPIN           | (a)   | handle  | 18          | `subanimtype: 000001C6C31E6440` |         |
+| SUBANIM\_TYPE\_READY          | (a)   | handle  | 19          | `subanimtype: 000001C6C31E6480` |         |
+| SUBANIM\_TYPE\_CHANNEL        | (a)   | handle  | 20          | `subanimtype: 000001C6C31E66D0` |         |
+| SUBANIM\_TYPE\_DEFEND         | (a)   | handle  | 21          | `subanimtype: 000001C6C31E6710` |         |
+| SUBANIM\_TYPE\_VICTORY        | (a)   | handle  | 22          | `subanimtype: 000001C6C31E6750` |         |
+| SUBANIM\_TYPE\_TURN           | (a)   | handle  | 23          | `subanimtype: 000001C6C31E6790` |         |
+| SUBANIM\_TYPE\_LEFT           | (a)   | handle  | 24          | `subanimtype: 000001C6C31E67D0` |         |
+| SUBANIM\_TYPE\_RIGHT          | (a)   | handle  | 25          | `subanimtype: 000001C6C31E6810` |         |
+| SUBANIM\_TYPE\_FIRE           | (a)   | handle  | 26          | `subanimtype: 000001C6C31E6850` |         |
+| SUBANIM\_TYPE\_FLESH          | (a)   | handle  | 27          | `subanimtype: 000001C6C31E6890` |         |
+| SUBANIM\_TYPE\_HIT            | (a)   | handle  | 28          | `subanimtype: 000001C6C31E6AE0` |         |
+| SUBANIM\_TYPE\_WOUNDED        | (a)   | handle  | 29          | `subanimtype: 000001C6C31E6B20` |         |
+| SUBANIM\_TYPE\_LIGHT          | (a)   | handle  | 30          | `subanimtype: 000001C6C31E6B60` |         |
+| SUBANIM\_TYPE\_MODERATE       | (a)   | handle  | 31          | `subanimtype: 000001C6C31E6BA0` |         |
+| SUBANIM\_TYPE\_SEVERE         | (a)   | handle  | 32          | `subanimtype: 000001C6C31E6BE0` |         |
+| SUBANIM\_TYPE\_CRITICAL       | (a)   | handle  | 33          | `subanimtype: 000001C6C31E6C20` |         |
+| SUBANIM\_TYPE\_COMPLETE       | (a)   | handle  | 34          | `subanimtype: 000001C6C31E6C60` |         |
+| SUBANIM\_TYPE\_GOLD           | (a)   | handle  | 35          | `subanimtype: 000001C6C31E6CA0` |         |
+| SUBANIM\_TYPE\_LUMBER         | (a)   | handle  | 36          | `subanimtype: 000001C6C31E6CE0` |         |
+| SUBANIM\_TYPE\_WORK           | (a)   | handle  | 37          | `subanimtype: 000001C6C31E6D20` |         |
+| SUBANIM\_TYPE\_TALK           | (a)   | handle  | 38          | `subanimtype: 000001C6C31E6D60` |         |
+| SUBANIM\_TYPE\_FIRST          | (a)   | handle  | 39          | `subanimtype: 000001C6C31E6DA0` |         |
+| SUBANIM\_TYPE\_SECOND         | (a)   | handle  | 40          | `subanimtype: 000001C6C31E6DE0` |         |
+| SUBANIM\_TYPE\_THIRD          | (a)   | handle  | 41          | `subanimtype: 000001C6C31E6E20` |         |
+| SUBANIM\_TYPE\_FOURTH         | (a)   | handle  | 42          | `subanimtype: 000001C6C31E6E60` |         |
+| SUBANIM\_TYPE\_FIFTH          | (a)   | handle  | 43          | `subanimtype: 000001C6C31E6EA0` |         |
+| SUBANIM\_TYPE\_ONE            | (a)   | handle  | 44          | `subanimtype: 000001C6C31E6EE0` |         |
+| SUBANIM\_TYPE\_TWO            | (a)   | handle  | 45          | `subanimtype: 000001C6C31E6F20` |         |
+| SUBANIM\_TYPE\_THREE          | (a)   | handle  | 46          | `subanimtype: 000001C6C31E6F60` |         |
+| SUBANIM\_TYPE\_FOUR           | (a)   | handle  | 47          | `subanimtype: 000001C6C31E6FA0` |         |
+| SUBANIM\_TYPE\_FIVE           | (a)   | handle  | 48          | `subanimtype: 000001C6C31E6FE0` |         |
+| SUBANIM\_TYPE\_SMALL          | (a)   | handle  | 49          | `subanimtype: 000001C6C31E7020` |         |
+| SUBANIM\_TYPE\_MEDIUM         | (a)   | handle  | 50          | `subanimtype: 000001C6C31E7480` |         |
+| SUBANIM\_TYPE\_LARGE          | (a)   | handle  | 51          | `subanimtype: 000001C6C31E74C0` |         |
+| SUBANIM\_TYPE\_UPGRADE        | (a)   | handle  | 52          | `subanimtype: 000001C6C31E7500` |         |
+| SUBANIM\_TYPE\_DRAIN          | (a)   | handle  | 53          | `subanimtype: 000001C6C31E7540` |         |
+| SUBANIM\_TYPE\_FILL           | (a)   | handle  | 54          | `subanimtype: 000001C6C31E7580` |         |
+| SUBANIM\_TYPE\_CHAINLIGHTNING | (a)   | handle  | 55          | `subanimtype: 000001C6C31E75C0` |         |
+| SUBANIM\_TYPE\_EATTREE        | (a)   | handle  | 56          | `subanimtype: 000001C6C31E7600` |         |
+| SUBANIM\_TYPE\_PUKE           | (a)   | handle  | 57          | `subanimtype: 000001C6C31E7640` |         |
+| SUBANIM\_TYPE\_FLAIL          | (a)   | handle  | 58          | `subanimtype: 000001C6C31E7680` |         |
+| SUBANIM\_TYPE\_OFF            | (a)   | handle  | 59          | `subanimtype: 000001C6C31E76C0` |         |
+| SUBANIM\_TYPE\_SWIM           | (a)   | handle  | 60          | `subanimtype: 000001C6C31E7700` |         |
+| SUBANIM\_TYPE\_ENTANGLE       | (a)   | handle  | 61          | `subanimtype: 000001C6C31E7740` |         |
+| SUBANIM\_TYPE\_BERSERK        | (a)   | handle  | 62          | `subanimtype: 000001C6C31E7780` |         |
+| -1                            | (a)   | handle  | -1          | `subanimtype: 000001C6E05E2D60` |         |
+| past the last constant        | (a)   | handle  | 63          | `subanimtype: 000001C73FAD02D0` |         |
+| 2147483647                    | (a)   | handle  | 2147483647  | `subanimtype: 000001C73F9B9DB0` |         |
+| -2147483648                   | (a)   | handle  | -2147483648 | `subanimtype: 000001C73FAD95B0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (SUBANIM\_TYPE\_ROOTED, SUBANIM\_TYPE\_ALTERNATE\_EX, SUBANIM\_TYPE\_LOOPING, SUBANIM\_TYPE\_SLAM, SUBANIM\_TYPE\_THROW, SUBANIM\_TYPE\_SPIKED, SUBANIM\_TYPE\_FAST, SUBANIM\_TYPE\_SPIN, SUBANIM\_TYPE\_READY, SUBANIM\_TYPE\_CHANNEL, SUBANIM\_TYPE\_DEFEND, SUBANIM\_TYPE\_VICTORY, SUBANIM\_TYPE\_TURN, SUBANIM\_TYPE\_LEFT, SUBANIM\_TYPE\_RIGHT, SUBANIM\_TYPE\_FIRE, SUBANIM\_TYPE\_FLESH, SUBANIM\_TYPE\_HIT, SUBANIM\_TYPE\_WOUNDED, SUBANIM\_TYPE\_LIGHT, SUBANIM\_TYPE\_MODERATE, SUBANIM\_TYPE\_SEVERE, SUBANIM\_TYPE\_CRITICAL, SUBANIM\_TYPE\_COMPLETE, SUBANIM\_TYPE\_GOLD, SUBANIM\_TYPE\_LUMBER, SUBANIM\_TYPE\_WORK, SUBANIM\_TYPE\_TALK, SUBANIM\_TYPE\_FIRST, SUBANIM\_TYPE\_SECOND, SUBANIM\_TYPE\_THIRD, SUBANIM\_TYPE\_FOURTH, SUBANIM\_TYPE\_FIFTH, SUBANIM\_TYPE\_ONE, SUBANIM\_TYPE\_TWO, SUBANIM\_TYPE\_THREE, SUBANIM\_TYPE\_FOUR, SUBANIM\_TYPE\_FIVE, SUBANIM\_TYPE\_SMALL, SUBANIM\_TYPE\_MEDIUM, SUBANIM\_TYPE\_LARGE, SUBANIM\_TYPE\_UPGRADE, SUBANIM\_TYPE\_DRAIN, SUBANIM\_TYPE\_FILL, SUBANIM\_TYPE\_CHAINLIGHTNING, SUBANIM\_TYPE\_EATTREE, SUBANIM\_TYPE\_PUKE, SUBANIM\_TYPE\_FLAIL, SUBANIM\_TYPE\_OFF, SUBANIM\_TYPE\_SWIM, SUBANIM\_TYPE\_ENTANGLE, SUBANIM\_TYPE\_BERSERK, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertOriginFrameType`
+
+| Case                                         | Group | Outcome | Id          | Type                                | Message |
+| -------------------------------------------- | ----- | ------- | ----------- | ----------------------------------- | ------- |
+| ORIGIN\_FRAME\_GAME\_UI                      | (a)   | handle  | 0           | `originframetype: 000001C6C31EE660` |         |
+| ORIGIN\_FRAME\_COMMAND\_BUTTON               | (a)   | handle  | 1           | `originframetype: 000001C6C31EE6A0` |         |
+| ORIGIN\_FRAME\_HERO\_BAR                     | (a)   | handle  | 2           | `originframetype: 000001C6C31EE710` |         |
+| ORIGIN\_FRAME\_HERO\_BUTTON                  | (a)   | handle  | 3           | `originframetype: 000001C6C31EE790` |         |
+| ORIGIN\_FRAME\_HERO\_HP\_BAR                 | (a)   | handle  | 4           | `originframetype: 000001C6C31EE750` |         |
+| ORIGIN\_FRAME\_HERO\_MANA\_BAR               | (a)   | handle  | 5           | `originframetype: 000001C6C31EE7D0` |         |
+| ORIGIN\_FRAME\_HERO\_BUTTON\_INDICATOR       | (a)   | handle  | 6           | `originframetype: 000001C6C31EE8B0` |         |
+| ORIGIN\_FRAME\_ITEM\_BUTTON                  | (a)   | handle  | 7           | `originframetype: 000001C6C31EE8F0` |         |
+| ORIGIN\_FRAME\_MINIMAP                       | (a)   | handle  | 8           | `originframetype: 000001C6C31EE930` |         |
+| ORIGIN\_FRAME\_MINIMAP\_BUTTON               | (a)   | handle  | 9           | `originframetype: 000001C6C31EE970` |         |
+| ORIGIN\_FRAME\_SYSTEM\_BUTTON                | (a)   | handle  | 10          | `originframetype: 000001C6C31EE9B0` |         |
+| ORIGIN\_FRAME\_TOOLTIP                       | (a)   | handle  | 11          | `originframetype: 000001C6C31EE9F0` |         |
+| ORIGIN\_FRAME\_UBERTOOLTIP                   | (a)   | handle  | 12          | `originframetype: 000001C6C31EEA30` |         |
+| ORIGIN\_FRAME\_CHAT\_MSG                     | (a)   | handle  | 13          | `originframetype: 000001C6C31EEA70` |         |
+| ORIGIN\_FRAME\_UNIT\_MSG                     | (a)   | handle  | 14          | `originframetype: 000001C6C31EEAB0` |         |
+| ORIGIN\_FRAME\_TOP\_MSG                      | (a)   | handle  | 15          | `originframetype: 000001C6C31EEAF0` |         |
+| ORIGIN\_FRAME\_PORTRAIT                      | (a)   | handle  | 16          | `originframetype: 000001C6C31EEB30` |         |
+| ORIGIN\_FRAME\_WORLD\_FRAME                  | (a)   | handle  | 17          | `originframetype: 000001C6C31EEB70` |         |
+| ORIGIN\_FRAME\_SIMPLE\_UI\_PARENT            | (a)   | handle  | 18          | `originframetype: 000001C6C31EEBB0` |         |
+| ORIGIN\_FRAME\_PORTRAIT\_HP\_TEXT            | (a)   | handle  | 19          | `originframetype: 000001C6C31EEBF0` |         |
+| ORIGIN\_FRAME\_PORTRAIT\_MANA\_TEXT          | (a)   | handle  | 20          | `originframetype: 000001C6C31EEC30` |         |
+| ORIGIN\_FRAME\_UNIT\_PANEL\_BUFF\_BAR        | (a)   | handle  | 21          | `originframetype: 000001C6C31EEC70` |         |
+| ORIGIN\_FRAME\_UNIT\_PANEL\_BUFF\_BAR\_LABEL | (a)   | handle  | 22          | `originframetype: 000001C6C31EECB0` |         |
+| -1                                           | (a)   | handle  | -1          | `originframetype: 000001C6E0A33340` |         |
+| past the last constant                       | (a)   | handle  | 23          | `originframetype: 000001C6E05E8A00` |         |
+| 2147483647                                   | (a)   | handle  | 2147483647  | `originframetype: 000001C7803A62D0` |         |
+| -2147483648                                  | (a)   | handle  | -2147483648 | `originframetype: 000001C6E05F9E70` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ORIGIN\_FRAME\_GAME\_UI, ORIGIN\_FRAME\_COMMAND\_BUTTON, ORIGIN\_FRAME\_HERO\_BAR, ORIGIN\_FRAME\_HERO\_BUTTON, ORIGIN\_FRAME\_HERO\_HP\_BAR, ORIGIN\_FRAME\_HERO\_MANA\_BAR, ORIGIN\_FRAME\_HERO\_BUTTON\_INDICATOR, ORIGIN\_FRAME\_ITEM\_BUTTON, ORIGIN\_FRAME\_MINIMAP, ORIGIN\_FRAME\_MINIMAP\_BUTTON, ORIGIN\_FRAME\_SYSTEM\_BUTTON, ORIGIN\_FRAME\_TOOLTIP, ORIGIN\_FRAME\_UBERTOOLTIP, ORIGIN\_FRAME\_CHAT\_MSG, ORIGIN\_FRAME\_UNIT\_MSG, ORIGIN\_FRAME\_TOP\_MSG, ORIGIN\_FRAME\_PORTRAIT, ORIGIN\_FRAME\_WORLD\_FRAME, ORIGIN\_FRAME\_SIMPLE\_UI\_PARENT, ORIGIN\_FRAME\_PORTRAIT\_HP\_TEXT, ORIGIN\_FRAME\_PORTRAIT\_MANA\_TEXT, ORIGIN\_FRAME\_UNIT\_PANEL\_BUFF\_BAR, ORIGIN\_FRAME\_UNIT\_PANEL\_BUFF\_BAR\_LABEL, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For ORIGIN\_FRAME\_GAME\_UI, a handle of id 0.
+
+### `ConvertFramePointType`
+
+| Case                    | Group | Outcome | Id          | Type                               | Message |
+| ----------------------- | ----- | ------- | ----------- | ---------------------------------- | ------- |
+| FRAMEPOINT\_TOPLEFT     | (a)   | handle  | 0           | `framepointtype: 000001C6C31EECF0` |         |
+| FRAMEPOINT\_TOP         | (a)   | handle  | 1           | `framepointtype: 000001C6C31EED30` |         |
+| FRAMEPOINT\_TOPRIGHT    | (a)   | handle  | 2           | `framepointtype: 000001C6C31EEDA0` |         |
+| FRAMEPOINT\_LEFT        | (a)   | handle  | 3           | `framepointtype: 000001C6C31EEE20` |         |
+| FRAMEPOINT\_CENTER      | (a)   | handle  | 4           | `framepointtype: 000001C6C31EEDE0` |         |
+| FRAMEPOINT\_RIGHT       | (a)   | handle  | 5           | `framepointtype: 000001C6C31EEE60` |         |
+| FRAMEPOINT\_BOTTOMLEFT  | (a)   | handle  | 6           | `framepointtype: 000001C6C31EEEA0` |         |
+| FRAMEPOINT\_BOTTOM      | (a)   | handle  | 7           | `framepointtype: 000001C6C31EEEE0` |         |
+| FRAMEPOINT\_BOTTOMRIGHT | (a)   | handle  | 8           | `framepointtype: 000001C6C31EEF20` |         |
+| -1                      | (a)   | handle  | -1          | `framepointtype: 000001C78076B320` |         |
+| past the last constant  | (a)   | handle  | 9           | `framepointtype: 000001C6E05D1E80` |         |
+| 2147483647              | (a)   | handle  | 2147483647  | `framepointtype: 000001C6C7BF6540` |         |
+| -2147483648             | (a)   | handle  | -2147483648 | `framepointtype: 000001C6E05913A0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (FRAMEPOINT\_TOPLEFT, FRAMEPOINT\_TOP, FRAMEPOINT\_TOPRIGHT, FRAMEPOINT\_LEFT, FRAMEPOINT\_CENTER, FRAMEPOINT\_RIGHT, FRAMEPOINT\_BOTTOMLEFT, FRAMEPOINT\_BOTTOM, FRAMEPOINT\_BOTTOMRIGHT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For FRAMEPOINT\_TOPLEFT, a handle of id 0.
+
+### `ConvertTextAlignType`
+
+| Case                   | Group | Outcome | Id          | Type                              | Message |
+| ---------------------- | ----- | ------- | ----------- | --------------------------------- | ------- |
+| TEXT\_JUSTIFY\_TOP     | (a)   | handle  | 0           | `textaligntype: 000001C6C31EEF60` |         |
+| TEXT\_JUSTIFY\_MIDDLE  | (a)   | handle  | 1           | `textaligntype: 000001C6C31EEFA0` |         |
+| TEXT\_JUSTIFY\_BOTTOM  | (a)   | handle  | 2           | `textaligntype: 000001C6C31EF010` |         |
+| TEXT\_JUSTIFY\_LEFT    | (a)   | handle  | 3           | `textaligntype: 000001C6C31EF090` |         |
+| TEXT\_JUSTIFY\_CENTER  | (a)   | handle  | 4           | `textaligntype: 000001C6C31EF050` |         |
+| TEXT\_JUSTIFY\_RIGHT   | (a)   | handle  | 5           | `textaligntype: 000001C6C31EF0D0` |         |
+| -1                     | (a)   | handle  | -1          | `textaligntype: 000001C780382D60` |         |
+| past the last constant | (a)   | handle  | 6           | `textaligntype: 000001C78037A0A0` |         |
+| 2147483647             | (a)   | handle  | 2147483647  | `textaligntype: 000001C7803709A0` |         |
+| -2147483648            | (a)   | handle  | -2147483648 | `textaligntype: 000001C780363E10` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (TEXT\_JUSTIFY\_TOP, TEXT\_JUSTIFY\_MIDDLE, TEXT\_JUSTIFY\_BOTTOM, TEXT\_JUSTIFY\_LEFT, TEXT\_JUSTIFY\_CENTER, TEXT\_JUSTIFY\_RIGHT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For TEXT\_JUSTIFY\_TOP, a handle of id 0.
+
+### `ConvertFrameEventType`
+
+| Case                                 | Group | Outcome | Id          | Type                               | Message |
+| ------------------------------------ | ----- | ------- | ----------- | ---------------------------------- | ------- |
+| FRAMEEVENT\_CONTROL\_CLICK           | (a)   | handle  | 1           | `frameeventtype: 000001C6C31EF1B0` |         |
+| FRAMEEVENT\_MOUSE\_ENTER             | (a)   | handle  | 2           | `frameeventtype: 000001C6C31EF1F0` |         |
+| FRAMEEVENT\_MOUSE\_LEAVE             | (a)   | handle  | 3           | `frameeventtype: 000001C6C31EF270` |         |
+| FRAMEEVENT\_MOUSE\_UP                | (a)   | handle  | 4           | `frameeventtype: 000001C6C31EF230` |         |
+| FRAMEEVENT\_MOUSE\_DOWN              | (a)   | handle  | 5           | `frameeventtype: 000001C6C31EF2B0` |         |
+| FRAMEEVENT\_MOUSE\_WHEEL             | (a)   | handle  | 6           | `frameeventtype: 000001C6C31EF390` |         |
+| FRAMEEVENT\_CHECKBOX\_CHECKED        | (a)   | handle  | 7           | `frameeventtype: 000001C6C31EF3D0` |         |
+| FRAMEEVENT\_CHECKBOX\_UNCHECKED      | (a)   | handle  | 8           | `frameeventtype: 000001C6C31EF410` |         |
+| FRAMEEVENT\_EDITBOX\_TEXT\_CHANGED   | (a)   | handle  | 9           | `frameeventtype: 000001C6C31EF450` |         |
+| FRAMEEVENT\_POPUPMENU\_ITEM\_CHANGED | (a)   | handle  | 10          | `frameeventtype: 000001C6C31EF490` |         |
+| FRAMEEVENT\_MOUSE\_DOUBLECLICK       | (a)   | handle  | 11          | `frameeventtype: 000001C6C31EF4D0` |         |
+| FRAMEEVENT\_SPRITE\_ANIM\_UPDATE     | (a)   | handle  | 12          | `frameeventtype: 000001C6C31EF510` |         |
+| FRAMEEVENT\_SLIDER\_VALUE\_CHANGED   | (a)   | handle  | 13          | `frameeventtype: 000001C6C31EF550` |         |
+| FRAMEEVENT\_DIALOG\_CANCEL           | (a)   | handle  | 14          | `frameeventtype: 000001C6C31EF590` |         |
+| FRAMEEVENT\_DIALOG\_ACCEPT           | (a)   | handle  | 15          | `frameeventtype: 000001C6C31EF5D0` |         |
+| FRAMEEVENT\_EDITBOX\_ENTER           | (a)   | handle  | 16          | `frameeventtype: 000001C6C31EF610` |         |
+| -1                                   | (a)   | handle  | -1          | `frameeventtype: 000001C6E05980E0` |         |
+| past the last constant               | (a)   | handle  | 17          | `frameeventtype: 000001C6DA305270` |         |
+| 2147483647                           | (a)   | handle  | 2147483647  | `frameeventtype: 000001C6E05DE930` |         |
+| -2147483648                          | (a)   | handle  | -2147483648 | `frameeventtype: 000001C6CD1C8CC0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (FRAMEEVENT\_CONTROL\_CLICK, FRAMEEVENT\_MOUSE\_ENTER, FRAMEEVENT\_MOUSE\_LEAVE, FRAMEEVENT\_MOUSE\_UP, FRAMEEVENT\_MOUSE\_DOWN, FRAMEEVENT\_MOUSE\_WHEEL, FRAMEEVENT\_CHECKBOX\_CHECKED, FRAMEEVENT\_CHECKBOX\_UNCHECKED, FRAMEEVENT\_EDITBOX\_TEXT\_CHANGED, FRAMEEVENT\_POPUPMENU\_ITEM\_CHANGED, FRAMEEVENT\_MOUSE\_DOUBLECLICK, FRAMEEVENT\_SPRITE\_ANIM\_UPDATE, FRAMEEVENT\_SLIDER\_VALUE\_CHANGED, FRAMEEVENT\_DIALOG\_CANCEL, FRAMEEVENT\_DIALOG\_ACCEPT, FRAMEEVENT\_EDITBOX\_ENTER, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertOsKeyType`
+
+| Case                                            | Group | Outcome | Id          | Type                          | Message |
+| ----------------------------------------------- | ----- | ------- | ----------- | ----------------------------- | ------- |
+| OSKEY\_BACKSPACE                                | (a)   | handle  | 8           | `oskeytype: 000001C6C31EF650` |         |
+| OSKEY\_TAB                                      | (a)   | handle  | 9           | `oskeytype: 000001C6C31EF690` |         |
+| OSKEY\_CLEAR                                    | (a)   | handle  | 12          | `oskeytype: 000001C6C31EF6D0` |         |
+| OSKEY\_RETURN                                   | (a)   | handle  | 13          | `oskeytype: 000001C6C31EF710` |         |
+| OSKEY\_SHIFT                                    | (a)   | handle  | 16          | `oskeytype: 000001C6C31EF750` |         |
+| OSKEY\_CONTROL                                  | (a)   | handle  | 17          | `oskeytype: 000001C6C31EF790` |         |
+| OSKEY\_ALT                                      | (a)   | handle  | 18          | `oskeytype: 000001C6C31EF7D0` |         |
+| OSKEY\_PAUSE                                    | (a)   | handle  | 19          | `oskeytype: 000001C6C31EF810` |         |
+| OSKEY\_CAPSLOCK                                 | (a)   | handle  | 20          | `oskeytype: 000001C6C31EF850` |         |
+| OSKEY\_KANA or OSKEY\_HANGUL                    | (a)   | handle  | 21          | `oskeytype: 000001C6C31EF890` |         |
+| OSKEY\_JUNJA                                    | (a)   | handle  | 23          | `oskeytype: 000001C6C31EF8D0` |         |
+| OSKEY\_FINAL                                    | (a)   | handle  | 24          | `oskeytype: 000001C6C31EF910` |         |
+| OSKEY\_HANJA or OSKEY\_KANJI                    | (a)   | handle  | 25          | `oskeytype: 000001C6C31EF950` |         |
+| OSKEY\_ESCAPE                                   | (a)   | handle  | 27          | `oskeytype: 000001C6C31EF990` |         |
+| OSKEY\_CONVERT                                  | (a)   | handle  | 28          | `oskeytype: 000001C6C31EF9D0` |         |
+| OSKEY\_NONCONVERT                               | (a)   | handle  | 29          | `oskeytype: 000001C6C31EFA10` |         |
+| OSKEY\_ACCEPT                                   | (a)   | handle  | 30          | `oskeytype: 000001C6C31EFA50` |         |
+| OSKEY\_MODECHANGE                               | (a)   | handle  | 31          | `oskeytype: 000001C6C31EFA90` |         |
+| OSKEY\_SPACE                                    | (a)   | handle  | 32          | `oskeytype: 000001C6C31EFAD0` |         |
+| OSKEY\_PAGEUP                                   | (a)   | handle  | 33          | `oskeytype: 000001C6C31EFB10` |         |
+| OSKEY\_PAGEDOWN                                 | (a)   | handle  | 34          | `oskeytype: 000001C6C31EFB50` |         |
+| OSKEY\_END                                      | (a)   | handle  | 35          | `oskeytype: 000001C6C31EFB90` |         |
+| OSKEY\_HOME                                     | (a)   | handle  | 36          | `oskeytype: 000001C6C31EFBD0` |         |
+| OSKEY\_LEFT                                     | (a)   | handle  | 37          | `oskeytype: 000001C6C31EFC10` |         |
+| OSKEY\_UP                                       | (a)   | handle  | 38          | `oskeytype: 000001C6C31EFC50` |         |
+| OSKEY\_RIGHT                                    | (a)   | handle  | 39          | `oskeytype: 000001C6C31EFC90` |         |
+| OSKEY\_DOWN                                     | (a)   | handle  | 40          | `oskeytype: 000001C6C31EFCD0` |         |
+| OSKEY\_SELECT                                   | (a)   | handle  | 41          | `oskeytype: 000001C6C31EFD10` |         |
+| OSKEY\_PRINT                                    | (a)   | handle  | 42          | `oskeytype: 000001C6C31EFD50` |         |
+| OSKEY\_EXECUTE                                  | (a)   | handle  | 43          | `oskeytype: 000001C6C31EFD90` |         |
+| OSKEY\_PRINTSCREEN                              | (a)   | handle  | 44          | `oskeytype: 000001C6C31EFDD0` |         |
+| OSKEY\_INSERT                                   | (a)   | handle  | 45          | `oskeytype: 000001C6C31EFE10` |         |
+| OSKEY\_DELETE                                   | (a)   | handle  | 46          | `oskeytype: 000001C6C31EFE50` |         |
+| OSKEY\_HELP                                     | (a)   | handle  | 47          | `oskeytype: 000001C6C31EFE90` |         |
+| OSKEY\_0                                        | (a)   | handle  | 48          | `oskeytype: 000001C6C31EFED0` |         |
+| OSKEY\_1                                        | (a)   | handle  | 49          | `oskeytype: 000001C6C31EFF10` |         |
+| OSKEY\_2                                        | (a)   | handle  | 50          | `oskeytype: 000001C6C31EFF50` |         |
+| OSKEY\_3                                        | (a)   | handle  | 51          | `oskeytype: 000001C6C31EFF90` |         |
+| OSKEY\_4                                        | (a)   | handle  | 52          | `oskeytype: 000001C6C31EFFD0` |         |
+| OSKEY\_5                                        | (a)   | handle  | 53          | `oskeytype: 000001C6C31F0010` |         |
+| OSKEY\_6                                        | (a)   | handle  | 54          | `oskeytype: 000001C6C31F0050` |         |
+| OSKEY\_7                                        | (a)   | handle  | 55          | `oskeytype: 000001C6C31F0090` |         |
+| OSKEY\_8                                        | (a)   | handle  | 56          | `oskeytype: 000001C6C31F00D0` |         |
+| OSKEY\_9                                        | (a)   | handle  | 57          | `oskeytype: 000001C6C31F0110` |         |
+| OSKEY\_A                                        | (a)   | handle  | 65          | `oskeytype: 000001C6C31F0150` |         |
+| OSKEY\_B                                        | (a)   | handle  | 66          | `oskeytype: 000001C6C31F0190` |         |
+| OSKEY\_C                                        | (a)   | handle  | 67          | `oskeytype: 000001C6C31F01D0` |         |
+| OSKEY\_D                                        | (a)   | handle  | 68          | `oskeytype: 000001C6C31F0210` |         |
+| OSKEY\_E                                        | (a)   | handle  | 69          | `oskeytype: 000001C6C31F0250` |         |
+| OSKEY\_F                                        | (a)   | handle  | 70          | `oskeytype: 000001C6C31F0290` |         |
+| OSKEY\_G                                        | (a)   | handle  | 71          | `oskeytype: 000001C6C31F02D0` |         |
+| OSKEY\_H                                        | (a)   | handle  | 72          | `oskeytype: 000001C6C31F0310` |         |
+| OSKEY\_I                                        | (a)   | handle  | 73          | `oskeytype: 000001C6C31F0350` |         |
+| OSKEY\_J                                        | (a)   | handle  | 74          | `oskeytype: 000001C6C31F0390` |         |
+| OSKEY\_K                                        | (a)   | handle  | 75          | `oskeytype: 000001C6C31F03D0` |         |
+| OSKEY\_L                                        | (a)   | handle  | 76          | `oskeytype: 000001C6C31F0410` |         |
+| OSKEY\_M                                        | (a)   | handle  | 77          | `oskeytype: 000001C6C31F0450` |         |
+| OSKEY\_N                                        | (a)   | handle  | 78          | `oskeytype: 000001C6C31F0490` |         |
+| OSKEY\_O                                        | (a)   | handle  | 79          | `oskeytype: 000001C6C31F04D0` |         |
+| OSKEY\_P                                        | (a)   | handle  | 80          | `oskeytype: 000001C6C31F0510` |         |
+| OSKEY\_Q                                        | (a)   | handle  | 81          | `oskeytype: 000001C6C31F0550` |         |
+| OSKEY\_R                                        | (a)   | handle  | 82          | `oskeytype: 000001C6C31F0590` |         |
+| OSKEY\_S                                        | (a)   | handle  | 83          | `oskeytype: 000001C6C31F05D0` |         |
+| OSKEY\_T                                        | (a)   | handle  | 84          | `oskeytype: 000001C6C31F0610` |         |
+| OSKEY\_U                                        | (a)   | handle  | 85          | `oskeytype: 000001C6C31F0650` |         |
+| OSKEY\_V                                        | (a)   | handle  | 86          | `oskeytype: 000001C6C31F0690` |         |
+| OSKEY\_W                                        | (a)   | handle  | 87          | `oskeytype: 000001C6C31F06D0` |         |
+| OSKEY\_X                                        | (a)   | handle  | 88          | `oskeytype: 000001C6C31F0710` |         |
+| OSKEY\_Y                                        | (a)   | handle  | 89          | `oskeytype: 000001C6C31F0750` |         |
+| OSKEY\_Z                                        | (a)   | handle  | 90          | `oskeytype: 000001C6C31F0790` |         |
+| OSKEY\_LMETA                                    | (a)   | handle  | 91          | `oskeytype: 000001C6C31F07D0` |         |
+| OSKEY\_RMETA                                    | (a)   | handle  | 92          | `oskeytype: 000001C6C31F0810` |         |
+| OSKEY\_APPS                                     | (a)   | handle  | 93          | `oskeytype: 000001C6C31F0850` |         |
+| OSKEY\_SLEEP                                    | (a)   | handle  | 95          | `oskeytype: 000001C6C31F0890` |         |
+| OSKEY\_NUMPAD0                                  | (a)   | handle  | 96          | `oskeytype: 000001C6C31F08D0` |         |
+| OSKEY\_NUMPAD1                                  | (a)   | handle  | 97          | `oskeytype: 000001C6C31F0910` |         |
+| OSKEY\_NUMPAD2                                  | (a)   | handle  | 98          | `oskeytype: 000001C6C31F0950` |         |
+| OSKEY\_NUMPAD3                                  | (a)   | handle  | 99          | `oskeytype: 000001C6C31F0990` |         |
+| OSKEY\_NUMPAD4                                  | (a)   | handle  | 100         | `oskeytype: 000001C6C31F09D0` |         |
+| OSKEY\_NUMPAD5                                  | (a)   | handle  | 101         | `oskeytype: 000001C6C31F0A10` |         |
+| OSKEY\_NUMPAD6                                  | (a)   | handle  | 102         | `oskeytype: 000001C6C31F0A50` |         |
+| OSKEY\_NUMPAD7                                  | (a)   | handle  | 103         | `oskeytype: 000001C6C31F0A90` |         |
+| OSKEY\_NUMPAD8                                  | (a)   | handle  | 104         | `oskeytype: 000001C6C31F0AD0` |         |
+| OSKEY\_NUMPAD9                                  | (a)   | handle  | 105         | `oskeytype: 000001C6C31F0B10` |         |
+| OSKEY\_MULTIPLY                                 | (a)   | handle  | 106         | `oskeytype: 000001C6C31F0B50` |         |
+| OSKEY\_ADD                                      | (a)   | handle  | 107         | `oskeytype: 000001C6C31F0B90` |         |
+| OSKEY\_SEPARATOR                                | (a)   | handle  | 108         | `oskeytype: 000001C6C31F0BD0` |         |
+| OSKEY\_SUBTRACT                                 | (a)   | handle  | 109         | `oskeytype: 000001C6C31F0C10` |         |
+| OSKEY\_DECIMAL                                  | (a)   | handle  | 110         | `oskeytype: 000001C6C31F0C50` |         |
+| OSKEY\_DIVIDE                                   | (a)   | handle  | 111         | `oskeytype: 000001C6C31F0C90` |         |
+| OSKEY\_F1                                       | (a)   | handle  | 112         | `oskeytype: 000001C6C31F0CD0` |         |
+| OSKEY\_F2                                       | (a)   | handle  | 113         | `oskeytype: 000001C6C31F0D10` |         |
+| OSKEY\_F3                                       | (a)   | handle  | 114         | `oskeytype: 000001C6C31F0D50` |         |
+| OSKEY\_F4                                       | (a)   | handle  | 115         | `oskeytype: 000001C6C31F0D90` |         |
+| OSKEY\_F5                                       | (a)   | handle  | 116         | `oskeytype: 000001C6C31F0DD0` |         |
+| OSKEY\_F6                                       | (a)   | handle  | 117         | `oskeytype: 000001C6C31F0E10` |         |
+| OSKEY\_F7                                       | (a)   | handle  | 118         | `oskeytype: 000001C6C31F0E50` |         |
+| OSKEY\_F8                                       | (a)   | handle  | 119         | `oskeytype: 000001C6C31F0E90` |         |
+| OSKEY\_F9                                       | (a)   | handle  | 120         | `oskeytype: 000001C6C31F0ED0` |         |
+| OSKEY\_F10                                      | (a)   | handle  | 121         | `oskeytype: 000001C6C31F0F10` |         |
+| OSKEY\_F11                                      | (a)   | handle  | 122         | `oskeytype: 000001C6C31F0F50` |         |
+| OSKEY\_F12                                      | (a)   | handle  | 123         | `oskeytype: 000001C6C31F0F90` |         |
+| OSKEY\_F13                                      | (a)   | handle  | 124         | `oskeytype: 000001C6C31F0FD0` |         |
+| OSKEY\_F14                                      | (a)   | handle  | 125         | `oskeytype: 000001C6C31F1010` |         |
+| OSKEY\_F15                                      | (a)   | handle  | 126         | `oskeytype: 000001C6C31F1050` |         |
+| OSKEY\_F16                                      | (a)   | handle  | 127         | `oskeytype: 000001C6C31F1090` |         |
+| OSKEY\_F17                                      | (a)   | handle  | 128         | `oskeytype: 000001C6C31F10D0` |         |
+| OSKEY\_F18                                      | (a)   | handle  | 129         | `oskeytype: 000001C6C31F1110` |         |
+| OSKEY\_F19                                      | (a)   | handle  | 130         | `oskeytype: 000001C6C31F1150` |         |
+| OSKEY\_F20                                      | (a)   | handle  | 131         | `oskeytype: 000001C6C31F1190` |         |
+| OSKEY\_F21                                      | (a)   | handle  | 132         | `oskeytype: 000001C6C31F11D0` |         |
+| OSKEY\_F22                                      | (a)   | handle  | 133         | `oskeytype: 000001C6C31F1210` |         |
+| OSKEY\_F23                                      | (a)   | handle  | 134         | `oskeytype: 000001C6C31F1250` |         |
+| OSKEY\_F24                                      | (a)   | handle  | 135         | `oskeytype: 000001C6C31F1290` |         |
+| OSKEY\_NUMLOCK                                  | (a)   | handle  | 144         | `oskeytype: 000001C6C31F12D0` |         |
+| OSKEY\_SCROLLLOCK                               | (a)   | handle  | 145         | `oskeytype: 000001C6C31F1310` |         |
+| OSKEY\_OEM\_NEC\_EQUAL or OSKEY\_OEM\_FJ\_JISHO | (a)   | handle  | 146         | `oskeytype: 000001C6C31F1350` |         |
+| OSKEY\_OEM\_FJ\_MASSHOU                         | (a)   | handle  | 147         | `oskeytype: 000001C6C31F1390` |         |
+| OSKEY\_OEM\_FJ\_TOUROKU                         | (a)   | handle  | 148         | `oskeytype: 000001C6C31F13D0` |         |
+| OSKEY\_OEM\_FJ\_LOYA                            | (a)   | handle  | 149         | `oskeytype: 000001C6C31F1410` |         |
+| OSKEY\_OEM\_FJ\_ROYA                            | (a)   | handle  | 150         | `oskeytype: 000001C6C31F1450` |         |
+| OSKEY\_LSHIFT                                   | (a)   | handle  | 160         | `oskeytype: 000001C6C31F1490` |         |
+| OSKEY\_RSHIFT                                   | (a)   | handle  | 161         | `oskeytype: 000001C6C31F14D0` |         |
+| OSKEY\_LCONTROL                                 | (a)   | handle  | 162         | `oskeytype: 000001C6C31F1510` |         |
+| OSKEY\_RCONTROL                                 | (a)   | handle  | 163         | `oskeytype: 000001C6C31F1550` |         |
+| OSKEY\_LALT                                     | (a)   | handle  | 164         | `oskeytype: 000001C6C31F1590` |         |
+| OSKEY\_RALT                                     | (a)   | handle  | 165         | `oskeytype: 000001C6C31F15D0` |         |
+| OSKEY\_BROWSER\_BACK                            | (a)   | handle  | 166         | `oskeytype: 000001C6C31F1610` |         |
+| OSKEY\_BROWSER\_FORWARD                         | (a)   | handle  | 167         | `oskeytype: 000001C6C31F1650` |         |
+| OSKEY\_BROWSER\_REFRESH                         | (a)   | handle  | 168         | `oskeytype: 000001C6C31F1690` |         |
+| OSKEY\_BROWSER\_STOP                            | (a)   | handle  | 169         | `oskeytype: 000001C6C31F16D0` |         |
+| OSKEY\_BROWSER\_SEARCH                          | (a)   | handle  | 170         | `oskeytype: 000001C6C31F1710` |         |
+| OSKEY\_BROWSER\_FAVORITES                       | (a)   | handle  | 171         | `oskeytype: 000001C6C31F1750` |         |
+| OSKEY\_BROWSER\_HOME                            | (a)   | handle  | 172         | `oskeytype: 000001C6C31F1790` |         |
+| OSKEY\_VOLUME\_MUTE                             | (a)   | handle  | 173         | `oskeytype: 000001C6C31F17D0` |         |
+| OSKEY\_VOLUME\_DOWN                             | (a)   | handle  | 174         | `oskeytype: 000001C6C31F1810` |         |
+| OSKEY\_VOLUME\_UP                               | (a)   | handle  | 175         | `oskeytype: 000001C6C31F1850` |         |
+| OSKEY\_MEDIA\_NEXT\_TRACK                       | (a)   | handle  | 176         | `oskeytype: 000001C6C31F1890` |         |
+| OSKEY\_MEDIA\_PREV\_TRACK                       | (a)   | handle  | 177         | `oskeytype: 000001C6C31F18D0` |         |
+| OSKEY\_MEDIA\_STOP                              | (a)   | handle  | 178         | `oskeytype: 000001C6C31F1910` |         |
+| OSKEY\_MEDIA\_PLAY\_PAUSE                       | (a)   | handle  | 179         | `oskeytype: 000001C6C31F1950` |         |
+| OSKEY\_LAUNCH\_MAIL                             | (a)   | handle  | 180         | `oskeytype: 000001C6C31F1990` |         |
+| OSKEY\_LAUNCH\_MEDIA\_SELECT                    | (a)   | handle  | 181         | `oskeytype: 000001C6C31F19D0` |         |
+| OSKEY\_LAUNCH\_APP1                             | (a)   | handle  | 182         | `oskeytype: 000001C6C31F1A10` |         |
+| OSKEY\_LAUNCH\_APP2                             | (a)   | handle  | 183         | `oskeytype: 000001C6C31F1A50` |         |
+| OSKEY\_OEM\_1                                   | (a)   | handle  | 186         | `oskeytype: 000001C6C31F1A90` |         |
+| OSKEY\_OEM\_PLUS                                | (a)   | handle  | 187         | `oskeytype: 000001C6C31F1AD0` |         |
+| OSKEY\_OEM\_COMMA                               | (a)   | handle  | 188         | `oskeytype: 000001C6C31F1B10` |         |
+| OSKEY\_OEM\_MINUS                               | (a)   | handle  | 189         | `oskeytype: 000001C6C31F1B50` |         |
+| OSKEY\_OEM\_PERIOD                              | (a)   | handle  | 190         | `oskeytype: 000001C6C31F1B90` |         |
+| OSKEY\_OEM\_2                                   | (a)   | handle  | 191         | `oskeytype: 000001C6C31F1BD0` |         |
+| OSKEY\_OEM\_3                                   | (a)   | handle  | 192         | `oskeytype: 000001C6C31F1C10` |         |
+| OSKEY\_OEM\_4                                   | (a)   | handle  | 219         | `oskeytype: 000001C6C31F1C50` |         |
+| OSKEY\_OEM\_5                                   | (a)   | handle  | 220         | `oskeytype: 000001C6C31F1C90` |         |
+| OSKEY\_OEM\_6                                   | (a)   | handle  | 221         | `oskeytype: 000001C6C31F1CD0` |         |
+| OSKEY\_OEM\_7                                   | (a)   | handle  | 222         | `oskeytype: 000001C6C31F1D10` |         |
+| OSKEY\_OEM\_8                                   | (a)   | handle  | 223         | `oskeytype: 000001C6C31F1D50` |         |
+| OSKEY\_OEM\_AX                                  | (a)   | handle  | 225         | `oskeytype: 000001C6C31F1D90` |         |
+| OSKEY\_OEM\_102                                 | (a)   | handle  | 226         | `oskeytype: 000001C6C31F1DD0` |         |
+| OSKEY\_ICO\_HELP                                | (a)   | handle  | 227         | `oskeytype: 000001C6C31F1E10` |         |
+| OSKEY\_ICO\_00                                  | (a)   | handle  | 228         | `oskeytype: 000001C6C31F1E50` |         |
+| OSKEY\_PROCESSKEY                               | (a)   | handle  | 229         | `oskeytype: 000001C6C31F1E90` |         |
+| OSKEY\_ICO\_CLEAR                               | (a)   | handle  | 230         | `oskeytype: 000001C6C31F1ED0` |         |
+| OSKEY\_PACKET                                   | (a)   | handle  | 231         | `oskeytype: 000001C6C31F1F10` |         |
+| OSKEY\_OEM\_RESET                               | (a)   | handle  | 233         | `oskeytype: 000001C6C31F1F50` |         |
+| OSKEY\_OEM\_JUMP                                | (a)   | handle  | 234         | `oskeytype: 000001C6C31F1F90` |         |
+| OSKEY\_OEM\_PA1                                 | (a)   | handle  | 235         | `oskeytype: 000001C6C31F1FD0` |         |
+| OSKEY\_OEM\_PA2                                 | (a)   | handle  | 236         | `oskeytype: 000001C6C31F2010` |         |
+| OSKEY\_OEM\_PA3                                 | (a)   | handle  | 237         | `oskeytype: 000001C6C31F2050` |         |
+| OSKEY\_OEM\_WSCTRL                              | (a)   | handle  | 238         | `oskeytype: 000001C6C31F2090` |         |
+| OSKEY\_OEM\_CUSEL                               | (a)   | handle  | 239         | `oskeytype: 000001C6C31F20D0` |         |
+| OSKEY\_OEM\_ATTN                                | (a)   | handle  | 240         | `oskeytype: 000001C6C31F2110` |         |
+| OSKEY\_OEM\_FINISH                              | (a)   | handle  | 241         | `oskeytype: 000001C6C31F2150` |         |
+| OSKEY\_OEM\_COPY                                | (a)   | handle  | 242         | `oskeytype: 000001C6C31F2190` |         |
+| OSKEY\_OEM\_AUTO                                | (a)   | handle  | 243         | `oskeytype: 000001C6C31F21D0` |         |
+| OSKEY\_OEM\_ENLW                                | (a)   | handle  | 244         | `oskeytype: 000001C6C31F2210` |         |
+| OSKEY\_OEM\_BACKTAB                             | (a)   | handle  | 245         | `oskeytype: 000001C6C31F2250` |         |
+| OSKEY\_ATTN                                     | (a)   | handle  | 246         | `oskeytype: 000001C6C31F2290` |         |
+| OSKEY\_CRSEL                                    | (a)   | handle  | 247         | `oskeytype: 000001C6C31F22D0` |         |
+| OSKEY\_EXSEL                                    | (a)   | handle  | 248         | `oskeytype: 000001C6C31F2310` |         |
+| OSKEY\_EREOF                                    | (a)   | handle  | 249         | `oskeytype: 000001C6C31F2350` |         |
+| OSKEY\_PLAY                                     | (a)   | handle  | 250         | `oskeytype: 000001C6C31F2390` |         |
+| OSKEY\_ZOOM                                     | (a)   | handle  | 251         | `oskeytype: 000001C6C31F23D0` |         |
+| OSKEY\_NONAME                                   | (a)   | handle  | 252         | `oskeytype: 000001C6C31F2410` |         |
+| OSKEY\_PA1                                      | (a)   | handle  | 253         | `oskeytype: 000001C6C31F2450` |         |
+| OSKEY\_OEM\_CLEAR                               | (a)   | handle  | 254         | `oskeytype: 000001C6C31F2490` |         |
+| -1                                              | (a)   | handle  | -1          | `oskeytype: 000001C6DA34AA10` |         |
+| past the last constant                          | (a)   | handle  | 255         | `oskeytype: 000001C78090F8D0` |         |
+| 2147483647                                      | (a)   | handle  | 2147483647  | `oskeytype: 000001C6DA343520` |         |
+| -2147483648                                     | (a)   | handle  | -2147483648 | `oskeytype: 000001C6DA2DE6D0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (OSKEY\_BACKSPACE, OSKEY\_TAB, OSKEY\_CLEAR, OSKEY\_RETURN, OSKEY\_SHIFT, OSKEY\_CONTROL, OSKEY\_ALT, OSKEY\_PAUSE, OSKEY\_CAPSLOCK, OSKEY\_KANA or OSKEY\_HANGUL, OSKEY\_JUNJA, OSKEY\_FINAL, OSKEY\_HANJA or OSKEY\_KANJI, OSKEY\_ESCAPE, OSKEY\_CONVERT, OSKEY\_NONCONVERT, OSKEY\_ACCEPT, OSKEY\_MODECHANGE, OSKEY\_SPACE, OSKEY\_PAGEUP, OSKEY\_PAGEDOWN, OSKEY\_END, OSKEY\_HOME, OSKEY\_LEFT, OSKEY\_UP, OSKEY\_RIGHT, OSKEY\_DOWN, OSKEY\_SELECT, OSKEY\_PRINT, OSKEY\_EXECUTE, OSKEY\_PRINTSCREEN, OSKEY\_INSERT, OSKEY\_DELETE, OSKEY\_HELP, OSKEY\_0, OSKEY\_1, OSKEY\_2, OSKEY\_3, OSKEY\_4, OSKEY\_5, OSKEY\_6, OSKEY\_7, OSKEY\_8, OSKEY\_9, OSKEY\_A, OSKEY\_B, OSKEY\_C, OSKEY\_D, OSKEY\_E, OSKEY\_F, OSKEY\_G, OSKEY\_H, OSKEY\_I, OSKEY\_J, OSKEY\_K, OSKEY\_L, OSKEY\_M, OSKEY\_N, OSKEY\_O, OSKEY\_P, OSKEY\_Q, OSKEY\_R, OSKEY\_S, OSKEY\_T, OSKEY\_U, OSKEY\_V, OSKEY\_W, OSKEY\_X, OSKEY\_Y, OSKEY\_Z, OSKEY\_LMETA, OSKEY\_RMETA, OSKEY\_APPS, OSKEY\_SLEEP, OSKEY\_NUMPAD0, OSKEY\_NUMPAD1, OSKEY\_NUMPAD2, OSKEY\_NUMPAD3, OSKEY\_NUMPAD4, OSKEY\_NUMPAD5, OSKEY\_NUMPAD6, OSKEY\_NUMPAD7, OSKEY\_NUMPAD8, OSKEY\_NUMPAD9, OSKEY\_MULTIPLY, OSKEY\_ADD, OSKEY\_SEPARATOR, OSKEY\_SUBTRACT, OSKEY\_DECIMAL, OSKEY\_DIVIDE, OSKEY\_F1, OSKEY\_F2, OSKEY\_F3, OSKEY\_F4, OSKEY\_F5, OSKEY\_F6, OSKEY\_F7, OSKEY\_F8, OSKEY\_F9, OSKEY\_F10, OSKEY\_F11, OSKEY\_F12, OSKEY\_F13, OSKEY\_F14, OSKEY\_F15, OSKEY\_F16, OSKEY\_F17, OSKEY\_F18, OSKEY\_F19, OSKEY\_F20, OSKEY\_F21, OSKEY\_F22, OSKEY\_F23, OSKEY\_F24, OSKEY\_NUMLOCK, OSKEY\_SCROLLLOCK, OSKEY\_OEM\_NEC\_EQUAL or OSKEY\_OEM\_FJ\_JISHO, OSKEY\_OEM\_FJ\_MASSHOU, OSKEY\_OEM\_FJ\_TOUROKU, OSKEY\_OEM\_FJ\_LOYA, OSKEY\_OEM\_FJ\_ROYA, OSKEY\_LSHIFT, OSKEY\_RSHIFT, OSKEY\_LCONTROL, OSKEY\_RCONTROL, OSKEY\_LALT, OSKEY\_RALT, OSKEY\_BROWSER\_BACK, OSKEY\_BROWSER\_FORWARD, OSKEY\_BROWSER\_REFRESH, OSKEY\_BROWSER\_STOP, OSKEY\_BROWSER\_SEARCH, OSKEY\_BROWSER\_FAVORITES, OSKEY\_BROWSER\_HOME, OSKEY\_VOLUME\_MUTE, OSKEY\_VOLUME\_DOWN, OSKEY\_VOLUME\_UP, OSKEY\_MEDIA\_NEXT\_TRACK, OSKEY\_MEDIA\_PREV\_TRACK, OSKEY\_MEDIA\_STOP, OSKEY\_MEDIA\_PLAY\_PAUSE, OSKEY\_LAUNCH\_MAIL, OSKEY\_LAUNCH\_MEDIA\_SELECT, OSKEY\_LAUNCH\_APP1, OSKEY\_LAUNCH\_APP2, OSKEY\_OEM\_1, OSKEY\_OEM\_PLUS, OSKEY\_OEM\_COMMA, OSKEY\_OEM\_MINUS, OSKEY\_OEM\_PERIOD, OSKEY\_OEM\_2, OSKEY\_OEM\_3, OSKEY\_OEM\_4, OSKEY\_OEM\_5, OSKEY\_OEM\_6, OSKEY\_OEM\_7, OSKEY\_OEM\_8, OSKEY\_OEM\_AX, OSKEY\_OEM\_102, OSKEY\_ICO\_HELP, OSKEY\_ICO\_00, OSKEY\_PROCESSKEY, OSKEY\_ICO\_CLEAR, OSKEY\_PACKET, OSKEY\_OEM\_RESET, OSKEY\_OEM\_JUMP, OSKEY\_OEM\_PA1, OSKEY\_OEM\_PA2, OSKEY\_OEM\_PA3, OSKEY\_OEM\_WSCTRL, OSKEY\_OEM\_CUSEL, OSKEY\_OEM\_ATTN, OSKEY\_OEM\_FINISH, OSKEY\_OEM\_COPY, OSKEY\_OEM\_AUTO, OSKEY\_OEM\_ENLW, OSKEY\_OEM\_BACKTAB, OSKEY\_ATTN, OSKEY\_CRSEL, OSKEY\_EXSEL, OSKEY\_EREOF, OSKEY\_PLAY, OSKEY\_ZOOM, OSKEY\_NONAME, OSKEY\_PA1, OSKEY\_OEM\_CLEAR, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertAbilityIntegerField`
+
+| Case                                        | Group | Outcome | Id          | Type                                    | Message |
+| ------------------------------------------- | ----- | ------- | ----------- | --------------------------------------- | ------- |
+| ABILITY\_IF\_BUTTON\_POSITION\_NORMAL\_X    | (a)   | handle  | 1633841272  | `abilityintegerfield: 000001C6C31F2560` |         |
+| ABILITY\_IF\_BUTTON\_POSITION\_NORMAL\_Y    | (a)   | handle  | 1633841273  | `abilityintegerfield: 000001C6C31F2600` |         |
+| ABILITY\_IF\_BUTTON\_POSITION\_ACTIVATED\_X | (a)   | handle  | 1635082872  | `abilityintegerfield: 000001C6C31F2640` |         |
+| ABILITY\_IF\_BUTTON\_POSITION\_ACTIVATED\_Y | (a)   | handle  | 1635082873  | `abilityintegerfield: 000001C6C31F2680` |         |
+| ABILITY\_IF\_BUTTON\_POSITION\_RESEARCH\_X  | (a)   | handle  | 1634889848  | `abilityintegerfield: 000001C6C31F26F0` |         |
+| ABILITY\_IF\_BUTTON\_POSITION\_RESEARCH\_Y  | (a)   | handle  | 1634889849  | `abilityintegerfield: 000001C6C31F2730` |         |
+| ABILITY\_IF\_MISSILE\_SPEED                 | (a)   | handle  | 1634562928  | `abilityintegerfield: 000001C6C31F27A0` |         |
+| ABILITY\_IF\_TARGET\_ATTACHMENTS            | (a)   | handle  | 1635017059  | `abilityintegerfield: 000001C6C31F2840` |         |
+| ABILITY\_IF\_CASTER\_ATTACHMENTS            | (a)   | handle  | 1633902947  | `abilityintegerfield: 000001C6C31F2880` |         |
+| ABILITY\_IF\_PRIORITY                       | (a)   | handle  | 1634759273  | `abilityintegerfield: 000001C6C31F28C0` |         |
+| ABILITY\_IF\_LEVELS                         | (a)   | handle  | 1634493814  | `abilityintegerfield: 000001C6C31F2930` |         |
+| ABILITY\_IF\_REQUIRED\_LEVEL                | (a)   | handle  | 1634888822  | `abilityintegerfield: 000001C6C31F2970` |         |
+| ABILITY\_IF\_LEVEL\_SKIP\_REQUIREMENT       | (a)   | handle  | 1634497387  | `abilityintegerfield: 000001C6C31F29E0` |         |
+| -1                                          | (a)   | handle  | -1          | `abilityintegerfield: 000001C6DA3B7C70` |         |
+| past the last constant                      | (a)   | handle  | 1635082874  | `abilityintegerfield: 000001C6DA37BC10` |         |
+| 2147483647                                  | (a)   | handle  | 2147483647  | `abilityintegerfield: 000001C7807D7800` |         |
+| -2147483648                                 | (a)   | handle  | -2147483648 | `abilityintegerfield: 000001C6DA38B4A0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_IF\_BUTTON\_POSITION\_NORMAL\_X, ABILITY\_IF\_BUTTON\_POSITION\_NORMAL\_Y, ABILITY\_IF\_BUTTON\_POSITION\_ACTIVATED\_X, ABILITY\_IF\_BUTTON\_POSITION\_ACTIVATED\_Y, ABILITY\_IF\_BUTTON\_POSITION\_RESEARCH\_X, ABILITY\_IF\_BUTTON\_POSITION\_RESEARCH\_Y, ABILITY\_IF\_MISSILE\_SPEED, ABILITY\_IF\_TARGET\_ATTACHMENTS, ABILITY\_IF\_CASTER\_ATTACHMENTS, ABILITY\_IF\_PRIORITY, ABILITY\_IF\_LEVELS, ABILITY\_IF\_REQUIRED\_LEVEL, ABILITY\_IF\_LEVEL\_SKIP\_REQUIREMENT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertAbilityRealField`
+
+| Case                           | Group | Outcome | Id          | Type                                 | Message |
+| ------------------------------ | ----- | ------- | ----------- | ------------------------------------ | ------- |
+| ABILITY\_RF\_ARF\_MISSILE\_ARC | (a)   | handle  | 1634558307  | `abilityrealfield: 000001C6C31F2B40` |         |
+| -1                             | (a)   | handle  | -1          | `abilityrealfield: 000001C6DA337DA0` |         |
+| past the last constant         | (a)   | handle  | 1634558308  | `abilityrealfield: 000001C6DA3B3370` |         |
+| 2147483647                     | (a)   | handle  | 2147483647  | `abilityrealfield: 000001C6DA3A28D0` |         |
+| -2147483648                    | (a)   | handle  | -2147483648 | `abilityrealfield: 000001C6DA3A3030` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_RF\_ARF\_MISSILE\_ARC, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertAbilityBooleanField`
+
+| Case                             | Group | Outcome | Id          | Type                                    | Message |
+| -------------------------------- | ----- | ------- | ----------- | --------------------------------------- | ------- |
+| ABILITY\_BF\_HERO\_ABILITY       | (a)   | handle  | 1634231666  | `abilitybooleanfield: 000001C6C31F2A50` |         |
+| ABILITY\_BF\_ITEM\_ABILITY       | (a)   | handle  | 1634301029  | `abilitybooleanfield: 000001C6C31F2AC0` |         |
+| ABILITY\_BF\_CHECK\_DEPENDENCIES | (a)   | handle  | 1633904740  | `abilitybooleanfield: 000001C6C31F2B00` |         |
+| -1                               | (a)   | handle  | -1          | `abilitybooleanfield: 000001C6DA3A9CA0` |         |
+| past the last constant           | (a)   | handle  | 1634301030  | `abilitybooleanfield: 000001C6DA370C90` |         |
+| 2147483647                       | (a)   | handle  | 2147483647  | `abilitybooleanfield: 000001C6DA3697B0` |         |
+| -2147483648                      | (a)   | handle  | -2147483648 | `abilitybooleanfield: 000001C6DA39A380` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_BF\_HERO\_ABILITY, ABILITY\_BF\_ITEM\_ABILITY, ABILITY\_BF\_CHECK\_DEPENDENCIES, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertAbilityStringField`
+
+| Case                                | Group | Outcome | Id          | Type                                   | Message |
+| ----------------------------------- | ----- | ------- | ----------- | -------------------------------------- | ------- |
+| ABILITY\_SF\_NAME                   | (a)   | handle  | 1634623853  | `abilitystringfield: 000001C6C31F2BB0` |         |
+| ABILITY\_SF\_ICON\_ACTIVATED        | (a)   | handle  | 1635082610  | `abilitystringfield: 000001C6C31F2C20` |         |
+| ABILITY\_SF\_ICON\_RESEARCH         | (a)   | handle  | 1634886002  | `abilitystringfield: 000001C6C31F2C60` |         |
+| ABILITY\_SF\_EFFECT\_SOUND          | (a)   | handle  | 1634035315  | `abilitystringfield: 000001C6C31F2D30` |         |
+| ABILITY\_SF\_EFFECT\_SOUND\_LOOPING | (a)   | handle  | 1634035308  | `abilitystringfield: 000001C6C31F2D70` |         |
+| -1                                  | (a)   | handle  | -1          | `abilitystringfield: 000001C6DA33EB30` |         |
+| past the last constant              | (a)   | handle  | 1635082611  | `abilitystringfield: 000001C6DA351530` |         |
+| 2147483647                          | (a)   | handle  | 2147483647  | `abilitystringfield: 000001C6DA3A6D60` |         |
+| -2147483648                         | (a)   | handle  | -2147483648 | `abilitystringfield: 000001C6DA322270` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_SF\_NAME, ABILITY\_SF\_ICON\_ACTIVATED, ABILITY\_SF\_ICON\_RESEARCH, ABILITY\_SF\_EFFECT\_SOUND, ABILITY\_SF\_EFFECT\_SOUND\_LOOPING, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
