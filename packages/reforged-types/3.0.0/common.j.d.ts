@@ -13425,9 +13425,10 @@ declare function GetStartLocPrioSlot(whichStartLoc: number, prioSlotIndex: numbe
  * @param whichStartLoc - integer (32-bit)
  * @param prioSlotIndex - integer (32-bit)
  * @returns startlocprio
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichStartLoc: negative, whichStartLoc: outside the world, whichStartLoc: 2147483647, prioSlotIndex: negative, prioSlotIndex: outside the world, prioSlotIndex: 2147483647) on 3.0.0.24268; evidence, not proof. The handle had id 0 in every case, the integer of `MAP_LOC_PRIO_LOW`, not a missing handle.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetStartLocPrio}
  */
-declare function GetStartLocPrio(whichStartLoc: number, prioSlotIndex: number): startlocprio | undefined;
+declare function GetStartLocPrio(whichStartLoc: number, prioSlotIndex: number): startlocprio;
 
 /**
  * @param whichStartLoc - integer (32-bit)
@@ -13519,9 +13520,10 @@ declare function IsGameTypeSupported(whichGameType: gametype): boolean;
 
 /**
  * @returns gametype
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetGameTypeSelected}
  */
-declare function GetGameTypeSelected(): gametype | undefined;
+declare function GetGameTypeSelected(): gametype;
 
 /**
  * @param whichMapFlag - mapflag
@@ -13532,33 +13534,38 @@ declare function IsMapFlagSet(whichMapFlag: mapflag): boolean;
 
 /**
  * @returns placement
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetGamePlacement}
  */
-declare function GetGamePlacement(): placement | undefined;
+declare function GetGamePlacement(): placement;
 
 /**
  * @returns gamespeed
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetGameSpeed}
  */
-declare function GetGameSpeed(): gamespeed | undefined;
+declare function GetGameSpeed(): gamespeed;
 
 /**
  * @returns gamedifficulty
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (one call), the integer of `MAP_DIFFICULTY_EASY`, not a missing handle.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetGameDifficulty}
  */
-declare function GetGameDifficulty(): gamedifficulty | undefined;
+declare function GetGameDifficulty(): gamedifficulty;
 
 /**
  * @returns mapdensity
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetResourceDensity}
  */
-declare function GetResourceDensity(): mapdensity | undefined;
+declare function GetResourceDensity(): mapdensity;
 
 /**
  * @returns mapdensity
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (one call), the integer of `MAP_DENSITY_NONE`, not a missing handle.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetCreatureDensity}
  */
-declare function GetCreatureDensity(): mapdensity | undefined;
+declare function GetCreatureDensity(): mapdensity;
 
 /**
  * @param whichStartLocation - integer (32-bit)
@@ -13700,6 +13707,7 @@ declare function GetPlayerStartLocation(whichPlayer: player): number;
 /**
  * @param whichPlayer - player
  * @returns playercolor
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (typical arguments), the integer of `PLAYER_COLOR_RED`, not a missing handle.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetPlayerColor}
  */
 declare function GetPlayerColor(whichPlayer: player): playercolor;
@@ -13714,6 +13722,7 @@ declare function GetPlayerSelectable(whichPlayer: player): boolean;
 /**
  * @param whichPlayer - player
  * @returns mapcontrol
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (typical arguments), the integer of `MAP_CONTROL_USER`, not a missing handle.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetPlayerController}
  */
 declare function GetPlayerController(whichPlayer: player): mapcontrol;
@@ -13721,6 +13730,7 @@ declare function GetPlayerController(whichPlayer: player): mapcontrol;
 /**
  * @param whichPlayer - player
  * @returns playerslotstate
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichPlayer: empty slot), the integer of `PLAYER_SLOT_STATE_EMPTY`, not a missing handle.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetPlayerSlotState}
  */
 declare function GetPlayerSlotState(whichPlayer: player): playerslotstate;
@@ -14400,9 +14410,10 @@ declare function IsLocationInRegion(whichRegion: region, whichLocation: location
 
 /**
  * @returns rect
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetWorldBounds}
  */
-declare function GetWorldBounds(): rect | undefined;
+declare function GetWorldBounds(): rect;
 
 /**
  * @returns trigger
@@ -15753,6 +15764,7 @@ declare function RemoveItem(whichItem: item): void;
 /**
  * @param whichItem - item
  * @returns player
+ * @remarks Returned nothing in a case of the nullability sweep (whichItem: removed item) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetItemPlayer}
  */
 declare function GetItemPlayer(whichItem: item): player | undefined;
@@ -15943,9 +15955,10 @@ declare function GetItemLevel(whichItem: item): number;
 /**
  * @param whichItem - item
  * @returns itemtype
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichItem: dead item, whichItem: removed item) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetItemType}
  */
-declare function GetItemType(whichItem: item): itemtype | undefined;
+declare function GetItemType(whichItem: item): itemtype;
 
 /**
  * @param whichItem - item
@@ -15997,6 +16010,7 @@ declare function SetItemUserData(whichItem: item, data: number): void;
  * @param whichItem - item
  * @returns equipmentType
  * @patch 3.0.0.24268
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichItem: dead item, whichItem: removed item) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (typical arguments, whichItem: dead item, whichItem: removed item), the integer of `EQUIPMENT_TYPE_NONE`, not a missing handle.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetItemEquipmentType}
  */
 declare function GetItemEquipmentType(whichItem: item): equipmentType;
@@ -16005,6 +16019,7 @@ declare function GetItemEquipmentType(whichItem: item): equipmentType;
  * @param whichItem - item
  * @returns itemTag
  * @patch 3.0.0.24268
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichItem: dead item, whichItem: removed item) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (typical arguments, whichItem: dead item, whichItem: removed item), the integer of `ITEMTAG_TYPE_UNDEFINED`, not a missing handle.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetItemTag}
  */
 declare function GetItemTag(whichItem: item): itemTag;
@@ -16940,7 +16955,7 @@ declare function GetUnitY(whichUnit: unit): number;
 /**
  * @param whichUnit - unit
  * @returns location
- * @remarks Returned a handle in every case of the nullability sweep (live unit, dead unit, removed unit) on 3.0.0.24268; evidence, not proof.
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichUnit: dead unit, whichUnit: removed unit) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitLoc}
  */
 declare function GetUnitLoc(whichUnit: unit): location;
@@ -16977,7 +16992,7 @@ declare function GetUnitState(whichUnit: unit, whichUnitState: unitstate): numbe
 /**
  * @param whichUnit - unit
  * @returns player
- * @remarks Returned a handle in every case of the nullability sweep (unit of player 0, Neutral Passive unit, dead unit, removed unit) on 3.0.0.24268; evidence, not proof.
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichUnit: dead unit, whichUnit: removed unit) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetOwningPlayer}
  */
 declare function GetOwningPlayer(whichUnit: unit): player;
@@ -16992,6 +17007,7 @@ declare function GetUnitTypeId(whichUnit: unit): number;
 /**
  * @param whichUnit - unit
  * @returns race
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichUnit: dead unit, whichUnit: removed unit) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitRace}
  */
 declare function GetUnitRace(whichUnit: unit): race;
@@ -17971,9 +17987,10 @@ declare function IsLocationMaskedToPlayer(whichLocation: location, whichPlayer: 
 /**
  * @param whichPlayer - player
  * @returns race
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichPlayer: neutral player), an integer no `race` constant of `common.j` has (`RACE_HUMAN` to `RACE_OTHER` are 1 to 7).
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetPlayerRace}
  */
-declare function GetPlayerRace(whichPlayer: player): race | undefined;
+declare function GetPlayerRace(whichPlayer: player): race;
 
 /**
  * @param whichPlayer - player
@@ -18314,9 +18331,10 @@ declare function FogModifierStop(whichFogModifier: fogmodifier): void;
 
 /**
  * @returns version
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/VersionGet}
  */
-declare function VersionGet(): version | undefined;
+declare function VersionGet(): version;
 
 /**
  * @param whichVersion - version
@@ -18518,9 +18536,10 @@ declare function SetEdCinematicAvailable(campaignNumber: number, available: bool
 
 /**
  * @returns gamedifficulty
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetDefaultDifficulty}
  */
-declare function GetDefaultDifficulty(): gamedifficulty | undefined;
+declare function GetDefaultDifficulty(): gamedifficulty;
 
 /**
  * @param g - gamedifficulty
@@ -21597,7 +21616,7 @@ declare function CameraSetupSetDestPosition(whichSetup: camerasetup, x: number, 
 /**
  * @param whichSetup - camerasetup
  * @returns location
- * @remarks Returned a handle in every case of the nullability sweep (fresh setup, positioned setup) on 3.0.0.24268; evidence, not proof.
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CameraSetupGetDestPositionLoc}
  */
 declare function CameraSetupGetDestPositionLoc(whichSetup: camerasetup): location;
@@ -21935,9 +21954,10 @@ declare function GetCameraTargetPositionZ(): number;
 /**
  * @returns location
  * @async
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetCameraTargetPositionLoc}
  */
-declare function GetCameraTargetPositionLoc(): location | undefined;
+declare function GetCameraTargetPositionLoc(): location;
 
 /**
  * @returns real
@@ -21963,9 +21983,10 @@ declare function GetCameraEyePositionZ(): number;
 /**
  * @returns location
  * @async
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetCameraEyePositionLoc}
  */
-declare function GetCameraEyePositionLoc(): location | undefined;
+declare function GetCameraEyePositionLoc(): location;
 
 /**
  * @param environmentName - string
@@ -23320,9 +23341,10 @@ declare function PauseCompAI(p: player, pause: boolean): void;
 /**
  * @param num - player
  * @returns aidifficulty
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, num: empty slot, num: neutral player) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetAIDifficulty}
  */
-declare function GetAIDifficulty(num: player): aidifficulty | undefined;
+declare function GetAIDifficulty(num: player): aidifficulty;
 
 /**
  * @param hUnit - unit

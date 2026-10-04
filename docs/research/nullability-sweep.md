@@ -4844,7 +4844,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichStartLoc: negative, whichStartLoc: outside the world, whichStartLoc: 2147483647, prioSlotIndex: negative, prioSlotIndex: outside the world, prioSlotIndex: 2147483647) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 7 cases (typical arguments, whichStartLoc: negative, whichStartLoc: outside the world, whichStartLoc: 2147483647, prioSlotIndex: negative, prioSlotIndex: outside the world, prioSlotIndex: 2147483647).
 
@@ -4856,7 +4856,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -4868,7 +4868,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -4880,7 +4880,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -4892,7 +4892,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (one call).
 
@@ -4904,7 +4904,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -4916,7 +4916,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (one call).
 
@@ -4970,7 +4970,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `intrinsic-property`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -4998,7 +4998,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichItem: dead item, whichItem: removed item) on 3.0.0.24268; evidence, not proof.
 
@@ -5094,7 +5094,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichPlayer: neutral player).
 
@@ -5106,7 +5106,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5118,7 +5118,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5142,7 +5142,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `intrinsic-property`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5154,7 +5154,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `intrinsic-property`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5168,7 +5168,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, num: empty slot, num: neutral player) on 3.0.0.24268; evidence, not proof.
 
