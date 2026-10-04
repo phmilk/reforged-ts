@@ -160,6 +160,17 @@ describe("buildProbe", () => {
     );
   });
 
+  it("compiles against the Typings of the manifest's Game version, whatever probes/tsconfig.json names", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "probe-manifest-"));
+    const manifest = join(dir, "manifest.json");
+    await writeFile(manifest, JSON.stringify({ patch: "9.9.9.1" }));
+    const folders = await tempFolders({ manifest });
+
+    expect(() => buildProbe("hello", folders)).toThrow(
+      /reforged-types\/9\.9\.9/,
+    );
+  });
+
   it.each([
     ["no patch", "{}"],
     ["a patch that is no Build", JSON.stringify({ patch: 'a"b' })],

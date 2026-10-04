@@ -26,6 +26,7 @@ import {
   sliceSetup,
   writeResultFile,
 } from "./support/nullability.js";
+import { stateFile } from "../src/state.js";
 
 /** The clock's now: late on 2 October 2026, in UTC. */
 const NOW = new Date("2026-10-02T23:30:00Z");
@@ -72,6 +73,7 @@ const SECTION = `## \`${PROBE}\`
 
 - Probe: \`${PROBE}\`
 - Patch: 3.0.0.12345
+- Client: 3.0.0.12345
 - Date: 2026-10-02
 - Run: \`${RUN_ID}\`
 
@@ -555,6 +557,20 @@ describe("the nullability report", () => {
     ]);
   });
 
+  it("names the client's Build the run was run on beside the Patch, and says when the run recorded none", async () => {
+    const { context, resultFile } = await setup();
+    await writeResultFile(resultFile, FINISHED);
+    await writeFile(
+      stateFile(context.stateFolder, PROBE),
+      JSON.stringify({ probe: PROBE, runId: RUN_ID }),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, context);
+    expect(slice.client).toBeUndefined();
+    expect(await readFile(context.reportFile, "utf8")).toContain(
+      "- Patch: 3.0.0.12345\n- Client: not recorded\n",
+    );
+  });
+
   it("refuses a run whose BEGIN line names no Patch", async () => {
     const { context, resultFile } = await setup();
     await writeResultFile(
@@ -614,6 +630,16 @@ describe("the nullability report", () => {
       "| a \\*b\\* \\_c\\_ \\[d\\] \\<e\\> \\#f \\| \\\\ \\`g\\` | (b)   |",
     );
     expect(report).toContain("| 1       | `` x\\|`y` ``         |");
+    // Read back as the section of another Build, every label pairs with its
+    // case again: no change.
+    await writeFile(
+      context.reportFile,
+      report.replace("- Patch: 3.0.0.12345", "- Patch: 3.0.0.11111"),
+    );
+    const { stdout } = await runMain(context);
+    expect(stdout.join("")).toContain(
+      "\nNo change from the section of Build 3.0.0.11111.\n",
+    );
   });
 
   it("replaces on a rerun only its own section, in place, and keeps the other Slices' sections", async () => {
@@ -971,6 +997,94 @@ describe("the nullability report", () => {
     );
   });
 
+  it("prints, when it replaces a section written under another Build, each change: a verdict, a case's outcome, a case added or gone, never an id", async () => {
+    const { context, resultFile } = await setup();
+    await mkdir(join(context.reportFile, ".."), { recursive: true });
+    await writeFile(
+      context.reportFile,
+      `${REPORT_HEADER}\n${SECTION.replace("- Patch: 3.0.0.12345", "- Patch: 3.0.0.11111")}`,
+    );
+    // On the new Build CreateTimer's first case returns nothing,
+    // GetOwningPlayer's removed unit became a dead unit, and Location's
+    // origin is another handle.
+    await writeResultFile(
+      resultFile,
+      FINISHED.map((line) =>
+        line
+          .replace(
+            "id=1048577 native=CreateTimer outcome=handle type=timer:%200000020C",
+            "native=CreateTimer outcome=nil",
+          )
+          .replaceAll("removed%20unit", "dead%20unit")
+          .replace("id=1048579", "id=1048999"),
+      ),
+    );
+    const { code, stdout } = await runMain(context);
+    expect(code).toBe(0);
+    expect(stdout.join("").split("\n").slice(4)).toEqual([
+      "Changes from the section of Build 3.0.0.11111:",
+      "CreateTimer: verdict non-null (evidence) -> nullable (proved)",
+      "CreateTimer case one call: handle -> nil",
+      "GetOwningPlayer case dead unit: added, nil",
+      "GetOwningPlayer case removed unit: gone",
+      "",
+    ]);
+  });
+
+  it("flags a new unsafe, and a Native or parameter added or gone, among the changes", async () => {
+    const { context, resultFile } = await setup();
+    await mkdir(join(context.reportFile, ".."), { recursive: true });
+    const previous = SECTION.replace(
+      "- Patch: 3.0.0.12345",
+      "- Patch: 3.0.0.11111",
+    )
+      .replaceAll("`Location`", "`CreateTrigger`")
+      .concat(
+        "\n### `EnumItemsInRect` parameter `filter`\n\n| Case | Group | Argument | Outcome | Count | Message |\n| --- | --- | --- | --- | --- | --- |\n| nil filter | (a) | nil | completed | 3 | |\n\n- Verdict: nullable (accepted)\n",
+      );
+    await writeFile(context.reportFile, `${REPORT_HEADER}\n${previous}`);
+    // CreateTimer's second call crashed the game in an earlier run.
+    await writeResultFile(
+      resultFile,
+      FINISHED.map((line) =>
+        line.includes(" CALL case=second%20call ")
+          ? line.replace(
+              / CALL .*/,
+              " SKIP case=second%20call group=a native=CreateTimer reason=crashed",
+            )
+          : line,
+      ),
+    );
+    const { stdout } = await runMain(context);
+    expect(stdout.join("").split("\n").slice(4)).toEqual([
+      "Changes from the section of Build 3.0.0.11111:",
+      "CreateTimer: verdict non-null (evidence) -> unsafe, a new unsafe",
+      "CreateTimer case second call: handle -> crashed",
+      "Location: added, nullable (proved)",
+      "CreateTrigger: gone",
+      "EnumItemsInRect parameter filter: gone",
+      "",
+    ]);
+  });
+
+  it("prints no change when the section it replaces is of the same Build, and says so when one of another Build has none", async () => {
+    const { context, resultFile } = await setup();
+    await mkdir(join(context.reportFile, ".."), { recursive: true });
+    await writeResultFile(resultFile, FINISHED);
+    await writeFile(context.reportFile, `${REPORT_HEADER}\n${SECTION}`);
+    const same = await runMain(context);
+    expect(same.stdout.join("").split("\n")).toHaveLength(5);
+    await writeFile(
+      context.reportFile,
+      `${REPORT_HEADER}\n${SECTION.replace("- Patch: 3.0.0.12345", "- Patch: 3.0.0.11111")}`,
+    );
+    const other = await runMain(context);
+    expect(other.stdout.join("").split("\n").slice(4)).toEqual([
+      "No change from the section of Build 3.0.0.11111.",
+      "",
+    ]);
+  });
+
   it("reviews a Native whose only case raised an error, never unsafe", async () => {
     const { context, resultFile } = await setup();
     await writeResultFile(
@@ -1149,6 +1263,7 @@ describe("the nullability report's parameter section", () => {
 
 - Probe: \`${PROBE}\`
 - Patch: 3.0.0.12345
+- Client: 3.0.0.12345
 - Date: 2026-10-02
 - Run: \`${RUN_ID}\`
 

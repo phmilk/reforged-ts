@@ -8,8 +8,10 @@
  * the Typings, does the same for each parameter a Native's call cases
  * measure, against the entry's `params[].nullable`, and writes the
  * Slice's section of the sweep report, under the Patch the run's `BEGIN`
- * line names, the one its build compiled against. It reads the Overlay and
- * writes the report file only: never the Overlay. The verdicts it reports
+ * line names, the one its build compiled against, beside the client's
+ * Build `probe:run` recorded. When the section it replaces was written
+ * under another Build, it tells what changed from it. It reads the Overlay
+ * and writes the report file only: never the Overlay. The verdicts it reports
  * (`readSlice`) are what `probe:nullability-curate` applies to the Overlay
  * (./curate.ts).
  */
@@ -42,7 +44,9 @@ import {
 } from "./converters.js";
 import {
   formatSection,
+  readSection,
   replaceSection,
+  sectionChanges,
   type NativeSection,
   type ParamSection,
   type SliceSection,
@@ -86,6 +90,11 @@ export interface NullabilityReportContext extends SliceContext {
 export interface NullabilityReport {
   file: string;
   slice: SliceSection;
+  /**
+   * When the section replaced one written under another Build: that Build,
+   * and each change from it (`sectionChanges`); undefined otherwise.
+   */
+  changes?: { from: string; lines: string[] };
 }
 
 /** A Slice's verdicts, as its section reports them, the date aside. */
@@ -94,7 +103,8 @@ export type SliceVerdicts = Omit<SliceSection, "date">;
 /**
  * Writes the section of the Slice `probe` into the sweep report, in place
  * of its previous one, from the verdicts of the Probe's last run
- * (`readSlice`); on an AuthorError, the report is left as it was.
+ * (`readSlice`), and tells what changed when the previous one was written
+ * under another Build; on an AuthorError, the report is left as it was.
  */
 export async function writeNullabilityReport(
   probe: string,
@@ -109,8 +119,19 @@ export async function writeNullabilityReport(
     ? fs.readFileSync(context.reportFile, "utf8")
     : undefined;
   fs.mkdirSync(path.dirname(context.reportFile), { recursive: true });
+  const previous = readSection(report, probe);
   fs.writeFileSync(context.reportFile, replaceSection(report, probe, section));
-  return { file: context.reportFile, slice };
+  return {
+    file: context.reportFile,
+    slice,
+    ...(previous !== undefined &&
+      previous.patch !== slice.patch && {
+        changes: {
+          from: previous.patch,
+          lines: sectionChanges(previous, slice),
+        },
+      }),
+  };
 }
 
 /**
@@ -182,7 +203,14 @@ export function readSlice(probe: string, context: SliceContext): SliceVerdicts {
       };
     });
   });
-  return { probe, patch, runId, natives, params };
+  return {
+    probe,
+    patch,
+    ...(run.client !== undefined && { client: run.client }),
+    runId,
+    natives,
+    params,
+  };
 }
 
 /**

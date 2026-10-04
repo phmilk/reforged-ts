@@ -25,6 +25,11 @@ export interface BundleProject {
   rootDir: string;
   /** The folder the bundle is written to, as `bundle.lua`. */
   outDir: string;
+  /**
+   * The Game version of the Typings to compile against: each
+   * `reforged-types/<version>` of the tsconfig's `types` names it instead.
+   */
+  typings?: string;
 }
 
 /** A compiled bundle: its file and its bytes. */
@@ -56,6 +61,14 @@ export function compileBundle(project: BundleProject): Bundle {
     outDir: project.outDir,
     luaBundle: file,
     luaBundleEntry: project.entry,
+    ...(project.typings !== undefined && {
+      types: parsed.options.types?.map((type) =>
+        type.replace(
+          /^reforged-types\/[^/]+/,
+          `reforged-types/${project.typings ?? ""}`,
+        ),
+      ),
+    }),
     paths: {
       ...parsed.options.paths,
       ...Object.fromEntries(

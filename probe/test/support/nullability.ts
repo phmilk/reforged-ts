@@ -42,6 +42,9 @@ export const VENDOR_FOLDER = fileURLToPath(
  */
 export const PATCH = "3.0.0.12345";
 
+/** The Build of the game client `probe:run` ran the Slice's build on. */
+export const CLIENT = "3.0.0.12345";
+
 /** The lines of a Result file: `BEGIN`, then `records`, each numbered. */
 export function numbered(records: readonly string[]): string[] {
   return [`BEGIN patch=${PATCH} probe=${PROBE} run=${RUN_ID}`, ...records].map(
@@ -60,7 +63,8 @@ export interface SliceSetup {
 
 /**
  * A temporary Warcraft III user folder, named by WC3_USER_FOLDER on the real
- * machine, and a state folder holding the Slice's build with `RUN_ID`,
+ * machine, and a state folder holding the Slice's build with `RUN_ID`, run
+ * on `CLIENT`,
  * with the fixture Overlay and vendor folder.
  */
 export async function sliceSetup(): Promise<SliceSetup> {
@@ -70,7 +74,7 @@ export async function sliceSetup(): Promise<SliceSetup> {
   await mkdir(stateFolder);
   await writeFile(
     stateFile(stateFolder, PROBE),
-    JSON.stringify({ probe: PROBE, runId: RUN_ID }),
+    JSON.stringify({ probe: PROBE, runId: RUN_ID, client: CLIENT }),
   );
   // The fake machine is linux on every host, so its paths join with "/":
   // the reader's own resultFile gives the path it reads.
@@ -78,6 +82,8 @@ export async function sliceSetup(): Promise<SliceSetup> {
     ...systemMachine,
     platform: "linux",
     env: { [USER_FOLDER_VARIABLE]: userFolder },
+    // Under WSL the real process list would find a game the human left open.
+    isRunning: () => false,
   };
   return {
     dir,
