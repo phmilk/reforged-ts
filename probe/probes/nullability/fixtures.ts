@@ -19,6 +19,19 @@ function built<T>(value: T | undefined, fixture: string): T {
   return value;
 }
 
+// Points
+
+/**
+ * A point, unseen: `(x, y)` as given; the Fixture fails when `Player(0)`
+ * sees it (`IsVisibleToPlayer`), so a case that needs the fog has it.
+ */
+export function unseenPoint(x: number, y: number): readonly [number, number] {
+  if (IsVisibleToPlayer(x, y, userSlotPlayer())) {
+    error(`Fixture unseenPoint: Player(0) sees (${x}, ${y})`, 0);
+  }
+  return [x, y];
+}
+
 // Players: a player is never stale.
 
 /** A player, a user slot: `Player(0)`, the slot the Probe run plays. */
@@ -74,7 +87,7 @@ export function liveHero(): unit {
   return built(CreateUnit(owner, FourCC("Hpal"), 0, 0, 0), "liveHero");
 }
 
-/** A unit, dead: a live `'Hpal'` hero of `Player(0)` after `KillUnit`, its corpse still in the game. */
+/** A unit, dead: a live `'Hpal'` hero of `Player(0)` after `KillUnit`, a dead hero still in the game, revivable. */
 export function deadHero(): unit {
   const paladin = liveHero();
   KillUnit(paladin);
@@ -138,7 +151,7 @@ export function removedItem(): item {
 
 // Item pools
 
-/** An item pool, live: `CreateItemPool` holding the `'ratf'` item type at weight 1. */
+/** An item pool, live: `CreateItemPool` holding the `'ratf'` item type (Claws of Attack) at weight 1. */
 export function liveItemPool(): itempool {
   const pool = built(CreateItemPool(), "liveItemPool");
   ItemPoolAddItemType(pool, FourCC("ratf"), 1);

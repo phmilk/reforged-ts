@@ -1,7 +1,8 @@
 // The Nullability sweep's Slice `nullability-constructors-world` (#393):
 // the 41 constructors of world objects, in `common.j` order, each declared
-// for the constructors' case generator (./nullability/constructor.ts), and
-// what each call returned recorded (./nullability/case-runner.ts).
+// for the constructors' case generator (./nullability/constructor.ts),
+// plus five catalogue cases beyond the rule, and what each call returned
+// recorded (./nullability/case-runner.ts).
 // `pnpm probe:nullability-report nullability-constructors-world` turns its
 // Result file into this Slice's section of the sweep report. The arguments
 // come from the Fixtures (./nullability/fixtures.ts), built before the
@@ -9,7 +10,7 @@
 
 import type { ProbeContext } from "../game/probe";
 import { type ReturnCase, runCases } from "./nullability/case-runner";
-import { constructorCases } from "./nullability/constructor";
+import { catalogueCase, constructorCases } from "./nullability/constructor";
 import { inGroupOrder } from "./nullability/expand";
 import {
   deadDestructable,
@@ -32,6 +33,7 @@ import {
   removedLocation,
   removedRect,
   removedUnit,
+  unseenPoint,
   userSlotPlayer,
 } from "./nullability/fixtures";
 import {
@@ -44,21 +46,6 @@ import {
 } from "./nullability/parameters";
 
 /**
- * A case beyond the generator's, of live arguments (group a): one the
- * handle-type catalogue (#362) names for `native` and the constructors'
- * rule cannot reach, since it varies no boolean and runs no other live
- * object, such as a unit with no inventory. Labelled `<param>: <phrase>`
- * as a generated case.
- */
-function catalogueCase(
-  native: string,
-  label: string,
-  call: () => unknown,
-): ReturnCase[] {
-  return [{ native, label, group: "a", call }];
-}
-
-/**
  * The Slice's cases, every (a) case before any (b) case, over the Fixtures
  * built here before any case runs. A unit, an item and a destructable each
  * run dead and removed, and a `widget` parameter runs all six, its typical
@@ -68,14 +55,14 @@ function catalogueCase(
  * fixed.
  *
  * The catalogue's cases (`catalogueCase`): an empty unit pool and item
- * pool, a unit with no inventory, and lightning that checks visibility,
- * which jassdoc gives as returning nothing when the local player does not
- * see its points.
+ * pool, a unit with no inventory, and lightning that checks visibility
+ * between two points Player(0) does not see, which jassdoc gives as
+ * returning nothing.
  */
 function sliceCases(): ReturnCase[] {
   const footman = FourCC("hfoo");
   const claws = FourCC("ratf");
-  const location = (name: string) =>
+  const locationParam = (name: string) =>
     handle(name, liveLocation(256, 256), [
       ["removed location", removedLocation()],
     ]);
@@ -99,6 +86,10 @@ function sliceCases(): ReturnCase[] {
   const emptyPool = emptyUnitPool();
   const emptyItems = emptyItemPool();
   const user = userSlotPlayer();
+  // The south-east corner of the Probe map, far from every unit of
+  // Player(0): the melee start and the Fixtures' units.
+  const near = unseenPoint(2944, -3200);
+  const far = unseenPoint(3200, -3456);
   return inGroupOrder(
     constructorCases(
       "CreateItem",
@@ -132,7 +123,7 @@ function sliceCases(): ReturnCase[] {
       [
         player("id"),
         rawcode("unitid", footman),
-        location("whichLocation"),
+        locationParam("whichLocation"),
         numeric("face", 270),
       ],
       ([p, unitid, where, face]) => CreateUnitAtLoc(p, unitid, where, face),
@@ -142,7 +133,7 @@ function sliceCases(): ReturnCase[] {
       [
         player("id"),
         text("unitname", "footman"),
-        location("whichLocation"),
+        locationParam("whichLocation"),
         numeric("face", 270),
       ],
       ([p, unitname, where, face]) =>
@@ -172,8 +163,11 @@ function sliceCases(): ReturnCase[] {
     ),
     // A footman has no inventory: jassdoc gives nothing, the item left on
     // the ground.
-    catalogueCase("UnitAddItemById", "whichUnit: unit with no inventory", () =>
-      UnitAddItemById(noInventory, claws),
+    catalogueCase(
+      "UnitAddItemById",
+      "whichUnit",
+      "unit with no inventory",
+      () => UnitAddItemById(noInventory, claws),
     ),
     constructorCases("CreateUnitPool", [], () => CreateUnitPool()),
     constructorCases(
@@ -189,7 +183,7 @@ function sliceCases(): ReturnCase[] {
       ],
       ([pool, p, x, y, facing]) => PlaceRandomUnit(pool, p, x, y, facing),
     ),
-    catalogueCase("PlaceRandomUnit", "whichPool: empty unit pool", () =>
+    catalogueCase("PlaceRandomUnit", "whichPool", "empty unit pool", () =>
       PlaceRandomUnit(emptyPool, user, 256, 256, 270),
     ),
     constructorCases("CreateItemPool", [], () => CreateItemPool()),
@@ -204,7 +198,7 @@ function sliceCases(): ReturnCase[] {
       ],
       ([pool, x, y]) => PlaceRandomItem(pool, x, y),
     ),
-    catalogueCase("PlaceRandomItem", "whichItemPool: empty item pool", () =>
+    catalogueCase("PlaceRandomItem", "whichItemPool", "empty item pool", () =>
       PlaceRandomItem(emptyItems, 256, 256),
     ),
     constructorCases(
@@ -223,7 +217,7 @@ function sliceCases(): ReturnCase[] {
     constructorCases(
       "CreateMinimapIconAtLoc",
       [
-        location("where"),
+        locationParam("where"),
         numeric("red", 255),
         numeric("green", 255),
         numeric("blue", 255),
@@ -425,7 +419,7 @@ function sliceCases(): ReturnCase[] {
     ),
     constructorCases(
       "AddSpecialEffectLoc",
-      [text("modelName", model), location("where")],
+      [text("modelName", model), locationParam("where")],
       ([modelName, where]) => AddSpecialEffectLoc(modelName, where),
     ),
     constructorCases(
@@ -454,7 +448,7 @@ function sliceCases(): ReturnCase[] {
       [
         text("abilityString", "AHhb"),
         fixed("t", EFFECT_TYPE_TARGET),
-        location("where"),
+        locationParam("where"),
       ],
       ([ability, t, where]) => AddSpellEffectLoc(ability, t, where),
     ),
@@ -473,7 +467,7 @@ function sliceCases(): ReturnCase[] {
       [
         rawcode("abilityId", holyLight),
         fixed("t", EFFECT_TYPE_TARGET),
-        location("where"),
+        locationParam("where"),
       ],
       ([abilityId, t, where]) => AddSpellEffectByIdLoc(abilityId, t, where),
     ),
@@ -514,8 +508,11 @@ function sliceCases(): ReturnCase[] {
       ([codeName, check, x1, y1, x2, y2]) =>
         AddLightning(codeName, check, x1, y1, x2, y2),
     ),
-    catalogueCase("AddLightning", "checkVisibility: true", () =>
-      AddLightning("CLPB", true, 256, 256, 512, 512),
+    catalogueCase(
+      "AddLightning",
+      "checkVisibility",
+      "true, points unseen",
+      () => AddLightning("CLPB", true, near[0], near[1], far[0], far[1]),
     ),
     constructorCases(
       "AddLightningEx",
@@ -532,8 +529,12 @@ function sliceCases(): ReturnCase[] {
       ([codeName, check, x1, y1, z1, x2, y2, z2]) =>
         AddLightningEx(codeName, check, x1, y1, z1, x2, y2, z2),
     ),
-    catalogueCase("AddLightningEx", "checkVisibility: true", () =>
-      AddLightningEx("CLPB", true, 256, 256, 64, 512, 512, 64),
+    catalogueCase(
+      "AddLightningEx",
+      "checkVisibility",
+      "true, points unseen",
+      () =>
+        AddLightningEx("CLPB", true, near[0], near[1], 64, far[0], far[1], 64),
     ),
     // An image type of 1, a selection image, as the library's Image.
     constructorCases(

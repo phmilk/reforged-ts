@@ -86,3 +86,22 @@ export function registrationCases<const P extends readonly Param<unknown>[]>(
     param.kind === "filter" ? [["nil", undefined]] : oddValues(param);
   return expandCases(native, params, call, live);
 }
+
+/**
+ * A catalogue case of a constructor or registration `native`, beyond the
+ * family's rule: one live argument the handle-type catalogue (#362) or
+ * jassdoc gives as returning nothing, which the rule cannot reach since it
+ * varies no `fixed` parameter and runs no other live object (a unit with
+ * no inventory, an empty pool, a boolean set). One case of group a,
+ * labelled `<param>: <phrase>` as a generated case; `call` calls the
+ * Native with the other arguments typical, over Fixtures built before the
+ * cases.
+ */
+export function catalogueCase(
+  native: string,
+  param: string,
+  phrase: string,
+  call: () => unknown,
+): ReturnCase[] {
+  return [{ native, label: `${param}: ${phrase}`, group: "a", call }];
+}

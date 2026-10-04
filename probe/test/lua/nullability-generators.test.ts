@@ -9,6 +9,7 @@
 import { describe, expect, it } from "reforged-test/lua";
 import type { Case, ReturnCase } from "../../probes/nullability/case-runner";
 import {
+  catalogueCase,
   constructorCases,
   OUTSIDE_THE_WORLD,
   registrationCases,
@@ -289,6 +290,22 @@ describe("constructorCases", () => {
     const cases = constructorCases("CreateTimer", [], () => "called");
     expect(labels(cases)).toEqual(["a one call"]);
     expect(callsOf(cases)).toEqual(["called"]);
+  });
+});
+
+describe("catalogueCase", () => {
+  it("is one case of group a, labelled by its parameter and phrase", () => {
+    const cases = catalogueCase(
+      "UnitAddItemById",
+      "whichUnit",
+      "unit with no inventory",
+      () => "no inventory",
+    );
+    expect(
+      cases.map((testCase) => `${testCase.native} ${testCase.label}`),
+    ).toEqual(["UnitAddItemById whichUnit: unit with no inventory"]);
+    expect(labels(cases)).toEqual(["a whichUnit: unit with no inventory"]);
+    expect(callsOf(cases)).toEqual(["no inventory"]);
   });
 });
 
