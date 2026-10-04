@@ -14515,12 +14515,14 @@ declare function GetEnumPlayer(): player | undefined;
 
 /**
  * @returns trigger
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetTriggeringTrigger}
  */
 declare function GetTriggeringTrigger(): trigger | undefined;
 
 /**
  * @returns eventid
+ * @remarks Outside its event, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that it was called outside its event. Typed nullable, as an event response called outside its event gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetTriggerEventId}
  */
 declare function GetTriggerEventId(): eventid | undefined;
@@ -14664,6 +14666,7 @@ declare function TriggerRegisterDialogButtonEvent(whichTrigger: trigger, whichBu
 
 /**
  * @returns gamestate
+ * @remarks Outside its event, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that it was called outside its event. Typed nullable, as an event response called outside its event gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEventGameState}
  */
 declare function GetEventGameState(): gamestate | undefined;
@@ -14678,6 +14681,7 @@ declare function TriggerRegisterGameEvent(whichTrigger: trigger, whichGameEvent:
 
 /**
  * @returns player
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetWinningPlayer}
  */
 declare function GetWinningPlayer(): player | undefined;
@@ -14693,12 +14697,14 @@ declare function TriggerRegisterEnterRegion(whichTrigger: trigger, whichRegion: 
 
 /**
  * @returns region
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetTriggeringRegion}
  */
 declare function GetTriggeringRegion(): region | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEnteringUnit}
  */
 declare function GetEnteringUnit(): unit | undefined;
@@ -14714,6 +14720,7 @@ declare function TriggerRegisterLeaveRegion(whichTrigger: trigger, whichRegion: 
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetLeavingUnit}
  */
 declare function GetLeavingUnit(): unit | undefined;
@@ -14753,18 +14760,21 @@ declare function TriggerRegisterUpgradeCommandEvent(whichTrigger: trigger, which
 
 /**
  * @returns trackable
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetTriggeringTrackable}
  */
 declare function GetTriggeringTrackable(): trackable | undefined;
 
 /**
  * @returns button
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetClickedButton}
  */
 declare function GetClickedButton(): button | undefined;
 
 /**
  * @returns dialog
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetClickedDialog}
  */
 declare function GetClickedDialog(): dialog | undefined;
@@ -14783,6 +14793,7 @@ declare function GetTournamentFinishNowRule(): number;
 
 /**
  * @returns player
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetTournamentFinishNowPlayer}
  */
 declare function GetTournamentFinishNowPlayer(): player | undefined;
@@ -14811,6 +14822,7 @@ declare function TriggerRegisterPlayerEvent(whichTrigger: trigger, whichPlayer: 
 
 /**
  * @returns player
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetTriggerPlayer}
  */
 declare function GetTriggerPlayer(): player | undefined;
@@ -14827,12 +14839,14 @@ declare function TriggerRegisterPlayerUnitEvent(whichTrigger: trigger, whichPlay
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetLevelingUnit}
  */
 declare function GetLevelingUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetLearningUnit}
  */
 declare function GetLearningUnit(): unit | undefined;
@@ -14851,66 +14865,77 @@ declare function GetLearnedSkillLevel(): number;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetRevivableUnit}
  */
 declare function GetRevivableUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetRevivingUnit}
  */
 declare function GetRevivingUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetAttacker}
  */
 declare function GetAttacker(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetRescuer}
  */
 declare function GetRescuer(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetDyingUnit}
  */
 declare function GetDyingUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetKillingUnit}
  */
 declare function GetKillingUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetDecayingUnit}
  */
 declare function GetDecayingUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetConstructingStructure}
  */
 declare function GetConstructingStructure(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetCancelledStructure}
  */
 declare function GetCancelledStructure(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetConstructedStructure}
  */
 declare function GetConstructedStructure(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetResearchingUnit}
  */
 declare function GetResearchingUnit(): unit | undefined;
@@ -14929,84 +14954,98 @@ declare function GetTrainedUnitType(): number;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetTrainedUnit}
  */
 declare function GetTrainedUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetDetectedUnit}
  */
 declare function GetDetectedUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetSummoningUnit}
  */
 declare function GetSummoningUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetSummonedUnit}
  */
 declare function GetSummonedUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetTransportUnit}
  */
 declare function GetTransportUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetLoadedUnit}
  */
 declare function GetLoadedUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetSellingUnit}
  */
 declare function GetSellingUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetSoldUnit}
  */
 declare function GetSoldUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetBuyingUnit}
  */
 declare function GetBuyingUnit(): unit | undefined;
 
 /**
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetSoldItem}
  */
 declare function GetSoldItem(): item | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetChangingUnit}
  */
 declare function GetChangingUnit(): unit | undefined;
 
 /**
  * @returns player
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetChangingUnitPrevOwner}
  */
 declare function GetChangingUnitPrevOwner(): player | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetManipulatingUnit}
  */
 declare function GetManipulatingUnit(): unit | undefined;
 
 /**
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetManipulatedItem}
  */
 declare function GetManipulatedItem(): item | undefined;
@@ -15014,6 +15053,7 @@ declare function GetManipulatedItem(): item | undefined;
 /**
  * @returns item
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEquippedItem}
  */
 declare function GetEquippedItem(): item | undefined;
@@ -15021,12 +15061,14 @@ declare function GetEquippedItem(): item | undefined;
 /**
  * @returns item
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnequippedItem}
  */
 declare function GetUnequippedItem(): item | undefined;
 
 /**
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbsorbingItem}
  */
 declare function BlzGetAbsorbingItem(): item | undefined;
@@ -15039,12 +15081,14 @@ declare function BlzGetManipulatedItemWasAbsorbed(): boolean;
 
 /**
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetStackingItemSource}
  */
 declare function BlzGetStackingItemSource(): item | undefined;
 
 /**
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetStackingItemTarget}
  */
 declare function BlzGetStackingItemTarget(): item | undefined;
@@ -15057,6 +15101,7 @@ declare function BlzGetStackingItemTargetPreviousCharges(): number;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetOrderedUnit}
  */
 declare function GetOrderedUnit(): unit | undefined;
@@ -15081,36 +15126,42 @@ declare function GetOrderPointY(): number;
 
 /**
  * @returns location
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetOrderPointLoc}
  */
 declare function GetOrderPointLoc(): location | undefined;
 
 /**
  * @returns widget
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetOrderTarget}
  */
 declare function GetOrderTarget(): widget | undefined;
 
 /**
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetOrderTargetDestructable}
  */
 declare function GetOrderTargetDestructable(): destructable | undefined;
 
 /**
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetOrderTargetItem}
  */
 declare function GetOrderTargetItem(): item | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetOrderTargetUnit}
  */
 declare function GetOrderTargetUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetSpellAbilityUnit}
  */
 declare function GetSpellAbilityUnit(): unit | undefined;
@@ -15123,12 +15174,14 @@ declare function GetSpellAbilityId(): number;
 
 /**
  * @returns ability
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetSpellAbility}
  */
 declare function GetSpellAbility(): ability | undefined;
 
 /**
  * @returns location
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetSpellTargetLoc}
  */
 declare function GetSpellTargetLoc(): location | undefined;
@@ -15147,18 +15200,21 @@ declare function GetSpellTargetY(): number;
 
 /**
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetSpellTargetDestructable}
  */
 declare function GetSpellTargetDestructable(): destructable | undefined;
 
 /**
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetSpellTargetItem}
  */
 declare function GetSpellTargetItem(): item | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetSpellTargetUnit}
  */
 declare function GetSpellTargetUnit(): unit | undefined;
@@ -15185,6 +15241,7 @@ declare function TriggerRegisterPlayerStateEvent(whichTrigger: trigger, whichPla
 
 /**
  * @returns playerstate
+ * @remarks Outside its event, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that it was called outside its event. Typed nullable, as an event response called outside its event gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEventPlayerState}
  */
 declare function GetEventPlayerState(): playerstate | undefined;
@@ -15221,6 +15278,7 @@ declare function TriggerRegisterDeathEvent(whichTrigger: trigger, whichWidget: w
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetTriggerUnit}
  */
 declare function GetTriggerUnit(): unit | undefined;
@@ -15238,6 +15296,7 @@ declare function TriggerRegisterUnitStateEvent(whichTrigger: trigger, whichUnit:
 
 /**
  * @returns unitstate
+ * @remarks Outside its event, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that it was called outside its event. Typed nullable, as an event response called outside its event gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEventUnitState}
  */
 declare function GetEventUnitState(): unitstate | undefined;
@@ -15259,12 +15318,14 @@ declare function GetEventDamage(): number;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEventDamageSource}
  */
 declare function GetEventDamageSource(): unit | undefined;
 
 /**
  * @returns player
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEventDetectingPlayer}
  */
 declare function GetEventDetectingPlayer(): player | undefined;
@@ -15281,6 +15342,7 @@ declare function TriggerRegisterFilterUnitEvent(whichTrigger: trigger, whichUnit
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEventTargetUnit}
  */
 declare function GetEventTargetUnit(): unit | undefined;
@@ -15437,6 +15499,7 @@ declare function GetWidgetY(whichWidget: widget): number;
 
 /**
  * @returns widget
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetTriggerWidget}
  */
 declare function GetTriggerWidget(): widget | undefined;
@@ -15655,6 +15718,7 @@ declare function GetDestructableName(d: destructable): string | undefined;
 
 /**
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetTriggerDestructable}
  */
 declare function GetTriggerDestructable(): destructable | undefined;
@@ -23343,12 +23407,14 @@ declare function BlzGetTriggerPlayerMouseY(): number;
 
 /**
  * @returns location
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetTriggerPlayerMousePosition}
  */
 declare function BlzGetTriggerPlayerMousePosition(): location | undefined;
 
 /**
  * @returns mousebuttontype
+ * @remarks Outside its event, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that it was called outside its event. Typed nullable, as an event response called outside its event gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetTriggerPlayerMouseButton}
  */
 declare function BlzGetTriggerPlayerMouseButton(): mousebuttontype | undefined;
@@ -24210,24 +24276,28 @@ declare function BlzSetEventDamage(damage: number): void;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetEventDamageTarget}
  */
 declare function BlzGetEventDamageTarget(): unit | undefined;
 
 /**
  * @returns attacktype
+ * @remarks Outside its event, returned a handle of id -1 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that it was called outside its event. Typed nullable, as an event response called outside its event gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetEventAttackType}
  */
 declare function BlzGetEventAttackType(): attacktype | undefined;
 
 /**
  * @returns damagetype
+ * @remarks Outside its event, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that it was called outside its event. Typed nullable, as an event response called outside its event gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetEventDamageType}
  */
 declare function BlzGetEventDamageType(): damagetype | undefined;
 
 /**
  * @returns weapontype
+ * @remarks Outside its event, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that it was called outside its event. Typed nullable, as an event response called outside its event gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetEventWeaponType}
  */
 declare function BlzGetEventWeaponType(): weapontype | undefined;
@@ -24784,12 +24854,14 @@ declare function BlzTriggerRegisterFrameEvent(whichTrigger: trigger, frame: fram
 
 /**
  * @returns framehandle
+ * @remarks Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetTriggerFrame}
  */
 declare function BlzGetTriggerFrame(): framehandle | undefined;
 
 /**
  * @returns frameeventtype
+ * @remarks Outside its event, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that it was called outside its event. Typed nullable, as an event response called outside its event gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetTriggerFrameEvent}
  */
 declare function BlzGetTriggerFrameEvent(): frameeventtype | undefined;
@@ -24849,6 +24921,7 @@ declare function BlzTriggerRegisterPlayerKeyEvent(whichTrigger: trigger, whichPl
 
 /**
  * @returns oskeytype
+ * @remarks Outside its event, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that it was called outside its event. Typed nullable, as an event response called outside its event gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetTriggerPlayerKey}
  */
 declare function BlzGetTriggerPlayerKey(): oskeytype | undefined;

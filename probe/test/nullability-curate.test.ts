@@ -227,7 +227,7 @@ describe("probe:nullability-curate", () => {
     });
     expect(JSON.parse(await read(functions, "Location"))).toMatchObject({
       notes:
-        "Returns nothing for outside the world (nullability sweep, 3.0.0.12345).",
+        "Returned nothing in a case of the nullability sweep (outside the world) on 3.0.0.12345.",
     });
   });
 
@@ -246,7 +246,7 @@ describe("probe:nullability-curate", () => {
     expect(runMain(context).stdout).toBe(
       [
         `Applied Probe ${PROBE}, run ${RUN_ID} on 3.0.0.12345, to the Overlay: 1 of 2 entries written.`,
-        "TriggerAddAction (non-null (evidence, handle id 0)): returns.nullable narrowed to false; notes kept; proposed for the review: Returned a handle in every case of the nullability sweep (destroyed trigger) on 3.0.0.12345; evidence, not proof. For destroyed trigger, a handle of id 0.",
+        "TriggerAddAction (non-null (evidence, handle id 0)): returns.nullable narrowed to false; notes kept; proposed for the review: Returned a handle in every case of the nullability sweep (destroyed trigger) on 3.0.0.12345; evidence, not proof. The handle had id 0 in a case (destroyed trigger).",
         "CreateUnit (review): notes left for review",
         "",
       ].join("\n"),

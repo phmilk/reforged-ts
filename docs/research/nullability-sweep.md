@@ -3298,7 +3298,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetTriggerEventId`
 
@@ -3310,7 +3310,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (rule)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268. The handle had id 0 in a case (outside its event).
 
 ### `GetEventGameState`
 
@@ -3322,7 +3322,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (rule)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268. The handle had id 0 in a case (outside its event).
 
 ### `GetWinningPlayer`
 
@@ -3334,7 +3334,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetTriggeringRegion`
 
@@ -3346,7 +3346,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetEnteringUnit`
 
@@ -3358,7 +3358,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetLeavingUnit`
 
@@ -3370,7 +3370,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetTriggeringTrackable`
 
@@ -3382,7 +3382,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetClickedButton`
 
@@ -3394,7 +3394,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetClickedDialog`
 
@@ -3406,7 +3406,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetTournamentFinishNowPlayer`
 
@@ -3418,7 +3418,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetTriggerPlayer`
 
@@ -3430,7 +3430,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetLevelingUnit`
 
@@ -3442,7 +3442,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetLearningUnit`
 
@@ -3454,7 +3454,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetRevivableUnit`
 
@@ -3466,7 +3466,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetRevivingUnit`
 
@@ -3478,7 +3478,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetAttacker`
 
@@ -3490,7 +3490,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetRescuer`
 
@@ -3502,7 +3502,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetDyingUnit`
 
@@ -3514,7 +3514,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetKillingUnit`
 
@@ -3526,7 +3526,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetDecayingUnit`
 
@@ -3538,7 +3538,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetConstructingStructure`
 
@@ -3550,7 +3550,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetCancelledStructure`
 
@@ -3562,7 +3562,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetConstructedStructure`
 
@@ -3574,7 +3574,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetResearchingUnit`
 
@@ -3586,7 +3586,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetTrainedUnit`
 
@@ -3598,7 +3598,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetDetectedUnit`
 
@@ -3610,7 +3610,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetSummoningUnit`
 
@@ -3622,7 +3622,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetSummonedUnit`
 
@@ -3634,7 +3634,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetTransportUnit`
 
@@ -3646,7 +3646,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetLoadedUnit`
 
@@ -3658,7 +3658,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetSellingUnit`
 
@@ -3670,7 +3670,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetSoldUnit`
 
@@ -3682,7 +3682,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetBuyingUnit`
 
@@ -3694,7 +3694,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetSoldItem`
 
@@ -3706,7 +3706,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetChangingUnit`
 
@@ -3718,7 +3718,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetChangingUnitPrevOwner`
 
@@ -3730,7 +3730,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ## `nullability-event-responses-2`
 
@@ -3749,7 +3749,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetManipulatedItem`
 
@@ -3761,7 +3761,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetEquippedItem`
 
@@ -3773,7 +3773,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetUnequippedItem`
 
@@ -3785,7 +3785,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `BlzGetAbsorbingItem`
 
@@ -3797,7 +3797,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `BlzGetStackingItemSource`
 
@@ -3809,7 +3809,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `BlzGetStackingItemTarget`
 
@@ -3821,7 +3821,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetOrderedUnit`
 
@@ -3833,7 +3833,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetOrderPointLoc`
 
@@ -3845,7 +3845,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetOrderTarget`
 
@@ -3857,7 +3857,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetOrderTargetDestructable`
 
@@ -3869,7 +3869,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetOrderTargetItem`
 
@@ -3881,7 +3881,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetOrderTargetUnit`
 
@@ -3893,7 +3893,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetSpellAbilityUnit`
 
@@ -3905,7 +3905,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetSpellAbility`
 
@@ -3917,7 +3917,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetSpellTargetLoc`
 
@@ -3929,7 +3929,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetSpellTargetDestructable`
 
@@ -3941,7 +3941,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetSpellTargetItem`
 
@@ -3953,7 +3953,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetSpellTargetUnit`
 
@@ -3965,7 +3965,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetEventPlayerState`
 
@@ -3977,7 +3977,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (rule)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268. The handle had id 0 in a case (outside its event).
 
 ### `GetTriggerUnit`
 
@@ -3989,7 +3989,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetEventUnitState`
 
@@ -4001,7 +4001,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (rule)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268. The handle had id 0 in a case (outside its event).
 
 ### `GetEventDamageSource`
 
@@ -4013,7 +4013,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetEventDetectingPlayer`
 
@@ -4025,7 +4025,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetEventTargetUnit`
 
@@ -4037,7 +4037,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetTriggerWidget`
 
@@ -4049,7 +4049,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `GetTriggerDestructable`
 
@@ -4061,7 +4061,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `BlzGetTriggerPlayerMousePosition`
 
@@ -4073,7 +4073,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `BlzGetTriggerPlayerMouseButton`
 
@@ -4085,7 +4085,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (rule)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268. The handle had id 0 in a case (outside its event).
 
 ### `BlzGetEventDamageTarget`
 
@@ -4097,7 +4097,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `BlzGetEventAttackType`
 
@@ -4121,7 +4121,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (rule)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268. The handle had id 0 in a case (outside its event).
 
 ### `BlzGetEventWeaponType`
 
@@ -4133,7 +4133,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (rule)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268. The handle had id 0 in a case (outside its event).
 
 ### `BlzGetTriggerFrame`
 
@@ -4145,7 +4145,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its event) on 3.0.0.24268.
 
 ### `BlzGetTriggerFrameEvent`
 
@@ -4157,7 +4157,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (rule)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268. The handle had id 0 in a case (outside its event).
 
 ### `BlzGetTriggerPlayerKey`
 
@@ -4169,7 +4169,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (rule)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268. The handle had id 0 in a case (outside its event).
 
 ## `nullability-lookups-1`
 

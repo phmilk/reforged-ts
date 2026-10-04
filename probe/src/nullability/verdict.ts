@@ -183,14 +183,36 @@ function labels(selected: readonly CaseResult[]): string {
 }
 
 /**
+ * How many cases `selected` holds, for a sentence: `a case`, `2 cases`.
+ * A label is a phrase (`outside its event`, `unsaved key`), so a sentence
+ * names it in parentheses after the count, never after "for".
+ */
+function caseCount(selected: readonly CaseResult[]): string {
+  return selected.length === 1 ? "a case" : `${String(selected.length)} cases`;
+}
+
+/**
+ * The sentence naming the cases that gave a handle of id 0,
+ * `The handle had id 0 in <a case|n cases> (<cases>).`, alone in its list;
+ * an empty list when none did.
+ */
+function idZeroSentence(cases: readonly CaseResult[]): string[] {
+  const idZero = cases.filter(gaveIdZero);
+  return idZero.length === 0
+    ? []
+    : [`The handle had id 0 in ${caseCount(idZero)} (${labels(idZero)}).`];
+}
+
+/**
  * The `notes` text proposed for the Native's Overlay entry, citing the
  * Patch the Probe was built against and the sweep, never an issue number
  * or a family's name, since `notes` is published as `@remarks`: the cases
  * that returned nothing for `nullable (proved)`; every case for
  * `non-null (evidence)`, then, for its id-0 variant, the cases that gave a
  * handle of id 0; for `nullable (rule)`, what the family may have nothing
- * for, then every case; for `unsafe`, the crash, then the sentence the
- * other cases give (`unsafeNotes`). Labels are joined with commas. A
+ * for, then every case, then the cases that gave a handle of id 0; for
+ * `unsafe`, the crash, then the sentence the other cases give
+ * (`unsafeNotes`). Labels are joined with commas, in parentheses. A
  * Native proved nullable next to a crashed case gets the crash first too.
  * `review` gets no text, only "review", so no unchecked text reaches
  * `@remarks`. `nullable (rule)` for a family whose Natives may be
@@ -204,17 +226,22 @@ export function proposedNotes(
 ): string {
   const everyCase = `every case of the nullability sweep (${labels(cases)}) on ${patch}`;
   switch (verdict) {
-    case "nullable (proved)":
+    case "nullable (proved)": {
+      const nil = cases.filter(gave("nil"));
       return [
         ...crashSentence(cases, patch),
-        `Returns nothing for ${labels(cases.filter(gave("nil")))} (nullability sweep, ${patch}).`,
+        `Returned nothing in ${caseCount(nil)} of the nullability sweep (${labels(nil)}) on ${patch}.`,
       ].join(" ");
+    }
     case "unsafe":
       return unsafeNotes(cases, family, patch);
     case "non-null (evidence)":
       return `Returned a handle in ${everyCase}; evidence, not proof.`;
     case "non-null (evidence, handle id 0)":
-      return `Returned a handle in ${everyCase}; evidence, not proof. For ${labels(cases.filter(gaveIdZero))}, a handle of id 0.`;
+      return [
+        `Returned a handle in ${everyCase}; evidence, not proof.`,
+        ...idZeroSentence(cases),
+      ].join(" ");
     case "nullable (rule)": {
       const rule: FamilyRule = FAMILIES[family];
       if (rule.mayBeNonNull) {
@@ -222,7 +249,10 @@ export function proposedNotes(
           `The family ${family} may be non-null: it gives no verdict of nullable (rule).`,
         );
       }
-      return `May return nothing ${rule.reason}. Returned a handle in ${everyCase}.`;
+      return [
+        `May return nothing ${rule.reason}. Returned a handle in ${everyCase}.`,
+        ...idZeroSentence(cases),
+      ].join(" ");
     }
     default:
       return "review";
@@ -231,7 +261,8 @@ export function proposedNotes(
 
 /**
  * The sentence that opens the `notes` of a Native with a crashed case,
- * `Crashes the game for <cases> (nullability sweep, <Patch>).`, alone in
+ * `Crashed the game in <a case|n cases> of the nullability sweep (<cases>)
+ * on <Patch>.`, alone in
  * its list; an empty list for a Native without one.
  */
 function crashSentence(cases: readonly CaseResult[], patch: string): string[] {
@@ -239,7 +270,7 @@ function crashSentence(cases: readonly CaseResult[], patch: string): string[] {
   return crashed.length === 0
     ? []
     : [
-        `Crashes the game for ${labels(crashed)} (nullability sweep, ${patch}).`,
+        `Crashed the game in ${caseCount(crashed)} of the nullability sweep (${labels(crashed)}) on ${patch}.`,
       ];
 }
 
@@ -247,8 +278,8 @@ function crashSentence(cases: readonly CaseResult[], patch: string): string[] {
  * The `notes` of an `unsafe` Native, which the report proposes nullable
  * whatever its family: the crash, naming every crashed case, then the
  * sentence its other cases give,
- * `Returned a handle in every other case (<cases>).`, then
- * `For <cases>, a handle of id 0.` when one gave a handle of id 0; for a
+ * `Returned a handle in every other case (<cases>).`, then the cases that
+ * gave a handle of id 0 (`idZeroSentence`); for a
  * Native of a nullable family, what it may have nothing for comes before
  * that sentence. "review" when a case that did not crash gave anything but
  * a handle, an error, an odd value or a case not run, which leaves no
@@ -263,16 +294,13 @@ function unsafeNotes(
   const others = cases.filter((testCase) => !crashed(testCase));
   if (!others.every(gave("handle"))) return "review";
   const rule: FamilyRule = FAMILIES[family];
-  const idZero = others.filter(gaveIdZero);
   return [
     ...crashSentence(cases, patch),
     ...(rule.mayBeNonNull ? [] : [`May return nothing ${rule.reason}.`]),
     ...(others.length === 0
       ? []
       : [`Returned a handle in every other case (${labels(others)}).`]),
-    ...(idZero.length === 0
-      ? []
-      : [`For ${labels(idZero)}, a handle of id 0.`]),
+    ...idZeroSentence(others),
   ].join(" ");
 }
 
