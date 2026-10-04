@@ -11,6 +11,6 @@
       "nullable": false
     }
   ],
-  "notes": "Returned a handle in every case of the nullability sweep (live unit, dead unit, removed unit) on 3.0.0.24268; evidence, not proof.",
+  "notes": "Returned a handle in every case of the nullability sweep (typical arguments, whichUnit: dead unit, whichUnit: removed unit) on 3.0.0.24268; evidence, not proof.",
   "origin": "war3-types-strict"
 }
