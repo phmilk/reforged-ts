@@ -19,5 +19,6 @@
       "nullable": false
     }
   ],
+  "notes": "For an unsaved key, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that nothing was saved under the key. Typed nullable, as a lookup that finds nothing gives no guarantee.",
   "origin": "war3-types-strict"
 }

@@ -19,5 +19,6 @@
       "nullable": false
     }
   ],
+  "notes": "For a cell outside the board (row 1, column 1 of a board of one cell), returned a multiboard item rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that the cell is outside the board. Typed nullable, as a lookup that finds nothing gives no guarantee.",
   "origin": "war3-types-strict"
 }

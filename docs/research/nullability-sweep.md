@@ -3962,6 +3962,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Probe: `nullability-lookups-1`
 - Patch: 3.0.0.24268
+- Client: not recorded
 - Date: 2026-10-04
 - Run: `04b94ae1-c04b-4011-9f9f-0be39b716491`
 
@@ -3975,7 +3976,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for index out of range (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (index out of range) on 3.0.0.24268.
 
 ### `BlzGroupUnitAt`
 
@@ -3987,7 +3988,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for index out of range (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (index out of range) on 3.0.0.24268.
 
 ### `FirstOfGroup`
 
@@ -3999,7 +4000,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for empty group (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (empty group) on 3.0.0.24268.
 
 ### `UnitRemoveItemFromSlot`
 
@@ -4011,7 +4012,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for empty slot (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.
 
 ### `UnitUnequipItemFromSlot`
 
@@ -4023,7 +4024,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for empty slot (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.
 
 ### `UnitItemInSlot`
 
@@ -4035,7 +4036,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for empty slot (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.
 
 ### `UnitItemInBagSlot`
 
@@ -4047,7 +4048,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for empty slot (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.
 
 ### `UnitItemInEquipmentSlot`
 
@@ -4059,7 +4060,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for empty slot (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.
 
 ### `Player`
 
@@ -4071,7 +4072,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for index out of range (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (index out of range) on 3.0.0.24268.
 
 ### `RestoreUnit`
 
@@ -4083,7 +4084,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadPlayerHandle`
 
@@ -4095,7 +4096,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadWidgetHandle`
 
@@ -4107,7 +4108,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadDestructableHandle`
 
@@ -4119,7 +4120,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadItemHandle`
 
@@ -4131,7 +4132,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadUnitHandle`
 
@@ -4143,7 +4144,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadAbilityHandle`
 
@@ -4155,7 +4156,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadTimerHandle`
 
@@ -4167,7 +4168,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadTriggerHandle`
 
@@ -4179,7 +4180,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadTriggerConditionHandle`
 
@@ -4191,7 +4192,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadTriggerActionHandle`
 
@@ -4203,7 +4204,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (rule)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: May return nothing when nothing is found. Returned a handle in every case of the nullability sweep (unsaved key) on 3.0.0.24268.
+- Proposed `notes`: May return nothing when nothing is found. Returned a handle in every case of the nullability sweep (unsaved key) on 3.0.0.24268. The handle had id 0 in a case (unsaved key).
 
 ### `LoadTriggerEventHandle`
 
@@ -4215,7 +4216,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadForceHandle`
 
@@ -4227,7 +4228,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadGroupHandle`
 
@@ -4239,7 +4240,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadLocationHandle`
 
@@ -4251,7 +4252,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadRectHandle`
 
@@ -4263,7 +4264,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadBooleanExprHandle`
 
@@ -4275,7 +4276,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadSoundHandle`
 
@@ -4287,7 +4288,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ### `LoadEffectHandle`
 
@@ -4299,7 +4300,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
 
 ## `nullability-lookups-2`
 
