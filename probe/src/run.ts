@@ -111,8 +111,8 @@ export function captureFile(
  * image name), with no game found, a client whose `.build.info` names
  * another Build than the Patch of the Typings, or a build that fails, it
  * starts nothing and raises an AuthorError. The build keeps the client's
- * Build in the Probe's state file, for the report. Once the game has started, every way out ends
- * it, the command's own failure included.
+ * Build in the Probe's state file, for the report. Once the game has
+ * started, every way out ends it, the command's own failure included.
  */
 export async function runProbe(
   probe: string,

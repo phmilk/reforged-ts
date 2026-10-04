@@ -68,9 +68,9 @@ export function builtMessage(result: BuildResult): string {
  * map folder whose `war3map.lua` is the editor script, one newline and the
  * bundle. The runner writes the Patch of `folders.manifest` in the run's
  * `BEGIN` line, so the run names the Typings it was built against. Stores
- * the runId in the Probe's state file last, with `client`, the Build of the
- * game client `probe:run` runs it on, so a failed build leaves the previous
- * one's. A bad name, a missing Probe, a manifest without a Patch
+ * the runId, with `client`, the Build of the game client `probe:run` runs
+ * it on, in the Probe's state file last, so a failed build leaves the
+ * previous one's. A bad name, a missing Probe, a manifest without a Patch
  * or a compile error is an AuthorError of one line.
  */
 export function buildProbe(

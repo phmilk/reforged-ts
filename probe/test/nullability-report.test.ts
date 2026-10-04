@@ -629,6 +629,16 @@ describe("the nullability report", () => {
       "| a \\*b\\* \\_c\\_ \\[d\\] \\<e\\> \\#f \\| \\\\ \\`g\\` | (b)   |",
     );
     expect(report).toContain("| 1       | `` x\\|`y` ``         |");
+    // Read back as the section of another Build, every label pairs with its
+    // case again: no change.
+    await writeFile(
+      context.reportFile,
+      report.replace("- Patch: 3.0.0.12345", "- Patch: 3.0.0.11111"),
+    );
+    const { stdout } = await runMain(context);
+    expect(stdout.join("")).toContain(
+      "\nNo change from the section of Build 3.0.0.11111.\n",
+    );
   });
 
   it("replaces on a rerun only its own section, in place, and keeps the other Slices' sections", async () => {

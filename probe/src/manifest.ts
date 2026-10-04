@@ -14,6 +14,9 @@ const PATCH_PATTERN = /^[0-9]+(\.[0-9]+)*$/;
 /** A vendored Build's folder name: four components, as reforged-types names them. */
 const BUILD_PATTERN = /^\d+\.\d+\.\d+\.\d+$/;
 
+// gameVersion and compareBuilds mirror packages/reforged-types/src/build.ts,
+// which the package does not export: change both together.
+
 /** The Game version a Build belongs to: its first three components. */
 export function gameVersion(build: string): string {
   return build.split(".").slice(0, 3).join(".");
