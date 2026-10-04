@@ -6,5 +6,6 @@
     "family": "event-response"
   },
   "params": [],
+  "notes": "Outside its event, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that it was called outside its event. Typed nullable, as an event response called outside its event gives no guarantee.",
   "origin": "war3-types-strict"
 }

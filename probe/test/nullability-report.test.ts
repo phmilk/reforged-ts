@@ -99,7 +99,7 @@ const SECTION = `## \`${PROBE}\`
 - Verdict: nullable (proved)
 - Overlay \`returns.nullable\`: \`false\`
 - Comparison: mismatch
-- Proposed \`notes\`: Returns nothing for removed unit (nullability sweep, 3.0.0.12345).
+- Proposed \`notes\`: Returned nothing in a case of the nullability sweep (removed unit) on 3.0.0.12345.
 
 ### \`Location\`
 
@@ -112,7 +112,7 @@ const SECTION = `## \`${PROBE}\`
 - Verdict: nullable (proved)
 - Overlay \`returns.nullable\`: \`true\`
 - Comparison: consistent
-- Proposed \`notes\`: Returns nothing for outside the world (nullability sweep, 3.0.0.12345).
+- Proposed \`notes\`: Returned nothing in a case of the nullability sweep (outside the world) on 3.0.0.12345.
 `;
 
 /**
@@ -474,7 +474,7 @@ describe("the nullability report", () => {
 - Verdict: nullable (proved)
 - Overlay \`returns.nullable\`: \`true\`
 - Comparison: consistent
-- Proposed \`notes\`: Crashes the game for destroyed frame (nullability sweep, 3.0.0.12345). Returns nothing for outside the world (nullability sweep, 3.0.0.12345).
+- Proposed \`notes\`: Crashed the game in a case of the nullability sweep (destroyed frame) on 3.0.0.12345. Returned nothing in a case of the nullability sweep (outside the world) on 3.0.0.12345.
 `);
     expect(await format(report, { parser: "markdown" })).toBe(report);
   });
@@ -497,7 +497,7 @@ describe("the nullability report", () => {
         "Location",
         "nullable (proved)",
         "consistent",
-        "Crashes the game for destroyed frame (nullability sweep, 3.0.0.12345). Returns nothing for outside the world (nullability sweep, 3.0.0.12345).",
+        "Crashed the game in a case of the nullability sweep (destroyed frame) on 3.0.0.12345. Returned nothing in a case of the nullability sweep (outside the world) on 3.0.0.12345.",
       ],
     ]);
   });
@@ -641,7 +641,7 @@ describe("the nullability report", () => {
     expect(sections[2]?.startsWith(`## \`${PROBE}\``)).toBe(true);
     expect(sections[2]).toContain("| one call    | (a)   | nil     |");
     expect(sections[2]).toContain(
-      "- Proposed `notes`: Returns nothing for one call (nullability sweep, 3.0.0.12345).",
+      "- Proposed `notes`: Returned nothing in a case of the nullability sweep (one call) on 3.0.0.12345.",
     );
     expect(sections[3]).toBe(otherSection("nullability-slice-2"));
     expect(sections.length).toBe(4);
@@ -770,19 +770,23 @@ describe("the nullability report", () => {
     );
   });
 
-  it("keeps a Native of a nullable family nullable by the rule when every case gave a handle, with the reason in its notes", async () => {
+  it("keeps a Native of a nullable family nullable by the rule when every case gave a handle, with the reason and the cases of a handle of id 0 in its notes", async () => {
     const { context, resultFile } = await setup();
     const overlayFolder = await overlayWith(context, {
       GetTriggerUnit: { nullable: true, family: "event-response" },
+      GetTriggerEventId: { nullable: true, family: "event-response" },
       LoadUnitHandle: { nullable: true, family: "lookup" },
     });
     await writeResultFile(
       resultFile,
       numbered([
         "CASE case=outside%20its%20event group=a native=GetTriggerUnit",
+        "CASE case=outside%20its%20event group=a native=GetTriggerEventId",
         "CASE case=unsaved%20key group=a native=LoadUnitHandle",
         "PENDING label=GetTriggerUnit%20outside%20its%20event",
         "CALL case=outside%20its%20event group=a id=1048577 native=GetTriggerUnit outcome=handle type=unit:%200000020C",
+        "PENDING label=GetTriggerEventId%20outside%20its%20event",
+        "CALL case=outside%20its%20event group=a id=0 native=GetTriggerEventId outcome=handle type=eventid:%200000020D",
         "PENDING label=LoadUnitHandle%20unsaved%20key",
         "CALL case=unsaved%20key group=a native=LoadUnitHandle outcome=nil",
         "END status=ok",
@@ -809,11 +813,18 @@ describe("the nullability report", () => {
         "May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.12345.",
       ],
       [
+        "GetTriggerEventId",
+        "event-response",
+        "nullable (rule)",
+        "consistent",
+        "May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.12345. The handle had id 0 in a case (outside its event).",
+      ],
+      [
         "LoadUnitHandle",
         "lookup",
         "nullable (proved)",
         "consistent",
-        "Returns nothing for unsaved key (nullability sweep, 3.0.0.12345).",
+        "Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.12345.",
       ],
     ]);
   });
@@ -903,7 +914,7 @@ describe("the nullability report", () => {
       [
         [
           "non-null (evidence, handle id 0)",
-          "Returned a handle in every case of the nullability sweep (live trigger, destroyed trigger) on 3.0.0.12345; evidence, not proof. For destroyed trigger, a handle of id 0.",
+          "Returned a handle in every case of the nullability sweep (live trigger, destroyed trigger) on 3.0.0.12345; evidence, not proof. The handle had id 0 in a case (destroyed trigger).",
         ],
       ],
     );
@@ -1018,13 +1029,13 @@ describe("the nullability report", () => {
         "CreateTimer",
         "unsafe",
         "mismatch",
-        "Crashes the game for second call (nullability sweep, 3.0.0.12345). Returned a handle in every other case (one call).",
+        "Crashed the game in a case of the nullability sweep (second call) on 3.0.0.12345. Returned a handle in every other case (one call).",
       ],
       [
         "GetTriggerUnit",
         "unsafe",
         "consistent",
-        "Crashes the game for dead trigger (nullability sweep, 3.0.0.12345). May return nothing outside its event. Returned a handle in every other case (outside its event). For outside its event, a handle of id 0.",
+        "Crashed the game in a case of the nullability sweep (dead trigger) on 3.0.0.12345. May return nothing outside its event. Returned a handle in every other case (outside its event). The handle had id 0 in a case (outside its event).",
       ],
     ]);
   });
@@ -1062,14 +1073,14 @@ describe("the nullability report", () => {
         "CreateTimer",
         "unsafe",
         "mismatch",
-        "Crashes the game for second call (nullability sweep, 3.0.0.12345). Returned a handle in every other case (one call).",
+        "Crashed the game in a case of the nullability sweep (second call) on 3.0.0.12345. Returned a handle in every other case (one call).",
       ],
     ]);
     expect((await crashedOn("GetTriggerUnit", "dead trigger"))[1]).toEqual([
       "GetTriggerUnit",
       "unsafe",
       "consistent",
-      "Crashes the game for dead trigger (nullability sweep, 3.0.0.12345). May return nothing outside its event.",
+      "Crashed the game in a case of the nullability sweep (dead trigger) on 3.0.0.12345. May return nothing outside its event.",
     ]);
   });
 
@@ -1099,7 +1110,7 @@ describe("the nullability report", () => {
       [
         "unsafe",
         "mismatch",
-        "Crashes the game for second call, third call (nullability sweep, 3.0.0.12345). Returned a handle in every other case (one call).",
+        "Crashed the game in 2 cases of the nullability sweep (second call, third call) on 3.0.0.12345. Returned a handle in every other case (one call).",
       ],
     ]);
   });
@@ -1589,7 +1600,7 @@ describe("the nullability report's converter notes", () => {
     });
     const race = slice.natives.find(({ native }) => native === "ConvertRace");
     expect(race?.notes).toBe(
-      "Returned a handle in every case of the nullability sweep (RACE_NONE, RACE_HUMAN, RACE_ORC or RACE_GREEN, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.12345; evidence, not proof. For RACE_NONE, a handle of id 0.",
+      "Returned a handle in every case of the nullability sweep (RACE_NONE, RACE_HUMAN, RACE_ORC or RACE_GREEN, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.12345; evidence, not proof. The handle had id 0 in a case (RACE_NONE).",
     );
   });
 
