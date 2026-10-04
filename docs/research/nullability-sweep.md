@@ -4170,3 +4170,346 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
 - Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+
+## `nullability-lookups-1`
+
+- Probe: `nullability-lookups-1`
+- Patch: 3.0.0.24268
+- Date: 2026-10-04
+- Run: `04b94ae1-c04b-4011-9f9f-0be39b716491`
+
+### `GetStartLocationLoc`
+
+| Case               | Group | Outcome | Id  | Type | Message |
+| ------------------ | ----- | ------- | --- | ---- | ------- |
+| index out of range | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for index out of range (nullability sweep, 3.0.0.24268).
+
+### `BlzGroupUnitAt`
+
+| Case               | Group | Outcome | Id  | Type | Message |
+| ------------------ | ----- | ------- | --- | ---- | ------- |
+| index out of range | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for index out of range (nullability sweep, 3.0.0.24268).
+
+### `FirstOfGroup`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| empty group | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for empty group (nullability sweep, 3.0.0.24268).
+
+### `UnitRemoveItemFromSlot`
+
+| Case       | Group | Outcome | Id  | Type | Message |
+| ---------- | ----- | ------- | --- | ---- | ------- |
+| empty slot | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for empty slot (nullability sweep, 3.0.0.24268).
+
+### `UnitUnequipItemFromSlot`
+
+| Case       | Group | Outcome | Id  | Type | Message |
+| ---------- | ----- | ------- | --- | ---- | ------- |
+| empty slot | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for empty slot (nullability sweep, 3.0.0.24268).
+
+### `UnitItemInSlot`
+
+| Case       | Group | Outcome | Id  | Type | Message |
+| ---------- | ----- | ------- | --- | ---- | ------- |
+| empty slot | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for empty slot (nullability sweep, 3.0.0.24268).
+
+### `UnitItemInBagSlot`
+
+| Case       | Group | Outcome | Id  | Type | Message |
+| ---------- | ----- | ------- | --- | ---- | ------- |
+| empty slot | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for empty slot (nullability sweep, 3.0.0.24268).
+
+### `UnitItemInEquipmentSlot`
+
+| Case       | Group | Outcome | Id  | Type | Message |
+| ---------- | ----- | ------- | --- | ---- | ------- |
+| empty slot | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for empty slot (nullability sweep, 3.0.0.24268).
+
+### `Player`
+
+| Case               | Group | Outcome | Id  | Type | Message |
+| ------------------ | ----- | ------- | --- | ---- | ------- |
+| index out of range | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for index out of range (nullability sweep, 3.0.0.24268).
+
+### `RestoreUnit`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadPlayerHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadWidgetHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadDestructableHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadItemHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadUnitHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadAbilityHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadTimerHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadTriggerHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadTriggerConditionHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadTriggerActionHandle`
+
+| Case        | Group | Outcome | Id  | Type                              | Message |
+| ----------- | ----- | ------- | --- | --------------------------------- | ------- |
+| unsaved key | (a)   | handle  | 0   | `triggeraction: 0000020C8BB37970` |         |
+
+- Family: `lookup`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing when nothing is found. Returned a handle in every case of the nullability sweep (unsaved key) on 3.0.0.24268.
+
+### `LoadTriggerEventHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadForceHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadGroupHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadLocationHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadRectHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadBooleanExprHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadSoundHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
+
+### `LoadEffectHandle`
+
+| Case        | Group | Outcome | Id  | Type | Message |
+| ----------- | ----- | ------- | --- | ---- | ------- |
+| unsaved key | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for unsaved key (nullability sweep, 3.0.0.24268).
