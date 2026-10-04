@@ -1,5 +1,16 @@
 # eslint-plugin-reforged
 
+## 1.0.0-alpha.4
+
+### Minor Changes
+
+- [#375](https://github.com/phmilk/reforged-ts/pull/375) [`17ed385`](https://github.com/phmilk/reforged-ts/commit/17ed3851ceb8af33a64815919d47809f8a404edc) Thanks [@wyller](https://github.com/wyller)! - Add `no-event-response-outside-event`, a warning in the recommended config: it reports an event response (`GetTriggerUnit`, `GetEnumUnit`, `GetEventDamage`, `Unit.fromEvent()`, ...) called where its context certainly does not hold, at module top level, in the callback of an Init stage registered at module top level or in a timer's callback, where it returns nothing. The event responses of `common.j` and their contexts are listed in the new `data/event-responses.json`; a library member is classified by its `@native` tags.
+
+### Patch Changes
+
+- Updated dependencies [[`728953d`](https://github.com/phmilk/reforged-ts/commit/728953ddfb6f3b7ef683f7c49e62a82379986f8a)]:
+  - reforged-types@1.0.0-alpha.4
+
 ## 1.0.0-alpha.3
 
 ### Minor Changes

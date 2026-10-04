@@ -1,5 +1,11 @@
 # reforged-types
 
+## 1.0.0-alpha.4
+
+### Patch Changes
+
+- [#374](https://github.com/phmilk/reforged-ts/pull/374) [`728953d`](https://github.com/phmilk/reforged-ts/commit/728953ddfb6f3b7ef683f7c49e62a82379986f8a) Thanks [@phmilk](https://github.com/phmilk)! - Every handle-returning Native of `common.j` names its Nullability family in the Overlay, and the generator enforces the curation rule: a Native of a nullable family (an event response, a callback getter, a lookup, an optional property) is never typed non-null. The README says when a handle return is typed non-null. No type changes.
+
 ## 1.0.0-alpha.3
 
 ### Minor Changes
