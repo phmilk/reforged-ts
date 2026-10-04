@@ -240,6 +240,37 @@ export function removedRect(): rect {
   return rect;
 }
 
+// Regions
+
+/** A region, live: `CreateRegion` after `RegionAddRect` of a live rect. */
+export function liveRegion(): region {
+  const region = built(CreateRegion(), "liveRegion");
+  RegionAddRect(region, liveRect());
+  return region;
+}
+
+/** A region, removed: a live region after `RemoveRegion`, a stale handle. */
+export function removedRegion(): region {
+  const region = liveRegion();
+  RemoveRegion(region);
+  return region;
+}
+
+// Trackables: no Native destroys one, so none is stale.
+
+/** A trackable, live: `CreateTrackable` of the Holy Light model at (256, 256), facing 270. */
+export function liveTrackable(): trackable {
+  return built(
+    CreateTrackable(
+      "Abilities\\Spells\\Human\\HolyBolt\\HolyBoltSpecialArt.mdl",
+      256,
+      256,
+      270,
+    ),
+    "liveTrackable",
+  );
+}
+
 // Groups
 
 /** A group, empty: `CreateGroup`, no unit added. */
@@ -284,6 +315,43 @@ export function destroyedDialog(): dialog {
   const dialog = liveDialog();
   DialogDestroy(dialog);
   return dialog;
+}
+
+// Dialog buttons
+
+/** A button, live: `DialogAddButton` on a dialog of its own, never shown, with no hotkey. */
+export function liveButton(): button {
+  return built(DialogAddButton(liveDialog(), "Nullability", 0), "liveButton");
+}
+
+/**
+ * A button after `DialogDestroy` of its dialog: a live button whose dialog
+ * is destroyed, whose stale state is not known, so the Fixture is named
+ * after the action and does not claim the handle is stale (#371).
+ */
+export function buttonAfterDialogDestroy(): button {
+  const dialog = liveDialog();
+  const button = built(
+    DialogAddButton(dialog, "Nullability", 0),
+    "buttonAfterDialogDestroy",
+  );
+  DialogDestroy(dialog);
+  return button;
+}
+
+/**
+ * A button after `DialogClear` of its dialog: a live button whose dialog
+ * is emptied, whose stale state is not known, named after the action as
+ * `buttonAfterDialogDestroy` is.
+ */
+export function buttonAfterDialogClear(): button {
+  const dialog = liveDialog();
+  const button = built(
+    DialogAddButton(dialog, "Nullability", 0),
+    "buttonAfterDialogClear",
+  );
+  DialogClear(dialog);
+  return button;
 }
 
 // Quests
