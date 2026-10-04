@@ -2,7 +2,7 @@
   "name": "ConvertAbilityStringLevelArrayField",
   "source": "common.j",
   "returns": {
-    "nullable": true,
+    "nullable": false,
     "family": "converter"
   },
   "params": [
@@ -11,5 +11,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.",
   "origin": "war3-types-strict"
 }

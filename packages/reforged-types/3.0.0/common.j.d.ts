@@ -150,595 +150,680 @@ declare interface loadoutslot extends handle { __loadoutslot: never }
 /**
  * @param i - integer (32-bit)
  * @returns race
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertRace}
  */
-declare function ConvertRace(i: number): race | undefined;
+declare function ConvertRace(i: number): race;
 
 /**
  * @param i - integer (32-bit)
  * @returns alliancetype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAllianceType}
  */
-declare function ConvertAllianceType(i: number): alliancetype | undefined;
+declare function ConvertAllianceType(i: number): alliancetype;
 
 /**
  * @param i - integer (32-bit)
  * @returns racepreference
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertRacePref}
  */
-declare function ConvertRacePref(i: number): racepreference | undefined;
+declare function ConvertRacePref(i: number): racepreference;
 
 /**
  * @param i - integer (32-bit)
  * @returns igamestate
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertIGameState}
  */
-declare function ConvertIGameState(i: number): igamestate | undefined;
+declare function ConvertIGameState(i: number): igamestate;
 
 /**
  * @param i - integer (32-bit)
  * @returns fgamestate
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertFGameState}
  */
-declare function ConvertFGameState(i: number): fgamestate | undefined;
+declare function ConvertFGameState(i: number): fgamestate;
 
 /**
  * @param i - integer (32-bit)
  * @returns playerstate
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertPlayerState}
  */
-declare function ConvertPlayerState(i: number): playerstate | undefined;
+declare function ConvertPlayerState(i: number): playerstate;
 
 /**
  * @param i - integer (32-bit)
  * @returns playerscore
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertPlayerScore}
  */
-declare function ConvertPlayerScore(i: number): playerscore | undefined;
+declare function ConvertPlayerScore(i: number): playerscore;
 
 /**
  * @param i - integer (32-bit)
  * @returns playergameresult
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertPlayerGameResult}
  */
-declare function ConvertPlayerGameResult(i: number): playergameresult | undefined;
+declare function ConvertPlayerGameResult(i: number): playergameresult;
 
 /**
  * @param i - integer (32-bit)
  * @returns unitstate
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertUnitState}
  */
-declare function ConvertUnitState(i: number): unitstate | undefined;
+declare function ConvertUnitState(i: number): unitstate;
 
 /**
  * @param i - integer (32-bit)
  * @returns aidifficulty
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAIDifficulty}
  */
-declare function ConvertAIDifficulty(i: number): aidifficulty | undefined;
+declare function ConvertAIDifficulty(i: number): aidifficulty;
 
 /**
  * @param i - integer (32-bit)
  * @returns gameevent
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertGameEvent}
  */
-declare function ConvertGameEvent(i: number): gameevent | undefined;
+declare function ConvertGameEvent(i: number): gameevent;
 
 /**
  * @param i - integer (32-bit)
  * @returns playerevent
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertPlayerEvent}
  */
-declare function ConvertPlayerEvent(i: number): playerevent | undefined;
+declare function ConvertPlayerEvent(i: number): playerevent;
 
 /**
  * @param i - integer (32-bit)
  * @returns playerunitevent
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertPlayerUnitEvent}
  */
-declare function ConvertPlayerUnitEvent(i: number): playerunitevent | undefined;
+declare function ConvertPlayerUnitEvent(i: number): playerunitevent;
 
 /**
  * @param i - integer (32-bit)
  * @returns widgetevent
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertWidgetEvent}
  */
-declare function ConvertWidgetEvent(i: number): widgetevent | undefined;
+declare function ConvertWidgetEvent(i: number): widgetevent;
 
 /**
  * @param i - integer (32-bit)
  * @returns dialogevent
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertDialogEvent}
  */
-declare function ConvertDialogEvent(i: number): dialogevent | undefined;
+declare function ConvertDialogEvent(i: number): dialogevent;
 
 /**
  * @param i - integer (32-bit)
  * @returns unitevent
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertUnitEvent}
  */
-declare function ConvertUnitEvent(i: number): unitevent | undefined;
+declare function ConvertUnitEvent(i: number): unitevent;
 
 /**
  * @param i - integer (32-bit)
  * @returns limitop
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertLimitOp}
  */
-declare function ConvertLimitOp(i: number): limitop | undefined;
+declare function ConvertLimitOp(i: number): limitop;
 
 /**
  * @param i - integer (32-bit)
  * @returns unittype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertUnitType}
  */
-declare function ConvertUnitType(i: number): unittype | undefined;
+declare function ConvertUnitType(i: number): unittype;
 
 /**
  * @param i - integer (32-bit)
  * @returns gamespeed
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertGameSpeed}
  */
-declare function ConvertGameSpeed(i: number): gamespeed | undefined;
+declare function ConvertGameSpeed(i: number): gamespeed;
 
 /**
  * @param i - integer (32-bit)
  * @returns placement
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertPlacement}
  */
-declare function ConvertPlacement(i: number): placement | undefined;
+declare function ConvertPlacement(i: number): placement;
 
 /**
  * @param i - integer (32-bit)
  * @returns startlocprio
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertStartLocPrio}
  */
-declare function ConvertStartLocPrio(i: number): startlocprio | undefined;
+declare function ConvertStartLocPrio(i: number): startlocprio;
 
 /**
  * @param i - integer (32-bit)
  * @returns gamedifficulty
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertGameDifficulty}
  */
-declare function ConvertGameDifficulty(i: number): gamedifficulty | undefined;
+declare function ConvertGameDifficulty(i: number): gamedifficulty;
 
 /**
  * @param i - integer (32-bit)
  * @returns gametype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertGameType}
  */
-declare function ConvertGameType(i: number): gametype | undefined;
+declare function ConvertGameType(i: number): gametype;
 
 /**
  * @param i - integer (32-bit)
  * @returns mapflag
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertMapFlag}
  */
-declare function ConvertMapFlag(i: number): mapflag | undefined;
+declare function ConvertMapFlag(i: number): mapflag;
 
 /**
  * @param i - integer (32-bit)
  * @returns mapvisibility
+ * @remarks Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertMapVisibility}
  */
-declare function ConvertMapVisibility(i: number): mapvisibility | undefined;
+declare function ConvertMapVisibility(i: number): mapvisibility;
 
 /**
  * @param i - integer (32-bit)
  * @returns mapsetting
+ * @remarks Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertMapSetting}
  */
-declare function ConvertMapSetting(i: number): mapsetting | undefined;
+declare function ConvertMapSetting(i: number): mapsetting;
 
 /**
  * @param i - integer (32-bit)
  * @returns mapdensity
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertMapDensity}
  */
-declare function ConvertMapDensity(i: number): mapdensity | undefined;
+declare function ConvertMapDensity(i: number): mapdensity;
 
 /**
  * @param i - integer (32-bit)
  * @returns mapcontrol
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertMapControl}
  */
-declare function ConvertMapControl(i: number): mapcontrol | undefined;
+declare function ConvertMapControl(i: number): mapcontrol;
 
 /**
  * @param i - integer (32-bit)
  * @returns playercolor
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertPlayerColor}
  */
-declare function ConvertPlayerColor(i: number): playercolor | undefined;
+declare function ConvertPlayerColor(i: number): playercolor;
 
 /**
  * @param i - integer (32-bit)
  * @returns playerslotstate
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertPlayerSlotState}
  */
-declare function ConvertPlayerSlotState(i: number): playerslotstate | undefined;
+declare function ConvertPlayerSlotState(i: number): playerslotstate;
 
 /**
  * @param i - integer (32-bit)
  * @returns volumegroup
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertVolumeGroup}
  */
-declare function ConvertVolumeGroup(i: number): volumegroup | undefined;
+declare function ConvertVolumeGroup(i: number): volumegroup;
 
 /**
  * @param i - integer (32-bit)
  * @returns camerafield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertCameraField}
  */
-declare function ConvertCameraField(i: number): camerafield | undefined;
+declare function ConvertCameraField(i: number): camerafield;
 
 /**
  * @param i - integer (32-bit)
  * @returns blendmode
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertBlendMode}
  */
-declare function ConvertBlendMode(i: number): blendmode | undefined;
+declare function ConvertBlendMode(i: number): blendmode;
 
 /**
  * @param i - integer (32-bit)
  * @returns raritycontrol
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertRarityControl}
  */
-declare function ConvertRarityControl(i: number): raritycontrol | undefined;
+declare function ConvertRarityControl(i: number): raritycontrol;
 
 /**
  * @param i - integer (32-bit)
  * @returns texmapflags
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertTexMapFlags}
  */
-declare function ConvertTexMapFlags(i: number): texmapflags | undefined;
+declare function ConvertTexMapFlags(i: number): texmapflags;
 
 /**
  * @param i - integer (32-bit)
  * @returns fogstate
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertFogState}
  */
-declare function ConvertFogState(i: number): fogstate | undefined;
+declare function ConvertFogState(i: number): fogstate;
 
 /**
  * @param i - integer (32-bit)
  * @returns effecttype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertEffectType}
  */
-declare function ConvertEffectType(i: number): effecttype | undefined;
+declare function ConvertEffectType(i: number): effecttype;
 
 /**
  * @param i - integer (32-bit)
  * @returns version
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertVersion}
  */
-declare function ConvertVersion(i: number): version | undefined;
+declare function ConvertVersion(i: number): version;
 
 /**
  * @param i - integer (32-bit)
  * @returns itemtype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertItemType}
  */
-declare function ConvertItemType(i: number): itemtype | undefined;
+declare function ConvertItemType(i: number): itemtype;
 
 /**
  * @param i - integer (32-bit)
  * @returns attacktype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAttackType}
  */
-declare function ConvertAttackType(i: number): attacktype | undefined;
+declare function ConvertAttackType(i: number): attacktype;
 
 /**
  * @param i - integer (32-bit)
  * @returns damagetype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertDamageType}
  */
-declare function ConvertDamageType(i: number): damagetype | undefined;
+declare function ConvertDamageType(i: number): damagetype;
 
 /**
  * @param i - integer (32-bit)
  * @returns weapontype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertWeaponType}
  */
-declare function ConvertWeaponType(i: number): weapontype | undefined;
+declare function ConvertWeaponType(i: number): weapontype;
 
 /**
  * @param i - integer (32-bit)
  * @returns soundtype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertSoundType}
  */
-declare function ConvertSoundType(i: number): soundtype | undefined;
+declare function ConvertSoundType(i: number): soundtype;
 
 /**
  * @param i - integer (32-bit)
  * @returns pathingtype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertPathingType}
  */
-declare function ConvertPathingType(i: number): pathingtype | undefined;
+declare function ConvertPathingType(i: number): pathingtype;
 
 /**
  * @param i - integer (32-bit)
  * @returns mousebuttontype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the bit flag `1 << ((i - 1) & 31)` of the integer `i` passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertMouseButtonType}
  */
-declare function ConvertMouseButtonType(i: number): mousebuttontype | undefined;
+declare function ConvertMouseButtonType(i: number): mousebuttontype;
 
 /**
  * @param i - integer (32-bit)
  * @returns animtype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAnimType}
  */
-declare function ConvertAnimType(i: number): animtype | undefined;
+declare function ConvertAnimType(i: number): animtype;
 
 /**
  * @param i - integer (32-bit)
  * @returns subanimtype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertSubAnimType}
  */
-declare function ConvertSubAnimType(i: number): subanimtype | undefined;
+declare function ConvertSubAnimType(i: number): subanimtype;
 
 /**
  * @param i - integer (32-bit)
  * @returns originframetype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertOriginFrameType}
  */
-declare function ConvertOriginFrameType(i: number): originframetype | undefined;
+declare function ConvertOriginFrameType(i: number): originframetype;
 
 /**
  * @param i - integer (32-bit)
  * @returns framepointtype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertFramePointType}
  */
-declare function ConvertFramePointType(i: number): framepointtype | undefined;
+declare function ConvertFramePointType(i: number): framepointtype;
 
 /**
  * @param i - integer (32-bit)
  * @returns textaligntype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertTextAlignType}
  */
-declare function ConvertTextAlignType(i: number): textaligntype | undefined;
+declare function ConvertTextAlignType(i: number): textaligntype;
 
 /**
  * @param i - integer (32-bit)
  * @returns frameeventtype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertFrameEventType}
  */
-declare function ConvertFrameEventType(i: number): frameeventtype | undefined;
+declare function ConvertFrameEventType(i: number): frameeventtype;
 
 /**
  * @param i - integer (32-bit)
  * @returns oskeytype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertOsKeyType}
  */
-declare function ConvertOsKeyType(i: number): oskeytype | undefined;
+declare function ConvertOsKeyType(i: number): oskeytype;
 
 /**
  * @param i - integer (32-bit)
  * @returns abilityintegerfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAbilityIntegerField}
  */
-declare function ConvertAbilityIntegerField(i: number): abilityintegerfield | undefined;
+declare function ConvertAbilityIntegerField(i: number): abilityintegerfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns abilityrealfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAbilityRealField}
  */
-declare function ConvertAbilityRealField(i: number): abilityrealfield | undefined;
+declare function ConvertAbilityRealField(i: number): abilityrealfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns abilitybooleanfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAbilityBooleanField}
  */
-declare function ConvertAbilityBooleanField(i: number): abilitybooleanfield | undefined;
+declare function ConvertAbilityBooleanField(i: number): abilitybooleanfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns abilitystringfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAbilityStringField}
  */
-declare function ConvertAbilityStringField(i: number): abilitystringfield | undefined;
+declare function ConvertAbilityStringField(i: number): abilitystringfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns abilityintegerlevelfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAbilityIntegerLevelField}
  */
-declare function ConvertAbilityIntegerLevelField(i: number): abilityintegerlevelfield | undefined;
+declare function ConvertAbilityIntegerLevelField(i: number): abilityintegerlevelfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns abilityreallevelfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAbilityRealLevelField}
  */
-declare function ConvertAbilityRealLevelField(i: number): abilityreallevelfield | undefined;
+declare function ConvertAbilityRealLevelField(i: number): abilityreallevelfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns abilitybooleanlevelfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAbilityBooleanLevelField}
  */
-declare function ConvertAbilityBooleanLevelField(i: number): abilitybooleanlevelfield | undefined;
+declare function ConvertAbilityBooleanLevelField(i: number): abilitybooleanlevelfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns abilitystringlevelfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAbilityStringLevelField}
  */
-declare function ConvertAbilityStringLevelField(i: number): abilitystringlevelfield | undefined;
+declare function ConvertAbilityStringLevelField(i: number): abilitystringlevelfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns abilityintegerlevelarrayfield
+ * @remarks Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAbilityIntegerLevelArrayField}
  */
-declare function ConvertAbilityIntegerLevelArrayField(i: number): abilityintegerlevelarrayfield | undefined;
+declare function ConvertAbilityIntegerLevelArrayField(i: number): abilityintegerlevelarrayfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns abilityreallevelarrayfield
+ * @remarks Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAbilityRealLevelArrayField}
  */
-declare function ConvertAbilityRealLevelArrayField(i: number): abilityreallevelarrayfield | undefined;
+declare function ConvertAbilityRealLevelArrayField(i: number): abilityreallevelarrayfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns abilitybooleanlevelarrayfield
+ * @remarks Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAbilityBooleanLevelArrayField}
  */
-declare function ConvertAbilityBooleanLevelArrayField(i: number): abilitybooleanlevelarrayfield | undefined;
+declare function ConvertAbilityBooleanLevelArrayField(i: number): abilitybooleanlevelarrayfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns abilitystringlevelarrayfield
+ * @remarks Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertAbilityStringLevelArrayField}
  */
-declare function ConvertAbilityStringLevelArrayField(i: number): abilitystringlevelarrayfield | undefined;
+declare function ConvertAbilityStringLevelArrayField(i: number): abilitystringlevelarrayfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns unitintegerfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertUnitIntegerField}
  */
-declare function ConvertUnitIntegerField(i: number): unitintegerfield | undefined;
+declare function ConvertUnitIntegerField(i: number): unitintegerfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns unitrealfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertUnitRealField}
  */
-declare function ConvertUnitRealField(i: number): unitrealfield | undefined;
+declare function ConvertUnitRealField(i: number): unitrealfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns unitbooleanfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertUnitBooleanField}
  */
-declare function ConvertUnitBooleanField(i: number): unitbooleanfield | undefined;
+declare function ConvertUnitBooleanField(i: number): unitbooleanfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns unitstringfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertUnitStringField}
  */
-declare function ConvertUnitStringField(i: number): unitstringfield | undefined;
+declare function ConvertUnitStringField(i: number): unitstringfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns unitweaponintegerfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertUnitWeaponIntegerField}
  */
-declare function ConvertUnitWeaponIntegerField(i: number): unitweaponintegerfield | undefined;
+declare function ConvertUnitWeaponIntegerField(i: number): unitweaponintegerfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns unitweaponrealfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertUnitWeaponRealField}
  */
-declare function ConvertUnitWeaponRealField(i: number): unitweaponrealfield | undefined;
+declare function ConvertUnitWeaponRealField(i: number): unitweaponrealfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns unitweaponbooleanfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertUnitWeaponBooleanField}
  */
-declare function ConvertUnitWeaponBooleanField(i: number): unitweaponbooleanfield | undefined;
+declare function ConvertUnitWeaponBooleanField(i: number): unitweaponbooleanfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns unitweaponstringfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertUnitWeaponStringField}
  */
-declare function ConvertUnitWeaponStringField(i: number): unitweaponstringfield | undefined;
+declare function ConvertUnitWeaponStringField(i: number): unitweaponstringfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns itemintegerfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertItemIntegerField}
  */
-declare function ConvertItemIntegerField(i: number): itemintegerfield | undefined;
+declare function ConvertItemIntegerField(i: number): itemintegerfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns itemrealfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertItemRealField}
  */
-declare function ConvertItemRealField(i: number): itemrealfield | undefined;
+declare function ConvertItemRealField(i: number): itemrealfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns itembooleanfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertItemBooleanField}
  */
-declare function ConvertItemBooleanField(i: number): itembooleanfield | undefined;
+declare function ConvertItemBooleanField(i: number): itembooleanfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns itemstringfield
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertItemStringField}
  */
-declare function ConvertItemStringField(i: number): itemstringfield | undefined;
+declare function ConvertItemStringField(i: number): itemstringfield;
 
 /**
  * @param i - integer (32-bit)
  * @returns movetype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertMoveType}
  */
-declare function ConvertMoveType(i: number): movetype | undefined;
+declare function ConvertMoveType(i: number): movetype;
 
 /**
  * @param i - integer (32-bit)
  * @returns targetflag
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertTargetFlag}
  */
-declare function ConvertTargetFlag(i: number): targetflag | undefined;
+declare function ConvertTargetFlag(i: number): targetflag;
 
 /**
  * @param i - integer (32-bit)
  * @returns armortype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertArmorType}
  */
-declare function ConvertArmorType(i: number): armortype | undefined;
+declare function ConvertArmorType(i: number): armortype;
 
 /**
  * @param i - integer (32-bit)
  * @returns heroattribute
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertHeroAttribute}
  */
-declare function ConvertHeroAttribute(i: number): heroattribute | undefined;
+declare function ConvertHeroAttribute(i: number): heroattribute;
 
 /**
  * @param i - integer (32-bit)
  * @returns defensetype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertDefenseType}
  */
-declare function ConvertDefenseType(i: number): defensetype | undefined;
+declare function ConvertDefenseType(i: number): defensetype;
 
 /**
  * @param i - integer (32-bit)
  * @returns regentype
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertRegenType}
  */
-declare function ConvertRegenType(i: number): regentype | undefined;
+declare function ConvertRegenType(i: number): regentype;
 
 /**
  * @param i - integer (32-bit)
  * @returns unitcategory
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertUnitCategory}
  */
-declare function ConvertUnitCategory(i: number): unitcategory | undefined;
+declare function ConvertUnitCategory(i: number): unitcategory;
 
 /**
  * @param i - integer (32-bit)
  * @returns pathingflag
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertPathingFlag}
  */
-declare function ConvertPathingFlag(i: number): pathingflag | undefined;
+declare function ConvertPathingFlag(i: number): pathingflag;
 
 /**
  * @param i - integer (32-bit)
  * @returns fogstyle
  * @patch 3.0.0.24268
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertFogStyle}
  */
 declare function ConvertFogStyle(i: number): fogstyle;
@@ -747,6 +832,7 @@ declare function ConvertFogStyle(i: number): fogstyle;
  * @param i - integer (32-bit)
  * @returns equipmentType
  * @patch 3.0.0.24268
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertEquipmentType}
  */
 declare function ConvertEquipmentType(i: number): equipmentType;
@@ -755,6 +841,7 @@ declare function ConvertEquipmentType(i: number): equipmentType;
  * @param i - integer (32-bit)
  * @returns itemTag
  * @patch 3.0.0.24268
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertItemTag}
  */
 declare function ConvertItemTag(i: number): itemTag;
@@ -763,6 +850,7 @@ declare function ConvertItemTag(i: number): itemTag;
  * @param i - integer (32-bit)
  * @returns loadoutslot
  * @patch 3.0.0.24268
+ * @remarks Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertLoadoutSlot}
  */
 declare function ConvertLoadoutSlot(i: number): loadoutslot;

@@ -2,7 +2,7 @@
   "name": "ConvertMoveType",
   "source": "common.j",
   "returns": {
-    "nullable": true,
+    "nullable": false,
     "family": "converter"
   },
   "params": [
@@ -11,5 +11,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.",
   "origin": "war3-types-strict"
 }
