@@ -7,7 +7,9 @@
 // per type and state with the Slices.
 //
 // A stale handle is one whose object is dead, removed or destroyed: the
-// factories named `dead…`, `removed…` and `destroyed…` return one.
+// factories named `dead…`, `removed…` and `destroyed…` return one. A
+// factory that takes a Handle, `selectedUnit`, puts it in a state and
+// returns it.
 
 import { CONVERTER_CONSTANTS } from "./converter-constants";
 

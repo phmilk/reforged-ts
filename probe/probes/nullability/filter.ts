@@ -1,10 +1,10 @@
-// The case generator of the Nullability sweep's Slice `nullability-filters`
-// (#364): the call cases of a Native that returns nothing and takes a
-// `filter` the Overlay types nullable (`EnumDestructablesInRect`,
-// `EnumItemsInRect`, the `ForceEnum*` and the `GroupEnum*`), which measure
-// whether the call takes a `nil` filter, against an always-true one and a
-// live one, as `probe/README.md` ("Call cases and the parameter verdict")
-// requires.
+// The case generator of the Nullability sweep's Slice `nullability-filters`,
+// not of a Nullability family: the call cases of a Native that returns
+// nothing and takes a `filter` the Overlay types nullable
+// (`EnumDestructablesInRect`, `EnumItemsInRect`, the `ForceEnum*` and the
+// `GroupEnum*`), which measure whether the call takes a `nil` filter,
+// against an always-true one and a live one, as `probe/README.md` ("Call
+// cases and the parameter verdict") requires.
 
 import type { CallCase } from "./case-runner";
 
@@ -19,7 +19,10 @@ export const FILTER_PARAM = "filter";
 export interface Filters {
   /** A filter that keeps everything: `Filter(() => true)`. */
   readonly alwaysTrue: boolexpr;
-  /** A filter that keeps some of what the call enumerates, not all. */
+  /**
+   * A filter that keeps less than the always-true one, wherever the call
+   * finds anything: one type of object, say.
+   */
   readonly live: boolexpr;
 }
 

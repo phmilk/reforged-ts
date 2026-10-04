@@ -17,7 +17,6 @@ import {
   clawsFilter,
   emptyForce,
   emptyGroup,
-  otherPlayerFilter,
   footmanFilter,
   liveDestructable,
   liveFilter,
@@ -28,6 +27,7 @@ import {
   liveRing,
   liveUnit,
   originRect,
+  otherPlayerFilter,
   selectedUnit,
   treeFilter,
   userSlotPlayer,
@@ -35,6 +35,15 @@ import {
 
 /** The `countLimit` of the `*Counted` Natives: more than any of them finds here. */
 const COUNT_LIMIT = 100;
+
+/** The `radius` of the `GroupEnumUnitsInRange*` Natives, around the map's origin. */
+const RADIUS = 512;
+
+/**
+ * The `unitname` of the `GroupEnumUnitsOfType*` Natives: peasants, which
+ * the footman filter leaves out.
+ */
+const UNIT_NAME = "peasant";
 
 /** The units of `whichGroup` after `enumerate` fills it, the group cleared first. */
 function unitsAfter(whichGroup: group, enumerate: () => void): number {
@@ -69,10 +78,11 @@ function actionsOf(enumerate: (action: () => void) => void): number {
  * before any case runs. Around the map's origin, far from `Player(0)`'s
  * start location, stand a footman and a peasant of `Player(0)`, both
  * selected, a Claws of Attack and a Ring of Protection on the ground, and a
- * Lordaeron tree and a gate, so a live filter keeps one of two: footmen,
- * Claws of Attack, Lordaeron trees. `GroupEnumUnitsOfType` looks for
- * peasants, which the footman filter leaves out. For players, the live
- * filter keeps every player but `Player(0)`, the only player in the game.
+ * Lordaeron tree and a gate, so a live filter keeps one of two where it
+ * finds both: footmen, Claws of Attack, Lordaeron trees.
+ * `GroupEnumUnitsOfType` looks for peasants, so the footman filter keeps
+ * none. For players, the live filter keeps every player but `Player(0)`,
+ * the only player in the game, so it keeps none.
  * The always-true filter is a `Filter` returning `true`. Each Native has a
  * group or a force of its own, cleared before each call, and a
  * `*Counted` Native a `countLimit` above what it finds.
@@ -116,13 +126,13 @@ function sliceCases(): CallCase[] {
   };
   return [
     groupCases("GroupEnumUnitsOfType", (g, filter) => {
-      GroupEnumUnitsOfType(g, "peasant", filter);
+      GroupEnumUnitsOfType(g, UNIT_NAME, filter);
     }),
     groupCases("GroupEnumUnitsOfPlayer", (g, filter) => {
       GroupEnumUnitsOfPlayer(g, owner, filter);
     }),
     groupCases("GroupEnumUnitsOfTypeCounted", (g, filter) => {
-      GroupEnumUnitsOfTypeCounted(g, "peasant", filter, COUNT_LIMIT);
+      GroupEnumUnitsOfTypeCounted(g, UNIT_NAME, filter, COUNT_LIMIT);
     }),
     groupCases("GroupEnumUnitsInRect", (g, filter) => {
       GroupEnumUnitsInRect(g, rect, filter);
@@ -131,16 +141,22 @@ function sliceCases(): CallCase[] {
       GroupEnumUnitsInRectCounted(g, rect, filter, COUNT_LIMIT);
     }),
     groupCases("GroupEnumUnitsInRange", (g, filter) => {
-      GroupEnumUnitsInRange(g, 0, 0, 512, filter);
+      GroupEnumUnitsInRange(g, 0, 0, RADIUS, filter);
     }),
     groupCases("GroupEnumUnitsInRangeOfLoc", (g, filter) => {
-      GroupEnumUnitsInRangeOfLoc(g, location, 512, filter);
+      GroupEnumUnitsInRangeOfLoc(g, location, RADIUS, filter);
     }),
     groupCases("GroupEnumUnitsInRangeCounted", (g, filter) => {
-      GroupEnumUnitsInRangeCounted(g, 0, 0, 512, filter, COUNT_LIMIT);
+      GroupEnumUnitsInRangeCounted(g, 0, 0, RADIUS, filter, COUNT_LIMIT);
     }),
     groupCases("GroupEnumUnitsInRangeOfLocCounted", (g, filter) => {
-      GroupEnumUnitsInRangeOfLocCounted(g, location, 512, filter, COUNT_LIMIT);
+      GroupEnumUnitsInRangeOfLocCounted(
+        g,
+        location,
+        RADIUS,
+        filter,
+        COUNT_LIMIT,
+      );
     }),
     groupCases("GroupEnumUnitsSelected", (g, filter) => {
       GroupEnumUnitsSelected(g, owner, filter);
