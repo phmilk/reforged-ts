@@ -266,7 +266,7 @@ export function gameUiParentFrame(): framehandle {
 }
 
 /** A frame, live child: a `"FRAME"` made with `BlzCreateFrameByType` on the game UI, inheriting nothing. */
-export function childFrame(): framehandle {
+function childFrame(): framehandle {
   return built(
     BlzCreateFrameByType("FRAME", "NullabilityFixture", gameUiFrame(), "", 0),
     "childFrame",
@@ -276,6 +276,20 @@ export function childFrame(): framehandle {
 /** A frame, destroyed: a live child frame after `BlzDestroyFrame`, a stale handle. */
 export function destroyedFrame(): framehandle {
   const frame = childFrame();
+  BlzDestroyFrame(frame);
+  return frame;
+}
+
+/**
+ * A simple frame, destroyed: a `"SimpleInfoPanelIconDamage"`, a default
+ * template, made with `BlzCreateSimpleFrame` on the console, after
+ * `BlzDestroyFrame`, a stale handle.
+ */
+export function destroyedSimpleFrame(): framehandle {
+  const frame = built(
+    BlzCreateSimpleFrame("SimpleInfoPanelIconDamage", consoleUiFrame(), 0),
+    "destroyedSimpleFrame",
+  );
   BlzDestroyFrame(frame);
   return frame;
 }

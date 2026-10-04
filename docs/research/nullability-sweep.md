@@ -5177,13 +5177,13 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Patch: 3.0.0.24268
 - Client: 3.0.0.24268
 - Date: 2026-10-04
-- Run: `fe969c27-d4ef-4df8-a2d0-964bbdba0e65`
+- Run: `77478543-2ed0-4bfa-a8ec-f4585cac0701`
 
 ### `CreateTimer`
 
 | Case     | Group | Outcome | Id      | Type                      | Message |
 | -------- | ----- | ------- | ------- | ------------------------- | ------- |
-| one call | (a)   | handle  | 1048807 | `timer: 0000026F5161AB90` |         |
+| one call | (a)   | handle  | 1048807 | `timer: 000001F980888350` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5195,7 +5195,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                      | Message |
 | -------- | ----- | ------- | ------- | ------------------------- | ------- |
-| one call | (a)   | handle  | 1048808 | `group: 0000026F56E23520` |         |
+| one call | (a)   | handle  | 1048808 | `group: 000001F98088AA60` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5207,7 +5207,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                      | Message |
 | -------- | ----- | ------- | ------- | ------------------------- | ------- |
-| one call | (a)   | handle  | 1048809 | `force: 0000026F5140B030` |         |
+| one call | (a)   | handle  | 1048809 | `force: 000001F980888E70` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5219,23 +5219,23 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                    | Group | Outcome | Id      | Type                     | Message |
 | ----------------------- | ----- | ------- | ------- | ------------------------ | ------- |
-| typical arguments       | (a)   | handle  | 1048810 | `rect: 0000026F519070E0` |         |
-| minx: 0                 | (a)   | handle  | 1048811 | `rect: 0000026F56E182E0` |         |
-| minx: negative          | (a)   | handle  | 1048812 | `rect: 0000026F517D6770` |         |
-| minx: outside the world | (a)   | handle  | 1048813 | `rect: 0000026F514F1910` |         |
-| minx: 2147483647        | (a)   | handle  | 1048814 | `rect: 0000026F5180D470` |         |
-| miny: 0                 | (a)   | handle  | 1048815 | `rect: 0000026F515995F0` |         |
-| miny: negative          | (a)   | handle  | 1048816 | `rect: 0000026F5174D150` |         |
-| miny: outside the world | (a)   | handle  | 1048817 | `rect: 0000026F517E3590` |         |
-| miny: 2147483647        | (a)   | handle  | 1048818 | `rect: 0000026F4BC2A2D0` |         |
-| maxx: 0                 | (a)   | handle  | 1048819 | `rect: 0000026F51623F60` |         |
-| maxx: negative          | (a)   | handle  | 1048820 | `rect: 0000026F563DED10` |         |
-| maxx: outside the world | (a)   | handle  | 1048821 | `rect: 0000026FFF32F6C0` |         |
-| maxx: 2147483647        | (a)   | handle  | 1048822 | `rect: 0000026F518C6910` |         |
-| maxy: 0                 | (a)   | handle  | 1048823 | `rect: 0000026F51747130` |         |
-| maxy: negative          | (a)   | handle  | 1048824 | `rect: 0000026F512EA640` |         |
-| maxy: outside the world | (a)   | handle  | 1048825 | `rect: 0000026F51748890` |         |
-| maxy: 2147483647        | (a)   | handle  | 1048826 | `rect: 000002700319FE40` |         |
+| typical arguments       | (a)   | handle  | 1048810 | `rect: 000001F980981AC0` |         |
+| minx: 0                 | (a)   | handle  | 1048811 | `rect: 000001F980987F20` |         |
+| minx: negative          | (a)   | handle  | 1048812 | `rect: 000001F980982E90` |         |
+| minx: outside the world | (a)   | handle  | 1048813 | `rect: 000001F98088B690` |         |
+| minx: 2147483647        | (a)   | handle  | 1048814 | `rect: 000001F98098C990` |         |
+| miny: 0                 | (a)   | handle  | 1048815 | `rect: 000001F980987860` |         |
+| miny: negative          | (a)   | handle  | 1048816 | `rect: 000001F980989A00` |         |
+| miny: outside the world | (a)   | handle  | 1048817 | `rect: 000001F9809920A0` |         |
+| miny: 2147483647        | (a)   | handle  | 1048818 | `rect: 000001F980986450` |         |
+| maxx: 0                 | (a)   | handle  | 1048819 | `rect: 000001F980983FC0` |         |
+| maxx: negative          | (a)   | handle  | 1048820 | `rect: 000001F9809850B0` |         |
+| maxx: outside the world | (a)   | handle  | 1048821 | `rect: 000001F98054D960` |         |
+| maxx: 2147483647        | (a)   | handle  | 1048822 | `rect: 000001F980554180` |         |
+| maxy: 0                 | (a)   | handle  | 1048823 | `rect: 000001F980992C40` |         |
+| maxy: negative          | (a)   | handle  | 1048824 | `rect: 000001F980558410` |         |
+| maxy: outside the world | (a)   | handle  | 1048825 | `rect: 000001F98054B5B0` |         |
+| maxy: 2147483647        | (a)   | handle  | 1048826 | `rect: 000001F980991DB0` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5247,7 +5247,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                  | Group | Outcome | Id      | Type                     | Message |
 | --------------------- | ----- | ------- | ------- | ------------------------ | ------- |
-| typical arguments     | (a)   | handle  | 1048827 | `rect: 0000026F562DCD20` |         |
+| typical arguments     | (a)   | handle  | 1048827 | `rect: 000001F980557500` |         |
 | min: removed location | (b)   | nil     |         |                          |         |
 | max: removed location | (b)   | nil     |         |                          |         |
 
@@ -5261,7 +5261,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                       | Message |
 | -------- | ----- | ------- | ------- | -------------------------- | ------- |
-| one call | (a)   | handle  | 1048828 | `region: 0000026F5162B060` |         |
+| one call | (a)   | handle  | 1048828 | `region: 000001F980983EA0` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5273,15 +5273,15 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                 | Group | Outcome | Id      | Type                         | Message |
 | -------------------- | ----- | ------- | ------- | ---------------------------- | ------- |
-| typical arguments    | (a)   | handle  | 1048829 | `location: 0000026F516C4720` |         |
-| x: 0                 | (a)   | handle  | 1048830 | `location: 0000026F51755020` |         |
-| x: negative          | (a)   | handle  | 1048831 | `location: 0000026F5156C460` |         |
-| x: outside the world | (a)   | handle  | 1048832 | `location: 0000026F5175CE30` |         |
-| x: 2147483647        | (a)   | handle  | 1048833 | `location: 0000026F562C2400` |         |
-| y: 0                 | (a)   | handle  | 1048834 | `location: 0000026F51540680` |         |
-| y: negative          | (a)   | handle  | 1048835 | `location: 0000026F5177F6D0` |         |
-| y: outside the world | (a)   | handle  | 1048836 | `location: 0000026F517AF2B0` |         |
-| y: 2147483647        | (a)   | handle  | 1048837 | `location: 0000026F515D90F0` |         |
+| typical arguments    | (a)   | handle  | 1048829 | `location: 000001F980543E90` |         |
+| x: 0                 | (a)   | handle  | 1048830 | `location: 000001F9805514A0` |         |
+| x: negative          | (a)   | handle  | 1048831 | `location: 000001F8AA9FE0B0` |         |
+| x: outside the world | (a)   | handle  | 1048832 | `location: 000001F8AAA03870` |         |
+| x: 2147483647        | (a)   | handle  | 1048833 | `location: 000001F8AAA0C700` |         |
+| y: 0                 | (a)   | handle  | 1048834 | `location: 000001F8AAA11E30` |         |
+| y: negative          | (a)   | handle  | 1048835 | `location: 000001F8AAA0FD40` |         |
+| y: outside the world | (a)   | handle  | 1048836 | `location: 000001F8AAA08320` |         |
+| y: 2147483647        | (a)   | handle  | 1048837 | `location: 000001F8AA9FDDF0` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5293,7 +5293,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                        | Message |
 | -------- | ----- | ------- | ------- | --------------------------- | ------- |
-| one call | (a)   | handle  | 1048838 | `trigger: 0000026F5173E800` |         |
+| one call | (a)   | handle  | 1048838 | `trigger: 000001F8AAA13830` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5305,13 +5305,13 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                          | Group | Outcome | Id      | Type                         | Message |
 | ----------------------------- | ----- | ------- | ------- | ---------------------------- | ------- |
-| typical arguments             | (a)   | handle  | 1048839 | `boolexpr: 0000026F51760270` |         |
-| operandA: destroyed condition | (b)   | handle  | 1048903 | `boolexpr: 0000026F518D3B90` |         |
-| operandA: destroyed filter    | (b)   | handle  | 1048904 | `boolexpr: 0000026F583074F0` |         |
-| operandA: destroyed boolexpr  | (b)   | handle  | 1048905 | `boolexpr: 00000270017520A0` |         |
-| operandB: destroyed condition | (b)   | handle  | 1048906 | `boolexpr: 0000027001F955F0` |         |
-| operandB: destroyed filter    | (b)   | handle  | 1048907 | `boolexpr: 0000026F570D6C60` |         |
-| operandB: destroyed boolexpr  | (b)   | handle  | 1048908 | `boolexpr: 0000026F56260A40` |         |
+| typical arguments             | (a)   | handle  | 1048839 | `boolexpr: 000001F8AAA027C0` |         |
+| operandA: destroyed condition | (b)   | handle  | 1048903 | `boolexpr: 000001F98048ABC0` |         |
+| operandA: destroyed filter    | (b)   | handle  | 1048904 | `boolexpr: 000001F8AA942870` |         |
+| operandA: destroyed boolexpr  | (b)   | handle  | 1048905 | `boolexpr: 000001F8AA947E20` |         |
+| operandB: destroyed condition | (b)   | handle  | 1048906 | `boolexpr: 000001F8AA94D740` |         |
+| operandB: destroyed filter    | (b)   | handle  | 1048907 | `boolexpr: 000001F8AA953010` |         |
+| operandB: destroyed boolexpr  | (b)   | handle  | 1048908 | `boolexpr: 000001F8AA958AE0` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5323,13 +5323,13 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                          | Group | Outcome | Id      | Type                         | Message |
 | ----------------------------- | ----- | ------- | ------- | ---------------------------- | ------- |
-| typical arguments             | (a)   | handle  | 1048840 | `boolexpr: 0000026F517E2F70` |         |
-| operandA: destroyed condition | (b)   | handle  | 1048909 | `boolexpr: 0000026FFF7861C0` |         |
-| operandA: destroyed filter    | (b)   | handle  | 1048910 | `boolexpr: 0000026FFF788FD0` |         |
-| operandA: destroyed boolexpr  | (b)   | handle  | 1048911 | `boolexpr: 0000026FFF78A8D0` |         |
-| operandB: destroyed condition | (b)   | handle  | 1048912 | `boolexpr: 0000026FFF781240` |         |
-| operandB: destroyed filter    | (b)   | handle  | 1048913 | `boolexpr: 0000026FFF784990` |         |
-| operandB: destroyed boolexpr  | (b)   | handle  | 1048914 | `boolexpr: 0000026F58DD22E0` |         |
+| typical arguments             | (a)   | handle  | 1048840 | `boolexpr: 000001F8AAA0EDF0` |         |
+| operandA: destroyed condition | (b)   | handle  | 1048909 | `boolexpr: 000001F8AA95E900` |         |
+| operandA: destroyed filter    | (b)   | handle  | 1048910 | `boolexpr: 000001F8AA9646F0` |         |
+| operandA: destroyed boolexpr  | (b)   | handle  | 1048911 | `boolexpr: 000001F8AA96A5A0` |         |
+| operandB: destroyed condition | (b)   | handle  | 1048912 | `boolexpr: 000001F8AA970740` |         |
+| operandB: destroyed filter    | (b)   | handle  | 1048913 | `boolexpr: 000001F8AA976A70` |         |
+| operandB: destroyed boolexpr  | (b)   | handle  | 1048914 | `boolexpr: 000001F8AA97CE40` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5341,10 +5341,10 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                         | Group | Outcome | Id      | Type                         | Message |
 | ---------------------------- | ----- | ------- | ------- | ---------------------------- | ------- |
-| typical arguments            | (a)   | handle  | 1048841 | `boolexpr: 0000026F5152E8F0` |         |
-| operand: destroyed condition | (b)   | handle  | 1048915 | `boolexpr: 0000026F58DD7390` |         |
-| operand: destroyed filter    | (b)   | handle  | 1048916 | `boolexpr: 0000026F58DDC150` |         |
-| operand: destroyed boolexpr  | (b)   | handle  | 1048917 | `boolexpr: 0000026F58DE16B0` |         |
+| typical arguments            | (a)   | handle  | 1048841 | `boolexpr: 000001F8AAA06630` |         |
+| operand: destroyed condition | (b)   | handle  | 1048915 | `boolexpr: 000001F8AA983810` |         |
+| operand: destroyed filter    | (b)   | handle  | 1048916 | `boolexpr: 000001F8AA98A120` |         |
+| operand: destroyed boolexpr  | (b)   | handle  | 1048917 | `boolexpr: 000001F8AA986550` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5356,7 +5356,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case              | Group | Outcome | Id      | Type                              | Message |
 | ----------------- | ----- | ------- | ------- | --------------------------------- | ------- |
-| typical arguments | (a)   | handle  | 1048842 | `conditionfunc: 0000026F5176B610` |         |
+| typical arguments | (a)   | handle  | 1048842 | `conditionfunc: 000001F8AAA077E0` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5368,7 +5368,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case              | Group | Outcome | Id      | Type                           | Message |
 | ----------------- | ----- | ------- | ------- | ------------------------------ | ------- |
-| typical arguments | (a)   | handle  | 1048843 | `filterfunc: 0000026F5178F430` |         |
+| typical arguments | (a)   | handle  | 1048843 | `filterfunc: 000001F98090E8A0` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5380,11 +5380,11 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                                 | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------------------ | ------- |
-| typical arguments               | (a)   | handle  | 1048844 | `triggercondition: 0000026F514F8D80` |         |
+| typical arguments               | (a)   | handle  | 1048844 | `triggercondition: 000001F9809145D0` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                                      |         |
-| condition: destroyed condition  | (b)   | handle  | 1048918 | `triggercondition: 0000026F58DDE6D0` |         |
-| condition: destroyed filter     | (b)   | handle  | 1048919 | `triggercondition: 0000026F58DCE6F0` |         |
-| condition: destroyed boolexpr   | (b)   | handle  | 1048920 | `triggercondition: 0000026F58DD1C10` |         |
+| condition: destroyed condition  | (b)   | handle  | 1048918 | `triggercondition: 000001F8AA95B950` |         |
+| condition: destroyed filter     | (b)   | handle  | 1048919 | `triggercondition: 000001F8AA978E30` |         |
+| condition: destroyed boolexpr   | (b)   | handle  | 1048920 | `triggercondition: 000001F8AA97EF60` |         |
 
 - Family: `constructor`
 - Verdict: nullable (proved)
@@ -5396,8 +5396,8 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                              | Message |
 | ------------------------------- | ----- | ------- | ------- | --------------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048845 | `triggeraction: 0000026F518B0190` |         |
-| whichTrigger: destroyed trigger | (b)   | handle  | 0       | `triggeraction: 0000026F58DDAAF0` |         |
+| typical arguments               | (a)   | handle  | 1048845 | `triggeraction: 000001F980919E80` |         |
+| whichTrigger: destroyed trigger | (b)   | handle  | 0       | `triggeraction: 000001F8AA979410` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence, handle id 0)
@@ -5409,7 +5409,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                | Group | Outcome | Id      | Type                            | Message |
 | ------------------- | ----- | ------- | ------- | ------------------------------- | ------- |
-| typical arguments   | (a)   | handle  | 1048846 | `fogmodifier: 0000026F51867A00` |         |
+| typical arguments   | (a)   | handle  | 1048846 | `fogmodifier: 000001F98091F9D0` |         |
 | where: removed rect | (b)   | nil     |         |                                 |         |
 
 - Family: `constructor`
@@ -5422,18 +5422,18 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                       | Group | Outcome | Id      | Type                            | Message                            |
 | -------------------------- | ----- | ------- | ------- | ------------------------------- | ---------------------------------- |
-| typical arguments          | (a)   | handle  | 1048847 | `fogmodifier: 0000026F5166EB80` |                                    |
-| centerx: 0                 | (a)   | handle  | 1048848 | `fogmodifier: 0000026F515582C0` |                                    |
-| centerx: negative          | (a)   | handle  | 1048849 | `fogmodifier: 0000026F51761320` |                                    |
-| centerx: outside the world | (a)   | handle  | 1048850 | `fogmodifier: 0000026F514D2DB0` |                                    |
-| centerx: 2147483647        | (a)   | handle  | 1048851 | `fogmodifier: 0000026F57115D50` |                                    |
-| centerY: 0                 | (a)   | handle  | 1048852 | `fogmodifier: 0000026F516A6F00` |                                    |
-| centerY: negative          | (a)   | handle  | 1048853 | `fogmodifier: 0000026F518EA670` |                                    |
-| centerY: outside the world | (a)   | handle  | 1048854 | `fogmodifier: 0000026F575B3990` |                                    |
-| centerY: 2147483647        | (a)   | handle  | 1048855 | `fogmodifier: 0000026F517C4570` |                                    |
-| radius: 0                  | (a)   | handle  | 1048856 | `fogmodifier: 0000026F51899600` |                                    |
-| radius: negative           | (a)   | handle  | 1048857 | `fogmodifier: 0000026F517B6CB0` |                                    |
-| radius: outside the world  | (a)   | handle  | 1048858 | `fogmodifier: 0000026F516C36A0` |                                    |
+| typical arguments          | (a)   | handle  | 1048847 | `fogmodifier: 000001F980925110` |                                    |
+| centerx: 0                 | (a)   | handle  | 1048848 | `fogmodifier: 000001F98092A920` |                                    |
+| centerx: negative          | (a)   | handle  | 1048849 | `fogmodifier: 000001F980930170` |                                    |
+| centerx: outside the world | (a)   | handle  | 1048850 | `fogmodifier: 000001F980936160` |                                    |
+| centerx: 2147483647        | (a)   | handle  | 1048851 | `fogmodifier: 000001F98093C540` |                                    |
+| centerY: 0                 | (a)   | handle  | 1048852 | `fogmodifier: 000001F980942290` |                                    |
+| centerY: negative          | (a)   | handle  | 1048853 | `fogmodifier: 000001F980948C50` |                                    |
+| centerY: outside the world | (a)   | handle  | 1048854 | `fogmodifier: 000001F980922FB0` |                                    |
+| centerY: 2147483647        | (a)   | handle  | 1048855 | `fogmodifier: 000001F98093BE40` |                                    |
+| radius: 0                  | (a)   | handle  | 1048856 | `fogmodifier: 000001F9809184B0` |                                    |
+| radius: negative           | (a)   | handle  | 1048857 | `fogmodifier: 000001F980940080` |                                    |
+| radius: outside the world  | (a)   | handle  | 1048858 | `fogmodifier: 000001F98090D020` |                                    |
 | radius: 2147483647         | (a)   | crashed |         |                                 | skipped: crashed in an earlier run |
 
 - Family: `constructor`
@@ -5446,10 +5446,10 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                      | Group | Outcome | Id      | Type                            | Message                            |
 | ------------------------- | ----- | ------- | ------- | ------------------------------- | ---------------------------------- |
-| typical arguments         | (a)   | handle  | 1048859 | `fogmodifier: 0000026F515172C0` |                                    |
-| radius: 0                 | (a)   | handle  | 1048860 | `fogmodifier: 0000026F5178F810` |                                    |
-| radius: negative          | (a)   | handle  | 1048861 | `fogmodifier: 0000026F51844C10` |                                    |
-| radius: outside the world | (a)   | handle  | 1048862 | `fogmodifier: 0000026F512AE620` |                                    |
+| typical arguments         | (a)   | handle  | 1048859 | `fogmodifier: 000001F98091DF60` |                                    |
+| radius: 0                 | (a)   | handle  | 1048860 | `fogmodifier: 000001F9809124C0` |                                    |
+| radius: negative          | (a)   | handle  | 1048861 | `fogmodifier: 000001F980919180` |                                    |
+| radius: outside the world | (a)   | handle  | 1048862 | `fogmodifier: 000001F980915C10` |                                    |
 | radius: 2147483647        | (a)   | crashed |         |                                 | skipped: crashed in an earlier run |
 | center: removed location  | (b)   | nil     |         |                                 |                                    |
 
@@ -5463,7 +5463,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                       | Message |
 | -------- | ----- | ------- | ------- | -------------------------- | ------- |
-| one call | (a)   | handle  | 1048863 | `dialog: 0000026F516985C0` |         |
+| one call | (a)   | handle  | 1048863 | `dialog: 000001F98090FF30` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5475,12 +5475,12 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                          | Group | Outcome | Id      | Type                       | Message |
 | ----------------------------- | ----- | ------- | ------- | -------------------------- | ------- |
-| typical arguments             | (a)   | handle  | 1048864 | `button: 0000026F517261D0` |         |
-| buttonText: empty string      | (a)   | handle  | 1048865 | `button: 0000026F51362BD0` |         |
-| buttonText: unknown name      | (a)   | handle  | 1048866 | `button: 0000026F51721790` |         |
-| hotkey: negative              | (a)   | handle  | 1048867 | `button: 0000026F515D24F0` |         |
-| hotkey: outside the world     | (a)   | handle  | 1048868 | `button: 0000026F5178F8D0` |         |
-| hotkey: 2147483647            | (a)   | handle  | 1048869 | `button: 0000026F514E8340` |         |
+| typical arguments             | (a)   | handle  | 1048864 | `button: 000001F980932E90` |         |
+| buttonText: empty string      | (a)   | handle  | 1048865 | `button: 000001F98092DD50` |         |
+| buttonText: unknown name      | (a)   | handle  | 1048866 | `button: 000001F980933CE0` |         |
+| hotkey: negative              | (a)   | handle  | 1048867 | `button: 000001F98093A240` |         |
+| hotkey: outside the world     | (a)   | handle  | 1048868 | `button: 000001F98092F640` |         |
+| hotkey: 2147483647            | (a)   | handle  | 1048869 | `button: 000001F980945810` |         |
 | whichDialog: destroyed dialog | (b)   | nil     |         |                            |         |
 
 - Family: `constructor`
@@ -5493,12 +5493,12 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                          | Group | Outcome | Id      | Type                       | Message |
 | ----------------------------- | ----- | ------- | ------- | -------------------------- | ------- |
-| typical arguments             | (a)   | handle  | 1048870 | `button: 0000026F5151CDE0` |         |
-| buttonText: empty string      | (a)   | handle  | 1048871 | `button: 0000026F5167A510` |         |
-| buttonText: unknown name      | (a)   | handle  | 1048872 | `button: 0000026F5165FAA0` |         |
-| hotkey: negative              | (a)   | handle  | 1048873 | `button: 0000026F51590460` |         |
-| hotkey: outside the world     | (a)   | handle  | 1048874 | `button: 0000026F517B4140` |         |
-| hotkey: 2147483647            | (a)   | handle  | 1048875 | `button: 0000026F51A87C80` |         |
+| typical arguments             | (a)   | handle  | 1048870 | `button: 000001F98092F600` |         |
+| buttonText: empty string      | (a)   | handle  | 1048871 | `button: 000001F98093EEF0` |         |
+| buttonText: unknown name      | (a)   | handle  | 1048872 | `button: 000001F8AB20D9B0` |         |
+| hotkey: negative              | (a)   | handle  | 1048873 | `button: 000001F8AB211070` |         |
+| hotkey: outside the world     | (a)   | handle  | 1048874 | `button: 000001F8AB2145D0` |         |
+| hotkey: 2147483647            | (a)   | handle  | 1048875 | `button: 000001F8AB2184A0` |         |
 | whichDialog: destroyed dialog | (b)   | nil     |         |                            |         |
 
 - Family: `constructor`
@@ -5511,9 +5511,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                       | Group | Outcome | Id      | Type                          | Message |
 | -------------------------- | ----- | ------- | ------- | ----------------------------- | ------- |
-| typical arguments          | (a)   | handle  | 1048876 | `gamecache: 0000026F514D28D0` |         |
+| typical arguments          | (a)   | handle  | 1048876 | `gamecache: 000001F8AB21D740` |         |
 | campaignFile: empty string | (a)   | nil     |         |                               |         |
-| campaignFile: unknown name | (a)   | handle  | 1048877 | `gamecache: 0000026F58480960` |         |
+| campaignFile: unknown name | (a)   | handle  | 1048877 | `gamecache: 000001F8AB225520` |         |
 
 - Family: `constructor`
 - Verdict: nullable (proved)
@@ -5525,7 +5525,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                          | Message |
 | -------- | ----- | ------- | ------- | ----------------------------- | ------- |
-| one call | (a)   | handle  | 1048878 | `hashtable: 0000026F5156BFE0` |         |
+| one call | (a)   | handle  | 1048878 | `hashtable: 000001F8AB213A90` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5537,7 +5537,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                      | Message |
 | -------- | ----- | ------- | ------- | ------------------------- | ------- |
-| one call | (a)   | handle  | 1048879 | `quest: 0000026F56D50120` |         |
+| one call | (a)   | handle  | 1048879 | `quest: 000001F8AB225AF0` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5549,8 +5549,8 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                                 | Group | Outcome | Id      | Type                          | Message |
 | ------------------------------------ | ----- | ------- | ------- | ----------------------------- | ------- |
-| typical arguments                    | (a)   | handle  | 1048880 | `questitem: 0000026F5155BB30` |         |
-| whichQuest: quest after DestroyQuest | (b)   | handle  | 1048921 | `questitem: 00000270098C27F0` |         |
+| typical arguments                    | (a)   | handle  | 1048880 | `questitem: 000001F8AB21B7A0` |         |
+| whichQuest: quest after DestroyQuest | (b)   | handle  | 1048921 | `questitem: 000001F8AA96C890` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5562,7 +5562,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                                | Message |
 | -------- | ----- | ------- | ------- | ----------------------------------- | ------- |
-| one call | (a)   | handle  | 1048881 | `defeatcondition: 0000026F517419A0` |         |
+| one call | (a)   | handle  | 1048881 | `defeatcondition: 000001F8AB21F9A0` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5574,8 +5574,8 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case               | Group | Outcome | Id      | Type                            | Message |
 | ------------------ | ----- | ------- | ------- | ------------------------------- | ------- |
-| typical arguments  | (a)   | handle  | 1048882 | `timerdialog: 0000026F51558720` |         |
-| t: destroyed timer | (b)   | handle  | 1048922 | `timerdialog: 00000270098C85F0` |         |
+| typical arguments  | (a)   | handle  | 1048882 | `timerdialog: 000001F8AB2168A0` |         |
+| t: destroyed timer | (b)   | handle  | 1048922 | `timerdialog: 000001F8AA960DC0` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5587,7 +5587,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                            | Message |
 | -------- | ----- | ------- | ------- | ------------------------------- | ------- |
-| one call | (a)   | handle  | 1048883 | `leaderboard: 0000026F518DEA70` |         |
+| one call | (a)   | handle  | 1048883 | `leaderboard: 000001F8AB20B610` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5599,7 +5599,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                           | Message |
 | -------- | ----- | ------- | ------- | ------------------------------ | ------- |
-| one call | (a)   | handle  | 1048884 | `multiboard: 0000026F5182CA60` |         |
+| one call | (a)   | handle  | 1048884 | `multiboard: 000001F8AB21AB30` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5611,7 +5611,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                            | Message |
 | -------- | ----- | ------- | ------- | ------------------------------- | ------- |
-| one call | (a)   | handle  | 1048885 | `camerasetup: 0000026F515C4DF0` |         |
+| one call | (a)   | handle  | 1048885 | `camerasetup: 000001F8AB21A790` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5623,15 +5623,15 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                             | Group | Outcome | Id      | Type                            | Message |
 | -------------------------------- | ----- | ------- | ------- | ------------------------------- | ------- |
-| typical arguments                | (a)   | handle  | 1048886 | `framehandle: 0000026F517101D0` |         |
+| typical arguments                | (a)   | handle  | 1048886 | `framehandle: 000001F980466F50` |         |
 | name: empty string               | (a)   | nil     |         |                                 |         |
 | name: unknown name               | (a)   | nil     |         |                                 |         |
-| priority: negative               | (a)   | handle  | 1048887 | `framehandle: 0000026F51343230` |         |
-| priority: outside the world      | (a)   | handle  | 1048888 | `framehandle: 0000026F56400630` |         |
-| priority: 2147483647             | (a)   | handle  | 1048889 | `framehandle: 0000026F51738B40` |         |
-| createContext: negative          | (a)   | handle  | 1048890 | `framehandle: 0000026F515FFED0` |         |
-| createContext: outside the world | (a)   | handle  | 1048891 | `framehandle: 0000026F5160D0F0` |         |
-| createContext: 2147483647        | (a)   | handle  | 1048892 | `framehandle: 0000026F51673BC0` |         |
+| priority: negative               | (a)   | handle  | 1048887 | `framehandle: 000001F980476B30` |         |
+| priority: outside the world      | (a)   | handle  | 1048888 | `framehandle: 000001F98047C570` |         |
+| priority: 2147483647             | (a)   | handle  | 1048889 | `framehandle: 000001F980482170` |         |
+| createContext: negative          | (a)   | handle  | 1048890 | `framehandle: 000001F980487FD0` |         |
+| createContext: outside the world | (a)   | handle  | 1048891 | `framehandle: 000001F98048DDF0` |         |
+| createContext: 2147483647        | (a)   | handle  | 1048892 | `framehandle: 000001F980493FF0` |         |
 | owner: destroyed frame           | (b)   | nil     |         |                                 |         |
 
 - Family: `constructor`
@@ -5644,13 +5644,13 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                             | Group | Outcome | Id      | Type                            | Message |
 | -------------------------------- | ----- | ------- | ------- | ------------------------------- | ------- |
-| typical arguments                | (a)   | handle  | 1048893 | `framehandle: 0000026F5178B650` |         |
+| typical arguments                | (a)   | handle  | 1048893 | `framehandle: 000001F980499F50` |         |
 | name: empty string               | (a)   | nil     |         |                                 |         |
 | name: unknown name               | (a)   | nil     |         |                                 |         |
-| createContext: negative          | (a)   | handle  | 1048894 | `framehandle: 0000026F515F0B50` |         |
-| createContext: outside the world | (a)   | handle  | 1048895 | `framehandle: 0000026F51768C70` |         |
-| createContext: 2147483647        | (a)   | handle  | 1048896 | `framehandle: 0000026F51566040` |         |
-| owner: destroyed frame           | (b)   | handle  | 1048923 | `framehandle: 00000270098D4980` |         |
+| createContext: negative          | (a)   | handle  | 1048894 | `framehandle: 000001F9804ABA80` |         |
+| createContext: outside the world | (a)   | handle  | 1048895 | `framehandle: 000001F980463340` |         |
+| createContext: 2147483647        | (a)   | handle  | 1048896 | `framehandle: 000001F98048F960` |         |
+| owner: destroyed frame           | (b)   | handle  | 1048923 | `framehandle: 000001F8AA93DAD0` |         |
 
 - Family: `constructor`
 - Verdict: nullable (proved)
@@ -5662,10 +5662,10 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                       | Group | Outcome | Id      | Type                                    | Message |
 | -------------------------- | ----- | ------- | ------- | --------------------------------------- | ------- |
-| typical arguments          | (a)   | handle  | 1048897 | `commandbuttoneffect: 0000026F5153D450` |         |
-| abilityId: unknown rawcode | (a)   | handle  | 1048898 | `commandbuttoneffect: 0000026F518514D0` |         |
-| order: empty string        | (a)   | handle  | 0       | `commandbuttoneffect: 0000026F51861CD0` |         |
-| order: unknown name        | (a)   | handle  | 0       | `commandbuttoneffect: 0000026F51861CD0` |         |
+| typical arguments          | (a)   | handle  | 1048897 | `commandbuttoneffect: 000001F9804759D0` |         |
+| abilityId: unknown rawcode | (a)   | handle  | 1048898 | `commandbuttoneffect: 000001F98046E570` |         |
+| order: empty string        | (a)   | handle  | 0       | `commandbuttoneffect: 000001F980486D00` |         |
+| order: unknown name        | (a)   | handle  | 0       | `commandbuttoneffect: 000001F980486D00` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence, handle id 0)
@@ -5677,8 +5677,8 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                          | Group | Outcome | Id      | Type                                    | Message |
 | ----------------------------- | ----- | ------- | ------- | --------------------------------------- | ------- |
-| typical arguments             | (a)   | handle  | 1048899 | `commandbuttoneffect: 0000026F510BDE20` |         |
-| whichUprgade: unknown rawcode | (a)   | handle  | 1048900 | `commandbuttoneffect: 0000026F515C50C0` |         |
+| typical arguments             | (a)   | handle  | 1048899 | `commandbuttoneffect: 000001F98048D990` |         |
+| whichUprgade: unknown rawcode | (a)   | handle  | 1048900 | `commandbuttoneffect: 000001F980493020` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
@@ -5690,8 +5690,8 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                       | Group | Outcome | Id      | Type                                    | Message |
 | -------------------------- | ----- | ------- | ------- | --------------------------------------- | ------- |
-| typical arguments          | (a)   | handle  | 1048901 | `commandbuttoneffect: 0000026F514A7490` |         |
-| abilityId: unknown rawcode | (a)   | handle  | 1048902 | `commandbuttoneffect: 0000026F517158F0` |         |
+| typical arguments          | (a)   | handle  | 1048901 | `commandbuttoneffect: 000001F9804A5020` |         |
+| abilityId: unknown rawcode | (a)   | handle  | 1048902 | `commandbuttoneffect: 000001F980493230` |         |
 
 - Family: `constructor`
 - Verdict: non-null (evidence)

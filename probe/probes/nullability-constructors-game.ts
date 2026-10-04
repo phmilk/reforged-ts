@@ -18,6 +18,7 @@ import {
   destroyedDialog,
   destroyedFilter,
   destroyedFrame,
+  destroyedSimpleFrame,
   destroyedTimer,
   destroyedTrigger,
   gameUiFrame,
@@ -61,8 +62,10 @@ function noAction(): void {
  * parameter is `Player(0)` only, by the constructors' rule.
  *
  * The frame names are default templates the game loads with no TOC,
- * measured in a scratch run on 3.0.0.24268: `ScriptDialogButton` on the
- * game UI, `SimpleInfoPanelIconDamage` on `ConsoleUI`.
+ * measured in a scratch run on 3.0.0.24268 (run
+ * 4600bba5-e82d-4753-8bc1-2714f0c2095f): `ScriptDialogButton` on the game
+ * UI, `SimpleInfoPanelIconDamage` on `ConsoleUI`. Each owner's stale
+ * state is a destroyed frame of its own kind.
  */
 function sliceCases(): ReturnCase[] {
   const boolexprStale = [
@@ -82,8 +85,8 @@ function sliceCases(): ReturnCase[] {
   const whichDialog = handle("whichDialog", liveDialog(), [
     ["destroyed dialog", destroyedDialog()],
   ]);
-  const frameOwner = (owner: framehandle) =>
-    handle("owner", owner, [["destroyed frame", destroyedFrame()]]);
+  const frameOwner = (owner: framehandle, destroyed: framehandle) =>
+    handle("owner", owner, [["destroyed frame", destroyed]]);
   return inGroupOrder(
     constructorCases("CreateTimer", [], () => CreateTimer()),
     constructorCases("CreateGroup", [], () => CreateGroup()),
@@ -227,7 +230,7 @@ function sliceCases(): ReturnCase[] {
       "BlzCreateFrame",
       [
         text("name", "ScriptDialogButton"),
-        frameOwner(gameUiFrame()),
+        frameOwner(gameUiFrame(), destroyedFrame()),
         numeric("priority", 0),
         numeric("createContext", 0),
       ],
@@ -238,7 +241,7 @@ function sliceCases(): ReturnCase[] {
       "BlzCreateSimpleFrame",
       [
         text("name", "SimpleInfoPanelIconDamage"),
-        frameOwner(consoleUiFrame()),
+        frameOwner(consoleUiFrame(), destroyedSimpleFrame()),
         numeric("createContext", 0),
       ],
       ([name, owner, context]) => BlzCreateSimpleFrame(name, owner, context),
@@ -271,10 +274,7 @@ const SKIP: readonly string[] = [
   // bfb14491-bb8f-45ec-bbb5-4e21621e41b5 (the confirming run).
   "CreateFogModifierRadius radius: 2147483647",
   // Crashed on 3.0.0.24268, runs 677e6d4b-285a-4ccf-82f2-4cd17fbd4a81 and
-  // fdd3fb91-61d7-43be-89af-435bf194918d (the confirming run); it also
-  // crashed in run c0bc4e7d-d7b4-4ae3-90e6-2aee9d4f31db but not in its
-  // confirming run, 0b46be5c-8172-402f-9630-c4395c6a3890, which returned a
-  // handle: an intermittent crash, 3 runs of 4.
+  // fdd3fb91-61d7-43be-89af-435bf194918d (the confirming run).
   "CreateFogModifierRadiusLoc radius: 2147483647",
 ];
 
