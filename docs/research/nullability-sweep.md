@@ -5040,19 +5040,19 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Patch: 3.0.0.24268
 - Client: 3.0.0.24268
 - Date: 2026-10-04
-- Run: `628f9ac3-a029-4e0c-9692-0e7bb131b74c`
+- Run: `25b3accc-0d8b-4b30-a088-2211a7110bb8`
 
 ### `GetStartLocPrio`
 
 | Case                             | Group | Outcome | Id  | Type                             | Message |
 | -------------------------------- | ----- | ------- | --- | -------------------------------- | ------- |
-| typical arguments                | (a)   | handle  | 0   | `startlocprio: 000001A1F668D6A0` |         |
-| whichStartLoc: negative          | (a)   | handle  | 0   | `startlocprio: 000001A1F668D6A0` |         |
-| whichStartLoc: outside the world | (a)   | handle  | 0   | `startlocprio: 000001A1F668D6A0` |         |
-| whichStartLoc: 2147483647        | (a)   | handle  | 0   | `startlocprio: 000001A1F668D6A0` |         |
-| prioSlotIndex: negative          | (a)   | handle  | 0   | `startlocprio: 000001A1F668D6A0` |         |
-| prioSlotIndex: outside the world | (a)   | handle  | 0   | `startlocprio: 000001A1F668D6A0` |         |
-| prioSlotIndex: 2147483647        | (a)   | handle  | 0   | `startlocprio: 000001A1F668D6A0` |         |
+| typical arguments                | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
+| whichStartLoc: negative          | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
+| whichStartLoc: outside the world | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
+| whichStartLoc: 2147483647        | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
+| prioSlotIndex: negative          | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
+| prioSlotIndex: outside the world | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
+| prioSlotIndex: 2147483647        | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence, handle id 0)
@@ -5064,7 +5064,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id  | Type                         | Message |
 | -------- | ----- | ------- | --- | ---------------------------- | ------- |
-| one call | (a)   | handle  | 1   | `gametype: 000001A262B1CB10` |         |
+| one call | (a)   | handle  | 1   | `gametype: 0000019CEF76D3F0` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
@@ -5076,7 +5076,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id  | Type                          | Message |
 | -------- | ----- | ------- | --- | ----------------------------- | ------- |
-| one call | (a)   | handle  | 2   | `placement: 000001A1F668D660` |         |
+| one call | (a)   | handle  | 2   | `placement: 0000019CEF76DBC0` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
@@ -5088,7 +5088,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id  | Type                          | Message |
 | -------- | ----- | ------- | --- | ----------------------------- | ------- |
-| one call | (a)   | handle  | 2   | `gamespeed: 000001A1F668DC10` |         |
+| one call | (a)   | handle  | 2   | `gamespeed: 0000019CEF76E1A0` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
@@ -5100,7 +5100,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id  | Type                               | Message |
 | -------- | ----- | ------- | --- | ---------------------------------- | ------- |
-| one call | (a)   | handle  | 0   | `gamedifficulty: 000001A1F668D930` |         |
+| one call | (a)   | handle  | 0   | `gamedifficulty: 0000019CEF76DEC0` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence, handle id 0)
@@ -5112,7 +5112,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id  | Type                           | Message |
 | -------- | ----- | ------- | --- | ------------------------------ | ------- |
-| one call | (a)   | handle  | 2   | `mapdensity: 000001A1F668D8F0` |         |
+| one call | (a)   | handle  | 2   | `mapdensity: 0000019CEF76DE80` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
@@ -5124,7 +5124,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id  | Type                           | Message |
 | -------- | ----- | ------- | --- | ------------------------------ | ------- |
-| one call | (a)   | handle  | 0   | `mapdensity: 000001A1F668D840` |         |
+| one call | (a)   | handle  | 0   | `mapdensity: 0000019CEF76DDD0` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence, handle id 0)
@@ -5136,9 +5136,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                        | Group | Outcome | Id  | Type                            | Message |
 | --------------------------- | ----- | ------- | --- | ------------------------------- | ------- |
-| typical arguments           | (a)   | handle  | 0   | `playercolor: 000001A1F6587140` |         |
-| whichPlayer: empty slot     | (a)   | handle  | 23  | `playercolor: 000001A262B18E40` |         |
-| whichPlayer: neutral player | (a)   | handle  | 27  | `playercolor: 000001A28A9EA690` |         |
+| typical arguments           | (a)   | handle  | 0   | `playercolor: 0000019CF44948D0` |         |
+| whichPlayer: empty slot     | (a)   | handle  | 23  | `playercolor: 0000019CF9202F40` |         |
+| whichPlayer: neutral player | (a)   | handle  | 27  | `playercolor: 0000019D0BC0CAD0` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence, handle id 0)
@@ -5150,9 +5150,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                        | Group | Outcome | Id  | Type                           | Message |
 | --------------------------- | ----- | ------- | --- | ------------------------------ | ------- |
-| typical arguments           | (a)   | handle  | 0   | `mapcontrol: 000001A262B1C900` |         |
-| whichPlayer: empty slot     | (a)   | handle  | 5   | `mapcontrol: 000001A262B1CAD0` |         |
-| whichPlayer: neutral player | (a)   | handle  | 4   | `mapcontrol: 000001A262B1C9F0` |         |
+| typical arguments           | (a)   | handle  | 0   | `mapcontrol: 0000019CEF76D170` |         |
+| whichPlayer: empty slot     | (a)   | handle  | 5   | `mapcontrol: 0000019CEF76D310` |         |
+| whichPlayer: neutral player | (a)   | handle  | 4   | `mapcontrol: 0000019CEF76D230` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence, handle id 0)
@@ -5164,9 +5164,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                        | Group | Outcome | Id  | Type                                | Message |
 | --------------------------- | ----- | ------- | --- | ----------------------------------- | ------- |
-| typical arguments           | (a)   | handle  | 1   | `playerslotstate: 000001A1F668DD70` |         |
-| whichPlayer: empty slot     | (a)   | handle  | 0   | `playerslotstate: 000001A1F668DD30` |         |
-| whichPlayer: neutral player | (a)   | handle  | 1   | `playerslotstate: 000001A1F668DD70` |         |
+| typical arguments           | (a)   | handle  | 1   | `playerslotstate: 0000019CEF76E300` |         |
+| whichPlayer: empty slot     | (a)   | handle  | 0   | `playerslotstate: 0000019CEF76E2C0` |         |
+| whichPlayer: neutral player | (a)   | handle  | 1   | `playerslotstate: 0000019CEF76E300` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence, handle id 0)
@@ -5178,7 +5178,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                     | Message |
 | -------- | ----- | ------- | ------- | ------------------------ | ------- |
-| one call | (a)   | handle  | 1048785 | `rect: 000001A28A9E42E0` |         |
+| one call | (a)   | handle  | 1048785 | `rect: 0000019D0B8B87C0` |         |
 
 - Family: `intrinsic-property`
 - Verdict: non-null (evidence)
@@ -5190,8 +5190,8 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                    | Group | Outcome | Id      | Type                       | Message |
 | ----------------------- | ----- | ------- | ------- | -------------------------- | ------- |
-| typical arguments       | (a)   | handle  | 1048648 | `player: 000001A277275AA0` |         |
-| whichItem: dead item    | (b)   | handle  | 1048648 | `player: 000001A277275AA0` |         |
+| typical arguments       | (a)   | handle  | 1048648 | `player: 0000019C45BCD7B0` |         |
+| whichItem: dead item    | (b)   | handle  | 1048648 | `player: 0000019C45BCD7B0` |         |
 | whichItem: removed item | (b)   | nil     |         |                            |         |
 
 - Family: `intrinsic-property`
@@ -5204,9 +5204,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                    | Group | Outcome | Id  | Type                         | Message |
 | ----------------------- | ----- | ------- | --- | ---------------------------- | ------- |
-| typical arguments       | (a)   | handle  | 3   | `itemtype: 000001A262924DD0` |         |
-| whichItem: dead item    | (b)   | handle  | 3   | `itemtype: 000001A262924DD0` |         |
-| whichItem: removed item | (b)   | handle  | 8   | `itemtype: 000001A262924ED0` |         |
+| typical arguments       | (a)   | handle  | 3   | `itemtype: 0000019CEF772830` |         |
+| whichItem: dead item    | (b)   | handle  | 3   | `itemtype: 0000019CEF772830` |         |
+| whichItem: removed item | (b)   | handle  | 8   | `itemtype: 0000019CEF772930` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
@@ -5218,9 +5218,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                    | Group | Outcome | Id  | Type                              | Message |
 | ----------------------- | ----- | ------- | --- | --------------------------------- | ------- |
-| typical arguments       | (a)   | handle  | 0   | `equipmentType: 000001A262924F50` |         |
-| whichItem: dead item    | (b)   | handle  | 0   | `equipmentType: 000001A262924F50` |         |
-| whichItem: removed item | (b)   | handle  | 0   | `equipmentType: 000001A262924F50` |         |
+| typical arguments       | (a)   | handle  | 0   | `equipmentType: 0000019CEF7729B0` |         |
+| whichItem: dead item    | (b)   | handle  | 0   | `equipmentType: 0000019CEF7729B0` |         |
+| whichItem: removed item | (b)   | handle  | 0   | `equipmentType: 0000019CEF7729B0` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence, handle id 0)
@@ -5232,9 +5232,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                    | Group | Outcome | Id  | Type                        | Message |
 | ----------------------- | ----- | ------- | --- | --------------------------- | ------- |
-| typical arguments       | (a)   | handle  | 0   | `itemTag: 000001A262925320` |         |
-| whichItem: dead item    | (b)   | handle  | 0   | `itemTag: 000001A262925320` |         |
-| whichItem: removed item | (b)   | handle  | 0   | `itemTag: 000001A262925320` |         |
+| typical arguments       | (a)   | handle  | 0   | `itemTag: 0000019CEF772C60` |         |
+| whichItem: dead item    | (b)   | handle  | 0   | `itemTag: 0000019CEF772C60` |         |
+| whichItem: removed item | (b)   | handle  | 0   | `itemTag: 0000019CEF772C60` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence, handle id 0)
@@ -5246,9 +5246,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                    | Group | Outcome | Id      | Type                         | Message |
 | ----------------------- | ----- | ------- | ------- | ---------------------------- | ------- |
-| typical arguments       | (a)   | handle  | 1048786 | `location: 000001A28AA01FB0` |         |
-| whichUnit: dead unit    | (b)   | handle  | 1048790 | `location: 000001A28A9B12B0` |         |
-| whichUnit: removed unit | (b)   | handle  | 1048791 | `location: 000001A28A9A6710` |         |
+| typical arguments       | (a)   | handle  | 1048786 | `location: 0000019D0BCE1950` |         |
+| whichUnit: dead unit    | (b)   | handle  | 1048790 | `location: 0000019D0BC16010` |         |
+| whichUnit: removed unit | (b)   | handle  | 1048791 | `location: 0000019D0BC185E0` |         |
 
 - Family: `intrinsic-property`
 - Verdict: non-null (evidence)
@@ -5260,9 +5260,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                    | Group | Outcome | Id      | Type                       | Message |
 | ----------------------- | ----- | ------- | ------- | -------------------------- | ------- |
-| typical arguments       | (a)   | handle  | 1048584 | `player: 000001A26BB849E0` |         |
-| whichUnit: dead unit    | (b)   | handle  | 1048584 | `player: 000001A26BB849E0` |         |
-| whichUnit: removed unit | (b)   | handle  | 1048584 | `player: 000001A26BB849E0` |         |
+| typical arguments       | (a)   | handle  | 1048584 | `player: 0000019CF4316E50` |         |
+| whichUnit: dead unit    | (b)   | handle  | 1048584 | `player: 0000019CF4316E50` |         |
+| whichUnit: removed unit | (b)   | handle  | 1048584 | `player: 0000019CF4316E50` |         |
 
 - Family: `intrinsic-property`
 - Verdict: non-null (evidence)
@@ -5274,9 +5274,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                    | Group | Outcome | Id  | Type                     | Message |
 | ----------------------- | ----- | ------- | --- | ------------------------ | ------- |
-| typical arguments       | (a)   | handle  | 1   | `race: 000001A262B18EC0` |         |
-| whichUnit: dead unit    | (b)   | handle  | 1   | `race: 000001A262B18EC0` |         |
-| whichUnit: removed unit | (b)   | handle  | 1   | `race: 000001A262B18EC0` |         |
+| typical arguments       | (a)   | handle  | 1   | `race: 0000019CF9202FC0` |         |
+| whichUnit: dead unit    | (b)   | handle  | 1   | `race: 0000019CF9202FC0` |         |
+| whichUnit: removed unit | (b)   | handle  | 1   | `race: 0000019CF9202FC0` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
@@ -5288,7 +5288,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                       | Message |
 | -------- | ----- | ------- | ------- | -------------------------- | ------- |
-| one call | (a)   | handle  | 1048584 | `player: 000001A26BB849E0` |         |
+| one call | (a)   | handle  | 1048584 | `player: 0000019CF4316E50` |         |
 
 - Family: `intrinsic-property`
 - Verdict: non-null (evidence)
@@ -5300,9 +5300,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                        | Group | Outcome | Id  | Type                     | Message |
 | --------------------------- | ----- | ------- | --- | ------------------------ | ------- |
-| typical arguments           | (a)   | handle  | 2   | `race: 000001A262B18F00` |         |
-| whichPlayer: empty slot     | (a)   | handle  | 4   | `race: 000001A262B18F40` |         |
-| whichPlayer: neutral player | (a)   | handle  | 0   | `race: 000001A28AA04D90` |         |
+| typical arguments           | (a)   | handle  | 2   | `race: 0000019CF9203000` |         |
+| whichPlayer: empty slot     | (a)   | handle  | 4   | `race: 0000019CF9203040` |         |
+| whichPlayer: neutral player | (a)   | handle  | 0   | `race: 0000019D0B9F7EE0` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence, handle id 0)
@@ -5314,7 +5314,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id  | Type                        | Message |
 | -------- | ----- | ------- | --- | --------------------------- | ------- |
-| one call | (a)   | handle  | 2   | `version: 000001A27D72EA10` |         |
+| one call | (a)   | handle  | 2   | `version: 0000019C4A030510` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
@@ -5326,7 +5326,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id  | Type                               | Message |
 | -------- | ----- | ------- | --- | ---------------------------------- | ------- |
-| one call | (a)   | handle  | 1   | `gamedifficulty: 000001A1F668DA10` |         |
+| one call | (a)   | handle  | 1   | `gamedifficulty: 0000019CEF76DFA0` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)
@@ -5338,7 +5338,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case              | Group | Outcome | Id      | Type                         | Message |
 | ----------------- | ----- | ------- | ------- | ---------------------------- | ------- |
-| typical arguments | (a)   | handle  | 1048787 | `location: 000001A1F6596020` |         |
+| typical arguments | (a)   | handle  | 1048787 | `location: 0000019CF449B980` |         |
 
 - Family: `intrinsic-property`
 - Verdict: non-null (evidence)
@@ -5350,7 +5350,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                         | Message |
 | -------- | ----- | ------- | ------- | ---------------------------- | ------- |
-| one call | (a)   | handle  | 1048788 | `location: 000001A1F6599C70` |         |
+| one call | (a)   | handle  | 1048788 | `location: 0000019CF449F3E0` |         |
 
 - Family: `intrinsic-property`
 - Verdict: non-null (evidence)
@@ -5362,7 +5362,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case     | Group | Outcome | Id      | Type                         | Message |
 | -------- | ----- | ------- | ------- | ---------------------------- | ------- |
-| one call | (a)   | handle  | 1048789 | `location: 000001A1F6593910` |         |
+| one call | (a)   | handle  | 1048789 | `location: 0000019CF44A3200` |         |
 
 - Family: `intrinsic-property`
 - Verdict: non-null (evidence)
@@ -5374,9 +5374,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                | Group | Outcome | Id  | Type                             | Message |
 | ------------------- | ----- | ------- | --- | -------------------------------- | ------- |
-| typical arguments   | (a)   | handle  | 1   | `aidifficulty: 000001A1F668F140` |         |
-| num: empty slot     | (a)   | handle  | 1   | `aidifficulty: 000001A1F668F140` |         |
-| num: neutral player | (a)   | handle  | 1   | `aidifficulty: 000001A1F668F140` |         |
+| typical arguments   | (a)   | handle  | 1   | `aidifficulty: 0000019CEF76F270` |         |
+| num: empty slot     | (a)   | handle  | 1   | `aidifficulty: 0000019CEF76F270` |         |
+| num: neutral player | (a)   | handle  | 1   | `aidifficulty: 0000019CEF76F270` |         |
 
 - Family: `enum-getter`
 - Verdict: non-null (evidence)

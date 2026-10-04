@@ -90,10 +90,16 @@ export function liveItem(): item {
   return built(CreateItem(FourCC("ratf"), 0, 0), "liveItem");
 }
 
-/** An item, dead: a live `'ratf'` after `SetWidgetLife` to 0. */
+/**
+ * An item, dead: a live `'ratf'` after `SetWidgetLife` to 0; the Fixture
+ * fails when the item's life is still above 0.
+ */
 export function deadItem(): item {
   const claws = liveItem();
   SetWidgetLife(claws, 0);
+  if (GetWidgetLife(claws) > 0) {
+    error("Fixture deadItem: the item's life is still above 0", 0);
+  }
   return claws;
 }
 
