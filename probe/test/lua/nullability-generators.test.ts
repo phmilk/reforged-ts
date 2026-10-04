@@ -18,6 +18,7 @@ import {
 } from "../../probes/nullability/constructor";
 import { converterCases } from "../../probes/nullability/converter";
 import { inGroupOrder } from "../../probes/nullability/expand";
+import { filterCases } from "../../probes/nullability/filter";
 import {
   enumGetterCases,
   intrinsicPropertyCases,
@@ -468,10 +469,42 @@ describe("the cheap case of the four nullable families", () => {
   });
 });
 
+describe("filterCases", () => {
+  it("is three call cases of group a on the filter: always-true, nil and live", () => {
+    const alwaysTrue = __stub_new_handle("boolexpr") as boolexpr;
+    const live = __stub_new_handle("boolexpr") as boolexpr;
+    const cases = filterCases(
+      "GroupEnumUnitsInRect",
+      "unit",
+      { alwaysTrue, live },
+      (filter) => {
+        if (filter === undefined) return 0;
+        return filter === alwaysTrue ? 1 : 2;
+      },
+    );
+    expect(labels(cases)).toEqual([
+      "a filter: always-true",
+      "a filter: nil",
+      "a filter: live",
+    ]);
+    expect(
+      cases.map(
+        (testCase) =>
+          `${testCase.native} ${tostring(testCase.param)} ${tostring(testCase.argument)} ${tostring(testCase.counted)}`,
+      ),
+    ).toEqual([
+      "GroupEnumUnitsInRect filter always-true unit",
+      "GroupEnumUnitsInRect filter nil unit",
+      "GroupEnumUnitsInRect filter live unit",
+    ]);
+    expect(callsOf(cases)).toEqual(["1", "0", "2"]);
+  });
+});
+
 describe("inGroupOrder", () => {
-  it("joins return cases, which every generator produces", () => {
+  it("joins return cases, which every family generator produces", () => {
     // Typed as ReturnCase, which the type checker holds the generators to:
-    // a generator never builds a call case (those of #396 are the Slice's).
+    // a family generator never builds a call case (filterCases builds those).
     const cases: readonly ReturnCase[] = inGroupOrder(
       converterCases("ConvertMapSetting"),
       constructorCases("CreateTimer", [], () => undefined),

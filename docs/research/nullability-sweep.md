@@ -8359,3 +8359,219 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
 - Proposed `notes`: Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
+
+## `nullability-filters`
+
+- Probe: `nullability-filters`
+- Patch: 3.0.0.24268
+- Client: 3.0.0.24268
+- Date: 2026-10-04
+- Run: `d81cd6c3-0642-45f7-87d9-81df06eabee4`
+
+### `GroupEnumUnitsOfType` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 1     |         |
+| filter: nil         | (a)   | nil         | completed | 1     |         |
+| filter: live        | (a)   | live        | completed | 0     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
+
+### `GroupEnumUnitsOfPlayer` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 8     |         |
+| filter: nil         | (a)   | nil         | completed | 8     |         |
+| filter: live        | (a)   | live        | completed | 1     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
+
+### `GroupEnumUnitsOfTypeCounted` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 1     |         |
+| filter: nil         | (a)   | nil         | completed | 1     |         |
+| filter: live        | (a)   | live        | completed | 0     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
+
+### `GroupEnumUnitsInRect` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 2     |         |
+| filter: nil         | (a)   | nil         | completed | 2     |         |
+| filter: live        | (a)   | live        | completed | 1     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
+
+### `GroupEnumUnitsInRectCounted` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 2     |         |
+| filter: nil         | (a)   | nil         | completed | 2     |         |
+| filter: live        | (a)   | live        | completed | 1     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
+
+### `GroupEnumUnitsInRange` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 2     |         |
+| filter: nil         | (a)   | nil         | completed | 2     |         |
+| filter: live        | (a)   | live        | completed | 1     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
+
+### `GroupEnumUnitsInRangeOfLoc` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 2     |         |
+| filter: nil         | (a)   | nil         | completed | 2     |         |
+| filter: live        | (a)   | live        | completed | 1     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
+
+### `GroupEnumUnitsInRangeCounted` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 2     |         |
+| filter: nil         | (a)   | nil         | completed | 2     |         |
+| filter: live        | (a)   | live        | completed | 1     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
+
+### `GroupEnumUnitsInRangeOfLocCounted` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 2     |         |
+| filter: nil         | (a)   | nil         | completed | 2     |         |
+| filter: live        | (a)   | live        | completed | 1     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
+
+### `GroupEnumUnitsSelected` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 2     |         |
+| filter: nil         | (a)   | nil         | completed | 2     |         |
+| filter: live        | (a)   | live        | completed | 1     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
+
+### `ForceEnumPlayers` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 1     |         |
+| filter: nil         | (a)   | nil         | completed | 1     |         |
+| filter: live        | (a)   | live        | completed | 0     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every player (nullability sweep, 3.0.0.24268).
+
+### `ForceEnumPlayersCounted` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 1     |         |
+| filter: nil         | (a)   | nil         | completed | 1     |         |
+| filter: live        | (a)   | live        | completed | 0     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every player (nullability sweep, 3.0.0.24268).
+
+### `ForceEnumAllies` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 1     |         |
+| filter: nil         | (a)   | nil         | completed | 1     |         |
+| filter: live        | (a)   | live        | completed | 0     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every player (nullability sweep, 3.0.0.24268).
+
+### `ForceEnumEnemies` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 0     |         |
+| filter: nil         | (a)   | nil         | completed | 0     |         |
+| filter: live        | (a)   | live        | completed | 0     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every player (nullability sweep, 3.0.0.24268).
+
+### `EnumDestructablesInRect` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 2     |         |
+| filter: nil         | (a)   | nil         | completed | 2     |         |
+| filter: live        | (a)   | live        | completed | 1     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every destructable (nullability sweep, 3.0.0.24268).
+
+### `EnumItemsInRect` parameter `filter`
+
+| Case                | Group | Argument    | Outcome   | Count | Message |
+| ------------------- | ----- | ----------- | --------- | ----- | ------- |
+| filter: always-true | (a)   | always-true | completed | 2     |         |
+| filter: nil         | (a)   | nil         | completed | 2     |         |
+| filter: live        | (a)   | live        | completed | 1     |         |
+
+- Verdict: nullable (completed)
+- Overlay `params[].nullable`: `true`
+- Comparison: consistent
+- Proposed sentence of the Native's `notes`: A nil filter keeps every item (nullability sweep, 3.0.0.24268).
