@@ -13,8 +13,8 @@ import { stateFile } from "../../src/state.js";
 import { USER_FOLDER_VARIABLE } from "../../src/user-folder.js";
 import { preloadFile } from "./bridge.js";
 
-/** The Slice the hand-written Result files belong to. */
-export const PROBE = "nullability-slice-1";
+/** The Slice the hand-written Result files belong to, a Probe of these tests only. */
+export const PROBE = "nullability-fixture-slice";
 
 /** The runId of the Slice's last build, in the state file and the Result files. */
 export const RUN_ID = "slice-run";

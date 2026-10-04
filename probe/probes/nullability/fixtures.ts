@@ -51,15 +51,6 @@ export function liveUnit(): unit {
   return built(CreateUnit(owner, FourCC("hfoo"), 0, 0, 0), "liveUnit");
 }
 
-/** A unit, live: a `'hfoo'` of Neutral Passive at the map's origin (`CreateUnit`). */
-export function neutralPassiveUnit(): unit {
-  const owner = built(Player(PLAYER_NEUTRAL_PASSIVE), "neutralPassiveUnit");
-  return built(
-    CreateUnit(owner, FourCC("hfoo"), 0, 0, 0),
-    "neutralPassiveUnit",
-  );
-}
-
 /** A unit, dead: a live `'hfoo'` of `Player(0)` after `KillUnit`, its corpse still in the game. */
 export function deadUnit(): unit {
   const footman = liveUnit();
@@ -110,6 +101,46 @@ export function removedItem(): item {
   return claws;
 }
 
+// Timers
+
+/** A timer, live: `CreateTimer`, never started. */
+export function liveTimer(): timer {
+  return CreateTimer();
+}
+
+/** A timer, destroyed: a live timer after `DestroyTimer`, a stale handle. */
+export function destroyedTimer(): timer {
+  const timer = liveTimer();
+  DestroyTimer(timer);
+  return timer;
+}
+
+// Locations and rects
+
+/** A location, live: `Location(x, y)`, the map's origin by default. */
+export function liveLocation(x = 0, y = 0): location {
+  return Location(x, y);
+}
+
+/** A location, removed: a live location at the origin after `RemoveLocation`, a stale handle. */
+export function removedLocation(): location {
+  const location = liveLocation();
+  RemoveLocation(location);
+  return location;
+}
+
+/** A rect, live: `Rect(-256, -256, 256, 256)`, centred on the map's origin. */
+export function liveRect(): rect {
+  return Rect(-256, -256, 256, 256);
+}
+
+/** A rect, removed: a live rect after `RemoveRect`, a stale handle. */
+export function removedRect(): rect {
+  const rect = liveRect();
+  RemoveRect(rect);
+  return rect;
+}
+
 // Groups
 
 /** A group, empty: `CreateGroup`, no unit added. */
@@ -142,6 +173,38 @@ export function oneCellMultiboard(): multiboard {
   return board;
 }
 
+// Dialogs
+
+/** A dialog, live: `DialogCreate`, never shown. */
+export function liveDialog(): dialog {
+  return built(DialogCreate(), "liveDialog");
+}
+
+/** A dialog, destroyed: a live dialog after `DialogDestroy`, a stale handle. */
+export function destroyedDialog(): dialog {
+  const dialog = liveDialog();
+  DialogDestroy(dialog);
+  return dialog;
+}
+
+// Quests
+
+/** A quest, live: `CreateQuest`, nothing set. */
+export function liveQuest(): quest {
+  return built(CreateQuest(), "liveQuest");
+}
+
+/**
+ * A quest after `DestroyQuest`: a live quest destroyed, whose stale state
+ * is not known, so the Fixture is named after the action and does not claim
+ * the handle is stale (#371).
+ */
+export function questAfterDestroyQuest(): quest {
+  const quest = liveQuest();
+  DestroyQuest(quest);
+  return quest;
+}
+
 // Boolexprs
 
 /**
@@ -164,6 +227,13 @@ export function destroyedCondition(): conditionfunc {
   return condition;
 }
 
+/** A boolexpr, destroyed: a live `Filter` after `DestroyFilter`, a stale handle. */
+export function destroyedFilter(): filterfunc {
+  const filter = liveFilter();
+  DestroyFilter(filter);
+  return filter;
+}
+
 /** A boolexpr, destroyed: a live `Filter` after `DestroyBoolExpr`, a stale handle. */
 export function destroyedBoolExpr(): boolexpr {
   const filter = liveFilter();
@@ -178,14 +248,17 @@ export function gameUiFrame(): framehandle {
   return built(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), "gameUiFrame");
 }
 
-/** A frame, top-level: the world frame, `BlzGetOriginFrame(ORIGIN_FRAME_WORLD_FRAME, 0)`. */
-export function worldFrame(): framehandle {
-  return built(BlzGetOriginFrame(ORIGIN_FRAME_WORLD_FRAME, 0), "worldFrame");
+/**
+ * A frame, top-level simple frame: the console, `BlzGetFrameByName("ConsoleUI", 0)`,
+ * which a simple frame takes as its owner.
+ */
+export function consoleUiFrame(): framehandle {
+  return built(BlzGetFrameByName("ConsoleUI", 0), "consoleUiFrame");
 }
 
 /**
  * A frame, top: the game UI's parent, `BlzFrameGetParent` of the game UI
- * frame, the highest frame the sweep has reached (a handle in
+ * frame, the highest frame the sweep has reached (a handle in the retired
  * `nullability-slice-1`); the Fixture fails when the game UI has no parent.
  */
 export function gameUiParentFrame(): framehandle {
@@ -193,7 +266,7 @@ export function gameUiParentFrame(): framehandle {
 }
 
 /** A frame, live child: a `"FRAME"` made with `BlzCreateFrameByType` on the game UI, inheriting nothing. */
-export function childFrame(): framehandle {
+function childFrame(): framehandle {
   return built(
     BlzCreateFrameByType("FRAME", "NullabilityFixture", gameUiFrame(), "", 0),
     "childFrame",
@@ -203,6 +276,20 @@ export function childFrame(): framehandle {
 /** A frame, destroyed: a live child frame after `BlzDestroyFrame`, a stale handle. */
 export function destroyedFrame(): framehandle {
   const frame = childFrame();
+  BlzDestroyFrame(frame);
+  return frame;
+}
+
+/**
+ * A simple frame, destroyed: a `"SimpleInfoPanelIconDamage"`, a default
+ * template, made with `BlzCreateSimpleFrame` on the console, after
+ * `BlzDestroyFrame`, a stale handle.
+ */
+export function destroyedSimpleFrame(): framehandle {
+  const frame = built(
+    BlzCreateSimpleFrame("SimpleInfoPanelIconDamage", consoleUiFrame(), 0),
+    "destroyedSimpleFrame",
+  );
   BlzDestroyFrame(frame);
   return frame;
 }
@@ -245,11 +332,4 @@ export function destroyedTrigger(): trigger {
 /** A camera setup, fresh: `CreateCameraSetup`, nothing set. */
 export function freshCameraSetup(): camerasetup {
   return CreateCameraSetup();
-}
-
-/** A camera setup, positioned: a fresh setup after `CameraSetupSetDestPosition` to `(512, 512)`. */
-export function positionedCameraSetup(): camerasetup {
-  const setup = freshCameraSetup();
-  CameraSetupSetDestPosition(setup, 512, 512, 0);
-  return setup;
 }
