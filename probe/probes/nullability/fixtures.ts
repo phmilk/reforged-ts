@@ -319,9 +319,14 @@ export function destroyedDialog(): dialog {
 
 // Dialog buttons
 
+/** A button, live, on `dialog`: `DialogAddButton` with no hotkey; the Fixture `fixture` fails when it returns nothing. */
+function buttonOn(dialog: dialog, fixture: string): button {
+  return built(DialogAddButton(dialog, "Nullability", 0), fixture);
+}
+
 /** A button, live: `DialogAddButton` on a dialog of its own, never shown, with no hotkey. */
 export function liveButton(): button {
-  return built(DialogAddButton(liveDialog(), "Nullability", 0), "liveButton");
+  return buttonOn(liveDialog(), "liveButton");
 }
 
 /**
@@ -331,10 +336,7 @@ export function liveButton(): button {
  */
 export function buttonAfterDialogDestroy(): button {
   const dialog = liveDialog();
-  const button = built(
-    DialogAddButton(dialog, "Nullability", 0),
-    "buttonAfterDialogDestroy",
-  );
+  const button = buttonOn(dialog, "buttonAfterDialogDestroy");
   DialogDestroy(dialog);
   return button;
 }
@@ -346,10 +348,7 @@ export function buttonAfterDialogDestroy(): button {
  */
 export function buttonAfterDialogClear(): button {
   const dialog = liveDialog();
-  const button = built(
-    DialogAddButton(dialog, "Nullability", 0),
-    "buttonAfterDialogClear",
-  );
+  const button = buttonOn(dialog, "buttonAfterDialogClear");
   DialogClear(dialog);
   return button;
 }
@@ -499,4 +498,17 @@ export function destroyedTrigger(): trigger {
 /** A camera setup, fresh: `CreateCameraSetup`, nothing set. */
 export function freshCameraSetup(): camerasetup {
   return CreateCameraSetup();
+}
+
+// Variables
+
+/**
+ * A variable, watched: the name of a real Lua global, set to 0 here, for
+ * `TriggerRegisterVariableEvent`, since the Probe's map declares no
+ * variable of its own.
+ */
+export function watchedVariable(): string {
+  const name = "ReforgedTsNullabilityVariable";
+  (_G as unknown as Record<string, number>)[name] = 0;
+  return name;
 }

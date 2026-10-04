@@ -7939,19 +7939,19 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Patch: 3.0.0.24268
 - Client: 3.0.0.24268
 - Date: 2026-10-04
-- Run: `3f36541a-dc5e-49d4-b897-f7fe7ac1213a`
+- Run: `a9b0d5b2-ab48-4fd3-bd29-71efab4692b7`
 
 ### `TriggerRegisterVariableEvent`
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048813 | `event: 000001B40B96A810` |         |
-| varName: empty string           | (a)   | handle  | 1048814 | `event: 000001B40B98BFC0` |         |
-| varName: unknown name           | (a)   | handle  | 1048815 | `event: 000001B40B998A10` |         |
-| limitval: 0                     | (a)   | handle  | 1048816 | `event: 000001B40B9A8F80` |         |
-| limitval: negative              | (a)   | handle  | 1048817 | `event: 000001B40B993990` |         |
-| limitval: outside the world     | (a)   | handle  | 1048818 | `event: 000001B324CD9010` |         |
-| limitval: 2147483647            | (a)   | handle  | 1048819 | `event: 000001B40C263EC0` |         |
+| typical arguments               | (a)   | handle  | 1048813 | `event: 0000020A0973BBC0` |         |
+| varName: empty string           | (a)   | handle  | 1048814 | `event: 0000020A096EA820` |         |
+| varName: unknown name           | (a)   | handle  | 1048815 | `event: 0000020A097415C0` |         |
+| limitval: 0                     | (a)   | handle  | 1048816 | `event: 0000020A09749830` |         |
+| limitval: negative              | (a)   | handle  | 1048817 | `event: 0000020A0971A990` |         |
+| limitval: outside the world     | (a)   | handle  | 1048818 | `event: 0000020A097248A0` |         |
+| limitval: 2147483647            | (a)   | handle  | 1048819 | `event: 0000020A0972E7C0` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 
 - Family: `registration`
@@ -7964,11 +7964,11 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048820 | `event: 000001B40C266640` |         |
-| timeout: 0                      | (a)   | handle  | 1048821 | `event: 000001B309F295B0` |         |
-| timeout: negative               | (a)   | handle  | 1048822 | `event: 000001B309F292F0` |         |
-| timeout: outside the world      | (a)   | handle  | 1048823 | `event: 000001B40C20DED0` |         |
-| timeout: 2147483647             | (a)   | handle  | 1048824 | `event: 000001B40C27A530` |         |
+| typical arguments               | (a)   | handle  | 1048820 | `event: 0000020A09738340` |         |
+| timeout: 0                      | (a)   | handle  | 1048821 | `event: 0000020A09748870` |         |
+| timeout: negative               | (a)   | handle  | 1048822 | `event: 0000020A0972DF40` |         |
+| timeout: outside the world      | (a)   | handle  | 1048823 | `event: 0000020A095F2300` |         |
+| timeout: 2147483647             | (a)   | handle  | 1048824 | `event: 0000020A095FC750` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 
 - Family: `registration`
@@ -7981,7 +7981,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048825 | `event: 000001B40C1F68D0` |         |
+| typical arguments               | (a)   | handle  | 1048825 | `event: 0000020A09606B80` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 | t: destroyed timer              | (b)   | nil     |         |                           |         |
 
@@ -7995,11 +7995,11 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048826 | `event: 000001B40C206DC0` |         |
-| limitval: 0                     | (a)   | handle  | 1048827 | `event: 000001B40C281BD0` |         |
-| limitval: negative              | (a)   | handle  | 1048828 | `event: 000001B40C2A6D70` |         |
-| limitval: outside the world     | (a)   | handle  | 1048829 | `event: 000001B40C2BA3B0` |         |
-| limitval: 2147483647            | (a)   | handle  | 1048830 | `event: 000001B40C281220` |         |
+| typical arguments               | (a)   | handle  | 1048826 | `event: 0000020A09611500` |         |
+| limitval: 0                     | (a)   | handle  | 1048827 | `event: 0000020A0961C050` |         |
+| limitval: negative              | (a)   | handle  | 1048828 | `event: 0000020A09626E60` |         |
+| limitval: outside the world     | (a)   | handle  | 1048829 | `event: 0000020A09631EA0` |         |
+| limitval: 2147483647            | (a)   | handle  | 1048830 | `event: 0000020A0963D120` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 
 - Family: `registration`
@@ -8012,7 +8012,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048831 | `event: 000001B40C2A5420` |         |
+| typical arguments               | (a)   | handle  | 1048831 | `event: 0000020A09610750` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 | whichDialog: destroyed dialog   | (b)   | nil     |         |                           |         |
 
@@ -8026,7 +8026,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                                    | Group | Outcome | Id      | Type                      | Message |
 | --------------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments                       | (a)   | handle  | 1048832 | `event: 000001B326193AE0` |         |
+| typical arguments                       | (a)   | handle  | 1048832 | `event: 0000020A095BF460` |         |
 | whichTrigger: destroyed trigger         | (b)   | nil     |         |                           |         |
 | whichButton: button after DialogDestroy | (b)   | nil     |         |                           |         |
 | whichButton: button after DialogClear   | (b)   | nil     |         |                           |         |
@@ -8041,7 +8041,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048833 | `event: 000001B40C29AB00` |         |
+| typical arguments               | (a)   | handle  | 1048833 | `event: 0000020A095DDFD0` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 
 - Family: `registration`
@@ -8054,13 +8054,13 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048834 | `event: 000001B40C1F74B0` |         |
-| filter: nil                     | (a)   | handle  | 1048835 | `event: 000001B40C2FF710` |         |
+| typical arguments               | (a)   | handle  | 1048834 | `event: 0000020A095E9AF0` |         |
+| filter: nil                     | (a)   | handle  | 1048835 | `event: 0000020A096D7C60` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 | whichRegion: removed region     | (b)   | nil     |         |                           |         |
-| filter: destroyed condition     | (b)   | handle  | 1048881 | `event: 000001B40C410420` |         |
-| filter: destroyed filter        | (b)   | handle  | 1048882 | `event: 000001B40C48DA90` |         |
-| filter: destroyed boolexpr      | (b)   | handle  | 1048883 | `event: 000001B40C3D9650` |         |
+| filter: destroyed condition     | (b)   | handle  | 1048881 | `event: 0000020A09730C80` |         |
+| filter: destroyed filter        | (b)   | handle  | 1048882 | `event: 0000020A095E6AA0` |         |
+| filter: destroyed boolexpr      | (b)   | handle  | 1048883 | `event: 0000020A095E33F0` |         |
 
 - Family: `registration`
 - Verdict: nullable (proved)
@@ -8072,13 +8072,13 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048836 | `event: 000001B40C30B190` |         |
-| filter: nil                     | (a)   | handle  | 1048837 | `event: 000001B409FF4570` |         |
+| typical arguments               | (a)   | handle  | 1048836 | `event: 0000020A0971DD90` |         |
+| filter: nil                     | (a)   | handle  | 1048837 | `event: 0000020A095F73F0` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 | whichRegion: removed region     | (b)   | nil     |         |                           |         |
-| filter: destroyed condition     | (b)   | handle  | 1048884 | `event: 000001B40C5EFB20` |         |
-| filter: destroyed filter        | (b)   | handle  | 1048885 | `event: 000001B40C337CD0` |         |
-| filter: destroyed boolexpr      | (b)   | handle  | 1048886 | `event: 000001B40C5E9970` |         |
+| filter: destroyed condition     | (b)   | handle  | 1048884 | `event: 0000020A0961A9D0` |         |
+| filter: destroyed filter        | (b)   | handle  | 1048885 | `event: 0000020A095B6EB0` |         |
+| filter: destroyed boolexpr      | (b)   | handle  | 1048886 | `event: 0000020A0961A650` |         |
 
 - Family: `registration`
 - Verdict: nullable (proved)
@@ -8090,7 +8090,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048838 | `event: 000001B40C319180` |         |
+| typical arguments               | (a)   | handle  | 1048838 | `event: 0000020A096E7900` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 
 - Family: `registration`
@@ -8103,7 +8103,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048839 | `event: 000001B40C32EB40` |         |
+| typical arguments               | (a)   | handle  | 1048839 | `event: 0000020A09716100` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 
 - Family: `registration`
@@ -8116,8 +8116,8 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048840 | `event: 000001B40C317370` |         |
-| whichAbility: unknown rawcode   | (a)   | handle  | 1048841 | `event: 000001B40C344FC0` |         |
+| typical arguments               | (a)   | handle  | 1048840 | `event: 0000020A09741F90` |         |
+| whichAbility: unknown rawcode   | (a)   | handle  | 1048841 | `event: 0000020A09745490` |         |
 | order: empty string             | (a)   | nil     |         |                           |         |
 | order: unknown name             | (a)   | nil     |         |                           |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
@@ -8132,8 +8132,8 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048842 | `event: 000001B40C37AD10` |         |
-| whichUpgrade: unknown rawcode   | (a)   | handle  | 1048843 | `event: 000001B40C34B4B0` |         |
+| typical arguments               | (a)   | handle  | 1048842 | `event: 0000020A0811F950` |         |
+| whichUpgrade: unknown rawcode   | (a)   | handle  | 1048843 | `event: 0000020A097121C0` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 
 - Family: `registration`
@@ -8146,7 +8146,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048844 | `event: 000001B40C3BB8B0` |         |
+| typical arguments               | (a)   | handle  | 1048844 | `event: 0000020A09715850` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 
 - Family: `registration`
@@ -8159,12 +8159,12 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048845 | `event: 000001B40C3BB3A0` |         |
-| filter: nil                     | (a)   | handle  | 1048846 | `event: 000001B40C3DFFB0` |         |
+| typical arguments               | (a)   | handle  | 1048845 | `event: 0000020A0961B400` |         |
+| filter: nil                     | (a)   | handle  | 1048846 | `event: 0000020A096DE170` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
-| filter: destroyed condition     | (b)   | handle  | 1048887 | `event: 000001B40C31F4E0` |         |
-| filter: destroyed filter        | (b)   | handle  | 1048888 | `event: 000001B40C487800` |         |
-| filter: destroyed boolexpr      | (b)   | handle  | 1048889 | `event: 000001B40C5A7D30` |         |
+| filter: destroyed condition     | (b)   | handle  | 1048887 | `event: 0000020A09622820` |         |
+| filter: destroyed filter        | (b)   | handle  | 1048888 | `event: 0000020A09625980` |         |
+| filter: destroyed boolexpr      | (b)   | handle  | 1048889 | `event: 0000020A0963A830` |         |
 
 - Family: `registration`
 - Verdict: nullable (proved)
@@ -8176,7 +8176,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048847 | `event: 000001B40C407270` |         |
+| typical arguments               | (a)   | handle  | 1048847 | `event: 0000020A096DFDC0` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 
 - Family: `registration`
@@ -8189,11 +8189,11 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048848 | `event: 000001B40C4067D0` |         |
-| limitval: 0                     | (a)   | handle  | 1048849 | `event: 000001B40C3EA540` |         |
-| limitval: negative              | (a)   | handle  | 1048850 | `event: 000001B409F71720` |         |
-| limitval: outside the world     | (a)   | handle  | 1048851 | `event: 000001B40C322610` |         |
-| limitval: 2147483647            | (a)   | handle  | 1048852 | `event: 000001B40C38DB70` |         |
+| typical arguments               | (a)   | handle  | 1048848 | `event: 0000020A0974F600` |         |
+| limitval: 0                     | (a)   | handle  | 1048849 | `event: 0000020A096E3B60` |         |
+| limitval: negative              | (a)   | handle  | 1048850 | `event: 0000020A0961BA40` |         |
+| limitval: outside the world     | (a)   | handle  | 1048851 | `event: 0000020A096CFBD0` |         |
+| limitval: 2147483647            | (a)   | handle  | 1048852 | `event: 0000020A09603E90` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 
 - Family: `registration`
@@ -8206,9 +8206,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                              | Group | Outcome | Id      | Type                      | Message |
 | --------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments                 | (a)   | handle  | 1048853 | `event: 000001B40C39CFB0` |         |
-| chatMessageToDetect: empty string | (a)   | handle  | 1048854 | `event: 000001B40C346F40` |         |
-| chatMessageToDetect: unknown name | (a)   | handle  | 1048855 | `event: 000001B409FF0EE0` |         |
+| typical arguments                 | (a)   | handle  | 1048853 | `event: 0000020A0974DEE0` |         |
+| chatMessageToDetect: empty string | (a)   | handle  | 1048854 | `event: 0000020A09722720` |         |
+| chatMessageToDetect: unknown name | (a)   | handle  | 1048855 | `event: 0000020A095F7310` |         |
 | whichTrigger: destroyed trigger   | (b)   | nil     |         |                           |         |
 
 - Family: `registration`
@@ -8221,15 +8221,15 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                              | Group | Outcome | Id      | Type                      | Message |
 | --------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments                 | (a)   | handle  | 1048856 | `event: 000001B40C2DB830` |         |
-| whichWidget: live destructable    | (a)   | handle  | 1048857 | `event: 000001B40C46EDC0` |         |
-| whichWidget: live item            | (a)   | handle  | 1048858 | `event: 000001B40C282340` |         |
+| typical arguments                 | (a)   | handle  | 1048856 | `event: 0000020A095F8AB0` |         |
+| whichWidget: live destructable    | (a)   | handle  | 1048857 | `event: 0000020A095F91A0` |         |
+| whichWidget: live item            | (a)   | handle  | 1048858 | `event: 0000020A07C4F640` |         |
 | whichTrigger: destroyed trigger   | (b)   | nil     |         |                           |         |
-| whichWidget: dead unit            | (b)   | handle  | 1048890 | `event: 000001B40C458EF0` |         |
-| whichWidget: removed unit         | (b)   | handle  | 1048891 | `event: 000001B40C337120` |         |
-| whichWidget: dead destructable    | (b)   | handle  | 1048892 | `event: 000001B40C256B90` |         |
+| whichWidget: dead unit            | (b)   | handle  | 1048890 | `event: 0000020A09639C90` |         |
+| whichWidget: removed unit         | (b)   | handle  | 1048891 | `event: 0000020A0962D2F0` |         |
+| whichWidget: dead destructable    | (b)   | handle  | 1048892 | `event: 0000020A0962F160` |         |
 | whichWidget: removed destructable | (b)   | nil     |         |                           |         |
-| whichWidget: dead item            | (b)   | handle  | 1048893 | `event: 000001B40C45DD20` |         |
+| whichWidget: dead item            | (b)   | handle  | 1048893 | `event: 0000020A09642AD0` |         |
 | whichWidget: removed item         | (b)   | nil     |         |                           |         |
 
 - Family: `registration`
@@ -8242,14 +8242,14 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048859 | `event: 000001B40B9A1060` |         |
-| limitval: 0                     | (a)   | handle  | 1048860 | `event: 000001B40C4B8AE0` |         |
-| limitval: negative              | (a)   | handle  | 1048861 | `event: 000001B40B709060` |         |
-| limitval: outside the world     | (a)   | handle  | 1048862 | `event: 000001B40B9653E0` |         |
-| limitval: 2147483647            | (a)   | handle  | 1048863 | `event: 000001B40B998370` |         |
+| typical arguments               | (a)   | handle  | 1048859 | `event: 0000020A09714B60` |         |
+| limitval: 0                     | (a)   | handle  | 1048860 | `event: 0000020A095EECF0` |         |
+| limitval: negative              | (a)   | handle  | 1048861 | `event: 0000020A09715040` |         |
+| limitval: outside the world     | (a)   | handle  | 1048862 | `event: 0000020A095FF860` |         |
+| limitval: 2147483647            | (a)   | handle  | 1048863 | `event: 0000020A095EF800` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
-| whichUnit: dead unit            | (b)   | handle  | 1048894 | `event: 000001B40C3361D0` |         |
-| whichUnit: removed unit         | (b)   | handle  | 1048895 | `event: 000001B40C1FB670` |         |
+| whichUnit: dead unit            | (b)   | handle  | 1048894 | `event: 0000020A0996F6E0` |         |
+| whichUnit: removed unit         | (b)   | handle  | 1048895 | `event: 0000020A099683B0` |         |
 
 - Family: `registration`
 - Verdict: nullable (proved)
@@ -8261,10 +8261,10 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048864 | `event: 000001B40B969CE0` |         |
+| typical arguments               | (a)   | handle  | 1048864 | `event: 0000020A095E7F80` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
-| whichUnit: dead unit            | (b)   | handle  | 1048896 | `event: 000001B40C3D1690` |         |
-| whichUnit: removed unit         | (b)   | handle  | 1048897 | `event: 000001B40C2DB4A0` |         |
+| whichUnit: dead unit            | (b)   | handle  | 1048896 | `event: 0000020A0996B070` |         |
+| whichUnit: removed unit         | (b)   | handle  | 1048897 | `event: 0000020A09AFFB90` |         |
 
 - Family: `registration`
 - Verdict: nullable (proved)
@@ -8276,15 +8276,15 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048865 | `event: 000001B40C1F59E0` |         |
-| filter: nil                     | (a)   | handle  | 1048866 | `event: 000001B40B973280` |         |
+| typical arguments               | (a)   | handle  | 1048865 | `event: 0000020A095F9800` |         |
+| filter: nil                     | (a)   | handle  | 1048866 | `event: 0000020A09B3F560` |         |
 | whichEvent: EVENT\_UNIT\_DEATH  | (a)   | nil     |         |                           |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
-| whichUnit: dead unit            | (b)   | handle  | 1048898 | `event: 000001B40C41BF20` |         |
-| whichUnit: removed unit         | (b)   | handle  | 1048899 | `event: 000001B40C4C7D70` |         |
-| filter: destroyed condition     | (b)   | handle  | 1048900 | `event: 000001B40C203F00` |         |
-| filter: destroyed filter        | (b)   | handle  | 1048901 | `event: 000001B40B9AD7C0` |         |
-| filter: destroyed boolexpr      | (b)   | handle  | 1048902 | `event: 000001B40B9A27B0` |         |
+| whichUnit: dead unit            | (b)   | handle  | 1048898 | `event: 0000020A09AFDFB0` |         |
+| whichUnit: removed unit         | (b)   | handle  | 1048899 | `event: 0000020A09B01C90` |         |
+| filter: destroyed condition     | (b)   | handle  | 1048900 | `event: 0000020A09AFB9A0` |         |
+| filter: destroyed filter        | (b)   | handle  | 1048901 | `event: 0000020A0953EFE0` |         |
+| filter: destroyed boolexpr      | (b)   | handle  | 1048902 | `event: 0000020A09542A70` |         |
 
 - Family: `registration`
 - Verdict: nullable (proved)
@@ -8296,18 +8296,18 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048867 | `event: 000001B40B9760F0` |         |
-| range: 0                        | (a)   | handle  | 1048868 | `event: 000001B40C1F6810` |         |
-| range: negative                 | (a)   | handle  | 1048869 | `event: 000001B40C2BD2D0` |         |
-| range: outside the world        | (a)   | handle  | 1048870 | `event: 000001B40C3DE760` |         |
-| range: 2147483647               | (a)   | handle  | 1048871 | `event: 000001B40C4A0C70` |         |
-| filter: nil                     | (a)   | handle  | 1048872 | `event: 000001B40C4C2A80` |         |
+| typical arguments               | (a)   | handle  | 1048867 | `event: 0000020A095F7900` |         |
+| range: 0                        | (a)   | handle  | 1048868 | `event: 0000020A095FAD90` |         |
+| range: negative                 | (a)   | handle  | 1048869 | `event: 0000020A075F7920` |         |
+| range: outside the world        | (a)   | handle  | 1048870 | `event: 0000020A09720650` |         |
+| range: 2147483647               | (a)   | handle  | 1048871 | `event: 0000020A0971EDA0` |         |
+| filter: nil                     | (a)   | handle  | 1048872 | `event: 0000020A099A1C00` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
-| whichUnit: dead unit            | (b)   | handle  | 1048903 | `event: 000001B40B9A56C0` |         |
-| whichUnit: removed unit         | (b)   | handle  | 1048904 | `event: 000001B40C2A3540` |         |
-| filter: destroyed condition     | (b)   | handle  | 1048905 | `event: 000001B40C2984F0` |         |
-| filter: destroyed filter        | (b)   | handle  | 1048906 | `event: 000001B40C2B0070` |         |
-| filter: destroyed boolexpr      | (b)   | handle  | 1048907 | `event: 000001B40C2A4F00` |         |
+| whichUnit: dead unit            | (b)   | handle  | 1048903 | `event: 0000020A09545080` |         |
+| whichUnit: removed unit         | (b)   | handle  | 1048904 | `event: 0000020A0953A130` |         |
+| filter: destroyed condition     | (b)   | handle  | 1048905 | `event: 0000020A09B491F0` |         |
+| filter: destroyed filter        | (b)   | handle  | 1048906 | `event: 0000020A09B4FB20` |         |
+| filter: destroyed boolexpr      | (b)   | handle  | 1048907 | `event: 0000020A09B4B0B0` |         |
 
 - Family: `registration`
 - Verdict: nullable (proved)
@@ -8319,7 +8319,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048873 | `event: 000001B40C1F9BE0` |         |
+| typical arguments               | (a)   | handle  | 1048873 | `event: 0000020A09C63DB0` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 | frame: destroyed frame          | (b)   | nil     |         |                           |         |
 
@@ -8333,9 +8333,9 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048874 | `event: 000001B40C5ED9D0` |         |
-| prefix: empty string            | (a)   | handle  | 1048875 | `event: 000001B40B970230` |         |
-| prefix: unknown name            | (a)   | handle  | 1048876 | `event: 000001B40B964800` |         |
+| typical arguments               | (a)   | handle  | 1048874 | `event: 0000020A096DCB80` |         |
+| prefix: empty string            | (a)   | handle  | 1048875 | `event: 0000020A096CB560` |         |
+| prefix: unknown name            | (a)   | handle  | 1048876 | `event: 0000020A096DCE80` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 
 - Family: `registration`
@@ -8348,10 +8348,10 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case                            | Group | Outcome | Id      | Type                      | Message |
 | ------------------------------- | ----- | ------- | ------- | ------------------------- | ------- |
-| typical arguments               | (a)   | handle  | 1048877 | `event: 000001B40B971630` |         |
-| metaKey: negative               | (a)   | handle  | 1048878 | `event: 000001B40B9A6210` |         |
-| metaKey: outside the world      | (a)   | handle  | 1048879 | `event: 000001B40C5B0D50` |         |
-| metaKey: 2147483647             | (a)   | handle  | 1048880 | `event: 000001B40B9A7700` |         |
+| typical arguments               | (a)   | handle  | 1048877 | `event: 0000020A095D7CD0` |         |
+| metaKey: negative               | (a)   | handle  | 1048878 | `event: 000002090F382190` |         |
+| metaKey: outside the world      | (a)   | handle  | 1048879 | `event: 0000020A09B42F20` |         |
+| metaKey: 2147483647             | (a)   | handle  | 1048880 | `event: 00000209F69DC780` |         |
 | whichTrigger: destroyed trigger | (b)   | nil     |         |                           |         |
 
 - Family: `registration`

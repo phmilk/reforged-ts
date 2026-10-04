@@ -3,7 +3,8 @@
 // `common.j` order, each declared for the registrations' case generator
 // (./nullability/constructor.ts), and what each call returned recorded
 // (./nullability/case-runner.ts). The five `filter` parameters the Overlay
-// types nullable run `nil` among their cases.
+// types nullable run `nil` among their cases. Three catalogue cases run
+// beyond the rule.
 // `pnpm probe:nullability-report nullability-registrations` turns its
 // Result file into this Slice's section of the sweep report. The arguments
 // come from the Fixtures (./nullability/fixtures.ts), built before the
@@ -41,6 +42,7 @@ import {
   removedItem,
   removedRegion,
   removedUnit,
+  watchedVariable,
 } from "./nullability/fixtures";
 import {
   filter,
@@ -54,13 +56,6 @@ import {
 } from "./nullability/parameters";
 
 /**
- * The name of the real `TriggerRegisterVariableEvent` watches: a Lua
- * global the Slice sets before the cases, since the Probe's map declares
- * no variable of its own.
- */
-const VARIABLE = "ReforgedTsNullabilityVariable";
-
-/**
  * The Slice's cases, every (a) case before any (b) case, over the Fixtures
  * built here before any case runs. Every registration shares one live
  * trigger, and its destroyed one; no trigger has an action, so an event
@@ -71,10 +66,16 @@ const VARIABLE = "ReforgedTsNullabilityVariable";
  * state is not known. A trackable has no stale state. A player parameter
  * is `Player(0)` only, by the constructors' rule. An event is one that
  * never fires in a Probe run where one is free to choose (`EVENT_GAME_SAVE`)
- * and an ordinary one otherwise.
+ * and an ordinary one otherwise. `TriggerRegisterVariableEvent` watches a
+ * Lua global the Fixture `watchedVariable` sets.
+ *
+ * The catalogue's cases (`catalogueCase`): `TriggerRegisterDeathEvent`
+ * with a live destructable and a live item, the widget kinds its typical
+ * unit leaves out; `TriggerRegisterFilterUnitEvent` with
+ * `EVENT_UNIT_DEATH`, an event `common.j` does not list under it, which a
+ * first run gave nil for.
  */
 function sliceCases(): ReturnCase[] {
-  (_G as unknown as Record<string, number>)[VARIABLE] = 0;
   const whichTrigger = trigger(
     "whichTrigger",
     liveTrigger(),
@@ -89,18 +90,18 @@ function sliceCases(): ReturnCase[] {
     ["removed region", removedRegion()],
   ]);
   const trackable = handle("t", liveTrackable(), []);
+  const destructable = liveDestructable();
+  const item = liveItem();
   const whichUnit = handle("whichUnit", liveUnit(), [
     ["dead unit", deadUnit()],
     ["removed unit", removedUnit()],
   ]);
-  const deathEvent = (whichWidget: widget) => () =>
-    TriggerRegisterDeathEvent(whichTrigger.typical, whichWidget);
   return inGroupOrder(
     registrationCases(
       "TriggerRegisterVariableEvent",
       [
         whichTrigger,
-        text("varName", VARIABLE),
+        text("varName", watchedVariable()),
         fixed("opcode", GREATER_THAN),
         numeric("limitval", 1),
       ],
@@ -265,13 +266,10 @@ function sliceCases(): ReturnCase[] {
       "TriggerRegisterDeathEvent",
       "whichWidget",
       "live destructable",
-      deathEvent(liveDestructable()),
+      () => TriggerRegisterDeathEvent(whichTrigger.typical, destructable),
     ),
-    catalogueCase(
-      "TriggerRegisterDeathEvent",
-      "whichWidget",
-      "live item",
-      deathEvent(liveItem()),
+    catalogueCase("TriggerRegisterDeathEvent", "whichWidget", "live item", () =>
+      TriggerRegisterDeathEvent(whichTrigger.typical, item),
     ),
     registrationCases(
       "TriggerRegisterUnitStateEvent",
