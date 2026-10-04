@@ -160,7 +160,7 @@ Group `a` is a case of live arguments, `b` one of a stale handle. A `handle` may
 
 `probe:run` exits 2, `crashed` (a stall included), naming the pending case `<native> <case>`. Then:
 
-1. **Confirm.** Run the Slice again, unchanged. A crash is confirmed when a later unchanged run crashes on the same case. When the confirming run does not, the crash may be intermittent: run the Slice once more, unchanged, and a crash there confirms it too (#364). Until it is skipped, the report gives a `nil` call case that crashed `review`, never `non-null (crashed)`: narrowing a parameter is breaking, so only a confirmed crash narrows it.
+1. **Confirm.** Run the Slice again, unchanged. A crash is confirmed when that run crashes on the same case. When it does not, the crash may be intermittent: run the Slice once more, unchanged, and a crash there confirms it too (#364). Until it is skipped, the report gives a `nil` call case that crashed `review`, never `non-null (crashed)`: narrowing a parameter is breaking, so only a confirmed crash narrows it.
 2. **Skip.** Add the case's label, `<native> <case>`, to the Slice's `skip` list and run it again. Each crash skips one case, so the loop ends.
 3. **Stop and ask the human** when:
    - the run names no pending case, or a pending step that is not a case (a crash while building the Fixtures, before the cases);
@@ -168,19 +168,19 @@ Group `a` is a case of live arguments, `b` one of a stale handle. A `handle` may
    - the stall capture, `.probe/<probe>/stall.png`, shows neither a crash nor a hang (a Probe stuck, say);
    - the Slice reaches 3 skipped cases: about three crashes are expected across the whole sweep, so three in one Slice point at a broken Fixture or a wrong cut.
 
-The `skip` list is committed in the Slice's Probe source, one label per entry, each with a comment naming the Patch and the runId it crashed on, so the Slice reproduces and the per-Patch re-run knows it:
+The `skip` list is committed in the Slice's Probe source, one label per entry, each with a comment naming the Patch and the runIds it crashed on, so the Slice reproduces and the per-Patch re-run knows it:
 
 ```ts
 const SKIP = [
   // Crashed on <Patch>, runs <runId> and <runId> (the confirming run).
   "GetExpiredTimer one call",
-  // Crashed on <Patch>, runs <runId> and <runId> (the second confirming run);
-  // not run <runId> (the first): intermittent, N of M runs.
+  // Crashed on <Patch> in N of M unchanged runs (intermittent): runs <runId>
+  // and <runId>; it did not crash in run <runId>.
   "CreateFogModifierRadiusLoc radius: 2147483647",
 ];
 ```
 
-An intermittent crash skips its case like any other and counts toward the 3-skip stop. The report's proposed `notes` do not say the crash is intermittent: the curation pull request writes that sentence by hand, with its count, crashed in N of M runs.
+An intermittent crash's comment names every run of the case, crashed or not, so the count reads from it. It skips its case like any other and counts toward the 3-skip stop. The report's proposed `notes` do not say the crash is intermittent: the curation pull request adds the sentence `packages/reforged-types/AGENTS.md` gives by hand, `The crash is intermittent: <N> of <M> unchanged runs.`
 
 ### Call cases and the parameter verdict
 

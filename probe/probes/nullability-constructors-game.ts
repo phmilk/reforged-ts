@@ -273,8 +273,10 @@ const SKIP: readonly string[] = [
   // Crashed on 3.0.0.24268, runs 9e132106-d7e6-4748-aaab-0334a0bb57a8 and
   // bfb14491-bb8f-45ec-bbb5-4e21621e41b5 (the confirming run).
   "CreateFogModifierRadius radius: 2147483647",
-  // Crashed on 3.0.0.24268, runs c0bc4e7d and 677e6d4b (the second confirming
-  // run); not run 0b46be5c (the first): intermittent, 3 of 4 runs.
+  // Crashed on 3.0.0.24268 in 3 of 4 unchanged runs (intermittent): runs
+  // c0bc4e7d, 677e6d4b-285a-4ccf-82f2-4cd17fbd4a81 and
+  // fdd3fb91-61d7-43be-89af-435bf194918d; it did not crash in run 0b46be5c.
+  // Of c0bc4e7d and 0b46be5c only these first 8 characters were kept.
   "CreateFogModifierRadiusLoc radius: 2147483647",
 ];
 
