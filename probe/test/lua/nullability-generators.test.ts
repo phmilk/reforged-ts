@@ -27,6 +27,7 @@ import {
   callbackGetterCase,
   eventResponseCase,
   lookupCase,
+  nullableCatalogueCase,
   optionalPropertyCase,
 } from "../../probes/nullability/nullable";
 import {
@@ -466,6 +467,21 @@ describe("the cheap case of the four nullable families", () => {
       "a unit with no rally point",
     ]);
     expect(callsOf(cases)).toEqual(["event", "callback", "lookup", "property"]);
+  });
+});
+
+describe("nullableCatalogueCase", () => {
+  it("is one case of group a, named by the Slice", () => {
+    const cases = nullableCatalogueCase(
+      "GetExpiredTimer",
+      "callback of a destroyed timer",
+      () => "destroyed",
+    );
+    expect(
+      cases.map((testCase) => `${testCase.native} ${testCase.label}`),
+    ).toEqual(["GetExpiredTimer callback of a destroyed timer"]);
+    expect(labels(cases)).toEqual(["a callback of a destroyed timer"]);
+    expect(callsOf(cases)).toEqual(["destroyed"]);
   });
 });
 

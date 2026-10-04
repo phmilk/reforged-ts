@@ -8575,3 +8575,62 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Overlay `params[].nullable`: `true`
 - Comparison: consistent
 - Proposed sentence of the Native's `notes`: A nil filter keeps every item (nullability sweep, 3.0.0.24268).
+
+## `nullability-risky`
+
+- Probe: `nullability-risky`
+- Patch: 3.0.0.24268
+- Client: 3.0.0.24268
+- Date: 2026-10-04
+- Run: `06da6f60-a59b-4646-8792-ef1e69800cce`
+
+### `GetExpiredTimer`
+
+| Case                          | Group | Outcome | Id  | Type | Message                            |
+| ----------------------------- | ----- | ------- | --- | ---- | ---------------------------------- |
+| outside its event             | (a)   | crashed |     |      | skipped: crashed in an earlier run |
+| callback of a destroyed timer | (a)   | nil     |     |      |                                    |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Crashed the game in a case of the nullability sweep (outside its event) on 3.0.0.24268. Returned nothing in a case of the nullability sweep (callback of a destroyed timer) on 3.0.0.24268.
+
+### `BlzCreateFrameByType`
+
+| Case                                                | Group | Outcome | Id      | Type                            | Message                            |
+| --------------------------------------------------- | ----- | ------- | ------- | ------------------------------- | ---------------------------------- |
+| typical arguments                                   | (a)   | handle  | 1048783 | `framehandle: 000002CC036B15D0` |                                    |
+| typeName: empty string                              | (a)   | nil     |         |                                 |                                    |
+| typeName: unknown name                              | (a)   | nil     |         |                                 |                                    |
+| name: empty string                                  | (a)   | handle  | 1048784 | `framehandle: 000002CB217A9AF0` |                                    |
+| name: unknown name                                  | (a)   | handle  | 1048785 | `framehandle: 000002CB21A38110` |                                    |
+| inherits: unknown name                              | (a)   | handle  | 1048786 | `framehandle: 000002CB2193C040` |                                    |
+| createContext: negative                             | (a)   | handle  | 1048787 | `framehandle: 000002CB21851BA0` |                                    |
+| createContext: outside the world                    | (a)   | handle  | 1048788 | `framehandle: 000002CB21A76EF0` |                                    |
+| createContext: 2147483647                           | (a)   | handle  | 1048789 | `framehandle: 000002CB215DC430` |                                    |
+| typeName: BACKDROP without its FDF fields           | (a)   | handle  | 1048790 | `framehandle: 000002CB2184C710` |                                    |
+| typeName: TEXTAREA without its FDF fields           | (a)   | handle  | 1048791 | `framehandle: 000002CB2190D260` |                                    |
+| typeName: SIMPLEMESSAGEFRAME without its FDF fields | (a)   | crashed |         |                                 | skipped: crashed in an earlier run |
+| typeName: DIALOG without its FDF fields             | (a)   | handle  | 1048792 | `framehandle: 000002CB21866F80` |                                    |
+| typeName: CONTROL without its FDF fields            | (a)   | crashed |         |                                 | skipped: crashed in an earlier run |
+| owner: destroyed frame                              | (b)   | handle  | 1048793 | `framehandle: 000002CB21B19DA0` |                                    |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Crashed the game in 2 cases of the nullability sweep (typeName: SIMPLEMESSAGEFRAME without its FDF fields, typeName: CONTROL without its FDF fields) on 3.0.0.24268. Returned nothing in 2 cases of the nullability sweep (typeName: empty string, typeName: unknown name) on 3.0.0.24268.
+
+### `BlzFrameGetChild`
+
+| Case               | Group | Outcome | Id  | Type | Message |
+| ------------------ | ----- | ------- | --- | ---- | ------- |
+| index out of range | (a)   | nil     |     |      |         |
+
+- Family: `lookup`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (index out of range) on 3.0.0.24268.

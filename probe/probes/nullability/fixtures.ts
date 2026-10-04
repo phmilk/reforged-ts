@@ -581,6 +581,20 @@ export function destroyedTrigger(): trigger {
   return live;
 }
 
+/**
+ * A trigger, on a unit's damage event: a live trigger registered on
+ * `EVENT_UNIT_DAMAGED` of `target`, with no action, so a Slice adds the
+ * one to run in a thread a unit event starts, which no timer did.
+ */
+export function damageEventTrigger(target: unit): trigger {
+  const live = liveTrigger();
+  built(
+    TriggerRegisterUnitEvent(live, target, EVENT_UNIT_DAMAGED),
+    "damageEventTrigger",
+  );
+  return live;
+}
+
 // Camera setups: no Native destroys one, so none is stale.
 
 /** A camera setup, fresh: `CreateCameraSetup`, nothing set. */
