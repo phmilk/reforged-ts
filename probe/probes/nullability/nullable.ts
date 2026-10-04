@@ -54,3 +54,17 @@ export function optionalPropertyCase(
 ): ReturnCase[] {
   return cheapCase(native, label, call);
 }
+
+/**
+ * A catalogue case of a Native of the four nullable families, beyond its
+ * one cheap case: a call the handle-type catalogue (#362) or jassdoc gives
+ * as returning nothing, which the Slice names: `callback of a destroyed
+ * timer`. One case of group a.
+ */
+export function nullableCatalogueCase(
+  native: string,
+  label: string,
+  call: () => unknown,
+): ReturnCase[] {
+  return cheapCase(native, label, call);
+}
