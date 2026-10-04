@@ -146,7 +146,7 @@ function readJson(file: string): unknown {
  * The text of the vendored `common.j` of `patch`; a Patch the vendor folder
  * does not hold is an AuthorError.
  */
-function readCommonJ(vendorFolder: string, patch: string): string {
+export function readCommonJ(vendorFolder: string, patch: string): string {
   const file = path.join(vendorFolder, patch, "common.j");
   try {
     return fs.readFileSync(file, "utf8");
