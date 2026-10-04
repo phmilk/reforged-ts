@@ -6740,3 +6740,1195 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
 - Proposed `notes`: Returned nothing in a case of the nullability sweep (unitid: unknown rawcode) on 3.0.0.24268.
+
+## `nullability-constructors-destructables`
+
+- Probe: `nullability-constructors-destructables`
+- Patch: 3.0.0.24268
+- Client: 3.0.0.24268
+- Date: 2026-10-04
+- Run: `abe30d15-8dff-46ee-9f02-3ea816f9d1eb`
+
+### `CreateDestructable`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1048778 | `destructable: 0000017EC9EFF0A0` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1048779 | `destructable: 0000017EC9E002F0` |         |
+| x: negative                  | (a)   | handle  | 1048780 | `destructable: 0000017ECBECD3B0` |         |
+| x: outside the world         | (a)   | handle  | 1048781 | `destructable: 0000017ECBEB99F0` |         |
+| x: 2147483647                | (a)   | handle  | 1048782 | `destructable: 0000017ECB256F40` |         |
+| y: 0                         | (a)   | handle  | 1048783 | `destructable: 0000017ECA7525F0` |         |
+| y: negative                  | (a)   | handle  | 1048784 | `destructable: 0000017ECAA97660` |         |
+| y: outside the world         | (a)   | handle  | 1048785 | `destructable: 0000017ECBBA68D0` |         |
+| y: 2147483647                | (a)   | handle  | 1048786 | `destructable: 0000017ECBEBEC40` |         |
+| face: 0                      | (a)   | handle  | 1048787 | `destructable: 0000017ECA750BA0` |         |
+| face: negative               | (a)   | handle  | 1048788 | `destructable: 0000017ECB1CF2F0` |         |
+| face: outside the world      | (a)   | handle  | 1048789 | `destructable: 0000017ECB1ED230` |         |
+| face: 2147483647             | (a)   | handle  | 1048790 | `destructable: 0000017ECA51B3C0` |         |
+| scale: 0                     | (a)   | handle  | 1048791 | `destructable: 0000017ECBB12440` |         |
+| scale: negative              | (a)   | handle  | 1048792 | `destructable: 0000017ECB1D7870` |         |
+| scale: outside the world     | (a)   | handle  | 1048793 | `destructable: 0000017ECB1D8E40` |         |
+| scale: 2147483647            | (a)   | handle  | 1048794 | `destructable: 0000017ECB470D20` |         |
+| variation: negative          | (a)   | handle  | 1048795 | `destructable: 0000017ECBECBFE0` |         |
+| variation: outside the world | (a)   | handle  | 1048796 | `destructable: 0000017F725912A0` |         |
+| variation: 2147483647        | (a)   | handle  | 1048797 | `destructable: 0000017F6D92B7A0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `CreateDestructableZ`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1048798 | `destructable: 0000017ECA41F770` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1048799 | `destructable: 0000017ECA417430` |         |
+| x: negative                  | (a)   | handle  | 1048800 | `destructable: 0000017EC9F09280` |         |
+| x: outside the world         | (a)   | handle  | 1048801 | `destructable: 0000017ECBC21480` |         |
+| x: 2147483647                | (a)   | handle  | 1048802 | `destructable: 0000017ECBA987F0` |         |
+| y: 0                         | (a)   | handle  | 1048803 | `destructable: 0000017ECB52CFC0` |         |
+| y: negative                  | (a)   | handle  | 1048804 | `destructable: 0000017ECAA8E7A0` |         |
+| y: outside the world         | (a)   | handle  | 1048805 | `destructable: 0000017ECB1CCB50` |         |
+| y: 2147483647                | (a)   | handle  | 1048806 | `destructable: 0000017ECB1C7AC0` |         |
+| z: negative                  | (a)   | handle  | 1048807 | `destructable: 0000017ECBB9A340` |         |
+| z: outside the world         | (a)   | handle  | 1048808 | `destructable: 0000017ECBB96ED0` |         |
+| z: 2147483647                | (a)   | handle  | 1048809 | `destructable: 0000017ECBD566C0` |         |
+| face: 0                      | (a)   | handle  | 1048810 | `destructable: 0000017ECBB93A10` |         |
+| face: negative               | (a)   | handle  | 1048811 | `destructable: 0000017ECBD48C40` |         |
+| face: outside the world      | (a)   | handle  | 1048812 | `destructable: 0000017ECB1DC190` |         |
+| face: 2147483647             | (a)   | handle  | 1048813 | `destructable: 0000017ECB1C73B0` |         |
+| scale: 0                     | (a)   | handle  | 1048814 | `destructable: 0000017ECA51F310` |         |
+| scale: negative              | (a)   | handle  | 1048815 | `destructable: 0000017ECA519940` |         |
+| scale: outside the world     | (a)   | handle  | 1048816 | `destructable: 0000017ECBB36660` |         |
+| scale: 2147483647            | (a)   | handle  | 1048817 | `destructable: 0000017ECBB26490` |         |
+| variation: negative          | (a)   | handle  | 1048818 | `destructable: 0000017ECBB1E330` |         |
+| variation: outside the world | (a)   | handle  | 1048819 | `destructable: 0000017ECBB23290` |         |
+| variation: 2147483647        | (a)   | handle  | 1048820 | `destructable: 0000017ECBB0D0E0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `CreateDeadDestructable`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1048821 | `destructable: 0000017ECB47D0C0` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1048822 | `destructable: 0000017ECBB1BE50` |         |
+| x: negative                  | (a)   | handle  | 1048823 | `destructable: 0000017ECB46B760` |         |
+| x: outside the world         | (a)   | handle  | 1048824 | `destructable: 0000017ECB457E40` |         |
+| x: 2147483647                | (a)   | handle  | 1048825 | `destructable: 0000017ECB44E210` |         |
+| y: 0                         | (a)   | handle  | 1048826 | `destructable: 0000017ECB459A70` |         |
+| y: negative                  | (a)   | handle  | 1048827 | `destructable: 0000017F6DAAE8A0` |         |
+| y: outside the world         | (a)   | handle  | 1048828 | `destructable: 0000017ECBEC6EF0` |         |
+| y: 2147483647                | (a)   | handle  | 1048829 | `destructable: 0000017ECBEC86F0` |         |
+| face: 0                      | (a)   | handle  | 1048830 | `destructable: 0000017ECBEB67F0` |         |
+| face: negative               | (a)   | handle  | 1048831 | `destructable: 0000017ECBEB1D40` |         |
+| face: outside the world      | (a)   | handle  | 1048832 | `destructable: 0000017ECA5243B0` |         |
+| face: 2147483647             | (a)   | handle  | 1048833 | `destructable: 0000017ECBB9D580` |         |
+| scale: 0                     | (a)   | handle  | 1048834 | `destructable: 0000017F6DAB29F0` |         |
+| scale: negative              | (a)   | handle  | 1048835 | `destructable: 0000017F76E4AAE0` |         |
+| scale: outside the world     | (a)   | handle  | 1048836 | `destructable: 0000017ECB47DC10` |         |
+| scale: 2147483647            | (a)   | handle  | 1048837 | `destructable: 0000017ECA525670` |         |
+| variation: negative          | (a)   | handle  | 1048838 | `destructable: 0000017ECBEB5E70` |         |
+| variation: outside the world | (a)   | handle  | 1048839 | `destructable: 0000017ECBB9E5B0` |         |
+| variation: 2147483647        | (a)   | handle  | 1048840 | `destructable: 0000017ECBB10750` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `CreateDeadDestructableZ`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1048841 | `destructable: 0000017ECBC1B6A0` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1048842 | `destructable: 0000017ECA51A810` |         |
+| x: negative                  | (a)   | handle  | 1048843 | `destructable: 0000017ECBB2C770` |         |
+| x: outside the world         | (a)   | handle  | 1048844 | `destructable: 0000017ECBB206B0` |         |
+| x: 2147483647                | (a)   | handle  | 1048845 | `destructable: 0000017ECB4539A0` |         |
+| y: 0                         | (a)   | handle  | 1048846 | `destructable: 0000017ECA7558B0` |         |
+| y: negative                  | (a)   | handle  | 1048847 | `destructable: 0000017ECA2D1520` |         |
+| y: outside the world         | (a)   | handle  | 1048848 | `destructable: 0000017ECA2CDE90` |         |
+| y: 2147483647                | (a)   | handle  | 1048849 | `destructable: 0000017ECA2D7B60` |         |
+| z: negative                  | (a)   | handle  | 1048850 | `destructable: 0000017F8B429F00` |         |
+| z: outside the world         | (a)   | handle  | 1048851 | `destructable: 0000017ECBC18180` |         |
+| z: 2147483647                | (a)   | handle  | 1048852 | `destructable: 0000017ECA4131A0` |         |
+| face: 0                      | (a)   | handle  | 1048853 | `destructable: 0000017ECBEB46A0` |         |
+| face: negative               | (a)   | handle  | 1048854 | `destructable: 0000017ECB1D0420` |         |
+| face: outside the world      | (a)   | handle  | 1048855 | `destructable: 0000017ECB9A3390` |         |
+| face: 2147483647             | (a)   | handle  | 1048856 | `destructable: 0000017F6DA4CA80` |         |
+| scale: 0                     | (a)   | handle  | 1048857 | `destructable: 0000017ECB1C40F0` |         |
+| scale: negative              | (a)   | handle  | 1048858 | `destructable: 0000017EC9E083C0` |         |
+| scale: outside the world     | (a)   | handle  | 1048859 | `destructable: 0000017ECB577460` |         |
+| scale: 2147483647            | (a)   | handle  | 1048860 | `destructable: 0000017ECB576790` |         |
+| variation: negative          | (a)   | handle  | 1048861 | `destructable: 0000017ECBB0BF30` |         |
+| variation: outside the world | (a)   | handle  | 1048862 | `destructable: 0000017ECB47AFC0` |         |
+| variation: 2147483647        | (a)   | handle  | 1048863 | `destructable: 0000017ECB474920` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructableWithSkin`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1048864 | `destructable: 0000017ECBB21A30` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1048865 | `destructable: 0000017ECB45FA70` |         |
+| x: negative                  | (a)   | handle  | 1048866 | `destructable: 0000017ECB454690` |         |
+| x: outside the world         | (a)   | handle  | 1048867 | `destructable: 0000017EC9F07000` |         |
+| x: 2147483647                | (a)   | handle  | 1048868 | `destructable: 0000017ECB44FBE0` |         |
+| y: 0                         | (a)   | handle  | 1048869 | `destructable: 0000017EC9E058C0` |         |
+| y: negative                  | (a)   | handle  | 1048870 | `destructable: 0000017F6DAA6A40` |         |
+| y: outside the world         | (a)   | handle  | 1048871 | `destructable: 0000017ECA753F70` |         |
+| y: 2147483647                | (a)   | handle  | 1048872 | `destructable: 0000017ECBB0EF20` |         |
+| face: 0                      | (a)   | handle  | 1048873 | `destructable: 0000017ECBBA4F10` |         |
+| face: negative               | (a)   | handle  | 1048874 | `destructable: 0000017ECBC1CCF0` |         |
+| face: outside the world      | (a)   | handle  | 1048875 | `destructable: 0000017ECA75B8F0` |         |
+| face: 2147483647             | (a)   | handle  | 1048876 | `destructable: 0000017ECB1C4D40` |         |
+| scale: 0                     | (a)   | handle  | 1048877 | `destructable: 0000017ECBD523F0` |         |
+| scale: negative              | (a)   | handle  | 1048878 | `destructable: 0000017ECBA5D970` |         |
+| scale: outside the world     | (a)   | handle  | 1048879 | `destructable: 0000017ECBB3A700` |         |
+| scale: 2147483647            | (a)   | handle  | 1048880 | `destructable: 0000017ECBB399A0` |         |
+| variation: negative          | (a)   | handle  | 1048881 | `destructable: 0000017ECBB135A0` |         |
+| variation: outside the world | (a)   | handle  | 1048882 | `destructable: 0000017F6D969770` |         |
+| variation: 2147483647        | (a)   | handle  | 1048883 | `destructable: 0000017ECB1D3AC0` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1048884 | `destructable: 0000017EC87211C0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructableZWithSkin`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1048885 | `destructable: 0000017ECA522990` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1048886 | `destructable: 0000017ECBEBE000` |         |
+| x: negative                  | (a)   | handle  | 1048887 | `destructable: 0000017ECB016240` |         |
+| x: outside the world         | (a)   | handle  | 1048888 | `destructable: 0000017ECBB3EEA0` |         |
+| x: 2147483647                | (a)   | handle  | 1048889 | `destructable: 0000017ECB461B70` |         |
+| y: 0                         | (a)   | handle  | 1048890 | `destructable: 0000017ECBA1D800` |         |
+| y: negative                  | (a)   | handle  | 1048891 | `destructable: 0000017ECBA23890` |         |
+| y: outside the world         | (a)   | handle  | 1048892 | `destructable: 0000017ECBA1F8A0` |         |
+| y: 2147483647                | (a)   | handle  | 1048893 | `destructable: 0000017ECBA256F0` |         |
+| z: negative                  | (a)   | handle  | 1048894 | `destructable: 0000017F72764740` |         |
+| z: outside the world         | (a)   | handle  | 1048895 | `destructable: 0000017ECB464180` |         |
+| z: 2147483647                | (a)   | handle  | 1048896 | `destructable: 0000017ECB4F5500` |         |
+| face: 0                      | (a)   | handle  | 1048897 | `destructable: 0000017ECB4FDCE0` |         |
+| face: negative               | (a)   | handle  | 1048898 | `destructable: 0000017ECB506F60` |         |
+| face: outside the world      | (a)   | handle  | 1048899 | `destructable: 0000017ECB50DAB0` |         |
+| face: 2147483647             | (a)   | handle  | 1048900 | `destructable: 0000017ECB4F91A0` |         |
+| scale: 0                     | (a)   | handle  | 1048901 | `destructable: 0000017ECB502480` |         |
+| scale: negative              | (a)   | handle  | 1048902 | `destructable: 0000017ECBA1CCA0` |         |
+| scale: outside the world     | (a)   | handle  | 1048903 | `destructable: 0000017ECB50A1A0` |         |
+| scale: 2147483647            | (a)   | handle  | 1048904 | `destructable: 0000017ECB4F0790` |         |
+| variation: negative          | (a)   | handle  | 1048905 | `destructable: 0000017ECB4EBC00` |         |
+| variation: outside the world | (a)   | handle  | 1048906 | `destructable: 0000017ECB4F3D00` |         |
+| variation: 2147483647        | (a)   | handle  | 1048907 | `destructable: 0000017F8B6DB190` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1048908 | `destructable: 0000017ECB4F7660` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructableWithSkin`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1048909 | `destructable: 0000017F8B6E3BC0` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1048910 | `destructable: 0000017F8B6E4140` |         |
+| x: negative                  | (a)   | handle  | 1048911 | `destructable: 0000017F8B6E3840` |         |
+| x: outside the world         | (a)   | handle  | 1048912 | `destructable: 0000017ECB477C60` |         |
+| x: 2147483647                | (a)   | handle  | 1048913 | `destructable: 0000017F8B6E6860` |         |
+| y: 0                         | (a)   | handle  | 1048914 | `destructable: 0000017F8B6EF3D0` |         |
+| y: negative                  | (a)   | handle  | 1048915 | `destructable: 0000017ECA518640` |         |
+| y: outside the world         | (a)   | handle  | 1048916 | `destructable: 0000017F8B6EA8A0` |         |
+| y: 2147483647                | (a)   | handle  | 1048917 | `destructable: 0000017F8B6F70E0` |         |
+| face: 0                      | (a)   | handle  | 1048918 | `destructable: 0000017F8B6F69F0` |         |
+| face: negative               | (a)   | handle  | 1048919 | `destructable: 0000017F8B6FC8D0` |         |
+| face: outside the world      | (a)   | handle  | 1048920 | `destructable: 0000017F8B6F93B0` |         |
+| face: 2147483647             | (a)   | handle  | 1048921 | `destructable: 0000017F8B702130` |         |
+| scale: 0                     | (a)   | handle  | 1048922 | `destructable: 0000017F8B6FEE00` |         |
+| scale: negative              | (a)   | handle  | 1048923 | `destructable: 0000017F8B7096A0` |         |
+| scale: outside the world     | (a)   | handle  | 1048924 | `destructable: 0000017F8B70D1D0` |         |
+| scale: 2147483647            | (a)   | handle  | 1048925 | `destructable: 0000017F8B70C0D0` |         |
+| variation: negative          | (a)   | handle  | 1048926 | `destructable: 0000017F8B711680` |         |
+| variation: outside the world | (a)   | handle  | 1048927 | `destructable: 0000017ECB4F0100` |         |
+| variation: 2147483647        | (a)   | handle  | 1048928 | `destructable: 0000017F8B716960` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1048929 | `destructable: 0000017F8B71B600` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructableZWithSkin`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1048930 | `destructable: 0000017F8B71C300` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1048931 | `destructable: 0000017F8B721680` |         |
+| x: negative                  | (a)   | handle  | 1048932 | `destructable: 0000017F8B7255F0` |         |
+| x: outside the world         | (a)   | handle  | 1048933 | `destructable: 0000017F8B7265B0` |         |
+| x: 2147483647                | (a)   | handle  | 1048934 | `destructable: 0000017F8B724910` |         |
+| y: 0                         | (a)   | handle  | 1048935 | `destructable: 0000017F8B72C040` |         |
+| y: negative                  | (a)   | handle  | 1048936 | `destructable: 0000017F8B729300` |         |
+| y: outside the world         | (a)   | handle  | 1048937 | `destructable: 0000017F8B733570` |         |
+| y: 2147483647                | (a)   | handle  | 1048938 | `destructable: 0000017F8B7365E0` |         |
+| z: negative                  | (a)   | handle  | 1048939 | `destructable: 0000017F8B72DC70` |         |
+| z: outside the world         | (a)   | handle  | 1048940 | `destructable: 0000017F8B739B00` |         |
+| z: 2147483647                | (a)   | handle  | 1048941 | `destructable: 0000017F8B738AB0` |         |
+| face: 0                      | (a)   | handle  | 1048942 | `destructable: 0000017F8B741DA0` |         |
+| face: negative               | (a)   | handle  | 1048943 | `destructable: 0000017F8B746850` |         |
+| face: outside the world      | (a)   | handle  | 1048944 | `destructable: 0000017F8B7472A0` |         |
+| face: 2147483647             | (a)   | handle  | 1048945 | `destructable: 0000017F8B7453A0` |         |
+| scale: 0                     | (a)   | handle  | 1048946 | `destructable: 0000017F8B74C890` |         |
+| scale: negative              | (a)   | handle  | 1048947 | `destructable: 0000017F8B751670` |         |
+| scale: outside the world     | (a)   | handle  | 1048948 | `destructable: 0000017F8B751E70` |         |
+| scale: 2147483647            | (a)   | handle  | 1048949 | `destructable: 0000017F8B74F920` |         |
+| variation: negative          | (a)   | handle  | 1048950 | `destructable: 0000017F8B757980` |         |
+| variation: outside the world | (a)   | handle  | 1048951 | `destructable: 0000017F8B7549F0` |         |
+| variation: 2147483647        | (a)   | handle  | 1048952 | `destructable: 0000017F8B75CA30` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1048953 | `destructable: 0000017F8B75A2A0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructablePitchRoll`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1048954 | `destructable: 0000017F8B761FD0` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1048955 | `destructable: 0000017F8B75D3C0` |         |
+| x: negative                  | (a)   | handle  | 1048956 | `destructable: 0000017F8B76B810` |         |
+| x: outside the world         | (a)   | handle  | 1048957 | `destructable: 0000017F8B76A460` |         |
+| x: 2147483647                | (a)   | handle  | 1048958 | `destructable: 0000017F8B7734C0` |         |
+| y: 0                         | (a)   | handle  | 1048959 | `destructable: 0000017F8B79F430` |         |
+| y: negative                  | (a)   | handle  | 1048960 | `destructable: 0000017F8B773380` |         |
+| y: outside the world         | (a)   | handle  | 1048961 | `destructable: 0000017F8B7A8A50` |         |
+| y: 2147483647                | (a)   | handle  | 1048962 | `destructable: 0000017F8B7A1A30` |         |
+| face: 0                      | (a)   | handle  | 1048963 | `destructable: 0000017F8B7A8AF0` |         |
+| face: negative               | (a)   | handle  | 1048964 | `destructable: 0000017F8B7A5A10` |         |
+| face: outside the world      | (a)   | handle  | 1048965 | `destructable: 0000017F8B7ADFA0` |         |
+| face: 2147483647             | (a)   | handle  | 1048966 | `destructable: 0000017F8B7AAD70` |         |
+| roll: negative               | (a)   | handle  | 1048967 | `destructable: 0000017F8B7B36F0` |         |
+| roll: outside the world      | (a)   | handle  | 1048968 | `destructable: 0000017F8B7C1030` |         |
+| roll: 2147483647             | (a)   | handle  | 1048969 | `destructable: 0000017F8B7B8080` |         |
+| pitch: negative              | (a)   | handle  | 1048970 | `destructable: 0000017F8B7C10D0` |         |
+| pitch: outside the world     | (a)   | handle  | 1048971 | `destructable: 0000017F8B7BC360` |         |
+| pitch: 2147483647            | (a)   | handle  | 1048972 | `destructable: 0000017F8B7C6540` |         |
+| scale: 0                     | (a)   | handle  | 1048973 | `destructable: 0000017F8B7B5B10` |         |
+| scale: negative              | (a)   | handle  | 1048974 | `destructable: 0000017F8B7CBB70` |         |
+| scale: outside the world     | (a)   | handle  | 1048975 | `destructable: 0000017F8B7CA3B0` |         |
+| scale: 2147483647            | (a)   | handle  | 1048976 | `destructable: 0000017F8B7D5240` |         |
+| variation: negative          | (a)   | handle  | 1048977 | `destructable: 0000017F8B7D3340` |         |
+| variation: outside the world | (a)   | handle  | 1048978 | `destructable: 0000017F8B7ECE50` |         |
+| variation: 2147483647        | (a)   | handle  | 1048979 | `destructable: 0000017F8B7D2C80` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructableZPitchRoll`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1048980 | `destructable: 0000017F8B7F3A40` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1048981 | `destructable: 0000017F8B7FCCB0` |         |
+| x: negative                  | (a)   | handle  | 1048982 | `destructable: 0000017F8B7FE060` |         |
+| x: outside the world         | (a)   | handle  | 1048983 | `destructable: 0000017F8B7F0060` |         |
+| x: 2147483647                | (a)   | handle  | 1048984 | `destructable: 0000017F8B807210` |         |
+| y: 0                         | (a)   | handle  | 1048985 | `destructable: 0000017F8B804610` |         |
+| y: negative                  | (a)   | handle  | 1048986 | `destructable: 0000017F8B8076C0` |         |
+| y: outside the world         | (a)   | handle  | 1048987 | `destructable: 0000017F8B80C1F0` |         |
+| y: 2147483647                | (a)   | handle  | 1048988 | `destructable: 0000017F8B80CA20` |         |
+| z: negative                  | (a)   | handle  | 1048989 | `destructable: 0000017F8B8099F0` |         |
+| z: outside the world         | (a)   | handle  | 1048990 | `destructable: 0000017F8B812540` |         |
+| z: 2147483647                | (a)   | handle  | 1048991 | `destructable: 0000017F8B8109D0` |         |
+| face: 0                      | (a)   | handle  | 1048992 | `destructable: 0000017F8B817C30` |         |
+| face: negative               | (a)   | handle  | 1048993 | `destructable: 0000017F8B8159F0` |         |
+| face: outside the world      | (a)   | handle  | 1048994 | `destructable: 0000017F8B6EDEE0` |         |
+| face: 2147483647             | (a)   | handle  | 1048995 | `destructable: 0000017F8B8450A0` |         |
+| roll: negative               | (a)   | handle  | 1048996 | `destructable: 0000017F8B84BB70` |         |
+| roll: outside the world      | (a)   | handle  | 1048997 | `destructable: 0000017F8B81BB80` |         |
+| roll: 2147483647             | (a)   | handle  | 1048998 | `destructable: 0000017F8B850910` |         |
+| pitch: negative              | (a)   | handle  | 1048999 | `destructable: 0000017F8B84F530` |         |
+| pitch: outside the world     | (a)   | handle  | 1049000 | `destructable: 0000017F8B856000` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049001 | `destructable: 0000017F8B853270` |         |
+| scale: 0                     | (a)   | handle  | 1049002 | `destructable: 0000017F8B85B5A0` |         |
+| scale: negative              | (a)   | handle  | 1049003 | `destructable: 0000017F8B85F4D0` |         |
+| scale: outside the world     | (a)   | handle  | 1049004 | `destructable: 0000017F8B861180` |         |
+| scale: 2147483647            | (a)   | handle  | 1049005 | `destructable: 0000017F8B8632C0` |         |
+| variation: negative          | (a)   | handle  | 1049006 | `destructable: 0000017F8B866240` |         |
+| variation: outside the world | (a)   | handle  | 1049007 | `destructable: 0000017F8B8688A0` |         |
+| variation: 2147483647        | (a)   | handle  | 1049008 | `destructable: 0000017F8B86D000` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructablePitchRoll`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049009 | `destructable: 0000017F8B86A060` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049010 | `destructable: 0000017F8B876AB0` |         |
+| x: negative                  | (a)   | handle  | 1049011 | `destructable: 0000017F8B875590` |         |
+| x: outside the world         | (a)   | handle  | 1049012 | `destructable: 0000017F8B878800` |         |
+| x: 2147483647                | (a)   | handle  | 1049013 | `destructable: 0000017F8B87B120` |         |
+| y: 0                         | (a)   | handle  | 1049014 | `destructable: 0000017F8B87FC40` |         |
+| y: negative                  | (a)   | handle  | 1049015 | `destructable: 0000017F8B882160` |         |
+| y: outside the world         | (a)   | handle  | 1049016 | `destructable: 0000017F8B885190` |         |
+| y: 2147483647                | (a)   | handle  | 1049017 | `destructable: 0000017F8B88A090` |         |
+| face: 0                      | (a)   | handle  | 1049018 | `destructable: 0000017F8B88A800` |         |
+| face: negative               | (a)   | handle  | 1049019 | `destructable: 0000017F8B888960` |         |
+| face: outside the world      | (a)   | handle  | 1049020 | `destructable: 0000017F8B897FF0` |         |
+| face: 2147483647             | (a)   | handle  | 1049021 | `destructable: 0000017F8B89CA20` |         |
+| roll: negative               | (a)   | handle  | 1049022 | `destructable: 0000017F8B89EFF0` |         |
+| roll: outside the world      | (a)   | handle  | 1049023 | `destructable: 0000017F8B8A4010` |         |
+| roll: 2147483647             | (a)   | handle  | 1049024 | `destructable: 0000017F8B8A9C00` |         |
+| pitch: negative              | (a)   | handle  | 1049025 | `destructable: 0000017F8B8A4620` |         |
+| pitch: outside the world     | (a)   | handle  | 1049026 | `destructable: 0000017F8B8A9610` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049027 | `destructable: 0000017F8B8AC800` |         |
+| scale: 0                     | (a)   | handle  | 1049028 | `destructable: 0000017F8B8AF470` |         |
+| scale: negative              | (a)   | handle  | 1049029 | `destructable: 0000017F8B8B1F80` |         |
+| scale: outside the world     | (a)   | handle  | 1049030 | `destructable: 0000017F8B8B6D20` |         |
+| scale: 2147483647            | (a)   | handle  | 1049031 | `destructable: 0000017F8B8B77A0` |         |
+| variation: negative          | (a)   | handle  | 1049032 | `destructable: 0000017F8B8BCF20` |         |
+| variation: outside the world | (a)   | handle  | 1049033 | `destructable: 0000017F8B8C18B0` |         |
+| variation: 2147483647        | (a)   | handle  | 1049034 | `destructable: 0000017F8B8C5680` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructableZPitchRoll`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049035 | `destructable: 0000017F8B8C1E00` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049036 | `destructable: 0000017F8B8CE500` |         |
+| x: negative                  | (a)   | handle  | 1049037 | `destructable: 0000017F8B8FFAF0` |         |
+| x: outside the world         | (a)   | handle  | 1049038 | `destructable: 0000017F8B904250` |         |
+| x: 2147483647                | (a)   | handle  | 1049039 | `destructable: 0000017F8B9029B0` |         |
+| y: 0                         | (a)   | handle  | 1049040 | `destructable: 0000017F8B906580` |         |
+| y: negative                  | (a)   | handle  | 1049041 | `destructable: 0000017F8B90AC70` |         |
+| y: outside the world         | (a)   | handle  | 1049042 | `destructable: 0000017F8B908AA0` |         |
+| y: 2147483647                | (a)   | handle  | 1049043 | `destructable: 0000017F8B90E280` |         |
+| z: negative                  | (a)   | handle  | 1049044 | `destructable: 0000017F8B9136D0` |         |
+| z: outside the world         | (a)   | handle  | 1049045 | `destructable: 0000017F8B916670` |         |
+| z: 2147483647                | (a)   | handle  | 1049046 | `destructable: 0000017F8B91B1E0` |         |
+| face: 0                      | (a)   | handle  | 1049047 | `destructable: 0000017F8B919620` |         |
+| face: negative               | (a)   | handle  | 1049048 | `destructable: 0000017F8B91D810` |         |
+| face: outside the world      | (a)   | handle  | 1049049 | `destructable: 0000017F8B9219A0` |         |
+| face: 2147483647             | (a)   | handle  | 1049050 | `destructable: 0000017F8B920990` |         |
+| roll: negative               | (a)   | handle  | 1049051 | `destructable: 0000017F8B925BA0` |         |
+| roll: outside the world      | (a)   | handle  | 1049052 | `destructable: 0000017F8B929680` |         |
+| roll: 2147483647             | (a)   | handle  | 1049053 | `destructable: 0000017F8B928C30` |         |
+| pitch: negative              | (a)   | handle  | 1049054 | `destructable: 0000017F8B92DF30` |         |
+| pitch: outside the world     | (a)   | handle  | 1049055 | `destructable: 0000017F8B932320` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049056 | `destructable: 0000017F8B9300C0` |         |
+| scale: 0                     | (a)   | handle  | 1049057 | `destructable: 0000017F8B937920` |         |
+| scale: negative              | (a)   | handle  | 1049058 | `destructable: 0000017F8B93B3A0` |         |
+| scale: outside the world     | (a)   | handle  | 1049059 | `destructable: 0000017F8B93E020` |         |
+| scale: 2147483647            | (a)   | handle  | 1049060 | `destructable: 0000017F8B942260` |         |
+| variation: negative          | (a)   | handle  | 1049061 | `destructable: 0000017ECBB9AD90` |         |
+| variation: outside the world | (a)   | handle  | 1049062 | `destructable: 0000017F8B944C20` |         |
+| variation: 2147483647        | (a)   | handle  | 1049063 | `destructable: 0000017F8B948D10` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructableWithSkinPitchRoll`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049064 | `destructable: 0000017F8B947D40` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049065 | `destructable: 0000017F8B950530` |         |
+| x: negative                  | (a)   | handle  | 1049066 | `destructable: 0000017F8B940D10` |         |
+| x: outside the world         | (a)   | handle  | 1049067 | `destructable: 0000017F8B955180` |         |
+| x: 2147483647                | (a)   | handle  | 1049068 | `destructable: 0000017F8B959A20` |         |
+| y: 0                         | (a)   | handle  | 1049069 | `destructable: 0000017F8B957BB0` |         |
+| y: negative                  | (a)   | handle  | 1049070 | `destructable: 0000017F8B95CCD0` |         |
+| y: outside the world         | (a)   | handle  | 1049071 | `destructable: 0000017F8B960C10` |         |
+| y: 2147483647                | (a)   | handle  | 1049072 | `destructable: 0000017F8B95ECB0` |         |
+| face: 0                      | (a)   | handle  | 1049073 | `destructable: 0000017F8B96E250` |         |
+| face: negative               | (a)   | handle  | 1049074 | `destructable: 0000017F8B96A170` |         |
+| face: outside the world      | (a)   | handle  | 1049075 | `destructable: 0000017F8B969510` |         |
+| face: 2147483647             | (a)   | handle  | 1049076 | `destructable: 0000017F8B96E430` |         |
+| roll: negative               | (a)   | handle  | 1049077 | `destructable: 0000017F8B972080` |         |
+| roll: outside the world      | (a)   | handle  | 1049078 | `destructable: 0000017F8B970C20` |         |
+| roll: 2147483647             | (a)   | handle  | 1049079 | `destructable: 0000017F8B97DF20` |         |
+| pitch: negative              | (a)   | handle  | 1049080 | `destructable: 0000017F8B97A940` |         |
+| pitch: outside the world     | (a)   | handle  | 1049081 | `destructable: 0000017F8B97A0C0` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049082 | `destructable: 0000017F8B97E610` |         |
+| scale: 0                     | (a)   | handle  | 1049083 | `destructable: 0000017F8B985DE0` |         |
+| scale: negative              | (a)   | handle  | 1049084 | `destructable: 0000017F8B986760` |         |
+| scale: outside the world     | (a)   | handle  | 1049085 | `destructable: 0000017F8B98B030` |         |
+| scale: 2147483647            | (a)   | handle  | 1049086 | `destructable: 0000017F8B9827E0` |         |
+| variation: negative          | (a)   | handle  | 1049087 | `destructable: 0000017F8B98E9F0` |         |
+| variation: outside the world | (a)   | handle  | 1049088 | `destructable: 0000017F8B992A70` |         |
+| variation: 2147483647        | (a)   | handle  | 1049089 | `destructable: 0000017F8B98E0C0` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1049090 | `destructable: 0000017F8B995C40` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructableZWithSkinPitchRoll`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049091 | `destructable: 0000017F8B999740` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049092 | `destructable: 0000017F8B9A2870` |         |
+| x: negative                  | (a)   | handle  | 1049093 | `destructable: 0000017F8B9A63C0` |         |
+| x: outside the world         | (a)   | handle  | 1049094 | `destructable: 0000017F8B99C210` |         |
+| x: 2147483647                | (a)   | handle  | 1049095 | `destructable: 0000017F8B9CB930` |         |
+| y: 0                         | (a)   | handle  | 1049096 | `destructable: 0000017F8B9D35B0` |         |
+| y: negative                  | (a)   | handle  | 1049097 | `destructable: 0000017F8B9D7850` |         |
+| y: outside the world         | (a)   | handle  | 1049098 | `destructable: 0000017F8B9D9B40` |         |
+| y: 2147483647                | (a)   | handle  | 1049099 | `destructable: 0000017F8B9DC9F0` |         |
+| z: negative                  | (a)   | handle  | 1049100 | `destructable: 0000017F8B9E0140` |         |
+| z: outside the world         | (a)   | handle  | 1049101 | `destructable: 0000017F8B9DF9F0` |         |
+| z: 2147483647                | (a)   | handle  | 1049102 | `destructable: 0000017F8B9E4580` |         |
+| face: 0                      | (a)   | handle  | 1049103 | `destructable: 0000017F8B9E9970` |         |
+| face: negative               | (a)   | handle  | 1049104 | `destructable: 0000017F8B9E7AE0` |         |
+| face: outside the world      | (a)   | handle  | 1049105 | `destructable: 0000017F8B9EC660` |         |
+| face: 2147483647             | (a)   | handle  | 1049106 | `destructable: 0000017F8B9F0690` |         |
+| roll: negative               | (a)   | handle  | 1049107 | `destructable: 0000017F8B9E2650` |         |
+| roll: outside the world      | (a)   | handle  | 1049108 | `destructable: 0000017F8B9F78B0` |         |
+| roll: 2147483647             | (a)   | handle  | 1049109 | `destructable: 0000017F8B9F6C10` |         |
+| pitch: negative              | (a)   | handle  | 1049110 | `destructable: 0000017F8BA0B670` |         |
+| pitch: outside the world     | (a)   | handle  | 1049111 | `destructable: 0000017F8BA102D0` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049112 | `destructable: 0000017F8BA0F780` |         |
+| scale: 0                     | (a)   | handle  | 1049113 | `destructable: 0000017F8BA13B30` |         |
+| scale: negative              | (a)   | handle  | 1049114 | `destructable: 0000017F8BA181F0` |         |
+| scale: outside the world     | (a)   | handle  | 1049115 | `destructable: 0000017F8B9FB3A0` |         |
+| scale: 2147483647            | (a)   | handle  | 1049116 | `destructable: 0000017F8BA1BB80` |         |
+| variation: negative          | (a)   | handle  | 1049117 | `destructable: 0000017F8BA208E0` |         |
+| variation: outside the world | (a)   | handle  | 1049118 | `destructable: 0000017F8BA1AA20` |         |
+| variation: 2147483647        | (a)   | handle  | 1049119 | `destructable: 0000017F8BA24340` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1049120 | `destructable: 0000017F8BA28C20` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructableWithSkinPitchRoll`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049121 | `destructable: 0000017F8BA27D20` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049122 | `destructable: 0000017F8BA30860` |         |
+| x: negative                  | (a)   | handle  | 1049123 | `destructable: 0000017F8BA2AAF0` |         |
+| x: outside the world         | (a)   | handle  | 1049124 | `destructable: 0000017F8BA5BF80` |         |
+| x: 2147483647                | (a)   | handle  | 1049125 | `destructable: 0000017F8BA61210` |         |
+| y: 0                         | (a)   | handle  | 1049126 | `destructable: 0000017F8BA60790` |         |
+| y: negative                  | (a)   | handle  | 1049127 | `destructable: 0000017F8B84B130` |         |
+| y: outside the world         | (a)   | handle  | 1049128 | `destructable: 0000017F8B84AD80` |         |
+| y: 2147483647                | (a)   | handle  | 1049129 | `destructable: 0000017F8BA6A180` |         |
+| face: 0                      | (a)   | handle  | 1049130 | `destructable: 0000017F8BA6E400` |         |
+| face: negative               | (a)   | handle  | 1049131 | `destructable: 0000017F8BA72E00` |         |
+| face: outside the world      | (a)   | handle  | 1049132 | `destructable: 0000017F8BA724D0` |         |
+| face: 2147483647             | (a)   | handle  | 1049133 | `destructable: 0000017F8BA76BC0` |         |
+| roll: negative               | (a)   | handle  | 1049134 | `destructable: 0000017F8BA7CA80` |         |
+| roll: outside the world      | (a)   | handle  | 1049135 | `destructable: 0000017F8BA75010` |         |
+| roll: 2147483647             | (a)   | handle  | 1049136 | `destructable: 0000017F8BA7F0B0` |         |
+| pitch: negative              | (a)   | handle  | 1049137 | `destructable: 0000017F8BA84320` |         |
+| pitch: outside the world     | (a)   | handle  | 1049138 | `destructable: 0000017F8BA833D0` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049139 | `destructable: 0000017F8BA87600` |         |
+| scale: 0                     | (a)   | handle  | 1049140 | `destructable: 0000017F8BA8CA80` |         |
+| scale: negative              | (a)   | handle  | 1049141 | `destructable: 0000017F8BA8C140` |         |
+| scale: outside the world     | (a)   | handle  | 1049142 | `destructable: 0000017F8BA8FAC0` |         |
+| scale: 2147483647            | (a)   | handle  | 1049143 | `destructable: 0000017F8BA94ED0` |         |
+| variation: negative          | (a)   | handle  | 1049144 | `destructable: 0000017F8BA94420` |         |
+| variation: outside the world | (a)   | handle  | 1049145 | `destructable: 0000017F8BA94BB0` |         |
+| variation: 2147483647        | (a)   | handle  | 1049146 | `destructable: 0000017F8B84B5F0` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1049147 | `destructable: 0000017F8BA7C7D0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructableZWithSkinPitchRoll`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049148 | `destructable: 0000017F8B9E2CC0` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049149 | `destructable: 0000017F8B9A61B0` |         |
+| x: negative                  | (a)   | handle  | 1049150 | `destructable: 0000017F8B96DE90` |         |
+| x: outside the world         | (a)   | handle  | 1049151 | `destructable: 0000017F8B947550` |         |
+| x: 2147483647                | (a)   | handle  | 1049152 | `destructable: 0000017F8B920ED0` |         |
+| y: 0                         | (a)   | handle  | 1049153 | `destructable: 0000017F8B91FFD0` |         |
+| y: negative                  | (a)   | handle  | 1049154 | `destructable: 0000017F8B8C1B10` |         |
+| y: outside the world         | (a)   | handle  | 1049155 | `destructable: 0000017F8B89C920` |         |
+| y: 2147483647                | (a)   | handle  | 1049156 | `destructable: 0000017F8B868DC0` |         |
+| z: negative                  | (a)   | handle  | 1049157 | `destructable: 0000017F8B89EEF0` |         |
+| z: outside the world         | (a)   | handle  | 1049158 | `destructable: 0000017F8B8B0A20` |         |
+| z: 2147483647                | (a)   | handle  | 1049159 | `destructable: 0000017F8B7FD4B0` |         |
+| face: 0                      | (a)   | handle  | 1049160 | `destructable: 0000017F8B7D4DF0` |         |
+| face: negative               | (a)   | handle  | 1049161 | `destructable: 0000017F8B7B2CA0` |         |
+| face: outside the world      | (a)   | handle  | 1049162 | `destructable: 0000017F8B745280` |         |
+| face: 2147483647             | (a)   | handle  | 1049163 | `destructable: 0000017F8B747130` |         |
+| roll: negative               | (a)   | handle  | 1049164 | `destructable: 0000017F8B71EE60` |         |
+| roll: outside the world      | (a)   | handle  | 1049165 | `destructable: 0000017ECB4F24E0` |         |
+| roll: 2147483647             | (a)   | handle  | 1049166 | `destructable: 0000017ECBA1FA60` |         |
+| pitch: negative              | (a)   | handle  | 1049167 | `destructable: 0000017F8B868960` |         |
+| pitch: outside the world     | (a)   | handle  | 1049168 | `destructable: 0000017F8BA978E0` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049169 | `destructable: 0000017F8B9037E0` |         |
+| scale: 0                     | (a)   | handle  | 1049170 | `destructable: 0000017ECBB22120` |         |
+| scale: negative              | (a)   | handle  | 1049171 | `destructable: 0000017ECBC16170` |         |
+| scale: outside the world     | (a)   | handle  | 1049172 | `destructable: 0000017ECBEC9A70` |         |
+| scale: 2147483647            | (a)   | handle  | 1049173 | `destructable: 0000017ECBA8FBA0` |         |
+| variation: negative          | (a)   | handle  | 1049174 | `destructable: 0000017EC9F09C90` |         |
+| variation: outside the world | (a)   | handle  | 1049175 | `destructable: 0000017F6DA3A040` |         |
+| variation: 2147483647        | (a)   | handle  | 1049176 | `destructable: 0000017ECBB97BC0` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1049177 | `destructable: 0000017EC9DFBEB0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructableWithColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049178 | `destructable: 0000017ECBB10140` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049179 | `destructable: 0000017F76E3CAC0` |         |
+| x: negative                  | (a)   | handle  | 1049180 | `destructable: 0000017ECAA8BC40` |         |
+| x: outside the world         | (a)   | handle  | 1049181 | `destructable: 0000017F6DA47A60` |         |
+| x: 2147483647                | (a)   | handle  | 1049182 | `destructable: 0000017F76E50AC0` |         |
+| y: 0                         | (a)   | handle  | 1049183 | `destructable: 0000017ECB1EA0C0` |         |
+| y: negative                  | (a)   | handle  | 1049184 | `destructable: 0000017ECA414740` |         |
+| y: outside the world         | (a)   | handle  | 1049185 | `destructable: 0000017ECBB93B00` |         |
+| y: 2147483647                | (a)   | handle  | 1049186 | `destructable: 0000017F76E54BE0` |         |
+| face: 0                      | (a)   | handle  | 1049187 | `destructable: 0000017ECB1D1BE0` |         |
+| face: negative               | (a)   | handle  | 1049188 | `destructable: 0000017ECA51EE20` |         |
+| face: outside the world      | (a)   | handle  | 1049189 | `destructable: 0000017ECB1EDFB0` |         |
+| face: 2147483647             | (a)   | handle  | 1049190 | `destructable: 0000017ECBD51B10` |         |
+| scale: 0                     | (a)   | handle  | 1049191 | `destructable: 0000017F72425920` |         |
+| scale: negative              | (a)   | handle  | 1049192 | `destructable: 0000017ECA730FD0` |         |
+| scale: outside the world     | (a)   | handle  | 1049193 | `destructable: 0000017ECBEABCD0` |         |
+| scale: 2147483647            | (a)   | handle  | 1049194 | `destructable: 0000017ECBB34C20` |         |
+| variation: negative          | (a)   | handle  | 1049195 | `destructable: 0000017ECBB97050` |         |
+| variation: outside the world | (a)   | handle  | 1049196 | `destructable: 0000017ECBB16620` |         |
+| variation: 2147483647        | (a)   | handle  | 1049197 | `destructable: 0000017ECBA95C80` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructableZWithColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049198 | `destructable: 0000017F8B4353A0` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049199 | `destructable: 0000017ECB1D21E0` |         |
+| x: negative                  | (a)   | handle  | 1049200 | `destructable: 0000017ECBB1FA30` |         |
+| x: outside the world         | (a)   | handle  | 1049201 | `destructable: 0000017F8B909F00` |         |
+| x: 2147483647                | (a)   | handle  | 1049202 | `destructable: 0000017F8B42A2E0` |         |
+| y: 0                         | (a)   | handle  | 1049203 | `destructable: 0000017ECBB2E140` |         |
+| y: negative                  | (a)   | handle  | 1049204 | `destructable: 0000017F8B766F20` |         |
+| y: outside the world         | (a)   | handle  | 1049205 | `destructable: 0000017ECB522860` |         |
+| y: 2147483647                | (a)   | handle  | 1049206 | `destructable: 0000017ECA75DF50` |         |
+| z: negative                  | (a)   | handle  | 1049207 | `destructable: 0000017ECB504280` |         |
+| z: outside the world         | (a)   | handle  | 1049208 | `destructable: 0000017F8B865A50` |         |
+| z: 2147483647                | (a)   | handle  | 1049209 | `destructable: 0000017ECBA98A80` |         |
+| face: 0                      | (a)   | handle  | 1049210 | `destructable: 0000017F8B8A8050` |         |
+| face: negative               | (a)   | handle  | 1049211 | `destructable: 0000017ECB527810` |         |
+| face: outside the world      | (a)   | handle  | 1049212 | `destructable: 0000017ECB6A39E0` |         |
+| face: 2147483647             | (a)   | handle  | 1049213 | `destructable: 0000017F8B871250` |         |
+| scale: 0                     | (a)   | handle  | 1049214 | `destructable: 0000017ECB57A530` |         |
+| scale: negative              | (a)   | handle  | 1049215 | `destructable: 0000017ECBB3DD60` |         |
+| scale: outside the world     | (a)   | handle  | 1049216 | `destructable: 0000017F8B6E6630` |         |
+| scale: 2147483647            | (a)   | handle  | 1049217 | `destructable: 0000017F8B888F80` |         |
+| variation: negative          | (a)   | handle  | 1049218 | `destructable: 0000017F8B70C9B0` |         |
+| variation: outside the world | (a)   | handle  | 1049219 | `destructable: 0000017F8B8555E0` |         |
+| variation: 2147483647        | (a)   | handle  | 1049220 | `destructable: 0000017ECA2CA460` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructableWithColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049221 | `destructable: 0000017F8B7CF370` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049222 | `destructable: 0000017F8B7A7FD0` |         |
+| x: negative                  | (a)   | handle  | 1049223 | `destructable: 0000017F8B87BDF0` |         |
+| x: outside the world         | (a)   | handle  | 1049224 | `destructable: 0000017ECAA94470` |         |
+| x: 2147483647                | (a)   | handle  | 1049225 | `destructable: 0000017ECBEC3A20` |         |
+| y: 0                         | (a)   | handle  | 1049226 | `destructable: 0000017F8B7AC2D0` |         |
+| y: negative                  | (a)   | handle  | 1049227 | `destructable: 0000017ECBEBA740` |         |
+| y: outside the world         | (a)   | handle  | 1049228 | `destructable: 0000017ECA5254F0` |         |
+| y: 2147483647                | (a)   | handle  | 1049229 | `destructable: 0000017ECBA97F40` |         |
+| face: 0                      | (a)   | handle  | 1049230 | `destructable: 0000017ECA520D80` |         |
+| face: negative               | (a)   | handle  | 1049231 | `destructable: 0000017F8BA289E0` |         |
+| face: outside the world      | (a)   | handle  | 1049232 | `destructable: 0000017ECB461880` |         |
+| face: 2147483647             | (a)   | handle  | 1049233 | `destructable: 0000017ECBECCDE0` |         |
+| scale: 0                     | (a)   | handle  | 1049234 | `destructable: 0000017ECBC1C290` |         |
+| scale: negative              | (a)   | handle  | 1049235 | `destructable: 0000017F8B73D270` |         |
+| scale: outside the world     | (a)   | handle  | 1049236 | `destructable: 0000017F8B976910` |         |
+| scale: 2147483647            | (a)   | handle  | 1049237 | `destructable: 0000017F8B8857B0` |         |
+| variation: negative          | (a)   | handle  | 1049238 | `destructable: 0000017F8B754E70` |         |
+| variation: outside the world | (a)   | handle  | 1049239 | `destructable: 0000017F8BA2AD80` |         |
+| variation: 2147483647        | (a)   | handle  | 1049240 | `destructable: 0000017F6DAA68E0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructableZWithColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049241 | `destructable: 0000017ECB45C3D0` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049242 | `destructable: 0000017F8B757B00` |         |
+| x: negative                  | (a)   | handle  | 1049243 | `destructable: 0000017F8B8A35C0` |         |
+| x: outside the world         | (a)   | handle  | 1049244 | `destructable: 0000017F8B999120` |         |
+| x: 2147483647                | (a)   | handle  | 1049245 | `destructable: 0000017ECBB36EA0` |         |
+| y: 0                         | (a)   | handle  | 1049246 | `destructable: 0000017F8BA238C0` |         |
+| y: negative                  | (a)   | handle  | 1049247 | `destructable: 0000017ECBB27700` |         |
+| y: outside the world         | (a)   | handle  | 1049248 | `destructable: 0000017F8B965870` |         |
+| y: 2147483647                | (a)   | handle  | 1049249 | `destructable: 0000017F8B870480` |         |
+| z: negative                  | (a)   | handle  | 1049250 | `destructable: 0000017ECBA244E0` |         |
+| z: outside the world         | (a)   | handle  | 1049251 | `destructable: 0000017F8B746470` |         |
+| z: 2147483647                | (a)   | handle  | 1049252 | `destructable: 0000017F8B883200` |         |
+| face: 0                      | (a)   | handle  | 1049253 | `destructable: 0000017ECAEF6EA0` |         |
+| face: negative               | (a)   | handle  | 1049254 | `destructable: 0000017ECBEB2480` |         |
+| face: outside the world      | (a)   | handle  | 1049255 | `destructable: 0000017ECBD4CB90` |         |
+| face: 2147483647             | (a)   | handle  | 1049256 | `destructable: 0000017F8B7B0BB0` |         |
+| scale: 0                     | (a)   | handle  | 1049257 | `destructable: 0000017F8B817E80` |         |
+| scale: negative              | (a)   | handle  | 1049258 | `destructable: 0000017F8B432F70` |         |
+| scale: outside the world     | (a)   | handle  | 1049259 | `destructable: 0000017F8B94C310` |         |
+| scale: 2147483647            | (a)   | handle  | 1049260 | `destructable: 0000017F8B768430` |         |
+| variation: negative          | (a)   | handle  | 1049261 | `destructable: 0000017ECB46F080` |         |
+| variation: outside the world | (a)   | handle  | 1049262 | `destructable: 0000017F8B9A7EA0` |         |
+| variation: 2147483647        | (a)   | handle  | 1049263 | `destructable: 0000017F8BA93B70` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructableWithSkinColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049264 | `destructable: 0000017F6DAAD160` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049265 | `destructable: 0000017ECBB2A060` |         |
+| x: negative                  | (a)   | handle  | 1049266 | `destructable: 0000017ECB50CE80` |         |
+| x: outside the world         | (a)   | handle  | 1049267 | `destructable: 0000017ECBD53D80` |         |
+| x: 2147483647                | (a)   | handle  | 1049268 | `destructable: 0000017F8B87A8E0` |         |
+| y: 0                         | (a)   | handle  | 1049269 | `destructable: 0000017F8B6F0DE0` |         |
+| y: negative                  | (a)   | handle  | 1049270 | `destructable: 0000017ECB5321C0` |         |
+| y: outside the world         | (a)   | handle  | 1049271 | `destructable: 0000017ECBB38150` |         |
+| y: 2147483647                | (a)   | handle  | 1049272 | `destructable: 0000017F725C58D0` |         |
+| face: 0                      | (a)   | handle  | 1049273 | `destructable: 0000017F8B95BA30` |         |
+| face: negative               | (a)   | handle  | 1049274 | `destructable: 0000017F8B769910` |         |
+| face: outside the world      | (a)   | handle  | 1049275 | `destructable: 0000017F8B7CF950` |         |
+| face: 2147483647             | (a)   | handle  | 1049276 | `destructable: 0000017ECBD53F30` |         |
+| scale: 0                     | (a)   | handle  | 1049277 | `destructable: 0000017F76E4EB80` |         |
+| scale: negative              | (a)   | handle  | 1049278 | `destructable: 0000017F8B7A5010` |         |
+| scale: outside the world     | (a)   | handle  | 1049279 | `destructable: 0000017F8B7AF8E0` |         |
+| scale: 2147483647            | (a)   | handle  | 1049280 | `destructable: 0000017ECBC189D0` |         |
+| variation: negative          | (a)   | handle  | 1049281 | `destructable: 0000017F8B7C80C0` |         |
+| variation: outside the world | (a)   | handle  | 1049282 | `destructable: 0000017F8B7EFDC0` |         |
+| variation: 2147483647        | (a)   | handle  | 1049283 | `destructable: 0000017ECB2574C0` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1049284 | `destructable: 0000017F8BA2BB30` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructableZWithSkinColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049285 | `destructable: 0000017F8BAAFF20` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049286 | `destructable: 0000017F8B84DDE0` |         |
+| x: negative                  | (a)   | handle  | 1049287 | `destructable: 0000017ECB1CBD70` |         |
+| x: outside the world         | (a)   | handle  | 1049288 | `destructable: 0000017ECBEB3BE0` |         |
+| x: 2147483647                | (a)   | handle  | 1049289 | `destructable: 0000017F8B73A010` |         |
+| y: 0                         | (a)   | handle  | 1049290 | `destructable: 0000017EC9E08A50` |         |
+| y: negative                  | (a)   | handle  | 1049291 | `destructable: 0000017F8B9F35D0` |         |
+| y: outside the world         | (a)   | handle  | 1049292 | `destructable: 0000017F8B6F8870` |         |
+| y: 2147483647                | (a)   | handle  | 1049293 | `destructable: 0000017ECBA23FC0` |         |
+| z: negative                  | (a)   | handle  | 1049294 | `destructable: 0000017F8B9DE1A0` |         |
+| z: outside the world         | (a)   | handle  | 1049295 | `destructable: 0000017F8B907C10` |         |
+| z: 2147483647                | (a)   | handle  | 1049296 | `destructable: 0000017F8B8627F0` |         |
+| face: 0                      | (a)   | handle  | 1049297 | `destructable: 0000017F8B7BA4C0` |         |
+| face: negative               | (a)   | handle  | 1049298 | `destructable: 0000017F8B727C40` |         |
+| face: outside the world      | (a)   | handle  | 1049299 | `destructable: 0000017ECB4FEC40` |         |
+| face: 2147483647             | (a)   | handle  | 1049300 | `destructable: 0000017F8B973A40` |         |
+| scale: 0                     | (a)   | handle  | 1049301 | `destructable: 0000017F8B92ABF0` |         |
+| scale: negative              | (a)   | handle  | 1049302 | `destructable: 0000017F8B7C2C60` |         |
+| scale: outside the world     | (a)   | handle  | 1049303 | `destructable: 0000017F8B9E6300` |         |
+| scale: 2147483647            | (a)   | handle  | 1049304 | `destructable: 0000017F8B7CAA50` |         |
+| variation: negative          | (a)   | handle  | 1049305 | `destructable: 0000017ECA415250` |         |
+| variation: outside the world | (a)   | handle  | 1049306 | `destructable: 0000017ECB47D690` |         |
+| variation: 2147483647        | (a)   | handle  | 1049307 | `destructable: 0000017ECBEE2530` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1049308 | `destructable: 0000017ECB5013C0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructableWithSkinColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049309 | `destructable: 0000017F8B75EA40` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049310 | `destructable: 0000017F8B9754C0` |         |
+| x: negative                  | (a)   | handle  | 1049311 | `destructable: 0000017F8B72A4A0` |         |
+| x: outside the world         | (a)   | handle  | 1049312 | `destructable: 0000017F8B766140` |         |
+| x: 2147483647                | (a)   | handle  | 1049313 | `destructable: 0000017F8B985800` |         |
+| y: 0                         | (a)   | handle  | 1049314 | `destructable: 0000017F8B7A7030` |         |
+| y: negative                  | (a)   | handle  | 1049315 | `destructable: 0000017F8BA7AF80` |         |
+| y: outside the world         | (a)   | handle  | 1049316 | `destructable: 0000017F8B765680` |         |
+| y: 2147483647                | (a)   | handle  | 1049317 | `destructable: 0000017F8B8BEB60` |         |
+| face: 0                      | (a)   | handle  | 1049318 | `destructable: 0000017F8B867F80` |         |
+| face: negative               | (a)   | handle  | 1049319 | `destructable: 0000017F8B6E2790` |         |
+| face: outside the world      | (a)   | handle  | 1049320 | `destructable: 0000017ECBEE1D40` |         |
+| face: 2147483647             | (a)   | handle  | 1049321 | `destructable: 0000017F8BA0D0A0` |         |
+| scale: 0                     | (a)   | handle  | 1049322 | `destructable: 0000017F8BA67F20` |         |
+| scale: negative              | (a)   | handle  | 1049323 | `destructable: 0000017ECB457390` |         |
+| scale: outside the world     | (a)   | handle  | 1049324 | `destructable: 0000017F8BA7B9F0` |         |
+| scale: 2147483647            | (a)   | handle  | 1049325 | `destructable: 0000017F8BA1F6B0` |         |
+| variation: negative          | (a)   | handle  | 1049326 | `destructable: 0000017F8B92FAE0` |         |
+| variation: outside the world | (a)   | handle  | 1049327 | `destructable: 0000017ECBB162E0` |         |
+| variation: 2147483647        | (a)   | handle  | 1049328 | `destructable: 0000017EC9E02FF0` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1049329 | `destructable: 0000017ECBB9C380` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructableZWithSkinColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049330 | `destructable: 0000017ECB011390` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049331 | `destructable: 0000017ECBA21BC0` |         |
+| x: negative                  | (a)   | handle  | 1049332 | `destructable: 0000017F8B74B080` |         |
+| x: outside the world         | (a)   | handle  | 1049333 | `destructable: 0000017ECBEDA310` |         |
+| x: 2147483647                | (a)   | handle  | 1049334 | `destructable: 0000017F8B74A180` |         |
+| y: 0                         | (a)   | handle  | 1049335 | `destructable: 0000017ECA51FBF0` |         |
+| y: negative                  | (a)   | handle  | 1049336 | `destructable: 0000017ECBED9920` |         |
+| y: outside the world         | (a)   | handle  | 1049337 | `destructable: 0000017ECB4FE600` |         |
+| y: 2147483647                | (a)   | handle  | 1049338 | `destructable: 0000017F8B6E7020` |         |
+| z: negative                  | (a)   | handle  | 1049339 | `destructable: 0000017F8B7BBD90` |         |
+| z: outside the world         | (a)   | handle  | 1049340 | `destructable: 0000017F8B8A5850` |         |
+| z: 2147483647                | (a)   | handle  | 1049341 | `destructable: 0000017ECBA20B70` |         |
+| face: 0                      | (a)   | handle  | 1049342 | `destructable: 0000017ECB44BAC0` |         |
+| face: negative               | (a)   | handle  | 1049343 | `destructable: 0000017F8B6EFEA0` |         |
+| face: outside the world      | (a)   | handle  | 1049344 | `destructable: 0000017F8BA1E0F0` |         |
+| face: 2147483647             | (a)   | handle  | 1049345 | `destructable: 0000017ECB4714A0` |         |
+| scale: 0                     | (a)   | handle  | 1049346 | `destructable: 0000017ECBB1D4F0` |         |
+| scale: negative              | (a)   | handle  | 1049347 | `destructable: 0000017ECAEF62A0` |         |
+| scale: outside the world     | (a)   | handle  | 1049348 | `destructable: 0000017ECBA24F80` |         |
+| scale: 2147483647            | (a)   | handle  | 1049349 | `destructable: 0000017F8B91E9F0` |         |
+| variation: negative          | (a)   | handle  | 1049350 | `destructable: 0000017F8B979890` |         |
+| variation: outside the world | (a)   | handle  | 1049351 | `destructable: 0000017ECBEE1000` |         |
+| variation: 2147483647        | (a)   | handle  | 1049352 | `destructable: 0000017ECBB3FD20` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1049353 | `destructable: 0000017F8BA190C0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructablePitchRollWithColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049354 | `destructable: 0000017F8BA2E2E0` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049355 | `destructable: 0000017F8B6FD820` |         |
+| x: negative                  | (a)   | handle  | 1049356 | `destructable: 0000017ECB452350` |         |
+| x: outside the world         | (a)   | handle  | 1049357 | `destructable: 0000017F8BA9FDE0` |         |
+| x: 2147483647                | (a)   | handle  | 1049358 | `destructable: 0000017F8B42DD30` |         |
+| y: 0                         | (a)   | handle  | 1049359 | `destructable: 0000017F8B726E50` |         |
+| y: negative                  | (a)   | handle  | 1049360 | `destructable: 0000017F8B8793A0` |         |
+| y: outside the world         | (a)   | handle  | 1049361 | `destructable: 0000017F8B85C3A0` |         |
+| y: 2147483647                | (a)   | handle  | 1049362 | `destructable: 0000017F8B7FEBF0` |         |
+| face: 0                      | (a)   | handle  | 1049363 | `destructable: 0000017F8B808AA0` |         |
+| face: negative               | (a)   | handle  | 1049364 | `destructable: 0000017F8B7FAC60` |         |
+| face: outside the world      | (a)   | handle  | 1049365 | `destructable: 0000017F72592C50` |         |
+| face: 2147483647             | (a)   | handle  | 1049366 | `destructable: 0000017F8B7433D0` |         |
+| roll: negative               | (a)   | handle  | 1049367 | `destructable: 0000017F8B702F20` |         |
+| roll: outside the world      | (a)   | handle  | 1049368 | `destructable: 0000017ECB507870` |         |
+| roll: 2147483647             | (a)   | handle  | 1049369 | `destructable: 0000017F8B9D4800` |         |
+| pitch: negative              | (a)   | handle  | 1049370 | `destructable: 0000017F8BA15130` |         |
+| pitch: outside the world     | (a)   | handle  | 1049371 | `destructable: 0000017F8B80E050` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049372 | `destructable: 0000017F8B980E60` |         |
+| scale: 0                     | (a)   | handle  | 1049373 | `destructable: 0000017F8B93EC70` |         |
+| scale: negative              | (a)   | handle  | 1049374 | `destructable: 0000017F8B7C1BE0` |         |
+| scale: outside the world     | (a)   | handle  | 1049375 | `destructable: 0000017F8B946030` |         |
+| scale: 2147483647            | (a)   | handle  | 1049376 | `destructable: 0000017F8B92A440` |         |
+| variation: negative          | (a)   | handle  | 1049377 | `destructable: 0000017F8B89DA40` |         |
+| variation: outside the world | (a)   | handle  | 1049378 | `destructable: 0000017F8B956600` |         |
+| variation: 2147483647        | (a)   | handle  | 1049379 | `destructable: 0000017F8B722630` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructableZPitchRollWithColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049380 | `destructable: 0000017F8B977440` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049381 | `destructable: 0000017ECBEE3030` |         |
+| x: negative                  | (a)   | handle  | 1049382 | `destructable: 0000017F8B748970` |         |
+| x: outside the world         | (a)   | handle  | 1049383 | `destructable: 0000017F6DAAF570` |         |
+| x: 2147483647                | (a)   | handle  | 1049384 | `destructable: 0000017ECBA9BB60` |         |
+| y: 0                         | (a)   | handle  | 1049385 | `destructable: 0000017F8B851C60` |         |
+| y: negative                  | (a)   | handle  | 1049386 | `destructable: 0000017F8B943050` |         |
+| y: outside the world         | (a)   | handle  | 1049387 | `destructable: 0000017F8B9E1170` |         |
+| y: 2147483647                | (a)   | handle  | 1049388 | `destructable: 0000017ECBEE33F0` |         |
+| z: negative                  | (a)   | handle  | 1049389 | `destructable: 0000017F8BA67750` |         |
+| z: outside the world         | (a)   | handle  | 1049390 | `destructable: 0000017F8BA5D280` |         |
+| z: 2147483647                | (a)   | handle  | 1049391 | `destructable: 0000017F8B74DEA0` |         |
+| face: 0                      | (a)   | handle  | 1049392 | `destructable: 0000017F8B86F8B0` |         |
+| face: negative               | (a)   | handle  | 1049393 | `destructable: 0000017F8B86F770` |         |
+| face: outside the world      | (a)   | handle  | 1049394 | `destructable: 0000017F8B93BD10` |         |
+| face: 2147483647             | (a)   | handle  | 1049395 | `destructable: 0000017F8B9D04B0` |         |
+| roll: negative               | (a)   | handle  | 1049396 | `destructable: 0000017F8B951210` |         |
+| roll: outside the world      | (a)   | handle  | 1049397 | `destructable: 0000017F8B94B7F0` |         |
+| roll: 2147483647             | (a)   | handle  | 1049398 | `destructable: 0000017F72765770` |         |
+| pitch: negative              | (a)   | handle  | 1049399 | `destructable: 0000017F8B7F1AE0` |         |
+| pitch: outside the world     | (a)   | handle  | 1049400 | `destructable: 0000017F8B729970` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049401 | `destructable: 0000017F8BA5FA70` |         |
+| scale: 0                     | (a)   | handle  | 1049402 | `destructable: 0000017F8B92C330` |         |
+| scale: negative              | (a)   | handle  | 1049403 | `destructable: 0000017ECB44CC30` |         |
+| scale: outside the world     | (a)   | handle  | 1049404 | `destructable: 0000017F8B8CA780` |         |
+| scale: 2147483647            | (a)   | handle  | 1049405 | `destructable: 0000017F8B700390` |         |
+| variation: negative          | (a)   | handle  | 1049406 | `destructable: 0000017F8B9140D0` |         |
+| variation: outside the world | (a)   | handle  | 1049407 | `destructable: 0000017F8B805910` |         |
+| variation: 2147483647        | (a)   | handle  | 1049408 | `destructable: 0000017F8BA24ED0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructablePitchRollWithColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049409 | `destructable: 0000017F8B9144D0` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049410 | `destructable: 0000017ECB4F7830` |         |
+| x: negative                  | (a)   | handle  | 1049411 | `destructable: 0000017F8B845D00` |         |
+| x: outside the world         | (a)   | handle  | 1049412 | `destructable: 0000017F6D96A5B0` |         |
+| x: 2147483647                | (a)   | handle  | 1049413 | `destructable: 0000017F8B9F1320` |         |
+| y: 0                         | (a)   | handle  | 1049414 | `destructable: 0000017F8B9F1030` |         |
+| y: negative                  | (a)   | handle  | 1049415 | `destructable: 0000017F8B949D40` |         |
+| y: outside the world         | (a)   | handle  | 1049416 | `destructable: 0000017ECBEDB5C0` |         |
+| y: 2147483647                | (a)   | handle  | 1049417 | `destructable: 0000017F8BA20C50` |         |
+| face: 0                      | (a)   | handle  | 1049418 | `destructable: 0000017F8B9224A0` |         |
+| face: negative               | (a)   | handle  | 1049419 | `destructable: 0000017F8BA10EE0` |         |
+| face: outside the world      | (a)   | handle  | 1049420 | `destructable: 0000017F8CA88000` |         |
+| face: 2147483647             | (a)   | handle  | 1049421 | `destructable: 0000017F8B99A690` |         |
+| roll: negative               | (a)   | handle  | 1049422 | `destructable: 0000017ECB463290` |         |
+| roll: outside the world      | (a)   | handle  | 1049423 | `destructable: 0000017F8B741BD0` |         |
+| roll: 2147483647             | (a)   | handle  | 1049424 | `destructable: 0000017F8B7D0A70` |         |
+| pitch: negative              | (a)   | handle  | 1049425 | `destructable: 0000017F8BA6CDC0` |         |
+| pitch: outside the world     | (a)   | handle  | 1049426 | `destructable: 0000017ECBEE87A0` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049427 | `destructable: 0000017F72599160` |         |
+| scale: 0                     | (a)   | handle  | 1049428 | `destructable: 0000017F725980E0` |         |
+| scale: negative              | (a)   | handle  | 1049429 | `destructable: 0000017F8CAF4DE0` |         |
+| scale: outside the world     | (a)   | handle  | 1049430 | `destructable: 0000017F8CAF9710` |         |
+| scale: 2147483647            | (a)   | handle  | 1049431 | `destructable: 0000017F7259BA70` |         |
+| variation: negative          | (a)   | handle  | 1049432 | `destructable: 0000017F8CAF3000` |         |
+| variation: outside the world | (a)   | handle  | 1049433 | `destructable: 0000017F8CB2F3E0` |         |
+| variation: 2147483647        | (a)   | handle  | 1049434 | `destructable: 0000017F8CB332D0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructableZPitchRollWithColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049435 | `destructable: 0000017F8CB32750` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049436 | `destructable: 0000017F8CBAEFC0` |         |
+| x: negative                  | (a)   | handle  | 1049437 | `destructable: 0000017F8CBB36B0` |         |
+| x: outside the world         | (a)   | handle  | 1049438 | `destructable: 0000017F8CBB78E0` |         |
+| x: 2147483647                | (a)   | handle  | 1049439 | `destructable: 0000017F8CB35A80` |         |
+| y: 0                         | (a)   | handle  | 1049440 | `destructable: 0000017F8CBBA570` |         |
+| y: negative                  | (a)   | handle  | 1049441 | `destructable: 0000017F8CBE5050` |         |
+| y: outside the world         | (a)   | handle  | 1049442 | `destructable: 0000017F8CBEA6D0` |         |
+| y: 2147483647                | (a)   | handle  | 1049443 | `destructable: 0000017F8CBED9D0` |         |
+| z: negative                  | (a)   | handle  | 1049444 | `destructable: 0000017F8CBED7A0` |         |
+| z: outside the world         | (a)   | handle  | 1049445 | `destructable: 0000017F8CBE3570` |         |
+| z: 2147483647                | (a)   | handle  | 1049446 | `destructable: 0000017F8CBFEBE0` |         |
+| face: 0                      | (a)   | handle  | 1049447 | `destructable: 0000017F8CC05200` |         |
+| face: negative               | (a)   | handle  | 1049448 | `destructable: 0000017F8CC0A130` |         |
+| face: outside the world      | (a)   | handle  | 1049449 | `destructable: 0000017F8CC04850` |         |
+| face: 2147483647             | (a)   | handle  | 1049450 | `destructable: 0000017F8CC03760` |         |
+| roll: negative               | (a)   | handle  | 1049451 | `destructable: 0000017F8CC0E290` |         |
+| roll: outside the world      | (a)   | handle  | 1049452 | `destructable: 0000017F8CC13A50` |         |
+| roll: 2147483647             | (a)   | handle  | 1049453 | `destructable: 0000017F8CC19340` |         |
+| pitch: negative              | (a)   | handle  | 1049454 | `destructable: 0000017F8CBEDCD0` |         |
+| pitch: outside the world     | (a)   | handle  | 1049455 | `destructable: 0000017F8CC11FD0` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049456 | `destructable: 0000017F8CC1B8E0` |         |
+| scale: 0                     | (a)   | handle  | 1049457 | `destructable: 0000017F8CC1FB00` |         |
+| scale: negative              | (a)   | handle  | 1049458 | `destructable: 0000017F8CC24B50` |         |
+| scale: outside the world     | (a)   | handle  | 1049459 | `destructable: 0000017F8CC29230` |         |
+| scale: 2147483647            | (a)   | handle  | 1049460 | `destructable: 0000017F8CC2D110` |         |
+| variation: negative          | (a)   | handle  | 1049461 | `destructable: 0000017F8CC2B6A0` |         |
+| variation: outside the world | (a)   | handle  | 1049462 | `destructable: 0000017F8CC27030` |         |
+| variation: 2147483647        | (a)   | handle  | 1049463 | `destructable: 0000017F8CC30790` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructableWithSkinPitchRollColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049464 | `destructable: 0000017F8CC364D0` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049465 | `destructable: 0000017F8CC23E20` |         |
+| x: negative                  | (a)   | handle  | 1049466 | `destructable: 0000017F8CC3DE80` |         |
+| x: outside the world         | (a)   | handle  | 1049467 | `destructable: 0000017F8CC3B180` |         |
+| x: 2147483647                | (a)   | handle  | 1049468 | `destructable: 0000017F8CC41340` |         |
+| y: 0                         | (a)   | handle  | 1049469 | `destructable: 0000017F8CC46B00` |         |
+| y: negative                  | (a)   | handle  | 1049470 | `destructable: 0000017F8CC4C370` |         |
+| y: outside the world         | (a)   | handle  | 1049471 | `destructable: 0000017F8CC45A70` |         |
+| y: 2147483647                | (a)   | handle  | 1049472 | `destructable: 0000017F8CC491B0` |         |
+| face: 0                      | (a)   | handle  | 1049473 | `destructable: 0000017F8CC54190` |         |
+| face: negative               | (a)   | handle  | 1049474 | `destructable: 0000017F8CC5A700` |         |
+| face: outside the world      | (a)   | handle  | 1049475 | `destructable: 0000017F8CC5D2D0` |         |
+| face: 2147483647             | (a)   | handle  | 1049476 | `destructable: 0000017F8CC59EF0` |         |
+| roll: negative               | (a)   | handle  | 1049477 | `destructable: 0000017F8CC5FAA0` |         |
+| roll: outside the world      | (a)   | handle  | 1049478 | `destructable: 0000017F8CC8AAF0` |         |
+| roll: 2147483647             | (a)   | handle  | 1049479 | `destructable: 0000017F8CC90AD0` |         |
+| pitch: negative              | (a)   | handle  | 1049480 | `destructable: 0000017F8CC16760` |         |
+| pitch: outside the world     | (a)   | handle  | 1049481 | `destructable: 0000017F8CC8DB70` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049482 | `destructable: 0000017F8CCA8CD0` |         |
+| scale: 0                     | (a)   | handle  | 1049483 | `destructable: 0000017F8CCA0520` |         |
+| scale: negative              | (a)   | handle  | 1049484 | `destructable: 0000017F8CCA6980` |         |
+| scale: outside the world     | (a)   | handle  | 1049485 | `destructable: 0000017F8CC97180` |         |
+| scale: 2147483647            | (a)   | handle  | 1049486 | `destructable: 0000017F8CC9D600` |         |
+| variation: negative          | (a)   | handle  | 1049487 | `destructable: 0000017F8CCA9000` |         |
+| variation: outside the world | (a)   | handle  | 1049488 | `destructable: 0000017F8CCAF680` |         |
+| variation: 2147483647        | (a)   | handle  | 1049489 | `destructable: 0000017F8CCB6130` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1049490 | `destructable: 0000017F8CCAEDB0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDestructableZWithSkinPitchRollColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049491 | `destructable: 0000017F8CCB2250` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049492 | `destructable: 0000017F8CCB90C0` |         |
+| x: negative                  | (a)   | handle  | 1049493 | `destructable: 0000017F8CCBE930` |         |
+| x: outside the world         | (a)   | handle  | 1049494 | `destructable: 0000017F8CCC4BC0` |         |
+| x: 2147483647                | (a)   | handle  | 1049495 | `destructable: 0000017F8CCAC2F0` |         |
+| y: 0                         | (a)   | handle  | 1049496 | `destructable: 0000017F8CCC14D0` |         |
+| y: negative                  | (a)   | handle  | 1049497 | `destructable: 0000017F8CCC0CF0` |         |
+| y: outside the world         | (a)   | handle  | 1049498 | `destructable: 0000017F8CCCE800` |         |
+| y: 2147483647                | (a)   | handle  | 1049499 | `destructable: 0000017F8CCD4100` |         |
+| z: negative                  | (a)   | handle  | 1049500 | `destructable: 0000017F8CCBDB10` |         |
+| z: outside the world         | (a)   | handle  | 1049501 | `destructable: 0000017F8CCCB600` |         |
+| z: 2147483647                | (a)   | handle  | 1049502 | `destructable: 0000017F8CCD60E0` |         |
+| face: 0                      | (a)   | handle  | 1049503 | `destructable: 0000017F8CCFFAF0` |         |
+| face: negative               | (a)   | handle  | 1049504 | `destructable: 0000017F8CCF5100` |         |
+| face: outside the world      | (a)   | handle  | 1049505 | `destructable: 0000017F8CCFA6F0` |         |
+| face: 2147483647             | (a)   | handle  | 1049506 | `destructable: 0000017F8CCF9220` |         |
+| roll: negative               | (a)   | handle  | 1049507 | `destructable: 0000017F8CCF36A0` |         |
+| roll: outside the world      | (a)   | handle  | 1049508 | `destructable: 0000017F8CCF1440` |         |
+| roll: 2147483647             | (a)   | handle  | 1049509 | `destructable: 0000017F8BAACFE0` |         |
+| pitch: negative              | (a)   | handle  | 1049510 | `destructable: 0000017F8CCD2310` |         |
+| pitch: outside the world     | (a)   | handle  | 1049511 | `destructable: 0000017F8CD06910` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049512 | `destructable: 0000017F8CD0C1B0` |         |
+| scale: 0                     | (a)   | handle  | 1049513 | `destructable: 0000017F8BAAB630` |         |
+| scale: negative              | (a)   | handle  | 1049514 | `destructable: 0000017F8CD09740` |         |
+| scale: outside the world     | (a)   | handle  | 1049515 | `destructable: 0000017F8CD0E780` |         |
+| scale: 2147483647            | (a)   | handle  | 1049516 | `destructable: 0000017F8CD1C9B0` |         |
+| variation: negative          | (a)   | handle  | 1049517 | `destructable: 0000017F8CD22B10` |         |
+| variation: outside the world | (a)   | handle  | 1049518 | `destructable: 0000017F8CD224C0` |         |
+| variation: 2147483647        | (a)   | handle  | 1049519 | `destructable: 0000017F8CD1B7F0` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1049520 | `destructable: 0000017F8CD27300` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructableWithSkinPitchRollColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049521 | `destructable: 0000017F8CD21340` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049522 | `destructable: 0000017F8CD52C30` |         |
+| x: negative                  | (a)   | handle  | 1049523 | `destructable: 0000017F8CD57B20` |         |
+| x: outside the world         | (a)   | handle  | 1049524 | `destructable: 0000017F8CD1A860` |         |
+| x: 2147483647                | (a)   | handle  | 1049525 | `destructable: 0000017F8CD5BDC0` |         |
+| y: 0                         | (a)   | handle  | 1049526 | `destructable: 0000017F8CD567D0` |         |
+| y: negative                  | (a)   | handle  | 1049527 | `destructable: 0000017F8CD5FDF0` |         |
+| y: outside the world         | (a)   | handle  | 1049528 | `destructable: 0000017F8CD667D0` |         |
+| y: 2147483647                | (a)   | handle  | 1049529 | `destructable: 0000017F8CD6CA60` |         |
+| face: 0                      | (a)   | handle  | 1049530 | `destructable: 0000017F8CD68910` |         |
+| face: negative               | (a)   | handle  | 1049531 | `destructable: 0000017F8CD4FF40` |         |
+| face: outside the world      | (a)   | handle  | 1049532 | `destructable: 0000017F8CD63810` |         |
+| face: 2147483647             | (a)   | handle  | 1049533 | `destructable: 0000017F8CD715F0` |         |
+| roll: negative               | (a)   | handle  | 1049534 | `destructable: 0000017F8CD76B90` |         |
+| roll: outside the world      | (a)   | handle  | 1049535 | `destructable: 0000017F8CD7B2E0` |         |
+| roll: 2147483647             | (a)   | handle  | 1049536 | `destructable: 0000017F8CD809D0` |         |
+| pitch: negative              | (a)   | handle  | 1049537 | `destructable: 0000017F8CD7A780` |         |
+| pitch: outside the world     | (a)   | handle  | 1049538 | `destructable: 0000017F8CD79D40` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049539 | `destructable: 0000017F8CD82130` |         |
+| scale: 0                     | (a)   | handle  | 1049540 | `destructable: 0000017F8CD874B0` |         |
+| scale: negative              | (a)   | handle  | 1049541 | `destructable: 0000017F8CD8C100` |         |
+| scale: outside the world     | (a)   | handle  | 1049542 | `destructable: 0000017F8CD90910` |         |
+| scale: 2147483647            | (a)   | handle  | 1049543 | `destructable: 0000017F8CD8A5D0` |         |
+| variation: negative          | (a)   | handle  | 1049544 | `destructable: 0000017F8CD8F770` |         |
+| variation: outside the world | (a)   | handle  | 1049545 | `destructable: 0000017F8CD93AA0` |         |
+| variation: 2147483647        | (a)   | handle  | 1049546 | `destructable: 0000017F8CD98490` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1049547 | `destructable: 0000017F8CD9E7E0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
+
+### `BlzCreateDeadDestructableZWithSkinPitchRollColor`
+
+| Case                         | Group | Outcome | Id      | Type                             | Message |
+| ---------------------------- | ----- | ------- | ------- | -------------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1049548 | `destructable: 0000017F8CDA0AB0` |         |
+| objectid: unknown rawcode    | (a)   | nil     |         |                                  |         |
+| x: 0                         | (a)   | handle  | 1049549 | `destructable: 0000017F8CD9D2A0` |         |
+| x: negative                  | (a)   | handle  | 1049550 | `destructable: 0000017F8CDAA490` |         |
+| x: outside the world         | (a)   | handle  | 1049551 | `destructable: 0000017F8CDAEE40` |         |
+| x: 2147483647                | (a)   | handle  | 1049552 | `destructable: 0000017F8CDB43B0` |         |
+| y: 0                         | (a)   | handle  | 1049553 | `destructable: 0000017F8CDA1EC0` |         |
+| y: negative                  | (a)   | handle  | 1049554 | `destructable: 0000017F8CDB32C0` |         |
+| y: outside the world         | (a)   | handle  | 1049555 | `destructable: 0000017F8CD97000` |         |
+| y: 2147483647                | (a)   | handle  | 1049556 | `destructable: 0000017F8CD79A70` |         |
+| z: negative                  | (a)   | handle  | 1049557 | `destructable: 0000017F8CD928E0` |         |
+| z: outside the world         | (a)   | handle  | 1049558 | `destructable: 0000017F8CCCCF50` |         |
+| z: 2147483647                | (a)   | handle  | 1049559 | `destructable: 0000017F8CDA07C0` |         |
+| face: 0                      | (a)   | handle  | 1049560 | `destructable: 0000017F8CC9CAF0` |         |
+| face: negative               | (a)   | handle  | 1049561 | `destructable: 0000017F8CC54D10` |         |
+| face: outside the world      | (a)   | handle  | 1049562 | `destructable: 0000017F8CC3AB40` |         |
+| face: 2147483647             | (a)   | handle  | 1049563 | `destructable: 0000017F8CCAC040` |         |
+| roll: negative               | (a)   | handle  | 1049564 | `destructable: 0000017F8CC9D7C0` |         |
+| roll: outside the world      | (a)   | handle  | 1049565 | `destructable: 0000017F8CBAE4A0` |         |
+| roll: 2147483647             | (a)   | handle  | 1049566 | `destructable: 0000017F8CB35DA0` |         |
+| pitch: negative              | (a)   | handle  | 1049567 | `destructable: 0000017F8B9F0B40` |         |
+| pitch: outside the world     | (a)   | handle  | 1049568 | `destructable: 0000017F8B8CA6B0` |         |
+| pitch: 2147483647            | (a)   | handle  | 1049569 | `destructable: 0000017F8B951750` |         |
+| scale: 0                     | (a)   | handle  | 1049570 | `destructable: 0000017F8B9565C0` |         |
+| scale: negative              | (a)   | handle  | 1049571 | `destructable: 0000017F8B977A00` |         |
+| scale: outside the world     | (a)   | handle  | 1049572 | `destructable: 0000017F8BA782D0` |         |
+| scale: 2147483647            | (a)   | handle  | 1049573 | `destructable: 0000017F8B772710` |         |
+| variation: negative          | (a)   | handle  | 1049574 | `destructable: 0000017ECB4FE290` |         |
+| variation: outside the world | (a)   | handle  | 1049575 | `destructable: 0000017ECBB0C9F0` |         |
+| variation: 2147483647        | (a)   | handle  | 1049576 | `destructable: 0000017F8B8A0E40` |         |
+| skinId: unknown rawcode      | (a)   | handle  | 1049577 | `destructable: 0000017ECB47D6D0` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
