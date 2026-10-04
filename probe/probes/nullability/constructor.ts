@@ -92,11 +92,11 @@ export function registrationCases<const P extends readonly Param<unknown>[]>(
  * family's rule: one live argument the rule cannot reach, since it varies
  * no `fixed` parameter and runs no other live object, that the
  * handle-type catalogue (#362), jassdoc or an earlier run of the Slice
- * gives as returning nothing (a unit with no inventory, an empty pool, a
- * boolean set, an event its Native does not list), or another live kind
- * of a parameter's type than its typical one (a destructable or an item
- * for a widget). One case of group a,
- * labelled `<param>: <phrase>` as a generated case; `call` calls the
+ * gives as returning nothing or crashing (a unit with no inventory, an
+ * empty pool, a boolean set, an event its Native does not list, a frame
+ * type without its FDF fields), or another live kind of a parameter's
+ * type than its typical one (a destructable or an item for a widget). One
+ * case of group a, labelled `<param>: <phrase>` as a generated case; `call` calls the
  * Native with the other arguments typical, over Fixtures built before the
  * cases.
  */

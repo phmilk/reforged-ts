@@ -206,7 +206,7 @@ Every handle-returning Native of `common.j` names its Nullability family in its 
   - per string parameter, `""` and an unknown name;
   - (b) each handle parameter in every stale state its type has;
   - a constructor with no parameters runs one call;
-  - (a) a catalogue case beyond the rule, a live argument the rule cannot reach: one the handle-type catalogue (#362), jassdoc or an earlier run of the Slice gives as returning nothing (a unit with no inventory, an empty pool, a `checkVisibility` set, an event its Native does not list), or another live kind of a parameter's type than its typical one (a destructable or an item for a widget).
+  - (a) a catalogue case beyond the rule, a live argument the rule cannot reach: one the handle-type catalogue (#362), jassdoc or an earlier run of the Slice gives as returning nothing or crashing (the frame types `BlzCreateFrameByType` may crash on without their FDF fields) (a unit with no inventory, an empty pool, a `checkVisibility` set, an event its Native does not list), or another live kind of a parameter's type than its typical one (a destructable or an item for a widget).
 - **registration**: the constructor's cases, plus the trigger destroyed, plus a `nil` `filter` where the Overlay types it nullable (this measures the `TriggerRegister*` among the 21 `filter` parameters).
 - **enum-getter** and **intrinsic-property**:
   - each handle parameter live and in every stale state;
@@ -219,7 +219,7 @@ Every handle-returning Native of `common.j` names its Nullability family in its 
   - the first integer past the last constant;
   - `2147483647` and `-2147483648`;
   - for the six types with no constant (`mapsetting`, `mapvisibility`, the four `ability*levelarrayfield`): `0`, `1`, `-1`, `2147483647`.
-- **optional-property**, **event-response**, **callback-getter** and **lookup**, nullable by their nature: one cheap case that should return nothing, where one exists (a call outside the context, an unsaved key, an index out of range), with no event Fixture. A member whose cheap case returns a handle stays nullable, `nullable (rule)`. Cases that may crash (`GetExpiredTimer`) follow [the crash loop](#the-crash-loop).
+- **optional-property**, **event-response**, **callback-getter** and **lookup**, nullable by their nature: one cheap case that should return nothing, where one exists (a call outside the context, an unsaved key, an index out of range), with no event Fixture unless the call needs one to leave the context (`GetExpiredTimer`, whose Probe already runs in a timer's callback, is called in a damage event's action). A Slice may add a catalogue case the handle-type catalogue (#362) or jassdoc gives (`GetExpiredTimer` in the callback of a destroyed timer). A member whose cases return a handle stays nullable, `nullable (rule)`. Cases that may crash (`GetExpiredTimer`) follow [the crash loop](#the-crash-loop).
 
 A Slice that leaves a required case unrun (no Fixture for a stale state, say) cannot make that Native non-null: its verdict is `review`.
 

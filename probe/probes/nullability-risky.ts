@@ -2,11 +2,11 @@
 // Natives jassdoc reports as able to crash the game, in `common.j` order,
 // run last of the sweep (#371): `GetExpiredTimer` outside its timer and in
 // the callback of a destroyed timer (./nullability/nullable.ts),
-// `BlzCreateFrameByType` through the
-// constructors' case generator (./nullability/constructor.ts), the frame
-// types it may crash on without their FDF fields among its catalogue cases,
-// and `BlzFrameGetChild` at an index past its frame's last child; what each
-// call returned recorded (./nullability/case-runner.ts).
+// `BlzCreateFrameByType` through the constructors' case generator
+// (./nullability/constructor.ts), the frame types it may crash on without
+// their FDF fields among its catalogue cases, and `BlzFrameGetChild` at an
+// index past its frame's last child; what each call returned recorded
+// (./nullability/case-runner.ts).
 // `pnpm probe:nullability-report nullability-risky` turns its Result file
 // into this Slice's section of the sweep report. The arguments come from the
 // Fixtures (./nullability/fixtures.ts), built before the cases run; the
@@ -43,11 +43,14 @@ const FRAME_TYPES_WITHOUT_FDF_FIELDS = [
 ] as const;
 
 /**
- * `GetExpiredTimer`'s cases. Outside its event: called in a thread no timer
- * started, the action of a trigger on a footman's damage event, which
- * `UnitDamageTarget` fires before it returns. The Probe itself runs in a timer's callback, so a call
- * there would not be outside its timer. The call fails, an `error` for
- * review, when the event did not fire. In the callback of a destroyed
+ * `GetExpiredTimer`'s cases. Outside its event: called in a thread no
+ * timer started, the action of a trigger on a footman's damage event, which
+ * `UnitDamageTarget` fires before it returns. The Probe itself runs in a
+ * timer's callback, so a call there would not be outside its timer. The
+ * action calls the Native under `pcall`, since an error in its own thread
+ * would not reach the case runner's, and the case raises it again: the
+ * case is an `error` for review when the call raised or the event did not
+ * fire, never a `nil` it did not see. In the callback of a destroyed
  * timer, the catalogue's case (#362, from jassdoc): called in the Probe's
  * own thread, the callback of the runner's timer, which the runner destroys
  * before it starts the Probe (game/runner.ts).
@@ -56,12 +59,13 @@ function expiredTimerCase(): ReturnCase[] {
   const target = liveUnit();
   const trigger = damageEventTrigger(target);
   let fired = false;
-  let expired: timer | undefined;
+  let ok = true;
+  let expired: unknown;
   TriggerAddAction(trigger, () => {
     fired = true;
-    expired = GetExpiredTimer();
+    [ok, expired] = pcall(GetExpiredTimer);
   });
-  const outsideItsTimer = eventResponseCase("GetExpiredTimer", () => {
+  const outsideItsEvent = eventResponseCase("GetExpiredTimer", () => {
     UnitDamageTarget(
       target,
       target,
@@ -73,10 +77,11 @@ function expiredTimerCase(): ReturnCase[] {
       WEAPON_TYPE_WHOKNOWS,
     );
     if (!fired) error("The footman's damage event did not fire.", 0);
+    if (!ok) error(tostring(expired), 0);
     return expired;
   });
   return [
-    ...outsideItsTimer,
+    ...outsideItsEvent,
     ...nullableCatalogueCase(
       "GetExpiredTimer",
       "callback of a destroyed timer",
