@@ -6,6 +6,7 @@
     "family": "optional-property"
   },
   "params": [],
+  "notes": "Returned nothing in a case of the nullability sweep (no mouse input) on 3.0.0.24268.",
   "async": true,
   "origin": "war3-types-strict"
 }

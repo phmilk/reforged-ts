@@ -14463,36 +14463,42 @@ declare function IsTriggerWaitOnSleeps(whichTrigger: trigger): boolean;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetFilterUnit}
  */
 declare function GetFilterUnit(): unit | undefined;
 
 /**
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEnumUnit}
  */
 declare function GetEnumUnit(): unit | undefined;
 
 /**
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetFilterDestructable}
  */
 declare function GetFilterDestructable(): destructable | undefined;
 
 /**
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEnumDestructable}
  */
 declare function GetEnumDestructable(): destructable | undefined;
 
 /**
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetFilterItem}
  */
 declare function GetFilterItem(): item | undefined;
 
 /**
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEnumItem}
  */
 declare function GetEnumItem(): item | undefined;
@@ -14506,12 +14512,14 @@ declare function ParseTags(taggedString: string): string | undefined;
 
 /**
  * @returns player
+ * @remarks Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetFilterPlayer}
  */
 declare function GetFilterPlayer(): player | undefined;
 
 /**
  * @returns player
+ * @remarks Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEnumPlayer}
  */
 declare function GetEnumPlayer(): player | undefined;
@@ -17035,6 +17043,7 @@ declare function SetUnitUseFood(whichUnit: unit, useFood: boolean): void;
 /**
  * @param whichUnit - unit
  * @returns location
+ * @remarks Returned nothing in a case of the nullability sweep (unit with no rally point) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitRallyPoint}
  */
 declare function GetUnitRallyPoint(whichUnit: unit): location | undefined;
@@ -17042,6 +17051,7 @@ declare function GetUnitRallyPoint(whichUnit: unit): location | undefined;
 /**
  * @param whichUnit - unit
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (unit with no rally point) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitRallyUnit}
  */
 declare function GetUnitRallyUnit(whichUnit: unit): unit | undefined;
@@ -17049,6 +17059,7 @@ declare function GetUnitRallyUnit(whichUnit: unit): unit | undefined;
 /**
  * @param whichUnit - unit
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (unit with no rally point) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitRallyDestructable}
  */
 declare function GetUnitRallyDestructable(whichUnit: unit): destructable | undefined;
@@ -21071,6 +21082,7 @@ declare function PlayerSetLeaderboard(toPlayer: player, lb: leaderboard): void;
 /**
  * @param toPlayer - player
  * @returns leaderboard
+ * @remarks Returned nothing in a case of the nullability sweep (player with no leaderboard) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/PlayerGetLeaderboard}
  */
 declare function PlayerGetLeaderboard(toPlayer: player): leaderboard | undefined;
@@ -24838,7 +24850,7 @@ declare function BlzFrameSetParent(frame: framehandle, parent: framehandle): voi
  * @param frame - framehandle
  * @returns framehandle
  * @async
- * @remarks Returns nothing for destroyed frame (nullability sweep, 3.0.0.24268).
+ * @remarks Returned nothing in a case of the nullability sweep (game UI's parent frame) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzFrameGetParent}
  */
 declare function BlzFrameGetParent(frame: framehandle): framehandle | undefined;
@@ -25072,6 +25084,7 @@ declare function BlzIsLocalClientActive(): boolean;
 /**
  * @returns unit
  * @async
+ * @remarks Returned nothing in a case of the nullability sweep (no mouse input) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetMouseFocusUnit}
  */
 declare function BlzGetMouseFocusUnit(): unit | undefined;

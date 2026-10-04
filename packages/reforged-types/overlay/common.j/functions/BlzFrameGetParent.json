@@ -11,7 +11,7 @@
       "nullable": false
     }
   ],
-  "notes": "Returns nothing for destroyed frame (nullability sweep, 3.0.0.24268).",
+  "notes": "Returned nothing in a case of the nullability sweep (game UI's parent frame) on 3.0.0.24268.",
   "async": true,
   "origin": "war3-types-strict"
 }
