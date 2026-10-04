@@ -5033,3 +5033,353 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
 - Proposed `notes`: Returned nothing in a case of the nullability sweep (no mouse input) on 3.0.0.24268.
+
+## `nullability-getters`
+
+- Probe: `nullability-getters`
+- Patch: 3.0.0.24268
+- Client: 3.0.0.24268
+- Date: 2026-10-04
+- Run: `25b3accc-0d8b-4b30-a088-2211a7110bb8`
+
+### `GetStartLocPrio`
+
+| Case                             | Group | Outcome | Id  | Type                             | Message |
+| -------------------------------- | ----- | ------- | --- | -------------------------------- | ------- |
+| typical arguments                | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
+| whichStartLoc: negative          | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
+| whichStartLoc: outside the world | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
+| whichStartLoc: 2147483647        | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
+| prioSlotIndex: negative          | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
+| prioSlotIndex: outside the world | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
+| prioSlotIndex: 2147483647        | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichStartLoc: negative, whichStartLoc: outside the world, whichStartLoc: 2147483647, prioSlotIndex: negative, prioSlotIndex: outside the world, prioSlotIndex: 2147483647) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 7 cases (typical arguments, whichStartLoc: negative, whichStartLoc: outside the world, whichStartLoc: 2147483647, prioSlotIndex: negative, prioSlotIndex: outside the world, prioSlotIndex: 2147483647).
+
+### `GetGameTypeSelected`
+
+| Case     | Group | Outcome | Id  | Type                         | Message |
+| -------- | ----- | ------- | --- | ---------------------------- | ------- |
+| one call | (a)   | handle  | 1   | `gametype: 0000019CEF76D3F0` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `GetGamePlacement`
+
+| Case     | Group | Outcome | Id  | Type                          | Message |
+| -------- | ----- | ------- | --- | ----------------------------- | ------- |
+| one call | (a)   | handle  | 2   | `placement: 0000019CEF76DBC0` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `GetGameSpeed`
+
+| Case     | Group | Outcome | Id  | Type                          | Message |
+| -------- | ----- | ------- | --- | ----------------------------- | ------- |
+| one call | (a)   | handle  | 2   | `gamespeed: 0000019CEF76E1A0` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `GetGameDifficulty`
+
+| Case     | Group | Outcome | Id  | Type                               | Message |
+| -------- | ----- | ------- | --- | ---------------------------------- | ------- |
+| one call | (a)   | handle  | 0   | `gamedifficulty: 0000019CEF76DEC0` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (one call).
+
+### `GetResourceDensity`
+
+| Case     | Group | Outcome | Id  | Type                           | Message |
+| -------- | ----- | ------- | --- | ------------------------------ | ------- |
+| one call | (a)   | handle  | 2   | `mapdensity: 0000019CEF76DE80` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `GetCreatureDensity`
+
+| Case     | Group | Outcome | Id  | Type                           | Message |
+| -------- | ----- | ------- | --- | ------------------------------ | ------- |
+| one call | (a)   | handle  | 0   | `mapdensity: 0000019CEF76DDD0` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (one call).
+
+### `GetPlayerColor`
+
+| Case                        | Group | Outcome | Id  | Type                            | Message |
+| --------------------------- | ----- | ------- | --- | ------------------------------- | ------- |
+| typical arguments           | (a)   | handle  | 0   | `playercolor: 0000019CF44948D0` |         |
+| whichPlayer: empty slot     | (a)   | handle  | 23  | `playercolor: 0000019CF9202F40` |         |
+| whichPlayer: neutral player | (a)   | handle  | 27  | `playercolor: 0000019D0BC0CAD0` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (typical arguments).
+
+### `GetPlayerController`
+
+| Case                        | Group | Outcome | Id  | Type                           | Message |
+| --------------------------- | ----- | ------- | --- | ------------------------------ | ------- |
+| typical arguments           | (a)   | handle  | 0   | `mapcontrol: 0000019CEF76D170` |         |
+| whichPlayer: empty slot     | (a)   | handle  | 5   | `mapcontrol: 0000019CEF76D310` |         |
+| whichPlayer: neutral player | (a)   | handle  | 4   | `mapcontrol: 0000019CEF76D230` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (typical arguments).
+
+### `GetPlayerSlotState`
+
+| Case                        | Group | Outcome | Id  | Type                                | Message |
+| --------------------------- | ----- | ------- | --- | ----------------------------------- | ------- |
+| typical arguments           | (a)   | handle  | 1   | `playerslotstate: 0000019CEF76E300` |         |
+| whichPlayer: empty slot     | (a)   | handle  | 0   | `playerslotstate: 0000019CEF76E2C0` |         |
+| whichPlayer: neutral player | (a)   | handle  | 1   | `playerslotstate: 0000019CEF76E300` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichPlayer: empty slot).
+
+### `GetWorldBounds`
+
+| Case     | Group | Outcome | Id      | Type                     | Message |
+| -------- | ----- | ------- | ------- | ------------------------ | ------- |
+| one call | (a)   | handle  | 1048785 | `rect: 0000019D0B8B87C0` |         |
+
+- Family: `intrinsic-property`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `GetItemPlayer`
+
+| Case                    | Group | Outcome | Id      | Type                       | Message |
+| ----------------------- | ----- | ------- | ------- | -------------------------- | ------- |
+| typical arguments       | (a)   | handle  | 1048648 | `player: 0000019C45BCD7B0` |         |
+| whichItem: dead item    | (b)   | handle  | 1048648 | `player: 0000019C45BCD7B0` |         |
+| whichItem: removed item | (b)   | nil     |         |                            |         |
+
+- Family: `intrinsic-property`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (whichItem: removed item) on 3.0.0.24268.
+
+### `GetItemType`
+
+| Case                    | Group | Outcome | Id  | Type                         | Message |
+| ----------------------- | ----- | ------- | --- | ---------------------------- | ------- |
+| typical arguments       | (a)   | handle  | 3   | `itemtype: 0000019CEF772830` |         |
+| whichItem: dead item    | (b)   | handle  | 3   | `itemtype: 0000019CEF772830` |         |
+| whichItem: removed item | (b)   | handle  | 8   | `itemtype: 0000019CEF772930` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichItem: dead item, whichItem: removed item) on 3.0.0.24268; evidence, not proof.
+
+### `GetItemEquipmentType`
+
+| Case                    | Group | Outcome | Id  | Type                              | Message |
+| ----------------------- | ----- | ------- | --- | --------------------------------- | ------- |
+| typical arguments       | (a)   | handle  | 0   | `equipmentType: 0000019CEF7729B0` |         |
+| whichItem: dead item    | (b)   | handle  | 0   | `equipmentType: 0000019CEF7729B0` |         |
+| whichItem: removed item | (b)   | handle  | 0   | `equipmentType: 0000019CEF7729B0` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichItem: dead item, whichItem: removed item) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (typical arguments, whichItem: dead item, whichItem: removed item).
+
+### `GetItemTag`
+
+| Case                    | Group | Outcome | Id  | Type                        | Message |
+| ----------------------- | ----- | ------- | --- | --------------------------- | ------- |
+| typical arguments       | (a)   | handle  | 0   | `itemTag: 0000019CEF772C60` |         |
+| whichItem: dead item    | (b)   | handle  | 0   | `itemTag: 0000019CEF772C60` |         |
+| whichItem: removed item | (b)   | handle  | 0   | `itemTag: 0000019CEF772C60` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichItem: dead item, whichItem: removed item) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (typical arguments, whichItem: dead item, whichItem: removed item).
+
+### `GetUnitLoc`
+
+| Case                    | Group | Outcome | Id      | Type                         | Message |
+| ----------------------- | ----- | ------- | ------- | ---------------------------- | ------- |
+| typical arguments       | (a)   | handle  | 1048786 | `location: 0000019D0BCE1950` |         |
+| whichUnit: dead unit    | (b)   | handle  | 1048790 | `location: 0000019D0BC16010` |         |
+| whichUnit: removed unit | (b)   | handle  | 1048791 | `location: 0000019D0BC185E0` |         |
+
+- Family: `intrinsic-property`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichUnit: dead unit, whichUnit: removed unit) on 3.0.0.24268; evidence, not proof.
+
+### `GetOwningPlayer`
+
+| Case                    | Group | Outcome | Id      | Type                       | Message |
+| ----------------------- | ----- | ------- | ------- | -------------------------- | ------- |
+| typical arguments       | (a)   | handle  | 1048584 | `player: 0000019CF4316E50` |         |
+| whichUnit: dead unit    | (b)   | handle  | 1048584 | `player: 0000019CF4316E50` |         |
+| whichUnit: removed unit | (b)   | handle  | 1048584 | `player: 0000019CF4316E50` |         |
+
+- Family: `intrinsic-property`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichUnit: dead unit, whichUnit: removed unit) on 3.0.0.24268; evidence, not proof.
+
+### `GetUnitRace`
+
+| Case                    | Group | Outcome | Id  | Type                     | Message |
+| ----------------------- | ----- | ------- | --- | ------------------------ | ------- |
+| typical arguments       | (a)   | handle  | 1   | `race: 0000019CF9202FC0` |         |
+| whichUnit: dead unit    | (b)   | handle  | 1   | `race: 0000019CF9202FC0` |         |
+| whichUnit: removed unit | (b)   | handle  | 1   | `race: 0000019CF9202FC0` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichUnit: dead unit, whichUnit: removed unit) on 3.0.0.24268; evidence, not proof.
+
+### `GetLocalPlayer`
+
+| Case     | Group | Outcome | Id      | Type                       | Message |
+| -------- | ----- | ------- | ------- | -------------------------- | ------- |
+| one call | (a)   | handle  | 1048584 | `player: 0000019CF4316E50` |         |
+
+- Family: `intrinsic-property`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `GetPlayerRace`
+
+| Case                        | Group | Outcome | Id  | Type                     | Message |
+| --------------------------- | ----- | ------- | --- | ------------------------ | ------- |
+| typical arguments           | (a)   | handle  | 2   | `race: 0000019CF9203000` |         |
+| whichPlayer: empty slot     | (a)   | handle  | 4   | `race: 0000019CF9203040` |         |
+| whichPlayer: neutral player | (a)   | handle  | 0   | `race: 0000019D0B9F7EE0` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichPlayer: neutral player).
+
+### `VersionGet`
+
+| Case     | Group | Outcome | Id  | Type                        | Message |
+| -------- | ----- | ------- | --- | --------------------------- | ------- |
+| one call | (a)   | handle  | 2   | `version: 0000019C4A030510` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `GetDefaultDifficulty`
+
+| Case     | Group | Outcome | Id  | Type                               | Message |
+| -------- | ----- | ------- | --- | ---------------------------------- | ------- |
+| one call | (a)   | handle  | 1   | `gamedifficulty: 0000019CEF76DFA0` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `CameraSetupGetDestPositionLoc`
+
+| Case              | Group | Outcome | Id      | Type                         | Message |
+| ----------------- | ----- | ------- | ------- | ---------------------------- | ------- |
+| typical arguments | (a)   | handle  | 1048787 | `location: 0000019CF449B980` |         |
+
+- Family: `intrinsic-property`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments) on 3.0.0.24268; evidence, not proof.
+
+### `GetCameraTargetPositionLoc`
+
+| Case     | Group | Outcome | Id      | Type                         | Message |
+| -------- | ----- | ------- | ------- | ---------------------------- | ------- |
+| one call | (a)   | handle  | 1048788 | `location: 0000019CF449F3E0` |         |
+
+- Family: `intrinsic-property`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `GetCameraEyePositionLoc`
+
+| Case     | Group | Outcome | Id      | Type                         | Message |
+| -------- | ----- | ------- | ------- | ---------------------------- | ------- |
+| one call | (a)   | handle  | 1048789 | `location: 0000019CF44A3200` |         |
+
+- Family: `intrinsic-property`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `GetAIDifficulty`
+
+| Case                | Group | Outcome | Id  | Type                             | Message |
+| ------------------- | ----- | ------- | --- | -------------------------------- | ------- |
+| typical arguments   | (a)   | handle  | 1   | `aidifficulty: 0000019CEF76F270` |         |
+| num: empty slot     | (a)   | handle  | 1   | `aidifficulty: 0000019CEF76F270` |         |
+| num: neutral player | (a)   | handle  | 1   | `aidifficulty: 0000019CEF76F270` |         |
+
+- Family: `enum-getter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, num: empty slot, num: neutral player) on 3.0.0.24268; evidence, not proof.
