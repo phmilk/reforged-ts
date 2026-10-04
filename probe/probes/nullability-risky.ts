@@ -93,11 +93,13 @@ function expiredTimerCase(): ReturnCase[] {
  * `BlzCreateFrameByType` makes a `"FRAME"` on the game UI, inheriting
  * nothing, as the `childFrame` Fixture does; its owner's stale state is a
  * destroyed frame. `BlzFrameGetChild` reads the game UI frame at the index
- * `BlzFrameGetChildrenCount` gives it, one past its last child.
+ * `BlzFrameGetChildrenCount` gives it at the call, one past its last child:
+ * the frames the cases before it create are children of the game UI too, so
+ * a count read before them is a live index (run 392e5847 returned the
+ * `BACKDROP` case's frame).
  */
 function sliceCases(): ReturnCase[] {
   const gameUi = gameUiFrame();
-  const pastLastChild = BlzFrameGetChildrenCount(gameUi);
   return inGroupOrder(
     expiredTimerCase(),
     constructorCases(
@@ -121,7 +123,7 @@ function sliceCases(): ReturnCase[] {
       ),
     ),
     lookupCase("BlzFrameGetChild", "index out of range", () =>
-      BlzFrameGetChild(gameUi, pastLastChild),
+      BlzFrameGetChild(gameUi, BlzFrameGetChildrenCount(gameUi)),
     ),
   );
 }
@@ -129,6 +131,11 @@ function sliceCases(): ReturnCase[] {
 /**
  * The cases not to call, each as `<native> <case>`: a case that crashed the
  * game in an earlier run, named by the pending step `probe:read` printed.
+ *
+ * This Slice may hold more than the crash loop's 3 skipped cases (#364): it
+ * holds exactly the Natives known to crash, so the maintainer lifted the
+ * 3-skip stop for it alone (#397, 2026-10-04). Every skip is still a crash
+ * the loop confirmed, and its other stops still hold.
  */
 const SKIP: readonly string[] = [
   // Crashed on 3.0.0.24268, runs 9a0105e1-328b-4b5f-9709-448a5e5c1146 and
