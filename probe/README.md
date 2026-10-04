@@ -160,11 +160,11 @@ Group `a` is a case of live arguments, `b` one of a stale handle. A `handle` may
 
 `probe:run` exits 2, `crashed` (a stall included), naming the pending case `<native> <case>`. Then:
 
-1. **Confirm.** Run the Slice again, unchanged. A case is skipped only when it crashes twice in a row. Until it is skipped, the report gives a `nil` call case that crashed `review`, never `non-null (crashed)`: narrowing a parameter is breaking, so only a confirmed crash narrows it.
+1. **Confirm.** Run the Slice again, unchanged. A crash is confirmed when a later unchanged run crashes on the same case. When the confirming run does not, the crash may be intermittent: run the Slice once more, unchanged, and a crash there confirms it too (#364, an intermittent crash). Until it is skipped, the report gives a `nil` call case that crashed `review`, never `non-null (crashed)`: narrowing a parameter is breaking, so only a confirmed crash narrows it.
 2. **Skip.** Add the case's label, `<native> <case>`, to the Slice's `skip` list and run it again. Each crash skips one case, so the loop ends.
 3. **Stop and ask the human** when:
    - the run names no pending case, or a pending step that is not a case (a crash while building the Fixtures, before the cases);
-   - the confirming run does not crash on the same case: a crash not reproduced is never recorded as `unsafe`;
+   - neither of the two unchanged runs after a crash crashes on the same case: a crash not reproduced is never recorded as `unsafe`;
    - the stall capture, `.probe/<probe>/stall.png`, shows neither a crash nor a hang (a Probe stuck, say);
    - the Slice reaches 3 skipped cases: about three crashes are expected across the whole sweep, so three in one Slice point at a broken Fixture or a wrong cut.
 
@@ -174,8 +174,13 @@ The `skip` list is committed in the Slice's Probe source, one label per entry, e
 const SKIP = [
   // Crashed on <Patch>, runs <runId> and <runId> (the confirming run).
   "GetExpiredTimer one call",
+  // Crashed on <Patch>, runs <runId> and <runId> (the confirming run), not
+  // run <runId>: intermittent, N of M runs.
+  "CreateFogModifierRadiusLoc radius: 2147483647",
 ];
 ```
+
+An intermittent crash skips its case like any other and counts toward the 3-skip stop. The report's proposed `notes` do not say the crash is intermittent: the curation pull request writes that sentence by hand, with its count, crashed in N of M runs.
 
 ### Call cases and the parameter verdict
 
