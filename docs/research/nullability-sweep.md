@@ -1856,3 +1856,835 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_SF\_NAME, ABILITY\_SF\_ICON\_ACTIVATED, ABILITY\_SF\_ICON\_RESEARCH, ABILITY\_SF\_EFFECT\_SOUND, ABILITY\_SF\_EFFECT\_SOUND\_LOOPING, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+## `nullability-converters-3`
+
+- Probe: `nullability-converters-3`
+- Patch: 3.0.0.24268
+- Date: 2026-10-04
+- Run: `90ad2dd1-7a4f-409e-aff7-7dd9f611e004`
+
+### `ConvertAbilityIntegerLevelField`
+
+| Case                                                | Group | Outcome | Id          | Type                                         | Message |
+| --------------------------------------------------- | ----- | ------- | ----------- | -------------------------------------------- | ------- |
+| ABILITY\_ILF\_MANA\_COST                            | (a)   | handle  | 1634558835  | `abilityintegerlevelfield: 000002BC19898D10` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_WAVES                     | (a)   | handle  | 1214413361  | `abilityintegerlevelfield: 000002BC14E76D10` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_SHARDS                    | (a)   | handle  | 1214413363  | `abilityintegerlevelfield: 000002BC1989AFB0` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_UNITS\_TELEPORTED         | (a)   | handle  | 1215132721  | `abilityintegerlevelfield: 000002BC1989B080` |         |
+| ABILITY\_ILF\_SUMMONED\_UNIT\_COUNT\_HWE2           | (a)   | handle  | 1215784242  | `abilityintegerlevelfield: 000002BC1989B0F0` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_IMAGES                    | (a)   | handle  | 1332570417  | `abilityintegerlevelfield: 000002BC1989B270` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_CORPSES\_RAISED\_UAN1     | (a)   | handle  | 1432448561  | `abilityintegerlevelfield: 000002BC1989B2E0` |         |
+| ABILITY\_ILF\_MORPHING\_FLAGS                       | (a)   | handle  | 1164797234  | `abilityintegerlevelfield: 000002BC1989B350` |         |
+| ABILITY\_ILF\_STRENGTH\_BONUS\_NRG5                 | (a)   | handle  | 1316120373  | `abilityintegerlevelfield: 000002BC1989AF60` |         |
+| ABILITY\_ILF\_DEFENSE\_BONUS\_NRG6                  | (a)   | handle  | 1316120374  | `abilityintegerlevelfield: 000002BC1989B020` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_TARGETS\_HIT              | (a)   | handle  | 1331915826  | `abilityintegerlevelfield: 000002BC1989B130` |         |
+| ABILITY\_ILF\_DETECTION\_TYPE\_OFS1                 | (a)   | handle  | 1332114225  | `abilityintegerlevelfield: 000002BC1989B170` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_OSF2     | (a)   | handle  | 1332962866  | `abilityintegerlevelfield: 000002BC1989B1B0` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_EFN1     | (a)   | handle  | 1164340785  | `abilityintegerlevelfield: 000002BC1989B1F0` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_CORPSES\_RAISED\_HRE1     | (a)   | handle  | 1215456561  | `abilityintegerlevelfield: 000002BC1989C660` |         |
+| ABILITY\_ILF\_STACK\_FLAGS                          | (a)   | handle  | 1214472500  | `abilityintegerlevelfield: 000002BC1989C6D0` |         |
+| ABILITY\_ILF\_MINIMUM\_NUMBER\_OF\_UNITS            | (a)   | handle  | 1315205170  | `abilityintegerlevelfield: 000002BC1989C710` |         |
+| ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_UNITS\_NDP3      | (a)   | handle  | 1315205171  | `abilityintegerlevelfield: 000002BC1989CB60` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_UNITS\_CREATED\_NRC2      | (a)   | handle  | 1316119346  | `abilityintegerlevelfield: 000002BC1989CBA0` |         |
+| ABILITY\_ILF\_SHIELD\_LIFE                          | (a)   | handle  | 1097691955  | `abilityintegerlevelfield: 000002BC1989CC10` |         |
+| ABILITY\_ILF\_MANA\_LOSS\_AMS4                      | (a)   | handle  | 1097691956  | `abilityintegerlevelfield: 000002BC1989CC50` |         |
+| ABILITY\_ILF\_GOLD\_PER\_INTERVAL\_BGM1             | (a)   | handle  | 1114074417  | `abilityintegerlevelfield: 000002BC1989CCC0` |         |
+| ABILITY\_ILF\_MAX\_NUMBER\_OF\_MINERS               | (a)   | handle  | 1114074419  | `abilityintegerlevelfield: 000002BC1989CD00` |         |
+| ABILITY\_ILF\_CARGO\_CAPACITY                       | (a)   | handle  | 1130459697  | `abilityintegerlevelfield: 000002BC1989CD70` |         |
+| ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_DEV3           | (a)   | handle  | 1147500083  | `abilityintegerlevelfield: 000002BC1989CDE0` |         |
+| ABILITY\_ILF\_MAX\_CREEP\_LEVEL\_DEV1               | (a)   | handle  | 1147500081  | `abilityintegerlevelfield: 000002BC1989CE20` |         |
+| ABILITY\_ILF\_GOLD\_PER\_INTERVAL\_EGM1             | (a)   | handle  | 1164406065  | `abilityintegerlevelfield: 000002BC1989CE60` |         |
+| ABILITY\_ILF\_DEFENSE\_REDUCTION                    | (a)   | handle  | 1180788017  | `abilityintegerlevelfield: 000002BC1989CED0` |         |
+| ABILITY\_ILF\_DETECTION\_TYPE\_FLA1                 | (a)   | handle  | 1181507889  | `abilityintegerlevelfield: 000002BC1989CF10` |         |
+| ABILITY\_ILF\_FLARE\_COUNT                          | (a)   | handle  | 1181507891  | `abilityintegerlevelfield: 000002BC1989CF50` |         |
+| ABILITY\_ILF\_MAX\_GOLD                             | (a)   | handle  | 1198285873  | `abilityintegerlevelfield: 000002BC1989CFC0` |         |
+| ABILITY\_ILF\_MINING\_CAPACITY                      | (a)   | handle  | 1198285875  | `abilityintegerlevelfield: 000002BC1989D000` |         |
+| ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_CORPSES\_GYD1    | (a)   | handle  | 1199137841  | `abilityintegerlevelfield: 000002BC1989D040` |         |
+| ABILITY\_ILF\_DAMAGE\_TO\_TREE                      | (a)   | handle  | 1214345777  | `abilityintegerlevelfield: 000002BC1989D080` |         |
+| ABILITY\_ILF\_LUMBER\_CAPACITY                      | (a)   | handle  | 1214345778  | `abilityintegerlevelfield: 000002BC1989D0C0` |         |
+| ABILITY\_ILF\_GOLD\_CAPACITY                        | (a)   | handle  | 1214345779  | `abilityintegerlevelfield: 000002BC1989D100` |         |
+| ABILITY\_ILF\_DEFENSE\_INCREASE\_INF2               | (a)   | handle  | 1231971890  | `abilityintegerlevelfield: 000002BC1989C450` |         |
+| ABILITY\_ILF\_INTERACTION\_TYPE                     | (a)   | handle  | 1315271986  | `abilityintegerlevelfield: 000002BC1989C490` |         |
+| ABILITY\_ILF\_GOLD\_COST\_NDT1                      | (a)   | handle  | 1315206193  | `abilityintegerlevelfield: 000002BC1989C4D0` |         |
+| ABILITY\_ILF\_LUMBER\_COST\_NDT2                    | (a)   | handle  | 1315206194  | `abilityintegerlevelfield: 000002BC1989C510` |         |
+| ABILITY\_ILF\_DETECTION\_TYPE\_NDT3                 | (a)   | handle  | 1315206195  | `abilityintegerlevelfield: 000002BC1989C550` |         |
+| ABILITY\_ILF\_STACKING\_TYPE\_POI4                  | (a)   | handle  | 1349478708  | `abilityintegerlevelfield: 000002BC1989C5C0` |         |
+| ABILITY\_ILF\_STACKING\_TYPE\_POA5                  | (a)   | handle  | 1349476661  | `abilityintegerlevelfield: 000002BC1989C600` |         |
+| ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_PLY1           | (a)   | handle  | 1349286193  | `abilityintegerlevelfield: 000002BC1989C750` |         |
+| ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_POS1           | (a)   | handle  | 1349481265  | `abilityintegerlevelfield: 000002BC1989C790` |         |
+| ABILITY\_ILF\_MOVEMENT\_UPDATE\_FREQUENCY\_PRG1     | (a)   | handle  | 1349674801  | `abilityintegerlevelfield: 000002BC1989C7D0` |         |
+| ABILITY\_ILF\_ATTACK\_UPDATE\_FREQUENCY\_PRG2       | (a)   | handle  | 1349674802  | `abilityintegerlevelfield: 000002BC1989C810` |         |
+| ABILITY\_ILF\_MANA\_LOSS\_PRG6                      | (a)   | handle  | 1349674806  | `abilityintegerlevelfield: 000002BC1989C850` |         |
+| ABILITY\_ILF\_UNITS\_SUMMONED\_TYPE\_ONE            | (a)   | handle  | 1382115633  | `abilityintegerlevelfield: 000002BC1989C8C0` |         |
+| ABILITY\_ILF\_UNITS\_SUMMONED\_TYPE\_TWO            | (a)   | handle  | 1382115634  | `abilityintegerlevelfield: 000002BC1989C900` |         |
+| ABILITY\_ILF\_MAX\_UNITS\_SUMMONED                  | (a)   | handle  | 1432576565  | `abilityintegerlevelfield: 000002BC1989C940` |         |
+| ABILITY\_ILF\_ALLOW\_WHEN\_FULL\_REJ3               | (a)   | handle  | 1382378035  | `abilityintegerlevelfield: 000002BC1989C9B0` |         |
+| ABILITY\_ILF\_MAXIMUM\_UNITS\_CHARGED\_TO\_CASTER   | (a)   | handle  | 1383096885  | `abilityintegerlevelfield: 000002BC1989C9F0` |         |
+| ABILITY\_ILF\_MAXIMUM\_UNITS\_AFFECTED              | (a)   | handle  | 1383096886  | `abilityintegerlevelfield: 000002BC1989CA30` |         |
+| ABILITY\_ILF\_DEFENSE\_INCREASE\_ROA2               | (a)   | handle  | 1383031090  | `abilityintegerlevelfield: 000002BC1989CA70` |         |
+| ABILITY\_ILF\_MAX\_UNITS\_ROA7                      | (a)   | handle  | 1383031095  | `abilityintegerlevelfield: 000002BC1989CAE0` |         |
+| ABILITY\_ILF\_ROOTED\_WEAPONS                       | (a)   | handle  | 1383034673  | `abilityintegerlevelfield: 000002BC1989CB20` |         |
+| ABILITY\_ILF\_UPROOTED\_WEAPONS                     | (a)   | handle  | 1383034674  | `abilityintegerlevelfield: 000002BC1E3634D0` |         |
+| ABILITY\_ILF\_UPROOTED\_DEFENSE\_TYPE               | (a)   | handle  | 1383034676  | `abilityintegerlevelfield: 000002BC1E363510` |         |
+| ABILITY\_ILF\_ACCUMULATION\_STEP                    | (a)   | handle  | 1398893618  | `abilityintegerlevelfield: 000002BC1E363580` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_OWLS                      | (a)   | handle  | 1165192756  | `abilityintegerlevelfield: 000002BC1E3635C0` |         |
+| ABILITY\_ILF\_STACKING\_TYPE\_SPO4                  | (a)   | handle  | 1399877428  | `abilityintegerlevelfield: 000002BC1E363600` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_UNITS                     | (a)   | handle  | 1399809073  | `abilityintegerlevelfield: 000002BC1E363640` |         |
+| ABILITY\_ILF\_SPIDER\_CAPACITY                      | (a)   | handle  | 1399873841  | `abilityintegerlevelfield: 000002BC1E363680` |         |
+| ABILITY\_ILF\_INTERVALS\_BEFORE\_CHANGING\_TREES    | (a)   | handle  | 1466458418  | `abilityintegerlevelfield: 000002BC1E3636F0` |         |
+| ABILITY\_ILF\_AGILITY\_BONUS                        | (a)   | handle  | 1231120233  | `abilityintegerlevelfield: 000002BC1E364740` |         |
+| ABILITY\_ILF\_INTELLIGENCE\_BONUS                   | (a)   | handle  | 1231646324  | `abilityintegerlevelfield: 000002BC1E364780` |         |
+| ABILITY\_ILF\_STRENGTH\_BONUS\_ISTR                 | (a)   | handle  | 1232303218  | `abilityintegerlevelfield: 000002BC1E3647C0` |         |
+| ABILITY\_ILF\_ATTACK\_BONUS                         | (a)   | handle  | 1231123572  | `abilityintegerlevelfield: 000002BC1E364800` |         |
+| ABILITY\_ILF\_DEFENSE\_BONUS\_IDEF                  | (a)   | handle  | 1231316326  | `abilityintegerlevelfield: 000002BC1E364840` |         |
+| ABILITY\_ILF\_SUMMON\_1\_AMOUNT                     | (a)   | handle  | 1232301617  | `abilityintegerlevelfield: 000002BC1E364880` |         |
+| ABILITY\_ILF\_SUMMON\_2\_AMOUNT                     | (a)   | handle  | 1232301618  | `abilityintegerlevelfield: 000002BC1E3648C0` |         |
+| ABILITY\_ILF\_EXPERIENCE\_GAINED                    | (a)   | handle  | 1232629863  | `abilityintegerlevelfield: 000002BC1E364900` |         |
+| ABILITY\_ILF\_HIT\_POINTS\_GAINED\_IHPG             | (a)   | handle  | 1231581287  | `abilityintegerlevelfield: 000002BC1E364940` |         |
+| ABILITY\_ILF\_MANA\_POINTS\_GAINED\_IMPG            | (a)   | handle  | 1231908967  | `abilityintegerlevelfield: 000002BC1E364980` |         |
+| ABILITY\_ILF\_HIT\_POINTS\_GAINED\_IHP2             | (a)   | handle  | 1231581234  | `abilityintegerlevelfield: 000002BC1E3649C0` |         |
+| ABILITY\_ILF\_MANA\_POINTS\_GAINED\_IMP2            | (a)   | handle  | 1231908914  | `abilityintegerlevelfield: 000002BC1E364A00` |         |
+| ABILITY\_ILF\_DAMAGE\_BONUS\_DICE                   | (a)   | handle  | 1231317347  | `abilityintegerlevelfield: 000002BC1E364A40` |         |
+| ABILITY\_ILF\_ARMOR\_PENALTY\_IARP                  | (a)   | handle  | 1231123056  | `abilityintegerlevelfield: 000002BC1E364A80` |         |
+| ABILITY\_ILF\_ENABLED\_ATTACK\_INDEX\_IOB5          | (a)   | handle  | 1232036405  | `abilityintegerlevelfield: 000002BC1E364AC0` |         |
+| ABILITY\_ILF\_LEVELS\_GAINED                        | (a)   | handle  | 1231840630  | `abilityintegerlevelfield: 000002BC1E364B00` |         |
+| ABILITY\_ILF\_MAX\_LIFE\_GAINED                     | (a)   | handle  | 1231841638  | `abilityintegerlevelfield: 000002BC1E364B40` |         |
+| ABILITY\_ILF\_MAX\_MANA\_GAINED                     | (a)   | handle  | 1231905134  | `abilityintegerlevelfield: 000002BC1E364B80` |         |
+| ABILITY\_ILF\_GOLD\_GIVEN                           | (a)   | handle  | 1231515500  | `abilityintegerlevelfield: 000002BC1E364BC0` |         |
+| ABILITY\_ILF\_LUMBER\_GIVEN                         | (a)   | handle  | 1231844717  | `abilityintegerlevelfield: 000002BC1E364C00` |         |
+| ABILITY\_ILF\_DETECTION\_TYPE\_IFA1                 | (a)   | handle  | 1231446321  | `abilityintegerlevelfield: 000002BC1E364C40` |         |
+| ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_ICRE           | (a)   | handle  | 1231254117  | `abilityintegerlevelfield: 000002BC1E364C80` |         |
+| ABILITY\_ILF\_MOVEMENT\_SPEED\_BONUS                | (a)   | handle  | 1231910498  | `abilityintegerlevelfield: 000002BC1E364CC0` |         |
+| ABILITY\_ILF\_HIT\_POINTS\_REGENERATED\_PER\_SECOND | (a)   | handle  | 1231581298  | `abilityintegerlevelfield: 000002BC1E364D00` |         |
+| ABILITY\_ILF\_SIGHT\_RANGE\_BONUS                   | (a)   | handle  | 1232300386  | `abilityintegerlevelfield: 000002BC1E364D40` |         |
+| ABILITY\_ILF\_DAMAGE\_PER\_DURATION                 | (a)   | handle  | 1231251044  | `abilityintegerlevelfield: 000002BC1E364D80` |         |
+| ABILITY\_ILF\_MANA\_USED\_PER\_SECOND               | (a)   | handle  | 1231251053  | `abilityintegerlevelfield: 000002BC1E364DC0` |         |
+| ABILITY\_ILF\_EXTRA\_MANA\_REQUIRED                 | (a)   | handle  | 1231251064  | `abilityintegerlevelfield: 000002BC1E364E00` |         |
+| ABILITY\_ILF\_DETECTION\_RADIUS\_IDET               | (a)   | handle  | 1231316340  | `abilityintegerlevelfield: 000002BC1E364E40` |         |
+| ABILITY\_ILF\_MANA\_LOSS\_PER\_UNIT\_IDIM           | (a)   | handle  | 1231317357  | `abilityintegerlevelfield: 000002BC1E364E80` |         |
+| ABILITY\_ILF\_DAMAGE\_TO\_SUMMONED\_UNITS\_IDID     | (a)   | handle  | 1231317348  | `abilityintegerlevelfield: 000002BC1E364EC0` |         |
+| ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_UNITS\_IREC      | (a)   | handle  | 1232233827  | `abilityintegerlevelfield: 000002BC1E364F00` |         |
+| ABILITY\_ILF\_DELAY\_AFTER\_DEATH\_SECONDS          | (a)   | handle  | 1232233316  | `abilityintegerlevelfield: 000002BC1E364F40` |         |
+| ABILITY\_ILF\_RESTORED\_LIFE                        | (a)   | handle  | 1769104178  | `abilityintegerlevelfield: 000002BC1E364F80` |         |
+| ABILITY\_ILF\_RESTORED\_MANA\_\_1\_FOR\_CURRENT     | (a)   | handle  | 1769104179  | `abilityintegerlevelfield: 000002BC1E364FC0` |         |
+| ABILITY\_ILF\_HIT\_POINTS\_RESTORED                 | (a)   | handle  | 1231581299  | `abilityintegerlevelfield: 000002BC1E365000` |         |
+| ABILITY\_ILF\_MANA\_POINTS\_RESTORED                | (a)   | handle  | 1231908979  | `abilityintegerlevelfield: 000002BC1E365040` |         |
+| ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_UNITS\_ITPM      | (a)   | handle  | 1232367725  | `abilityintegerlevelfield: 000002BC1E365080` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_CORPSES\_RAISED\_CAD1     | (a)   | handle  | 1130456113  | `abilityintegerlevelfield: 000002BC1E3650C0` |         |
+| ABILITY\_ILF\_TERRAIN\_DEFORMATION\_DURATION\_MS    | (a)   | handle  | 1467118387  | `abilityintegerlevelfield: 000002BC1E365100` |         |
+| ABILITY\_ILF\_MAXIMUM\_UNITS                        | (a)   | handle  | 1432646449  | `abilityintegerlevelfield: 000002BC1E365140` |         |
+| ABILITY\_ILF\_DETECTION\_TYPE\_DET1                 | (a)   | handle  | 1147499569  | `abilityintegerlevelfield: 000002BC1E365180` |         |
+| ABILITY\_ILF\_GOLD\_COST\_PER\_STRUCTURE            | (a)   | handle  | 1316188209  | `abilityintegerlevelfield: 000002BC1E3651C0` |         |
+| ABILITY\_ILF\_LUMBER\_COST\_PER\_USE                | (a)   | handle  | 1316188210  | `abilityintegerlevelfield: 000002BC1E365200` |         |
+| ABILITY\_ILF\_DETECTION\_TYPE\_NSP3                 | (a)   | handle  | 1316188211  | `abilityintegerlevelfield: 000002BC1E365240` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_SWARM\_UNITS              | (a)   | handle  | 1433170737  | `abilityintegerlevelfield: 000002BC1E365280` |         |
+| ABILITY\_ILF\_MAX\_SWARM\_UNITS\_PER\_TARGET        | (a)   | handle  | 1433170739  | `abilityintegerlevelfield: 000002BC1E3652C0` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_NBA2     | (a)   | handle  | 1315070258  | `abilityintegerlevelfield: 000002BC1E365300` |         |
+| ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_NCH1           | (a)   | handle  | 1315137585  | `abilityintegerlevelfield: 000002BC1E365340` |         |
+| ABILITY\_ILF\_ATTACKS\_PREVENTED                    | (a)   | handle  | 1316186417  | `abilityintegerlevelfield: 000002BC1E365380` |         |
+| ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_TARGETS\_EFK3    | (a)   | handle  | 1164340019  | `abilityintegerlevelfield: 000002BC1E3653C0` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_ESV1     | (a)   | handle  | 1165194801  | `abilityintegerlevelfield: 000002BC1E365400` |         |
+| ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_CORPSES\_EXH1    | (a)   | handle  | 1702389809  | `abilityintegerlevelfield: 000002BC1E365440` |         |
+| ABILITY\_ILF\_ITEM\_CAPACITY                        | (a)   | handle  | 1768846897  | `abilityintegerlevelfield: 000002BC1E365480` |         |
+| ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_TARGETS\_SPL2    | (a)   | handle  | 1936747570  | `abilityintegerlevelfield: 000002BC1E3654C0` |         |
+| ABILITY\_ILF\_ALLOW\_WHEN\_FULL\_IRL3               | (a)   | handle  | 1769106483  | `abilityintegerlevelfield: 000002BC1E365500` |         |
+| ABILITY\_ILF\_MAXIMUM\_DISPELLED\_UNITS             | (a)   | handle  | 1768186675  | `abilityintegerlevelfield: 000002BC1E365540` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_LURES                     | (a)   | handle  | 1768779569  | `abilityintegerlevelfield: 000002BC1E365580` |         |
+| ABILITY\_ILF\_NEW\_TIME\_OF\_DAY\_HOUR              | (a)   | handle  | 1768125489  | `abilityintegerlevelfield: 000002BC1E3655C0` |         |
+| ABILITY\_ILF\_NEW\_TIME\_OF\_DAY\_MINUTE            | (a)   | handle  | 1768125490  | `abilityintegerlevelfield: 000002BC1E365600` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_UNITS\_CREATED\_MEC1      | (a)   | handle  | 1835361073  | `abilityintegerlevelfield: 000002BC1E365640` |         |
+| ABILITY\_ILF\_MINIMUM\_SPELLS                       | (a)   | handle  | 1936745011  | `abilityintegerlevelfield: 000002BC1E365680` |         |
+| ABILITY\_ILF\_MAXIMUM\_SPELLS                       | (a)   | handle  | 1936745012  | `abilityintegerlevelfield: 000002BC1E3656C0` |         |
+| ABILITY\_ILF\_DISABLED\_ATTACK\_INDEX               | (a)   | handle  | 1735549235  | `abilityintegerlevelfield: 000002BC1E365700` |         |
+| ABILITY\_ILF\_ENABLED\_ATTACK\_INDEX\_GRA4          | (a)   | handle  | 1735549236  | `abilityintegerlevelfield: 000002BC1E367750` |         |
+| ABILITY\_ILF\_MAXIMUM\_ATTACKS                      | (a)   | handle  | 1735549237  | `abilityintegerlevelfield: 000002BC1E367790` |         |
+| ABILITY\_ILF\_BUILDING\_TYPES\_ALLOWED\_NPR1        | (a)   | handle  | 1315992113  | `abilityintegerlevelfield: 000002BC1E3677D0` |         |
+| ABILITY\_ILF\_BUILDING\_TYPES\_ALLOWED\_NSA1        | (a)   | handle  | 1316184369  | `abilityintegerlevelfield: 000002BC1E367810` |         |
+| ABILITY\_ILF\_ATTACK\_MODIFICATION                  | (a)   | handle  | 1231118641  | `abilityintegerlevelfield: 000002BC1E367850` |         |
+| ABILITY\_ILF\_SUMMONED\_UNIT\_COUNT\_NPA5           | (a)   | handle  | 1315987765  | `abilityintegerlevelfield: 000002BC1E367890` |         |
+| ABILITY\_ILF\_UPGRADE\_LEVELS                       | (a)   | handle  | 1231514673  | `abilityintegerlevelfield: 000002BC1E3678D0` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_NDO2     | (a)   | handle  | 1315204914  | `abilityintegerlevelfield: 000002BC1E367910` |         |
+| ABILITY\_ILF\_BEASTS\_PER\_SECOND                   | (a)   | handle  | 1316189233  | `abilityintegerlevelfield: 000002BC1E367950` |         |
+| ABILITY\_ILF\_TARGET\_TYPE                          | (a)   | handle  | 1315138610  | `abilityintegerlevelfield: 000002BC1E367990` |         |
+| ABILITY\_ILF\_OPTIONS                               | (a)   | handle  | 1315138611  | `abilityintegerlevelfield: 000002BC1E3679D0` |         |
+| ABILITY\_ILF\_ARMOR\_PENALTY\_NAB3                  | (a)   | handle  | 1315004979  | `abilityintegerlevelfield: 000002BC1E367A10` |         |
+| ABILITY\_ILF\_WAVE\_COUNT\_NHS6                     | (a)   | handle  | 1315468086  | `abilityintegerlevelfield: 000002BC1E367A50` |         |
+| ABILITY\_ILF\_MAX\_CREEP\_LEVEL\_NTM3               | (a)   | handle  | 1316252979  | `abilityintegerlevelfield: 000002BC1E367A90` |         |
+| ABILITY\_ILF\_MISSILE\_COUNT                        | (a)   | handle  | 1315140403  | `abilityintegerlevelfield: 000002BC1E367AD0` |         |
+| ABILITY\_ILF\_SPLIT\_ATTACK\_COUNT                  | (a)   | handle  | 1315728691  | `abilityintegerlevelfield: 000002BC1E367B10` |         |
+| ABILITY\_ILF\_GENERATION\_COUNT                     | (a)   | handle  | 1315728694  | `abilityintegerlevelfield: 000002BC1E367B50` |         |
+| ABILITY\_ILF\_ROCK\_RING\_COUNT                     | (a)   | handle  | 1316381489  | `abilityintegerlevelfield: 000002BC1E367B90` |         |
+| ABILITY\_ILF\_WAVE\_COUNT\_NVC2                     | (a)   | handle  | 1316381490  | `abilityintegerlevelfield: 000002BC1E367BD0` |         |
+| ABILITY\_ILF\_PREFER\_HOSTILES\_TAU1                | (a)   | handle  | 1415673137  | `abilityintegerlevelfield: 000002BC1E367C40` |         |
+| ABILITY\_ILF\_PREFER\_FRIENDLIES\_TAU2              | (a)   | handle  | 1415673138  | `abilityintegerlevelfield: 000002BC1E367C80` |         |
+| ABILITY\_ILF\_MAX\_UNITS\_TAU3                      | (a)   | handle  | 1415673139  | `abilityintegerlevelfield: 000002BC1E367CC0` |         |
+| ABILITY\_ILF\_NUMBER\_OF\_PULSES                    | (a)   | handle  | 1415673140  | `abilityintegerlevelfield: 000002BC1E367D00` |         |
+| ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_HWE1            | (a)   | handle  | 1215784241  | `abilityintegerlevelfield: 000002BC1E367D40` |         |
+| ABILITY\_ILF\_SUMMONED\_UNIT\_UIN4                  | (a)   | handle  | 1432972852  | `abilityintegerlevelfield: 000002BC1E367D80` |         |
+| ABILITY\_ILF\_SUMMONED\_UNIT\_OSF1                  | (a)   | handle  | 1332962865  | `abilityintegerlevelfield: 000002BC1E367DC0` |         |
+| ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_EFNU            | (a)   | handle  | 1164340853  | `abilityintegerlevelfield: 000002BC1E367E00` |         |
+| ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_NBAU            | (a)   | handle  | 1315070325  | `abilityintegerlevelfield: 000002BC1E367E40` |         |
+| ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_NTOU            | (a)   | handle  | 1316253557  | `abilityintegerlevelfield: 000002BC1E367E80` |         |
+| ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_ESVU            | (a)   | handle  | 1165194869  | `abilityintegerlevelfield: 000002BC1E367EC0` |         |
+| ABILITY\_ILF\_SUMMONED\_UNIT\_TYPES                 | (a)   | handle  | 1315268145  | `abilityintegerlevelfield: 000002BC1E367F00` |         |
+| ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_NDOU            | (a)   | handle  | 1315204981  | `abilityintegerlevelfield: 000002BC1E367F40` |         |
+| ABILITY\_ILF\_ALTERNATE\_FORM\_UNIT\_EMEU           | (a)   | handle  | 1164797301  | `abilityintegerlevelfield: 000002BC1E367F80` |         |
+| ABILITY\_ILF\_PLAGUE\_WARD\_UNIT\_TYPE              | (a)   | handle  | 1097886837  | `abilityintegerlevelfield: 000002BC1E367FC0` |         |
+| ABILITY\_ILF\_ALLOWED\_UNIT\_TYPE\_BTL1             | (a)   | handle  | 1114926129  | `abilityintegerlevelfield: 000002BC1E368000` |         |
+| ABILITY\_ILF\_NEW\_UNIT\_TYPE                       | (a)   | handle  | 1130914097  | `abilityintegerlevelfield: 000002BC1E368040` |         |
+| ABILITY\_ILF\_RESULTING\_UNIT\_TYPE\_ENT1           | (a)   | handle  | 1701737521  | `abilityintegerlevelfield: 000002BC1E368080` |         |
+| ABILITY\_ILF\_CORPSE\_UNIT\_TYPE                    | (a)   | handle  | 1199137909  | `abilityintegerlevelfield: 000002BC1E3680C0` |         |
+| ABILITY\_ILF\_ALLOWED\_UNIT\_TYPE\_LOA1             | (a)   | handle  | 1282367793  | `abilityintegerlevelfield: 000002BC1E368130` |         |
+| ABILITY\_ILF\_UNIT\_TYPE\_FOR\_LIMIT\_CHECK         | (a)   | handle  | 1382115701  | `abilityintegerlevelfield: 000002BC1E368170` |         |
+| ABILITY\_ILF\_WARD\_UNIT\_TYPE\_STAU                | (a)   | handle  | 1400136053  | `abilityintegerlevelfield: 000002BC1E3681B0` |         |
+| ABILITY\_ILF\_EFFECT\_ABILITY                       | (a)   | handle  | 1232036469  | `abilityintegerlevelfield: 000002BC1E3681F0` |         |
+| ABILITY\_ILF\_CONVERSION\_UNIT                      | (a)   | handle  | 1315201842  | `abilityintegerlevelfield: 000002BC1E368230` |         |
+| ABILITY\_ILF\_UNIT\_TO\_PRESERVE                    | (a)   | handle  | 1316187185  | `abilityintegerlevelfield: 000002BC1E368270` |         |
+| ABILITY\_ILF\_UNIT\_TYPE\_ALLOWED                   | (a)   | handle  | 1130916913  | `abilityintegerlevelfield: 000002BC1E3682B0` |         |
+| ABILITY\_ILF\_SWARM\_UNIT\_TYPE                     | (a)   | handle  | 1433170805  | `abilityintegerlevelfield: 000002BC1E3682F0` |         |
+| ABILITY\_ILF\_RESULTING\_UNIT\_TYPE\_COAU           | (a)   | handle  | 1668243829  | `abilityintegerlevelfield: 000002BC1E368330` |         |
+| ABILITY\_ILF\_UNIT\_TYPE\_EXHU                      | (a)   | handle  | 1702389877  | `abilityintegerlevelfield: 000002BC1E368370` |         |
+| ABILITY\_ILF\_WARD\_UNIT\_TYPE\_HWDU                | (a)   | handle  | 1752654965  | `abilityintegerlevelfield: 000002BC1E3683B0` |         |
+| ABILITY\_ILF\_LURE\_UNIT\_TYPE                      | (a)   | handle  | 1768779637  | `abilityintegerlevelfield: 000002BC1E3683F0` |         |
+| ABILITY\_ILF\_UNIT\_TYPE\_IPMU                      | (a)   | handle  | 1768975733  | `abilityintegerlevelfield: 000002BC1E368430` |         |
+| ABILITY\_ILF\_FACTORY\_UNIT\_ID                     | (a)   | handle  | 1316190581  | `abilityintegerlevelfield: 000002BC1E368470` |         |
+| ABILITY\_ILF\_SPAWN\_UNIT\_ID\_NFYU                 | (a)   | handle  | 1315338613  | `abilityintegerlevelfield: 000002BC1E3684B0` |         |
+| ABILITY\_ILF\_DESTRUCTIBLE\_ID                      | (a)   | handle  | 1316381557  | `abilityintegerlevelfield: 000002BC1E3684F0` |         |
+| ABILITY\_ILF\_UPGRADE\_TYPE                         | (a)   | handle  | 1231514741  | `abilityintegerlevelfield: 000002BC1E368530` |         |
+| -1                                                  | (a)   | handle  | -1          | `abilityintegerlevelfield: 000002BC14D63580` |         |
+| past the last constant                              | (a)   | handle  | 1936747571  | `abilityintegerlevelfield: 000002BC14D60A40` |         |
+| 2147483647                                          | (a)   | handle  | 2147483647  | `abilityintegerlevelfield: 000002BC14D5D700` |         |
+| -2147483648                                         | (a)   | handle  | -2147483648 | `abilityintegerlevelfield: 000002BC2FC4E340` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_ILF\_MANA\_COST, ABILITY\_ILF\_NUMBER\_OF\_WAVES, ABILITY\_ILF\_NUMBER\_OF\_SHARDS, ABILITY\_ILF\_NUMBER\_OF\_UNITS\_TELEPORTED, ABILITY\_ILF\_SUMMONED\_UNIT\_COUNT\_HWE2, ABILITY\_ILF\_NUMBER\_OF\_IMAGES, ABILITY\_ILF\_NUMBER\_OF\_CORPSES\_RAISED\_UAN1, ABILITY\_ILF\_MORPHING\_FLAGS, ABILITY\_ILF\_STRENGTH\_BONUS\_NRG5, ABILITY\_ILF\_DEFENSE\_BONUS\_NRG6, ABILITY\_ILF\_NUMBER\_OF\_TARGETS\_HIT, ABILITY\_ILF\_DETECTION\_TYPE\_OFS1, ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_OSF2, ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_EFN1, ABILITY\_ILF\_NUMBER\_OF\_CORPSES\_RAISED\_HRE1, ABILITY\_ILF\_STACK\_FLAGS, ABILITY\_ILF\_MINIMUM\_NUMBER\_OF\_UNITS, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_UNITS\_NDP3, ABILITY\_ILF\_NUMBER\_OF\_UNITS\_CREATED\_NRC2, ABILITY\_ILF\_SHIELD\_LIFE, ABILITY\_ILF\_MANA\_LOSS\_AMS4, ABILITY\_ILF\_GOLD\_PER\_INTERVAL\_BGM1, ABILITY\_ILF\_MAX\_NUMBER\_OF\_MINERS, ABILITY\_ILF\_CARGO\_CAPACITY, ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_DEV3, ABILITY\_ILF\_MAX\_CREEP\_LEVEL\_DEV1, ABILITY\_ILF\_GOLD\_PER\_INTERVAL\_EGM1, ABILITY\_ILF\_DEFENSE\_REDUCTION, ABILITY\_ILF\_DETECTION\_TYPE\_FLA1, ABILITY\_ILF\_FLARE\_COUNT, ABILITY\_ILF\_MAX\_GOLD, ABILITY\_ILF\_MINING\_CAPACITY, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_CORPSES\_GYD1, ABILITY\_ILF\_DAMAGE\_TO\_TREE, ABILITY\_ILF\_LUMBER\_CAPACITY, ABILITY\_ILF\_GOLD\_CAPACITY, ABILITY\_ILF\_DEFENSE\_INCREASE\_INF2, ABILITY\_ILF\_INTERACTION\_TYPE, ABILITY\_ILF\_GOLD\_COST\_NDT1, ABILITY\_ILF\_LUMBER\_COST\_NDT2, ABILITY\_ILF\_DETECTION\_TYPE\_NDT3, ABILITY\_ILF\_STACKING\_TYPE\_POI4, ABILITY\_ILF\_STACKING\_TYPE\_POA5, ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_PLY1, ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_POS1, ABILITY\_ILF\_MOVEMENT\_UPDATE\_FREQUENCY\_PRG1, ABILITY\_ILF\_ATTACK\_UPDATE\_FREQUENCY\_PRG2, ABILITY\_ILF\_MANA\_LOSS\_PRG6, ABILITY\_ILF\_UNITS\_SUMMONED\_TYPE\_ONE, ABILITY\_ILF\_UNITS\_SUMMONED\_TYPE\_TWO, ABILITY\_ILF\_MAX\_UNITS\_SUMMONED, ABILITY\_ILF\_ALLOW\_WHEN\_FULL\_REJ3, ABILITY\_ILF\_MAXIMUM\_UNITS\_CHARGED\_TO\_CASTER, ABILITY\_ILF\_MAXIMUM\_UNITS\_AFFECTED, ABILITY\_ILF\_DEFENSE\_INCREASE\_ROA2, ABILITY\_ILF\_MAX\_UNITS\_ROA7, ABILITY\_ILF\_ROOTED\_WEAPONS, ABILITY\_ILF\_UPROOTED\_WEAPONS, ABILITY\_ILF\_UPROOTED\_DEFENSE\_TYPE, ABILITY\_ILF\_ACCUMULATION\_STEP, ABILITY\_ILF\_NUMBER\_OF\_OWLS, ABILITY\_ILF\_STACKING\_TYPE\_SPO4, ABILITY\_ILF\_NUMBER\_OF\_UNITS, ABILITY\_ILF\_SPIDER\_CAPACITY, ABILITY\_ILF\_INTERVALS\_BEFORE\_CHANGING\_TREES, ABILITY\_ILF\_AGILITY\_BONUS, ABILITY\_ILF\_INTELLIGENCE\_BONUS, ABILITY\_ILF\_STRENGTH\_BONUS\_ISTR, ABILITY\_ILF\_ATTACK\_BONUS, ABILITY\_ILF\_DEFENSE\_BONUS\_IDEF, ABILITY\_ILF\_SUMMON\_1\_AMOUNT, ABILITY\_ILF\_SUMMON\_2\_AMOUNT, ABILITY\_ILF\_EXPERIENCE\_GAINED, ABILITY\_ILF\_HIT\_POINTS\_GAINED\_IHPG, ABILITY\_ILF\_MANA\_POINTS\_GAINED\_IMPG, ABILITY\_ILF\_HIT\_POINTS\_GAINED\_IHP2, ABILITY\_ILF\_MANA\_POINTS\_GAINED\_IMP2, ABILITY\_ILF\_DAMAGE\_BONUS\_DICE, ABILITY\_ILF\_ARMOR\_PENALTY\_IARP, ABILITY\_ILF\_ENABLED\_ATTACK\_INDEX\_IOB5, ABILITY\_ILF\_LEVELS\_GAINED, ABILITY\_ILF\_MAX\_LIFE\_GAINED, ABILITY\_ILF\_MAX\_MANA\_GAINED, ABILITY\_ILF\_GOLD\_GIVEN, ABILITY\_ILF\_LUMBER\_GIVEN, ABILITY\_ILF\_DETECTION\_TYPE\_IFA1, ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_ICRE, ABILITY\_ILF\_MOVEMENT\_SPEED\_BONUS, ABILITY\_ILF\_HIT\_POINTS\_REGENERATED\_PER\_SECOND, ABILITY\_ILF\_SIGHT\_RANGE\_BONUS, ABILITY\_ILF\_DAMAGE\_PER\_DURATION, ABILITY\_ILF\_MANA\_USED\_PER\_SECOND, ABILITY\_ILF\_EXTRA\_MANA\_REQUIRED, ABILITY\_ILF\_DETECTION\_RADIUS\_IDET, ABILITY\_ILF\_MANA\_LOSS\_PER\_UNIT\_IDIM, ABILITY\_ILF\_DAMAGE\_TO\_SUMMONED\_UNITS\_IDID, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_UNITS\_IREC, ABILITY\_ILF\_DELAY\_AFTER\_DEATH\_SECONDS, ABILITY\_ILF\_RESTORED\_LIFE, ABILITY\_ILF\_RESTORED\_MANA\_\_1\_FOR\_CURRENT, ABILITY\_ILF\_HIT\_POINTS\_RESTORED, ABILITY\_ILF\_MANA\_POINTS\_RESTORED, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_UNITS\_ITPM, ABILITY\_ILF\_NUMBER\_OF\_CORPSES\_RAISED\_CAD1, ABILITY\_ILF\_TERRAIN\_DEFORMATION\_DURATION\_MS, ABILITY\_ILF\_MAXIMUM\_UNITS, ABILITY\_ILF\_DETECTION\_TYPE\_DET1, ABILITY\_ILF\_GOLD\_COST\_PER\_STRUCTURE, ABILITY\_ILF\_LUMBER\_COST\_PER\_USE, ABILITY\_ILF\_DETECTION\_TYPE\_NSP3, ABILITY\_ILF\_NUMBER\_OF\_SWARM\_UNITS, ABILITY\_ILF\_MAX\_SWARM\_UNITS\_PER\_TARGET, ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_NBA2, ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_NCH1, ABILITY\_ILF\_ATTACKS\_PREVENTED, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_TARGETS\_EFK3, ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_ESV1, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_CORPSES\_EXH1, ABILITY\_ILF\_ITEM\_CAPACITY, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_TARGETS\_SPL2, ABILITY\_ILF\_ALLOW\_WHEN\_FULL\_IRL3, ABILITY\_ILF\_MAXIMUM\_DISPELLED\_UNITS, ABILITY\_ILF\_NUMBER\_OF\_LURES, ABILITY\_ILF\_NEW\_TIME\_OF\_DAY\_HOUR, ABILITY\_ILF\_NEW\_TIME\_OF\_DAY\_MINUTE, ABILITY\_ILF\_NUMBER\_OF\_UNITS\_CREATED\_MEC1, ABILITY\_ILF\_MINIMUM\_SPELLS, ABILITY\_ILF\_MAXIMUM\_SPELLS, ABILITY\_ILF\_DISABLED\_ATTACK\_INDEX, ABILITY\_ILF\_ENABLED\_ATTACK\_INDEX\_GRA4, ABILITY\_ILF\_MAXIMUM\_ATTACKS, ABILITY\_ILF\_BUILDING\_TYPES\_ALLOWED\_NPR1, ABILITY\_ILF\_BUILDING\_TYPES\_ALLOWED\_NSA1, ABILITY\_ILF\_ATTACK\_MODIFICATION, ABILITY\_ILF\_SUMMONED\_UNIT\_COUNT\_NPA5, ABILITY\_ILF\_UPGRADE\_LEVELS, ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_NDO2, ABILITY\_ILF\_BEASTS\_PER\_SECOND, ABILITY\_ILF\_TARGET\_TYPE, ABILITY\_ILF\_OPTIONS, ABILITY\_ILF\_ARMOR\_PENALTY\_NAB3, ABILITY\_ILF\_WAVE\_COUNT\_NHS6, ABILITY\_ILF\_MAX\_CREEP\_LEVEL\_NTM3, ABILITY\_ILF\_MISSILE\_COUNT, ABILITY\_ILF\_SPLIT\_ATTACK\_COUNT, ABILITY\_ILF\_GENERATION\_COUNT, ABILITY\_ILF\_ROCK\_RING\_COUNT, ABILITY\_ILF\_WAVE\_COUNT\_NVC2, ABILITY\_ILF\_PREFER\_HOSTILES\_TAU1, ABILITY\_ILF\_PREFER\_FRIENDLIES\_TAU2, ABILITY\_ILF\_MAX\_UNITS\_TAU3, ABILITY\_ILF\_NUMBER\_OF\_PULSES, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_HWE1, ABILITY\_ILF\_SUMMONED\_UNIT\_UIN4, ABILITY\_ILF\_SUMMONED\_UNIT\_OSF1, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_EFNU, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_NBAU, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_NTOU, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_ESVU, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPES, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_NDOU, ABILITY\_ILF\_ALTERNATE\_FORM\_UNIT\_EMEU, ABILITY\_ILF\_PLAGUE\_WARD\_UNIT\_TYPE, ABILITY\_ILF\_ALLOWED\_UNIT\_TYPE\_BTL1, ABILITY\_ILF\_NEW\_UNIT\_TYPE, ABILITY\_ILF\_RESULTING\_UNIT\_TYPE\_ENT1, ABILITY\_ILF\_CORPSE\_UNIT\_TYPE, ABILITY\_ILF\_ALLOWED\_UNIT\_TYPE\_LOA1, ABILITY\_ILF\_UNIT\_TYPE\_FOR\_LIMIT\_CHECK, ABILITY\_ILF\_WARD\_UNIT\_TYPE\_STAU, ABILITY\_ILF\_EFFECT\_ABILITY, ABILITY\_ILF\_CONVERSION\_UNIT, ABILITY\_ILF\_UNIT\_TO\_PRESERVE, ABILITY\_ILF\_UNIT\_TYPE\_ALLOWED, ABILITY\_ILF\_SWARM\_UNIT\_TYPE, ABILITY\_ILF\_RESULTING\_UNIT\_TYPE\_COAU, ABILITY\_ILF\_UNIT\_TYPE\_EXHU, ABILITY\_ILF\_WARD\_UNIT\_TYPE\_HWDU, ABILITY\_ILF\_LURE\_UNIT\_TYPE, ABILITY\_ILF\_UNIT\_TYPE\_IPMU, ABILITY\_ILF\_FACTORY\_UNIT\_ID, ABILITY\_ILF\_SPAWN\_UNIT\_ID\_NFYU, ABILITY\_ILF\_DESTRUCTIBLE\_ID, ABILITY\_ILF\_UPGRADE\_TYPE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertAbilityRealLevelField`
+
+| Case                                                              | Group | Outcome | Id          | Type                                      | Message |
+| ----------------------------------------------------------------- | ----- | ------- | ----------- | ----------------------------------------- | ------- |
+| ABILITY\_RLF\_CASTING\_TIME                                       | (a)   | handle  | 1633902963  | `abilityreallevelfield: 000002BC1E368570` |         |
+| ABILITY\_RLF\_DURATION\_NORMAL                                    | (a)   | handle  | 1633973618  | `abilityreallevelfield: 000002BC1E3685E0` |         |
+| ABILITY\_RLF\_DURATION\_HERO                                      | (a)   | handle  | 1634231413  | `abilityreallevelfield: 000002BC1E368670` |         |
+| ABILITY\_RLF\_COOLDOWN                                            | (a)   | handle  | 1633903726  | `abilityreallevelfield: 000002BC1E368740` |         |
+| ABILITY\_RLF\_AREA\_OF\_EFFECT                                    | (a)   | handle  | 1633776229  | `abilityreallevelfield: 000002BC1E368780` |         |
+| ABILITY\_RLF\_CAST\_RANGE                                         | (a)   | handle  | 1634885998  | `abilityreallevelfield: 000002BC1E3687C0` |         |
+| ABILITY\_RLF\_DAMAGE\_HBZ2                                        | (a)   | handle  | 1214413362  | `abilityreallevelfield: 000002BC1E368800` |         |
+| ABILITY\_RLF\_BUILDING\_REDUCTION\_HBZ4                           | (a)   | handle  | 1214413364  | `abilityreallevelfield: 000002BC1E368840` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_HBZ5                           | (a)   | handle  | 1214413365  | `abilityreallevelfield: 000002BC1E368880` |         |
+| ABILITY\_RLF\_MAXIMUM\_DAMAGE\_PER\_WAVE                          | (a)   | handle  | 1214413366  | `abilityreallevelfield: 000002BC1E3688C0` |         |
+| ABILITY\_RLF\_MANA\_REGENERATION\_INCREASE                        | (a)   | handle  | 1214341681  | `abilityreallevelfield: 000002BC1E368900` |         |
+| ABILITY\_RLF\_CASTING\_DELAY                                      | (a)   | handle  | 1215132722  | `abilityreallevelfield: 000002BC1E368940` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_OWW1                           | (a)   | handle  | 1333229361  | `abilityreallevelfield: 000002BC1E368980` |         |
+| ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_OWW2                      | (a)   | handle  | 1333229362  | `abilityreallevelfield: 000002BC1E3689C0` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_CRITICAL\_STRIKE                        | (a)   | handle  | 1331917361  | `abilityreallevelfield: 000002BC1E368A00` |         |
+| ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_OCR2                            | (a)   | handle  | 1331917362  | `abilityreallevelfield: 000002BC1E368A40` |         |
+| ABILITY\_RLF\_DAMAGE\_BONUS\_OCR3                                 | (a)   | handle  | 1331917363  | `abilityreallevelfield: 000002BC1E368A80` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_EVADE\_OCR4                             | (a)   | handle  | 1331917364  | `abilityreallevelfield: 000002BC1E368AC0` |         |
+| ABILITY\_RLF\_DAMAGE\_DEALT\_PERCENT\_OMI2                        | (a)   | handle  | 1332570418  | `abilityreallevelfield: 000002BC1E368B00` |         |
+| ABILITY\_RLF\_DAMAGE\_TAKEN\_PERCENT\_OMI3                        | (a)   | handle  | 1332570419  | `abilityreallevelfield: 000002BC1E368B40` |         |
+| ABILITY\_RLF\_ANIMATION\_DELAY                                    | (a)   | handle  | 1332570420  | `abilityreallevelfield: 000002BC1E368B80` |         |
+| ABILITY\_RLF\_TRANSITION\_TIME                                    | (a)   | handle  | 1333226289  | `abilityreallevelfield: 000002BC1E368BC0` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_PERCENT\_OWK2            | (a)   | handle  | 1333226290  | `abilityreallevelfield: 000002BC1E368C00` |         |
+| ABILITY\_RLF\_BACKSTAB\_DAMAGE                                    | (a)   | handle  | 1333226291  | `abilityreallevelfield: 000002BC1E368C40` |         |
+| ABILITY\_RLF\_AMOUNT\_HEALED\_DAMAGED\_UDC1                       | (a)   | handle  | 1432642353  | `abilityreallevelfield: 000002BC1E368C80` |         |
+| ABILITY\_RLF\_LIFE\_CONVERTED\_TO\_MANA                           | (a)   | handle  | 1432645681  | `abilityreallevelfield: 000002BC1E368CC0` |         |
+| ABILITY\_RLF\_LIFE\_CONVERTED\_TO\_LIFE                           | (a)   | handle  | 1432645682  | `abilityreallevelfield: 000002BC1E368D00` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_PERCENT\_UAU1            | (a)   | handle  | 1432450353  | `abilityreallevelfield: 000002BC1E368D40` |         |
+| ABILITY\_RLF\_LIFE\_REGENERATION\_INCREASE\_PERCENT               | (a)   | handle  | 1432450354  | `abilityreallevelfield: 000002BC1E368D80` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_EVADE\_EEV1                             | (a)   | handle  | 1164277297  | `abilityreallevelfield: 000002BC1E368DC0` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_INTERVAL                               | (a)   | handle  | 1164537137  | `abilityreallevelfield: 000002BC1E368E00` |         |
+| ABILITY\_RLF\_MANA\_DRAINED\_PER\_SECOND\_EIM2                    | (a)   | handle  | 1164537138  | `abilityreallevelfield: 000002BC1E368E40` |         |
+| ABILITY\_RLF\_BUFFER\_MANA\_REQUIRED                              | (a)   | handle  | 1164537139  | `abilityreallevelfield: 000002BC1E368E80` |         |
+| ABILITY\_RLF\_MAX\_MANA\_DRAINED                                  | (a)   | handle  | 1164796465  | `abilityreallevelfield: 000002BC1E368EC0` |         |
+| ABILITY\_RLF\_BOLT\_DELAY                                         | (a)   | handle  | 1164796466  | `abilityreallevelfield: 000002BC1E368F00` |         |
+| ABILITY\_RLF\_BOLT\_LIFETIME                                      | (a)   | handle  | 1164796467  | `abilityreallevelfield: 000002BC1E368F40` |         |
+| ABILITY\_RLF\_ALTITUDE\_ADJUSTMENT\_DURATION                      | (a)   | handle  | 1164797235  | `abilityreallevelfield: 000002BC1E368F80` |         |
+| ABILITY\_RLF\_LANDING\_DELAY\_TIME                                | (a)   | handle  | 1164797236  | `abilityreallevelfield: 000002BC1E368FC0` |         |
+| ABILITY\_RLF\_ALTERNATE\_FORM\_HIT\_POINT\_BONUS                  | (a)   | handle  | 1164797237  | `abilityreallevelfield: 000002BC1E369000` |         |
+| ABILITY\_RLF\_MOVE\_SPEED\_BONUS\_INFO\_PANEL\_ONLY               | (a)   | handle  | 1315140149  | `abilityreallevelfield: 000002BC1E369040` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_BONUS\_INFO\_PANEL\_ONLY             | (a)   | handle  | 1315140150  | `abilityreallevelfield: 000002BC1E369080` |         |
+| ABILITY\_RLF\_LIFE\_REGENERATION\_RATE\_PER\_SECOND               | (a)   | handle  | 1635149109  | `abilityreallevelfield: 000002BC1E3690C0` |         |
+| ABILITY\_RLF\_STUN\_DURATION\_USL1                                | (a)   | handle  | 1433627697  | `abilityreallevelfield: 000002BC1E369100` |         |
+| ABILITY\_RLF\_ATTACK\_DAMAGE\_STOLEN\_PERCENT                     | (a)   | handle  | 1432450609  | `abilityreallevelfield: 000002BC1E369140` |         |
+| ABILITY\_RLF\_DAMAGE\_UCS1                                        | (a)   | handle  | 1432580913  | `abilityreallevelfield: 000002BC1E369180` |         |
+| ABILITY\_RLF\_MAX\_DAMAGE\_UCS2                                   | (a)   | handle  | 1432580914  | `abilityreallevelfield: 000002BC1E3691C0` |         |
+| ABILITY\_RLF\_DISTANCE\_UCS3                                      | (a)   | handle  | 1432580915  | `abilityreallevelfield: 000002BC1E369200` |         |
+| ABILITY\_RLF\_FINAL\_AREA\_UCS4                                   | (a)   | handle  | 1432580916  | `abilityreallevelfield: 000002BC1E369240` |         |
+| ABILITY\_RLF\_DAMAGE\_UIN1                                        | (a)   | handle  | 1432972849  | `abilityreallevelfield: 000002BC1E369280` |         |
+| ABILITY\_RLF\_DURATION                                            | (a)   | handle  | 1432972850  | `abilityreallevelfield: 000002BC1E3692C0` |         |
+| ABILITY\_RLF\_IMPACT\_DELAY                                       | (a)   | handle  | 1432972851  | `abilityreallevelfield: 000002BC1E369300` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_TARGET\_OCL1                           | (a)   | handle  | 1331915825  | `abilityreallevelfield: 000002BC1E369340` |         |
+| ABILITY\_RLF\_DAMAGE\_REDUCTION\_PER\_TARGET                      | (a)   | handle  | 1331915827  | `abilityreallevelfield: 000002BC1E369380` |         |
+| ABILITY\_RLF\_EFFECT\_DELAY\_OEQ1                                 | (a)   | handle  | 1332048177  | `abilityreallevelfield: 000002BC1E3693C0` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_TO\_BUILDINGS                  | (a)   | handle  | 1332048178  | `abilityreallevelfield: 000002BC1E369400` |         |
+| ABILITY\_RLF\_UNITS\_SLOWED\_PERCENT                              | (a)   | handle  | 1332048179  | `abilityreallevelfield: 000002BC1E369440` |         |
+| ABILITY\_RLF\_FINAL\_AREA\_OEQ4                                   | (a)   | handle  | 1332048180  | `abilityreallevelfield: 000002BC1E369480` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_EER1                           | (a)   | handle  | 1164276273  | `abilityreallevelfield: 000002BC1E3694C0` |         |
+| ABILITY\_RLF\_DAMAGE\_DEALT\_TO\_ATTACKERS                        | (a)   | handle  | 1164011569  | `abilityreallevelfield: 000002BC1E369500` |         |
+| ABILITY\_RLF\_LIFE\_HEALED                                        | (a)   | handle  | 1165259057  | `abilityreallevelfield: 000002BC1E369540` |         |
+| ABILITY\_RLF\_HEAL\_INTERVAL                                      | (a)   | handle  | 1165259058  | `abilityreallevelfield: 000002BC1E369580` |         |
+| ABILITY\_RLF\_BUILDING\_REDUCTION\_ETQ3                           | (a)   | handle  | 1165259059  | `abilityreallevelfield: 000002BC1E3695C0` |         |
+| ABILITY\_RLF\_INITIAL\_IMMUNITY\_DURATION                         | (a)   | handle  | 1165259060  | `abilityreallevelfield: 000002BC1E369600` |         |
+| ABILITY\_RLF\_MAX\_LIFE\_DRAINED\_PER\_SECOND\_PERCENT            | (a)   | handle  | 1432642609  | `abilityreallevelfield: 000002BC1E369640` |         |
+| ABILITY\_RLF\_BUILDING\_REDUCTION\_UDD2                           | (a)   | handle  | 1432642610  | `abilityreallevelfield: 000002BC1E369680` |         |
+| ABILITY\_RLF\_ARMOR\_DURATION                                     | (a)   | handle  | 1432772913  | `abilityreallevelfield: 000002BC1E36A6D0` |         |
+| ABILITY\_RLF\_ARMOR\_BONUS\_UFA2                                  | (a)   | handle  | 1432772914  | `abilityreallevelfield: 000002BC1E36A710` |         |
+| ABILITY\_RLF\_AREA\_OF\_EFFECT\_DAMAGE                            | (a)   | handle  | 1432776241  | `abilityreallevelfield: 000002BC1E36A750` |         |
+| ABILITY\_RLF\_SPECIFIC\_TARGET\_DAMAGE\_UFN2                      | (a)   | handle  | 1432776242  | `abilityreallevelfield: 000002BC1E36A790` |         |
+| ABILITY\_RLF\_DAMAGE\_BONUS\_HFA1                                 | (a)   | handle  | 1214669105  | `abilityreallevelfield: 000002BC1E36A7D0` |         |
+| ABILITY\_RLF\_DAMAGE\_DEALT\_ESF1                                 | (a)   | handle  | 1165190705  | `abilityreallevelfield: 000002BC1E36A810` |         |
+| ABILITY\_RLF\_DAMAGE\_INTERVAL\_ESF2                              | (a)   | handle  | 1165190706  | `abilityreallevelfield: 000002BC1E36A850` |         |
+| ABILITY\_RLF\_BUILDING\_REDUCTION\_ESF3                           | (a)   | handle  | 1165190707  | `abilityreallevelfield: 000002BC1E36A890` |         |
+| ABILITY\_RLF\_DAMAGE\_BONUS\_PERCENT                              | (a)   | handle  | 1164014129  | `abilityreallevelfield: 000002BC1E36A8D0` |         |
+| ABILITY\_RLF\_DEFENSE\_BONUS\_HAV1                                | (a)   | handle  | 1214346801  | `abilityreallevelfield: 000002BC1E36A910` |         |
+| ABILITY\_RLF\_HIT\_POINT\_BONUS                                   | (a)   | handle  | 1214346802  | `abilityreallevelfield: 000002BC1E36A950` |         |
+| ABILITY\_RLF\_DAMAGE\_BONUS\_HAV3                                 | (a)   | handle  | 1214346803  | `abilityreallevelfield: 000002BC1E36A990` |         |
+| ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_HAV4                      | (a)   | handle  | 1214346804  | `abilityreallevelfield: 000002BC1E36A9D0` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_BASH                                    | (a)   | handle  | 1214408753  | `abilityreallevelfield: 000002BC1E36AA10` |         |
+| ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_HBH2                            | (a)   | handle  | 1214408754  | `abilityreallevelfield: 000002BC1E36AA50` |         |
+| ABILITY\_RLF\_DAMAGE\_BONUS\_HBH3                                 | (a)   | handle  | 1214408755  | `abilityreallevelfield: 000002BC1E36AA90` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_MISS\_HBH4                              | (a)   | handle  | 1214408756  | `abilityreallevelfield: 000002BC1E36AAD0` |         |
+| ABILITY\_RLF\_DAMAGE\_HTB1                                        | (a)   | handle  | 1215586865  | `abilityreallevelfield: 000002BC1E36AB10` |         |
+| ABILITY\_RLF\_AOE\_DAMAGE                                         | (a)   | handle  | 1215587121  | `abilityreallevelfield: 000002BC1E36AB50` |         |
+| ABILITY\_RLF\_SPECIFIC\_TARGET\_DAMAGE\_HTC2                      | (a)   | handle  | 1215587122  | `abilityreallevelfield: 000002BC1E36AB90` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_HTC3           | (a)   | handle  | 1215587123  | `abilityreallevelfield: 000002BC1E36ABD0` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_HTC4             | (a)   | handle  | 1215587124  | `abilityreallevelfield: 000002BC1E36AC10` |         |
+| ABILITY\_RLF\_ARMOR\_BONUS\_HAD1                                  | (a)   | handle  | 1214342193  | `abilityreallevelfield: 000002BC1E36AC50` |         |
+| ABILITY\_RLF\_AMOUNT\_HEALED\_DAMAGED\_HHB1                       | (a)   | handle  | 1214800433  | `abilityreallevelfield: 000002BC1E36AC90` |         |
+| ABILITY\_RLF\_EXTRA\_DAMAGE\_HCA1                                 | (a)   | handle  | 1214472497  | `abilityreallevelfield: 000002BC1E36ACD0` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_HCA2                       | (a)   | handle  | 1214472498  | `abilityreallevelfield: 000002BC1E36AD10` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_HCA3                         | (a)   | handle  | 1214472499  | `abilityreallevelfield: 000002BC1E36AD50` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_PERCENT\_OAE1            | (a)   | handle  | 1331782961  | `abilityreallevelfield: 000002BC1E36AD90` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_INCREASE\_PERCENT\_OAE2              | (a)   | handle  | 1331782962  | `abilityreallevelfield: 000002BC1E36ADD0` |         |
+| ABILITY\_RLF\_REINCARNATION\_DELAY                                | (a)   | handle  | 1332897073  | `abilityreallevelfield: 000002BC1E36AE10` |         |
+| ABILITY\_RLF\_DAMAGE\_OSH1                                        | (a)   | handle  | 1332963377  | `abilityreallevelfield: 000002BC1E36AE50` |         |
+| ABILITY\_RLF\_MAXIMUM\_DAMAGE\_OSH2                               | (a)   | handle  | 1332963378  | `abilityreallevelfield: 000002BC1E36AE90` |         |
+| ABILITY\_RLF\_DISTANCE\_OSH3                                      | (a)   | handle  | 1332963379  | `abilityreallevelfield: 000002BC1E36AED0` |         |
+| ABILITY\_RLF\_FINAL\_AREA\_OSH4                                   | (a)   | handle  | 1332963380  | `abilityreallevelfield: 000002BC1E36AF10` |         |
+| ABILITY\_RLF\_GRAPHIC\_DELAY\_NFD1                                | (a)   | handle  | 1315333169  | `abilityreallevelfield: 000002BC1E36AF50` |         |
+| ABILITY\_RLF\_GRAPHIC\_DURATION\_NFD2                             | (a)   | handle  | 1315333170  | `abilityreallevelfield: 000002BC1E36AF90` |         |
+| ABILITY\_RLF\_DAMAGE\_NFD3                                        | (a)   | handle  | 1315333171  | `abilityreallevelfield: 000002BC1E36AFD0` |         |
+| ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_AMS1                        | (a)   | handle  | 1097691953  | `abilityreallevelfield: 000002BC1E36B010` |         |
+| ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_AMS2                      | (a)   | handle  | 1097691954  | `abilityreallevelfield: 000002BC1E36B050` |         |
+| ABILITY\_RLF\_AURA\_DURATION                                      | (a)   | handle  | 1097886769  | `abilityreallevelfield: 000002BC1E36B090` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_APL2                           | (a)   | handle  | 1097886770  | `abilityreallevelfield: 000002BC1E36B0D0` |         |
+| ABILITY\_RLF\_DURATION\_OF\_PLAGUE\_WARD                          | (a)   | handle  | 1097886771  | `abilityreallevelfield: 000002BC1E36B110` |         |
+| ABILITY\_RLF\_AMOUNT\_OF\_HIT\_POINTS\_REGENERATED                | (a)   | handle  | 1331786289  | `abilityreallevelfield: 000002BC1E36B150` |         |
+| ABILITY\_RLF\_ATTACK\_DAMAGE\_INCREASE\_AKB1                      | (a)   | handle  | 1097556529  | `abilityreallevelfield: 000002BC1E36B190` |         |
+| ABILITY\_RLF\_MANA\_LOSS\_ADM1                                    | (a)   | handle  | 1097100593  | `abilityreallevelfield: 000002BC1E36B1D0` |         |
+| ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_ADM2                        | (a)   | handle  | 1097100594  | `abilityreallevelfield: 000002BC1E36B210` |         |
+| ABILITY\_RLF\_EXPANSION\_AMOUNT                                   | (a)   | handle  | 1114401073  | `abilityreallevelfield: 000002BC1E36B250` |         |
+| ABILITY\_RLF\_INTERVAL\_DURATION\_BGM2                            | (a)   | handle  | 1114074418  | `abilityreallevelfield: 000002BC1E36B290` |         |
+| ABILITY\_RLF\_RADIUS\_OF\_MINING\_RING                            | (a)   | handle  | 1114074420  | `abilityreallevelfield: 000002BC1E36B2D0` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_INCREASE\_PERCENT\_BLO1              | (a)   | handle  | 1114402609  | `abilityreallevelfield: 000002BC1E36B310` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_PERCENT\_BLO2            | (a)   | handle  | 1114402610  | `abilityreallevelfield: 000002BC1E36B350` |         |
+| ABILITY\_RLF\_SCALING\_FACTOR                                     | (a)   | handle  | 1114402611  | `abilityreallevelfield: 000002BC1E36B390` |         |
+| ABILITY\_RLF\_HIT\_POINTS\_PER\_SECOND\_CAN1                      | (a)   | handle  | 1130458673  | `abilityreallevelfield: 000002BC1E36B3D0` |         |
+| ABILITY\_RLF\_MAX\_HIT\_POINTS                                    | (a)   | handle  | 1130458674  | `abilityreallevelfield: 000002BC1E36B410` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_DEV2                           | (a)   | handle  | 1147500082  | `abilityreallevelfield: 000002BC1E36B450` |         |
+| ABILITY\_RLF\_MOVEMENT\_UPDATE\_FREQUENCY\_CHD1                   | (a)   | handle  | 1130914865  | `abilityreallevelfield: 000002BC1E36B490` |         |
+| ABILITY\_RLF\_ATTACK\_UPDATE\_FREQUENCY\_CHD2                     | (a)   | handle  | 1130914866  | `abilityreallevelfield: 000002BC1E36B4D0` |         |
+| ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_CHD3                        | (a)   | handle  | 1130914867  | `abilityreallevelfield: 000002BC1E36B510` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_CRI1           | (a)   | handle  | 1131571505  | `abilityreallevelfield: 000002BC1E36B550` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_CRI2             | (a)   | handle  | 1131571506  | `abilityreallevelfield: 000002BC1E36B590` |         |
+| ABILITY\_RLF\_DAMAGE\_REDUCTION\_CRI3                             | (a)   | handle  | 1131571507  | `abilityreallevelfield: 000002BC1E36B5D0` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_MISS\_CRS                               | (a)   | handle  | 1131574065  | `abilityreallevelfield: 000002BC1E36B610` |         |
+| ABILITY\_RLF\_FULL\_DAMAGE\_RADIUS\_DDA1                          | (a)   | handle  | 1147429169  | `abilityreallevelfield: 000002BC1E36B650` |         |
+| ABILITY\_RLF\_FULL\_DAMAGE\_AMOUNT\_DDA2                          | (a)   | handle  | 1147429170  | `abilityreallevelfield: 000002BC1E36B690` |         |
+| ABILITY\_RLF\_PARTIAL\_DAMAGE\_RADIUS                             | (a)   | handle  | 1147429171  | `abilityreallevelfield: 000002BC1E36D6E0` |         |
+| ABILITY\_RLF\_PARTIAL\_DAMAGE\_AMOUNT                             | (a)   | handle  | 1147429172  | `abilityreallevelfield: 000002BC1E36D720` |         |
+| ABILITY\_RLF\_BUILDING\_DAMAGE\_FACTOR\_SDS1                      | (a)   | handle  | 1399092017  | `abilityreallevelfield: 000002BC1E36D760` |         |
+| ABILITY\_RLF\_MAX\_DAMAGE\_UCO5                                   | (a)   | handle  | 1432579893  | `abilityreallevelfield: 000002BC1E36D7A0` |         |
+| ABILITY\_RLF\_MOVE\_SPEED\_BONUS\_UCO6                            | (a)   | handle  | 1432579894  | `abilityreallevelfield: 000002BC1E36D7E0` |         |
+| ABILITY\_RLF\_DAMAGE\_TAKEN\_PERCENT\_DEF1                        | (a)   | handle  | 1147495985  | `abilityreallevelfield: 000002BC1E36D820` |         |
+| ABILITY\_RLF\_DAMAGE\_DEALT\_PERCENT\_DEF2                        | (a)   | handle  | 1147495986  | `abilityreallevelfield: 000002BC1E36D860` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_DEF3                       | (a)   | handle  | 1147495987  | `abilityreallevelfield: 000002BC1E36D8A0` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_DEF4                         | (a)   | handle  | 1147495988  | `abilityreallevelfield: 000002BC1E36D8E0` |         |
+| ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_DEF5                      | (a)   | handle  | 1147495989  | `abilityreallevelfield: 000002BC1E36D920` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_DEFLECT                                 | (a)   | handle  | 1147495990  | `abilityreallevelfield: 000002BC1E36D960` |         |
+| ABILITY\_RLF\_DEFLECT\_DAMAGE\_TAKEN\_PIERCING                    | (a)   | handle  | 1147495991  | `abilityreallevelfield: 000002BC1E36D9A0` |         |
+| ABILITY\_RLF\_DEFLECT\_DAMAGE\_TAKEN\_SPELLS                      | (a)   | handle  | 1147495992  | `abilityreallevelfield: 000002BC1E36D9E0` |         |
+| ABILITY\_RLF\_RIP\_DELAY                                          | (a)   | handle  | 1164014641  | `abilityreallevelfield: 000002BC1E36DA20` |         |
+| ABILITY\_RLF\_EAT\_DELAY                                          | (a)   | handle  | 1164014642  | `abilityreallevelfield: 000002BC1E36DA60` |         |
+| ABILITY\_RLF\_HIT\_POINTS\_GAINED\_EAT3                           | (a)   | handle  | 1164014643  | `abilityreallevelfield: 000002BC1E36DAA0` |         |
+| ABILITY\_RLF\_AIR\_UNIT\_LOWER\_DURATION                          | (a)   | handle  | 1164866353  | `abilityreallevelfield: 000002BC1E36DAE0` |         |
+| ABILITY\_RLF\_AIR\_UNIT\_HEIGHT                                   | (a)   | handle  | 1164866354  | `abilityreallevelfield: 000002BC1E36DB20` |         |
+| ABILITY\_RLF\_MELEE\_ATTACK\_RANGE                                | (a)   | handle  | 1164866355  | `abilityreallevelfield: 000002BC1E36DB60` |         |
+| ABILITY\_RLF\_INTERVAL\_DURATION\_EGM2                            | (a)   | handle  | 1164406066  | `abilityreallevelfield: 000002BC1E36DBA0` |         |
+| ABILITY\_RLF\_EFFECT\_DELAY\_FLA2                                 | (a)   | handle  | 1181507890  | `abilityreallevelfield: 000002BC1E36DBE0` |         |
+| ABILITY\_RLF\_MINING\_DURATION                                    | (a)   | handle  | 1198285874  | `abilityreallevelfield: 000002BC1E36DC20` |         |
+| ABILITY\_RLF\_RADIUS\_OF\_GRAVESTONES                             | (a)   | handle  | 1199137842  | `abilityreallevelfield: 000002BC1E36DC60` |         |
+| ABILITY\_RLF\_RADIUS\_OF\_CORPSES                                 | (a)   | handle  | 1199137843  | `abilityreallevelfield: 000002BC1E36DCA0` |         |
+| ABILITY\_RLF\_HIT\_POINTS\_GAINED\_HEA1                           | (a)   | handle  | 1214603569  | `abilityreallevelfield: 000002BC1E36DCE0` |         |
+| ABILITY\_RLF\_DAMAGE\_INCREASE\_PERCENT\_INF1                     | (a)   | handle  | 1231971889  | `abilityreallevelfield: 000002BC1E36DD20` |         |
+| ABILITY\_RLF\_AUTOCAST\_RANGE                                     | (a)   | handle  | 1231971891  | `abilityreallevelfield: 000002BC1E36DD60` |         |
+| ABILITY\_RLF\_LIFE\_REGEN\_RATE                                   | (a)   | handle  | 1231971892  | `abilityreallevelfield: 000002BC1E36DDA0` |         |
+| ABILITY\_RLF\_GRAPHIC\_DELAY\_LIT1                                | (a)   | handle  | 1281979441  | `abilityreallevelfield: 000002BC1E36DDE0` |         |
+| ABILITY\_RLF\_GRAPHIC\_DURATION\_LIT2                             | (a)   | handle  | 1281979442  | `abilityreallevelfield: 000002BC1E36DE20` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_LSH1                           | (a)   | handle  | 1282631729  | `abilityreallevelfield: 000002BC1E36DE90` |         |
+| ABILITY\_RLF\_MANA\_GAINED                                        | (a)   | handle  | 1298297905  | `abilityreallevelfield: 000002BC1E36DF30` |         |
+| ABILITY\_RLF\_HIT\_POINTS\_GAINED\_MBT2                           | (a)   | handle  | 1298297906  | `abilityreallevelfield: 000002BC1E36DF70` |         |
+| ABILITY\_RLF\_AUTOCAST\_REQUIREMENT                               | (a)   | handle  | 1298297907  | `abilityreallevelfield: 000002BC1E36DFB0` |         |
+| ABILITY\_RLF\_WATER\_HEIGHT                                       | (a)   | handle  | 1298297908  | `abilityreallevelfield: 000002BC1E36DFF0` |         |
+| ABILITY\_RLF\_ACTIVATION\_DELAY\_MIN1                             | (a)   | handle  | 1298755121  | `abilityreallevelfield: 000002BC1E36E030` |         |
+| ABILITY\_RLF\_INVISIBILITY\_TRANSITION\_TIME                      | (a)   | handle  | 1298755122  | `abilityreallevelfield: 000002BC1E36E070` |         |
+| ABILITY\_RLF\_ACTIVATION\_RADIUS                                  | (a)   | handle  | 1315271985  | `abilityreallevelfield: 000002BC1E36E110` |         |
+| ABILITY\_RLF\_AMOUNT\_REGENERATED                                 | (a)   | handle  | 1098018097  | `abilityreallevelfield: 000002BC1E36E1B0` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_POI1                           | (a)   | handle  | 1349478705  | `abilityreallevelfield: 000002BC1E36E220` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_POI2                         | (a)   | handle  | 1349478706  | `abilityreallevelfield: 000002BC1E36E260` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_POI3                       | (a)   | handle  | 1349478707  | `abilityreallevelfield: 000002BC1E36E2A0` |         |
+| ABILITY\_RLF\_EXTRA\_DAMAGE\_POA1                                 | (a)   | handle  | 1349476657  | `abilityreallevelfield: 000002BC1E36E2E0` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_POA2                           | (a)   | handle  | 1349476658  | `abilityreallevelfield: 000002BC1E36E320` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_POA3                         | (a)   | handle  | 1349476659  | `abilityreallevelfield: 000002BC1E36E360` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_POA4                       | (a)   | handle  | 1349476660  | `abilityreallevelfield: 000002BC1E36E3A0` |         |
+| ABILITY\_RLF\_DAMAGE\_AMPLIFICATION                               | (a)   | handle  | 1349481266  | `abilityreallevelfield: 000002BC1E36E3E0` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_STOMP\_PERCENT                          | (a)   | handle  | 1466004017  | `abilityreallevelfield: 000002BC1E36E450` |         |
+| ABILITY\_RLF\_DAMAGE\_DEALT\_WAR2                                 | (a)   | handle  | 1466004018  | `abilityreallevelfield: 000002BC1E36E490` |         |
+| ABILITY\_RLF\_FULL\_DAMAGE\_RADIUS\_WAR3                          | (a)   | handle  | 1466004019  | `abilityreallevelfield: 000002BC1E36E4D0` |         |
+| ABILITY\_RLF\_HALF\_DAMAGE\_RADIUS\_WAR4                          | (a)   | handle  | 1466004020  | `abilityreallevelfield: 000002BC1E36E510` |         |
+| ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_PRG3                        | (a)   | handle  | 1349674803  | `abilityreallevelfield: 000002BC1E36E550` |         |
+| ABILITY\_RLF\_UNIT\_PAUSE\_DURATION                               | (a)   | handle  | 1349674804  | `abilityreallevelfield: 000002BC1E36E590` |         |
+| ABILITY\_RLF\_HERO\_PAUSE\_DURATION                               | (a)   | handle  | 1349674805  | `abilityreallevelfield: 000002BC1E36E5D0` |         |
+| ABILITY\_RLF\_HIT\_POINTS\_GAINED\_REJ1                           | (a)   | handle  | 1382378033  | `abilityreallevelfield: 000002BC1E36E670` |         |
+| ABILITY\_RLF\_MANA\_POINTS\_GAINED\_REJ2                          | (a)   | handle  | 1382378034  | `abilityreallevelfield: 000002BC1E36E6B0` |         |
+| ABILITY\_RLF\_MINIMUM\_LIFE\_REQUIRED                             | (a)   | handle  | 1383096883  | `abilityreallevelfield: 000002BC1E36E720` |         |
+| ABILITY\_RLF\_MINIMUM\_MANA\_REQUIRED                             | (a)   | handle  | 1383096884  | `abilityreallevelfield: 000002BC1E36E760` |         |
+| ABILITY\_RLF\_REPAIR\_COST\_RATIO                                 | (a)   | handle  | 1382379569  | `abilityreallevelfield: 000002BC1E36E7A0` |         |
+| ABILITY\_RLF\_REPAIR\_TIME\_RATIO                                 | (a)   | handle  | 1382379570  | `abilityreallevelfield: 000002BC1E36E7E0` |         |
+| ABILITY\_RLF\_POWERBUILD\_COST                                    | (a)   | handle  | 1382379571  | `abilityreallevelfield: 000002BC1E36E820` |         |
+| ABILITY\_RLF\_POWERBUILD\_RATE                                    | (a)   | handle  | 1382379572  | `abilityreallevelfield: 000002BC1E36E860` |         |
+| ABILITY\_RLF\_NAVAL\_RANGE\_BONUS                                 | (a)   | handle  | 1382379573  | `abilityreallevelfield: 000002BC1E36E8A0` |         |
+| ABILITY\_RLF\_DAMAGE\_INCREASE\_PERCENT\_ROA1                     | (a)   | handle  | 1383031089  | `abilityreallevelfield: 000002BC1E36E8E0` |         |
+| ABILITY\_RLF\_LIFE\_REGENERATION\_RATE                            | (a)   | handle  | 1383031091  | `abilityreallevelfield: 000002BC1E36E920` |         |
+| ABILITY\_RLF\_MANA\_REGEN                                         | (a)   | handle  | 1383031092  | `abilityreallevelfield: 000002BC1E36E960` |         |
+| ABILITY\_RLF\_DAMAGE\_INCREASE                                    | (a)   | handle  | 1315074609  | `abilityreallevelfield: 000002BC1E36E9A0` |         |
+| ABILITY\_RLF\_SALVAGE\_COST\_RATIO                                | (a)   | handle  | 1398893617  | `abilityreallevelfield: 000002BC1E36E9E0` |         |
+| ABILITY\_RLF\_IN\_FLIGHT\_SIGHT\_RADIUS                           | (a)   | handle  | 1165192753  | `abilityreallevelfield: 000002BC1E36EA20` |         |
+| ABILITY\_RLF\_HOVERING\_SIGHT\_RADIUS                             | (a)   | handle  | 1165192754  | `abilityreallevelfield: 000002BC1E36EA60` |         |
+| ABILITY\_RLF\_HOVERING\_HEIGHT                                    | (a)   | handle  | 1165192755  | `abilityreallevelfield: 000002BC1E36EAA0` |         |
+| ABILITY\_RLF\_DURATION\_OF\_OWLS                                  | (a)   | handle  | 1165192757  | `abilityreallevelfield: 000002BC1E36EAE0` |         |
+| ABILITY\_RLF\_FADE\_DURATION                                      | (a)   | handle  | 1399352625  | `abilityreallevelfield: 000002BC1E36EB20` |         |
+| ABILITY\_RLF\_DAY\_NIGHT\_DURATION                                | (a)   | handle  | 1399352626  | `abilityreallevelfield: 000002BC1E36EB60` |         |
+| ABILITY\_RLF\_ACTION\_DURATION                                    | (a)   | handle  | 1399352627  | `abilityreallevelfield: 000002BC1E36EBA0` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_SLO1                       | (a)   | handle  | 1399615281  | `abilityreallevelfield: 000002BC1E36EBE0` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_SLO2                         | (a)   | handle  | 1399615282  | `abilityreallevelfield: 000002BC1E36EC20` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_SPO1                           | (a)   | handle  | 1399877425  | `abilityreallevelfield: 000002BC1E36EC60` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_SPO2                       | (a)   | handle  | 1399877426  | `abilityreallevelfield: 000002BC1E36ECA0` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_SPO3                         | (a)   | handle  | 1399877427  | `abilityreallevelfield: 000002BC1E36ECE0` |         |
+| ABILITY\_RLF\_ACTIVATION\_DELAY\_STA1                             | (a)   | handle  | 1400135985  | `abilityreallevelfield: 000002BC1E36ED20` |         |
+| ABILITY\_RLF\_DETECTION\_RADIUS\_STA2                             | (a)   | handle  | 1400135986  | `abilityreallevelfield: 000002BC1E36ED60` |         |
+| ABILITY\_RLF\_DETONATION\_RADIUS                                  | (a)   | handle  | 1400135987  | `abilityreallevelfield: 000002BC1E36EDA0` |         |
+| ABILITY\_RLF\_STUN\_DURATION\_STA4                                | (a)   | handle  | 1400135988  | `abilityreallevelfield: 000002BC1E36EDE0` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_BONUS\_PERCENT                       | (a)   | handle  | 1432905265  | `abilityreallevelfield: 000002BC1E36EE20` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_UHF2                           | (a)   | handle  | 1432905266  | `abilityreallevelfield: 000002BC1E36EE60` |         |
+| ABILITY\_RLF\_LUMBER\_PER\_INTERVAL                               | (a)   | handle  | 1466458417  | `abilityreallevelfield: 000002BC1E36EEA0` |         |
+| ABILITY\_RLF\_ART\_ATTACHMENT\_HEIGHT                             | (a)   | handle  | 1466458419  | `abilityreallevelfield: 000002BC1E36EEE0` |         |
+| ABILITY\_RLF\_TELEPORT\_AREA\_WIDTH                               | (a)   | handle  | 1467117617  | `abilityreallevelfield: 000002BC1E36EF20` |         |
+| ABILITY\_RLF\_TELEPORT\_AREA\_HEIGHT                              | (a)   | handle  | 1467117618  | `abilityreallevelfield: 000002BC1E36EF60` |         |
+| ABILITY\_RLF\_LIFE\_STOLEN\_PER\_ATTACK                           | (a)   | handle  | 1232494957  | `abilityreallevelfield: 000002BC1E36EFA0` |         |
+| ABILITY\_RLF\_DAMAGE\_BONUS\_IDAM                                 | (a)   | handle  | 1231315309  | `abilityreallevelfield: 000002BC1E36EFE0` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_HIT\_UNITS\_PERCENT                     | (a)   | handle  | 1232036402  | `abilityreallevelfield: 000002BC1E36F020` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_HIT\_HEROS\_PERCENT                     | (a)   | handle  | 1232036403  | `abilityreallevelfield: 000002BC1E36F060` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_HIT\_SUMMONS\_PERCENT                   | (a)   | handle  | 1232036404  | `abilityreallevelfield: 000002BC1E36F0A0` |         |
+| ABILITY\_RLF\_DELAY\_FOR\_TARGET\_EFFECT                          | (a)   | handle  | 1231316332  | `abilityreallevelfield: 000002BC1E36F0E0` |         |
+| ABILITY\_RLF\_DAMAGE\_DEALT\_PERCENT\_OF\_NORMAL                  | (a)   | handle  | 1231645796  | `abilityreallevelfield: 000002BC1E36F120` |         |
+| ABILITY\_RLF\_DAMAGE\_RECEIVED\_MULTIPLIER                        | (a)   | handle  | 1231645815  | `abilityreallevelfield: 000002BC1E36F190` |         |
+| ABILITY\_RLF\_MANA\_REGENERATION\_BONUS\_AS\_FRACTION\_OF\_NORMAL | (a)   | handle  | 1231909488  | `abilityreallevelfield: 000002BC1E36F1D0` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_ISPI                     | (a)   | handle  | 1232302185  | `abilityreallevelfield: 000002BC1E36F210` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_IDPS                           | (a)   | handle  | 1231319155  | `abilityreallevelfield: 000002BC1E36F250` |         |
+| ABILITY\_RLF\_ATTACK\_DAMAGE\_INCREASE\_CAC1                      | (a)   | handle  | 1130455857  | `abilityreallevelfield: 000002BC1E36F2C0` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_COR1                           | (a)   | handle  | 1131377201  | `abilityreallevelfield: 000002BC1E36F300` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_INCREASE\_ISX1                       | (a)   | handle  | 1232304177  | `abilityreallevelfield: 000002BC1E36F370` |         |
+| ABILITY\_RLF\_DAMAGE\_WRS1                                        | (a)   | handle  | 1467118385  | `abilityreallevelfield: 000002BC1E36F3B0` |         |
+| ABILITY\_RLF\_TERRAIN\_DEFORMATION\_AMPLITUDE                     | (a)   | handle  | 1467118386  | `abilityreallevelfield: 000002BC1E36F3F0` |         |
+| ABILITY\_RLF\_DAMAGE\_CTC1                                        | (a)   | handle  | 1131701041  | `abilityreallevelfield: 000002BC1E36F430` |         |
+| ABILITY\_RLF\_EXTRA\_DAMAGE\_TO\_TARGET                           | (a)   | handle  | 1131701042  | `abilityreallevelfield: 000002BC1E36F470` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_CTC3                    | (a)   | handle  | 1131701043  | `abilityreallevelfield: 000002BC1E36F4B0` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_CTC4                      | (a)   | handle  | 1131701044  | `abilityreallevelfield: 000002BC1E36F4F0` |         |
+| ABILITY\_RLF\_DAMAGE\_CTB1                                        | (a)   | handle  | 1131700785  | `abilityreallevelfield: 000002BC1E36F530` |         |
+| ABILITY\_RLF\_CASTING\_DELAY\_SECONDS                             | (a)   | handle  | 1432646450  | `abilityreallevelfield: 000002BC1E36F570` |         |
+| ABILITY\_RLF\_MANA\_LOSS\_PER\_UNIT\_DTN1                         | (a)   | handle  | 1148481073  | `abilityreallevelfield: 000002BC1E36F5B0` |         |
+| ABILITY\_RLF\_DAMAGE\_TO\_SUMMONED\_UNITS\_DTN2                   | (a)   | handle  | 1148481074  | `abilityreallevelfield: 000002BC1E36F5F0` |         |
+| ABILITY\_RLF\_TRANSITION\_TIME\_SECONDS                           | (a)   | handle  | 1232499505  | `abilityreallevelfield: 000002BC1E36F630` |         |
+| ABILITY\_RLF\_MANA\_DRAINED\_PER\_SECOND\_NMR1                    | (a)   | handle  | 1315795505  | `abilityreallevelfield: 000002BC1E36F670` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_REDUCE\_DAMAGE\_PERCENT                 | (a)   | handle  | 1400073009  | `abilityreallevelfield: 000002BC1E36F6E0` |         |
+| ABILITY\_RLF\_MINIMUM\_DAMAGE                                     | (a)   | handle  | 1400073010  | `abilityreallevelfield: 000002BC1E36F720` |         |
+| ABILITY\_RLF\_IGNORED\_DAMAGE                                     | (a)   | handle  | 1400073011  | `abilityreallevelfield: 000002BC1E36F760` |         |
+| ABILITY\_RLF\_FULL\_DAMAGE\_DEALT                                 | (a)   | handle  | 1214673713  | `abilityreallevelfield: 000002BC1E36F7A0` |         |
+| ABILITY\_RLF\_FULL\_DAMAGE\_INTERVAL                              | (a)   | handle  | 1214673714  | `abilityreallevelfield: 000002BC1E36F7E0` |         |
+| ABILITY\_RLF\_HALF\_DAMAGE\_DEALT                                 | (a)   | handle  | 1214673715  | `abilityreallevelfield: 000002BC1E36F820` |         |
+| ABILITY\_RLF\_HALF\_DAMAGE\_INTERVAL                              | (a)   | handle  | 1214673716  | `abilityreallevelfield: 000002BC1E36F860` |         |
+| ABILITY\_RLF\_BUILDING\_REDUCTION\_HFS5                           | (a)   | handle  | 1214673717  | `abilityreallevelfield: 000002BC1E36F8A0` |         |
+| ABILITY\_RLF\_MAXIMUM\_DAMAGE\_HFS6                               | (a)   | handle  | 1214673718  | `abilityreallevelfield: 000002BC1E36F8E0` |         |
+| ABILITY\_RLF\_MANA\_PER\_HIT\_POINT                               | (a)   | handle  | 1315795761  | `abilityreallevelfield: 000002BC1E36F920` |         |
+| ABILITY\_RLF\_DAMAGE\_ABSORBED\_PERCENT                           | (a)   | handle  | 1315795762  | `abilityreallevelfield: 000002BC1E36F960` |         |
+| ABILITY\_RLF\_WAVE\_DISTANCE                                      | (a)   | handle  | 1432972593  | `abilityreallevelfield: 000002BC1E36F9A0` |         |
+| ABILITY\_RLF\_WAVE\_TIME\_SECONDS                                 | (a)   | handle  | 1432972594  | `abilityreallevelfield: 000002BC1E36F9E0` |         |
+| ABILITY\_RLF\_DAMAGE\_DEALT\_UIM3                                 | (a)   | handle  | 1432972595  | `abilityreallevelfield: 000002BC1E36FA20` |         |
+| ABILITY\_RLF\_AIR\_TIME\_SECONDS\_UIM4                            | (a)   | handle  | 1432972596  | `abilityreallevelfield: 000002BC1E36FA60` |         |
+| ABILITY\_RLF\_UNIT\_RELEASE\_INTERVAL\_SECONDS                    | (a)   | handle  | 1433170738  | `abilityreallevelfield: 000002BC1E36FAA0` |         |
+| ABILITY\_RLF\_DAMAGE\_RETURN\_FACTOR                              | (a)   | handle  | 1433170740  | `abilityreallevelfield: 000002BC1E36FAE0` |         |
+| ABILITY\_RLF\_DAMAGE\_RETURN\_THRESHOLD                           | (a)   | handle  | 1433170741  | `abilityreallevelfield: 000002BC1E36FB20` |         |
+| ABILITY\_RLF\_RETURNED\_DAMAGE\_FACTOR                            | (a)   | handle  | 1433695025  | `abilityreallevelfield: 000002BC1E36FB60` |         |
+| ABILITY\_RLF\_RECEIVED\_DAMAGE\_FACTOR                            | (a)   | handle  | 1433695026  | `abilityreallevelfield: 000002BC1E36FBA0` |         |
+| ABILITY\_RLF\_DEFENSE\_BONUS\_UTS3                                | (a)   | handle  | 1433695027  | `abilityreallevelfield: 000002BC1E36FBE0` |         |
+| ABILITY\_RLF\_DAMAGE\_BONUS\_NBA1                                 | (a)   | handle  | 1315070257  | `abilityreallevelfield: 000002BC1E36FC20` |         |
+| ABILITY\_RLF\_SUMMONED\_UNIT\_DURATION\_SECONDS\_NBA3             | (a)   | handle  | 1315070259  | `abilityreallevelfield: 000002BC1E36FC60` |         |
+| ABILITY\_RLF\_MANA\_PER\_SUMMONED\_HITPOINT                       | (a)   | handle  | 1131243314  | `abilityreallevelfield: 000002BC1E36FCA0` |         |
+| ABILITY\_RLF\_CHARGE\_FOR\_CURRENT\_LIFE                          | (a)   | handle  | 1131243315  | `abilityreallevelfield: 000002BC1E36FCE0` |         |
+| ABILITY\_RLF\_HIT\_POINTS\_DRAINED                                | (a)   | handle  | 1315205681  | `abilityreallevelfield: 000002BC1E36FD20` |         |
+| ABILITY\_RLF\_MANA\_POINTS\_DRAINED                               | (a)   | handle  | 1315205682  | `abilityreallevelfield: 000002BC1E36FD60` |         |
+| ABILITY\_RLF\_DRAIN\_INTERVAL\_SECONDS                            | (a)   | handle  | 1315205683  | `abilityreallevelfield: 000002BC1E36FDA0` |         |
+| ABILITY\_RLF\_LIFE\_TRANSFERRED\_PER\_SECOND                      | (a)   | handle  | 1315205684  | `abilityreallevelfield: 000002BC1E36FDE0` |         |
+| ABILITY\_RLF\_MANA\_TRANSFERRED\_PER\_SECOND                      | (a)   | handle  | 1315205685  | `abilityreallevelfield: 000002BC1E36FE20` |         |
+| ABILITY\_RLF\_BONUS\_LIFE\_FACTOR                                 | (a)   | handle  | 1315205686  | `abilityreallevelfield: 000002BC1E36FE60` |         |
+| ABILITY\_RLF\_BONUS\_LIFE\_DECAY                                  | (a)   | handle  | 1315205687  | `abilityreallevelfield: 000002BC1E36FEA0` |         |
+| ABILITY\_RLF\_BONUS\_MANA\_FACTOR                                 | (a)   | handle  | 1315205688  | `abilityreallevelfield: 000002BC1E36FEE0` |         |
+| ABILITY\_RLF\_BONUS\_MANA\_DECAY                                  | (a)   | handle  | 1315205689  | `abilityreallevelfield: 000002BC1E36FF50` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_MISS\_PERCENT                           | (a)   | handle  | 1316186418  | `abilityreallevelfield: 000002BC1E36FF90` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_MODIFIER                           | (a)   | handle  | 1316186419  | `abilityreallevelfield: 000002BC1E36FFD0` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_MODIFIER                             | (a)   | handle  | 1316186420  | `abilityreallevelfield: 000002BC1E370010` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_TDG1                           | (a)   | handle  | 1415866161  | `abilityreallevelfield: 000002BC1E370080` |         |
+| ABILITY\_RLF\_MEDIUM\_DAMAGE\_RADIUS\_TDG2                        | (a)   | handle  | 1415866162  | `abilityreallevelfield: 000002BC1E3700C0` |         |
+| ABILITY\_RLF\_MEDIUM\_DAMAGE\_PER\_SECOND                         | (a)   | handle  | 1415866163  | `abilityreallevelfield: 000002BC1E370100` |         |
+| ABILITY\_RLF\_SMALL\_DAMAGE\_RADIUS\_TDG4                         | (a)   | handle  | 1415866164  | `abilityreallevelfield: 000002BC1E370140` |         |
+| ABILITY\_RLF\_SMALL\_DAMAGE\_PER\_SECOND                          | (a)   | handle  | 1415866165  | `abilityreallevelfield: 000002BC1E370180` |         |
+| ABILITY\_RLF\_AIR\_TIME\_SECONDS\_TSP1                            | (a)   | handle  | 1416851505  | `abilityreallevelfield: 000002BC1E3701C0` |         |
+| ABILITY\_RLF\_MINIMUM\_HIT\_INTERVAL\_SECONDS                     | (a)   | handle  | 1416851506  | `abilityreallevelfield: 000002BC1E370200` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_NBF5                           | (a)   | handle  | 1315071541  | `abilityreallevelfield: 000002BC1E370240` |         |
+| ABILITY\_RLF\_MAXIMUM\_RANGE                                      | (a)   | handle  | 1164078129  | `abilityreallevelfield: 000002BC1E370280` |         |
+| ABILITY\_RLF\_MINIMUM\_RANGE                                      | (a)   | handle  | 1164078130  | `abilityreallevelfield: 000002BC1E3702C0` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_TARGET\_EFK1                           | (a)   | handle  | 1164340017  | `abilityreallevelfield: 000002BC1E370300` |         |
+| ABILITY\_RLF\_MAXIMUM\_TOTAL\_DAMAGE                              | (a)   | handle  | 1164340018  | `abilityreallevelfield: 000002BC1E370340` |         |
+| ABILITY\_RLF\_MAXIMUM\_SPEED\_ADJUSTMENT                          | (a)   | handle  | 1164340020  | `abilityreallevelfield: 000002BC1E370380` |         |
+| ABILITY\_RLF\_DECAYING\_DAMAGE                                    | (a)   | handle  | 1165191217  | `abilityreallevelfield: 000002BC1E3703C0` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_ESH2                       | (a)   | handle  | 1165191218  | `abilityreallevelfield: 000002BC1E370400` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_ESH3                         | (a)   | handle  | 1165191219  | `abilityreallevelfield: 000002BC1E370440` |         |
+| ABILITY\_RLF\_DECAY\_POWER                                        | (a)   | handle  | 1165191220  | `abilityreallevelfield: 000002BC1E370480` |         |
+| ABILITY\_RLF\_INITIAL\_DAMAGE\_ESH5                               | (a)   | handle  | 1165191221  | `abilityreallevelfield: 000002BC1E3704C0` |         |
+| ABILITY\_RLF\_MAXIMUM\_LIFE\_ABSORBED                             | (a)   | handle  | 1633841969  | `abilityreallevelfield: 000002BC1E370500` |         |
+| ABILITY\_RLF\_MAXIMUM\_MANA\_ABSORBED                             | (a)   | handle  | 1633841970  | `abilityreallevelfield: 000002BC1E370540` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_BSK1                     | (a)   | handle  | 1651731249  | `abilityreallevelfield: 000002BC1E370580` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_INCREASE\_BSK2                       | (a)   | handle  | 1651731250  | `abilityreallevelfield: 000002BC1E3705C0` |         |
+| ABILITY\_RLF\_DAMAGE\_TAKEN\_INCREASE                             | (a)   | handle  | 1651731251  | `abilityreallevelfield: 000002BC1E370600` |         |
+| ABILITY\_RLF\_LIFE\_PER\_UNIT                                     | (a)   | handle  | 1685482801  | `abilityreallevelfield: 000002BC1E370640` |         |
+| ABILITY\_RLF\_MANA\_PER\_UNIT                                     | (a)   | handle  | 1685482802  | `abilityreallevelfield: 000002BC1E370680` |         |
+| ABILITY\_RLF\_LIFE\_PER\_BUFF                                     | (a)   | handle  | 1685482803  | `abilityreallevelfield: 000002BC1E3706C0` |         |
+| ABILITY\_RLF\_MANA\_PER\_BUFF                                     | (a)   | handle  | 1685482804  | `abilityreallevelfield: 000002BC1E370700` |         |
+| ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_DVM5                        | (a)   | handle  | 1685482805  | `abilityreallevelfield: 000002BC1E370740` |         |
+| ABILITY\_RLF\_DAMAGE\_BONUS\_FAK1                                 | (a)   | handle  | 1717660465  | `abilityreallevelfield: 000002BC1E370780` |         |
+| ABILITY\_RLF\_MEDIUM\_DAMAGE\_FACTOR\_FAK2                        | (a)   | handle  | 1717660466  | `abilityreallevelfield: 000002BC1E3707C0` |         |
+| ABILITY\_RLF\_SMALL\_DAMAGE\_FACTOR\_FAK3                         | (a)   | handle  | 1717660467  | `abilityreallevelfield: 000002BC1E370800` |         |
+| ABILITY\_RLF\_FULL\_DAMAGE\_RADIUS\_FAK4                          | (a)   | handle  | 1717660468  | `abilityreallevelfield: 000002BC1E370840` |         |
+| ABILITY\_RLF\_HALF\_DAMAGE\_RADIUS\_FAK5                          | (a)   | handle  | 1717660469  | `abilityreallevelfield: 000002BC1E370880` |         |
+| ABILITY\_RLF\_EXTRA\_DAMAGE\_PER\_SECOND                          | (a)   | handle  | 1818849585  | `abilityreallevelfield: 000002BC1E3708F0` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_LIQ2                    | (a)   | handle  | 1818849586  | `abilityreallevelfield: 000002BC1E370930` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_LIQ3                      | (a)   | handle  | 1818849587  | `abilityreallevelfield: 000002BC1E370970` |         |
+| ABILITY\_RLF\_MAGIC\_DAMAGE\_FACTOR                               | (a)   | handle  | 1835625777  | `abilityreallevelfield: 000002BC1E3709B0` |         |
+| ABILITY\_RLF\_UNIT\_DAMAGE\_PER\_MANA\_POINT                      | (a)   | handle  | 1835428913  | `abilityreallevelfield: 000002BC1E3709F0` |         |
+| ABILITY\_RLF\_HERO\_DAMAGE\_PER\_MANA\_POINT                      | (a)   | handle  | 1835428914  | `abilityreallevelfield: 000002BC1E370A30` |         |
+| ABILITY\_RLF\_UNIT\_MAXIMUM\_DAMAGE                               | (a)   | handle  | 1835428915  | `abilityreallevelfield: 000002BC1E370A70` |         |
+| ABILITY\_RLF\_HERO\_MAXIMUM\_DAMAGE                               | (a)   | handle  | 1835428916  | `abilityreallevelfield: 000002BC1E370AB0` |         |
+| ABILITY\_RLF\_DAMAGE\_COOLDOWN                                    | (a)   | handle  | 1835428917  | `abilityreallevelfield: 000002BC1E370AF0` |         |
+| ABILITY\_RLF\_DISTRIBUTED\_DAMAGE\_FACTOR\_SPL1                   | (a)   | handle  | 1936747569  | `abilityreallevelfield: 000002BC1E370B30` |         |
+| ABILITY\_RLF\_LIFE\_REGENERATED                                   | (a)   | handle  | 1769106481  | `abilityreallevelfield: 000002BC1E370B70` |         |
+| ABILITY\_RLF\_MANA\_REGENERATED                                   | (a)   | handle  | 1769106482  | `abilityreallevelfield: 000002BC1E370BB0` |         |
+| ABILITY\_RLF\_MANA\_LOSS\_PER\_UNIT\_IDC1                         | (a)   | handle  | 1768186673  | `abilityreallevelfield: 000002BC1E370BF0` |         |
+| ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_IDC2                        | (a)   | handle  | 1768186674  | `abilityreallevelfield: 000002BC1E370C30` |         |
+| ABILITY\_RLF\_ACTIVATION\_DELAY\_IMO2                             | (a)   | handle  | 1768779570  | `abilityreallevelfield: 000002BC1E370C70` |         |
+| ABILITY\_RLF\_LURE\_INTERVAL\_SECONDS                             | (a)   | handle  | 1768779571  | `abilityreallevelfield: 000002BC1E370CB0` |         |
+| ABILITY\_RLF\_DAMAGE\_BONUS\_ISR1                                 | (a)   | handle  | 1769173553  | `abilityreallevelfield: 000002BC1E370CF0` |         |
+| ABILITY\_RLF\_DAMAGE\_REDUCTION\_ISR2                             | (a)   | handle  | 1769173554  | `abilityreallevelfield: 000002BC1E370D30` |         |
+| ABILITY\_RLF\_DAMAGE\_BONUS\_IPV1                                 | (a)   | handle  | 1768977969  | `abilityreallevelfield: 000002BC1E370D70` |         |
+| ABILITY\_RLF\_LIFE\_STEAL\_AMOUNT                                 | (a)   | handle  | 1768977970  | `abilityreallevelfield: 000002BC1E370DB0` |         |
+| ABILITY\_RLF\_LIFE\_RESTORED\_FACTOR                              | (a)   | handle  | 1634956337  | `abilityreallevelfield: 000002BC1E370DF0` |         |
+| ABILITY\_RLF\_MANA\_RESTORED\_FACTOR                              | (a)   | handle  | 1634956338  | `abilityreallevelfield: 000002BC1E370E30` |         |
+| ABILITY\_RLF\_ATTACH\_DELAY                                       | (a)   | handle  | 1735549233  | `abilityreallevelfield: 000002BC1E370E70` |         |
+| ABILITY\_RLF\_REMOVE\_DELAY                                       | (a)   | handle  | 1735549234  | `abilityreallevelfield: 000002BC1E370EB0` |         |
+| ABILITY\_RLF\_HERO\_REGENERATION\_DELAY                           | (a)   | handle  | 1316184370  | `abilityreallevelfield: 000002BC1E370EF0` |         |
+| ABILITY\_RLF\_UNIT\_REGENERATION\_DELAY                           | (a)   | handle  | 1316184371  | `abilityreallevelfield: 000002BC1E370F30` |         |
+| ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_NSA4                      | (a)   | handle  | 1316184372  | `abilityreallevelfield: 000002BC1E370F70` |         |
+| ABILITY\_RLF\_HIT\_POINTS\_PER\_SECOND\_NSA5                      | (a)   | handle  | 1316184373  | `abilityreallevelfield: 000002BC1E370FB0` |         |
+| ABILITY\_RLF\_DAMAGE\_TO\_SUMMONED\_UNITS\_IXS1                   | (a)   | handle  | 1232630577  | `abilityreallevelfield: 000002BC1E370FF0` |         |
+| ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_IXS2                      | (a)   | handle  | 1232630578  | `abilityreallevelfield: 000002BC1E371030` |         |
+| ABILITY\_RLF\_SUMMONED\_UNIT\_DURATION                            | (a)   | handle  | 1315987766  | `abilityreallevelfield: 000002BC1E371070` |         |
+| ABILITY\_RLF\_SHIELD\_COOLDOWN\_TIME                              | (a)   | handle  | 1316185393  | `abilityreallevelfield: 000002BC1E3710B0` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_NDO1                           | (a)   | handle  | 1315204913  | `abilityreallevelfield: 000002BC1E3710F0` |         |
+| ABILITY\_RLF\_SUMMONED\_UNIT\_DURATION\_SECONDS\_NDO3             | (a)   | handle  | 1315204915  | `abilityreallevelfield: 000002BC1E371130` |         |
+| ABILITY\_RLF\_MEDIUM\_DAMAGE\_RADIUS\_FLK1                        | (a)   | handle  | 1718381361  | `abilityreallevelfield: 000002BC1E371170` |         |
+| ABILITY\_RLF\_SMALL\_DAMAGE\_RADIUS\_FLK2                         | (a)   | handle  | 1718381362  | `abilityreallevelfield: 000002BC1E3711B0` |         |
+| ABILITY\_RLF\_FULL\_DAMAGE\_AMOUNT\_FLK3                          | (a)   | handle  | 1718381363  | `abilityreallevelfield: 000002BC1E3711F0` |         |
+| ABILITY\_RLF\_MEDIUM\_DAMAGE\_AMOUNT                              | (a)   | handle  | 1718381364  | `abilityreallevelfield: 000002BC1E371230` |         |
+| ABILITY\_RLF\_SMALL\_DAMAGE\_AMOUNT                               | (a)   | handle  | 1718381365  | `abilityreallevelfield: 000002BC1E371270` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_HBN1           | (a)   | handle  | 1214410289  | `abilityreallevelfield: 000002BC1E3712B0` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_HBN2             | (a)   | handle  | 1214410290  | `abilityreallevelfield: 000002BC1E3712F0` |         |
+| ABILITY\_RLF\_MAX\_MANA\_DRAINED\_UNITS                           | (a)   | handle  | 1717726001  | `abilityreallevelfield: 000002BC1E371330` |         |
+| ABILITY\_RLF\_DAMAGE\_RATIO\_UNITS\_PERCENT                       | (a)   | handle  | 1717726002  | `abilityreallevelfield: 000002BC1E371370` |         |
+| ABILITY\_RLF\_MAX\_MANA\_DRAINED\_HEROS                           | (a)   | handle  | 1717726003  | `abilityreallevelfield: 000002BC1E3713B0` |         |
+| ABILITY\_RLF\_DAMAGE\_RATIO\_HEROS\_PERCENT                       | (a)   | handle  | 1717726004  | `abilityreallevelfield: 000002BC1E3713F0` |         |
+| ABILITY\_RLF\_SUMMONED\_DAMAGE                                    | (a)   | handle  | 1717726005  | `abilityreallevelfield: 000002BC1E371430` |         |
+| ABILITY\_RLF\_DISTRIBUTED\_DAMAGE\_FACTOR\_NCA1                   | (a)   | handle  | 1852006705  | `abilityreallevelfield: 000002BC1E371470` |         |
+| ABILITY\_RLF\_INITIAL\_DAMAGE\_PXF1                               | (a)   | handle  | 1886938673  | `abilityreallevelfield: 000002BC1E3714B0` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_PXF2                           | (a)   | handle  | 1886938674  | `abilityreallevelfield: 000002BC1E3714F0` |         |
+| ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_MLS1                           | (a)   | handle  | 1835823921  | `abilityreallevelfield: 000002BC1E371530` |         |
+| ABILITY\_RLF\_BEAST\_COLLISION\_RADIUS                            | (a)   | handle  | 1316189234  | `abilityreallevelfield: 000002BC1E371570` |         |
+| ABILITY\_RLF\_DAMAGE\_AMOUNT\_NST3                                | (a)   | handle  | 1316189235  | `abilityreallevelfield: 000002BC1E3715B0` |         |
+| ABILITY\_RLF\_DAMAGE\_RADIUS                                      | (a)   | handle  | 1316189236  | `abilityreallevelfield: 000002BC1E3715F0` |         |
+| ABILITY\_RLF\_DAMAGE\_DELAY                                       | (a)   | handle  | 1316189237  | `abilityreallevelfield: 000002BC1E371630` |         |
+| ABILITY\_RLF\_FOLLOW\_THROUGH\_TIME                               | (a)   | handle  | 1315138609  | `abilityreallevelfield: 000002BC1E371670` |         |
+| ABILITY\_RLF\_ART\_DURATION                                       | (a)   | handle  | 1315138612  | `abilityreallevelfield: 000002BC1E3716B0` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_NAB1           | (a)   | handle  | 1315004977  | `abilityreallevelfield: 000002BC1E3716F0` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_NAB2             | (a)   | handle  | 1315004978  | `abilityreallevelfield: 000002BC1E371730` |         |
+| ABILITY\_RLF\_PRIMARY\_DAMAGE                                     | (a)   | handle  | 1315004980  | `abilityreallevelfield: 000002BC1E371770` |         |
+| ABILITY\_RLF\_SECONDARY\_DAMAGE                                   | (a)   | handle  | 1315004981  | `abilityreallevelfield: 000002BC1E3717B0` |         |
+| ABILITY\_RLF\_DAMAGE\_INTERVAL\_NAB6                              | (a)   | handle  | 1315004982  | `abilityreallevelfield: 000002BC1E3717F0` |         |
+| ABILITY\_RLF\_GOLD\_COST\_FACTOR                                  | (a)   | handle  | 1316252977  | `abilityreallevelfield: 000002BC1E371830` |         |
+| ABILITY\_RLF\_LUMBER\_COST\_FACTOR                                | (a)   | handle  | 1316252978  | `abilityreallevelfield: 000002BC1E371870` |         |
+| ABILITY\_RLF\_MOVE\_SPEED\_BONUS\_NEG1                            | (a)   | handle  | 1315268401  | `abilityreallevelfield: 000002BC1E3718B0` |         |
+| ABILITY\_RLF\_DAMAGE\_BONUS\_NEG2                                 | (a)   | handle  | 1315268402  | `abilityreallevelfield: 000002BC1E3718F0` |         |
+| ABILITY\_RLF\_DAMAGE\_AMOUNT\_NCS1                                | (a)   | handle  | 1315140401  | `abilityreallevelfield: 000002BC1E371930` |         |
+| ABILITY\_RLF\_DAMAGE\_INTERVAL\_NCS2                              | (a)   | handle  | 1315140402  | `abilityreallevelfield: 000002BC1E371970` |         |
+| ABILITY\_RLF\_MAX\_DAMAGE\_NCS4                                   | (a)   | handle  | 1315140404  | `abilityreallevelfield: 000002BC1E3719B0` |         |
+| ABILITY\_RLF\_BUILDING\_DAMAGE\_FACTOR\_NCS5                      | (a)   | handle  | 1315140405  | `abilityreallevelfield: 000002BC1E3719F0` |         |
+| ABILITY\_RLF\_EFFECT\_DURATION                                    | (a)   | handle  | 1315140406  | `abilityreallevelfield: 000002BC1E371A30` |         |
+| ABILITY\_RLF\_SPAWN\_INTERVAL\_NSY1                               | (a)   | handle  | 1316190513  | `abilityreallevelfield: 000002BC1E371A70` |         |
+| ABILITY\_RLF\_SPAWN\_UNIT\_DURATION                               | (a)   | handle  | 1316190515  | `abilityreallevelfield: 000002BC1E371AB0` |         |
+| ABILITY\_RLF\_SPAWN\_UNIT\_OFFSET                                 | (a)   | handle  | 1316190516  | `abilityreallevelfield: 000002BC1E371AF0` |         |
+| ABILITY\_RLF\_LEASH\_RANGE\_NSY5                                  | (a)   | handle  | 1316190517  | `abilityreallevelfield: 000002BC1E371B30` |         |
+| ABILITY\_RLF\_SPAWN\_INTERVAL\_NFY1                               | (a)   | handle  | 1315338545  | `abilityreallevelfield: 000002BC1E371B70` |         |
+| ABILITY\_RLF\_LEASH\_RANGE\_NFY2                                  | (a)   | handle  | 1315338546  | `abilityreallevelfield: 000002BC1E371BB0` |         |
+| ABILITY\_RLF\_CHANCE\_TO\_DEMOLISH                                | (a)   | handle  | 1315202353  | `abilityreallevelfield: 000002BC1E371BF0` |         |
+| ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_BUILDINGS                       | (a)   | handle  | 1315202354  | `abilityreallevelfield: 000002BC1E371C30` |         |
+| ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_UNITS                           | (a)   | handle  | 1315202355  | `abilityreallevelfield: 000002BC1E371C70` |         |
+| ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_HEROES                          | (a)   | handle  | 1315202356  | `abilityreallevelfield: 000002BC1E371CB0` |         |
+| ABILITY\_RLF\_BONUS\_DAMAGE\_MULTIPLIER                           | (a)   | handle  | 1315529521  | `abilityreallevelfield: 000002BC1E371CF0` |         |
+| ABILITY\_RLF\_DEATH\_DAMAGE\_FULL\_AMOUNT                         | (a)   | handle  | 1315529522  | `abilityreallevelfield: 000002BC1E371D30` |         |
+| ABILITY\_RLF\_DEATH\_DAMAGE\_FULL\_AREA                           | (a)   | handle  | 1315529523  | `abilityreallevelfield: 000002BC1E371D70` |         |
+| ABILITY\_RLF\_DEATH\_DAMAGE\_HALF\_AMOUNT                         | (a)   | handle  | 1315529524  | `abilityreallevelfield: 000002BC1E371DB0` |         |
+| ABILITY\_RLF\_DEATH\_DAMAGE\_HALF\_AREA                           | (a)   | handle  | 1315529525  | `abilityreallevelfield: 000002BC1E371DF0` |         |
+| ABILITY\_RLF\_DEATH\_DAMAGE\_DELAY                                | (a)   | handle  | 1315529526  | `abilityreallevelfield: 000002BC1E371E30` |         |
+| ABILITY\_RLF\_DAMAGE\_AMOUNT\_NSO1                                | (a)   | handle  | 1316187953  | `abilityreallevelfield: 000002BC1E371E70` |         |
+| ABILITY\_RLF\_DAMAGE\_PERIOD                                      | (a)   | handle  | 1316187954  | `abilityreallevelfield: 000002BC1E371EB0` |         |
+| ABILITY\_RLF\_DAMAGE\_PENALTY                                     | (a)   | handle  | 1316187955  | `abilityreallevelfield: 000002BC1E371EF0` |         |
+| ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_NSO4           | (a)   | handle  | 1316187956  | `abilityreallevelfield: 000002BC1E371F30` |         |
+| ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_NSO5             | (a)   | handle  | 1316187957  | `abilityreallevelfield: 000002BC1E371F70` |         |
+| ABILITY\_RLF\_SPLIT\_DELAY                                        | (a)   | handle  | 1315728690  | `abilityreallevelfield: 000002BC1E371FB0` |         |
+| ABILITY\_RLF\_MAX\_HITPOINT\_FACTOR                               | (a)   | handle  | 1315728692  | `abilityreallevelfield: 000002BC1E371FF0` |         |
+| ABILITY\_RLF\_LIFE\_DURATION\_SPLIT\_BONUS                        | (a)   | handle  | 1315728693  | `abilityreallevelfield: 000002BC1E372030` |         |
+| ABILITY\_RLF\_WAVE\_INTERVAL                                      | (a)   | handle  | 1316381491  | `abilityreallevelfield: 000002BC1E372070` |         |
+| ABILITY\_RLF\_BUILDING\_DAMAGE\_FACTOR\_NVC4                      | (a)   | handle  | 1316381492  | `abilityreallevelfield: 000002BC1E3720B0` |         |
+| ABILITY\_RLF\_FULL\_DAMAGE\_AMOUNT\_NVC5                          | (a)   | handle  | 1316381493  | `abilityreallevelfield: 000002BC1E3720F0` |         |
+| ABILITY\_RLF\_HALF\_DAMAGE\_FACTOR                                | (a)   | handle  | 1316381494  | `abilityreallevelfield: 000002BC1E372130` |         |
+| ABILITY\_RLF\_INTERVAL\_BETWEEN\_PULSES                           | (a)   | handle  | 1415673141  | `abilityreallevelfield: 000002BC1E372170` |         |
+| -1                                                                | (a)   | handle  | -1          | `abilityreallevelfield: 000002BD0A4E4F50` |         |
+| past the last constant                                            | (a)   | handle  | 1936747570  | `abilityreallevelfield: 000002BD0A4B90B0` |         |
+| 2147483647                                                        | (a)   | handle  | 2147483647  | `abilityreallevelfield: 000002BD09476DF0` |         |
+| -2147483648                                                       | (a)   | handle  | -2147483648 | `abilityreallevelfield: 000002BD093A72F0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_RLF\_CASTING\_TIME, ABILITY\_RLF\_DURATION\_NORMAL, ABILITY\_RLF\_DURATION\_HERO, ABILITY\_RLF\_COOLDOWN, ABILITY\_RLF\_AREA\_OF\_EFFECT, ABILITY\_RLF\_CAST\_RANGE, ABILITY\_RLF\_DAMAGE\_HBZ2, ABILITY\_RLF\_BUILDING\_REDUCTION\_HBZ4, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_HBZ5, ABILITY\_RLF\_MAXIMUM\_DAMAGE\_PER\_WAVE, ABILITY\_RLF\_MANA\_REGENERATION\_INCREASE, ABILITY\_RLF\_CASTING\_DELAY, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_OWW1, ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_OWW2, ABILITY\_RLF\_CHANCE\_TO\_CRITICAL\_STRIKE, ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_OCR2, ABILITY\_RLF\_DAMAGE\_BONUS\_OCR3, ABILITY\_RLF\_CHANCE\_TO\_EVADE\_OCR4, ABILITY\_RLF\_DAMAGE\_DEALT\_PERCENT\_OMI2, ABILITY\_RLF\_DAMAGE\_TAKEN\_PERCENT\_OMI3, ABILITY\_RLF\_ANIMATION\_DELAY, ABILITY\_RLF\_TRANSITION\_TIME, ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_PERCENT\_OWK2, ABILITY\_RLF\_BACKSTAB\_DAMAGE, ABILITY\_RLF\_AMOUNT\_HEALED\_DAMAGED\_UDC1, ABILITY\_RLF\_LIFE\_CONVERTED\_TO\_MANA, ABILITY\_RLF\_LIFE\_CONVERTED\_TO\_LIFE, ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_PERCENT\_UAU1, ABILITY\_RLF\_LIFE\_REGENERATION\_INCREASE\_PERCENT, ABILITY\_RLF\_CHANCE\_TO\_EVADE\_EEV1, ABILITY\_RLF\_DAMAGE\_PER\_INTERVAL, ABILITY\_RLF\_MANA\_DRAINED\_PER\_SECOND\_EIM2, ABILITY\_RLF\_BUFFER\_MANA\_REQUIRED, ABILITY\_RLF\_MAX\_MANA\_DRAINED, ABILITY\_RLF\_BOLT\_DELAY, ABILITY\_RLF\_BOLT\_LIFETIME, ABILITY\_RLF\_ALTITUDE\_ADJUSTMENT\_DURATION, ABILITY\_RLF\_LANDING\_DELAY\_TIME, ABILITY\_RLF\_ALTERNATE\_FORM\_HIT\_POINT\_BONUS, ABILITY\_RLF\_MOVE\_SPEED\_BONUS\_INFO\_PANEL\_ONLY, ABILITY\_RLF\_ATTACK\_SPEED\_BONUS\_INFO\_PANEL\_ONLY, ABILITY\_RLF\_LIFE\_REGENERATION\_RATE\_PER\_SECOND, ABILITY\_RLF\_STUN\_DURATION\_USL1, ABILITY\_RLF\_ATTACK\_DAMAGE\_STOLEN\_PERCENT, ABILITY\_RLF\_DAMAGE\_UCS1, ABILITY\_RLF\_MAX\_DAMAGE\_UCS2, ABILITY\_RLF\_DISTANCE\_UCS3, ABILITY\_RLF\_FINAL\_AREA\_UCS4, ABILITY\_RLF\_DAMAGE\_UIN1, ABILITY\_RLF\_DURATION, ABILITY\_RLF\_IMPACT\_DELAY, ABILITY\_RLF\_DAMAGE\_PER\_TARGET\_OCL1, ABILITY\_RLF\_DAMAGE\_REDUCTION\_PER\_TARGET, ABILITY\_RLF\_EFFECT\_DELAY\_OEQ1, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_TO\_BUILDINGS, ABILITY\_RLF\_UNITS\_SLOWED\_PERCENT, ABILITY\_RLF\_FINAL\_AREA\_OEQ4, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_EER1, ABILITY\_RLF\_DAMAGE\_DEALT\_TO\_ATTACKERS, ABILITY\_RLF\_LIFE\_HEALED, ABILITY\_RLF\_HEAL\_INTERVAL, ABILITY\_RLF\_BUILDING\_REDUCTION\_ETQ3, ABILITY\_RLF\_INITIAL\_IMMUNITY\_DURATION, ABILITY\_RLF\_MAX\_LIFE\_DRAINED\_PER\_SECOND\_PERCENT, ABILITY\_RLF\_BUILDING\_REDUCTION\_UDD2, ABILITY\_RLF\_ARMOR\_DURATION, ABILITY\_RLF\_ARMOR\_BONUS\_UFA2, ABILITY\_RLF\_AREA\_OF\_EFFECT\_DAMAGE, ABILITY\_RLF\_SPECIFIC\_TARGET\_DAMAGE\_UFN2, ABILITY\_RLF\_DAMAGE\_BONUS\_HFA1, ABILITY\_RLF\_DAMAGE\_DEALT\_ESF1, ABILITY\_RLF\_DAMAGE\_INTERVAL\_ESF2, ABILITY\_RLF\_BUILDING\_REDUCTION\_ESF3, ABILITY\_RLF\_DAMAGE\_BONUS\_PERCENT, ABILITY\_RLF\_DEFENSE\_BONUS\_HAV1, ABILITY\_RLF\_HIT\_POINT\_BONUS, ABILITY\_RLF\_DAMAGE\_BONUS\_HAV3, ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_HAV4, ABILITY\_RLF\_CHANCE\_TO\_BASH, ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_HBH2, ABILITY\_RLF\_DAMAGE\_BONUS\_HBH3, ABILITY\_RLF\_CHANCE\_TO\_MISS\_HBH4, ABILITY\_RLF\_DAMAGE\_HTB1, ABILITY\_RLF\_AOE\_DAMAGE, ABILITY\_RLF\_SPECIFIC\_TARGET\_DAMAGE\_HTC2, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_HTC3, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_HTC4, ABILITY\_RLF\_ARMOR\_BONUS\_HAD1, ABILITY\_RLF\_AMOUNT\_HEALED\_DAMAGED\_HHB1, ABILITY\_RLF\_EXTRA\_DAMAGE\_HCA1, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_HCA2, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_HCA3, ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_PERCENT\_OAE1, ABILITY\_RLF\_ATTACK\_SPEED\_INCREASE\_PERCENT\_OAE2, ABILITY\_RLF\_REINCARNATION\_DELAY, ABILITY\_RLF\_DAMAGE\_OSH1, ABILITY\_RLF\_MAXIMUM\_DAMAGE\_OSH2, ABILITY\_RLF\_DISTANCE\_OSH3, ABILITY\_RLF\_FINAL\_AREA\_OSH4, ABILITY\_RLF\_GRAPHIC\_DELAY\_NFD1, ABILITY\_RLF\_GRAPHIC\_DURATION\_NFD2, ABILITY\_RLF\_DAMAGE\_NFD3, ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_AMS1, ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_AMS2, ABILITY\_RLF\_AURA\_DURATION, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_APL2, ABILITY\_RLF\_DURATION\_OF\_PLAGUE\_WARD, ABILITY\_RLF\_AMOUNT\_OF\_HIT\_POINTS\_REGENERATED, ABILITY\_RLF\_ATTACK\_DAMAGE\_INCREASE\_AKB1, ABILITY\_RLF\_MANA\_LOSS\_ADM1, ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_ADM2, ABILITY\_RLF\_EXPANSION\_AMOUNT, ABILITY\_RLF\_INTERVAL\_DURATION\_BGM2, ABILITY\_RLF\_RADIUS\_OF\_MINING\_RING, ABILITY\_RLF\_ATTACK\_SPEED\_INCREASE\_PERCENT\_BLO1, ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_PERCENT\_BLO2, ABILITY\_RLF\_SCALING\_FACTOR, ABILITY\_RLF\_HIT\_POINTS\_PER\_SECOND\_CAN1, ABILITY\_RLF\_MAX\_HIT\_POINTS, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_DEV2, ABILITY\_RLF\_MOVEMENT\_UPDATE\_FREQUENCY\_CHD1, ABILITY\_RLF\_ATTACK\_UPDATE\_FREQUENCY\_CHD2, ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_CHD3, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_CRI1, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_CRI2, ABILITY\_RLF\_DAMAGE\_REDUCTION\_CRI3, ABILITY\_RLF\_CHANCE\_TO\_MISS\_CRS, ABILITY\_RLF\_FULL\_DAMAGE\_RADIUS\_DDA1, ABILITY\_RLF\_FULL\_DAMAGE\_AMOUNT\_DDA2, ABILITY\_RLF\_PARTIAL\_DAMAGE\_RADIUS, ABILITY\_RLF\_PARTIAL\_DAMAGE\_AMOUNT, ABILITY\_RLF\_BUILDING\_DAMAGE\_FACTOR\_SDS1, ABILITY\_RLF\_MAX\_DAMAGE\_UCO5, ABILITY\_RLF\_MOVE\_SPEED\_BONUS\_UCO6, ABILITY\_RLF\_DAMAGE\_TAKEN\_PERCENT\_DEF1, ABILITY\_RLF\_DAMAGE\_DEALT\_PERCENT\_DEF2, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_DEF3, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_DEF4, ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_DEF5, ABILITY\_RLF\_CHANCE\_TO\_DEFLECT, ABILITY\_RLF\_DEFLECT\_DAMAGE\_TAKEN\_PIERCING, ABILITY\_RLF\_DEFLECT\_DAMAGE\_TAKEN\_SPELLS, ABILITY\_RLF\_RIP\_DELAY, ABILITY\_RLF\_EAT\_DELAY, ABILITY\_RLF\_HIT\_POINTS\_GAINED\_EAT3, ABILITY\_RLF\_AIR\_UNIT\_LOWER\_DURATION, ABILITY\_RLF\_AIR\_UNIT\_HEIGHT, ABILITY\_RLF\_MELEE\_ATTACK\_RANGE, ABILITY\_RLF\_INTERVAL\_DURATION\_EGM2, ABILITY\_RLF\_EFFECT\_DELAY\_FLA2, ABILITY\_RLF\_MINING\_DURATION, ABILITY\_RLF\_RADIUS\_OF\_GRAVESTONES, ABILITY\_RLF\_RADIUS\_OF\_CORPSES, ABILITY\_RLF\_HIT\_POINTS\_GAINED\_HEA1, ABILITY\_RLF\_DAMAGE\_INCREASE\_PERCENT\_INF1, ABILITY\_RLF\_AUTOCAST\_RANGE, ABILITY\_RLF\_LIFE\_REGEN\_RATE, ABILITY\_RLF\_GRAPHIC\_DELAY\_LIT1, ABILITY\_RLF\_GRAPHIC\_DURATION\_LIT2, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_LSH1, ABILITY\_RLF\_MANA\_GAINED, ABILITY\_RLF\_HIT\_POINTS\_GAINED\_MBT2, ABILITY\_RLF\_AUTOCAST\_REQUIREMENT, ABILITY\_RLF\_WATER\_HEIGHT, ABILITY\_RLF\_ACTIVATION\_DELAY\_MIN1, ABILITY\_RLF\_INVISIBILITY\_TRANSITION\_TIME, ABILITY\_RLF\_ACTIVATION\_RADIUS, ABILITY\_RLF\_AMOUNT\_REGENERATED, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_POI1, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_POI2, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_POI3, ABILITY\_RLF\_EXTRA\_DAMAGE\_POA1, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_POA2, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_POA3, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_POA4, ABILITY\_RLF\_DAMAGE\_AMPLIFICATION, ABILITY\_RLF\_CHANCE\_TO\_STOMP\_PERCENT, ABILITY\_RLF\_DAMAGE\_DEALT\_WAR2, ABILITY\_RLF\_FULL\_DAMAGE\_RADIUS\_WAR3, ABILITY\_RLF\_HALF\_DAMAGE\_RADIUS\_WAR4, ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_PRG3, ABILITY\_RLF\_UNIT\_PAUSE\_DURATION, ABILITY\_RLF\_HERO\_PAUSE\_DURATION, ABILITY\_RLF\_HIT\_POINTS\_GAINED\_REJ1, ABILITY\_RLF\_MANA\_POINTS\_GAINED\_REJ2, ABILITY\_RLF\_MINIMUM\_LIFE\_REQUIRED, ABILITY\_RLF\_MINIMUM\_MANA\_REQUIRED, ABILITY\_RLF\_REPAIR\_COST\_RATIO, ABILITY\_RLF\_REPAIR\_TIME\_RATIO, ABILITY\_RLF\_POWERBUILD\_COST, ABILITY\_RLF\_POWERBUILD\_RATE, ABILITY\_RLF\_NAVAL\_RANGE\_BONUS, ABILITY\_RLF\_DAMAGE\_INCREASE\_PERCENT\_ROA1, ABILITY\_RLF\_LIFE\_REGENERATION\_RATE, ABILITY\_RLF\_MANA\_REGEN, ABILITY\_RLF\_DAMAGE\_INCREASE, ABILITY\_RLF\_SALVAGE\_COST\_RATIO, ABILITY\_RLF\_IN\_FLIGHT\_SIGHT\_RADIUS, ABILITY\_RLF\_HOVERING\_SIGHT\_RADIUS, ABILITY\_RLF\_HOVERING\_HEIGHT, ABILITY\_RLF\_DURATION\_OF\_OWLS, ABILITY\_RLF\_FADE\_DURATION, ABILITY\_RLF\_DAY\_NIGHT\_DURATION, ABILITY\_RLF\_ACTION\_DURATION, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_SLO1, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_SLO2, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_SPO1, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_SPO2, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_SPO3, ABILITY\_RLF\_ACTIVATION\_DELAY\_STA1, ABILITY\_RLF\_DETECTION\_RADIUS\_STA2, ABILITY\_RLF\_DETONATION\_RADIUS, ABILITY\_RLF\_STUN\_DURATION\_STA4, ABILITY\_RLF\_ATTACK\_SPEED\_BONUS\_PERCENT, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_UHF2, ABILITY\_RLF\_LUMBER\_PER\_INTERVAL, ABILITY\_RLF\_ART\_ATTACHMENT\_HEIGHT, ABILITY\_RLF\_TELEPORT\_AREA\_WIDTH, ABILITY\_RLF\_TELEPORT\_AREA\_HEIGHT, ABILITY\_RLF\_LIFE\_STOLEN\_PER\_ATTACK, ABILITY\_RLF\_DAMAGE\_BONUS\_IDAM, ABILITY\_RLF\_CHANCE\_TO\_HIT\_UNITS\_PERCENT, ABILITY\_RLF\_CHANCE\_TO\_HIT\_HEROS\_PERCENT, ABILITY\_RLF\_CHANCE\_TO\_HIT\_SUMMONS\_PERCENT, ABILITY\_RLF\_DELAY\_FOR\_TARGET\_EFFECT, ABILITY\_RLF\_DAMAGE\_DEALT\_PERCENT\_OF\_NORMAL, ABILITY\_RLF\_DAMAGE\_RECEIVED\_MULTIPLIER, ABILITY\_RLF\_MANA\_REGENERATION\_BONUS\_AS\_FRACTION\_OF\_NORMAL, ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_ISPI, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_IDPS, ABILITY\_RLF\_ATTACK\_DAMAGE\_INCREASE\_CAC1, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_COR1, ABILITY\_RLF\_ATTACK\_SPEED\_INCREASE\_ISX1, ABILITY\_RLF\_DAMAGE\_WRS1, ABILITY\_RLF\_TERRAIN\_DEFORMATION\_AMPLITUDE, ABILITY\_RLF\_DAMAGE\_CTC1, ABILITY\_RLF\_EXTRA\_DAMAGE\_TO\_TARGET, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_CTC3, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_CTC4, ABILITY\_RLF\_DAMAGE\_CTB1, ABILITY\_RLF\_CASTING\_DELAY\_SECONDS, ABILITY\_RLF\_MANA\_LOSS\_PER\_UNIT\_DTN1, ABILITY\_RLF\_DAMAGE\_TO\_SUMMONED\_UNITS\_DTN2, ABILITY\_RLF\_TRANSITION\_TIME\_SECONDS, ABILITY\_RLF\_MANA\_DRAINED\_PER\_SECOND\_NMR1, ABILITY\_RLF\_CHANCE\_TO\_REDUCE\_DAMAGE\_PERCENT, ABILITY\_RLF\_MINIMUM\_DAMAGE, ABILITY\_RLF\_IGNORED\_DAMAGE, ABILITY\_RLF\_FULL\_DAMAGE\_DEALT, ABILITY\_RLF\_FULL\_DAMAGE\_INTERVAL, ABILITY\_RLF\_HALF\_DAMAGE\_DEALT, ABILITY\_RLF\_HALF\_DAMAGE\_INTERVAL, ABILITY\_RLF\_BUILDING\_REDUCTION\_HFS5, ABILITY\_RLF\_MAXIMUM\_DAMAGE\_HFS6, ABILITY\_RLF\_MANA\_PER\_HIT\_POINT, ABILITY\_RLF\_DAMAGE\_ABSORBED\_PERCENT, ABILITY\_RLF\_WAVE\_DISTANCE, ABILITY\_RLF\_WAVE\_TIME\_SECONDS, ABILITY\_RLF\_DAMAGE\_DEALT\_UIM3, ABILITY\_RLF\_AIR\_TIME\_SECONDS\_UIM4, ABILITY\_RLF\_UNIT\_RELEASE\_INTERVAL\_SECONDS, ABILITY\_RLF\_DAMAGE\_RETURN\_FACTOR, ABILITY\_RLF\_DAMAGE\_RETURN\_THRESHOLD, ABILITY\_RLF\_RETURNED\_DAMAGE\_FACTOR, ABILITY\_RLF\_RECEIVED\_DAMAGE\_FACTOR, ABILITY\_RLF\_DEFENSE\_BONUS\_UTS3, ABILITY\_RLF\_DAMAGE\_BONUS\_NBA1, ABILITY\_RLF\_SUMMONED\_UNIT\_DURATION\_SECONDS\_NBA3, ABILITY\_RLF\_MANA\_PER\_SUMMONED\_HITPOINT, ABILITY\_RLF\_CHARGE\_FOR\_CURRENT\_LIFE, ABILITY\_RLF\_HIT\_POINTS\_DRAINED, ABILITY\_RLF\_MANA\_POINTS\_DRAINED, ABILITY\_RLF\_DRAIN\_INTERVAL\_SECONDS, ABILITY\_RLF\_LIFE\_TRANSFERRED\_PER\_SECOND, ABILITY\_RLF\_MANA\_TRANSFERRED\_PER\_SECOND, ABILITY\_RLF\_BONUS\_LIFE\_FACTOR, ABILITY\_RLF\_BONUS\_LIFE\_DECAY, ABILITY\_RLF\_BONUS\_MANA\_FACTOR, ABILITY\_RLF\_BONUS\_MANA\_DECAY, ABILITY\_RLF\_CHANCE\_TO\_MISS\_PERCENT, ABILITY\_RLF\_MOVEMENT\_SPEED\_MODIFIER, ABILITY\_RLF\_ATTACK\_SPEED\_MODIFIER, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_TDG1, ABILITY\_RLF\_MEDIUM\_DAMAGE\_RADIUS\_TDG2, ABILITY\_RLF\_MEDIUM\_DAMAGE\_PER\_SECOND, ABILITY\_RLF\_SMALL\_DAMAGE\_RADIUS\_TDG4, ABILITY\_RLF\_SMALL\_DAMAGE\_PER\_SECOND, ABILITY\_RLF\_AIR\_TIME\_SECONDS\_TSP1, ABILITY\_RLF\_MINIMUM\_HIT\_INTERVAL\_SECONDS, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_NBF5, ABILITY\_RLF\_MAXIMUM\_RANGE, ABILITY\_RLF\_MINIMUM\_RANGE, ABILITY\_RLF\_DAMAGE\_PER\_TARGET\_EFK1, ABILITY\_RLF\_MAXIMUM\_TOTAL\_DAMAGE, ABILITY\_RLF\_MAXIMUM\_SPEED\_ADJUSTMENT, ABILITY\_RLF\_DECAYING\_DAMAGE, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_ESH2, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_ESH3, ABILITY\_RLF\_DECAY\_POWER, ABILITY\_RLF\_INITIAL\_DAMAGE\_ESH5, ABILITY\_RLF\_MAXIMUM\_LIFE\_ABSORBED, ABILITY\_RLF\_MAXIMUM\_MANA\_ABSORBED, ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_BSK1, ABILITY\_RLF\_ATTACK\_SPEED\_INCREASE\_BSK2, ABILITY\_RLF\_DAMAGE\_TAKEN\_INCREASE, ABILITY\_RLF\_LIFE\_PER\_UNIT, ABILITY\_RLF\_MANA\_PER\_UNIT, ABILITY\_RLF\_LIFE\_PER\_BUFF, ABILITY\_RLF\_MANA\_PER\_BUFF, ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_DVM5, ABILITY\_RLF\_DAMAGE\_BONUS\_FAK1, ABILITY\_RLF\_MEDIUM\_DAMAGE\_FACTOR\_FAK2, ABILITY\_RLF\_SMALL\_DAMAGE\_FACTOR\_FAK3, ABILITY\_RLF\_FULL\_DAMAGE\_RADIUS\_FAK4, ABILITY\_RLF\_HALF\_DAMAGE\_RADIUS\_FAK5, ABILITY\_RLF\_EXTRA\_DAMAGE\_PER\_SECOND, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_LIQ2, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_LIQ3, ABILITY\_RLF\_MAGIC\_DAMAGE\_FACTOR, ABILITY\_RLF\_UNIT\_DAMAGE\_PER\_MANA\_POINT, ABILITY\_RLF\_HERO\_DAMAGE\_PER\_MANA\_POINT, ABILITY\_RLF\_UNIT\_MAXIMUM\_DAMAGE, ABILITY\_RLF\_HERO\_MAXIMUM\_DAMAGE, ABILITY\_RLF\_DAMAGE\_COOLDOWN, ABILITY\_RLF\_DISTRIBUTED\_DAMAGE\_FACTOR\_SPL1, ABILITY\_RLF\_LIFE\_REGENERATED, ABILITY\_RLF\_MANA\_REGENERATED, ABILITY\_RLF\_MANA\_LOSS\_PER\_UNIT\_IDC1, ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_IDC2, ABILITY\_RLF\_ACTIVATION\_DELAY\_IMO2, ABILITY\_RLF\_LURE\_INTERVAL\_SECONDS, ABILITY\_RLF\_DAMAGE\_BONUS\_ISR1, ABILITY\_RLF\_DAMAGE\_REDUCTION\_ISR2, ABILITY\_RLF\_DAMAGE\_BONUS\_IPV1, ABILITY\_RLF\_LIFE\_STEAL\_AMOUNT, ABILITY\_RLF\_LIFE\_RESTORED\_FACTOR, ABILITY\_RLF\_MANA\_RESTORED\_FACTOR, ABILITY\_RLF\_ATTACH\_DELAY, ABILITY\_RLF\_REMOVE\_DELAY, ABILITY\_RLF\_HERO\_REGENERATION\_DELAY, ABILITY\_RLF\_UNIT\_REGENERATION\_DELAY, ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_NSA4, ABILITY\_RLF\_HIT\_POINTS\_PER\_SECOND\_NSA5, ABILITY\_RLF\_DAMAGE\_TO\_SUMMONED\_UNITS\_IXS1, ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_IXS2, ABILITY\_RLF\_SUMMONED\_UNIT\_DURATION, ABILITY\_RLF\_SHIELD\_COOLDOWN\_TIME, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_NDO1, ABILITY\_RLF\_SUMMONED\_UNIT\_DURATION\_SECONDS\_NDO3, ABILITY\_RLF\_MEDIUM\_DAMAGE\_RADIUS\_FLK1, ABILITY\_RLF\_SMALL\_DAMAGE\_RADIUS\_FLK2, ABILITY\_RLF\_FULL\_DAMAGE\_AMOUNT\_FLK3, ABILITY\_RLF\_MEDIUM\_DAMAGE\_AMOUNT, ABILITY\_RLF\_SMALL\_DAMAGE\_AMOUNT, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_HBN1, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_HBN2, ABILITY\_RLF\_MAX\_MANA\_DRAINED\_UNITS, ABILITY\_RLF\_DAMAGE\_RATIO\_UNITS\_PERCENT, ABILITY\_RLF\_MAX\_MANA\_DRAINED\_HEROS, ABILITY\_RLF\_DAMAGE\_RATIO\_HEROS\_PERCENT, ABILITY\_RLF\_SUMMONED\_DAMAGE, ABILITY\_RLF\_DISTRIBUTED\_DAMAGE\_FACTOR\_NCA1, ABILITY\_RLF\_INITIAL\_DAMAGE\_PXF1, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_PXF2, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_MLS1, ABILITY\_RLF\_BEAST\_COLLISION\_RADIUS, ABILITY\_RLF\_DAMAGE\_AMOUNT\_NST3, ABILITY\_RLF\_DAMAGE\_RADIUS, ABILITY\_RLF\_DAMAGE\_DELAY, ABILITY\_RLF\_FOLLOW\_THROUGH\_TIME, ABILITY\_RLF\_ART\_DURATION, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_NAB1, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_NAB2, ABILITY\_RLF\_PRIMARY\_DAMAGE, ABILITY\_RLF\_SECONDARY\_DAMAGE, ABILITY\_RLF\_DAMAGE\_INTERVAL\_NAB6, ABILITY\_RLF\_GOLD\_COST\_FACTOR, ABILITY\_RLF\_LUMBER\_COST\_FACTOR, ABILITY\_RLF\_MOVE\_SPEED\_BONUS\_NEG1, ABILITY\_RLF\_DAMAGE\_BONUS\_NEG2, ABILITY\_RLF\_DAMAGE\_AMOUNT\_NCS1, ABILITY\_RLF\_DAMAGE\_INTERVAL\_NCS2, ABILITY\_RLF\_MAX\_DAMAGE\_NCS4, ABILITY\_RLF\_BUILDING\_DAMAGE\_FACTOR\_NCS5, ABILITY\_RLF\_EFFECT\_DURATION, ABILITY\_RLF\_SPAWN\_INTERVAL\_NSY1, ABILITY\_RLF\_SPAWN\_UNIT\_DURATION, ABILITY\_RLF\_SPAWN\_UNIT\_OFFSET, ABILITY\_RLF\_LEASH\_RANGE\_NSY5, ABILITY\_RLF\_SPAWN\_INTERVAL\_NFY1, ABILITY\_RLF\_LEASH\_RANGE\_NFY2, ABILITY\_RLF\_CHANCE\_TO\_DEMOLISH, ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_BUILDINGS, ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_UNITS, ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_HEROES, ABILITY\_RLF\_BONUS\_DAMAGE\_MULTIPLIER, ABILITY\_RLF\_DEATH\_DAMAGE\_FULL\_AMOUNT, ABILITY\_RLF\_DEATH\_DAMAGE\_FULL\_AREA, ABILITY\_RLF\_DEATH\_DAMAGE\_HALF\_AMOUNT, ABILITY\_RLF\_DEATH\_DAMAGE\_HALF\_AREA, ABILITY\_RLF\_DEATH\_DAMAGE\_DELAY, ABILITY\_RLF\_DAMAGE\_AMOUNT\_NSO1, ABILITY\_RLF\_DAMAGE\_PERIOD, ABILITY\_RLF\_DAMAGE\_PENALTY, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_NSO4, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_NSO5, ABILITY\_RLF\_SPLIT\_DELAY, ABILITY\_RLF\_MAX\_HITPOINT\_FACTOR, ABILITY\_RLF\_LIFE\_DURATION\_SPLIT\_BONUS, ABILITY\_RLF\_WAVE\_INTERVAL, ABILITY\_RLF\_BUILDING\_DAMAGE\_FACTOR\_NVC4, ABILITY\_RLF\_FULL\_DAMAGE\_AMOUNT\_NVC5, ABILITY\_RLF\_HALF\_DAMAGE\_FACTOR, ABILITY\_RLF\_INTERVAL\_BETWEEN\_PULSES, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertAbilityBooleanLevelField`
+
+| Case                                           | Group | Outcome | Id          | Type                                         | Message |
+| ---------------------------------------------- | ----- | ------- | ----------- | -------------------------------------------- | ------- |
+| ABILITY\_BLF\_PERCENT\_BONUS\_HAB2             | (a)   | handle  | 1214341682  | `abilitybooleanlevelfield: 000002BC1E3721B0` |         |
+| ABILITY\_BLF\_USE\_TELEPORT\_CLUSTERING\_HMT3  | (a)   | handle  | 1215132723  | `abilitybooleanlevelfield: 000002BC1E372220` |         |
+| ABILITY\_BLF\_NEVER\_MISS\_OCR5                | (a)   | handle  | 1331917365  | `abilitybooleanlevelfield: 000002BC1E372260` |         |
+| ABILITY\_BLF\_EXCLUDE\_ITEM\_DAMAGE            | (a)   | handle  | 1331917366  | `abilitybooleanlevelfield: 000002BC1E3722A0` |         |
+| ABILITY\_BLF\_BACKSTAB\_DAMAGE                 | (a)   | handle  | 1333226292  | `abilitybooleanlevelfield: 000002BC1E3722E0` |         |
+| ABILITY\_BLF\_INHERIT\_UPGRADES\_UAN3          | (a)   | handle  | 1432448563  | `abilitybooleanlevelfield: 000002BC1E372320` |         |
+| ABILITY\_BLF\_MANA\_CONVERSION\_AS\_PERCENT    | (a)   | handle  | 1432645683  | `abilitybooleanlevelfield: 000002BC1E372360` |         |
+| ABILITY\_BLF\_LIFE\_CONVERSION\_AS\_PERCENT    | (a)   | handle  | 1432645684  | `abilitybooleanlevelfield: 000002BC1E3723A0` |         |
+| ABILITY\_BLF\_LEAVE\_TARGET\_ALIVE             | (a)   | handle  | 1432645685  | `abilitybooleanlevelfield: 000002BC1E3723E0` |         |
+| ABILITY\_BLF\_PERCENT\_BONUS\_UAU3             | (a)   | handle  | 1432450355  | `abilitybooleanlevelfield: 000002BC1E372420` |         |
+| ABILITY\_BLF\_DAMAGE\_IS\_PERCENT\_RECEIVED    | (a)   | handle  | 1164011570  | `abilitybooleanlevelfield: 000002BC1E372460` |         |
+| ABILITY\_BLF\_MELEE\_BONUS                     | (a)   | handle  | 1164014130  | `abilitybooleanlevelfield: 000002BC1E3724A0` |         |
+| ABILITY\_BLF\_RANGED\_BONUS                    | (a)   | handle  | 1164014131  | `abilitybooleanlevelfield: 000002BC1E3724E0` |         |
+| ABILITY\_BLF\_FLAT\_BONUS                      | (a)   | handle  | 1164014132  | `abilitybooleanlevelfield: 000002BC1E372520` |         |
+| ABILITY\_BLF\_NEVER\_MISS\_HBH5                | (a)   | handle  | 1214408757  | `abilitybooleanlevelfield: 000002BC1E372560` |         |
+| ABILITY\_BLF\_PERCENT\_BONUS\_HAD2             | (a)   | handle  | 1214342194  | `abilitybooleanlevelfield: 000002BC1E3725A0` |         |
+| ABILITY\_BLF\_CAN\_DEACTIVATE                  | (a)   | handle  | 1214542641  | `abilitybooleanlevelfield: 000002BC1E3725E0` |         |
+| ABILITY\_BLF\_RAISED\_UNITS\_ARE\_INVULNERABLE | (a)   | handle  | 1215456562  | `abilitybooleanlevelfield: 000002BC1E372620` |         |
+| ABILITY\_BLF\_PERCENTAGE\_OAR2                 | (a)   | handle  | 1331786290  | `abilitybooleanlevelfield: 000002BC1E372660` |         |
+| ABILITY\_BLF\_SUMMON\_BUSY\_UNITS              | (a)   | handle  | 1114926130  | `abilitybooleanlevelfield: 000002BC1E3726D0` |         |
+| ABILITY\_BLF\_CREATES\_BLIGHT                  | (a)   | handle  | 1114401074  | `abilitybooleanlevelfield: 000002BC1E372710` |         |
+| ABILITY\_BLF\_EXPLODES\_ON\_DEATH              | (a)   | handle  | 1399092022  | `abilitybooleanlevelfield: 000002BC1E372750` |         |
+| ABILITY\_BLF\_ALWAYS\_AUTOCAST\_FAE2           | (a)   | handle  | 1180788018  | `abilitybooleanlevelfield: 000002BC1E372790` |         |
+| ABILITY\_BLF\_REGENERATE\_ONLY\_AT\_NIGHT      | (a)   | handle  | 1298297909  | `abilitybooleanlevelfield: 000002BC1E3727D0` |         |
+| ABILITY\_BLF\_SHOW\_SELECT\_UNIT\_BUTTON       | (a)   | handle  | 1315271987  | `abilitybooleanlevelfield: 000002BC1E372810` |         |
+| ABILITY\_BLF\_SHOW\_UNIT\_INDICATOR            | (a)   | handle  | 1315271988  | `abilitybooleanlevelfield: 000002BC1E372850` |         |
+| ABILITY\_BLF\_CHARGE\_OWNING\_PLAYER           | (a)   | handle  | 1097757494  | `abilitybooleanlevelfield: 000002BC1E372890` |         |
+| ABILITY\_BLF\_PERCENTAGE\_ARM2                 | (a)   | handle  | 1098018098  | `abilitybooleanlevelfield: 000002BC1E3728D0` |         |
+| ABILITY\_BLF\_TARGET\_IS\_INVULNERABLE         | (a)   | handle  | 1349481267  | `abilitybooleanlevelfield: 000002BC1E372910` |         |
+| ABILITY\_BLF\_TARGET\_IS\_MAGIC\_IMMUNE        | (a)   | handle  | 1349481268  | `abilitybooleanlevelfield: 000002BC1E372950` |         |
+| ABILITY\_BLF\_KILL\_ON\_CASTER\_DEATH          | (a)   | handle  | 1432576566  | `abilitybooleanlevelfield: 000002BC1E372990` |         |
+| ABILITY\_BLF\_NO\_TARGET\_REQUIRED\_REJ4       | (a)   | handle  | 1382378036  | `abilitybooleanlevelfield: 000002BC1E3729D0` |         |
+| ABILITY\_BLF\_ACCEPTS\_GOLD                    | (a)   | handle  | 1383362097  | `abilitybooleanlevelfield: 000002BC1E372A10` |         |
+| ABILITY\_BLF\_ACCEPTS\_LUMBER                  | (a)   | handle  | 1383362098  | `abilitybooleanlevelfield: 000002BC1E372A50` |         |
+| ABILITY\_BLF\_PREFER\_HOSTILES\_ROA5           | (a)   | handle  | 1383031093  | `abilitybooleanlevelfield: 000002BC1E372A90` |         |
+| ABILITY\_BLF\_PREFER\_FRIENDLIES\_ROA6         | (a)   | handle  | 1383031094  | `abilitybooleanlevelfield: 000002BC1E372AD0` |         |
+| ABILITY\_BLF\_ROOTED\_TURNING                  | (a)   | handle  | 1383034675  | `abilitybooleanlevelfield: 000002BC1E372B10` |         |
+| ABILITY\_BLF\_ALWAYS\_AUTOCAST\_SLO3           | (a)   | handle  | 1399615283  | `abilitybooleanlevelfield: 000002BC1E372B50` |         |
+| ABILITY\_BLF\_HIDE\_BUTTON                     | (a)   | handle  | 1231579492  | `abilitybooleanlevelfield: 000002BC1E372B90` |         |
+| ABILITY\_BLF\_USE\_TELEPORT\_CLUSTERING\_ITP2  | (a)   | handle  | 1232367666  | `abilitybooleanlevelfield: 000002BC1E372BD0` |         |
+| ABILITY\_BLF\_IMMUNE\_TO\_MORPH\_EFFECTS       | (a)   | handle  | 1165256753  | `abilitybooleanlevelfield: 000002BC1E372C10` |         |
+| ABILITY\_BLF\_DOES\_NOT\_BLOCK\_BUILDINGS      | (a)   | handle  | 1165256754  | `abilitybooleanlevelfield: 000002BC1E372C50` |         |
+| ABILITY\_BLF\_AUTO\_ACQUIRE\_ATTACK\_TARGETS   | (a)   | handle  | 1198026545  | `abilitybooleanlevelfield: 000002BC1E372C90` |         |
+| ABILITY\_BLF\_IMMUNE\_TO\_MORPH\_EFFECTS\_GHO2 | (a)   | handle  | 1198026546  | `abilitybooleanlevelfield: 000002BCFF9FABE0` |         |
+| ABILITY\_BLF\_DO\_NOT\_BLOCK\_BUILDINGS        | (a)   | handle  | 1198026547  | `abilitybooleanlevelfield: 000002BC14E7DC30` |         |
+| ABILITY\_BLF\_INCLUDE\_RANGED\_DAMAGE          | (a)   | handle  | 1400073012  | `abilitybooleanlevelfield: 000002BC14E74CE0` |         |
+| ABILITY\_BLF\_INCLUDE\_MELEE\_DAMAGE           | (a)   | handle  | 1400073013  | `abilitybooleanlevelfield: 000002BC14E92230` |         |
+| ABILITY\_BLF\_MOVE\_TO\_PARTNER                | (a)   | handle  | 1668243762  | `abilitybooleanlevelfield: 000002BC14E75410` |         |
+| ABILITY\_BLF\_CAN\_BE\_DISPELLED               | (a)   | handle  | 1668899633  | `abilitybooleanlevelfield: 000002BC1E368620` |         |
+| ABILITY\_BLF\_IGNORE\_FRIENDLY\_BUFFS          | (a)   | handle  | 1685482806  | `abilitybooleanlevelfield: 000002BCFF9FD760` |         |
+| ABILITY\_BLF\_DROP\_ITEMS\_ON\_DEATH           | (a)   | handle  | 1768846898  | `abilitybooleanlevelfield: 000002BCFF9FBC90` |         |
+| ABILITY\_BLF\_CAN\_USE\_ITEMS                  | (a)   | handle  | 1768846899  | `abilitybooleanlevelfield: 000002BCFF9FBE10` |         |
+| ABILITY\_BLF\_CAN\_GET\_ITEMS                  | (a)   | handle  | 1768846900  | `abilitybooleanlevelfield: 000002BC14E84710` |         |
+| ABILITY\_BLF\_CAN\_DROP\_ITEMS                 | (a)   | handle  | 1768846901  | `abilitybooleanlevelfield: 000002BC14E84950` |         |
+| ABILITY\_BLF\_REPAIRS\_ALLOWED                 | (a)   | handle  | 1818849588  | `abilitybooleanlevelfield: 000002BC1989D140` |         |
+| ABILITY\_BLF\_CASTER\_ONLY\_SPLASH             | (a)   | handle  | 1835428918  | `abilitybooleanlevelfield: 000002BC14E84640` |         |
+| ABILITY\_BLF\_NO\_TARGET\_REQUIRED\_IRL4       | (a)   | handle  | 1769106484  | `abilitybooleanlevelfield: 000002BC14E84680` |         |
+| ABILITY\_BLF\_DISPEL\_ON\_ATTACK               | (a)   | handle  | 1769106485  | `abilitybooleanlevelfield: 000002BC19898D50` |         |
+| ABILITY\_BLF\_AMOUNT\_IS\_RAW\_VALUE           | (a)   | handle  | 1768977971  | `abilitybooleanlevelfield: 000002BC19898D90` |         |
+| ABILITY\_BLF\_SHARED\_SPELL\_COOLDOWN          | (a)   | handle  | 1936745010  | `abilitybooleanlevelfield: 000002BC1E3686B0` |         |
+| ABILITY\_BLF\_SLEEP\_ONCE                      | (a)   | handle  | 1936482609  | `abilitybooleanlevelfield: 000002BC1E3686F0` |         |
+| ABILITY\_BLF\_ALLOW\_ON\_ANY\_PLAYER\_SLOT     | (a)   | handle  | 1936482610  | `abilitybooleanlevelfield: 000002BC1989B390` |         |
+| ABILITY\_BLF\_DISABLE\_OTHER\_ABILITIES        | (a)   | handle  | 1315138613  | `abilitybooleanlevelfield: 000002BC1989B3D0` |         |
+| ABILITY\_BLF\_ALLOW\_BOUNTY                    | (a)   | handle  | 1316252980  | `abilitybooleanlevelfield: 000002BCFF9FCFC0` |         |
+| -1                                             | (a)   | handle  | -1          | `abilitybooleanlevelfield: 000002BC14D5C680` |         |
+| past the last constant                         | (a)   | handle  | 1936745011  | `abilitybooleanlevelfield: 000002BC198962E0` |         |
+| 2147483647                                     | (a)   | handle  | 2147483647  | `abilitybooleanlevelfield: 000002BD037DF9E0` |         |
+| -2147483648                                    | (a)   | handle  | -2147483648 | `abilitybooleanlevelfield: 000002BD0A4D7F30` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_BLF\_PERCENT\_BONUS\_HAB2, ABILITY\_BLF\_USE\_TELEPORT\_CLUSTERING\_HMT3, ABILITY\_BLF\_NEVER\_MISS\_OCR5, ABILITY\_BLF\_EXCLUDE\_ITEM\_DAMAGE, ABILITY\_BLF\_BACKSTAB\_DAMAGE, ABILITY\_BLF\_INHERIT\_UPGRADES\_UAN3, ABILITY\_BLF\_MANA\_CONVERSION\_AS\_PERCENT, ABILITY\_BLF\_LIFE\_CONVERSION\_AS\_PERCENT, ABILITY\_BLF\_LEAVE\_TARGET\_ALIVE, ABILITY\_BLF\_PERCENT\_BONUS\_UAU3, ABILITY\_BLF\_DAMAGE\_IS\_PERCENT\_RECEIVED, ABILITY\_BLF\_MELEE\_BONUS, ABILITY\_BLF\_RANGED\_BONUS, ABILITY\_BLF\_FLAT\_BONUS, ABILITY\_BLF\_NEVER\_MISS\_HBH5, ABILITY\_BLF\_PERCENT\_BONUS\_HAD2, ABILITY\_BLF\_CAN\_DEACTIVATE, ABILITY\_BLF\_RAISED\_UNITS\_ARE\_INVULNERABLE, ABILITY\_BLF\_PERCENTAGE\_OAR2, ABILITY\_BLF\_SUMMON\_BUSY\_UNITS, ABILITY\_BLF\_CREATES\_BLIGHT, ABILITY\_BLF\_EXPLODES\_ON\_DEATH, ABILITY\_BLF\_ALWAYS\_AUTOCAST\_FAE2, ABILITY\_BLF\_REGENERATE\_ONLY\_AT\_NIGHT, ABILITY\_BLF\_SHOW\_SELECT\_UNIT\_BUTTON, ABILITY\_BLF\_SHOW\_UNIT\_INDICATOR, ABILITY\_BLF\_CHARGE\_OWNING\_PLAYER, ABILITY\_BLF\_PERCENTAGE\_ARM2, ABILITY\_BLF\_TARGET\_IS\_INVULNERABLE, ABILITY\_BLF\_TARGET\_IS\_MAGIC\_IMMUNE, ABILITY\_BLF\_KILL\_ON\_CASTER\_DEATH, ABILITY\_BLF\_NO\_TARGET\_REQUIRED\_REJ4, ABILITY\_BLF\_ACCEPTS\_GOLD, ABILITY\_BLF\_ACCEPTS\_LUMBER, ABILITY\_BLF\_PREFER\_HOSTILES\_ROA5, ABILITY\_BLF\_PREFER\_FRIENDLIES\_ROA6, ABILITY\_BLF\_ROOTED\_TURNING, ABILITY\_BLF\_ALWAYS\_AUTOCAST\_SLO3, ABILITY\_BLF\_HIDE\_BUTTON, ABILITY\_BLF\_USE\_TELEPORT\_CLUSTERING\_ITP2, ABILITY\_BLF\_IMMUNE\_TO\_MORPH\_EFFECTS, ABILITY\_BLF\_DOES\_NOT\_BLOCK\_BUILDINGS, ABILITY\_BLF\_AUTO\_ACQUIRE\_ATTACK\_TARGETS, ABILITY\_BLF\_IMMUNE\_TO\_MORPH\_EFFECTS\_GHO2, ABILITY\_BLF\_DO\_NOT\_BLOCK\_BUILDINGS, ABILITY\_BLF\_INCLUDE\_RANGED\_DAMAGE, ABILITY\_BLF\_INCLUDE\_MELEE\_DAMAGE, ABILITY\_BLF\_MOVE\_TO\_PARTNER, ABILITY\_BLF\_CAN\_BE\_DISPELLED, ABILITY\_BLF\_IGNORE\_FRIENDLY\_BUFFS, ABILITY\_BLF\_DROP\_ITEMS\_ON\_DEATH, ABILITY\_BLF\_CAN\_USE\_ITEMS, ABILITY\_BLF\_CAN\_GET\_ITEMS, ABILITY\_BLF\_CAN\_DROP\_ITEMS, ABILITY\_BLF\_REPAIRS\_ALLOWED, ABILITY\_BLF\_CASTER\_ONLY\_SPLASH, ABILITY\_BLF\_NO\_TARGET\_REQUIRED\_IRL4, ABILITY\_BLF\_DISPEL\_ON\_ATTACK, ABILITY\_BLF\_AMOUNT\_IS\_RAW\_VALUE, ABILITY\_BLF\_SHARED\_SPELL\_COOLDOWN, ABILITY\_BLF\_SLEEP\_ONCE, ABILITY\_BLF\_ALLOW\_ON\_ANY\_PLAYER\_SLOT, ABILITY\_BLF\_DISABLE\_OTHER\_ABILITIES, ABILITY\_BLF\_ALLOW\_BOUNTY, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertAbilityStringLevelField`
+
+| Case                                       | Group | Outcome | Id          | Type                                        | Message |
+| ------------------------------------------ | ----- | ------- | ----------- | ------------------------------------------- | ------- |
+| ABILITY\_SLF\_ICON\_NORMAL                 | (a)   | handle  | 1633776244  | `abilitystringlevelfield: 000002BCFF9FD000` |         |
+| ABILITY\_SLF\_CASTER                       | (a)   | handle  | 1633902964  | `abilitystringlevelfield: 000002BCFF9FAA50` |         |
+| ABILITY\_SLF\_TARGET                       | (a)   | handle  | 1635017076  | `abilitystringlevelfield: 000002BCFF9FAAE0` |         |
+| ABILITY\_SLF\_SPECIAL                      | (a)   | handle  | 1634951540  | `abilitystringlevelfield: 000002BC1E362D50` |         |
+| ABILITY\_SLF\_EFFECT                       | (a)   | handle  | 1634034036  | `abilitystringlevelfield: 000002BC1E362D90` |         |
+| ABILITY\_SLF\_AREA\_EFFECT                 | (a)   | handle  | 1633772897  | `abilitystringlevelfield: 000002BC1E362EE0` |         |
+| ABILITY\_SLF\_LIGHTNING\_EFFECTS           | (a)   | handle  | 1634494823  | `abilitystringlevelfield: 000002BC1E362F20` |         |
+| ABILITY\_SLF\_MISSILE\_ART                 | (a)   | handle  | 1634558324  | `abilitystringlevelfield: 000002BC1E362F60` |         |
+| ABILITY\_SLF\_TOOLTIP\_LEARN               | (a)   | handle  | 1634887028  | `abilitystringlevelfield: 000002BC1E362FA0` |         |
+| ABILITY\_SLF\_TOOLTIP\_LEARN\_EXTENDED     | (a)   | handle  | 1634891124  | `abilitystringlevelfield: 000002BC1E3631F0` |         |
+| ABILITY\_SLF\_TOOLTIP\_NORMAL              | (a)   | handle  | 1635020849  | `abilitystringlevelfield: 000002BC1E363230` |         |
+| ABILITY\_SLF\_TOOLTIP\_TURN\_OFF           | (a)   | handle  | 1635087409  | `abilitystringlevelfield: 000002BC1E363270` |         |
+| ABILITY\_SLF\_TOOLTIP\_NORMAL\_EXTENDED    | (a)   | handle  | 1635082801  | `abilitystringlevelfield: 000002BC1E3632B0` |         |
+| ABILITY\_SLF\_TOOLTIP\_TURN\_OFF\_EXTENDED | (a)   | handle  | 1635087665  | `abilitystringlevelfield: 000002BC1E3632F0` |         |
+| ABILITY\_SLF\_NORMAL\_FORM\_UNIT\_EME1     | (a)   | handle  | 1164797233  | `abilitystringlevelfield: 000002BC1E363330` |         |
+| ABILITY\_SLF\_SPAWNED\_UNITS               | (a)   | handle  | 1315205169  | `abilitystringlevelfield: 000002BC1E363370` |         |
+| ABILITY\_SLF\_ABILITY\_FOR\_UNIT\_CREATION | (a)   | handle  | 1316119345  | `abilitystringlevelfield: 000002BC1E3633B0` |         |
+| ABILITY\_SLF\_NORMAL\_FORM\_UNIT\_MIL1     | (a)   | handle  | 1298754609  | `abilitystringlevelfield: 000002BC1E3633F0` |         |
+| ABILITY\_SLF\_ALTERNATE\_FORM\_UNIT\_MIL2  | (a)   | handle  | 1298754610  | `abilitystringlevelfield: 000002BC1E363430` |         |
+| ABILITY\_SLF\_BASE\_ORDER\_ID\_ANS5        | (a)   | handle  | 1097757493  | `abilitystringlevelfield: 000002BC1E363470` |         |
+| ABILITY\_SLF\_MORPH\_UNITS\_GROUND         | (a)   | handle  | 1349286194  | `abilitystringlevelfield: 000002BCFF9FAA90` |         |
+| ABILITY\_SLF\_MORPH\_UNITS\_AIR            | (a)   | handle  | 1349286195  | `abilitystringlevelfield: 000002BCFF9FAB20` |         |
+| ABILITY\_SLF\_MORPH\_UNITS\_AMPHIBIOUS     | (a)   | handle  | 1349286196  | `abilitystringlevelfield: 000002BC1E362CC0` |         |
+| ABILITY\_SLF\_MORPH\_UNITS\_WATER          | (a)   | handle  | 1349286197  | `abilitystringlevelfield: 000002BC1E362D00` |         |
+| ABILITY\_SLF\_UNIT\_TYPE\_ONE              | (a)   | handle  | 1382115635  | `abilitystringlevelfield: 000002BC1E362DD0` |         |
+| ABILITY\_SLF\_UNIT\_TYPE\_TWO              | (a)   | handle  | 1382115636  | `abilitystringlevelfield: 000002BC1E362E10` |         |
+| ABILITY\_SLF\_UNIT\_TYPE\_SOD2             | (a)   | handle  | 1399809074  | `abilitystringlevelfield: 000002BC1E362E50` |         |
+| ABILITY\_SLF\_SUMMON\_1\_UNIT\_TYPE        | (a)   | handle  | 1232303153  | `abilitystringlevelfield: 000002BC1E362E90` |         |
+| ABILITY\_SLF\_SUMMON\_2\_UNIT\_TYPE        | (a)   | handle  | 1232303154  | `abilitystringlevelfield: 000002BC1E362FE0` |         |
+| ABILITY\_SLF\_RACE\_TO\_CONVERT            | (a)   | handle  | 1315201841  | `abilitystringlevelfield: 000002BC1E363020` |         |
+| ABILITY\_SLF\_PARTNER\_UNIT\_TYPE          | (a)   | handle  | 1668243761  | `abilitystringlevelfield: 000002BC1E363060` |         |
+| ABILITY\_SLF\_PARTNER\_UNIT\_TYPE\_ONE     | (a)   | handle  | 1684238385  | `abilitystringlevelfield: 000002BC1E3630A0` |         |
+| ABILITY\_SLF\_PARTNER\_UNIT\_TYPE\_TWO     | (a)   | handle  | 1684238386  | `abilitystringlevelfield: 000002BC1E3630E0` |         |
+| ABILITY\_SLF\_REQUIRED\_UNIT\_TYPE         | (a)   | handle  | 1953524017  | `abilitystringlevelfield: 000002BC1E363120` |         |
+| ABILITY\_SLF\_CONVERTED\_UNIT\_TYPE        | (a)   | handle  | 1953524018  | `abilitystringlevelfield: 000002BC1E363160` |         |
+| ABILITY\_SLF\_SPELL\_LIST                  | (a)   | handle  | 1936745009  | `abilitystringlevelfield: 000002BC1E3631A0` |         |
+| ABILITY\_SLF\_BASE\_ORDER\_ID\_SPB5        | (a)   | handle  | 1936745013  | `abilitystringlevelfield: 000002BC1E364350` |         |
+| ABILITY\_SLF\_BASE\_ORDER\_ID\_NCL6        | (a)   | handle  | 1315138614  | `abilitystringlevelfield: 000002BC1E364390` |         |
+| ABILITY\_SLF\_ABILITY\_UPGRADE\_1          | (a)   | handle  | 1315268403  | `abilitystringlevelfield: 000002BC1E3643D0` |         |
+| ABILITY\_SLF\_ABILITY\_UPGRADE\_2          | (a)   | handle  | 1315268404  | `abilitystringlevelfield: 000002BC1E364410` |         |
+| ABILITY\_SLF\_ABILITY\_UPGRADE\_3          | (a)   | handle  | 1315268405  | `abilitystringlevelfield: 000002BC1E364450` |         |
+| ABILITY\_SLF\_ABILITY\_UPGRADE\_4          | (a)   | handle  | 1315268406  | `abilitystringlevelfield: 000002BC1E364490` |         |
+| ABILITY\_SLF\_SPAWN\_UNIT\_ID\_NSY2        | (a)   | handle  | 1316190514  | `abilitystringlevelfield: 000002BC1E3644D0` |         |
+| -1                                         | (a)   | handle  | -1          | `abilitystringlevelfield: 000002BD093A4DC0` |         |
+| past the last constant                     | (a)   | handle  | 1953524019  | `abilitystringlevelfield: 000002BD0A59F960` |         |
+| 2147483647                                 | (a)   | handle  | 2147483647  | `abilitystringlevelfield: 000002BD0A540060` |         |
+| -2147483648                                | (a)   | handle  | -2147483648 | `abilitystringlevelfield: 000002BD0A56DB90` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_SLF\_ICON\_NORMAL, ABILITY\_SLF\_CASTER, ABILITY\_SLF\_TARGET, ABILITY\_SLF\_SPECIAL, ABILITY\_SLF\_EFFECT, ABILITY\_SLF\_AREA\_EFFECT, ABILITY\_SLF\_LIGHTNING\_EFFECTS, ABILITY\_SLF\_MISSILE\_ART, ABILITY\_SLF\_TOOLTIP\_LEARN, ABILITY\_SLF\_TOOLTIP\_LEARN\_EXTENDED, ABILITY\_SLF\_TOOLTIP\_NORMAL, ABILITY\_SLF\_TOOLTIP\_TURN\_OFF, ABILITY\_SLF\_TOOLTIP\_NORMAL\_EXTENDED, ABILITY\_SLF\_TOOLTIP\_TURN\_OFF\_EXTENDED, ABILITY\_SLF\_NORMAL\_FORM\_UNIT\_EME1, ABILITY\_SLF\_SPAWNED\_UNITS, ABILITY\_SLF\_ABILITY\_FOR\_UNIT\_CREATION, ABILITY\_SLF\_NORMAL\_FORM\_UNIT\_MIL1, ABILITY\_SLF\_ALTERNATE\_FORM\_UNIT\_MIL2, ABILITY\_SLF\_BASE\_ORDER\_ID\_ANS5, ABILITY\_SLF\_MORPH\_UNITS\_GROUND, ABILITY\_SLF\_MORPH\_UNITS\_AIR, ABILITY\_SLF\_MORPH\_UNITS\_AMPHIBIOUS, ABILITY\_SLF\_MORPH\_UNITS\_WATER, ABILITY\_SLF\_UNIT\_TYPE\_ONE, ABILITY\_SLF\_UNIT\_TYPE\_TWO, ABILITY\_SLF\_UNIT\_TYPE\_SOD2, ABILITY\_SLF\_SUMMON\_1\_UNIT\_TYPE, ABILITY\_SLF\_SUMMON\_2\_UNIT\_TYPE, ABILITY\_SLF\_RACE\_TO\_CONVERT, ABILITY\_SLF\_PARTNER\_UNIT\_TYPE, ABILITY\_SLF\_PARTNER\_UNIT\_TYPE\_ONE, ABILITY\_SLF\_PARTNER\_UNIT\_TYPE\_TWO, ABILITY\_SLF\_REQUIRED\_UNIT\_TYPE, ABILITY\_SLF\_CONVERTED\_UNIT\_TYPE, ABILITY\_SLF\_SPELL\_LIST, ABILITY\_SLF\_BASE\_ORDER\_ID\_SPB5, ABILITY\_SLF\_BASE\_ORDER\_ID\_NCL6, ABILITY\_SLF\_ABILITY\_UPGRADE\_1, ABILITY\_SLF\_ABILITY\_UPGRADE\_2, ABILITY\_SLF\_ABILITY\_UPGRADE\_3, ABILITY\_SLF\_ABILITY\_UPGRADE\_4, ABILITY\_SLF\_SPAWN\_UNIT\_ID\_NSY2, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertAbilityIntegerLevelArrayField`
+
+| Case       | Group | Outcome | Id         | Type                                              | Message |
+| ---------- | ----- | ------- | ---------- | ------------------------------------------------- | ------- |
+| 0          | (a)   | handle  | 0          | `abilityintegerlevelarrayfield: 000002BD0A4FC1D0` |         |
+| 1          | (a)   | handle  | 1          | `abilityintegerlevelarrayfield: 000002BD09376670` |         |
+| -1         | (a)   | handle  | -1         | `abilityintegerlevelarrayfield: 000002BD0A5B43E0` |         |
+| 2147483647 | (a)   | handle  | 2147483647 | `abilityintegerlevelarrayfield: 000002BD0A4A6750` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (0, 1, -1, 2147483647) on 3.0.0.24268; evidence, not proof. For 0, a handle of id 0.
+
+### `ConvertAbilityRealLevelArrayField`
+
+| Case       | Group | Outcome | Id         | Type                                           | Message |
+| ---------- | ----- | ------- | ---------- | ---------------------------------------------- | ------- |
+| 0          | (a)   | handle  | 0          | `abilityreallevelarrayfield: 000002BD0A528550` |         |
+| 1          | (a)   | handle  | 1          | `abilityreallevelarrayfield: 000002BD09378470` |         |
+| -1         | (a)   | handle  | -1         | `abilityreallevelarrayfield: 000002BD0A5A88E0` |         |
+| 2147483647 | (a)   | handle  | 2147483647 | `abilityreallevelarrayfield: 000002BD0A580AD0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (0, 1, -1, 2147483647) on 3.0.0.24268; evidence, not proof. For 0, a handle of id 0.
+
+### `ConvertAbilityBooleanLevelArrayField`
+
+| Case       | Group | Outcome | Id         | Type                                              | Message |
+| ---------- | ----- | ------- | ---------- | ------------------------------------------------- | ------- |
+| 0          | (a)   | handle  | 0          | `abilitybooleanlevelarrayfield: 000002BD0A59CF70` |         |
+| 1          | (a)   | handle  | 1          | `abilitybooleanlevelarrayfield: 000002BD0A580340` |         |
+| -1         | (a)   | handle  | -1         | `abilitybooleanlevelarrayfield: 000002BD06F0CF60` |         |
+| 2147483647 | (a)   | handle  | 2147483647 | `abilitybooleanlevelarrayfield: 000002BD0A4DB770` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (0, 1, -1, 2147483647) on 3.0.0.24268; evidence, not proof. For 0, a handle of id 0.
+
+### `ConvertAbilityStringLevelArrayField`
+
+| Case       | Group | Outcome | Id         | Type                                             | Message |
+| ---------- | ----- | ------- | ---------- | ------------------------------------------------ | ------- |
+| 0          | (a)   | handle  | 0          | `abilitystringlevelarrayfield: 000002BD0A5A5780` |         |
+| 1          | (a)   | handle  | 1          | `abilitystringlevelarrayfield: 000002BC2FE43720` |         |
+| -1         | (a)   | handle  | -1         | `abilitystringlevelarrayfield: 000002BD093B9300` |         |
+| 2147483647 | (a)   | handle  | 2147483647 | `abilitystringlevelarrayfield: 000002BD093B8CA0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (0, 1, -1, 2147483647) on 3.0.0.24268; evidence, not proof. For 0, a handle of id 0.
