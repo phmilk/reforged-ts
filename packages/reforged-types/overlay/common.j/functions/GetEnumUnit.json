@@ -6,5 +6,6 @@
     "family": "callback-getter"
   },
   "params": [],
+  "notes": "Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.",
   "origin": "war3-types-strict"
 }
