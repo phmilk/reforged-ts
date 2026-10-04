@@ -163,6 +163,15 @@ export function worldFrame(): framehandle {
   return built(BlzGetOriginFrame(ORIGIN_FRAME_WORLD_FRAME, 0), "worldFrame");
 }
 
+/**
+ * A frame, top: the game UI's parent, `BlzFrameGetParent` of the game UI
+ * frame, the highest frame the sweep has reached (a handle in
+ * `nullability-slice-1`); the Fixture fails when the game UI has no parent.
+ */
+export function gameUiParentFrame(): framehandle {
+  return built(BlzFrameGetParent(gameUiFrame()), "gameUiParentFrame");
+}
+
 /** A frame, live child: a `"FRAME"` made with `BlzCreateFrameByType` on the game UI, inheriting nothing. */
 export function childFrame(): framehandle {
   return built(

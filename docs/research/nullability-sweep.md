@@ -4857,3 +4857,179 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
 - Proposed `notes`: Returned nothing in a case of the nullability sweep (ability it lacks) on 3.0.0.24268.
+
+## `nullability-callbacks-and-properties`
+
+- Probe: `nullability-callbacks-and-properties`
+- Patch: 3.0.0.24268
+- Client: 3.0.0.24268
+- Date: 2026-10-04
+- Run: `dc314da5-38ee-4762-854f-008bc847a76a`
+
+### `GetFilterUnit`
+
+| Case                 | Group | Outcome | Id  | Type | Message |
+| -------------------- | ----- | ------- | --- | ---- | ------- |
+| outside its callback | (a)   | nil     |     |      |         |
+
+- Family: `callback-getter`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
+
+### `GetEnumUnit`
+
+| Case                 | Group | Outcome | Id  | Type | Message |
+| -------------------- | ----- | ------- | --- | ---- | ------- |
+| outside its callback | (a)   | nil     |     |      |         |
+
+- Family: `callback-getter`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
+
+### `GetFilterDestructable`
+
+| Case                 | Group | Outcome | Id  | Type | Message |
+| -------------------- | ----- | ------- | --- | ---- | ------- |
+| outside its callback | (a)   | nil     |     |      |         |
+
+- Family: `callback-getter`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
+
+### `GetEnumDestructable`
+
+| Case                 | Group | Outcome | Id  | Type | Message |
+| -------------------- | ----- | ------- | --- | ---- | ------- |
+| outside its callback | (a)   | nil     |     |      |         |
+
+- Family: `callback-getter`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
+
+### `GetFilterItem`
+
+| Case                 | Group | Outcome | Id  | Type | Message |
+| -------------------- | ----- | ------- | --- | ---- | ------- |
+| outside its callback | (a)   | nil     |     |      |         |
+
+- Family: `callback-getter`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
+
+### `GetEnumItem`
+
+| Case                 | Group | Outcome | Id  | Type | Message |
+| -------------------- | ----- | ------- | --- | ---- | ------- |
+| outside its callback | (a)   | nil     |     |      |         |
+
+- Family: `callback-getter`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
+
+### `GetFilterPlayer`
+
+| Case                 | Group | Outcome | Id  | Type | Message |
+| -------------------- | ----- | ------- | --- | ---- | ------- |
+| outside its callback | (a)   | nil     |     |      |         |
+
+- Family: `callback-getter`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
+
+### `GetEnumPlayer`
+
+| Case                 | Group | Outcome | Id  | Type | Message |
+| -------------------- | ----- | ------- | --- | ---- | ------- |
+| outside its callback | (a)   | nil     |     |      |         |
+
+- Family: `callback-getter`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (outside its callback) on 3.0.0.24268.
+
+### `GetUnitRallyPoint`
+
+| Case                     | Group | Outcome | Id  | Type | Message |
+| ------------------------ | ----- | ------- | --- | ---- | ------- |
+| unit with no rally point | (a)   | nil     |     |      |         |
+
+- Family: `optional-property`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unit with no rally point) on 3.0.0.24268.
+
+### `GetUnitRallyUnit`
+
+| Case                     | Group | Outcome | Id  | Type | Message |
+| ------------------------ | ----- | ------- | --- | ---- | ------- |
+| unit with no rally point | (a)   | nil     |     |      |         |
+
+- Family: `optional-property`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unit with no rally point) on 3.0.0.24268.
+
+### `GetUnitRallyDestructable`
+
+| Case                     | Group | Outcome | Id  | Type | Message |
+| ------------------------ | ----- | ------- | --- | ---- | ------- |
+| unit with no rally point | (a)   | nil     |     |      |         |
+
+- Family: `optional-property`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (unit with no rally point) on 3.0.0.24268.
+
+### `PlayerGetLeaderboard`
+
+| Case                       | Group | Outcome | Id  | Type | Message |
+| -------------------------- | ----- | ------- | --- | ---- | ------- |
+| player with no leaderboard | (a)   | nil     |     |      |         |
+
+- Family: `optional-property`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (player with no leaderboard) on 3.0.0.24268.
+
+### `BlzFrameGetParent`
+
+| Case                   | Group | Outcome | Id  | Type | Message |
+| ---------------------- | ----- | ------- | --- | ---- | ------- |
+| game UI's parent frame | (a)   | nil     |     |      |         |
+
+- Family: `optional-property`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (game UI's parent frame) on 3.0.0.24268.
+
+### `BlzGetMouseFocusUnit`
+
+| Case           | Group | Outcome | Id  | Type | Message |
+| -------------- | ----- | ------- | --- | ---- | ------- |
+| no mouse input | (a)   | nil     |     |      |         |
+
+- Family: `optional-property`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (no mouse input) on 3.0.0.24268.
