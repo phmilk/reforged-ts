@@ -23,5 +23,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned nothing in 11 cases of the nullability sweep (typical arguments, abilityString: empty string, abilityString: unknown name, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647) on 3.0.0.24268.",
   "origin": "war3-types-strict"
 }

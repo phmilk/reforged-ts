@@ -35,5 +35,6 @@
       "nullable": false
     }
   ],
+  "notes": "Crashed the game in a case of the nullability sweep (radius: 2147483647) on 3.0.0.24268. Returned a handle in every other case (typical arguments, centerx: 0, centerx: negative, centerx: outside the world, centerx: 2147483647, centerY: 0, centerY: negative, centerY: outside the world, centerY: 2147483647, radius: 0, radius: negative, radius: outside the world).",
   "origin": "war3-types-strict"
 }

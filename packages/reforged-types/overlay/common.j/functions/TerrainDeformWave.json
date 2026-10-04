@@ -2,7 +2,7 @@
   "name": "TerrainDeformWave",
   "source": "common.j",
   "returns": {
-    "nullable": true,
+    "nullable": false,
     "family": "constructor"
   },
   "params": [
@@ -47,5 +47,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, dirX: 0, dirX: negative, dirX: outside the world, dirX: 2147483647, dirY: 0, dirY: negative, dirY: outside the world, dirY: 2147483647, distance: 0, distance: negative, distance: outside the world, distance: 2147483647, speed: 0, speed: negative, speed: outside the world, speed: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, depth: 0, depth: negative, depth: outside the world, depth: 2147483647, trailTime: 0, trailTime: negative, trailTime: outside the world, trailTime: 2147483647, count: 0, count: negative, count: outside the world, count: 2147483647) on 3.0.0.24268; evidence, not proof.",
   "origin": "war3-types-strict"
 }

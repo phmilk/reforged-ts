@@ -2,7 +2,7 @@
   "name": "TerrainDeformRipple",
   "source": "common.j",
   "returns": {
-    "nullable": true,
+    "nullable": false,
     "family": "constructor"
   },
   "params": [
@@ -47,5 +47,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, depth: 0, depth: negative, depth: outside the world, depth: 2147483647, duration: 0, duration: negative, duration: outside the world, duration: 2147483647, count: 0, count: negative, count: outside the world, count: 2147483647, spaceWaves: 0, spaceWaves: negative, spaceWaves: outside the world, spaceWaves: 2147483647, timeWaves: 0, timeWaves: negative, timeWaves: outside the world, timeWaves: 2147483647, radiusStartPct: 0, radiusStartPct: negative, radiusStartPct: outside the world, radiusStartPct: 2147483647) on 3.0.0.24268; evidence, not proof.",
   "origin": "war3-types-strict"
 }

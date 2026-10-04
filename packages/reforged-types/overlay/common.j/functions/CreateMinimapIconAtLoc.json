@@ -2,7 +2,7 @@
   "name": "CreateMinimapIconAtLoc",
   "source": "common.j",
   "returns": {
-    "nullable": true,
+    "nullable": false,
     "family": "constructor"
   },
   "params": [
@@ -31,5 +31,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned a handle in every case of the nullability sweep (typical arguments, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, pingPath: empty string, pingPath: unknown name, where: removed location) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (where: removed location) rather than nothing, so a nil check does not tell that the location was removed.",
   "origin": "war3-types-strict"
 }

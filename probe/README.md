@@ -284,7 +284,7 @@ A converter's case list runs to thousands of characters, so its `notes` say the 
 The report never writes the Overlay; `pnpm probe:nullability-curate <probe>` does, for review (#406). It reads the Slice's last run and its verdicts as the report does, then writes `packages/reforged-types/overlay/`:
 
 - `returns.nullable: false` only for a `non-null (evidence)` or `non-null (evidence, handle id 0)` verdict of a family that may be non-null; it never sets `true`, so it never widens a return.
-- the proposed `notes`, after `params`, of every Native whose entry holds none: the Native's text, or the sentences of its parameters for a Native of call cases (a `filter`'s; `params[].nullable` never changes). An entry that holds `notes` keeps them, from their first Build (#365) or written by hand (`TriggerAddAction`'s), and the command prints the proposal for the review. A proposal of "review" writes nothing.
+- the proposed `notes`, after `params`, of every Native whose entry holds none: the Native's text, or the sentences of its parameters for a Native of call cases (a `filter`'s; `params[].nullable` never changes). An entry that holds `notes` keeps them, from their first Build (#365) or written by hand (`LoadUnitPoolHandle`'s), and the command prints the proposal for the review. A proposal of "review" writes nothing.
 - nothing at all when the Slice has a `mismatch`: it refuses with one line per Native and parameter.
 
 It writes local files only, and prints one line per Native. The Overlay still changes only through a reviewed pull request (#296):

@@ -23,5 +23,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned nothing in 11 cases of the nullability sweep (typical arguments, modelName: empty string, modelName: unknown name, attachPoint: empty string, attachPoint: unknown name, targetWidget: dead unit, targetWidget: removed unit, targetWidget: dead item, targetWidget: removed item, targetWidget: dead destructable, targetWidget: removed destructable) on 3.0.0.24268.",
   "origin": "war3-types-strict"
 }

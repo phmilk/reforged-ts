@@ -19,5 +19,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned nothing in 3 cases of the nullability sweep (attachPointName: empty string, targetWidget: removed item, targetWidget: removed destructable) on 3.0.0.24268.",
   "origin": "war3-types-strict"
 }

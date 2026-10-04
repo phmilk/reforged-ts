@@ -11,18 +11,16 @@ TimerStart(countdown, 1.5, false, () => {
   DestroyTimer(countdown);
 });
 
-const nearby = CreateGroup();
-if (nearby !== undefined) {
-  GroupEnumUnitsInRange(nearby, 0, 0, 512);
-  GroupEnumUnitsInRange(
-    nearby,
-    0,
-    0,
-    512,
-    Filter(() => GetFilterUnit() !== undefined),
-  );
-  DestroyGroup(nearby);
-}
+const nearby: group = CreateGroup();
+GroupEnumUnitsInRange(nearby, 0, 0, 512);
+GroupEnumUnitsInRange(
+  nearby,
+  0,
+  0,
+  512,
+  Filter(() => GetFilterUnit() !== undefined),
+);
+DestroyGroup(nearby);
 
 const firstForce: force | undefined = bj_FORCE_PLAYER[0];
 const slotUsed: boolean = bj_slotControlUsed[1];

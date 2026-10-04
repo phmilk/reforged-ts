@@ -5200,7 +5200,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5212,7 +5212,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5468,7 +5468,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5530,7 +5530,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5542,7 +5542,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5555,7 +5555,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichQuest: quest after DestroyQuest) on 3.0.0.24268; evidence, not proof.
 
@@ -5567,7 +5567,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5580,7 +5580,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, t: destroyed timer) on 3.0.0.24268; evidence, not proof.
 
@@ -5592,7 +5592,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5604,7 +5604,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5670,7 +5670,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, abilityId: unknown rawcode, order: empty string, order: unknown name) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 2 cases (order: empty string, order: unknown name).
 
@@ -5683,7 +5683,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichUprgade: unknown rawcode) on 3.0.0.24268; evidence, not proof.
 
@@ -5696,7 +5696,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, abilityId: unknown rawcode) on 3.0.0.24268; evidence, not proof.
 
@@ -5866,7 +5866,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5904,7 +5904,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -5954,7 +5954,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, pingPath: empty string, pingPath: unknown name, whichUnit: dead unit, whichUnit: removed unit) on 3.0.0.24268; evidence, not proof.
 
@@ -5981,7 +5981,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, pingPath: empty string, pingPath: unknown name, where: removed location) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (where: removed location).
 
@@ -6015,7 +6015,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, pingPath: empty string, pingPath: unknown name) on 3.0.0.24268; evidence, not proof.
 
@@ -6027,7 +6027,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
 
@@ -6053,7 +6053,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, trackableModelPath: empty string, trackableModelPath: unknown name, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, facing: 0, facing: negative, facing: outside the world, facing: 2147483647) on 3.0.0.24268; evidence, not proof.
 
@@ -6077,7 +6077,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, fileName: empty string, fileName: unknown name, fadeInRate: 0, fadeInRate: negative, fadeInRate: outside the world, fadeInRate: 2147483647, fadeOutRate: 0, fadeOutRate: negative, fadeOutRate: outside the world, fadeOutRate: 2147483647, eaxSetting: empty string, eaxSetting: unknown name) on 3.0.0.24268; evidence, not proof.
 
@@ -6101,7 +6101,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, fileName: empty string, fileName: unknown name, fadeInRate: 0, fadeInRate: negative, fadeInRate: outside the world, fadeInRate: 2147483647, fadeOutRate: 0, fadeOutRate: negative, fadeOutRate: outside the world, fadeOutRate: 2147483647, SLKEntryName: empty string, SLKEntryName: unknown name) on 3.0.0.24268; evidence, not proof.
 
@@ -6123,7 +6123,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, soundLabel: empty string, soundLabel: unknown name, fadeInRate: 0, fadeInRate: negative, fadeInRate: outside the world, fadeInRate: 2147483647, fadeOutRate: 0, fadeOutRate: negative, fadeOutRate: outside the world, fadeOutRate: 2147483647) on 3.0.0.24268; evidence, not proof.
 
@@ -6145,7 +6145,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, soundLabel: empty string, soundLabel: unknown name, fadeInRate: 0, fadeInRate: negative, fadeInRate: outside the world, fadeInRate: 2147483647, fadeOutRate: 0, fadeOutRate: negative, fadeOutRate: outside the world, fadeOutRate: 2147483647) on 3.0.0.24268; evidence, not proof.
 
@@ -6159,7 +6159,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, effectID: unknown rawcode, where: removed rect) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (where: removed rect).
 
@@ -6191,7 +6191,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, depth: 0, depth: negative, depth: outside the world, depth: 2147483647, duration: 0, duration: negative, duration: outside the world, duration: 2147483647) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (typical arguments).
 
@@ -6239,7 +6239,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, depth: 0, depth: negative, depth: outside the world, depth: 2147483647, duration: 0, duration: negative, duration: outside the world, duration: 2147483647, count: 0, count: negative, count: outside the world, count: 2147483647, spaceWaves: 0, spaceWaves: negative, spaceWaves: outside the world, spaceWaves: 2147483647, timeWaves: 0, timeWaves: negative, timeWaves: outside the world, timeWaves: 2147483647, radiusStartPct: 0, radiusStartPct: negative, radiusStartPct: outside the world, radiusStartPct: 2147483647) on 3.0.0.24268; evidence, not proof.
 
@@ -6291,7 +6291,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, dirX: 0, dirX: negative, dirX: outside the world, dirX: 2147483647, dirY: 0, dirY: negative, dirY: outside the world, dirY: 2147483647, distance: 0, distance: negative, distance: outside the world, distance: 2147483647, speed: 0, speed: negative, speed: outside the world, speed: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, depth: 0, depth: negative, depth: outside the world, depth: 2147483647, trailTime: 0, trailTime: negative, trailTime: outside the world, trailTime: 2147483647, count: 0, count: negative, count: outside the world, count: 2147483647) on 3.0.0.24268; evidence, not proof.
 
@@ -6331,7 +6331,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, minDelta: 0, minDelta: negative, minDelta: outside the world, minDelta: 2147483647, maxDelta: 0, maxDelta: negative, maxDelta: outside the world, maxDelta: 2147483647, duration: 0, duration: negative, duration: outside the world, duration: 2147483647, updateInterval: 0, updateInterval: negative, updateInterval: outside the world, updateInterval: 2147483647) on 3.0.0.24268; evidence, not proof.
 
@@ -6353,7 +6353,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, modelName: empty string, modelName: unknown name, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647) on 3.0.0.24268; evidence, not proof.
 
@@ -6536,7 +6536,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, codeName: empty string, codeName: unknown name, x1: 0, x1: negative, x1: outside the world, x1: 2147483647, y1: 0, y1: negative, y1: outside the world, y1: 2147483647, x2: 0, x2: negative, x2: outside the world, x2: 2147483647, y2: 0, y2: negative, y2: outside the world, y2: 2147483647, checkVisibility: true, points unseen) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (codeName: empty string, codeName: unknown name, checkVisibility: true, points unseen).
 
@@ -6575,7 +6575,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, codeName: empty string, codeName: unknown name, x1: 0, x1: negative, x1: outside the world, x1: 2147483647, y1: 0, y1: negative, y1: outside the world, y1: 2147483647, z1: 0, z1: negative, z1: outside the world, z1: 2147483647, x2: 0, x2: negative, x2: outside the world, x2: 2147483647, y2: 0, y2: negative, y2: outside the world, y2: 2147483647, z2: 0, z2: negative, z2: outside the world, z2: 2147483647, checkVisibility: true, points unseen) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (codeName: empty string, codeName: unknown name, checkVisibility: true, points unseen).
 
@@ -6666,7 +6666,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, name: empty string, name: unknown name, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, alpha: 0, alpha: negative, alpha: outside the world, alpha: 2147483647) on 3.0.0.24268; evidence, not proof.
 
@@ -6690,7 +6690,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Family: `constructor`
 - Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `true`
+- Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, face: 0, face: negative, face: outside the world, face: 2147483647) on 3.0.0.24268; evidence, not proof.
 

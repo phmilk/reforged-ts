@@ -12,6 +12,6 @@
       "type": "boolcode"
     }
   ],
-  "notes": "Returned a handle in every case of the nullability sweep (TypeScript function) on 3.0.0.24268; evidence, not proof.",
+  "notes": "Returned a handle in every case of the nullability sweep (typical arguments) on 3.0.0.24268; evidence, not proof.",
   "origin": "war3-types-strict"
 }
