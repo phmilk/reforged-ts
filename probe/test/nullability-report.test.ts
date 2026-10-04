@@ -26,6 +26,7 @@ import {
   sliceSetup,
   writeResultFile,
 } from "./support/nullability.js";
+import { stateFile } from "../src/state.js";
 
 /** The clock's now: late on 2 October 2026, in UTC. */
 const NOW = new Date("2026-10-02T23:30:00Z");
