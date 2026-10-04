@@ -72,6 +72,34 @@ export function removedUnit(): unit {
   return footman;
 }
 
+/**
+ * A unit, live: a `'Hpal'` hero of `Player(0)` at the map's origin
+ * (`CreateUnit`), its inventory empty.
+ */
+export function liveHero(): unit {
+  const owner = built(Player(0), "liveHero");
+  return built(CreateUnit(owner, FourCC("Hpal"), 0, 0, 0), "liveHero");
+}
+
+// Groups
+
+/** A group, empty: `CreateGroup`, no unit added. */
+export function emptyGroup(): group {
+  return built(CreateGroup(), "emptyGroup");
+}
+
+// Hashtables and game caches
+
+/** A hashtable, empty: `InitHashtable`, nothing saved. */
+export function emptyHashtable(): hashtable {
+  return built(InitHashtable(), "emptyHashtable");
+}
+
+/** A game cache, empty: `InitGameCache` of a file never saved, nothing stored. */
+export function emptyGameCache(): gamecache {
+  return built(InitGameCache("NullabilityFixture.w3v"), "emptyGameCache");
+}
+
 // Boolexprs
 
 /**
