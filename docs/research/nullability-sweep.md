@@ -2688,3 +2688,595 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (0, 1, -1, 2147483647) on 3.0.0.24268; evidence, not proof. For 0, a handle of id 0.
+
+## `nullability-converters-4`
+
+- Probe: `nullability-converters-4`
+- Patch: 3.0.0.24268
+- Date: 2026-10-04
+- Run: `980deee9-1cbf-448b-b141-4f8debd52a57`
+
+### `ConvertUnitIntegerField`
+
+| Case                                                | Group | Outcome | Id          | Type                                 | Message |
+| --------------------------------------------------- | ----- | ------- | ----------- | ------------------------------------ | ------- |
+| UNIT\_IF\_DEFENSE\_TYPE                             | (a)   | handle  | 1969517689  | `unitintegerfield: 000001CE0A50C360` |         |
+| UNIT\_IF\_ARMOR\_TYPE                               | (a)   | handle  | 1969320557  | `unitintegerfield: 000001CE0A50C3D0` |         |
+| UNIT\_IF\_LOOPING\_FADE\_IN\_RATE                   | (a)   | handle  | 1970038377  | `unitintegerfield: 000001CE0A50C410` |         |
+| UNIT\_IF\_LOOPING\_FADE\_OUT\_RATE                  | (a)   | handle  | 1970038383  | `unitintegerfield: 000001CE0A50C450` |         |
+| UNIT\_IF\_AGILITY                                   | (a)   | handle  | 1969317731  | `unitintegerfield: 000001CE0A50C490` |         |
+| UNIT\_IF\_INTELLIGENCE                              | (a)   | handle  | 1969843811  | `unitintegerfield: 000001CE0A50C4D0` |         |
+| UNIT\_IF\_STRENGTH                                  | (a)   | handle  | 1970500707  | `unitintegerfield: 000001CE0A50C510` |         |
+| UNIT\_IF\_AGILITY\_PERMANENT                        | (a)   | handle  | 1969317741  | `unitintegerfield: 000001CE0A50C550` |         |
+| UNIT\_IF\_INTELLIGENCE\_PERMANENT                   | (a)   | handle  | 1969843821  | `unitintegerfield: 000001CE0A50C590` |         |
+| UNIT\_IF\_STRENGTH\_PERMANENT                       | (a)   | handle  | 1970500717  | `unitintegerfield: 000001CE0A50C5D0` |         |
+| UNIT\_IF\_AGILITY\_WITH\_BONUS                      | (a)   | handle  | 1969317730  | `unitintegerfield: 000001CE0A50C610` |         |
+| UNIT\_IF\_INTELLIGENCE\_WITH\_BONUS                 | (a)   | handle  | 1969843810  | `unitintegerfield: 000001CE0A50C650` |         |
+| UNIT\_IF\_STRENGTH\_WITH\_BONUS                     | (a)   | handle  | 1970500706  | `unitintegerfield: 000001CE0A50C690` |         |
+| UNIT\_IF\_GOLD\_BOUNTY\_AWARDED\_NUMBER\_OF\_DICE   | (a)   | handle  | 1969382505  | `unitintegerfield: 000001CE0A50C6D0` |         |
+| UNIT\_IF\_GOLD\_BOUNTY\_AWARDED\_BASE               | (a)   | handle  | 1969381985  | `unitintegerfield: 000001CE0A50C710` |         |
+| UNIT\_IF\_GOLD\_BOUNTY\_AWARDED\_SIDES\_PER\_DIE    | (a)   | handle  | 1969386345  | `unitintegerfield: 000001CE0A50C750` |         |
+| UNIT\_IF\_LUMBER\_BOUNTY\_AWARDED\_NUMBER\_OF\_DICE | (a)   | handle  | 1970037348  | `unitintegerfield: 000001CE0A50C790` |         |
+| UNIT\_IF\_LUMBER\_BOUNTY\_AWARDED\_BASE             | (a)   | handle  | 1970037345  | `unitintegerfield: 000001CE0A50CBE0` |         |
+| UNIT\_IF\_LUMBER\_BOUNTY\_AWARDED\_SIDES\_PER\_DIE  | (a)   | handle  | 1970037363  | `unitintegerfield: 000001CE0A50CC20` |         |
+| UNIT\_IF\_LEVEL                                     | (a)   | handle  | 1970038134  | `unitintegerfield: 000001CE0A50CC60` |         |
+| UNIT\_IF\_FORMATION\_RANK                           | (a)   | handle  | 1969647474  | `unitintegerfield: 000001CE0A50CCA0` |         |
+| UNIT\_IF\_ORIENTATION\_INTERPOLATION                | (a)   | handle  | 1970238057  | `unitintegerfield: 000001CE0A50CCE0` |         |
+| UNIT\_IF\_ELEVATION\_SAMPLE\_POINTS                 | (a)   | handle  | 1969582196  | `unitintegerfield: 000001CE0A50CD20` |         |
+| UNIT\_IF\_TINTING\_COLOR\_RED                       | (a)   | handle  | 1969450098  | `unitintegerfield: 000001CE0A50CD60` |         |
+| UNIT\_IF\_TINTING\_COLOR\_GREEN                     | (a)   | handle  | 1969450087  | `unitintegerfield: 000001CE0A50CDA0` |         |
+| UNIT\_IF\_TINTING\_COLOR\_BLUE                      | (a)   | handle  | 1969450082  | `unitintegerfield: 000001CE0A50CDE0` |         |
+| UNIT\_IF\_TINTING\_COLOR\_ALPHA                     | (a)   | handle  | 1969447276  | `unitintegerfield: 000001CE0A50CE20` |         |
+| UNIT\_IF\_MOVE\_TYPE                                | (a)   | handle  | 1970108020  | `unitintegerfield: 000001CE0A50CE60` |         |
+| UNIT\_IF\_TARGETED\_AS                              | (a)   | handle  | 1970561394  | `unitintegerfield: 000001CE0A50CEA0` |         |
+| UNIT\_IF\_UNIT\_CLASSIFICATION                      | (a)   | handle  | 1970567536  | `unitintegerfield: 000001CE0A50CEE0` |         |
+| UNIT\_IF\_HIT\_POINTS\_REGENERATION\_TYPE           | (a)   | handle  | 1969779316  | `unitintegerfield: 000001CE0A50CF20` |         |
+| UNIT\_IF\_PLACEMENT\_PREVENTED\_BY                  | (a)   | handle  | 1970299250  | `unitintegerfield: 000001CE0A50CF60` |         |
+| UNIT\_IF\_PRIMARY\_ATTRIBUTE                        | (a)   | handle  | 1970303585  | `unitintegerfield: 000001CE0A50CFA0` |         |
+| -1                                                  | (a)   | handle  | -1          | `unitintegerfield: 000001CE2086D1B0` |         |
+| past the last constant                              | (a)   | handle  | 1970567537  | `unitintegerfield: 000001CE20874E20` |         |
+| 2147483647                                          | (a)   | handle  | 2147483647  | `unitintegerfield: 000001CE2087CEA0` |         |
+| -2147483648                                         | (a)   | handle  | -2147483648 | `unitintegerfield: 000001CE20884FA0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_IF\_DEFENSE\_TYPE, UNIT\_IF\_ARMOR\_TYPE, UNIT\_IF\_LOOPING\_FADE\_IN\_RATE, UNIT\_IF\_LOOPING\_FADE\_OUT\_RATE, UNIT\_IF\_AGILITY, UNIT\_IF\_INTELLIGENCE, UNIT\_IF\_STRENGTH, UNIT\_IF\_AGILITY\_PERMANENT, UNIT\_IF\_INTELLIGENCE\_PERMANENT, UNIT\_IF\_STRENGTH\_PERMANENT, UNIT\_IF\_AGILITY\_WITH\_BONUS, UNIT\_IF\_INTELLIGENCE\_WITH\_BONUS, UNIT\_IF\_STRENGTH\_WITH\_BONUS, UNIT\_IF\_GOLD\_BOUNTY\_AWARDED\_NUMBER\_OF\_DICE, UNIT\_IF\_GOLD\_BOUNTY\_AWARDED\_BASE, UNIT\_IF\_GOLD\_BOUNTY\_AWARDED\_SIDES\_PER\_DIE, UNIT\_IF\_LUMBER\_BOUNTY\_AWARDED\_NUMBER\_OF\_DICE, UNIT\_IF\_LUMBER\_BOUNTY\_AWARDED\_BASE, UNIT\_IF\_LUMBER\_BOUNTY\_AWARDED\_SIDES\_PER\_DIE, UNIT\_IF\_LEVEL, UNIT\_IF\_FORMATION\_RANK, UNIT\_IF\_ORIENTATION\_INTERPOLATION, UNIT\_IF\_ELEVATION\_SAMPLE\_POINTS, UNIT\_IF\_TINTING\_COLOR\_RED, UNIT\_IF\_TINTING\_COLOR\_GREEN, UNIT\_IF\_TINTING\_COLOR\_BLUE, UNIT\_IF\_TINTING\_COLOR\_ALPHA, UNIT\_IF\_MOVE\_TYPE, UNIT\_IF\_TARGETED\_AS, UNIT\_IF\_UNIT\_CLASSIFICATION, UNIT\_IF\_HIT\_POINTS\_REGENERATION\_TYPE, UNIT\_IF\_PLACEMENT\_PREVENTED\_BY, UNIT\_IF\_PRIMARY\_ATTRIBUTE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertUnitRealField`
+
+| Case                                      | Group | Outcome | Id          | Type                              | Message |
+| ----------------------------------------- | ----- | ------- | ----------- | --------------------------------- | ------- |
+| UNIT\_RF\_STRENGTH\_PER\_LEVEL            | (a)   | handle  | 1970500720  | `unitrealfield: 000001CE0A50CFE0` |         |
+| UNIT\_RF\_AGILITY\_PER\_LEVEL             | (a)   | handle  | 1969317744  | `unitrealfield: 000001CE0A50D020` |         |
+| UNIT\_RF\_INTELLIGENCE\_PER\_LEVEL        | (a)   | handle  | 1969843824  | `unitrealfield: 000001CE0A50D060` |         |
+| UNIT\_RF\_HIT\_POINTS\_REGENERATION\_RATE | (a)   | handle  | 1969778802  | `unitrealfield: 000001CE0A50D0A0` |         |
+| UNIT\_RF\_MANA\_REGENERATION              | (a)   | handle  | 1970106482  | `unitrealfield: 000001CE0A50D0E0` |         |
+| UNIT\_RF\_DEATH\_TIME                     | (a)   | handle  | 1969517677  | `unitrealfield: 000001CE0A50D120` |         |
+| UNIT\_RF\_FLY\_HEIGHT                     | (a)   | handle  | 1969650024  | `unitrealfield: 000001CE0A50D160` |         |
+| UNIT\_RF\_FLY\_MAX\_HEIGHT                | (a)   | handle  | 1969646952  | `unitrealfield: 000001CE0A50D1A0` |         |
+| UNIT\_RF\_TURN\_RATE                      | (a)   | handle  | 1970108018  | `unitrealfield: 000001CE0A50D1E0` |         |
+| UNIT\_RF\_ELEVATION\_SAMPLE\_RADIUS       | (a)   | handle  | 1969582692  | `unitrealfield: 000001CE0A50D220` |         |
+| UNIT\_RF\_FOG\_OF\_WAR\_SAMPLE\_RADIUS    | (a)   | handle  | 1969648228  | `unitrealfield: 000001CE0A50D260` |         |
+| UNIT\_RF\_MAXIMUM\_PITCH\_ANGLE\_DEGREES  | (a)   | handle  | 1970108528  | `unitrealfield: 000001CE0A50D2A0` |         |
+| UNIT\_RF\_MAXIMUM\_ROLL\_ANGLE\_DEGREES   | (a)   | handle  | 1970108530  | `unitrealfield: 000001CE0A50D2E0` |         |
+| UNIT\_RF\_SCALING\_VALUE                  | (a)   | handle  | 1970496353  | `unitrealfield: 000001CE0A50D320` |         |
+| UNIT\_RF\_ANIMATION\_RUN\_SPEED           | (a)   | handle  | 1970435438  | `unitrealfield: 000001CE0A50D360` |         |
+| UNIT\_RF\_SELECTION\_SCALE                | (a)   | handle  | 1970500451  | `unitrealfield: 000001CE0A50D3A0` |         |
+| UNIT\_RF\_SELECTION\_CIRCLE\_HEIGHT       | (a)   | handle  | 1970498682  | `unitrealfield: 000001CE0A50D3E0` |         |
+| UNIT\_RF\_SHADOW\_IMAGE\_HEIGHT           | (a)   | handle  | 1970497640  | `unitrealfield: 000001CE0A50D420` |         |
+| UNIT\_RF\_SHADOW\_IMAGE\_WIDTH            | (a)   | handle  | 1970497655  | `unitrealfield: 000001CE0A50D460` |         |
+| UNIT\_RF\_SHADOW\_IMAGE\_CENTER\_X        | (a)   | handle  | 1970497656  | `unitrealfield: 000001CE0A50D4A0` |         |
+| UNIT\_RF\_SHADOW\_IMAGE\_CENTER\_Y        | (a)   | handle  | 1970497657  | `unitrealfield: 000001CE0A50D4E0` |         |
+| UNIT\_RF\_ANIMATION\_WALK\_SPEED          | (a)   | handle  | 1970757996  | `unitrealfield: 000001CE0A50D520` |         |
+| UNIT\_RF\_DEFENSE                         | (a)   | handle  | 1969514083  | `unitrealfield: 000001CE0A50D560` |         |
+| UNIT\_RF\_SIGHT\_RADIUS                   | (a)   | handle  | 1970497906  | `unitrealfield: 000001CE0A50D5A0` |         |
+| UNIT\_RF\_PRIORITY                        | (a)   | handle  | 1970303593  | `unitrealfield: 000001CE080133D0` |         |
+| UNIT\_RF\_SPEED                           | (a)   | handle  | 1970108003  | `unitrealfield: 000001CE07F29BD0` |         |
+| UNIT\_RF\_OCCLUDER\_HEIGHT                | (a)   | handle  | 1970234211  | `unitrealfield: 000001CE08014370` |         |
+| UNIT\_RF\_HP                              | (a)   | handle  | 1969778787  | `unitrealfield: 000001CE08014710` |         |
+| UNIT\_RF\_MANA                            | (a)   | handle  | 1970106467  | `unitrealfield: 000001CE034EEB60` |         |
+| UNIT\_RF\_ACQUISITION\_RANGE              | (a)   | handle  | 1969316721  | `unitrealfield: 000001CE034EEDF0` |         |
+| UNIT\_RF\_CAST\_BACK\_SWING               | (a)   | handle  | 1969447539  | `unitrealfield: 000001CE034EEF10` |         |
+| UNIT\_RF\_CAST\_POINT                     | (a)   | handle  | 1969451124  | `unitrealfield: 000001CE034EF5B0` |         |
+| UNIT\_RF\_MINIMUM\_ATTACK\_RANGE          | (a)   | handle  | 1969319278  | `unitrealfield: 000001CE034F0A00` |         |
+| -1                                        | (a)   | handle  | -1          | `unitrealfield: 000001CE20867450` |         |
+| past the last constant                    | (a)   | handle  | 1970757997  | `unitrealfield: 000001CE2085EF10` |         |
+| 2147483647                                | (a)   | handle  | 2147483647  | `unitrealfield: 000001CE20849DE0` |         |
+| -2147483648                               | (a)   | handle  | -2147483648 | `unitrealfield: 000001CE2086A990` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_RF\_STRENGTH\_PER\_LEVEL, UNIT\_RF\_AGILITY\_PER\_LEVEL, UNIT\_RF\_INTELLIGENCE\_PER\_LEVEL, UNIT\_RF\_HIT\_POINTS\_REGENERATION\_RATE, UNIT\_RF\_MANA\_REGENERATION, UNIT\_RF\_DEATH\_TIME, UNIT\_RF\_FLY\_HEIGHT, UNIT\_RF\_FLY\_MAX\_HEIGHT, UNIT\_RF\_TURN\_RATE, UNIT\_RF\_ELEVATION\_SAMPLE\_RADIUS, UNIT\_RF\_FOG\_OF\_WAR\_SAMPLE\_RADIUS, UNIT\_RF\_MAXIMUM\_PITCH\_ANGLE\_DEGREES, UNIT\_RF\_MAXIMUM\_ROLL\_ANGLE\_DEGREES, UNIT\_RF\_SCALING\_VALUE, UNIT\_RF\_ANIMATION\_RUN\_SPEED, UNIT\_RF\_SELECTION\_SCALE, UNIT\_RF\_SELECTION\_CIRCLE\_HEIGHT, UNIT\_RF\_SHADOW\_IMAGE\_HEIGHT, UNIT\_RF\_SHADOW\_IMAGE\_WIDTH, UNIT\_RF\_SHADOW\_IMAGE\_CENTER\_X, UNIT\_RF\_SHADOW\_IMAGE\_CENTER\_Y, UNIT\_RF\_ANIMATION\_WALK\_SPEED, UNIT\_RF\_DEFENSE, UNIT\_RF\_SIGHT\_RADIUS, UNIT\_RF\_PRIORITY, UNIT\_RF\_SPEED, UNIT\_RF\_OCCLUDER\_HEIGHT, UNIT\_RF\_HP, UNIT\_RF\_MANA, UNIT\_RF\_ACQUISITION\_RANGE, UNIT\_RF\_CAST\_BACK\_SWING, UNIT\_RF\_CAST\_POINT, UNIT\_RF\_MINIMUM\_ATTACK\_RANGE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertUnitBooleanField`
+
+| Case                                              | Group | Outcome | Id          | Type                                 | Message |
+| ------------------------------------------------- | ----- | ------- | ----------- | ------------------------------------ | ------- |
+| UNIT\_BF\_RAISABLE                                | (a)   | handle  | 1970430313  | `unitbooleanfield: 000001CE034EEA90` |         |
+| UNIT\_BF\_DECAYABLE                               | (a)   | handle  | 1969513827  | `unitbooleanfield: 000001CE034EEAD0` |         |
+| UNIT\_BF\_IS\_A\_BUILDING                         | (a)   | handle  | 1969382503  | `unitbooleanfield: 000001CE034EF7F0` |         |
+| UNIT\_BF\_USE\_EXTENDED\_LINE\_OF\_SIGHT          | (a)   | handle  | 1970040691  | `unitbooleanfield: 000001CE034EF7A0` |         |
+| UNIT\_BF\_NEUTRAL\_BUILDING\_SHOWS\_MINIMAP\_ICON | (a)   | handle  | 1970168429  | `unitbooleanfield: 000001CE034EF430` |         |
+| UNIT\_BF\_HERO\_HIDE\_HERO\_INTERFACE\_ICON       | (a)   | handle  | 1969776738  | `unitbooleanfield: 000001CE034EF470` |         |
+| UNIT\_BF\_HERO\_HIDE\_HERO\_MINIMAP\_DISPLAY      | (a)   | handle  | 1969776749  | `unitbooleanfield: 000001CE034EF4B0` |         |
+| UNIT\_BF\_HERO\_HIDE\_HERO\_DEATH\_MESSAGE        | (a)   | handle  | 1969776740  | `unitbooleanfield: 000001CE07F29950` |         |
+| UNIT\_BF\_HIDE\_MINIMAP\_DISPLAY                  | (a)   | handle  | 1969778541  | `unitbooleanfield: 000001CE07F29990` |         |
+| UNIT\_BF\_SCALE\_PROJECTILES                      | (a)   | handle  | 1970496354  | `unitbooleanfield: 000001CE0A50CAF0` |         |
+| UNIT\_BF\_SELECTION\_CIRCLE\_ON\_WATER            | (a)   | handle  | 1970496887  | `unitbooleanfield: 000001CE0A50CB30` |         |
+| UNIT\_BF\_HAS\_WATER\_SHADOW                      | (a)   | handle  | 1970497650  | `unitbooleanfield: 000001CE0A50CB70` |         |
+| UNIT\_BF\_SHOW\_AIR\_TO\_GROUND                   | (a)   | handle  | 1969321063  | `unitbooleanfield: 000001CE0A50C7D0` |         |
+| UNIT\_BF\_FORCE\_DISPLAY\_HP                      | (a)   | handle  | 1969645680  | `unitbooleanfield: 000001CE0A50C810` |         |
+| -1                                                | (a)   | handle  | -1          | `unitbooleanfield: 000001CE1F451160` |         |
+| past the last constant                            | (a)   | handle  | 1970497651  | `unitbooleanfield: 000001CE1F456DF0` |         |
+| 2147483647                                        | (a)   | handle  | 2147483647  | `unitbooleanfield: 000001CE1F45CC80` |         |
+| -2147483648                                       | (a)   | handle  | -2147483648 | `unitbooleanfield: 000001CE1F462B00` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_BF\_RAISABLE, UNIT\_BF\_DECAYABLE, UNIT\_BF\_IS\_A\_BUILDING, UNIT\_BF\_USE\_EXTENDED\_LINE\_OF\_SIGHT, UNIT\_BF\_NEUTRAL\_BUILDING\_SHOWS\_MINIMAP\_ICON, UNIT\_BF\_HERO\_HIDE\_HERO\_INTERFACE\_ICON, UNIT\_BF\_HERO\_HIDE\_HERO\_MINIMAP\_DISPLAY, UNIT\_BF\_HERO\_HIDE\_HERO\_DEATH\_MESSAGE, UNIT\_BF\_HIDE\_MINIMAP\_DISPLAY, UNIT\_BF\_SCALE\_PROJECTILES, UNIT\_BF\_SELECTION\_CIRCLE\_ON\_WATER, UNIT\_BF\_HAS\_WATER\_SHADOW, UNIT\_BF\_SHOW\_AIR\_TO\_GROUND, UNIT\_BF\_FORCE\_DISPLAY\_HP, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertUnitStringField`
+
+| Case                          | Group | Outcome | Id          | Type                                | Message |
+| ----------------------------- | ----- | ------- | ----------- | ----------------------------------- | ------- |
+| UNIT\_SF\_NAME                | (a)   | handle  | 1970168173  | `unitstringfield: 000001CE0A50C850` |         |
+| UNIT\_SF\_PROPER\_NAMES       | (a)   | handle  | 1970303599  | `unitstringfield: 000001CE0A50C890` |         |
+| UNIT\_SF\_GROUND\_TEXTURE     | (a)   | handle  | 1970627187  | `unitstringfield: 000001CE034F1BC0` |         |
+| UNIT\_SF\_SHADOW\_IMAGE\_UNIT | (a)   | handle  | 1970497653  | `unitstringfield: 000001CE034F1C90` |         |
+| -1                            | (a)   | handle  | -1          | `unitstringfield: 000001CE1F485BA0` |         |
+| past the last constant        | (a)   | handle  | 1970627188  | `unitstringfield: 000001CE1F48BD90` |         |
+| 2147483647                    | (a)   | handle  | 2147483647  | `unitstringfield: 000001CE1F4921E0` |         |
+| -2147483648                   | (a)   | handle  | -2147483648 | `unitstringfield: 000001CE1F498A10` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_SF\_NAME, UNIT\_SF\_PROPER\_NAMES, UNIT\_SF\_GROUND\_TEXTURE, UNIT\_SF\_SHADOW\_IMAGE\_UNIT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertUnitWeaponIntegerField`
+
+| Case                                                   | Group | Outcome | Id          | Type                                       | Message |
+| ------------------------------------------------------ | ----- | ------- | ----------- | ------------------------------------------ | ------- |
+| UNIT\_WEAPON\_IF\_ATTACK\_DAMAGE\_NUMBER\_OF\_DICE     | (a)   | handle  | 1969303908  | `unitweaponintegerfield: 000001CE034F1CD0` |         |
+| UNIT\_WEAPON\_IF\_ATTACK\_DAMAGE\_BASE                 | (a)   | handle  | 1969303906  | `unitweaponintegerfield: 000001CE034F1D10` |         |
+| UNIT\_WEAPON\_IF\_ATTACK\_DAMAGE\_SIDES\_PER\_DIE      | (a)   | handle  | 1969303923  | `unitweaponintegerfield: 000001CE034F1D50` |         |
+| UNIT\_WEAPON\_IF\_ATTACK\_MAXIMUM\_NUMBER\_OF\_TARGETS | (a)   | handle  | 1970561841  | `unitweaponintegerfield: 000001CE034F1E20` |         |
+| UNIT\_WEAPON\_IF\_ATTACK\_ATTACK\_TYPE                 | (a)   | handle  | 1969303924  | `unitweaponintegerfield: 000001CE034F1E60` |         |
+| UNIT\_WEAPON\_IF\_ATTACK\_WEAPON\_SOUND                | (a)   | handle  | 1969451825  | `unitweaponintegerfield: 000001CE034F1FB0` |         |
+| UNIT\_WEAPON\_IF\_ATTACK\_AREA\_OF\_EFFECT\_TARGETS    | (a)   | handle  | 1969303920  | `unitweaponintegerfield: 000001CE034F1FF0` |         |
+| UNIT\_WEAPON\_IF\_ATTACK\_TARGETS\_ALLOWED             | (a)   | handle  | 1969303911  | `unitweaponintegerfield: 000001CE034F2030` |         |
+| -1                                                     | (a)   | handle  | -1          | `unitweaponintegerfield: 000001CE1F491370` |         |
+| past the last constant                                 | (a)   | handle  | 1970561842  | `unitweaponintegerfield: 000001CE1F4369B0` |         |
+| 2147483647                                             | (a)   | handle  | 2147483647  | `unitweaponintegerfield: 000001CE1F497A90` |         |
+| -2147483648                                            | (a)   | handle  | -2147483648 | `unitweaponintegerfield: 000001CE1F4393E0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_WEAPON\_IF\_ATTACK\_DAMAGE\_NUMBER\_OF\_DICE, UNIT\_WEAPON\_IF\_ATTACK\_DAMAGE\_BASE, UNIT\_WEAPON\_IF\_ATTACK\_DAMAGE\_SIDES\_PER\_DIE, UNIT\_WEAPON\_IF\_ATTACK\_MAXIMUM\_NUMBER\_OF\_TARGETS, UNIT\_WEAPON\_IF\_ATTACK\_ATTACK\_TYPE, UNIT\_WEAPON\_IF\_ATTACK\_WEAPON\_SOUND, UNIT\_WEAPON\_IF\_ATTACK\_AREA\_OF\_EFFECT\_TARGETS, UNIT\_WEAPON\_IF\_ATTACK\_TARGETS\_ALLOWED, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertUnitWeaponRealField`
+
+| Case                                                       | Group | Outcome | Id          | Type                                    | Message |
+| ---------------------------------------------------------- | ----- | ------- | ----------- | --------------------------------------- | ------- |
+| UNIT\_WEAPON\_RF\_ATTACK\_BACKSWING\_POINT                 | (a)   | handle  | 1969386289  | `unitweaponrealfield: 000001CE034F2070` |         |
+| UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_POINT                    | (a)   | handle  | 1969516593  | `unitweaponrealfield: 000001CE034F20B0` |         |
+| UNIT\_WEAPON\_RF\_ATTACK\_BASE\_COOLDOWN                   | (a)   | handle  | 1969303907  | `unitweaponrealfield: 000001CE034F20F0` |         |
+| UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_LOSS\_FACTOR             | (a)   | handle  | 1969515569  | `unitweaponrealfield: 000001CE034F1B70` |         |
+| UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_FACTOR\_MEDIUM           | (a)   | handle  | 1969775665  | `unitweaponrealfield: 000001CE0A5007E0` |         |
+| UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_FACTOR\_SMALL            | (a)   | handle  | 1970365489  | `unitweaponrealfield: 000001CE0A500930` |         |
+| UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_SPILL\_DISTANCE          | (a)   | handle  | 1970496561  | `unitweaponrealfield: 000001CE0A500970` |         |
+| UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_SPILL\_RADIUS            | (a)   | handle  | 1970500145  | `unitweaponrealfield: 000001CE0A5009B0` |         |
+| UNIT\_WEAPON\_RF\_ATTACK\_PROJECTILE\_SPEED                | (a)   | handle  | 1969303930  | `unitweaponrealfield: 000001CE0A5009F0` |         |
+| UNIT\_WEAPON\_RF\_ATTACK\_PROJECTILE\_ARC                  | (a)   | handle  | 1970102577  | `unitweaponrealfield: 000001CE0A500C40` |         |
+| UNIT\_WEAPON\_RF\_ATTACK\_AREA\_OF\_EFFECT\_FULL\_DAMAGE   | (a)   | handle  | 1969303910  | `unitweaponrealfield: 000001CE0A500C80` |         |
+| UNIT\_WEAPON\_RF\_ATTACK\_AREA\_OF\_EFFECT\_MEDIUM\_DAMAGE | (a)   | handle  | 1969303912  | `unitweaponrealfield: 000001CE0A500CC0` |         |
+| UNIT\_WEAPON\_RF\_ATTACK\_AREA\_OF\_EFFECT\_SMALL\_DAMAGE  | (a)   | handle  | 1969303921  | `unitweaponrealfield: 000001CE0A500D00` |         |
+| UNIT\_WEAPON\_RF\_ATTACK\_RANGE                            | (a)   | handle  | 1969303922  | `unitweaponrealfield: 000001CE0A500D40` |         |
+| -1                                                         | (a)   | handle  | -1          | `unitweaponrealfield: 000001CE1F447DB0` |         |
+| past the last constant                                     | (a)   | handle  | 1970500146  | `unitweaponrealfield: 000001CE1F441E70` |         |
+| 2147483647                                                 | (a)   | handle  | 2147483647  | `unitweaponrealfield: 000001CE1FCB8B20` |         |
+| -2147483648                                                | (a)   | handle  | -2147483648 | `unitweaponrealfield: 000001CE1F490C60` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_WEAPON\_RF\_ATTACK\_BACKSWING\_POINT, UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_POINT, UNIT\_WEAPON\_RF\_ATTACK\_BASE\_COOLDOWN, UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_LOSS\_FACTOR, UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_FACTOR\_MEDIUM, UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_FACTOR\_SMALL, UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_SPILL\_DISTANCE, UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_SPILL\_RADIUS, UNIT\_WEAPON\_RF\_ATTACK\_PROJECTILE\_SPEED, UNIT\_WEAPON\_RF\_ATTACK\_PROJECTILE\_ARC, UNIT\_WEAPON\_RF\_ATTACK\_AREA\_OF\_EFFECT\_FULL\_DAMAGE, UNIT\_WEAPON\_RF\_ATTACK\_AREA\_OF\_EFFECT\_MEDIUM\_DAMAGE, UNIT\_WEAPON\_RF\_ATTACK\_AREA\_OF\_EFFECT\_SMALL\_DAMAGE, UNIT\_WEAPON\_RF\_ATTACK\_RANGE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertUnitWeaponBooleanField`
+
+| Case                                                  | Group | Outcome | Id          | Type                                       | Message |
+| ----------------------------------------------------- | ----- | ------- | ----------- | ------------------------------------------ | ------- |
+| UNIT\_WEAPON\_BF\_ATTACK\_SHOW\_UI                    | (a)   | handle  | 1970763057  | `unitweaponbooleanfield: 000001CE0A500D80` |         |
+| UNIT\_WEAPON\_BF\_ATTACKS\_ENABLED                    | (a)   | handle  | 1969317230  | `unitweaponbooleanfield: 000001CE0A500DC0` |         |
+| UNIT\_WEAPON\_BF\_ATTACK\_PROJECTILE\_HOMING\_ENABLED | (a)   | handle  | 1970104369  | `unitweaponbooleanfield: 000001CE0A500E50` |         |
+| -1                                                    | (a)   | handle  | -1          | `unitweaponbooleanfield: 000001CE1F44C890` |         |
+| past the last constant                                | (a)   | handle  | 1970763058  | `unitweaponbooleanfield: 000001CE20851970` |         |
+| 2147483647                                            | (a)   | handle  | 2147483647  | `unitweaponbooleanfield: 000001CE2089CF10` |         |
+| -2147483648                                           | (a)   | handle  | -2147483648 | `unitweaponbooleanfield: 000001CE2089DB40` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_WEAPON\_BF\_ATTACK\_SHOW\_UI, UNIT\_WEAPON\_BF\_ATTACKS\_ENABLED, UNIT\_WEAPON\_BF\_ATTACK\_PROJECTILE\_HOMING\_ENABLED, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertUnitWeaponStringField`
+
+| Case                                      | Group | Outcome | Id          | Type                                      | Message |
+| ----------------------------------------- | ----- | ------- | ----------- | ----------------------------------------- | ------- |
+| UNIT\_WEAPON\_SF\_ATTACK\_PROJECTILE\_ART | (a)   | handle  | 1969303917  | `unitweaponstringfield: 000001CE0A500E90` |         |
+| -1                                        | (a)   | handle  | -1          | `unitweaponstringfield: 000001CE1EF34EA0` |         |
+| past the last constant                    | (a)   | handle  | 1969303918  | `unitweaponstringfield: 000001CE1EF5C830` |         |
+| 2147483647                                | (a)   | handle  | 2147483647  | `unitweaponstringfield: 000001CE1EF2E250` |         |
+| -2147483648                               | (a)   | handle  | -2147483648 | `unitweaponstringfield: 000001CE1F414990` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_WEAPON\_SF\_ATTACK\_PROJECTILE\_ART, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertItemIntegerField`
+
+| Case                            | Group | Outcome | Id          | Type                                 | Message |
+| ------------------------------- | ----- | ------- | ----------- | ------------------------------------ | ------- |
+| ITEM\_IF\_LEVEL                 | (a)   | handle  | 1768711542  | `itemintegerfield: 000001CE0A50BE30` |         |
+| ITEM\_IF\_NUMBER\_OF\_CHARGES   | (a)   | handle  | 1769304933  | `itemintegerfield: 000001CE0A50BE70` |         |
+| ITEM\_IF\_COOLDOWN\_GROUP       | (a)   | handle  | 1768122724  | `itemintegerfield: 000001CE0A50BEB0` |         |
+| ITEM\_IF\_MAX\_HIT\_POINTS      | (a)   | handle  | 1768453232  | `itemintegerfield: 000001CE0A50BEF0` |         |
+| ITEM\_IF\_HIT\_POINTS           | (a)   | handle  | 1768452195  | `itemintegerfield: 000001CE0A50BF30` |         |
+| ITEM\_IF\_PRIORITY              | (a)   | handle  | 1768977001  | `itemintegerfield: 000001CE0A50BF70` |         |
+| ITEM\_IF\_ARMOR\_TYPE           | (a)   | handle  | 1767993965  | `itemintegerfield: 000001CE0A50BFB0` |         |
+| ITEM\_IF\_TINTING\_COLOR\_RED   | (a)   | handle  | 1768123506  | `itemintegerfield: 000001CE0A50BFF0` |         |
+| ITEM\_IF\_TINTING\_COLOR\_GREEN | (a)   | handle  | 1768123495  | `itemintegerfield: 000001CE0A50C030` |         |
+| ITEM\_IF\_TINTING\_COLOR\_BLUE  | (a)   | handle  | 1768123490  | `itemintegerfield: 000001CE0A50C070` |         |
+| ITEM\_IF\_TINTING\_COLOR\_ALPHA | (a)   | handle  | 1768120684  | `itemintegerfield: 000001CE0A50C0B0` |         |
+| -1                              | (a)   | handle  | -1          | `itemintegerfield: 000001CE2039A060` |         |
+| past the last constant          | (a)   | handle  | 1769304934  | `itemintegerfield: 000001CE20759710` |         |
+| 2147483647                      | (a)   | handle  | 2147483647  | `itemintegerfield: 000001CE1FCD2210` |         |
+| -2147483648                     | (a)   | handle  | -2147483648 | `itemintegerfield: 000001CE1FDEEFF0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ITEM\_IF\_LEVEL, ITEM\_IF\_NUMBER\_OF\_CHARGES, ITEM\_IF\_COOLDOWN\_GROUP, ITEM\_IF\_MAX\_HIT\_POINTS, ITEM\_IF\_HIT\_POINTS, ITEM\_IF\_PRIORITY, ITEM\_IF\_ARMOR\_TYPE, ITEM\_IF\_TINTING\_COLOR\_RED, ITEM\_IF\_TINTING\_COLOR\_GREEN, ITEM\_IF\_TINTING\_COLOR\_BLUE, ITEM\_IF\_TINTING\_COLOR\_ALPHA, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertItemRealField`
+
+| Case                     | Group | Outcome | Id          | Type                              | Message |
+| ------------------------ | ----- | ------- | ----------- | --------------------------------- | ------- |
+| ITEM\_RF\_SCALING\_VALUE | (a)   | handle  | 1769169761  | `itemrealfield: 000001CE0A50C0F0` |         |
+| -1                       | (a)   | handle  | -1          | `itemrealfield: 000001CE20766540` |         |
+| past the last constant   | (a)   | handle  | 1769169762  | `itemrealfield: 000001CE207681E0` |         |
+| 2147483647               | (a)   | handle  | 2147483647  | `itemrealfield: 000001CE1F406B90` |         |
+| -2147483648              | (a)   | handle  | -2147483648 | `itemrealfield: 000001CE1EF4DBE0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ITEM\_RF\_SCALING\_VALUE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertItemBooleanField`
+
+| Case                                         | Group | Outcome | Id          | Type                                 | Message |
+| -------------------------------------------- | ----- | ------- | ----------- | ------------------------------------ | ------- |
+| ITEM\_BF\_DROPPED\_WHEN\_CARRIER\_DIES       | (a)   | handle  | 1768190576  | `itembooleanfield: 000001CE0A50C130` |         |
+| ITEM\_BF\_CAN\_BE\_DROPPED                   | (a)   | handle  | 1768190575  | `itembooleanfield: 000001CE0A50C1A0` |         |
+| ITEM\_BF\_PERISHABLE                         | (a)   | handle  | 1768973682  | `itembooleanfield: 000001CE0A50C1E0` |         |
+| ITEM\_BF\_INCLUDE\_AS\_RANDOM\_CHOICE        | (a)   | handle  | 1768977006  | `itembooleanfield: 000001CE0A50C220` |         |
+| ITEM\_BF\_USE\_AUTOMATICALLY\_WHEN\_ACQUIRED | (a)   | handle  | 1768976247  | `itembooleanfield: 000001CE0A50C260` |         |
+| ITEM\_BF\_CAN\_BE\_SOLD\_TO\_MERCHANTS       | (a)   | handle  | 1768972663  | `itembooleanfield: 000001CE0A50C2A0` |         |
+| ITEM\_BF\_ACTIVELY\_USED                     | (a)   | handle  | 1769304929  | `itembooleanfield: 000001CE0A50C2E0` |         |
+| -1                                           | (a)   | handle  | -1          | `itembooleanfield: 000001CE2089BF10` |         |
+| past the last constant                       | (a)   | handle  | 1769304930  | `itembooleanfield: 000001CE2046E1B0` |         |
+| 2147483647                                   | (a)   | handle  | 2147483647  | `itembooleanfield: 000001CE1EF6BC70` |         |
+| -2147483648                                  | (a)   | handle  | -2147483648 | `itembooleanfield: 000001CE1F417F30` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ITEM\_BF\_DROPPED\_WHEN\_CARRIER\_DIES, ITEM\_BF\_CAN\_BE\_DROPPED, ITEM\_BF\_PERISHABLE, ITEM\_BF\_INCLUDE\_AS\_RANDOM\_CHOICE, ITEM\_BF\_USE\_AUTOMATICALLY\_WHEN\_ACQUIRED, ITEM\_BF\_CAN\_BE\_SOLD\_TO\_MERCHANTS, ITEM\_BF\_ACTIVELY\_USED, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertItemStringField`
+
+| Case                   | Group | Outcome | Id          | Type                                | Message |
+| ---------------------- | ----- | ------- | ----------- | ----------------------------------- | ------- |
+| ITEM\_SF\_MODEL\_USED  | (a)   | handle  | 1768319340  | `itemstringfield: 000001CE0A50C320` |         |
+| -1                     | (a)   | handle  | -1          | `itemstringfield: 000001CE203B6ED0` |         |
+| past the last constant | (a)   | handle  | 1768319341  | `itemstringfield: 000001CE1F435A00` |         |
+| 2147483647             | (a)   | handle  | 2147483647  | `itemstringfield: 000001CE20842D00` |         |
+| -2147483648            | (a)   | handle  | -2147483648 | `itemstringfield: 000001CE1EF3A100` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ITEM\_SF\_MODEL\_USED, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertMoveType`
+
+| Case                    | Group | Outcome | Id          | Type                         | Message |
+| ----------------------- | ----- | ------- | ----------- | ---------------------------- | ------- |
+| MOVE\_TYPE\_UNKNOWN     | (a)   | handle  | 0           | `movetype: 000001CE0A500ED0` |         |
+| MOVE\_TYPE\_FOOT        | (a)   | handle  | 1           | `movetype: 000001CE0A500F10` |         |
+| MOVE\_TYPE\_FLY         | (a)   | handle  | 2           | `movetype: 000001CE0A500F50` |         |
+| MOVE\_TYPE\_HORSE       | (a)   | handle  | 4           | `movetype: 000001CE0A500FD0` |         |
+| MOVE\_TYPE\_HOVER       | (a)   | handle  | 8           | `movetype: 000001CE0A500F90` |         |
+| MOVE\_TYPE\_FLOAT       | (a)   | handle  | 16          | `movetype: 000001CE0A501070` |         |
+| MOVE\_TYPE\_AMPHIBIOUS  | (a)   | handle  | 32          | `movetype: 000001CE0A501140` |         |
+| MOVE\_TYPE\_UNBUILDABLE | (a)   | handle  | 64          | `movetype: 000001CE0A501180` |         |
+| -1                      | (a)   | handle  | -1          | `movetype: 000001CE1F464220` |         |
+| past the last constant  | (a)   | handle  | 65          | `movetype: 000001CE20482490` |         |
+| 2147483647              | (a)   | handle  | 2147483647  | `movetype: 000001CE208803F0` |         |
+| -2147483648             | (a)   | handle  | -2147483648 | `movetype: 000001CE1EF60930` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (MOVE\_TYPE\_UNKNOWN, MOVE\_TYPE\_FOOT, MOVE\_TYPE\_FLY, MOVE\_TYPE\_HORSE, MOVE\_TYPE\_HOVER, MOVE\_TYPE\_FLOAT, MOVE\_TYPE\_AMPHIBIOUS, MOVE\_TYPE\_UNBUILDABLE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For MOVE\_TYPE\_UNKNOWN, a handle of id 0.
+
+### `ConvertTargetFlag`
+
+| Case                     | Group | Outcome | Id          | Type                           | Message |
+| ------------------------ | ----- | ------- | ----------- | ------------------------------ | ------- |
+| TARGET\_FLAG\_NONE       | (a)   | handle  | 1           | `targetflag: 000001CE0A5011C0` |         |
+| TARGET\_FLAG\_GROUND     | (a)   | handle  | 2           | `targetflag: 000001CE0A501200` |         |
+| TARGET\_FLAG\_AIR        | (a)   | handle  | 4           | `targetflag: 000001CE0A501280` |         |
+| TARGET\_FLAG\_STRUCTURE  | (a)   | handle  | 8           | `targetflag: 000001CE0A501240` |         |
+| TARGET\_FLAG\_WARD       | (a)   | handle  | 16          | `targetflag: 000001CE0A501320` |         |
+| TARGET\_FLAG\_ITEM       | (a)   | handle  | 32          | `targetflag: 000001CE0A501360` |         |
+| TARGET\_FLAG\_TREE       | (a)   | handle  | 64          | `targetflag: 000001CE0A5013A0` |         |
+| TARGET\_FLAG\_WALL       | (a)   | handle  | 128         | `targetflag: 000001CE0A5013E0` |         |
+| TARGET\_FLAG\_DEBRIS     | (a)   | handle  | 256         | `targetflag: 000001CE0A501530` |         |
+| TARGET\_FLAG\_DECORATION | (a)   | handle  | 512         | `targetflag: 000001CE0A501570` |         |
+| TARGET\_FLAG\_BRIDGE     | (a)   | handle  | 1024        | `targetflag: 000001CE0A5015B0` |         |
+| -1                       | (a)   | handle  | -1          | `targetflag: 000001CE1EF34AF0` |         |
+| past the last constant   | (a)   | handle  | 1025        | `targetflag: 000001CE1F440D60` |         |
+| 2147483647               | (a)   | handle  | 2147483647  | `targetflag: 000001CE1F490B60` |         |
+| -2147483648              | (a)   | handle  | -2147483648 | `targetflag: 000001CE208790C0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (TARGET\_FLAG\_NONE, TARGET\_FLAG\_GROUND, TARGET\_FLAG\_AIR, TARGET\_FLAG\_STRUCTURE, TARGET\_FLAG\_WARD, TARGET\_FLAG\_ITEM, TARGET\_FLAG\_TREE, TARGET\_FLAG\_WALL, TARGET\_FLAG\_DEBRIS, TARGET\_FLAG\_DECORATION, TARGET\_FLAG\_BRIDGE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertArmorType`
+
+| Case                   | Group | Outcome | Id          | Type                          | Message |
+| ---------------------- | ----- | ------- | ----------- | ----------------------------- | ------- |
+| ARMOR\_TYPE\_WHOKNOWS  | (a)   | handle  | 0           | `armortype: 000001CE034C1780` |         |
+| ARMOR\_TYPE\_FLESH     | (a)   | handle  | 1           | `armortype: 000001CE034C1800` |         |
+| ARMOR\_TYPE\_METAL     | (a)   | handle  | 2           | `armortype: 000001CE034C1840` |         |
+| ARMOR\_TYPE\_WOOD      | (a)   | handle  | 3           | `armortype: 000001CE034C18C0` |         |
+| ARMOR\_TYPE\_ETHREAL   | (a)   | handle  | 4           | `armortype: 000001CE034C1880` |         |
+| ARMOR\_TYPE\_STONE     | (a)   | handle  | 5           | `armortype: 000001CE034C1960` |         |
+| -1                     | (a)   | handle  | -1          | `armortype: 000001CE203903F0` |         |
+| past the last constant | (a)   | handle  | 6           | `armortype: 000001CE208881B0` |         |
+| 2147483647             | (a)   | handle  | 2147483647  | `armortype: 000001CE2075B330` |         |
+| -2147483648            | (a)   | handle  | -2147483648 | `armortype: 000001CE1EF2AA60` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ARMOR\_TYPE\_WHOKNOWS, ARMOR\_TYPE\_FLESH, ARMOR\_TYPE\_METAL, ARMOR\_TYPE\_WOOD, ARMOR\_TYPE\_ETHREAL, ARMOR\_TYPE\_STONE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For ARMOR\_TYPE\_WHOKNOWS, a handle of id 0.
+
+### `ConvertHeroAttribute`
+
+| Case                   | Group | Outcome | Id          | Type                              | Message |
+| ---------------------- | ----- | ------- | ----------- | --------------------------------- | ------- |
+| HERO\_ATTRIBUTE\_STR   | (a)   | handle  | 1           | `heroattribute: 000001CE034C1700` |         |
+| HERO\_ATTRIBUTE\_INT   | (a)   | handle  | 2           | `heroattribute: 000001CE034C1740` |         |
+| HERO\_ATTRIBUTE\_AGI   | (a)   | handle  | 3           | `heroattribute: 000001CE034C17C0` |         |
+| -1                     | (a)   | handle  | -1          | `heroattribute: 000001CE1EF7A1D0` |         |
+| past the last constant | (a)   | handle  | 4           | `heroattribute: 000001CE204651B0` |         |
+| 2147483647             | (a)   | handle  | 2147483647  | `heroattribute: 000001CE1EF28150` |         |
+| -2147483648            | (a)   | handle  | -2147483648 | `heroattribute: 000001CE1FCD0A40` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (HERO\_ATTRIBUTE\_STR, HERO\_ATTRIBUTE\_INT, HERO\_ATTRIBUTE\_AGI, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertDefenseType`
+
+| Case                   | Group | Outcome | Id          | Type                            | Message |
+| ---------------------- | ----- | ------- | ----------- | ------------------------------- | ------- |
+| DEFENSE\_TYPE\_LIGHT   | (a)   | handle  | 0           | `defensetype: 000001CE0A5015F0` |         |
+| DEFENSE\_TYPE\_MEDIUM  | (a)   | handle  | 1           | `defensetype: 000001CE0A501630` |         |
+| DEFENSE\_TYPE\_LARGE   | (a)   | handle  | 2           | `defensetype: 000001CE0A501670` |         |
+| DEFENSE\_TYPE\_FORT    | (a)   | handle  | 3           | `defensetype: 000001CE0A5016F0` |         |
+| DEFENSE\_TYPE\_NORMAL  | (a)   | handle  | 4           | `defensetype: 000001CE0A5016B0` |         |
+| DEFENSE\_TYPE\_HERO    | (a)   | handle  | 5           | `defensetype: 000001CE0A501790` |         |
+| DEFENSE\_TYPE\_DIVINE  | (a)   | handle  | 6           | `defensetype: 000001CE034C1680` |         |
+| DEFENSE\_TYPE\_NONE    | (a)   | handle  | 7           | `defensetype: 000001CE034C16C0` |         |
+| -1                     | (a)   | handle  | -1          | `defensetype: 000001CE20888E90` |         |
+| past the last constant | (a)   | handle  | 8           | `defensetype: 000001CE1EF48610` |         |
+| 2147483647             | (a)   | handle  | 2147483647  | `defensetype: 000001CE1EF4FA40` |         |
+| -2147483648            | (a)   | handle  | -2147483648 | `defensetype: 000001CE1EF2AC80` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (DEFENSE\_TYPE\_LIGHT, DEFENSE\_TYPE\_MEDIUM, DEFENSE\_TYPE\_LARGE, DEFENSE\_TYPE\_FORT, DEFENSE\_TYPE\_NORMAL, DEFENSE\_TYPE\_HERO, DEFENSE\_TYPE\_DIVINE, DEFENSE\_TYPE\_NONE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For DEFENSE\_TYPE\_LIGHT, a handle of id 0.
+
+### `ConvertRegenType`
+
+| Case                       | Group | Outcome | Id          | Type                          | Message |
+| -------------------------- | ----- | ------- | ----------- | ----------------------------- | ------- |
+| REGENERATION\_TYPE\_NONE   | (a)   | handle  | 0           | `regentype: 000001CE034C1A40` |         |
+| REGENERATION\_TYPE\_ALWAYS | (a)   | handle  | 1           | `regentype: 000001CE034C1A80` |         |
+| REGENERATION\_TYPE\_BLIGHT | (a)   | handle  | 2           | `regentype: 000001CE034C1AF0` |         |
+| REGENERATION\_TYPE\_DAY    | (a)   | handle  | 3           | `regentype: 000001CE034C1B70` |         |
+| REGENERATION\_TYPE\_NIGHT  | (a)   | handle  | 4           | `regentype: 000001CE034C1B30` |         |
+| -1                         | (a)   | handle  | -1          | `regentype: 000001CE1FCC1080` |         |
+| past the last constant     | (a)   | handle  | 5           | `regentype: 000001CE1FCBB070` |         |
+| 2147483647                 | (a)   | handle  | 2147483647  | `regentype: 000001CE1FCAD9A0` |         |
+| -2147483648                | (a)   | handle  | -2147483648 | `regentype: 000001CE034DA470` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (REGENERATION\_TYPE\_NONE, REGENERATION\_TYPE\_ALWAYS, REGENERATION\_TYPE\_BLIGHT, REGENERATION\_TYPE\_DAY, REGENERATION\_TYPE\_NIGHT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For REGENERATION\_TYPE\_NONE, a handle of id 0.
+
+### `ConvertUnitCategory`
+
+| Case                       | Group | Outcome | Id          | Type                             | Message |
+| -------------------------- | ----- | ------- | ----------- | -------------------------------- | ------- |
+| UNIT\_CATEGORY\_GIANT      | (a)   | handle  | 1           | `unitcategory: 000001CE034C1BB0` |         |
+| UNIT\_CATEGORY\_UNDEAD     | (a)   | handle  | 2           | `unitcategory: 000001CE034C1BF0` |         |
+| UNIT\_CATEGORY\_SUMMONED   | (a)   | handle  | 4           | `unitcategory: 000001CE034C1C70` |         |
+| UNIT\_CATEGORY\_MECHANICAL | (a)   | handle  | 8           | `unitcategory: 000001CE034C1C30` |         |
+| UNIT\_CATEGORY\_PEON       | (a)   | handle  | 16          | `unitcategory: 000001CE034C1D10` |         |
+| UNIT\_CATEGORY\_SAPPER     | (a)   | handle  | 32          | `unitcategory: 000001CE034C1D50` |         |
+| UNIT\_CATEGORY\_TOWNHALL   | (a)   | handle  | 64          | `unitcategory: 000001CE034C1D90` |         |
+| UNIT\_CATEGORY\_ANCIENT    | (a)   | handle  | 128         | `unitcategory: 000001CE034C1DD0` |         |
+| UNIT\_CATEGORY\_NEUTRAL    | (a)   | handle  | 256         | `unitcategory: 000001CE034C1F20` |         |
+| UNIT\_CATEGORY\_WARD       | (a)   | handle  | 512         | `unitcategory: 000001CE034C1F60` |         |
+| UNIT\_CATEGORY\_STANDON    | (a)   | handle  | 1024        | `unitcategory: 000001CE034C1FA0` |         |
+| UNIT\_CATEGORY\_TAUREN     | (a)   | handle  | 2048        | `unitcategory: 000001CE034C1FE0` |         |
+| -1                         | (a)   | handle  | -1          | `unitcategory: 000001CE20471CF0` |         |
+| past the last constant     | (a)   | handle  | 2049        | `unitcategory: 000001CE1FCBA890` |         |
+| 2147483647                 | (a)   | handle  | 2147483647  | `unitcategory: 000001CE1FCD5060` |         |
+| -2147483648                | (a)   | handle  | -2147483648 | `unitcategory: 000001CE1FDEE910` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_CATEGORY\_GIANT, UNIT\_CATEGORY\_UNDEAD, UNIT\_CATEGORY\_SUMMONED, UNIT\_CATEGORY\_MECHANICAL, UNIT\_CATEGORY\_PEON, UNIT\_CATEGORY\_SAPPER, UNIT\_CATEGORY\_TOWNHALL, UNIT\_CATEGORY\_ANCIENT, UNIT\_CATEGORY\_NEUTRAL, UNIT\_CATEGORY\_WARD, UNIT\_CATEGORY\_STANDON, UNIT\_CATEGORY\_TAUREN, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertPathingFlag`
+
+| Case                          | Group | Outcome | Id          | Type                            | Message |
+| ----------------------------- | ----- | ------- | ----------- | ------------------------------- | ------- |
+| PATHING\_FLAG\_UNWALKABLE     | (a)   | handle  | 2           | `pathingflag: 000001CE034C2230` |         |
+| PATHING\_FLAG\_UNFLYABLE      | (a)   | handle  | 4           | `pathingflag: 000001CE034C2270` |         |
+| PATHING\_FLAG\_UNBUILDABLE    | (a)   | handle  | 8           | `pathingflag: 000001CE034C22B0` |         |
+| PATHING\_FLAG\_UNPEONHARVEST  | (a)   | handle  | 16          | `pathingflag: 000001CE034C22F0` |         |
+| PATHING\_FLAG\_BLIGHTED       | (a)   | handle  | 32          | `pathingflag: 000001CE034C2330` |         |
+| PATHING\_FLAG\_UNFLOATABLE    | (a)   | handle  | 64          | `pathingflag: 000001CE034C2370` |         |
+| PATHING\_FLAG\_UNAMPHIBIOUS   | (a)   | handle  | 128         | `pathingflag: 000001CE034C23B0` |         |
+| PATHING\_FLAG\_UNITEMPLACABLE | (a)   | handle  | 256         | `pathingflag: 000001CE034C23F0` |         |
+| -1                            | (a)   | handle  | -1          | `pathingflag: 000001CE20881350` |         |
+| past the last constant        | (a)   | handle  | 257         | `pathingflag: 000001CE1EF44A50` |         |
+| 2147483647                    | (a)   | handle  | 2147483647  | `pathingflag: 000001CE20880E30` |         |
+| -2147483648                   | (a)   | handle  | -2147483648 | `pathingflag: 000001CE20846380` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (PATHING\_FLAG\_UNWALKABLE, PATHING\_FLAG\_UNFLYABLE, PATHING\_FLAG\_UNBUILDABLE, PATHING\_FLAG\_UNPEONHARVEST, PATHING\_FLAG\_BLIGHTED, PATHING\_FLAG\_UNFLOATABLE, PATHING\_FLAG\_UNAMPHIBIOUS, PATHING\_FLAG\_UNITEMPLACABLE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+
+### `ConvertFogStyle`
+
+| Case                    | Group | Outcome | Id          | Type                         | Message |
+| ----------------------- | ----- | ------- | ----------- | ---------------------------- | ------- |
+| FOG\_STYLE\_LINEAR      | (a)   | handle  | 0           | `fogstyle: 000001CEFFC7DAC0` |         |
+| FOG\_STYLE\_EXP         | (a)   | handle  | 1           | `fogstyle: 000001CEFFC7DB00` |         |
+| FOG\_STYLE\_EXP2        | (a)   | handle  | 2           | `fogstyle: 000001CEFFC7DB70` |         |
+| FOG\_STYLE\_HEIGHT      | (a)   | handle  | 3           | `fogstyle: 000001CEFFC7DBF0` |         |
+| FOG\_STYLE\_NEW\_EXP    | (a)   | handle  | 4           | `fogstyle: 000001CEFFC7DBB0` |         |
+| FOG\_STYLE\_NEW\_EXP\_2 | (a)   | handle  | 5           | `fogstyle: 000001CEFFC7DC90` |         |
+| -1                      | (a)   | handle  | -1          | `fogstyle: 000001CE034D8640` |         |
+| past the last constant  | (a)   | handle  | 6           | `fogstyle: 000001CE203AF7C0` |         |
+| 2147483647              | (a)   | handle  | 2147483647  | `fogstyle: 000001CE203C0880` |         |
+| -2147483648             | (a)   | handle  | -2147483648 | `fogstyle: 000001CE203B7670` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (FOG\_STYLE\_LINEAR, FOG\_STYLE\_EXP, FOG\_STYLE\_EXP2, FOG\_STYLE\_HEIGHT, FOG\_STYLE\_NEW\_EXP, FOG\_STYLE\_NEW\_EXP\_2, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For FOG\_STYLE\_LINEAR, a handle of id 0.
+
+### `ConvertEquipmentType`
+
+| Case                     | Group | Outcome | Id          | Type                              | Message |
+| ------------------------ | ----- | ------- | ----------- | --------------------------------- | ------- |
+| EQUIPMENT\_TYPE\_NONE    | (a)   | handle  | 0           | `equipmentType: 000001CE034E6B50` |         |
+| EQUIPMENT\_TYPE\_HEAD    | (a)   | handle  | 1           | `equipmentType: 000001CE034E6B90` |         |
+| EQUIPMENT\_TYPE\_CHEST   | (a)   | handle  | 2           | `equipmentType: 000001CE034E6C00` |         |
+| EQUIPMENT\_TYPE\_GLOVES  | (a)   | handle  | 3           | `equipmentType: 000001CE034E6C80` |         |
+| EQUIPMENT\_TYPE\_BOOTS   | (a)   | handle  | 4           | `equipmentType: 000001CE034E6C40` |         |
+| EQUIPMENT\_TYPE\_RING    | (a)   | handle  | 5           | `equipmentType: 000001CE034E6CC0` |         |
+| EQUIPMENT\_TYPE\_PRIMARY | (a)   | handle  | 6           | `equipmentType: 000001CE034E6D00` |         |
+| EQUIPMENT\_TYPE\_OFFHAND | (a)   | handle  | 7           | `equipmentType: 000001CE034E6D40` |         |
+| EQUIPMENT\_TYPE\_TRINKET | (a)   | handle  | 8           | `equipmentType: 000001CE034E6D80` |         |
+| EQUIPMENT\_TYPE\_ANY     | (a)   | handle  | 9           | `equipmentType: 000001CE034E6DC0` |         |
+| -1                       | (a)   | handle  | -1          | `equipmentType: 000001CE2038F400` |         |
+| past the last constant   | (a)   | handle  | 10          | `equipmentType: 000001CE2074BA80` |         |
+| 2147483647               | (a)   | handle  | 2147483647  | `equipmentType: 000001CE20481F10` |         |
+| -2147483648              | (a)   | handle  | -2147483648 | `equipmentType: 000001CE20754480` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (EQUIPMENT\_TYPE\_NONE, EQUIPMENT\_TYPE\_HEAD, EQUIPMENT\_TYPE\_CHEST, EQUIPMENT\_TYPE\_GLOVES, EQUIPMENT\_TYPE\_BOOTS, EQUIPMENT\_TYPE\_RING, EQUIPMENT\_TYPE\_PRIMARY, EQUIPMENT\_TYPE\_OFFHAND, EQUIPMENT\_TYPE\_TRINKET, EQUIPMENT\_TYPE\_ANY, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For EQUIPMENT\_TYPE\_NONE, a handle of id 0.
+
+### `ConvertItemTag`
+
+| Case                       | Group | Outcome | Id          | Type                        | Message |
+| -------------------------- | ----- | ------- | ----------- | --------------------------- | ------- |
+| ITEMTAG\_TYPE\_UNDEFINED   | (a)   | handle  | 0           | `itemTag: 000001CE034E6F20` |         |
+| ITEMTAG\_TYPE\_DROPPABLE   | (a)   | handle  | 1           | `itemTag: 000001CE034E6F60` |         |
+| ITEMTAG\_TYPE\_QUESTREWARD | (a)   | handle  | 2           | `itemTag: 000001CE034E6FD0` |         |
+| ITEMTAG\_TYPE\_BOSSDROP    | (a)   | handle  | 3           | `itemTag: 000001CE034E7050` |         |
+| ITEMTAG\_TYPE\_SECRET      | (a)   | handle  | 4           | `itemTag: 000001CE034E7010` |         |
+| ITEMTAG\_TYPE\_PUZZLE      | (a)   | handle  | 5           | `itemTag: 000001CE034E7090` |         |
+| ITEMTAG\_TYPE\_WORLD       | (a)   | handle  | 6           | `itemTag: 000001CE034E70D0` |         |
+| ITEMTAG\_TYPE\_SHOP        | (a)   | handle  | 7           | `itemTag: 000001CE034E7110` |         |
+| ITEMTAG\_TYPE\_ANY         | (a)   | handle  | 8           | `itemTag: 000001CE034E7150` |         |
+| -1                         | (a)   | handle  | -1          | `itemTag: 000001CE203B3160` |         |
+| past the last constant     | (a)   | handle  | 9           | `itemTag: 000001CE20854EF0` |         |
+| 2147483647                 | (a)   | handle  | 2147483647  | `itemTag: 000001CE207745F0` |         |
+| -2147483648                | (a)   | handle  | -2147483648 | `itemTag: 000001CE20774C20` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (ITEMTAG\_TYPE\_UNDEFINED, ITEMTAG\_TYPE\_DROPPABLE, ITEMTAG\_TYPE\_QUESTREWARD, ITEMTAG\_TYPE\_BOSSDROP, ITEMTAG\_TYPE\_SECRET, ITEMTAG\_TYPE\_PUZZLE, ITEMTAG\_TYPE\_WORLD, ITEMTAG\_TYPE\_SHOP, ITEMTAG\_TYPE\_ANY, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For ITEMTAG\_TYPE\_UNDEFINED, a handle of id 0.
+
+### `ConvertLoadoutSlot`
+
+| Case                              | Group | Outcome | Id          | Type                            | Message |
+| --------------------------------- | ----- | ------- | ----------- | ------------------------------- | ------- |
+| EQUIPMENT\_LOADOUT\_SLOT\_HEAD    | (a)   | handle  | 0           | `loadoutslot: 000001CE034E7190` |         |
+| EQUIPMENT\_LOADOUT\_SLOT\_CHEST   | (a)   | handle  | 1           | `loadoutslot: 000001CE034E71D0` |         |
+| EQUIPMENT\_LOADOUT\_SLOT\_GLOVES  | (a)   | handle  | 2           | `loadoutslot: 000001CE034E7240` |         |
+| EQUIPMENT\_LOADOUT\_SLOT\_BOOTS   | (a)   | handle  | 3           | `loadoutslot: 000001CE034E72C0` |         |
+| EQUIPMENT\_LOADOUT\_SLOT\_RING    | (a)   | handle  | 4           | `loadoutslot: 000001CE034E7280` |         |
+| EQUIPMENT\_LOADOUT\_SLOT\_RINGALT | (a)   | handle  | 5           | `loadoutslot: 000001CE034E7300` |         |
+| EQUIPMENT\_LOADOUT\_SLOT\_PRIMARY | (a)   | handle  | 6           | `loadoutslot: 000001CE034E73E0` |         |
+| EQUIPMENT\_LOADOUT\_SLOT\_OFFHAND | (a)   | handle  | 7           | `loadoutslot: 000001CE034E7420` |         |
+| EQUIPMENT\_LOADOUT\_SLOT\_TRINKET | (a)   | handle  | 8           | `loadoutslot: 000001CE034E7460` |         |
+| -1                                | (a)   | handle  | -1          | `loadoutslot: 000001CE203A3820` |         |
+| past the last constant            | (a)   | handle  | 9           | `loadoutslot: 000001CE1F41E0C0` |         |
+| 2147483647                        | (a)   | handle  | 2147483647  | `loadoutslot: 000001CE1F463240` |         |
+| -2147483648                       | (a)   | handle  | -2147483648 | `loadoutslot: 000001CE1F4993B0` |         |
+
+- Family: `converter`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (EQUIPMENT\_LOADOUT\_SLOT\_HEAD, EQUIPMENT\_LOADOUT\_SLOT\_CHEST, EQUIPMENT\_LOADOUT\_SLOT\_GLOVES, EQUIPMENT\_LOADOUT\_SLOT\_BOOTS, EQUIPMENT\_LOADOUT\_SLOT\_RING, EQUIPMENT\_LOADOUT\_SLOT\_RINGALT, EQUIPMENT\_LOADOUT\_SLOT\_PRIMARY, EQUIPMENT\_LOADOUT\_SLOT\_OFFHAND, EQUIPMENT\_LOADOUT\_SLOT\_TRINKET, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For EQUIPMENT\_LOADOUT\_SLOT\_HEAD, a handle of id 0.
