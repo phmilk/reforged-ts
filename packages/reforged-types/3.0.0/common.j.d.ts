@@ -13425,7 +13425,7 @@ declare function GetStartLocPrioSlot(whichStartLoc: number, prioSlotIndex: numbe
  * @param whichStartLoc - integer (32-bit)
  * @param prioSlotIndex - integer (32-bit)
  * @returns startlocprio
- * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichStartLoc: negative, whichStartLoc: outside the world, whichStartLoc: 2147483647, prioSlotIndex: negative, prioSlotIndex: outside the world, prioSlotIndex: 2147483647) on 3.0.0.24268; evidence, not proof. The handle had id 0 in every case, the integer of `MAP_LOC_PRIO_LOW`, not a missing handle.
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichStartLoc: negative, whichStartLoc: outside the world, whichStartLoc: 2147483647, prioSlotIndex: negative, prioSlotIndex: outside the world, prioSlotIndex: 2147483647) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 7 cases (typical arguments, whichStartLoc: negative, whichStartLoc: outside the world, whichStartLoc: 2147483647, prioSlotIndex: negative, prioSlotIndex: outside the world, prioSlotIndex: 2147483647), the integer of `MAP_LOC_PRIO_LOW`, not a missing handle.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetStartLocPrio}
  */
 declare function GetStartLocPrio(whichStartLoc: number, prioSlotIndex: number): startlocprio;
@@ -17987,7 +17987,7 @@ declare function IsLocationMaskedToPlayer(whichLocation: location, whichPlayer: 
 /**
  * @param whichPlayer - player
  * @returns race
- * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichPlayer: neutral player), an integer no `race` constant of `common.j` has (`RACE_HUMAN` to `RACE_OTHER` are 1 to 7).
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichPlayer: neutral player), an integer no `race` constant of `common.j` has (`RACE_HUMAN` to `RACE_OTHER` are 1 to 5 and 7).
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetPlayerRace}
  */
 declare function GetPlayerRace(whichPlayer: player): race;
