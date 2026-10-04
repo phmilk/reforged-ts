@@ -23,5 +23,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned nothing in 3 cases of the nullability sweep (name: empty string, name: unknown name, owner: destroyed frame) on 3.0.0.24268.",
   "origin": "war3-types-strict"
 }

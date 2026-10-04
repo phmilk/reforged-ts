@@ -2,7 +2,7 @@
   "name": "CreateTrackable",
   "source": "common.j",
   "returns": {
-    "nullable": true,
+    "nullable": false,
     "family": "constructor"
   },
   "params": [
@@ -23,5 +23,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned a handle in every case of the nullability sweep (typical arguments, trackableModelPath: empty string, trackableModelPath: unknown name, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, facing: 0, facing: negative, facing: outside the world, facing: 2147483647) on 3.0.0.24268; evidence, not proof.",
   "origin": "war3-types-strict"
 }

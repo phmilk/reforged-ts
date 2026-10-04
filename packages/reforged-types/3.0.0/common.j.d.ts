@@ -13826,9 +13826,10 @@ declare function GetExpiredTimer(): timer | undefined;
 
 /**
  * @returns group
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateGroup}
  */
-declare function CreateGroup(): group | undefined;
+declare function CreateGroup(): group;
 
 /**
  * @param whichGroup - group
@@ -14082,9 +14083,10 @@ declare function FirstOfGroup(whichGroup: group): unit | undefined;
 
 /**
  * @returns force
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateForce}
  */
-declare function CreateForce(): force | undefined;
+declare function CreateForce(): force;
 
 /**
  * @param whichForce - force
@@ -14173,7 +14175,7 @@ declare function ForForce(whichForce: force, callback: code): void;
  * @param maxx - real
  * @param maxy - real
  * @returns rect
- * @remarks Returned a handle in every case of the nullability sweep (normal rect, inverted rect, zero area rect, rect outside the world) on 3.0.0.24268; evidence, not proof.
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, minx: 0, minx: negative, minx: outside the world, minx: 2147483647, miny: 0, miny: negative, miny: outside the world, miny: 2147483647, maxx: 0, maxx: negative, maxx: outside the world, maxx: 2147483647, maxy: 0, maxy: negative, maxy: outside the world, maxy: 2147483647) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/Rect}
  */
 declare function Rect(minx: number, miny: number, maxx: number, maxy: number): rect;
@@ -14182,6 +14184,7 @@ declare function Rect(minx: number, miny: number, maxx: number, maxy: number): r
  * @param min - location
  * @param max - location
  * @returns rect
+ * @remarks Returned nothing in 2 cases of the nullability sweep (min: removed location, max: removed location) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/RectFromLoc}
  */
 declare function RectFromLoc(min: location, max: location): rect | undefined;
@@ -14340,7 +14343,7 @@ declare function RegionClearCellAtLoc(whichRegion: region, whichLocation: locati
  * @param x - real
  * @param y - real
  * @returns location
- * @remarks Returned a handle in every case of the nullability sweep (origin, outside the world) on 3.0.0.24268; evidence, not proof.
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/Location}
  */
 declare function Location(x: number, y: number): location;
@@ -14574,7 +14577,7 @@ declare function ExecuteFunc(funcName: string): void;
  * @param operandA - boolexpr
  * @param operandB - boolexpr
  * @returns boolexpr
- * @remarks Returned a handle in every case of the nullability sweep (two live operands, condition and filter, destroyed condition operand) on 3.0.0.24268; evidence, not proof.
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, operandA: destroyed condition, operandA: destroyed filter, operandA: destroyed boolexpr, operandB: destroyed condition, operandB: destroyed filter, operandB: destroyed boolexpr) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/And}
  */
 declare function And(operandA: boolexpr, operandB: boolexpr): boolexpr;
@@ -14583,7 +14586,7 @@ declare function And(operandA: boolexpr, operandB: boolexpr): boolexpr;
  * @param operandA - boolexpr
  * @param operandB - boolexpr
  * @returns boolexpr
- * @remarks Returned a handle in every case of the nullability sweep (two live operands, condition and filter, destroyed boolexpr operand) on 3.0.0.24268; evidence, not proof.
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, operandA: destroyed condition, operandA: destroyed filter, operandA: destroyed boolexpr, operandB: destroyed condition, operandB: destroyed filter, operandB: destroyed boolexpr) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/Or}
  */
 declare function Or(operandA: boolexpr, operandB: boolexpr): boolexpr;
@@ -14591,7 +14594,7 @@ declare function Or(operandA: boolexpr, operandB: boolexpr): boolexpr;
 /**
  * @param operand - boolexpr
  * @returns boolexpr
- * @remarks Returned a handle in every case of the nullability sweep (live operand, destroyed operand) on 3.0.0.24268; evidence, not proof.
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, operand: destroyed condition, operand: destroyed filter, operand: destroyed boolexpr) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/Not}
  */
 declare function Not(operand: boolexpr): boolexpr;
@@ -14599,7 +14602,7 @@ declare function Not(operand: boolexpr): boolexpr;
 /**
  * @param func - code
  * @returns conditionfunc
- * @remarks Returned a handle in every case of the nullability sweep (TypeScript function) on 3.0.0.24268; evidence, not proof.
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/Condition}
  */
 declare function Condition(func: boolcode): conditionfunc;
@@ -14614,7 +14617,7 @@ declare function DestroyCondition(c: conditionfunc): void;
 /**
  * @param func - code
  * @returns filterfunc
- * @remarks Returned a handle in every case of the nullability sweep (TypeScript function) on 3.0.0.24268; evidence, not proof.
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/Filter}
  */
 declare function Filter(func: boolcode): filterfunc;
@@ -15383,6 +15386,7 @@ declare function TriggerRegisterUnitInRange(whichTrigger: trigger, whichUnit: un
  * @param whichTrigger - trigger
  * @param condition - boolexpr
  * @returns triggercondition
+ * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerAddCondition}
  */
 declare function TriggerAddCondition(whichTrigger: trigger, condition: boolexpr): triggercondition | undefined;
@@ -15406,7 +15410,7 @@ declare function TriggerClearConditions(whichTrigger: trigger): void;
  * @param whichTrigger - trigger
  * @param actionFunc - code
  * @returns triggeraction
- * @remarks On a destroyed trigger it returned a `triggeraction` whose `GetHandleId` is 0, not nothing; it returned a handle in every case of the nullability sweep (live trigger, destroyed trigger) on 3.0.0.24268; evidence, not proof.
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichTrigger: destroyed trigger) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichTrigger: destroyed trigger) rather than nothing, so a nil check does not tell that the trigger was destroyed.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerAddAction}
  */
 declare function TriggerAddAction(whichTrigger: trigger, actionFunc: code): triggeraction;
@@ -15534,6 +15538,7 @@ declare function GetTriggerWidget(): widget | undefined;
  * @param scale - real
  * @param variation - integer (32-bit)
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateDestructable}
  */
 declare function CreateDestructable(objectid: number, x: number, y: number, face: number, scale: number, variation: number): destructable | undefined;
@@ -15547,6 +15552,7 @@ declare function CreateDestructable(objectid: number, x: number, y: number, face
  * @param scale - real
  * @param variation - integer (32-bit)
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateDestructableZ}
  */
 declare function CreateDestructableZ(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number): destructable | undefined;
@@ -15559,6 +15565,7 @@ declare function CreateDestructableZ(objectid: number, x: number, y: number, z: 
  * @param scale - real
  * @param variation - integer (32-bit)
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateDeadDestructable}
  */
 declare function CreateDeadDestructable(objectid: number, x: number, y: number, face: number, scale: number, variation: number): destructable | undefined;
@@ -15572,6 +15579,7 @@ declare function CreateDeadDestructable(objectid: number, x: number, y: number, 
  * @param scale - real
  * @param variation - integer (32-bit)
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateDeadDestructableZ}
  */
 declare function CreateDeadDestructableZ(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number): destructable | undefined;
@@ -15750,6 +15758,7 @@ declare function GetTriggerDestructable(): destructable | undefined;
  * @param x - real
  * @param y - real
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (itemid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateItem}
  */
 declare function CreateItem(itemid: number, x: number, y: number): item | undefined;
@@ -16031,6 +16040,7 @@ declare function GetItemTag(whichItem: item): itemTag;
  * @param y - real
  * @param face - real
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (unitid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUnit}
  */
 declare function CreateUnit(id: player, unitid: number, x: number, y: number, face: number): unit | undefined;
@@ -16042,6 +16052,7 @@ declare function CreateUnit(id: player, unitid: number, x: number, y: number, fa
  * @param y - real
  * @param face - real
  * @returns unit
+ * @remarks Returned nothing in 2 cases of the nullability sweep (unitname: empty string, unitname: unknown name) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUnitByName}
  */
 declare function CreateUnitByName(whichPlayer: player, unitname: string, x: number, y: number, face: number): unit | undefined;
@@ -16052,6 +16063,7 @@ declare function CreateUnitByName(whichPlayer: player, unitname: string, x: numb
  * @param whichLocation - location
  * @param face - real
  * @returns unit
+ * @remarks Returned nothing in 2 cases of the nullability sweep (unitid: unknown rawcode, whichLocation: removed location) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUnitAtLoc}
  */
 declare function CreateUnitAtLoc(id: player, unitid: number, whichLocation: location, face: number): unit | undefined;
@@ -16062,6 +16074,7 @@ declare function CreateUnitAtLoc(id: player, unitid: number, whichLocation: loca
  * @param whichLocation - location
  * @param face - real
  * @returns unit
+ * @remarks Returned nothing in 3 cases of the nullability sweep (unitname: empty string, unitname: unknown name, whichLocation: removed location) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUnitAtLocByName}
  */
 declare function CreateUnitAtLocByName(id: player, unitname: string, whichLocation: location, face: number): unit | undefined;
@@ -16073,6 +16086,7 @@ declare function CreateUnitAtLocByName(id: player, unitname: string, whichLocati
  * @param y - real
  * @param face - real
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (unitid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateCorpse}
  */
 declare function CreateCorpse(whichPlayer: player, unitid: number, x: number, y: number, face: number): unit | undefined;
@@ -16729,6 +16743,7 @@ declare function UnitEquipItem(whichUnit: unit, whichItem: item): boolean;
  * @param whichUnit - unit
  * @param itemId - integer (32-bit)
  * @returns item
+ * @remarks Returned nothing in 3 cases of the nullability sweep (itemId: unknown rawcode, whichUnit: unit with no inventory, whichUnit: dead hero) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitAddItemById}
  */
 declare function UnitAddItemById(whichUnit: unit, itemId: number): item | undefined;
@@ -18279,6 +18294,7 @@ declare function IsFogEnabled(): boolean;
  * @param useSharedVision - boolean
  * @param afterUnits - boolean
  * @returns fogmodifier
+ * @remarks Returned nothing in a case of the nullability sweep (where: removed rect) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateFogModifierRect}
  */
 declare function CreateFogModifierRect(forWhichPlayer: player, whichState: fogstate, where: rect, useSharedVision: boolean, afterUnits: boolean): fogmodifier | undefined;
@@ -18292,6 +18308,7 @@ declare function CreateFogModifierRect(forWhichPlayer: player, whichState: fogst
  * @param useSharedVision - boolean
  * @param afterUnits - boolean
  * @returns fogmodifier
+ * @remarks Crashed the game in a case of the nullability sweep (radius: 2147483647) on 3.0.0.24268. Returned a handle in every other case (typical arguments, centerx: 0, centerx: negative, centerx: outside the world, centerx: 2147483647, centerY: 0, centerY: negative, centerY: outside the world, centerY: 2147483647, radius: 0, radius: negative, radius: outside the world).
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateFogModifierRadius}
  */
 declare function CreateFogModifierRadius(forWhichPlayer: player, whichState: fogstate, centerx: number, centerY: number, radius: number, useSharedVision: boolean, afterUnits: boolean): fogmodifier | undefined;
@@ -18304,6 +18321,7 @@ declare function CreateFogModifierRadius(forWhichPlayer: player, whichState: fog
  * @param useSharedVision - boolean
  * @param afterUnits - boolean
  * @returns fogmodifier
+ * @remarks Crashed the game in a case of the nullability sweep (radius: 2147483647) on 3.0.0.24268. The crash is intermittent: 3 of 4 unchanged runs. Returned nothing in a case of the nullability sweep (center: removed location) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateFogModifierRadiusLoc}
  */
 declare function CreateFogModifierRadiusLoc(forWhichPlayer: player, whichState: fogstate, center: location, radius: number, useSharedVision: boolean, afterUnits: boolean): fogmodifier | undefined;
@@ -18571,9 +18589,10 @@ declare function DoNotSaveReplay(): void;
 
 /**
  * @returns dialog
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/DialogCreate}
  */
-declare function DialogCreate(): dialog | undefined;
+declare function DialogCreate(): dialog;
 
 /**
  * @param whichDialog - dialog
@@ -18602,6 +18621,7 @@ declare function DialogSetMessage(whichDialog: dialog, messageText: string): voi
  * @param buttonText - string
  * @param hotkey - integer (32-bit)
  * @returns button
+ * @remarks Returned nothing in a case of the nullability sweep (whichDialog: destroyed dialog) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/DialogAddButton}
  */
 declare function DialogAddButton(whichDialog: dialog, buttonText: string, hotkey: number): button | undefined;
@@ -18612,6 +18632,7 @@ declare function DialogAddButton(whichDialog: dialog, buttonText: string, hotkey
  * @param buttonText - string
  * @param hotkey - integer (32-bit)
  * @returns button
+ * @remarks Returned nothing in a case of the nullability sweep (whichDialog: destroyed dialog) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/DialogAddQuitButton}
  */
 declare function DialogAddQuitButton(whichDialog: dialog, doScoreScreen: boolean, buttonText: string, hotkey: number): button | undefined;
@@ -18634,6 +18655,7 @@ declare function ReloadGameCachesFromDisk(): boolean;
 /**
  * @param campaignFile - string
  * @returns gamecache
+ * @remarks Returned nothing in a case of the nullability sweep (campaignFile: empty string) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/InitGameCache}
  */
 declare function InitGameCache(campaignFile: string): gamecache | undefined;
@@ -18898,9 +18920,10 @@ declare function RestoreUnit(cache: gamecache, missionKey: string, key: string, 
 
 /**
  * @returns hashtable
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/InitHashtable}
  */
-declare function InitHashtable(): hashtable | undefined;
+declare function InitHashtable(): hashtable;
 
 /**
  * @param table - hashtable
@@ -19891,9 +19914,10 @@ declare function GetRandomReal(lowBound: number, highBound: number): number;
 
 /**
  * @returns unitpool
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUnitPool}
  */
-declare function CreateUnitPool(): unitpool | undefined;
+declare function CreateUnitPool(): unitpool;
 
 /**
  * @param whichPool - unitpool
@@ -19926,15 +19950,17 @@ declare function UnitPoolRemoveUnitType(whichPool: unitpool, unitId: number): vo
  * @param y - real
  * @param facing - real
  * @returns unit
+ * @remarks Returned nothing in 2 cases of the nullability sweep (whichPool: empty unit pool, whichPool: destroyed unit pool) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/PlaceRandomUnit}
  */
 declare function PlaceRandomUnit(whichPool: unitpool, forWhichPlayer: player, x: number, y: number, facing: number): unit | undefined;
 
 /**
  * @returns itempool
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateItemPool}
  */
-declare function CreateItemPool(): itempool | undefined;
+declare function CreateItemPool(): itempool;
 
 /**
  * @param whichItemPool - itempool
@@ -19965,6 +19991,7 @@ declare function ItemPoolRemoveItemType(whichItemPool: itempool, itemId: number)
  * @param x - real
  * @param y - real
  * @returns item
+ * @remarks Returned nothing in 2 cases of the nullability sweep (whichItemPool: empty item pool, whichItemPool: destroyed item pool) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/PlaceRandomItem}
  */
 declare function PlaceRandomItem(whichItemPool: itempool, x: number, y: number): item | undefined;
@@ -20325,9 +20352,10 @@ declare function PingMinimapEx(x: number, y: number, duration: number, red: numb
  * @param pingPath - string
  * @param fogVisibility - fogstate
  * @returns minimapicon
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, pingPath: empty string, pingPath: unknown name, whichUnit: dead unit, whichUnit: removed unit) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateMinimapIconOnUnit}
  */
-declare function CreateMinimapIconOnUnit(whichUnit: unit, red: number, green: number, blue: number, pingPath: string, fogVisibility: fogstate): minimapicon | undefined;
+declare function CreateMinimapIconOnUnit(whichUnit: unit, red: number, green: number, blue: number, pingPath: string, fogVisibility: fogstate): minimapicon;
 
 /**
  * @param where - location
@@ -20337,9 +20365,10 @@ declare function CreateMinimapIconOnUnit(whichUnit: unit, red: number, green: nu
  * @param pingPath - string
  * @param fogVisibility - fogstate
  * @returns minimapicon
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, pingPath: empty string, pingPath: unknown name, where: removed location) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (where: removed location) rather than nothing, so a nil check does not tell that the location was removed.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateMinimapIconAtLoc}
  */
-declare function CreateMinimapIconAtLoc(where: location, red: number, green: number, blue: number, pingPath: string, fogVisibility: fogstate): minimapicon | undefined;
+declare function CreateMinimapIconAtLoc(where: location, red: number, green: number, blue: number, pingPath: string, fogVisibility: fogstate): minimapicon;
 
 /**
  * @param x - real
@@ -20350,9 +20379,10 @@ declare function CreateMinimapIconAtLoc(where: location, red: number, green: num
  * @param pingPath - string
  * @param fogVisibility - fogstate
  * @returns minimapicon
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, pingPath: empty string, pingPath: unknown name) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateMinimapIcon}
  */
-declare function CreateMinimapIcon(x: number, y: number, red: number, green: number, blue: number, pingPath: string, fogVisibility: fogstate): minimapicon | undefined;
+declare function CreateMinimapIcon(x: number, y: number, red: number, green: number, blue: number, pingPath: string, fogVisibility: fogstate): minimapicon;
 
 /**
  * @param key - string
@@ -20525,9 +20555,10 @@ declare function DisableRestartMission(flag: boolean): void;
 
 /**
  * @returns texttag
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateTextTag}
  */
-declare function CreateTextTag(): texttag | undefined;
+declare function CreateTextTag(): texttag;
 
 /**
  * @param t - texttag
@@ -20705,15 +20736,17 @@ declare function EnableSelect(state: boolean, ui: boolean): void;
  * @param y - real
  * @param facing - real
  * @returns trackable
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, trackableModelPath: empty string, trackableModelPath: unknown name, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, facing: 0, facing: negative, facing: outside the world, facing: 2147483647) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateTrackable}
  */
-declare function CreateTrackable(trackableModelPath: string, x: number, y: number, facing: number): trackable | undefined;
+declare function CreateTrackable(trackableModelPath: string, x: number, y: number, facing: number): trackable;
 
 /**
  * @returns quest
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateQuest}
  */
-declare function CreateQuest(): quest | undefined;
+declare function CreateQuest(): quest;
 
 /**
  * @param whichQuest - quest
@@ -20824,9 +20857,10 @@ declare function IsQuestEnabled(whichQuest: quest): boolean;
 /**
  * @param whichQuest - quest
  * @returns questitem
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichQuest: quest after DestroyQuest) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/QuestCreateItem}
  */
-declare function QuestCreateItem(whichQuest: quest): questitem | undefined;
+declare function QuestCreateItem(whichQuest: quest): questitem;
 
 /**
  * @param whichQuestItem - questitem
@@ -20853,9 +20887,10 @@ declare function IsQuestItemCompleted(whichQuestItem: questitem): boolean;
 
 /**
  * @returns defeatcondition
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateDefeatCondition}
  */
-declare function CreateDefeatCondition(): defeatcondition | undefined;
+declare function CreateDefeatCondition(): defeatcondition;
 
 /**
  * @param whichCondition - defeatcondition
@@ -20887,9 +20922,10 @@ declare function ForceQuestDialogUpdate(): void;
 /**
  * @param t - timer
  * @returns timerdialog
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, t: destroyed timer) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateTimerDialog}
  */
-declare function CreateTimerDialog(t: timer): timerdialog | undefined;
+declare function CreateTimerDialog(t: timer): timerdialog;
 
 /**
  * @param whichDialog - timerdialog
@@ -20961,9 +20997,10 @@ declare function TimerDialogSetRealTimeRemaining(whichDialog: timerdialog, timeR
 
 /**
  * @returns leaderboard
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateLeaderboard}
  */
-declare function CreateLeaderboard(): leaderboard | undefined;
+declare function CreateLeaderboard(): leaderboard;
 
 /**
  * @param lb - leaderboard
@@ -21194,9 +21231,10 @@ declare function LeaderboardSetItemValueColor(lb: leaderboard, whichItem: number
 
 /**
  * @returns multiboard
+ * @remarks Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateMultiboard}
  */
-declare function CreateMultiboard(): multiboard | undefined;
+declare function CreateMultiboard(): multiboard;
 
 /**
  * @param lb - multiboard
@@ -22004,9 +22042,10 @@ declare function NewSoundEnvironment(environmentName: string): void;
  * @param fadeOutRate - integer (32-bit)
  * @param eaxSetting - string
  * @returns sound
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, fileName: empty string, fileName: unknown name, fadeInRate: 0, fadeInRate: negative, fadeInRate: outside the world, fadeInRate: 2147483647, fadeOutRate: 0, fadeOutRate: negative, fadeOutRate: outside the world, fadeOutRate: 2147483647, eaxSetting: empty string, eaxSetting: unknown name) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateSound}
  */
-declare function CreateSound(fileName: string, looping: boolean, is3D: boolean, stopwhenoutofrange: boolean, fadeInRate: number, fadeOutRate: number, eaxSetting: string): sound | undefined;
+declare function CreateSound(fileName: string, looping: boolean, is3D: boolean, stopwhenoutofrange: boolean, fadeInRate: number, fadeOutRate: number, eaxSetting: string): sound;
 
 /**
  * @param fileName - string
@@ -22017,9 +22056,10 @@ declare function CreateSound(fileName: string, looping: boolean, is3D: boolean, 
  * @param fadeOutRate - integer (32-bit)
  * @param SLKEntryName - string
  * @returns sound
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, fileName: empty string, fileName: unknown name, fadeInRate: 0, fadeInRate: negative, fadeInRate: outside the world, fadeInRate: 2147483647, fadeOutRate: 0, fadeOutRate: negative, fadeOutRate: outside the world, fadeOutRate: 2147483647, SLKEntryName: empty string, SLKEntryName: unknown name) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateSoundFilenameWithLabel}
  */
-declare function CreateSoundFilenameWithLabel(fileName: string, looping: boolean, is3D: boolean, stopwhenoutofrange: boolean, fadeInRate: number, fadeOutRate: number, SLKEntryName: string): sound | undefined;
+declare function CreateSoundFilenameWithLabel(fileName: string, looping: boolean, is3D: boolean, stopwhenoutofrange: boolean, fadeInRate: number, fadeOutRate: number, SLKEntryName: string): sound;
 
 /**
  * @param soundLabel - string
@@ -22029,18 +22069,20 @@ declare function CreateSoundFilenameWithLabel(fileName: string, looping: boolean
  * @param fadeInRate - integer (32-bit)
  * @param fadeOutRate - integer (32-bit)
  * @returns sound
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, soundLabel: empty string, soundLabel: unknown name, fadeInRate: 0, fadeInRate: negative, fadeInRate: outside the world, fadeInRate: 2147483647, fadeOutRate: 0, fadeOutRate: negative, fadeOutRate: outside the world, fadeOutRate: 2147483647) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateSoundFromLabel}
  */
-declare function CreateSoundFromLabel(soundLabel: string, looping: boolean, is3D: boolean, stopwhenoutofrange: boolean, fadeInRate: number, fadeOutRate: number): sound | undefined;
+declare function CreateSoundFromLabel(soundLabel: string, looping: boolean, is3D: boolean, stopwhenoutofrange: boolean, fadeInRate: number, fadeOutRate: number): sound;
 
 /**
  * @param soundLabel - string
  * @param fadeInRate - integer (32-bit)
  * @param fadeOutRate - integer (32-bit)
  * @returns sound
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, soundLabel: empty string, soundLabel: unknown name, fadeInRate: 0, fadeInRate: negative, fadeInRate: outside the world, fadeInRate: 2147483647, fadeOutRate: 0, fadeOutRate: negative, fadeOutRate: outside the world, fadeOutRate: 2147483647) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateMIDISound}
  */
-declare function CreateMIDISound(soundLabel: string, fadeInRate: number, fadeOutRate: number): sound | undefined;
+declare function CreateMIDISound(soundLabel: string, fadeInRate: number, fadeOutRate: number): sound;
 
 /**
  * @param soundHandle - sound
@@ -22410,9 +22452,10 @@ declare function GetDialogueTextKey(soundHandle: sound): string | undefined;
  * @param where - rect
  * @param effectID - integer (32-bit)
  * @returns weathereffect
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, effectID: unknown rawcode, where: removed rect) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (where: removed rect) and id -1 in a case (effectID: unknown rawcode) rather than nothing, so a nil check does not tell that the rect was removed or the effect is unknown.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddWeatherEffect}
  */
-declare function AddWeatherEffect(where: rect, effectID: number): weathereffect | undefined;
+declare function AddWeatherEffect(where: rect, effectID: number): weathereffect;
 
 /**
  * @param whichEffect - weathereffect
@@ -22437,9 +22480,10 @@ declare function EnableWeatherEffect(whichEffect: weathereffect, enable: boolean
  * @param duration - integer (32-bit)
  * @param permanent - boolean
  * @returns terraindeformation
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, depth: 0, depth: negative, depth: outside the world, depth: 2147483647, duration: 0, duration: negative, duration: outside the world, duration: 2147483647) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (typical arguments), a real deformation: deformation ids count up from 0.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TerrainDeformCrater}
  */
-declare function TerrainDeformCrater(x: number, y: number, radius: number, depth: number, duration: number, permanent: boolean): terraindeformation | undefined;
+declare function TerrainDeformCrater(x: number, y: number, radius: number, depth: number, duration: number, permanent: boolean): terraindeformation;
 
 /**
  * @param x - real
@@ -22453,9 +22497,10 @@ declare function TerrainDeformCrater(x: number, y: number, radius: number, depth
  * @param radiusStartPct - real
  * @param limitNeg - boolean
  * @returns terraindeformation
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, depth: 0, depth: negative, depth: outside the world, depth: 2147483647, duration: 0, duration: negative, duration: outside the world, duration: 2147483647, count: 0, count: negative, count: outside the world, count: 2147483647, spaceWaves: 0, spaceWaves: negative, spaceWaves: outside the world, spaceWaves: 2147483647, timeWaves: 0, timeWaves: negative, timeWaves: outside the world, timeWaves: 2147483647, radiusStartPct: 0, radiusStartPct: negative, radiusStartPct: outside the world, radiusStartPct: 2147483647) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TerrainDeformRipple}
  */
-declare function TerrainDeformRipple(x: number, y: number, radius: number, depth: number, duration: number, count: number, spaceWaves: number, timeWaves: number, radiusStartPct: number, limitNeg: boolean): terraindeformation | undefined;
+declare function TerrainDeformRipple(x: number, y: number, radius: number, depth: number, duration: number, count: number, spaceWaves: number, timeWaves: number, radiusStartPct: number, limitNeg: boolean): terraindeformation;
 
 /**
  * @param x - real
@@ -22469,9 +22514,10 @@ declare function TerrainDeformRipple(x: number, y: number, radius: number, depth
  * @param trailTime - integer (32-bit)
  * @param count - integer (32-bit)
  * @returns terraindeformation
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, dirX: 0, dirX: negative, dirX: outside the world, dirX: 2147483647, dirY: 0, dirY: negative, dirY: outside the world, dirY: 2147483647, distance: 0, distance: negative, distance: outside the world, distance: 2147483647, speed: 0, speed: negative, speed: outside the world, speed: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, depth: 0, depth: negative, depth: outside the world, depth: 2147483647, trailTime: 0, trailTime: negative, trailTime: outside the world, trailTime: 2147483647, count: 0, count: negative, count: outside the world, count: 2147483647) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TerrainDeformWave}
  */
-declare function TerrainDeformWave(x: number, y: number, dirX: number, dirY: number, distance: number, speed: number, radius: number, depth: number, trailTime: number, count: number): terraindeformation | undefined;
+declare function TerrainDeformWave(x: number, y: number, dirX: number, dirY: number, distance: number, speed: number, radius: number, depth: number, trailTime: number, count: number): terraindeformation;
 
 /**
  * @param x - real
@@ -22482,9 +22528,10 @@ declare function TerrainDeformWave(x: number, y: number, dirX: number, dirY: num
  * @param duration - integer (32-bit)
  * @param updateInterval - integer (32-bit)
  * @returns terraindeformation
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, minDelta: 0, minDelta: negative, minDelta: outside the world, minDelta: 2147483647, maxDelta: 0, maxDelta: negative, maxDelta: outside the world, maxDelta: 2147483647, duration: 0, duration: negative, duration: outside the world, duration: 2147483647, updateInterval: 0, updateInterval: negative, updateInterval: outside the world, updateInterval: 2147483647) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TerrainDeformRandom}
  */
-declare function TerrainDeformRandom(x: number, y: number, radius: number, minDelta: number, maxDelta: number, duration: number, updateInterval: number): terraindeformation | undefined;
+declare function TerrainDeformRandom(x: number, y: number, radius: number, minDelta: number, maxDelta: number, duration: number, updateInterval: number): terraindeformation;
 
 /**
  * @param deformation - terraindeformation
@@ -22505,14 +22552,16 @@ declare function TerrainDeformStopAll(): void;
  * @param x - real
  * @param y - real
  * @returns effect
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, modelName: empty string, modelName: unknown name, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddSpecialEffect}
  */
-declare function AddSpecialEffect(modelName: string, x: number, y: number): effect | undefined;
+declare function AddSpecialEffect(modelName: string, x: number, y: number): effect;
 
 /**
  * @param modelName - string
  * @param where - location
  * @returns effect
+ * @remarks Returned nothing in a case of the nullability sweep (where: removed location) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddSpecialEffectLoc}
  */
 declare function AddSpecialEffectLoc(modelName: string, where: location): effect | undefined;
@@ -22522,6 +22571,7 @@ declare function AddSpecialEffectLoc(modelName: string, where: location): effect
  * @param targetWidget - widget
  * @param attachPointName - string
  * @returns effect
+ * @remarks Returned nothing in 3 cases of the nullability sweep (attachPointName: empty string, targetWidget: removed item, targetWidget: removed destructable) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddSpecialEffectTarget}
  */
 declare function AddSpecialEffectTarget(modelName: string, targetWidget: widget, attachPointName: string): effect | undefined;
@@ -22539,6 +22589,7 @@ declare function DestroyEffect(whichEffect: effect): void;
  * @param x - real
  * @param y - real
  * @returns effect
+ * @remarks Returned nothing in 11 cases of the nullability sweep (typical arguments, abilityString: empty string, abilityString: unknown name, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddSpellEffect}
  */
 declare function AddSpellEffect(abilityString: string, t: effecttype, x: number, y: number): effect | undefined;
@@ -22548,6 +22599,7 @@ declare function AddSpellEffect(abilityString: string, t: effecttype, x: number,
  * @param t - effecttype
  * @param where - location
  * @returns effect
+ * @remarks Returned nothing in 4 cases of the nullability sweep (typical arguments, abilityString: empty string, abilityString: unknown name, where: removed location) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddSpellEffectLoc}
  */
 declare function AddSpellEffectLoc(abilityString: string, t: effecttype, where: location): effect | undefined;
@@ -22558,6 +22610,7 @@ declare function AddSpellEffectLoc(abilityString: string, t: effecttype, where: 
  * @param x - real
  * @param y - real
  * @returns effect
+ * @remarks Returned nothing in a case of the nullability sweep (abilityId: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddSpellEffectById}
  */
 declare function AddSpellEffectById(abilityId: number, t: effecttype, x: number, y: number): effect | undefined;
@@ -22567,6 +22620,7 @@ declare function AddSpellEffectById(abilityId: number, t: effecttype, x: number,
  * @param t - effecttype
  * @param where - location
  * @returns effect
+ * @remarks Returned nothing in 2 cases of the nullability sweep (abilityId: unknown rawcode, where: removed location) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddSpellEffectByIdLoc}
  */
 declare function AddSpellEffectByIdLoc(abilityId: number, t: effecttype, where: location): effect | undefined;
@@ -22577,6 +22631,7 @@ declare function AddSpellEffectByIdLoc(abilityId: number, t: effecttype, where: 
  * @param targetWidget - widget
  * @param attachPoint - string
  * @returns effect
+ * @remarks Returned nothing in 11 cases of the nullability sweep (typical arguments, modelName: empty string, modelName: unknown name, attachPoint: empty string, attachPoint: unknown name, targetWidget: dead unit, targetWidget: removed unit, targetWidget: dead item, targetWidget: removed item, targetWidget: dead destructable, targetWidget: removed destructable) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddSpellEffectTarget}
  */
 declare function AddSpellEffectTarget(modelName: string, t: effecttype, targetWidget: widget, attachPoint: string): effect | undefined;
@@ -22587,6 +22642,7 @@ declare function AddSpellEffectTarget(modelName: string, t: effecttype, targetWi
  * @param targetWidget - widget
  * @param attachPoint - string
  * @returns effect
+ * @remarks Returned nothing in 4 cases of the nullability sweep (abilityId: unknown rawcode, attachPoint: empty string, targetWidget: removed item, targetWidget: removed destructable) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddSpellEffectTargetById}
  */
 declare function AddSpellEffectTargetById(abilityId: number, t: effecttype, targetWidget: widget, attachPoint: string): effect | undefined;
@@ -22599,9 +22655,10 @@ declare function AddSpellEffectTargetById(abilityId: number, t: effecttype, targ
  * @param x2 - real
  * @param y2 - real
  * @returns lightning
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, codeName: empty string, codeName: unknown name, x1: 0, x1: negative, x1: outside the world, x1: 2147483647, y1: 0, y1: negative, y1: outside the world, y1: 2147483647, x2: 0, x2: negative, x2: outside the world, x2: 2147483647, y2: 0, y2: negative, y2: outside the world, y2: 2147483647, checkVisibility: true, points unseen) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (codeName: empty string, codeName: unknown name, checkVisibility: true, points unseen), the same `lightning` each time rather than nothing, so a nil check does not tell that the code name is unknown or the points are unseen.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddLightning}
  */
-declare function AddLightning(codeName: string, checkVisibility: boolean, x1: number, y1: number, x2: number, y2: number): lightning | undefined;
+declare function AddLightning(codeName: string, checkVisibility: boolean, x1: number, y1: number, x2: number, y2: number): lightning;
 
 /**
  * @param codeName - string
@@ -22613,9 +22670,10 @@ declare function AddLightning(codeName: string, checkVisibility: boolean, x1: nu
  * @param y2 - real
  * @param z2 - real
  * @returns lightning
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, codeName: empty string, codeName: unknown name, x1: 0, x1: negative, x1: outside the world, x1: 2147483647, y1: 0, y1: negative, y1: outside the world, y1: 2147483647, z1: 0, z1: negative, z1: outside the world, z1: 2147483647, x2: 0, x2: negative, x2: outside the world, x2: 2147483647, y2: 0, y2: negative, y2: outside the world, y2: 2147483647, z2: 0, z2: negative, z2: outside the world, z2: 2147483647, checkVisibility: true, points unseen) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (codeName: empty string, codeName: unknown name, checkVisibility: true, points unseen), the same `lightning` each time rather than nothing, so a nil check does not tell that the code name is unknown or the points are unseen.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddLightningEx}
  */
-declare function AddLightningEx(codeName: string, checkVisibility: boolean, x1: number, y1: number, z1: number, x2: number, y2: number, z2: number): lightning | undefined;
+declare function AddLightningEx(codeName: string, checkVisibility: boolean, x1: number, y1: number, z1: number, x2: number, y2: number, z2: number): lightning;
 
 /**
  * @param whichBolt - lightning
@@ -22937,6 +22995,7 @@ declare function SetTerrainPathable(x: number, y: number, t: pathingtype, flag: 
  * @param originZ - real
  * @param imageType - integer (32-bit)
  * @returns image
+ * @remarks Crashed the game in a case of the nullability sweep (imageType: 2147483647) on 3.0.0.24268. Returned a handle in every other case (typical arguments, file: empty string, file: unknown name, sizeX: 0, sizeX: negative, sizeX: outside the world, sizeX: 2147483647, sizeY: 0, sizeY: negative, sizeY: outside the world, sizeY: 2147483647, sizeZ: 0, sizeZ: negative, sizeZ: outside the world, sizeZ: 2147483647, posX: 0, posX: negative, posX: outside the world, posX: 2147483647, posY: 0, posY: negative, posY: outside the world, posY: 2147483647, posZ: 0, posZ: negative, posZ: outside the world, posZ: 2147483647, originX: 0, originX: negative, originX: outside the world, originX: 2147483647, originY: 0, originY: negative, originY: outside the world, originY: 2147483647, originZ: negative, originZ: outside the world, originZ: 2147483647, imageType: 0, imageType: negative, imageType: outside the world). The handle had id -1 in 3 cases (file: empty string, file: unknown name, imageType: 0) rather than nothing, so a nil check does not catch them.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateImage}
  */
 declare function CreateImage(file: string, sizeX: number, sizeY: number, sizeZ: number, posX: number, posY: number, posZ: number, originX: number, originY: number, originZ: number, imageType: number): image | undefined;
@@ -23030,9 +23089,10 @@ declare function SetImageType(whichImage: image, imageType: number): void;
  * @param forcePaused - boolean
  * @param noBirthTime - boolean
  * @returns ubersplat
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, name: empty string, name: unknown name, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, alpha: 0, alpha: negative, alpha: outside the world, alpha: 2147483647) on 3.0.0.24268; evidence, not proof. The handle had id -1 in 2 cases (name: empty string, name: unknown name), the same `ubersplat` both times rather than nothing, so a nil check does not tell that the name is unknown.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUbersplat}
  */
-declare function CreateUbersplat(x: number, y: number, name: string, red: number, green: number, blue: number, alpha: number, forcePaused: boolean, noBirthTime: boolean): ubersplat | undefined;
+declare function CreateUbersplat(x: number, y: number, name: string, red: number, green: number, blue: number, alpha: number, forcePaused: boolean, noBirthTime: boolean): ubersplat;
 
 /**
  * @param whichSplat - ubersplat
@@ -23125,9 +23185,10 @@ declare function SetBlightLoc(whichPlayer: player, whichLocation: location, radi
  * @param y - real
  * @param face - real
  * @returns unit
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, face: 0, face: negative, face: outside the world, face: 2147483647) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateBlightedGoldmine}
  */
-declare function CreateBlightedGoldmine(id: player, x: number, y: number, face: number): unit | undefined;
+declare function CreateBlightedGoldmine(id: player, x: number, y: number, face: number): unit;
 
 /**
  * @param x - real
@@ -24547,6 +24608,7 @@ declare function BlzLoadTOCFile(TOCFile: string): boolean;
  * @param priority - integer (32-bit)
  * @param createContext - integer (32-bit)
  * @returns framehandle
+ * @remarks Returned nothing in 3 cases of the nullability sweep (name: empty string, name: unknown name, owner: destroyed frame) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateFrame}
  */
 declare function BlzCreateFrame(name: string, owner: framehandle, priority: number, createContext: number): framehandle | undefined;
@@ -24556,6 +24618,7 @@ declare function BlzCreateFrame(name: string, owner: framehandle, priority: numb
  * @param owner - framehandle
  * @param createContext - integer (32-bit)
  * @returns framehandle
+ * @remarks Returned nothing in 2 cases of the nullability sweep (name: empty string, name: unknown name) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateSimpleFrame}
  */
 declare function BlzCreateSimpleFrame(name: string, owner: framehandle, createContext: number): framehandle | undefined;
@@ -25239,23 +25302,26 @@ declare function BlzSetUnitFacingEx(whichUnit: unit, facingAngle: number): void;
  * @param abilityId - integer (32-bit)
  * @param order - string
  * @returns commandbuttoneffect
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, abilityId: unknown rawcode, order: empty string, order: unknown name) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 2 cases (order: empty string, order: unknown name), the same `commandbuttoneffect` both times rather than nothing, so a nil check does not tell that the order is unknown.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateCommandButtonEffect}
  */
-declare function CreateCommandButtonEffect(abilityId: number, order: string): commandbuttoneffect | undefined;
+declare function CreateCommandButtonEffect(abilityId: number, order: string): commandbuttoneffect;
 
 /**
  * @param whichUprgade - integer (32-bit)
  * @returns commandbuttoneffect
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichUprgade: unknown rawcode) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUpgradeCommandButtonEffect}
  */
-declare function CreateUpgradeCommandButtonEffect(whichUprgade: number): commandbuttoneffect | undefined;
+declare function CreateUpgradeCommandButtonEffect(whichUprgade: number): commandbuttoneffect;
 
 /**
  * @param abilityId - integer (32-bit)
  * @returns commandbuttoneffect
+ * @remarks Returned a handle in every case of the nullability sweep (typical arguments, abilityId: unknown rawcode) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateLearnCommandButtonEffect}
  */
-declare function CreateLearnCommandButtonEffect(abilityId: number): commandbuttoneffect | undefined;
+declare function CreateLearnCommandButtonEffect(abilityId: number): commandbuttoneffect;
 
 /**
  * @param whichEffect - commandbuttoneffect
@@ -25878,6 +25944,7 @@ declare function BlzSetItemSkin(whichItem: item, skinId: number): void;
  * @param y - real
  * @param skinId - integer (32-bit)
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (itemid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateItemWithSkin}
  */
 declare function BlzCreateItemWithSkin(itemid: number, x: number, y: number, skinId: number): item | undefined;
@@ -25890,6 +25957,7 @@ declare function BlzCreateItemWithSkin(itemid: number, x: number, y: number, ski
  * @param face - real
  * @param skinId - integer (32-bit)
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (unitid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateUnitWithSkin}
  */
 declare function BlzCreateUnitWithSkin(id: player, unitid: number, x: number, y: number, face: number, skinId: number): unit | undefined;
@@ -25903,6 +25971,7 @@ declare function BlzCreateUnitWithSkin(id: player, unitid: number, x: number, y:
  * @param variation - integer (32-bit)
  * @param skinId - integer (32-bit)
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableWithSkin}
  */
 declare function BlzCreateDestructableWithSkin(objectid: number, x: number, y: number, face: number, scale: number, variation: number, skinId: number): destructable | undefined;
@@ -25917,6 +25986,7 @@ declare function BlzCreateDestructableWithSkin(objectid: number, x: number, y: n
  * @param variation - integer (32-bit)
  * @param skinId - integer (32-bit)
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZWithSkin}
  */
 declare function BlzCreateDestructableZWithSkin(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number, skinId: number): destructable | undefined;
@@ -25930,6 +26000,7 @@ declare function BlzCreateDestructableZWithSkin(objectid: number, x: number, y: 
  * @param variation - integer (32-bit)
  * @param skinId - integer (32-bit)
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableWithSkin}
  */
 declare function BlzCreateDeadDestructableWithSkin(objectid: number, x: number, y: number, face: number, scale: number, variation: number, skinId: number): destructable | undefined;
@@ -25944,6 +26015,7 @@ declare function BlzCreateDeadDestructableWithSkin(objectid: number, x: number, 
  * @param variation - integer (32-bit)
  * @param skinId - integer (32-bit)
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZWithSkin}
  */
 declare function BlzCreateDeadDestructableZWithSkin(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number, skinId: number): destructable | undefined;
@@ -26077,6 +26149,7 @@ declare function BlzUnitForceStopOrder(whichUnit: unit, clearQueue: boolean): vo
  * @param variation - integer (32-bit)
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructablePitchRoll}
  */
 declare function BlzCreateDestructablePitchRoll(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number): destructable | undefined;
@@ -26093,6 +26166,7 @@ declare function BlzCreateDestructablePitchRoll(objectid: number, x: number, y: 
  * @param variation - integer (32-bit)
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZPitchRoll}
  */
 declare function BlzCreateDestructableZPitchRoll(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number): destructable | undefined;
@@ -26108,6 +26182,7 @@ declare function BlzCreateDestructableZPitchRoll(objectid: number, x: number, y:
  * @param variation - integer (32-bit)
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructablePitchRoll}
  */
 declare function BlzCreateDeadDestructablePitchRoll(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number): destructable | undefined;
@@ -26124,6 +26199,7 @@ declare function BlzCreateDeadDestructablePitchRoll(objectid: number, x: number,
  * @param variation - integer (32-bit)
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZPitchRoll}
  */
 declare function BlzCreateDeadDestructableZPitchRoll(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number): destructable | undefined;
@@ -26140,6 +26216,7 @@ declare function BlzCreateDeadDestructableZPitchRoll(objectid: number, x: number
  * @param skinId - integer (32-bit)
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableWithSkinPitchRoll}
  */
 declare function BlzCreateDestructableWithSkinPitchRoll(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number): destructable | undefined;
@@ -26157,6 +26234,7 @@ declare function BlzCreateDestructableWithSkinPitchRoll(objectid: number, x: num
  * @param skinId - integer (32-bit)
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZWithSkinPitchRoll}
  */
 declare function BlzCreateDestructableZWithSkinPitchRoll(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number): destructable | undefined;
@@ -26173,6 +26251,7 @@ declare function BlzCreateDestructableZWithSkinPitchRoll(objectid: number, x: nu
  * @param skinId - integer (32-bit)
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableWithSkinPitchRoll}
  */
 declare function BlzCreateDeadDestructableWithSkinPitchRoll(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number): destructable | undefined;
@@ -26190,6 +26269,7 @@ declare function BlzCreateDeadDestructableWithSkinPitchRoll(objectid: number, x:
  * @param skinId - integer (32-bit)
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZWithSkinPitchRoll}
  */
 declare function BlzCreateDeadDestructableZWithSkinPitchRoll(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number): destructable | undefined;
@@ -26204,6 +26284,7 @@ declare function BlzCreateDeadDestructableZWithSkinPitchRoll(objectid: number, x
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableWithColor}
  */
 declare function BlzCreateDestructableWithColor(objectid: number, x: number, y: number, face: number, scale: number, variation: number, color: playercolor): destructable | undefined;
@@ -26219,6 +26300,7 @@ declare function BlzCreateDestructableWithColor(objectid: number, x: number, y: 
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZWithColor}
  */
 declare function BlzCreateDestructableZWithColor(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number, color: playercolor): destructable | undefined;
@@ -26233,6 +26315,7 @@ declare function BlzCreateDestructableZWithColor(objectid: number, x: number, y:
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableWithColor}
  */
 declare function BlzCreateDeadDestructableWithColor(objectid: number, x: number, y: number, face: number, scale: number, variation: number, color: playercolor): destructable | undefined;
@@ -26248,6 +26331,7 @@ declare function BlzCreateDeadDestructableWithColor(objectid: number, x: number,
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZWithColor}
  */
 declare function BlzCreateDeadDestructableZWithColor(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number, color: playercolor): destructable | undefined;
@@ -26263,6 +26347,7 @@ declare function BlzCreateDeadDestructableZWithColor(objectid: number, x: number
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableWithSkinColor}
  */
 declare function BlzCreateDestructableWithSkinColor(objectid: number, x: number, y: number, face: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
@@ -26279,6 +26364,7 @@ declare function BlzCreateDestructableWithSkinColor(objectid: number, x: number,
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZWithSkinColor}
  */
 declare function BlzCreateDestructableZWithSkinColor(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
@@ -26294,6 +26380,7 @@ declare function BlzCreateDestructableZWithSkinColor(objectid: number, x: number
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableWithSkinColor}
  */
 declare function BlzCreateDeadDestructableWithSkinColor(objectid: number, x: number, y: number, face: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
@@ -26310,6 +26397,7 @@ declare function BlzCreateDeadDestructableWithSkinColor(objectid: number, x: num
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZWithSkinColor}
  */
 declare function BlzCreateDeadDestructableZWithSkinColor(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
@@ -26326,6 +26414,7 @@ declare function BlzCreateDeadDestructableZWithSkinColor(objectid: number, x: nu
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructablePitchRollWithColor}
  */
 declare function BlzCreateDestructablePitchRollWithColor(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, color: playercolor): destructable | undefined;
@@ -26343,6 +26432,7 @@ declare function BlzCreateDestructablePitchRollWithColor(objectid: number, x: nu
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZPitchRollWithColor}
  */
 declare function BlzCreateDestructableZPitchRollWithColor(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, color: playercolor): destructable | undefined;
@@ -26359,6 +26449,7 @@ declare function BlzCreateDestructableZPitchRollWithColor(objectid: number, x: n
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructablePitchRollWithColor}
  */
 declare function BlzCreateDeadDestructablePitchRollWithColor(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, color: playercolor): destructable | undefined;
@@ -26376,6 +26467,7 @@ declare function BlzCreateDeadDestructablePitchRollWithColor(objectid: number, x
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZPitchRollWithColor}
  */
 declare function BlzCreateDeadDestructableZPitchRollWithColor(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, color: playercolor): destructable | undefined;
@@ -26393,6 +26485,7 @@ declare function BlzCreateDeadDestructableZPitchRollWithColor(objectid: number, 
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableWithSkinPitchRollColor}
  */
 declare function BlzCreateDestructableWithSkinPitchRollColor(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
@@ -26411,6 +26504,7 @@ declare function BlzCreateDestructableWithSkinPitchRollColor(objectid: number, x
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZWithSkinPitchRollColor}
  */
 declare function BlzCreateDestructableZWithSkinPitchRollColor(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
@@ -26428,6 +26522,7 @@ declare function BlzCreateDestructableZWithSkinPitchRollColor(objectid: number, 
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableWithSkinPitchRollColor}
  */
 declare function BlzCreateDeadDestructableWithSkinPitchRollColor(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
@@ -26446,6 +26541,7 @@ declare function BlzCreateDeadDestructableWithSkinPitchRollColor(objectid: numbe
  * @param color - playercolor
  * @returns destructable
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZWithSkinPitchRollColor}
  */
 declare function BlzCreateDeadDestructableZWithSkinPitchRollColor(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;

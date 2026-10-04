@@ -31,5 +31,6 @@
       "nullable": false
     }
   ],
+  "notes": "Crashed the game in a case of the nullability sweep (radius: 2147483647) on 3.0.0.24268. The crash is intermittent: 3 of 4 unchanged runs. Returned nothing in a case of the nullability sweep (center: removed location) on 3.0.0.24268.",
   "origin": "war3-types-strict"
 }

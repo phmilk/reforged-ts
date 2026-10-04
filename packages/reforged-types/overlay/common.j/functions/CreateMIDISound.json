@@ -2,7 +2,7 @@
   "name": "CreateMIDISound",
   "source": "common.j",
   "returns": {
-    "nullable": true,
+    "nullable": false,
     "family": "constructor"
   },
   "params": [
@@ -19,5 +19,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned a handle in every case of the nullability sweep (typical arguments, soundLabel: empty string, soundLabel: unknown name, fadeInRate: 0, fadeInRate: negative, fadeInRate: outside the world, fadeInRate: 2147483647, fadeOutRate: 0, fadeOutRate: negative, fadeOutRate: outside the world, fadeOutRate: 2147483647) on 3.0.0.24268; evidence, not proof.",
   "origin": "war3-types-strict"
 }

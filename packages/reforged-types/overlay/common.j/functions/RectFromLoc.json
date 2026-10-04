@@ -15,5 +15,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned nothing in 2 cases of the nullability sweep (min: removed location, max: removed location) on 3.0.0.24268.",
   "origin": "war3-types-strict"
 }

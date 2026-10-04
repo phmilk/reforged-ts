@@ -2,7 +2,7 @@
   "name": "CreateUbersplat",
   "source": "common.j",
   "returns": {
-    "nullable": true,
+    "nullable": false,
     "family": "constructor"
   },
   "params": [
@@ -43,5 +43,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, name: empty string, name: unknown name, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, alpha: 0, alpha: negative, alpha: outside the world, alpha: 2147483647) on 3.0.0.24268; evidence, not proof. The handle had id -1 in 2 cases (name: empty string, name: unknown name), the same `ubersplat` both times rather than nothing, so a nil check does not tell that the name is unknown.",
   "origin": "war3-types-strict"
 }

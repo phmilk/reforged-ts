@@ -23,5 +23,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned nothing in 3 cases of the nullability sweep (unitname: empty string, unitname: unknown name, whichLocation: removed location) on 3.0.0.24268.",
   "origin": "war3-types-strict"
 }

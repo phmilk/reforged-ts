@@ -233,10 +233,8 @@ export class Force extends Handle<force> {
    * @native ForceAddPlayer
    */
   public static fromPlayer(whichPlayer: MapPlayer): Force {
-    const handle = CreateForce();
-    if (handle !== undefined) {
-      ForceAddPlayer(handle, whichPlayer.handle);
-    }
-    return this.expect(handle);
+    return this.expect(CreateForce(), "", (force) => {
+      ForceAddPlayer(force.handle, whichPlayer.handle);
+    });
   }
 }
