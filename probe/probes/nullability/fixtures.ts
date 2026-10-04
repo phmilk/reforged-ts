@@ -9,6 +9,8 @@
 // A stale handle is one whose object is dead, removed or destroyed: the
 // factories named `dead…`, `removed…` and `destroyed…` return one.
 
+import { CONVERTER_CONSTANTS } from "./converter-constants";
+
 /** `value`, or an error naming the Fixture when a Native returned nothing for it. */
 function built<T>(value: T | undefined, fixture: string): T {
   if (value === undefined) {
@@ -174,6 +176,25 @@ export function destroyedFrame(): framehandle {
   const frame = childFrame();
   BlzDestroyFrame(frame);
   return frame;
+}
+
+// Origin frame types: a converted integer, never stale.
+
+/**
+ * An origin frame type, out of range: `ConvertOriginFrameType` of the first
+ * integer past the Patch's greatest `originframetype` constant
+ * (`ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR_LABEL`, 22, on 3.0.0.24268), so a Patch
+ * that adds an origin frame keeps it out of range.
+ */
+export function outOfRangeOriginFrameType(): originframetype {
+  const greatest = CONVERTER_CONSTANTS.ConvertOriginFrameType.reduce(
+    (greatest, [, value]) => (value > greatest ? value : greatest),
+    0,
+  );
+  return built(
+    ConvertOriginFrameType(greatest + 1),
+    "outOfRangeOriginFrameType",
+  );
 }
 
 // Triggers

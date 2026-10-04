@@ -4520,13 +4520,13 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Patch: 3.0.0.24268
 - Client: 3.0.0.24268
 - Date: 2026-10-04
-- Run: `e17d6fce-f0fd-4cbd-b538-d152ad330212`
+- Run: `4074b2a5-8a34-4160-a7be-37fac463f448`
 
 ### `LoadUnitPoolHandle`
 
 | Case        | Group | Outcome | Id  | Type                         | Message |
 | ----------- | ----- | ------- | --- | ---------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `unitpool: 000001C60C7AD700` |         |
+| unsaved key | (a)   | handle  | 0   | `unitpool: 0000022F58ECE500` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4538,7 +4538,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case        | Group | Outcome | Id  | Type                         | Message |
 | ----------- | ----- | ------- | --- | ---------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `itempool: 000001C6007FED90` |         |
+| unsaved key | (a)   | handle  | 0   | `itempool: 0000022F58ECE4C0` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4670,7 +4670,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case        | Group | Outcome | Id  | Type                        | Message |
 | ----------- | ----- | ------- | --- | --------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `texttag: 000001C6007FF810` |         |
+| unsaved key | (a)   | handle  | 0   | `texttag: 00000230012705A0` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4682,7 +4682,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case        | Group | Outcome | Id  | Type                          | Message |
 | ----------- | ----- | ------- | --- | ----------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `lightning: 000001C5C4E55CA0` |         |
+| unsaved key | (a)   | handle  | 0   | `lightning: 0000023000650920` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4694,7 +4694,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case        | Group | Outcome | Id  | Type                      | Message |
 | ----------- | ----- | ------- | --- | ------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `image: 000001C60C7BAFE0` |         |
+| unsaved key | (a)   | handle  | 0   | `image: 00000230008D7370` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4706,7 +4706,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case        | Group | Outcome | Id  | Type                          | Message |
 | ----------- | ----- | ------- | --- | ----------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `ubersplat: 000001C60B499BC0` |         |
+| unsaved key | (a)   | handle  | 0   | `ubersplat: 0000023000CCEAA0` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4730,7 +4730,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case        | Group | Outcome | Id  | Type                         | Message |
 | ----------- | ----- | ------- | --- | ---------------------------- | ------- |
-| unsaved key | (a)   | handle  | 0   | `fogstate: 000001C60B74A800` |         |
+| unsaved key | (a)   | handle  | 0   | `fogstate: 0000023000CCE5F0` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)
@@ -4778,7 +4778,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 | Case               | Group | Outcome | Id      | Type                               | Message |
 | ------------------ | ----- | ------- | ------- | ---------------------------------- | ------- |
-| index out of range | (a)   | handle  | 1048782 | `multiboarditem: 000001C5C4DC37F0` |         |
+| index out of range | (a)   | handle  | 1048782 | `multiboarditem: 0000023000F546B0` |         |
 
 - Family: `lookup`
 - Verdict: nullable (rule)

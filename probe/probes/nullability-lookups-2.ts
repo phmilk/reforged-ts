@@ -12,13 +12,13 @@
 import type { ProbeContext } from "../game/probe";
 import { runCases } from "./nullability/case-runner";
 import { UNKNOWN_NAME } from "./nullability/constructor";
-import { CONVERTER_CONSTANTS } from "./nullability/converter-constants";
 import { inGroupOrder } from "./nullability/expand";
 import {
   emptyHashtable,
   liveItem,
   liveUnit,
   oneCellMultiboard,
+  outOfRangeOriginFrameType,
 } from "./nullability/fixtures";
 import { lookupCase } from "./nullability/nullable";
 
@@ -33,27 +33,17 @@ const ABILITY_INDEX_OUT_OF_RANGE = 100;
 const LACKED_ABILITY = "AHhb";
 
 /**
- * The first integer past the greatest `originframetype` constant of the
- * Patch (`ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR_LABEL`, 22, on 3.0.0.24268), so a
- * Patch that adds an origin frame keeps the case out of range.
- */
-const ORIGIN_FRAME_TYPE_OUT_OF_RANGE =
-  CONVERTER_CONSTANTS.ConvertOriginFrameType.reduce(
-    (greatest, [, value]) => (value > greatest ? value : greatest),
-    0,
-  ) + 1;
-
-/**
  * The Slice's lookups, in `common.j` order, each with its case's label and
  * call, over the Fixtures built here before any case runs: an empty
- * hashtable, a multiboard of one cell, a footman and a `'ratf'`.
+ * hashtable, a multiboard of one cell, a footman, a `'ratf'` and an origin
+ * frame type out of range.
  */
 function lookups(): readonly [string, string, () => unknown][] {
   const table = emptyHashtable();
   const board = oneCellMultiboard();
   const footman = liveUnit();
   const item = liveItem();
-  const frameType = ConvertOriginFrameType(ORIGIN_FRAME_TYPE_OUT_OF_RANGE);
+  const frameType = outOfRangeOriginFrameType();
   const load = (
     native: string,
     call: (table: hashtable, parentKey: number, childKey: number) => unknown,
