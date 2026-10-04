@@ -19,6 +19,22 @@ function built<T>(value: T | undefined, fixture: string): T {
   return value;
 }
 
+// Points
+
+/**
+ * A point, unseen: `(x, y)` as given; the Fixture fails when `Player(0)`
+ * sees it (`IsVisibleToPlayer`), so a case that needs the fog has it.
+ */
+export function unseenPoint(x: number, y: number): readonly [number, number] {
+  if (IsVisibleToPlayer(x, y, userSlotPlayer())) {
+    error(
+      `Fixture unseenPoint: Player(0) sees (${tostring(x)}, ${tostring(y)})`,
+      0,
+    );
+  }
+  return [x, y];
+}
+
 // Players: a player is never stale.
 
 /** A player, a user slot: `Player(0)`, the slot the Probe run plays. */
@@ -74,6 +90,41 @@ export function liveHero(): unit {
   return built(CreateUnit(owner, FourCC("Hpal"), 0, 0, 0), "liveHero");
 }
 
+/** A unit, dead: a live `'Hpal'` hero of `Player(0)` after `KillUnit`, a dead hero still in the game, revivable. */
+export function deadHero(): unit {
+  const paladin = liveHero();
+  KillUnit(paladin);
+  return paladin;
+}
+
+/** A unit, removed: a live `'Hpal'` hero of `Player(0)` after `RemoveUnit`, a stale handle. */
+export function removedHero(): unit {
+  const paladin = liveHero();
+  RemoveUnit(paladin);
+  return paladin;
+}
+
+// Unit pools
+
+/** A unit pool, live: `CreateUnitPool` holding the `'hfoo'` unit type at weight 1. */
+export function liveUnitPool(): unitpool {
+  const pool = built(CreateUnitPool(), "liveUnitPool");
+  UnitPoolAddUnitType(pool, FourCC("hfoo"), 1);
+  return pool;
+}
+
+/** A unit pool, empty: `CreateUnitPool`, no unit type added. */
+export function emptyUnitPool(): unitpool {
+  return built(CreateUnitPool(), "emptyUnitPool");
+}
+
+/** A unit pool, destroyed: a live unit pool after `DestroyUnitPool`, a stale handle. */
+export function destroyedUnitPool(): unitpool {
+  const pool = liveUnitPool();
+  DestroyUnitPool(pool);
+  return pool;
+}
+
 // Items
 
 /** An item, live: a `'ratf'` (Claws of Attack) on the ground at the map's origin (`CreateItem`). */
@@ -99,6 +150,54 @@ export function removedItem(): item {
   const claws = liveItem();
   RemoveItem(claws);
   return claws;
+}
+
+// Item pools
+
+/** An item pool, live: `CreateItemPool` holding the `'ratf'` item type (Claws of Attack) at weight 1. */
+export function liveItemPool(): itempool {
+  const pool = built(CreateItemPool(), "liveItemPool");
+  ItemPoolAddItemType(pool, FourCC("ratf"), 1);
+  return pool;
+}
+
+/** An item pool, empty: `CreateItemPool`, no item type added. */
+export function emptyItemPool(): itempool {
+  return built(CreateItemPool(), "emptyItemPool");
+}
+
+/** An item pool, destroyed: a live item pool after `DestroyItemPool`, a stale handle. */
+export function destroyedItemPool(): itempool {
+  const pool = liveItemPool();
+  DestroyItemPool(pool);
+  return pool;
+}
+
+// Destructables
+
+/**
+ * A destructable, live: a `'LTlt'` (a Lordaeron tree) at (-512, -512),
+ * facing 0, scale 1, variation 0 (`CreateDestructable`).
+ */
+export function liveDestructable(): destructable {
+  return built(
+    CreateDestructable(FourCC("LTlt"), -512, -512, 0, 1, 0),
+    "liveDestructable",
+  );
+}
+
+/** A destructable, dead: a live `'LTlt'` after `KillDestructable`, still in the game. */
+export function deadDestructable(): destructable {
+  const tree = liveDestructable();
+  KillDestructable(tree);
+  return tree;
+}
+
+/** A destructable, removed: a live `'LTlt'` after `RemoveDestructable`, a stale handle. */
+export function removedDestructable(): destructable {
+  const tree = liveDestructable();
+  RemoveDestructable(tree);
+  return tree;
 }
 
 // Timers
