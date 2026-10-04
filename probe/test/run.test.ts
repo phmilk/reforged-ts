@@ -12,7 +12,8 @@ import {
   wellKnownExecutables,
 } from "../src/game.js";
 import type { Machine } from "../src/machine.js";
-import { resultFile } from "../src/read.js";
+import { readPatch } from "../src/manifest.js";
+import { readProbeRun, resultFile } from "../src/read.js";
 import { HUMAN_WAIT_SECONDS, LAUNCH_ARGS, captureFile } from "../src/run.js";
 import { stateFile } from "../src/state.js";
 import { USER_FOLDER_VARIABLE } from "../src/user-folder.js";
@@ -37,6 +38,25 @@ const windowsEnv = {
 const root = path.resolve("fake-workspace");
 /** An executable outside the well-known locations, absolute on this machine. */
 const ELSEWHERE = path.resolve("elsewhere", "wc3");
+
+/** The `.build.info` of ELSEWHERE's install: the folder above it. */
+const BUILD_INFO = path.join(path.dirname(ELSEWHERE), ".build.info");
+
+/** The Build of the Typings' manifest the Probes compile against. */
+const TYPINGS_PATCH = readPatch(PROBE_FOLDERS.manifest);
+
+/**
+ * A `.build.info` as the Battle.net app writes it (read on 3.0.0.24268): a
+ * header of `<name>!<type>:<size>` columns, then one row per region, the
+ * active one with `Active` 1. `version` is the active row's `Version`.
+ */
+function buildInfo(version: string): string {
+  return [
+    "Branch!STRING:0|Active!DEC:1|Build Key!HEX:16|CDN Key!HEX:16|Install Key!HEX:16|IM Size!DEC:4|CDN Path!STRING:0|CDN Hosts!STRING:0|CDN Servers!STRING:0|Tags!STRING:0|Armadillo!STRING:0|Last Activated!STRING:0|Version!STRING:0|KeyRing!HEX:16|Product!STRING:0",
+    `us|1|3a9d8f26806936764d2d9ad526a65e04|0f055013d9f2f8809afa564ede96b499|||tpr/war3|level3.blizzard.com|http://level3.blizzard.com/?maxhosts=4|Windows US? enUS speech?:Windows US? enUS text?|||${version}||w3`,
+    "",
+  ].join("\n");
+}
 
 /** A fake machine where exactly `existing` exist, recording what was asked. */
 function recordingMachine(
@@ -159,6 +179,11 @@ interface Scenario {
   overrides?: Partial<Machine>;
   script?: Script;
   signal?: AbortSignal;
+  /**
+   * The `Version` of the game's `.build.info`: the Typings' Patch by
+   * default; null for an install without one.
+   */
+  client?: string | null;
 }
 
 interface Ran {
@@ -182,7 +207,12 @@ async function run(scenario: Scenario = {}): Promise<Ran> {
     state: path.join(dir, "state"),
   };
   const events: GameEvent[] = [];
-  const files: Record<string, string> = { [ELSEWHERE]: "" };
+  const client =
+    scenario.client === undefined ? TYPINGS_PATCH : scenario.client;
+  const files: Record<string, string> = {
+    [ELSEWHERE]: "",
+    ...(client !== null && { [BUILD_INFO]: buildInfo(client) }),
+  };
   let file = "";
   const machine = fakeMachine({
     env: { [EXECUTABLE_ENV]: ELSEWHERE, [USER_FOLDER_VARIABLE]: USER_FOLDER },
@@ -307,6 +337,21 @@ describe("probe:run", () => {
       "greeting word=hi",
       "",
     ]);
+  });
+
+  it("records the client's Build in the run, beside the Typings' Patch, for the reader", async () => {
+    const { code, context } = await run({ script: game(12) });
+
+    expect(code).toBe(0);
+    const read = readProbeRun("hello", {
+      machine: context.machine,
+      stateFolder: context.folders.state,
+    });
+    expect(read).toMatchObject({
+      state: "finished",
+      patch: "3.0.0.24268",
+      client: TYPINGS_PATCH,
+    });
   });
 
   it("posts the key again every 2 seconds until the Probe writes past BEGIN, since a key before the screen that waits for it is lost", async () => {
@@ -600,6 +645,30 @@ describe("probe:run", () => {
     expect(stderr).toBe(
       `probe:run failed: Could not start "${ELSEWHERE}": no such file.\n`,
     );
+  });
+
+  it("refuses a client on another Build than the Typings' Patch before any build, naming both Builds, exit code 4", async () => {
+    const { code, stdout, stderr, events, context } = await run({
+      client: "3.0.0.24000",
+    });
+
+    expect(code).toBe(4);
+    expect(stdout).toBe("");
+    expect(stderr).toBe(
+      `probe:run failed: The game client is on Build 3.0.0.24000 (${BUILD_INFO}), not on ${TYPINGS_PATCH}, the Patch of the Typings: a run would test another Build than the one the Typings declare. Update the game through the Battle.net app when it is behind; when it is ahead, the run of ${TYPINGS_PATCH} is skipped.\n`,
+    );
+    expect(events).toEqual([]);
+    expect(existsSync(context.folders.output)).toBe(false);
+  });
+
+  it("refuses an install without a .build.info before any build, naming where it looked, exit code 4", async () => {
+    const { code, stderr, events } = await run({ client: null });
+
+    expect(code).toBe(4);
+    expect(stderr).toMatch(
+      /^probe:run failed: No \.build\.info above the game's executable [^\n]*: probe:run reads the client's Build from it\.\n$/,
+    );
+    expect(events).toEqual([]);
   });
 
   it("refuses a bad Probe name with a one-line author error", async () => {

@@ -13,9 +13,11 @@ import { AuthorError } from "./errors.js";
 import type { ProbeFolders } from "./folders.js";
 import {
   GAME_IMAGE_NAME,
+  readClientBuild,
   resolveGameExecutable,
   type GameOptions,
 } from "./game.js";
+import { readPatch } from "./manifest.js";
 import type { GameProcess, Machine, SpawnCommand } from "./machine.js";
 import {
   field,
@@ -106,8 +108,10 @@ export function captureFile(
  * Runs `probe` end to end, as the module's comment says, and gives the
  * run as `probe:read` reads it once the game is gone. Off native Windows,
  * with `Warcraft III.exe` already running (the reader looks the game up by
- * image name), with no game found or a build that fails, it starts nothing
- * and raises an AuthorError. Once the game has started, every way out ends
+ * image name), with no game found, a client whose `.build.info` names
+ * another Build than the Patch of the Typings, or a build that fails, it
+ * starts nothing and raises an AuthorError. The build keeps the client's
+ * Build in the Probe's state file, for the report. Once the game has started, every way out ends
  * it, the command's own failure included.
  */
 export async function runProbe(
@@ -128,7 +132,14 @@ export async function runProbe(
     );
   }
   const executable = resolveGameExecutable(options, context.root, machine);
-  const build = buildProbe(probe, folders);
+  const client = readClientBuild(executable, machine);
+  const patch = readPatch(folders.manifest);
+  if (client.build !== patch) {
+    throw new AuthorError(
+      `The game client is on Build ${client.build} (${client.file}), not on ${patch}, the Patch of the Typings: a run would test another Build than the one the Typings declare. Update the game through the Battle.net app when it is behind; when it is ahead, the run of ${patch} is skipped.`,
+    );
+  }
+  const build = buildProbe(probe, folders, undefined, client.build);
   progress(builtMessage(build));
 
   const startedAt = machine.now();

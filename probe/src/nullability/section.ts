@@ -4,8 +4,9 @@
  * Probe's name in a code span. This module writes a Slice's section as
  * Markdown, formatted by Prettier itself, so the report passes the
  * workspace's Prettier check, and puts it into the report in place of the
- * Slice's previous one, keeping every other section. Pure: the report's
- * text in, its new text out.
+ * Slice's previous one, keeping every other section, and reads back what
+ * a previous section says to tell what changed from it. Pure: the
+ * report's text in, its new text out.
  */
 import { format } from "prettier";
 import type {
@@ -63,6 +64,11 @@ export interface SliceSection {
   probe: string;
   /** The Build of the Typings the Probe was built against. */
   patch: string;
+  /**
+   * The Build of the game client the run was run on, as `probe:run`
+   * recorded it; undefined when the run recorded none.
+   */
+  client?: string;
   /** The day the report was written, `YYYY-MM-DD`. */
   date: string;
   /** The runId of the Probe run read. */
@@ -237,12 +243,168 @@ export async function formatSection(slice: SliceSection): Promise<string> {
     "",
     `- Probe: \`${slice.probe}\``,
     `- Patch: ${slice.patch}`,
+    `- Client: ${slice.client ?? "not recorded"}`,
     `- Date: ${slice.date}`,
     `- Run: \`${slice.runId}\``,
     ...slice.natives.flatMap((native) => ["", ...nativeLines(native)]),
     ...slice.params.flatMap((param) => ["", ...paramLines(param)]),
   ];
   return format(`${lines.join("\n")}\n`, { parser: "markdown" });
+}
+
+/** What a section says of one Native or parameter: its verdict and its cases' outcomes. */
+interface PreviousPart {
+  verdict: string;
+  /** Each case's outcome, by its label as the table shows it. */
+  outcomes: Map<string, string>;
+}
+
+/**
+ * A Slice's section as the report holds it, read back to tell what a run
+ * changed: the Patch it was written under, and its Natives and parameters,
+ * by their heading's name (`CreateTimer`, `EnumItemsInRect parameter
+ * filter`), in order.
+ */
+export interface PreviousSection {
+  patch: string;
+  natives: Map<string, PreviousPart>;
+  params: Map<string, PreviousPart>;
+}
+
+/** The text of a table cell or a list item, its escapes undone (`text`). */
+function unescape(cell: string): string {
+  return cell.replace(/\\(.)/g, "$1");
+}
+
+/** The cells of a table row, split on the pipes no backslash escapes, trimmed. */
+function cells(row: string): string[] {
+  return row
+    .replace(/^\|/, "")
+    .replace(/(?<!\\)\|$/, "")
+    .split(/(?<!\\)\|/)
+    .map((cell) => cell.trim());
+}
+
+/**
+ * The section of `probe` in `report`, read back; undefined when the
+ * report, or its section, does not exist, or the section names no Patch.
+ * A part's table gives each case's outcome under its `Outcome` column; its
+ * `- Verdict:` line, its verdict.
+ */
+export function readSection(
+  report: string | undefined,
+  probe: string,
+): PreviousSection | undefined {
+  const lines = (report ?? "").split("\n");
+  const start = lines.indexOf(sectionHeading(probe));
+  if (start === -1) return undefined;
+  const next = lines.findIndex(
+    (line, index) => index > start && line.startsWith("## "),
+  );
+  const section = lines.slice(start + 1, next === -1 ? undefined : next);
+  const patch = section
+    .find((line) => line.startsWith("- Patch: "))
+    ?.slice("- Patch: ".length);
+  if (patch === undefined) return undefined;
+  const read: PreviousSection = {
+    patch,
+    natives: new Map(),
+    params: new Map(),
+  };
+  let part: PreviousPart | undefined;
+  let outcomeColumn = -1;
+  for (const line of section) {
+    const nativeHeading = /^### `([^`]+)`$/.exec(line);
+    const paramHeading = /^### `([^`]+)` parameter `([^`]+)`$/.exec(line);
+    const heading = nativeHeading ?? paramHeading;
+    if (heading !== null) {
+      part = { verdict: "", outcomes: new Map() };
+      const [, native, param] = heading;
+      if (nativeHeading !== null) read.natives.set(native, part);
+      else read.params.set(paramName(native, param), part);
+      outcomeColumn = -1;
+    } else if (part !== undefined && line.startsWith("|")) {
+      const row = cells(line);
+      if (outcomeColumn === -1) outcomeColumn = row.indexOf("Outcome");
+      else if (!/^-+$/.test(row[0] ?? "")) {
+        part.outcomes.set(unescape(row[0] ?? ""), row[outcomeColumn] ?? "");
+      }
+    } else if (part !== undefined && line.startsWith("- Verdict: ")) {
+      part.verdict = line.slice("- Verdict: ".length);
+    }
+  }
+  return read;
+}
+
+/** A parameter's name in the changes: `EnumItemsInRect parameter filter`. */
+function paramName(native: string, param: string): string {
+  return `${native} parameter ${param}`;
+}
+
+/**
+ * What changed from `previous`, the section the report held, to `slice`,
+ * one line each, for the pull request that adopts the Build: for each
+ * Native, then each parameter, in the order of `slice`, a verdict that
+ * differs (a new `unsafe` flagged), then each case whose outcome differs,
+ * each case added, each case gone; then each Native and parameter gone. A
+ * handle's id or type is not a change. Empty when nothing changed.
+ */
+export function sectionChanges(
+  previous: PreviousSection,
+  slice: SliceSection,
+): string[] {
+  const current = [
+    ...slice.natives.map(
+      (native) =>
+        [
+          native.native,
+          native.verdict,
+          native.cases,
+          previous.natives,
+        ] as const,
+    ),
+    ...slice.params.map(
+      (param) =>
+        [
+          paramName(param.native, param.param),
+          param.verdict,
+          param.cases,
+          previous.params,
+        ] as const,
+    ),
+  ];
+  const changes: string[] = [];
+  for (const [name, verdict, cases, parts] of current) {
+    const part = parts.get(name);
+    if (part === undefined) {
+      changes.push(`${name}: added, ${verdict}`);
+      continue;
+    }
+    if (part.verdict !== verdict) {
+      changes.push(
+        `${name}: verdict ${part.verdict} -> ${verdict}${verdict === "unsafe" ? ", a new unsafe" : ""}`,
+      );
+    }
+    const labels = new Set<string>();
+    for (const { label, outcome } of cases) {
+      const shown = oneLine(label);
+      labels.add(shown);
+      const before = part.outcomes.get(shown);
+      if (before === undefined) {
+        changes.push(`${name} case ${shown}: added, ${outcome}`);
+      } else if (before !== outcome) {
+        changes.push(`${name} case ${shown}: ${before} -> ${outcome}`);
+      }
+    }
+    for (const label of part.outcomes.keys()) {
+      if (!labels.has(label)) changes.push(`${name} case ${label}: gone`);
+    }
+  }
+  const names = new Set(current.map(([name]) => name));
+  for (const name of [...previous.natives.keys(), ...previous.params.keys()]) {
+    if (!names.has(name)) changes.push(`${name}: gone`);
+  }
+  return changes;
 }
 
 /**

@@ -5,6 +5,7 @@
  */
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { typingsManifest } from "./manifest.js";
 
 /** The package folder, from src/ (the tests) and build/ (the commands) alike. */
 export const PACKAGE_FOLDER = fileURLToPath(new URL("..", import.meta.url));
@@ -16,10 +17,12 @@ export const WORKSPACE_FOLDER = join(PACKAGE_FOLDER, "..");
 const TYPES_FOLDER = join(WORKSPACE_FOLDER, "packages", "reforged-types");
 
 /**
- * The manifest of the Typings the Probes compile against
- * (`reforged-types/3.0.0`, probes/tsconfig.json): its `patch` is their Build.
+ * The manifest of the Typings the Probes compile against, those of the Game
+ * version of the newest vendored Build (`reforged-types/3.0.0`): its
+ * `patch` is their Build. `probe:build` compiles against its Game version,
+ * whatever probes/tsconfig.json names.
  */
-export const TYPINGS_MANIFEST = join(TYPES_FOLDER, "3.0.0", "manifest.json");
+export const TYPINGS_MANIFEST = typingsManifest(TYPES_FOLDER);
 
 export interface ProbeFolders {
   /** The Probes: one `<probe>.ts` each. */

@@ -5,7 +5,8 @@
  * one progress line per event, then exactly what `probe:read` prints for the
  * run. Exit codes are `probe:read`'s: 0 `finished`, 1 `failed`, 2 `crashed`
  * (a stall included), 3 `not-started` (no `BEGIN` came); 4 when the command
- * itself fails (a usage or author error, printed on one line, or a bug),
+ * itself fails (a usage or author error, printed on one line, a game
+ * client on another Build than the Patch of the Typings included, or a bug),
  * after ending the game if it had started. Ctrl+C, or a stop of the command,
  * ends the game and reads the run.
  */

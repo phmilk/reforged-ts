@@ -1,6 +1,7 @@
 /**
  * A Probe's state file, `<state>/<probe>.json`: the runId of its last build,
- * which `probe:read` compares with the Result file's.
+ * which `probe:read` compares with the Result file's, and the Build of the
+ * game client `probe:run` built it for.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -11,6 +12,11 @@ export interface ProbeState {
   probe: string;
   /** The runId the last build baked into the bundle. */
   runId: string;
+  /**
+   * The Build of the game client the last build was run on, from its
+   * `.build.info`; undefined for a build `probe:build` made alone.
+   */
+  client?: string;
 }
 
 /** The state file of `probe` in the state folder. */
@@ -41,11 +47,14 @@ export function readState(
   } catch {
     state = undefined;
   }
-  const { runId } = (state ?? {}) as { runId?: unknown };
+  const { runId, client } = (state ?? {}) as {
+    runId?: unknown;
+    client?: unknown;
+  };
   if (typeof runId !== "string" || runId === "") {
     throw new AuthorError(
       `${file} holds no runId: build the Probe again with \`pnpm probe:build ${probe}\`.`,
     );
   }
-  return { probe, runId };
+  return { probe, runId, ...(typeof client === "string" && { client }) };
 }

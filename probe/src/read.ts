@@ -67,6 +67,12 @@ export interface ProbeRun {
    * run of a runner that did not write it.
    */
   patch?: string;
+  /**
+   * The Build of the game client the run's build was run on, as `probe:run`
+   * read it from `.build.info`; undefined unless the run is the expected
+   * one, and for a build `probe:build` made alone.
+   */
+  client?: string;
   /** The Probe's own records, in order; empty unless the run is the expected one. */
   records: readonly ResultLine[];
   /**
@@ -127,7 +133,12 @@ export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
     return { ...run, runId, state: "not-started", records: [] };
   }
   const patch = field(begin, "patch");
-  const expected = { ...run, runId, ...(patch !== undefined && { patch }) };
+  const expected = {
+    ...run,
+    runId,
+    ...(patch !== undefined && { patch }),
+    ...(state.client !== undefined && { client: state.client }),
+  };
   const lines = [begin, ...texts.slice(1).map(parseResultLine)];
   const records = lines.filter((line) => !RESERVED_KINDS.includes(line.kind));
   const last = lines.at(-1);

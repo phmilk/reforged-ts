@@ -117,7 +117,7 @@ The file a Probe run writes through `Preload` in the game's `CustomMapData` fold
 _Avoid_: log, output file, save file
 
 **Nullability sweep**:
-Measuring in the game the `returns.nullable` of the 394 handle-returning Natives, in Slices, each reported against the Overlay in `docs/research/nullability-sweep.md` by `pnpm probe:nullability-report <probe>`, which never writes the Overlay, and curated into it by `pnpm probe:nullability-curate <probe>` in one reviewed pull request per group of Slices.
+Measuring in the game the `returns.nullable` of the 394 handle-returning Natives, in Slices, each reported against the Overlay in `docs/research/nullability-sweep.md` by `pnpm probe:nullability-report <probe>`, which never writes the Overlay, and curated into it by `pnpm probe:nullability-curate <probe>` in one reviewed pull request per group of Slices, and re-run on every Patch adoption, every Slice on the adopted Build.
 _Avoid_: nullability audit, null check, nullability test
 
 **Nullability family**:
