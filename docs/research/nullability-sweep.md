@@ -1,6 +1,6 @@
 # Nullability sweep
 
-The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, written by `pnpm probe:nullability-report <probe>` from the Result file of the Slice's last Probe run, and replaced, alone, each time the command runs again. Each Native gets a verdict from its cases and its Nullability family, compared with the Overlay's `returns.nullable`, and a proposed `notes` text; a Native is a `mismatch` when the Overlay types it non-null and its verdict is neither `non-null (evidence)` nor `non-null (evidence, handle id 0)`, `unsafe` and `review` included. An `unsafe` Native, one with a case that crashed the game, is proposed nullable. Each parameter measured by call cases gets a verdict from them, compared with the Overlay's `params[].nullable`, and a proposed sentence of its Native's `notes`, since the Overlay has no `params[].notes`. The command never writes the Overlay: every change to it goes through review.
+The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, written by `pnpm probe:nullability-report <probe>` from the Result file of the Slice's last Probe run, and replaced, alone, each time the command runs again. Each Native gets a verdict from its cases and its Nullability family, compared with the Overlay's `returns.nullable`, and a proposed `notes` text; a Native is a `mismatch` when the Overlay types it non-null and its verdict is neither `non-null (evidence)` nor `non-null (evidence, handle id 0)`, `unsafe` and `review` included. An `unsafe` Native, one with a case that crashed the game, is proposed nullable. Each parameter measured by call cases gets a verdict from them, compared with the Overlay's `params[].nullable`, and a proposed sentence of its Native's `notes`, since the Overlay has no `params[].notes`. A converter backed non-null gets condensed `notes`, the measured fact instead of its case list. The command never writes the Overlay: `pnpm probe:nullability-curate <probe>` applies a Slice's verdicts to it, and every change goes through review.
 
 ## `nullability-slice-1`
 
@@ -241,7 +241,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (RACE\_HUMAN, RACE\_ORC, RACE\_UNDEAD, RACE\_NIGHTELF, RACE\_DEMON, RACE\_OTHER, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAllianceType`
 
@@ -266,7 +266,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ALLIANCE\_PASSIVE, ALLIANCE\_HELP\_REQUEST, ALLIANCE\_HELP\_RESPONSE, ALLIANCE\_SHARED\_XP, ALLIANCE\_SHARED\_SPELLS, ALLIANCE\_SHARED\_VISION, ALLIANCE\_SHARED\_CONTROL, ALLIANCE\_SHARED\_ADVANCED\_CONTROL, ALLIANCE\_RESCUABLE, ALLIANCE\_SHARED\_VISION\_FORCED, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For ALLIANCE\_PASSIVE, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertRacePref`
 
@@ -289,7 +289,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (RACE\_PREF\_HUMAN, RACE\_PREF\_ORC, RACE\_PREF\_NIGHTELF, RACE\_PREF\_UNDEAD, RACE\_PREF\_DEMON, RACE\_PREF\_RANDOM, RACE\_PREF\_USER\_SELECTABLE, RACE\_PREF\_FORSAKEN, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertIGameState`
 
@@ -306,7 +306,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (GAME\_STATE\_DIVINE\_INTERVENTION, GAME\_STATE\_DISCONNECTED, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For GAME\_STATE\_DIVINE\_INTERVENTION, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertFGameState`
 
@@ -322,7 +322,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (GAME\_STATE\_TIME\_OF\_DAY, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertPlayerState`
 
@@ -355,7 +355,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (PLAYER\_STATE\_GAME\_RESULT, PLAYER\_STATE\_RESOURCE\_GOLD, PLAYER\_STATE\_RESOURCE\_LUMBER, PLAYER\_STATE\_RESOURCE\_HERO\_TOKENS, PLAYER\_STATE\_RESOURCE\_FOOD\_CAP, PLAYER\_STATE\_RESOURCE\_FOOD\_USED, PLAYER\_STATE\_FOOD\_CAP\_CEILING, PLAYER\_STATE\_GIVES\_BOUNTY, PLAYER\_STATE\_ALLIED\_VICTORY, PLAYER\_STATE\_PLACED, PLAYER\_STATE\_OBSERVER\_ON\_DEATH, PLAYER\_STATE\_OBSERVER, PLAYER\_STATE\_UNFOLLOWABLE, PLAYER\_STATE\_GOLD\_UPKEEP\_RATE, PLAYER\_STATE\_LUMBER\_UPKEEP\_RATE, PLAYER\_STATE\_GOLD\_GATHERED, PLAYER\_STATE\_LUMBER\_GATHERED, PLAYER\_STATE\_NO\_CREEP\_SLEEP, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For PLAYER\_STATE\_GAME\_RESULT, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertPlayerScore`
 
@@ -395,7 +395,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (PLAYER\_SCORE\_UNITS\_TRAINED, PLAYER\_SCORE\_UNITS\_KILLED, PLAYER\_SCORE\_STRUCT\_BUILT, PLAYER\_SCORE\_STRUCT\_RAZED, PLAYER\_SCORE\_TECH\_PERCENT, PLAYER\_SCORE\_FOOD\_MAXPROD, PLAYER\_SCORE\_FOOD\_MAXUSED, PLAYER\_SCORE\_HEROES\_KILLED, PLAYER\_SCORE\_ITEMS\_GAINED, PLAYER\_SCORE\_MERCS\_HIRED, PLAYER\_SCORE\_GOLD\_MINED\_TOTAL, PLAYER\_SCORE\_GOLD\_MINED\_UPKEEP, PLAYER\_SCORE\_GOLD\_LOST\_UPKEEP, PLAYER\_SCORE\_GOLD\_LOST\_TAX, PLAYER\_SCORE\_GOLD\_GIVEN, PLAYER\_SCORE\_GOLD\_RECEIVED, PLAYER\_SCORE\_LUMBER\_TOTAL, PLAYER\_SCORE\_LUMBER\_LOST\_UPKEEP, PLAYER\_SCORE\_LUMBER\_LOST\_TAX, PLAYER\_SCORE\_LUMBER\_GIVEN, PLAYER\_SCORE\_LUMBER\_RECEIVED, PLAYER\_SCORE\_UNIT\_TOTAL, PLAYER\_SCORE\_HERO\_TOTAL, PLAYER\_SCORE\_RESOURCE\_TOTAL, PLAYER\_SCORE\_TOTAL, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For PLAYER\_SCORE\_UNITS\_TRAINED, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertPlayerGameResult`
 
@@ -414,7 +414,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (PLAYER\_GAME\_RESULT\_VICTORY, PLAYER\_GAME\_RESULT\_DEFEAT, PLAYER\_GAME\_RESULT\_TIE, PLAYER\_GAME\_RESULT\_NEUTRAL, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For PLAYER\_GAME\_RESULT\_VICTORY, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertUnitState`
 
@@ -433,7 +433,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_STATE\_LIFE, UNIT\_STATE\_MAX\_LIFE, UNIT\_STATE\_MANA, UNIT\_STATE\_MAX\_MANA, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For UNIT\_STATE\_LIFE, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAIDifficulty`
 
@@ -451,7 +451,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (AI\_DIFFICULTY\_NEWBIE, AI\_DIFFICULTY\_NORMAL, AI\_DIFFICULTY\_INSANE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For AI\_DIFFICULTY\_NEWBIE, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertGameEvent`
 
@@ -482,7 +482,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (EVENT\_GAME\_VICTORY, EVENT\_GAME\_END\_LEVEL, EVENT\_GAME\_VARIABLE\_LIMIT, EVENT\_GAME\_STATE\_LIMIT, EVENT\_GAME\_TIMER\_EXPIRED, EVENT\_GAME\_ENTER\_REGION, EVENT\_GAME\_LEAVE\_REGION, EVENT\_GAME\_TRACKABLE\_HIT, EVENT\_GAME\_TRACKABLE\_TRACK, EVENT\_GAME\_SHOW\_SKILL, EVENT\_GAME\_BUILD\_SUBMENU, EVENT\_GAME\_LOADED, EVENT\_GAME\_TOURNAMENT\_FINISH\_SOON, EVENT\_GAME\_TOURNAMENT\_FINISH\_NOW, EVENT\_GAME\_SAVE, EVENT\_GAME\_CUSTOM\_UI\_FRAME, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For EVENT\_GAME\_VICTORY, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertPlayerEvent`
 
@@ -519,7 +519,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (EVENT\_PLAYER\_STATE\_LIMIT, EVENT\_PLAYER\_ALLIANCE\_CHANGED, EVENT\_PLAYER\_DEFEAT, EVENT\_PLAYER\_VICTORY, EVENT\_PLAYER\_LEAVE, EVENT\_PLAYER\_CHAT, EVENT\_PLAYER\_END\_CINEMATIC, EVENT\_PLAYER\_ARROW\_LEFT\_DOWN, EVENT\_PLAYER\_ARROW\_LEFT\_UP, EVENT\_PLAYER\_ARROW\_RIGHT\_DOWN, EVENT\_PLAYER\_ARROW\_RIGHT\_UP, EVENT\_PLAYER\_ARROW\_DOWN\_DOWN, EVENT\_PLAYER\_ARROW\_DOWN\_UP, EVENT\_PLAYER\_ARROW\_UP\_DOWN, EVENT\_PLAYER\_ARROW\_UP\_UP, EVENT\_PLAYER\_MOUSE\_DOWN, EVENT\_PLAYER\_MOUSE\_UP, EVENT\_PLAYER\_MOUSE\_MOVE, EVENT\_PLAYER\_SYNC\_DATA, EVENT\_PLAYER\_KEY, EVENT\_PLAYER\_KEY\_DOWN, EVENT\_PLAYER\_KEY\_UP, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertPlayerUnitEvent`
 
@@ -582,7 +582,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (EVENT\_PLAYER\_UNIT\_ATTACKED, EVENT\_PLAYER\_UNIT\_RESCUED, EVENT\_PLAYER\_UNIT\_DEATH, EVENT\_PLAYER\_UNIT\_DECAY, EVENT\_PLAYER\_UNIT\_DETECTED, EVENT\_PLAYER\_UNIT\_HIDDEN, EVENT\_PLAYER\_UNIT\_SELECTED, EVENT\_PLAYER\_UNIT\_DESELECTED, EVENT\_PLAYER\_UNIT\_CONSTRUCT\_START, EVENT\_PLAYER\_UNIT\_CONSTRUCT\_CANCEL, EVENT\_PLAYER\_UNIT\_CONSTRUCT\_FINISH, EVENT\_PLAYER\_UNIT\_UPGRADE\_START, EVENT\_PLAYER\_UNIT\_UPGRADE\_CANCEL, EVENT\_PLAYER\_UNIT\_UPGRADE\_FINISH, EVENT\_PLAYER\_UNIT\_TRAIN\_START, EVENT\_PLAYER\_UNIT\_TRAIN\_CANCEL, EVENT\_PLAYER\_UNIT\_TRAIN\_FINISH, EVENT\_PLAYER\_UNIT\_RESEARCH\_START, EVENT\_PLAYER\_UNIT\_RESEARCH\_CANCEL, EVENT\_PLAYER\_UNIT\_RESEARCH\_FINISH, EVENT\_PLAYER\_UNIT\_ISSUED\_ORDER, EVENT\_PLAYER\_UNIT\_ISSUED\_POINT\_ORDER, EVENT\_PLAYER\_UNIT\_ISSUED\_TARGET\_ORDER or EVENT\_PLAYER\_UNIT\_ISSUED\_UNIT\_ORDER, EVENT\_PLAYER\_HERO\_LEVEL, EVENT\_PLAYER\_HERO\_SKILL, EVENT\_PLAYER\_HERO\_REVIVABLE, EVENT\_PLAYER\_HERO\_REVIVE\_START, EVENT\_PLAYER\_HERO\_REVIVE\_CANCEL, EVENT\_PLAYER\_HERO\_REVIVE\_FINISH, EVENT\_PLAYER\_UNIT\_SUMMON, EVENT\_PLAYER\_UNIT\_DROP\_ITEM, EVENT\_PLAYER\_UNIT\_PICKUP\_ITEM, EVENT\_PLAYER\_UNIT\_USE\_ITEM, EVENT\_PLAYER\_UNIT\_LOADED, EVENT\_PLAYER\_UNIT\_DAMAGED, EVENT\_PLAYER\_UNIT\_DAMAGING, EVENT\_PLAYER\_UNIT\_SELL, EVENT\_PLAYER\_UNIT\_CHANGE\_OWNER, EVENT\_PLAYER\_UNIT\_SELL\_ITEM, EVENT\_PLAYER\_UNIT\_SPELL\_CHANNEL, EVENT\_PLAYER\_UNIT\_SPELL\_CAST, EVENT\_PLAYER\_UNIT\_SPELL\_EFFECT, EVENT\_PLAYER\_UNIT\_SPELL\_FINISH, EVENT\_PLAYER\_UNIT\_SPELL\_ENDCAST, EVENT\_PLAYER\_UNIT\_PAWN\_ITEM, EVENT\_PLAYER\_UNIT\_STACK\_ITEM, EVENT\_PLAYER\_UNIT\_EQUIP\_ITEM, EVENT\_PLAYER\_UNIT\_UNEQUIP\_ITEM, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertWidgetEvent`
 
@@ -598,7 +598,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (EVENT\_WIDGET\_DEATH, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertDialogEvent`
 
@@ -615,7 +615,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (EVENT\_DIALOG\_BUTTON\_CLICK, EVENT\_DIALOG\_CLICK, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertUnitEvent`
 
@@ -680,7 +680,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (EVENT\_UNIT\_DAMAGED, EVENT\_UNIT\_DAMAGING, EVENT\_UNIT\_DEATH, EVENT\_UNIT\_DECAY, EVENT\_UNIT\_DETECTED, EVENT\_UNIT\_HIDDEN, EVENT\_UNIT\_SELECTED, EVENT\_UNIT\_DESELECTED, EVENT\_UNIT\_STATE\_LIMIT, EVENT\_UNIT\_ACQUIRED\_TARGET, EVENT\_UNIT\_TARGET\_IN\_RANGE, EVENT\_UNIT\_ATTACKED, EVENT\_UNIT\_RESCUED, EVENT\_UNIT\_CONSTRUCT\_CANCEL, EVENT\_UNIT\_CONSTRUCT\_FINISH, EVENT\_UNIT\_UPGRADE\_START, EVENT\_UNIT\_UPGRADE\_CANCEL, EVENT\_UNIT\_UPGRADE\_FINISH, EVENT\_UNIT\_TRAIN\_START, EVENT\_UNIT\_TRAIN\_CANCEL, EVENT\_UNIT\_TRAIN\_FINISH, EVENT\_UNIT\_RESEARCH\_START, EVENT\_UNIT\_RESEARCH\_CANCEL, EVENT\_UNIT\_RESEARCH\_FINISH, EVENT\_UNIT\_ISSUED\_ORDER, EVENT\_UNIT\_ISSUED\_POINT\_ORDER, EVENT\_UNIT\_ISSUED\_TARGET\_ORDER, EVENT\_UNIT\_HERO\_LEVEL, EVENT\_UNIT\_HERO\_SKILL, EVENT\_UNIT\_HERO\_REVIVABLE, EVENT\_UNIT\_HERO\_REVIVE\_START, EVENT\_UNIT\_HERO\_REVIVE\_CANCEL, EVENT\_UNIT\_HERO\_REVIVE\_FINISH, EVENT\_UNIT\_SUMMON, EVENT\_UNIT\_DROP\_ITEM, EVENT\_UNIT\_PICKUP\_ITEM, EVENT\_UNIT\_USE\_ITEM, EVENT\_UNIT\_LOADED, EVENT\_UNIT\_SELL, EVENT\_UNIT\_CHANGE\_OWNER, EVENT\_UNIT\_SELL\_ITEM, EVENT\_UNIT\_SPELL\_CHANNEL, EVENT\_UNIT\_SPELL\_CAST, EVENT\_UNIT\_SPELL\_EFFECT, EVENT\_UNIT\_SPELL\_FINISH, EVENT\_UNIT\_SPELL\_ENDCAST, EVENT\_UNIT\_PAWN\_ITEM, EVENT\_UNIT\_STACK\_ITEM, EVENT\_UNIT\_EQUIP\_ITEM, EVENT\_UNIT\_UNEQUIP\_ITEM, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertLimitOp`
 
@@ -701,7 +701,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (LESS\_THAN, LESS\_THAN\_OR\_EQUAL, EQUAL, GREATER\_THAN\_OR\_EQUAL, GREATER\_THAN, NOT\_EQUAL, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For LESS\_THAN, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertUnitType`
 
@@ -743,7 +743,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_TYPE\_HERO, UNIT\_TYPE\_DEAD, UNIT\_TYPE\_STRUCTURE, UNIT\_TYPE\_FLYING, UNIT\_TYPE\_GROUND, UNIT\_TYPE\_ATTACKS\_FLYING, UNIT\_TYPE\_ATTACKS\_GROUND, UNIT\_TYPE\_MELEE\_ATTACKER, UNIT\_TYPE\_RANGED\_ATTACKER, UNIT\_TYPE\_GIANT, UNIT\_TYPE\_SUMMONED, UNIT\_TYPE\_STUNNED, UNIT\_TYPE\_PLAGUED, UNIT\_TYPE\_SNARED, UNIT\_TYPE\_UNDEAD, UNIT\_TYPE\_MECHANICAL, UNIT\_TYPE\_PEON, UNIT\_TYPE\_SAPPER, UNIT\_TYPE\_TOWNHALL, UNIT\_TYPE\_ANCIENT, UNIT\_TYPE\_TAUREN, UNIT\_TYPE\_POISONED, UNIT\_TYPE\_POLYMORPHED, UNIT\_TYPE\_SLEEPING, UNIT\_TYPE\_RESISTANT, UNIT\_TYPE\_ETHEREAL, UNIT\_TYPE\_MAGIC\_IMMUNE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For UNIT\_TYPE\_HERO, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertGameSpeed`
 
@@ -763,7 +763,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (MAP\_SPEED\_SLOWEST, MAP\_SPEED\_SLOW, MAP\_SPEED\_NORMAL, MAP\_SPEED\_FAST, MAP\_SPEED\_FASTEST, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For MAP\_SPEED\_SLOWEST, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertPlacement`
 
@@ -782,7 +782,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (MAP\_PLACEMENT\_RANDOM, MAP\_PLACEMENT\_FIXED, MAP\_PLACEMENT\_USE\_MAP\_SETTINGS, MAP\_PLACEMENT\_TEAMS\_TOGETHER, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For MAP\_PLACEMENT\_RANDOM, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertStartLocPrio`
 
@@ -800,7 +800,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (MAP\_LOC\_PRIO\_LOW, MAP\_LOC\_PRIO\_HIGH, MAP\_LOC\_PRIO\_NOT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For MAP\_LOC\_PRIO\_LOW, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertGameDifficulty`
 
@@ -819,7 +819,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (MAP\_DIFFICULTY\_EASY, MAP\_DIFFICULTY\_NORMAL, MAP\_DIFFICULTY\_HARD, MAP\_DIFFICULTY\_INSANE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For MAP\_DIFFICULTY\_EASY, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertGameType`
 
@@ -842,7 +842,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (GAME\_TYPE\_MELEE, GAME\_TYPE\_FFA, GAME\_TYPE\_USE\_MAP\_SETTINGS, GAME\_TYPE\_BLIZ, GAME\_TYPE\_ONE\_ON\_ONE, GAME\_TYPE\_TWO\_TEAM\_PLAY, GAME\_TYPE\_THREE\_TEAM\_PLAY, GAME\_TYPE\_FOUR\_TEAM\_PLAY, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertMapFlag`
 
@@ -876,7 +876,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (MAP\_FOG\_HIDE\_TERRAIN, MAP\_FOG\_MAP\_EXPLORED, MAP\_FOG\_ALWAYS\_VISIBLE, MAP\_USE\_HANDICAPS, MAP\_OBSERVERS, MAP\_OBSERVERS\_ON\_DEATH, MAP\_FIXED\_COLORS, MAP\_LOCK\_RESOURCE\_TRADING, MAP\_RESOURCE\_TRADING\_ALLIES\_ONLY, MAP\_LOCK\_ALLIANCE\_CHANGES, MAP\_ALLIANCE\_CHANGES\_HIDDEN, MAP\_CHEATS, MAP\_CHEATS\_HIDDEN, MAP\_LOCK\_SPEED, MAP\_LOCK\_RANDOM\_SEED, MAP\_SHARED\_ADVANCED\_CONTROL, MAP\_RANDOM\_HERO, MAP\_RANDOM\_RACES, MAP\_RELOADED, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertMapVisibility`
 
@@ -891,7 +891,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (0, 1, -1, 2147483647) on 3.0.0.24268; evidence, not proof. For 0, a handle of id 0.
+- Proposed `notes`: Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertMapSetting`
 
@@ -906,7 +906,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (0, 1, -1, 2147483647) on 3.0.0.24268; evidence, not proof. For 0, a handle of id 0.
+- Proposed `notes`: Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertMapDensity`
 
@@ -925,7 +925,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (MAP\_DENSITY\_NONE, MAP\_DENSITY\_LIGHT, MAP\_DENSITY\_MEDIUM, MAP\_DENSITY\_HEAVY, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For MAP\_DENSITY\_NONE, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertMapControl`
 
@@ -946,7 +946,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (MAP\_CONTROL\_USER, MAP\_CONTROL\_COMPUTER, MAP\_CONTROL\_RESCUABLE, MAP\_CONTROL\_NEUTRAL, MAP\_CONTROL\_CREEP, MAP\_CONTROL\_NONE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For MAP\_CONTROL\_USER, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertPlayerColor`
 
@@ -986,7 +986,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (PLAYER\_COLOR\_RED, PLAYER\_COLOR\_BLUE, PLAYER\_COLOR\_CYAN, PLAYER\_COLOR\_PURPLE, PLAYER\_COLOR\_YELLOW, PLAYER\_COLOR\_ORANGE, PLAYER\_COLOR\_GREEN, PLAYER\_COLOR\_PINK, PLAYER\_COLOR\_LIGHT\_GRAY, PLAYER\_COLOR\_LIGHT\_BLUE, PLAYER\_COLOR\_AQUA, PLAYER\_COLOR\_BROWN, PLAYER\_COLOR\_MAROON, PLAYER\_COLOR\_NAVY, PLAYER\_COLOR\_TURQUOISE, PLAYER\_COLOR\_VIOLET, PLAYER\_COLOR\_WHEAT, PLAYER\_COLOR\_PEACH, PLAYER\_COLOR\_MINT, PLAYER\_COLOR\_LAVENDER, PLAYER\_COLOR\_COAL, PLAYER\_COLOR\_SNOW, PLAYER\_COLOR\_EMERALD, PLAYER\_COLOR\_PEANUT, PLAYER\_COLOR\_BLACK, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For PLAYER\_COLOR\_RED, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertPlayerSlotState`
 
@@ -1004,7 +1004,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (PLAYER\_SLOT\_STATE\_EMPTY, PLAYER\_SLOT\_STATE\_PLAYING, PLAYER\_SLOT\_STATE\_LEFT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For PLAYER\_SLOT\_STATE\_EMPTY, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertVolumeGroup`
 
@@ -1034,7 +1034,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (SOUND\_VOLUMEGROUP\_UNITMOVEMENT, SOUND\_VOLUMEGROUP\_UNITSOUNDS, SOUND\_VOLUMEGROUP\_COMBAT, SOUND\_VOLUMEGROUP\_SPELLS, SOUND\_VOLUMEGROUP\_UI, SOUND\_VOLUMEGROUP\_MUSIC, SOUND\_VOLUMEGROUP\_AMBIENTSOUNDS, SOUND\_VOLUMEGROUP\_FIRE, SOUND\_VOLUMEGROUP\_CINEMATIC\_GENERAL, SOUND\_VOLUMEGROUP\_CINEMATIC\_AMBIENT, SOUND\_VOLUMEGROUP\_CINEMATIC\_MUSIC, SOUND\_VOLUMEGROUP\_CINEMATIC\_DIALOGUE, SOUND\_VOLUMEGROUP\_CINEMATIC\_SOUND\_EFFECTS\_1, SOUND\_VOLUMEGROUP\_CINEMATIC\_SOUND\_EFFECTS\_2, SOUND\_VOLUMEGROUP\_CINEMATIC\_SOUND\_EFFECTS\_3, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For SOUND\_VOLUMEGROUP\_UNITMOVEMENT, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertCameraField`
 
@@ -1063,7 +1063,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (CAMERA\_FIELD\_TARGET\_DISTANCE, CAMERA\_FIELD\_FARZ, CAMERA\_FIELD\_ANGLE\_OF\_ATTACK, CAMERA\_FIELD\_FIELD\_OF\_VIEW, CAMERA\_FIELD\_ROLL, CAMERA\_FIELD\_ROTATION, CAMERA\_FIELD\_ZOFFSET, CAMERA\_FIELD\_NEARZ, CAMERA\_FIELD\_LOCAL\_PITCH, CAMERA\_FIELD\_LOCAL\_YAW, CAMERA\_FIELD\_LOCAL\_ROLL, CAMERA\_FIELD\_DEPTH\_OF\_FIELD\_DISTANCE, CAMERA\_FIELD\_DEPTH\_OF\_FIELD\_SCALE, CAMERA\_FIELD\_ZABSOLUTE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For CAMERA\_FIELD\_TARGET\_DISTANCE, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertBlendMode`
 
@@ -1084,7 +1084,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (BLEND\_MODE\_NONE or BLEND\_MODE\_DONT\_CARE, BLEND\_MODE\_KEYALPHA, BLEND\_MODE\_BLEND, BLEND\_MODE\_ADDITIVE, BLEND\_MODE\_MODULATE, BLEND\_MODE\_MODULATE\_2X, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For BLEND\_MODE\_NONE or BLEND\_MODE\_DONT\_CARE, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertRarityControl`
 
@@ -1101,7 +1101,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (RARITY\_FREQUENT, RARITY\_RARE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For RARITY\_FREQUENT, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertTexMapFlags`
 
@@ -1120,7 +1120,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (TEXMAP\_FLAG\_NONE, TEXMAP\_FLAG\_WRAP\_U, TEXMAP\_FLAG\_WRAP\_V, TEXMAP\_FLAG\_WRAP\_UV, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For TEXMAP\_FLAG\_NONE, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertFogState`
 
@@ -1138,7 +1138,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (FOG\_OF\_WAR\_MASKED, FOG\_OF\_WAR\_FOGGED, FOG\_OF\_WAR\_VISIBLE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertEffectType`
 
@@ -1160,7 +1160,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (EFFECT\_TYPE\_EFFECT, EFFECT\_TYPE\_TARGET, EFFECT\_TYPE\_CASTER, EFFECT\_TYPE\_SPECIAL, EFFECT\_TYPE\_AREA\_EFFECT, EFFECT\_TYPE\_MISSILE, EFFECT\_TYPE\_LIGHTNING, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For EFFECT\_TYPE\_EFFECT, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertVersion`
 
@@ -1177,7 +1177,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (VERSION\_REIGN\_OF\_CHAOS, VERSION\_FROZEN\_THRONE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For VERSION\_REIGN\_OF\_CHAOS, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertItemType`
 
@@ -1202,7 +1202,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ITEM\_TYPE\_PERMANENT, ITEM\_TYPE\_CHARGED, ITEM\_TYPE\_POWERUP or ITEM\_TYPE\_TOME, ITEM\_TYPE\_ARTIFACT, ITEM\_TYPE\_PURCHASABLE, ITEM\_TYPE\_CAMPAIGN, ITEM\_TYPE\_MISCELLANEOUS, ITEM\_TYPE\_EQUIPMENT, ITEM\_TYPE\_UNKNOWN, ITEM\_TYPE\_ANY, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For ITEM\_TYPE\_PERMANENT, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAttackType`
 
@@ -1224,7 +1224,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ATTACK\_TYPE\_NORMAL, ATTACK\_TYPE\_MELEE, ATTACK\_TYPE\_PIERCE, ATTACK\_TYPE\_SIEGE, ATTACK\_TYPE\_MAGIC, ATTACK\_TYPE\_CHAOS, ATTACK\_TYPE\_HERO, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For ATTACK\_TYPE\_NORMAL, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ## `nullability-converters-2`
 
@@ -1268,7 +1268,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (DAMAGE\_TYPE\_UNKNOWN, DAMAGE\_TYPE\_NORMAL, DAMAGE\_TYPE\_ENHANCED, DAMAGE\_TYPE\_FIRE, DAMAGE\_TYPE\_COLD, DAMAGE\_TYPE\_LIGHTNING, DAMAGE\_TYPE\_POISON, DAMAGE\_TYPE\_DISEASE, DAMAGE\_TYPE\_DIVINE, DAMAGE\_TYPE\_MAGIC, DAMAGE\_TYPE\_SONIC, DAMAGE\_TYPE\_ACID, DAMAGE\_TYPE\_FORCE, DAMAGE\_TYPE\_DEATH, DAMAGE\_TYPE\_MIND, DAMAGE\_TYPE\_PLANT, DAMAGE\_TYPE\_DEFENSIVE, DAMAGE\_TYPE\_DEMOLITION, DAMAGE\_TYPE\_SLOW\_POISON, DAMAGE\_TYPE\_SPIRIT\_LINK, DAMAGE\_TYPE\_SHADOW\_STRIKE, DAMAGE\_TYPE\_UNIVERSAL, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For DAMAGE\_TYPE\_UNKNOWN, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertWeaponType`
 
@@ -1307,7 +1307,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (WEAPON\_TYPE\_WHOKNOWS, WEAPON\_TYPE\_METAL\_LIGHT\_CHOP, WEAPON\_TYPE\_METAL\_MEDIUM\_CHOP, WEAPON\_TYPE\_METAL\_HEAVY\_CHOP, WEAPON\_TYPE\_METAL\_LIGHT\_SLICE, WEAPON\_TYPE\_METAL\_MEDIUM\_SLICE, WEAPON\_TYPE\_METAL\_HEAVY\_SLICE, WEAPON\_TYPE\_METAL\_MEDIUM\_BASH, WEAPON\_TYPE\_METAL\_HEAVY\_BASH, WEAPON\_TYPE\_METAL\_MEDIUM\_STAB, WEAPON\_TYPE\_METAL\_HEAVY\_STAB, WEAPON\_TYPE\_WOOD\_LIGHT\_SLICE, WEAPON\_TYPE\_WOOD\_MEDIUM\_SLICE, WEAPON\_TYPE\_WOOD\_HEAVY\_SLICE, WEAPON\_TYPE\_WOOD\_LIGHT\_BASH, WEAPON\_TYPE\_WOOD\_MEDIUM\_BASH, WEAPON\_TYPE\_WOOD\_HEAVY\_BASH, WEAPON\_TYPE\_WOOD\_LIGHT\_STAB, WEAPON\_TYPE\_WOOD\_MEDIUM\_STAB, WEAPON\_TYPE\_CLAW\_LIGHT\_SLICE, WEAPON\_TYPE\_CLAW\_MEDIUM\_SLICE, WEAPON\_TYPE\_CLAW\_HEAVY\_SLICE, WEAPON\_TYPE\_AXE\_MEDIUM\_CHOP, WEAPON\_TYPE\_ROCK\_HEAVY\_BASH, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For WEAPON\_TYPE\_WHOKNOWS, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertSoundType`
 
@@ -1324,7 +1324,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (SOUND\_TYPE\_EFFECT, SOUND\_TYPE\_EFFECT\_LOOPED, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For SOUND\_TYPE\_EFFECT, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertPathingType`
 
@@ -1347,7 +1347,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (PATHING\_TYPE\_ANY, PATHING\_TYPE\_WALKABILITY, PATHING\_TYPE\_FLYABILITY, PATHING\_TYPE\_BUILDABILITY, PATHING\_TYPE\_PEONHARVESTPATHING, PATHING\_TYPE\_BLIGHTPATHING, PATHING\_TYPE\_FLOATABILITY, PATHING\_TYPE\_AMPHIBIOUSPATHING, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For PATHING\_TYPE\_ANY, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertMouseButtonType`
 
@@ -1365,7 +1365,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (MOUSE\_BUTTON\_TYPE\_LEFT, MOUSE\_BUTTON\_TYPE\_MIDDLE, MOUSE\_BUTTON\_TYPE\_RIGHT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the bit flag \`1 \<\< ((i - 1) & 31)\` of the integer \`i\` passed in. Evidence, not proof.
 
 ### `ConvertAnimType`
 
@@ -1391,7 +1391,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ANIM\_TYPE\_BIRTH, ANIM\_TYPE\_DEATH, ANIM\_TYPE\_DECAY, ANIM\_TYPE\_DISSIPATE, ANIM\_TYPE\_STAND, ANIM\_TYPE\_WALK, ANIM\_TYPE\_ATTACK, ANIM\_TYPE\_MORPH, ANIM\_TYPE\_SLEEP, ANIM\_TYPE\_SPELL, ANIM\_TYPE\_PORTRAIT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For ANIM\_TYPE\_BIRTH, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertSubAnimType`
 
@@ -1458,7 +1458,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (SUBANIM\_TYPE\_ROOTED, SUBANIM\_TYPE\_ALTERNATE\_EX, SUBANIM\_TYPE\_LOOPING, SUBANIM\_TYPE\_SLAM, SUBANIM\_TYPE\_THROW, SUBANIM\_TYPE\_SPIKED, SUBANIM\_TYPE\_FAST, SUBANIM\_TYPE\_SPIN, SUBANIM\_TYPE\_READY, SUBANIM\_TYPE\_CHANNEL, SUBANIM\_TYPE\_DEFEND, SUBANIM\_TYPE\_VICTORY, SUBANIM\_TYPE\_TURN, SUBANIM\_TYPE\_LEFT, SUBANIM\_TYPE\_RIGHT, SUBANIM\_TYPE\_FIRE, SUBANIM\_TYPE\_FLESH, SUBANIM\_TYPE\_HIT, SUBANIM\_TYPE\_WOUNDED, SUBANIM\_TYPE\_LIGHT, SUBANIM\_TYPE\_MODERATE, SUBANIM\_TYPE\_SEVERE, SUBANIM\_TYPE\_CRITICAL, SUBANIM\_TYPE\_COMPLETE, SUBANIM\_TYPE\_GOLD, SUBANIM\_TYPE\_LUMBER, SUBANIM\_TYPE\_WORK, SUBANIM\_TYPE\_TALK, SUBANIM\_TYPE\_FIRST, SUBANIM\_TYPE\_SECOND, SUBANIM\_TYPE\_THIRD, SUBANIM\_TYPE\_FOURTH, SUBANIM\_TYPE\_FIFTH, SUBANIM\_TYPE\_ONE, SUBANIM\_TYPE\_TWO, SUBANIM\_TYPE\_THREE, SUBANIM\_TYPE\_FOUR, SUBANIM\_TYPE\_FIVE, SUBANIM\_TYPE\_SMALL, SUBANIM\_TYPE\_MEDIUM, SUBANIM\_TYPE\_LARGE, SUBANIM\_TYPE\_UPGRADE, SUBANIM\_TYPE\_DRAIN, SUBANIM\_TYPE\_FILL, SUBANIM\_TYPE\_CHAINLIGHTNING, SUBANIM\_TYPE\_EATTREE, SUBANIM\_TYPE\_PUKE, SUBANIM\_TYPE\_FLAIL, SUBANIM\_TYPE\_OFF, SUBANIM\_TYPE\_SWIM, SUBANIM\_TYPE\_ENTANGLE, SUBANIM\_TYPE\_BERSERK, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertOriginFrameType`
 
@@ -1496,7 +1496,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ORIGIN\_FRAME\_GAME\_UI, ORIGIN\_FRAME\_COMMAND\_BUTTON, ORIGIN\_FRAME\_HERO\_BAR, ORIGIN\_FRAME\_HERO\_BUTTON, ORIGIN\_FRAME\_HERO\_HP\_BAR, ORIGIN\_FRAME\_HERO\_MANA\_BAR, ORIGIN\_FRAME\_HERO\_BUTTON\_INDICATOR, ORIGIN\_FRAME\_ITEM\_BUTTON, ORIGIN\_FRAME\_MINIMAP, ORIGIN\_FRAME\_MINIMAP\_BUTTON, ORIGIN\_FRAME\_SYSTEM\_BUTTON, ORIGIN\_FRAME\_TOOLTIP, ORIGIN\_FRAME\_UBERTOOLTIP, ORIGIN\_FRAME\_CHAT\_MSG, ORIGIN\_FRAME\_UNIT\_MSG, ORIGIN\_FRAME\_TOP\_MSG, ORIGIN\_FRAME\_PORTRAIT, ORIGIN\_FRAME\_WORLD\_FRAME, ORIGIN\_FRAME\_SIMPLE\_UI\_PARENT, ORIGIN\_FRAME\_PORTRAIT\_HP\_TEXT, ORIGIN\_FRAME\_PORTRAIT\_MANA\_TEXT, ORIGIN\_FRAME\_UNIT\_PANEL\_BUFF\_BAR, ORIGIN\_FRAME\_UNIT\_PANEL\_BUFF\_BAR\_LABEL, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For ORIGIN\_FRAME\_GAME\_UI, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertFramePointType`
 
@@ -1520,7 +1520,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (FRAMEPOINT\_TOPLEFT, FRAMEPOINT\_TOP, FRAMEPOINT\_TOPRIGHT, FRAMEPOINT\_LEFT, FRAMEPOINT\_CENTER, FRAMEPOINT\_RIGHT, FRAMEPOINT\_BOTTOMLEFT, FRAMEPOINT\_BOTTOM, FRAMEPOINT\_BOTTOMRIGHT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For FRAMEPOINT\_TOPLEFT, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertTextAlignType`
 
@@ -1541,7 +1541,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (TEXT\_JUSTIFY\_TOP, TEXT\_JUSTIFY\_MIDDLE, TEXT\_JUSTIFY\_BOTTOM, TEXT\_JUSTIFY\_LEFT, TEXT\_JUSTIFY\_CENTER, TEXT\_JUSTIFY\_RIGHT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For TEXT\_JUSTIFY\_TOP, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertFrameEventType`
 
@@ -1572,7 +1572,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (FRAMEEVENT\_CONTROL\_CLICK, FRAMEEVENT\_MOUSE\_ENTER, FRAMEEVENT\_MOUSE\_LEAVE, FRAMEEVENT\_MOUSE\_UP, FRAMEEVENT\_MOUSE\_DOWN, FRAMEEVENT\_MOUSE\_WHEEL, FRAMEEVENT\_CHECKBOX\_CHECKED, FRAMEEVENT\_CHECKBOX\_UNCHECKED, FRAMEEVENT\_EDITBOX\_TEXT\_CHANGED, FRAMEEVENT\_POPUPMENU\_ITEM\_CHANGED, FRAMEEVENT\_MOUSE\_DOUBLECLICK, FRAMEEVENT\_SPRITE\_ANIM\_UPDATE, FRAMEEVENT\_SLIDER\_VALUE\_CHANGED, FRAMEEVENT\_DIALOG\_CANCEL, FRAMEEVENT\_DIALOG\_ACCEPT, FRAMEEVENT\_EDITBOX\_ENTER, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertOsKeyType`
 
@@ -1773,7 +1773,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (OSKEY\_BACKSPACE, OSKEY\_TAB, OSKEY\_CLEAR, OSKEY\_RETURN, OSKEY\_SHIFT, OSKEY\_CONTROL, OSKEY\_ALT, OSKEY\_PAUSE, OSKEY\_CAPSLOCK, OSKEY\_KANA or OSKEY\_HANGUL, OSKEY\_JUNJA, OSKEY\_FINAL, OSKEY\_HANJA or OSKEY\_KANJI, OSKEY\_ESCAPE, OSKEY\_CONVERT, OSKEY\_NONCONVERT, OSKEY\_ACCEPT, OSKEY\_MODECHANGE, OSKEY\_SPACE, OSKEY\_PAGEUP, OSKEY\_PAGEDOWN, OSKEY\_END, OSKEY\_HOME, OSKEY\_LEFT, OSKEY\_UP, OSKEY\_RIGHT, OSKEY\_DOWN, OSKEY\_SELECT, OSKEY\_PRINT, OSKEY\_EXECUTE, OSKEY\_PRINTSCREEN, OSKEY\_INSERT, OSKEY\_DELETE, OSKEY\_HELP, OSKEY\_0, OSKEY\_1, OSKEY\_2, OSKEY\_3, OSKEY\_4, OSKEY\_5, OSKEY\_6, OSKEY\_7, OSKEY\_8, OSKEY\_9, OSKEY\_A, OSKEY\_B, OSKEY\_C, OSKEY\_D, OSKEY\_E, OSKEY\_F, OSKEY\_G, OSKEY\_H, OSKEY\_I, OSKEY\_J, OSKEY\_K, OSKEY\_L, OSKEY\_M, OSKEY\_N, OSKEY\_O, OSKEY\_P, OSKEY\_Q, OSKEY\_R, OSKEY\_S, OSKEY\_T, OSKEY\_U, OSKEY\_V, OSKEY\_W, OSKEY\_X, OSKEY\_Y, OSKEY\_Z, OSKEY\_LMETA, OSKEY\_RMETA, OSKEY\_APPS, OSKEY\_SLEEP, OSKEY\_NUMPAD0, OSKEY\_NUMPAD1, OSKEY\_NUMPAD2, OSKEY\_NUMPAD3, OSKEY\_NUMPAD4, OSKEY\_NUMPAD5, OSKEY\_NUMPAD6, OSKEY\_NUMPAD7, OSKEY\_NUMPAD8, OSKEY\_NUMPAD9, OSKEY\_MULTIPLY, OSKEY\_ADD, OSKEY\_SEPARATOR, OSKEY\_SUBTRACT, OSKEY\_DECIMAL, OSKEY\_DIVIDE, OSKEY\_F1, OSKEY\_F2, OSKEY\_F3, OSKEY\_F4, OSKEY\_F5, OSKEY\_F6, OSKEY\_F7, OSKEY\_F8, OSKEY\_F9, OSKEY\_F10, OSKEY\_F11, OSKEY\_F12, OSKEY\_F13, OSKEY\_F14, OSKEY\_F15, OSKEY\_F16, OSKEY\_F17, OSKEY\_F18, OSKEY\_F19, OSKEY\_F20, OSKEY\_F21, OSKEY\_F22, OSKEY\_F23, OSKEY\_F24, OSKEY\_NUMLOCK, OSKEY\_SCROLLLOCK, OSKEY\_OEM\_NEC\_EQUAL or OSKEY\_OEM\_FJ\_JISHO, OSKEY\_OEM\_FJ\_MASSHOU, OSKEY\_OEM\_FJ\_TOUROKU, OSKEY\_OEM\_FJ\_LOYA, OSKEY\_OEM\_FJ\_ROYA, OSKEY\_LSHIFT, OSKEY\_RSHIFT, OSKEY\_LCONTROL, OSKEY\_RCONTROL, OSKEY\_LALT, OSKEY\_RALT, OSKEY\_BROWSER\_BACK, OSKEY\_BROWSER\_FORWARD, OSKEY\_BROWSER\_REFRESH, OSKEY\_BROWSER\_STOP, OSKEY\_BROWSER\_SEARCH, OSKEY\_BROWSER\_FAVORITES, OSKEY\_BROWSER\_HOME, OSKEY\_VOLUME\_MUTE, OSKEY\_VOLUME\_DOWN, OSKEY\_VOLUME\_UP, OSKEY\_MEDIA\_NEXT\_TRACK, OSKEY\_MEDIA\_PREV\_TRACK, OSKEY\_MEDIA\_STOP, OSKEY\_MEDIA\_PLAY\_PAUSE, OSKEY\_LAUNCH\_MAIL, OSKEY\_LAUNCH\_MEDIA\_SELECT, OSKEY\_LAUNCH\_APP1, OSKEY\_LAUNCH\_APP2, OSKEY\_OEM\_1, OSKEY\_OEM\_PLUS, OSKEY\_OEM\_COMMA, OSKEY\_OEM\_MINUS, OSKEY\_OEM\_PERIOD, OSKEY\_OEM\_2, OSKEY\_OEM\_3, OSKEY\_OEM\_4, OSKEY\_OEM\_5, OSKEY\_OEM\_6, OSKEY\_OEM\_7, OSKEY\_OEM\_8, OSKEY\_OEM\_AX, OSKEY\_OEM\_102, OSKEY\_ICO\_HELP, OSKEY\_ICO\_00, OSKEY\_PROCESSKEY, OSKEY\_ICO\_CLEAR, OSKEY\_PACKET, OSKEY\_OEM\_RESET, OSKEY\_OEM\_JUMP, OSKEY\_OEM\_PA1, OSKEY\_OEM\_PA2, OSKEY\_OEM\_PA3, OSKEY\_OEM\_WSCTRL, OSKEY\_OEM\_CUSEL, OSKEY\_OEM\_ATTN, OSKEY\_OEM\_FINISH, OSKEY\_OEM\_COPY, OSKEY\_OEM\_AUTO, OSKEY\_OEM\_ENLW, OSKEY\_OEM\_BACKTAB, OSKEY\_ATTN, OSKEY\_CRSEL, OSKEY\_EXSEL, OSKEY\_EREOF, OSKEY\_PLAY, OSKEY\_ZOOM, OSKEY\_NONAME, OSKEY\_PA1, OSKEY\_OEM\_CLEAR, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAbilityIntegerField`
 
@@ -1801,7 +1801,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_IF\_BUTTON\_POSITION\_NORMAL\_X, ABILITY\_IF\_BUTTON\_POSITION\_NORMAL\_Y, ABILITY\_IF\_BUTTON\_POSITION\_ACTIVATED\_X, ABILITY\_IF\_BUTTON\_POSITION\_ACTIVATED\_Y, ABILITY\_IF\_BUTTON\_POSITION\_RESEARCH\_X, ABILITY\_IF\_BUTTON\_POSITION\_RESEARCH\_Y, ABILITY\_IF\_MISSILE\_SPEED, ABILITY\_IF\_TARGET\_ATTACHMENTS, ABILITY\_IF\_CASTER\_ATTACHMENTS, ABILITY\_IF\_PRIORITY, ABILITY\_IF\_LEVELS, ABILITY\_IF\_REQUIRED\_LEVEL, ABILITY\_IF\_LEVEL\_SKIP\_REQUIREMENT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAbilityRealField`
 
@@ -1817,7 +1817,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_RF\_ARF\_MISSILE\_ARC, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAbilityBooleanField`
 
@@ -1835,7 +1835,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_BF\_HERO\_ABILITY, ABILITY\_BF\_ITEM\_ABILITY, ABILITY\_BF\_CHECK\_DEPENDENCIES, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAbilityStringField`
 
@@ -1855,7 +1855,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_SF\_NAME, ABILITY\_SF\_ICON\_ACTIVATED, ABILITY\_SF\_ICON\_RESEARCH, ABILITY\_SF\_EFFECT\_SOUND, ABILITY\_SF\_EFFECT\_SOUND\_LOOPING, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ## `nullability-converters-3`
 
@@ -2061,7 +2061,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_ILF\_MANA\_COST, ABILITY\_ILF\_NUMBER\_OF\_WAVES, ABILITY\_ILF\_NUMBER\_OF\_SHARDS, ABILITY\_ILF\_NUMBER\_OF\_UNITS\_TELEPORTED, ABILITY\_ILF\_SUMMONED\_UNIT\_COUNT\_HWE2, ABILITY\_ILF\_NUMBER\_OF\_IMAGES, ABILITY\_ILF\_NUMBER\_OF\_CORPSES\_RAISED\_UAN1, ABILITY\_ILF\_MORPHING\_FLAGS, ABILITY\_ILF\_STRENGTH\_BONUS\_NRG5, ABILITY\_ILF\_DEFENSE\_BONUS\_NRG6, ABILITY\_ILF\_NUMBER\_OF\_TARGETS\_HIT, ABILITY\_ILF\_DETECTION\_TYPE\_OFS1, ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_OSF2, ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_EFN1, ABILITY\_ILF\_NUMBER\_OF\_CORPSES\_RAISED\_HRE1, ABILITY\_ILF\_STACK\_FLAGS, ABILITY\_ILF\_MINIMUM\_NUMBER\_OF\_UNITS, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_UNITS\_NDP3, ABILITY\_ILF\_NUMBER\_OF\_UNITS\_CREATED\_NRC2, ABILITY\_ILF\_SHIELD\_LIFE, ABILITY\_ILF\_MANA\_LOSS\_AMS4, ABILITY\_ILF\_GOLD\_PER\_INTERVAL\_BGM1, ABILITY\_ILF\_MAX\_NUMBER\_OF\_MINERS, ABILITY\_ILF\_CARGO\_CAPACITY, ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_DEV3, ABILITY\_ILF\_MAX\_CREEP\_LEVEL\_DEV1, ABILITY\_ILF\_GOLD\_PER\_INTERVAL\_EGM1, ABILITY\_ILF\_DEFENSE\_REDUCTION, ABILITY\_ILF\_DETECTION\_TYPE\_FLA1, ABILITY\_ILF\_FLARE\_COUNT, ABILITY\_ILF\_MAX\_GOLD, ABILITY\_ILF\_MINING\_CAPACITY, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_CORPSES\_GYD1, ABILITY\_ILF\_DAMAGE\_TO\_TREE, ABILITY\_ILF\_LUMBER\_CAPACITY, ABILITY\_ILF\_GOLD\_CAPACITY, ABILITY\_ILF\_DEFENSE\_INCREASE\_INF2, ABILITY\_ILF\_INTERACTION\_TYPE, ABILITY\_ILF\_GOLD\_COST\_NDT1, ABILITY\_ILF\_LUMBER\_COST\_NDT2, ABILITY\_ILF\_DETECTION\_TYPE\_NDT3, ABILITY\_ILF\_STACKING\_TYPE\_POI4, ABILITY\_ILF\_STACKING\_TYPE\_POA5, ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_PLY1, ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_POS1, ABILITY\_ILF\_MOVEMENT\_UPDATE\_FREQUENCY\_PRG1, ABILITY\_ILF\_ATTACK\_UPDATE\_FREQUENCY\_PRG2, ABILITY\_ILF\_MANA\_LOSS\_PRG6, ABILITY\_ILF\_UNITS\_SUMMONED\_TYPE\_ONE, ABILITY\_ILF\_UNITS\_SUMMONED\_TYPE\_TWO, ABILITY\_ILF\_MAX\_UNITS\_SUMMONED, ABILITY\_ILF\_ALLOW\_WHEN\_FULL\_REJ3, ABILITY\_ILF\_MAXIMUM\_UNITS\_CHARGED\_TO\_CASTER, ABILITY\_ILF\_MAXIMUM\_UNITS\_AFFECTED, ABILITY\_ILF\_DEFENSE\_INCREASE\_ROA2, ABILITY\_ILF\_MAX\_UNITS\_ROA7, ABILITY\_ILF\_ROOTED\_WEAPONS, ABILITY\_ILF\_UPROOTED\_WEAPONS, ABILITY\_ILF\_UPROOTED\_DEFENSE\_TYPE, ABILITY\_ILF\_ACCUMULATION\_STEP, ABILITY\_ILF\_NUMBER\_OF\_OWLS, ABILITY\_ILF\_STACKING\_TYPE\_SPO4, ABILITY\_ILF\_NUMBER\_OF\_UNITS, ABILITY\_ILF\_SPIDER\_CAPACITY, ABILITY\_ILF\_INTERVALS\_BEFORE\_CHANGING\_TREES, ABILITY\_ILF\_AGILITY\_BONUS, ABILITY\_ILF\_INTELLIGENCE\_BONUS, ABILITY\_ILF\_STRENGTH\_BONUS\_ISTR, ABILITY\_ILF\_ATTACK\_BONUS, ABILITY\_ILF\_DEFENSE\_BONUS\_IDEF, ABILITY\_ILF\_SUMMON\_1\_AMOUNT, ABILITY\_ILF\_SUMMON\_2\_AMOUNT, ABILITY\_ILF\_EXPERIENCE\_GAINED, ABILITY\_ILF\_HIT\_POINTS\_GAINED\_IHPG, ABILITY\_ILF\_MANA\_POINTS\_GAINED\_IMPG, ABILITY\_ILF\_HIT\_POINTS\_GAINED\_IHP2, ABILITY\_ILF\_MANA\_POINTS\_GAINED\_IMP2, ABILITY\_ILF\_DAMAGE\_BONUS\_DICE, ABILITY\_ILF\_ARMOR\_PENALTY\_IARP, ABILITY\_ILF\_ENABLED\_ATTACK\_INDEX\_IOB5, ABILITY\_ILF\_LEVELS\_GAINED, ABILITY\_ILF\_MAX\_LIFE\_GAINED, ABILITY\_ILF\_MAX\_MANA\_GAINED, ABILITY\_ILF\_GOLD\_GIVEN, ABILITY\_ILF\_LUMBER\_GIVEN, ABILITY\_ILF\_DETECTION\_TYPE\_IFA1, ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_ICRE, ABILITY\_ILF\_MOVEMENT\_SPEED\_BONUS, ABILITY\_ILF\_HIT\_POINTS\_REGENERATED\_PER\_SECOND, ABILITY\_ILF\_SIGHT\_RANGE\_BONUS, ABILITY\_ILF\_DAMAGE\_PER\_DURATION, ABILITY\_ILF\_MANA\_USED\_PER\_SECOND, ABILITY\_ILF\_EXTRA\_MANA\_REQUIRED, ABILITY\_ILF\_DETECTION\_RADIUS\_IDET, ABILITY\_ILF\_MANA\_LOSS\_PER\_UNIT\_IDIM, ABILITY\_ILF\_DAMAGE\_TO\_SUMMONED\_UNITS\_IDID, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_UNITS\_IREC, ABILITY\_ILF\_DELAY\_AFTER\_DEATH\_SECONDS, ABILITY\_ILF\_RESTORED\_LIFE, ABILITY\_ILF\_RESTORED\_MANA\_\_1\_FOR\_CURRENT, ABILITY\_ILF\_HIT\_POINTS\_RESTORED, ABILITY\_ILF\_MANA\_POINTS\_RESTORED, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_UNITS\_ITPM, ABILITY\_ILF\_NUMBER\_OF\_CORPSES\_RAISED\_CAD1, ABILITY\_ILF\_TERRAIN\_DEFORMATION\_DURATION\_MS, ABILITY\_ILF\_MAXIMUM\_UNITS, ABILITY\_ILF\_DETECTION\_TYPE\_DET1, ABILITY\_ILF\_GOLD\_COST\_PER\_STRUCTURE, ABILITY\_ILF\_LUMBER\_COST\_PER\_USE, ABILITY\_ILF\_DETECTION\_TYPE\_NSP3, ABILITY\_ILF\_NUMBER\_OF\_SWARM\_UNITS, ABILITY\_ILF\_MAX\_SWARM\_UNITS\_PER\_TARGET, ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_NBA2, ABILITY\_ILF\_MAXIMUM\_CREEP\_LEVEL\_NCH1, ABILITY\_ILF\_ATTACKS\_PREVENTED, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_TARGETS\_EFK3, ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_ESV1, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_CORPSES\_EXH1, ABILITY\_ILF\_ITEM\_CAPACITY, ABILITY\_ILF\_MAXIMUM\_NUMBER\_OF\_TARGETS\_SPL2, ABILITY\_ILF\_ALLOW\_WHEN\_FULL\_IRL3, ABILITY\_ILF\_MAXIMUM\_DISPELLED\_UNITS, ABILITY\_ILF\_NUMBER\_OF\_LURES, ABILITY\_ILF\_NEW\_TIME\_OF\_DAY\_HOUR, ABILITY\_ILF\_NEW\_TIME\_OF\_DAY\_MINUTE, ABILITY\_ILF\_NUMBER\_OF\_UNITS\_CREATED\_MEC1, ABILITY\_ILF\_MINIMUM\_SPELLS, ABILITY\_ILF\_MAXIMUM\_SPELLS, ABILITY\_ILF\_DISABLED\_ATTACK\_INDEX, ABILITY\_ILF\_ENABLED\_ATTACK\_INDEX\_GRA4, ABILITY\_ILF\_MAXIMUM\_ATTACKS, ABILITY\_ILF\_BUILDING\_TYPES\_ALLOWED\_NPR1, ABILITY\_ILF\_BUILDING\_TYPES\_ALLOWED\_NSA1, ABILITY\_ILF\_ATTACK\_MODIFICATION, ABILITY\_ILF\_SUMMONED\_UNIT\_COUNT\_NPA5, ABILITY\_ILF\_UPGRADE\_LEVELS, ABILITY\_ILF\_NUMBER\_OF\_SUMMONED\_UNITS\_NDO2, ABILITY\_ILF\_BEASTS\_PER\_SECOND, ABILITY\_ILF\_TARGET\_TYPE, ABILITY\_ILF\_OPTIONS, ABILITY\_ILF\_ARMOR\_PENALTY\_NAB3, ABILITY\_ILF\_WAVE\_COUNT\_NHS6, ABILITY\_ILF\_MAX\_CREEP\_LEVEL\_NTM3, ABILITY\_ILF\_MISSILE\_COUNT, ABILITY\_ILF\_SPLIT\_ATTACK\_COUNT, ABILITY\_ILF\_GENERATION\_COUNT, ABILITY\_ILF\_ROCK\_RING\_COUNT, ABILITY\_ILF\_WAVE\_COUNT\_NVC2, ABILITY\_ILF\_PREFER\_HOSTILES\_TAU1, ABILITY\_ILF\_PREFER\_FRIENDLIES\_TAU2, ABILITY\_ILF\_MAX\_UNITS\_TAU3, ABILITY\_ILF\_NUMBER\_OF\_PULSES, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_HWE1, ABILITY\_ILF\_SUMMONED\_UNIT\_UIN4, ABILITY\_ILF\_SUMMONED\_UNIT\_OSF1, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_EFNU, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_NBAU, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_NTOU, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_ESVU, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPES, ABILITY\_ILF\_SUMMONED\_UNIT\_TYPE\_NDOU, ABILITY\_ILF\_ALTERNATE\_FORM\_UNIT\_EMEU, ABILITY\_ILF\_PLAGUE\_WARD\_UNIT\_TYPE, ABILITY\_ILF\_ALLOWED\_UNIT\_TYPE\_BTL1, ABILITY\_ILF\_NEW\_UNIT\_TYPE, ABILITY\_ILF\_RESULTING\_UNIT\_TYPE\_ENT1, ABILITY\_ILF\_CORPSE\_UNIT\_TYPE, ABILITY\_ILF\_ALLOWED\_UNIT\_TYPE\_LOA1, ABILITY\_ILF\_UNIT\_TYPE\_FOR\_LIMIT\_CHECK, ABILITY\_ILF\_WARD\_UNIT\_TYPE\_STAU, ABILITY\_ILF\_EFFECT\_ABILITY, ABILITY\_ILF\_CONVERSION\_UNIT, ABILITY\_ILF\_UNIT\_TO\_PRESERVE, ABILITY\_ILF\_UNIT\_TYPE\_ALLOWED, ABILITY\_ILF\_SWARM\_UNIT\_TYPE, ABILITY\_ILF\_RESULTING\_UNIT\_TYPE\_COAU, ABILITY\_ILF\_UNIT\_TYPE\_EXHU, ABILITY\_ILF\_WARD\_UNIT\_TYPE\_HWDU, ABILITY\_ILF\_LURE\_UNIT\_TYPE, ABILITY\_ILF\_UNIT\_TYPE\_IPMU, ABILITY\_ILF\_FACTORY\_UNIT\_ID, ABILITY\_ILF\_SPAWN\_UNIT\_ID\_NFYU, ABILITY\_ILF\_DESTRUCTIBLE\_ID, ABILITY\_ILF\_UPGRADE\_TYPE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAbilityRealLevelField`
 
@@ -2490,7 +2490,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_RLF\_CASTING\_TIME, ABILITY\_RLF\_DURATION\_NORMAL, ABILITY\_RLF\_DURATION\_HERO, ABILITY\_RLF\_COOLDOWN, ABILITY\_RLF\_AREA\_OF\_EFFECT, ABILITY\_RLF\_CAST\_RANGE, ABILITY\_RLF\_DAMAGE\_HBZ2, ABILITY\_RLF\_BUILDING\_REDUCTION\_HBZ4, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_HBZ5, ABILITY\_RLF\_MAXIMUM\_DAMAGE\_PER\_WAVE, ABILITY\_RLF\_MANA\_REGENERATION\_INCREASE, ABILITY\_RLF\_CASTING\_DELAY, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_OWW1, ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_OWW2, ABILITY\_RLF\_CHANCE\_TO\_CRITICAL\_STRIKE, ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_OCR2, ABILITY\_RLF\_DAMAGE\_BONUS\_OCR3, ABILITY\_RLF\_CHANCE\_TO\_EVADE\_OCR4, ABILITY\_RLF\_DAMAGE\_DEALT\_PERCENT\_OMI2, ABILITY\_RLF\_DAMAGE\_TAKEN\_PERCENT\_OMI3, ABILITY\_RLF\_ANIMATION\_DELAY, ABILITY\_RLF\_TRANSITION\_TIME, ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_PERCENT\_OWK2, ABILITY\_RLF\_BACKSTAB\_DAMAGE, ABILITY\_RLF\_AMOUNT\_HEALED\_DAMAGED\_UDC1, ABILITY\_RLF\_LIFE\_CONVERTED\_TO\_MANA, ABILITY\_RLF\_LIFE\_CONVERTED\_TO\_LIFE, ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_PERCENT\_UAU1, ABILITY\_RLF\_LIFE\_REGENERATION\_INCREASE\_PERCENT, ABILITY\_RLF\_CHANCE\_TO\_EVADE\_EEV1, ABILITY\_RLF\_DAMAGE\_PER\_INTERVAL, ABILITY\_RLF\_MANA\_DRAINED\_PER\_SECOND\_EIM2, ABILITY\_RLF\_BUFFER\_MANA\_REQUIRED, ABILITY\_RLF\_MAX\_MANA\_DRAINED, ABILITY\_RLF\_BOLT\_DELAY, ABILITY\_RLF\_BOLT\_LIFETIME, ABILITY\_RLF\_ALTITUDE\_ADJUSTMENT\_DURATION, ABILITY\_RLF\_LANDING\_DELAY\_TIME, ABILITY\_RLF\_ALTERNATE\_FORM\_HIT\_POINT\_BONUS, ABILITY\_RLF\_MOVE\_SPEED\_BONUS\_INFO\_PANEL\_ONLY, ABILITY\_RLF\_ATTACK\_SPEED\_BONUS\_INFO\_PANEL\_ONLY, ABILITY\_RLF\_LIFE\_REGENERATION\_RATE\_PER\_SECOND, ABILITY\_RLF\_STUN\_DURATION\_USL1, ABILITY\_RLF\_ATTACK\_DAMAGE\_STOLEN\_PERCENT, ABILITY\_RLF\_DAMAGE\_UCS1, ABILITY\_RLF\_MAX\_DAMAGE\_UCS2, ABILITY\_RLF\_DISTANCE\_UCS3, ABILITY\_RLF\_FINAL\_AREA\_UCS4, ABILITY\_RLF\_DAMAGE\_UIN1, ABILITY\_RLF\_DURATION, ABILITY\_RLF\_IMPACT\_DELAY, ABILITY\_RLF\_DAMAGE\_PER\_TARGET\_OCL1, ABILITY\_RLF\_DAMAGE\_REDUCTION\_PER\_TARGET, ABILITY\_RLF\_EFFECT\_DELAY\_OEQ1, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_TO\_BUILDINGS, ABILITY\_RLF\_UNITS\_SLOWED\_PERCENT, ABILITY\_RLF\_FINAL\_AREA\_OEQ4, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_EER1, ABILITY\_RLF\_DAMAGE\_DEALT\_TO\_ATTACKERS, ABILITY\_RLF\_LIFE\_HEALED, ABILITY\_RLF\_HEAL\_INTERVAL, ABILITY\_RLF\_BUILDING\_REDUCTION\_ETQ3, ABILITY\_RLF\_INITIAL\_IMMUNITY\_DURATION, ABILITY\_RLF\_MAX\_LIFE\_DRAINED\_PER\_SECOND\_PERCENT, ABILITY\_RLF\_BUILDING\_REDUCTION\_UDD2, ABILITY\_RLF\_ARMOR\_DURATION, ABILITY\_RLF\_ARMOR\_BONUS\_UFA2, ABILITY\_RLF\_AREA\_OF\_EFFECT\_DAMAGE, ABILITY\_RLF\_SPECIFIC\_TARGET\_DAMAGE\_UFN2, ABILITY\_RLF\_DAMAGE\_BONUS\_HFA1, ABILITY\_RLF\_DAMAGE\_DEALT\_ESF1, ABILITY\_RLF\_DAMAGE\_INTERVAL\_ESF2, ABILITY\_RLF\_BUILDING\_REDUCTION\_ESF3, ABILITY\_RLF\_DAMAGE\_BONUS\_PERCENT, ABILITY\_RLF\_DEFENSE\_BONUS\_HAV1, ABILITY\_RLF\_HIT\_POINT\_BONUS, ABILITY\_RLF\_DAMAGE\_BONUS\_HAV3, ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_HAV4, ABILITY\_RLF\_CHANCE\_TO\_BASH, ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_HBH2, ABILITY\_RLF\_DAMAGE\_BONUS\_HBH3, ABILITY\_RLF\_CHANCE\_TO\_MISS\_HBH4, ABILITY\_RLF\_DAMAGE\_HTB1, ABILITY\_RLF\_AOE\_DAMAGE, ABILITY\_RLF\_SPECIFIC\_TARGET\_DAMAGE\_HTC2, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_HTC3, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_HTC4, ABILITY\_RLF\_ARMOR\_BONUS\_HAD1, ABILITY\_RLF\_AMOUNT\_HEALED\_DAMAGED\_HHB1, ABILITY\_RLF\_EXTRA\_DAMAGE\_HCA1, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_HCA2, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_HCA3, ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_PERCENT\_OAE1, ABILITY\_RLF\_ATTACK\_SPEED\_INCREASE\_PERCENT\_OAE2, ABILITY\_RLF\_REINCARNATION\_DELAY, ABILITY\_RLF\_DAMAGE\_OSH1, ABILITY\_RLF\_MAXIMUM\_DAMAGE\_OSH2, ABILITY\_RLF\_DISTANCE\_OSH3, ABILITY\_RLF\_FINAL\_AREA\_OSH4, ABILITY\_RLF\_GRAPHIC\_DELAY\_NFD1, ABILITY\_RLF\_GRAPHIC\_DURATION\_NFD2, ABILITY\_RLF\_DAMAGE\_NFD3, ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_AMS1, ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_AMS2, ABILITY\_RLF\_AURA\_DURATION, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_APL2, ABILITY\_RLF\_DURATION\_OF\_PLAGUE\_WARD, ABILITY\_RLF\_AMOUNT\_OF\_HIT\_POINTS\_REGENERATED, ABILITY\_RLF\_ATTACK\_DAMAGE\_INCREASE\_AKB1, ABILITY\_RLF\_MANA\_LOSS\_ADM1, ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_ADM2, ABILITY\_RLF\_EXPANSION\_AMOUNT, ABILITY\_RLF\_INTERVAL\_DURATION\_BGM2, ABILITY\_RLF\_RADIUS\_OF\_MINING\_RING, ABILITY\_RLF\_ATTACK\_SPEED\_INCREASE\_PERCENT\_BLO1, ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_PERCENT\_BLO2, ABILITY\_RLF\_SCALING\_FACTOR, ABILITY\_RLF\_HIT\_POINTS\_PER\_SECOND\_CAN1, ABILITY\_RLF\_MAX\_HIT\_POINTS, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_DEV2, ABILITY\_RLF\_MOVEMENT\_UPDATE\_FREQUENCY\_CHD1, ABILITY\_RLF\_ATTACK\_UPDATE\_FREQUENCY\_CHD2, ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_CHD3, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_CRI1, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_CRI2, ABILITY\_RLF\_DAMAGE\_REDUCTION\_CRI3, ABILITY\_RLF\_CHANCE\_TO\_MISS\_CRS, ABILITY\_RLF\_FULL\_DAMAGE\_RADIUS\_DDA1, ABILITY\_RLF\_FULL\_DAMAGE\_AMOUNT\_DDA2, ABILITY\_RLF\_PARTIAL\_DAMAGE\_RADIUS, ABILITY\_RLF\_PARTIAL\_DAMAGE\_AMOUNT, ABILITY\_RLF\_BUILDING\_DAMAGE\_FACTOR\_SDS1, ABILITY\_RLF\_MAX\_DAMAGE\_UCO5, ABILITY\_RLF\_MOVE\_SPEED\_BONUS\_UCO6, ABILITY\_RLF\_DAMAGE\_TAKEN\_PERCENT\_DEF1, ABILITY\_RLF\_DAMAGE\_DEALT\_PERCENT\_DEF2, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_DEF3, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_DEF4, ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_DEF5, ABILITY\_RLF\_CHANCE\_TO\_DEFLECT, ABILITY\_RLF\_DEFLECT\_DAMAGE\_TAKEN\_PIERCING, ABILITY\_RLF\_DEFLECT\_DAMAGE\_TAKEN\_SPELLS, ABILITY\_RLF\_RIP\_DELAY, ABILITY\_RLF\_EAT\_DELAY, ABILITY\_RLF\_HIT\_POINTS\_GAINED\_EAT3, ABILITY\_RLF\_AIR\_UNIT\_LOWER\_DURATION, ABILITY\_RLF\_AIR\_UNIT\_HEIGHT, ABILITY\_RLF\_MELEE\_ATTACK\_RANGE, ABILITY\_RLF\_INTERVAL\_DURATION\_EGM2, ABILITY\_RLF\_EFFECT\_DELAY\_FLA2, ABILITY\_RLF\_MINING\_DURATION, ABILITY\_RLF\_RADIUS\_OF\_GRAVESTONES, ABILITY\_RLF\_RADIUS\_OF\_CORPSES, ABILITY\_RLF\_HIT\_POINTS\_GAINED\_HEA1, ABILITY\_RLF\_DAMAGE\_INCREASE\_PERCENT\_INF1, ABILITY\_RLF\_AUTOCAST\_RANGE, ABILITY\_RLF\_LIFE\_REGEN\_RATE, ABILITY\_RLF\_GRAPHIC\_DELAY\_LIT1, ABILITY\_RLF\_GRAPHIC\_DURATION\_LIT2, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_LSH1, ABILITY\_RLF\_MANA\_GAINED, ABILITY\_RLF\_HIT\_POINTS\_GAINED\_MBT2, ABILITY\_RLF\_AUTOCAST\_REQUIREMENT, ABILITY\_RLF\_WATER\_HEIGHT, ABILITY\_RLF\_ACTIVATION\_DELAY\_MIN1, ABILITY\_RLF\_INVISIBILITY\_TRANSITION\_TIME, ABILITY\_RLF\_ACTIVATION\_RADIUS, ABILITY\_RLF\_AMOUNT\_REGENERATED, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_POI1, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_POI2, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_POI3, ABILITY\_RLF\_EXTRA\_DAMAGE\_POA1, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_POA2, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_POA3, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_POA4, ABILITY\_RLF\_DAMAGE\_AMPLIFICATION, ABILITY\_RLF\_CHANCE\_TO\_STOMP\_PERCENT, ABILITY\_RLF\_DAMAGE\_DEALT\_WAR2, ABILITY\_RLF\_FULL\_DAMAGE\_RADIUS\_WAR3, ABILITY\_RLF\_HALF\_DAMAGE\_RADIUS\_WAR4, ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_PRG3, ABILITY\_RLF\_UNIT\_PAUSE\_DURATION, ABILITY\_RLF\_HERO\_PAUSE\_DURATION, ABILITY\_RLF\_HIT\_POINTS\_GAINED\_REJ1, ABILITY\_RLF\_MANA\_POINTS\_GAINED\_REJ2, ABILITY\_RLF\_MINIMUM\_LIFE\_REQUIRED, ABILITY\_RLF\_MINIMUM\_MANA\_REQUIRED, ABILITY\_RLF\_REPAIR\_COST\_RATIO, ABILITY\_RLF\_REPAIR\_TIME\_RATIO, ABILITY\_RLF\_POWERBUILD\_COST, ABILITY\_RLF\_POWERBUILD\_RATE, ABILITY\_RLF\_NAVAL\_RANGE\_BONUS, ABILITY\_RLF\_DAMAGE\_INCREASE\_PERCENT\_ROA1, ABILITY\_RLF\_LIFE\_REGENERATION\_RATE, ABILITY\_RLF\_MANA\_REGEN, ABILITY\_RLF\_DAMAGE\_INCREASE, ABILITY\_RLF\_SALVAGE\_COST\_RATIO, ABILITY\_RLF\_IN\_FLIGHT\_SIGHT\_RADIUS, ABILITY\_RLF\_HOVERING\_SIGHT\_RADIUS, ABILITY\_RLF\_HOVERING\_HEIGHT, ABILITY\_RLF\_DURATION\_OF\_OWLS, ABILITY\_RLF\_FADE\_DURATION, ABILITY\_RLF\_DAY\_NIGHT\_DURATION, ABILITY\_RLF\_ACTION\_DURATION, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_SLO1, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_SLO2, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_SPO1, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_SPO2, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_SPO3, ABILITY\_RLF\_ACTIVATION\_DELAY\_STA1, ABILITY\_RLF\_DETECTION\_RADIUS\_STA2, ABILITY\_RLF\_DETONATION\_RADIUS, ABILITY\_RLF\_STUN\_DURATION\_STA4, ABILITY\_RLF\_ATTACK\_SPEED\_BONUS\_PERCENT, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_UHF2, ABILITY\_RLF\_LUMBER\_PER\_INTERVAL, ABILITY\_RLF\_ART\_ATTACHMENT\_HEIGHT, ABILITY\_RLF\_TELEPORT\_AREA\_WIDTH, ABILITY\_RLF\_TELEPORT\_AREA\_HEIGHT, ABILITY\_RLF\_LIFE\_STOLEN\_PER\_ATTACK, ABILITY\_RLF\_DAMAGE\_BONUS\_IDAM, ABILITY\_RLF\_CHANCE\_TO\_HIT\_UNITS\_PERCENT, ABILITY\_RLF\_CHANCE\_TO\_HIT\_HEROS\_PERCENT, ABILITY\_RLF\_CHANCE\_TO\_HIT\_SUMMONS\_PERCENT, ABILITY\_RLF\_DELAY\_FOR\_TARGET\_EFFECT, ABILITY\_RLF\_DAMAGE\_DEALT\_PERCENT\_OF\_NORMAL, ABILITY\_RLF\_DAMAGE\_RECEIVED\_MULTIPLIER, ABILITY\_RLF\_MANA\_REGENERATION\_BONUS\_AS\_FRACTION\_OF\_NORMAL, ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_ISPI, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_IDPS, ABILITY\_RLF\_ATTACK\_DAMAGE\_INCREASE\_CAC1, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_COR1, ABILITY\_RLF\_ATTACK\_SPEED\_INCREASE\_ISX1, ABILITY\_RLF\_DAMAGE\_WRS1, ABILITY\_RLF\_TERRAIN\_DEFORMATION\_AMPLITUDE, ABILITY\_RLF\_DAMAGE\_CTC1, ABILITY\_RLF\_EXTRA\_DAMAGE\_TO\_TARGET, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_CTC3, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_CTC4, ABILITY\_RLF\_DAMAGE\_CTB1, ABILITY\_RLF\_CASTING\_DELAY\_SECONDS, ABILITY\_RLF\_MANA\_LOSS\_PER\_UNIT\_DTN1, ABILITY\_RLF\_DAMAGE\_TO\_SUMMONED\_UNITS\_DTN2, ABILITY\_RLF\_TRANSITION\_TIME\_SECONDS, ABILITY\_RLF\_MANA\_DRAINED\_PER\_SECOND\_NMR1, ABILITY\_RLF\_CHANCE\_TO\_REDUCE\_DAMAGE\_PERCENT, ABILITY\_RLF\_MINIMUM\_DAMAGE, ABILITY\_RLF\_IGNORED\_DAMAGE, ABILITY\_RLF\_FULL\_DAMAGE\_DEALT, ABILITY\_RLF\_FULL\_DAMAGE\_INTERVAL, ABILITY\_RLF\_HALF\_DAMAGE\_DEALT, ABILITY\_RLF\_HALF\_DAMAGE\_INTERVAL, ABILITY\_RLF\_BUILDING\_REDUCTION\_HFS5, ABILITY\_RLF\_MAXIMUM\_DAMAGE\_HFS6, ABILITY\_RLF\_MANA\_PER\_HIT\_POINT, ABILITY\_RLF\_DAMAGE\_ABSORBED\_PERCENT, ABILITY\_RLF\_WAVE\_DISTANCE, ABILITY\_RLF\_WAVE\_TIME\_SECONDS, ABILITY\_RLF\_DAMAGE\_DEALT\_UIM3, ABILITY\_RLF\_AIR\_TIME\_SECONDS\_UIM4, ABILITY\_RLF\_UNIT\_RELEASE\_INTERVAL\_SECONDS, ABILITY\_RLF\_DAMAGE\_RETURN\_FACTOR, ABILITY\_RLF\_DAMAGE\_RETURN\_THRESHOLD, ABILITY\_RLF\_RETURNED\_DAMAGE\_FACTOR, ABILITY\_RLF\_RECEIVED\_DAMAGE\_FACTOR, ABILITY\_RLF\_DEFENSE\_BONUS\_UTS3, ABILITY\_RLF\_DAMAGE\_BONUS\_NBA1, ABILITY\_RLF\_SUMMONED\_UNIT\_DURATION\_SECONDS\_NBA3, ABILITY\_RLF\_MANA\_PER\_SUMMONED\_HITPOINT, ABILITY\_RLF\_CHARGE\_FOR\_CURRENT\_LIFE, ABILITY\_RLF\_HIT\_POINTS\_DRAINED, ABILITY\_RLF\_MANA\_POINTS\_DRAINED, ABILITY\_RLF\_DRAIN\_INTERVAL\_SECONDS, ABILITY\_RLF\_LIFE\_TRANSFERRED\_PER\_SECOND, ABILITY\_RLF\_MANA\_TRANSFERRED\_PER\_SECOND, ABILITY\_RLF\_BONUS\_LIFE\_FACTOR, ABILITY\_RLF\_BONUS\_LIFE\_DECAY, ABILITY\_RLF\_BONUS\_MANA\_FACTOR, ABILITY\_RLF\_BONUS\_MANA\_DECAY, ABILITY\_RLF\_CHANCE\_TO\_MISS\_PERCENT, ABILITY\_RLF\_MOVEMENT\_SPEED\_MODIFIER, ABILITY\_RLF\_ATTACK\_SPEED\_MODIFIER, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_TDG1, ABILITY\_RLF\_MEDIUM\_DAMAGE\_RADIUS\_TDG2, ABILITY\_RLF\_MEDIUM\_DAMAGE\_PER\_SECOND, ABILITY\_RLF\_SMALL\_DAMAGE\_RADIUS\_TDG4, ABILITY\_RLF\_SMALL\_DAMAGE\_PER\_SECOND, ABILITY\_RLF\_AIR\_TIME\_SECONDS\_TSP1, ABILITY\_RLF\_MINIMUM\_HIT\_INTERVAL\_SECONDS, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_NBF5, ABILITY\_RLF\_MAXIMUM\_RANGE, ABILITY\_RLF\_MINIMUM\_RANGE, ABILITY\_RLF\_DAMAGE\_PER\_TARGET\_EFK1, ABILITY\_RLF\_MAXIMUM\_TOTAL\_DAMAGE, ABILITY\_RLF\_MAXIMUM\_SPEED\_ADJUSTMENT, ABILITY\_RLF\_DECAYING\_DAMAGE, ABILITY\_RLF\_MOVEMENT\_SPEED\_FACTOR\_ESH2, ABILITY\_RLF\_ATTACK\_SPEED\_FACTOR\_ESH3, ABILITY\_RLF\_DECAY\_POWER, ABILITY\_RLF\_INITIAL\_DAMAGE\_ESH5, ABILITY\_RLF\_MAXIMUM\_LIFE\_ABSORBED, ABILITY\_RLF\_MAXIMUM\_MANA\_ABSORBED, ABILITY\_RLF\_MOVEMENT\_SPEED\_INCREASE\_BSK1, ABILITY\_RLF\_ATTACK\_SPEED\_INCREASE\_BSK2, ABILITY\_RLF\_DAMAGE\_TAKEN\_INCREASE, ABILITY\_RLF\_LIFE\_PER\_UNIT, ABILITY\_RLF\_MANA\_PER\_UNIT, ABILITY\_RLF\_LIFE\_PER\_BUFF, ABILITY\_RLF\_MANA\_PER\_BUFF, ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_DVM5, ABILITY\_RLF\_DAMAGE\_BONUS\_FAK1, ABILITY\_RLF\_MEDIUM\_DAMAGE\_FACTOR\_FAK2, ABILITY\_RLF\_SMALL\_DAMAGE\_FACTOR\_FAK3, ABILITY\_RLF\_FULL\_DAMAGE\_RADIUS\_FAK4, ABILITY\_RLF\_HALF\_DAMAGE\_RADIUS\_FAK5, ABILITY\_RLF\_EXTRA\_DAMAGE\_PER\_SECOND, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_LIQ2, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_LIQ3, ABILITY\_RLF\_MAGIC\_DAMAGE\_FACTOR, ABILITY\_RLF\_UNIT\_DAMAGE\_PER\_MANA\_POINT, ABILITY\_RLF\_HERO\_DAMAGE\_PER\_MANA\_POINT, ABILITY\_RLF\_UNIT\_MAXIMUM\_DAMAGE, ABILITY\_RLF\_HERO\_MAXIMUM\_DAMAGE, ABILITY\_RLF\_DAMAGE\_COOLDOWN, ABILITY\_RLF\_DISTRIBUTED\_DAMAGE\_FACTOR\_SPL1, ABILITY\_RLF\_LIFE\_REGENERATED, ABILITY\_RLF\_MANA\_REGENERATED, ABILITY\_RLF\_MANA\_LOSS\_PER\_UNIT\_IDC1, ABILITY\_RLF\_SUMMONED\_UNIT\_DAMAGE\_IDC2, ABILITY\_RLF\_ACTIVATION\_DELAY\_IMO2, ABILITY\_RLF\_LURE\_INTERVAL\_SECONDS, ABILITY\_RLF\_DAMAGE\_BONUS\_ISR1, ABILITY\_RLF\_DAMAGE\_REDUCTION\_ISR2, ABILITY\_RLF\_DAMAGE\_BONUS\_IPV1, ABILITY\_RLF\_LIFE\_STEAL\_AMOUNT, ABILITY\_RLF\_LIFE\_RESTORED\_FACTOR, ABILITY\_RLF\_MANA\_RESTORED\_FACTOR, ABILITY\_RLF\_ATTACH\_DELAY, ABILITY\_RLF\_REMOVE\_DELAY, ABILITY\_RLF\_HERO\_REGENERATION\_DELAY, ABILITY\_RLF\_UNIT\_REGENERATION\_DELAY, ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_NSA4, ABILITY\_RLF\_HIT\_POINTS\_PER\_SECOND\_NSA5, ABILITY\_RLF\_DAMAGE\_TO\_SUMMONED\_UNITS\_IXS1, ABILITY\_RLF\_MAGIC\_DAMAGE\_REDUCTION\_IXS2, ABILITY\_RLF\_SUMMONED\_UNIT\_DURATION, ABILITY\_RLF\_SHIELD\_COOLDOWN\_TIME, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_NDO1, ABILITY\_RLF\_SUMMONED\_UNIT\_DURATION\_SECONDS\_NDO3, ABILITY\_RLF\_MEDIUM\_DAMAGE\_RADIUS\_FLK1, ABILITY\_RLF\_SMALL\_DAMAGE\_RADIUS\_FLK2, ABILITY\_RLF\_FULL\_DAMAGE\_AMOUNT\_FLK3, ABILITY\_RLF\_MEDIUM\_DAMAGE\_AMOUNT, ABILITY\_RLF\_SMALL\_DAMAGE\_AMOUNT, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_HBN1, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_HBN2, ABILITY\_RLF\_MAX\_MANA\_DRAINED\_UNITS, ABILITY\_RLF\_DAMAGE\_RATIO\_UNITS\_PERCENT, ABILITY\_RLF\_MAX\_MANA\_DRAINED\_HEROS, ABILITY\_RLF\_DAMAGE\_RATIO\_HEROS\_PERCENT, ABILITY\_RLF\_SUMMONED\_DAMAGE, ABILITY\_RLF\_DISTRIBUTED\_DAMAGE\_FACTOR\_NCA1, ABILITY\_RLF\_INITIAL\_DAMAGE\_PXF1, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_PXF2, ABILITY\_RLF\_DAMAGE\_PER\_SECOND\_MLS1, ABILITY\_RLF\_BEAST\_COLLISION\_RADIUS, ABILITY\_RLF\_DAMAGE\_AMOUNT\_NST3, ABILITY\_RLF\_DAMAGE\_RADIUS, ABILITY\_RLF\_DAMAGE\_DELAY, ABILITY\_RLF\_FOLLOW\_THROUGH\_TIME, ABILITY\_RLF\_ART\_DURATION, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_NAB1, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_NAB2, ABILITY\_RLF\_PRIMARY\_DAMAGE, ABILITY\_RLF\_SECONDARY\_DAMAGE, ABILITY\_RLF\_DAMAGE\_INTERVAL\_NAB6, ABILITY\_RLF\_GOLD\_COST\_FACTOR, ABILITY\_RLF\_LUMBER\_COST\_FACTOR, ABILITY\_RLF\_MOVE\_SPEED\_BONUS\_NEG1, ABILITY\_RLF\_DAMAGE\_BONUS\_NEG2, ABILITY\_RLF\_DAMAGE\_AMOUNT\_NCS1, ABILITY\_RLF\_DAMAGE\_INTERVAL\_NCS2, ABILITY\_RLF\_MAX\_DAMAGE\_NCS4, ABILITY\_RLF\_BUILDING\_DAMAGE\_FACTOR\_NCS5, ABILITY\_RLF\_EFFECT\_DURATION, ABILITY\_RLF\_SPAWN\_INTERVAL\_NSY1, ABILITY\_RLF\_SPAWN\_UNIT\_DURATION, ABILITY\_RLF\_SPAWN\_UNIT\_OFFSET, ABILITY\_RLF\_LEASH\_RANGE\_NSY5, ABILITY\_RLF\_SPAWN\_INTERVAL\_NFY1, ABILITY\_RLF\_LEASH\_RANGE\_NFY2, ABILITY\_RLF\_CHANCE\_TO\_DEMOLISH, ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_BUILDINGS, ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_UNITS, ABILITY\_RLF\_DAMAGE\_MULTIPLIER\_HEROES, ABILITY\_RLF\_BONUS\_DAMAGE\_MULTIPLIER, ABILITY\_RLF\_DEATH\_DAMAGE\_FULL\_AMOUNT, ABILITY\_RLF\_DEATH\_DAMAGE\_FULL\_AREA, ABILITY\_RLF\_DEATH\_DAMAGE\_HALF\_AMOUNT, ABILITY\_RLF\_DEATH\_DAMAGE\_HALF\_AREA, ABILITY\_RLF\_DEATH\_DAMAGE\_DELAY, ABILITY\_RLF\_DAMAGE\_AMOUNT\_NSO1, ABILITY\_RLF\_DAMAGE\_PERIOD, ABILITY\_RLF\_DAMAGE\_PENALTY, ABILITY\_RLF\_MOVEMENT\_SPEED\_REDUCTION\_PERCENT\_NSO4, ABILITY\_RLF\_ATTACK\_SPEED\_REDUCTION\_PERCENT\_NSO5, ABILITY\_RLF\_SPLIT\_DELAY, ABILITY\_RLF\_MAX\_HITPOINT\_FACTOR, ABILITY\_RLF\_LIFE\_DURATION\_SPLIT\_BONUS, ABILITY\_RLF\_WAVE\_INTERVAL, ABILITY\_RLF\_BUILDING\_DAMAGE\_FACTOR\_NVC4, ABILITY\_RLF\_FULL\_DAMAGE\_AMOUNT\_NVC5, ABILITY\_RLF\_HALF\_DAMAGE\_FACTOR, ABILITY\_RLF\_INTERVAL\_BETWEEN\_PULSES, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAbilityBooleanLevelField`
 
@@ -2569,7 +2569,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_BLF\_PERCENT\_BONUS\_HAB2, ABILITY\_BLF\_USE\_TELEPORT\_CLUSTERING\_HMT3, ABILITY\_BLF\_NEVER\_MISS\_OCR5, ABILITY\_BLF\_EXCLUDE\_ITEM\_DAMAGE, ABILITY\_BLF\_BACKSTAB\_DAMAGE, ABILITY\_BLF\_INHERIT\_UPGRADES\_UAN3, ABILITY\_BLF\_MANA\_CONVERSION\_AS\_PERCENT, ABILITY\_BLF\_LIFE\_CONVERSION\_AS\_PERCENT, ABILITY\_BLF\_LEAVE\_TARGET\_ALIVE, ABILITY\_BLF\_PERCENT\_BONUS\_UAU3, ABILITY\_BLF\_DAMAGE\_IS\_PERCENT\_RECEIVED, ABILITY\_BLF\_MELEE\_BONUS, ABILITY\_BLF\_RANGED\_BONUS, ABILITY\_BLF\_FLAT\_BONUS, ABILITY\_BLF\_NEVER\_MISS\_HBH5, ABILITY\_BLF\_PERCENT\_BONUS\_HAD2, ABILITY\_BLF\_CAN\_DEACTIVATE, ABILITY\_BLF\_RAISED\_UNITS\_ARE\_INVULNERABLE, ABILITY\_BLF\_PERCENTAGE\_OAR2, ABILITY\_BLF\_SUMMON\_BUSY\_UNITS, ABILITY\_BLF\_CREATES\_BLIGHT, ABILITY\_BLF\_EXPLODES\_ON\_DEATH, ABILITY\_BLF\_ALWAYS\_AUTOCAST\_FAE2, ABILITY\_BLF\_REGENERATE\_ONLY\_AT\_NIGHT, ABILITY\_BLF\_SHOW\_SELECT\_UNIT\_BUTTON, ABILITY\_BLF\_SHOW\_UNIT\_INDICATOR, ABILITY\_BLF\_CHARGE\_OWNING\_PLAYER, ABILITY\_BLF\_PERCENTAGE\_ARM2, ABILITY\_BLF\_TARGET\_IS\_INVULNERABLE, ABILITY\_BLF\_TARGET\_IS\_MAGIC\_IMMUNE, ABILITY\_BLF\_KILL\_ON\_CASTER\_DEATH, ABILITY\_BLF\_NO\_TARGET\_REQUIRED\_REJ4, ABILITY\_BLF\_ACCEPTS\_GOLD, ABILITY\_BLF\_ACCEPTS\_LUMBER, ABILITY\_BLF\_PREFER\_HOSTILES\_ROA5, ABILITY\_BLF\_PREFER\_FRIENDLIES\_ROA6, ABILITY\_BLF\_ROOTED\_TURNING, ABILITY\_BLF\_ALWAYS\_AUTOCAST\_SLO3, ABILITY\_BLF\_HIDE\_BUTTON, ABILITY\_BLF\_USE\_TELEPORT\_CLUSTERING\_ITP2, ABILITY\_BLF\_IMMUNE\_TO\_MORPH\_EFFECTS, ABILITY\_BLF\_DOES\_NOT\_BLOCK\_BUILDINGS, ABILITY\_BLF\_AUTO\_ACQUIRE\_ATTACK\_TARGETS, ABILITY\_BLF\_IMMUNE\_TO\_MORPH\_EFFECTS\_GHO2, ABILITY\_BLF\_DO\_NOT\_BLOCK\_BUILDINGS, ABILITY\_BLF\_INCLUDE\_RANGED\_DAMAGE, ABILITY\_BLF\_INCLUDE\_MELEE\_DAMAGE, ABILITY\_BLF\_MOVE\_TO\_PARTNER, ABILITY\_BLF\_CAN\_BE\_DISPELLED, ABILITY\_BLF\_IGNORE\_FRIENDLY\_BUFFS, ABILITY\_BLF\_DROP\_ITEMS\_ON\_DEATH, ABILITY\_BLF\_CAN\_USE\_ITEMS, ABILITY\_BLF\_CAN\_GET\_ITEMS, ABILITY\_BLF\_CAN\_DROP\_ITEMS, ABILITY\_BLF\_REPAIRS\_ALLOWED, ABILITY\_BLF\_CASTER\_ONLY\_SPLASH, ABILITY\_BLF\_NO\_TARGET\_REQUIRED\_IRL4, ABILITY\_BLF\_DISPEL\_ON\_ATTACK, ABILITY\_BLF\_AMOUNT\_IS\_RAW\_VALUE, ABILITY\_BLF\_SHARED\_SPELL\_COOLDOWN, ABILITY\_BLF\_SLEEP\_ONCE, ABILITY\_BLF\_ALLOW\_ON\_ANY\_PLAYER\_SLOT, ABILITY\_BLF\_DISABLE\_OTHER\_ABILITIES, ABILITY\_BLF\_ALLOW\_BOUNTY, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAbilityStringLevelField`
 
@@ -2627,7 +2627,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ABILITY\_SLF\_ICON\_NORMAL, ABILITY\_SLF\_CASTER, ABILITY\_SLF\_TARGET, ABILITY\_SLF\_SPECIAL, ABILITY\_SLF\_EFFECT, ABILITY\_SLF\_AREA\_EFFECT, ABILITY\_SLF\_LIGHTNING\_EFFECTS, ABILITY\_SLF\_MISSILE\_ART, ABILITY\_SLF\_TOOLTIP\_LEARN, ABILITY\_SLF\_TOOLTIP\_LEARN\_EXTENDED, ABILITY\_SLF\_TOOLTIP\_NORMAL, ABILITY\_SLF\_TOOLTIP\_TURN\_OFF, ABILITY\_SLF\_TOOLTIP\_NORMAL\_EXTENDED, ABILITY\_SLF\_TOOLTIP\_TURN\_OFF\_EXTENDED, ABILITY\_SLF\_NORMAL\_FORM\_UNIT\_EME1, ABILITY\_SLF\_SPAWNED\_UNITS, ABILITY\_SLF\_ABILITY\_FOR\_UNIT\_CREATION, ABILITY\_SLF\_NORMAL\_FORM\_UNIT\_MIL1, ABILITY\_SLF\_ALTERNATE\_FORM\_UNIT\_MIL2, ABILITY\_SLF\_BASE\_ORDER\_ID\_ANS5, ABILITY\_SLF\_MORPH\_UNITS\_GROUND, ABILITY\_SLF\_MORPH\_UNITS\_AIR, ABILITY\_SLF\_MORPH\_UNITS\_AMPHIBIOUS, ABILITY\_SLF\_MORPH\_UNITS\_WATER, ABILITY\_SLF\_UNIT\_TYPE\_ONE, ABILITY\_SLF\_UNIT\_TYPE\_TWO, ABILITY\_SLF\_UNIT\_TYPE\_SOD2, ABILITY\_SLF\_SUMMON\_1\_UNIT\_TYPE, ABILITY\_SLF\_SUMMON\_2\_UNIT\_TYPE, ABILITY\_SLF\_RACE\_TO\_CONVERT, ABILITY\_SLF\_PARTNER\_UNIT\_TYPE, ABILITY\_SLF\_PARTNER\_UNIT\_TYPE\_ONE, ABILITY\_SLF\_PARTNER\_UNIT\_TYPE\_TWO, ABILITY\_SLF\_REQUIRED\_UNIT\_TYPE, ABILITY\_SLF\_CONVERTED\_UNIT\_TYPE, ABILITY\_SLF\_SPELL\_LIST, ABILITY\_SLF\_BASE\_ORDER\_ID\_SPB5, ABILITY\_SLF\_BASE\_ORDER\_ID\_NCL6, ABILITY\_SLF\_ABILITY\_UPGRADE\_1, ABILITY\_SLF\_ABILITY\_UPGRADE\_2, ABILITY\_SLF\_ABILITY\_UPGRADE\_3, ABILITY\_SLF\_ABILITY\_UPGRADE\_4, ABILITY\_SLF\_SPAWN\_UNIT\_ID\_NSY2, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAbilityIntegerLevelArrayField`
 
@@ -2642,7 +2642,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (0, 1, -1, 2147483647) on 3.0.0.24268; evidence, not proof. For 0, a handle of id 0.
+- Proposed `notes`: Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAbilityRealLevelArrayField`
 
@@ -2657,7 +2657,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (0, 1, -1, 2147483647) on 3.0.0.24268; evidence, not proof. For 0, a handle of id 0.
+- Proposed `notes`: Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAbilityBooleanLevelArrayField`
 
@@ -2672,7 +2672,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (0, 1, -1, 2147483647) on 3.0.0.24268; evidence, not proof. For 0, a handle of id 0.
+- Proposed `notes`: Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertAbilityStringLevelArrayField`
 
@@ -2687,7 +2687,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (0, 1, -1, 2147483647) on 3.0.0.24268; evidence, not proof. For 0, a handle of id 0.
+- Proposed `notes`: Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ## `nullability-converters-4`
 
@@ -2742,7 +2742,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_IF\_DEFENSE\_TYPE, UNIT\_IF\_ARMOR\_TYPE, UNIT\_IF\_LOOPING\_FADE\_IN\_RATE, UNIT\_IF\_LOOPING\_FADE\_OUT\_RATE, UNIT\_IF\_AGILITY, UNIT\_IF\_INTELLIGENCE, UNIT\_IF\_STRENGTH, UNIT\_IF\_AGILITY\_PERMANENT, UNIT\_IF\_INTELLIGENCE\_PERMANENT, UNIT\_IF\_STRENGTH\_PERMANENT, UNIT\_IF\_AGILITY\_WITH\_BONUS, UNIT\_IF\_INTELLIGENCE\_WITH\_BONUS, UNIT\_IF\_STRENGTH\_WITH\_BONUS, UNIT\_IF\_GOLD\_BOUNTY\_AWARDED\_NUMBER\_OF\_DICE, UNIT\_IF\_GOLD\_BOUNTY\_AWARDED\_BASE, UNIT\_IF\_GOLD\_BOUNTY\_AWARDED\_SIDES\_PER\_DIE, UNIT\_IF\_LUMBER\_BOUNTY\_AWARDED\_NUMBER\_OF\_DICE, UNIT\_IF\_LUMBER\_BOUNTY\_AWARDED\_BASE, UNIT\_IF\_LUMBER\_BOUNTY\_AWARDED\_SIDES\_PER\_DIE, UNIT\_IF\_LEVEL, UNIT\_IF\_FORMATION\_RANK, UNIT\_IF\_ORIENTATION\_INTERPOLATION, UNIT\_IF\_ELEVATION\_SAMPLE\_POINTS, UNIT\_IF\_TINTING\_COLOR\_RED, UNIT\_IF\_TINTING\_COLOR\_GREEN, UNIT\_IF\_TINTING\_COLOR\_BLUE, UNIT\_IF\_TINTING\_COLOR\_ALPHA, UNIT\_IF\_MOVE\_TYPE, UNIT\_IF\_TARGETED\_AS, UNIT\_IF\_UNIT\_CLASSIFICATION, UNIT\_IF\_HIT\_POINTS\_REGENERATION\_TYPE, UNIT\_IF\_PLACEMENT\_PREVENTED\_BY, UNIT\_IF\_PRIMARY\_ATTRIBUTE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertUnitRealField`
 
@@ -2790,7 +2790,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_RF\_STRENGTH\_PER\_LEVEL, UNIT\_RF\_AGILITY\_PER\_LEVEL, UNIT\_RF\_INTELLIGENCE\_PER\_LEVEL, UNIT\_RF\_HIT\_POINTS\_REGENERATION\_RATE, UNIT\_RF\_MANA\_REGENERATION, UNIT\_RF\_DEATH\_TIME, UNIT\_RF\_FLY\_HEIGHT, UNIT\_RF\_FLY\_MAX\_HEIGHT, UNIT\_RF\_TURN\_RATE, UNIT\_RF\_ELEVATION\_SAMPLE\_RADIUS, UNIT\_RF\_FOG\_OF\_WAR\_SAMPLE\_RADIUS, UNIT\_RF\_MAXIMUM\_PITCH\_ANGLE\_DEGREES, UNIT\_RF\_MAXIMUM\_ROLL\_ANGLE\_DEGREES, UNIT\_RF\_SCALING\_VALUE, UNIT\_RF\_ANIMATION\_RUN\_SPEED, UNIT\_RF\_SELECTION\_SCALE, UNIT\_RF\_SELECTION\_CIRCLE\_HEIGHT, UNIT\_RF\_SHADOW\_IMAGE\_HEIGHT, UNIT\_RF\_SHADOW\_IMAGE\_WIDTH, UNIT\_RF\_SHADOW\_IMAGE\_CENTER\_X, UNIT\_RF\_SHADOW\_IMAGE\_CENTER\_Y, UNIT\_RF\_ANIMATION\_WALK\_SPEED, UNIT\_RF\_DEFENSE, UNIT\_RF\_SIGHT\_RADIUS, UNIT\_RF\_PRIORITY, UNIT\_RF\_SPEED, UNIT\_RF\_OCCLUDER\_HEIGHT, UNIT\_RF\_HP, UNIT\_RF\_MANA, UNIT\_RF\_ACQUISITION\_RANGE, UNIT\_RF\_CAST\_BACK\_SWING, UNIT\_RF\_CAST\_POINT, UNIT\_RF\_MINIMUM\_ATTACK\_RANGE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertUnitBooleanField`
 
@@ -2819,7 +2819,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_BF\_RAISABLE, UNIT\_BF\_DECAYABLE, UNIT\_BF\_IS\_A\_BUILDING, UNIT\_BF\_USE\_EXTENDED\_LINE\_OF\_SIGHT, UNIT\_BF\_NEUTRAL\_BUILDING\_SHOWS\_MINIMAP\_ICON, UNIT\_BF\_HERO\_HIDE\_HERO\_INTERFACE\_ICON, UNIT\_BF\_HERO\_HIDE\_HERO\_MINIMAP\_DISPLAY, UNIT\_BF\_HERO\_HIDE\_HERO\_DEATH\_MESSAGE, UNIT\_BF\_HIDE\_MINIMAP\_DISPLAY, UNIT\_BF\_SCALE\_PROJECTILES, UNIT\_BF\_SELECTION\_CIRCLE\_ON\_WATER, UNIT\_BF\_HAS\_WATER\_SHADOW, UNIT\_BF\_SHOW\_AIR\_TO\_GROUND, UNIT\_BF\_FORCE\_DISPLAY\_HP, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertUnitStringField`
 
@@ -2838,7 +2838,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_SF\_NAME, UNIT\_SF\_PROPER\_NAMES, UNIT\_SF\_GROUND\_TEXTURE, UNIT\_SF\_SHADOW\_IMAGE\_UNIT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertUnitWeaponIntegerField`
 
@@ -2861,7 +2861,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_WEAPON\_IF\_ATTACK\_DAMAGE\_NUMBER\_OF\_DICE, UNIT\_WEAPON\_IF\_ATTACK\_DAMAGE\_BASE, UNIT\_WEAPON\_IF\_ATTACK\_DAMAGE\_SIDES\_PER\_DIE, UNIT\_WEAPON\_IF\_ATTACK\_MAXIMUM\_NUMBER\_OF\_TARGETS, UNIT\_WEAPON\_IF\_ATTACK\_ATTACK\_TYPE, UNIT\_WEAPON\_IF\_ATTACK\_WEAPON\_SOUND, UNIT\_WEAPON\_IF\_ATTACK\_AREA\_OF\_EFFECT\_TARGETS, UNIT\_WEAPON\_IF\_ATTACK\_TARGETS\_ALLOWED, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertUnitWeaponRealField`
 
@@ -2890,7 +2890,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_WEAPON\_RF\_ATTACK\_BACKSWING\_POINT, UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_POINT, UNIT\_WEAPON\_RF\_ATTACK\_BASE\_COOLDOWN, UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_LOSS\_FACTOR, UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_FACTOR\_MEDIUM, UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_FACTOR\_SMALL, UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_SPILL\_DISTANCE, UNIT\_WEAPON\_RF\_ATTACK\_DAMAGE\_SPILL\_RADIUS, UNIT\_WEAPON\_RF\_ATTACK\_PROJECTILE\_SPEED, UNIT\_WEAPON\_RF\_ATTACK\_PROJECTILE\_ARC, UNIT\_WEAPON\_RF\_ATTACK\_AREA\_OF\_EFFECT\_FULL\_DAMAGE, UNIT\_WEAPON\_RF\_ATTACK\_AREA\_OF\_EFFECT\_MEDIUM\_DAMAGE, UNIT\_WEAPON\_RF\_ATTACK\_AREA\_OF\_EFFECT\_SMALL\_DAMAGE, UNIT\_WEAPON\_RF\_ATTACK\_RANGE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertUnitWeaponBooleanField`
 
@@ -2908,7 +2908,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_WEAPON\_BF\_ATTACK\_SHOW\_UI, UNIT\_WEAPON\_BF\_ATTACKS\_ENABLED, UNIT\_WEAPON\_BF\_ATTACK\_PROJECTILE\_HOMING\_ENABLED, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertUnitWeaponStringField`
 
@@ -2924,7 +2924,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_WEAPON\_SF\_ATTACK\_PROJECTILE\_ART, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertItemIntegerField`
 
@@ -2950,7 +2950,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ITEM\_IF\_LEVEL, ITEM\_IF\_NUMBER\_OF\_CHARGES, ITEM\_IF\_COOLDOWN\_GROUP, ITEM\_IF\_MAX\_HIT\_POINTS, ITEM\_IF\_HIT\_POINTS, ITEM\_IF\_PRIORITY, ITEM\_IF\_ARMOR\_TYPE, ITEM\_IF\_TINTING\_COLOR\_RED, ITEM\_IF\_TINTING\_COLOR\_GREEN, ITEM\_IF\_TINTING\_COLOR\_BLUE, ITEM\_IF\_TINTING\_COLOR\_ALPHA, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertItemRealField`
 
@@ -2966,7 +2966,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ITEM\_RF\_SCALING\_VALUE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertItemBooleanField`
 
@@ -2988,7 +2988,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ITEM\_BF\_DROPPED\_WHEN\_CARRIER\_DIES, ITEM\_BF\_CAN\_BE\_DROPPED, ITEM\_BF\_PERISHABLE, ITEM\_BF\_INCLUDE\_AS\_RANDOM\_CHOICE, ITEM\_BF\_USE\_AUTOMATICALLY\_WHEN\_ACQUIRED, ITEM\_BF\_CAN\_BE\_SOLD\_TO\_MERCHANTS, ITEM\_BF\_ACTIVELY\_USED, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertItemStringField`
 
@@ -3004,7 +3004,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ITEM\_SF\_MODEL\_USED, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertMoveType`
 
@@ -3027,7 +3027,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (MOVE\_TYPE\_UNKNOWN, MOVE\_TYPE\_FOOT, MOVE\_TYPE\_FLY, MOVE\_TYPE\_HORSE, MOVE\_TYPE\_HOVER, MOVE\_TYPE\_FLOAT, MOVE\_TYPE\_AMPHIBIOUS, MOVE\_TYPE\_UNBUILDABLE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For MOVE\_TYPE\_UNKNOWN, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertTargetFlag`
 
@@ -3053,7 +3053,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (TARGET\_FLAG\_NONE, TARGET\_FLAG\_GROUND, TARGET\_FLAG\_AIR, TARGET\_FLAG\_STRUCTURE, TARGET\_FLAG\_WARD, TARGET\_FLAG\_ITEM, TARGET\_FLAG\_TREE, TARGET\_FLAG\_WALL, TARGET\_FLAG\_DEBRIS, TARGET\_FLAG\_DECORATION, TARGET\_FLAG\_BRIDGE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertArmorType`
 
@@ -3074,7 +3074,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ARMOR\_TYPE\_WHOKNOWS, ARMOR\_TYPE\_FLESH, ARMOR\_TYPE\_METAL, ARMOR\_TYPE\_WOOD, ARMOR\_TYPE\_ETHREAL, ARMOR\_TYPE\_STONE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For ARMOR\_TYPE\_WHOKNOWS, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertHeroAttribute`
 
@@ -3092,7 +3092,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (HERO\_ATTRIBUTE\_STR, HERO\_ATTRIBUTE\_INT, HERO\_ATTRIBUTE\_AGI, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertDefenseType`
 
@@ -3115,7 +3115,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (DEFENSE\_TYPE\_LIGHT, DEFENSE\_TYPE\_MEDIUM, DEFENSE\_TYPE\_LARGE, DEFENSE\_TYPE\_FORT, DEFENSE\_TYPE\_NORMAL, DEFENSE\_TYPE\_HERO, DEFENSE\_TYPE\_DIVINE, DEFENSE\_TYPE\_NONE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For DEFENSE\_TYPE\_LIGHT, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertRegenType`
 
@@ -3135,7 +3135,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (REGENERATION\_TYPE\_NONE, REGENERATION\_TYPE\_ALWAYS, REGENERATION\_TYPE\_BLIGHT, REGENERATION\_TYPE\_DAY, REGENERATION\_TYPE\_NIGHT, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For REGENERATION\_TYPE\_NONE, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertUnitCategory`
 
@@ -3162,7 +3162,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (UNIT\_CATEGORY\_GIANT, UNIT\_CATEGORY\_UNDEAD, UNIT\_CATEGORY\_SUMMONED, UNIT\_CATEGORY\_MECHANICAL, UNIT\_CATEGORY\_PEON, UNIT\_CATEGORY\_SAPPER, UNIT\_CATEGORY\_TOWNHALL, UNIT\_CATEGORY\_ANCIENT, UNIT\_CATEGORY\_NEUTRAL, UNIT\_CATEGORY\_WARD, UNIT\_CATEGORY\_STANDON, UNIT\_CATEGORY\_TAUREN, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertPathingFlag`
 
@@ -3185,7 +3185,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (PATHING\_FLAG\_UNWALKABLE, PATHING\_FLAG\_UNFLYABLE, PATHING\_FLAG\_UNBUILDABLE, PATHING\_FLAG\_UNPEONHARVEST, PATHING\_FLAG\_BLIGHTED, PATHING\_FLAG\_UNFLOATABLE, PATHING\_FLAG\_UNAMPHIBIOUS, PATHING\_FLAG\_UNITEMPLACABLE, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertFogStyle`
 
@@ -3206,7 +3206,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (FOG\_STYLE\_LINEAR, FOG\_STYLE\_EXP, FOG\_STYLE\_EXP2, FOG\_STYLE\_HEIGHT, FOG\_STYLE\_NEW\_EXP, FOG\_STYLE\_NEW\_EXP\_2, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For FOG\_STYLE\_LINEAR, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertEquipmentType`
 
@@ -3231,7 +3231,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (EQUIPMENT\_TYPE\_NONE, EQUIPMENT\_TYPE\_HEAD, EQUIPMENT\_TYPE\_CHEST, EQUIPMENT\_TYPE\_GLOVES, EQUIPMENT\_TYPE\_BOOTS, EQUIPMENT\_TYPE\_RING, EQUIPMENT\_TYPE\_PRIMARY, EQUIPMENT\_TYPE\_OFFHAND, EQUIPMENT\_TYPE\_TRINKET, EQUIPMENT\_TYPE\_ANY, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For EQUIPMENT\_TYPE\_NONE, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertItemTag`
 
@@ -3255,7 +3255,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (ITEMTAG\_TYPE\_UNDEFINED, ITEMTAG\_TYPE\_DROPPABLE, ITEMTAG\_TYPE\_QUESTREWARD, ITEMTAG\_TYPE\_BOSSDROP, ITEMTAG\_TYPE\_SECRET, ITEMTAG\_TYPE\_PUZZLE, ITEMTAG\_TYPE\_WORLD, ITEMTAG\_TYPE\_SHOP, ITEMTAG\_TYPE\_ANY, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For ITEMTAG\_TYPE\_UNDEFINED, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
 
 ### `ConvertLoadoutSlot`
 
@@ -3279,4 +3279,4 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: non-null (evidence, handle id 0)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (EQUIPMENT\_LOADOUT\_SLOT\_HEAD, EQUIPMENT\_LOADOUT\_SLOT\_CHEST, EQUIPMENT\_LOADOUT\_SLOT\_GLOVES, EQUIPMENT\_LOADOUT\_SLOT\_BOOTS, EQUIPMENT\_LOADOUT\_SLOT\_RING, EQUIPMENT\_LOADOUT\_SLOT\_RINGALT, EQUIPMENT\_LOADOUT\_SLOT\_PRIMARY, EQUIPMENT\_LOADOUT\_SLOT\_OFFHAND, EQUIPMENT\_LOADOUT\_SLOT\_TRINKET, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.24268; evidence, not proof. For EQUIPMENT\_LOADOUT\_SLOT\_HEAD, a handle of id 0.
+- Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.

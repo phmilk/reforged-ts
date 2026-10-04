@@ -26,6 +26,7 @@
     "probe:read": "pnpm --dir probe probe:read",
     "probe:nullability-report": "pnpm --dir probe probe:nullability-report",
     "probe:nullability-converters": "pnpm --dir probe probe:nullability-converters",
+    "probe:nullability-curate": "pnpm --dir probe probe:nullability-curate",
     "changeset": "changeset",
     "release:check-changeset": "pnpm --filter reforged-ts-release release:check-changeset",
     "release:check-patches": "pnpm --filter reforged-ts-release release:check-patches",

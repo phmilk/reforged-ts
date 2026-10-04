@@ -109,7 +109,7 @@ One run of a built Probe in the game, from start to end by the agent: the build 
 _Avoid_: session, execution, test run
 
 **Probe runner**:
-The private workspace package `probe/` and its commands: `probe:build` compiles a Probe into a map folder, `probe:run` runs it in the game end to end, `probe:read` reads its Result file and says how the Probe run ended, `probe:nullability-report` reports a Slice.
+The private workspace package `probe/` and its commands: `probe:build` compiles a Probe into a map folder, `probe:run` runs it in the game end to end, `probe:read` reads its Result file and says how the Probe run ended, `probe:nullability-report` reports a Slice, `probe:nullability-curate` applies a Slice's verdicts to the Overlay.
 _Avoid_: harness (the Lua test harness), launcher, probe map
 
 **Result file**:
@@ -117,7 +117,7 @@ The file a Probe run writes through `Preload` in the game's `CustomMapData` fold
 _Avoid_: log, output file, save file
 
 **Nullability sweep**:
-Measuring in the game the `returns.nullable` of the 394 handle-returning Natives, in Slices, each reported against the Overlay in `docs/research/nullability-sweep.md` by `pnpm probe:nullability-report <probe>`, which never writes the Overlay.
+Measuring in the game the `returns.nullable` of the 394 handle-returning Natives, in Slices, each reported against the Overlay in `docs/research/nullability-sweep.md` by `pnpm probe:nullability-report <probe>`, which never writes the Overlay, and curated into it by `pnpm probe:nullability-curate <probe>` in one reviewed pull request per group of Slices.
 _Avoid_: nullability audit, null check, nullability test
 
 **Nullability family**:

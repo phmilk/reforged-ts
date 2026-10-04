@@ -9,7 +9,9 @@
  * measure, against the entry's `params[].nullable`, and writes the
  * Slice's section of the sweep report, under the Patch the run's `BEGIN`
  * line names, the one its build compiled against. It reads the Overlay and
- * writes the report file only: never the Overlay.
+ * writes the report file only: never the Overlay. The verdicts it reports
+ * (`readSlice`) are what `probe:nullability-curate` applies to the Overlay
+ * (./curate.ts).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -32,6 +34,12 @@ import {
   type ReadContext,
   type ResultLine,
 } from "../read.js";
+import { converterNotes } from "./converter-notes.js";
+import {
+  converterTable,
+  readCommonJ,
+  type ConverterConstant,
+} from "./converters.js";
 import {
   formatSection,
   replaceSection,
@@ -40,6 +48,7 @@ import {
   type SliceSection,
 } from "./section.js";
 import {
+  backsNonNull,
   compare,
   compareCounts,
   compareParam,
@@ -53,10 +62,20 @@ import {
   type ParamCaseResult,
 } from "./verdict.js";
 
-/** Where the report reads and writes, and its clock. */
-export interface NullabilityReportContext extends ReadContext {
+/** Where a Slice's verdicts are read from. */
+export interface SliceContext extends ReadContext {
   /** The Overlay folder: `<source>/functions/<native>.json`. */
   overlayFolder: string;
+  /**
+   * The vendor folder of reforged-types, `<vendor>/<patch>/common.j`: the
+   * constants of a converter's type, which its condensed `notes` check its
+   * cases against, come from the `common.j` of the run's Patch.
+   */
+  vendorFolder: string;
+}
+
+/** Where the report reads and writes, and its clock. */
+export interface NullabilityReportContext extends SliceContext {
   /** The sweep report, created when it does not exist. */
   reportFile: string;
   /** Now: the report's date is its day, in UTC. */
@@ -69,44 +88,81 @@ export interface NullabilityReport {
   slice: SliceSection;
 }
 
+/** A Slice's verdicts, as its section reports them, the date aside. */
+export type SliceVerdicts = Omit<SliceSection, "date">;
+
 /**
  * Writes the section of the Slice `probe` into the sweep report, in place
- * of its previous one, from the Probe's last run: a `finished` one, or an
- * `incomplete` or `crashed` one, whose trailing PENDING case is `crashed`
- * and whose cases after it are `not run`; any other is an AuthorError.
- * Each Native of return cases, in the order of the case list, gets a table
- * of its cases, its family, a verdict, its Overlay `returns.nullable` and
- * the comparison of the two, and a proposed `notes` text or "review"; each
- * parameter the call cases measure, after them, gets the same against its
- * Overlay `params[].nullable`, with how the `nil` counts differ from the
- * always-true ones. A Native without an Overlay entry or a family, a
- * parameter the entry does not list, a Native with both kinds of case, or
- * a record the report does not read, is an AuthorError, and the report is
- * then left as it was.
+ * of its previous one, from the verdicts of the Probe's last run
+ * (`readSlice`); on an AuthorError, the report is left as it was.
  */
 export async function writeNullabilityReport(
   probe: string,
   context: NullabilityReportContext,
 ): Promise<NullabilityReport> {
+  const slice: SliceSection = {
+    ...readSlice(probe, context),
+    date: context.clock().toISOString().slice(0, "YYYY-MM-DD".length),
+  };
+  const section = await formatSection(slice);
+  const report = fs.statSync(context.reportFile, { throwIfNoEntry: false })
+    ? fs.readFileSync(context.reportFile, "utf8")
+    : undefined;
+  fs.mkdirSync(path.dirname(context.reportFile), { recursive: true });
+  fs.writeFileSync(context.reportFile, replaceSection(report, probe, section));
+  return { file: context.reportFile, slice };
+}
+
+/**
+ * The verdicts of the Slice `probe`, from the Probe's last run: a
+ * `finished` one, or an `incomplete` or `crashed` one, whose trailing
+ * PENDING case is `crashed` and whose cases after it are `not run`; any
+ * other is an AuthorError. Each Native of return cases, in the order of
+ * the case list, gets its cases, its family, a verdict, its Overlay
+ * `returns.nullable` and the comparison of the two, and a proposed `notes`
+ * text or "review", condensed for a converter backed non-null
+ * (./converter-notes.ts) when its cases check out against the converter
+ * table of the run's Patch; each parameter the call cases measure, after
+ * them, gets the same against its Overlay `params[].nullable`, with how
+ * the `nil` counts differ from the always-true ones. A Native without an
+ * Overlay entry or a family, a parameter the entry does not list, a
+ * Native with both kinds of case, or a record the report does not read,
+ * is an AuthorError. Reads files only.
+ */
+export function readSlice(probe: string, context: SliceContext): SliceVerdicts {
   const run = readProbeRun(probe, context);
   const runId = acceptedRunId(run);
   const patch = builtPatch(run);
   const { returnCases, callCases } = casesByNative(run);
-  const natives = [...returnCases].map(([native, cases]): NativeSection => {
-    const { nullable: overlayNullable, family } = readReturns(
-      readEntry(context.overlayFolder, native),
-    );
-    const verdict = verdictOf(cases, family);
-    return {
-      native,
-      cases,
-      family,
-      verdict,
-      overlayNullable,
-      comparison: compare(verdict, overlayNullable),
-      notes: proposedNotes(verdict, cases, family, patch),
-    };
-  });
+  const read = [...returnCases].map(([native, cases]) => ({
+    native,
+    cases,
+    ...readReturns(readEntry(context.overlayFolder, native)),
+  }));
+  const constants = converterConstants(
+    read.filter(({ family }) => family === "converter"),
+    context.vendorFolder,
+    patch,
+  );
+  const natives = read.map(
+    ({ native, cases, nullable: overlayNullable, family }): NativeSection => {
+      const verdict = verdictOf(cases, family);
+      const ofConverter = constants.get(native);
+      const condensed =
+        ofConverter !== undefined && backsNonNull(verdict)
+          ? converterNotes(cases, ofConverter, patch)
+          : undefined;
+      return {
+        native,
+        cases,
+        family,
+        verdict,
+        overlayNullable,
+        comparison: compare(verdict, overlayNullable),
+        notes: condensed ?? proposedNotes(verdict, cases, family, patch),
+      };
+    },
+  );
   const params = [...callCases].flatMap(([native, byParam]) => {
     const entry = readEntry(context.overlayFolder, native);
     return [...byParam].map(([param, cases]): ParamSection => {
@@ -126,21 +182,25 @@ export async function writeNullabilityReport(
       };
     });
   });
-  const slice: SliceSection = {
-    probe,
-    patch,
-    date: context.clock().toISOString().slice(0, "YYYY-MM-DD".length),
-    runId,
-    natives,
-    params,
-  };
-  const section = await formatSection(slice);
-  const report = fs.statSync(context.reportFile, { throwIfNoEntry: false })
-    ? fs.readFileSync(context.reportFile, "utf8")
-    : undefined;
-  fs.mkdirSync(path.dirname(context.reportFile), { recursive: true });
-  fs.writeFileSync(context.reportFile, replaceSection(report, probe, section));
-  return { file: context.reportFile, slice };
+  return { probe, patch, runId, natives, params };
+}
+
+/**
+ * The constants of each converter of `converters`, from the vendored
+ * `common.j` of `patch`; read only when the Slice has a converter. A Patch
+ * the vendor folder does not hold is an AuthorError.
+ */
+function converterConstants(
+  converters: readonly { native: string }[],
+  vendorFolder: string,
+  patch: string,
+): Map<string, readonly ConverterConstant[]> {
+  if (converters.length === 0) return new Map();
+  const table = converterTable(
+    readCommonJ(vendorFolder, patch),
+    new Set(converters.map(({ native }) => native)),
+  );
+  return new Map(table.map(({ native, constants }) => [native, constants]));
 }
 
 /**
@@ -453,24 +513,23 @@ function builtPatch(run: ProbeRun): string {
 }
 
 /** An Overlay entry, as far as the report reads it. */
-interface OverlayEntry {
+export interface OverlayEntry {
   returns?: { nullable?: unknown; family?: unknown };
   params?: unknown;
 }
 
 /** An Overlay entry, with the file it was read from. */
-interface ReadEntry {
+export interface ReadEntry {
   file: string;
   entry: OverlayEntry;
 }
 
 /**
  * The Overlay entry of `native`, found as `<source>/functions/<native>.json`
- * under any source of the Overlay, with its file; read once per Native. A
- * Native without an entry, or with entries under several sources, is an
- * AuthorError.
+ * under any source of the Overlay, with its file. A Native without an
+ * entry, or with entries under several sources, is an AuthorError.
  */
-function readEntry(overlayFolder: string, native: string): ReadEntry {
+export function readEntry(overlayFolder: string, native: string): ReadEntry {
   const files = fs
     .readdirSync(overlayFolder, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())

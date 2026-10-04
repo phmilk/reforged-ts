@@ -1,14 +1,5 @@
-import {
-  cp,
-  mkdir,
-  mkdtemp,
-  readFile,
-  readdir,
-  writeFile,
-} from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { cp, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { format } from "prettier";
 import { describe, expect, it } from "vitest";
 import { main, type Context } from "../src/cli/nullability-report.js";
@@ -17,47 +8,27 @@ import {
   OVERLAY_FOLDER as TYPINGS_OVERLAY_FOLDER,
   TYPINGS_MANIFEST,
 } from "../src/folders.js";
-import { systemMachine, type Machine } from "../src/machine.js";
-import { resultFile } from "../src/read.js";
 import { writeNullabilityReport } from "../src/nullability/report.js";
 import {
   REPORT_HEADER,
   type SliceSection,
 } from "../src/nullability/section.js";
 import { FAMILIES, proposedNotes } from "../src/nullability/verdict.js";
-import { stateFile } from "../src/state.js";
-import { USER_FOLDER_VARIABLE } from "../src/user-folder.js";
 import { preloadFile } from "./support/bridge.js";
-
-/** The Slice the hand-written Result files belong to. */
-const PROBE = "nullability-slice-1";
-
-/** The runId of the Slice's last build, in the state file and the Result files. */
-const RUN_ID = "slice-run";
-
-/**
- * The fixture Overlay: CreateTimer, a constructor, and GetOwningPlayer, an
- * intrinsic property, non-null; Location, a constructor, nullable.
- */
-const OVERLAY_FOLDER = fileURLToPath(
-  new URL("fixtures/nullability/overlay/", import.meta.url),
-);
-
-/**
- * The Patch the Slice's build baked, in the Result files' `BEGIN` line: not
- * the Typings' own.
- */
-const PATCH = "3.0.0.12345";
+import {
+  caseRun,
+  handleCase,
+  numbered,
+  OVERLAY_FOLDER,
+  PATCH,
+  PROBE,
+  RUN_ID,
+  sliceSetup,
+  writeResultFile,
+} from "./support/nullability.js";
 
 /** The clock's now: late on 2 October 2026, in UTC. */
 const NOW = new Date("2026-10-02T23:30:00Z");
-
-/** The lines of a Result file: `BEGIN`, then `records`, each numbered. */
-function numbered(records: readonly string[]): string[] {
-  return [`BEGIN patch=${PATCH} probe=${PROBE} run=${RUN_ID}`, ...records].map(
-    (line, index) => `${String(index + 1)} ${line}`,
-  );
-}
 
 /**
  * The case list of the finished run, as the case runner records it up
@@ -206,36 +177,18 @@ interface Setup {
 }
 
 /**
- * A temporary Warcraft III user folder, named by WC3_USER_FOLDER on the real
- * machine, a state folder holding the Slice's build with `RUN_ID`, and a
- * report file not written yet, with the fixture Overlay and the fixed
- * clock.
+ * The Slice's build of `sliceSetup`, and a report file not written yet,
+ * with the fixed clock.
  */
 async function setup(): Promise<Setup> {
-  const dir = await mkdtemp(join(tmpdir(), "probe-nullability-"));
-  const userFolder = join(dir, "Warcraft III");
-  const stateFolder = join(dir, "state");
-  await mkdir(stateFolder);
-  await writeFile(
-    stateFile(stateFolder, PROBE),
-    JSON.stringify({ probe: PROBE, runId: RUN_ID }),
-  );
-  // The fake machine is linux on every host, so its paths join with "/":
-  // the reader's own resultFile gives the path it reads.
-  const machine: Machine = {
-    ...systemMachine,
-    platform: "linux",
-    env: { [USER_FOLDER_VARIABLE]: userFolder },
-  };
+  const { dir, context, resultFile } = await sliceSetup();
   return {
     context: {
-      machine,
-      stateFolder,
-      overlayFolder: OVERLAY_FOLDER,
+      ...context,
       reportFile: join(dir, "docs", "nullability-sweep.md"),
       clock: () => NOW,
     },
-    resultFile: resultFile(machine, PROBE),
+    resultFile,
   };
 }
 
@@ -403,12 +356,6 @@ async function reportEveryVerdict(
     overlayFolder,
   });
   return slice;
-}
-
-/** Writes the Result file as the game does, its lines through `Preload`. */
-async function writeResultFile(file: string, lines: readonly string[]) {
-  await mkdir(join(file, ".."), { recursive: true });
-  await writeFile(file, preloadFile(lines));
 }
 
 /** Every file under `folder` with its text, by path relative to it. */
@@ -1554,5 +1501,110 @@ describe("the nullability report's parameter section", () => {
         `The record ${record.replace("nil%20filter", '"nil filter"')} is not one the nullability report reads.`,
       );
     }
+  });
+});
+
+describe("the nullability report's converter notes", () => {
+  /**
+   * Reports a finished run of the fixture common.j's converters, typed
+   * nullable: ConvertRace and ConvertAbilityIntegerLevelArrayField give the
+   * integer passed in as the id, ConvertMouseButtonType its bit flag, and
+   * ConvertRace's `-1` the id `idOfMinusOne`.
+   */
+  async function reportConverters(context: Context, idOfMinusOne = -1) {
+    const overlayFolder = await overlayWith(context, {
+      ConvertRace: { nullable: true, family: "converter" },
+      ConvertMouseButtonType: { nullable: true, family: "converter" },
+      ConvertAbilityIntegerLevelArrayField: {
+        nullable: true,
+        family: "converter",
+      },
+    });
+    const race = [
+      handleCase("ConvertRace", "RACE_NONE", 0),
+      handleCase("ConvertRace", "RACE_HUMAN", 1),
+      handleCase("ConvertRace", "RACE_ORC or RACE_GREEN", 2),
+      handleCase("ConvertRace", "-1", idOfMinusOne),
+      handleCase("ConvertRace", "past the last constant", 3),
+      handleCase("ConvertRace", "2147483647", 2147483647),
+      handleCase("ConvertRace", "-2147483648", -2147483648),
+    ];
+    const mouse = [
+      ["MOUSE_BUTTON_TYPE_LEFT", 1],
+      ["MOUSE_BUTTON_TYPE_MIDDLE", 2],
+      ["MOUSE_BUTTON_TYPE_RIGHT", 4],
+      ["-1", 1073741824],
+      ["past the last constant", 8],
+      ["2147483647", 1073741824],
+      ["-2147483648", -2147483648],
+    ].map(([label, id]) =>
+      handleCase("ConvertMouseButtonType", String(label), id),
+    );
+    const field = [0, 1, -1, 2147483647].map((i) =>
+      handleCase("ConvertAbilityIntegerLevelArrayField", String(i), i),
+    );
+    return { overlayFolder, run: caseRun([...race, ...mouse, ...field]) };
+  }
+
+  it("condenses the notes of a converter backed non-null to the measured fact", async () => {
+    const { context, resultFile } = await setup();
+    const { overlayFolder, run } = await reportConverters(context);
+    await writeResultFile(resultFile, run);
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    expect(
+      slice.natives.map(({ native, verdict, notes }) => [
+        native,
+        verdict,
+        notes,
+      ]),
+    ).toEqual([
+      [
+        "ConvertRace",
+        "non-null (evidence, handle id 0)",
+        "Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.12345); the handle's id is the integer passed in. Evidence, not proof.",
+      ],
+      [
+        "ConvertMouseButtonType",
+        "non-null (evidence)",
+        "Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.12345); the handle's id is the bit flag `1 << ((i - 1) & 31)` of the integer `i` passed in. Evidence, not proof.",
+      ],
+      [
+        "ConvertAbilityIntegerLevelArrayField",
+        "non-null (evidence, handle id 0)",
+        "Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.12345); the handle's id is the integer passed in. Evidence, not proof.",
+      ],
+    ]);
+  });
+
+  it("keeps the full text of a converter whose ids follow no rule", async () => {
+    const { context, resultFile } = await setup();
+    const { overlayFolder, run } = await reportConverters(context, 7);
+    await writeResultFile(resultFile, run);
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    const race = slice.natives.find(({ native }) => native === "ConvertRace");
+    expect(race?.notes).toBe(
+      "Returned a handle in every case of the nullability sweep (RACE_NONE, RACE_HUMAN, RACE_ORC or RACE_GREEN, -1, past the last constant, 2147483647, -2147483648) on 3.0.0.12345; evidence, not proof. For RACE_NONE, a handle of id 0.",
+    );
+  });
+
+  it("refuses a Slice of converters whose Patch is not vendored, and reads no common.j for a Slice without one", async () => {
+    const { context, resultFile } = await setup();
+    const { overlayFolder, run } = await reportConverters(context);
+    await writeResultFile(resultFile, run);
+    const vendorFolder = join(context.reportFile, "..", "..", "vendor");
+    await expectRefusal(
+      { ...context, overlayFolder, vendorFolder },
+      `${join(vendorFolder, PATCH, "common.j")} could not be read: the Patch ${PATCH} is not vendored.`,
+    );
+    await writeResultFile(resultFile, FINISHED);
+    expect(await runMain({ ...context, vendorFolder })).toMatchObject({
+      code: 0,
+    });
   });
 });

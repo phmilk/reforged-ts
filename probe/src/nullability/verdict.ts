@@ -169,9 +169,12 @@ export function compare(
   verdict: Verdict,
   overlayNullable: boolean,
 ): Comparison {
-  return !overlayNullable && !NON_NULL_VERDICTS.includes(verdict)
-    ? "mismatch"
-    : "consistent";
+  return !overlayNullable && !backsNonNull(verdict) ? "mismatch" : "consistent";
+}
+
+/** Whether `verdict` backs a non-null return (`NON_NULL_VERDICTS`). */
+export function backsNonNull(verdict: Verdict): boolean {
+  return NON_NULL_VERDICTS.includes(verdict);
 }
 
 /** Case labels, joined with commas. */

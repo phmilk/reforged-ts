@@ -9,6 +9,7 @@ import {
   NULLABILITY_REPORT,
   OVERLAY_FOLDER,
   PROBE_FOLDERS,
+  VENDOR_FOLDER,
 } from "../folders.js";
 import { systemMachine } from "../machine.js";
 import {
@@ -35,6 +36,7 @@ export async function main(
     machine: systemMachine,
     stateFolder: PROBE_FOLDERS.state,
     overlayFolder: OVERLAY_FOLDER,
+    vendorFolder: VENDOR_FOLDER,
     reportFile: NULLABILITY_REPORT,
     clock: () => new Date(),
   },
