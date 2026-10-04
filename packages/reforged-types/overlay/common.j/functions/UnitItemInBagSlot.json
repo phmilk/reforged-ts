@@ -15,5 +15,6 @@
       "nullable": false
     }
   ],
+  "notes": "Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.",
   "since": "3.0.0.24268"
 }

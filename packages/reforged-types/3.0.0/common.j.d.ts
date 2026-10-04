@@ -13577,6 +13577,7 @@ declare function GetStartLocationY(whichStartLocation: number): number;
 /**
  * @param whichStartLocation - integer (32-bit)
  * @returns location
+ * @remarks Returned nothing in a case of the nullability sweep (index out of range) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetStartLocationLoc}
  */
 declare function GetStartLocationLoc(whichStartLocation: number): location | undefined;
@@ -13876,6 +13877,7 @@ declare function BlzGroupGetSize(whichGroup: group): number;
  * @param whichGroup - group
  * @param index - integer (32-bit)
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (index out of range) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGroupUnitAt}
  */
 declare function BlzGroupUnitAt(whichGroup: group, index: number): unit | undefined;
@@ -14063,6 +14065,7 @@ declare function ForGroup(whichGroup: group, callback: code): void;
 /**
  * @param whichGroup - group
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (empty group) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/FirstOfGroup}
  */
 declare function FirstOfGroup(whichGroup: group): unit | undefined;
@@ -16728,6 +16731,7 @@ declare function UnitRemoveItem(whichUnit: unit, whichItem: item): void;
  * @param whichUnit - unit
  * @param itemSlot - integer (32-bit)
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitRemoveItemFromSlot}
  */
 declare function UnitRemoveItemFromSlot(whichUnit: unit, itemSlot: number): item | undefined;
@@ -16746,6 +16750,7 @@ declare function UnitUnequipItem(whichUnit: unit, whichItem: item): void;
  * @param slot - loadoutslot
  * @returns item
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitUnequipItemFromSlot}
  */
 declare function UnitUnequipItemFromSlot(whichUnit: unit, slot: loadoutslot): item | undefined;
@@ -16771,6 +16776,7 @@ declare function UnitHasItemBagged(whichUnit: unit, whichItem: item): boolean;
  * @param whichUnit - unit
  * @param itemSlot - integer (32-bit)
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitItemInSlot}
  */
 declare function UnitItemInSlot(whichUnit: unit, itemSlot: number): item | undefined;
@@ -16795,6 +16801,7 @@ declare function UnitExtendedInventorySize(whichUnit: unit): number;
  * @param itemSlot - integer (32-bit)
  * @returns item
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitItemInBagSlot}
  */
 declare function UnitItemInBagSlot(whichUnit: unit, itemSlot: number): item | undefined;
@@ -16804,6 +16811,7 @@ declare function UnitItemInBagSlot(whichUnit: unit, itemSlot: number): item | un
  * @param itemSlot - loadoutslot
  * @returns item
  * @patch 3.0.0.24268
+ * @remarks Returned nothing in a case of the nullability sweep (empty slot) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitItemInEquipmentSlot}
  */
 declare function UnitItemInEquipmentSlot(whichUnit: unit, itemSlot: loadoutslot): item | undefined;
@@ -17854,6 +17862,7 @@ declare function SetUnitUserData(whichUnit: unit, data: number): void;
 /**
  * @param number - integer (32-bit)
  * @returns player
+ * @remarks Returned nothing in a case of the nullability sweep (index out of range) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/Player}
  */
 declare function Player(number: number): player | undefined;
@@ -18852,6 +18861,7 @@ declare function GetStoredString(cache: gamecache, missionKey: string, key: stri
  * @param y - real
  * @param facing - real
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/RestoreUnit}
  */
 declare function RestoreUnit(cache: gamecache, missionKey: string, key: string, forWhichPlayer: player, x: number, y: number, facing: number): unit | undefined;
@@ -19343,6 +19353,7 @@ declare function LoadStr(table: hashtable, parentKey: number, childKey: number):
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns player
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadPlayerHandle}
  */
 declare function LoadPlayerHandle(table: hashtable, parentKey: number, childKey: number): player | undefined;
@@ -19352,6 +19363,7 @@ declare function LoadPlayerHandle(table: hashtable, parentKey: number, childKey:
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns widget
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadWidgetHandle}
  */
 declare function LoadWidgetHandle(table: hashtable, parentKey: number, childKey: number): widget | undefined;
@@ -19361,6 +19373,7 @@ declare function LoadWidgetHandle(table: hashtable, parentKey: number, childKey:
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns destructable
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadDestructableHandle}
  */
 declare function LoadDestructableHandle(table: hashtable, parentKey: number, childKey: number): destructable | undefined;
@@ -19370,6 +19383,7 @@ declare function LoadDestructableHandle(table: hashtable, parentKey: number, chi
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns item
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadItemHandle}
  */
 declare function LoadItemHandle(table: hashtable, parentKey: number, childKey: number): item | undefined;
@@ -19379,6 +19393,7 @@ declare function LoadItemHandle(table: hashtable, parentKey: number, childKey: n
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns unit
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadUnitHandle}
  */
 declare function LoadUnitHandle(table: hashtable, parentKey: number, childKey: number): unit | undefined;
@@ -19388,6 +19403,7 @@ declare function LoadUnitHandle(table: hashtable, parentKey: number, childKey: n
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns ability
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadAbilityHandle}
  */
 declare function LoadAbilityHandle(table: hashtable, parentKey: number, childKey: number): ability | undefined;
@@ -19397,6 +19413,7 @@ declare function LoadAbilityHandle(table: hashtable, parentKey: number, childKey
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns timer
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadTimerHandle}
  */
 declare function LoadTimerHandle(table: hashtable, parentKey: number, childKey: number): timer | undefined;
@@ -19406,6 +19423,7 @@ declare function LoadTimerHandle(table: hashtable, parentKey: number, childKey: 
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns trigger
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadTriggerHandle}
  */
 declare function LoadTriggerHandle(table: hashtable, parentKey: number, childKey: number): trigger | undefined;
@@ -19415,6 +19433,7 @@ declare function LoadTriggerHandle(table: hashtable, parentKey: number, childKey
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns triggercondition
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadTriggerConditionHandle}
  */
 declare function LoadTriggerConditionHandle(table: hashtable, parentKey: number, childKey: number): triggercondition | undefined;
@@ -19424,6 +19443,7 @@ declare function LoadTriggerConditionHandle(table: hashtable, parentKey: number,
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns triggeraction
+ * @remarks For an unsaved key, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that nothing was saved under the key. Typed nullable, as a lookup that finds nothing gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadTriggerActionHandle}
  */
 declare function LoadTriggerActionHandle(table: hashtable, parentKey: number, childKey: number): triggeraction | undefined;
@@ -19433,6 +19453,7 @@ declare function LoadTriggerActionHandle(table: hashtable, parentKey: number, ch
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns event
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadTriggerEventHandle}
  */
 declare function LoadTriggerEventHandle(table: hashtable, parentKey: number, childKey: number): event | undefined;
@@ -19442,6 +19463,7 @@ declare function LoadTriggerEventHandle(table: hashtable, parentKey: number, chi
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns force
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadForceHandle}
  */
 declare function LoadForceHandle(table: hashtable, parentKey: number, childKey: number): force | undefined;
@@ -19451,6 +19473,7 @@ declare function LoadForceHandle(table: hashtable, parentKey: number, childKey: 
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns group
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadGroupHandle}
  */
 declare function LoadGroupHandle(table: hashtable, parentKey: number, childKey: number): group | undefined;
@@ -19460,6 +19483,7 @@ declare function LoadGroupHandle(table: hashtable, parentKey: number, childKey: 
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns location
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadLocationHandle}
  */
 declare function LoadLocationHandle(table: hashtable, parentKey: number, childKey: number): location | undefined;
@@ -19469,6 +19493,7 @@ declare function LoadLocationHandle(table: hashtable, parentKey: number, childKe
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns rect
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadRectHandle}
  */
 declare function LoadRectHandle(table: hashtable, parentKey: number, childKey: number): rect | undefined;
@@ -19478,6 +19503,7 @@ declare function LoadRectHandle(table: hashtable, parentKey: number, childKey: n
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns boolexpr
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadBooleanExprHandle}
  */
 declare function LoadBooleanExprHandle(table: hashtable, parentKey: number, childKey: number): boolexpr | undefined;
@@ -19487,6 +19513,7 @@ declare function LoadBooleanExprHandle(table: hashtable, parentKey: number, chil
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns sound
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadSoundHandle}
  */
 declare function LoadSoundHandle(table: hashtable, parentKey: number, childKey: number): sound | undefined;
@@ -19496,6 +19523,7 @@ declare function LoadSoundHandle(table: hashtable, parentKey: number, childKey: 
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns effect
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadEffectHandle}
  */
 declare function LoadEffectHandle(table: hashtable, parentKey: number, childKey: number): effect | undefined;
@@ -19505,6 +19533,7 @@ declare function LoadEffectHandle(table: hashtable, parentKey: number, childKey:
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns unitpool
+ * @remarks For an unsaved key, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that nothing was saved under the key. Typed nullable, as a lookup that finds nothing gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadUnitPoolHandle}
  */
 declare function LoadUnitPoolHandle(table: hashtable, parentKey: number, childKey: number): unitpool | undefined;
@@ -19514,6 +19543,7 @@ declare function LoadUnitPoolHandle(table: hashtable, parentKey: number, childKe
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns itempool
+ * @remarks For an unsaved key, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that nothing was saved under the key. Typed nullable, as a lookup that finds nothing gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadItemPoolHandle}
  */
 declare function LoadItemPoolHandle(table: hashtable, parentKey: number, childKey: number): itempool | undefined;
@@ -19523,6 +19553,7 @@ declare function LoadItemPoolHandle(table: hashtable, parentKey: number, childKe
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns quest
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadQuestHandle}
  */
 declare function LoadQuestHandle(table: hashtable, parentKey: number, childKey: number): quest | undefined;
@@ -19532,6 +19563,7 @@ declare function LoadQuestHandle(table: hashtable, parentKey: number, childKey: 
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns questitem
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadQuestItemHandle}
  */
 declare function LoadQuestItemHandle(table: hashtable, parentKey: number, childKey: number): questitem | undefined;
@@ -19541,6 +19573,7 @@ declare function LoadQuestItemHandle(table: hashtable, parentKey: number, childK
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns defeatcondition
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadDefeatConditionHandle}
  */
 declare function LoadDefeatConditionHandle(table: hashtable, parentKey: number, childKey: number): defeatcondition | undefined;
@@ -19550,6 +19583,7 @@ declare function LoadDefeatConditionHandle(table: hashtable, parentKey: number, 
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns timerdialog
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadTimerDialogHandle}
  */
 declare function LoadTimerDialogHandle(table: hashtable, parentKey: number, childKey: number): timerdialog | undefined;
@@ -19559,6 +19593,7 @@ declare function LoadTimerDialogHandle(table: hashtable, parentKey: number, chil
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns leaderboard
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadLeaderboardHandle}
  */
 declare function LoadLeaderboardHandle(table: hashtable, parentKey: number, childKey: number): leaderboard | undefined;
@@ -19568,6 +19603,7 @@ declare function LoadLeaderboardHandle(table: hashtable, parentKey: number, chil
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns multiboard
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadMultiboardHandle}
  */
 declare function LoadMultiboardHandle(table: hashtable, parentKey: number, childKey: number): multiboard | undefined;
@@ -19577,6 +19613,7 @@ declare function LoadMultiboardHandle(table: hashtable, parentKey: number, child
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns multiboarditem
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadMultiboardItemHandle}
  */
 declare function LoadMultiboardItemHandle(table: hashtable, parentKey: number, childKey: number): multiboarditem | undefined;
@@ -19586,6 +19623,7 @@ declare function LoadMultiboardItemHandle(table: hashtable, parentKey: number, c
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns trackable
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadTrackableHandle}
  */
 declare function LoadTrackableHandle(table: hashtable, parentKey: number, childKey: number): trackable | undefined;
@@ -19595,6 +19633,7 @@ declare function LoadTrackableHandle(table: hashtable, parentKey: number, childK
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns dialog
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadDialogHandle}
  */
 declare function LoadDialogHandle(table: hashtable, parentKey: number, childKey: number): dialog | undefined;
@@ -19604,6 +19643,7 @@ declare function LoadDialogHandle(table: hashtable, parentKey: number, childKey:
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns button
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadButtonHandle}
  */
 declare function LoadButtonHandle(table: hashtable, parentKey: number, childKey: number): button | undefined;
@@ -19613,6 +19653,7 @@ declare function LoadButtonHandle(table: hashtable, parentKey: number, childKey:
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns texttag
+ * @remarks For an unsaved key, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that nothing was saved under the key. Typed nullable, as a lookup that finds nothing gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadTextTagHandle}
  */
 declare function LoadTextTagHandle(table: hashtable, parentKey: number, childKey: number): texttag | undefined;
@@ -19622,6 +19663,7 @@ declare function LoadTextTagHandle(table: hashtable, parentKey: number, childKey
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns lightning
+ * @remarks For an unsaved key, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that nothing was saved under the key. Typed nullable, as a lookup that finds nothing gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadLightningHandle}
  */
 declare function LoadLightningHandle(table: hashtable, parentKey: number, childKey: number): lightning | undefined;
@@ -19631,6 +19673,7 @@ declare function LoadLightningHandle(table: hashtable, parentKey: number, childK
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns image
+ * @remarks For an unsaved key, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that nothing was saved under the key. Typed nullable, as a lookup that finds nothing gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadImageHandle}
  */
 declare function LoadImageHandle(table: hashtable, parentKey: number, childKey: number): image | undefined;
@@ -19640,6 +19683,7 @@ declare function LoadImageHandle(table: hashtable, parentKey: number, childKey: 
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns ubersplat
+ * @remarks For an unsaved key, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that nothing was saved under the key. Typed nullable, as a lookup that finds nothing gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadUbersplatHandle}
  */
 declare function LoadUbersplatHandle(table: hashtable, parentKey: number, childKey: number): ubersplat | undefined;
@@ -19649,6 +19693,7 @@ declare function LoadUbersplatHandle(table: hashtable, parentKey: number, childK
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns region
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadRegionHandle}
  */
 declare function LoadRegionHandle(table: hashtable, parentKey: number, childKey: number): region | undefined;
@@ -19658,6 +19703,7 @@ declare function LoadRegionHandle(table: hashtable, parentKey: number, childKey:
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns fogstate
+ * @remarks For an unsaved key, returned a handle of id 0 rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that nothing was saved under the key. Typed nullable, as a lookup that finds nothing gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadFogStateHandle}
  */
 declare function LoadFogStateHandle(table: hashtable, parentKey: number, childKey: number): fogstate | undefined;
@@ -19667,6 +19713,7 @@ declare function LoadFogStateHandle(table: hashtable, parentKey: number, childKe
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns fogmodifier
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadFogModifierHandle}
  */
 declare function LoadFogModifierHandle(table: hashtable, parentKey: number, childKey: number): fogmodifier | undefined;
@@ -19676,6 +19723,7 @@ declare function LoadFogModifierHandle(table: hashtable, parentKey: number, chil
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns hashtable
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadHashtableHandle}
  */
 declare function LoadHashtableHandle(table: hashtable, parentKey: number, childKey: number): hashtable | undefined;
@@ -19685,6 +19733,7 @@ declare function LoadHashtableHandle(table: hashtable, parentKey: number, childK
  * @param parentKey - integer (32-bit)
  * @param childKey - integer (32-bit)
  * @returns framehandle
+ * @remarks Returned nothing in a case of the nullability sweep (unsaved key) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/LoadFrameHandle}
  */
 declare function LoadFrameHandle(table: hashtable, parentKey: number, childKey: number): framehandle | undefined;
@@ -21268,6 +21317,7 @@ declare function MultiboardSetItemsIcon(lb: multiboard, iconPath: string): void;
  * @param row - integer (32-bit)
  * @param column - integer (32-bit)
  * @returns multiboarditem
+ * @remarks For a cell outside the board (row 1, column 1 of a board of one cell), returned a multiboard item rather than nothing (nullability sweep, 3.0.0.24268), so a nil check does not tell that the cell is outside the board. Typed nullable, as a lookup that finds nothing gives no guarantee.
  * @see {@link https://lep.duckdns.org/jassbot/doc/MultiboardGetItem}
  */
 declare function MultiboardGetItem(lb: multiboard, row: number, column: number): multiboarditem | undefined;
@@ -24421,6 +24471,7 @@ declare function BlzShowUnitTeamGlow(whichUnit: unit, show: boolean): void;
  * @param frameType - originframetype
  * @param index - integer (32-bit)
  * @returns framehandle
+ * @remarks Returned nothing in a case of the nullability sweep (frame type out of range) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetOriginFrame}
  */
 declare function BlzGetOriginFrame(frameType: originframetype, index: number): framehandle | undefined;
@@ -24550,6 +24601,7 @@ declare function BlzFrameIsVisible(frame: framehandle): boolean;
  * @param name - string
  * @param createContext - integer (32-bit)
  * @returns framehandle
+ * @remarks Returned nothing in a case of the nullability sweep (unknown name) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetFrameByName}
  */
 declare function BlzGetFrameByName(name: string, createContext: number): framehandle | undefined;
@@ -25102,6 +25154,7 @@ declare function BlzResetSpecialEffectMatrix(whichEffect: effect): void;
  * @param whichUnit - unit
  * @param abilId - integer (32-bit)
  * @returns ability
+ * @remarks Returned nothing in a case of the nullability sweep (ability it lacks) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetUnitAbility}
  */
 declare function BlzGetUnitAbility(whichUnit: unit, abilId: number): ability | undefined;
@@ -25110,6 +25163,7 @@ declare function BlzGetUnitAbility(whichUnit: unit, abilId: number): ability | u
  * @param whichUnit - unit
  * @param index - integer (32-bit)
  * @returns ability
+ * @remarks Returned nothing in a case of the nullability sweep (index out of range) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetUnitAbilityByIndex}
  */
 declare function BlzGetUnitAbilityByIndex(whichUnit: unit, index: number): ability | undefined;
@@ -25511,6 +25565,7 @@ declare function BlzRemoveAbilityStringLevelArrayField(whichAbility: ability, wh
  * @param whichItem - item
  * @param index - integer (32-bit)
  * @returns ability
+ * @remarks Returned nothing in a case of the nullability sweep (index out of range) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetItemAbilityByIndex}
  */
 declare function BlzGetItemAbilityByIndex(whichItem: item, index: number): ability | undefined;
@@ -25519,6 +25574,7 @@ declare function BlzGetItemAbilityByIndex(whichItem: item, index: number): abili
  * @param whichItem - item
  * @param abilCode - integer (32-bit)
  * @returns ability
+ * @remarks Returned nothing in a case of the nullability sweep (ability it lacks) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetItemAbility}
  */
 declare function BlzGetItemAbility(whichItem: item, abilCode: number): ability | undefined;
