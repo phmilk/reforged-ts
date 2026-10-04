@@ -9,6 +9,8 @@
 // A stale handle is one whose object is dead, removed or destroyed: the
 // factories named `dead…`, `removed…` and `destroyed…` return one.
 
+import { CONVERTER_CONSTANTS } from "./converter-constants";
+
 /** `value`, or an error naming the Fixture when a Native returned nothing for it. */
 function built<T>(value: T | undefined, fixture: string): T {
   if (value === undefined) {
@@ -81,6 +83,13 @@ export function liveHero(): unit {
   return built(CreateUnit(owner, FourCC("Hpal"), 0, 0, 0), "liveHero");
 }
 
+// Items
+
+/** An item, live: a `'ratf'` (Claws of Attack) on the ground at the map's origin (`CreateItem`). */
+export function liveItem(): item {
+  return built(CreateItem(FourCC("ratf"), 0, 0), "liveItem");
+}
+
 // Groups
 
 /** A group, empty: `CreateGroup`, no unit added. */
@@ -98,6 +107,19 @@ export function emptyHashtable(): hashtable {
 /** A game cache, empty: `InitGameCache` of a file never saved, nothing stored. */
 export function emptyGameCache(): gamecache {
   return built(InitGameCache("NullabilityFixture.w3v"), "emptyGameCache");
+}
+
+// Multiboards
+
+/**
+ * A multiboard, one cell: `CreateMultiboard` after `MultiboardSetRowCount`
+ * and `MultiboardSetColumnCount` to 1, so its only cell is (0, 0).
+ */
+export function oneCellMultiboard(): multiboard {
+  const board = built(CreateMultiboard(), "oneCellMultiboard");
+  MultiboardSetRowCount(board, 1);
+  MultiboardSetColumnCount(board, 1);
+  return board;
 }
 
 // Boolexprs
@@ -154,6 +176,25 @@ export function destroyedFrame(): framehandle {
   const frame = childFrame();
   BlzDestroyFrame(frame);
   return frame;
+}
+
+// Origin frame types: a converted integer, never stale.
+
+/**
+ * An origin frame type, out of range: `ConvertOriginFrameType` of the first
+ * integer past the Patch's greatest `originframetype` constant
+ * (`ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR_LABEL`, 22, on 3.0.0.24268), so a Patch
+ * that adds an origin frame keeps it out of range.
+ */
+export function outOfRangeOriginFrameType(): originframetype {
+  const greatest = CONVERTER_CONSTANTS.ConvertOriginFrameType.reduce(
+    (greatest, [, value]) => (value > greatest ? value : greatest),
+    0,
+  );
+  return built(
+    ConvertOriginFrameType(greatest + 1),
+    "outOfRangeOriginFrameType",
+  );
 }
 
 // Triggers
