@@ -3731,3 +3731,442 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
 - Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+## `nullability-event-responses-2`
+
+- Probe: `nullability-event-responses-2`
+- Patch: 3.0.0.24268
+- Date: 2026-10-04
+- Run: `ceda43ff-060f-4165-98e4-393064ab2e7b`
+
+### `GetManipulatingUnit`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetManipulatedItem`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetEquippedItem`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetUnequippedItem`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `BlzGetAbsorbingItem`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `BlzGetStackingItemSource`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `BlzGetStackingItemTarget`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetOrderedUnit`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetOrderPointLoc`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetOrderTarget`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetOrderTargetDestructable`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetOrderTargetItem`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetOrderTargetUnit`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetSpellAbilityUnit`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetSpellAbility`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetSpellTargetLoc`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetSpellTargetDestructable`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetSpellTargetItem`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetSpellTargetUnit`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetEventPlayerState`
+
+| Case              | Group | Outcome | Id  | Type                            | Message |
+| ----------------- | ----- | ------- | --- | ------------------------------- | ------- |
+| outside its event | (a)   | handle  | 0   | `playerstate: 0000017772619A60` |         |
+
+- Family: `event-response`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+
+### `GetTriggerUnit`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetEventUnitState`
+
+| Case              | Group | Outcome | Id  | Type                          | Message |
+| ----------------- | ----- | ------- | --- | ----------------------------- | ------- |
+| outside its event | (a)   | handle  | 0   | `unitstate: 000001777261A280` |         |
+
+- Family: `event-response`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+
+### `GetEventDamageSource`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetEventDetectingPlayer`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetEventTargetUnit`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetTriggerWidget`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `GetTriggerDestructable`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `BlzGetTriggerPlayerMousePosition`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `BlzGetTriggerPlayerMouseButton`
+
+| Case              | Group | Outcome | Id  | Type                                | Message |
+| ----------------- | ----- | ------- | --- | ----------------------------------- | ------- |
+| outside its event | (a)   | handle  | 0   | `mousebuttontype: 000001777E11A5B0` |         |
+
+- Family: `event-response`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+
+### `BlzGetEventDamageTarget`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `BlzGetEventAttackType`
+
+| Case              | Group | Outcome | Id  | Type                           | Message |
+| ----------------- | ----- | ------- | --- | ------------------------------ | ------- |
+| outside its event | (a)   | handle  | -1  | `attacktype: 000001777E10F930` |         |
+
+- Family: `event-response`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+
+### `BlzGetEventDamageType`
+
+| Case              | Group | Outcome | Id  | Type                           | Message |
+| ----------------- | ----- | ------- | --- | ------------------------------ | ------- |
+| outside its event | (a)   | handle  | 0   | `damagetype: 000001777952AB20` |         |
+
+- Family: `event-response`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+
+### `BlzGetEventWeaponType`
+
+| Case              | Group | Outcome | Id  | Type                           | Message |
+| ----------------- | ----- | ------- | --- | ------------------------------ | ------- |
+| outside its event | (a)   | handle  | 0   | `weapontype: 000001777952B740` |         |
+
+- Family: `event-response`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+
+### `BlzGetTriggerFrame`
+
+| Case              | Group | Outcome | Id  | Type | Message |
+| ----------------- | ----- | ------- | --- | ---- | ------- |
+| outside its event | (a)   | nil     |     |      |         |
+
+- Family: `event-response`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returns nothing for outside its event (nullability sweep, 3.0.0.24268).
+
+### `BlzGetTriggerFrameEvent`
+
+| Case              | Group | Outcome | Id  | Type                               | Message |
+| ----------------- | ----- | ------- | --- | ---------------------------------- | ------- |
+| outside its event | (a)   | handle  | 0   | `frameeventtype: 000001777F9AC280` |         |
+
+- Family: `event-response`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+
+### `BlzGetTriggerPlayerKey`
+
+| Case              | Group | Outcome | Id  | Type                          | Message |
+| ----------------- | ----- | ------- | --- | ----------------------------- | ------- |
+| outside its event | (a)   | handle  | 0   | `oskeytype: 000001777F9B06B0` |         |
+
+- Family: `event-response`
+- Verdict: nullable (rule)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
