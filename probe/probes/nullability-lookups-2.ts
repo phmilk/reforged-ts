@@ -11,6 +11,8 @@
 
 import type { ProbeContext } from "../game/probe";
 import { runCases } from "./nullability/case-runner";
+import { UNKNOWN_NAME } from "./nullability/constructor";
+import { CONVERTER_CONSTANTS } from "./nullability/converter-constants";
 import { inGroupOrder } from "./nullability/expand";
 import {
   emptyHashtable,
@@ -30,8 +32,16 @@ const ABILITY_INDEX_OUT_OF_RANGE = 100;
 /** Holy Light, an ability neither a footman nor a `'ratf'` has. */
 const LACKED_ABILITY = "AHhb";
 
-/** The first integer past the last `originframetype` constant, `ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR_LABEL`. */
-const ORIGIN_FRAME_TYPE_OUT_OF_RANGE = 23;
+/**
+ * The first integer past the greatest `originframetype` constant of the
+ * Patch (`ORIGIN_FRAME_UNIT_PANEL_BUFF_BAR_LABEL`, 22, on 3.0.0.24268), so a
+ * Patch that adds an origin frame keeps the case out of range.
+ */
+const ORIGIN_FRAME_TYPE_OUT_OF_RANGE =
+  CONVERTER_CONSTANTS.ConvertOriginFrameType.reduce(
+    (greatest, [, value]) => (value > greatest ? value : greatest),
+    0,
+  ) + 1;
 
 /**
  * The Slice's lookups, in `common.j` order, each with its case's label and
@@ -88,7 +98,7 @@ function lookups(): readonly [string, string, () => unknown][] {
     [
       "BlzGetFrameByName",
       "unknown name",
-      () => BlzGetFrameByName("NullabilityUnknownFrame", 0),
+      () => BlzGetFrameByName(UNKNOWN_NAME, 0),
     ],
     [
       "BlzGetUnitAbility",
