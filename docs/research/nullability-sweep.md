@@ -4864,7 +4864,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Patch: 3.0.0.24268
 - Client: 3.0.0.24268
 - Date: 2026-10-04
-- Run: `d7d82ed9-ac37-4408-80ae-f5146436fb9b`
+- Run: `dc314da5-38ee-4762-854f-008bc847a76a`
 
 ### `GetFilterUnit`
 
@@ -5012,24 +5012,24 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 ### `BlzFrameGetParent`
 
-| Case            | Group | Outcome | Id  | Type | Message |
-| --------------- | ----- | ------- | --- | ---- | ------- |
-| destroyed frame | (a)   | nil     |     |      |         |
+| Case                   | Group | Outcome | Id  | Type | Message |
+| ---------------------- | ----- | ------- | --- | ---- | ------- |
+| game UI's parent frame | (a)   | nil     |     |      |         |
 
 - Family: `optional-property`
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned nothing in a case of the nullability sweep (destroyed frame) on 3.0.0.24268.
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (game UI's parent frame) on 3.0.0.24268.
 
 ### `BlzGetMouseFocusUnit`
 
-| Case                     | Group | Outcome | Id  | Type | Message |
-| ------------------------ | ----- | ------- | --- | ---- | ------- |
-| no unit under the cursor | (a)   | nil     |     |      |         |
+| Case           | Group | Outcome | Id  | Type | Message |
+| -------------- | ----- | ------- | --- | ---- | ------- |
+| no mouse input | (a)   | nil     |     |      |         |
 
 - Family: `optional-property`
 - Verdict: nullable (proved)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned nothing in a case of the nullability sweep (no unit under the cursor) on 3.0.0.24268.
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (no mouse input) on 3.0.0.24268.

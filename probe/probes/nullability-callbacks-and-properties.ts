@@ -1,8 +1,8 @@
 // The Nullability sweep's Slice `nullability-callbacks-and-properties`
 // (#390): the 8 callback-getters, each called outside its enum or filter
 // callback, and the 6 optional-properties, each called on an object that
-// has none (./nullability/nullable.ts), in `common.j` order, and what each
-// call returned recorded (./nullability/case-runner.ts).
+// should have none (./nullability/nullable.ts), in `common.j` order, and
+// what each call returned recorded (./nullability/case-runner.ts).
 // `pnpm probe:nullability-report nullability-callbacks-and-properties`
 // turns its Result file into this Slice's section of the sweep report. The
 // arguments come from the Fixtures (./nullability/fixtures.ts), built
@@ -12,7 +12,7 @@ import type { ProbeContext } from "../game/probe";
 import { type ReturnCase, runCases } from "./nullability/case-runner";
 import { inGroupOrder } from "./nullability/expand";
 import {
-  destroyedFrame,
+  gameUiParentFrame,
   liveUnit,
   userSlotPlayer,
 } from "./nullability/fixtures";
@@ -24,12 +24,13 @@ import {
 /**
  * The Slice's cases, in `common.j` order, over the Fixtures built here
  * before any case runs: a footman, which has no rally point, `Player(0)`,
- * which has no leaderboard, and a destroyed frame, which has no parent.
+ * which has no leaderboard, and the game UI's parent frame, the highest
+ * frame reached so far.
  */
 function sliceCases(): ReturnCase[] {
   const footman = liveUnit();
   const player = userSlotPlayer();
-  const frame = destroyedFrame();
+  const frame = gameUiParentFrame();
   const noRallyPoint = "unit with no rally point";
   return inGroupOrder(
     callbackGetterCase("GetFilterUnit", () => GetFilterUnit()),
@@ -54,16 +55,16 @@ function sliceCases(): ReturnCase[] {
       "player with no leaderboard",
       () => PlayerGetLeaderboard(player),
     ),
-    optionalPropertyCase("BlzFrameGetParent", "destroyed frame", () =>
+    // A top-level frame has a parent (the game UI's was a handle in
+    // `nullability-slice-1`), so the case goes one frame higher.
+    optionalPropertyCase("BlzFrameGetParent", "game UI's parent frame", () =>
       BlzFrameGetParent(frame),
     ),
-    // A Probe run posts no mouse input, and the footman, the only unit,
-    // stands at the map's origin; the case's outcome records whether the
-    // cursor rested on it.
-    optionalPropertyCase(
-      "BlzGetMouseFocusUnit",
-      "no unit under the cursor",
-      () => BlzGetMouseFocusUnit(),
+    // A Probe run posts no mouse input, so the cursor rests wherever it was
+    // when the game started, maybe over a melee starting unit; the case's
+    // outcome records whether a unit was under it.
+    optionalPropertyCase("BlzGetMouseFocusUnit", "no mouse input", () =>
+      BlzGetMouseFocusUnit(),
     ),
   );
 }
