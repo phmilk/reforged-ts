@@ -206,7 +206,7 @@ Every handle-returning Native of `common.j` names its Nullability family in its 
   - per string parameter, `""` and an unknown name;
   - (b) each handle parameter in every stale state its type has;
   - a constructor with no parameters runs one call;
-  - (a) a catalogue case beyond the rule, where the handle-type catalogue (#362) or jassdoc gives a live argument the rule cannot reach as returning nothing: a unit with no inventory, an empty pool, a `checkVisibility` set.
+  - (a) a catalogue case beyond the rule, a live argument the rule cannot reach: one the handle-type catalogue (#362), jassdoc or an earlier run of the Slice gives as returning nothing (a unit with no inventory, an empty pool, a `checkVisibility` set, an event its Native does not list), or another live kind of a parameter's type than its typical one (a destructable or an item for a widget).
 - **registration**: the constructor's cases, plus the trigger destroyed, plus a `nil` `filter` where the Overlay types it nullable (this measures the `TriggerRegister*` among the 21 `filter` parameters).
 - **enum-getter** and **intrinsic-property**:
   - each handle parameter live and in every stale state;
