@@ -2,219 +2,6 @@
 
 The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, written by `pnpm probe:nullability-report <probe>` from the Result file of the Slice's last Probe run, and replaced, alone, each time the command runs again. Each Native gets a verdict from its cases and its Nullability family, compared with the Overlay's `returns.nullable`, and a proposed `notes` text; a Native is a `mismatch` when the Overlay types it non-null and its verdict is neither `non-null (evidence)` nor `non-null (evidence, handle id 0)`, `unsafe` and `review` included. An `unsafe` Native, one with a case that crashed the game, is proposed nullable. Each parameter measured by call cases gets a verdict from them, compared with the Overlay's `params[].nullable`, and a proposed sentence of its Native's `notes`, since the Overlay has no `params[].notes`. A converter backed non-null gets condensed `notes`, the measured fact instead of its case list. The command never writes the Overlay: `pnpm probe:nullability-curate <probe>` applies a Slice's verdicts to it, and every change goes through review.
 
-## `nullability-slice-1`
-
-- Probe: `nullability-slice-1`
-- Patch: 3.0.0.24268
-- Date: 2026-10-02
-- Run: `ebe42ed0-dc97-4341-999b-5719a0928132`
-
-### `CreateTimer`
-
-| Case     | Group | Outcome | Id      | Type                      | Message |
-| -------- | ----- | ------- | ------- | ------------------------- | ------- |
-| one call | (a)   | handle  | 1048796 | `timer: 0000014F3D6FD3B0` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
-
-### `CreateTrigger`
-
-| Case     | Group | Outcome | Id      | Type                        | Message |
-| -------- | ----- | ------- | ------- | --------------------------- | ------- |
-| one call | (a)   | handle  | 1048797 | `trigger: 0000014F3D6FD040` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
-
-### `CreateRegion`
-
-| Case     | Group | Outcome | Id      | Type                       | Message |
-| -------- | ----- | ------- | ------- | -------------------------- | ------- |
-| one call | (a)   | handle  | 1048798 | `region: 0000014F3D706610` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
-
-### `CreateCameraSetup`
-
-| Case     | Group | Outcome | Id      | Type                            | Message |
-| -------- | ----- | ------- | ------- | ------------------------------- | ------- |
-| one call | (a)   | handle  | 1048799 | `camerasetup: 0000014F3D70AE00` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
-
-### `GetLocalPlayer`
-
-| Case     | Group | Outcome | Id      | Type                       | Message |
-| -------- | ----- | ------- | ------- | -------------------------- | ------- |
-| one call | (a)   | handle  | 1048584 | `player: 0000014F30184290` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
-
-### `Location`
-
-| Case              | Group | Outcome | Id      | Type                         | Message |
-| ----------------- | ----- | ------- | ------- | ---------------------------- | ------- |
-| origin            | (a)   | handle  | 1048800 | `location: 0000014F3D713FA0` |         |
-| outside the world | (a)   | handle  | 1048801 | `location: 0000014F3D718D10` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (origin, outside the world) on 3.0.0.24268; evidence, not proof.
-
-### `Rect`
-
-| Case                   | Group | Outcome | Id      | Type                     | Message |
-| ---------------------- | ----- | ------- | ------- | ------------------------ | ------- |
-| normal rect            | (a)   | handle  | 1048802 | `rect: 0000014F3D71D550` |         |
-| inverted rect          | (a)   | handle  | 1048803 | `rect: 0000014F3D722170` |         |
-| zero area rect         | (a)   | handle  | 1048804 | `rect: 0000014F3D726820` |         |
-| rect outside the world | (a)   | handle  | 1048805 | `rect: 0000014F3D72B760` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (normal rect, inverted rect, zero area rect, rect outside the world) on 3.0.0.24268; evidence, not proof.
-
-### `Condition`
-
-| Case                | Group | Outcome | Id      | Type                              | Message |
-| ------------------- | ----- | ------- | ------- | --------------------------------- | ------- |
-| TypeScript function | (a)   | handle  | 1048806 | `conditionfunc: 0000014F3D72F850` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (TypeScript function) on 3.0.0.24268; evidence, not proof.
-
-### `Filter`
-
-| Case                | Group | Outcome | Id      | Type                           | Message |
-| ------------------- | ----- | ------- | ------- | ------------------------------ | ------- |
-| TypeScript function | (a)   | handle  | 1048807 | `filterfunc: 0000014F3D734C90` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (TypeScript function) on 3.0.0.24268; evidence, not proof.
-
-### `And`
-
-| Case                        | Group | Outcome | Id      | Type                         | Message |
-| --------------------------- | ----- | ------- | ------- | ---------------------------- | ------- |
-| two live operands           | (a)   | handle  | 1048808 | `boolexpr: 0000014F3D739F30` |         |
-| condition and filter        | (a)   | handle  | 1048809 | `boolexpr: 0000014F3D73EEB0` |         |
-| destroyed condition operand | (b)   | handle  | 1048820 | `boolexpr: 0000014F3D7AFFF0` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (two live operands, condition and filter, destroyed condition operand) on 3.0.0.24268; evidence, not proof.
-
-### `Or`
-
-| Case                       | Group | Outcome | Id      | Type                         | Message |
-| -------------------------- | ----- | ------- | ------- | ---------------------------- | ------- |
-| two live operands          | (a)   | handle  | 1048810 | `boolexpr: 0000014F3D743830` |         |
-| condition and filter       | (a)   | handle  | 1048811 | `boolexpr: 0000014F3D7488C0` |         |
-| destroyed boolexpr operand | (b)   | handle  | 1048821 | `boolexpr: 0000014F3D7B4840` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (two live operands, condition and filter, destroyed boolexpr operand) on 3.0.0.24268; evidence, not proof.
-
-### `Not`
-
-| Case              | Group | Outcome | Id      | Type                         | Message |
-| ----------------- | ----- | ------- | ------- | ---------------------------- | ------- |
-| live operand      | (a)   | handle  | 1048812 | `boolexpr: 0000014F3D74CAD0` |         |
-| destroyed operand | (b)   | handle  | 1048822 | `boolexpr: 0000014F3D7B9080` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (live operand, destroyed operand) on 3.0.0.24268; evidence, not proof.
-
-### `GetOwningPlayer`
-
-| Case                 | Group | Outcome | Id      | Type                       | Message |
-| -------------------- | ----- | ------- | ------- | -------------------------- | ------- |
-| unit of player 0     | (a)   | handle  | 1048584 | `player: 0000014F30184290` |         |
-| Neutral Passive unit | (a)   | handle  | 1048648 | `player: 0000014F395779D0` |         |
-| dead unit            | (b)   | handle  | 1048584 | `player: 0000014F30184290` |         |
-| removed unit         | (b)   | handle  | 1048584 | `player: 0000014F30184290` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (unit of player 0, Neutral Passive unit, dead unit, removed unit) on 3.0.0.24268; evidence, not proof.
-
-### `GetUnitLoc`
-
-| Case         | Group | Outcome | Id      | Type                         | Message |
-| ------------ | ----- | ------- | ------- | ---------------------------- | ------- |
-| live unit    | (a)   | handle  | 1048813 | `location: 0000014F3D75C590` |         |
-| dead unit    | (b)   | handle  | 1048818 | `location: 0000014F3D77E020` |         |
-| removed unit | (b)   | handle  | 1048819 | `location: 0000014F3D786B80` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (live unit, dead unit, removed unit) on 3.0.0.24268; evidence, not proof.
-
-### `BlzFrameGetParent`
-
-| Case                | Group | Outcome | Id      | Type                            | Message |
-| ------------------- | ----- | ------- | ------- | ------------------------------- | ------- |
-| created child frame | (a)   | handle  | 1048780 | `framehandle: 0000014F3D6D4130` |         |
-| game UI frame       | (a)   | handle  | 1048814 | `framehandle: 0000014F3D7647E0` |         |
-| world frame         | (a)   | handle  | 1048780 | `framehandle: 0000014F3D6D4130` |         |
-| destroyed frame     | (b)   | nil     |         |                                 |         |
-
-- Verdict: nullable (proved)
-- Overlay `returns.nullable`: `false`
-- Comparison: mismatch
-- Proposed `notes`: Returns nothing for destroyed frame (nullability sweep, 3.0.0.24268).
-
-### `CameraSetupGetDestPositionLoc`
-
-| Case             | Group | Outcome | Id      | Type                         | Message |
-| ---------------- | ----- | ------- | ------- | ---------------------------- | ------- |
-| fresh setup      | (a)   | handle  | 1048815 | `location: 0000014F3D76C9D0` |         |
-| positioned setup | (a)   | handle  | 1048816 | `location: 0000014F3D7710A0` |         |
-
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (fresh setup, positioned setup) on 3.0.0.24268; evidence, not proof.
-
-### `TriggerAddAction`
-
-| Case              | Group | Outcome | Id      | Type                              | Message |
-| ----------------- | ----- | ------- | ------- | --------------------------------- | ------- |
-| live trigger      | (a)   | handle  | 1048817 | `triggeraction: 0000014F3D775200` |         |
-| destroyed trigger | (b)   | odd     |         | `triggeraction: 0000014F3D78B6C0` |         |
-
-- Verdict: review
-- Overlay `returns.nullable`: `false`
-- Comparison: consistent
-- Proposed `notes`: review
-
 ## `nullability-converters-1`
 
 - Probe: `nullability-converters-1`
@@ -5383,3 +5170,531 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, num: empty slot, num: neutral player) on 3.0.0.24268; evidence, not proof.
+
+## `nullability-constructors-game`
+
+- Probe: `nullability-constructors-game`
+- Patch: 3.0.0.24268
+- Client: 3.0.0.24268
+- Date: 2026-10-04
+- Run: `fe969c27-d4ef-4df8-a2d0-964bbdba0e65`
+
+### `CreateTimer`
+
+| Case     | Group | Outcome | Id      | Type                      | Message |
+| -------- | ----- | ------- | ------- | ------------------------- | ------- |
+| one call | (a)   | handle  | 1048807 | `timer: 0000026F5161AB90` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `CreateGroup`
+
+| Case     | Group | Outcome | Id      | Type                      | Message |
+| -------- | ----- | ------- | ------- | ------------------------- | ------- |
+| one call | (a)   | handle  | 1048808 | `group: 0000026F56E23520` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `CreateForce`
+
+| Case     | Group | Outcome | Id      | Type                      | Message |
+| -------- | ----- | ------- | ------- | ------------------------- | ------- |
+| one call | (a)   | handle  | 1048809 | `force: 0000026F5140B030` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `Rect`
+
+| Case                    | Group | Outcome | Id      | Type                     | Message |
+| ----------------------- | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments       | (a)   | handle  | 1048810 | `rect: 0000026F519070E0` |         |
+| minx: 0                 | (a)   | handle  | 1048811 | `rect: 0000026F56E182E0` |         |
+| minx: negative          | (a)   | handle  | 1048812 | `rect: 0000026F517D6770` |         |
+| minx: outside the world | (a)   | handle  | 1048813 | `rect: 0000026F514F1910` |         |
+| minx: 2147483647        | (a)   | handle  | 1048814 | `rect: 0000026F5180D470` |         |
+| miny: 0                 | (a)   | handle  | 1048815 | `rect: 0000026F515995F0` |         |
+| miny: negative          | (a)   | handle  | 1048816 | `rect: 0000026F5174D150` |         |
+| miny: outside the world | (a)   | handle  | 1048817 | `rect: 0000026F517E3590` |         |
+| miny: 2147483647        | (a)   | handle  | 1048818 | `rect: 0000026F4BC2A2D0` |         |
+| maxx: 0                 | (a)   | handle  | 1048819 | `rect: 0000026F51623F60` |         |
+| maxx: negative          | (a)   | handle  | 1048820 | `rect: 0000026F563DED10` |         |
+| maxx: outside the world | (a)   | handle  | 1048821 | `rect: 0000026FFF32F6C0` |         |
+| maxx: 2147483647        | (a)   | handle  | 1048822 | `rect: 0000026F518C6910` |         |
+| maxy: 0                 | (a)   | handle  | 1048823 | `rect: 0000026F51747130` |         |
+| maxy: negative          | (a)   | handle  | 1048824 | `rect: 0000026F512EA640` |         |
+| maxy: outside the world | (a)   | handle  | 1048825 | `rect: 0000026F51748890` |         |
+| maxy: 2147483647        | (a)   | handle  | 1048826 | `rect: 000002700319FE40` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, minx: 0, minx: negative, minx: outside the world, minx: 2147483647, miny: 0, miny: negative, miny: outside the world, miny: 2147483647, maxx: 0, maxx: negative, maxx: outside the world, maxx: 2147483647, maxy: 0, maxy: negative, maxy: outside the world, maxy: 2147483647) on 3.0.0.24268; evidence, not proof.
+
+### `RectFromLoc`
+
+| Case                  | Group | Outcome | Id      | Type                     | Message |
+| --------------------- | ----- | ------- | ------- | ------------------------ | ------- |
+| typical arguments     | (a)   | handle  | 1048827 | `rect: 0000026F562DCD20` |         |
+| min: removed location | (b)   | nil     |         |                          |         |
+| max: removed location | (b)   | nil     |         |                          |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 2 cases of the nullability sweep (min: removed location, max: removed location) on 3.0.0.24268.
+
+### `CreateRegion`
+
+| Case     | Group | Outcome | Id      | Type                       | Message |
+| -------- | ----- | ------- | ------- | -------------------------- | ------- |
+| one call | (a)   | handle  | 1048828 | `region: 0000026F5162B060` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `Location`
+
+| Case                 | Group | Outcome | Id      | Type                         | Message |
+| -------------------- | ----- | ------- | ------- | ---------------------------- | ------- |
+| typical arguments    | (a)   | handle  | 1048829 | `location: 0000026F516C4720` |         |
+| x: 0                 | (a)   | handle  | 1048830 | `location: 0000026F51755020` |         |
+| x: negative          | (a)   | handle  | 1048831 | `location: 0000026F5156C460` |         |
+| x: outside the world | (a)   | handle  | 1048832 | `location: 0000026F5175CE30` |         |
+| x: 2147483647        | (a)   | handle  | 1048833 | `location: 0000026F562C2400` |         |
+| y: 0                 | (a)   | handle  | 1048834 | `location: 0000026F51540680` |         |
+| y: negative          | (a)   | handle  | 1048835 | `location: 0000026F5177F6D0` |         |
+| y: outside the world | (a)   | handle  | 1048836 | `location: 0000026F517AF2B0` |         |
+| y: 2147483647        | (a)   | handle  | 1048837 | `location: 0000026F515D90F0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647) on 3.0.0.24268; evidence, not proof.
+
+### `CreateTrigger`
+
+| Case     | Group | Outcome | Id      | Type                        | Message |
+| -------- | ----- | ------- | ------- | --------------------------- | ------- |
+| one call | (a)   | handle  | 1048838 | `trigger: 0000026F5173E800` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `And`
+
+| Case                          | Group | Outcome | Id      | Type                         | Message |
+| ----------------------------- | ----- | ------- | ------- | ---------------------------- | ------- |
+| typical arguments             | (a)   | handle  | 1048839 | `boolexpr: 0000026F51760270` |         |
+| operandA: destroyed condition | (b)   | handle  | 1048903 | `boolexpr: 0000026F518D3B90` |         |
+| operandA: destroyed filter    | (b)   | handle  | 1048904 | `boolexpr: 0000026F583074F0` |         |
+| operandA: destroyed boolexpr  | (b)   | handle  | 1048905 | `boolexpr: 00000270017520A0` |         |
+| operandB: destroyed condition | (b)   | handle  | 1048906 | `boolexpr: 0000027001F955F0` |         |
+| operandB: destroyed filter    | (b)   | handle  | 1048907 | `boolexpr: 0000026F570D6C60` |         |
+| operandB: destroyed boolexpr  | (b)   | handle  | 1048908 | `boolexpr: 0000026F56260A40` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, operandA: destroyed condition, operandA: destroyed filter, operandA: destroyed boolexpr, operandB: destroyed condition, operandB: destroyed filter, operandB: destroyed boolexpr) on 3.0.0.24268; evidence, not proof.
+
+### `Or`
+
+| Case                          | Group | Outcome | Id      | Type                         | Message |
+| ----------------------------- | ----- | ------- | ------- | ---------------------------- | ------- |
+| typical arguments             | (a)   | handle  | 1048840 | `boolexpr: 0000026F517E2F70` |         |
+| operandA: destroyed condition | (b)   | handle  | 1048909 | `boolexpr: 0000026FFF7861C0` |         |
+| operandA: destroyed filter    | (b)   | handle  | 1048910 | `boolexpr: 0000026FFF788FD0` |         |
+| operandA: destroyed boolexpr  | (b)   | handle  | 1048911 | `boolexpr: 0000026FFF78A8D0` |         |
+| operandB: destroyed condition | (b)   | handle  | 1048912 | `boolexpr: 0000026FFF781240` |         |
+| operandB: destroyed filter    | (b)   | handle  | 1048913 | `boolexpr: 0000026FFF784990` |         |
+| operandB: destroyed boolexpr  | (b)   | handle  | 1048914 | `boolexpr: 0000026F58DD22E0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, operandA: destroyed condition, operandA: destroyed filter, operandA: destroyed boolexpr, operandB: destroyed condition, operandB: destroyed filter, operandB: destroyed boolexpr) on 3.0.0.24268; evidence, not proof.
+
+### `Not`
+
+| Case                         | Group | Outcome | Id      | Type                         | Message |
+| ---------------------------- | ----- | ------- | ------- | ---------------------------- | ------- |
+| typical arguments            | (a)   | handle  | 1048841 | `boolexpr: 0000026F5152E8F0` |         |
+| operand: destroyed condition | (b)   | handle  | 1048915 | `boolexpr: 0000026F58DD7390` |         |
+| operand: destroyed filter    | (b)   | handle  | 1048916 | `boolexpr: 0000026F58DDC150` |         |
+| operand: destroyed boolexpr  | (b)   | handle  | 1048917 | `boolexpr: 0000026F58DE16B0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, operand: destroyed condition, operand: destroyed filter, operand: destroyed boolexpr) on 3.0.0.24268; evidence, not proof.
+
+### `Condition`
+
+| Case              | Group | Outcome | Id      | Type                              | Message |
+| ----------------- | ----- | ------- | ------- | --------------------------------- | ------- |
+| typical arguments | (a)   | handle  | 1048842 | `conditionfunc: 0000026F5176B610` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments) on 3.0.0.24268; evidence, not proof.
+
+### `Filter`
+
+| Case              | Group | Outcome | Id      | Type                           | Message |
+| ----------------- | ----- | ------- | ------- | ------------------------------ | ------- |
+| typical arguments | (a)   | handle  | 1048843 | `filterfunc: 0000026F5178F430` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments) on 3.0.0.24268; evidence, not proof.
+
+### `TriggerAddCondition`
+
+| Case                            | Group | Outcome | Id      | Type                                 | Message |
+| ------------------------------- | ----- | ------- | ------- | ------------------------------------ | ------- |
+| typical arguments               | (a)   | handle  | 1048844 | `triggercondition: 0000026F514F8D80` |         |
+| whichTrigger: destroyed trigger | (b)   | nil     |         |                                      |         |
+| condition: destroyed condition  | (b)   | handle  | 1048918 | `triggercondition: 0000026F58DDE6D0` |         |
+| condition: destroyed filter     | (b)   | handle  | 1048919 | `triggercondition: 0000026F58DCE6F0` |         |
+| condition: destroyed boolexpr   | (b)   | handle  | 1048920 | `triggercondition: 0000026F58DD1C10` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
+
+### `TriggerAddAction`
+
+| Case                            | Group | Outcome | Id      | Type                              | Message |
+| ------------------------------- | ----- | ------- | ------- | --------------------------------- | ------- |
+| typical arguments               | (a)   | handle  | 1048845 | `triggeraction: 0000026F518B0190` |         |
+| whichTrigger: destroyed trigger | (b)   | handle  | 0       | `triggeraction: 0000026F58DDAAF0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichTrigger: destroyed trigger) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichTrigger: destroyed trigger).
+
+### `CreateFogModifierRect`
+
+| Case                | Group | Outcome | Id      | Type                            | Message |
+| ------------------- | ----- | ------- | ------- | ------------------------------- | ------- |
+| typical arguments   | (a)   | handle  | 1048846 | `fogmodifier: 0000026F51867A00` |         |
+| where: removed rect | (b)   | nil     |         |                                 |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (where: removed rect) on 3.0.0.24268.
+
+### `CreateFogModifierRadius`
+
+| Case                       | Group | Outcome | Id      | Type                            | Message                            |
+| -------------------------- | ----- | ------- | ------- | ------------------------------- | ---------------------------------- |
+| typical arguments          | (a)   | handle  | 1048847 | `fogmodifier: 0000026F5166EB80` |                                    |
+| centerx: 0                 | (a)   | handle  | 1048848 | `fogmodifier: 0000026F515582C0` |                                    |
+| centerx: negative          | (a)   | handle  | 1048849 | `fogmodifier: 0000026F51761320` |                                    |
+| centerx: outside the world | (a)   | handle  | 1048850 | `fogmodifier: 0000026F514D2DB0` |                                    |
+| centerx: 2147483647        | (a)   | handle  | 1048851 | `fogmodifier: 0000026F57115D50` |                                    |
+| centerY: 0                 | (a)   | handle  | 1048852 | `fogmodifier: 0000026F516A6F00` |                                    |
+| centerY: negative          | (a)   | handle  | 1048853 | `fogmodifier: 0000026F518EA670` |                                    |
+| centerY: outside the world | (a)   | handle  | 1048854 | `fogmodifier: 0000026F575B3990` |                                    |
+| centerY: 2147483647        | (a)   | handle  | 1048855 | `fogmodifier: 0000026F517C4570` |                                    |
+| radius: 0                  | (a)   | handle  | 1048856 | `fogmodifier: 0000026F51899600` |                                    |
+| radius: negative           | (a)   | handle  | 1048857 | `fogmodifier: 0000026F517B6CB0` |                                    |
+| radius: outside the world  | (a)   | handle  | 1048858 | `fogmodifier: 0000026F516C36A0` |                                    |
+| radius: 2147483647         | (a)   | crashed |         |                                 | skipped: crashed in an earlier run |
+
+- Family: `constructor`
+- Verdict: unsafe
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Crashed the game in a case of the nullability sweep (radius: 2147483647) on 3.0.0.24268. Returned a handle in every other case (typical arguments, centerx: 0, centerx: negative, centerx: outside the world, centerx: 2147483647, centerY: 0, centerY: negative, centerY: outside the world, centerY: 2147483647, radius: 0, radius: negative, radius: outside the world).
+
+### `CreateFogModifierRadiusLoc`
+
+| Case                      | Group | Outcome | Id      | Type                            | Message                            |
+| ------------------------- | ----- | ------- | ------- | ------------------------------- | ---------------------------------- |
+| typical arguments         | (a)   | handle  | 1048859 | `fogmodifier: 0000026F515172C0` |                                    |
+| radius: 0                 | (a)   | handle  | 1048860 | `fogmodifier: 0000026F5178F810` |                                    |
+| radius: negative          | (a)   | handle  | 1048861 | `fogmodifier: 0000026F51844C10` |                                    |
+| radius: outside the world | (a)   | handle  | 1048862 | `fogmodifier: 0000026F512AE620` |                                    |
+| radius: 2147483647        | (a)   | crashed |         |                                 | skipped: crashed in an earlier run |
+| center: removed location  | (b)   | nil     |         |                                 |                                    |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Crashed the game in a case of the nullability sweep (radius: 2147483647) on 3.0.0.24268. Returned nothing in a case of the nullability sweep (center: removed location) on 3.0.0.24268.
+
+### `DialogCreate`
+
+| Case     | Group | Outcome | Id      | Type                       | Message |
+| -------- | ----- | ------- | ------- | -------------------------- | ------- |
+| one call | (a)   | handle  | 1048863 | `dialog: 0000026F516985C0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `DialogAddButton`
+
+| Case                          | Group | Outcome | Id      | Type                       | Message |
+| ----------------------------- | ----- | ------- | ------- | -------------------------- | ------- |
+| typical arguments             | (a)   | handle  | 1048864 | `button: 0000026F517261D0` |         |
+| buttonText: empty string      | (a)   | handle  | 1048865 | `button: 0000026F51362BD0` |         |
+| buttonText: unknown name      | (a)   | handle  | 1048866 | `button: 0000026F51721790` |         |
+| hotkey: negative              | (a)   | handle  | 1048867 | `button: 0000026F515D24F0` |         |
+| hotkey: outside the world     | (a)   | handle  | 1048868 | `button: 0000026F5178F8D0` |         |
+| hotkey: 2147483647            | (a)   | handle  | 1048869 | `button: 0000026F514E8340` |         |
+| whichDialog: destroyed dialog | (b)   | nil     |         |                            |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (whichDialog: destroyed dialog) on 3.0.0.24268.
+
+### `DialogAddQuitButton`
+
+| Case                          | Group | Outcome | Id      | Type                       | Message |
+| ----------------------------- | ----- | ------- | ------- | -------------------------- | ------- |
+| typical arguments             | (a)   | handle  | 1048870 | `button: 0000026F5151CDE0` |         |
+| buttonText: empty string      | (a)   | handle  | 1048871 | `button: 0000026F5167A510` |         |
+| buttonText: unknown name      | (a)   | handle  | 1048872 | `button: 0000026F5165FAA0` |         |
+| hotkey: negative              | (a)   | handle  | 1048873 | `button: 0000026F51590460` |         |
+| hotkey: outside the world     | (a)   | handle  | 1048874 | `button: 0000026F517B4140` |         |
+| hotkey: 2147483647            | (a)   | handle  | 1048875 | `button: 0000026F51A87C80` |         |
+| whichDialog: destroyed dialog | (b)   | nil     |         |                            |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (whichDialog: destroyed dialog) on 3.0.0.24268.
+
+### `InitGameCache`
+
+| Case                       | Group | Outcome | Id      | Type                          | Message |
+| -------------------------- | ----- | ------- | ------- | ----------------------------- | ------- |
+| typical arguments          | (a)   | handle  | 1048876 | `gamecache: 0000026F514D28D0` |         |
+| campaignFile: empty string | (a)   | nil     |         |                               |         |
+| campaignFile: unknown name | (a)   | handle  | 1048877 | `gamecache: 0000026F58480960` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in a case of the nullability sweep (campaignFile: empty string) on 3.0.0.24268.
+
+### `InitHashtable`
+
+| Case     | Group | Outcome | Id      | Type                          | Message |
+| -------- | ----- | ------- | ------- | ----------------------------- | ------- |
+| one call | (a)   | handle  | 1048878 | `hashtable: 0000026F5156BFE0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `CreateQuest`
+
+| Case     | Group | Outcome | Id      | Type                      | Message |
+| -------- | ----- | ------- | ------- | ------------------------- | ------- |
+| one call | (a)   | handle  | 1048879 | `quest: 0000026F56D50120` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `QuestCreateItem`
+
+| Case                                 | Group | Outcome | Id      | Type                          | Message |
+| ------------------------------------ | ----- | ------- | ------- | ----------------------------- | ------- |
+| typical arguments                    | (a)   | handle  | 1048880 | `questitem: 0000026F5155BB30` |         |
+| whichQuest: quest after DestroyQuest | (b)   | handle  | 1048921 | `questitem: 00000270098C27F0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichQuest: quest after DestroyQuest) on 3.0.0.24268; evidence, not proof.
+
+### `CreateDefeatCondition`
+
+| Case     | Group | Outcome | Id      | Type                                | Message |
+| -------- | ----- | ------- | ------- | ----------------------------------- | ------- |
+| one call | (a)   | handle  | 1048881 | `defeatcondition: 0000026F517419A0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `CreateTimerDialog`
+
+| Case               | Group | Outcome | Id      | Type                            | Message |
+| ------------------ | ----- | ------- | ------- | ------------------------------- | ------- |
+| typical arguments  | (a)   | handle  | 1048882 | `timerdialog: 0000026F51558720` |         |
+| t: destroyed timer | (b)   | handle  | 1048922 | `timerdialog: 00000270098C85F0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, t: destroyed timer) on 3.0.0.24268; evidence, not proof.
+
+### `CreateLeaderboard`
+
+| Case     | Group | Outcome | Id      | Type                            | Message |
+| -------- | ----- | ------- | ------- | ------------------------------- | ------- |
+| one call | (a)   | handle  | 1048883 | `leaderboard: 0000026F518DEA70` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `CreateMultiboard`
+
+| Case     | Group | Outcome | Id      | Type                           | Message |
+| -------- | ----- | ------- | ------- | ------------------------------ | ------- |
+| one call | (a)   | handle  | 1048884 | `multiboard: 0000026F5182CA60` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `CreateCameraSetup`
+
+| Case     | Group | Outcome | Id      | Type                            | Message |
+| -------- | ----- | ------- | ------- | ------------------------------- | ------- |
+| one call | (a)   | handle  | 1048885 | `camerasetup: 0000026F515C4DF0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `false`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof.
+
+### `BlzCreateFrame`
+
+| Case                             | Group | Outcome | Id      | Type                            | Message |
+| -------------------------------- | ----- | ------- | ------- | ------------------------------- | ------- |
+| typical arguments                | (a)   | handle  | 1048886 | `framehandle: 0000026F517101D0` |         |
+| name: empty string               | (a)   | nil     |         |                                 |         |
+| name: unknown name               | (a)   | nil     |         |                                 |         |
+| priority: negative               | (a)   | handle  | 1048887 | `framehandle: 0000026F51343230` |         |
+| priority: outside the world      | (a)   | handle  | 1048888 | `framehandle: 0000026F56400630` |         |
+| priority: 2147483647             | (a)   | handle  | 1048889 | `framehandle: 0000026F51738B40` |         |
+| createContext: negative          | (a)   | handle  | 1048890 | `framehandle: 0000026F515FFED0` |         |
+| createContext: outside the world | (a)   | handle  | 1048891 | `framehandle: 0000026F5160D0F0` |         |
+| createContext: 2147483647        | (a)   | handle  | 1048892 | `framehandle: 0000026F51673BC0` |         |
+| owner: destroyed frame           | (b)   | nil     |         |                                 |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 3 cases of the nullability sweep (name: empty string, name: unknown name, owner: destroyed frame) on 3.0.0.24268.
+
+### `BlzCreateSimpleFrame`
+
+| Case                             | Group | Outcome | Id      | Type                            | Message |
+| -------------------------------- | ----- | ------- | ------- | ------------------------------- | ------- |
+| typical arguments                | (a)   | handle  | 1048893 | `framehandle: 0000026F5178B650` |         |
+| name: empty string               | (a)   | nil     |         |                                 |         |
+| name: unknown name               | (a)   | nil     |         |                                 |         |
+| createContext: negative          | (a)   | handle  | 1048894 | `framehandle: 0000026F515F0B50` |         |
+| createContext: outside the world | (a)   | handle  | 1048895 | `framehandle: 0000026F51768C70` |         |
+| createContext: 2147483647        | (a)   | handle  | 1048896 | `framehandle: 0000026F51566040` |         |
+| owner: destroyed frame           | (b)   | handle  | 1048923 | `framehandle: 00000270098D4980` |         |
+
+- Family: `constructor`
+- Verdict: nullable (proved)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned nothing in 2 cases of the nullability sweep (name: empty string, name: unknown name) on 3.0.0.24268.
+
+### `CreateCommandButtonEffect`
+
+| Case                       | Group | Outcome | Id      | Type                                    | Message |
+| -------------------------- | ----- | ------- | ------- | --------------------------------------- | ------- |
+| typical arguments          | (a)   | handle  | 1048897 | `commandbuttoneffect: 0000026F5153D450` |         |
+| abilityId: unknown rawcode | (a)   | handle  | 1048898 | `commandbuttoneffect: 0000026F518514D0` |         |
+| order: empty string        | (a)   | handle  | 0       | `commandbuttoneffect: 0000026F51861CD0` |         |
+| order: unknown name        | (a)   | handle  | 0       | `commandbuttoneffect: 0000026F51861CD0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence, handle id 0)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, abilityId: unknown rawcode, order: empty string, order: unknown name) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 2 cases (order: empty string, order: unknown name).
+
+### `CreateUpgradeCommandButtonEffect`
+
+| Case                          | Group | Outcome | Id      | Type                                    | Message |
+| ----------------------------- | ----- | ------- | ------- | --------------------------------------- | ------- |
+| typical arguments             | (a)   | handle  | 1048899 | `commandbuttoneffect: 0000026F510BDE20` |         |
+| whichUprgade: unknown rawcode | (a)   | handle  | 1048900 | `commandbuttoneffect: 0000026F515C50C0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichUprgade: unknown rawcode) on 3.0.0.24268; evidence, not proof.
+
+### `CreateLearnCommandButtonEffect`
+
+| Case                       | Group | Outcome | Id      | Type                                    | Message |
+| -------------------------- | ----- | ------- | ------- | --------------------------------------- | ------- |
+| typical arguments          | (a)   | handle  | 1048901 | `commandbuttoneffect: 0000026F514A7490` |         |
+| abilityId: unknown rawcode | (a)   | handle  | 1048902 | `commandbuttoneffect: 0000026F517158F0` |         |
+
+- Family: `constructor`
+- Verdict: non-null (evidence)
+- Overlay `returns.nullable`: `true`
+- Comparison: consistent
+- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, abilityId: unknown rawcode) on 3.0.0.24268; evidence, not proof.

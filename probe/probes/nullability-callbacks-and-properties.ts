@@ -56,7 +56,7 @@ function sliceCases(): ReturnCase[] {
       () => PlayerGetLeaderboard(player),
     ),
     // A top-level frame has a parent (the game UI's was a handle in
-    // `nullability-slice-1`), so the case goes one frame higher.
+    // the retired `nullability-slice-1`), so the case goes one frame higher.
     optionalPropertyCase("BlzFrameGetParent", "game UI's parent frame", () =>
       BlzFrameGetParent(frame),
     ),
