@@ -98,17 +98,22 @@ function gave(...outcomes: readonly Outcome[]) {
 }
 
 /**
- * The ids of a Placeholder handle, the handle the game returns in place of
- * nothing in a case where the Native could not do what it was asked.
+ * The ids a handle has that a review judges: those of a Placeholder
+ * handle, the handle the game returns in place of nothing in a case where
+ * the Native could not do what it was asked, and also a successful call's
+ * (a converter's integer 0).
  */
-const PLACEHOLDER_IDS = ["0", "-1"] as const;
+const ID_ZERO_OR_MINUS_ONE = ["0", "-1"] as const;
 
 /**
  * The label of a constructor's or a registration's case of typical
- * arguments (`constructorCases`), whose id a Placeholder handle's is told
- * apart from.
+ * arguments, as the case generators write it (`TYPICAL_LABEL` of
+ * probes/nullability/expand.ts, which this package's build cannot
+ * import): a Placeholder handle's id is told apart from this case's. The
+ * generators' tests pin that label, and this module's tests pin this one
+ * to the same text.
  */
-const TYPICAL_ARGUMENTS = "typical arguments";
+export const TYPICAL_ARGUMENTS = "typical arguments";
 
 /**
  * The Nullability families that may be non-null and whose cases vary one
@@ -125,30 +130,25 @@ function gaveId(id: string) {
 
 /** Whether a case gave a handle of id 0 or -1, which is not `nil`. */
 function gaveIdZeroOrMinusOne(testCase: CaseResult): boolean {
-  return PLACEHOLDER_IDS.some((id) => gaveId(id)(testCase));
-}
-
-/** The cases other than typical arguments that gave a handle of id 0 or -1. */
-function placeholderCases(cases: readonly CaseResult[]): CaseResult[] {
-  return cases.filter(
-    (testCase) =>
-      testCase.label !== TYPICAL_ARGUMENTS && gaveIdZeroOrMinusOne(testCase),
-  );
+  return ID_ZERO_OR_MINUS_ONE.some((id) => gaveId(id)(testCase));
 }
 
 /**
- * Whether the cases show a Placeholder handle: a case other than typical
- * arguments gave a handle of id 0 or -1, and typical arguments gave a
- * handle of another id, so no successful call gave that one. A handle of
- * id 0 from typical arguments (`TerrainDeformCrater`'s first deformation)
- * is a handle.
+ * The cases that gave a Placeholder handle: a case other than typical
+ * arguments that gave a handle of id 0 or -1, when typical arguments gave
+ * a handle of another id, so no successful call gave that one. A handle
+ * of the id typical arguments gave (`TerrainDeformCrater`'s first
+ * deformation, id 0) is a handle. Empty when typical arguments did not
+ * run or gave no handle.
  */
-function showsPlaceholder(cases: readonly CaseResult[]): boolean {
+function placeholderCases(cases: readonly CaseResult[]): CaseResult[] {
   const typical = cases.find(({ label }) => label === TYPICAL_ARGUMENTS);
-  return (
-    typical?.outcome === "handle" &&
-    !gaveIdZeroOrMinusOne(typical) &&
-    placeholderCases(cases).length > 0
+  if (typical?.outcome !== "handle") return [];
+  return cases.filter(
+    (testCase) =>
+      testCase.label !== TYPICAL_ARGUMENTS &&
+      gaveIdZeroOrMinusOne(testCase) &&
+      testCase.id !== typical.id,
   );
 }
 
@@ -175,7 +175,8 @@ const VERDICTS: readonly (readonly [
   [
     "nullable (placeholder)",
     (cases, family) =>
-      PLACEHOLDER_FAMILIES.includes(family) && showsPlaceholder(cases),
+      PLACEHOLDER_FAMILIES.includes(family) &&
+      placeholderCases(cases).length > 0,
   ],
   // Outside a constructor or a registration, a handle of id 0 or -1 is
   // judged by hand in review: a converter's integer 0 or an enum-getter's
@@ -258,7 +259,7 @@ function caseCount(selected: readonly CaseResult[]): string {
  * when none did.
  */
 function idZeroOrMinusOneSentences(cases: readonly CaseResult[]): string[] {
-  return PLACEHOLDER_IDS.flatMap((id) => {
+  return ID_ZERO_OR_MINUS_ONE.flatMap((id) => {
     const selected = cases.filter(gaveId(id));
     return selected.length === 0
       ? []
@@ -273,7 +274,7 @@ function idZeroOrMinusOneSentences(cases: readonly CaseResult[]): string[] {
  * `id 0`, `id -1`, or `id 0 or -1` when they had both.
  */
 function placeholderIds(selected: readonly CaseResult[]): string {
-  const ids = PLACEHOLDER_IDS.filter((id) => selected.some(gaveId(id)));
+  const ids = ID_ZERO_OR_MINUS_ONE.filter((id) => selected.some(gaveId(id)));
   return `id ${ids.join(" or ")}`;
 }
 
@@ -286,9 +287,8 @@ function placeholderIds(selected: readonly CaseResult[]): string {
  * case for `non-null (evidence)`, then, for its variant of id 0 or -1, the
  * cases that gave a handle of each id; for `nullable (rule)`, what the
  * family may have nothing for, then every case, then the cases that gave
- * a handle of id 0 or -1; for
- * `unsafe`, the crash, then the sentence the other cases give
- * (`unsafeNotes`). Labels are joined with commas, in parentheses. A
+ * a handle of id 0 or -1; for `unsafe`, the crash, then the sentence the
+ * other cases give (`unsafeNotes`). Labels are joined with commas, in parentheses. A
  * Native proved nullable next to a crashed case gets the crash first too.
  * `review` gets no text, only "review", so no unchecked text reaches
  * `@remarks`. `nullable (rule)` for a family whose Natives may be

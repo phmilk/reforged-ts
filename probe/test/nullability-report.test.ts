@@ -13,7 +13,11 @@ import {
   REPORT_HEADER,
   type SliceSection,
 } from "../src/nullability/section.js";
-import { FAMILIES, proposedNotes } from "../src/nullability/verdict.js";
+import {
+  FAMILIES,
+  proposedNotes,
+  TYPICAL_ARGUMENTS,
+} from "../src/nullability/verdict.js";
 import { preloadFile } from "./support/bridge.js";
 import {
   caseRun,
@@ -1033,6 +1037,26 @@ describe("the nullability report", () => {
         "Returned a handle in every case of the nullability sweep (typical arguments, x: 0) on 3.0.0.12345; evidence, not proof. The handle had id 0 in a case (typical arguments).",
       ],
     ]);
+  });
+
+  it("tells a Placeholder handle of id -1 apart from typical arguments of id 0", async () => {
+    const { context, resultFile } = await setup();
+    expect(
+      await reportIds(context, resultFile, "CreateNothing", "constructor", [
+        ["typical arguments", 0],
+        ["x: 0", 1],
+        ["name: unknown name", -1],
+      ]),
+    ).toEqual([
+      [
+        "nullable (placeholder)",
+        "Returned a placeholder handle in place of nothing in a case of the nullability sweep (name: unknown name) on 3.0.0.12345: id -1, so a nil check does not catch it.",
+      ],
+    ]);
+  });
+
+  it("pins the label of typical arguments to the one the case generators write", () => {
+    expect(TYPICAL_ARGUMENTS).toBe("typical arguments");
   });
 
   it("judges a handle of id 0 or -1 outside a constructor or a registration in review, naming each id", async () => {
