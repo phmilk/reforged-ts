@@ -18,5 +18,6 @@
       "nullable": false
     }
   ],
+  "notes": "A nil filter keeps every item (nullability sweep, 3.0.0.24268).",
   "origin": "war3-types-strict"
 }
