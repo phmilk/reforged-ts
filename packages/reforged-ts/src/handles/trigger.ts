@@ -335,6 +335,10 @@ export class Trigger extends Handle<trigger> {
    * - The Trigger keeps the `triggeraction` the Native returns under
    *   `actionFunc`: `removeAction(actionFunc)` removes this action. Adding
    *   the same function twice adds two actions, both removed together.
+   * - When `TriggerAddAction` returns nothing, the Trigger keeps nothing and
+   *   the call still returns the Trigger. On a destroyed trigger the game
+   *   returns a placeholder `triggeraction` of id 0 instead, which the
+   *   Trigger keeps.
    * @param actionFunc - The action; it reads the event through the lookups,
    * such as `Unit.fromEvent()`.
    * @returns The Trigger, for chaining.
@@ -345,7 +349,7 @@ export class Trigger extends Handle<trigger> {
       this.handle,
       this.damageNesting(protect(this, "Trigger.addAction", actionFunc)),
     );
-    append(this.record().actions, actionFunc, action);
+    if (action !== undefined) append(this.record().actions, actionFunc, action);
     return this;
   }
 

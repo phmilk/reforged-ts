@@ -15448,10 +15448,10 @@ declare function TriggerClearConditions(whichTrigger: trigger): void;
  * @param whichTrigger - trigger
  * @param actionFunc - code
  * @returns triggeraction
- * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichTrigger: destroyed trigger) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichTrigger: destroyed trigger) rather than nothing, so a nil check does not tell that the trigger was destroyed.
+ * @remarks Returned a placeholder handle in place of nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268: id 0, so a nil check does not catch it. A nil check does not tell that the trigger was destroyed.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerAddAction}
  */
-declare function TriggerAddAction(whichTrigger: trigger, actionFunc: code): triggeraction;
+declare function TriggerAddAction(whichTrigger: trigger, actionFunc: code): triggeraction | undefined;
 
 /**
  * @param whichTrigger - trigger
@@ -20405,10 +20405,10 @@ declare function CreateMinimapIconOnUnit(whichUnit: unit, red: number, green: nu
  * @param pingPath - string
  * @param fogVisibility - fogstate
  * @returns minimapicon
- * @remarks Returned a handle in every case of the nullability sweep (typical arguments, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, pingPath: empty string, pingPath: unknown name, where: removed location) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (where: removed location) rather than nothing, so a nil check does not tell that the location was removed.
+ * @remarks Returned a placeholder handle in place of nothing in a case of the nullability sweep (where: removed location) on 3.0.0.24268: id 0, so a nil check does not catch it. A nil check does not tell that the location was removed.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateMinimapIconAtLoc}
  */
-declare function CreateMinimapIconAtLoc(where: location, red: number, green: number, blue: number, pingPath: string, fogVisibility: fogstate): minimapicon;
+declare function CreateMinimapIconAtLoc(where: location, red: number, green: number, blue: number, pingPath: string, fogVisibility: fogstate): minimapicon | undefined;
 
 /**
  * @param x - real
@@ -22492,10 +22492,10 @@ declare function GetDialogueTextKey(soundHandle: sound): string | undefined;
  * @param where - rect
  * @param effectID - integer (32-bit)
  * @returns weathereffect
- * @remarks Returned a handle in every case of the nullability sweep (typical arguments, effectID: unknown rawcode, where: removed rect) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (where: removed rect) and id -1 in a case (effectID: unknown rawcode) rather than nothing, so a nil check does not tell that the rect was removed or the effect is unknown.
+ * @remarks Returned a placeholder handle in place of nothing in 2 cases of the nullability sweep (effectID: unknown rawcode, where: removed rect) on 3.0.0.24268: id 0 or -1, so a nil check does not catch it. The handle had id -1 for the unknown effect and id 0 for the removed rect, so a nil check does not tell that the effect is unknown or the rect was removed.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddWeatherEffect}
  */
-declare function AddWeatherEffect(where: rect, effectID: number): weathereffect;
+declare function AddWeatherEffect(where: rect, effectID: number): weathereffect | undefined;
 
 /**
  * @param whichEffect - weathereffect
@@ -22695,10 +22695,10 @@ declare function AddSpellEffectTargetById(abilityId: number, t: effecttype, targ
  * @param x2 - real
  * @param y2 - real
  * @returns lightning
- * @remarks Returned a handle in every case of the nullability sweep (typical arguments, codeName: empty string, codeName: unknown name, x1: 0, x1: negative, x1: outside the world, x1: 2147483647, y1: 0, y1: negative, y1: outside the world, y1: 2147483647, x2: 0, x2: negative, x2: outside the world, x2: 2147483647, y2: 0, y2: negative, y2: outside the world, y2: 2147483647, checkVisibility: true, points unseen) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (codeName: empty string, codeName: unknown name, checkVisibility: true, points unseen), the same `lightning` each time rather than nothing, so a nil check does not tell that the code name is unknown or the points are unseen.
+ * @remarks Returned a placeholder handle in place of nothing in 3 cases of the nullability sweep (codeName: empty string, codeName: unknown name, checkVisibility: true, points unseen) on 3.0.0.24268: id 0, so a nil check does not catch it. It was the same `lightning` each time, so a nil check does not tell that the code name is unknown or the points are unseen. jassdoc documents these cases as returning nothing.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddLightning}
  */
-declare function AddLightning(codeName: string, checkVisibility: boolean, x1: number, y1: number, x2: number, y2: number): lightning;
+declare function AddLightning(codeName: string, checkVisibility: boolean, x1: number, y1: number, x2: number, y2: number): lightning | undefined;
 
 /**
  * @param codeName - string
@@ -22710,10 +22710,10 @@ declare function AddLightning(codeName: string, checkVisibility: boolean, x1: nu
  * @param y2 - real
  * @param z2 - real
  * @returns lightning
- * @remarks Returned a handle in every case of the nullability sweep (typical arguments, codeName: empty string, codeName: unknown name, x1: 0, x1: negative, x1: outside the world, x1: 2147483647, y1: 0, y1: negative, y1: outside the world, y1: 2147483647, z1: 0, z1: negative, z1: outside the world, z1: 2147483647, x2: 0, x2: negative, x2: outside the world, x2: 2147483647, y2: 0, y2: negative, y2: outside the world, y2: 2147483647, z2: 0, z2: negative, z2: outside the world, z2: 2147483647, checkVisibility: true, points unseen) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (codeName: empty string, codeName: unknown name, checkVisibility: true, points unseen), the same `lightning` each time rather than nothing, so a nil check does not tell that the code name is unknown or the points are unseen.
+ * @remarks Returned a placeholder handle in place of nothing in 3 cases of the nullability sweep (codeName: empty string, codeName: unknown name, checkVisibility: true, points unseen) on 3.0.0.24268: id 0, so a nil check does not catch it. It was the same `lightning` each time, so a nil check does not tell that the code name is unknown or the points are unseen. jassdoc documents these cases as returning nothing.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddLightningEx}
  */
-declare function AddLightningEx(codeName: string, checkVisibility: boolean, x1: number, y1: number, z1: number, x2: number, y2: number, z2: number): lightning;
+declare function AddLightningEx(codeName: string, checkVisibility: boolean, x1: number, y1: number, z1: number, x2: number, y2: number, z2: number): lightning | undefined;
 
 /**
  * @param whichBolt - lightning
@@ -23129,10 +23129,10 @@ declare function SetImageType(whichImage: image, imageType: number): void;
  * @param forcePaused - boolean
  * @param noBirthTime - boolean
  * @returns ubersplat
- * @remarks Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, name: empty string, name: unknown name, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, alpha: 0, alpha: negative, alpha: outside the world, alpha: 2147483647) on 3.0.0.24268; evidence, not proof. The handle had id -1 in 2 cases (name: empty string, name: unknown name), the same `ubersplat` both times rather than nothing, so a nil check does not tell that the name is unknown.
+ * @remarks Returned a placeholder handle in place of nothing in 2 cases of the nullability sweep (name: empty string, name: unknown name) on 3.0.0.24268: id -1, so a nil check does not catch it. It was the same `ubersplat` both times, so a nil check does not tell that the name is unknown.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUbersplat}
  */
-declare function CreateUbersplat(x: number, y: number, name: string, red: number, green: number, blue: number, alpha: number, forcePaused: boolean, noBirthTime: boolean): ubersplat;
+declare function CreateUbersplat(x: number, y: number, name: string, red: number, green: number, blue: number, alpha: number, forcePaused: boolean, noBirthTime: boolean): ubersplat | undefined;
 
 /**
  * @param whichSplat - ubersplat
@@ -25347,10 +25347,10 @@ declare function BlzSetUnitFacingEx(whichUnit: unit, facingAngle: number): void;
  * @param abilityId - integer (32-bit)
  * @param order - string
  * @returns commandbuttoneffect
- * @remarks Returned a handle in every case of the nullability sweep (typical arguments, abilityId: unknown rawcode, order: empty string, order: unknown name) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 2 cases (order: empty string, order: unknown name), the same `commandbuttoneffect` both times rather than nothing, so a nil check does not tell that the order is unknown.
+ * @remarks Returned a placeholder handle in place of nothing in 2 cases of the nullability sweep (order: empty string, order: unknown name) on 3.0.0.24268: id 0, so a nil check does not catch it. It was the same `commandbuttoneffect` both times, so a nil check does not tell that the order is unknown.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateCommandButtonEffect}
  */
-declare function CreateCommandButtonEffect(abilityId: number, order: string): commandbuttoneffect;
+declare function CreateCommandButtonEffect(abilityId: number, order: string): commandbuttoneffect | undefined;
 
 /**
  * @param whichUprgade - integer (32-bit)

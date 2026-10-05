@@ -309,13 +309,15 @@ function callRun(cases: readonly ReturnType<typeof callCase>[]): string[] {
 }
 
 /**
- * Reports a finished run whose six Natives give the six verdicts, one
+ * Reports a finished run whose seven Natives give the seven verdicts, one
  * each, in the order of the `Verdict` type, against an Overlay that types every
  * one of them nullable, or every one non-null, as `nullable` says:
  * GetOwningPlayer returns nothing; GetTriggerUnit, of a nullable family, a
  * handle; CreateTimer's case was skipped after a crash; CreateUnit's
- * raised an error; Location returns a handle; TriggerAddAction a handle of
- * id 0. Returns the Slice's section.
+ * raised an error; CreateUbersplat a handle for typical arguments and a
+ * Placeholder handle of id -1 for an unknown name; Location returns a
+ * handle; TriggerAddAction a handle of id 0, with no case of typical
+ * arguments to tell it from. Returns the Slice's section.
  */
 async function reportEveryVerdict(
   context: Context,
@@ -327,6 +329,7 @@ async function reportEveryVerdict(
     GetTriggerUnit: { nullable, family: "event-response" },
     CreateTimer: { nullable, family: "constructor" },
     CreateUnit: { nullable, family: "constructor" },
+    CreateUbersplat: { nullable, family: "constructor" },
     Location: { nullable, family: "constructor" },
     TriggerAddAction: { nullable, family: "registration" },
   });
@@ -337,6 +340,8 @@ async function reportEveryVerdict(
       "CASE case=outside%20its%20event group=a native=GetTriggerUnit",
       "CASE case=one%20call group=a native=CreateTimer",
       "CASE case=one%20call group=a native=CreateUnit",
+      "CASE case=typical%20arguments group=a native=CreateUbersplat",
+      "CASE case=name:%20unknown%20name group=a native=CreateUbersplat",
       "CASE case=origin group=a native=Location",
       "CASE case=destroyed%20trigger group=b native=TriggerAddAction",
       "PENDING label=GetOwningPlayer%20removed%20unit",
@@ -346,6 +351,10 @@ async function reportEveryVerdict(
       "SKIP case=one%20call group=a native=CreateTimer reason=crashed",
       "PENDING label=CreateUnit%20one%20call",
       "CALL case=one%20call group=a message=bad%20arg native=CreateUnit outcome=error",
+      "PENDING label=CreateUbersplat%20typical%20arguments",
+      "CALL case=typical%20arguments group=a id=1 native=CreateUbersplat outcome=handle type=ubersplat:%200000020F",
+      "PENDING label=CreateUbersplat%20name:%20unknown%20name",
+      "CALL case=name:%20unknown%20name group=a id=-1 native=CreateUbersplat outcome=handle type=ubersplat:%2000000210",
       "PENDING label=Location%20origin",
       "CALL case=origin group=a id=1048578 native=Location outcome=handle type=location:%200000020D",
       "PENDING label=TriggerAddAction%20destroyed%20trigger",
@@ -855,7 +864,7 @@ describe("the nullability report", () => {
     ]);
   });
 
-  it("reports a mismatch whenever the Overlay types a Native non-null without evidence: unsafe, review and both nullable verdicts", async () => {
+  it("reports a mismatch whenever the Overlay types a Native non-null without evidence: unsafe, review and every nullable verdict", async () => {
     const { context, resultFile } = await setup();
     const slice = await reportEveryVerdict(context, resultFile, false);
     expect(
@@ -865,8 +874,9 @@ describe("the nullability report", () => {
       ["nullable (rule)", "mismatch"],
       ["unsafe", "mismatch"],
       ["review", "mismatch"],
+      ["nullable (placeholder)", "mismatch"],
       ["non-null (evidence)", "consistent"],
-      ["non-null (evidence, handle id 0)", "consistent"],
+      ["non-null (evidence, handle id 0 or -1)", "consistent"],
     ]);
   });
 
@@ -880,8 +890,9 @@ describe("the nullability report", () => {
       ["nullable (rule)", "consistent"],
       ["unsafe", "consistent"],
       ["review", "consistent"],
+      ["nullable (placeholder)", "consistent"],
       ["non-null (evidence)", "consistent"],
-      ["non-null (evidence, handle id 0)", "consistent"],
+      ["non-null (evidence, handle id 0 or -1)", "consistent"],
     ]);
   });
 
@@ -939,11 +950,105 @@ describe("the nullability report", () => {
     expect(slice.natives.map(({ verdict, notes }) => [verdict, notes])).toEqual(
       [
         [
-          "non-null (evidence, handle id 0)",
+          "non-null (evidence, handle id 0 or -1)",
           "Returned a handle in every case of the nullability sweep (live trigger, destroyed trigger) on 3.0.0.12345; evidence, not proof. The handle had id 0 in a case (destroyed trigger).",
         ],
       ],
     );
+  });
+
+  /**
+   * Reports one Native of `family`, nullable in the Overlay, whose cases
+   * give the ids `ids`, by label, in that order. Returns its verdict and
+   * proposed notes.
+   */
+  async function reportIds(
+    context: Context,
+    resultFile: string,
+    native: string,
+    family: string,
+    ids: readonly (readonly [label: string, id: number])[],
+  ) {
+    const overlayFolder = await overlayWith(context, {
+      [native]: { nullable: true, family },
+    });
+    await writeResultFile(
+      resultFile,
+      caseRun(ids.map(([label, id]) => handleCase(native, label, id))),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    return slice.natives.map(({ verdict, notes }) => [verdict, notes]);
+  }
+
+  it("makes a constructor nullable when a case other than typical arguments gave a Placeholder handle, naming its cases and ids", async () => {
+    const { context, resultFile } = await setup();
+    expect(
+      await reportIds(context, resultFile, "AddWeatherEffect", "constructor", [
+        ["typical arguments", 1],
+        ["effectID: unknown rawcode", -1],
+        ["where: removed rect", 0],
+      ]),
+    ).toEqual([
+      [
+        "nullable (placeholder)",
+        "Returned a placeholder handle in place of nothing in 2 cases of the nullability sweep (effectID: unknown rawcode, where: removed rect) on 3.0.0.12345: id 0 or -1, so a nil check does not catch it.",
+      ],
+    ]);
+  });
+
+  it("makes a registration nullable for a Placeholder handle of id 0, in a case", async () => {
+    const { context, resultFile } = await setup();
+    expect(
+      await reportIds(context, resultFile, "TriggerAddAction", "registration", [
+        ["typical arguments", 1048577],
+        ["whichTrigger: destroyed trigger", 0],
+      ]),
+    ).toEqual([
+      [
+        "nullable (placeholder)",
+        "Returned a placeholder handle in place of nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.12345: id 0, so a nil check does not catch it.",
+      ],
+    ]);
+  });
+
+  it("keeps a constructor's handle of id 0 from typical arguments a handle, not a Placeholder", async () => {
+    const { context, resultFile } = await setup();
+    expect(
+      await reportIds(
+        context,
+        resultFile,
+        "TerrainDeformCrater",
+        "constructor",
+        [
+          ["typical arguments", 0],
+          ["x: 0", 1],
+        ],
+      ),
+    ).toEqual([
+      [
+        "non-null (evidence, handle id 0 or -1)",
+        "Returned a handle in every case of the nullability sweep (typical arguments, x: 0) on 3.0.0.12345; evidence, not proof. The handle had id 0 in a case (typical arguments).",
+      ],
+    ]);
+  });
+
+  it("judges a handle of id 0 or -1 outside a constructor or a registration in review, naming each id", async () => {
+    const { context, resultFile } = await setup();
+    expect(
+      await reportIds(context, resultFile, "GetPlayerRace", "enum-getter", [
+        ["typical arguments", 1],
+        ["whichPlayer: neutral player", 0],
+        ["whichPlayer: empty slot", -1],
+      ]),
+    ).toEqual([
+      [
+        "non-null (evidence, handle id 0 or -1)",
+        "Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: neutral player, whichPlayer: empty slot) on 3.0.0.12345; evidence, not proof. The handle had id 0 in a case (whichPlayer: neutral player). The handle had id -1 in a case (whichPlayer: empty slot).",
+      ],
+    ]);
   });
 
   it("reviews an odd value, one that is no handle, whatever the family", async () => {
@@ -1689,7 +1794,7 @@ describe("the nullability report's converter notes", () => {
     ).toEqual([
       [
         "ConvertRace",
-        "non-null (evidence, handle id 0)",
+        "non-null (evidence, handle id 0 or -1)",
         "Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.12345); the handle's id is the integer passed in. Evidence, not proof.",
       ],
       [
@@ -1699,7 +1804,7 @@ describe("the nullability report's converter notes", () => {
       ],
       [
         "ConvertAbilityIntegerLevelArrayField",
-        "non-null (evidence, handle id 0)",
+        "non-null (evidence, handle id 0 or -1)",
         "Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.12345); the handle's id is the integer passed in. Evidence, not proof.",
       ],
     ]);

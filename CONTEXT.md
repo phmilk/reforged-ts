@@ -124,6 +124,10 @@ _Avoid_: nullability audit, null check, nullability test
 The kind of handle-returning Native the curation rule types by: whether it may be typed non-null at all, and which cases the Nullability sweep runs before it is. A converter, enum-getter, constructor, registration or intrinsic-property Native may be non-null; an event-response, callback-getter, lookup or optional-property Native is nullable, since by its nature it may have nothing to return.
 _Avoid_: category, kind, group (a Slice's case group)
 
+**Placeholder handle**:
+A handle the game returns in place of nothing, in a case where the Native could not do what it was asked (an unknown name or rawcode, a removed or destroyed argument), recognisable by an id no successful call of that Native returns (0 or -1). A handle of id 0 that a successful call returns (a converter's integer 0, an enum-getter's constant of integer 0, the first terrain deformation) is not a placeholder.
+_Avoid_: sentinel, null handle
+
 **Slice**:
 One batch of the Nullability sweep: one Probe, named by what it holds, `nullability-<family>[-<part>]` (`nullability-converters-1`, `nullability-filters`), which declares its Natives of one Nullability family and runs the cases its family's case generator expands, and one section of the sweep's report.
 _Avoid_: batch, phase, chunk

@@ -1,12 +1,13 @@
 # Nullability sweep
 
-The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, written by `pnpm probe:nullability-report <probe>` from the Result file of the Slice's last Probe run, and replaced, alone, each time the command runs again. Each Native gets a verdict from its cases and its Nullability family, compared with the Overlay's `returns.nullable`, and a proposed `notes` text; a Native is a `mismatch` when the Overlay types it non-null and its verdict is neither `non-null (evidence)` nor `non-null (evidence, handle id 0)`, `unsafe` and `review` included. An `unsafe` Native, one with a case that crashed the game, is proposed nullable. Each parameter measured by call cases gets a verdict from them, compared with the Overlay's `params[].nullable`, and a proposed sentence of its Native's `notes`, since the Overlay has no `params[].notes`. A converter backed non-null gets condensed `notes`, the measured fact instead of its case list. The command never writes the Overlay: `pnpm probe:nullability-curate <probe>` applies a Slice's verdicts to it, and every change goes through review.
+The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, written by `pnpm probe:nullability-report <probe>` from the Result file of the Slice's last Probe run, and replaced, alone, each time the command runs again. Each Native gets a verdict from its cases and its Nullability family, compared with the Overlay's `returns.nullable`, and a proposed `notes` text; a Native is a `mismatch` when the Overlay types it non-null and its verdict is neither `non-null (evidence)` nor `non-null (evidence, handle id 0 or -1)`, `unsafe`, `review` and `nullable (placeholder)` included. An `unsafe` Native, one with a case that crashed the game, is proposed nullable, and so is a `nullable (placeholder)` one, a constructor or a registration that returned a Placeholder handle (id 0 or -1) in place of nothing. Each parameter measured by call cases gets a verdict from them, compared with the Overlay's `params[].nullable`, and a proposed sentence of its Native's `notes`, since the Overlay has no `params[].notes`. A converter backed non-null gets condensed `notes`, the measured fact instead of its case list. The command never writes the Overlay: `pnpm probe:nullability-curate <probe>` applies a Slice's verdicts to it, and every change goes through review.
 
 ## `nullability-converters-1`
 
 - Probe: `nullability-converters-1`
 - Patch: 3.0.0.24268
-- Date: 2026-10-04
+- Client: not recorded
+- Date: 2026-10-05
 - Run: `2c4f582a-e7e7-4cbc-8fc9-35494734dab9`
 
 ### `ConvertRace`
@@ -25,7 +26,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `race: 000002B380EA7C60` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -50,7 +51,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                         | (a)   | handle  | -2147483648 | `alliancetype: 000002B39041CFB0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -73,7 +74,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                  | (a)   | handle  | -2147483648 | `racepreference: 000002B380EE1A70` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -90,7 +91,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                       | (a)   | handle  | -2147483648 | `igamestate: 000002B380EE4F10` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -106,7 +107,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                | (a)   | handle  | -2147483648 | `fgamestate: 000002B380ED1110` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -139,7 +140,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                           | (a)   | handle  | -2147483648 | `playerstate: 000002B391410360` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -179,7 +180,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                         | (a)   | handle  | -2147483648 | `playerscore: 000002B390403670` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -198,7 +199,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                   | (a)   | handle  | -2147483648 | `playergameresult: 000002B380E1E900` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -217,7 +218,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `unitstate: 000002B374996FA0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -235,7 +236,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `aidifficulty: 000002B380E916D0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -266,7 +267,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                           | (a)   | handle  | -2147483648 | `gameevent: 000002B3806674F0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -303,7 +304,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                       | (a)   | handle  | -2147483648 | `playerevent: 000002B380EDDEE0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -366,7 +367,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                                                            | (a)   | handle  | -2147483648 | `playerunitevent: 000002B380E22420` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -382,7 +383,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `widgetevent: 000002B3806836C0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -399,7 +400,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                  | (a)   | handle  | -2147483648 | `dialogevent: 000002B380805630` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -464,7 +465,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                        | (a)   | handle  | -2147483648 | `unitevent: 000002B3903C7780` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -485,7 +486,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648              | (a)   | handle  | -2147483648 | `limitop: 000002B380806AC0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -527,7 +528,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                  | (a)   | handle  | -2147483648 | `unittype: 000002B37499F530` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -547,7 +548,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `gamespeed: 000002B39140EB30` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -566,7 +567,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                        | (a)   | handle  | -2147483648 | `placement: 000002B380ED2000` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -584,7 +585,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `startlocprio: 000002B2C5253C10` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -603,7 +604,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648             | (a)   | handle  | -2147483648 | `gamedifficulty: 000002B3747ABF80` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -626,7 +627,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                    | (a)   | handle  | -2147483648 | `gametype: 000002B380DD10A0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -660,7 +661,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                          | (a)   | handle  | -2147483648 | `mapflag: 000002B39146C200` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -675,7 +676,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | 2147483647 | (a)   | handle  | 2147483647 | `mapvisibility: 000002B3914746F0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -690,7 +691,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | 2147483647 | (a)   | handle  | 2147483647 | `mapsetting: 000002B391474B30` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -709,7 +710,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `mapdensity: 000002B391485A80` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -730,7 +731,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648             | (a)   | handle  | -2147483648 | `mapcontrol: 000002B391490CE0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -770,7 +771,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                | (a)   | handle  | -2147483648 | `playercolor: 000002B3914E8AF0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -788,7 +789,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                  | (a)   | handle  | -2147483648 | `playerslotstate: 000002B3914F7230` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -818,7 +819,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                      | (a)   | handle  | -2147483648 | `volumegroup: 000002B39151B780` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -847,7 +848,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                               | (a)   | handle  | -2147483648 | `camerafield: 000002B391548820` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -868,7 +869,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                  | (a)   | handle  | -2147483648 | `blendmode: 000002B39148B840` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -885,7 +886,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `raritycontrol: 000002B3747A2650` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -904,7 +905,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `texmapflags: 000002B3903CAAB0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -922,7 +923,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `fogstate: 000002B3903E2C80` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -944,7 +945,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                | (a)   | handle  | -2147483648 | `effecttype: 000002B38F957640` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -961,7 +962,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648               | (a)   | handle  | -2147483648 | `version: 000002B3806673B0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -986,7 +987,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                             | (a)   | handle  | -2147483648 | `itemtype: 000002B380E40720` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1008,7 +1009,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `attacktype: 000002B3903DD470` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1017,7 +1018,8 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Probe: `nullability-converters-2`
 - Patch: 3.0.0.24268
-- Date: 2026-10-04
+- Client: not recorded
+- Date: 2026-10-05
 - Run: `f324589b-8437-43ea-83e0-ae689edb1c27`
 
 ### `ConvertDamageType`
@@ -1052,7 +1054,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                  | (a)   | handle  | -2147483648 | `damagetype: 000001C6E05C6B60` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1091,7 +1093,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                        | (a)   | handle  | -2147483648 | `weapontype: 000001C6E061A160` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1108,7 +1110,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                 | (a)   | handle  | -2147483648 | `soundtype: 000001C6E05AC090` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1131,7 +1133,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                       | (a)   | handle  | -2147483648 | `pathingtype: 000001C6E05F8680` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1175,7 +1177,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `animtype: 000001C6DA2E6040` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1242,7 +1244,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                   | (a)   | handle  | -2147483648 | `subanimtype: 000001C73FAD95B0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1280,7 +1282,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                  | (a)   | handle  | -2147483648 | `originframetype: 000001C6E05F9E70` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1304,7 +1306,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648             | (a)   | handle  | -2147483648 | `framepointtype: 000001C6E05913A0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1325,7 +1327,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `textaligntype: 000001C780363E10` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1356,7 +1358,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                          | (a)   | handle  | -2147483648 | `frameeventtype: 000001C6CD1C8CC0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1557,7 +1559,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                     | (a)   | handle  | -2147483648 | `oskeytype: 000001C6DA2DE6D0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1585,7 +1587,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                 | (a)   | handle  | -2147483648 | `abilityintegerfield: 000001C6DA38B4A0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1601,7 +1603,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                    | (a)   | handle  | -2147483648 | `abilityrealfield: 000001C6DA3A3030` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1619,7 +1621,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                      | (a)   | handle  | -2147483648 | `abilitybooleanfield: 000001C6DA39A380` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1639,7 +1641,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                         | (a)   | handle  | -2147483648 | `abilitystringfield: 000001C6DA322270` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -1648,7 +1650,8 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Probe: `nullability-converters-3`
 - Patch: 3.0.0.24268
-- Date: 2026-10-04
+- Client: not recorded
+- Date: 2026-10-05
 - Run: `90ad2dd1-7a4f-409e-aff7-7dd9f611e004`
 
 ### `ConvertAbilityIntegerLevelField`
@@ -1845,7 +1848,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                         | (a)   | handle  | -2147483648 | `abilityintegerlevelfield: 000002BC2FC4E340` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2274,7 +2277,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                                       | (a)   | handle  | -2147483648 | `abilityreallevelfield: 000002BD093A72F0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2353,7 +2356,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                    | (a)   | handle  | -2147483648 | `abilitybooleanlevelfield: 000002BD0A4D7F30` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2411,7 +2414,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                | (a)   | handle  | -2147483648 | `abilitystringlevelfield: 000002BD0A56DB90` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2426,7 +2429,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | 2147483647 | (a)   | handle  | 2147483647 | `abilityintegerlevelarrayfield: 000002BD0A4A6750` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2441,7 +2444,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | 2147483647 | (a)   | handle  | 2147483647 | `abilityreallevelarrayfield: 000002BD0A580AD0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2456,7 +2459,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | 2147483647 | (a)   | handle  | 2147483647 | `abilitybooleanlevelarrayfield: 000002BD0A4DB770` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2471,7 +2474,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | 2147483647 | (a)   | handle  | 2147483647 | `abilitystringlevelarrayfield: 000002BD093B8CA0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for 0, 1, -1 and 2147483647, its type having no common.j constant (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2480,7 +2483,8 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Probe: `nullability-converters-4`
 - Patch: 3.0.0.24268
-- Date: 2026-10-04
+- Client: not recorded
+- Date: 2026-10-05
 - Run: `980deee9-1cbf-448b-b141-4f8debd52a57`
 
 ### `ConvertUnitIntegerField`
@@ -2526,7 +2530,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                         | (a)   | handle  | -2147483648 | `unitintegerfield: 000001CE20884FA0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2574,7 +2578,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                               | (a)   | handle  | -2147483648 | `unitrealfield: 000001CE2086A990` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2603,7 +2607,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                       | (a)   | handle  | -2147483648 | `unitbooleanfield: 000001CE1F462B00` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2622,7 +2626,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                   | (a)   | handle  | -2147483648 | `unitstringfield: 000001CE1F498A10` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2645,7 +2649,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                            | (a)   | handle  | -2147483648 | `unitweaponintegerfield: 000001CE1F4393E0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2674,7 +2678,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                                | (a)   | handle  | -2147483648 | `unitweaponrealfield: 000001CE1F490C60` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2692,7 +2696,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                           | (a)   | handle  | -2147483648 | `unitweaponbooleanfield: 000001CE2089DB40` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2708,7 +2712,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                               | (a)   | handle  | -2147483648 | `unitweaponstringfield: 000001CE1F414990` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2734,7 +2738,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                     | (a)   | handle  | -2147483648 | `itemintegerfield: 000001CE1FDEEFF0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2750,7 +2754,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648              | (a)   | handle  | -2147483648 | `itemrealfield: 000001CE1EF4DBE0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2772,7 +2776,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                                  | (a)   | handle  | -2147483648 | `itembooleanfield: 000001CE1F417F30` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2788,7 +2792,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `itemstringfield: 000001CE1EF3A100` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2811,7 +2815,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648             | (a)   | handle  | -2147483648 | `movetype: 000001CE1EF60930` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2837,7 +2841,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648              | (a)   | handle  | -2147483648 | `targetflag: 000001CE208790C0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2858,7 +2862,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `armortype: 000001CE1EF2AA60` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2876,7 +2880,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `heroattribute: 000001CE1FCD0A40` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2899,7 +2903,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648            | (a)   | handle  | -2147483648 | `defensetype: 000001CE1EF2AC80` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2919,7 +2923,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                | (a)   | handle  | -2147483648 | `regentype: 000001CE034DA470` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2946,7 +2950,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                | (a)   | handle  | -2147483648 | `unitcategory: 000001CE1FDEE910` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2969,7 +2973,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                   | (a)   | handle  | -2147483648 | `pathingflag: 000001CE20846380` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -2990,7 +2994,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648             | (a)   | handle  | -2147483648 | `fogstyle: 000001CE203B7670` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -3015,7 +3019,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648              | (a)   | handle  | -2147483648 | `equipmentType: 000001CE20754480` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -3039,7 +3043,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                | (a)   | handle  | -2147483648 | `itemTag: 000001CE20774C20` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -3063,7 +3067,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | -2147483648                       | (a)   | handle  | -2147483648 | `loadoutslot: 000001CE1F4993B0` |         |
 
 - Family: `converter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle for every common.j constant of its type and for -1, past the last constant, 2147483647 and -2147483648 (nullability sweep, 3.0.0.24268); the handle's id is the integer passed in. Evidence, not proof.
@@ -3523,7 +3527,8 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 
 - Probe: `nullability-event-responses-2`
 - Patch: 3.0.0.24268
-- Date: 2026-10-04
+- Client: not recorded
+- Date: 2026-10-05
 - Run: `ceda43ff-060f-4165-98e4-393064ab2e7b`
 
 ### `GetManipulatingUnit`
@@ -3896,7 +3901,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (rule)
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268.
+- Proposed `notes`: May return nothing outside its event. Returned a handle in every case of the nullability sweep (outside its event) on 3.0.0.24268. The handle had id -1 in a case (outside its event).
 
 ### `BlzGetEventDamageType`
 
@@ -4827,7 +4832,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Probe: `nullability-getters`
 - Patch: 3.0.0.24268
 - Client: 3.0.0.24268
-- Date: 2026-10-04
+- Date: 2026-10-05
 - Run: `25b3accc-0d8b-4b30-a088-2211a7110bb8`
 
 ### `GetStartLocPrio`
@@ -4843,7 +4848,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | prioSlotIndex: 2147483647        | (a)   | handle  | 0   | `startlocprio: 0000019CEF76DC00` |         |
 
 - Family: `enum-getter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichStartLoc: negative, whichStartLoc: outside the world, whichStartLoc: 2147483647, prioSlotIndex: negative, prioSlotIndex: outside the world, prioSlotIndex: 2147483647) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 7 cases (typical arguments, whichStartLoc: negative, whichStartLoc: outside the world, whichStartLoc: 2147483647, prioSlotIndex: negative, prioSlotIndex: outside the world, prioSlotIndex: 2147483647).
@@ -4891,7 +4896,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | one call | (a)   | handle  | 0   | `gamedifficulty: 0000019CEF76DEC0` |         |
 
 - Family: `enum-getter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (one call).
@@ -4915,7 +4920,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | one call | (a)   | handle  | 0   | `mapdensity: 0000019CEF76DDD0` |         |
 
 - Family: `enum-getter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (one call) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (one call).
@@ -4929,7 +4934,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | whichPlayer: neutral player | (a)   | handle  | 27  | `playercolor: 0000019D0BC0CAD0` |         |
 
 - Family: `enum-getter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (typical arguments).
@@ -4943,7 +4948,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | whichPlayer: neutral player | (a)   | handle  | 4   | `mapcontrol: 0000019CEF76D230` |         |
 
 - Family: `enum-getter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (typical arguments).
@@ -4957,7 +4962,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | whichPlayer: neutral player | (a)   | handle  | 1   | `playerslotstate: 0000019CEF76E300` |         |
 
 - Family: `enum-getter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichPlayer: empty slot).
@@ -5011,7 +5016,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | whichItem: removed item | (b)   | handle  | 0   | `equipmentType: 0000019CEF7729B0` |         |
 
 - Family: `enum-getter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichItem: dead item, whichItem: removed item) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (typical arguments, whichItem: dead item, whichItem: removed item).
@@ -5025,7 +5030,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | whichItem: removed item | (b)   | handle  | 0   | `itemTag: 0000019CEF772C60` |         |
 
 - Family: `enum-getter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichItem: dead item, whichItem: removed item) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (typical arguments, whichItem: dead item, whichItem: removed item).
@@ -5093,7 +5098,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | whichPlayer: neutral player | (a)   | handle  | 0   | `race: 0000019D0B9F7EE0` |         |
 
 - Family: `enum-getter`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichPlayer: empty slot, whichPlayer: neutral player) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichPlayer: neutral player).
@@ -5177,7 +5182,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Probe: `nullability-constructors-game`
 - Patch: 3.0.0.24268
 - Client: 3.0.0.24268
-- Date: 2026-10-04
+- Date: 2026-10-05
 - Run: `77478543-2ed0-4bfa-a8ec-f4585cac0701`
 
 ### `CreateTimer`
@@ -5401,10 +5406,10 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | whichTrigger: destroyed trigger | (b)   | handle  | 0       | `triggeraction: 000001F8AA979410` |         |
 
 - Family: `constructor`
-- Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `false`
+- Verdict: nullable (placeholder)
+- Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, whichTrigger: destroyed trigger) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichTrigger: destroyed trigger).
+- Proposed `notes`: Returned a placeholder handle in place of nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268: id 0, so a nil check does not catch it.
 
 ### `CreateFogModifierRect`
 
@@ -5669,10 +5674,10 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | order: unknown name        | (a)   | handle  | 0       | `commandbuttoneffect: 000001F980486D00` |         |
 
 - Family: `constructor`
-- Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `false`
+- Verdict: nullable (placeholder)
+- Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, abilityId: unknown rawcode, order: empty string, order: unknown name) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 2 cases (order: empty string, order: unknown name).
+- Proposed `notes`: Returned a placeholder handle in place of nothing in 2 cases of the nullability sweep (order: empty string, order: unknown name) on 3.0.0.24268: id 0, so a nil check does not catch it.
 
 ### `CreateUpgradeCommandButtonEffect`
 
@@ -5705,7 +5710,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Probe: `nullability-constructors-world`
 - Patch: 3.0.0.24268
 - Client: 3.0.0.24268
-- Date: 2026-10-04
+- Date: 2026-10-05
 - Run: `3396d838-f905-4949-9b57-c73e310bfcb3`
 
 ### `CreateItem`
@@ -5980,10 +5985,10 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | where: removed location  | (b)   | handle  | 0   | `minimapicon: 000001EC8B83B4A0` |         |
 
 - Family: `constructor`
-- Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `false`
+- Verdict: nullable (placeholder)
+- Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, pingPath: empty string, pingPath: unknown name, where: removed location) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (where: removed location).
+- Proposed `notes`: Returned a placeholder handle in place of nothing in a case of the nullability sweep (where: removed location) on 3.0.0.24268: id 0, so a nil check does not catch it.
 
 ### `CreateMinimapIcon`
 
@@ -6158,10 +6163,10 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | where: removed rect       | (b)   | handle  | 0   | `weathereffect: 000001EC8B854E10` |         |
 
 - Family: `constructor`
-- Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `false`
+- Verdict: nullable (placeholder)
+- Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, effectID: unknown rawcode, where: removed rect) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (where: removed rect).
+- Proposed `notes`: Returned a placeholder handle in place of nothing in 2 cases of the nullability sweep (effectID: unknown rawcode, where: removed rect) on 3.0.0.24268: id 0 or -1, so a nil check does not catch it.
 
 ### `TerrainDeformCrater`
 
@@ -6190,7 +6195,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | duration: 2147483647        | (a)   | handle  | 20  | `terraindeformation: 000001EC8B42BB50` |         |
 
 - Family: `constructor`
-- Verdict: non-null (evidence, handle id 0)
+- Verdict: non-null (evidence, handle id 0 or -1)
 - Overlay `returns.nullable`: `false`
 - Comparison: consistent
 - Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, radius: 0, radius: negative, radius: outside the world, radius: 2147483647, depth: 0, depth: negative, depth: outside the world, depth: 2147483647, duration: 0, duration: negative, duration: outside the world, duration: 2147483647) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (typical arguments).
@@ -6535,10 +6540,10 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | checkVisibility: true, points unseen | (a)   | handle  | 0       | `lightning: 000001EC8B710480` |         |
 
 - Family: `constructor`
-- Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `false`
+- Verdict: nullable (placeholder)
+- Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, codeName: empty string, codeName: unknown name, x1: 0, x1: negative, x1: outside the world, x1: 2147483647, y1: 0, y1: negative, y1: outside the world, y1: 2147483647, x2: 0, x2: negative, x2: outside the world, x2: 2147483647, y2: 0, y2: negative, y2: outside the world, y2: 2147483647, checkVisibility: true, points unseen) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (codeName: empty string, codeName: unknown name, checkVisibility: true, points unseen).
+- Proposed `notes`: Returned a placeholder handle in place of nothing in 3 cases of the nullability sweep (codeName: empty string, codeName: unknown name, checkVisibility: true, points unseen) on 3.0.0.24268: id 0, so a nil check does not catch it.
 
 ### `AddLightningEx`
 
@@ -6574,10 +6579,10 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | checkVisibility: true, points unseen | (a)   | handle  | 0       | `lightning: 000001EC8B710480` |         |
 
 - Family: `constructor`
-- Verdict: non-null (evidence, handle id 0)
-- Overlay `returns.nullable`: `false`
+- Verdict: nullable (placeholder)
+- Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, codeName: empty string, codeName: unknown name, x1: 0, x1: negative, x1: outside the world, x1: 2147483647, y1: 0, y1: negative, y1: outside the world, y1: 2147483647, z1: 0, z1: negative, z1: outside the world, z1: 2147483647, x2: 0, x2: negative, x2: outside the world, x2: 2147483647, y2: 0, y2: negative, y2: outside the world, y2: 2147483647, z2: 0, z2: negative, z2: outside the world, z2: 2147483647, checkVisibility: true, points unseen) on 3.0.0.24268; evidence, not proof. The handle had id 0 in 3 cases (codeName: empty string, codeName: unknown name, checkVisibility: true, points unseen).
+- Proposed `notes`: Returned a placeholder handle in place of nothing in 3 cases of the nullability sweep (codeName: empty string, codeName: unknown name, checkVisibility: true, points unseen) on 3.0.0.24268: id 0, so a nil check does not catch it.
 
 ### `CreateImage`
 
@@ -6630,7 +6635,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: unsafe
 - Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Crashed the game in a case of the nullability sweep (imageType: 2147483647) on 3.0.0.24268. Returned a handle in every other case (typical arguments, file: empty string, file: unknown name, sizeX: 0, sizeX: negative, sizeX: outside the world, sizeX: 2147483647, sizeY: 0, sizeY: negative, sizeY: outside the world, sizeY: 2147483647, sizeZ: 0, sizeZ: negative, sizeZ: outside the world, sizeZ: 2147483647, posX: 0, posX: negative, posX: outside the world, posX: 2147483647, posY: 0, posY: negative, posY: outside the world, posY: 2147483647, posZ: 0, posZ: negative, posZ: outside the world, posZ: 2147483647, originX: 0, originX: negative, originX: outside the world, originX: 2147483647, originY: 0, originY: negative, originY: outside the world, originY: 2147483647, originZ: negative, originZ: outside the world, originZ: 2147483647, imageType: 0, imageType: negative, imageType: outside the world).
+- Proposed `notes`: Crashed the game in a case of the nullability sweep (imageType: 2147483647) on 3.0.0.24268. Returned a handle in every other case (typical arguments, file: empty string, file: unknown name, sizeX: 0, sizeX: negative, sizeX: outside the world, sizeX: 2147483647, sizeY: 0, sizeY: negative, sizeY: outside the world, sizeY: 2147483647, sizeZ: 0, sizeZ: negative, sizeZ: outside the world, sizeZ: 2147483647, posX: 0, posX: negative, posX: outside the world, posX: 2147483647, posY: 0, posY: negative, posY: outside the world, posY: 2147483647, posZ: 0, posZ: negative, posZ: outside the world, posZ: 2147483647, originX: 0, originX: negative, originX: outside the world, originX: 2147483647, originY: 0, originY: negative, originY: outside the world, originY: 2147483647, originZ: negative, originZ: outside the world, originZ: 2147483647, imageType: 0, imageType: negative, imageType: outside the world). The handle had id -1 in 3 cases (file: empty string, file: unknown name, imageType: 0).
 
 ### `CreateUbersplat`
 
@@ -6665,10 +6670,10 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 | alpha: 2147483647        | (a)   | handle  | 25  | `ubersplat: 000001EC8B5438B0` |         |
 
 - Family: `constructor`
-- Verdict: non-null (evidence)
-- Overlay `returns.nullable`: `false`
+- Verdict: nullable (placeholder)
+- Overlay `returns.nullable`: `true`
 - Comparison: consistent
-- Proposed `notes`: Returned a handle in every case of the nullability sweep (typical arguments, x: 0, x: negative, x: outside the world, x: 2147483647, y: 0, y: negative, y: outside the world, y: 2147483647, name: empty string, name: unknown name, red: 0, red: negative, red: outside the world, red: 2147483647, green: 0, green: negative, green: outside the world, green: 2147483647, blue: 0, blue: negative, blue: outside the world, blue: 2147483647, alpha: 0, alpha: negative, alpha: outside the world, alpha: 2147483647) on 3.0.0.24268; evidence, not proof.
+- Proposed `notes`: Returned a placeholder handle in place of nothing in 2 cases of the nullability sweep (name: empty string, name: unknown name) on 3.0.0.24268: id -1, so a nil check does not catch it.
 
 ### `CreateBlightedGoldmine`
 
