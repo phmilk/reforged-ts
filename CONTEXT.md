@@ -128,6 +128,22 @@ _Avoid_: map object, custom unit
 The World Editor's editor of Object data; an external editor of Object data is not one.
 _Avoid_: OE, object editor (for an external tool)
 
+**Studio**:
+The Toolchain's local app for editing what code does not express well, one area per thing it edits; today Object data, where it creates, edits and deletes any object of a Map project's map folder. It is not the Object Editor.
+_Avoid_: external editor, object editor, web editor
+
+**Object definition**:
+A type of object declared in a Map project's code rather than authored in an editor: a new Custom object, or a change to a Built-in object the map folder does not already change. It belongs to the code alone, never also to the map folder.
+_Avoid_: code object, compiletime object
+
+**Object sync**:
+Writing a Map project's Object definitions into its map folder's Object data, so that the World Editor, HiveWE and any other editor show them before a build.
+_Avoid_: inject, export, object generation
+
+**Object manifest**:
+The Map project's record of which Rawcodes belong to its Object definitions and what an Object sync last wrote for each, so a later one can replace, remove or detect a change made outside the code.
+_Avoid_: lock file, provenance field
+
 **Agent skill**:
 A folder holding a `SKILL.md` that scripts one workflow for an AI coding agent to follow when invoked (`add-wrapper`, `map-feature`).
 _Avoid_: prompt, recipe, playbook

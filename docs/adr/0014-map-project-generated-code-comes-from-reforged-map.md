@@ -36,4 +36,6 @@ A Custom Rawcode used by two kinds gets no `FourCC` overload: `FourCC("B000")` s
 - The lint rule (#466) and the hover tool (#468) read the Map project's JSON index from `src/generated/`.
 - A rename in the World Editor renames a Custom object's constant, and the build fails at each use until the code follows.
 
+The package only read when this was decided; ADR 0015 gives it a writer of Object data, for Object sync and the Studio.
+
 Decision record: https://github.com/phmilk/reforged-ts/issues/465
