@@ -27,5 +27,6 @@
       "nullable": false
     }
   ],
+  "notes": "Crashed the game in 2 cases of the nullability sweep (typeName: SIMPLEMESSAGEFRAME without its FDF fields, typeName: CONTROL without its FDF fields) on 3.0.0.24268. Returned nothing in 2 cases of the nullability sweep (typeName: empty string, typeName: unknown name) on 3.0.0.24268.",
   "origin": "war3-types-strict"
 }

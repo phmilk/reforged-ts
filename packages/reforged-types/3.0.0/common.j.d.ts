@@ -13820,6 +13820,7 @@ declare function ResumeTimer(whichTimer: timer): void;
 
 /**
  * @returns timer
+ * @remarks Crashed the game in a case of the nullability sweep (outside its event) on 3.0.0.24268. It was called in the action of a unit's damage event, a thread no timer started. Returned nothing in a case of the nullability sweep (callback of a destroyed timer) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetExpiredTimer}
  */
 declare function GetExpiredTimer(): timer | undefined;
@@ -24669,6 +24670,7 @@ declare function BlzCreateSimpleFrame(name: string, owner: framehandle, createCo
  * @param inherits - string
  * @param createContext - integer (32-bit)
  * @returns framehandle
+ * @remarks Crashed the game in 2 cases of the nullability sweep (typeName: SIMPLEMESSAGEFRAME without its FDF fields, typeName: CONTROL without its FDF fields) on 3.0.0.24268. Returned nothing in 2 cases of the nullability sweep (typeName: empty string, typeName: unknown name) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateFrameByType}
  */
 declare function BlzCreateFrameByType(typeName: string, name: string, owner: framehandle, inherits: string, createContext: number): framehandle | undefined;
@@ -25027,6 +25029,7 @@ declare function BlzFrameGetChildrenCount(frame: framehandle): number;
  * @param index - integer (32-bit)
  * @returns framehandle
  * @async
+ * @remarks Returned nothing in a case of the nullability sweep (index out of range) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzFrameGetChild}
  */
 declare function BlzFrameGetChild(frame: framehandle, index: number): framehandle | undefined;

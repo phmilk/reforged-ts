@@ -15,6 +15,7 @@
       "nullable": false
     }
   ],
+  "notes": "Returned nothing in a case of the nullability sweep (index out of range) on 3.0.0.24268.",
   "async": true,
   "origin": "war3-types-strict"
 }
