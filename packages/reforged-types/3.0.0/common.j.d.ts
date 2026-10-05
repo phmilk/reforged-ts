@@ -13898,6 +13898,7 @@ declare function BlzGroupUnitAt(whichGroup: group, index: number): unit | undefi
  * @param unitname - string
  * @param filter - boolexpr
  * @returns nothing
+ * @remarks A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/GroupEnumUnitsOfType}
  */
 declare function GroupEnumUnitsOfType(whichGroup: group, unitname: string, filter?: boolexpr): void;
@@ -13907,6 +13908,7 @@ declare function GroupEnumUnitsOfType(whichGroup: group, unitname: string, filte
  * @param whichPlayer - player
  * @param filter - boolexpr
  * @returns nothing
+ * @remarks A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/GroupEnumUnitsOfPlayer}
  */
 declare function GroupEnumUnitsOfPlayer(whichGroup: group, whichPlayer: player, filter?: boolexpr): void;
@@ -13917,6 +13919,7 @@ declare function GroupEnumUnitsOfPlayer(whichGroup: group, whichPlayer: player, 
  * @param filter - boolexpr
  * @param countLimit - integer (32-bit)
  * @returns nothing
+ * @remarks A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/GroupEnumUnitsOfTypeCounted}
  */
 declare function GroupEnumUnitsOfTypeCounted(whichGroup: group, unitname: string, filter: boolexpr | undefined, countLimit: number): void;
@@ -13926,6 +13929,7 @@ declare function GroupEnumUnitsOfTypeCounted(whichGroup: group, unitname: string
  * @param r - rect
  * @param filter - boolexpr
  * @returns nothing
+ * @remarks A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/GroupEnumUnitsInRect}
  */
 declare function GroupEnumUnitsInRect(whichGroup: group, r: rect, filter?: boolexpr): void;
@@ -13936,6 +13940,7 @@ declare function GroupEnumUnitsInRect(whichGroup: group, r: rect, filter?: boole
  * @param filter - boolexpr
  * @param countLimit - integer (32-bit)
  * @returns nothing
+ * @remarks A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/GroupEnumUnitsInRectCounted}
  */
 declare function GroupEnumUnitsInRectCounted(whichGroup: group, r: rect, filter: boolexpr | undefined, countLimit: number): void;
@@ -13947,6 +13952,7 @@ declare function GroupEnumUnitsInRectCounted(whichGroup: group, r: rect, filter:
  * @param radius - real
  * @param filter - boolexpr
  * @returns nothing
+ * @remarks A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/GroupEnumUnitsInRange}
  */
 declare function GroupEnumUnitsInRange(whichGroup: group, x: number, y: number, radius: number, filter?: boolexpr): void;
@@ -13957,6 +13963,7 @@ declare function GroupEnumUnitsInRange(whichGroup: group, x: number, y: number, 
  * @param radius - real
  * @param filter - boolexpr
  * @returns nothing
+ * @remarks A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/GroupEnumUnitsInRangeOfLoc}
  */
 declare function GroupEnumUnitsInRangeOfLoc(whichGroup: group, whichLocation: location, radius: number, filter?: boolexpr): void;
@@ -13969,6 +13976,7 @@ declare function GroupEnumUnitsInRangeOfLoc(whichGroup: group, whichLocation: lo
  * @param filter - boolexpr
  * @param countLimit - integer (32-bit)
  * @returns nothing
+ * @remarks A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/GroupEnumUnitsInRangeCounted}
  */
 declare function GroupEnumUnitsInRangeCounted(whichGroup: group, x: number, y: number, radius: number, filter: boolexpr | undefined, countLimit: number): void;
@@ -13980,6 +13988,7 @@ declare function GroupEnumUnitsInRangeCounted(whichGroup: group, x: number, y: n
  * @param filter - boolexpr
  * @param countLimit - integer (32-bit)
  * @returns nothing
+ * @remarks A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/GroupEnumUnitsInRangeOfLocCounted}
  */
 declare function GroupEnumUnitsInRangeOfLocCounted(whichGroup: group, whichLocation: location, radius: number, filter: boolexpr | undefined, countLimit: number): void;
@@ -13989,6 +13998,7 @@ declare function GroupEnumUnitsInRangeOfLocCounted(whichGroup: group, whichLocat
  * @param whichPlayer - player
  * @param filter - boolexpr
  * @returns nothing
+ * @remarks A nil filter keeps every unit (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/GroupEnumUnitsSelected}
  */
 declare function GroupEnumUnitsSelected(whichGroup: group, whichPlayer: player, filter?: boolexpr): void;
@@ -14130,6 +14140,7 @@ declare function ForceClear(whichForce: force): void;
  * @param whichForce - force
  * @param filter - boolexpr
  * @returns nothing
+ * @remarks A nil filter keeps every player (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/ForceEnumPlayers}
  */
 declare function ForceEnumPlayers(whichForce: force, filter?: boolexpr): void;
@@ -14139,6 +14150,7 @@ declare function ForceEnumPlayers(whichForce: force, filter?: boolexpr): void;
  * @param filter - boolexpr
  * @param countLimit - integer (32-bit)
  * @returns nothing
+ * @remarks A nil filter keeps every player (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/ForceEnumPlayersCounted}
  */
 declare function ForceEnumPlayersCounted(whichForce: force, filter: boolexpr | undefined, countLimit: number): void;
@@ -14148,6 +14160,7 @@ declare function ForceEnumPlayersCounted(whichForce: force, filter: boolexpr | u
  * @param whichPlayer - player
  * @param filter - boolexpr
  * @returns nothing
+ * @remarks A nil filter keeps every player (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/ForceEnumAllies}
  */
 declare function ForceEnumAllies(whichForce: force, whichPlayer: player, filter?: boolexpr): void;
@@ -14157,6 +14170,7 @@ declare function ForceEnumAllies(whichForce: force, whichPlayer: player, filter?
  * @param whichPlayer - player
  * @param filter - boolexpr
  * @returns nothing
+ * @remarks A nil filter is accepted (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/ForceEnumEnemies}
  */
 declare function ForceEnumEnemies(whichForce: force, whichPlayer: player, filter?: boolexpr): void;
@@ -15641,6 +15655,7 @@ declare function IsDestructableInvulnerable(d: destructable): boolean;
  * @param filter - boolexpr
  * @param actionFunc - code
  * @returns nothing
+ * @remarks A nil filter keeps every destructable (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/EnumDestructablesInRect}
  */
 declare function EnumDestructablesInRect(r: rect, filter: boolexpr | undefined, actionFunc: code): void;
@@ -15973,6 +15988,7 @@ declare function IsItemIdPawnable(itemId: number): boolean;
  * @param filter - boolexpr
  * @param actionFunc - code
  * @returns nothing
+ * @remarks A nil filter keeps every item (nullability sweep, 3.0.0.24268).
  * @see {@link https://lep.duckdns.org/jassbot/doc/EnumItemsInRect}
  */
 declare function EnumItemsInRect(r: rect, filter: boolexpr | undefined, actionFunc: code): void;
