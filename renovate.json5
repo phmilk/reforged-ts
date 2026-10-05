@@ -103,6 +103,15 @@
         "**TypeScript moves by hand, in this pull request.** Renovate ignores `typescript` (ADR 0002): set the `typescript` entry of the catalog in `pnpm-workspace.yaml` to the exact version the new typescript-to-lua's peer dependency names (`pnpm view typescript-to-lua@<version> peerDependencies`), run `pnpm install` and `pnpm check`, and push the catalog and the lockfile to this branch before merging.",
       ],
     },
+    // docusaurus-plugin-llms 0.6.1 strips the number prefix from every
+    // segment of a page's resolved route, so the ADR pages, whose `slug`
+    // keeps it (`0001-<slug>`, website/scripts/kinds.mts), get llms.txt links
+    // and Markdown copies at routes Docusaurus never builds, and docs:check
+    // fails. Skip that version only; a later one is tried as usual.
+    {
+      matchPackageNames: ["docusaurus-plugin-llms"],
+      allowedVersions: "!/^0\\.6\\.1$/",
+    },
   ],
   customManagers: [
     // The validator's version in the root `renovate:check` script.
