@@ -1,8 +1,8 @@
-// Where no event context can hold: the places a call certainly runs outside
-// the context of any event or callback. The context of an event holds
-// through every synchronous call from its handler, so a function the rule
-// cannot follow (a named function, a method, a literal passed anywhere
-// else) is never one. The certain places are:
+// Where a call certainly runs: outside the context of any event or callback,
+// or in a trigger's handler. The context of an event holds through every
+// synchronous call from its handler, so a function the rule cannot follow (a
+// named function, a method, a literal passed anywhere else) is never one.
+// The certain places are:
 // - module top level (the Lua root), as `top-level.ts` defines it;
 // - the body of a function literal passed directly as the callback of an
 //   Init stage (`Init.onGlobals`, `Init.onTriggers`, `Init.onInitTriggers`,
@@ -16,7 +16,13 @@
 //   stages run from `main`, in no event;
 // - the body of a function literal passed directly as a timer's callback
 //   (`TimerStart`, `Timer.after`, `Timer.every`, `timer.start`): it runs
-//   later, in its own thread, where only a Timer's expiry holds.
+//   later, in its own thread, where only a Timer's expiry holds;
+// - the body of a function literal passed directly as a trigger's handler
+//   (`on`, `Trigger#addAction`, `TriggerAddAction`): the trigger's event
+//   holds there, and the handler runs in a new thread, where no Timer's
+//   expiry holds even when the trigger fires from a timer's callback (the
+//   Nullability sweep, 3.0.0.24268). `ForGroup` and filter callbacks run in
+//   the caller's thread instead.
 // The innermost enclosing function literal decides; an immediately invoked
 // function is transparent. A type assertion (`as`, `satisfies`, `!`) between
 // the literal and the call does not change where it is passed.
@@ -25,10 +31,12 @@ import {
   type ParserServicesWithTypeInformation,
   type TSESTree,
 } from "@typescript-eslint/utils";
+import * as ts from "typescript";
 
 import { invokedName } from "./allowlist.js";
 import { type FunctionNode, isFunction } from "./function.js";
-import { propertyName } from "./member-access.js";
+import { propertyName, resolvedDeclarations } from "./member-access.js";
+import { isDeclaredIn } from "./package.js";
 import { isAtModuleTopLevel, isImmediatelyInvoked } from "./top-level.js";
 
 /** A place where no event context holds, but maybe a Timer's expiry. */
@@ -47,12 +55,26 @@ export type ContextFreePlace =
       readonly timerExpiry: true;
     };
 
-/** A function a callback is passed to, by the name `invokedName` resolves. */
+/**
+ * The body of a trigger's handler: the trigger's event holds, in a new
+ * thread where no Timer's expiry does. `callee`: `on`, `Trigger#addAction`
+ * or `TriggerAddAction`.
+ */
+export interface TriggerHandlerPlace {
+  readonly kind: "triggerHandler";
+  readonly callee: string;
+  readonly timerExpiry: false;
+}
+
+/** A place where a call certainly runs: context-free, or a trigger's handler. */
+export type EventPlace = ContextFreePlace | TriggerHandlerPlace;
+
+/** A function a callback is passed to, by the name `takerName` resolves. */
 interface CallbackTaker {
   /** The index of the callback among the arguments. */
   readonly index: number;
   /** The place the callback runs in. */
-  readonly place: Exclude<ContextFreePlace, { kind: "topLevel" }>;
+  readonly place: Exclude<EventPlace, { kind: "topLevel" }>;
 }
 
 function initStage(stage: string, timerExpiry: boolean): CallbackTaker {
@@ -66,6 +88,13 @@ function timerCallback(callee: string, index: number): CallbackTaker {
   return { index, place: { kind: "timerCallback", callee, timerExpiry: true } };
 }
 
+function triggerHandler(callee: string, index: number): CallbackTaker {
+  return {
+    index,
+    place: { kind: "triggerHandler", callee, timerExpiry: false },
+  };
+}
+
 /** The callback takers, by resolved name. */
 const callbackTakers: ReadonlyMap<string, CallbackTaker> = new Map([
   ["InitStages#onGlobals", initStage("onGlobals", false)],
@@ -76,6 +105,9 @@ const callbackTakers: ReadonlyMap<string, CallbackTaker> = new Map([
   ["Timer.after", timerCallback("Timer.after", 1)],
   ["Timer.every", timerCallback("Timer.every", 1)],
   ["Timer#start", timerCallback("Timer#start", 2)],
+  ["on", triggerHandler("on", 1)],
+  ["Trigger#addAction", triggerHandler("Trigger#addAction", 0)],
+  ["TriggerAddAction", triggerHandler("TriggerAddAction", 1)],
 ]);
 
 /** The last segment of each taker's name, with its callback index, for the syntactic pre-match. */
@@ -141,15 +173,37 @@ function shortName(callee: TSESTree.Expression): string | undefined {
 }
 
 /**
- * The context-free place a function literal's body is, when the literal is
- * passed directly to an Init stage registered at module top level, or as a
- * timer's callback. Matches syntactically, then asks the checker for the
- * call it is passed to.
+ * The name of the callback taker a call invokes: a Native, a library member
+ * (`invokedName`), or a function declared in reforged-ts (`on`). Asks the
+ * checker.
+ */
+function takerName(
+  services: ParserServicesWithTypeInformation,
+  call: TSESTree.CallExpression,
+): string | undefined {
+  const { callee } = call;
+  if (
+    callee.type === AST_NODE_TYPES.Identifier &&
+    resolvedDeclarations(services, callee).some(
+      (each) =>
+        ts.isFunctionDeclaration(each) && isDeclaredIn(each, "reforged-ts"),
+    )
+  ) {
+    return callee.name;
+  }
+  return invokedName(services, call);
+}
+
+/**
+ * The place a function literal's body is, when the literal is passed
+ * directly to an Init stage registered at module top level, as a timer's
+ * callback or as a trigger's handler. Matches syntactically, then asks the
+ * checker for the call it is passed to.
  */
 function placeOfCallback(
   services: ParserServicesWithTypeInformation,
   fn: FunctionNode,
-): ContextFreePlace | undefined {
+): EventPlace | undefined {
   const passed = passedTo(fn);
   if (passed === undefined) {
     return undefined;
@@ -159,7 +213,7 @@ function placeOfCallback(
   if (short === undefined || takerIndexes.get(short) !== index) {
     return undefined;
   }
-  const name = invokedName(services, call);
+  const name = takerName(services, call);
   const taker = name === undefined ? undefined : callbackTakers.get(name);
   if (taker?.index !== index) {
     return undefined;
@@ -170,16 +224,16 @@ function placeOfCallback(
 }
 
 /**
- * The context-free place a node runs in, or undefined when an event context
- * may hold there. Syntactic first: the checker is asked only for the call
- * the innermost function literal is passed to, and the answer is cached per
- * function in `cache`.
+ * The place a node certainly runs in (context-free, or a trigger's handler),
+ * or undefined when the rule cannot tell. Syntactic first: the checker is
+ * asked only for the call the innermost function literal is passed to, and
+ * the answer is cached per function in `cache`.
  */
-export function contextFreePlaceOf(
+export function eventPlaceOf(
   services: ParserServicesWithTypeInformation,
   node: TSESTree.Node,
-  cache: Map<FunctionNode, ContextFreePlace | undefined>,
-): ContextFreePlace | undefined {
+  cache: Map<FunctionNode, EventPlace | undefined>,
+): EventPlace | undefined {
   const fn = innermostFunction(node);
   if (fn === undefined) {
     return isAtModuleTopLevel(node)
