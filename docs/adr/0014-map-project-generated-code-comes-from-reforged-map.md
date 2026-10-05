@@ -1,0 +1,39 @@
+---
+status: accepted
+date: 2026-10-05
+---
+
+# A Map project's generated code comes from `reforged-map`, not from Template scripts
+
+A Map project's code needs to know what its map folder holds: the editor's `gg_` and `udg_` globals, which the Template's `scripts/editor-globals.ts` reads from `war3map.lua` today, and from ADR 0012 on the Object kind of every Rawcode it names. A GUI variable of type unit-type is an integer in `war3map.lua`, byte for byte the same as an `integer` variable, so its kind is only in the Variable Editor's type (`unitcode`, `itemcode`, `abilcode`, `buffcode`, `destructablecode`, `techcode`) in `war3map.wtg`; typed `number`, every Rawcode parameter of 1.0.0 rejects it. A Custom object (`h000`) has a kind, a name and a base only in the map's Object data, and on 3.0 its name is in `war3mapSkin.w3u` as a `TRIGSTR` into `war3map.wts`, not in `war3map.w3u`.
+
+Reading these files moves out of the Template's scripts into a new package of the monorepo, `reforged-map`: a Map project's scripts are copied from the Template once and never refreshed, and a reader of the World Editor's binary formats has to follow every Patch and every editor that saves the map (HiveWE writes another layout) through an update, not a hand merge in each Map project. `reforged-map` owns everything the Map project's generated code reads from the map folder: the globals of `war3map.lua` (the `editor-globals` generator and its Lua stub for `reforged-test` move there), the variables block of `war3map.wtg`, the Game data set of `war3map.w3i`, and the Object data with its Skin files and `war3map.wts`. The Template keeps `scripts/generate.ts` and its `Generator`s, each a thin call into the package. The package only reads, so ADR 0006 stands; whether it also writes Object data is the authoring decision's (#467).
+
+The readers are ours, read-only, with wc3libs' notes and fixtures (Apache-2.0) and maps saved by the 3.0 World Editor and by HiveWE as their contract. They accept both layouts (a name in the Skin file or in the base file, the Skin file winning; a `TRIGSTR_nnn` or literal text), any four-character Custom Rawcode, and take the Object kind from the file it is in, never from the Rawcode's shape.
+
+From one model of the map, the generator writes into the Map project's `src/generated/` folder, git-ignored and rewritten on install, build and `pnpm dev`, next to the overloads and constants of `reforged-builtins` (ADR 0013):
+
+- `udg_` variables of an object type typed `Rawcode<kind>` (`Record<number, Rawcode<kind>>` for an array, `Rawcode<"unit" | "upgrade">` for `techcode`); `ordercode` stays `number`;
+- a `FourCC` overload per Custom object returning `Rawcode<kind>`, its TSDoc giving the name, the kind and the Built-in object it derives from, and one per Built-in object the map modifies, giving the map's name next to the game's; a literal overload of a file under `src/` precedes the package's, so the map's wins, and a type test in the Template holds that order;
+- constants per Object kind for Custom objects only, `CustomUnits.Captain_h000`, named by name and Rawcode as in ADR 0013 and compiled to integer literals;
+- a JSON index for the lint rule and the hover tool: Rawcode, kind, name, base, custom or modified, and the map's Game data set.
+
+A Custom Rawcode used by two kinds gets no `FourCC` overload: `FourCC("B000")` stays `UnknownRawcode`, the constants `CustomBuffs.…_B000` and `CustomDestructables.…_B000` keep their exact kinds, and the JSON index records the collision for the hover tool. The World Editor numbers custom destructables from `B000` whatever their base, and custom buffs from the first letter of theirs, `B` for every Built-in buff, so this is the common case, and a build warning would fire on most maps.
+
+## Considered options
+
+- Template scripts, as `editor-globals.ts` is today: no package to publish, but a Map project keeps the reader it was generated with, including its bugs and its ignorance of the next Patch.
+- The readers inside `reforged-builtins`: one package fewer, but ADR 0013 keeps that one package to Blizzard-derived data, the one a takedown would reach, and a map's files change for other reasons than a Patch's Built-in objects.
+- `mdx-m3-viewer-th`, already a dependency of the Template for the MPQ writer: its Object data reader skips the Skin files, so it cannot name a 3.0 Custom object, its `w3i` reader misreads version 39 and its `wtg` reader cannot read the 1.31+ format.
+- A `FourCC` overload returning `Rawcode<"buff" | "destructable">` for a Rawcode shared across kinds: no single-kind parameter accepts it without `as`. Failing the build: the World Editor's own defaults would fail most maps.
+- Constants for modified Built-in objects too: `Units.Footman_hfoo` already names them, and the map's name shows in the overload's TSDoc.
+- Generated files committed: the generator needs only the map folder, which is always in the repository, never the game.
+
+## Consequences
+
+- The monorepo gains a sixth package. Its first slice, the globals and the `wtg` variable types, ships with ADR 0012 and gates 1.0.0 with it, since a Map project's GUI unit-type variables would otherwise stop compiling; the Object data slice is additive and does not.
+- The Template drops `scripts/editor-globals.ts` and adds `reforged-map` and `reforged-builtins`, with the overloads turned on.
+- The lint rule (#466) and the hover tool (#468) read the Map project's JSON index from `src/generated/`.
+- A rename in the World Editor renames a Custom object's constant, and the build fails at each use until the code follows.
+
+Decision record: https://github.com/phmilk/reforged-ts/issues/465
