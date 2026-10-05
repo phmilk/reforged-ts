@@ -21,6 +21,14 @@ const advice = {
   filter: "call it inside the filter function",
 };
 
+function inTriggerHandler(name: string, callee: string, line: number) {
+  return {
+    messageId: "inTriggerHandler" as const,
+    data: { name, callee },
+    line,
+  };
+}
+
 function atTopLevel(name: string, line = 3) {
   return {
     messageId: "atTopLevel" as const,
@@ -79,6 +87,22 @@ ruleTester.run(
       {
         name: "a timer response inside Init.onGameStart, whose callback runs in the expiry of blizzard.j's game-started timer",
         code: `${imports}Init.onGameStart(() => {\n  print(GetExpiredTimer());\n  print(Timer.fromExpired());\n});`,
+      },
+      {
+        name: "GetExpiredTimer in a helper called from a trigger's handler",
+        code: `${imports}function expired(): timer | undefined {\n  return GetExpiredTimer();\n}\nconst current = (): Timer | undefined => Timer.fromExpired();\non(death, () => print(expired()));\nTrigger.create().addAction(() => print(current()));\ndeclare const t: trigger;\nTriggerAddAction(t, () => print(expired(), current()));`,
+      },
+      {
+        name: "GetExpiredTimer in a timer's callback opened from a trigger's handler, and in a ForGroup callback inside a timer's callback",
+        code: `${imports}declare const g: group;\non(death, () => {\n  Timer.after(1, () => print(Timer.fromExpired()));\n});\nTimer.every(1, () => {\n  ForGroup(g, () => {\n    print(GetExpiredTimer(), Timer.fromExpired());\n  });\n});`,
+      },
+      {
+        name: "the other event responses in a trigger's handler, which return nothing there and do not crash",
+        code: `${imports}on(death, () => {\n  print(GetEnumUnit(), GetFilterUnit());\n});`,
+      },
+      {
+        name: "a project function named on and a project addAction",
+        code: "function on(_: number, fn: () => void): void {\n  fn();\n}\non(1, () => print(GetExpiredTimer()));\nconst t = { addAction(fn: () => void) { fn(); } };\nt.addAction(() => print(GetExpiredTimer()));",
       },
       {
         name: "an event-response getter as an assignment target or the operand of ++ and --",
@@ -294,6 +318,38 @@ ruleTester.run(
             },
             line: 3,
           },
+        ],
+      },
+      {
+        name: "GetExpiredTimer and Timer.fromExpired in an on() handler",
+        code: `${imports}on(death, () => {\n  print(GetExpiredTimer());\n  print(Timer.fromExpired());\n});`,
+        errors: [
+          inTriggerHandler("GetExpiredTimer", "on", 4),
+          inTriggerHandler("Timer.fromExpired (GetExpiredTimer)", "on", 5),
+        ],
+      },
+      {
+        name: "GetExpiredTimer and Timer.fromExpired in a Trigger.addAction handler",
+        code: `${imports}Trigger.create().addAction(() => {\n  print(GetExpiredTimer());\n  print(Timer.fromExpired());\n});`,
+        errors: [
+          inTriggerHandler("GetExpiredTimer", "Trigger#addAction", 4),
+          inTriggerHandler(
+            "Timer.fromExpired (GetExpiredTimer)",
+            "Trigger#addAction",
+            5,
+          ),
+        ],
+      },
+      {
+        name: "GetExpiredTimer and Timer.fromExpired in a TriggerAddAction handler",
+        code: `${imports}declare const t: trigger;\nTriggerAddAction(t, function () {\n  print(GetExpiredTimer());\n  print(Timer.fromExpired());\n});`,
+        errors: [
+          inTriggerHandler("GetExpiredTimer", "TriggerAddAction", 5),
+          inTriggerHandler(
+            "Timer.fromExpired (GetExpiredTimer)",
+            "TriggerAddAction",
+            6,
+          ),
         ],
       },
     ],

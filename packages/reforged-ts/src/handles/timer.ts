@@ -194,9 +194,15 @@ export class Timer extends Handle<timer> {
   /**
    * Gets the Timer whose expiry is running.
    * @remarks
-   * A handler receives its Timer; this lookup stays for parity with the
-   * Natives.
-   * @returns The expired Timer, or `undefined` outside a Timer's expiry.
+   * - A handler receives its Timer; this lookup stays for parity with the
+   *   Natives, and the Timer `start` passes its handler is the one to use.
+   * - Outside a Timer's expiry, the Nullability sweep measured on
+   *   3.0.0.24268 that it crashes the game in a trigger's handler, which
+   *   runs in a new thread even when the trigger fires from a timer's
+   *   callback, and returns `undefined` in the callback of a destroyed
+   *   timer.
+   * @returns The expired Timer, or `undefined` in the callback of a
+   * destroyed timer.
    * @native GetExpiredTimer
    */
   public static fromExpired(): Timer | undefined {

@@ -1,15 +1,15 @@
 // The reforged-ts library as the workspace has it: every callable member of
 // its classes, by allowlist name (`Class#member` for an instance method or
 // accessor with a setter, `Class.member` for a static one). Read from the
-// library's sources (syntax only), for the consistency test of
-// data/local-safe.json.
+// library's sources (syntax only), with each one's parameter names, for the
+// consistency tests of data/local-safe.json and data/crashing-arguments.json.
 import { readdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 
 import * as ts from "typescript";
 
-let members: ReadonlySet<string> | undefined;
+let members: ReadonlyMap<string, readonly string[]> | undefined;
 
 function sourceFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -25,11 +25,22 @@ function sourceFiles(directory: string): string[] {
 
 /** Every method and setter of the library's classes, by allowlist name (read once). */
 export function libraryMembers(): ReadonlySet<string> {
+  return new Set(membersWithParameters().keys());
+}
+
+/** The parameter names of a library method or setter, by allowlist name; undefined when it has none of that name. */
+export function libraryMemberParameters(
+  name: string,
+): readonly string[] | undefined {
+  return membersWithParameters().get(name);
+}
+
+function membersWithParameters(): ReadonlyMap<string, readonly string[]> {
   if (members === undefined) {
     const root = path.dirname(
       createRequire(import.meta.url).resolve("reforged-ts/package.json"),
     );
-    const found = new Set<string>();
+    const found = new Map<string, string[]>();
     for (const file of sourceFiles(path.join(root, "src"))) {
       const source = ts.createSourceFile(
         file,
@@ -53,8 +64,9 @@ export function libraryMembers(): ReadonlySet<string> {
           }
           const isStatic =
             ts.getCombinedModifierFlags(member) & ts.ModifierFlags.Static;
-          found.add(
+          found.set(
             `${statement.name.text}${isStatic ? "." : "#"}${member.name.text}`,
+            member.parameters.map((parameter) => parameter.name.getText()),
           );
         }
       }

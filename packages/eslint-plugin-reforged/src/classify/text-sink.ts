@@ -18,7 +18,8 @@ import {
 } from "@typescript-eslint/utils";
 import * as ts from "typescript";
 
-import type { Allowlist, Invocation } from "./allowlist.js";
+import type { Allowlist } from "./allowlist.js";
+import type { Invocation } from "./callee.js";
 import {
   type FlowStep,
   isStringConversion,

@@ -1,21 +1,25 @@
 // Asked for by #367 (pitfall C1): an event response called where its context
 // certainly does not hold. An event response (`GetTriggerUnit`,
 // `GetEnumUnit`, `GetExpiredTimer`, `Unit.fromEvent()`) answers only inside
-// the event or callback it belongs to; at module top level, in the callback
+// the event or callback it belongs to. At module top level, in the callback
 // of an Init stage registered at module top level or in a timer's callback
-// opened from a handler it returns nothing, and the code goes on with a nil
-// Handle. Only a Timer's expiry holds in a timer's callback and in the
-// callback of `Init.onGameStart` (blizzard.j runs `MarkGameStarted` from a
-// timer), so `GetExpiredTimer` answers there. The rule reports only those places:
-// the context of an event holds through every synchronous call from its
-// handler, so a helper, a method or any other callback is never reported.
+// opened from a handler, an event response of another context returns
+// nothing, and the code goes on with a nil Handle. Only a Timer's expiry
+// holds in a timer's callback and in the callback of `Init.onGameStart`
+// (blizzard.j runs `MarkGameStarted` from a timer), so `GetExpiredTimer`
+// answers there. In a trigger's handler, `GetExpiredTimer` does not return
+// nothing: it crashes the game (#448, a Crashing case of the Nullability
+// sweep on 3.0.0.24268, measured with the trigger fired from a timer's
+// callback, since the handler runs in a new thread). The rule reports it
+// written directly in a handler given to `on`, `Trigger#addAction` or
+// `TriggerAddAction`; the other event responses there return nothing and
+// are not reported. The rule reports only those places: the context of an
+// event holds through every synchronous call from its handler, so a helper,
+// a method or any other callback is never reported.
 import { ESLintUtils } from "@typescript-eslint/utils";
 import type * as ts from "typescript";
 
-import {
-  type ContextFreePlace,
-  contextFreePlaceOf,
-} from "../classify/event-context.js";
+import { type EventPlace, eventPlaceOf } from "../classify/event-context.js";
 import {
   type EventResponseCandidate,
   classifyEventResponse,
@@ -30,7 +34,8 @@ import { defineRuleEntry } from "../rule-entry.js";
 export const name = "no-event-response-outside-event";
 
 type Options = [];
-type MessageIds = "atTopLevel" | "inInitStage" | "inTimerCallback";
+type MessageIds =
+  "atTopLevel" | "inInitStage" | "inTimerCallback" | "inTriggerHandler";
 
 /** The context of each kind, as the messages name it. */
 const contextNames: Readonly<Record<EventContextKind, string>> = {
@@ -40,11 +45,20 @@ const contextNames: Readonly<Record<EventContextKind, string>> = {
   filter: "the context of a filter function",
 };
 
-const messageIds: Readonly<Record<ContextFreePlace["kind"], MessageIds>> = {
+const messageIds: Readonly<Record<EventPlace["kind"], MessageIds>> = {
   topLevel: "atTopLevel",
   initStage: "inInitStage",
   timerCallback: "inTimerCallback",
+  triggerHandler: "inTriggerHandler",
 };
+
+/**
+ * The event response reported in a trigger's handler: the Crashing case of
+ * the Nullability sweep there, which crashed the game in a trigger's action
+ * on 3.0.0.24268. The other responses there return nothing, which is out of
+ * the rule's scope (#373).
+ */
+const crashingInTriggerHandler = "GetExpiredTimer";
 
 /** The replacement each context kind advises. */
 const advice: Readonly<Record<EventContextKind, string>> = {
@@ -76,7 +90,7 @@ export function createNoEventResponseOutsideEvent(
       type: "problem",
       docs: {
         description:
-          "Disallow an event response where its context certainly does not hold: module top level, a top-level Init stage callback, a timer's callback",
+          "Disallow an event response where its context certainly does not hold: module top level, a top-level Init stage callback, a timer's callback; and GetExpiredTimer in a trigger's handler, where it crashes the game",
       },
       messages: {
         atTopLevel:
@@ -85,6 +99,8 @@ export function createNoEventResponseOutsideEvent(
           "{{name}} reads {{context}} ({{event}}), and {{callee}}, registered at module top level, runs its callback from the map's initialization, where that context does not hold: it returns nothing there. Instead, {{advice}}.",
         inTimerCallback:
           "{{name}} reads {{context}} ({{event}}), and the callback of {{callee}} runs later, in its own thread, where only a Timer's expiry holds: it returns nothing there. Instead, {{advice}}.",
+        inTriggerHandler:
+          "{{name}} crashes the game in a trigger's handler: the handler given to {{callee}} runs in a new thread, where no Timer has expired, even when the trigger fires from a timer's callback. Instead, use the timer's own Timer, which `Timer.start` passes its handler, and keep it where the trigger's handler can read it.",
       },
       schema: [],
       defaultOptions: [],
@@ -94,13 +110,13 @@ export function createNoEventResponseOutsideEvent(
       // the first file with typescript-eslint's own error.
       const services = ESLintUtils.getParserServices(context);
       const memberNames = memberNamesOf(services.program);
-      const places = new Map<FunctionNode, ContextFreePlace | undefined>();
+      const places = new Map<FunctionNode, EventPlace | undefined>();
 
       function check(node: EventResponseCandidate): void {
         if (!mayReadEventResponse(node, responses, memberNames)) {
           return;
         }
-        const place = contextFreePlaceOf(services, node, places);
+        const place = eventPlaceOf(services, node, places);
         if (place === undefined) {
           return;
         }
@@ -109,7 +125,11 @@ export function createNoEventResponseOutsideEvent(
           return;
         }
         const { response } = read;
-        if (place.timerExpiry && response.context === "timer") {
+        if (
+          place.kind === "triggerHandler"
+            ? response.name !== crashingInTriggerHandler
+            : place.timerExpiry && response.context === "timer"
+        ) {
           return;
         }
         context.report({

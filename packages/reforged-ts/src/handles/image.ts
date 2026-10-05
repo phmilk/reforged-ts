@@ -1,5 +1,7 @@
 /** @noSelfInFile */
 
+import { LIBRARY } from "../init/state";
+import { configuration } from "../reforged/configuration";
 import { Handle } from "./handle";
 
 /**
@@ -24,6 +26,14 @@ export enum ImageType {
    * war tint the images of this layer too.
    */
   Ubersplat = 4,
+}
+
+/**
+ * Whether `value` is one of the integers the game takes as an image type, 1
+ * to 4: what TypeScript does not check of a number passed as an `ImageType`.
+ */
+function isImageType(value: number): boolean {
+  return value >= 1 && value <= 4 && Math.floor(value) === value;
 }
 
 /**
@@ -59,12 +69,19 @@ export class Image extends Handle<image> {
    * towards negative y.
    * @param originZ - How far the bottom-left corner moves from `posZ`,
    * towards negative z.
-   * @param imageType - The layer the image is drawn in.
+   * @param imageType - The layer the image is drawn in, an integer from 1 to
+   * 4.
    * @returns The new image.
    * @throws When the game returns no handle:
    * `reforged-ts: failed to create Image (<file>)`, at the calling line. In
    * Dev mode, also when called before the globals Init stage or inside
    * `MapPlayer.runLocal`.
+   * @throws In Dev mode, before `CreateImage` is called, when `imageType` is
+   * not an integer from 1 to 4, which TypeScript lets through an
+   * `ImageType`: `CreateImage` crashed the game with image type 2147483647 on
+   * 3.0.0.24268, and returned a Placeholder handle with 0. The message, at
+   * the calling line:
+   * `reforged-ts: Image.create with image type <imageType>, which is not an integer from 1 to 4 (ImageType): CreateImage crashed the game with image type 2147483647 on 3.0.0.24268, and returned a Placeholder handle with 0`.
    * @native CreateImage
    */
   public static create(
@@ -80,6 +97,13 @@ export class Image extends Handle<image> {
     originZ: number,
     imageType: ImageType,
   ): Image {
+    if (configuration.devMode && !isImageType(imageType)) {
+      // Level 2: the Map project's line that called create.
+      error(
+        `${LIBRARY}: Image.create with image type ${String(imageType)}, which is not an integer from 1 to 4 (ImageType): CreateImage crashed the game with image type 2147483647 on 3.0.0.24268, and returned a Placeholder handle with 0`,
+        2,
+      );
+    }
     return this.expect(
       CreateImage(
         file,

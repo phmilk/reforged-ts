@@ -3,14 +3,22 @@
 // Frame on the Handle base, with the one class-specific validity rule: the
 // game hands back a frame whose handle id is 0 when it finds none (a name it
 // does not know, a missing FDF definition), and that frame is never a
-// Wrapper. Lookups return undefined for it; creations throw.
+// Wrapper. Lookups return undefined for it; creations throw. In Dev mode
+// `createType` refuses the Crashing case of the Nullability sweep before it
+// calls `BlzCreateFrameByType`: a SIMPLEMESSAGEFRAME or a CONTROL frame with
+// `inherits: ""` crashed the game on 3.0.0.24268
+// (`docs/research/nullability-sweep.md`).
 
 import { describe, expect, it, stubCalls } from "reforged-test/lua";
 import { Frame } from "../src/index";
+import { Reforged } from "../src/reforged/index";
 import { handleRef } from "./support/handle-ref";
 import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
+
+// Dev mode raises for a Wrapper created before the globals Init stage.
+__stub_init_globals();
 
 /** The frames stub's "not found" frame, handle id 0 (stubs/frames.lua). */
 declare function __stub_frame_not_found(): framehandle;
@@ -395,6 +403,73 @@ describe("Frame pixel conversions", () => {
     expect(stubCalls()).toContainCall("BlzFrameToPixelX(0.8)");
     expect(stubCalls()).toContainCall("BlzFrameToPixelY(0.3)");
   });
+});
+
+/** How many times the call log shows `BlzCreateFrameByType` called. */
+function createFrameByTypeCalls(): number {
+  return stubCalls().filter((line) => line.startsWith("BlzCreateFrameByType("))
+    .length;
+}
+
+/** The message the Guard raises for a frame of `typeName` without a template. */
+function crashingMessage(typeName: string): string {
+  return `reforged-ts: Frame.createType of a ${typeName} frame with inherits "" crashes the game (a Crashing case on 3.0.0.24268): inherit an FDF template that defines the type's fields`;
+}
+
+const crashingTypes = ["SIMPLEMESSAGEFRAME", "CONTROL"];
+
+describe("Frame.createType's Crashing case in Dev mode", () => {
+  for (const typeName of crashingTypes) {
+    it(`raises for ${typeName} with inherits "", at the calling line, before the Native`, () => {
+      const owner = gameUi();
+      const before = createFrameByTypeCalls();
+      Reforged.configure({ devMode: true });
+      const message = raisedIn(() => {
+        Frame.createType("Crash", owner, 0, typeName, "");
+      });
+      Reforged.configure({ devMode: false });
+
+      expect(message).toEqual(crashingMessage(typeName));
+      expect(createFrameByTypeCalls()).toEqual(before);
+    });
+
+    it(`creates a ${typeName} frame that inherits a template`, () => {
+      const owner = gameUi();
+      Reforged.configure({ devMode: true });
+      const frame = Frame.createType(
+        "Templated",
+        owner,
+        0,
+        typeName,
+        "MyTemplate",
+      );
+      Reforged.configure({ devMode: false });
+
+      expect(Frame.fromHandle(frame.handle)).toBe(frame);
+    });
+  }
+
+  it('creates a frame of another type with inherits ""', () => {
+    const owner = gameUi();
+    Reforged.configure({ devMode: true });
+    const frame = Frame.createType("Backdrop", owner, 0, "BACKDROP", "");
+    Reforged.configure({ devMode: false });
+
+    expect(Frame.fromHandle(frame.handle)).toBe(frame);
+  });
+});
+
+describe("Frame.createType's Crashing case with Dev mode off", () => {
+  for (const typeName of crashingTypes) {
+    it(`calls the Native for ${typeName} with inherits ""`, () => {
+      Reforged.configure({ devMode: false });
+      const before = createFrameByTypeCalls();
+      const frame = Frame.createType("Unguarded", gameUi(), 0, typeName, "");
+
+      expect(createFrameByTypeCalls()).toEqual(before + 1);
+      expect(Frame.fromHandle(frame.handle)).toBe(frame);
+    });
+  }
 });
 
 {

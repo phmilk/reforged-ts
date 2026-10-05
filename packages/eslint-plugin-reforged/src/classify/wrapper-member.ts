@@ -8,7 +8,7 @@ import {
 } from "@typescript-eslint/utils";
 import * as ts from "typescript";
 
-import type { Invocation } from "./allowlist.js";
+import type { Invocation } from "./callee.js";
 import { propertyName } from "./member-access.js";
 import { isDeclaredIn } from "./package.js";
 import { isWrapperClass } from "./wrapper.js";

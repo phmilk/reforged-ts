@@ -1,0 +1,14 @@
+[
+  {
+    "name": "BlzCreateFrameByType",
+    "members": ["Frame.createType"],
+    "arguments": {
+      "typeName": ["SIMPLEMESSAGEFRAME", "CONTROL"],
+      "inherits": [""]
+    },
+    "case": "typeName SIMPLEMESSAGEFRAME or CONTROL without its FDF fields, inherits \"\"",
+    "build": "3.0.0.24268",
+    "reason": "crashed the game in the Nullability sweep.",
+    "replacement": "Inherit an FDF template that defines the type's fields: pass its name as inherits."
+  }
+]

@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 import * as ts from "typescript";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
+import crashingArguments from "../data/crashing-arguments.json" with { type: "json" };
 import creationNatives from "../data/creation-natives.json" with { type: "json" };
 import eventResponses from "../data/event-responses.json" with { type: "json" };
 import localSafe from "../data/local-safe.json" with { type: "json" };
@@ -28,7 +29,7 @@ import { findPackageDirectory } from "../src/data/optional.js";
 import { createPlugin, DataFileError } from "../src/index.js";
 import { fixtureProjectRoot } from "./support/fixture-project.js";
 import { lintWithRecommended } from "./support/lint.js";
-import { libraryMembers } from "./support/library.js";
+import { libraryMemberParameters, libraryMembers } from "./support/library.js";
 import { fixtureProgram, installedNatives } from "./support/typings.js";
 
 const scratch = mkdtempSync(path.join(tmpdir(), "eslint-plugin-reforged-"));
@@ -346,6 +347,143 @@ describe("the event responses (data/event-responses.json)", () => {
         "GetEventDamage",
         "GetSpellAbilityId",
       ]),
+    );
+  });
+});
+
+describe("the Crashing cases (data/crashing-arguments.json)", () => {
+  const entry = {
+    name: "BlzCreateFrameByType",
+    members: ["Frame.createType"],
+    arguments: { typeName: ["CONTROL"], inherits: [""] },
+    case: "c",
+    build: "3.0.0.24268",
+    reason: "crashes.",
+    replacement: "p.",
+  };
+
+  it.each([
+    ["not an array", "{}", "the root must be an array"],
+    ["an entry not an object", "[1]", "[0] must be an object"],
+    [
+      "a name of another form",
+      JSON.stringify([{ ...entry, name: "Frame::createType" }]),
+      "[0].name must be a Native name, Class#member or Class.member",
+    ],
+    [
+      "members not an array",
+      JSON.stringify([{ ...entry, members: "Frame.createType" }]),
+      "[0].members must be an array",
+    ],
+    [
+      "a member that is not Class#member or Class.member",
+      JSON.stringify([{ ...entry, members: ["createType"] }]),
+      "[0].members[0] must be Class#member or Class.member",
+    ],
+    [
+      "arguments not an object",
+      JSON.stringify([{ ...entry, arguments: ["CONTROL"] }]),
+      "[0].arguments must be an object",
+    ],
+    [
+      "arguments without a parameter",
+      JSON.stringify([{ ...entry, arguments: {} }]),
+      "[0].arguments must be an object with a parameter",
+    ],
+    [
+      "a parameter with no value",
+      JSON.stringify([{ ...entry, arguments: { typeName: [] } }]),
+      "[0].arguments.typeName must be a non-empty array",
+    ],
+    [
+      "a value that is not a literal",
+      JSON.stringify([{ ...entry, arguments: { typeName: [null] } }]),
+      "[0].arguments.typeName[0] must be a string, a number or a boolean",
+    ],
+    [
+      "a build that is not a Build",
+      JSON.stringify([{ ...entry, build: "3.0" }]),
+      "[0].build must be a Build (3.0.0.24268)",
+    ],
+    [
+      "a missing case",
+      JSON.stringify([{ ...entry, case: undefined }]),
+      "[0].case must be a non-empty string",
+    ],
+    [
+      "an empty replacement",
+      JSON.stringify([{ ...entry, replacement: "" }]),
+      "[0].replacement must be a non-empty string",
+    ],
+  ])("throws at load for %s, naming the field", (_, content, message) => {
+    const file = dataFile("crashing-arguments.json", content);
+    expect(() =>
+      createPlugin({
+        files: { crashingArguments: file },
+        projectRoot: fixtureProjectRoot,
+      }),
+    ).toThrow(DataFileError);
+    expect(() =>
+      createPlugin({
+        files: { crashingArguments: file },
+        projectRoot: fixtureProjectRoot,
+      }),
+    ).toThrow(`${file}: ${message}`);
+  });
+
+  it("loads a well-formed file, members left out", () => {
+    const file = dataFile(
+      "crashing-arguments.json",
+      JSON.stringify([{ ...entry, members: undefined }]),
+    );
+    expect(
+      createPlugin({
+        files: { crashingArguments: file },
+        projectRoot: fixtureProjectRoot,
+      }).rules,
+    ).toHaveProperty("no-crashing-arguments");
+  });
+
+  it("names only Natives of the installed Typings, each listed argument a parameter of it", () => {
+    const natives = installedNatives();
+    const wrong = crashingArguments
+      .filter((each) => !/[#.]/.test(each.name))
+      .filter((each) => {
+        const parameters = natives
+          .get(each.name)
+          ?.parameters.map((parameter) => parameter.name.getText());
+        return Object.keys(each.arguments).some(
+          (parameter) => !parameters?.includes(parameter),
+        );
+      });
+    expect(wrong.map((each) => each.name)).toEqual([]);
+  });
+
+  it("names only members of the reforged-ts library, each listed argument a parameter of it", () => {
+    const wrong = crashingArguments.flatMap((each) =>
+      [each.name, ...each.members]
+        .filter((name) => /[#.]/.test(name))
+        .filter((name) => {
+          const parameters = libraryMemberParameters(name);
+          return Object.keys(each.arguments).some(
+            (parameter) => !parameters?.includes(parameter),
+          );
+        }),
+    );
+    expect(wrong).toEqual([]);
+  });
+
+  it("guards the Crashing case of BlzCreateFrameByType on the Native and Frame.createType", () => {
+    expect(crashingArguments).toContainEqual(
+      expect.objectContaining({
+        name: "BlzCreateFrameByType",
+        members: ["Frame.createType"],
+        arguments: {
+          typeName: ["SIMPLEMESSAGEFRAME", "CONTROL"],
+          inherits: [""],
+        },
+        build: "3.0.0.24268",
+      }),
     );
   });
 });

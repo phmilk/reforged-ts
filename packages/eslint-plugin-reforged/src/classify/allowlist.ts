@@ -11,38 +11,16 @@
 // - `obj.prop = value` (any assignment operator) on an accessor with a setter
 //   declared in reforged-ts: `Class#prop` (or `Class.prop` when static), as a
 //   call to that setter (decision 4 of the #50 run).
-import {
-  AST_NODE_TYPES,
-  type ParserServicesWithTypeInformation,
-  type TSESTree,
-} from "@typescript-eslint/utils";
-import * as ts from "typescript";
+import type { ParserServicesWithTypeInformation } from "@typescript-eslint/utils";
 
 import type { LocalSafeEntry, LocalSafeKind } from "../data/index.js";
-import { memberName } from "./member.js";
-import { propertyName, resolvedDeclarations } from "./member-access.js";
-import { isDeclaredIn, packageNameOf } from "./package.js";
-
-/** What can invoke an allowlist entry: a call, or an assignment to an accessor. */
-export type Invocation =
-  TSESTree.CallExpression | TSESTree.AssignmentExpression;
+import { type Invocation, resolveCallee, syntacticName } from "./callee.js";
 
 /** The packages whose global functions an allowlist name can denote. */
-const globalFunctionPackages = new Set(["reforged-types", "lua-types"]);
-
-/** The member (or global function) name an invocation names syntactically. */
-function syntacticName(node: Invocation): string | undefined {
-  const target =
-    node.type === AST_NODE_TYPES.CallExpression ? node.callee : node.left;
-  if (target.type === AST_NODE_TYPES.Identifier) {
-    return node.type === AST_NODE_TYPES.CallExpression
-      ? target.name
-      : undefined;
-  }
-  return target.type === AST_NODE_TYPES.MemberExpression
-    ? propertyName(target)
-    : undefined;
-}
+const globalFunctionPackages: ReadonlySet<string> = new Set([
+  "reforged-types",
+  "lua-types",
+]);
 
 /**
  * The allowlist name of what a call or accessor assignment invokes (see the
@@ -54,39 +32,7 @@ export function invokedName(
   services: ParserServicesWithTypeInformation,
   node: Invocation,
 ): string | undefined {
-  const name = syntacticName(node);
-  if (name === undefined) {
-    return undefined;
-  }
-  const target =
-    node.type === AST_NODE_TYPES.CallExpression ? node.callee : node.left;
-  if (target.type === AST_NODE_TYPES.Identifier) {
-    const declaration = resolvedDeclarations(services, target).find(
-      (each) =>
-        ts.isFunctionDeclaration(each) &&
-        globalFunctionPackages.has(
-          packageNameOf(each.getSourceFile().fileName) ?? "",
-        ),
-    );
-    return declaration === undefined ? undefined : name;
-  }
-  if (target.type !== AST_NODE_TYPES.MemberExpression) {
-    return undefined;
-  }
-  const isCall = node.type === AST_NODE_TYPES.CallExpression;
-  for (const declaration of resolvedDeclarations(services, target.property)) {
-    const matches = isCall
-      ? ts.isMethodDeclaration(declaration) || ts.isMethodSignature(declaration)
-      : ts.isSetAccessorDeclaration(declaration);
-    const found =
-      matches && isDeclaredIn(declaration, "reforged-ts")
-        ? memberName(declaration, name)
-        : undefined;
-    if (found !== undefined) {
-      return found;
-    }
-  }
-  return undefined;
+  return resolveCallee(services, node, globalFunctionPackages)?.name;
 }
 
 /** The allowlist of data/local-safe.json, indexed for the rules. */

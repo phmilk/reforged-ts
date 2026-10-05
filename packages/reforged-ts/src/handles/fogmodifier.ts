@@ -18,6 +18,10 @@ import type { Rectangle } from "./rect";
 export class FogModifier extends Handle<fogmodifier> {
   /**
    * Creates a stopped fog modifier over a circle.
+   * @remarks
+   * `CreateFogModifierRadius` crashed the game with a radius of 2147483647
+   * on 3.0.0.24268; every other radius measured (0, negative, past the edge
+   * of the world) worked. Dev mode does not check the radius.
    * @param forWhichPlayer - The player whose fog it changes.
    * @param whichState - The fog state forced on the area, such as
    * `FOG_OF_WAR_VISIBLE`.
@@ -61,6 +65,11 @@ export class FogModifier extends Handle<fogmodifier> {
   /**
    * Creates a stopped fog modifier over a circle around `center`, through
    * `CreateFogModifierRadiusLoc`.
+   * @remarks
+   * `CreateFogModifierRadiusLoc` crashed the game with a radius of
+   * 2147483647 on 3.0.0.24268, in 3 of 4 runs; every other radius measured
+   * (0, negative, past the edge of the world) worked. Dev mode does not
+   * check the radius.
    * @param forWhichPlayer - The player whose fog it changes.
    * @param whichState - The fog state forced on the area, such as
    * `FOG_OF_WAR_VISIBLE`.

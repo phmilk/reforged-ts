@@ -8,6 +8,10 @@
 // whose entry `requires` that package.
 import { asyncNativesFile } from "./async-natives.js";
 import {
+  type CrashingArguments,
+  parseCrashingArguments,
+} from "./crashing-arguments.js";
+import {
   type CreationNative,
   parseCreationNatives,
 } from "./creation-natives.js";
@@ -32,6 +36,8 @@ export interface PluginData {
   readonly creationNatives: readonly CreationNative[];
   /** The event responses (the plugin's data/event-responses.json). */
   readonly eventResponses: readonly EventResponse[];
+  /** The Crashing cases of `no-crashing-arguments` (the plugin's data/crashing-arguments.json). */
+  readonly crashingArguments: readonly CrashingArguments[];
   /** The rename map of `no-legacy-w3ts-names` (reforged-ts's migration/renames.json). */
   readonly renames: readonly RenameEntry[];
   /** The async Natives of `no-async-value-as-state` (reforged-types's async-natives.json). */
@@ -50,6 +56,8 @@ export interface DataFiles {
   readonly creationNatives?: string;
   /** Defaults to the plugin's own data/event-responses.json. */
   readonly eventResponses?: string;
+  /** Defaults to the plugin's own data/crashing-arguments.json. */
+  readonly crashingArguments?: string;
   /** Defaults to reforged-ts's migration/renames.json, found from the project root. */
   readonly renames?: string;
   /** Defaults to reforged-types's async-natives.json, found from the project root. */
@@ -90,6 +98,10 @@ export function loadPluginData(
       files.eventResponses ?? ownDataFile("event-responses.json"),
       parseEventResponses,
     ),
+    crashingArguments: readDataFile(
+      files.crashingArguments ?? ownDataFile("crashing-arguments.json"),
+      parseCrashingArguments,
+    ),
     renames: optional(renamesFile, files.renames, []),
     asyncNatives: optional(asyncNativesFile, files.asyncNatives, []),
     unavailable,
@@ -106,5 +118,6 @@ export type {
 export type { UnsafeNative } from "./unsafe-natives.js";
 export type { LocalSafeEntry, LocalSafeKind } from "./local-safe.js";
 export type { CreationNative } from "./creation-natives.js";
+export type { ArgumentValue, CrashingArguments } from "./crashing-arguments.js";
 export type { EventContextKind, EventResponse } from "./event-responses.js";
 export { DataFileError } from "./schema.js";
