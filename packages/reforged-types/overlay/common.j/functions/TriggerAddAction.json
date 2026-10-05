@@ -2,7 +2,7 @@
   "name": "TriggerAddAction",
   "source": "common.j",
   "returns": {
-    "nullable": false,
+    "nullable": true,
     "family": "constructor"
   },
   "params": [
@@ -15,6 +15,6 @@
       "nullable": false
     }
   ],
-  "notes": "Returned a handle in every case of the nullability sweep (typical arguments, whichTrigger: destroyed trigger) on 3.0.0.24268; evidence, not proof. The handle had id 0 in a case (whichTrigger: destroyed trigger) rather than nothing, so a nil check does not tell that the trigger was destroyed.",
+  "notes": "Returned a placeholder handle in place of nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268: id 0, so a nil check does not catch it. A nil check does not tell that the trigger was destroyed.",
   "origin": "war3-types-strict"
 }

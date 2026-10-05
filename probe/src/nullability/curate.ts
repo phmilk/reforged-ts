@@ -57,7 +57,7 @@ export interface Curation {
 /**
  * Applies the verdicts of the Slice `probe` to the Overlay. A Native's
  * `returns.nullable` goes to `false` only for a `non-null (evidence)` or
- * `non-null (evidence, handle id 0)` verdict in a family that may be
+ * `non-null (evidence, handle id 0 or -1)` verdict in a family that may be
  * non-null; nothing ever goes to `true`. Its proposed `notes`, the Native's
  * text, or the sentences of its parameters for a Native of call cases, are
  * written to an entry that holds no `notes`, after its `params`; an entry

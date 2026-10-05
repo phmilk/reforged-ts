@@ -172,7 +172,7 @@ describe("probe:nullability-curate", () => {
       code: 0,
       stdout: [
         `Applied Probe ${PROBE}, run ${RUN_ID} on 3.0.0.12345, to the Overlay: 1 of 1 entries written.`,
-        "ConvertRace (non-null (evidence, handle id 0)): returns.nullable narrowed to false; notes written",
+        "ConvertRace (non-null (evidence, handle id 0 or -1)): returns.nullable narrowed to false; notes written",
         "",
       ].join("\n"),
       stderr: "",
@@ -246,7 +246,7 @@ describe("probe:nullability-curate", () => {
     expect(runMain(context).stdout).toBe(
       [
         `Applied Probe ${PROBE}, run ${RUN_ID} on 3.0.0.12345, to the Overlay: 1 of 2 entries written.`,
-        "TriggerAddAction (non-null (evidence, handle id 0)): returns.nullable narrowed to false; notes kept; proposed for the review: Returned a handle in every case of the nullability sweep (destroyed trigger) on 3.0.0.12345; evidence, not proof. The handle had id 0 in a case (destroyed trigger).",
+        "TriggerAddAction (non-null (evidence, handle id 0 or -1)): returns.nullable narrowed to false; notes kept; proposed for the review: Returned a handle in every case of the nullability sweep (destroyed trigger) on 3.0.0.12345; evidence, not proof. The handle had id 0 in a case (destroyed trigger).",
         "CreateUnit (review): notes left for review",
         "",
       ].join("\n"),
@@ -260,6 +260,37 @@ describe("probe:nullability-curate", () => {
     );
   });
 
+  it("never narrows a Native of a Placeholder handle, writes its notes, and refuses it against an Overlay non-null", async () => {
+    const placeholder = [
+      handleCase("CreateUbersplat", "typical arguments", 1),
+      handleCase("CreateUbersplat", "name: unknown name", -1),
+    ];
+    const { context, functions } = await curationSetup(
+      [entry("CreateUbersplat", true, "constructor")],
+      placeholder,
+    );
+    expect(runMain(context).stdout).toBe(
+      [
+        `Applied Probe ${PROBE}, run ${RUN_ID} on 3.0.0.12345, to the Overlay: 1 of 1 entries written.`,
+        "CreateUbersplat (nullable (placeholder)): notes written",
+        "",
+      ].join("\n"),
+    );
+    expect(JSON.parse(await read(functions, "CreateUbersplat"))).toEqual(
+      entry("CreateUbersplat", true, "constructor", {
+        notes:
+          "Returned a placeholder handle in place of nothing in a case of the nullability sweep (name: unknown name) on 3.0.0.12345: id -1, so a nil check does not catch it.",
+      }),
+    );
+    const nonNull = await curationSetup(
+      [entry("CreateUbersplat", false, "constructor")],
+      placeholder,
+    );
+    expect(runMain(nonNull.context).stderr).toContain(
+      "CreateUbersplat: nullable (placeholder), Overlay returns.nullable false",
+    );
+  });
+
   it("writes nothing when it runs again", async () => {
     const { context, functions } = await curationSetup(
       [entry("ConvertRace", true, "converter")],
@@ -270,7 +301,7 @@ describe("probe:nullability-curate", () => {
     expect(runMain(context).stdout).toBe(
       [
         `Applied Probe ${PROBE}, run ${RUN_ID} on 3.0.0.12345, to the Overlay: 0 of 1 entries written.`,
-        "ConvertRace (non-null (evidence, handle id 0)): unchanged",
+        "ConvertRace (non-null (evidence, handle id 0 or -1)): unchanged",
         "",
       ].join("\n"),
     );

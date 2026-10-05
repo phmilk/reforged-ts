@@ -88,26 +88,78 @@ export type Verdict =
   | "nullable (rule)"
   | "unsafe"
   | "review"
+  | "nullable (placeholder)"
   | "non-null (evidence)"
-  | "non-null (evidence, handle id 0)";
+  | "non-null (evidence, handle id 0 or -1)";
 
 /** Whether a case gave one of `outcomes`. */
 function gave(...outcomes: readonly Outcome[]) {
   return ({ outcome }: CaseResult) => outcomes.includes(outcome);
 }
 
-/** Whether a case gave a handle of id 0, which is not `nil`. */
-function gaveIdZero(testCase: CaseResult): boolean {
-  return testCase.outcome === "handle" && testCase.id === "0";
+/**
+ * The ids a handle has that a review judges: those of a Placeholder
+ * handle, the handle the game returns in place of nothing in a case where
+ * the Native could not do what it was asked, and also a successful call's
+ * (a converter's integer 0).
+ */
+const ID_ZERO_OR_MINUS_ONE = ["0", "-1"] as const;
+
+/**
+ * The label of a constructor's or a registration's case of typical
+ * arguments, as the case generators write it (`TYPICAL_LABEL` of
+ * probes/nullability/expand.ts, which this package's build cannot
+ * import): a Placeholder handle's id is told apart from this case's. The
+ * generators' tests pin that label, and this module's tests pin this one
+ * to the same text.
+ */
+export const TYPICAL_ARGUMENTS = "typical arguments";
+
+/**
+ * The Nullability families that may be non-null and whose cases vary one
+ * argument away from typical arguments, so a Placeholder handle shows
+ * against them.
+ */
+const PLACEHOLDER_FAMILIES: readonly Family[] = ["constructor", "registration"];
+
+/** Whether a case gave a handle of `id`. */
+function gaveId(id: string) {
+  return (testCase: CaseResult) =>
+    testCase.outcome === "handle" && testCase.id === id;
+}
+
+/** Whether a case gave a handle of id 0 or -1, which is not `nil`. */
+function gaveIdZeroOrMinusOne(testCase: CaseResult): boolean {
+  return ID_ZERO_OR_MINUS_ONE.some((id) => gaveId(id)(testCase));
+}
+
+/**
+ * The cases that gave a Placeholder handle: a case other than typical
+ * arguments that gave a handle of id 0 or -1, when typical arguments gave
+ * a handle of another id, so no successful call gave that one. A handle
+ * of the id typical arguments gave (`TerrainDeformCrater`'s first
+ * deformation, id 0) is a handle. Empty when typical arguments did not
+ * run or gave no handle.
+ */
+function placeholderCases(cases: readonly CaseResult[]): CaseResult[] {
+  const typical = cases.find(({ label }) => label === TYPICAL_ARGUMENTS);
+  if (typical?.outcome !== "handle") return [];
+  return cases.filter(
+    (testCase) =>
+      testCase.label !== TYPICAL_ARGUMENTS &&
+      gaveIdZeroOrMinusOne(testCase) &&
+      testCase.id !== typical.id,
+  );
 }
 
 /**
  * The verdicts, checked in this order, each with the condition the cases
  * and the family meet: the first that holds is the Native's, so a `nil` is
  * proof whatever the family and the other cases gave, a crash or a skip
- * makes the Native unsafe, an odd value or an error is reviewed, and a
- * Native of a nullable family stays nullable by the rule, whatever handles
- * it gave.
+ * makes the Native unsafe, an odd value or an error is reviewed, a Native
+ * of a nullable family stays nullable by the rule, whatever handles it
+ * gave, and a Placeholder handle is a case without a handle, so it makes a
+ * constructor or a registration nullable.
  */
 const VERDICTS: readonly (readonly [
   verdict: Verdict,
@@ -121,8 +173,17 @@ const VERDICTS: readonly (readonly [
   ["review", (cases) => cases.some(gave("odd", "error", "not run"))],
   ["nullable (rule)", (_cases, family) => !FAMILIES[family].mayBeNonNull],
   [
-    "non-null (evidence, handle id 0)",
-    (cases) => cases.every(gave("handle")) && cases.some(gaveIdZero),
+    "nullable (placeholder)",
+    (cases, family) =>
+      PLACEHOLDER_FAMILIES.includes(family) &&
+      placeholderCases(cases).length > 0,
+  ],
+  // Outside a constructor or a registration, a handle of id 0 or -1 is
+  // judged by hand in review: a converter's integer 0 or an enum-getter's
+  // constant of integer 0 is a handle.
+  [
+    "non-null (evidence, handle id 0 or -1)",
+    (cases) => cases.every(gave("handle")) && cases.some(gaveIdZeroOrMinusOne),
   ],
   ["non-null (evidence)", (cases) => cases.every(gave("handle"))],
 ];
@@ -151,11 +212,11 @@ export type Comparison = "mismatch" | "consistent";
 
 /**
  * The verdicts that back a non-null return: every case returned a handle,
- * one of id 0 or not.
+ * one of id 0 or -1 or not, and none was a Placeholder handle.
  */
 const NON_NULL_VERDICTS: readonly Verdict[] = [
   "non-null (evidence)",
-  "non-null (evidence, handle id 0)",
+  "non-null (evidence, handle id 0 or -1)",
 ];
 
 /**
@@ -192,27 +253,42 @@ function caseCount(selected: readonly CaseResult[]): string {
 }
 
 /**
- * The sentence naming the cases that gave a handle of id 0,
- * `The handle had id 0 in <a case|n cases> (<cases>).`, alone in its list;
- * an empty list when none did.
+ * The sentences naming the cases that gave a handle of id 0, then those
+ * that gave one of id -1, one per id,
+ * `The handle had id <0|-1> in <a case|n cases> (<cases>).`; an empty list
+ * when none did.
  */
-function idZeroSentence(cases: readonly CaseResult[]): string[] {
-  const idZero = cases.filter(gaveIdZero);
-  return idZero.length === 0
-    ? []
-    : [`The handle had id 0 in ${caseCount(idZero)} (${labels(idZero)}).`];
+function idZeroOrMinusOneSentences(cases: readonly CaseResult[]): string[] {
+  return ID_ZERO_OR_MINUS_ONE.flatMap((id) => {
+    const selected = cases.filter(gaveId(id));
+    return selected.length === 0
+      ? []
+      : [
+          `The handle had id ${id} in ${caseCount(selected)} (${labels(selected)}).`,
+        ];
+  });
+}
+
+/**
+ * The ids of the Placeholder handles of `selected`, for a sentence:
+ * `id 0`, `id -1`, or `id 0 or -1` when they had both.
+ */
+function placeholderIds(selected: readonly CaseResult[]): string {
+  const ids = ID_ZERO_OR_MINUS_ONE.filter((id) => selected.some(gaveId(id)));
+  return `id ${ids.join(" or ")}`;
 }
 
 /**
  * The `notes` text proposed for the Native's Overlay entry, citing the
  * Patch the Probe was built against and the sweep, never an issue number
  * or a family's name, since `notes` is published as `@remarks`: the cases
- * that returned nothing for `nullable (proved)`; every case for
- * `non-null (evidence)`, then, for its id-0 variant, the cases that gave a
- * handle of id 0; for `nullable (rule)`, what the family may have nothing
- * for, then every case, then the cases that gave a handle of id 0; for
- * `unsafe`, the crash, then the sentence the other cases give
- * (`unsafeNotes`). Labels are joined with commas, in parentheses. A
+ * that returned nothing for `nullable (proved)`; the cases that gave a
+ * Placeholder handle, with its ids, for `nullable (placeholder)`; every
+ * case for `non-null (evidence)`, then, for its variant of id 0 or -1, the
+ * cases that gave a handle of each id; for `nullable (rule)`, what the
+ * family may have nothing for, then every case, then the cases that gave
+ * a handle of id 0 or -1; for `unsafe`, the crash, then the sentence the
+ * other cases give (`unsafeNotes`). Labels are joined with commas, in parentheses. A
  * Native proved nullable next to a crashed case gets the crash first too.
  * `review` gets no text, only "review", so no unchecked text reaches
  * `@remarks`. `nullable (rule)` for a family whose Natives may be
@@ -237,10 +313,14 @@ export function proposedNotes(
       return unsafeNotes(cases, family, patch);
     case "non-null (evidence)":
       return `Returned a handle in ${everyCase}; evidence, not proof.`;
-    case "non-null (evidence, handle id 0)":
+    case "nullable (placeholder)": {
+      const placeholders = placeholderCases(cases);
+      return `Returned a placeholder handle in place of nothing in ${caseCount(placeholders)} of the nullability sweep (${labels(placeholders)}) on ${patch}: ${placeholderIds(placeholders)}, so a nil check does not catch it.`;
+    }
+    case "non-null (evidence, handle id 0 or -1)":
       return [
         `Returned a handle in ${everyCase}; evidence, not proof.`,
-        ...idZeroSentence(cases),
+        ...idZeroOrMinusOneSentences(cases),
       ].join(" ");
     case "nullable (rule)": {
       const rule: FamilyRule = FAMILIES[family];
@@ -251,7 +331,7 @@ export function proposedNotes(
       }
       return [
         `May return nothing ${rule.reason}. Returned a handle in ${everyCase}.`,
-        ...idZeroSentence(cases),
+        ...idZeroOrMinusOneSentences(cases),
       ].join(" ");
     }
     default:
@@ -279,7 +359,7 @@ function crashSentence(cases: readonly CaseResult[], patch: string): string[] {
  * whatever its family: the crash, naming every crashed case, then the
  * sentence its other cases give,
  * `Returned a handle in every other case (<cases>).`, then the cases that
- * gave a handle of id 0 (`idZeroSentence`); for a
+ * gave a handle of id 0 or -1 (`idZeroOrMinusOneSentences`); for a
  * Native of a nullable family, what it may have nothing for comes before
  * that sentence. "review" when a case that did not crash gave anything but
  * a handle, an error, an odd value or a case not run, which leaves no
@@ -300,7 +380,7 @@ function unsafeNotes(
     ...(others.length === 0
       ? []
       : [`Returned a handle in every other case (${labels(others)}).`]),
-    ...idZeroSentence(others),
+    ...idZeroOrMinusOneSentences(others),
   ].join(" ");
 }
 

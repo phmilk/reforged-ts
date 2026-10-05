@@ -632,6 +632,21 @@ for (const devMode of [false, true]) {
       });
     });
 
+    it("keeps nothing when TriggerAddAction returns nil, and still returns the Trigger", () => {
+      inMode(devMode, () => {
+        const trigger = Trigger.create();
+        const action = () => undefined;
+        const returned = withNative(
+          "TriggerAddAction",
+          () => undefined,
+          () => trigger.addAction(action),
+        );
+        expect(returned).toBe(trigger);
+        expect(trigger.removeAction(action)).toBe(trigger);
+        expect(callsOn(trigger, "TriggerRemoveAction")).toEqual([]);
+      });
+    });
+
     it("calls no Native for a function never added", () => {
       inMode(devMode, () => {
         const trigger = Trigger.create().addAction(() => undefined);
@@ -646,7 +661,10 @@ for (const devMode of [false, true]) {
     it("passes a triggeraction straight to the Native", () => {
       inMode(devMode, () => {
         const trigger = Trigger.create();
-        const raw = TriggerAddAction(trigger.handle, () => undefined);
+        const raw = defined(
+          TriggerAddAction(trigger.handle, () => undefined),
+          "TriggerAddAction",
+        );
         expect(trigger.removeAction(raw)).toBe(trigger);
         expect(callsOn(trigger, "TriggerRemoveAction")).toEqual([
           `TriggerRemoveAction(${handleRef("trigger", trigger.handle)}, ${handleRef("triggeraction", raw)})`,
