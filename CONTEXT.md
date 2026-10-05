@@ -104,6 +104,10 @@ _Avoid_: version (alone), Patch (one Game version can span several Builds)
 The four-character id of one type of object (`hfoo`, `AHbz`), which a map script holds as an integer (`FourCC("hfoo")`).
 _Avoid_: object id, type id, fourcc
 
+**Object kind**:
+Which of the seven families a type of object belongs to: unit (heroes included), item, ability, buff, destructable, doodad or upgrade; each Rawcode names an object of one Object kind.
+_Avoid_: object type, category, rawcode type
+
 **Object data**:
 A map's definitions of its types of object (units, items, abilities, buffs, destructables, doodads, upgrades), stored in its `war3map.w3u`, `.w3t`, `.w3a`, `.w3h`, `.w3b`, `.w3d` and `.w3q` files, their `war3mapSkin` counterparts (which hold a Custom object's name), and the strings they reference in `war3map.wts`.
 _Avoid_: object editor data, w3o
