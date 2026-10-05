@@ -47,3 +47,13 @@ The unknown-Rawcode lint rule (#466) does not read the JSON index in `src/genera
 The JSON index stays, for the hover tool (#468). The generated `FourCC` overloads stay as fresh as the last generation: a Rawcode newer than them is `UnknownRawcode`, which every parameter accepts, so stale overloads hide nothing from the lint rule.
 
 Amendment record: https://github.com/phmilk/reforged-ts/issues/466
+
+## Second amendment (2026-10-05)
+
+The hover tool (#468) does not read the JSON index in `src/generated/` either. It is a TypeScript language service plugin, and tsserver outlives install, build and `pnpm dev` just as ESLint's server does. Reading the index, it would call a Rawcode created in the World Editor while `pnpm dev` is not running unknown, while the lint rule accepts it.
+
+`reforged-map` instead exposes one public lookup from a Rawcode to its object. The lookup joins the JSON index of `reforged-builtins` with the map's model held in memory, from the map folder and the Object definitions, and reloads it when the modification time of one of their files changes. The plugin (`reforged-map/typescript-plugin`) and the lint rule both call it, so they always agree on which Rawcodes exist. A Rawcode that two kinds share is a lookup result naming both objects, not a field of a file.
+
+The map's JSON index loses its last consumer, so the generator no longer writes it. `src/generated/` holds the `udg_` declarations, the `FourCC` overloads and the constants. The JSON index of `reforged-builtins` stays; the lookup reads it.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/468
