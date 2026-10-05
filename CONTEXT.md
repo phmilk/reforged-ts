@@ -100,6 +100,26 @@ _Avoid_: version, patch number, build number
 The first three components of a Build (3.0.0), shared by every Patch released under that number; a Map project selects its Typings by Game version.
 _Avoid_: version (alone), Patch (one Game version can span several Builds)
 
+**Rawcode**:
+The four-character id of one type of object (`hfoo`, `AHbz`), which a map script holds as an integer (`FourCC("hfoo")`).
+_Avoid_: object id, type id, fourcc
+
+**Object data**:
+A map's definitions of its types of object (units, items, abilities, buffs, destructables, doodads, upgrades), stored in its `war3map.w3u`, `.w3t`, `.w3a`, `.w3h`, `.w3b`, `.w3d` and `.w3q` files.
+_Avoid_: object editor data, w3o
+
+**Built-in object**:
+A type of object the game ships in a Patch, the same in every map (`hfoo`); one a map's Object data modifies keeps its Rawcode and is still a Built-in object.
+_Avoid_: native object (a Native is something else), melee object, standard object
+
+**Custom object**:
+A type of object that exists only in one map's Object data (`h000`), new or derived from a Built-in object.
+_Avoid_: map object, custom unit
+
+**Object Editor**:
+The World Editor's editor of Object data; an external editor of Object data is not one.
+_Avoid_: OE, object editor (for an external tool)
+
 **Agent skill**:
 A folder holding a `SKILL.md` that scripts one workflow for an AI coding agent to follow when invoked (`add-wrapper`, `map-feature`).
 _Avoid_: prompt, recipe, playbook
