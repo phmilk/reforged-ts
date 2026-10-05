@@ -45,3 +45,13 @@ The Studio, a new package `reforged-studio`, is the Toolchain's local app for ed
 - The Studio needs the game installed, as the Template's launch already does.
 
 Decision record: https://github.com/phmilk/reforged-ts/issues/467
+
+## Amendment (2026-10-05)
+
+What the 3.0 World Editor does on save to Object data another tool wrote (#475) settles three details the decision above left open. The decision itself stands.
+
+- **Detecting a change made outside the code.** Object sync detects it object by object: it merges the base and Skin files, resolves `TRIGSTR` references to their text and compares fields. Comparing file bytes would not work. A save with no edit normalizes whatever is not in the editor's own form: it turns a literal name into a `TRIGSTR`, moves fields into the file the editor keeps them in, lists every object in the Skin file, and drops and re-sorts strings in `war3map.wts`. The writer still writes that form (localizable strings as `TRIGSTR`, each field in the editor's file, new string numbers above every existing one), so that objects it writes survive a World Editor save unchanged.
+- **Where the Object manifest lives.** It lives in the Map project, outside the map folder. The World Editor lists every file it does not know in the map folder as an import in `war3map.imp`. The Object manifest also records the Rawcodes Object sync removed, since the World Editor offers a removed Rawcode again for its next new object.
+- **Holding files open.** Neither Object sync nor the Studio holds a map file open beyond one read or write, and each opens files with delete sharing, as Node's `fs` does. The World Editor saves by writing a new folder and swapping it in; if another process holds a map file open without delete sharing, the save deletes part of the folder with no error, and imports are lost. Before writing or sending `-launch -loadfile`, both read the World Editor's window title, which ends in ` *]` while it holds unsaved edits: the only sign of them, since an edit writes nothing to disk.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/475
