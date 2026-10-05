@@ -105,11 +105,15 @@ The four-character id of one type of object (`hfoo`, `AHbz`), which a map script
 _Avoid_: object id, type id, fourcc
 
 **Object data**:
-A map's definitions of its types of object (units, items, abilities, buffs, destructables, doodads, upgrades), stored in its `war3map.w3u`, `.w3t`, `.w3a`, `.w3h`, `.w3b`, `.w3d` and `.w3q` files.
+A map's definitions of its types of object (units, items, abilities, buffs, destructables, doodads, upgrades), stored in its `war3map.w3u`, `.w3t`, `.w3a`, `.w3h`, `.w3b`, `.w3d` and `.w3q` files, their `war3mapSkin` counterparts (which hold a Custom object's name), and the strings they reference in `war3map.wts`.
 _Avoid_: object editor data, w3o
 
+**Game data set**:
+The set of Built-in objects a map selects in its options, one of several a Patch ships (the default, Custom v1, Melee), which differ in which objects exist and in their stats.
+_Avoid_: data set (alone), game data, balance
+
 **Built-in object**:
-A type of object the game ships in a Patch, the same in every map (`hfoo`); one a map's Object data modifies keeps its Rawcode and is still a Built-in object.
+A type of object the game ships in a Patch, the same in every map that selects the same Game data set (`hfoo`); one a map's Object data modifies keeps its Rawcode and is still a Built-in object.
 _Avoid_: native object (a Native is something else), melee object, standard object
 
 **Custom object**:
