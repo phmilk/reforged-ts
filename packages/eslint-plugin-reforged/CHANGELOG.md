@@ -1,5 +1,17 @@
 # eslint-plugin-reforged
 
+## 1.0.0-alpha.4
+
+### Minor Changes
+
+- [#375](https://github.com/phmilk/reforged-ts/pull/375) [`17ed385`](https://github.com/phmilk/reforged-ts/commit/17ed3851ceb8af33a64815919d47809f8a404edc) Thanks [@wyller](https://github.com/wyller)! - Add `no-event-response-outside-event`, a warning in the recommended config: it reports an event response (`GetTriggerUnit`, `GetEnumUnit`, `GetEventDamage`, `Unit.fromEvent()`, ...) called where its context certainly does not hold, at module top level, in the callback of an Init stage registered at module top level or in a timer's callback, where it returns nothing. The event responses of `common.j` and their contexts are listed in the new `data/event-responses.json`; a library member is classified by its `@native` tags.
+
+### Patch Changes
+
+- Updated dependencies [[`c4a4aef`](https://github.com/phmilk/reforged-ts/commit/c4a4aef03feee0a9cab5182be3935c77fe8094f6), [`8eab0d7`](https://github.com/phmilk/reforged-ts/commit/8eab0d772139939601acf5e3960a51741f9725e6), [`5e96ca2`](https://github.com/phmilk/reforged-ts/commit/5e96ca25e45ddb8d1ec3fce3f663806b94a5080d), [`21e4534`](https://github.com/phmilk/reforged-ts/commit/21e45346ec0e3b71eb3c61c89db7c09dcafe7cfc), [`4c061da`](https://github.com/phmilk/reforged-ts/commit/4c061dadb5a1523b81253ab86e99730f65446388), [`dbdabc9`](https://github.com/phmilk/reforged-ts/commit/dbdabc958376b83800cda7b79bff8cf946bd27a9), [`8bdcd3a`](https://github.com/phmilk/reforged-ts/commit/8bdcd3a4a5c673655d0efae4bd35098b1cca2437), [`db51e02`](https://github.com/phmilk/reforged-ts/commit/db51e025837d423375feb52f062c5c07a53c033b), [`75378d0`](https://github.com/phmilk/reforged-ts/commit/75378d003976ddbfea59b488cbc4a05b2769890c), [`728953d`](https://github.com/phmilk/reforged-ts/commit/728953ddfb6f3b7ef683f7c49e62a82379986f8a), [`4e0e404`](https://github.com/phmilk/reforged-ts/commit/4e0e4044af0d5d92405918d4d1344725a53b47fb)]:
+  - reforged-types@1.0.0-alpha.4
+  - reforged-ts@1.0.0-alpha.15
+
 ## 1.0.0-alpha.3
 
 ### Minor Changes

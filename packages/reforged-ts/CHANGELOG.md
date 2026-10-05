@@ -1,5 +1,22 @@
 # reforged-ts
 
+## 1.0.0-alpha.15
+
+### Patch Changes
+
+- [#436](https://github.com/phmilk/reforged-ts/pull/436) [`8eab0d7`](https://github.com/phmilk/reforged-ts/commit/8eab0d772139939601acf5e3960a51741f9725e6) Thanks [@phmilk](https://github.com/phmilk)! - 28 constructors typed nullable now return their handle type, no longer `| undefined`: the Nullability sweep saw each return a handle on 3.0.0.24268 for typical arguments, odd numbers, empty or unknown names and rawcodes, and stale handle arguments alike. They are `CreateGroup`, `CreateForce`, `DialogCreate`, `InitHashtable`, `CreateQuest`, `QuestCreateItem`, `CreateDefeatCondition`, `CreateTimerDialog`, `CreateLeaderboard`, `CreateMultiboard`, `CreateUpgradeCommandButtonEffect`, `CreateLearnCommandButtonEffect`, `CreateUnitPool`, `CreateItemPool`, `CreateMinimapIcon`, `CreateMinimapIconOnUnit`, `CreateTextTag`, `CreateTrackable`, `CreateSound`, `CreateSoundFilenameWithLabel`, `CreateSoundFromLabel`, `CreateMIDISound`, `TerrainDeformCrater`, `TerrainDeformRipple`, `TerrainDeformWave`, `TerrainDeformRandom`, `AddSpecialEffect` and `CreateBlightedGoldmine`. A `?.` or `!` on their result is no longer needed.
+
+  The 108 constructors the sweep measured carry a `@remarks` with what was measured. The 62 that stay `| undefined` for a case that returned nothing name those cases, such as a removed location or rect, a destroyed trigger or dialog, an unknown unit, item or destructable rawcode, or an unknown frame name, or that crashed the game (`CreateFogModifierRadius`, `CreateFogModifierRadiusLoc` and `CreateImage` with a radius or image type of `2147483647`).
+
+  `Force.fromPlayer` adds no player when it throws: before, in Dev mode, a Guard that raised (a call before the globals Init stage or inside `MapPlayer.runLocal`) left the player added to a force the game had created.
+
+- [#446](https://github.com/phmilk/reforged-ts/pull/446) [`4e0e404`](https://github.com/phmilk/reforged-ts/commit/4e0e4044af0d5d92405918d4d1344725a53b47fb) Thanks [@phmilk](https://github.com/phmilk)! - `TriggerAddAction` now returns `triggeraction | undefined`, no longer `triggeraction`: on a destroyed trigger the game returns a placeholder handle of id 0 in place of nothing, and a later Patch may return nothing there. Check its result for `undefined` where you call it directly. Six more constructors that fail the same way stay `| undefined`: `CreateCommandButtonEffect` (an unknown order), `CreateMinimapIconAtLoc` (a removed location), `AddWeatherEffect` (an unknown effect rawcode, id -1, or a removed rect), `AddLightning` and `AddLightningEx` (an unknown code name, or `checkVisibility` with points the player cannot see) and `CreateUbersplat` (an unknown name, id -1). The `@remarks` of all seven name the cases that gave the placeholder, which a nil check does not catch on 3.0.0.24268.
+
+  `Trigger.addAction` keeps nothing for `removeAction` when `TriggerAddAction` returns nothing, and still returns the Trigger.
+
+- Updated dependencies [[`c4a4aef`](https://github.com/phmilk/reforged-ts/commit/c4a4aef03feee0a9cab5182be3935c77fe8094f6), [`8eab0d7`](https://github.com/phmilk/reforged-ts/commit/8eab0d772139939601acf5e3960a51741f9725e6), [`5e96ca2`](https://github.com/phmilk/reforged-ts/commit/5e96ca25e45ddb8d1ec3fce3f663806b94a5080d), [`21e4534`](https://github.com/phmilk/reforged-ts/commit/21e45346ec0e3b71eb3c61c89db7c09dcafe7cfc), [`4c061da`](https://github.com/phmilk/reforged-ts/commit/4c061dadb5a1523b81253ab86e99730f65446388), [`dbdabc9`](https://github.com/phmilk/reforged-ts/commit/dbdabc958376b83800cda7b79bff8cf946bd27a9), [`8bdcd3a`](https://github.com/phmilk/reforged-ts/commit/8bdcd3a4a5c673655d0efae4bd35098b1cca2437), [`db51e02`](https://github.com/phmilk/reforged-ts/commit/db51e025837d423375feb52f062c5c07a53c033b), [`75378d0`](https://github.com/phmilk/reforged-ts/commit/75378d003976ddbfea59b488cbc4a05b2769890c), [`728953d`](https://github.com/phmilk/reforged-ts/commit/728953ddfb6f3b7ef683f7c49e62a82379986f8a), [`4e0e404`](https://github.com/phmilk/reforged-ts/commit/4e0e4044af0d5d92405918d4d1344725a53b47fb)]:
+  - reforged-types@1.0.0-alpha.4
+
 ## 1.0.0-alpha.14
 
 ### Patch Changes
