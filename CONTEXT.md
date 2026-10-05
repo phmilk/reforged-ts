@@ -60,6 +60,10 @@ _Avoid_: hook, lifecycle event, main/config
 A check that catches a known Warcraft III scripting pitfall (desync, crash, leak) before it reaches players: at the type level, in the lint plugin, or at run time in Dev mode.
 _Avoid_: safety check, validation, sanity check
 
+**Ban list**:
+The Natives the lint plugin forbids outright, whatever their arguments, because every call kills the thread, leaks or desyncs (`TriggerSleepAction`, `CreateTimerBJ`); each entry names its reason and a replacement.
+_Avoid_: unsafe natives, unsafe (alone), blacklist
+
 **Dev mode**:
 The library state set by `Reforged.configure({ devMode: true })` in which runtime Guards are active; off by default and in release builds.
 _Avoid_: debug mode, development build, test mode
@@ -135,3 +139,7 @@ _Avoid_: batch, phase, chunk
 **Fixture**:
 A factory, inside a Probe, for a Handle in a known state (live, dead, removed, destroyed), built with Natives only, so a case names the state it tests. A **stale handle** is one whose object is dead, removed or destroyed: the Handle is still held, and the object behind it is no longer alive or no longer there.
 _Avoid_: setup, mock, stub (the Lua test harness's stand-ins); test fixture (a file a vitest test reads)
+
+**Crashing case**:
+A case of the Nullability sweep in which the game crashed: one Native with one argument value or Handle state (`CreateImage` with image type 2147483647, `GetExpiredTimer` in a trigger's action), on one Build. A Native with a Crashing case is not on the Ban list: its other cases ran.
+_Avoid_: unsafe (alone), crash (alone, which is the event, not the case), crashing Native
