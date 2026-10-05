@@ -1,0 +1,32 @@
+[
+  {
+    "native": "GetExpiredTimer",
+    "case": "outside its event",
+    "guard": "no-event-response-outside-event"
+  },
+  {
+    "native": "CreateFogModifierRadius",
+    "case": "radius: 2147483647",
+    "excluded": "No map passes int-max as a radius, and the threshold is unknown: the @remarks of FogModifier.create say it."
+  },
+  {
+    "native": "CreateFogModifierRadiusLoc",
+    "case": "radius: 2147483647",
+    "excluded": "No map passes int-max as a radius, and the threshold is unknown: the @remarks of FogModifier.createAtPoint say it."
+  },
+  {
+    "native": "CreateImage",
+    "case": "imageType: 2147483647",
+    "guard": "Image.create"
+  },
+  {
+    "native": "BlzCreateFrameByType",
+    "case": "typeName: SIMPLEMESSAGEFRAME without its FDF fields",
+    "guard": ["no-crashing-arguments", "Frame.createType"]
+  },
+  {
+    "native": "BlzCreateFrameByType",
+    "case": "typeName: CONTROL without its FDF fields",
+    "guard": ["no-crashing-arguments", "Frame.createType"]
+  }
+]

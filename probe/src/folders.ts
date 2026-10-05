@@ -85,3 +85,10 @@ export const NULLABILITY_REPORT = join(
   "research",
   "nullability-sweep.md",
 );
+
+/**
+ * The coverage of the Crashing cases: one record per crashed row of the
+ * Nullability sweep's report, with its Guard or the reason it has none
+ * (src/nullability/crashing-cases.ts).
+ */
+export const CRASHING_CASES = join(PACKAGE_FOLDER, "crashing-cases.json");

@@ -254,6 +254,8 @@ export async function formatSection(slice: SliceSection): Promise<string> {
 
 /** What a section says of one Native or parameter: its verdict and its cases' outcomes. */
 interface PreviousPart {
+  /** The Native, its own or its parameter's. */
+  native: string;
   verdict: string;
   /** Each case's outcome, by its label as the table shows it. */
   outcomes: Map<string, string>;
@@ -318,8 +320,8 @@ export function readSection(
     const paramHeading = /^### `([^`]+)` parameter `([^`]+)`$/.exec(line);
     const heading = nativeHeading ?? paramHeading;
     if (heading !== null) {
-      part = { verdict: "", outcomes: new Map() };
       const [, native, param] = heading;
+      part = { native, verdict: "", outcomes: new Map() };
       if (nativeHeading !== null) read.natives.set(native, part);
       else read.params.set(paramName(native, param), part);
       outcomeColumn = -1;
