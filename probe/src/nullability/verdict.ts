@@ -470,10 +470,11 @@ export function compareParam(
 
 /**
  * How the counts of a parameter's completed `nil` cases stand against its
- * completed `always-true` cases', group by group: `nothing to compare`
- * when no group has both; `same` when every group that has both has one
- * count; `different` otherwise, with the difference in words for the
- * report's section and the pull request,
+ * completed `always-true` cases', group by group, leaving out a group
+ * whose counts are all `0`, which gives no evidence either way:
+ * `nothing to compare` when no group is left with both; `same` when every
+ * group left with both has one count; `different` otherwise, with the
+ * difference in words for the report's section and the pull request,
  * `nil: <case> <count>; always-true: <case> <count>`, naming the cases of
  * the groups whose counts differ.
  */
@@ -486,7 +487,9 @@ export type CountComparison =
  * The comparison of a parameter's `nil` counts with its always-true
  * counts (`CountComparison`). A `nil` case is compared with the
  * always-true cases of its own group only, since a stale handle may leave
- * fewer objects to enumerate than a live one.
+ * fewer objects to enumerate than a live one. A group that counted nothing
+ * is not compared: `ForceEnumEnemies` counts 0 on the one-player probe
+ * map, and its equal counts would propose "keeps every player" (#441).
  */
 export function compareCounts(
   cases: readonly ParamCaseResult[],
@@ -497,15 +500,24 @@ export function compareCounts(
       (testCase) => testCase.group === group && testCase.argument === argument,
     );
   const compared = [...new Set(cases.map(({ group }) => group))]
-    .map((group) => ({
-      nil: of(group, "nil"),
-      alwaysTrue: of(group, "always-true"),
-    }))
-    .filter(({ nil, alwaysTrue }) => nil.length > 0 && alwaysTrue.length > 0);
+    .map((group) => {
+      const nil = of(group, "nil");
+      const alwaysTrue = of(group, "always-true");
+      return {
+        nil,
+        alwaysTrue,
+        groupCounts: [...nil, ...alwaysTrue].map(({ count }) => count),
+      };
+    })
+    .filter(
+      ({ nil, alwaysTrue, groupCounts }) =>
+        nil.length > 0 &&
+        alwaysTrue.length > 0 &&
+        groupCounts.some((count) => count !== "0"),
+    );
   if (compared.length === 0) return { kind: "nothing to compare" };
   const differing = compared.filter(
-    ({ nil, alwaysTrue }) =>
-      new Set([...nil, ...alwaysTrue].map(({ count }) => count)).size > 1,
+    ({ groupCounts }) => new Set(groupCounts).size > 1,
   );
   if (differing.length === 0) return { kind: "same" };
   const counts = (selected: readonly ParamCaseResult[]) =>
