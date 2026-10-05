@@ -69,7 +69,7 @@ The library state set by `Reforged.configure({ devMode: true })` in which runtim
 _Avoid_: debug mode, development build, test mode
 
 **Map project**:
-A repository that consumes the library to produce a playable map, normally generated from the Template.
+A repository generated from the Template that consumes the library to produce a playable map; the Template fixes the versions of its Toolchain and of the reforged-ts packages.
 _Avoid_: consumer, user code, game project
 
 **Template**:
