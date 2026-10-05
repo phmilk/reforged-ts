@@ -19,4 +19,6 @@ The upstream template's open issues all trace to compile-time object-data editin
 - The library's release pipeline has a hard dependency on the Template repository being buildable.
 - The MPQ writer must be proven against the 3.0 editor's `.w3i` version 39 before the Template is built (verification ticket on the map); the fallback is a parser fix or opaque handling of the w3i.
 
+ADR 0015 revises the Object data half of this decision: the map folder owns Object data, and any editor that round-trips it faithfully may edit it, the World Editor, HiveWE or the Studio; code declares Object definitions, which `reforged-map` writes. Terrain and placed units stay the World Editor's.
+
 Decision record: https://github.com/phmilk/reforged-ts/issues/23
