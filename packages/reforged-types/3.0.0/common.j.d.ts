@@ -13820,7 +13820,7 @@ declare function ResumeTimer(whichTimer: timer): void;
 
 /**
  * @returns timer
- * @remarks Crashed the game in a case of the nullability sweep (outside its event) on 3.0.0.24268: called in the action of a unit's damage event, a thread no timer started. Returned nothing in a case of the nullability sweep (callback of a destroyed timer) on 3.0.0.24268.
+ * @remarks Crashed the game in a case of the nullability sweep (outside its event) on 3.0.0.24268. It was called in the action of a unit's damage event, a thread no timer started. Returned nothing in a case of the nullability sweep (callback of a destroyed timer) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetExpiredTimer}
  */
 declare function GetExpiredTimer(): timer | undefined;
