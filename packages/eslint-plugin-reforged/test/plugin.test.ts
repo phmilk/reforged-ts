@@ -18,6 +18,7 @@ const decidedTable: Readonly<Record<string, "error" | "warn">> = {
   "no-unused-handle-result": "error",
   "no-dotted-asset-paths": "error",
   "no-legacy-w3ts-names": "error",
+  "no-crashing-arguments": "error",
   "no-unordered-iteration": "warn",
   "no-handle-id-as-data": "warn",
   "no-async-value-as-state": "warn",
@@ -64,6 +65,7 @@ export const dying = GetTriggerUnit();
 
 function onTick(): void {
   TriggerSleepAction(1);
+  BlzCreateFrameByType("CONTROL", "Box", BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)!, "", 0);
   AddSpecialEffect("war3mapImported/Fire.v2.mdx", 0, 0);
   print("100% done");
   zoom = GetCameraTargetPositionX();
@@ -96,13 +98,13 @@ describe("the plugin object", () => {
   });
 
   it("exports every rule of the decided table, and only those", () => {
-    expect(Object.keys(decidedTable)).toHaveLength(13);
+    expect(Object.keys(decidedTable)).toHaveLength(14);
     expect([...ruleNames].sort()).toEqual(Object.keys(decidedTable).sort());
   });
 
-  it("decides six errors and seven warnings", () => {
+  it("decides seven errors and seven warnings", () => {
     const severities = Object.values(decidedTable);
-    expect(severities.filter((each) => each === "error")).toHaveLength(6);
+    expect(severities.filter((each) => each === "error")).toHaveLength(7);
     expect(severities.filter((each) => each === "warn")).toHaveLength(7);
   });
 });

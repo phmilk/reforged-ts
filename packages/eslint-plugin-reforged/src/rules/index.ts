@@ -2,6 +2,7 @@
 // Adding a rule is its file under rules/, one import and one line here.
 import type { RuleEntry } from "../rule-entry.js";
 import noAsyncValueAsState from "./no-async-value-as-state.js";
+import noCrashingArguments from "./no-crashing-arguments.js";
 import noDottedAssetPaths from "./no-dotted-asset-paths.js";
 import noEventResponseOutsideEvent from "./no-event-response-outside-event.js";
 import noGameStateInLocalBranch from "./no-game-state-in-local-branch.js";
@@ -17,6 +18,7 @@ import preferHandleMap from "./prefer-handle-map.js";
 
 export const ruleEntries: readonly RuleEntry[] = [
   noAsyncValueAsState,
+  noCrashingArguments,
   noDottedAssetPaths,
   noEventResponseOutsideEvent,
   noGameStateInLocalBranch,
