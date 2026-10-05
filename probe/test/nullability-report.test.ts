@@ -1597,6 +1597,43 @@ describe("the nullability report's parameter section", () => {
     ]);
   });
 
+  it("compares no group whose counts are all 0, and words the notes as accepted", async () => {
+    const { context, resultFile } = await setup();
+    const overlayFolder = await overlayWithFilters(context, {
+      GroupEnumUnitsInRect: true,
+    });
+    await writeResultFile(
+      resultFile,
+      callRun([
+        callCase(
+          "GroupEnumUnitsInRect",
+          "always-true filter",
+          "always-true",
+          "completed",
+          0,
+        ),
+        callCase("GroupEnumUnitsInRect", "nil filter", "nil", "completed", 0),
+      ]),
+    );
+    const { slice } = await writeNullabilityReport(PROBE, {
+      ...context,
+      overlayFolder,
+    });
+    expect(
+      slice.params.map(({ verdict, countDifference, notes }) => [
+        verdict,
+        countDifference,
+        notes,
+      ]),
+    ).toEqual([
+      [
+        "nullable (completed)",
+        undefined,
+        "A nil filter is accepted (nullability sweep, 3.0.0.12345).",
+      ],
+    ]);
+  });
+
   it("prints no count difference when no always-true filter completed, and words the notes as accepted", async () => {
     const { context, resultFile } = await setup();
     const overlayFolder = await overlayWithFilters(context, {

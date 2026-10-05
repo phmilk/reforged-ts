@@ -8371,7 +8371,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Probe: `nullability-filters`
 - Patch: 3.0.0.24268
 - Client: 3.0.0.24268
-- Date: 2026-10-04
+- Date: 2026-10-05
 - Run: `8d3bc710-2304-4f35-836f-d0b51929f50c`
 
 ### `GroupEnumUnitsOfType` parameter `filter`
@@ -8554,7 +8554,7 @@ The [Nullability sweep](../../CONTEXT.md)'s report: one section per Slice, writt
 - Verdict: nullable (completed)
 - Overlay `params[].nullable`: `true`
 - Comparison: consistent
-- Proposed sentence of the Native's `notes`: A nil filter keeps every player (nullability sweep, 3.0.0.24268).
+- Proposed sentence of the Native's `notes`: A nil filter is accepted (nullability sweep, 3.0.0.24268).
 
 ### `EnumDestructablesInRect` parameter `filter`
 
