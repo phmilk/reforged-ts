@@ -53,14 +53,12 @@ const messageIds: Readonly<Record<EventPlace["kind"], MessageIds>> = {
 };
 
 /**
- * The event responses reported in a trigger's handler: the Crashing cases
- * of the Nullability sweep there. `GetExpiredTimer` crashed the game in a
- * trigger's action on 3.0.0.24268. The other responses there return
- * nothing, which is out of the rule's scope (#373).
+ * The event response reported in a trigger's handler: the Crashing case of
+ * the Nullability sweep there, which crashed the game in a trigger's action
+ * on 3.0.0.24268. The other responses there return nothing, which is out of
+ * the rule's scope (#373).
  */
-const crashingInTriggerHandler: ReadonlySet<string> = new Set([
-  "GetExpiredTimer",
-]);
+const crashingInTriggerHandler = "GetExpiredTimer";
 
 /** The replacement each context kind advises. */
 const advice: Readonly<Record<EventContextKind, string>> = {
@@ -129,7 +127,7 @@ export function createNoEventResponseOutsideEvent(
         const { response } = read;
         if (
           place.kind === "triggerHandler"
-            ? !crashingInTriggerHandler.has(response.name)
+            ? response.name !== crashingInTriggerHandler
             : place.timerExpiry && response.context === "timer"
         ) {
           return;

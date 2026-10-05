@@ -31,12 +31,9 @@ import {
   type ParserServicesWithTypeInformation,
   type TSESTree,
 } from "@typescript-eslint/utils";
-import * as ts from "typescript";
 
-import { invokedName } from "./allowlist.js";
+import { resolveCallee, syntacticName } from "./callee.js";
 import { type FunctionNode, isFunction } from "./function.js";
-import { propertyName, resolvedDeclarations } from "./member-access.js";
-import { isDeclaredIn } from "./package.js";
 import { isAtModuleTopLevel, isImmediatelyInvoked } from "./top-level.js";
 
 /** A place where no event context holds, but maybe a Timer's expiry. */
@@ -63,13 +60,12 @@ export type ContextFreePlace =
 export interface TriggerHandlerPlace {
   readonly kind: "triggerHandler";
   readonly callee: string;
-  readonly timerExpiry: false;
 }
 
 /** A place where a call certainly runs: context-free, or a trigger's handler. */
 export type EventPlace = ContextFreePlace | TriggerHandlerPlace;
 
-/** A function a callback is passed to, by the name `takerName` resolves. */
+/** A function a callback is passed to, by the name `resolveCallee` gives it. */
 interface CallbackTaker {
   /** The index of the callback among the arguments. */
   readonly index: number;
@@ -89,10 +85,7 @@ function timerCallback(callee: string, index: number): CallbackTaker {
 }
 
 function triggerHandler(callee: string, index: number): CallbackTaker {
-  return {
-    index,
-    place: { kind: "triggerHandler", callee, timerExpiry: false },
-  };
+  return { index, place: { kind: "triggerHandler", callee } };
 }
 
 /** The callback takers, by resolved name. */
@@ -162,37 +155,14 @@ function passedTo(
   return index < 0 ? undefined : { call: parent, index };
 }
 
-/** The name a callee names syntactically: `TimerStart`, or `after` for `Timer.after`. */
-function shortName(callee: TSESTree.Expression): string | undefined {
-  if (callee.type === AST_NODE_TYPES.Identifier) {
-    return callee.name;
-  }
-  return callee.type === AST_NODE_TYPES.MemberExpression
-    ? propertyName(callee)
-    : undefined;
-}
-
 /**
- * The name of the callback taker a call invokes: a Native, a library member
- * (`invokedName`), or a function declared in reforged-ts (`on`). Asks the
- * checker.
+ * The packages a callback taker called by its plain name is declared in:
+ * the Natives (`TimerStart`) and the library's own functions (`on`).
  */
-function takerName(
-  services: ParserServicesWithTypeInformation,
-  call: TSESTree.CallExpression,
-): string | undefined {
-  const { callee } = call;
-  if (
-    callee.type === AST_NODE_TYPES.Identifier &&
-    resolvedDeclarations(services, callee).some(
-      (each) =>
-        ts.isFunctionDeclaration(each) && isDeclaredIn(each, "reforged-ts"),
-    )
-  ) {
-    return callee.name;
-  }
-  return invokedName(services, call);
-}
+const takerPackages: ReadonlySet<string> = new Set([
+  "reforged-types",
+  "reforged-ts",
+]);
 
 /**
  * The place a function literal's body is, when the literal is passed
@@ -209,11 +179,11 @@ function placeOfCallback(
     return undefined;
   }
   const { call, index } = passed;
-  const short = shortName(call.callee);
+  const short = syntacticName(call);
   if (short === undefined || takerIndexes.get(short) !== index) {
     return undefined;
   }
-  const name = takerName(services, call);
+  const name = resolveCallee(services, call, takerPackages)?.name;
   const taker = name === undefined ? undefined : callbackTakers.get(name);
   if (taker?.index !== index) {
     return undefined;

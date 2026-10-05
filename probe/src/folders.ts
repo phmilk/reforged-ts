@@ -92,3 +92,24 @@ export const NULLABILITY_REPORT = join(
  * (src/nullability/crashing-cases.ts).
  */
 export const CRASHING_CASES = join(PACKAGE_FOLDER, "crashing-cases.json");
+
+/**
+ * The lint plugin's rule registry, one `import <name> from "./<rule>.js";`
+ * line per rule: the rules a Crashing case's Guard can name.
+ */
+export const PLUGIN_RULES_INDEX = join(
+  WORKSPACE_FOLDER,
+  "packages",
+  "eslint-plugin-reforged",
+  "src",
+  "rules",
+  "index.ts",
+);
+
+/** The library's sources: the members a Crashing case's Guard can name. */
+export const LIBRARY_SOURCES = join(
+  WORKSPACE_FOLDER,
+  "packages",
+  "reforged-ts",
+  "src",
+);

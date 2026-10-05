@@ -79,9 +79,9 @@ export class Image extends Handle<image> {
    * @throws In Dev mode, before `CreateImage` is called, when `imageType` is
    * not an integer from 1 to 4, which TypeScript lets through an
    * `ImageType`: `CreateImage` crashed the game with image type 2147483647 on
-   * 3.0.0.24268, and returned the invalid image, id -1, with 0. The message,
-   * at the calling line:
-   * `reforged-ts: Image.create with image type <imageType>, which is not an integer from 1 to 4 (ImageType): CreateImage crashed the game with image type 2147483647 on 3.0.0.24268, and returned the invalid image (id -1) with 0`.
+   * 3.0.0.24268, and returned a Placeholder handle with 0. The message, at
+   * the calling line:
+   * `reforged-ts: Image.create with image type <imageType>, which is not an integer from 1 to 4 (ImageType): CreateImage crashed the game with image type 2147483647 on 3.0.0.24268, and returned a Placeholder handle with 0`.
    * @native CreateImage
    */
   public static create(
@@ -98,8 +98,9 @@ export class Image extends Handle<image> {
     imageType: ImageType,
   ): Image {
     if (configuration.devMode && !isImageType(imageType)) {
+      // Level 2: the Map project's line that called create.
       error(
-        `${LIBRARY}: Image.create with image type ${String(imageType)}, which is not an integer from 1 to 4 (ImageType): CreateImage crashed the game with image type 2147483647 on 3.0.0.24268, and returned the invalid image (id -1) with 0`,
+        `${LIBRARY}: Image.create with image type ${String(imageType)}, which is not an integer from 1 to 4 (ImageType): CreateImage crashed the game with image type 2147483647 on 3.0.0.24268, and returned a Placeholder handle with 0`,
         2,
       );
     }

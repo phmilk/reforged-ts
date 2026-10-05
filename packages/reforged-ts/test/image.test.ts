@@ -85,7 +85,7 @@ describe("Image.create's image type in Dev mode", () => {
       Reforged.configure({ devMode: false });
 
       expect(message).toEqual(
-        `reforged-ts: Image.create with image type ${String(imageType)}, which is not an integer from 1 to 4 (ImageType): CreateImage crashed the game with image type 2147483647 on 3.0.0.24268, and returned the invalid image (id -1) with 0`,
+        `reforged-ts: Image.create with image type ${String(imageType)}, which is not an integer from 1 to 4 (ImageType): CreateImage crashed the game with image type 2147483647 on 3.0.0.24268, and returned a Placeholder handle with 0`,
       );
       expect(createImageCalls()).toEqual(before);
     });

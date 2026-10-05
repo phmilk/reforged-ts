@@ -12,7 +12,11 @@ import {
   type TSESTree,
 } from "@typescript-eslint/utils";
 
-import { resolveNamedCallee, syntacticCalleeName } from "../classify/callee.js";
+import {
+  parameterNames,
+  resolveCallee,
+  syntacticName,
+} from "../classify/callee.js";
 import { createRule } from "../create-rule.js";
 import type { ArgumentValue, CrashingArguments } from "../data/index.js";
 import { defineRuleEntry } from "../rule-entry.js";
@@ -20,6 +24,9 @@ import { defineRuleEntry } from "../rule-entry.js";
 export const name = "no-crashing-arguments";
 
 type MessageIds = "crashingArguments";
+
+/** The package an entry's plain callee is declared in: the Natives. */
+const nativePackages: ReadonlySet<string> = new Set(["reforged-types"]);
 
 /** The value of a literal argument (`"CONTROL"`, `` `` ``, `-1`, `true`), or undefined. */
 function literalValue(
@@ -131,7 +138,7 @@ export function createNoCrashingArguments(
       }
       return {
         CallExpression(node) {
-          const short = syntacticCalleeName(node);
+          const short = syntacticName(node);
           if (
             short === undefined ||
             !shortNames.has(short) ||
@@ -139,12 +146,13 @@ export function createNoCrashingArguments(
           ) {
             return;
           }
-          const callee = resolveNamedCallee(services, node);
+          const callee = resolveCallee(services, node, nativePackages);
           if (callee === undefined) {
             return;
           }
+          const parameters = parameterNames(callee.declaration);
           for (const entry of byCallee.get(callee.name) ?? []) {
-            const values = matchedValues(entry, node, callee.parameters);
+            const values = matchedValues(entry, node, parameters);
             if (values === undefined) {
               continue;
             }
