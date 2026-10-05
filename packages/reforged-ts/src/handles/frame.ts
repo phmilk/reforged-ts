@@ -1,5 +1,6 @@
 /** @noSelfInFile */
 
+import { LIBRARY } from "../init/state";
 import { configuration } from "../reforged/configuration";
 import { assertNotLocal } from "../reforged/local";
 import { canonicalWrapper, Handle, type WrapperClass } from "./handle";
@@ -120,7 +121,11 @@ export class Frame extends Handle<framehandle> {
    * @throws When the game returns no frame, for example for an unknown frame
    * type or definition: `reforged-ts: failed to create Frame (<name>)`, at the
    * calling line. In Dev mode, also when called before the globals Init stage
-   * or inside `MapPlayer.runLocal`.
+   * or inside `MapPlayer.runLocal`, and, before the Native is called, for
+   * the Crashing case of 3.0.0.24268, a `SIMPLEMESSAGEFRAME` or `CONTROL`
+   * frame with `inherits` `""`:
+   * `reforged-ts: Frame.createType of a <typeName> frame with inherits "" crashes the game (a Crashing case on 3.0.0.24268): inherit an FDF template that defines the type's fields`,
+   * at the calling line.
    * @native BlzCreateFrameByType
    * @native GetHandleId
    */
@@ -131,6 +136,17 @@ export class Frame extends Handle<framehandle> {
     typeName: string,
     inherits: string,
   ): Frame {
+    if (
+      configuration.devMode &&
+      inherits === "" &&
+      (typeName === "SIMPLEMESSAGEFRAME" || typeName === "CONTROL")
+    ) {
+      // Level 2: the Map project's line that called createType.
+      error(
+        `${LIBRARY}: Frame.createType of a ${typeName} frame with inherits "" crashes the game (a Crashing case on 3.0.0.24268): inherit an FDF template that defines the type's fields`,
+        2,
+      );
+    }
     return this.expect(
       unlessNotFound(
         BlzCreateFrameByType(

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "BlzCreateFrameByType",
+    "members": ["Frame.createType"],
+    "arguments": {
+      "typeName": ["SIMPLEMESSAGEFRAME", "CONTROL"],
+      "inherits": [""]
+    },
+    "case": "typeName SIMPLEMESSAGEFRAME or CONTROL without its FDF fields, inherits \"\"",
+    "build": "3.0.0.24268",
+    "reason": "crashes the game for every player, with no error: a frame of that type created without a template lacks the fields its FDF definition sets (jassdoc, BlzCreateSimpleFrame).",
+    "replacement": "Inherit an FDF template that defines the type's fields: pass its name as inherits."
+  }
+]
