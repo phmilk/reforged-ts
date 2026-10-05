@@ -1,0 +1,1120 @@
+<!doctype html>
+<!--
+  PROTOTYPE (#476), throwaway. Three variants of the Studio's Objects area,
+  switchable with ?variant=A|B|C, on the decided route /objects/<rawcode>.
+  Run: pnpm prototype:studio  (or node packages/reforged-studio/prototype/serve.mjs)
+  Everything lives in memory: no map folder is read or written. Game data
+  (names, values, field metadata) is a hand-written sample, and icons are
+  placeholders, since ADR 0013 ships none of them.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio · Objects (prototype)</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --panel: #fff; --ink: #1d2330; --muted: #677085; --line: #dfe3ea;
+    --accent: #2f6fde; --accent-soft: #e7efff;
+    --builtin: #6b7280; --modified: #b7791f; --modified-soft: #fff6e0;
+    --custom: #2563eb; --custom-soft: #e8f0ff; --def: #7c3aed; --def-soft: #f1eaff;
+    --danger: #c53030; --danger-soft: #fdecec; --ok: #2f855a; --ok-soft: #e6f6ec;
+    --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 13px/1.4 system-ui, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); }
+  button { font: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--panel); border-radius: 6px; padding: 4px 10px; color: var(--ink); }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  button.danger { color: var(--danger); }
+  button.link { border: none; background: none; color: var(--accent); padding: 0 2px; }
+  button:disabled { opacity: .45; cursor: default; }
+  input, select, textarea { font: inherit; border: 1px solid var(--line); border-radius: 5px; padding: 3px 6px; background: #fff; color: var(--ink); }
+  input[type=number] { width: 90px; }
+  .mono { font-family: var(--mono); }
+  .muted { color: var(--muted); }
+  .small { font-size: 11px; }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .grow { flex: 1; }
+  .chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 1px 6px; border-radius: 999px; border: 1px solid; white-space: nowrap; }
+  .chip.builtin { color: var(--builtin); border-color: #d1d5db; background: #f3f4f6; }
+  .chip.modified { color: var(--modified); border-color: #f2d48a; background: var(--modified-soft); }
+  .chip.custom { color: var(--custom); border-color: #b8ccf7; background: var(--custom-soft); }
+  .chip.definition { color: var(--def); border-color: #d2bdf7; background: var(--def-soft); }
+  .chip.warn { color: var(--danger); border-color: #f2b8b8; background: var(--danger-soft); }
+  .rc { font-family: var(--mono); background: #eef1f6; border-radius: 4px; padding: 0 4px; }
+  .icon { width: 28px; height: 28px; border-radius: 4px; display: inline-grid; place-items: center; font-size: 10px; font-weight: 700; color: #fff; flex: none; text-shadow: 0 1px 1px #0006; box-shadow: inset 0 0 0 2px #0002; }
+  .icon.lg { width: 56px; height: 56px; font-size: 16px; }
+  .icon.sm { width: 20px; height: 20px; font-size: 8px; }
+  .modcell { background: var(--modified-soft); }
+  .modcell.unsaved { background: #fff1c7; box-shadow: inset 3px 0 0 var(--modified); }
+  .ro { color: var(--muted); }
+
+  /* shared chrome */
+  #topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: #1f2633; color: #e7eaf0; }
+  #topbar button { background: #2c3546; color: #e7eaf0; border-color: #3b465c; }
+  #topbar button.primary { background: var(--accent); border-color: var(--accent); }
+  #topbar .brand { font-weight: 700; letter-spacing: .3px; }
+  #topbar .crumb { color: #aab3c5; }
+  .we { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 2px 8px; border-radius: 999px; background: #2c3546; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #48bb78; }
+  .dot.busy { background: #ecc94b; }
+  .dot.off { background: #718096; }
+  #banners { position: sticky; top: 44px; z-index: 19; }
+  .banner { display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-bottom: 1px solid var(--line); }
+  .banner.info { background: var(--accent-soft); }
+  .banner.warn { background: var(--modified-soft); }
+  .banner.bad { background: var(--danger-soft); }
+  .banner.good { background: var(--ok-soft); }
+  #toast { position: fixed; right: 16px; bottom: 70px; z-index: 40; display: flex; flex-direction: column; gap: 8px; }
+  .toast { background: #1f2633; color: #fff; padding: 10px 14px; border-radius: 8px; box-shadow: 0 6px 20px #0003; max-width: 420px; display: flex; gap: 10px; align-items: center; }
+  .toast button { background: #2c3546; color: #fff; border-color: #3b465c; }
+
+  /* modal */
+  #modal { position: fixed; inset: 0; background: #0006; z-index: 50; display: none; place-items: center; }
+  #modal.open { display: grid; }
+  .dialog { background: var(--panel); border-radius: 10px; width: min(760px, 94vw); max-height: 86vh; overflow: auto; box-shadow: 0 20px 60px #0005; }
+  .dialog header { padding: 14px 18px; border-bottom: 1px solid var(--line); font-weight: 600; font-size: 15px; display: flex; }
+  .dialog .body { padding: 14px 18px; display: grid; gap: 12px; }
+  .dialog footer { padding: 12px 18px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 8px; }
+  .field-label { font-size: 11px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); margin-bottom: 3px; }
+  .pickgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; max-height: 340px; overflow: auto; }
+  .pickgrid > div { display: flex; gap: 6px; align-items: center; padding: 4px; border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
+  .pickgrid > div:hover, .pickgrid > div.sel { border-color: var(--accent); background: var(--accent-soft); }
+  .diff { font-family: var(--mono); font-size: 12px; }
+  .diff .obj { margin-top: 10px; font-family: system-ui, sans-serif; font-weight: 600; }
+  .diff .del { background: var(--danger-soft); color: var(--danger); padding: 0 4px; text-decoration: line-through; }
+  .diff .add { background: var(--ok-soft); color: var(--ok); padding: 0 4px; }
+
+  /* prototype controls: not part of the design */
+  #proto { position: fixed; left: 50%; transform: translateX(-50%); bottom: 14px; z-index: 60; display: flex; gap: 6px; align-items: center; background: #111; color: #fff; padding: 6px 8px; border-radius: 999px; box-shadow: 0 8px 24px #0006; font-size: 12px; }
+  #proto button { background: #222; color: #fff; border-color: #444; border-radius: 999px; padding: 3px 10px; }
+  #proto .label { min-width: 190px; text-align: center; font-weight: 600; }
+  #protoMenu { position: fixed; left: 50%; transform: translateX(-50%); bottom: 58px; z-index: 60; background: #111; color: #fff; padding: 10px; border-radius: 10px; display: none; flex-direction: column; gap: 6px; min-width: 380px; box-shadow: 0 8px 24px #0006; }
+  #protoMenu.open { display: flex; }
+  #protoMenu button { background: #222; color: #fff; border-color: #444; text-align: left; }
+  #protoMenu .h { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: .4px; margin-top: 4px; }
+
+  /* Variant A: Object Editor layout */
+  .A { display: grid; grid-template-columns: 300px 1fr; height: calc(100vh - 44px - var(--banner-h, 0px)); }
+  .A .kindtabs { grid-column: 1 / -1; display: flex; gap: 2px; padding: 6px 10px 0; background: var(--panel); border-bottom: 1px solid var(--line); }
+  .A .kindtabs button { border-radius: 6px 6px 0 0; border-bottom: none; }
+  .A .kindtabs button.on { background: var(--bg); font-weight: 600; border-color: var(--line); }
+  .A .tree { overflow: auto; border-right: 1px solid var(--line); background: var(--panel); padding: 8px; }
+  .A .tree .group { margin: 6px 0 2px; font-weight: 600; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .4px; cursor: pointer; }
+  .A .tree .item { display: flex; align-items: center; gap: 6px; padding: 3px 6px; border-radius: 5px; cursor: pointer; }
+  .A .tree .item:hover { background: #f1f4f9; }
+  .A .tree .item.on { background: var(--accent-soft); }
+  .A .tree .item.checked { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .A .pane { overflow: auto; padding: 0 0 80px; }
+  .A .objhead { display: flex; gap: 12px; align-items: center; padding: 14px 18px; background: var(--panel); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 2; }
+  .A table.fields { width: 100%; border-collapse: collapse; background: var(--panel); }
+  .A table.fields th, .A table.fields td { padding: 4px 10px; border-bottom: 1px solid #eef0f4; text-align: left; vertical-align: middle; }
+  .A table.fields th { position: sticky; top: 0; background: #f0f2f6; font-size: 11px; color: var(--muted); font-weight: 600; }
+  .A table.fields tr.cat td { background: #f7f8fb; font-weight: 600; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .4px; }
+  .A table.fields td.val { cursor: text; }
+  .A .cmp { display: grid; gap: 0; }
+
+  /* Variant B: Spreadsheet */
+  .B { display: flex; flex-direction: column; height: calc(100vh - 44px - var(--banner-h, 0px)); }
+  .B .bar { display: flex; gap: 8px; align-items: center; padding: 8px 12px; background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .B .gridwrap { flex: 1; overflow: auto; }
+  .B table { border-collapse: separate; border-spacing: 0; background: var(--panel); }
+  .B th, .B td { border-right: 1px solid #edf0f4; border-bottom: 1px solid #edf0f4; padding: 3px 8px; white-space: nowrap; max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
+  .B thead th { position: sticky; top: 0; background: #f0f2f6; z-index: 3; font-weight: 600; font-size: 11px; }
+  .B thead tr.cats th { top: 0; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; font-size: 10px; }
+  .B thead tr.names th { top: 22px; }
+  .B .stick { position: sticky; left: 0; background: var(--panel); z-index: 2; width: 36px; min-width: 36px; max-width: 36px; }
+  .B .stick2 { position: sticky; left: 36px; background: var(--panel); z-index: 2; width: 76px; min-width: 76px; max-width: 76px; }
+  .B .stick3 { position: sticky; left: 112px; background: var(--panel); z-index: 2; width: 160px; min-width: 160px; max-width: 160px; box-shadow: 2px 0 0 #dfe3ea; }
+  .B thead .stick, .B thead .stick2, .B thead .stick3 { z-index: 4; background: #f0f2f6; }
+  .B td.cell { cursor: cell; }
+  .B td.cell.sel { outline: 2px solid var(--accent); outline-offset: -2px; background: var(--accent-soft); }
+  .B tr.focus td:not(.modcell) { background: #f5f8ff; }
+  .B .drawer { position: fixed; right: 0; top: 44px; bottom: 0; width: 420px; background: var(--panel); border-left: 1px solid var(--line); box-shadow: -8px 0 24px #0001; overflow: auto; z-index: 15; padding-bottom: 80px; }
+
+  /* Variant C: Search and pages */
+  .C { display: grid; grid-template-columns: 210px 1fr; min-height: calc(100vh - 44px); }
+  .C nav { background: var(--panel); border-right: 1px solid var(--line); padding: 12px 8px; display: flex; flex-direction: column; gap: 2px; }
+  .C nav a { padding: 6px 10px; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; }
+  .C nav a:hover { background: #f1f4f9; }
+  .C nav a.on { background: var(--accent-soft); font-weight: 600; }
+  .C nav .h { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin: 12px 10px 4px; }
+  .C main { padding: 18px 28px 100px; max-width: 1400px; }
+  .C .omni { position: relative; }
+  .C .omni input { width: 100%; font-size: 16px; padding: 10px 14px; border-radius: 10px; border: 2px solid var(--line); }
+  .C .omni input:focus { border-color: var(--accent); outline: none; }
+  .C .results { position: absolute; left: 0; right: 0; top: 48px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 30px #0002; z-index: 10; max-height: 420px; overflow: auto; }
+  .C .results div.r { display: flex; gap: 10px; align-items: center; padding: 6px 12px; cursor: pointer; }
+  .C .results div.r:hover, .C .results div.r.hl { background: var(--accent-soft); }
+  .C .pages { display: grid; gap: 16px; margin-top: 18px; }
+  .C .page { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .C .page .hero { display: flex; gap: 14px; padding: 16px 18px; border-bottom: 1px solid var(--line); align-items: center; }
+  .C .section { padding: 10px 18px; border-bottom: 1px solid #f0f2f6; }
+  .C .section h4 { margin: 4px 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); }
+  .C .kv { display: grid; grid-template-columns: minmax(220px, 1.2fr) 1fr; gap: 2px 14px; align-items: center; }
+  .C .kv > div { padding: 3px 0; overflow-wrap: anywhere; }
+  .C .delta { font-size: 11px; color: var(--muted); }
+  .C .compare { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(360px, 1fr); gap: 16px; overflow-x: auto; }
+</style>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="banners"></div>
+<div id="app"></div>
+<div id="toast"></div>
+<div id="modal"><div class="dialog" id="dialog"></div></div>
+<div id="protoMenu"></div>
+<div id="proto"></div>
+
+<script>
+"use strict";
+// ---------------------------------------------------------------------------
+// Sample game data. Hand-written; the real Studio reads *MetaData.slk,
+// *Strings.txt and icons from the developer's install (ADR 0015).
+// ---------------------------------------------------------------------------
+const KINDS = [
+  { id: "unit", label: "Units", file: "war3map.w3u", prefix: null },
+  { id: "item", label: "Items", file: "war3map.w3t", prefix: "I" },
+  { id: "ability", label: "Abilities", file: "war3map.w3a", prefix: "A" },
+  { id: "buff", label: "Buffs/Effects", file: "war3map.w3h", prefix: "B" },
+  { id: "destructable", label: "Destructables", file: "war3map.w3b", prefix: "B" },
+  { id: "doodad", label: "Doodads", file: "war3map.w3d", prefix: "D" },
+  { id: "upgrade", label: "Upgrades", file: "war3map.w3q", prefix: "R" },
+];
+const kindOf = (id) => KINDS.find((k) => k.id === id);
+
+const ARMOR = { small: "Light", medium: "Medium", large: "Heavy", fort: "Fortified", hero: "Hero", divine: "Divine", none: "Unarmored" };
+const ATTACK = { normal: "Normal", pierce: "Pierce", siege: "Siege", magic: "Magic", chaos: "Chaos", hero: "Hero", spells: "Spells" };
+const MOVE = { foot: "Foot", horse: "Horse", fly: "Fly", hover: "Hover", float: "Float", amph: "Amphibious" };
+const RACE = { human: "Human", orc: "Orc", undead: "Undead", nightelf: "Night Elf", creeps: "Creeps", commoner: "Neutral" };
+
+// Field metadata: id, category, display name, type, and for some a per-level flag.
+const META = {
+  unit: [
+    ["unam", "Text", "Name", "string"], ["unsf", "Text", "Name - Editor Suffix", "string"],
+    ["utip", "Text", "Tooltip - Basic", "string"], ["utub", "Text", "Tooltip - Extended", "text"],
+    ["uico", "Art", "Icon - Game Interface", "icon"], ["umdl", "Art", "Model File", "model"],
+    ["usca", "Art", "Scaling Value", "real"], ["uclr", "Art", "Tinting Color 1 (Red)", "int"],
+    ["urac", "Stats", "Race", "enum", RACE], ["uhpm", "Stats", "Hit Points Maximum (Base)", "int"],
+    ["uhpr", "Stats", "Hit Points Regeneration Rate", "real"], ["umpm", "Stats", "Mana Maximum", "int"],
+    ["ugol", "Stats", "Gold Cost", "int"], ["ulum", "Stats", "Lumber Cost", "int"],
+    ["ubld", "Stats", "Build Time", "int"], ["ufoo", "Stats", "Food Cost", "int"],
+    ["usid", "Stats", "Sight Radius (Day)", "int"], ["usin", "Stats", "Sight Radius (Night)", "int"],
+    ["udef", "Combat", "Defense Base", "int"], ["udty", "Combat", "Armor Type", "enum", ARMOR],
+    ["ua1b", "Combat", "Attack 1 - Damage Base", "int"], ["ua1d", "Combat", "Attack 1 - Damage Number of Dice", "int"],
+    ["ua1s", "Combat", "Attack 1 - Damage Sides per Die", "int"], ["ua1c", "Combat", "Attack 1 - Cooldown Time", "real"],
+    ["ua1r", "Combat", "Attack 1 - Range", "int"], ["ua1t", "Combat", "Attack 1 - Attack Type", "enum", ATTACK],
+    ["umvs", "Movement", "Speed Base", "int"], ["umvt", "Movement", "Type", "enum", MOVE],
+    ["uabi", "Abilities", "Normal", "rawcodes:ability"], ["uhab", "Abilities", "Hero", "rawcodes:ability"],
+    ["ubui", "Techtree", "Structures Built", "rawcodes:unit"], ["ureq", "Techtree", "Requirements", "rawcodes:unit"],
+    ["uhot", "Text", "Hotkey", "string"],
+  ],
+  item: [
+    ["unam", "Text", "Name", "string"], ["utip", "Text", "Tooltip - Basic", "string"], ["utub", "Text", "Tooltip - Extended", "text"],
+    ["iico", "Art", "Interface Icon", "icon"], ["ifil", "Art", "Model Used", "model"],
+    ["iabi", "Abilities", "Abilities", "rawcodes:ability"], ["igol", "Stats", "Gold Cost", "int"], ["ilum", "Stats", "Lumber Cost", "int"],
+    ["ilev", "Stats", "Level", "int"], ["iusa", "Stats", "Can Be Used", "bool"], ["iper", "Stats", "Perishable", "bool"],
+    ["iuse", "Stats", "Number of Charges", "int"], ["icla", "Stats", "Classification", "enum", { permanent: "Permanent", charged: "Charged", powerup: "Power Up", artifact: "Artifact", purchasable: "Purchasable", campaign: "Campaign", miscellaneous: "Miscellaneous" }],
+  ],
+  ability: [
+    ["anam", "Text", "Name", "string"], ["ansf", "Text", "Editor Suffix", "string"], ["atp1", "Text", "Tooltip - Normal", "string", null, true],
+    ["aub1", "Text", "Tooltip - Normal - Extended", "text", null, true], ["ahky", "Text", "Hotkey - Normal", "string"],
+    ["aart", "Art", "Icon - Normal", "icon"], ["alev", "Stats", "Levels", "int"], ["aher", "Stats", "Hero Ability", "bool"],
+    ["acdn", "Stats", "Cooldown", "real", null, true], ["amcs", "Stats", "Mana Cost", "int", null, true],
+    ["aran", "Stats", "Cast Range", "int", null, true], ["aare", "Stats", "Area of Effect", "int", null, true],
+    ["adur", "Stats", "Duration - Normal", "real", null, true], ["abuf", "Stats", "Buffs", "rawcodes:buff", null, true],
+    ["DataA", "Data", "Data - Amount (field id varies by base)", "real", null, true],
+    ["atar", "Stats", "Targets Allowed", "string", null, true],
+  ],
+  buff: [
+    ["fnam", "Text", "Name (Editor only)", "string"], ["ftip", "Text", "Tooltip", "string"], ["fube", "Text", "Tooltip - Extended", "text"],
+    ["fart", "Art", "Icon", "icon"], ["ftat", "Art", "Target", "model"], ["fspd", "Art", "Special", "model"], ["feff", "Stats", "Is an Effect", "bool"],
+  ],
+  destructable: [
+    ["bnam", "Text", "Name", "string"], ["bfil", "Art", "Model File", "model"], ["bvar", "Art", "Variations", "int"],
+    ["bhps", "Stats", "Hit Points", "int"], ["barm", "Combat", "Armor Type", "enum", { Wood: "Wood", Stone: "Stone", Flesh: "Flesh", Metal: "Metal", Ethereal: "Ethereal" }],
+    ["bgsc", "Art", "Scaling", "real"], ["bgpm", "Pathing", "Pathing Texture", "string"], ["btar", "Combat", "Targeted As", "string"],
+  ],
+  doodad: [
+    ["dnam", "Text", "Name", "string"], ["dfil", "Art", "Model File", "model"], ["dvar", "Art", "Variations", "int"],
+    ["dmas", "Art", "Maximum Scale", "real"], ["dmis", "Art", "Minimum Scale", "real"], ["dsel", "Editor", "Selectable In Game", "bool"],
+  ],
+  upgrade: [
+    ["gnam", "Text", "Name", "string", null, true], ["gtp1", "Text", "Tooltip", "string", null, true], ["gar1", "Art", "Icon", "icon", null, true],
+    ["glvl", "Stats", "Levels", "int"], ["gbpx", "Stats", "Gold Base", "int"], ["glpx", "Stats", "Lumber Base", "int"],
+    ["gtib", "Stats", "Time Base", "int"], ["gef1", "Effects", "Effect 1", "string"], ["gba1", "Effects", "Base 1", "real"], ["gmo1", "Effects", "Increment 1", "real"],
+  ],
+};
+for (const k of Object.keys(META)) META[k] = META[k].map(([id, cat, name, type, options, levels]) => ({ id, cat, name, type, options, levels: !!levels }));
+const nameField = { unit: "unam", item: "unam", ability: "anam", buff: "fnam", destructable: "bnam", doodad: "dnam", upgrade: "gnam" };
+const iconField = { unit: "uico", item: "iico", ability: "aart", buff: "fart", upgrade: "gar1" };
+
+const BTN = (n) => `ReplaceableTextures\\CommandButtons\\BTN${n}.blp`;
+// Built-in objects: [rawcode, kind, race/group, values]
+const U = (rc, race, name, hp, mana, def, armor, dmg, dice, sides, cd, range, atk, spd, gold, lumber, food, extra = {}) => [rc, "unit", race, {
+  unam: name, uico: BTN(name.replace(/[^A-Za-z]/g, "")), umdl: `units\\${race}\\${name.replace(/ /g, "")}\\${name.replace(/ /g, "")}.mdx`, usca: 1, uclr: 255, urac: race,
+  uhpm: hp, uhpr: 0.25, umpm: mana, ugol: gold, ulum: lumber, ubld: 20, ufoo: food, usid: 1400, usin: 800,
+  udef: def, udty: armor, ua1b: dmg, ua1d: dice, ua1s: sides, ua1c: cd, ua1r: range, ua1t: atk, umvs: spd, umvt: "foot",
+  uabi: "", uhab: "", ubui: "", ureq: "", unsf: "", utip: `Train ${name}`, utub: `A ${name.toLowerCase()} of the ${RACE[race]} forces.`, uhot: name[0], ...extra }];
+const BUILTINS = [
+  U("hfoo", "human", "Footman", 420, 0, 2, "large", 11, 1, 2, 1.35, 90, "normal", 270, 135, 0, 2, { uabi: "Adef" }),
+  U("hkni", "human", "Knight", 835, 0, 5, "large", 28, 2, 6, 1.4, 90, "normal", 350, 245, 60, 4, { umvt: "horse", ureq: "hcas,hbla,hlum" }),
+  U("hrif", "human", "Rifleman", 535, 0, 0, "medium", 16, 1, 4, 1.35, 400, "pierce", 270, 205, 30, 3),
+  U("hpea", "human", "Peasant", 220, 0, 0, "medium", 4, 1, 2, 2, 90, "normal", 190, 75, 0, 1, { uabi: "Ahar,Ahrp,Amil", ubui: "htow,hhou,hbar,hbla,hwtw,halt,harm,hars,hlum,hgra,hvlt" }),
+  U("hsor", "human", "Sorceress", 405, 400, 0, "none", 10, 1, 2, 1.75, 600, "magic", 270, 155, 20, 2, { uabi: "Aslo,Ainv,Aply" }),
+  U("hmpr", "human", "Priest", 290, 400, 0, "none", 8, 1, 2, 2, 600, "magic", 270, 135, 10, 2, { uabi: "Ahea,Adis,Ainf" }),
+  U("hgry", "human", "Gryphon Rider", 875, 0, 1, "medium", 45, 1, 11, 2.2, 450, "magic", 350, 280, 70, 4, { umvt: "fly" }),
+  U("hmtm", "human", "Mortar Team", 360, 0, 0, "large", 51, 1, 18, 3.5, 1150, "siege", 270, 180, 70, 3),
+  U("Hpal", "human", "Paladin", 650, 255, 4, "hero", 24, 2, 6, 2.2, 100, "hero", 270, 425, 100, 5, { uhab: "AHhb,AHds,AHad,AHre", uabi: "AInv" }),
+  U("Hamg", "human", "Archmage", 450, 285, 2, "hero", 21, 1, 6, 2.13, 600, "hero", 320, 425, 100, 5, { uhab: "AHbz,AHab,AHwe,AHmt", uabi: "AInv", umvt: "horse" }),
+  U("Hmkg", "human", "Mountain King", 700, 225, 2, "hero", 26, 2, 6, 2.22, 100, "hero", 270, 425, 100, 5, { uhab: "AHtb,AHtc,AHbh,AHav", uabi: "AInv" }),
+  U("Hblm", "human", "Blood Mage", 450, 285, 2, "hero", 21, 1, 7, 2.13, 600, "hero", 270, 425, 100, 5, { uhab: "AHfs,AHbn,AHdr,AHpx", uabi: "AInv" }),
+  U("ogru", "orc", "Grunt", 700, 0, 1, "large", 18, 1, 3, 1.6, 90, "normal", 270, 200, 0, 3),
+  U("opeo", "orc", "Peon", 250, 0, 0, "medium", 7, 1, 2, 1, 90, "normal", 270, 75, 0, 1),
+  U("ohun", "orc", "Headhunter", 350, 0, 0, "medium", 21, 1, 4, 2.31, 450, "pierce", 270, 135, 20, 2),
+  U("Obla", "orc", "Blademaster", 525, 225, 1, "hero", 23, 2, 13, 2.22, 100, "hero", 320, 425, 100, 5, { uhab: "AOwk,AOmi,AOcr,AOww", uabi: "AInv" }),
+  U("ugho", "undead", "Ghoul", 340, 0, 0, "medium", 12, 1, 2, 1.3, 90, "normal", 270, 120, 0, 2, { uabi: "Aghl,Acan" }),
+  U("uaco", "undead", "Acolyte", 220, 0, 0, "medium", 8, 1, 2, 2, 90, "normal", 270, 75, 0, 1),
+  U("Udea", "undead", "Death Knight", 570, 255, 4, "hero", 24, 2, 5, 2.2, 100, "hero", 320, 425, 100, 5, { umvt: "horse", uhab: "AUdc,AUdp,AUau,AUan", uabi: "AInv" }),
+  U("earc", "nightelf", "Archer", 310, 0, 0, "medium", 16, 1, 3, 1.5, 500, "pierce", 270, 130, 10, 2),
+  U("ewsp", "nightelf", "Wisp", 120, 0, 0, "medium", 0, 1, 1, 1, 90, "normal", 270, 60, 0, 1, { umvt: "hover" }),
+  U("Edem", "nightelf", "Demon Hunter", 575, 225, 2, "hero", 24, 2, 6, 2.22, 100, "hero", 320, 425, 100, 5, { uhab: "AEmb,AEim,AEev,AEme", uabi: "AInv" }),
+  U("nogr", "creeps", "Ogre Warrior", 650, 0, 1, "large", 18, 1, 4, 1.4, 90, "normal", 270, 0, 0, 0),
+  U("nfrl", "creeps", "Furbolg", 510, 0, 2, "medium", 13, 1, 4, 1.35, 90, "normal", 270, 0, 0, 0),
+  ["ratf", "item", "permanent", { unam: "Claws of Attack +15", iico: BTN("ClawsOfAttack"), ifil: "Objects\\InventoryItems\\TreasureChest\\treasurechest.mdl", iabi: "AItf", igol: 500, ilum: 0, ilev: 6, iusa: 0, iper: 0, iuse: 0, icla: "permanent", utip: "Purchase Claws of Attack +15", utub: "Increases the attack damage of the Hero by 15 when worn." }],
+  ["rde1", "item", "permanent", { unam: "Ring of Protection +2", iico: BTN("RingGreen"), ifil: "Objects\\InventoryItems\\TreasureChest\\treasurechest.mdl", iabi: "AId2", igol: 150, ilum: 0, ilev: 2, iusa: 0, iper: 0, iuse: 0, icla: "permanent", utip: "Purchase Ring of Protection +2", utub: "Increases the armor of the Hero by 2 when worn." }],
+  ["phea", "item", "charged", { unam: "Potion of Healing", iico: BTN("PotionGreenSmall"), ifil: "Objects\\InventoryItems\\TreasureChest\\treasurechest.mdl", iabi: "AIh1", igol: 150, ilum: 0, ilev: 1, iusa: 1, iper: 1, iuse: 1, icla: "charged", utip: "Purchase Potion of Healing", utub: "Heals 250 hit points when used." }],
+  ["pman", "item", "charged", { unam: "Potion of Mana", iico: BTN("PotionBlueSmall"), ifil: "Objects\\InventoryItems\\TreasureChest\\treasurechest.mdl", iabi: "AIm1", igol: 200, ilum: 0, ilev: 1, iusa: 1, iper: 1, iuse: 1, icla: "charged", utip: "Purchase Potion of Mana", utub: "Restores 150 mana when used." }],
+  ["bspd", "item", "permanent", { unam: "Boots of Speed", iico: BTN("BootsOfSpeed"), ifil: "Objects\\InventoryItems\\TreasureChest\\treasurechest.mdl", iabi: "AIms", igol: 250, ilum: 0, ilev: 3, iusa: 0, iper: 0, iuse: 0, icla: "permanent", utip: "Purchase Boots of Speed", utub: "Increases the movement speed of the Hero when worn." }],
+  ["AHhb", "ability", "human", { anam: "Holy Light", ansf: "", aart: BTN("HolyBolt"), alev: 3, aher: 1, acdn: [5, 5, 5], amcs: [65, 65, 65], aran: [800, 800, 800], aare: [0, 0, 0], adur: [0, 0, 0], abuf: ["", "", ""], DataA: [200, 400, 600], atar: ["air,ground,friend,self,vuln,invu,enemy,neutral", "same", "same"], ahky: "T", atp1: ["Holy Light - [|cffffcc00Level 1|r]", "Holy Light - [|cffffcc00Level 2|r]", "Holy Light - [|cffffcc00Level 3|r]"], aub1: ["Heals 200 hit points.", "Heals 400 hit points.", "Heals 600 hit points."] }],
+  ["AHbz", "ability", "human", { anam: "Blizzard", ansf: "", aart: BTN("Blizzard"), alev: 3, aher: 1, acdn: [6, 6, 6], amcs: [75, 75, 75], aran: [800, 800, 800], aare: [200, 200, 200], adur: [6, 6, 6], abuf: ["BHbd", "BHbd", "BHbd"], DataA: [30, 40, 50], atar: ["ground,structure,debris", "same", "same"], ahky: "B", atp1: ["Blizzard - [|cffffcc00Level 1|r]", "Blizzard - [|cffffcc00Level 2|r]", "Blizzard - [|cffffcc00Level 3|r]"], aub1: ["Calls down waves.", "Calls down waves.", "Calls down waves."] }],
+  ["AHtb", "ability", "human", { anam: "Storm Bolt", ansf: "", aart: BTN("StormBolt"), alev: 3, aher: 1, acdn: [9, 9, 9], amcs: [75, 75, 75], aran: [600, 600, 600], aare: [0, 0, 0], adur: [5, 5, 5], abuf: ["BPSE", "BPSE", "BPSE"], DataA: [100, 225, 350], atar: ["air,ground,enemy,neutral,organic", "same", "same"], ahky: "T", atp1: ["Storm Bolt", "Storm Bolt", "Storm Bolt"], aub1: ["Throws a hammer.", "Throws a hammer.", "Throws a hammer."] }],
+  ["AHad", "ability", "human", { anam: "Devotion Aura", ansf: "", aart: BTN("DevotionAura"), alev: 3, aher: 1, acdn: [0, 0, 0], amcs: [0, 0, 0], aran: [0, 0, 0], aare: [900, 900, 900], adur: [0, 0, 0], abuf: ["BHad", "BHad", "BHad"], DataA: [1.5, 3, 4.5], atar: ["air,ground,friend,self,vuln,invu", "same", "same"], ahky: "D", atp1: ["Devotion Aura", "Devotion Aura", "Devotion Aura"], aub1: ["Gives additional armor.", "Gives additional armor.", "Gives additional armor."] }],
+  ["Adef", "ability", "human", { anam: "Defend", ansf: "", aart: BTN("Defend"), alev: 1, aher: 0, acdn: [0], amcs: [0], aran: [0], aare: [0], adur: [0], abuf: ["Bdef"], DataA: [0.5], atar: ["_"], ahky: "D", atp1: ["Defend"], aub1: ["Reduces piercing damage."] }],
+  ["AInv", "ability", "commoner", { anam: "Inventory (Hero)", ansf: "", aart: BTN("PackBeast"), alev: 1, aher: 0, acdn: [0], amcs: [0], aran: [0], aare: [0], adur: [0], abuf: [""], DataA: [6], atar: ["_"], ahky: "", atp1: [""], aub1: [""] }],
+  ["BHad", "buff", "human", { fnam: "Devotion Aura", ftip: "Devotion Aura", fube: "This unit is under the effects of Devotion Aura.", fart: BTN("DevotionAura"), ftat: "Abilities\\Spells\\Human\\DevotionAura\\DevotionAura.mdl", fspd: "", feff: 0 }],
+  ["BHbd", "buff", "human", { fnam: "Blizzard", ftip: "Blizzard", fube: "", fart: BTN("Blizzard"), ftat: "", fspd: "", feff: 1 }],
+  ["Bdef", "buff", "human", { fnam: "Defend", ftip: "Defend", fube: "This unit is defending.", fart: BTN("Defend"), ftat: "", fspd: "", feff: 0 }],
+  ["LTlt", "destructable", "trees", { bnam: "Summer Tree Wall", bfil: "Doodads\\Terrain\\LordaeronTree\\LordaeronTree", bvar: 10, bhps: 50, barm: "Wood", bgsc: 1, bgpm: "PathTextures\\4x4SimpleSolid.tga", btar: "tree" }],
+  ["LTbr", "destructable", "bridges", { bnam: "Barrel", bfil: "Doodads\\LordaeronSummer\\Props\\Barrel\\Barrel", bvar: 1, bhps: 10, barm: "Wood", bgsc: 1, bgpm: "", btar: "debris" }],
+  ["LOtr", "doodad", "props", { dnam: "Torch", dfil: "Doodads\\LordaeronSummer\\Props\\Torch\\Torch", dvar: 1, dmas: 1.2, dmis: 0.8, dsel: 0 }],
+  ["Rhme", "upgrade", "human", { gnam: ["Iron Forged Swords", "Steel Forged Swords", "Mithril Forged Swords"], gtp1: ["Upgrade to Iron Forged Swords", "Upgrade to Steel Forged Swords", "Upgrade to Mithril Forged Swords"], gar1: [BTN("SteelMelee"), BTN("ThoriumMelee"), BTN("ArcaniteMelee")], glvl: 3, gbpx: 100, glpx: 50, gtib: 60, gef1: "ratd", gba1: 1, gmo1: 1 }],
+  ["Rhar", "upgrade", "human", { gnam: ["Iron Plating", "Steel Plating", "Mithril Plating"], gtp1: ["Upgrade to Iron Plating", "Upgrade to Steel Plating", "Upgrade to Mithril Plating"], gar1: [BTN("HumanArmorUpOne"), BTN("HumanArmorUpTwo"), BTN("HumanArmorUpThree")], glvl: 3, gbpx: 125, glpx: 75, gtib: 60, gef1: "rarm", gba1: 2, gmo1: 2 }],
+];
+
+// The sample Map project's map folder (saved state) and its Object definitions.
+function initialMapFolder() {
+  return {
+    // modified Built-in objects: rawcode -> field mods
+    hfoo: { mods: { uhpm: 450, ugol: 120 } },
+    Hpal: { mods: { unam: "Uther", uhpm: 700 } },
+    // Custom objects
+    h000: { base: "hfoo", mods: { unam: "Captain", uhpm: 650, ua1b: 18, udef: 4, uabi: "Adef,A000", usca: 1.15, uico: BTN("TheCaptain") }, strings: { unam: "TRIGSTR_004" }, placed: 3 },
+    h001: { base: "hpea", mods: { unam: "Siege Engineer", ubui: "htow,hbar", uhpm: 300, ugol: 110 }, strings: { unam: "TRIGSTR_006" }, placed: 0 },
+    A000: { base: "AHad", mods: { anam: "Rally", alev: 1, aare: [600], DataA: [2], abuf: ["B000"], aart: BTN("Banner") }, strings: { anam: "TRIGSTR_008" } },
+    I000: { base: "ratf", mods: { unam: "Banner of the Captain", igol: 650, iabi: "AItf,A000" }, strings: { unam: "TRIGSTR_010" } },
+    B000_buff: { rawcode: "B000", kind: "buff", base: "BHad", mods: { fnam: "Rallied", ftip: "Rallied" } },
+    B000_destructable: { rawcode: "B000", kind: "destructable", base: "LTbr", mods: { bnam: "Palisade", bhps: 300, barm: "Wood" }, placed: 12 },
+  };
+}
+const OBJECT_DEFINITIONS = {
+  h002: { base: "hfoo", source: "src/objects/guards.ts:8", mods: { unam: "Royal Guard", uhpm: 900, udef: 6, ugol: 220 } },
+  hkni: { source: "src/objects/balance.ts:3", mods: { uhpm: 900, ugol: 260 } },
+};
+
+// ---------------------------------------------------------------------------
+// In-memory model.
+// ---------------------------------------------------------------------------
+const builtinByKey = new Map();
+for (const [rc, kind, group, values] of BUILTINS) builtinByKey.set(`${kind}:${rc}`, { rc, kind, group, values });
+const clone = (x) => (x === undefined ? undefined : JSON.parse(JSON.stringify(x)));
+
+const S = {
+  variant: new URLSearchParams(location.search).get("variant") || "A",
+  saved: initialMapFolder(),      // what the map folder holds
+  working: initialMapFolder(),    // what the Studio shows, saved + unsaved edits
+  lastStudioSave: null,           // the state the Studio last wrote, to detect a World Editor revert
+  undo: [], redo: [],
+  kind: "unit", selected: null, checked: new Set(), compare: [],
+  valueMode: "both", hideDefaults: false, filter: "",
+  weUnsaved: false, weRunning: true, autoReload: false,
+  banners: [], cGlobal: "", cView: "object", bSel: [],
+};
+
+function entryKey(e) { return e.kind + ":" + e.rc; }
+function allObjects() {
+  const out = [];
+  const used = new Set();
+  for (const [key, b] of builtinByKey) {
+    const folder = S.working[b.rc];
+    const folderMods = folder && !folder.base && (!folder.kind || folder.kind === b.kind) ? folder.mods : null;
+    const def = OBJECT_DEFINITIONS[b.rc] && !OBJECT_DEFINITIONS[b.rc].base ? OBJECT_DEFINITIONS[b.rc] : null;
+    const mods = def ? def.mods : folderMods || {};
+    const origin = def ? "definition" : Object.keys(mods).length ? "modified" : "builtin";
+    out.push({ rc: b.rc, kind: b.kind, group: b.group, base: null, origin, mods, source: def && def.source, folderKey: def ? null : b.rc });
+  }
+  for (const [fk, o] of Object.entries(S.working)) {
+    if (!o.base) continue;
+    const rc = o.rawcode || fk;
+    const baseB = [...builtinByKey.values()].find((b) => b.rc === o.base);
+    out.push({ rc, kind: o.kind || baseB.kind, group: baseB.group, base: o.base, origin: "custom", mods: o.mods, strings: o.strings || {}, placed: o.placed || 0, folderKey: fk });
+  }
+  for (const [rc, d] of Object.entries(OBJECT_DEFINITIONS)) {
+    if (!d.base) continue;
+    const baseB = [...builtinByKey.values()].find((b) => b.rc === d.base);
+    out.push({ rc, kind: baseB.kind, group: baseB.group, base: d.base, origin: "definition", mods: d.mods, source: d.source, folderKey: null });
+  }
+  return out;
+}
+function find(rc, kind) {
+  const all = allObjects().filter((o) => o.rc === rc);
+  return (kind && all.find((o) => o.kind === kind)) || all[0] || null;
+}
+function sharedRawcode(o) { return allObjects().filter((x) => x.rc === o.rc).length > 1; }
+function baseValue(o, f) {
+  const b = builtinByKey.get(`${o.kind}:${o.base || o.rc}`);
+  return b ? b.values[f] : undefined;
+}
+function value(o, f) { return o.mods[f] !== undefined ? o.mods[f] : baseValue(o, f); }
+function isModified(o, f) { return o.mods[f] !== undefined && JSON.stringify(o.mods[f]) !== JSON.stringify(baseValue(o, f)); }
+function savedMods(o) {
+  if (!o.folderKey) return o.mods;
+  const s = S.saved[o.folderKey];
+  return s ? s.mods : {};
+}
+function isUnsaved(o, f) {
+  if (!o.folderKey) return false;
+  return JSON.stringify(o.mods[f]) !== JSON.stringify(savedMods(o)[f]);
+}
+function nameOf(o) { const v = value(o, nameField[o.kind]); return Array.isArray(v) ? v[0] : v || "(unnamed)"; }
+function levels(o) { const v = value(o, o.kind === "upgrade" ? "glvl" : "alev"); return Number(v) || 1; }
+function iconOf(o) { const f = iconField[o.kind]; const v = f ? value(o, f) : null; return Array.isArray(v) ? v[0] : v; }
+
+function hue(s) { let h = 0; for (const c of s || "") h = (h * 31 + c.charCodeAt(0)) % 360; return h; }
+function iconHtml(path, cls = "", label) {
+  const n = String(path || label || "?").replace(/.*BTN/, "").replace(/\.blp$/, "");
+  const letters = n.replace(/[^A-Z]/g, "").slice(0, 2) || n.slice(0, 2);
+  return `<span class="icon ${cls}" title="${esc(path || "")}" style="background: hsl(${hue(n)} 45% 42%)">${esc(letters)}</span>`;
+}
+function esc(s) { return String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]); }
+function originChip(o) {
+  const t = { builtin: "Built-in", modified: "Modified Built-in", custom: "Custom", definition: "Object definition" }[o.origin];
+  const lock = o.origin === "definition" ? "🔒 " : "";
+  return `<span class="chip ${o.origin}" title="${o.source ? "Defined in " + esc(o.source) : ""}">${lock}${t}</span>`;
+}
+function sharedChip(o) {
+  if (!sharedRawcode(o)) return "";
+  const other = allObjects().find((x) => x.rc === o.rc && x.kind !== o.kind);
+  return `<span class="chip warn" title="Two kinds use this Rawcode; FourCC(&quot;${o.rc}&quot;) gets no typed overload">⚠ ${o.rc} is also a ${other.kind}</span>`;
+}
+function displayValue(o, m, v) {
+  if (v === undefined || v === "") return `<span class="muted">—</span>`;
+  if (m.type === "enum") return esc((m.options || {})[v] || v);
+  if (m.type === "bool") return v ? "Yes" : "No";
+  if (m.type === "icon") return `<span class="row">${iconHtml(v, "sm")}<span class="small muted">${esc(String(v).replace(/.*\\/, ""))}</span></span>`;
+  if (m.type === "model") return esc(String(v).replace(/.*\\/, ""));
+  if (m.type.startsWith("rawcodes:")) {
+    const k = m.type.split(":")[1];
+    return String(v).split(",").filter(Boolean).map((rc) => {
+      const t = find(rc, k);
+      return `<span class="chip builtin" style="cursor:pointer" data-goto="${rc}" data-kind="${k}">${t ? esc(nameOf(t)) : "?"} <span class="mono">${rc}</span></span>`;
+    }).join(" ");
+  }
+  if (m.id === nameField[o.kind] && o.strings && o.strings[m.id]) return esc(v);
+  return esc(v);
+}
+function rawValue(o, m, v) {
+  if (m.id === nameField[o.kind] && o.strings && o.strings[m.id]) return `${o.strings[m.id]}`;
+  if (m.type === "bool") return v ? "1" : "0";
+  return v === undefined ? "" : String(v);
+}
+function cellHtml(o, m, lvl) {
+  let v = value(o, m.id);
+  if (m.levels && Array.isArray(v)) v = v[lvl] ?? v[v.length - 1];
+  const disp = displayValue(o, m, v);
+  const raw = rawValue(o, m, v);
+  if (S.valueMode === "display") return disp;
+  if (S.valueMode === "raw") return `<span class="mono">${esc(raw)}</span>`;
+  const showRaw = raw && raw !== String(v === undefined ? "" : v) || m.type === "enum" || m.type === "bool" || m.type.startsWith("rawcodes") || m.type === "icon" || m.type === "model";
+  return showRaw ? `${disp} <span class="mono small muted" style="margin-left:6px">${esc(raw)}</span>` : disp;
+}
+
+// ---------------------------------------------------------------------------
+// Edits, undo, save.
+// ---------------------------------------------------------------------------
+function folderEntry(o) {
+  if (o.folderKey && S.working[o.folderKey]) return S.working[o.folderKey];
+  S.working[o.rc] = { mods: {} };
+  return S.working[o.rc];
+}
+function applyEdit(edit, dir) {
+  const o = find(edit.rc, edit.kind);
+  const entry = folderEntry(o);
+  const v = dir === "do" ? edit.after : edit.before;
+  if (v === undefined) delete entry.mods[edit.field]; else entry.mods[edit.field] = clone(v);
+}
+function commit(edits, label) {
+  edits = edits.filter((e) => JSON.stringify(e.before) !== JSON.stringify(e.after));
+  if (!edits.length) return;
+  for (const e of edits) applyEdit(e, "do");
+  S.undo.push({ label, edits }); S.redo = [];
+  render();
+}
+function setField(o, field, newValue, lvl) {
+  if (o.origin === "definition") { toast(`🔒 ${o.rc} is an Object definition: edit it in ${o.source}`); return; }
+  const m = META[o.kind].find((x) => x.id === field);
+  let after = newValue;
+  if (m.levels) { const cur = clone(value(o, field)) || []; cur[lvl] = newValue; after = cur; }
+  if (JSON.stringify(after) === JSON.stringify(baseValue(o, field))) after = undefined; // back to the base: drop the modification
+  commit([{ rc: o.rc, kind: o.kind, field, before: clone(o.mods[field]), after }], `${o.rc} · ${m.name}`);
+}
+function undo() { const step = S.undo.pop(); if (!step) return; for (const e of [...step.edits].reverse()) applyEdit(e, "undo"); S.redo.push(step); toast(`Undid: ${step.label}`); render(); }
+function redo() { const step = S.redo.pop(); if (!step) return; for (const e of step.edits) applyEdit(e, "do"); S.undo.push(step); toast(`Redid: ${step.label}`); render(); }
+function pendingChanges(from = S.saved, to = S.working) {
+  const out = [];
+  const keys = new Set([...Object.keys(from), ...Object.keys(to)]);
+  for (const k of keys) {
+    const a = from[k], b = to[k];
+    const rc = (b || a).rawcode || k;
+    const kind = (b || a).kind || (b || a).base && [...builtinByKey.values()].find((x) => x.rc === (b || a).base).kind || [...builtinByKey.values()].find((x) => x.rc === rc)?.kind;
+    if (!a && b.base) { out.push({ rc, kind, type: "created", fields: Object.keys(b.mods).map((f) => ({ f, before: undefined, after: b.mods[f] })) }); continue; }
+    if (!b && a.base) { out.push({ rc, kind, type: "deleted", fields: [] }); continue; }
+    const am = a ? a.mods : {}, bm = b ? b.mods : {};
+    const fs = new Set([...Object.keys(am), ...Object.keys(bm)]);
+    const fields = [...fs].filter((f) => JSON.stringify(am[f]) !== JSON.stringify(bm[f])).map((f) => ({ f, before: am[f], after: bm[f] }));
+    if (fields.length) out.push({ rc, kind, type: "changed", fields });
+  }
+  return out;
+}
+function save(force) {
+  const changes = pendingChanges();
+  if (!changes.length) { toast("Nothing to save"); return; }
+  if (S.weUnsaved && !force) {
+    modal(`<header>The World Editor holds unsaved edits</header>
+      <div class="body"><p>Its window title ends in <span class="mono">*]</span>. If you save now, its next save rewrites the whole map folder and puts back what it had loaded, undoing these ${changes.length} changes.</p>
+      <p class="muted">Save in the World Editor first, then save here (the Studio reloads what it wrote and keeps your edits on top).</p></div>
+      <footer><button onclick="closeModal()">Cancel</button><button class="danger" onclick="closeModal(); save(true)">Save anyway</button></footer>`);
+    return;
+  }
+  S.saved = clone(S.working);
+  S.lastStudioSave = clone(S.working);
+  S.lastSaveTime = time();
+  const n = changes.length;
+  if (S.weRunning && S.autoReload && !S.weUnsaved) { toast(`Saved ${n} objects to the map folder · the World Editor is reloading the map`); }
+  else if (S.weRunning) toast(`Saved ${n} objects to the map folder.`, [["Reload in the World Editor", "reloadWE()"]]);
+  else toast(`Saved ${n} objects to the map folder.`);
+  render();
+}
+function reloadWE() {
+  if (S.weUnsaved) { toast("The World Editor holds unsaved edits: reloading would ask it to discard them. Save there first."); return; }
+  toast("Sent -launch -loadfile: the World Editor reloads the map.");
+}
+
+// ---------------------------------------------------------------------------
+// Simulated turns with the World Editor (prototype controls).
+// ---------------------------------------------------------------------------
+function simDiskChange() {
+  const pending = pendingChanges().length;
+  // The World Editor changed the Footman's gold cost and the Captain's sight.
+  S.prevSaved = clone(S.saved);
+  (S.saved.hfoo ||= { mods: {} }).mods.ugol = 125;
+  if (S.saved.h000) S.saved.h000.mods.usid = 1600;
+  if (!pending) {
+    S.working = clone(S.saved);
+    banner("info", `Reloaded: the map folder changed on disk at ${time()} (2 objects: <span class="rc">hfoo</span> Footman, <span class="rc">h000</span> Captain).`, [["Show what changed", "showDiff('disk')"]]);
+  } else {
+    banner("warn", `The map folder changed on disk at ${time()} while you hold ${pending} unsaved changes. Their objects do not overlap.`, [["Reload and keep my edits on top", "mergeDisk()"], ["Show both", "showDiff('disk')"], ["Discard mine", "discardMine()"]]);
+  }
+  render();
+}
+function mergeDisk() {
+  for (const [k, v] of Object.entries(S.saved)) {
+    if (!S.working[k]) { S.working[k] = clone(v); continue; }
+    const prev = (S.prevSaved[k] || { mods: {} }).mods;
+    for (const [f, val] of Object.entries(v.mods)) if (JSON.stringify(S.working[k].mods[f]) === JSON.stringify(prev[f])) S.working[k].mods[f] = clone(val);
+  }
+  S.banners = [];
+  toast("Reloaded the map folder; your unsaved edits stay on top.");
+  render();
+}
+function discardMine() { S.working = clone(S.saved); S.undo = []; S.redo = []; S.banners = []; render(); }
+function simRevert() {
+  if (!S.lastStudioSave) {
+    // Seed a save so the scenario can be shown from a fresh page.
+    S.working.h000.mods.uhpm = 700; S.working.A000.mods.aare = [750];
+    S.saved = clone(S.working); S.lastStudioSave = clone(S.working);
+  }
+  const reverted = [];
+  const before = initialMapFolder();
+  for (const [k, v] of Object.entries(S.lastStudioSave)) {
+    const old = before[k];
+    for (const [f, val] of Object.entries(v.mods)) {
+      const was = old ? old.mods[f] : undefined;
+      if (JSON.stringify(was) !== JSON.stringify(val) && old) reverted.push({ k, f, studio: val, we: was });
+    }
+  }
+  S.saved = clone(before); S.working = clone(before);
+  S.revert = reverted;
+  const list = reverted.slice(0, 3).map((r) => `<span class="rc">${r.k.replace(/_.*/, "")}</span> ${r.f}`).join(", ");
+  banner("bad", `A World Editor save at ${time()} put back ${reverted.length} fields the Studio had changed at ${S.lastSaveTime || time()} (${list}${reverted.length > 3 ? ", …" : ""}).`, [["Apply them again", "reapply()"], ["Show", "showRevert()"], ["Keep the World Editor's", "dismissBanners()"]]);
+  render();
+}
+function reapply() {
+  for (const r of S.revert) {
+    if (r.studio === undefined) delete S.working[r.k].mods[r.f]; else S.working[r.k].mods[r.f] = clone(r.studio);
+  }
+  S.banners = [];
+  toast(`Applied ${S.revert.length} fields again as unsaved edits. Save to write them.`);
+  render();
+}
+function showRevert() {
+  modal(`<header>Fields a World Editor save put back</header><div class="body diff">${S.revert.map((r) => `<div><span class="rc">${r.k.replace(/_.*/, "")}</span> ${r.f}: <span class="add">${esc(JSON.stringify(r.studio))}</span> (Studio) → <span class="del">${esc(JSON.stringify(r.we))}</span> (World Editor)</div>`).join("")}</div>
+  <footer><button onclick="closeModal()">Close</button><button class="primary" onclick="closeModal(); reapply()">Apply them again</button></footer>`);
+}
+function time() { return new Date().toTimeString().slice(0, 5); }
+function banner(kind, html, actions = []) { S.banners = [{ kind, html, actions }]; }
+function dismissBanners() { S.banners = []; render(); }
+
+// ---------------------------------------------------------------------------
+// Dialogs: new object, pickers, bulk edit, diff, delete.
+// ---------------------------------------------------------------------------
+function modal(html) { document.getElementById("dialog").innerHTML = html; document.getElementById("modal").classList.add("open"); const i = document.querySelector("#dialog input"); if (i) i.focus(); }
+function closeModal() { document.getElementById("modal").classList.remove("open"); }
+function toast(text, actions = []) {
+  const el = document.createElement("div"); el.className = "toast";
+  el.innerHTML = `<span class="grow">${text}</span>` + actions.map(([l, f]) => `<button onclick="${f}; this.closest('.toast').remove()">${l}</button>`).join("");
+  document.getElementById("toast").appendChild(el);
+  setTimeout(() => el.remove(), actions.length ? 9000 : 3500);
+}
+function suggestRawcode(baseRc, kind) {
+  const used = new Set(allObjects().map((o) => o.rc));
+  const first = kind === "unit" ? baseRc[0] : kindOf(kind).prefix;
+  for (let i = 0; i < 1296; i++) {
+    const rc = first + i.toString(36).padStart(3, "0");
+    if (!used.has(rc)) return rc;
+  }
+}
+function newObject(baseRc) {
+  const kind = baseRc ? find(baseRc).kind : S.kind;
+  const bases = allObjects().filter((o) => o.kind === kind && !o.base);
+  const base = baseRc || bases[0].rc;
+  modal(`<header>New ${kindOf(kind).label.replace(/s$|s\/.*$/, "").toLowerCase()}</header>
+  <div class="body">
+    <div><div class="field-label">Based on</div>
+      <select id="nbBase" onchange="nbRefresh()">${bases.map((b) => `<option value="${b.rc}" ${b.rc === base ? "selected" : ""}>${esc(nameOf(b))} (${b.rc})${b.origin !== "builtin" ? " · modified" : ""}</option>`).join("")}
+      ${allObjects().filter((o) => o.kind === kind && o.base).map((b) => `<option value="${b.rc}" ${b.rc === base ? "selected" : ""}>${esc(nameOf(b))} (${b.rc}) · custom: copy</option>`).join("")}</select></div>
+    <div class="row"><div><div class="field-label">Rawcode</div><input id="nbRc" class="mono" maxlength="4" style="width:80px" oninput="nbCheck()"></div>
+      <div class="grow"><div class="field-label">Name</div><input id="nbName" style="width:100%"></div></div>
+    <div id="nbMsg" class="small"></div>
+    <div class="small muted">The suggested Rawcode is free across all seven Object kinds, so <span class="mono">FourCC</span> keeps one typed overload per Rawcode (unlike the World Editor's defaults, which give a buff and a destructable the same <span class="mono">B000</span>).</div>
+  </div>
+  <footer><button onclick="closeModal()">Cancel</button><button class="primary" id="nbOk" onclick="nbCreate('${kind}')">Create</button></footer>`);
+  nbRefresh();
+}
+function nbRefresh() {
+  const baseRc = document.getElementById("nbBase").value;
+  const b = find(baseRc);
+  document.getElementById("nbRc").value = suggestRawcode(b.base || b.rc, b.kind);
+  document.getElementById("nbName").value = nameOf(b) + " (copy)";
+  nbCheck();
+}
+function nbCheck() {
+  const rc = document.getElementById("nbRc").value;
+  const msg = document.getElementById("nbMsg");
+  const clash = allObjects().filter((o) => o.rc === rc);
+  const removed = rc === "h003";
+  let ok = true;
+  if (!/^[\x21-\x7e]{4}$/.test(rc)) { msg.innerHTML = `<span style="color:var(--danger)">A Rawcode is four printable ASCII characters.</span>`; ok = false; }
+  else if (clash.length) { msg.innerHTML = `<span style="color:var(--danger)">${rc} is taken: ${clash.map((c) => `${esc(nameOf(c))} (${c.kind}, ${c.origin})`).join(", ")}.</span>`; ok = false; }
+  else msg.innerHTML = `<span style="color:var(--ok)">${rc} is free in every Object kind.</span>`;
+  document.getElementById("nbOk").disabled = !ok;
+}
+function nbCreate(kind) {
+  const baseSel = find(document.getElementById("nbBase").value);
+  const rc = document.getElementById("nbRc").value;
+  const name = document.getElementById("nbName").value;
+  const nf = nameField[kind];
+  const baseRc = baseSel.base || baseSel.rc;
+  const mods = clone(baseSel.base ? baseSel.mods : {});
+  mods[nf] = name;
+  const key = find(rc) ? `${rc}_${kind}` : rc;
+  S.working[key] = { rawcode: rc, kind, base: baseRc, mods, strings: { [nf]: `TRIGSTR_${String(12 + Object.keys(S.working).length * 2).padStart(3, "0")}` } };
+  S.undo.push({ label: `create ${rc}`, edits: [], create: key, entry: clone(S.working[key]) }); S.redo = [];
+  closeModal();
+  select(rc, kind);
+  toast(`Created ${rc} “${esc(name)}” (unsaved).`);
+}
+function deleteObject(o) {
+  if (o.origin === "definition") { toast(`🔒 Remove it from ${o.source}`); return; }
+  if (o.origin !== "custom") { resetObject(o); return; }
+  const refs = allObjects().filter((x) => META[x.kind].some((m) => m.type.startsWith("rawcodes:") && String(value(x, m.id)).split(",").includes(o.rc) && x.rc !== o.rc));
+  modal(`<header>Delete ${o.rc} “${esc(nameOf(o))}”?</header>
+  <div class="body">
+    ${o.placed ? `<p>⚠ Placed <b>${o.placed}</b> times on the terrain (<span class="mono">war3mapUnits.doo</span>). The World Editor removes them on its next load.</p>` : ""}
+    ${refs.length ? `<p>Referenced by: ${refs.map((r) => `<span class="rc">${r.rc}</span> ${esc(nameOf(r))}`).join(", ")}; those references are left dangling.</p>` : `<p class="muted">No other object refers to it.</p>`}
+    <p class="muted">Code that uses <span class="mono">FourCC("${o.rc}")</span> or its constant then gets the lint rule's “neither Built-in nor this map's”.</p>
+  </div>
+  <footer><button onclick="closeModal()">Cancel</button><button class="danger" onclick="doDelete('${o.folderKey}')">Delete</button></footer>`);
+}
+function doDelete(key) {
+  const entry = S.working[key];
+  delete S.working[key];
+  S.undo.push({ label: `delete ${key}`, edits: [], restore: { key, entry } }); S.redo = [];
+  S.selected = null; closeModal(); render();
+}
+// undo for create/delete
+const _undo = undo;
+undo = function () {
+  const step = S.undo[S.undo.length - 1];
+  if (step && step.create) { S.undo.pop(); delete S.working[step.create]; S.redo.push(step); toast(`Undid: ${step.label}`); render(); return; }
+  if (step && step.restore) { S.undo.pop(); S.working[step.restore.key] = step.restore.entry; S.redo.push(step); toast(`Undid: ${step.label}`); render(); return; }
+  _undo();
+};
+const _redo = redo;
+redo = function () {
+  const step = S.redo[S.redo.length - 1];
+  if (step && step.create) { S.redo.pop(); S.working[step.create] = clone(step.entry); S.undo.push(step); toast(`Redid: ${step.label}`); render(); return; }
+  if (step && step.restore) { S.redo.pop(); delete S.working[step.restore.key]; S.undo.push(step); toast(`Redid: ${step.label}`); render(); return; }
+  _redo();
+};
+function resetObject(o, field) {
+  if (o.origin === "definition") { toast(`🔒 Edit it in ${o.source}`); return; }
+  const fields = field ? [field] : Object.keys(o.mods);
+  const edits = fields.filter((f) => !(o.origin === "custom" && f === nameField[o.kind])).map((f) => ({ rc: o.rc, kind: o.kind, field: f, before: clone(o.mods[f]), after: undefined }));
+  commit(edits, field ? `reset ${o.rc} ${field}` : `reset ${o.rc} to ${o.base || "Built-in"}`);
+}
+function iconPicker(onPick) {
+  const icons = [...new Set(BUILTINS.map(([, , , v]) => v.uico || v.iico || v.aart || v.fart).filter(Boolean)), BTN("TheCaptain"), BTN("Banner"), "war3mapImported\\BTNCaptainCustom.blp"];
+  window._pick = onPick;
+  modal(`<header>Choose an icon<span class="grow"></span><input placeholder="Filter…" oninput="[...document.querySelectorAll('.pickgrid>div')].forEach(d=>d.style.display=d.textContent.toLowerCase().includes(this.value.toLowerCase())?'':'none')"></header>
+  <div class="body"><div class="small muted">From your install (${icons.length - 1} of ~4,800) and the map's imports. Shown: the game's own <span class="mono">.blp</span> path; on 3.0 most resolve to <span class="mono">.dds</span> in three art layers.</div>
+  <div class="pickgrid">${icons.map((p) => `<div onclick="window._pick('${p.replace(/\\/g, "\\\\")}'); closeModal()">${iconHtml(p)}<span class="small">${esc(p.replace(/.*\\/, ""))}${p.startsWith("war3mapImported") ? ' <span class="chip custom">import</span>' : ""}</span></div>`).join("")}</div></div>
+  <footer><button onclick="closeModal()">Cancel</button></footer>`);
+}
+function modelPicker(onPick) {
+  const models = BUILTINS.map(([, , , v]) => v.umdl || v.ifil || v.bfil || v.dfil || v.ftat).filter(Boolean);
+  window._pick = onPick;
+  modal(`<header>Choose a model</header>
+  <div class="body"><div class="row" style="align-items:stretch"><div style="flex:1; max-height:360px; overflow:auto">${[...new Set(models)].map((p) => `<div style="padding:3px 6px; cursor:pointer" class="mono small" onmouseover="document.getElementById('mprev').textContent='${p.replace(/\\/g, "\\\\")}'" onclick="window._pick('${p.replace(/\\/g, "\\\\")}'); closeModal()">${esc(p)}</div>`).join("")}</div>
+  <div style="width:220px; height:220px; display:grid; place-items:center; background:#20262f; color:#9aa4b5; border-radius:8px; text-align:center; padding:10px" class="small"><div>3D preview (mdx-m3-viewer)<br><br><span id="mprev"></span></div></div></div></div>
+  <footer><button onclick="closeModal()">Cancel</button></footer>`);
+}
+function bulkEdit(objs) {
+  if (!objs.length) { toast("Select objects first (checkboxes, or Ctrl/Shift-click)"); return; }
+  const kind = objs[0].kind;
+  const editable = objs.filter((o) => o.origin !== "definition");
+  window._bulk = editable;
+  modal(`<header>Edit ${editable.length} ${kindOf(kind).label.toLowerCase()} at once</header>
+  <div class="body">
+    ${editable.length < objs.length ? `<div class="chip definition">🔒 ${objs.length - editable.length} Object definitions left out</div>` : ""}
+    <div class="row"><div><div class="field-label">Field</div><select id="bkF">${META[kind].filter((m) => !m.levels && !m.type.startsWith("rawcodes")).map((m) => `<option value="${m.id}">${m.cat} · ${m.name} (${m.id})</option>`).join("")}</select></div>
+    <div><div class="field-label">Operation</div><select id="bkOp"><option value="set">Set to</option><option value="add">Add</option><option value="mul">Multiply by</option><option value="reset">Reset to base</option></select></div>
+    <div><div class="field-label">Value</div><input id="bkV" value="10"></div></div>
+    <div class="small muted">Preview: ${editable.map((o) => `<span class="rc">${o.rc}</span> ${esc(nameOf(o))}`).join(", ")}. One undo step.</div>
+  </div>
+  <footer><button onclick="closeModal()">Cancel</button><button class="primary" onclick="doBulk()">Apply</button></footer>`);
+}
+function doBulk() {
+  const f = document.getElementById("bkF").value, op = document.getElementById("bkOp").value, raw = document.getElementById("bkV").value;
+  const edits = window._bulk.map((o) => {
+    const cur = value(o, f);
+    const n = Number(raw);
+    let after = op === "set" ? (isNaN(n) ? raw : n) : op === "add" ? Number(cur) + n : op === "mul" ? Math.round(Number(cur) * n * 100) / 100 : undefined;
+    if (op !== "reset" && JSON.stringify(after) === JSON.stringify(baseValue(o, f))) after = undefined;
+    return { rc: o.rc, kind: o.kind, field: f, before: clone(o.mods[f]), after };
+  });
+  closeModal();
+  commit(edits, `bulk ${f} on ${edits.length} objects`);
+}
+function diffHtml(changes, title) {
+  if (!changes.length) return `<p class="muted">No changes.</p>`;
+  return changes.map((c) => {
+    const o = find(c.rc, c.kind);
+    const m = (f) => META[c.kind].find((x) => x.id === f) || { name: f };
+    return `<div class="obj">${c.type === "created" ? "+ " : c.type === "deleted" ? "− " : "~ "}<span class="rc">${c.rc}</span> ${o ? esc(nameOf(o)) : "(deleted)"} <span class="muted small">${c.kind} · ${kindOf(c.kind).file}</span></div>
+      ${c.fields.map((x) => `<div>&nbsp;&nbsp;${esc(m(x.f).name)} <span class="muted">(${x.f})</span>: ${x.before !== undefined ? `<span class="del">${esc(JSON.stringify(x.before))}</span> → ` : ""}${x.after !== undefined ? `<span class="add">${esc(JSON.stringify(x.after))}</span>` : `<span class="muted">base value</span>`}</div>`).join("")}`;
+  }).join("");
+}
+function gitChanges() {
+  // Since the last commit: what the textconv driver would show, here a fixed sample plus the unsaved ones.
+  const head = initialMapFolder(); delete head.I000; head.h000.mods.uhpm = 600;
+  return pendingChanges(head, S.saved);
+}
+function showDiff(scope = "unsaved") {
+  const tabs = [["unsaved", "Unsaved (Studio → map folder)"], ["git", "Since last commit (git)"], ["disk", "Changed on disk"]];
+  const body = scope === "unsaved" ? diffHtml(pendingChanges()) : scope === "git" ? diffHtml(gitChanges()) : diffHtml([{ rc: "hfoo", kind: "unit", type: "changed", fields: [{ f: "ugol", before: 120, after: 125 }] }, { rc: "h000", kind: "unit", type: "changed", fields: [{ f: "usid", before: undefined, after: 1600 }] }]);
+  modal(`<header>Changes</header><div class="body"><div class="row">${tabs.map(([k, l]) => `<button class="${k === scope ? "primary" : ""}" onclick="showDiff('${k}')">${l}</button>`).join("")}</div>
+  <div class="diff">${body}</div>
+  ${scope === "git" ? `<div class="small muted">Same text as <span class="mono">git diff</span> through <span class="mono">reforged-map</span>'s textconv driver.</div>` : ""}</div>
+  <footer><button onclick="closeModal()">Close</button>${scope === "unsaved" ? `<button onclick="closeModal(); discardMine()">Discard all</button><button class="primary" onclick="closeModal(); save()">Save</button>` : ""}</footer>`);
+}
+
+// ---------------------------------------------------------------------------
+// Inline editing, shared by the variants.
+// ---------------------------------------------------------------------------
+function editCell(td, o, m, lvl = 0) {
+  if (o.origin === "definition") { toast(`🔒 ${o.rc} is an Object definition: edit it in <span class="mono">${o.source}</span>`); return; }
+  if (m.type === "icon") return iconPicker((p) => setField(o, m.id, p, lvl));
+  if (m.type === "model") return modelPicker((p) => setField(o, m.id, p, lvl));
+  let v = value(o, m.id); if (m.levels && Array.isArray(v)) v = v[lvl];
+  let input;
+  if (m.type === "enum") input = `<select>${Object.entries(m.options).map(([k, l]) => `<option value="${k}" ${k === v ? "selected" : ""}>${l} (${k})</option>`).join("")}</select>`;
+  else if (m.type === "bool") { setField(o, m.id, v ? 0 : 1, lvl); return; }
+  else if (m.type === "text") input = `<textarea rows="3" style="width:100%">${esc(v)}</textarea>`;
+  else input = `<input ${m.type === "int" || m.type === "real" ? 'type="number" step="any"' : ""} value="${esc(v)}" style="${m.type.startsWith("rawcodes") || m.type === "string" ? "width:100%" : ""}">`;
+  td.innerHTML = input;
+  const el = td.firstElementChild; el.focus(); if (el.select) el.select();
+  let finished = false;
+  const done = (ok) => {
+    if (finished) return; finished = true;
+    if (!ok) return render();
+    let nv = el.value;
+    if (m.type === "int") nv = parseInt(nv, 10); if (m.type === "real") nv = parseFloat(nv);
+    setField(o, m.id, nv, lvl);
+  };
+  el.addEventListener("keydown", (e) => { if (e.key === "Enter" && !(m.type === "text" && e.shiftKey)) done(true); if (e.key === "Escape") done(false); e.stopPropagation(); });
+  el.addEventListener("blur", () => done(true));
+  if (m.type === "enum") el.addEventListener("change", () => done(true));
+}
+function onCellClick(e) {
+  const g = e.target.closest("[data-goto]");
+  if (g) { e.stopPropagation(); select(g.dataset.goto, g.dataset.kind); return true; }
+  return false;
+}
+
+// ---------------------------------------------------------------------------
+// Routing: /objects/<rawcode>, ?variant=.
+// ---------------------------------------------------------------------------
+function select(rc, kind) {
+  const o = find(rc, kind);
+  if (!o) return;
+  S.selected = { rc: o.rc, kind: o.kind }; S.kind = o.kind;
+  const url = new URL(location.href);
+  url.pathname = `/objects/${encodeURIComponent(o.rc)}`;
+  if (sharedRawcode(o)) url.searchParams.set("kind", o.kind); else url.searchParams.delete("kind");
+  history.replaceState(null, "", url);
+  render();
+  const el = document.querySelector(".A .tree .item.on, .B tr.focus"); if (el) el.scrollIntoView({ block: "nearest" });
+}
+function current() { return S.selected ? find(S.selected.rc, S.selected.kind) : null; }
+(function route() {
+  const m = location.pathname.match(/^\/objects\/([^/]{4})/);
+  const kind = new URLSearchParams(location.search).get("kind");
+  const rc = m ? decodeURIComponent(m[1]) : "h000";
+  const o = find(rc, kind);
+  if (o) { S.selected = { rc: o.rc, kind: o.kind }; S.kind = o.kind; }
+  else if (m) S.notFound = rc;
+})();
+
+// ---------------------------------------------------------------------------
+// Shared chrome.
+// ---------------------------------------------------------------------------
+function renderTop() {
+  const pending = pendingChanges().length;
+  const we = !S.weRunning ? `<span class="we"><span class="dot off"></span>World Editor closed</span>`
+    : S.weUnsaved ? `<span class="we" title="Its window title ends in *]"><span class="dot busy"></span>World Editor · unsaved edits</span>`
+    : `<span class="we"><span class="dot"></span>World Editor · map open</span>`;
+  document.getElementById("topbar").innerHTML = `
+    <span class="brand">reforged studio</span><span class="crumb">castle-siege / map.w3x / <b style="color:#fff">Objects</b></span>
+    <span class="grow"></span>${we}
+    <button onclick="undo()" ${S.undo.length ? "" : "disabled"} title="Ctrl+Z">↶ Undo</button>
+    <button onclick="redo()" ${S.redo.length ? "" : "disabled"} title="Ctrl+Shift+Z">↷</button>
+    <button onclick="showDiff()">Changes${pending ? ` · ${pending}` : ""}</button>
+    <button class="primary" onclick="save()" ${pending ? "" : "disabled"} title="Ctrl+S">Save${pending ? ` ${pending}` : ""}</button>`;
+  document.getElementById("banners").innerHTML = S.banners.map((b) => `<div class="banner ${b.kind}"><span class="grow">${b.html}</span>${b.actions.map(([l, f]) => `<button onclick="${f}">${l}</button>`).join("")}<button class="link" onclick="dismissBanners()">✕</button></div>`).join("");
+  document.documentElement.style.setProperty("--banner-h", (document.getElementById("banners").offsetHeight || 0) + "px");
+}
+function objectHeader(o, size = "lg") {
+  return `${iconHtml(iconOf(o), size, nameOf(o))}
+    <div class="grow"><div class="row" style="flex-wrap:wrap"><b style="font-size:17px">${esc(nameOf(o))}</b>
+      <span class="rc" style="font-size:14px">${o.rc}</span>${originChip(o)}${sharedChip(o)}</div>
+      <div class="small muted">${kindOf(o.kind).label.replace(/\/.*/, "")} · ${kindOf(o.kind).file}
+      ${o.base ? ` · based on <a href="#" data-goto="${o.base}" data-kind="${o.kind}">${esc(nameOf(find(o.base, o.kind)))} (${o.base})</a>` : ""}
+      ${o.source ? ` · <span class="mono">${esc(o.source)}</span> <a href="#">open in editor</a>` : ""}
+      ${o.strings && o.strings[nameField[o.kind]] ? ` · name in <span class="mono">${o.strings[nameField[o.kind]]}</span>` : ""}
+      ${o.placed ? ` · placed ${o.placed}× on the terrain` : ""}
+      · FourCC("${o.rc}") = <span class="mono">${fourcc(o.rc)}</span></div></div>`;
+}
+function objectActions(o) {
+  if (o.origin === "definition") return `<span class="small muted">Read-only: change it in code</span> <button onclick="newObject('${o.rc}')">New from this</button>`;
+  return `<button onclick="newObject('${o.rc}')">New from this</button>
+    ${o.origin !== "builtin" ? `<button onclick="resetObject(find('${o.rc}','${o.kind}'))">${o.origin === "custom" ? "Reset to base" : "Reset to Built-in"}</button>` : ""}
+    ${o.origin === "custom" ? `<button class="danger" onclick="deleteObject(find('${o.rc}','${o.kind}'))">Delete</button>` : ""}
+    <button onclick="toggleCompare('${o.rc}','${o.kind}')">${S.compare.some((c) => c.rc === o.rc && c.kind === o.kind) ? "Unpin" : "Compare"}</button>`;
+}
+function fourcc(rc) { let n = 0; for (const c of rc) n = n * 256 + c.charCodeAt(0); return n; }
+function toggleCompare(rc, kind) {
+  const o = rc ? find(rc, kind) : current();
+  const i = S.compare.findIndex((c) => c.rc === o.rc && c.kind === o.kind);
+  if (i >= 0) S.compare.splice(i, 1); else S.compare.push({ rc: o.rc, kind: o.kind });
+  render();
+}
+function listFor(kind) {
+  const f = S.filter.toLowerCase();
+  return allObjects().filter((o) => o.kind === kind && (!f || o.rc.toLowerCase().includes(f) || nameOf(o).toLowerCase().includes(f)));
+}
+function valueModeSwitch() {
+  return `<span class="small muted">Values</span><select onchange="S.valueMode=this.value; render()">${[["both", "Display + raw"], ["display", "Display"], ["raw", "Raw"]].map(([k, l]) => `<option value="${k}" ${S.valueMode === k ? "selected" : ""}>${l}</option>`).join("")}</select>
+   <label class="small"><input type="checkbox" ${S.hideDefaults ? "checked" : ""} onchange="S.hideDefaults=this.checked; render()"> Hide unmodified fields</label>`;
+}
+
+// ---------------------------------------------------------------------------
+// Variant A: the Object Editor's layout. Kind tabs, a tree by origin and race,
+// and one field table, with compared objects as extra columns.
+// ---------------------------------------------------------------------------
+function renderA() {
+  const o = current();
+  const items = listFor(S.kind);
+  const groups = [
+    ["Custom", items.filter((x) => x.origin === "custom")],
+    ["Object definitions (code)", items.filter((x) => x.origin === "definition")],
+    ["Built-in · modified", items.filter((x) => x.origin === "modified")],
+    ...Object.entries(items.filter((x) => x.origin === "builtin").reduce((acc, x) => ((acc[x.group] ||= []).push(x), acc), {})).map(([g, xs]) => [`Built-in · ${RACE[g] || g}`, xs]),
+  ].filter(([, xs]) => xs.length);
+  const cols = [o, ...S.compare.map((c) => find(c.rc, c.kind)).filter((x) => x && x.kind === S.kind && !(x.rc === o?.rc && x.kind === o?.kind))].filter(Boolean);
+  const metas = META[S.kind];
+  let rows = "";
+  let lastCat = "";
+  for (const m of metas) {
+    if (S.hideDefaults && !cols.some((c) => isModified(c, m.id))) continue;
+    if (m.cat !== lastCat) { rows += `<tr class="cat"><td colspan="${2 + cols.length * (m.levels ? 1 : 1)}">${m.cat}</td></tr>`; lastCat = m.cat; }
+    const lv = m.levels ? Math.max(...cols.map(levels)) : 1;
+    for (let l = 0; l < lv; l++) {
+      rows += `<tr><td>${esc(m.name)}${m.levels ? ` <span class="muted">· level ${l + 1}</span>` : ""}</td><td class="mono small muted">${m.id}</td>`;
+      for (const c of cols) {
+        const cls = isModified(c, m.id) ? `modcell ${isUnsaved(c, m.id) ? "unsaved" : ""}` : "";
+        rows += `<td class="val ${cls} ${c.origin === "definition" ? "ro" : ""}" data-rc="${c.rc}" data-kind="${c.kind}" data-f="${m.id}" data-l="${l}" title="${isModified(c, m.id) ? `Base: ${esc(JSON.stringify(baseValue(c, m.id)))} — right-click to reset` : ""}">${l < levels(c) || !m.levels ? cellHtml(c, m, l) : '<span class="muted">—</span>'}</td>`;
+      }
+      rows += "</tr>";
+    }
+  }
+  return `<div class="A">
+    <div class="kindtabs">${KINDS.map((k) => `<button class="${k.id === S.kind ? "on" : ""}" onclick="S.kind='${k.id}'; S.checked.clear(); const f=allObjects().find(x=>x.kind==='${k.id}'); select(f.rc, f.kind)">${k.label} <span class="muted small">${allObjects().filter((x) => x.kind === k.id).length}</span></button>`).join("")}
+      <span class="grow"></span><span class="small muted" style="align-self:center">Rawcode or name</span> <input style="margin:2px 0 4px" value="${esc(S.filter)}" placeholder="Filter… (Ctrl+F)" oninput="S.filter=this.value; render(); const i=document.querySelector('.A .kindtabs input'); i.focus(); i.setSelectionRange(99,99)"></div>
+    <div class="tree">
+      <div class="row" style="margin-bottom:6px"><button onclick="newObject()">+ New</button><button onclick="bulkEdit([...S.checked].map(k=>find(...k.split('|'))))" ${S.checked.size > 1 ? "" : "disabled"}>Edit ${S.checked.size || ""} selected</button></div>
+      <div class="small muted" style="margin-bottom:4px">Ctrl-click to select several</div>
+      ${groups.map(([g, xs]) => `<div class="group">${g} <span>(${xs.length})</span></div>${xs.map((x) => `<div class="item ${o && x.rc === o.rc && x.kind === o.kind ? "on" : ""} ${S.checked.has(x.rc + "|" + x.kind) ? "checked" : ""}" data-rc="${x.rc}" data-kind="${x.kind}">${iconHtml(iconOf(x), "sm", nameOf(x))}<span class="grow">${esc(nameOf(x))}</span>${pendingChanges().some((p) => p.rc === x.rc && p.kind === x.kind) ? '<span title="unsaved" style="color:var(--modified)">●</span>' : ""}${x.origin === "definition" ? "🔒" : ""}<span class="mono small muted">${x.rc}</span></div>`).join("")}`).join("")}
+    </div>
+    <div class="pane">
+      ${o ? `<div class="objhead">${objectHeader(o)}<div class="row">${objectActions(o)}</div></div>
+      <div class="row" style="padding:8px 18px">${valueModeSwitch()}<span class="grow"></span>${cols.length > 1 ? `<span class="small muted">Comparing ${cols.length}</span>` : ""}</div>
+      <table class="fields"><thead><tr><th style="width:32%">Field</th><th style="width:60px">Id</th>${cols.map((c) => `<th>${c === o ? "Value" : `<a href="#" data-goto="${c.rc}" data-kind="${c.kind}">${esc(nameOf(c))} <span class="mono">${c.rc}</span></a> <button class="link" onclick="toggleCompare('${c.rc}','${c.kind}')">✕</button>`}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>`
+      : `<div style="padding:40px" class="muted">${S.notFound ? `No object <span class="rc">${esc(S.notFound)}</span> in this map or the Built-in objects.` : "Select an object."}</div>`}
+    </div></div>`;
+}
+function bindA() {
+  document.querySelectorAll(".A .tree .item").forEach((el) => el.addEventListener("click", (e) => {
+    const k = el.dataset.rc + "|" + el.dataset.kind;
+    if (e.ctrlKey || e.metaKey) { S.checked.has(k) ? S.checked.delete(k) : S.checked.add(k); render(); return; }
+    if (e.shiftKey) { S.checked.add(k); const c = current(); if (c) S.checked.add(c.rc + "|" + c.kind); render(); return; }
+    S.checked.clear(); select(el.dataset.rc, el.dataset.kind);
+  }));
+  document.querySelectorAll(".A td.val").forEach((td) => {
+    td.addEventListener("click", (e) => { if (onCellClick(e)) return; const o = find(td.dataset.rc, td.dataset.kind); editCell(td, o, META[o.kind].find((m) => m.id === td.dataset.f), +td.dataset.l); });
+    td.addEventListener("contextmenu", (e) => { e.preventDefault(); const o = find(td.dataset.rc, td.dataset.kind); if (isModified(o, td.dataset.f)) resetObject(o, td.dataset.f); });
+  });
+  document.querySelectorAll(".A .objhead [data-goto]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); select(a.dataset.goto, a.dataset.kind); }));
+  document.querySelectorAll(".A th [data-goto]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); select(a.dataset.goto, a.dataset.kind); }));
+}
+
+// ---------------------------------------------------------------------------
+// Variant B: a spreadsheet. One row per object, one column per field; a column
+// selection is the bulk edit; the row's Rawcode opens a drawer.
+// ---------------------------------------------------------------------------
+function renderB() {
+  const items = listFor(S.kind).sort((a, b) => ({ custom: 0, definition: 1, modified: 2, builtin: 3 })[a.origin] - ({ custom: 0, definition: 1, modified: 2, builtin: 3 })[b.origin]);
+  const shown = items.filter((o) => !S.hideDefaults || o.origin !== "builtin");
+  const metas = META[S.kind].filter((m) => !S.hideDefaults || shown.some((o) => isModified(o, m.id)));
+  const cats = []; for (const m of metas) { const last = cats[cats.length - 1]; if (last && last[0] === m.cat) last[1]++; else cats.push([m.cat, 1]); }
+  const o = current();
+  const sel = new Set(S.bSel.map((s) => s.join("|")));
+  return `<div class="B">
+    <div class="bar">
+      <select onchange="S.kind=this.value; S.bSel=[]; render()">${KINDS.map((k) => `<option value="${k.id}" ${k.id === S.kind ? "selected" : ""}>${k.label} (${allObjects().filter((x) => x.kind === k.id).length})</option>`).join("")}</select>
+      <input placeholder="Filter rows by Rawcode or name…" value="${esc(S.filter)}" oninput="S.filter=this.value; render(); const i=document.querySelector('.B .bar input'); i.focus(); i.setSelectionRange(99,99)">
+      <button onclick="newObject()">+ New row</button>
+      ${valueModeSwitch().replace("Hide unmodified fields", "Only changed rows and columns")}
+      <span class="grow"></span>
+      ${S.bSel.length > 1 ? `<span class="chip custom">${S.bSel.length} cells selected</span><input id="bfill" placeholder="Type a value, Enter fills all" onkeydown="if(event.key==='Enter') fillSel(this.value)"><button onclick="S.bSel=[]; render()">Clear</button>` : `<span class="small muted">Click a cell to edit · Shift-click down a column to select several, then type once</span>`}
+    </div>
+    ${S.notFound && !o ? `<div class="banner bad">No object <span class="rc">${esc(S.notFound)}</span> in this map or the Built-in objects.</div>` : ""}
+    <div class="gridwrap"><table>
+      <thead><tr class="cats"><th class="stick"></th><th class="stick2"></th><th class="stick3"></th>${cats.map(([c, n]) => `<th colspan="${n}" style="text-align:left">${c}</th>`).join("")}</tr>
+      <tr class="names"><th class="stick"></th><th class="stick2">Rawcode</th><th class="stick3">Origin</th>${metas.map((m) => `<th title="${m.id}">${esc(m.name)}<div class="mono muted" style="font-weight:400">${m.id}</div></th>`).join("")}</tr></thead>
+      <tbody>${shown.map((x) => `<tr class="${o && o.rc === x.rc && o.kind === x.kind ? "focus" : ""}">
+        <td class="stick">${iconHtml(iconOf(x), "sm", nameOf(x))}</td>
+        <td class="stick2"><a href="#" class="mono" data-open="${x.rc}" data-kind="${x.kind}">${x.rc}</a>${pendingChanges().some((p) => p.rc === x.rc && p.kind === x.kind) ? ' <span style="color:var(--modified)">●</span>' : ""}</td>
+        <td class="stick3">${originChip(x)}${sharedRawcode(x) ? " ⚠" : ""}</td>
+        ${metas.map((m) => `<td class="cell ${isModified(x, m.id) ? `modcell ${isUnsaved(x, m.id) ? "unsaved" : ""}` : ""} ${x.origin === "definition" ? "ro" : ""} ${sel.has(x.rc + "|" + x.kind + "|" + m.id) ? "sel" : ""}" data-rc="${x.rc}" data-kind="${x.kind}" data-f="${m.id}">${m.levels ? (Array.isArray(value(x, m.id)) ? value(x, m.id).map((v) => esc(v)).join(" / ") : esc(value(x, m.id))) : cellHtml(x, m, 0)}</td>`).join("")}
+      </tr>`).join("")}</tbody></table></div>
+    ${S.bDrawer && o ? `<div class="drawer"><div class="row" style="padding:12px; border-bottom:1px solid var(--line); align-items:flex-start">${objectHeader(o)}<button class="link" onclick="S.bDrawer=false; render()">✕</button></div>
+      <div class="row" style="padding:8px 12px; flex-wrap:wrap">${objectActions(o)}</div>
+      <div style="padding:0 12px">${META[o.kind].filter((m) => isModified(o, m.id)).map((m) => `<div style="padding:4px 0; border-bottom:1px solid #f0f2f6"><div class="small muted">${m.cat} · ${esc(m.name)} <span class="mono">${m.id}</span></div><div>${cellHtml(o, m, 0)} <span class="small muted">base ${esc(JSON.stringify(baseValue(o, m.id)))}</span> <button class="link small" onclick="resetObject(find('${o.rc}','${o.kind}'), '${m.id}')">reset</button></div></div>`).join("") || '<p class="muted">Unmodified.</p>'}</div></div>` : ""}
+  </div>`;
+}
+function fillSel(v) {
+  const edits = S.bSel.map(([rc, kind, f]) => {
+    const o = find(rc, kind); if (o.origin === "definition") return null;
+    const m = META[kind].find((x) => x.id === f);
+    let after = m.type === "int" ? parseInt(v, 10) : m.type === "real" ? parseFloat(v) : v;
+    if (JSON.stringify(after) === JSON.stringify(baseValue(o, f))) after = undefined;
+    return { rc, kind, field: f, before: clone(o.mods[f]), after };
+  }).filter(Boolean);
+  S.bSel = [];
+  commit(edits, `fill ${edits.length} cells`);
+}
+function bindB() {
+  document.querySelectorAll(".B td.cell").forEach((td) => td.addEventListener("click", (e) => {
+    if (onCellClick(e)) return;
+    const key = [td.dataset.rc, td.dataset.kind, td.dataset.f];
+    if (e.shiftKey || e.ctrlKey) {
+      if (S.bSel.length && S.bSel[0][2] !== td.dataset.f) S.bSel = [];
+      const i = S.bSel.findIndex((s) => s.join("|") === key.join("|"));
+      if (i >= 0) S.bSel.splice(i, 1); else S.bSel.push(key);
+      render(); const f = document.getElementById("bfill"); if (f) f.focus(); return;
+    }
+    S.bSel = [];
+    const o = find(td.dataset.rc, td.dataset.kind);
+    S.selected = { rc: o.rc, kind: o.kind };
+    const m = META[o.kind].find((x) => x.id === td.dataset.f);
+    if (m.levels) { const l = prompt(`${m.name}, per level, separated by /`, [].concat(value(o, m.id) ?? []).join(" / ")); if (l != null) { const vals = l.split("/").map((s) => (isNaN(+s) ? s.trim() : +s)); commit([{ rc: o.rc, kind: o.kind, field: m.id, before: clone(o.mods[m.id]), after: vals }], `${o.rc} ${m.id}`); } return; }
+    editCell(td, o, m, 0);
+  }));
+  document.querySelectorAll(".B [data-open]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); S.bDrawer = true; select(a.dataset.open, a.dataset.kind); }));
+  document.querySelectorAll(".B .drawer [data-goto]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); select(a.dataset.goto, a.dataset.kind); }));
+}
+
+// ---------------------------------------------------------------------------
+// Variant C: search first, one page per object. A global search across all
+// seven kinds; the page shows what differs from its base first; pinned pages
+// sit side by side; Changes is a page of its own.
+// ---------------------------------------------------------------------------
+function renderC() {
+  const o = current();
+  const q = S.cGlobal.toLowerCase();
+  const results = q ? allObjects().filter((x) => x.rc.toLowerCase().includes(q) || nameOf(x).toLowerCase().includes(q)).slice(0, 14) : [];
+  const recent = (S.recent ||= []);
+  const pages = S.cView === "object" ? [o, ...S.compare.map((c) => find(c.rc, c.kind)).filter((x) => x && !(x.rc === o?.rc && x.kind === o?.kind))].filter(Boolean) : [];
+  const counts = (pred) => allObjects().filter(pred).length;
+  return `<div class="C">
+    <nav>
+      <a class="${S.cView === "object" ? "on" : ""}" onclick="S.cView='object'; render()">Object <span class="mono muted">${o ? o.rc : ""}</span></a>
+      <a class="${S.cView === "changes" ? "on" : ""}" onclick="S.cView='changes'; render()">Changes <span>${pendingChanges().length || ""}</span></a>
+      <a class="${S.cView === "mine" ? "on" : ""}" onclick="S.cView='mine'; render()">This map's objects <span class="muted">${counts((x) => x.origin !== "builtin")}</span></a>
+      <div class="h">Kinds</div>
+      ${KINDS.map((k) => `<a class="${S.cView === "kind:" + k.id ? "on" : ""}" onclick="S.cView='kind:${k.id}'; render()">${k.label} <span class="muted">${counts((x) => x.kind === k.id)}</span></a>`).join("")}
+      <div class="h">Recent</div>
+      ${recent.slice(0, 6).map((r) => { const x = find(r.rc, r.kind); return x ? `<a onclick="S.cView='object'; select('${r.rc}','${r.kind}')">${esc(nameOf(x))} <span class="mono muted">${r.rc}</span></a>` : ""; }).join("")}
+    </nav>
+    <main>
+      <div class="omni"><input id="omni" placeholder="Find any object by name or Rawcode, in all seven kinds   (Ctrl+K)" value="${esc(S.cGlobal)}" autocomplete="off">
+      ${results.length ? `<div class="results">${results.map((x, i) => `<div class="r ${i === (S.hl || 0) ? "hl" : ""}" data-rc="${x.rc}" data-kind="${x.kind}">${iconHtml(iconOf(x), "sm", nameOf(x))}<span class="grow">${esc(nameOf(x))}</span><span class="small muted">${x.kind}</span>${originChip(x)}<span class="rc">${x.rc}</span></div>`).join("")}<div class="r" data-new="1"><span class="grow muted">+ New object named “${esc(S.cGlobal)}”…</span></div></div>` : ""}</div>
+      ${S.cView === "changes" ? `<div class="page" style="margin-top:18px; padding:16px 18px"><div class="row"><b style="font-size:16px" class="grow">Changes</b><button onclick="showDiff('git')">Since last commit</button><button onclick="discardMine()">Discard all</button><button class="primary" onclick="save()">Save</button></div><div class="diff">${diffHtml(pendingChanges())}</div></div>` : ""}
+      ${S.cView === "mine" || S.cView.startsWith("kind:") ? cList(S.cView === "mine" ? allObjects().filter((x) => x.origin !== "builtin") : allObjects().filter((x) => x.kind === S.cView.slice(5))) : ""}
+      ${S.cView === "object" ? `<div class="row" style="margin-top:14px">${valueModeSwitch().replace("Hide unmodified fields", "Show only what differs from the base")}<span class="grow"></span>${pages.length > 1 ? `<span class="small muted">${pages.length} pinned side by side</span>` : ""}</div>
+      <div class="pages"><div class="compare">${pages.map((p) => cPage(p)).join("")}</div></div>
+      ${!pages.length && S.notFound ? `<p class="muted">No object <span class="rc">${esc(S.notFound)}</span> in this map or the Built-in objects. <button onclick="newObject()">Create one</button></p>` : ""}` : ""}
+    </main></div>`;
+}
+function cList(xs) {
+  return `<div class="page" style="margin-top:18px"><div class="row" style="padding:12px 18px; border-bottom:1px solid var(--line)"><b class="grow">${xs.length} objects</b><button onclick="newObject()">+ New</button><button onclick="bulkEdit(xs_sel())">Edit selected</button></div>
+  ${xs.map((x) => `<div class="row" style="padding:6px 18px; border-bottom:1px solid #f0f2f6"><input type="checkbox" class="csel" data-rc="${x.rc}" data-kind="${x.kind}">${iconHtml(iconOf(x), "sm", nameOf(x))}<a href="#" data-goto="${x.rc}" data-kind="${x.kind}" class="grow">${esc(nameOf(x))}</a><span class="small muted">${META[x.kind].filter((m) => isModified(x, m.id)).length} fields changed</span>${originChip(x)}<span class="rc">${x.rc}</span></div>`).join("")}</div>`;
+}
+function xs_sel() { return [...document.querySelectorAll(".csel:checked")].map((c) => find(c.dataset.rc, c.dataset.kind)); }
+function cPage(o) {
+  const showAll = !S.hideDefaults;
+  const metas = META[o.kind];
+  const changed = metas.filter((m) => isModified(o, m.id));
+  const cats = [...new Set(metas.map((m) => m.cat))];
+  const fieldRow = (m) => {
+    const lv = m.levels ? levels(o) : 1;
+    let out = "";
+    for (let l = 0; l < lv; l++) {
+      const mod = isModified(o, m.id);
+      out += `<div>${esc(m.name)}${m.levels ? ` <span class="muted small">lv ${l + 1}</span>` : ""} <span class="mono small muted">${m.id}</span></div>
+      <div class="val ${mod ? `modcell ${isUnsaved(o, m.id) ? "unsaved" : ""}` : ""} ${o.origin === "definition" ? "ro" : ""}" style="padding:3px 6px; border-radius:4px; cursor:text" data-rc="${o.rc}" data-kind="${o.kind}" data-f="${m.id}" data-l="${l}">${cellHtml(o, m, l)}${mod ? ` <span class="delta">was ${esc((Array.isArray(baseValue(o, m.id)) ? baseValue(o, m.id)[l] : baseValue(o, m.id)) ?? "unset")} in ${o.base || "the Built-in object"}</span>` : ""}</div>`;
+    }
+    return out;
+  };
+  return `<div class="page">
+    <div class="hero">${objectHeader(o)}</div>
+    <div class="row" style="padding:8px 18px; border-bottom:1px solid var(--line); flex-wrap:wrap">${objectActions(o).replace(/>Compare</, ">Pin to compare<")}<span class="grow"></span><button onclick="navigator.clipboard && navigator.clipboard.writeText('FourCC(&quot;${o.rc}&quot;)'); toast('Copied FourCC(&quot;${o.rc}&quot;)')">Copy FourCC</button></div>
+    ${changed.length && o.origin !== "builtin" ? `<div class="section"><h4>Differs from ${o.base ? esc(nameOf(find(o.base, o.kind))) : "the Built-in object"} (${changed.length})</h4><div class="kv">${changed.map(fieldRow).join("")}</div></div>` : ""}
+    ${showAll ? cats.map((c) => `<details class="section" ${o.origin === "builtin" ? "open" : ""}><summary><h4 style="display:inline">${c}</h4> <span class="small muted">${metas.filter((m) => m.cat === c).length} fields</span></summary><div class="kv">${metas.filter((m) => m.cat === c).map(fieldRow).join("")}</div></details>`).join("") : ""}
+  </div>`;
+}
+function bindC() {
+  const omni = document.getElementById("omni");
+  if (omni) {
+    omni.addEventListener("input", () => { S.cGlobal = omni.value; S.hl = 0; render(); const i = document.getElementById("omni"); i.focus(); i.setSelectionRange(99, 99); });
+    omni.addEventListener("keydown", (e) => {
+      const rs = document.querySelectorAll(".C .results .r[data-rc]");
+      if (e.key === "ArrowDown") { S.hl = Math.min((S.hl || 0) + 1, rs.length - 1); e.preventDefault(); render(); document.getElementById("omni").focus(); }
+      if (e.key === "ArrowUp") { S.hl = Math.max((S.hl || 0) - 1, 0); e.preventDefault(); render(); document.getElementById("omni").focus(); }
+      if (e.key === "Enter" && rs[S.hl || 0]) { const r = rs[S.hl || 0]; cOpen(r.dataset.rc, r.dataset.kind, e.ctrlKey); }
+      if (e.key === "Escape") { S.cGlobal = ""; render(); }
+      e.stopPropagation();
+    });
+  }
+  document.querySelectorAll(".C .results .r").forEach((r) => r.addEventListener("click", (e) => { if (r.dataset.new) { S.cGlobal = ""; newObject(); return; } cOpen(r.dataset.rc, r.dataset.kind, e.ctrlKey); }));
+  document.querySelectorAll(".C .val[data-f]").forEach((td) => td.addEventListener("click", (e) => { if (onCellClick(e)) return; const o = find(td.dataset.rc, td.dataset.kind); editCell(td, o, META[o.kind].find((m) => m.id === td.dataset.f), +td.dataset.l); }));
+  document.querySelectorAll(".C [data-goto]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); cOpen(a.dataset.goto, a.dataset.kind, e.ctrlKey); }));
+}
+function cOpen(rc, kind, pin) {
+  S.cGlobal = ""; S.cView = "object";
+  if (pin) { toggleCompare(rc, kind); return; }
+  (S.recent ||= []).unshift({ rc, kind }); S.recent = S.recent.filter((r, i, a) => a.findIndex((x) => x.rc === r.rc && x.kind === r.kind) === i);
+  select(rc, kind);
+}
+
+// ---------------------------------------------------------------------------
+// Render loop, keyboard, prototype controls.
+// ---------------------------------------------------------------------------
+const VARIANTS = { A: "Object Editor layout", B: "Spreadsheet", C: "Search and pages" };
+function render() {
+  renderTop();
+  const app = document.getElementById("app");
+  app.innerHTML = S.variant === "B" ? renderB() : S.variant === "C" ? renderC() : renderA();
+  if (S.variant === "B") bindB(); else if (S.variant === "C") bindC(); else bindA();
+  renderProto();
+}
+function renderProto() {
+  document.getElementById("proto").innerHTML = `<button onclick="cycle(-1)">◀</button><span class="label">${S.variant} · ${VARIANTS[S.variant]}</span><button onclick="cycle(1)">▶</button><button onclick="document.getElementById('protoMenu').classList.toggle('open')">Simulate ▴</button>`;
+  document.getElementById("protoMenu").innerHTML = `<div class="h">Prototype only: turns with the World Editor</div>
+    <button onclick="simDiskChange(); closeMenu()">The map folder changed on disk (a World Editor save)</button>
+    <button onclick="simRevert(); closeMenu()">A World Editor save put back fields the Studio had changed</button>
+    <button onclick="S.weUnsaved=!S.weUnsaved; render()">World Editor holds unsaved edits (*): ${S.weUnsaved ? "yes" : "no"}</button>
+    <button onclick="S.weRunning=!S.weRunning; render()">World Editor running: ${S.weRunning ? "yes" : "no"}</button>
+    <button onclick="S.autoReload=!S.autoReload; render()">After a Studio save, reload the World Editor automatically: ${S.autoReload ? "yes" : "no (ask)"}</button>
+    <div class="h">Deep links (the hover tool's "Open in the Studio")</div>
+    <button onclick="go('/objects/h000')">/objects/h000 (Custom)</button>
+    <button onclick="go('/objects/hkni')">/objects/hkni (Built-in changed by an Object definition)</button>
+    <button onclick="go('/objects/B000')">/objects/B000 (shared by a buff and a destructable)</button>
+    <button onclick="go('/objects/zzzz')">/objects/zzzz (unknown)</button>
+    <button onclick="location.href='/objects/h000?variant=${S.variant}'">Reset the prototype</button>`;
+}
+function closeMenu() { document.getElementById("protoMenu").classList.remove("open"); }
+function go(path) { const u = new URL(location.href); u.pathname = path; u.searchParams.delete("kind"); location.href = u; }
+function cycle(d) {
+  const ks = Object.keys(VARIANTS);
+  S.variant = ks[(ks.indexOf(S.variant) + d + ks.length) % ks.length];
+  const u = new URL(location.href); u.searchParams.set("variant", S.variant); history.replaceState(null, "", u);
+  render();
+}
+document.addEventListener("keydown", (e) => {
+  const typing = e.target.closest && e.target.closest("input, textarea, select, [contenteditable]");
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !typing) { e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); save(); return; }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k" && S.variant === "C") { e.preventDefault(); document.getElementById("omni").focus(); return; }
+  if (e.key === "Escape") closeModal();
+  if (typing) return;
+  if (e.key === "ArrowLeft") cycle(-1);
+  if (e.key === "ArrowRight") cycle(1);
+});
+document.getElementById("modal").addEventListener("click", (e) => { if (e.target.id === "modal") closeModal(); });
+render();
+</script>
+</body>
+</html>
