@@ -144,6 +144,14 @@ _Avoid_: inject, export, object generation
 The Map project's record of which Rawcodes belong to its Object definitions and what an Object sync last wrote for each, so a later one can replace, remove or detect a change made outside the code.
 _Avoid_: lock file, provenance field
 
+**Object adoption**:
+Handing an object of the map folder (a Custom object, or a Built-in object the map folder changes) to the code: it becomes an Object definition and enters the Object manifest, while the map folder stays as it was.
+_Avoid_: import, convert, export
+
+**Object release**:
+The reverse of an Object adoption: an object that belongs to an Object definition goes back to the map folder as the code last defined it, and leaves the code and the Object manifest.
+_Avoid_: eject, release (a library release is something else)
+
 **Agent skill**:
 A folder holding a `SKILL.md` that scripts one workflow for an AI coding agent to follow when invoked (`add-wrapper`, `map-feature`).
 _Avoid_: prompt, recipe, playbook
