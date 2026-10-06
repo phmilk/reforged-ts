@@ -55,3 +55,9 @@ What the 3.0 World Editor does on save to Object data another tool wrote (#475) 
 - **Holding files open.** Neither Object sync nor the Studio holds a map file open beyond one read or write, and each opens files with delete sharing, as Node's `fs` does. The World Editor saves by writing a new folder and swapping it in; if another process holds a map file open without delete sharing, the save deletes part of the folder with no error, and imports are lost. Before writing or sending `-launch -loadfile`, both read the World Editor's window title, which ends in ` *]` while it holds unsaved edits: the only sign of them, since an edit writes nothing to disk.
 
 Amendment record: https://github.com/phmilk/reforged-ts/issues/475
+
+## Second amendment (2026-10-06)
+
+The editors that take turns on the map folder are the 3.0 World Editor and the Studio. HiveWE is not a target for now, since no HiveWE release reads a 3.0.0 map (ADR 0014, third amendment). The writer's round-trip contract covers maps saved by the World Editor, and Object sync makes objects visible in the World Editor and the Studio. Ownership still lives in the Object manifest and never in a field of the object: a marker field would have to survive every World Editor save, which nothing has checked.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/485
