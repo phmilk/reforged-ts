@@ -2,7 +2,8 @@
   "name": "BlzGetUnitSkin",
   "source": "common.j",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "kind": "unit"
   },
   "params": [
     {

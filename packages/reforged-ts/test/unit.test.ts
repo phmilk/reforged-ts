@@ -52,6 +52,13 @@ export function unitRawcodeKinds(unit: Unit, count: number): void {
   unit.addAbility(count);
   // @ts-expect-error: a plain number is not a Rawcode.
   unit.skin = count;
+  // What `Unit` returns carries its kind on, without a cast.
+  Unit.create(owner, unit.typeId, 0, 0, 0, unit.skin);
+  unit.skin = unit.typeId;
+  // @ts-expect-error: a returned unit's Rawcode is not an ability's.
+  unit.addAbility(unit.typeId);
+  // @ts-expect-error: a unit's skin is not an ability's Rawcode.
+  unit.removeAbility(unit.skin);
   // @ts-expect-error: an item's Rawcode is not a buff's.
   unit.applyTimedLife(rationType, 1);
   // @ts-expect-error: a plain number is not a Rawcode.

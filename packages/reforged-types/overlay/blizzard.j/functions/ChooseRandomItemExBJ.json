@@ -2,7 +2,8 @@
   "name": "ChooseRandomItemExBJ",
   "source": "blizzard.j",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "kind": "item"
   },
   "params": [
     {

@@ -874,7 +874,7 @@ declare function OrderId2String(orderId: number): string | undefined;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitId}
  */
-declare function UnitId(unitIdString: string): number;
+declare function UnitId(unitIdString: string): Rawcode<"unit">;
 
 /**
  * @param unitId - integer (32-bit)
@@ -888,7 +888,7 @@ declare function UnitId2String(unitId: Rawcode<"unit">): string | undefined;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/AbilityId}
  */
-declare function AbilityId(abilityIdString: string): number;
+declare function AbilityId(abilityIdString: string): Rawcode<"ability">;
 
 /**
  * @param abilityId - integer (32-bit)
@@ -14910,7 +14910,7 @@ declare function GetLearningUnit(): unit | undefined;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetLearnedSkill}
  */
-declare function GetLearnedSkill(): number;
+declare function GetLearnedSkill(): Rawcode<"ability">;
 
 /**
  * @returns integer (32-bit)
@@ -14999,13 +14999,13 @@ declare function GetResearchingUnit(): unit | undefined;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetResearched}
  */
-declare function GetResearched(): number;
+declare function GetResearched(): Rawcode<"upgrade">;
 
 /**
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetTrainedUnitType}
  */
-declare function GetTrainedUnitType(): number;
+declare function GetTrainedUnitType(): Rawcode<"unit">;
 
 /**
  * @returns unit
@@ -15225,7 +15225,7 @@ declare function GetSpellAbilityUnit(): unit | undefined;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetSpellAbilityId}
  */
-declare function GetSpellAbilityId(): number;
+declare function GetSpellAbilityId(): Rawcode<"ability">;
 
 /**
  * @returns ability
@@ -15666,7 +15666,7 @@ declare function EnumDestructablesInRect(r: rect, filter: boolexpr | undefined, 
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetDestructableTypeId}
  */
-declare function GetDestructableTypeId(d: destructable): number;
+declare function GetDestructableTypeId(d: destructable): Rawcode<"destructable">;
 
 /**
  * @param d - destructable
@@ -15822,7 +15822,7 @@ declare function GetItemPlayer(whichItem: item): player | undefined;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetItemTypeId}
  */
-declare function GetItemTypeId(i: item): number;
+declare function GetItemTypeId(i: item): Rawcode<"item">;
 
 /**
  * @param i - item
@@ -20041,20 +20041,20 @@ declare function PlaceRandomItem(whichItemPool: itempool, x: number, y: number):
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/ChooseRandomCreep}
  */
-declare function ChooseRandomCreep(level: number): number;
+declare function ChooseRandomCreep(level: number): Rawcode<"unit">;
 
 /**
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/ChooseRandomNPBuilding}
  */
-declare function ChooseRandomNPBuilding(): number;
+declare function ChooseRandomNPBuilding(): Rawcode<"unit">;
 
 /**
  * @param level - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/ChooseRandomItem}
  */
-declare function ChooseRandomItem(level: number): number;
+declare function ChooseRandomItem(level: number): Rawcode<"item">;
 
 /**
  * @param whichType - itemtype
@@ -20062,7 +20062,7 @@ declare function ChooseRandomItem(level: number): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/ChooseRandomItemEx}
  */
-declare function ChooseRandomItemEx(whichType: itemtype, level: number): number;
+declare function ChooseRandomItemEx(whichType: itemtype, level: number): Rawcode<"item">;
 
 /**
  * @param whichType - itemtype
@@ -20073,7 +20073,7 @@ declare function ChooseRandomItemEx(whichType: itemtype, level: number): number;
  * @patch 3.0.0.24268
  * @see {@link https://lep.duckdns.org/jassbot/doc/ChooseRandomItemExWithFilter}
  */
-declare function ChooseRandomItemExWithFilter(whichType: itemtype, level: number, whichEquipmentType: equipmentType, whichTag: itemTag): number;
+declare function ChooseRandomItemExWithFilter(whichType: itemtype, level: number, whichEquipmentType: equipmentType, whichTag: itemTag): Rawcode<"item">;
 
 /**
  * @param seed - integer (32-bit)
@@ -23397,7 +23397,7 @@ declare function BlzGetDoodadVariation(index: number): number;
  * @patch 3.0.0.24268
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetDoodadId}
  */
-declare function BlzGetDoodadId(index: number): number;
+declare function BlzGetDoodadId(index: number): Rawcode<"doodad">;
 
 /**
  * @returns integer (32-bit)
@@ -25316,7 +25316,7 @@ declare function BlzGetUnitAbilityByIndex(whichUnit: unit, index: number): abili
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityId}
  */
-declare function BlzGetAbilityId(whichAbility: ability): number;
+declare function BlzGetAbilityId(whichAbility: ability): Rawcode<"ability">;
 
 /**
  * @param whichPlayer - player
@@ -25958,14 +25958,14 @@ declare function BlzSetUnitWeaponStringField(whichUnit: unit, whichField: unitwe
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetUnitSkin}
  */
-declare function BlzGetUnitSkin(whichUnit: unit): number;
+declare function BlzGetUnitSkin(whichUnit: unit): Rawcode<"unit">;
 
 /**
  * @param whichItem - item
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetItemSkin}
  */
-declare function BlzGetItemSkin(whichItem: item): number;
+declare function BlzGetItemSkin(whichItem: item): Rawcode<"item">;
 
 /**
  * @param whichUnit - unit

@@ -2,5 +2,6 @@
   "name": "build_item",
   "source": "common.ai",
   "nullable": false,
+  "kind": "any",
   "origin": "war3-types-strict"
 }

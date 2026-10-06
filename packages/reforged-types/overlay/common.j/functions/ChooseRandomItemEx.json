@@ -2,7 +2,8 @@
   "name": "ChooseRandomItemEx",
   "source": "common.j",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "kind": "item"
   },
   "params": [
     {

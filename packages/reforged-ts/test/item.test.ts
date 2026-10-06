@@ -37,6 +37,18 @@ export function itemRawcodeKinds(item: Item, count: number): void {
   item.setDropId(footmanType);
   // @ts-expect-error: a plain number is not a Rawcode.
   item.setDropId(count);
+  // What `Item` returns carries its kind on, without a cast.
+  Item.create(item.typeId, 0, 0, item.skin);
+  item.skin = Item.chooseRandomWithFilter(
+    ITEM_TYPE_ANY,
+    1,
+    EquipmentType.Any,
+    ItemTag.Any,
+  );
+  // @ts-expect-error: a returned item's Rawcode is not an ability's.
+  item.addAbility(item.typeId);
+  // @ts-expect-error: an item's skin is not a unit's Rawcode.
+  item.setDropId(item.skin);
 }
 
 describe("Item.create", () => {
@@ -301,19 +313,19 @@ describe("Item.chooseRandomWithFilter", () => {
   });
 
   it("returns 0 when the game finds no item type", () => {
-    expect(
-      withNative(
-        "ChooseRandomItemExWithFilter",
-        () => 0,
-        () =>
-          Item.chooseRandomWithFilter(
-            ITEM_TYPE_ANY,
-            1,
-            EquipmentType.Any,
-            ItemTag.Any,
-          ),
-      ),
-    ).toEqual(0);
+    // A Rawcode widens to number; the game's "no item type" is 0.
+    const id: number = withNative(
+      "ChooseRandomItemExWithFilter",
+      () => 0 as Rawcode<"item">,
+      () =>
+        Item.chooseRandomWithFilter(
+          ITEM_TYPE_ANY,
+          1,
+          EquipmentType.Any,
+          ItemTag.Any,
+        ),
+    );
+    expect(id).toEqual(0);
   });
 });
 

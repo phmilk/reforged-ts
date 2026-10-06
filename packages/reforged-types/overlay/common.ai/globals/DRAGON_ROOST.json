@@ -1,5 +1,6 @@
 {
   "name": "DRAGON_ROOST",
   "source": "common.ai",
-  "nullable": false
+  "nullable": false,
+  "kind": "unit"
 }

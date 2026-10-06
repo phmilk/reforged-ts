@@ -6,4 +6,11 @@ StartThread(() => {
   }
 });
 
-export {};
+// The Rawcode globals of common.ai carry their kind into its functions.
+SetProduce(1, FOOTMAN, 0);
+SetProduce(1, FOOTMEN, 0);
+SetUpgrade(UPG_MELEE);
+const hero: Rawcode<"unit"> = GetHeroId();
+const skill: Rawcode<"ability"> = HOLY_BOLT;
+
+export { hero, skill };

@@ -19,9 +19,14 @@ const skin = FourCC("ATtr");
 
 /**
  * The Rawcodes `Destructable.create` takes: a destructable's, for its type
- * and its skin. Never called: `tsc` checks it.
+ * and its skin; and `typeId` carries its kind on. Never called: `tsc` checks
+ * it.
  */
-export function destructableRawcodeKinds(count: number): void {
+export function destructableRawcodeKinds(
+  count: number,
+  destructable: Destructable,
+  takeUnit: (unitId: Rawcode<"unit">) => void,
+): void {
   const treeType: Rawcode<"destructable"> = FourCC("LTlt");
   const footmanType: Rawcode<"unit"> = FourCC("hfoo");
   Destructable.create({ typeId: treeType, x: 0, y: 0, skin: treeType });
@@ -31,6 +36,10 @@ export function destructableRawcodeKinds(count: number): void {
   Destructable.create({ typeId: count, x: 0, y: 0 });
   // @ts-expect-error: a skin of `Destructable` is a destructable's Rawcode.
   Destructable.create({ typeId: treeType, x: 0, y: 0, skin: footmanType });
+  // What `Destructable` returns carries its kind on, without a cast.
+  Destructable.create({ typeId: destructable.typeId, x: 0, y: 0 });
+  // @ts-expect-error: a returned destructable's Rawcode is not a unit's.
+  takeUnit(destructable.typeId);
 }
 
 /** The creation Native lines written while `body` runs. */

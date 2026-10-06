@@ -13,6 +13,7 @@ Follow these steps in order for a Patch update. The loop is done when the checks
    - `no Overlay entry for <Jass declaration>; expected <path>`: write the entry at that path.
    - `parameters do not match the Patch`: the Patch renamed or reordered parameters; make the entry's `params` match the Jass signature it prints (count, order, names).
    - `<file>:<line>: unknown line`: the Patch uses grammar the parser rejects; extend `src/parser.ts` with a test in `test/`, never skip the line.
+   - `looks like a Rawcode but has no Object kind`: an `integer` parameter, return or global the generator takes for a Rawcode has no kind; give it one by the curation rule for `kind` below. The line names the field to set (`params[<i>].kind`, `returns.kind` or `kind`).
    - Warnings (`orphan Overlay entry`): the entry matches no vendored Patch. See step 6.
 3. **Curate.** Write one JSON per missing entry at the printed path, shaped like its neighbours in the same folder (`functions/` or `globals/`). Apply the curation rules below to every entry.
 4. **Regenerate.** Run `typings:generate` (no tag) until it exits 0. Every error item of step 2 is gone; any remaining warning is accounted for in step 6.
@@ -32,7 +33,12 @@ Follow these steps in order for a Patch update. The loop is done when the checks
 - `async: true` only for a Native whose value is valid for the local player alone (`GetLocalPlayer`); `async-natives.json` is generated from these flags.
 - `notes` holds a fact from the project's research, rendered as `@remarks`; no jassdoc prose, which has no license.
 - `deprecated` holds the reason, rendered as `@deprecated`.
-- A per-parameter `type` override holds TypeScript type text. `Condition` and `Filter` use it (`boolcode`); add another only as a reviewed curation decision.
+- `kind` is the Object kind of an `integer` that is a Rawcode (ADR 0012): `unit`, `item`, `ability`, `buff`, `destructable`, `doodad`, `upgrade`, or `any` for a Rawcode of any kind. A hero is a unit; a skin is of the kind of the Native that takes it. Weather effects, terrain types and order ids are not Rawcodes.
+  - A parameter whose name means one kind in every function of the Patch files is classified by the parameter-name table in `src/rawcodes.ts`, not by the Overlay; the table also lists the names that look like Rawcodes and are not (`orderId`, `effectID`, `terrainType`). A union of kinds exists only in the table (`techid`).
+  - A name whose kind depends on the function (`objectid`, `id`, `skinId`), or a generic name that holds a Rawcode in one function (`a`, `base`), gets `params[<i>].kind` on each use; it wins over the table. A parameter that takes several kinds outside the table gets `any`.
+  - A return takes its kind from `returns.kind` only, and a global from `kind` only: on every function that returns a Rawcode, and on every global whose value is one, an alias of one (`FOOTMEN = FOOTMAN`) or, for an array, holds them. A return the diagnostic flags that is not a Rawcode joins the generator's list of returns that are not Rawcodes in `src/rawcodes.ts`.
+  - The table and the lists of `src/rawcodes.ts` are generator changes: see "Generator changes".
+- A per-parameter `type` override holds TypeScript type text. `Condition` and `Filter` use it (`boolcode`), and so do the neutral point and target orders (`number`: an order id whose name the table would take for a unit's Rawcode); add another only as a reviewed curation decision. A parameter has `kind` or `type`, never both.
 - `origin: "war3-types-strict"` marks a seeded entry; a new entry is hand-written and has no `origin`.
 
 ## Generator changes

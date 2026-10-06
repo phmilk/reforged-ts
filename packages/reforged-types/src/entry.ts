@@ -100,6 +100,12 @@ export interface FunctionEntry extends TrackedEntry {
  */
 export interface GlobalEntry extends TrackedEntry {
   nullable: boolean;
+  /**
+   * The Object kind of an `integer` global that is a Rawcode, of its
+   * elements for an array: the only source of a global's kind
+   * (`rawcodes.ts`).
+   */
+  kind?: OverlayKind;
 }
 
 /** A type's optional entry: the base fields only. */

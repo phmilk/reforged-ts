@@ -2,7 +2,8 @@
   "name": "BlzGetDoodadId",
   "source": "common.j",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "kind": "doodad"
   },
   "params": [
     {

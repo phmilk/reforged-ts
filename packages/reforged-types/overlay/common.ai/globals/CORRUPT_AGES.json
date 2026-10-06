@@ -1,5 +1,6 @@
 {
   "name": "CORRUPT_AGES",
   "source": "common.ai",
-  "nullable": false
+  "nullable": false,
+  "kind": "unit"
 }

@@ -33,6 +33,48 @@ function count(text: string, pattern: RegExp): number {
   return text.match(new RegExp(pattern.source, "gm"))?.length ?? 0;
 }
 
+/** `Rawcode<"unit" | "upgrade">` as `unit | upgrade`, `Rawcode` as `any`. */
+function kindOf(type: string): string {
+  return type === "Rawcode" ? "any" : type.slice(8, -1).replaceAll('"', "");
+}
+
+const RAWCODE = /Rawcode(?:<[^>]*>)?/;
+
+/**
+ * The Rawcodes a generated file declares, counted per Object kind: the
+ * parameters, the returns and the globals (an array's elements).
+ */
+function rawcodes(text: string) {
+  const tally = {
+    params: {} as Record<string, number>,
+    returns: {} as Record<string, number>,
+    globals: {} as Record<string, number>,
+  };
+  const add = (into: Record<string, number>, type: string) => {
+    const kind = kindOf(type);
+    into[kind] = (into[kind] ?? 0) + 1;
+  };
+  for (const line of text.split("\n")) {
+    const fn = /^declare function \w+\((.*)\): (.+);$/.exec(line);
+    if (fn) {
+      for (const [type] of fn[1].matchAll(
+        new RegExp(`: (${RAWCODE.source})`, "g"),
+      )) {
+        add(tally.params, type.slice(2));
+      }
+      if (new RegExp(`^${RAWCODE.source}$`).test(fn[2])) {
+        add(tally.returns, fn[2]);
+      }
+      continue;
+    }
+    const global = new RegExp(
+      `^declare (?:const|let) \\w+: (?:Record<number, )?(${RAWCODE.source})`,
+    ).exec(line);
+    if (global) add(tally.globals, global[1]);
+  }
+  return tally;
+}
+
 const FUNCTION = /^declare function /;
 const TYPE = /^declare interface /;
 const GLOBAL = /^declare (const|let) /;
@@ -79,6 +121,62 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
     expect(commonJ).toContain(
       'declare function CreateUnit(id: player, unitid: Rawcode<"unit">, x: number, y: number, face: number): unit | undefined;',
     );
+  });
+
+  it("types every Rawcode by Object kind, none left unclassified", () => {
+    // The generator fails on an unclassified Rawcode, so a diagnostic-free
+    // run (above) is zero unclassified items; these counts pin the curation.
+    expect(rawcodes(commonJ)).toEqual({
+      params: {
+        ability: 62,
+        destructable: 48,
+        unit: 22,
+        item: 15,
+        "unit | upgrade": 7,
+        doodad: 4,
+        any: 3,
+        upgrade: 2,
+        buff: 1,
+      },
+      returns: {
+        unit: 6,
+        item: 5,
+        ability: 4,
+        destructable: 1,
+        doodad: 1,
+        upgrade: 1,
+      },
+      globals: {},
+    });
+    expect(rawcodes(blizzardJ)).toEqual({
+      params: {
+        unit: 30,
+        item: 17,
+        ability: 15,
+        "unit | upgrade": 5,
+        doodad: 4,
+        buff: 3,
+        upgrade: 3,
+        destructable: 2,
+        any: 1,
+      },
+      returns: { unit: 3, item: 3, ability: 1, any: 1 },
+      globals: { destructable: 3, any: 1 },
+    });
+    expect(rawcodes(commonAi)).toEqual({
+      params: { unit: 80, upgrade: 7, any: 1 },
+      returns: { unit: 2, ability: 1 },
+      // 382 four-character globals and 16 aliases, plus 7 arrays.
+      globals: { unit: 246, ability: 68, upgrade: 90, any: 1 },
+    });
+  });
+
+  it("types a returned Rawcode and a common.ai global by kind", () => {
+    expect(commonJ).toContain(
+      'declare function GetSpellAbilityId(): Rawcode<"ability">;',
+    );
+    expect(commonAi).toContain('declare const FOOTMAN: Rawcode<"unit">;');
+    expect(commonAi).toContain('declare const FOOTMEN: Rawcode<"unit">;');
   });
 
   it("gives Condition and Filter the boolean callback alias", () => {
