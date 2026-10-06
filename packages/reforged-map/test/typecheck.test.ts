@@ -1,5 +1,5 @@
-// The generated declarations in a Map project: the object-type variables of
-// war3map.wtg type-checked against the workspace's reforged-types and
+// The generated declarations in a Map project: the variables of war3map.wtg
+// whose Variable Editor type names an Object kind, type-checked against the workspace's reforged-types and
 // reforged-ts, the fixtures under test/fixtures/map-project.
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -62,7 +62,7 @@ describe("the generated declarations in a Map project", () => {
     );
   });
 
-  it("type-check the object-type variables into the Natives and the library, with no cast", () => {
+  it("type-check the variables typed by Object kind into the Natives and the library, with no cast", () => {
     expect(
       diagnostics.filter((d) => d.startsWith("src/object-variables.ts")),
     ).toEqual([]);

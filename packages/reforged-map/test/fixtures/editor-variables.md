@@ -1,6 +1,6 @@
 # Provenance of `editor-variables.w3m`
 
-`editor-variables.w3m/` is a map folder saved by the 3.0 World Editor, the fixture of [#500](https://github.com/phmilk/reforged-ts/issues/500): one GUI variable of every object type the Variable Editor offers, plus `integer` and `ordercode`, each as a scalar and as an array, with and without an initial value. `test/editor-saved.test.ts` reads it through the entry point. `.gitattributes` keeps git from changing its files (`-text -diff`).
+`editor-variables.w3m/` is a map folder saved by the 3.0 World Editor, the fixture of [#500](https://github.com/phmilk/reforged-ts/issues/500): one GUI variable of every Variable Editor type that names an Object kind, plus `integer` and `ordercode`, each as a scalar and as an array, with and without an initial value. `test/editor-saved.test.ts` reads it through the entry point. `.gitattributes` keeps git from changing its files (`-text -diff`).
 
 - **Source**: the Template's map folder, [phmilk/reforged-ts-template](https://github.com/phmilk/reforged-ts-template) at commit [`1c9df66301dd100b4550f88d26c32e02eae45ee2`](https://github.com/phmilk/reforged-ts-template/tree/1c9df66301dd100b4550f88d26c32e02eae45ee2) (`maps/reforged-ts-template.w3m/`).
 - **Editor**: `C:\Program Files (x86)\Warcraft III\_retail_\x86_64\World Editor.exe`, `ProductVersion 3.0.0.24268 (ede670caa6)`, Patch 3.0.0.24268, on Windows 11 (OS locale pt-BR, game enUS).
@@ -35,7 +35,7 @@ The saved folder was copied here, minus `conversation.json`. That file is byte-i
 ## What the editor showed
 
 - **The Variable Editor's types.** In the 3.0 editor, the variable panel's type list is the `[TriggerTypes]` of `UI/TriggerData.txt` (`War3.w3mod`, read from the install's CASC storage) whose second field (a global variable may have this type) is `1`. It holds 65 types, and the panel's combo box lists the same 65. Of those, the ones whose base type is `integer` are:
-  - **Object types**, Rawcodes of an Object kind: `unitcode` (Unit-Type), `itemcode` (Item-Type), `abilcode` (Ability Code), `buffcode` (Buff), `destructablecode` (Destructible-Type) and `techcode` (Tech-Type). They are #497's table, **with no type beyond it**: no upgrade-only type, no hero-skill type, no doodad type.
+  - **Types that name an Object kind**, Rawcodes of that Object kind: `unitcode` (Unit-Type), `itemcode` (Item-Type), `abilcode` (Ability Code), `buffcode` (Buff), `destructablecode` (Destructible-Type) and `techcode` (Tech-Type). They are #497's table, **with no type beyond it**: no upgrade-only type, no hero-skill type, no doodad type.
   - `ordercode` (Order), an order id.
   - **Enumerations, which stay `number`**: `animtype`, `subanimtype`, `imagetype`, `mousebuttontype`, `terrainshape`, `terraintype`, `equipmenttype` (Equipment Type, new in 3.0) and `itemtag` (Tag, new in 3.0). Their values are the constants of `common.j` (`EQUIPMENT_TYPE_HEAD`, `ITEMTAG_TYPE_SHOP`), or tile ids for `terraintype`, which reforged-types deliberately keeps out of `Rawcode`.
   - `Ability` is the `ability` handle of 1.31+, not a Rawcode. `Ability Code` is `abilcode`.

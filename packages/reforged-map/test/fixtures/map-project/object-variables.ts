@@ -1,4 +1,4 @@
-// Positive: the Variable Editor's object-type variables where the Natives and
+// Positive: the Variable Editor's variables typed by Object kind where the Natives and
 // the library take a Rawcode of their kind, with no cast.
 import { MapPlayer, Unit } from "reforged-ts";
 

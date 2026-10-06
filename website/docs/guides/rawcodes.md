@@ -174,7 +174,7 @@ Every API of the library that takes or returns a Rawcode says which kind, as the
 
 ## GUI variables of an object type
 
-A map whose triggers are made in the World Editor keeps object types in GUI variables: a Unit-Type `SpawnType`, an Ability Code `HeroSpell`, an Item-Type array `Rewards`. The World Editor writes each one into `war3map.lua` as a plain integer, and the code sees it as an Editor global, `udg_SpawnType`, declared in `src/generated/editor-globals.d.ts`. That file is written by `reforged-map`, a dev dependency of the Template that reads the map folder at build time. It declares each of these variables with the Object kind its Variable Editor type names:
+A map whose triggers are made in the World Editor keeps Rawcodes in GUI variables: a Unit-Type `SpawnType`, an Ability Code `HeroSpell`, an Item-Type array `Rewards`. The World Editor writes each one into `war3map.lua` as a plain integer, and the code sees it as an Editor global, `udg_SpawnType`, declared in `src/generated/editor-globals.d.ts`. That file is written by `reforged-map`, a dev dependency of the Template that reads the map folder at build time. It declares each of these variables with the Object kind its Variable Editor type names:
 
 | Variable Editor type                   | Declared                       |
 | -------------------------------------- | ------------------------------ |
@@ -186,7 +186,7 @@ A map whose triggers are made in the World Editor keeps object types in GUI vari
 | Tech-Type (`techcode`)                 | `Rawcode<"unit" \| "upgrade">` |
 | Order (`ordercode`)                    | `number`, an order id          |
 
-An array of one of these types is a `Record<number, T>` of the same type: an Item-Type array is a `Record<number, Rawcode<"item">>`. These are all the object types the Variable Editor of Patch 3.0 offers: it has no upgrade-only type and no doodad type. Every other type keeps the type it had. An Integer is a `number`, and so is each type the game stores as an integer that is not a Rawcode, such as Animation Type, Terrain Type, Equipment Type and Tag, whose values are constants of `common.j` or terrain codes.
+An array of one of these types is a `Record<number, T>` of the same type: an Item-Type array is a `Record<number, Rawcode<"item">>`. These are all the types of the Variable Editor of Patch 3.0 that name an Object kind: it has no upgrade-only type and no doodad type. Every other type keeps the type it had. An Integer is a `number`, and so is each type the game stores as an integer that is not a Rawcode, such as Animation Type, Terrain Type, Equipment Type and Tag, whose values are constants of `common.j` or terrain codes.
 
 Such a variable goes where its kind is expected with no cast, and a Rawcode of another kind does not:
 
@@ -250,13 +250,13 @@ An Order variable holds an order id, such as `OrderId` returns (see [Codes that 
 
 The declarations are written again on every install, every build and every rebuild of `pnpm dev`, which watches the map folder: a type changed in the Variable Editor reaches the code at the next save. They are generated files: a variable is added, renamed or retyped in the World Editor, never in `src/generated/`.
 
-When `war3map.wtg` is missing, cannot be read or is in a format `reforged-map` does not know, the build goes on and prints one warning, such as:
+When `war3map.wtg` is missing, cannot be read or is in a format `reforged-map` does not know, and the map has GUI variables, the build goes on and prints one warning, such as:
 
 ```txt
-Warning: war3map.wtg not found: object-type variables (unit-type, ability, item-type...) are declared as war3map.lua types them.
+Warning: war3map.wtg not found: Unit-Type, Ability Code, Item-Type... variables keep the type war3map.lua gives them, not their Object kind.
 ```
 
-Each of these variables is then a plain `number`, which every Rawcode parameter rejects. Saving the map with the World Editor of Patch 3.0 writes `war3map.wtg` in the format `reforged-map` reads, that of 1.31 and later, which HiveWE writes as well. A variable that `war3map.wtg` declares an array and `war3map.lua` does not, or the other way round, keeps the type `war3map.lua` gives it, and a warning names it.
+Each of these variables then keeps the type `war3map.lua` gives it, which every Rawcode parameter rejects: a `number`, or a `Record<number, number>` for an array, when the World Editor saved the map; when HiveWE saved it, `unknown`, or a `Record<number, string>` for an array, since HiveWE writes `nil` and `__jarray("")` for them. Saving the map with the World Editor of Patch 3.0 writes `war3map.wtg` in the format `reforged-map` reads, that of 1.31 and later, which HiveWE writes as well. A variable that `war3map.wtg` declares an array and `war3map.lua` does not, or the other way round, keeps the type `war3map.lua` gives it, and a warning names it.
 
 ### A Map project generated earlier
 

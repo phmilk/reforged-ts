@@ -1,6 +1,6 @@
 // The map folder the 3.0 World Editor saved (test/fixtures/editor-variables.w3m,
 // its provenance in test/fixtures/editor-variables.md): one GUI variable of
-// each object type the Variable Editor offers, plus `integer` and
+// each Variable Editor type that names an Object kind, plus `integer` and
 // `ordercode`, scalar and array, with and without an initial value. Read
 // through the entry point, as the Template runs it.
 
