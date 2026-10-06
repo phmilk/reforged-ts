@@ -22,12 +22,12 @@ export class WeatherEffect extends Handle<weathereffect> {
    * - The error message names the WeatherEffect. In w3ts 3.x it read
    *   `w3ts failed to create unit handle.`, naming the wrong Handle type.
    * @param where - The rectangle the weather shows over.
-   * @param effectID - The weather type's rawcode, such as `FourCC("RAhr")`
-   * for Ashenvale heavy rain.
+   * @param effectID - The weather type's four-character code, such as
+   * Ashenvale Rain (Heavy)'s, `FourCC("RAhr")`: a plain number, not a rawcode.
    * @returns The new weather effect, turned off.
    * @throws When the game returns no handle:
    * `reforged-ts: failed to create WeatherEffect (<effectID>)`, at the calling
-   * line, the id as its rawcode string. In Dev mode, also when called before
+   * line, the id as its four characters. In Dev mode, also when called before
    * the globals Init stage or inside `MapPlayer.runLocal`.
    * @native AddWeatherEffect
    */

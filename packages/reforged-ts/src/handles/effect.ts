@@ -101,7 +101,7 @@ export class Effect extends Handle<effect> {
    * @example
    * {@includeCode ../../examples/harness/effect-create-spell.ts}
    * @param ability - The ability whose art to show: its rawcode, such as
-   * `FourCC("AHtc")`, or an ability string (see the bug below).
+   * Thunder Clap's, `FourCC("AHtc")`, or an ability string (see the bug below).
    * @param effectType - Which of the ability's art fields to use, such as
    * `EFFECT_TYPE_CASTER` or `EFFECT_TYPE_TARGET`.
    * @param x - The x-coordinate, in world units.
@@ -134,7 +134,7 @@ export class Effect extends Handle<effect> {
    * Creates a spell visual effect at `where`, through `AddSpellEffectByIdLoc`
    * for an ability id and `AddSpellEffectLoc` for an ability string.
    * @param ability - The ability whose art to show: its rawcode, such as
-   * `FourCC("AHtc")`, or an ability string (see the bug below).
+   * Thunder Clap's, `FourCC("AHtc")`, or an ability string (see the bug below).
    * @param effectType - Which of the ability's art fields to use, such as
    * `EFFECT_TYPE_CASTER` or `EFFECT_TYPE_TARGET`.
    * @param where - The point to stand the effect on.
@@ -172,7 +172,7 @@ export class Effect extends Handle<effect> {
    * @example
    * {@includeCode ../../examples/harness/effect-create-spell-attachment.ts}
    * @param ability - The ability whose art to show: its rawcode, such as
-   * `FourCC("AHtc")`, or a string (see the remarks).
+   * Thunder Clap's, `FourCC("AHtc")`, or a string (see the remarks).
    * @param effectType - Which of the ability's art fields to use, such as
    * `EFFECT_TYPE_CASTER` or `EFFECT_TYPE_TARGET`.
    * @param targetWidget - The unit, item or destructable that carries the

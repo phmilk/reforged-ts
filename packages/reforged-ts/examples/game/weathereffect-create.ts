@@ -1,4 +1,4 @@
-// Ashenvale heavy rain over the centre of the map. A weather effect is
+// Ashenvale Rain (Heavy), `FourCC("RAhr")`, over the centre of the map. A weather effect is
 // created off, so it is enabled right after.
 import { Init, Rectangle, WeatherEffect } from "reforged-ts";
 

@@ -10,7 +10,10 @@ import { Widget } from "./widget";
  * takes it.
  */
 export interface DestructableOptions {
-  /** The rawcode of the destructable type. */
+  /**
+   * The destructable type's rawcode, such as the Summer Tree Wall's,
+   * `FourCC("LTlt")`.
+   */
   readonly typeId: number;
   /** The x-coordinate, in world units. */
   readonly x: number;
@@ -28,7 +31,10 @@ export interface DestructableOptions {
   readonly pitch?: number;
   /** The roll; 0 when only `pitch` is given. */
   readonly roll?: number;
-  /** The skin's rawcode; left out, the type's own model. */
+  /**
+   * The skin's rawcode, a destructable type's, such as the Summer Tree
+   * Wall's, `FourCC("LTlt")`; left out, the type's own model.
+   */
   readonly skin?: number;
   /** The team colour of the model. */
   readonly color?: playercolor;
@@ -60,7 +66,8 @@ export class Destructable extends Widget {
    * gives it a skin and `color` a team colour.
    * @example
    * {@includeCode ../../examples/harness/destructable-create.ts}
-   * @param options - The rawcode and the position, and the optional axes.
+   * @param options - The type's rawcode, such as the Summer Tree Wall's,
+   * `FourCC("LTlt")`, the position, and the optional axes.
    * @returns The new destructable.
    * @throws When the game returns no handle, for example an unknown rawcode:
    * `reforged-ts: failed to create Destructable (<rawcode>)`, at the calling line.
@@ -570,7 +577,8 @@ export class Destructable extends Widget {
 
   /**
    * Gets the rawcode of the destructable's type.
-   * @returns The type's rawcode, such as `FourCC("LTlt")`.
+   * @returns The type's rawcode, such as the Summer Tree Wall's,
+   * `FourCC("LTlt")`.
    * @native GetDestructableTypeId
    */
   public get typeId() {

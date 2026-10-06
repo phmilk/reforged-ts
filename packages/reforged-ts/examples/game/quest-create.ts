@@ -1,7 +1,8 @@
 // A main quest with two requirements, set up with the map. Its description
 // is set right away: the quest menu crashes on an enabled, discovered quest
-// without one. When a hero picks up the relic, the first requirement is
-// completed and the menu updated to show it.
+// without one. When a hero picks up the relic, an Ankh of Reincarnation,
+// `FourCC("ankh")`, the first requirement is completed and the menu updated
+// to show it.
 import { Init, Item, Quest, Trigger } from "reforged-ts";
 
 Init.onTriggers(() => {
