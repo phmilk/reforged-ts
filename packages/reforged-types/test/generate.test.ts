@@ -104,7 +104,7 @@ describe("generate: declaration file shape", () => {
       banner("blizzard.j") + "\n",
     );
     expect(result.files.get("3.0.0/common.ai.d.ts")).toBe(
-      banner("common.ai") + "\n",
+      banner("common.ai") + '\n/// <reference path="../rawcode.d.ts" />\n',
     );
   });
 

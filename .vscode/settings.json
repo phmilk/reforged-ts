@@ -37,7 +37,8 @@
   "js/ts.tsdk.promptToUseWorkspaceVersion": true,
 
   // The generated Typings: edit the Overlay or the generator, then
-  // regenerate. The hand-written lua-runtime.d.ts stays editable.
+  // regenerate. The hand-written lua-runtime.d.ts and rawcode.d.ts stay
+  // editable.
   "files.readonlyInclude": {
     "packages/reforged-types/[0-9]*/**": true,
     "packages/reforged-types/[0-9]*.d.ts": true,

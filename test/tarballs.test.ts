@@ -83,6 +83,7 @@ const PACKAGES: readonly Expected[] = [
       /^\d+\.\d+\.\d+\.d\.ts$/,
       /^\d+\.\d+\.\d+\/[^/]+\.d\.ts$/,
       /^lua-runtime\.d\.ts$/,
+      /^rawcode\.d\.ts$/,
       /^async-natives\.json$/,
     ],
     required: [
@@ -91,6 +92,7 @@ const PACKAGES: readonly Expected[] = [
       "3.0.0/blizzard.j.d.ts",
       "3.0.0/common.ai.d.ts",
       "lua-runtime.d.ts",
+      "rawcode.d.ts",
       "async-natives.json",
     ],
     sideEffectsFree: true,

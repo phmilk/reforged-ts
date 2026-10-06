@@ -20,7 +20,7 @@ The Template lists the Typings of its Game version in `types`, next to typescrip
 }
 ```
 
-That one entry declares every `common.j` Native, type and global, the `blizzard.j` functions and globals, the globals the game's Lua adds (`FourCC`, `__jarray`) and the Lua 5.3 standard library. The AI Natives of `common.ai` are valid only in AI scripts, so the entry leaves them out; to use them, add `reforged-types/3.0.0/common.ai` to `types` as well.
+That one entry declares every `common.j` Native, type and global, the `blizzard.j` functions and globals, the globals the game's Lua adds (`FourCC`, `__jarray`), the Rawcode types (`Rawcode`, `ObjectKind`, `UnknownRawcode`) and the Lua 5.3 standard library. The AI Natives of `common.ai` are valid only in AI scripts, so the entry leaves them out; to use them, add `reforged-types/3.0.0/common.ai` to `types` as well.
 
 The declarations turn the game's rules into compile errors:
 
@@ -43,6 +43,7 @@ if (owner !== undefined) {
 - **Nullability.** A Native that can return nothing (`CreateUnit`, `Player`) returns `T | undefined`; one the game guarantees (`GetLocalPlayer`, the `Convert*` functions) returns `T`. A parameter accepts `undefined` only where the game is known to accept `nil`.
 - **Plain Lua functions.** Callbacks are typed `this: void` and every file is `@noSelfInFile`, so typescript-to-lua emits plain Lua functions without a `self` parameter.
 - **Jass arrays.** The `bj_*` array globals are `Record<number, T>`, indexed from 0 as in Jass.
+- **Rawcodes.** A Rawcode is typed by its Object kind: `Rawcode<"unit">` for a unit type's, `Rawcode<"unit" | "upgrade">` for either kind's, `Rawcode` alone for any kind's. A plain `number` is not one, and neither is a Rawcode of another kind. `FourCC` returns an `UnknownRawcode`, which every Rawcode accepts; a Rawcode widens to `number`, and a computed `number` becomes one with a cast (`id as Rawcode<"unit">`). The types cost nothing at run time.
 - **The hover.** Each Native's documentation gives its Jass types (`integer (32-bit)`, `real`), `@async` when its value is valid only for the local player, `@deprecated` with the reason, `@patch` for the Patch that added it, and a link to its page on jassbot.
 
 `async-natives.json`, next to the declarations, lists the Natives marked `@async`: the lint rules read it ([`no-async-value-as-state`](lint-rules/no-async-value-as-state.md)).
