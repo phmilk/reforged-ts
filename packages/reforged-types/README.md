@@ -26,7 +26,7 @@ Add the entry of your Game version to `types` in `tsconfig.json`, next to the ty
 }
 ```
 
-That one line declares every `common.j` Native, type and global, the `Blizzard.j` functions and globals, the Lua runtime globals the game adds (`FourCC`, `__jarray`) and the Lua 5.3 standard library (through `lua-types`, a dependency of this package).
+That one line declares every `common.j` Native, type and global, the `Blizzard.j` functions and globals, the Lua runtime globals the game adds (`FourCC`, `__jarray`), the Rawcode types (`Rawcode`, `ObjectKind`, `UnknownRawcode`) and the Lua 5.3 standard library (through `lua-types`, a dependency of this package).
 
 The AI Natives of `common.ai` are valid only in AI scripts, so the entry leaves them out. To opt in, add their file as well:
 
@@ -40,6 +40,7 @@ What the declarations give you:
 - A Native that can return nothing returns `T | undefined`; one the game guarantees returns `T`.
 - Callbacks are typed with `this: void` and every file is `@noSelfInFile`, so typescript-to-lua emits plain Lua functions.
 - Jass arrays (`bj_*` array globals) are `Record<number, T>`, indexed from 0 as in Jass.
+- A Rawcode is typed by its Object kind: `Rawcode<"unit">` for a unit type's, `Rawcode<"unit" | "upgrade">` for either kind's, `Rawcode` alone for any kind's. A plain `number` is not one, and neither is a Rawcode of another kind. `FourCC` returns an `UnknownRawcode`, which every Rawcode accepts; a Rawcode widens to `number`, and a computed `number` becomes one with a cast (`id as Rawcode<"unit">`). The types cost nothing at run time.
 - Each Native's hover shows its Jass types (`integer (32-bit)`, `real`), `@async` when its value is valid only for the local player, `@deprecated` with the reason, `@patch` for the Patch that added it, and a link to its reference page.
 
 `async-natives.json` lists the Natives marked `@async`, for lint rules that read the same facts.

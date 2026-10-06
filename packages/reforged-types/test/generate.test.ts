@@ -103,8 +103,9 @@ describe("generate: declaration file shape", () => {
     expect(result.files.get("3.0.0/blizzard.j.d.ts")).toBe(
       banner("blizzard.j") + "\n",
     );
+    // Opt-in by its own path, common.ai references the Rawcode types itself.
     expect(result.files.get("3.0.0/common.ai.d.ts")).toBe(
-      banner("common.ai") + "\n",
+      banner("common.ai") + '\n/// <reference path="../rawcode.d.ts" />\n',
     );
   });
 

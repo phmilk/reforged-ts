@@ -8,9 +8,10 @@
  * The integer id of a four-character rawcode, as the Natives take it.
  *
  * @param id - four-character rawcode, such as `"hfoo"`
- * @returns integer (32-bit)
+ * @returns integer (32-bit): a Rawcode of unknown kind, which every Rawcode
+ * parameter accepts
  */
-declare function FourCC(id: string): number;
+declare function FourCC(id: string): UnknownRawcode;
 
 /**
  * A table whose missing keys read as `defaultValue`: the Lua form of a Jass

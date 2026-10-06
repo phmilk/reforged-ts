@@ -1,8 +1,9 @@
 /**
  * The type-check the package build runs over its own output
  * (`tsconfig.typings.json`): the committed entry, the files it references and
- * the common.ai output, against lua-types/5.3. Also the hand-written Lua
- * runtime file, which declares FourCC and __jarray and nothing else.
+ * the common.ai output, against lua-types/5.3. Also the hand-written files:
+ * the Lua runtime file, which declares FourCC and __jarray and nothing else,
+ * and the Rawcode types file.
  */
 import { readFile } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
@@ -95,6 +96,17 @@ describe("the typings type-check", () => {
     expect(diagnostics.map((d) => d.code)).toEqual([2304]);
     expect(diagnostics[0].file?.fileName).toMatch(/3\.0\.0\/common\.j\.d\.ts$/);
   }, 60_000);
+
+  it("fails when the Rawcode types file is broken", async () => {
+    const text = await readFile(join(packageRoot, "rawcode.d.ts"), "utf8");
+
+    const diagnostics = typecheck({
+      "rawcode.d.ts": text + 'type Broken = Rawcode<"hero">;\n',
+    });
+
+    expect(diagnostics.map((d) => d.code)).toEqual([2344]);
+    expect(diagnostics[0].file?.fileName).toMatch(/\/rawcode\.d\.ts$/);
+  }, 60_000);
 });
 
 describe("the Lua runtime file", () => {
@@ -113,8 +125,39 @@ describe("the Lua runtime file", () => {
 
     expect(text.startsWith("/** @noSelfInFile */\n")).toBe(true);
     expect(declarations).toEqual([
-      "declare function FourCC(id: string): number;",
+      "declare function FourCC(id: string): UnknownRawcode;",
       "declare function __jarray<T>(defaultValue: T): Record<number, T>;",
+    ]);
+  });
+});
+
+describe("the Rawcode types file", () => {
+  it("declares the brand key, ObjectKind, Rawcode and UnknownRawcode and nothing else", async () => {
+    const text = await readFile(join(packageRoot, "rawcode.d.ts"), "utf8");
+    const file = ts.createSourceFile(
+      "rawcode.d.ts",
+      text,
+      ts.ScriptTarget.Latest,
+    );
+    const printer = ts.createPrinter({ removeComments: true });
+
+    const declarations = file.statements.map((statement) =>
+      printer.printNode(ts.EmitHint.Unspecified, statement, file),
+    );
+
+    expect(declarations).toEqual([
+      "declare const __reforgedRawcodeKind: unique symbol;",
+      'type ObjectKind = "unit" | "item" | "ability" | "buff" | "destructable" | "doodad" | "upgrade";',
+      [
+        "type Rawcode<K extends ObjectKind = ObjectKind> = number & {",
+        "    readonly [__reforgedRawcodeKind]: K;",
+        "};",
+      ].join("\n"),
+      [
+        "type UnknownRawcode = number & {",
+        "    readonly [__reforgedRawcodeKind]: never;",
+        "};",
+      ].join("\n"),
     ]);
   });
 });

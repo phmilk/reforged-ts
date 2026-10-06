@@ -5,7 +5,7 @@
  * trailing newline.
  */
 import { gameVersion } from "./build.js";
-import { REGENERATE_COMMAND } from "./emit.js";
+import { RAWCODE_FILE, REGENERATE_COMMAND } from "./emit.js";
 import { byCodePoint } from "./order.js";
 import type { PatchIdentity } from "./provenance.js";
 import type { Resolved, ResolvedFunction, ResolvedGlobal } from "./resolve.js";
@@ -22,8 +22,9 @@ export const MANIFEST_FILE = "manifest.json";
 
 /**
  * The entry of the Game version: references the Lua standard library, the
- * Lua runtime file and the common.j and blizzard.j outputs. The common.ai
- * output is opt-in by its own path and never referenced here.
+ * Rawcode types file, the Lua runtime file and the common.j and blizzard.j
+ * outputs. The common.ai output is opt-in by its own path and never
+ * referenced here.
  */
 export function emitEntry({ patch, tag, commit }: PatchIdentity): string {
   const folder = gameVersion(patch);
@@ -37,6 +38,7 @@ export function emitEntry({ patch, tag, commit }: PatchIdentity): string {
     // resolves as an ES module, which adds no extension; lua-types has no
     // `exports` and only a `5.3.d.ts`. CommonJS rules find it in every mode.
     `/// <reference types="${LUA_TYPES_REFERENCE}" resolution-mode="require" />`,
+    `/// <reference path="./${RAWCODE_FILE}" />`,
     `/// <reference path="./${LUA_RUNTIME_FILE}" />`,
     `/// <reference path="./${folder}/common.j.d.ts" />`,
     `/// <reference path="./${folder}/blizzard.j.d.ts" />`,

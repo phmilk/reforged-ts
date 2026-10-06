@@ -39,7 +39,7 @@ describe("generate: output paths", () => {
 });
 
 describe("generate: the entry of the Game version", () => {
-  it("references lua-types, the Lua runtime and the common.j and blizzard.j outputs, never common.ai", async () => {
+  it("references lua-types, the Rawcode types, the Lua runtime and the common.j and blizzard.j outputs, never common.ai", async () => {
     const result = await generateOk({});
 
     expect(result.files.get("3.0.0.d.ts")).toBe(
@@ -50,6 +50,7 @@ describe("generate: the entry of the Game version", () => {
         "// Do not edit: curate the Overlay, then run `pnpm --filter reforged-types typings:generate`.",
         "// common.ai is not referenced here: add `reforged-types/3.0.0/common.ai` to `types` to use it.",
         '/// <reference types="lua-types/5.3" resolution-mode="require" />',
+        '/// <reference path="./rawcode.d.ts" />',
         '/// <reference path="./lua-runtime.d.ts" />',
         '/// <reference path="./3.0.0/common.j.d.ts" />',
         '/// <reference path="./3.0.0/blizzard.j.d.ts" />',

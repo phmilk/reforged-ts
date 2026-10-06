@@ -138,12 +138,13 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
     );
   });
 
-  it("references the common.j and blizzard.j outputs from the 3.0.0 entry, never common.ai", () => {
+  it("references the Rawcode types and the common.j and blizzard.j outputs from the 3.0.0 entry, never common.ai", () => {
     const references = generatedFile(result, "3.0.0.d.ts").match(
       /^\/\/\/ <reference .*\/>$/gm,
     );
     expect(references).toEqual([
       '/// <reference types="lua-types/5.3" resolution-mode="require" />',
+      '/// <reference path="./rawcode.d.ts" />',
       '/// <reference path="./lua-runtime.d.ts" />',
       '/// <reference path="./3.0.0/common.j.d.ts" />',
       '/// <reference path="./3.0.0/blizzard.j.d.ts" />',

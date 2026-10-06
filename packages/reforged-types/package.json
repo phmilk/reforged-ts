@@ -32,6 +32,7 @@
     "/[0-9]*.d.ts",
     "/[0-9]*/*.d.ts",
     "/lua-runtime.d.ts",
+    "/rawcode.d.ts",
     "/async-natives.json",
     "/LICENSE",
     "/README.md"
