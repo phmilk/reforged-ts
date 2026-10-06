@@ -12,7 +12,8 @@ import {
 } from "reforged-ts";
 
 Init.onTriggers(() => {
-  // A rawcode decides which item counts; the text only describes it.
+  // A rawcode decides which item counts, here Claws of Attack +15's,
+  // `FourCC("ratf")`; the text only describes it.
   on(
     UnitEvents.pickupItem,
     ({ unit, item }) => {

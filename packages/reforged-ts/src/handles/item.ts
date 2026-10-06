@@ -24,11 +24,12 @@ export class Item extends Widget {
 
   /**
    * Creates an item on the map at the given point.
-   * @param itemId - The item type's rawcode, such as `FourCC("ratf")`.
+   * @param itemId - The item type's rawcode, such as Claws of Attack +15's,
+   * `FourCC("ratf")`.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
-   * @param skinId - The skin's rawcode; the item type's own model when left
-   * out.
+   * @param skinId - The skin's rawcode, such as Claws of Attack +8's,
+   * `FourCC("rat9")`; the item type's own model when left out.
    * @returns The new item.
    * @throws When the game returns no handle, for example an unknown rawcode:
    * `reforged-ts: failed to create Item (<rawcode>)`, at the calling line.
@@ -305,7 +306,7 @@ export class Item extends Widget {
 
   /**
    * Gets the rawcode of the item's type.
-   * @returns The rawcode, such as `FourCC("ratf")`.
+   * @returns The rawcode, such as Claws of Attack +15's, `FourCC("ratf")`.
    * @native GetItemTypeId
    */
   public get typeId() {
@@ -350,7 +351,8 @@ export class Item extends Widget {
 
   /**
    * Gets the rawcode of the skin the item shows.
-   * @returns The skin's rawcode; the item type's own when no skin was set.
+   * @returns The skin's rawcode, such as Claws of Attack +8's, `FourCC("rat9")`;
+   * the item type's own when no skin was set.
    * @native BlzGetItemSkin
    */
   // eslint-disable-next-line @typescript-eslint/related-getter-setter-pairs -- cleared when the getter returns the Rawcode<"item"> BlzGetItemSkin will return (#490, #491)
@@ -359,7 +361,8 @@ export class Item extends Widget {
   }
 
   /**
-   * The rawcode of the skin the item shows, the model of another item type.
+   * The rawcode of the skin the item shows, the model of another item type,
+   * such as Claws of Attack +8's, `FourCC("rat9")`.
    * @native BlzSetItemSkin
    */
   public set skin(skinId: Rawcode<"item">) {
@@ -408,7 +411,8 @@ export class Item extends Widget {
    * Adds an ability to the item, which the unit carrying it gains.
    * @remarks
    * It works only on an item that a unit carries.
-   * @param abilCode - The ability's rawcode, such as `FourCC("AIat")`.
+   * @param abilCode - The ability's rawcode, such as Item Damage Bonus's,
+   * `FourCC("AIat")`.
    * @native BlzItemAddAbility
    */
   public addAbility(abilCode: Rawcode<"ability">) {
@@ -417,7 +421,8 @@ export class Item extends Widget {
 
   /**
    * Gets one of the item's abilities by its rawcode.
-   * @param abilCode - The ability's rawcode, such as `FourCC("AIat")`.
+   * @param abilCode - The ability's rawcode, such as Item Damage Bonus's,
+   * `FourCC("AIat")`.
    * @returns The game's `ability` Handle, or `undefined` when the item has no
    * ability of that rawcode.
    * @native BlzGetItemAbility
@@ -443,7 +448,8 @@ export class Item extends Widget {
 
   /**
    * Removes an ability from the item.
-   * @param abilCode - The ability's rawcode, such as `FourCC("AIat")`.
+   * @param abilCode - The ability's rawcode, such as Item Damage Bonus's,
+   * `FourCC("AIat")`.
    * @native BlzItemRemoveAbility
    */
   public removeAbility(abilCode: Rawcode<"ability">) {
@@ -543,7 +549,8 @@ export class Item extends Widget {
   /**
    * Records the unit type the item counts as dropped by, as the game does
    * for an item a creep drops.
-   * @param unitId - The unit type's rawcode, such as `FourCC("nfor")`.
+   * @param unitId - The unit type's rawcode, such as the Faceless One
+   * Trickster's, `FourCC("nfor")`.
    * @native SetItemDropID
    */
   public setDropId(unitId: Rawcode<"unit">) {
@@ -663,8 +670,8 @@ export class Item extends Widget {
    * @param equipmentType - The equipment type, or `EquipmentType.Any` for
    * every one.
    * @param tag - The tag, or `ItemTag.Any` for every one.
-   * @returns The rawcode of the item type chosen, or 0 when no item type
-   * matches.
+   * @returns The rawcode of the item type chosen, such as Claws of Attack
+   * +15's, `FourCC("ratf")`, or 0 when no item type matches.
    * @native ChooseRandomItemExWithFilter
    * @native ConvertEquipmentType
    * @native ConvertItemTag
@@ -787,7 +794,8 @@ export class Item extends Widget {
 
   /**
    * Tells whether a unit can sell items of a type to a shop (pawn them).
-   * @param itemId - The item type's rawcode, such as `FourCC("ratf")`.
+   * @param itemId - The item type's rawcode, such as Claws of Attack +15's,
+   * `FourCC("ratf")`.
    * @returns `true` when items of that type can be pawned.
    * @native IsItemIdPawnable
    */
@@ -797,7 +805,8 @@ export class Item extends Widget {
 
   /**
    * Tells whether items of a type are power-ups, used at once when picked up.
-   * @param itemId - The item type's rawcode, such as `FourCC("tdex")`.
+   * @param itemId - The item type's rawcode, such as Tome of Agility's,
+   * `FourCC("tdex")`.
    * @returns `true` when items of that type are power-ups.
    * @native IsItemIdPowerup
    */
@@ -808,7 +817,8 @@ export class Item extends Widget {
   /**
    * Tells whether a shop can sell items of a type, as a marketplace's random
    * stock.
-   * @param itemId - The item type's rawcode, such as `FourCC("ratf")`.
+   * @param itemId - The item type's rawcode, such as Claws of Attack +15's,
+   * `FourCC("ratf")`.
    * @returns `true` when items of that type are sellable.
    * @native IsItemIdSellable
    */

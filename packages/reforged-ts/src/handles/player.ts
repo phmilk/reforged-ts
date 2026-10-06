@@ -309,7 +309,8 @@ export class MapPlayer extends Handle<player> {
 
   /**
    * Raises the research level of one of the player's upgrades by `levels`.
-   * @param techId - The upgrade's rawcode, such as `FourCC("Rhar")`.
+   * @param techId - The upgrade's rawcode, such as Iron Plating's,
+   * `FourCC("Rhar")`.
    * @param levels - How many levels to add to its current level.
    * @native AddPlayerTechResearched
    */
@@ -322,7 +323,8 @@ export class MapPlayer extends Handle<player> {
 
   /**
    * Lowers the research level of one of the player's upgrades by `levels`.
-   * @param techId - The upgrade's rawcode, such as `FourCC("Rhar")`.
+   * @param techId - The upgrade's rawcode, such as Iron Plating's,
+   * `FourCC("Rhar")`.
    * @param levels - How many levels to remove from its current level. A
    * negative count adds none: raise a level with
    * {@link MapPlayer.addTechResearched}.
@@ -565,9 +567,10 @@ export class MapPlayer extends Handle<player> {
   /**
    * Gets the player's level of a tech: an upgrade's research level, or how
    * many units of a type the player controls.
-   * @param techId - The tech's rawcode: an upgrade such as `FourCC("Rhar")`,
-   * a unit type such as `FourCC("hfoo")`, or an equivalent such as
-   * `FourCC("HERO")` (any hero) or `FourCC("TWN1")` (a tier 1 town hall).
+   * @param techId - The tech's rawcode: an upgrade's, such as Iron Plating's,
+   * `FourCC("Rhar")`, a unit type's, such as the Footman's, `FourCC("hfoo")`,
+   * or an equivalent's, such as any hero's, `FourCC("HERO")`, or a tier 1
+   * town hall's, `FourCC("TWN1")`.
    * @param specificonly - `true` to count exact matches only; `false` to also
    * count what the tech tree treats as the same, such as a higher tier town
    * hall for a lower one.
@@ -585,8 +588,8 @@ export class MapPlayer extends Handle<player> {
   /**
    * Gets the player's limit on a tech: the most units of a type they may
    * have, or the highest level of an upgrade they may research.
-   * @param techId - The unit type's or upgrade's rawcode, such as
-   * `FourCC("hfoo")`.
+   * @param techId - The unit type's or upgrade's rawcode, such as the
+   * Footman's, `FourCC("hfoo")`.
    * @returns The limit; a very large number when none was set.
    * @native GetPlayerTechMaxAllowed
    */
@@ -597,7 +600,8 @@ export class MapPlayer extends Handle<player> {
   /**
    * Checks whether the player has researched an upgrade, or has a unit of a
    * type.
-   * @param techId - The tech's rawcode, such as `FourCC("Rhar")`.
+   * @param techId - The tech's rawcode, such as Iron Plating's,
+   * `FourCC("Rhar")`.
    * @param specificonly - `true` to count exact matches only; `false` to also
    * count what the tech tree treats as the same, as
    * {@link MapPlayer.getTechCount} does.
@@ -625,7 +629,7 @@ export class MapPlayer extends Handle<player> {
   /**
    * Counts the player's units of one type.
    * @param unitName - The unit type's internal name, such as `"footman"`
-   * for `FourCC("hfoo")`, not its rawcode or its localized name.
+   * for the Footman, `FourCC("hfoo")`, not its rawcode or its localized name.
    * @param includeIncomplete - Whether units still in training or under
    * construction count.
    * @param includeUpgrades - Whether the units this type upgrades into count.
@@ -783,7 +787,7 @@ export class MapPlayer extends Handle<player> {
 
   /**
    * Enables or disables an ability for every unit of the player.
-   * @param abilId - The ability's rawcode, such as `FourCC("AHbz")`.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param avail - `true` to enable it, `false` to disable it.
    * @native SetPlayerAbilityAvailable
    */
@@ -1002,8 +1006,8 @@ export class MapPlayer extends Handle<player> {
   /**
    * Limits a tech for the player: the most units of a type they may have,
    * or the highest level of an upgrade they may research.
-   * @param techId - The unit type's or upgrade's rawcode, such as
-   * `FourCC("hfoo")`.
+   * @param techId - The unit type's or upgrade's rawcode, such as the
+   * Footman's, `FourCC("hfoo")`.
    * @param maximum - The limit: 0 forbids the tech, -1 lifts the limit.
    * @native SetPlayerTechMaxAllowed
    */
@@ -1016,7 +1020,8 @@ export class MapPlayer extends Handle<player> {
 
   /**
    * Sets the research level of one of the player's upgrades.
-   * @param techId - The upgrade's rawcode, such as `FourCC("Rhar")`.
+   * @param techId - The upgrade's rawcode, such as Iron Plating's,
+   * `FourCC("Rhar")`.
    * @param setToLevel - The research level the upgrade gets, whatever its
    * current level.
    * @native SetPlayerTechResearched

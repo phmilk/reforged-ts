@@ -34,11 +34,13 @@ export class Unit extends Widget {
   /**
    * Creates a unit for `owner` at the given point, facing `face`.
    * @param owner - The player who owns the unit.
-   * @param unitId - The unit type's rawcode, such as `FourCC("hfoo")`.
+   * @param unitId - The unit type's rawcode, such as the Footman's,
+   * `FourCC("hfoo")`.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @param face - The facing, in degrees; 270 (`bj_UNIT_FACING`) when left out.
-   * @param skinId - The skin's rawcode; the unit type's own model when left out.
+   * @param skinId - The skin's rawcode, such as the Knight's, `FourCC("hkni")`;
+   * the unit type's own model when left out.
    * @returns The new unit.
    * @throws When the game returns no handle, for example an unknown rawcode:
    * `reforged-ts: failed to create Unit (<rawcode>)`, at the calling line. In Dev
@@ -65,7 +67,8 @@ export class Unit extends Widget {
   /**
    * Creates a unit for `owner` at a point, facing `face`.
    * @param owner - The player who owns the unit.
-   * @param unitId - The unit type's rawcode, such as `FourCC("hfoo")`.
+   * @param unitId - The unit type's rawcode, such as the Footman's,
+   * `FourCC("hfoo")`.
    * @param where - Where the unit stands.
    * @param face - The facing, in degrees; 270 (`bj_UNIT_FACING`) when left out.
    * @returns The new unit.
@@ -166,7 +169,8 @@ export class Unit extends Widget {
    * The unit dies as it spawns and plays its decay animation, so it becomes a
    * corpse only once that animation has run.
    * @param owner - The player who owns the corpse.
-   * @param unitId - The unit type's rawcode, such as `FourCC("hfoo")`.
+   * @param unitId - The unit type's rawcode, such as the Footman's,
+   * `FourCC("hfoo")`.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @param face - The facing, in degrees; 270 (`bj_UNIT_FACING`) when left out.
@@ -774,7 +778,7 @@ export class Unit extends Widget {
 
   /**
    * Gets the rawcode of the unit type whose model the unit uses.
-   * @returns The skin's rawcode.
+   * @returns The skin's rawcode, such as the Knight's, `FourCC("hkni")`.
    * @native BlzGetUnitSkin
    */
   // eslint-disable-next-line @typescript-eslint/related-getter-setter-pairs -- cleared when the getter returns the Rawcode<"unit"> BlzGetUnitSkin will return (#490, #491)
@@ -783,8 +787,9 @@ export class Unit extends Widget {
   }
 
   /**
-   * The rawcode of the unit type whose model, scale and sounds the unit uses; a
-   * change removes every effect attached to the unit.
+   * The rawcode of the unit type whose model, scale and sounds the unit uses,
+   * such as the Knight's, `FourCC("hkni")`; a change removes every effect
+   * attached to the unit.
    * @native BlzSetUnitSkin
    */
   public set skin(skinId: Rawcode<"unit">) {
@@ -866,7 +871,7 @@ export class Unit extends Widget {
 
   /**
    * Gets the rawcode of the unit's type.
-   * @returns The rawcode, such as `FourCC("hfoo")`.
+   * @returns The rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @native GetUnitTypeId
    */
   public get typeId() {
@@ -971,7 +976,7 @@ export class Unit extends Widget {
 
   /**
    * Adds an ability to the unit, at level 1 and off cooldown.
-   * @param abilityId - The ability's rawcode, such as `FourCC("AHbz")`.
+   * @param abilityId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns True when the ability was added, false when the unit already has it.
    * @native UnitAddAbility
    */
@@ -981,7 +986,7 @@ export class Unit extends Widget {
 
   /**
    * Adjusts the remaining cooldown of one of the unit's abilities by a share of its full cooldown.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param delta - The share of the full cooldown to add; negative to shorten the cooldown.
    * @native BlzAdjustUnitAbilityCooldownPercent
    */
@@ -994,7 +999,7 @@ export class Unit extends Widget {
 
   /**
    * Adjusts the remaining cooldown of one of the unit's abilities by a number of seconds.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param delta - The seconds to add; negative to shorten the cooldown.
    * @native BlzAdjustUnitAbilityCooldownRemaining
    */
@@ -1073,7 +1078,8 @@ export class Unit extends Widget {
    *   charges into an item the unit holds: the item is then removed.
    * - `UnitAddItemById` is not used: it returns nothing for the item it
    *   drops.
-   * @param itemId - The item type's rawcode, such as `FourCC("rde1")`.
+   * @param itemId - The item type's rawcode, such as Ring of Protection +2's,
+   * `FourCC("rde1")`.
    * @returns The new item.
    * @throws When no item is created, for example for an unknown rawcode or a
    * removed unit: `reforged-ts: failed to create Item (<rawcode>)`, at the
@@ -1099,7 +1105,8 @@ export class Unit extends Widget {
    * @remarks
    * When the slot is taken or does not exist, the game drops the new item at the
    * unit's feet.
-   * @param itemId - The item type's rawcode, such as `FourCC("rde1")`.
+   * @param itemId - The item type's rawcode, such as Ring of Protection +2's,
+   * `FourCC("rde1")`.
    * @param itemSlot - The slot, from 0 to 5.
    * @returns True when the item landed in the slot.
    * @native UnitAddItemToSlotById
@@ -1110,7 +1117,8 @@ export class Unit extends Widget {
 
   /**
    * Adds an item type to the stock of the shop.
-   * @param itemId - The item type's rawcode.
+   * @param itemId - The item type's rawcode, such as Claws of Attack +15's,
+   * `FourCC("ratf")`.
    * @param currentStock - The number of items in stock now.
    * @param stockMax - The most items the stock holds.
    * @native AddItemToStock
@@ -1155,7 +1163,7 @@ export class Unit extends Widget {
 
   /**
    * Adds a unit type to the stock of the shop.
-   * @param unitId - The unit type's rawcode.
+   * @param unitId - The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @param currentStock - The number of units in stock now.
    * @param stockMax - The most units the stock holds.
    * @native AddUnitToStock
@@ -1185,8 +1193,8 @@ export class Unit extends Widget {
   /**
    * Gives the unit a timed life: it dies once the duration has passed, and its
    * interface shows the time left.
-   * @param buffId - The timed-life buff's rawcode, such as `FourCC("BTLF")` (the
-   * generic one); an unknown buff falls back to it.
+   * @param buffId - The timed-life buff's rawcode, such as Timed Life's,
+   * `FourCC("BTLF")`, the generic one; an unknown buff falls back to it.
    * @param duration - The time left to live, in seconds.
    * @native UnitApplyTimedLife
    */
@@ -1382,7 +1390,7 @@ export class Unit extends Widget {
   /**
    * Lowers one of the unit's abilities by one level, down to level 1 at
    * least.
-   * @param abilCode - The ability's rawcode, such as `FourCC("AHbz")`.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns The new ability level.
    * @native DecUnitAbilityLevel
    */
@@ -1412,7 +1420,7 @@ export class Unit extends Widget {
    * Disables or enables one of the unit's abilities, and hides or shows its icon.
    * @remarks
    * A disabled ability that stays visible shows its disabled icon.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param flag - True to disable the ability, false to enable it.
    * @param hideUI - True to hide the ability's icon, false to show it.
    * @native BlzUnitDisableAbility
@@ -1471,7 +1479,7 @@ export class Unit extends Widget {
 
   /**
    * Ends the cooldown of one of the unit's abilities at once.
-   * @param abilCode - The ability's rawcode.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @native BlzEndUnitAbilityCooldown
    */
   public endAbilityCooldown(abilCode: Rawcode<"ability">) {
@@ -1503,7 +1511,7 @@ export class Unit extends Widget {
 
   /**
    * Gets the unit's instance of an ability, for the ability Natives.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns The game's `ability` Handle, or `undefined` when the unit lacks the ability.
    * @native BlzGetUnitAbility
    */
@@ -1523,7 +1531,7 @@ export class Unit extends Widget {
 
   /**
    * Gets the full cooldown of one of the unit's abilities at a level, not the time remaining.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param level - The ability level, counted from 0 (level 1 is 0).
    * @returns The cooldown, in seconds.
    * @native BlzGetUnitAbilityCooldown
@@ -1534,7 +1542,7 @@ export class Unit extends Widget {
 
   /**
    * Gets the remaining cooldown of one of the unit's abilities as a share of its full cooldown.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns The share of the cooldown left.
    * @native BlzGetUnitAbilityCooldownPercent
    */
@@ -1544,7 +1552,7 @@ export class Unit extends Widget {
 
   /**
    * Gets the remaining cooldown of one of the unit's abilities.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns The time left, in seconds; 0 when the ability is ready.
    * @native BlzGetUnitAbilityCooldownRemaining
    * @bug During the cooldown of an ability built on Channel, it sometimes
@@ -1557,7 +1565,7 @@ export class Unit extends Widget {
   /**
    * Gets the level the unit has in one of its abilities.
    * @remarks Levels count from 1, not from 0.
-   * @param abilCode - The ability's rawcode.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns The level, from 1; 0 when the unit lacks the ability.
    * @native GetUnitAbilityLevel
    */
@@ -1567,7 +1575,7 @@ export class Unit extends Widget {
 
   /**
    * Gets the mana cost of one of the unit's abilities at a level.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param level - The ability level, counted from 0 (level 1 is 0).
    * @returns The mana cost.
    * @native BlzGetUnitAbilityManaCost
@@ -1851,7 +1859,7 @@ export class Unit extends Widget {
 
   /**
    * Hides or shows the icon of one of the unit's abilities.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param flag - True to hide the icon, false to show it.
    * @native BlzUnitHideAbility
    * @bug The game counts the calls instead of storing the flag: after hiding an
@@ -1867,7 +1875,7 @@ export class Unit extends Widget {
    * field of the ability is 0. Sources:
    * http://www.wc3c.net/showthread.php?p=1029039#post1029039 and
    * http://www.hiveworkshop.com/forums/lab-715/silenceex-everything-you-dont-know-about-silence-274351/.
-   * @param abilCode - The ability's rawcode, such as `FourCC("AHbz")`.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns The new ability level.
    * @native IncUnitAbilityLevel
    */
@@ -2047,7 +2055,8 @@ export class Unit extends Widget {
 
   /**
    * Orders the unit to build a structure at a point.
-   * @param unit - The structure's order name, or its unit type's rawcode.
+   * @param unit - The structure's order name, or its unit type's rawcode, such
+   * as the Barracks', `FourCC("hbar")`.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @returns True when the unit took the order.
@@ -2141,7 +2150,8 @@ export class Unit extends Widget {
    * Orders this neutral structure (a shop, a tavern) to sell or train `unit` for
    * `forPlayer`.
    * @param forPlayer - The player who buys.
-   * @param unit - The order name of what is bought, or its rawcode.
+   * @param unit - The order name of what is bought, or its rawcode, such as
+   * the Gnoll's, `FourCC("ngno")`, bought from a mercenary camp.
    * @returns True when the structure took the order.
    * @native IssueNeutralImmediateOrder
    * @native IssueNeutralImmediateOrderById
@@ -2343,7 +2353,7 @@ export class Unit extends Widget {
    * Makes one of the unit's abilities survive a morph, or lets a morph
    * remove it.
    * @param permanent - True to keep the ability through a morph, false to let the morph remove it.
-   * @param abilityId - The ability's rawcode.
+   * @param abilityId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @native UnitMakeAbilityPermanent
    */
   public makeAbilityPermanent(
@@ -2413,7 +2423,8 @@ export class Unit extends Widget {
    * Queues an order on this neutral structure to sell or train `unitId` for
    * `forPlayer`, after its current orders.
    * @param forPlayer - The player who buys.
-   * @param unitId - The rawcode of what is bought.
+   * @param unitId - The rawcode of what is bought, such as the Gnoll's,
+   * `FourCC("ngno")`, bought from a mercenary camp.
    * @returns True when the structure took the order.
    * @native BlzQueueNeutralImmediateOrderById
    */
@@ -2485,7 +2496,7 @@ export class Unit extends Widget {
 
   /**
    * Removes an ability from the unit.
-   * @param abilityId - The ability's rawcode.
+   * @param abilityId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns True when the ability was removed, false when the unit lacks it.
    * @native UnitRemoveAbility
    */
@@ -2569,7 +2580,8 @@ export class Unit extends Widget {
 
   /**
    * Removes an item type from the stock of the shop.
-   * @param itemId - The item type's rawcode.
+   * @param itemId - The item type's rawcode, such as Claws of Attack +15's,
+   * `FourCC("ratf")`.
    * @native RemoveItemFromStock
    */
   public removeItemFromStock(itemId: Rawcode<"item">) {
@@ -2588,8 +2600,8 @@ export class Unit extends Widget {
 
   /**
    * Removes a unit type from the stock of the shop.
-   * @param unitId - The rawcode of the unit type to remove, such as
-   * `FourCC("hfoo")`.
+   * @param unitId - The rawcode of the unit type to remove, such as the
+   * Footman's, `FourCC("hfoo")`.
    * @native RemoveUnitFromStock
    */
   public removeUnitFromStock(unitId: Rawcode<"unit">) {
@@ -2662,7 +2674,7 @@ export class Unit extends Widget {
   /**
    * Spends one of the hero's skill points to learn or level an ability; does
    * nothing when the hero has no point or cannot learn it yet.
-   * @param abilCode - The ability's rawcode.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @native SelectHeroSkill
    */
   public selectSkill(abilCode: Rawcode<"ability">) {
@@ -2673,7 +2685,7 @@ export class Unit extends Widget {
    * Sets the full cooldown of one of the unit's abilities at a level.
    * @remarks
    * A cooldown that is running keeps its length: the new one applies from the next use.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param level - The ability level, counted from 0 (level 1 is 0).
    * @param cooldown - The cooldown, in seconds.
    * @native BlzSetUnitAbilityCooldown
@@ -2688,7 +2700,7 @@ export class Unit extends Widget {
 
   /**
    * Sets the remaining cooldown of one of the unit's abilities as a share of its full cooldown.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param percent - The share of the full cooldown left.
    * @native BlzSetUnitAbilityCooldownPercent
    */
@@ -2701,7 +2713,7 @@ export class Unit extends Widget {
 
   /**
    * Sets the remaining cooldown of one of the unit's abilities.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param seconds - The time left, in seconds.
    * @native BlzSetUnitAbilityCooldownRemaining
    */
@@ -2716,7 +2728,7 @@ export class Unit extends Widget {
    * Sets the level of an ability the unit has, without spending or refunding skill points.
    * @remarks
    * A level below 1 sets level 1, and one above the ability's highest sets the highest.
-   * @param abilCode - The ability's rawcode.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param level - The new level, from 1.
    * @returns The new level, or 0 when the unit lacks the ability.
    * @native SetUnitAbilityLevel
@@ -2727,7 +2739,7 @@ export class Unit extends Widget {
 
   /**
    * Sets the mana cost of one of the unit's abilities at a level.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param level - The ability level, counted from 0 (level 1 is 0).
    * @param manaCost - The mana the ability costs to cast at that level, a
    * whole number.
@@ -3192,7 +3204,7 @@ export class Unit extends Widget {
 
   /**
    * Starts the cooldown of one of the unit's abilities.
-   * @param abilCode - The ability's rawcode.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param cooldown - The cooldown, in seconds.
    * @native BlzStartUnitAbilityCooldown
    */
@@ -3471,7 +3483,8 @@ export class Unit extends Widget {
 
   /**
    * Queues an order to build a structure at a point, after the unit's current orders.
-   * @param unitId - The structure's unit type rawcode.
+   * @param unitId - The structure's unit type rawcode, such as the Barracks',
+   * `FourCC("hbar")`.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @returns True when the unit took the order.
@@ -3640,7 +3653,7 @@ export class Unit extends Widget {
 
   /**
    * Gets the food a unit type provides to its owner, such as a farm's.
-   * @param unitId - The unit type's rawcode.
+   * @param unitId - The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @returns The food provided.
    * @native GetFoodMade
    */
@@ -3650,7 +3663,7 @@ export class Unit extends Widget {
 
   /**
    * Gets the food a unit type costs its owner.
-   * @param unitId - The unit type's rawcode.
+   * @param unitId - The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @returns The food used.
    * @native GetFoodUsed
    */
@@ -4000,7 +4013,7 @@ export class Unit extends Widget {
 
   /**
    * Gets the point value a unit type defines, which the score screen counts.
-   * @param unitType - The unit type's rawcode.
+   * @param unitType - The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @returns The point value.
    * @native GetUnitPointValueByType
    */
@@ -4010,7 +4023,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether a unit type is a hero type.
-   * @param unitId - The unit type's rawcode.
+   * @param unitId - The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @returns True when the type is a hero type.
    * @native IsHeroUnitId
    */
@@ -4020,7 +4033,7 @@ export class Unit extends Widget {
 
   /**
    * Checks whether a unit type has a classification, such as `UNIT_TYPE_STRUCTURE`.
-   * @param unitId - The unit type's rawcode.
+   * @param unitId - The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @param whichUnitType - The classification.
    * @returns True when the type has it.
    * @native IsUnitIdType
