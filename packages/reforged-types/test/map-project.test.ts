@@ -87,6 +87,12 @@ describe("a Map project with the Template's types", () => {
     );
   });
 
+  it("type-checks FourCC literals into the Natives' Rawcode parameters of every kind, a union and any kind", () => {
+    expect(
+      diagnostics.filter((d) => d.startsWith("src/rawcode-natives.ts")),
+    ).toEqual([]);
+  });
+
   it("type-checks Rawcodes: FourCC literals into every kind, widening, the cast, arrays and Map keys", () => {
     expect(diagnostics.filter((d) => d.startsWith("src/rawcodes.ts"))).toEqual(
       [],

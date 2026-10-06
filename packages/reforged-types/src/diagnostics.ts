@@ -16,6 +16,11 @@ export type DiagnosticKind =
   | "param-mismatch"
   /** An Overlay entry whose `returns.family` breaks the curation rule. */
   | "nullability-family"
+  /**
+   * An `integer` that looks like a Rawcode and that neither the
+   * parameter-name table nor the Overlay `kind` classifies.
+   */
+  | "unclassified-rawcode"
   /** An Overlay entry that matches no declaration of the Patch. */
   | "orphan"
   /** A declaration named after a TypeScript reserved word. */

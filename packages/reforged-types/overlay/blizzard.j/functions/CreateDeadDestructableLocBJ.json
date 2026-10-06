@@ -7,7 +7,8 @@
   "params": [
     {
       "name": "objectid",
-      "nullable": false
+      "nullable": false,
+      "kind": "destructable"
     },
     {
       "name": "loc",

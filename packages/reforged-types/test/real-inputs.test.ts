@@ -77,7 +77,7 @@ describe("Patch 3.0.0.24268 with the real Overlay", () => {
 
   it("types CreateUnit as returning unit | undefined", () => {
     expect(commonJ).toContain(
-      "declare function CreateUnit(id: player, unitid: number, x: number, y: number, face: number): unit | undefined;",
+      'declare function CreateUnit(id: player, unitid: Rawcode<"unit">, x: number, y: number, face: number): unit | undefined;',
     );
   });
 

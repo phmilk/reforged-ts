@@ -11,8 +11,11 @@ import type { Param, ParamValues, Variant } from "./parameters";
 /** A coordinate outside the world of any map: far past `GetWorldBounds()`. */
 export const OUTSIDE_THE_WORLD = 1000000;
 
-/** A rawcode no object type has: `'zzzz'`. */
-export const UNKNOWN_RAWCODE = 0x7a7a7a7a;
+/**
+ * A rawcode no object type has: `'zzzz'`. Cast on purpose: a case passes it
+ * where a Rawcode of any kind is expected.
+ */
+export const UNKNOWN_RAWCODE = 0x7a7a7a7a as UnknownRawcode;
 
 /** A name no object, label or file has. */
 export const UNKNOWN_NAME = "ReforgedTsUnknownName";

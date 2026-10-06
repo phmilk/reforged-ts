@@ -554,7 +554,7 @@ export class Trigger extends Handle<trigger> {
    * @returns The Trigger, for chaining.
    * @native TriggerRegisterCommandEvent
    */
-  public registerCommandEvent(whichAbility: number, order: string) {
+  public registerCommandEvent(whichAbility: Rawcode<"ability">, order: string) {
     TriggerRegisterCommandEvent(this.handle, whichAbility, order);
     return this;
   }
@@ -1040,7 +1040,7 @@ export class Trigger extends Handle<trigger> {
    * @returns The Trigger, for chaining.
    * @native TriggerRegisterUpgradeCommandEvent
    */
-  public registerUpgradeCommandEvent(whichUpgrade: number) {
+  public registerUpgradeCommandEvent(whichUpgrade: Rawcode<"upgrade">) {
     TriggerRegisterUpgradeCommandEvent(this.handle, whichUpgrade);
     return this;
   }

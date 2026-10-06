@@ -13,8 +13,8 @@ export interface PatchFiles {
 export interface OverlayEntryFixture {
   name: string;
   source: string;
-  returns: { nullable: boolean; family?: string };
-  params: { name: string; nullable: boolean; type?: string }[];
+  returns: { nullable: boolean; family?: string; kind?: string };
+  params: { name: string; nullable: boolean; type?: string; kind?: string }[];
   async?: boolean;
   deprecated?: string;
   notes?: string;

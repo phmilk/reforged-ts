@@ -4,6 +4,7 @@
  * entry carries.
  */
 import type { SourceName } from "./model.js";
+import type { OverlayKind } from "./rawcodes.js";
 
 /** The only `origin` an entry may name: seeded from war3-types-strict. */
 export const SEED_ORIGIN = "war3-types-strict";
@@ -65,6 +66,11 @@ export interface OverlayReturns {
    * report, never rendered.
    */
   family?: NullabilityFamily;
+  /**
+   * The Object kind of an `integer` return that is a Rawcode: the only
+   * source of a return's kind (`rawcodes.ts`).
+   */
+  kind?: OverlayKind;
 }
 
 export interface OverlayParam {
@@ -72,6 +78,11 @@ export interface OverlayParam {
   nullable: boolean;
   /** TypeScript type text that replaces the parameter's mapped Jass type. */
   type?: string;
+  /**
+   * The Object kind of an `integer` parameter that is a Rawcode; it wins
+   * over the parameter-name table (`rawcodes.ts`).
+   */
+  kind?: OverlayKind;
 }
 
 /** A function's entry, mandatory for every `native` and `function`. */

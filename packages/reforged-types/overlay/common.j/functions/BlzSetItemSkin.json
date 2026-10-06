@@ -11,7 +11,8 @@
     },
     {
       "name": "skinId",
-      "nullable": false
+      "nullable": false,
+      "kind": "item"
     }
   ],
   "origin": "war3-types-strict"

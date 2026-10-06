@@ -881,7 +881,7 @@ declare function UnitId(unitIdString: string): number;
  * @returns string
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitId2String}
  */
-declare function UnitId2String(unitId: number): string | undefined;
+declare function UnitId2String(unitId: Rawcode<"unit">): string | undefined;
 
 /**
  * @param abilityIdString - string
@@ -895,7 +895,7 @@ declare function AbilityId(abilityIdString: string): number;
  * @returns string
  * @see {@link https://lep.duckdns.org/jassbot/doc/AbilityId2String}
  */
-declare function AbilityId2String(abilityId: number): string | undefined;
+declare function AbilityId2String(abilityId: Rawcode<"ability">): string | undefined;
 
 /**
  * @param objectId - integer (32-bit)
@@ -903,7 +903,7 @@ declare function AbilityId2String(abilityId: number): string | undefined;
  * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetObjectName}
  */
-declare function GetObjectName(objectId: number): string | undefined;
+declare function GetObjectName(objectId: Rawcode): string | undefined;
 
 /**
  * @returns integer (32-bit)
@@ -14800,7 +14800,7 @@ declare function TriggerRegisterTrackableTrackEvent(whichTrigger: trigger, t: tr
  * @remarks Returned nothing in 3 cases of the nullability sweep (order: empty string, order: unknown name, whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterCommandEvent}
  */
-declare function TriggerRegisterCommandEvent(whichTrigger: trigger, whichAbility: number, order: string): event | undefined;
+declare function TriggerRegisterCommandEvent(whichTrigger: trigger, whichAbility: Rawcode<"ability">, order: string): event | undefined;
 
 /**
  * @param whichTrigger - trigger
@@ -14809,7 +14809,7 @@ declare function TriggerRegisterCommandEvent(whichTrigger: trigger, whichAbility
  * @remarks Returned nothing in a case of the nullability sweep (whichTrigger: destroyed trigger) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterUpgradeCommandEvent}
  */
-declare function TriggerRegisterUpgradeCommandEvent(whichTrigger: trigger, whichUpgrade: number): event | undefined;
+declare function TriggerRegisterUpgradeCommandEvent(whichTrigger: trigger, whichUpgrade: Rawcode<"upgrade">): event | undefined;
 
 /**
  * @returns trackable
@@ -15579,7 +15579,7 @@ declare function GetTriggerWidget(): widget | undefined;
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateDestructable}
  */
-declare function CreateDestructable(objectid: number, x: number, y: number, face: number, scale: number, variation: number): destructable | undefined;
+declare function CreateDestructable(objectid: Rawcode<"destructable">, x: number, y: number, face: number, scale: number, variation: number): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -15593,7 +15593,7 @@ declare function CreateDestructable(objectid: number, x: number, y: number, face
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateDestructableZ}
  */
-declare function CreateDestructableZ(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number): destructable | undefined;
+declare function CreateDestructableZ(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, scale: number, variation: number): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -15606,7 +15606,7 @@ declare function CreateDestructableZ(objectid: number, x: number, y: number, z: 
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateDeadDestructable}
  */
-declare function CreateDeadDestructable(objectid: number, x: number, y: number, face: number, scale: number, variation: number): destructable | undefined;
+declare function CreateDeadDestructable(objectid: Rawcode<"destructable">, x: number, y: number, face: number, scale: number, variation: number): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -15620,7 +15620,7 @@ declare function CreateDeadDestructable(objectid: number, x: number, y: number, 
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateDeadDestructableZ}
  */
-declare function CreateDeadDestructableZ(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number): destructable | undefined;
+declare function CreateDeadDestructableZ(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, scale: number, variation: number): destructable | undefined;
 
 /**
  * @param d - destructable
@@ -15800,7 +15800,7 @@ declare function GetTriggerDestructable(): destructable | undefined;
  * @remarks Returned nothing in a case of the nullability sweep (itemid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateItem}
  */
-declare function CreateItem(itemid: number, x: number, y: number): item | undefined;
+declare function CreateItem(itemid: Rawcode<"item">, x: number, y: number): item | undefined;
 
 /**
  * @param whichItem - item
@@ -15968,21 +15968,21 @@ declare function IsItemPawnable(whichItem: item): boolean;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IsItemIdPowerup}
  */
-declare function IsItemIdPowerup(itemId: number): boolean;
+declare function IsItemIdPowerup(itemId: Rawcode<"item">): boolean;
 
 /**
  * @param itemId - integer (32-bit)
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IsItemIdSellable}
  */
-declare function IsItemIdSellable(itemId: number): boolean;
+declare function IsItemIdSellable(itemId: Rawcode<"item">): boolean;
 
 /**
  * @param itemId - integer (32-bit)
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IsItemIdPawnable}
  */
-declare function IsItemIdPawnable(itemId: number): boolean;
+declare function IsItemIdPawnable(itemId: Rawcode<"item">): boolean;
 
 /**
  * @param r - rect
@@ -16015,7 +16015,7 @@ declare function GetItemType(whichItem: item): itemtype;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetItemDropID}
  */
-declare function SetItemDropID(whichItem: item, unitId: number): void;
+declare function SetItemDropID(whichItem: item, unitId: Rawcode<"unit">): void;
 
 /**
  * @param whichItem - item
@@ -16083,7 +16083,7 @@ declare function GetItemTag(whichItem: item): itemTag;
  * @remarks Returned nothing in a case of the nullability sweep (unitid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUnit}
  */
-declare function CreateUnit(id: player, unitid: number, x: number, y: number, face: number): unit | undefined;
+declare function CreateUnit(id: player, unitid: Rawcode<"unit">, x: number, y: number, face: number): unit | undefined;
 
 /**
  * @param whichPlayer - player
@@ -16106,7 +16106,7 @@ declare function CreateUnitByName(whichPlayer: player, unitname: string, x: numb
  * @remarks Returned nothing in 2 cases of the nullability sweep (unitid: unknown rawcode, whichLocation: removed location) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUnitAtLoc}
  */
-declare function CreateUnitAtLoc(id: player, unitid: number, whichLocation: location, face: number): unit | undefined;
+declare function CreateUnitAtLoc(id: player, unitid: Rawcode<"unit">, whichLocation: location, face: number): unit | undefined;
 
 /**
  * @param id - player
@@ -16129,7 +16129,7 @@ declare function CreateUnitAtLocByName(id: player, unitname: string, whichLocati
  * @remarks Returned nothing in a case of the nullability sweep (unitid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateCorpse}
  */
-declare function CreateCorpse(whichPlayer: player, unitid: number, x: number, y: number, face: number): unit | undefined;
+declare function CreateCorpse(whichPlayer: player, unitid: Rawcode<"unit">, x: number, y: number, face: number): unit | undefined;
 
 /**
  * @param whichUnit - unit
@@ -16641,7 +16641,7 @@ declare function IsSuspendedXP(whichHero: unit): boolean;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SelectHeroSkill}
  */
-declare function SelectHeroSkill(whichHero: unit, abilcode: number): void;
+declare function SelectHeroSkill(whichHero: unit, abilcode: Rawcode<"ability">): void;
 
 /**
  * @param whichUnit - unit
@@ -16649,7 +16649,7 @@ declare function SelectHeroSkill(whichHero: unit, abilcode: number): void;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitAbilityLevel}
  */
-declare function GetUnitAbilityLevel(whichUnit: unit, abilcode: number): number;
+declare function GetUnitAbilityLevel(whichUnit: unit, abilcode: Rawcode<"ability">): number;
 
 /**
  * @param whichUnit - unit
@@ -16657,7 +16657,7 @@ declare function GetUnitAbilityLevel(whichUnit: unit, abilcode: number): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/DecUnitAbilityLevel}
  */
-declare function DecUnitAbilityLevel(whichUnit: unit, abilcode: number): number;
+declare function DecUnitAbilityLevel(whichUnit: unit, abilcode: Rawcode<"ability">): number;
 
 /**
  * @param whichUnit - unit
@@ -16665,7 +16665,7 @@ declare function DecUnitAbilityLevel(whichUnit: unit, abilcode: number): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/IncUnitAbilityLevel}
  */
-declare function IncUnitAbilityLevel(whichUnit: unit, abilcode: number): number;
+declare function IncUnitAbilityLevel(whichUnit: unit, abilcode: Rawcode<"ability">): number;
 
 /**
  * @param whichUnit - unit
@@ -16674,7 +16674,7 @@ declare function IncUnitAbilityLevel(whichUnit: unit, abilcode: number): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetUnitAbilityLevel}
  */
-declare function SetUnitAbilityLevel(whichUnit: unit, abilcode: number, level: number): number;
+declare function SetUnitAbilityLevel(whichUnit: unit, abilcode: Rawcode<"ability">, level: number): number;
 
 /**
  * @param whichHero - unit
@@ -16760,7 +16760,7 @@ declare function GetUnitPointValue(whichUnit: unit): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitPointValueByType}
  */
-declare function GetUnitPointValueByType(unitType: number): number;
+declare function GetUnitPointValueByType(unitType: Rawcode<"unit">): number;
 
 /**
  * @param whichUnit - unit
@@ -16786,7 +16786,7 @@ declare function UnitEquipItem(whichUnit: unit, whichItem: item): boolean;
  * @remarks Returned nothing in 3 cases of the nullability sweep (itemId: unknown rawcode, whichUnit: unit with no inventory, whichUnit: dead hero) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitAddItemById}
  */
-declare function UnitAddItemById(whichUnit: unit, itemId: number): item | undefined;
+declare function UnitAddItemById(whichUnit: unit, itemId: Rawcode<"item">): item | undefined;
 
 /**
  * @param whichUnit - unit
@@ -16795,7 +16795,7 @@ declare function UnitAddItemById(whichUnit: unit, itemId: number): item | undefi
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitAddItemToSlotById}
  */
-declare function UnitAddItemToSlotById(whichUnit: unit, itemId: number, itemSlot: number): boolean;
+declare function UnitAddItemToSlotById(whichUnit: unit, itemId: Rawcode<"item">, itemSlot: number): boolean;
 
 /**
  * @param whichUnit - unit
@@ -17057,7 +17057,7 @@ declare function GetOwningPlayer(whichUnit: unit): player;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitTypeId}
  */
-declare function GetUnitTypeId(whichUnit: unit): number;
+declare function GetUnitTypeId(whichUnit: unit): Rawcode<"unit">;
 
 /**
  * @param whichUnit - unit
@@ -17094,14 +17094,14 @@ declare function GetUnitFoodMade(whichUnit: unit): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetFoodMade}
  */
-declare function GetFoodMade(unitId: number): number;
+declare function GetFoodMade(unitId: Rawcode<"unit">): number;
 
 /**
  * @param unitId - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetFoodUsed}
  */
-declare function GetFoodUsed(unitId: number): number;
+declare function GetFoodUsed(unitId: Rawcode<"unit">): number;
 
 /**
  * @param whichUnit - unit
@@ -17309,7 +17309,7 @@ declare function IsUnitLoaded(whichUnit: unit): boolean;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IsHeroUnitId}
  */
-declare function IsHeroUnitId(unitId: number): boolean;
+declare function IsHeroUnitId(unitId: Rawcode<"unit">): boolean;
 
 /**
  * @param unitId - integer (32-bit)
@@ -17317,7 +17317,7 @@ declare function IsHeroUnitId(unitId: number): boolean;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IsUnitIdType}
  */
-declare function IsUnitIdType(unitId: number, whichUnitType: unittype): boolean;
+declare function IsUnitIdType(unitId: Rawcode<"unit">, whichUnitType: unittype): boolean;
 
 /**
  * @param whichUnit - unit
@@ -17358,7 +17358,7 @@ declare function UnitRemoveType(whichUnit: unit, whichUnitType: unittype): boole
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitAddAbility}
  */
-declare function UnitAddAbility(whichUnit: unit, abilityId: number): boolean;
+declare function UnitAddAbility(whichUnit: unit, abilityId: Rawcode<"ability">): boolean;
 
 /**
  * @param whichUnit - unit
@@ -17366,7 +17366,7 @@ declare function UnitAddAbility(whichUnit: unit, abilityId: number): boolean;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitRemoveAbility}
  */
-declare function UnitRemoveAbility(whichUnit: unit, abilityId: number): boolean;
+declare function UnitRemoveAbility(whichUnit: unit, abilityId: Rawcode<"ability">): boolean;
 
 /**
  * @param whichUnit - unit
@@ -17375,7 +17375,7 @@ declare function UnitRemoveAbility(whichUnit: unit, abilityId: number): boolean;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitMakeAbilityPermanent}
  */
-declare function UnitMakeAbilityPermanent(whichUnit: unit, permanent: boolean, abilityId: number): boolean;
+declare function UnitMakeAbilityPermanent(whichUnit: unit, permanent: boolean, abilityId: Rawcode<"ability">): boolean;
 
 /**
  * @param whichUnit - unit
@@ -17479,7 +17479,7 @@ declare function UnitWakeUp(whichUnit: unit): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitApplyTimedLife}
  */
-declare function UnitApplyTimedLife(whichUnit: unit, buffId: number, duration: number): void;
+declare function UnitApplyTimedLife(whichUnit: unit, buffId: Rawcode<"buff">, duration: number): void;
 
 /**
  * @param whichUnit - unit
@@ -17698,7 +17698,7 @@ declare function IssueBuildOrder(whichPeon: unit, unitToBuild: string, x: number
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IssueBuildOrderById}
  */
-declare function IssueBuildOrderById(whichPeon: unit, unitId: number, x: number, y: number): boolean;
+declare function IssueBuildOrderById(whichPeon: unit, unitId: Rawcode<"unit">, x: number, y: number): boolean;
 
 /**
  * @param forWhichPlayer - player
@@ -17716,7 +17716,7 @@ declare function IssueNeutralImmediateOrder(forWhichPlayer: player, neutralStruc
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IssueNeutralImmediateOrderById}
  */
-declare function IssueNeutralImmediateOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: number): boolean;
+declare function IssueNeutralImmediateOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: Rawcode): boolean;
 
 /**
  * @param forWhichPlayer - player
@@ -17738,7 +17738,7 @@ declare function IssueNeutralPointOrder(forWhichPlayer: player, neutralStructure
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IssueNeutralPointOrderById}
  */
-declare function IssueNeutralPointOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: number, x: number, y: number): boolean;
+declare function IssueNeutralPointOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: Rawcode, x: number, y: number): boolean;
 
 /**
  * @param forWhichPlayer - player
@@ -17758,7 +17758,7 @@ declare function IssueNeutralTargetOrder(forWhichPlayer: player, neutralStructur
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IssueNeutralTargetOrderById}
  */
-declare function IssueNeutralTargetOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: number, target: widget): boolean;
+declare function IssueNeutralTargetOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: Rawcode, target: widget): boolean;
 
 /**
  * @param whichUnit - unit
@@ -17835,7 +17835,7 @@ declare function WaygateIsActive(waygate: unit): boolean;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddItemToAllStock}
  */
-declare function AddItemToAllStock(itemId: number, currentStock: number, stockMax: number): void;
+declare function AddItemToAllStock(itemId: Rawcode<"item">, currentStock: number, stockMax: number): void;
 
 /**
  * @param whichUnit - unit
@@ -17845,7 +17845,7 @@ declare function AddItemToAllStock(itemId: number, currentStock: number, stockMa
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddItemToStock}
  */
-declare function AddItemToStock(whichUnit: unit, itemId: number, currentStock: number, stockMax: number): void;
+declare function AddItemToStock(whichUnit: unit, itemId: Rawcode<"item">, currentStock: number, stockMax: number): void;
 
 /**
  * @param unitId - integer (32-bit)
@@ -17854,7 +17854,7 @@ declare function AddItemToStock(whichUnit: unit, itemId: number, currentStock: n
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddUnitToAllStock}
  */
-declare function AddUnitToAllStock(unitId: number, currentStock: number, stockMax: number): void;
+declare function AddUnitToAllStock(unitId: Rawcode<"unit">, currentStock: number, stockMax: number): void;
 
 /**
  * @param whichUnit - unit
@@ -17864,14 +17864,14 @@ declare function AddUnitToAllStock(unitId: number, currentStock: number, stockMa
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddUnitToStock}
  */
-declare function AddUnitToStock(whichUnit: unit, unitId: number, currentStock: number, stockMax: number): void;
+declare function AddUnitToStock(whichUnit: unit, unitId: Rawcode<"unit">, currentStock: number, stockMax: number): void;
 
 /**
  * @param itemId - integer (32-bit)
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/RemoveItemFromAllStock}
  */
-declare function RemoveItemFromAllStock(itemId: number): void;
+declare function RemoveItemFromAllStock(itemId: Rawcode<"item">): void;
 
 /**
  * @param whichUnit - unit
@@ -17879,14 +17879,14 @@ declare function RemoveItemFromAllStock(itemId: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/RemoveItemFromStock}
  */
-declare function RemoveItemFromStock(whichUnit: unit, itemId: number): void;
+declare function RemoveItemFromStock(whichUnit: unit, itemId: Rawcode<"item">): void;
 
 /**
  * @param unitId - integer (32-bit)
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/RemoveUnitFromAllStock}
  */
-declare function RemoveUnitFromAllStock(unitId: number): void;
+declare function RemoveUnitFromAllStock(unitId: Rawcode<"unit">): void;
 
 /**
  * @param whichUnit - unit
@@ -17894,7 +17894,7 @@ declare function RemoveUnitFromAllStock(unitId: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/RemoveUnitFromStock}
  */
-declare function RemoveUnitFromStock(whichUnit: unit, unitId: number): void;
+declare function RemoveUnitFromStock(whichUnit: unit, unitId: Rawcode<"unit">): void;
 
 /**
  * @param slots - integer (32-bit)
@@ -18172,7 +18172,7 @@ declare function SetPlayerHandicapDamage(whichPlayer: player, handicap: number):
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetPlayerTechMaxAllowed}
  */
-declare function SetPlayerTechMaxAllowed(whichPlayer: player, techid: number, maximum: number): void;
+declare function SetPlayerTechMaxAllowed(whichPlayer: player, techid: Rawcode<"unit" | "upgrade">, maximum: number): void;
 
 /**
  * @param whichPlayer - player
@@ -18180,7 +18180,7 @@ declare function SetPlayerTechMaxAllowed(whichPlayer: player, techid: number, ma
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetPlayerTechMaxAllowed}
  */
-declare function GetPlayerTechMaxAllowed(whichPlayer: player, techid: number): number;
+declare function GetPlayerTechMaxAllowed(whichPlayer: player, techid: Rawcode<"unit" | "upgrade">): number;
 
 /**
  * @param whichPlayer - player
@@ -18189,7 +18189,7 @@ declare function GetPlayerTechMaxAllowed(whichPlayer: player, techid: number): n
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddPlayerTechResearched}
  */
-declare function AddPlayerTechResearched(whichPlayer: player, techid: number, levels: number): void;
+declare function AddPlayerTechResearched(whichPlayer: player, techid: Rawcode<"unit" | "upgrade">, levels: number): void;
 
 /**
  * @param whichPlayer - player
@@ -18198,7 +18198,7 @@ declare function AddPlayerTechResearched(whichPlayer: player, techid: number, le
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetPlayerTechResearched}
  */
-declare function SetPlayerTechResearched(whichPlayer: player, techid: number, setToLevel: number): void;
+declare function SetPlayerTechResearched(whichPlayer: player, techid: Rawcode<"unit" | "upgrade">, setToLevel: number): void;
 
 /**
  * @param whichPlayer - player
@@ -18207,7 +18207,7 @@ declare function SetPlayerTechResearched(whichPlayer: player, techid: number, se
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetPlayerTechResearched}
  */
-declare function GetPlayerTechResearched(whichPlayer: player, techid: number, specificonly: boolean): boolean;
+declare function GetPlayerTechResearched(whichPlayer: player, techid: Rawcode<"unit" | "upgrade">, specificonly: boolean): boolean;
 
 /**
  * @param whichPlayer - player
@@ -18216,7 +18216,7 @@ declare function GetPlayerTechResearched(whichPlayer: player, techid: number, sp
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetPlayerTechCount}
  */
-declare function GetPlayerTechCount(whichPlayer: player, techid: number, specificonly: boolean): number;
+declare function GetPlayerTechCount(whichPlayer: player, techid: Rawcode<"unit" | "upgrade">, specificonly: boolean): number;
 
 /**
  * @param whichPlayer - player
@@ -18242,7 +18242,7 @@ declare function CripplePlayer(whichPlayer: player, toWhichPlayers: force, flag:
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetPlayerAbilityAvailable}
  */
-declare function SetPlayerAbilityAvailable(whichPlayer: player, abilid: number, avail: boolean): void;
+declare function SetPlayerAbilityAvailable(whichPlayer: player, abilid: Rawcode<"ability">, avail: boolean): void;
 
 /**
  * @param whichPlayer - player
@@ -19973,7 +19973,7 @@ declare function DestroyUnitPool(whichPool: unitpool): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitPoolAddUnitType}
  */
-declare function UnitPoolAddUnitType(whichPool: unitpool, unitId: number, weight: number): void;
+declare function UnitPoolAddUnitType(whichPool: unitpool, unitId: Rawcode<"unit">, weight: number): void;
 
 /**
  * @param whichPool - unitpool
@@ -19981,7 +19981,7 @@ declare function UnitPoolAddUnitType(whichPool: unitpool, unitId: number, weight
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitPoolRemoveUnitType}
  */
-declare function UnitPoolRemoveUnitType(whichPool: unitpool, unitId: number): void;
+declare function UnitPoolRemoveUnitType(whichPool: unitpool, unitId: Rawcode<"unit">): void;
 
 /**
  * @param whichPool - unitpool
@@ -20016,7 +20016,7 @@ declare function DestroyItemPool(whichItemPool: itempool): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/ItemPoolAddItemType}
  */
-declare function ItemPoolAddItemType(whichItemPool: itempool, itemId: number, weight: number): void;
+declare function ItemPoolAddItemType(whichItemPool: itempool, itemId: Rawcode<"item">, weight: number): void;
 
 /**
  * @param whichItemPool - itempool
@@ -20024,7 +20024,7 @@ declare function ItemPoolAddItemType(whichItemPool: itempool, itemId: number, we
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/ItemPoolRemoveItemType}
  */
-declare function ItemPoolRemoveItemType(whichItemPool: itempool, itemId: number): void;
+declare function ItemPoolRemoveItemType(whichItemPool: itempool, itemId: Rawcode<"item">): void;
 
 /**
  * @param whichItemPool - itempool
@@ -21926,7 +21926,7 @@ declare function IsCineFilterDisplayed(): boolean;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetCinematicScene}
  */
-declare function SetCinematicScene(portraitUnitId: number, color: playercolor, speakerTitle: string, text: string, sceneDuration: number, voiceoverDuration: number): void;
+declare function SetCinematicScene(portraitUnitId: Rawcode<"unit">, color: playercolor, speakerTitle: string, text: string, sceneDuration: number, voiceoverDuration: number): void;
 
 /**
  * @returns nothing
@@ -22653,7 +22653,7 @@ declare function AddSpellEffectLoc(abilityString: string, t: effecttype, where: 
  * @remarks Returned nothing in a case of the nullability sweep (abilityId: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddSpellEffectById}
  */
-declare function AddSpellEffectById(abilityId: number, t: effecttype, x: number, y: number): effect | undefined;
+declare function AddSpellEffectById(abilityId: Rawcode<"ability">, t: effecttype, x: number, y: number): effect | undefined;
 
 /**
  * @param abilityId - integer (32-bit)
@@ -22663,7 +22663,7 @@ declare function AddSpellEffectById(abilityId: number, t: effecttype, x: number,
  * @remarks Returned nothing in 2 cases of the nullability sweep (abilityId: unknown rawcode, where: removed location) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddSpellEffectByIdLoc}
  */
-declare function AddSpellEffectByIdLoc(abilityId: number, t: effecttype, where: location): effect | undefined;
+declare function AddSpellEffectByIdLoc(abilityId: Rawcode<"ability">, t: effecttype, where: location): effect | undefined;
 
 /**
  * @param modelName - string
@@ -22685,7 +22685,7 @@ declare function AddSpellEffectTarget(modelName: string, t: effecttype, targetWi
  * @remarks Returned nothing in 4 cases of the nullability sweep (abilityId: unknown rawcode, attachPoint: empty string, targetWidget: removed item, targetWidget: removed destructable) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddSpellEffectTargetById}
  */
-declare function AddSpellEffectTargetById(abilityId: number, t: effecttype, targetWidget: widget, attachPoint: string): effect | undefined;
+declare function AddSpellEffectTargetById(abilityId: Rawcode<"ability">, t: effecttype, targetWidget: widget, attachPoint: string): effect | undefined;
 
 /**
  * @param codeName - string
@@ -22803,7 +22803,7 @@ declare function GetAbilityEffect(abilityString: string, t: effecttype, index: n
  * @returns string
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetAbilityEffectById}
  */
-declare function GetAbilityEffectById(abilityId: number, t: effecttype, index: number): string | undefined;
+declare function GetAbilityEffectById(abilityId: Rawcode<"ability">, t: effecttype, index: number): string | undefined;
 
 /**
  * @param abilityString - string
@@ -22819,7 +22819,7 @@ declare function GetAbilitySound(abilityString: string, t: soundtype): string | 
  * @returns string
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetAbilitySoundById}
  */
-declare function GetAbilitySoundById(abilityId: number, t: soundtype): string | undefined;
+declare function GetAbilitySoundById(abilityId: Rawcode<"ability">, t: soundtype): string | undefined;
 
 /**
  * @param x - real
@@ -23249,7 +23249,7 @@ declare function IsPointBlighted(x: number, y: number): boolean;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetDoodadAnimation}
  */
-declare function SetDoodadAnimation(x: number, y: number, radius: number, doodadID: number, nearestOnly: boolean, animName: string, animRandom: boolean): void;
+declare function SetDoodadAnimation(x: number, y: number, radius: number, doodadID: Rawcode<"doodad">, nearestOnly: boolean, animName: string, animRandom: boolean): void;
 
 /**
  * @param r - rect
@@ -23259,7 +23259,7 @@ declare function SetDoodadAnimation(x: number, y: number, radius: number, doodad
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetDoodadAnimationRect}
  */
-declare function SetDoodadAnimationRect(r: rect, doodadID: number, animName: string, animRandom: boolean): void;
+declare function SetDoodadAnimationRect(r: rect, doodadID: Rawcode<"doodad">, animName: string, animRandom: boolean): void;
 
 /**
  * @param index - integer (32-bit)
@@ -23282,7 +23282,7 @@ declare function BlzSetSingleDoodadAnimation(index: number, animName: string, an
  * @patch 3.0.0.24268
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetDoodadColor}
  */
-declare function SetDoodadColor(x: number, y: number, radius: number, doodadID: number, nearestOnly: boolean, whichColor: playercolor): void;
+declare function SetDoodadColor(x: number, y: number, radius: number, doodadID: Rawcode<"doodad">, nearestOnly: boolean, whichColor: playercolor): void;
 
 /**
  * @param r - rect
@@ -23292,7 +23292,7 @@ declare function SetDoodadColor(x: number, y: number, radius: number, doodadID: 
  * @patch 3.0.0.24268
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetDoodadColorRect}
  */
-declare function SetDoodadColorRect(r: rect, doodadID: number, whichColor: playercolor): void;
+declare function SetDoodadColorRect(r: rect, doodadID: Rawcode<"doodad">, whichColor: playercolor): void;
 
 /**
  * @param index - integer (32-bit)
@@ -23611,7 +23611,7 @@ declare function BlzGetTriggerPlayerMouseButton(): mousebuttontype | undefined;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetAbilityTooltip}
  */
-declare function BlzSetAbilityTooltip(abilCode: number, tooltip: string, level: number): void;
+declare function BlzSetAbilityTooltip(abilCode: Rawcode<"ability">, tooltip: string, level: number): void;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23620,7 +23620,7 @@ declare function BlzSetAbilityTooltip(abilCode: number, tooltip: string, level: 
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetAbilityActivatedTooltip}
  */
-declare function BlzSetAbilityActivatedTooltip(abilCode: number, tooltip: string, level: number): void;
+declare function BlzSetAbilityActivatedTooltip(abilCode: Rawcode<"ability">, tooltip: string, level: number): void;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23629,7 +23629,7 @@ declare function BlzSetAbilityActivatedTooltip(abilCode: number, tooltip: string
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetAbilityExtendedTooltip}
  */
-declare function BlzSetAbilityExtendedTooltip(abilCode: number, extendedTooltip: string, level: number): void;
+declare function BlzSetAbilityExtendedTooltip(abilCode: Rawcode<"ability">, extendedTooltip: string, level: number): void;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23638,7 +23638,7 @@ declare function BlzSetAbilityExtendedTooltip(abilCode: number, extendedTooltip:
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetAbilityActivatedExtendedTooltip}
  */
-declare function BlzSetAbilityActivatedExtendedTooltip(abilCode: number, extendedTooltip: string, level: number): void;
+declare function BlzSetAbilityActivatedExtendedTooltip(abilCode: Rawcode<"ability">, extendedTooltip: string, level: number): void;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23647,7 +23647,7 @@ declare function BlzSetAbilityActivatedExtendedTooltip(abilCode: number, extende
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetAbilityResearchTooltip}
  */
-declare function BlzSetAbilityResearchTooltip(abilCode: number, researchTooltip: string, level: number): void;
+declare function BlzSetAbilityResearchTooltip(abilCode: Rawcode<"ability">, researchTooltip: string, level: number): void;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23656,7 +23656,7 @@ declare function BlzSetAbilityResearchTooltip(abilCode: number, researchTooltip:
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetAbilityResearchExtendedTooltip}
  */
-declare function BlzSetAbilityResearchExtendedTooltip(abilCode: number, researchExtendedTooltip: string, level: number): void;
+declare function BlzSetAbilityResearchExtendedTooltip(abilCode: Rawcode<"ability">, researchExtendedTooltip: string, level: number): void;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23665,7 +23665,7 @@ declare function BlzSetAbilityResearchExtendedTooltip(abilCode: number, research
  * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityTooltip}
  */
-declare function BlzGetAbilityTooltip(abilCode: number, level: number): string | undefined;
+declare function BlzGetAbilityTooltip(abilCode: Rawcode<"ability">, level: number): string | undefined;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23674,7 +23674,7 @@ declare function BlzGetAbilityTooltip(abilCode: number, level: number): string |
  * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityActivatedTooltip}
  */
-declare function BlzGetAbilityActivatedTooltip(abilCode: number, level: number): string | undefined;
+declare function BlzGetAbilityActivatedTooltip(abilCode: Rawcode<"ability">, level: number): string | undefined;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23683,7 +23683,7 @@ declare function BlzGetAbilityActivatedTooltip(abilCode: number, level: number):
  * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityExtendedTooltip}
  */
-declare function BlzGetAbilityExtendedTooltip(abilCode: number, level: number): string | undefined;
+declare function BlzGetAbilityExtendedTooltip(abilCode: Rawcode<"ability">, level: number): string | undefined;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23692,7 +23692,7 @@ declare function BlzGetAbilityExtendedTooltip(abilCode: number, level: number): 
  * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityActivatedExtendedTooltip}
  */
-declare function BlzGetAbilityActivatedExtendedTooltip(abilCode: number, level: number): string | undefined;
+declare function BlzGetAbilityActivatedExtendedTooltip(abilCode: Rawcode<"ability">, level: number): string | undefined;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23701,7 +23701,7 @@ declare function BlzGetAbilityActivatedExtendedTooltip(abilCode: number, level: 
  * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityResearchTooltip}
  */
-declare function BlzGetAbilityResearchTooltip(abilCode: number, level: number): string | undefined;
+declare function BlzGetAbilityResearchTooltip(abilCode: Rawcode<"ability">, level: number): string | undefined;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23710,7 +23710,7 @@ declare function BlzGetAbilityResearchTooltip(abilCode: number, level: number): 
  * @async
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityResearchExtendedTooltip}
  */
-declare function BlzGetAbilityResearchExtendedTooltip(abilCode: number, level: number): string | undefined;
+declare function BlzGetAbilityResearchExtendedTooltip(abilCode: Rawcode<"ability">, level: number): string | undefined;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23718,14 +23718,14 @@ declare function BlzGetAbilityResearchExtendedTooltip(abilCode: number, level: n
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetAbilityIcon}
  */
-declare function BlzSetAbilityIcon(abilCode: number, iconPath: string): void;
+declare function BlzSetAbilityIcon(abilCode: Rawcode<"ability">, iconPath: string): void;
 
 /**
  * @param abilCode - integer (32-bit)
  * @returns string
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityIcon}
  */
-declare function BlzGetAbilityIcon(abilCode: number): string | undefined;
+declare function BlzGetAbilityIcon(abilCode: Rawcode<"ability">): string | undefined;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23733,28 +23733,28 @@ declare function BlzGetAbilityIcon(abilCode: number): string | undefined;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetAbilityActivatedIcon}
  */
-declare function BlzSetAbilityActivatedIcon(abilCode: number, iconPath: string): void;
+declare function BlzSetAbilityActivatedIcon(abilCode: Rawcode<"ability">, iconPath: string): void;
 
 /**
  * @param abilCode - integer (32-bit)
  * @returns string
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityActivatedIcon}
  */
-declare function BlzGetAbilityActivatedIcon(abilCode: number): string | undefined;
+declare function BlzGetAbilityActivatedIcon(abilCode: Rawcode<"ability">): string | undefined;
 
 /**
  * @param abilCode - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityPosX}
  */
-declare function BlzGetAbilityPosX(abilCode: number): number;
+declare function BlzGetAbilityPosX(abilCode: Rawcode<"ability">): number;
 
 /**
  * @param abilCode - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityPosY}
  */
-declare function BlzGetAbilityPosY(abilCode: number): number;
+declare function BlzGetAbilityPosY(abilCode: Rawcode<"ability">): number;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23762,7 +23762,7 @@ declare function BlzGetAbilityPosY(abilCode: number): number;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetAbilityPosX}
  */
-declare function BlzSetAbilityPosX(abilCode: number, x: number): void;
+declare function BlzSetAbilityPosX(abilCode: Rawcode<"ability">, x: number): void;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23770,21 +23770,21 @@ declare function BlzSetAbilityPosX(abilCode: number, x: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetAbilityPosY}
  */
-declare function BlzSetAbilityPosY(abilCode: number, y: number): void;
+declare function BlzSetAbilityPosY(abilCode: Rawcode<"ability">, y: number): void;
 
 /**
  * @param abilCode - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityActivatedPosX}
  */
-declare function BlzGetAbilityActivatedPosX(abilCode: number): number;
+declare function BlzGetAbilityActivatedPosX(abilCode: Rawcode<"ability">): number;
 
 /**
  * @param abilCode - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityActivatedPosY}
  */
-declare function BlzGetAbilityActivatedPosY(abilCode: number): number;
+declare function BlzGetAbilityActivatedPosY(abilCode: Rawcode<"ability">): number;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23792,7 +23792,7 @@ declare function BlzGetAbilityActivatedPosY(abilCode: number): number;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetAbilityActivatedPosX}
  */
-declare function BlzSetAbilityActivatedPosX(abilCode: number, x: number): void;
+declare function BlzSetAbilityActivatedPosX(abilCode: Rawcode<"ability">, x: number): void;
 
 /**
  * @param abilCode - integer (32-bit)
@@ -23800,7 +23800,7 @@ declare function BlzSetAbilityActivatedPosX(abilCode: number, x: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetAbilityActivatedPosY}
  */
-declare function BlzSetAbilityActivatedPosY(abilCode: number, y: number): void;
+declare function BlzSetAbilityActivatedPosY(abilCode: Rawcode<"ability">, y: number): void;
 
 /**
  * @param whichUnit - unit
@@ -24250,7 +24250,7 @@ declare function BlzSetUnitArmor(whichUnit: unit, armorAmount: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzUnitHideAbility}
  */
-declare function BlzUnitHideAbility(whichUnit: unit, abilId: number, flag: boolean): void;
+declare function BlzUnitHideAbility(whichUnit: unit, abilId: Rawcode<"ability">, flag: boolean): void;
 
 /**
  * @param whichUnit - unit
@@ -24260,7 +24260,7 @@ declare function BlzUnitHideAbility(whichUnit: unit, abilId: number, flag: boole
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzUnitDisableAbility}
  */
-declare function BlzUnitDisableAbility(whichUnit: unit, abilId: number, flag: boolean, hideUI: boolean): void;
+declare function BlzUnitDisableAbility(whichUnit: unit, abilId: Rawcode<"ability">, flag: boolean, hideUI: boolean): void;
 
 /**
  * @param whichUnit - unit
@@ -24313,7 +24313,7 @@ declare function BlzGetUnitCollisionSize(whichUnit: unit): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityManaCost}
  */
-declare function BlzGetAbilityManaCost(abilId: number, level: number): number;
+declare function BlzGetAbilityManaCost(abilId: Rawcode<"ability">, level: number): number;
 
 /**
  * @param abilId - integer (32-bit)
@@ -24321,7 +24321,7 @@ declare function BlzGetAbilityManaCost(abilId: number, level: number): number;
  * @returns real
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetAbilityCooldown}
  */
-declare function BlzGetAbilityCooldown(abilId: number, level: number): number;
+declare function BlzGetAbilityCooldown(abilId: Rawcode<"ability">, level: number): number;
 
 /**
  * @param whichUnit - unit
@@ -24331,7 +24331,7 @@ declare function BlzGetAbilityCooldown(abilId: number, level: number): number;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetUnitAbilityCooldown}
  */
-declare function BlzSetUnitAbilityCooldown(whichUnit: unit, abilId: number, level: number, cooldown: number): void;
+declare function BlzSetUnitAbilityCooldown(whichUnit: unit, abilId: Rawcode<"ability">, level: number, cooldown: number): void;
 
 /**
  * @param whichUnit - unit
@@ -24340,7 +24340,7 @@ declare function BlzSetUnitAbilityCooldown(whichUnit: unit, abilId: number, leve
  * @returns real
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetUnitAbilityCooldown}
  */
-declare function BlzGetUnitAbilityCooldown(whichUnit: unit, abilId: number, level: number): number;
+declare function BlzGetUnitAbilityCooldown(whichUnit: unit, abilId: Rawcode<"ability">, level: number): number;
 
 /**
  * @param whichUnit - unit
@@ -24348,7 +24348,7 @@ declare function BlzGetUnitAbilityCooldown(whichUnit: unit, abilId: number, leve
  * @returns real
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetUnitAbilityCooldownRemaining}
  */
-declare function BlzGetUnitAbilityCooldownRemaining(whichUnit: unit, abilId: number): number;
+declare function BlzGetUnitAbilityCooldownRemaining(whichUnit: unit, abilId: Rawcode<"ability">): number;
 
 /**
  * @param whichUnit - unit
@@ -24357,7 +24357,7 @@ declare function BlzGetUnitAbilityCooldownRemaining(whichUnit: unit, abilId: num
  * @patch 3.0.0.24268
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetUnitAbilityCooldownPercent}
  */
-declare function BlzGetUnitAbilityCooldownPercent(whichUnit: unit, abilId: number): number;
+declare function BlzGetUnitAbilityCooldownPercent(whichUnit: unit, abilId: Rawcode<"ability">): number;
 
 /**
  * @param whichUnit - unit
@@ -24367,7 +24367,7 @@ declare function BlzGetUnitAbilityCooldownPercent(whichUnit: unit, abilId: numbe
  * @patch 3.0.0.24268
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetUnitAbilityCooldownRemaining}
  */
-declare function BlzSetUnitAbilityCooldownRemaining(whichUnit: unit, abilId: number, duration: number): void;
+declare function BlzSetUnitAbilityCooldownRemaining(whichUnit: unit, abilId: Rawcode<"ability">, duration: number): void;
 
 /**
  * @param whichUnit - unit
@@ -24377,7 +24377,7 @@ declare function BlzSetUnitAbilityCooldownRemaining(whichUnit: unit, abilId: num
  * @patch 3.0.0.24268
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetUnitAbilityCooldownPercent}
  */
-declare function BlzSetUnitAbilityCooldownPercent(whichUnit: unit, abilId: number, percent: number): void;
+declare function BlzSetUnitAbilityCooldownPercent(whichUnit: unit, abilId: Rawcode<"ability">, percent: number): void;
 
 /**
  * @param whichUnit - unit
@@ -24387,7 +24387,7 @@ declare function BlzSetUnitAbilityCooldownPercent(whichUnit: unit, abilId: numbe
  * @patch 3.0.0.24268
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzAdjustUnitAbilityCooldownRemaining}
  */
-declare function BlzAdjustUnitAbilityCooldownRemaining(whichUnit: unit, abilId: number, duration: number): void;
+declare function BlzAdjustUnitAbilityCooldownRemaining(whichUnit: unit, abilId: Rawcode<"ability">, duration: number): void;
 
 /**
  * @param whichUnit - unit
@@ -24397,7 +24397,7 @@ declare function BlzAdjustUnitAbilityCooldownRemaining(whichUnit: unit, abilId: 
  * @patch 3.0.0.24268
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzAdjustUnitAbilityCooldownPercent}
  */
-declare function BlzAdjustUnitAbilityCooldownPercent(whichUnit: unit, abilId: number, percent: number): void;
+declare function BlzAdjustUnitAbilityCooldownPercent(whichUnit: unit, abilId: Rawcode<"ability">, percent: number): void;
 
 /**
  * @param whichUnit - unit
@@ -24405,7 +24405,7 @@ declare function BlzAdjustUnitAbilityCooldownPercent(whichUnit: unit, abilId: nu
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzEndUnitAbilityCooldown}
  */
-declare function BlzEndUnitAbilityCooldown(whichUnit: unit, abilCode: number): void;
+declare function BlzEndUnitAbilityCooldown(whichUnit: unit, abilCode: Rawcode<"ability">): void;
 
 /**
  * @param whichUnit - unit
@@ -24414,7 +24414,7 @@ declare function BlzEndUnitAbilityCooldown(whichUnit: unit, abilCode: number): v
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzStartUnitAbilityCooldown}
  */
-declare function BlzStartUnitAbilityCooldown(whichUnit: unit, abilCode: number, cooldown: number): void;
+declare function BlzStartUnitAbilityCooldown(whichUnit: unit, abilCode: Rawcode<"ability">, cooldown: number): void;
 
 /**
  * @param whichUnit - unit
@@ -24423,7 +24423,7 @@ declare function BlzStartUnitAbilityCooldown(whichUnit: unit, abilCode: number, 
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetUnitAbilityManaCost}
  */
-declare function BlzGetUnitAbilityManaCost(whichUnit: unit, abilId: number, level: number): number;
+declare function BlzGetUnitAbilityManaCost(whichUnit: unit, abilId: Rawcode<"ability">, level: number): number;
 
 /**
  * @param whichUnit - unit
@@ -24433,7 +24433,7 @@ declare function BlzGetUnitAbilityManaCost(whichUnit: unit, abilId: number, leve
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetUnitAbilityManaCost}
  */
-declare function BlzSetUnitAbilityManaCost(whichUnit: unit, abilId: number, level: number, manaCost: number): void;
+declare function BlzSetUnitAbilityManaCost(whichUnit: unit, abilId: Rawcode<"ability">, level: number, manaCost: number): void;
 
 /**
  * @param whichUnit - unit
@@ -24450,7 +24450,7 @@ declare function BlzGetLocalUnitZ(whichUnit: unit): number;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzDecPlayerTechResearched}
  */
-declare function BlzDecPlayerTechResearched(whichPlayer: player, techid: number, levels: number): void;
+declare function BlzDecPlayerTechResearched(whichPlayer: player, techid: Rawcode<"unit" | "upgrade">, levels: number): void;
 
 /**
  * @param damage - real
@@ -25300,7 +25300,7 @@ declare function BlzResetSpecialEffectMatrix(whichEffect: effect): void;
  * @remarks Returned nothing in a case of the nullability sweep (ability it lacks) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetUnitAbility}
  */
-declare function BlzGetUnitAbility(whichUnit: unit, abilId: number): ability | undefined;
+declare function BlzGetUnitAbility(whichUnit: unit, abilId: Rawcode<"ability">): ability | undefined;
 
 /**
  * @param whichUnit - unit
@@ -25350,7 +25350,7 @@ declare function BlzSetUnitFacingEx(whichUnit: unit, facingAngle: number): void;
  * @remarks Returned a placeholder handle in place of nothing in 2 cases of the nullability sweep (order: empty string, order: unknown name) on 3.0.0.24268: id 0, so a nil check does not catch it. It was the same `commandbuttoneffect` both times, so a nil check does not tell that the order is unknown.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateCommandButtonEffect}
  */
-declare function CreateCommandButtonEffect(abilityId: number, order: string): commandbuttoneffect | undefined;
+declare function CreateCommandButtonEffect(abilityId: Rawcode<"ability">, order: string): commandbuttoneffect | undefined;
 
 /**
  * @param whichUprgade - integer (32-bit)
@@ -25358,7 +25358,7 @@ declare function CreateCommandButtonEffect(abilityId: number, order: string): co
  * @remarks Returned a handle in every case of the nullability sweep (typical arguments, whichUprgade: unknown rawcode) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUpgradeCommandButtonEffect}
  */
-declare function CreateUpgradeCommandButtonEffect(whichUprgade: number): commandbuttoneffect;
+declare function CreateUpgradeCommandButtonEffect(whichUprgade: Rawcode<"upgrade">): commandbuttoneffect;
 
 /**
  * @param abilityId - integer (32-bit)
@@ -25366,7 +25366,7 @@ declare function CreateUpgradeCommandButtonEffect(whichUprgade: number): command
  * @remarks Returned a handle in every case of the nullability sweep (typical arguments, abilityId: unknown rawcode) on 3.0.0.24268; evidence, not proof.
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateLearnCommandButtonEffect}
  */
-declare function CreateLearnCommandButtonEffect(abilityId: number): commandbuttoneffect;
+declare function CreateLearnCommandButtonEffect(abilityId: Rawcode<"ability">): commandbuttoneffect;
 
 /**
  * @param whichEffect - commandbuttoneffect
@@ -25723,7 +25723,7 @@ declare function BlzGetItemAbilityByIndex(whichItem: item, index: number): abili
  * @remarks Returned nothing in a case of the nullability sweep (ability it lacks) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzGetItemAbility}
  */
-declare function BlzGetItemAbility(whichItem: item, abilCode: number): ability | undefined;
+declare function BlzGetItemAbility(whichItem: item, abilCode: Rawcode<"ability">): ability | undefined;
 
 /**
  * @param whichItem - item
@@ -25731,7 +25731,7 @@ declare function BlzGetItemAbility(whichItem: item, abilCode: number): ability |
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzItemAddAbility}
  */
-declare function BlzItemAddAbility(whichItem: item, abilCode: number): boolean;
+declare function BlzItemAddAbility(whichItem: item, abilCode: Rawcode<"ability">): boolean;
 
 /**
  * @param whichItem - item
@@ -25807,7 +25807,7 @@ declare function BlzSetItemStringField(whichItem: item, whichField: itemstringfi
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzItemRemoveAbility}
  */
-declare function BlzItemRemoveAbility(whichItem: item, abilCode: number): boolean;
+declare function BlzItemRemoveAbility(whichItem: item, abilCode: Rawcode<"ability">): boolean;
 
 /**
  * @param whichUnit - unit
@@ -25973,7 +25973,7 @@ declare function BlzGetItemSkin(whichItem: item): number;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetUnitSkin}
  */
-declare function BlzSetUnitSkin(whichUnit: unit, skinId: number): void;
+declare function BlzSetUnitSkin(whichUnit: unit, skinId: Rawcode<"unit">): void;
 
 /**
  * @param whichItem - item
@@ -25981,7 +25981,7 @@ declare function BlzSetUnitSkin(whichUnit: unit, skinId: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzSetItemSkin}
  */
-declare function BlzSetItemSkin(whichItem: item, skinId: number): void;
+declare function BlzSetItemSkin(whichItem: item, skinId: Rawcode<"item">): void;
 
 /**
  * @param itemid - integer (32-bit)
@@ -25992,7 +25992,7 @@ declare function BlzSetItemSkin(whichItem: item, skinId: number): void;
  * @remarks Returned nothing in a case of the nullability sweep (itemid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateItemWithSkin}
  */
-declare function BlzCreateItemWithSkin(itemid: number, x: number, y: number, skinId: number): item | undefined;
+declare function BlzCreateItemWithSkin(itemid: Rawcode<"item">, x: number, y: number, skinId: Rawcode<"item">): item | undefined;
 
 /**
  * @param id - player
@@ -26005,7 +26005,7 @@ declare function BlzCreateItemWithSkin(itemid: number, x: number, y: number, ski
  * @remarks Returned nothing in a case of the nullability sweep (unitid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateUnitWithSkin}
  */
-declare function BlzCreateUnitWithSkin(id: player, unitid: number, x: number, y: number, face: number, skinId: number): unit | undefined;
+declare function BlzCreateUnitWithSkin(id: player, unitid: Rawcode<"unit">, x: number, y: number, face: number, skinId: Rawcode<"unit">): unit | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26019,7 +26019,7 @@ declare function BlzCreateUnitWithSkin(id: player, unitid: number, x: number, y:
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableWithSkin}
  */
-declare function BlzCreateDestructableWithSkin(objectid: number, x: number, y: number, face: number, scale: number, variation: number, skinId: number): destructable | undefined;
+declare function BlzCreateDestructableWithSkin(objectid: Rawcode<"destructable">, x: number, y: number, face: number, scale: number, variation: number, skinId: Rawcode<"destructable">): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26034,7 +26034,7 @@ declare function BlzCreateDestructableWithSkin(objectid: number, x: number, y: n
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZWithSkin}
  */
-declare function BlzCreateDestructableZWithSkin(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number, skinId: number): destructable | undefined;
+declare function BlzCreateDestructableZWithSkin(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, scale: number, variation: number, skinId: Rawcode<"destructable">): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26048,7 +26048,7 @@ declare function BlzCreateDestructableZWithSkin(objectid: number, x: number, y: 
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableWithSkin}
  */
-declare function BlzCreateDeadDestructableWithSkin(objectid: number, x: number, y: number, face: number, scale: number, variation: number, skinId: number): destructable | undefined;
+declare function BlzCreateDeadDestructableWithSkin(objectid: Rawcode<"destructable">, x: number, y: number, face: number, scale: number, variation: number, skinId: Rawcode<"destructable">): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26063,7 +26063,7 @@ declare function BlzCreateDeadDestructableWithSkin(objectid: number, x: number, 
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZWithSkin}
  */
-declare function BlzCreateDeadDestructableZWithSkin(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number, skinId: number): destructable | undefined;
+declare function BlzCreateDeadDestructableZWithSkin(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, scale: number, variation: number, skinId: Rawcode<"destructable">): destructable | undefined;
 
 /**
  * @param whichPlayer - player
@@ -26128,7 +26128,7 @@ declare function BlzQueueInstantTargetOrderById(whichUnit: unit, order: number, 
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzQueueBuildOrderById}
  */
-declare function BlzQueueBuildOrderById(whichPeon: unit, unitId: number, x: number, y: number): boolean;
+declare function BlzQueueBuildOrderById(whichPeon: unit, unitId: Rawcode<"unit">, x: number, y: number): boolean;
 
 /**
  * @param forWhichPlayer - player
@@ -26137,7 +26137,7 @@ declare function BlzQueueBuildOrderById(whichPeon: unit, unitId: number, x: numb
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzQueueNeutralImmediateOrderById}
  */
-declare function BlzQueueNeutralImmediateOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: number): boolean;
+declare function BlzQueueNeutralImmediateOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: Rawcode): boolean;
 
 /**
  * @param forWhichPlayer - player
@@ -26148,7 +26148,7 @@ declare function BlzQueueNeutralImmediateOrderById(forWhichPlayer: player, neutr
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzQueueNeutralPointOrderById}
  */
-declare function BlzQueueNeutralPointOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: number, x: number, y: number): boolean;
+declare function BlzQueueNeutralPointOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: Rawcode, x: number, y: number): boolean;
 
 /**
  * @param forWhichPlayer - player
@@ -26158,7 +26158,7 @@ declare function BlzQueueNeutralPointOrderById(forWhichPlayer: player, neutralSt
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzQueueNeutralTargetOrderById}
  */
-declare function BlzQueueNeutralTargetOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: number, target: widget): boolean;
+declare function BlzQueueNeutralTargetOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: Rawcode, target: widget): boolean;
 
 /**
  * @param whichUnit - unit
@@ -26197,7 +26197,7 @@ declare function BlzUnitForceStopOrder(whichUnit: unit, clearQueue: boolean): vo
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructablePitchRoll}
  */
-declare function BlzCreateDestructablePitchRoll(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number): destructable | undefined;
+declare function BlzCreateDestructablePitchRoll(objectid: Rawcode<"destructable">, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26214,7 +26214,7 @@ declare function BlzCreateDestructablePitchRoll(objectid: number, x: number, y: 
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZPitchRoll}
  */
-declare function BlzCreateDestructableZPitchRoll(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number): destructable | undefined;
+declare function BlzCreateDestructableZPitchRoll(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26230,7 +26230,7 @@ declare function BlzCreateDestructableZPitchRoll(objectid: number, x: number, y:
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructablePitchRoll}
  */
-declare function BlzCreateDeadDestructablePitchRoll(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number): destructable | undefined;
+declare function BlzCreateDeadDestructablePitchRoll(objectid: Rawcode<"destructable">, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26247,7 +26247,7 @@ declare function BlzCreateDeadDestructablePitchRoll(objectid: number, x: number,
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZPitchRoll}
  */
-declare function BlzCreateDeadDestructableZPitchRoll(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number): destructable | undefined;
+declare function BlzCreateDeadDestructableZPitchRoll(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26264,7 +26264,7 @@ declare function BlzCreateDeadDestructableZPitchRoll(objectid: number, x: number
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableWithSkinPitchRoll}
  */
-declare function BlzCreateDestructableWithSkinPitchRoll(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number): destructable | undefined;
+declare function BlzCreateDestructableWithSkinPitchRoll(objectid: Rawcode<"destructable">, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: Rawcode<"destructable">): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26282,7 +26282,7 @@ declare function BlzCreateDestructableWithSkinPitchRoll(objectid: number, x: num
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZWithSkinPitchRoll}
  */
-declare function BlzCreateDestructableZWithSkinPitchRoll(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number): destructable | undefined;
+declare function BlzCreateDestructableZWithSkinPitchRoll(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: Rawcode<"destructable">): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26299,7 +26299,7 @@ declare function BlzCreateDestructableZWithSkinPitchRoll(objectid: number, x: nu
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableWithSkinPitchRoll}
  */
-declare function BlzCreateDeadDestructableWithSkinPitchRoll(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number): destructable | undefined;
+declare function BlzCreateDeadDestructableWithSkinPitchRoll(objectid: Rawcode<"destructable">, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: Rawcode<"destructable">): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26317,7 +26317,7 @@ declare function BlzCreateDeadDestructableWithSkinPitchRoll(objectid: number, x:
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZWithSkinPitchRoll}
  */
-declare function BlzCreateDeadDestructableZWithSkinPitchRoll(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number): destructable | undefined;
+declare function BlzCreateDeadDestructableZWithSkinPitchRoll(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: Rawcode<"destructable">): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26332,7 +26332,7 @@ declare function BlzCreateDeadDestructableZWithSkinPitchRoll(objectid: number, x
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableWithColor}
  */
-declare function BlzCreateDestructableWithColor(objectid: number, x: number, y: number, face: number, scale: number, variation: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDestructableWithColor(objectid: Rawcode<"destructable">, x: number, y: number, face: number, scale: number, variation: number, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26348,7 +26348,7 @@ declare function BlzCreateDestructableWithColor(objectid: number, x: number, y: 
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZWithColor}
  */
-declare function BlzCreateDestructableZWithColor(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDestructableZWithColor(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, scale: number, variation: number, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26363,7 +26363,7 @@ declare function BlzCreateDestructableZWithColor(objectid: number, x: number, y:
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableWithColor}
  */
-declare function BlzCreateDeadDestructableWithColor(objectid: number, x: number, y: number, face: number, scale: number, variation: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDeadDestructableWithColor(objectid: Rawcode<"destructable">, x: number, y: number, face: number, scale: number, variation: number, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26379,7 +26379,7 @@ declare function BlzCreateDeadDestructableWithColor(objectid: number, x: number,
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZWithColor}
  */
-declare function BlzCreateDeadDestructableZWithColor(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDeadDestructableZWithColor(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, scale: number, variation: number, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26395,7 +26395,7 @@ declare function BlzCreateDeadDestructableZWithColor(objectid: number, x: number
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableWithSkinColor}
  */
-declare function BlzCreateDestructableWithSkinColor(objectid: number, x: number, y: number, face: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDestructableWithSkinColor(objectid: Rawcode<"destructable">, x: number, y: number, face: number, scale: number, variation: number, skinId: Rawcode<"destructable">, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26412,7 +26412,7 @@ declare function BlzCreateDestructableWithSkinColor(objectid: number, x: number,
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZWithSkinColor}
  */
-declare function BlzCreateDestructableZWithSkinColor(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDestructableZWithSkinColor(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, scale: number, variation: number, skinId: Rawcode<"destructable">, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26428,7 +26428,7 @@ declare function BlzCreateDestructableZWithSkinColor(objectid: number, x: number
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableWithSkinColor}
  */
-declare function BlzCreateDeadDestructableWithSkinColor(objectid: number, x: number, y: number, face: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDeadDestructableWithSkinColor(objectid: Rawcode<"destructable">, x: number, y: number, face: number, scale: number, variation: number, skinId: Rawcode<"destructable">, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26445,7 +26445,7 @@ declare function BlzCreateDeadDestructableWithSkinColor(objectid: number, x: num
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZWithSkinColor}
  */
-declare function BlzCreateDeadDestructableZWithSkinColor(objectid: number, x: number, y: number, z: number, face: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDeadDestructableZWithSkinColor(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, scale: number, variation: number, skinId: Rawcode<"destructable">, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26462,7 +26462,7 @@ declare function BlzCreateDeadDestructableZWithSkinColor(objectid: number, x: nu
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructablePitchRollWithColor}
  */
-declare function BlzCreateDestructablePitchRollWithColor(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDestructablePitchRollWithColor(objectid: Rawcode<"destructable">, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26480,7 +26480,7 @@ declare function BlzCreateDestructablePitchRollWithColor(objectid: number, x: nu
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZPitchRollWithColor}
  */
-declare function BlzCreateDestructableZPitchRollWithColor(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDestructableZPitchRollWithColor(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26497,7 +26497,7 @@ declare function BlzCreateDestructableZPitchRollWithColor(objectid: number, x: n
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructablePitchRollWithColor}
  */
-declare function BlzCreateDeadDestructablePitchRollWithColor(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDeadDestructablePitchRollWithColor(objectid: Rawcode<"destructable">, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26515,7 +26515,7 @@ declare function BlzCreateDeadDestructablePitchRollWithColor(objectid: number, x
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZPitchRollWithColor}
  */
-declare function BlzCreateDeadDestructableZPitchRollWithColor(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDeadDestructableZPitchRollWithColor(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26533,7 +26533,7 @@ declare function BlzCreateDeadDestructableZPitchRollWithColor(objectid: number, 
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableWithSkinPitchRollColor}
  */
-declare function BlzCreateDestructableWithSkinPitchRollColor(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDestructableWithSkinPitchRollColor(objectid: Rawcode<"destructable">, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: Rawcode<"destructable">, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26552,7 +26552,7 @@ declare function BlzCreateDestructableWithSkinPitchRollColor(objectid: number, x
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDestructableZWithSkinPitchRollColor}
  */
-declare function BlzCreateDestructableZWithSkinPitchRollColor(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDestructableZWithSkinPitchRollColor(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: Rawcode<"destructable">, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26570,7 +26570,7 @@ declare function BlzCreateDestructableZWithSkinPitchRollColor(objectid: number, 
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableWithSkinPitchRollColor}
  */
-declare function BlzCreateDeadDestructableWithSkinPitchRollColor(objectid: number, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDeadDestructableWithSkinPitchRollColor(objectid: Rawcode<"destructable">, x: number, y: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: Rawcode<"destructable">, color: playercolor): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -26589,7 +26589,7 @@ declare function BlzCreateDeadDestructableWithSkinPitchRollColor(objectid: numbe
  * @remarks Returned nothing in a case of the nullability sweep (objectid: unknown rawcode) on 3.0.0.24268.
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzCreateDeadDestructableZWithSkinPitchRollColor}
  */
-declare function BlzCreateDeadDestructableZWithSkinPitchRollColor(objectid: number, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: number, color: playercolor): destructable | undefined;
+declare function BlzCreateDeadDestructableZWithSkinPitchRollColor(objectid: Rawcode<"destructable">, x: number, y: number, z: number, face: number, roll: number, pitch: number, scale: number, variation: number, skinId: Rawcode<"destructable">, color: playercolor): destructable | undefined;
 
 /**
  * @param whichDestructable - destructable

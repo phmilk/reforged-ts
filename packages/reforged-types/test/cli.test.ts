@@ -85,7 +85,7 @@ describe("typings:generate", () => {
     expect(
       await readFile(join(outDir, "3.0.0", "common.j.d.ts"), "utf8"),
     ).toContain(
-      "declare function CreateUnit(id: player, unitid: number, x: number, y: number, face: number): unit | undefined;",
+      'declare function CreateUnit(id: player, unitid: Rawcode<"unit">, x: number, y: number, face: number): unit | undefined;',
     );
   });
 

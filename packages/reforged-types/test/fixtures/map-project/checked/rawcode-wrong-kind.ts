@@ -1,6 +1,6 @@
-// Negative: an ability's Rawcode where a unit's is expected.
-declare function takeUnit(id: Rawcode<"unit">): void;
+// Negative: an ability's Rawcode where CreateUnit expects a unit's.
+declare const owner: player;
 declare const spell: Rawcode<"ability">;
-takeUnit(spell);
+CreateUnit(owner, spell, 0, 0, 0);
 
 export {};

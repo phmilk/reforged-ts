@@ -28,7 +28,8 @@
     },
     {
       "name": "skinId",
-      "nullable": false
+      "nullable": false,
+      "kind": "unit"
     }
   ],
   "notes": "Returned nothing in a case of the nullability sweep (unitid: unknown rawcode) on 3.0.0.24268.",

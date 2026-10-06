@@ -7,7 +7,8 @@
   "params": [
     {
       "name": "id",
-      "nullable": false
+      "nullable": false,
+      "kind": "upgrade"
     }
   ],
   "origin": "war3-types-strict"

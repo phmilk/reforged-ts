@@ -25,7 +25,7 @@ declare function DebugFI(str: string, val: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/DebugUnitID}
  */
-declare function DebugUnitID(str: string, val: number): void;
+declare function DebugUnitID(str: string, val: Rawcode<"unit">): void;
 
 /**
  * @param p - integer (32-bit)
@@ -94,7 +94,7 @@ declare function GetHeroLevelAI(): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitCount}
  */
-declare function GetUnitCount(unitid: number): number;
+declare function GetUnitCount(unitid: Rawcode<"unit">): number;
 
 /**
  * @param p - player
@@ -102,14 +102,14 @@ declare function GetUnitCount(unitid: number): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetPlayerUnitTypeCount}
  */
-declare function GetPlayerUnitTypeCount(p: player, unitid: number): number;
+declare function GetPlayerUnitTypeCount(p: player, unitid: Rawcode<"unit">): number;
 
 /**
  * @param unitid - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitCountDone}
  */
-declare function GetUnitCountDone(unitid: number): number;
+declare function GetUnitCountDone(unitid: Rawcode<"unit">): number;
 
 /**
  * @param id - integer (32-bit)
@@ -118,28 +118,28 @@ declare function GetUnitCountDone(unitid: number): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetTownUnitCount}
  */
-declare function GetTownUnitCount(id: number, tn: number, dn: boolean): number;
+declare function GetTownUnitCount(id: Rawcode<"unit">, tn: number, dn: boolean): number;
 
 /**
  * @param unitid - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitGoldCost}
  */
-declare function GetUnitGoldCost(unitid: number): number;
+declare function GetUnitGoldCost(unitid: Rawcode<"unit">): number;
 
 /**
  * @param unitid - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitWoodCost}
  */
-declare function GetUnitWoodCost(unitid: number): number;
+declare function GetUnitWoodCost(unitid: Rawcode<"unit">): number;
 
 /**
  * @param unitid - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitBuildTime}
  */
-declare function GetUnitBuildTime(unitid: number): number;
+declare function GetUnitBuildTime(unitid: Rawcode<"unit">): number;
 
 /**
  * @returns integer (32-bit)
@@ -178,21 +178,21 @@ declare function TownHasHall(townid: number): boolean;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUpgradeLevel}
  */
-declare function GetUpgradeLevel(id: number): number;
+declare function GetUpgradeLevel(id: Rawcode<"upgrade">): number;
 
 /**
  * @param id - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUpgradeGoldCost}
  */
-declare function GetUpgradeGoldCost(id: number): number;
+declare function GetUpgradeGoldCost(id: Rawcode<"upgrade">): number;
 
 /**
  * @param id - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUpgradeWoodCost}
  */
-declare function GetUpgradeWoodCost(id: number): number;
+declare function GetUpgradeWoodCost(id: Rawcode<"upgrade">): number;
 
 /**
  * @returns integer (32-bit)
@@ -239,7 +239,7 @@ declare function GetAllianceTarget(): unit | undefined;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetProduce}
  */
-declare function SetProduce(qty: number, id: number, town: number): boolean;
+declare function SetProduce(qty: number, id: Rawcode<"unit">, town: number): boolean;
 
 /**
  * @param unitid - unit
@@ -254,14 +254,14 @@ declare function Unsummon(unitid: unit): void;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetExpansion}
  */
-declare function SetExpansion(peon: unit, id: number): boolean;
+declare function SetExpansion(peon: unit, id: Rawcode<"unit">): boolean;
 
 /**
  * @param id - integer (32-bit)
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetUpgrade}
  */
-declare function SetUpgrade(id: number): boolean;
+declare function SetUpgrade(id: Rawcode<"upgrade">): boolean;
 
 /**
  * @param func - code
@@ -291,7 +291,7 @@ declare function PurchaseZeppelin(): void;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/MergeUnits}
  */
-declare function MergeUnits(qty: number, a: number, b: number, make: number): boolean;
+declare function MergeUnits(qty: number, a: Rawcode<"unit">, b: Rawcode<"unit">, make: Rawcode<"unit">): boolean;
 
 /**
  * @param qty - integer (32-bit)
@@ -299,7 +299,7 @@ declare function MergeUnits(qty: number, a: number, b: number, make: number): bo
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertUnits}
  */
-declare function ConvertUnits(qty: number, id: number): boolean;
+declare function ConvertUnits(qty: number, id: Rawcode<"unit">): boolean;
 
 /**
  * @returns nothing
@@ -449,7 +449,7 @@ declare function InitAssault(): void;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddAssault}
  */
-declare function AddAssault(qty: number, id: number): boolean;
+declare function AddAssault(qty: number, id: Rawcode<"unit">): boolean;
 
 /**
  * @param qty - integer (32-bit)
@@ -457,7 +457,7 @@ declare function AddAssault(qty: number, id: number): boolean;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddDefenders}
  */
-declare function AddDefenders(qty: number, id: number): boolean;
+declare function AddDefenders(qty: number, id: Rawcode<"unit">): boolean;
 
 /**
  * @param min - integer (32-bit)
@@ -612,7 +612,7 @@ declare function StopGathering(): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddGuardPost}
  */
-declare function AddGuardPost(id: number, x: number, y: number): void;
+declare function AddGuardPost(id: Rawcode<"unit">, x: number, y: number): void;
 
 /**
  * @returns nothing
@@ -763,7 +763,7 @@ declare function CreepsOnMap(): boolean;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SuicideUnit}
  */
-declare function SuicideUnit(count: number, unitid: number): void;
+declare function SuicideUnit(count: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param ct - integer (32-bit)
@@ -772,7 +772,7 @@ declare function SuicideUnit(count: number, unitid: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SuicideUnitEx}
  */
-declare function SuicideUnitEx(ct: number, uid: number, pid: number): void;
+declare function SuicideUnitEx(ct: number, uid: Rawcode<"unit">, pid: number): void;
 
 /**
  * @param func - code
@@ -807,7 +807,7 @@ declare function UnitInvis(id: unit): boolean;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/IgnoredUnits}
  */
-declare function IgnoredUnits(unitid: number): number;
+declare function IgnoredUnits(unitid: Rawcode<"unit">): number;
 
 /**
  * @returns boolean
@@ -4350,7 +4350,7 @@ declare function StartTownBuilder(func: code): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetBuildAll}
  */
-declare function SetBuildAll(t: number, qty: number, unitid: number, town: number): void;
+declare function SetBuildAll(t: number, qty: number, unitid: Rawcode, town: number): void;
 
 /**
  * @param qty - integer (32-bit)
@@ -4358,7 +4358,7 @@ declare function SetBuildAll(t: number, qty: number, unitid: number, town: numbe
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetBuildUnit}
  */
-declare function SetBuildUnit(qty: number, unitid: number): void;
+declare function SetBuildUnit(qty: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param qty - integer (32-bit)
@@ -4366,7 +4366,7 @@ declare function SetBuildUnit(qty: number, unitid: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetBuildNext}
  */
-declare function SetBuildNext(qty: number, unitid: number): void;
+declare function SetBuildNext(qty: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param easy - integer (32-bit)
@@ -4376,7 +4376,7 @@ declare function SetBuildNext(qty: number, unitid: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetBuildUnitEx}
  */
-declare function SetBuildUnitEx(easy: number, med: number, hard: number, unitid: number): void;
+declare function SetBuildUnitEx(easy: number, med: number, hard: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param town - integer (32-bit)
@@ -4385,7 +4385,7 @@ declare function SetBuildUnitEx(easy: number, med: number, hard: number, unitid:
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SecondaryTown}
  */
-declare function SecondaryTown(town: number, qty: number, unitid: number): void;
+declare function SecondaryTown(town: number, qty: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param town - integer (32-bit)
@@ -4394,7 +4394,7 @@ declare function SecondaryTown(town: number, qty: number, unitid: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SecTown}
  */
-declare function SecTown(town: number, qty: number, unitid: number): void;
+declare function SecTown(town: number, qty: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param qty - integer (32-bit)
@@ -4402,7 +4402,7 @@ declare function SecTown(town: number, qty: number, unitid: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetBuildUpgr}
  */
-declare function SetBuildUpgr(qty: number, unitid: number): void;
+declare function SetBuildUpgr(qty: number, unitid: Rawcode<"upgrade">): void;
 
 /**
  * @param easy - integer (32-bit)
@@ -4412,7 +4412,7 @@ declare function SetBuildUpgr(qty: number, unitid: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetBuildUpgrEx}
  */
-declare function SetBuildUpgrEx(easy: number, med: number, hard: number, unitid: number): void;
+declare function SetBuildUpgrEx(easy: number, med: number, hard: number, unitid: Rawcode<"upgrade">): void;
 
 /**
  * @param qty - integer (32-bit)
@@ -4420,7 +4420,7 @@ declare function SetBuildUpgrEx(easy: number, med: number, hard: number, unitid:
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetBuildExpa}
  */
-declare function SetBuildExpa(qty: number, unitid: number): void;
+declare function SetBuildExpa(qty: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param level - integer (32-bit)
@@ -4428,21 +4428,21 @@ declare function SetBuildExpa(qty: number, unitid: number): void;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/StartUpgrade}
  */
-declare function StartUpgrade(level: number, upgid: number): boolean;
+declare function StartUpgrade(level: number, upgid: Rawcode<"upgrade">): boolean;
 
 /**
  * @param unitid - integer (32-bit)
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BuildFactory}
  */
-declare function BuildFactory(unitid: number): void;
+declare function BuildFactory(unitid: Rawcode<"unit">): void;
 
 /**
  * @param unitid - integer (32-bit)
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/HallsCompleted}
  */
-declare function HallsCompleted(unitid: number): boolean;
+declare function HallsCompleted(unitid: Rawcode<"unit">): boolean;
 
 /**
  * @param townid - integer (32-bit)
@@ -4451,7 +4451,7 @@ declare function HallsCompleted(unitid: number): boolean;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/GuardSecondary}
  */
-declare function GuardSecondary(townid: number, qty: number, unitid: number): void;
+declare function GuardSecondary(townid: number, qty: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param unitid - integer (32-bit)
@@ -4460,7 +4460,7 @@ declare function GuardSecondary(townid: number, qty: number, unitid: number): vo
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitCountEx}
  */
-declare function GetUnitCountEx(unitid: number, only_done: boolean, townid: number): number;
+declare function GetUnitCountEx(unitid: Rawcode<"unit">, only_done: boolean, townid: number): number;
 
 /**
  * @param unitid - integer (32-bit)
@@ -4469,21 +4469,21 @@ declare function GetUnitCountEx(unitid: number, only_done: boolean, townid: numb
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/TownCountEx}
  */
-declare function TownCountEx(unitid: number, only_done: boolean, townid: number): number;
+declare function TownCountEx(unitid: Rawcode<"unit">, only_done: boolean, townid: number): number;
 
 /**
  * @param base - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/TownCountDone}
  */
-declare function TownCountDone(base: number): number;
+declare function TownCountDone(base: Rawcode<"unit">): number;
 
 /**
  * @param base - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/TownCount}
  */
-declare function TownCount(base: number): number;
+declare function TownCount(base: Rawcode<"unit">): number;
 
 /**
  * @param build_it - boolean
@@ -4491,7 +4491,7 @@ declare function TownCount(base: number): number;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BasicExpansion}
  */
-declare function BasicExpansion(build_it: boolean, unitid: number): void;
+declare function BasicExpansion(build_it: boolean, unitid: Rawcode<"unit">): void;
 
 /**
  * @param baseid - integer (32-bit)
@@ -4499,7 +4499,7 @@ declare function BasicExpansion(build_it: boolean, unitid: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/UpgradeAll}
  */
-declare function UpgradeAll(baseid: number, newid: number): void;
+declare function UpgradeAll(baseid: Rawcode<"unit">, newid: Rawcode<"unit">): void;
 
 /**
  * @param base - integer (32-bit)
@@ -4507,7 +4507,7 @@ declare function UpgradeAll(baseid: number, newid: number): void;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/TownCountTown}
  */
-declare function TownCountTown(base: number, townid: number): number;
+declare function TownCountTown(base: Rawcode<"unit">, townid: number): number;
 
 /**
  * @param food - integer (32-bit)
@@ -4520,7 +4520,7 @@ declare function TownCountTown(base: number, townid: number): number;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/FoodPool}
  */
-declare function FoodPool(food: number, weak: boolean, id1: number, use1: number, strong: boolean, id2: number, use2: number): void;
+declare function FoodPool(food: number, weak: boolean, id1: Rawcode<"unit">, use1: number, strong: boolean, id2: Rawcode<"unit">, use2: number): void;
 
 /**
  * @param townid - integer (32-bit)
@@ -4528,7 +4528,7 @@ declare function FoodPool(food: number, weak: boolean, id1: number, use1: number
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/MeleeTownHall}
  */
-declare function MeleeTownHall(townid: number, unitid: number): void;
+declare function MeleeTownHall(townid: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param unitid - integer (32-bit)
@@ -4536,7 +4536,7 @@ declare function MeleeTownHall(townid: number, unitid: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/WaitForUnits}
  */
-declare function WaitForUnits(unitid: number, qty: number): void;
+declare function WaitForUnits(unitid: Rawcode<"unit">, qty: number): void;
 
 /**
  * @param ask_qty - integer (32-bit)
@@ -4545,7 +4545,7 @@ declare function WaitForUnits(unitid: number, qty: number): void;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/StartUnit}
  */
-declare function StartUnit(ask_qty: number, unitid: number, town: number): boolean;
+declare function StartUnit(ask_qty: number, unitid: Rawcode<"unit">, town: number): boolean;
 
 /**
  * @param towns - integer (32-bit)
@@ -4561,7 +4561,7 @@ declare function WaitForTown(towns: number, townid: number): void;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/StartExpansion}
  */
-declare function StartExpansion(qty: number, hall: number): boolean;
+declare function StartExpansion(qty: number, hall: Rawcode<"unit">): boolean;
 
 /**
  * @returns nothing
@@ -4620,7 +4620,7 @@ declare function PlayGame(): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/ConvertNeeds}
  */
-declare function ConvertNeeds(unitid: number): void;
+declare function ConvertNeeds(unitid: Rawcode<"unit">): void;
 
 /**
  * @param desire - integer (32-bit)
@@ -4628,7 +4628,7 @@ declare function ConvertNeeds(unitid: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/Conversions}
  */
-declare function Conversions(desire: number, unitid: number): void;
+declare function Conversions(desire: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param qty - integer (32-bit)
@@ -4637,7 +4637,7 @@ declare function Conversions(desire: number, unitid: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetAssaultGroup}
  */
-declare function SetAssaultGroup(qty: number, max: number, unitid: number): void;
+declare function SetAssaultGroup(qty: number, max: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param e1 - integer (32-bit)
@@ -4655,14 +4655,14 @@ declare function SetAssaultGroup(qty: number, max: number, unitid: number): void
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/Interleave3}
  */
-declare function Interleave3(e1: number, m1: number, h1: number, u1: number, e2: number, m2: number, h2: number, u2: number, e3: number, m3: number, h3: number, u3: number): void;
+declare function Interleave3(e1: number, m1: number, h1: number, u1: Rawcode<"unit">, e2: number, m2: number, h2: number, u2: Rawcode<"unit">, e3: number, m3: number, h3: number, u3: Rawcode<"unit">): void;
 
 /**
  * @param unitid - integer (32-bit)
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetMeleeGroup}
  */
-declare function SetMeleeGroup(unitid: number): void;
+declare function SetMeleeGroup(unitid: Rawcode<"unit">): void;
 
 /**
  * @param level - integer (32-bit)
@@ -4671,7 +4671,7 @@ declare function SetMeleeGroup(unitid: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/CampaignDefender}
  */
-declare function CampaignDefender(level: number, qty: number, unitid: number): void;
+declare function CampaignDefender(level: number, qty: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param easy - integer (32-bit)
@@ -4681,7 +4681,7 @@ declare function CampaignDefender(level: number, qty: number, unitid: number): v
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/CampaignDefenderEx}
  */
-declare function CampaignDefenderEx(easy: number, med: number, hard: number, unitid: number): void;
+declare function CampaignDefenderEx(easy: number, med: number, hard: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param level - integer (32-bit)
@@ -4690,7 +4690,7 @@ declare function CampaignDefenderEx(easy: number, med: number, hard: number, uni
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/CampaignAttacker}
  */
-declare function CampaignAttacker(level: number, qty: number, unitid: number): void;
+declare function CampaignAttacker(level: number, qty: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param easy - integer (32-bit)
@@ -4700,7 +4700,7 @@ declare function CampaignAttacker(level: number, qty: number, unitid: number): v
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/CampaignAttackerEx}
  */
-declare function CampaignAttackerEx(easy: number, med: number, hard: number, unitid: number): void;
+declare function CampaignAttackerEx(easy: number, med: number, hard: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param seconds - integer (32-bit)
@@ -4715,7 +4715,7 @@ declare function FormGroup(seconds: number, testReady: boolean): void;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/WavePrepare}
  */
-declare function WavePrepare(unitid: number): number;
+declare function WavePrepare(unitid: Rawcode<"unit">): number;
 
 /**
  * @returns integer (32-bit)
@@ -4810,14 +4810,14 @@ declare function SuicideUntilSignal(seconds: number, p: player): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SuicideOnce}
  */
-declare function SuicideOnce(easy: number, med: number, hard: number, unitid: number): void;
+declare function SuicideOnce(easy: number, med: number, hard: number, unitid: Rawcode<"unit">): void;
 
 /**
  * @param unitid - integer (32-bit)
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SuicideUnitA}
  */
-declare function SuicideUnitA(unitid: number): void;
+declare function SuicideUnitA(unitid: Rawcode<"unit">): void;
 
 /**
  * @param unitid - integer (32-bit)
@@ -4825,7 +4825,7 @@ declare function SuicideUnitA(unitid: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SuicideUnitB}
  */
-declare function SuicideUnitB(unitid: number, playerid: number): void;
+declare function SuicideUnitB(unitid: Rawcode<"unit">, playerid: number): void;
 
 /**
  * @param u1 - integer (32-bit)
@@ -4841,7 +4841,7 @@ declare function SuicideUnitB(unitid: number, playerid: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SuicideUnits}
  */
-declare function SuicideUnits(u1: number, u2: number, u3: number, u4: number, u5: number, u6: number, u7: number, u8: number, u9: number, uA: number): void;
+declare function SuicideUnits(u1: Rawcode<"unit">, u2: Rawcode<"unit">, u3: Rawcode<"unit">, u4: Rawcode<"unit">, u5: Rawcode<"unit">, u6: Rawcode<"unit">, u7: Rawcode<"unit">, u8: Rawcode<"unit">, u9: Rawcode<"unit">, uA: Rawcode<"unit">): void;
 
 /**
  * @param playerid - integer (32-bit)
@@ -4858,7 +4858,7 @@ declare function SuicideUnits(u1: number, u2: number, u3: number, u4: number, u5
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SuicideUnitsEx}
  */
-declare function SuicideUnitsEx(playerid: number, u1: number, u2: number, u3: number, u4: number, u5: number, u6: number, u7: number, u8: number, u9: number, uA: number): void;
+declare function SuicideUnitsEx(playerid: number, u1: Rawcode<"unit">, u2: Rawcode<"unit">, u3: Rawcode<"unit">, u4: Rawcode<"unit">, u5: Rawcode<"unit">, u6: Rawcode<"unit">, u7: Rawcode<"unit">, u8: Rawcode<"unit">, u9: Rawcode<"unit">, uA: Rawcode<"unit">): void;
 
 /**
  * @param easy - integer (32-bit)
@@ -5011,7 +5011,7 @@ declare function FoodSpace(): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/FoodAvail}
  */
-declare function FoodAvail(base: number): number;
+declare function FoodAvail(base: Rawcode<"unit">): number;
 
 /**
  * @returns nothing
@@ -5063,7 +5063,7 @@ declare function SkillArrays(): number;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetSkillArray}
  */
-declare function SetSkillArray(index: number, id: number): void;
+declare function SetSkillArray(index: number, id: Rawcode<"unit">): void;
 
 /**
  * @returns nothing

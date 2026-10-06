@@ -2148,7 +2148,7 @@ export class Unit extends Widget {
    */
   public issueNeutralImmediateOrder(
     forPlayer: MapPlayer,
-    unit: string | Rawcode<"unit">,
+    unit: string | Rawcode,
   ) {
     return typeof unit === "string"
       ? IssueNeutralImmediateOrder(forPlayer.handle, this.handle, unit)
@@ -2167,7 +2167,7 @@ export class Unit extends Widget {
    */
   public issueNeutralPointOrder(
     forPlayer: MapPlayer,
-    unit: string | Rawcode<"unit">,
+    unit: string | Rawcode,
     x: number,
     y: number,
   ) {
@@ -2187,7 +2187,7 @@ export class Unit extends Widget {
    */
   public issueNeutralTargetOrder(
     forPlayer: MapPlayer,
-    unit: string | Rawcode<"unit">,
+    unit: string | Rawcode,
     target: Widget,
   ) {
     return typeof unit === "string"
@@ -2417,10 +2417,7 @@ export class Unit extends Widget {
    * @returns True when the structure took the order.
    * @native BlzQueueNeutralImmediateOrderById
    */
-  public queueNeutralImmediateOrder(
-    forPlayer: MapPlayer,
-    unitId: Rawcode<"unit">,
-  ) {
+  public queueNeutralImmediateOrder(forPlayer: MapPlayer, unitId: Rawcode) {
     return BlzQueueNeutralImmediateOrderById(
       forPlayer.handle,
       this.handle,
@@ -2440,7 +2437,7 @@ export class Unit extends Widget {
    */
   public queueNeutralPointOrder(
     forPlayer: MapPlayer,
-    unitId: Rawcode<"unit">,
+    unitId: Rawcode,
     x: number,
     y: number,
   ) {
@@ -2464,7 +2461,7 @@ export class Unit extends Widget {
    */
   public queueNeutralTargetOrder(
     forPlayer: MapPlayer,
-    unitId: Rawcode<"unit">,
+    unitId: Rawcode,
     target: Widget,
   ) {
     return BlzQueueNeutralTargetOrderById(
