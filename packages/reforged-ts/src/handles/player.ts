@@ -308,9 +308,10 @@ export class MapPlayer extends Handle<player> {
   }
 
   /**
-   * Raises the research level of one of the player's upgrades by `levels`.
-   * @param techId - The upgrade's rawcode, such as Iron Plating's,
-   * `FourCC("Rhar")`.
+   * Raises the research level of one of the player's techs by `levels`.
+   * @param techId - The tech's rawcode: an upgrade's, such as Iron Plating's,
+   * `FourCC("Rhar")`, or a unit type's, such as the Footman's,
+   * `FourCC("hfoo")`.
    * @param levels - How many levels to add to its current level.
    * @native AddPlayerTechResearched
    */
@@ -322,9 +323,10 @@ export class MapPlayer extends Handle<player> {
   }
 
   /**
-   * Lowers the research level of one of the player's upgrades by `levels`.
-   * @param techId - The upgrade's rawcode, such as Iron Plating's,
-   * `FourCC("Rhar")`.
+   * Lowers the research level of one of the player's techs by `levels`.
+   * @param techId - The tech's rawcode: an upgrade's, such as Iron Plating's,
+   * `FourCC("Rhar")`, or a unit type's, such as the Footman's,
+   * `FourCC("hfoo")`.
    * @param levels - How many levels to remove from its current level. A
    * negative count adds none: raise a level with
    * {@link MapPlayer.addTechResearched}.
@@ -1019,10 +1021,11 @@ export class MapPlayer extends Handle<player> {
   }
 
   /**
-   * Sets the research level of one of the player's upgrades.
-   * @param techId - The upgrade's rawcode, such as Iron Plating's,
-   * `FourCC("Rhar")`.
-   * @param setToLevel - The research level the upgrade gets, whatever its
+   * Sets the research level of one of the player's techs.
+   * @param techId - The tech's rawcode: an upgrade's, such as Iron Plating's,
+   * `FourCC("Rhar")`, or a unit type's, such as the Footman's,
+   * `FourCC("hfoo")`.
+   * @param setToLevel - The research level the tech gets, whatever its
    * current level.
    * @native SetPlayerTechResearched
    */

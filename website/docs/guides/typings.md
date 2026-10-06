@@ -31,7 +31,8 @@ if (owner !== undefined) {
   // @ts-expect-error: a timer where a unit is expected
   KillUnit(CreateTimer());
 
-  // A Native that can return nothing returns T | undefined.
+  // A Native that can return nothing returns T | undefined. The unit type's
+  // rawcode is the Footman's, `FourCC("hfoo")`.
   const footman = CreateUnit(owner, FourCC("hfoo"), 0, 0, 270);
   if (footman !== undefined) {
     SetUnitMoveSpeed(footman, 400);
