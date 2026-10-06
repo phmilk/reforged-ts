@@ -51,6 +51,16 @@ function typecheck(replace: Record<string, string> = {}): ts.Diagnostic[] {
   return [...ts.getPreEmitDiagnostics(program)];
 }
 
+/** The statements of a hand-written file at the package root, comments removed. */
+async function declarationsOf(path: string): Promise<string[]> {
+  const text = await readFile(join(packageRoot, path), "utf8");
+  const file = ts.createSourceFile(path, text, ts.ScriptTarget.Latest);
+  const printer = ts.createPrinter({ removeComments: true });
+  return file.statements.map((statement) =>
+    printer.printNode(ts.EmitHint.Unspecified, statement, file),
+  );
+}
+
 function format(diagnostics: readonly ts.Diagnostic[]): string {
   return ts.formatDiagnostics(diagnostics, {
     getCanonicalFileName: (name) => name,
@@ -112,19 +122,9 @@ describe("the typings type-check", () => {
 describe("the Lua runtime file", () => {
   it("declares FourCC and __jarray and nothing else", async () => {
     const text = await readFile(join(packageRoot, "lua-runtime.d.ts"), "utf8");
-    const file = ts.createSourceFile(
-      "lua-runtime.d.ts",
-      text,
-      ts.ScriptTarget.Latest,
-    );
-    const printer = ts.createPrinter({ removeComments: true });
-
-    const declarations = file.statements.map((statement) =>
-      printer.printNode(ts.EmitHint.Unspecified, statement, file),
-    );
 
     expect(text.startsWith("/** @noSelfInFile */\n")).toBe(true);
-    expect(declarations).toEqual([
+    expect(await declarationsOf("lua-runtime.d.ts")).toEqual([
       "declare function FourCC(id: string): UnknownRawcode;",
       "declare function __jarray<T>(defaultValue: T): Record<number, T>;",
     ]);
@@ -134,18 +134,9 @@ describe("the Lua runtime file", () => {
 describe("the Rawcode types file", () => {
   it("declares the brand key, ObjectKind, Rawcode and UnknownRawcode and nothing else", async () => {
     const text = await readFile(join(packageRoot, "rawcode.d.ts"), "utf8");
-    const file = ts.createSourceFile(
-      "rawcode.d.ts",
-      text,
-      ts.ScriptTarget.Latest,
-    );
-    const printer = ts.createPrinter({ removeComments: true });
 
-    const declarations = file.statements.map((statement) =>
-      printer.printNode(ts.EmitHint.Unspecified, statement, file),
-    );
-
-    expect(declarations).toEqual([
+    expect(text.startsWith("/** @noSelfInFile */\n")).toBe(true);
+    expect(await declarationsOf("rawcode.d.ts")).toEqual([
       "declare const __reforgedRawcodeKind: unique symbol;",
       'type ObjectKind = "unit" | "item" | "ability" | "buff" | "destructable" | "doodad" | "upgrade";',
       [

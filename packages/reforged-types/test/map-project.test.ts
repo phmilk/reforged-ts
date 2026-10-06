@@ -117,8 +117,8 @@ describe("a Map project with the Template's types", () => {
   it("declares Rawcode, ObjectKind and UnknownRawcode once, in rawcode.d.ts, and FourCC once", () => {
     const checker = program.getTypeChecker();
     const file = required(
-      program.getSourceFile(join(project.dir, "src", "handles.ts")),
-      "handles.ts",
+      program.getSourceFile(join(project.dir, "src", "rawcodes.ts")),
+      "rawcodes.ts",
     );
     const symbols = checker.getSymbolsInScope(
       file,

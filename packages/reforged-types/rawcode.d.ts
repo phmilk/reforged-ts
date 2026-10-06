@@ -1,3 +1,4 @@
+/** @noSelfInFile */
 // Hand-written: the Rawcode types (ADR 0012), the only place they are
 // declared. The entry of each Game version and the common.ai output reference
 // this file; the generated files only use the types. They exist at the type

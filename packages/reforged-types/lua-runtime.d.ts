@@ -5,11 +5,11 @@
 // signature is established.
 
 /**
- * The integer id of a four-character rawcode, as the Natives take it.
+ * The integer id of a four-character Rawcode, as the Natives take it: a
+ * Rawcode of unknown kind, which every Rawcode parameter accepts.
  *
- * @param id - four-character rawcode, such as `"hfoo"`
- * @returns integer (32-bit): a Rawcode of unknown kind, which every Rawcode
- * parameter accepts
+ * @param id - four-character Rawcode, such as `"hfoo"`
+ * @returns integer (32-bit)
  */
 declare function FourCC(id: string): UnknownRawcode;
 
