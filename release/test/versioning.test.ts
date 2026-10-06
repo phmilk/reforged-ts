@@ -69,6 +69,22 @@ async function scratchWorkspace(version?: string): Promise<string> {
   return root;
 }
 
+/** Sets the version of the package `name` in the scratch copy at `root`. */
+async function setVersion(
+  root: string,
+  name: string,
+  version: string,
+): Promise<void> {
+  const { packages } = await getPackages(root);
+  const found = packages.find(({ packageJson }) => packageJson.name === name);
+  if (found === undefined) throw new Error(`no package ${name} in ${root}`);
+  await writeText(
+    root,
+    `${found.relativeDir.split(sep).join(posix.sep)}/package.json`,
+    `${JSON.stringify({ ...found.packageJson, version }, null, 2)}\n`,
+  );
+}
+
 /** Runs the Changesets CLI in `root`. */
 async function changeset(root: string, ...args: string[]): Promise<void> {
   await promisify(execFile)(process.execPath, [CHANGESET_BIN, ...args], {
@@ -181,8 +197,10 @@ describe("changeset version", { timeout: 60_000 }, () => {
       ".changeset/pre.json",
       await readFile(join(repositoryRoot, ".changeset/pre.json"), "utf8"),
     );
+    // Pinned, not read: the release that publishes reforged-map has already
+    // versioned the repository's manifest past 0.0.0.
+    await setVersion(root, "reforged-map", "0.0.0");
     const before = await versions(root);
-    expect(before["reforged-map"]).toBe("0.0.0");
     await addChangeset(root, "reforged-map", { "reforged-map": "major" });
 
     await changeset(root, "version");
