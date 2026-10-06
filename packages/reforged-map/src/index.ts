@@ -41,11 +41,12 @@ export interface EditorGlobalsOutput {
  * Only the header of `war3map.lua` and the body of `InitGlobals` are read.
  * A `gg_` global is typed by its prefix (`gg_rct_` a `rect`), and a `udg_`
  * one by its initializer or the Native `InitGlobals` assigns it. A `udg_`
- * variable of an object type is typed by the Object kind its Variable Editor
- * type names, read from the variables block of `war3map.wtg` (a `unitcode`
+ * variable whose Variable Editor type names an Object kind is typed by that
+ * Object kind, read from the variables block of `war3map.wtg` (a `unitcode`
  * variable is a `Rawcode<"unit">`); without a readable `war3map.wtg`, a
- * warning says so and it keeps the type `war3map.lua` gives it. The stub
- * calls no Native.
+ * warning says so and it keeps the type `war3map.lua` gives it: `number` for
+ * a map saved by the World Editor, `unknown` or `Record<number, string>` for
+ * one saved by HiveWE. The stub calls no Native.
  *
  * @param mapFolder - The path of the map folder, saved as a folder by the
  *   World Editor.

@@ -18,7 +18,7 @@ import { buildWtg, type TestVariable } from "./support/wtg.js";
 afterAll(removeTemporary);
 
 const FALLBACK =
-  "object-type variables (unit-type, ability, item-type...) are declared as war3map.lua types them.";
+  "Unit-Type, Ability Code, Item-Type... variables keep the type war3map.lua gives them, not their Object kind.";
 
 /** The generated file of that name. */
 function contents(output: EditorGlobalsOutput, name: string): string {
@@ -89,7 +89,7 @@ const EXPECTED = Object.fromEntries(
 );
 
 describe("udg_ variables typed by Object kind from war3map.wtg", () => {
-  it("declares every Variable Editor object type, scalar and array, as its Object kind", () => {
+  it("declares every Variable Editor type that names an Object kind, scalar and array, as that Object kind", () => {
     const output = generate(EDITOR_SCRIPT, buildWtg(TABLE_VARIABLES));
     expect(declaredTypes(output)).toEqual(EXPECTED);
     expect(output.warnings).toEqual([]);
@@ -243,6 +243,27 @@ describe("war3map.wtg warnings and fallbacks", () => {
       "udg_Spawn: war3map.wtg declares it an array, war3map.lua not an array; declared as war3map.lua types it.",
       "udg_Spawns: war3map.wtg declares it not an array, war3map.lua an array; declared as war3map.lua types it.",
     ]);
+  });
+
+  it("does not warn on a variable the two files disagree is an array when its type names no Object kind", () => {
+    const output = generate(
+      ["udg_Score = 0", 'udg_Names = __jarray("")'],
+      buildWtg([
+        { name: "Score", type: "integer", arraySize: 2 },
+        { name: "Names", type: "string" },
+      ]),
+    );
+    expect(declaredTypes(output)).toEqual({
+      udg_Score: "number",
+      udg_Names: "Record<number, string>",
+    });
+    expect(output.warnings).toEqual([]);
+  });
+
+  it("does not warn on a missing or unreadable war3map.wtg when war3map.lua declares no udg_ variable", () => {
+    const script = ["gg_trg_Melee = nil", "gg_rct_Spawn = nil"];
+    expect(generate(script, undefined).warnings).toEqual([]);
+    expect(generate(script, new Uint8Array(3)).warnings).toEqual([]);
   });
 });
 

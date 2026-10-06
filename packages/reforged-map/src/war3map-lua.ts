@@ -47,9 +47,13 @@ const BOOLEAN = /^(?:true|false)$/;
 const JARRAY = /^__jarray[ \t]*\([ \t]*(.*?)[ \t]*\)$/;
 const CALL = /^([A-Za-z_][A-Za-z0-9_]*)[ \t]*\(.*\)$/;
 
-/** Declares the Editor globals of war3map.lua's text in the model; the first header assignment of a name wins. */
+/**
+ * Declares the Editor globals of war3map.lua's text, its byte order mark
+ * already removed by `readMapScript`, in the model; the first header
+ * assignment of a name wins.
+ */
 export function readWar3mapLua(text: string, model: EditorGlobalsModel): void {
-  const lines = text.replace(/^\uFEFF/, "").split(/\r?\n/);
+  const lines = text.split(/\r?\n/);
   const headerEnd = lines.findIndex((line) => FUNCTION_LINE.test(line));
   const header = headerEnd === -1 ? lines : lines.slice(0, headerEnd);
   const natives = initGlobalsNatives(lines);

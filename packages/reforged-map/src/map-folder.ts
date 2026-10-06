@@ -17,6 +17,7 @@ export const MAP_SCRIPT = "war3map.lua";
  * never this error: the build goes on.
  */
 export class MapFolderError extends Error {
+  /** `"MapFolderError"`, the error's name in a stack trace and in `String(error)`. */
   override name = "MapFolderError";
 }
 

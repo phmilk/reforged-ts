@@ -1,6 +1,6 @@
-// The reader of war3map.wtg: types the `udg_` variables of an object type
-// (a unit type, an ability, ...) by the Object kind their Variable Editor type
-// names, which war3map.lua does not say (its header holds `0`, `__jarray(0)`,
+// The reader of war3map.wtg: types the `udg_` variables whose Variable Editor
+// type names an Object kind (a Unit-Type, an Ability Code, ...) by that Object
+// kind, which war3map.lua does not say (its header holds `0`, `__jarray(0)`,
 // or HiveWE's `nil` and `__jarray("")`).
 //
 // Only the 1.31+ format is read (`WTG!`, format 0x80000004, sub-version 7),
@@ -22,8 +22,7 @@
 // The trigger elements after it are never parsed, so no TriggerData.txt is
 // needed. Little-endian integers, UTF-8 null-terminated strings.
 
-import type { EditorGlobalsModel } from "./model.js";
-import { findGlobal } from "./model.js";
+import type { EditorGlobal, EditorGlobalsModel } from "./model.js";
 
 /** The triggers file of a map folder: the Variable Editor's variables and the triggers. */
 export const WTG_FILE = "war3map.wtg";
@@ -31,11 +30,15 @@ export const WTG_FILE = "war3map.wtg";
 const MAGIC = "WTG!";
 const FORMAT = 0x80000004;
 const SUB_VERSION = 7;
+const UTF8 = new TextDecoder("utf-8");
 /** Maps, libraries, categories, triggers, comments, scripts, variables. */
 const ID_LISTS = 7;
 
-/** The Variable Editor's object types and the type their variable is declared with. */
-const OBJECT_TYPES: Readonly<Partial<Record<string, string>>> = {
+/**
+ * The Variable Editor types that name an Object kind, and the type their
+ * variable is declared with. An Order names none and stays `number`.
+ */
+const OBJECT_KIND_TYPES: Readonly<Partial<Record<string, string>>> = {
   unitcode: 'Rawcode<"unit">',
   itemcode: 'Rawcode<"item">',
   abilcode: 'Rawcode<"ability">',
@@ -100,15 +103,22 @@ export function readWtgVariables(bytes: Uint8Array): WtgVariable[] {
 
 /**
  * Refines the model's `udg_` globals with the variables of war3map.wtg's
- * bytes, or `undefined` when the map folder has none: an object-type
- * variable gets the type of its Object kind. Every failure is a warning.
+ * bytes, or `undefined` when the map folder has none: a variable whose
+ * Variable Editor type names an Object kind gets the type of that Object
+ * kind. Every failure is a warning, and only when the model holds a `udg_`
+ * global the file could have refined.
  */
 export function readWar3mapWtg(
   bytes: Uint8Array | undefined,
   model: EditorGlobalsModel,
 ): void {
+  const variablesByName = new Map<string, EditorGlobal>();
+  for (const global of model.globals) {
+    if (global.origin === "udg") variablesByName.set(global.name, global);
+  }
+  if (variablesByName.size === 0) return;
   const fallback =
-    "object-type variables (unit-type, ability, item-type...) are declared as war3map.lua types them.";
+    "Unit-Type, Ability Code, Item-Type... variables keep the type war3map.lua gives them, not their Object kind.";
   if (bytes === undefined) {
     model.warnings.push(`${WTG_FILE} not found: ${fallback}`);
     return;
@@ -122,8 +132,10 @@ export function readWar3mapWtg(
     return;
   }
   for (const variable of variables) {
-    const global = findGlobal(model, `udg_${variable.name}`);
+    const global = variablesByName.get(`udg_${variable.name}`);
     if (global === undefined) continue;
+    const type = OBJECT_KIND_TYPES[variable.type];
+    if (type === undefined) continue;
     if (global.array !== variable.array) {
       const shape = (array: boolean) => (array ? "an array" : "not an array");
       model.warnings.push(
@@ -131,8 +143,6 @@ export function readWar3mapWtg(
       );
       continue;
     }
-    const type = OBJECT_TYPES[variable.type];
-    if (type === undefined) continue;
     global.type = variable.array ? `Record<number, ${type}>` : type;
   }
 }
@@ -176,9 +186,7 @@ class ByteReader {
   cString(): string {
     const end = this.#bytes.indexOf(0, this.#offset);
     if (end === -1) throw truncated();
-    const text = new TextDecoder("utf-8").decode(
-      this.#bytes.subarray(this.#offset, end),
-    );
+    const text = UTF8.decode(this.#bytes.subarray(this.#offset, end));
     this.#offset = end + 1;
     return text;
   }

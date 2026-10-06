@@ -1,8 +1,8 @@
 // The model of a map folder's Editor globals: what the readers fill and the
 // renderers write from. The war3map.lua reader declares every global (the
 // list of globals is what exists at run time); a later reader, such as the
-// war3map.wtg one, refines what the first one declared, through
-// `findGlobal`, and adds its warnings. Not exported from the package.
+// war3map.wtg one, refines the type of what the first one declared, and adds
+// its warnings. Not exported from the package.
 
 /** Where an Editor global comes from: `gg_` (placed or created in the editor) or `udg_` (the Variable Editor). */
 export type EditorGlobalOrigin = "gg" | "udg";
@@ -30,12 +30,4 @@ export interface EditorGlobalsModel {
 
 export function createModel(): EditorGlobalsModel {
   return { globals: [], warnings: [] };
-}
-
-/** The global of that name, if a reader declared it. */
-export function findGlobal(
-  model: EditorGlobalsModel,
-  name: string,
-): EditorGlobal | undefined {
-  return model.globals.find((global) => global.name === name);
 }
