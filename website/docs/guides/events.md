@@ -49,7 +49,7 @@ An event without a descriptor is still reachable through the Trigger Wrapper (be
 
 ### `when`: a condition
 
-The third argument of `on()` is a predicate over the same payload. It runs first, as the trigger's condition, and the handler runs only when it returns `true`:
+The third argument of `on()` is a predicate over the same payload. It runs first, as the trigger's condition, and the handler runs only when it returns `true`, here when the spell is Holy Light, `FourCC("AHhb")`:
 
 ```ts
 import { Init, on, UnitEvents } from "reforged-ts";

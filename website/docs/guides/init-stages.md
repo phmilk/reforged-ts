@@ -25,6 +25,7 @@ Init.onGlobals(() => {
 Init.onGameStart(() => {
   const owner = MapPlayer.fromIndex(0);
   if (owner !== undefined) {
+    // A Peasant, `FourCC("hpea")`, walks off as the game starts.
     Unit.create(owner, FourCC("hpea"), 0, 0).issueOrderAt("move", 256, 0);
   }
 }, "first worker");
