@@ -243,6 +243,12 @@ esac
 # native programs go through cygpath instead (see native_path).
 export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*'
 
+# pnpm's Windows launcher (a corepack or nvm shell script) hands node a POSIX
+# path to its own pnpm.js, which only Git Bash's conversion makes readable to
+# node: run pnpm with the conversion back on. Its arguments are native paths
+# already.
+pnpm() { env -u MSYS_NO_PATHCONV -u MSYS2_ARG_CONV_EXCL pnpm "$@"; }
+
 # Nothing this wizard captures is persisted locally: no value is read from
 # or written to a .env file. The GitHub variable and secret are the store.
 ENV_FILE=/dev/null
