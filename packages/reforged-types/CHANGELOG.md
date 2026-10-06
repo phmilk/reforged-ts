@@ -1,5 +1,15 @@
 # reforged-types
 
+## 1.0.0-alpha.5
+
+### Major Changes
+
+- [#496](https://github.com/phmilk/reforged-ts/pull/496) [`3c4b9cd`](https://github.com/phmilk/reforged-ts/commit/3c4b9cd4c7df69c01981bd1f0d4c1b7c9c87b994) Thanks [@phmilk](https://github.com/phmilk)! - Every Native, `blizzard.j` function and `common.ai` function that takes a Rawcode takes it by Object kind: `CreateUnit` takes a `Rawcode<"unit">`, `UnitAddAbility` a `Rawcode<"ability">`, `SetPlayerTechResearched` a `Rawcode<"unit" | "upgrade">` and `GetObjectName` a `Rawcode` of any kind. A `FourCC` literal compiles unchanged wherever a Rawcode is expected. A plain `number`, or a Rawcode of another kind, is now a compile error: give a computed `number` its kind with a cast, such as `id as Rawcode<"unit">`. `GetUnitTypeId` returns a `Rawcode<"unit">`. Weather effect codes, terrain type codes and order ids stay `number`, the order ids of `IssueNeutralPointOrderById` and `IssueNeutralTargetOrderById` among them; `IssueNeutralImmediateOrderById` takes a Rawcode of any kind, since a neutral structure sells units and items. In the library, `Trigger`'s `registerCommandEvent` takes a `Rawcode<"ability">` and `registerUpgradeCommandEvent` a `Rawcode<"upgrade">`, and `Unit`'s `issueNeutralImmediateOrder` and `queueNeutralImmediateOrder` take a Rawcode of any kind.
+
+- [#494](https://github.com/phmilk/reforged-ts/pull/494) [`8d693fc`](https://github.com/phmilk/reforged-ts/commit/8d693fc2f14f4e110f963085920de26be52e50de) Thanks [@phmilk](https://github.com/phmilk)! - Declare the Rawcode types as globals, through the `types` entry a Map project already lists: `Rawcode<K>`, a Rawcode of the Object kind `K` (`Rawcode<"unit">`, `Rawcode<"unit" | "upgrade">`, `Rawcode` alone for any kind), `ObjectKind` and `UnknownRawcode`. `FourCC` returns `UnknownRawcode`, which every Rawcode accepts and which widens to `number`: a variable initialised with `FourCC("hfoo")` and later assigned a plain `number` needs a `number` annotation.
+
+- [#496](https://github.com/phmilk/reforged-ts/pull/496) [`3c4b9cd`](https://github.com/phmilk/reforged-ts/commit/3c4b9cd4c7df69c01981bd1f0d4c1b7c9c87b994) Thanks [@phmilk](https://github.com/phmilk)! - A Rawcode the game returns carries its Object kind into the next call: `GetSpellAbilityId` returns a `Rawcode<"ability">`, `GetResearched` a `Rawcode<"upgrade">`, `GetItemTypeId` and `ChooseRandomItem` a `Rawcode<"item">`, and `BlzGetUnitSkin` a `Rawcode<"unit">`, so `CreateUnit(p, GetUnitTypeId(u), x, y, f)` compiles and `UnitAddAbility(u, GetUnitTypeId(v))` does not. The Rawcode globals carry their kind too: `common.ai`'s `FOOTMAN` is a `Rawcode<"unit">` and `HOLY_BOLT` a `Rawcode<"ability">`, so `SetProduce(1, FOOTMAN, town)` still compiles in an AI script. A returned Rawcode widens to `number` for arithmetic and comparisons. In the library, `unit.typeId`, `unit.skin`, `item.typeId`, `item.skin`, `destructable.typeId`, `Item.chooseRandomWithFilter` and the payloads of the spell, research and hero skill events carry their kind.
+
 ## 1.0.0-alpha.4
 
 ### Minor Changes
