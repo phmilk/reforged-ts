@@ -2167,7 +2167,7 @@ export class Unit extends Widget {
    */
   public issueNeutralPointOrder(
     forPlayer: MapPlayer,
-    unit: string | Rawcode,
+    unit: string | number,
     x: number,
     y: number,
   ) {
@@ -2187,7 +2187,7 @@ export class Unit extends Widget {
    */
   public issueNeutralTargetOrder(
     forPlayer: MapPlayer,
-    unit: string | Rawcode,
+    unit: string | number,
     target: Widget,
   ) {
     return typeof unit === "string"
@@ -2437,7 +2437,7 @@ export class Unit extends Widget {
    */
   public queueNeutralPointOrder(
     forPlayer: MapPlayer,
-    unitId: Rawcode,
+    unitId: number,
     x: number,
     y: number,
   ) {
@@ -2461,7 +2461,7 @@ export class Unit extends Widget {
    */
   public queueNeutralTargetOrder(
     forPlayer: MapPlayer,
-    unitId: Rawcode,
+    unitId: number,
     target: Widget,
   ) {
     return BlzQueueNeutralTargetOrderById(

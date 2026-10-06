@@ -202,6 +202,27 @@ describe("generate: Rawcode parameters classified by the Overlay kind", () => {
       'declare function Pick(abilityId: Rawcode<"ability">, itemId?: Rawcode<"item">): void;',
     );
   });
+
+  it("takes an Overlay type override as the parameter's classification, over the table and the pattern", async () => {
+    const overlay = entry("common.j", "IssueNeutralPointOrderById", [
+      "unitId",
+      "fooId",
+    ]);
+    overlay.params[0].type = "number";
+    overlay.params[1].type = "number";
+    const result = await generateOk(
+      {
+        "common.j":
+          "native IssueNeutralPointOrderById takes integer unitId, integer fooId returns boolean",
+      },
+      [overlay],
+    );
+
+    expect(result.diagnostics).toEqual([]);
+    expect(generatedFile(result, "3.0.0/common.j.d.ts")).toContain(
+      "declare function IssueNeutralPointOrderById(unitId: number, fooId: number): boolean;",
+    );
+  });
 });
 
 describe("generate: Rawcode returns classified by the Overlay returns.kind", () => {

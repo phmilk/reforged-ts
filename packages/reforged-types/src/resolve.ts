@@ -195,7 +195,9 @@ function checkFamily(
 /**
  * The Object kinds of a function's Rawcodes, or the checklist lines of what
  * stops it: an Overlay `kind` on an item that is not an `integer`, and a
- * parameter that looks like a Rawcode and that nothing classifies.
+ * parameter that looks like a Rawcode and that nothing classifies. An
+ * Overlay `type` override classifies its parameter as what it says, such
+ * as `number` for an order id the table would take for a Rawcode.
  */
 function classify(
   fn: FunctionDeclaration,
@@ -203,7 +205,8 @@ function classify(
 ): FunctionRawcodes | Diagnostic[] {
   const problems: Diagnostic[] = [];
   const params = fn.params.map((param, index) => {
-    const { kind } = entry.params[index];
+    const { kind, type } = entry.params[index];
+    if (type !== undefined) return undefined;
     if (kind !== undefined && param.type !== "integer") {
       problems.push(
         kindError(

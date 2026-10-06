@@ -65,6 +65,9 @@ export function unitRawcodeKinds(unit: Unit, count: number): void {
   unit.queueNeutralImmediateOrder(owner, rationType);
   // @ts-expect-error: a plain number is not a Rawcode.
   unit.issueNeutralImmediateOrder(owner, count);
+  // The point and target ones take an order id, a plain number.
+  unit.issueNeutralPointOrder(owner, count, 0, 0);
+  unit.queueNeutralTargetOrder(owner, count, unit);
 }
 
 describe("Unit.create", () => {

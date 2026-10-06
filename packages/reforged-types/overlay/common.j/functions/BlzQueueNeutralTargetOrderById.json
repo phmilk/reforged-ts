@@ -16,7 +16,7 @@
     {
       "name": "unitId",
       "nullable": false,
-      "kind": "any"
+      "type": "number"
     },
     {
       "name": "target",

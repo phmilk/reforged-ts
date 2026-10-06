@@ -17738,7 +17738,7 @@ declare function IssueNeutralPointOrder(forWhichPlayer: player, neutralStructure
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IssueNeutralPointOrderById}
  */
-declare function IssueNeutralPointOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: Rawcode, x: number, y: number): boolean;
+declare function IssueNeutralPointOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: number, x: number, y: number): boolean;
 
 /**
  * @param forWhichPlayer - player
@@ -17758,7 +17758,7 @@ declare function IssueNeutralTargetOrder(forWhichPlayer: player, neutralStructur
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IssueNeutralTargetOrderById}
  */
-declare function IssueNeutralTargetOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: Rawcode, target: widget): boolean;
+declare function IssueNeutralTargetOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: number, target: widget): boolean;
 
 /**
  * @param whichUnit - unit
@@ -26148,7 +26148,7 @@ declare function BlzQueueNeutralImmediateOrderById(forWhichPlayer: player, neutr
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzQueueNeutralPointOrderById}
  */
-declare function BlzQueueNeutralPointOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: Rawcode, x: number, y: number): boolean;
+declare function BlzQueueNeutralPointOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: number, x: number, y: number): boolean;
 
 /**
  * @param forWhichPlayer - player
@@ -26158,7 +26158,7 @@ declare function BlzQueueNeutralPointOrderById(forWhichPlayer: player, neutralSt
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzQueueNeutralTargetOrderById}
  */
-declare function BlzQueueNeutralTargetOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: Rawcode, target: widget): boolean;
+declare function BlzQueueNeutralTargetOrderById(forWhichPlayer: player, neutralStructure: unit, unitId: number, target: widget): boolean;
 
 /**
  * @param whichUnit - unit
