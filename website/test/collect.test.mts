@@ -210,12 +210,15 @@ No release yet.
         source: "the add-wrapper Agent skill",
         reason: "The add-wrapper Agent skill (#202) is not written yet.",
       },
-      ...["reforged-types", "reforged-test", "eslint-plugin-reforged"].map(
-        (pkg) => ({
-          source: `the changelog of ${pkg}`,
-          reason: "Changesets writes it at the package's first release.",
-        }),
-      ),
+      ...[
+        "reforged-types",
+        "reforged-test",
+        "eslint-plugin-reforged",
+        "reforged-map",
+      ].map((pkg) => ({
+        source: `the changelog of ${pkg}`,
+        reason: "Changesets writes it at the package's first release.",
+      })),
     ]);
   });
 
@@ -342,7 +345,7 @@ describe("main", () => {
     const { out, output } = capture();
     expect(await main([], output, await fixture())).toBe(0);
     expect(out.stdout).toContain(
-      "docs:collect: 10 sources collected, 5 skipped.\n  collected the supported Patch: _supported-patch.md\n  collected the lint rule pages: guides/lint-rules/index.md, guides/lint-rules/no-sleep.md, guides/lint-rules/prefer-timer.md, guides/lint-rules/_category_.json\n  collected the migration guide: migration/_generated/w3ts-3-to-reforged-ts-1/renames.md, migration/_generated/w3ts-3-to-reforged-ts-1/behaviour-changes.md\n  collected the glossary: contributing/glossary.md\n",
+      "docs:collect: 10 sources collected, 6 skipped.\n  collected the supported Patch: _supported-patch.md\n  collected the lint rule pages: guides/lint-rules/index.md, guides/lint-rules/no-sleep.md, guides/lint-rules/prefer-timer.md, guides/lint-rules/_category_.json\n  collected the migration guide: migration/_generated/w3ts-3-to-reforged-ts-1/renames.md, migration/_generated/w3ts-3-to-reforged-ts-1/behaviour-changes.md\n  collected the glossary: contributing/glossary.md\n",
     );
     expect(out.stdout).toContain(
       "  skipped the contributing guide: The contribution model (#193) adds CONTRIBUTING.md.\n",

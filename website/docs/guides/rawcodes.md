@@ -1,7 +1,7 @@
 ---
 title: Rawcodes
 sidebar_position: 14
-description: How the Typings and the library type a Rawcode by its Object kind, with Rawcode<K>, what FourCC returns, the as cast for a computed number, widening to number, and the codes that are not Rawcodes.
+description: How the Typings and the library type a Rawcode by its Object kind, with Rawcode<K>, what FourCC returns, the as cast for a computed number, widening to number, GUI variables of an object type, and the codes that are not Rawcodes.
 ---
 
 # Rawcodes
@@ -171,6 +171,121 @@ Every API of the library that takes or returns a Rawcode says which kind, as the
 - `unit.typeId`, `item.typeId`, `destructable.typeId` and the `skin` of a unit or an item carry their kind, and so do the payloads of the Event descriptors that read a Rawcode: the `abilityId` of `UnitEvents.spellEffect` is a `Rawcode<"ability">`.
 - An API that takes a name or a Rawcode takes `string | Rawcode<…>`: the spell effects of `Effect` take an ability's name or its Rawcode, `unit.issueBuildOrder` a structure's order name or its unit type's Rawcode.
 - A creation that fails names the Rawcode in four characters, as before: `reforged-ts: failed to create Unit (hfoi)` when the Footman's Rawcode is misspelt.
+
+## GUI variables of an object type
+
+A map whose triggers are made in the World Editor keeps object types in GUI variables: a Unit-Type `SpawnType`, an Ability Code `HeroSpell`, an Item-Type array `Rewards`. The World Editor writes each one into `war3map.lua` as a plain integer, and the code sees it as an Editor global, `udg_SpawnType`, declared in `src/generated/editor-globals.d.ts`. That file is written by `reforged-map`, a dev dependency of the Template that reads the map folder at build time. It declares each of these variables with the Object kind its Variable Editor type names:
+
+| Variable Editor type                   | Declared                       |
+| -------------------------------------- | ------------------------------ |
+| Unit-Type (`unitcode`)                 | `Rawcode<"unit">`              |
+| Item-Type (`itemcode`)                 | `Rawcode<"item">`              |
+| Ability Code (`abilcode`)              | `Rawcode<"ability">`           |
+| Buff (`buffcode`)                      | `Rawcode<"buff">`              |
+| Destructible-Type (`destructablecode`) | `Rawcode<"destructable">`      |
+| Tech-Type (`techcode`)                 | `Rawcode<"unit" \| "upgrade">` |
+| Order (`ordercode`)                    | `number`, an order id          |
+
+An array of one of these types is a `Record<number, T>` of the same type: an Item-Type array is a `Record<number, Rawcode<"item">>`. These are all the object types the Variable Editor of Patch 3.0 offers: it has no upgrade-only type and no doodad type. Every other type keeps the type it had. An Integer is a `number`, and so is each type the game stores as an integer that is not a Rawcode, such as Animation Type, Terrain Type, Equipment Type and Tag, whose values are constants of `common.j` or terrain codes.
+
+Such a variable goes where its kind is expected with no cast, and a Rawcode of another kind does not:
+
+```ts
+import { Init, MapPlayer, Unit } from "reforged-ts";
+
+// What src/generated/editor-globals.d.ts declares for these GUI variables.
+declare let udg_SpawnType: Rawcode<"unit">;
+declare let udg_HeroSpell: Rawcode<"ability">;
+declare let udg_Rewards: Record<number, Rawcode<"item">>;
+declare let udg_Research: Rawcode<"unit" | "upgrade">;
+declare let udg_Retreat: number;
+
+Init.onGameStart(() => {
+  const owner = MapPlayer.fromIndex(0);
+  if (owner === undefined) {
+    return;
+  }
+  const hero = Unit.create(owner, udg_SpawnType, 0, 0);
+  hero.addAbility(udg_HeroSpell);
+  hero.addItemById(udg_Rewards[1]);
+  owner.setTechResearched(udg_Research, 1);
+  IssueImmediateOrderById(hero.handle, udg_Retreat);
+
+  // @ts-expect-error: a unit type's Rawcode where an ability's is expected
+  hero.addAbility(udg_SpawnType);
+  // @ts-expect-error: a tech type may be an upgrade, where a unit type's Rawcode is expected
+  Unit.create(owner, udg_Research, 0, 0);
+});
+```
+
+Code that writes one of these variables, for the GUI triggers to read, writes a Rawcode of its kind: a `FourCC` literal, what the game returns or another variable of the kind. A plain `number`, or a Rawcode of another kind, is a compile error, so a trigger never reads a value of the wrong kind:
+
+```ts
+import { Init, on, UnitEvents } from "reforged-ts";
+
+// What src/generated/editor-globals.d.ts declares for these GUI variables.
+declare let udg_SpawnType: Rawcode<"unit">;
+declare let udg_HeroSpell: Rawcode<"ability">;
+
+Init.onTriggers(() => {
+  udg_SpawnType = FourCC("hkni");
+  on(UnitEvents.death, ({ unit }) => {
+    // The next wave spawns what died last.
+    udg_SpawnType = unit.typeId;
+  });
+
+  const level = 2;
+  // @ts-expect-error: a plain number is not a Rawcode
+  udg_SpawnType = level;
+  // @ts-expect-error: an ability's Rawcode where a unit type's is expected
+  udg_SpawnType = udg_HeroSpell;
+});
+```
+
+### Where the kind comes from
+
+The kind comes from the type picked in the Variable Editor, which the World Editor stores in the map folder's `war3map.wtg`, and not from the Rawcode the variable holds: a Unit-Type variable is a `Rawcode<"unit">` whatever its initial value, and without one. When a kind is wrong, change the variable's type in the Variable Editor; never cast the variable.
+
+An Order variable holds an order id, such as `OrderId` returns (see [Codes that are not Rawcodes](#codes-that-are-not-rawcodes)). The World Editor of Patch 3.0 cannot save one with an initial value: it writes the order's name into the script as it is, and its script check fails. Set it from code instead, such as `udg_Retreat = OrderId("stop")`.
+
+The declarations are written again on every install, every build and every rebuild of `pnpm dev`, which watches the map folder: a type changed in the Variable Editor reaches the code at the next save. They are generated files: a variable is added, renamed or retyped in the World Editor, never in `src/generated/`.
+
+When `war3map.wtg` is missing, cannot be read or is in a format `reforged-map` does not know, the build goes on and prints one warning, such as:
+
+```txt
+Warning: war3map.wtg not found: object-type variables (unit-type, ability, item-type...) are declared as war3map.lua types them.
+```
+
+Each of these variables is then a plain `number`, which every Rawcode parameter rejects. Saving the map with the World Editor of Patch 3.0 writes `war3map.wtg` in the format `reforged-map` reads, that of 1.31 and later, which HiveWE writes as well. A variable that `war3map.wtg` declares an array and `war3map.lua` does not, or the other way round, keeps the type `war3map.lua` gives it, and a warning names it.
+
+### A Map project generated earlier
+
+A Map project generated from the Template before `reforged-map` declares its GUI variables with the copy of `scripts/editor-globals.ts` it was generated with, and that copy declares each of them `number`. To have them declared by kind, switch to the package as the Template does:
+
+1. Add it as a dev dependency: `pnpm add -D reforged-map@next`.
+2. In `scripts/generate.ts`, replace the editor globals `Generator` imported from `./editor-globals.ts` with one that calls `reforged-map`, passes on its warnings and turns its `MapFolderError` into the Template's `AuthorError`:
+
+   ```ts fragment
+   import { generateEditorGlobals, MapFolderError } from "reforged-map";
+   import { AuthorError } from "./errors.ts";
+
+   export const generateEditorGlobalsFiles: Generator = (config, warn) => {
+     try {
+       const { files, warnings } = generateEditorGlobals(config.mapFolder);
+       for (const warning of warnings) warn(warning);
+       return files;
+     } catch (error) {
+       if (error instanceof MapFolderError)
+         throw new AuthorError(error.message);
+       throw error;
+     }
+   };
+   ```
+
+3. In `tests/harness/compile.ts`, import `LUA_STUB_FILE` from `reforged-map` in place of `scripts/editor-globals.ts`. Then delete `scripts/editor-globals.ts` and its test, `tests/pipeline/editor-globals.test.ts`.
+4. Run `pnpm install`: the declarations are written again, and each `as Rawcode<…>` cast written for a `udg_` variable can go.
+
+The generated files keep their names, `editor-globals.d.ts` and `editor-globals.lua`, and the Lua stub the tests load is the same as before.
 
 ## Codes that are not Rawcodes
 
