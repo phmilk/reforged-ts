@@ -205,7 +205,10 @@ finish() {
 # It checks that npm does not hold the package yet and that the publish
 # plan's entry for it is 1.0.0-alpha.0 under `next`, and publishes that entry
 # alone: the other packages the plan holds are the release workflow's, whose
-# failed publish job is re-run afterwards. Then it walks through that
+# failed publish job is re-run afterwards. When a peer or dependency packed
+# in the package is a version npm does not hold yet (reforged-types bumped by
+# the same release), it says so and publishes only once the maintainer
+# confirms re-running that job right after. Then it walks through that
 # package's trusted publisher and publishing access, and the token.
 #
 # It checks what the npm CLI and git can check and stops at the first failed
@@ -374,6 +377,39 @@ keep_only_in_plan() {
     }
     fs.writeFileSync(file, `${JSON.stringify(plan, null, 2)}\n`);
   ' "$1" "$2"
+}
+
+# packed_requirements PACK_DIR PACKAGE prints "name range", one a line, for
+# each peer and dependency of the package.json packed in PACKAGE's tarball,
+# as the publish plan of PACK_DIR names it: what npm must hold for PACKAGE
+# to install.
+packed_requirements() {
+  local tarball
+  tarball=$(node -e '
+    const path = require("path");
+    const [dir, name] = process.argv.slice(1);
+    const plan = JSON.parse(require("fs").readFileSync(path.join(dir, "publish-plan.json"), "utf8"));
+    const entry = plan.plan.flat().find((e) => e.kind === "publish" && e.name === name);
+    if (!entry || typeof entry.tarball?.path !== "string") process.exit(1);
+    process.stdout.write(path.resolve(dir, entry.tarball.path));
+  ' "$1" "$2") || return 1
+  tar -xzOf "$tarball" package/package.json | node -e '
+    const manifest = JSON.parse(require("fs").readFileSync(0, "utf8"));
+    for (const field of ["peerDependencies", "dependencies"])
+      for (const [name, range] of Object.entries(manifest[field] ?? {})) console.log(name, range);
+  '
+}
+
+# npm_satisfies NAME RANGE: whether npm holds a version of NAME in RANGE.
+# Stops the wizard when npm cannot be asked.
+npm_satisfies() {
+  if [[ -n "$(npm view "$1@$2" version 2>"$ERR_FILE")" ]]; then
+    return 0
+  elif grep -q E404 "$ERR_FILE"; then
+    return 1
+  else
+    fail "npm view $1@$2 failed:" "$(cat "$ERR_FILE")" "Check your network and the npm registry."
+  fi
 }
 
 # manifest_field FILE FIELD prints FIELD of the JSON file FILE.
@@ -549,6 +585,33 @@ else
     printf '  %s$ (keep only %s in %s)%s\n' "$BOLD" "$ONE_PACKAGE" "$PACK_DIR/publish-plan.json" "$RESET"
     $DRY_RUN || keep_only_in_plan "$PACK_DIR/publish-plan.json" "$ONE_PACKAGE" ||
       fail "The publish plan does not publish $ONE_PACKAGE." "Is its version $VERSION on master, and not on npm yet?"
+
+    # A peer the release bumps (reforged-types for reforged-map) is on npm
+    # only once the re-run publish job publishes it: until then the package
+    # published here cannot be installed with it.
+    printf '  %s$ (npm view each peer and dependency packed in %s)%s\n' "$BOLD" "$ONE_PACKAGE" "$RESET"
+    if ! $DRY_RUN; then
+      REQUIREMENTS=$(packed_requirements "$PACK_DIR" "$ONE_PACKAGE") ||
+        fail "The packed package.json of $ONE_PACKAGE cannot be read." "Read the error above."
+      UNMET=()
+      while read -r name range; do
+        [[ -n "$name" ]] || continue
+        npm_satisfies "$name" "$range" || UNMET+=("$name@$range")
+      done <<<"$REQUIREMENTS"
+      if ((${#UNMET[@]})); then
+        warn "$ONE_PACKAGE@$VERSION needs what npm does not hold yet: ${UNMET[*]}."
+        say "Published now, $ONE_PACKAGE cannot be installed with it until the failed"
+        say "publish job of the release run is re-run and publishes it: install it before"
+        say "then, and pnpm reports an unmet peer and the Rawcode types do not resolve."
+        say "Re-run that job right after this wizard: ${BOLD}gh run rerun <run id> --failed${RESET}"
+        confirm "Publish $ONE_PACKAGE now, and re-run the failed publish job right after the wizard?" ||
+          fail "Nothing was published: npm does not hold ${UNMET[*]}." \
+            "The release run's failed publish job publishes it, but only once npm holds $ONE_PACKAGE." \
+            "Re-run this wizard when you can re-run that job right after it."
+      else
+        ok "npm holds every peer and dependency of $ONE_PACKAGE"
+      fi
+    fi
   fi
 
   PLANNED=()
