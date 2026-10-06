@@ -141,7 +141,7 @@ A type of object declared in a Map project's code rather than authored in an edi
 _Avoid_: code object, compiletime object
 
 **Object sync**:
-Writing a Map project's Object definitions into its map folder's Object data, so that the World Editor, HiveWE and any other editor show them before a build.
+Writing a Map project's Object definitions into its map folder's Object data, so that the World Editor and the Studio show them before a build.
 _Avoid_: inject, export, object generation
 
 **Object manifest**:

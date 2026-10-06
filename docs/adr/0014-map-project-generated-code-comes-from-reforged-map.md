@@ -57,3 +57,11 @@ The hover tool (#468) does not read the JSON index in `src/generated/` either. I
 The map's JSON index loses its last consumer, so the generator no longer writes it. `src/generated/` holds the `udg_` declarations, the `FourCC` overloads and the constants. The JSON index of `reforged-builtins` stays; the lookup reads it.
 
 Amendment record: https://github.com/phmilk/reforged-ts/issues/468
+
+## Third amendment (2026-10-06)
+
+HiveWE is not a target for now. No HiveWE release reads a 3.0.0 map: 0.10, the latest, predates 3.0, misreads its `war3map.w3i` and doo files, and crashed at startup on the maintainer's 3.0 install, and the `main` that reads them has no build (#471, #485). The readers' contract is maps saved by the 3.0 World Editor, with wc3libs' notes and fixtures; no fixture is shaped like a HiveWE save.
+
+The readers still accept both layouts: a name in the Skin file or in the base file, a `TRIGSTR_nnn` or literal text. The World Editor itself loads a literal name from either file (#475), so the tolerance costs nothing and keeps maps from other tools readable. Whether HiveWE becomes a target again is decided once a HiveWE release reads 3.0 maps.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/485
