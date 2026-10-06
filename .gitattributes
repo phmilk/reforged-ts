@@ -10,3 +10,7 @@ packages/reforged-types/test/fixtures/jass-history/**/*.ai -text
 # The Probe runner's map folder is a copy of the Template's editor-saved files
 # (probe/PROVENANCE.md): git stores them byte for byte, as the Template does.
 probe/probe.w3m/** -text -diff
+
+# reforged-map's fixture map folders are copies of editor-saved files: git
+# stores them byte for byte (CRLF line ends included).
+packages/reforged-map/test/fixtures/** -text -diff

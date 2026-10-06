@@ -4,9 +4,11 @@
  * publishable package declares, in the `reforged.patch` field of its
  * `package.json`, the game Patch it supports; the check asserts that each one
  * names a Patch the Typings ship an entry for, and that the library's equals
- * the newest of them (the library pins the newest Patch it supports). The
- * compatibility matrix generator runs it before writing a row, CI on every
- * pull request.
+ * the newest of them (the library pins the newest Patch it supports). A
+ * private package is checked too when it declares a `reforged.patch`: a
+ * package that is not published yet (reforged-map before its first release)
+ * keeps its field right. The compatibility matrix generator runs it before
+ * writing a row, CI on every pull request.
  */
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -14,7 +16,7 @@ import { compareBuilds, gameVersion, isBuild } from "./build.js";
 import { LIBRARY_PACKAGE, TYPINGS_PACKAGE } from "./packages.js";
 import { errorMessage, isRecord } from "./unknown.js";
 import {
-  readPublishablePackages,
+  readWorkspacePackages,
   type PackageManifest,
   type PublishablePackage,
 } from "./workspace.js";
@@ -30,7 +32,7 @@ export interface TypingsEntry {
 }
 
 export interface PatchCheckInput {
-  /** The publishable packages; a private one is skipped. */
+  /** The packages; a private one is skipped unless it declares a `reforged.patch`. */
   packages: readonly Pick<PublishablePackage, "name" | "manifest">[];
   /** The Patches the Typings ship an entry for, in any order. */
   entries: readonly TypingsEntry[];
@@ -77,7 +79,7 @@ export interface PatchCheckResult {
   /** Passes when there is no problem. */
   ok: boolean;
   /**
-   * Each publishable package's `reforged.patch`, in the order of the input;
+   * Each checked package's `reforged.patch`, in the order of the input;
    * `null` when the field is missing or not a Build.
    */
   patches: { name: string; patch: string | null }[];
@@ -95,7 +97,12 @@ export function declaredPatch(manifest: PackageManifest): unknown {
 const listed = (patches: readonly string[]) =>
   patches.length === 0 ? "none" : patches.join(", ");
 
-/** Checks the `reforged.patch` of every publishable package. */
+/** Whether the check covers a package: a publishable one, or a private one that declares a `reforged.patch`. */
+function isChecked(manifest: PackageManifest): boolean {
+  return manifest.private !== true || declaredPatch(manifest) !== undefined;
+}
+
+/** Checks the `reforged.patch` of every publishable package, and of every private one that declares it. */
 export function checkPatches(input: PatchCheckInput): PatchCheckResult {
   const shipped = [...new Set(input.entries.map((entry) => entry.patch))].sort(
     compareBuilds,
@@ -111,7 +118,7 @@ export function checkPatches(input: PatchCheckInput): PatchCheckResult {
 
   const patches: PatchCheckResult["patches"] = [];
   for (const { name, manifest } of input.packages) {
-    if (manifest.private === true) continue;
+    if (!isChecked(manifest)) continue;
     const value = declaredPatch(manifest);
     if (value === undefined) {
       problems.push({
@@ -207,14 +214,19 @@ export async function readTypingsEntries(dir: string): Promise<TypingsEntry[]> {
 
 /**
  * The inputs of `checkPatches` for the workspace at `root`: its publishable
- * packages and the entries of the Typings among them. Throws a
+ * packages, its private ones that declare a `reforged.patch`, and the
+ * entries of the Typings among them. Throws a
  * `PatchInputError` when no publishable package is the Typings.
  */
 export async function readPatchInputs(
   root: string,
 ): Promise<{ packages: PublishablePackage[]; entries: TypingsEntry[] }> {
-  const all = await readPublishablePackages(root);
-  const typings = all.find((pkg) => pkg.name === TYPINGS_PACKAGE);
+  const all = (await readWorkspacePackages(root)).filter(({ manifest }) =>
+    isChecked(manifest),
+  );
+  const typings = all.find(
+    (pkg) => pkg.name === TYPINGS_PACKAGE && pkg.manifest.private !== true,
+  );
   if (typings === undefined) {
     throw new PatchInputError(
       `No publishable package is named ${TYPINGS_PACKAGE} in ${root}, so no Patch has an entry.`,
