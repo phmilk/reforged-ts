@@ -13,7 +13,7 @@ function readSpell(caster: Unit) {
   return {
     /** The unit casting the spell. */
     caster,
-    /** The spell's ability id. */
+    /** The spell's ability rawcode, such as Blizzard's, `FourCC("AHbz")`. */
     abilityId: GetSpellAbilityId(),
     /** The target unit, undefined unless the spell targets a unit. */
     targetUnit: Unit.fromSpellTarget(),

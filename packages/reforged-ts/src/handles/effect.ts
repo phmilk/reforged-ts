@@ -7,7 +7,7 @@ import { Point } from "./point";
 import { Widget } from "./widget";
 
 /** The creation error's detail for a spell effect: the ability it names. */
-function spellDetail(ability: number | string): string {
+function spellDetail(ability: string | Rawcode<"ability">): string {
   return typeof ability === "number" ? rawcodeToString(ability) : ability;
 }
 
@@ -101,7 +101,7 @@ export class Effect extends Handle<effect> {
    * @example
    * {@includeCode ../../examples/harness/effect-create-spell.ts}
    * @param ability - The ability whose art to show: its rawcode, such as
-   * `FourCC("AHtc")`, or an ability string (see the bug below).
+   * Thunder Clap's, `FourCC("AHtc")`, or an ability string (see the bug below).
    * @param effectType - Which of the ability's art fields to use, such as
    * `EFFECT_TYPE_CASTER` or `EFFECT_TYPE_TARGET`.
    * @param x - The x-coordinate, in world units.
@@ -117,7 +117,7 @@ export class Effect extends Handle<effect> {
    * knows what its ability string is: pass the ability id.
    */
   public static createSpell(
-    ability: number | string,
+    ability: string | Rawcode<"ability">,
     effectType: effecttype,
     x: number,
     y: number,
@@ -134,7 +134,7 @@ export class Effect extends Handle<effect> {
    * Creates a spell visual effect at `where`, through `AddSpellEffectByIdLoc`
    * for an ability id and `AddSpellEffectLoc` for an ability string.
    * @param ability - The ability whose art to show: its rawcode, such as
-   * `FourCC("AHtc")`, or an ability string (see the bug below).
+   * Thunder Clap's, `FourCC("AHtc")`, or an ability string (see the bug below).
    * @param effectType - Which of the ability's art fields to use, such as
    * `EFFECT_TYPE_CASTER` or `EFFECT_TYPE_TARGET`.
    * @param where - The point to stand the effect on.
@@ -150,7 +150,7 @@ export class Effect extends Handle<effect> {
    * string. Pass the ability id.
    */
   public static createSpellAtPoint(
-    ability: number | string,
+    ability: string | Rawcode<"ability">,
     effectType: effecttype,
     where: Point,
   ): Effect {
@@ -172,7 +172,7 @@ export class Effect extends Handle<effect> {
    * @example
    * {@includeCode ../../examples/harness/effect-create-spell-attachment.ts}
    * @param ability - The ability whose art to show: its rawcode, such as
-   * `FourCC("AHtc")`, or a string (see the remarks).
+   * Thunder Clap's, `FourCC("AHtc")`, or a string (see the remarks).
    * @param effectType - Which of the ability's art fields to use, such as
    * `EFFECT_TYPE_CASTER` or `EFFECT_TYPE_TARGET`.
    * @param targetWidget - The unit, item or destructable that carries the
@@ -189,7 +189,7 @@ export class Effect extends Handle<effect> {
    * @native AddSpellEffectTarget
    */
   public static createSpellAttachment(
-    ability: number | string,
+    ability: string | Rawcode<"ability">,
     effectType: effecttype,
     targetWidget: Widget,
     attachPointName: string,

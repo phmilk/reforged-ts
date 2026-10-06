@@ -96,7 +96,7 @@ Lint's `@param` and `@returns` checks cover exported functions, the public metho
 
 - **English.**
 - **The summary** is one complete sentence that says what the symbol does, starting with its verb ("Creates a unit for the player at the given point."), or, for a class, a type, a constant or a field, what it is ("A rectangular area of the map, aligned with its axes."). It never restates the signature: "Sets the unit's life" on a `life` setter taking a number tells the reader nothing the hover does not show; say what the value means and its unit. Long explanations go in `@remarks`, never in the summary.
-- **`@param name - description`**, with the hyphen (`tsdoc/syntax` reports a `@param` without one). Give the unit and the range where they matter: seconds, degrees, world units, 0 to 255, a rawcode such as `FourCC("hfoo")`, what a left-out optional parameter means.
+- **`@param name - description`**, with the hyphen (`tsdoc/syntax` reports a `@param` without one). Give the unit and the range where they matter: seconds, degrees, world units, 0 to 255, what a left-out optional parameter means. A rawcode is given by an example object, its enUS name in the possessive before its `FourCC` literal: "The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`", "The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`". The same form holds in a `@returns`, a summary, a field's comment and an example's prose. Pick a Built-in object whose enUS name you are sure of, and keep the `FourCC` literal, never a generated constant: the hover then says which object the example is, and what it shows compiles in a Map project with nothing generated installed.
 - **`@returns`** describes the value, not its type; a lookup's says when it is `undefined`.
 - **Escaping.** Outside a code span, write `\{`, `\}`, `\>` and `\@`: TSDoc reads a brace as an inline tag, `>` as HTML and `@` as a tag. Inside backticks nothing is escaped, so put messages and placeholders in a code span (`` `reforged-ts: failed to create Unit (<rawcode>)` ``). A code span stays on one line: TSDoc cannot continue one on the next. No HTML.
 - **One `@remarks` per comment.** It holds the caveats and behaviour notes; several caveats make a bulleted list in it. The first release's behaviour changes from w3ts (the `readDouble` alignment, the corrected error messages, `Players` filled in the globals stage, the silent `fromLocal`) are recorded in the `@remarks` of the members they affect, from `packages/reforged-ts/migration/behaviour-changes.md`, so the migration guide can link to them.
@@ -110,11 +110,12 @@ A comment that meets the matrix and these rules:
 /**
  * Creates a unit for `owner` at the given point, facing `face`.
  * @param owner - The player who owns the unit.
- * @param unitId - The unit type's rawcode, such as `FourCC("hfoo")`.
+ * @param unitId - The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`.
  * @param x - The x-coordinate, in world units.
  * @param y - The y-coordinate, in world units.
  * @param face - The facing, in degrees; 270 (`bj_UNIT_FACING`) when left out.
- * @param skinId - The skin's rawcode; the unit type's own model when left out.
+ * @param skinId - The skin's rawcode, such as the Knight's, `FourCC("hkni")`; the
+ * unit type's own model when left out.
  * @returns The new unit.
  * @throws When the game returns no handle, for example an unknown rawcode:
  * `reforged-ts: failed to create Unit (<rawcode>)`, at the calling line.

@@ -2,7 +2,8 @@
   "name": "AbilityId",
   "source": "common.j",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "kind": "ability"
   },
   "params": [
     {

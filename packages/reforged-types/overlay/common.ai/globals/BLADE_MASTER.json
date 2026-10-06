@@ -2,5 +2,6 @@
   "name": "BLADE_MASTER",
   "source": "common.ai",
   "nullable": false,
+  "kind": "unit",
   "origin": "war3-types-strict"
 }

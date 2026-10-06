@@ -34,11 +34,13 @@ export class Unit extends Widget {
   /**
    * Creates a unit for `owner` at the given point, facing `face`.
    * @param owner - The player who owns the unit.
-   * @param unitId - The unit type's rawcode, such as `FourCC("hfoo")`.
+   * @param unitId - The unit type's rawcode, such as the Footman's,
+   * `FourCC("hfoo")`.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @param face - The facing, in degrees; 270 (`bj_UNIT_FACING`) when left out.
-   * @param skinId - The skin's rawcode; the unit type's own model when left out.
+   * @param skinId - The skin's rawcode, such as the Knight's, `FourCC("hkni")`;
+   * the unit type's own model when left out.
    * @returns The new unit.
    * @throws When the game returns no handle, for example an unknown rawcode:
    * `reforged-ts: failed to create Unit (<rawcode>)`, at the calling line. In Dev
@@ -48,11 +50,11 @@ export class Unit extends Widget {
    */
   public static create(
     owner: MapPlayer,
-    unitId: number,
+    unitId: Rawcode<"unit">,
     x: number,
     y: number,
     face: number = bj_UNIT_FACING,
-    skinId?: number,
+    skinId?: Rawcode<"unit">,
   ): Unit {
     return this.expect(
       skinId === undefined
@@ -65,7 +67,8 @@ export class Unit extends Widget {
   /**
    * Creates a unit for `owner` at a point, facing `face`.
    * @param owner - The player who owns the unit.
-   * @param unitId - The unit type's rawcode, such as `FourCC("hfoo")`.
+   * @param unitId - The unit type's rawcode, such as the Footman's,
+   * `FourCC("hfoo")`.
    * @param where - Where the unit stands.
    * @param face - The facing, in degrees; 270 (`bj_UNIT_FACING`) when left out.
    * @returns The new unit.
@@ -76,7 +79,7 @@ export class Unit extends Widget {
    */
   public static createAtPoint(
     owner: MapPlayer,
-    unitId: number,
+    unitId: Rawcode<"unit">,
     where: Point,
     face: number = bj_UNIT_FACING,
   ): Unit {
@@ -166,7 +169,8 @@ export class Unit extends Widget {
    * The unit dies as it spawns and plays its decay animation, so it becomes a
    * corpse only once that animation has run.
    * @param owner - The player who owns the corpse.
-   * @param unitId - The unit type's rawcode, such as `FourCC("hfoo")`.
+   * @param unitId - The unit type's rawcode, such as the Footman's,
+   * `FourCC("hfoo")`.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @param face - The facing, in degrees; 270 (`bj_UNIT_FACING`) when left out.
@@ -179,7 +183,7 @@ export class Unit extends Widget {
    */
   public static createCorpse(
     owner: MapPlayer,
-    unitId: number,
+    unitId: Rawcode<"unit">,
     x: number,
     y: number,
     face: number = bj_UNIT_FACING,
@@ -774,7 +778,7 @@ export class Unit extends Widget {
 
   /**
    * Gets the rawcode of the unit type whose model the unit uses.
-   * @returns The skin's rawcode.
+   * @returns The skin's rawcode, such as the Knight's, `FourCC("hkni")`.
    * @native BlzGetUnitSkin
    */
   public get skin() {
@@ -782,11 +786,12 @@ export class Unit extends Widget {
   }
 
   /**
-   * The rawcode of the unit type whose model, scale and sounds the unit uses; a
-   * change removes every effect attached to the unit.
+   * The rawcode of the unit type whose model, scale and sounds the unit uses,
+   * such as the Knight's, `FourCC("hkni")`; a change removes every effect
+   * attached to the unit.
    * @native BlzSetUnitSkin
    */
-  public set skin(skinId: number) {
+  public set skin(skinId: Rawcode<"unit">) {
     BlzSetUnitSkin(this.handle, skinId);
   }
 
@@ -865,7 +870,7 @@ export class Unit extends Widget {
 
   /**
    * Gets the rawcode of the unit's type.
-   * @returns The rawcode, such as `FourCC("hfoo")`.
+   * @returns The rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @native GetUnitTypeId
    */
   public get typeId() {
@@ -970,31 +975,37 @@ export class Unit extends Widget {
 
   /**
    * Adds an ability to the unit, at level 1 and off cooldown.
-   * @param abilityId - The ability's rawcode, such as `FourCC("AHbz")`.
+   * @param abilityId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns True when the ability was added, false when the unit already has it.
    * @native UnitAddAbility
    */
-  public addAbility(abilityId: number) {
+  public addAbility(abilityId: Rawcode<"ability">) {
     return UnitAddAbility(this.handle, abilityId);
   }
 
   /**
    * Adjusts the remaining cooldown of one of the unit's abilities by a share of its full cooldown.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param delta - The share of the full cooldown to add; negative to shorten the cooldown.
    * @native BlzAdjustUnitAbilityCooldownPercent
    */
-  public adjustAbilityCooldownPercent(abilId: number, delta: number) {
+  public adjustAbilityCooldownPercent(
+    abilId: Rawcode<"ability">,
+    delta: number,
+  ) {
     BlzAdjustUnitAbilityCooldownPercent(this.handle, abilId, delta);
   }
 
   /**
    * Adjusts the remaining cooldown of one of the unit's abilities by a number of seconds.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param delta - The seconds to add; negative to shorten the cooldown.
    * @native BlzAdjustUnitAbilityCooldownRemaining
    */
-  public adjustAbilityCooldownRemaining(abilId: number, delta: number) {
+  public adjustAbilityCooldownRemaining(
+    abilId: Rawcode<"ability">,
+    delta: number,
+  ) {
     BlzAdjustUnitAbilityCooldownRemaining(this.handle, abilId, delta);
   }
 
@@ -1066,7 +1077,8 @@ export class Unit extends Widget {
    *   charges into an item the unit holds: the item is then removed.
    * - `UnitAddItemById` is not used: it returns nothing for the item it
    *   drops.
-   * @param itemId - The item type's rawcode, such as `FourCC("rde1")`.
+   * @param itemId - The item type's rawcode, such as Ring of Protection +2's,
+   * `FourCC("rde1")`.
    * @returns The new item.
    * @throws When no item is created, for example for an unknown rawcode or a
    * removed unit: `reforged-ts: failed to create Item (<rawcode>)`, at the
@@ -1078,7 +1090,7 @@ export class Unit extends Widget {
    * @native CreateItem
    * @native UnitAddItem
    */
-  public addItemById(itemId: number): Item {
+  public addItemById(itemId: Rawcode<"item">): Item {
     // A removed unit has no type and reads 0 for its position: no item.
     const created =
       this.typeId === 0 ? undefined : CreateItem(itemId, this.x, this.y);
@@ -1092,24 +1104,26 @@ export class Unit extends Widget {
    * @remarks
    * When the slot is taken or does not exist, the game drops the new item at the
    * unit's feet.
-   * @param itemId - The item type's rawcode, such as `FourCC("rde1")`.
+   * @param itemId - The item type's rawcode, such as Ring of Protection +2's,
+   * `FourCC("rde1")`.
    * @param itemSlot - The slot, from 0 to 5.
    * @returns True when the item landed in the slot.
    * @native UnitAddItemToSlotById
    */
-  public addItemToSlotById(itemId: number, itemSlot: number) {
+  public addItemToSlotById(itemId: Rawcode<"item">, itemSlot: number) {
     return UnitAddItemToSlotById(this.handle, itemId, itemSlot);
   }
 
   /**
    * Adds an item type to the stock of the shop.
-   * @param itemId - The item type's rawcode.
+   * @param itemId - The item type's rawcode, such as Claws of Attack +15's,
+   * `FourCC("ratf")`.
    * @param currentStock - The number of items in stock now.
    * @param stockMax - The most items the stock holds.
    * @native AddItemToStock
    */
   public addItemToStock(
-    itemId: number,
+    itemId: Rawcode<"item">,
     currentStock: number,
     stockMax: number,
   ) {
@@ -1148,13 +1162,13 @@ export class Unit extends Widget {
 
   /**
    * Adds a unit type to the stock of the shop.
-   * @param unitId - The unit type's rawcode.
+   * @param unitId - The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @param currentStock - The number of units in stock now.
    * @param stockMax - The most units the stock holds.
    * @native AddUnitToStock
    */
   public addUnitToStock(
-    unitId: number,
+    unitId: Rawcode<"unit">,
     currentStock: number,
     stockMax: number,
   ) {
@@ -1178,12 +1192,12 @@ export class Unit extends Widget {
   /**
    * Gives the unit a timed life: it dies once the duration has passed, and its
    * interface shows the time left.
-   * @param buffId - The timed-life buff's rawcode, such as `FourCC("BTLF")` (the
-   * generic one); an unknown buff falls back to it.
+   * @param buffId - The timed-life buff's rawcode, such as Timed Life's,
+   * `FourCC("BTLF")`, the generic one; an unknown buff falls back to it.
    * @param duration - The time left to live, in seconds.
    * @native UnitApplyTimedLife
    */
-  public applyTimedLife(buffId: number, duration: number) {
+  public applyTimedLife(buffId: Rawcode<"buff">, duration: number) {
     UnitApplyTimedLife(this.handle, buffId, duration);
   }
 
@@ -1375,11 +1389,11 @@ export class Unit extends Widget {
   /**
    * Lowers one of the unit's abilities by one level, down to level 1 at
    * least.
-   * @param abilCode - The ability's rawcode, such as `FourCC("AHbz")`.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns The new ability level.
    * @native DecUnitAbilityLevel
    */
-  public decAbilityLevel(abilCode: number) {
+  public decAbilityLevel(abilCode: Rawcode<"ability">) {
     return DecUnitAbilityLevel(this.handle, abilCode);
   }
 
@@ -1405,7 +1419,7 @@ export class Unit extends Widget {
    * Disables or enables one of the unit's abilities, and hides or shows its icon.
    * @remarks
    * A disabled ability that stays visible shows its disabled icon.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param flag - True to disable the ability, false to enable it.
    * @param hideUI - True to hide the ability's icon, false to show it.
    * @native BlzUnitDisableAbility
@@ -1413,7 +1427,11 @@ export class Unit extends Widget {
    * icon several times, as many calls are needed to show it again
    * ([report](https://www.hiveworkshop.com/threads/blzunithideability-and-blzunitdisableability-dont-work.312477/)).
    */
-  public disableAbility(abilId: number, flag: boolean, hideUI: boolean) {
+  public disableAbility(
+    abilId: Rawcode<"ability">,
+    flag: boolean,
+    hideUI: boolean,
+  ) {
     BlzUnitDisableAbility(this.handle, abilId, flag, hideUI);
   }
 
@@ -1460,10 +1478,10 @@ export class Unit extends Widget {
 
   /**
    * Ends the cooldown of one of the unit's abilities at once.
-   * @param abilCode - The ability's rawcode.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @native BlzEndUnitAbilityCooldown
    */
-  public endAbilityCooldown(abilCode: number) {
+  public endAbilityCooldown(abilCode: Rawcode<"ability">) {
     BlzEndUnitAbilityCooldown(this.handle, abilCode);
   }
 
@@ -1492,11 +1510,11 @@ export class Unit extends Widget {
 
   /**
    * Gets the unit's instance of an ability, for the ability Natives.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns The game's `ability` Handle, or `undefined` when the unit lacks the ability.
    * @native BlzGetUnitAbility
    */
-  public getAbility(abilId: number) {
+  public getAbility(abilId: Rawcode<"ability">) {
     return BlzGetUnitAbility(this.handle, abilId);
   }
 
@@ -1512,56 +1530,56 @@ export class Unit extends Widget {
 
   /**
    * Gets the full cooldown of one of the unit's abilities at a level, not the time remaining.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param level - The ability level, counted from 0 (level 1 is 0).
    * @returns The cooldown, in seconds.
    * @native BlzGetUnitAbilityCooldown
    */
-  public getAbilityCooldown(abilId: number, level: number) {
+  public getAbilityCooldown(abilId: Rawcode<"ability">, level: number) {
     return BlzGetUnitAbilityCooldown(this.handle, abilId, level);
   }
 
   /**
    * Gets the remaining cooldown of one of the unit's abilities as a share of its full cooldown.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns The share of the cooldown left.
    * @native BlzGetUnitAbilityCooldownPercent
    */
-  public getAbilityCooldownPercent(abilId: number) {
+  public getAbilityCooldownPercent(abilId: Rawcode<"ability">) {
     return BlzGetUnitAbilityCooldownPercent(this.handle, abilId);
   }
 
   /**
    * Gets the remaining cooldown of one of the unit's abilities.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns The time left, in seconds; 0 when the ability is ready.
    * @native BlzGetUnitAbilityCooldownRemaining
    * @bug During the cooldown of an ability built on Channel, it sometimes
    * gives 0.
    */
-  public getAbilityCooldownRemaining(abilId: number) {
+  public getAbilityCooldownRemaining(abilId: Rawcode<"ability">) {
     return BlzGetUnitAbilityCooldownRemaining(this.handle, abilId);
   }
 
   /**
    * Gets the level the unit has in one of its abilities.
    * @remarks Levels count from 1, not from 0.
-   * @param abilCode - The ability's rawcode.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns The level, from 1; 0 when the unit lacks the ability.
    * @native GetUnitAbilityLevel
    */
-  public getAbilityLevel(abilCode: number) {
+  public getAbilityLevel(abilCode: Rawcode<"ability">) {
     return GetUnitAbilityLevel(this.handle, abilCode);
   }
 
   /**
    * Gets the mana cost of one of the unit's abilities at a level.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param level - The ability level, counted from 0 (level 1 is 0).
    * @returns The mana cost.
    * @native BlzGetUnitAbilityManaCost
    */
-  public getAbilityManaCost(abilId: number, level: number) {
+  public getAbilityManaCost(abilId: Rawcode<"ability">, level: number) {
     return BlzGetUnitAbilityManaCost(this.handle, abilId, level);
   }
 
@@ -1840,13 +1858,13 @@ export class Unit extends Widget {
 
   /**
    * Hides or shows the icon of one of the unit's abilities.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param flag - True to hide the icon, false to show it.
    * @native BlzUnitHideAbility
    * @bug The game counts the calls instead of storing the flag: after hiding an
    * icon several times, as many calls are needed to show it again.
    */
-  public hideAbility(abilId: number, flag: boolean) {
+  public hideAbility(abilId: Rawcode<"ability">, flag: boolean) {
     BlzUnitHideAbility(this.handle, abilId, flag);
   }
 
@@ -1856,11 +1874,11 @@ export class Unit extends Widget {
    * field of the ability is 0. Sources:
    * http://www.wc3c.net/showthread.php?p=1029039#post1029039 and
    * http://www.hiveworkshop.com/forums/lab-715/silenceex-everything-you-dont-know-about-silence-274351/.
-   * @param abilCode - The ability's rawcode, such as `FourCC("AHbz")`.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns The new ability level.
    * @native IncUnitAbilityLevel
    */
-  public incAbilityLevel(abilCode: number) {
+  public incAbilityLevel(abilCode: Rawcode<"ability">) {
     return IncUnitAbilityLevel(this.handle, abilCode);
   }
 
@@ -2036,7 +2054,8 @@ export class Unit extends Widget {
 
   /**
    * Orders the unit to build a structure at a point.
-   * @param unit - The structure's order name, or its unit type's rawcode.
+   * @param unit - The structure's order name, or its unit type's rawcode, such
+   * as the Barracks', `FourCC("hbar")`.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @returns True when the unit took the order.
@@ -2045,7 +2064,7 @@ export class Unit extends Widget {
    * @bug It returns true for a structure the unit can build on a free spot, even
    * when the player cannot afford it.
    */
-  public issueBuildOrder(unit: string | number, x: number, y: number) {
+  public issueBuildOrder(unit: string | Rawcode<"unit">, x: number, y: number) {
     return typeof unit === "string"
       ? IssueBuildOrder(this.handle, unit, x, y)
       : IssueBuildOrderById(this.handle, unit, x, y);
@@ -2127,27 +2146,28 @@ export class Unit extends Widget {
   }
 
   /**
-   * Orders this neutral structure (a shop, a tavern) to sell or train `unit` for
-   * `forPlayer`.
+   * Orders this neutral structure (a shop, a tavern) to sell or train
+   * `bought` for `forPlayer`.
    * @param forPlayer - The player who buys.
-   * @param unit - The order name of what is bought, or its rawcode.
+   * @param bought - The order name of what is bought, or its rawcode, such as
+   * the Gnoll's, `FourCC("ngno")`, bought from a mercenary camp.
    * @returns True when the structure took the order.
    * @native IssueNeutralImmediateOrder
    * @native IssueNeutralImmediateOrderById
    */
   public issueNeutralImmediateOrder(
     forPlayer: MapPlayer,
-    unit: string | number,
+    bought: string | Rawcode,
   ) {
-    return typeof unit === "string"
-      ? IssueNeutralImmediateOrder(forPlayer.handle, this.handle, unit)
-      : IssueNeutralImmediateOrderById(forPlayer.handle, this.handle, unit);
+    return typeof bought === "string"
+      ? IssueNeutralImmediateOrder(forPlayer.handle, this.handle, bought)
+      : IssueNeutralImmediateOrderById(forPlayer.handle, this.handle, bought);
   }
 
   /**
-   * Orders this neutral structure to use `unit` for `forPlayer` at a point.
+   * Orders this neutral structure to use `order` for `forPlayer` at a point.
    * @param forPlayer - The player the structure acts for.
-   * @param unit - The order's name, or its id.
+   * @param order - The order's name, or its id.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @returns True when the structure took the order.
@@ -2156,19 +2176,19 @@ export class Unit extends Widget {
    */
   public issueNeutralPointOrder(
     forPlayer: MapPlayer,
-    unit: string | number,
+    order: string | number,
     x: number,
     y: number,
   ) {
-    return typeof unit === "string"
-      ? IssueNeutralPointOrder(forPlayer.handle, this.handle, unit, x, y)
-      : IssueNeutralPointOrderById(forPlayer.handle, this.handle, unit, x, y);
+    return typeof order === "string"
+      ? IssueNeutralPointOrder(forPlayer.handle, this.handle, order, x, y)
+      : IssueNeutralPointOrderById(forPlayer.handle, this.handle, order, x, y);
   }
 
   /**
-   * Orders this neutral structure to use `unit` for `forPlayer` on `target`.
+   * Orders this neutral structure to use `order` for `forPlayer` on `target`.
    * @param forPlayer - The player the structure acts for.
-   * @param unit - The order's name, or its id.
+   * @param order - The order's name, or its id.
    * @param target - The order's target.
    * @returns True when the structure took the order.
    * @native IssueNeutralTargetOrder
@@ -2176,20 +2196,20 @@ export class Unit extends Widget {
    */
   public issueNeutralTargetOrder(
     forPlayer: MapPlayer,
-    unit: string | number,
+    order: string | number,
     target: Widget,
   ) {
-    return typeof unit === "string"
+    return typeof order === "string"
       ? IssueNeutralTargetOrder(
           forPlayer.handle,
           this.handle,
-          unit,
+          order,
           target.handle,
         )
       : IssueNeutralTargetOrderById(
           forPlayer.handle,
           this.handle,
-          unit,
+          order,
           target.handle,
         );
   }
@@ -2332,10 +2352,13 @@ export class Unit extends Widget {
    * Makes one of the unit's abilities survive a morph, or lets a morph
    * remove it.
    * @param permanent - True to keep the ability through a morph, false to let the morph remove it.
-   * @param abilityId - The ability's rawcode.
+   * @param abilityId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @native UnitMakeAbilityPermanent
    */
-  public makeAbilityPermanent(permanent: boolean, abilityId: number) {
+  public makeAbilityPermanent(
+    permanent: boolean,
+    abilityId: Rawcode<"ability">,
+  ) {
     UnitMakeAbilityPermanent(this.handle, permanent, abilityId);
   }
 
@@ -2396,26 +2419,27 @@ export class Unit extends Widget {
   }
 
   /**
-   * Queues an order on this neutral structure to sell or train `unitId` for
+   * Queues an order on this neutral structure to sell or train `bought` for
    * `forPlayer`, after its current orders.
    * @param forPlayer - The player who buys.
-   * @param unitId - The rawcode of what is bought.
+   * @param bought - The rawcode of what is bought, such as the Gnoll's,
+   * `FourCC("ngno")`, bought from a mercenary camp.
    * @returns True when the structure took the order.
    * @native BlzQueueNeutralImmediateOrderById
    */
-  public queueNeutralImmediateOrder(forPlayer: MapPlayer, unitId: number) {
+  public queueNeutralImmediateOrder(forPlayer: MapPlayer, bought: Rawcode) {
     return BlzQueueNeutralImmediateOrderById(
       forPlayer.handle,
       this.handle,
-      unitId,
+      bought,
     );
   }
 
   /**
-   * Queues an order on this neutral structure to use `unitId` for
+   * Queues an order on this neutral structure to use `orderId` for
    * `forPlayer` at a point, after its current orders.
    * @param forPlayer - The player the structure acts for.
-   * @param unitId - The order's id.
+   * @param orderId - The order's id.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @returns True when the structure took the order.
@@ -2423,37 +2447,37 @@ export class Unit extends Widget {
    */
   public queueNeutralPointOrder(
     forPlayer: MapPlayer,
-    unitId: number,
+    orderId: number,
     x: number,
     y: number,
   ) {
     return BlzQueueNeutralPointOrderById(
       forPlayer.handle,
       this.handle,
-      unitId,
+      orderId,
       x,
       y,
     );
   }
 
   /**
-   * Queues an order on this neutral structure to use `unitId` for
+   * Queues an order on this neutral structure to use `orderId` for
    * `forPlayer` on `target`, after its current orders.
    * @param forPlayer - The player the structure acts for.
-   * @param unitId - The order's id.
+   * @param orderId - The order's id.
    * @param target - The order's target.
    * @returns True when the structure took the order.
    * @native BlzQueueNeutralTargetOrderById
    */
   public queueNeutralTargetOrder(
     forPlayer: MapPlayer,
-    unitId: number,
+    orderId: number,
     target: Widget,
   ) {
     return BlzQueueNeutralTargetOrderById(
       forPlayer.handle,
       this.handle,
-      unitId,
+      orderId,
       target.handle,
     );
   }
@@ -2468,11 +2492,11 @@ export class Unit extends Widget {
 
   /**
    * Removes an ability from the unit.
-   * @param abilityId - The ability's rawcode.
+   * @param abilityId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @returns True when the ability was removed, false when the unit lacks it.
    * @native UnitRemoveAbility
    */
-  public removeAbility(abilityId: number) {
+  public removeAbility(abilityId: Rawcode<"ability">) {
     return UnitRemoveAbility(this.handle, abilityId);
   }
 
@@ -2552,10 +2576,11 @@ export class Unit extends Widget {
 
   /**
    * Removes an item type from the stock of the shop.
-   * @param itemId - The item type's rawcode.
+   * @param itemId - The item type's rawcode, such as Claws of Attack +15's,
+   * `FourCC("ratf")`.
    * @native RemoveItemFromStock
    */
-  public removeItemFromStock(itemId: number) {
+  public removeItemFromStock(itemId: Rawcode<"item">) {
     RemoveItemFromStock(this.handle, itemId);
   }
 
@@ -2571,11 +2596,11 @@ export class Unit extends Widget {
 
   /**
    * Removes a unit type from the stock of the shop.
-   * @param unitId - The rawcode of the unit type to remove, such as
-   * `FourCC("hfoo")`.
+   * @param unitId - The rawcode of the unit type to remove, such as the
+   * Footman's, `FourCC("hfoo")`.
    * @native RemoveUnitFromStock
    */
-  public removeUnitFromStock(unitId: number) {
+  public removeUnitFromStock(unitId: Rawcode<"unit">) {
     RemoveUnitFromStock(this.handle, unitId);
   }
 
@@ -2645,10 +2670,10 @@ export class Unit extends Widget {
   /**
    * Spends one of the hero's skill points to learn or level an ability; does
    * nothing when the hero has no point or cannot learn it yet.
-   * @param abilCode - The ability's rawcode.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @native SelectHeroSkill
    */
-  public selectSkill(abilCode: number) {
+  public selectSkill(abilCode: Rawcode<"ability">) {
     SelectHeroSkill(this.handle, abilCode);
   }
 
@@ -2656,32 +2681,42 @@ export class Unit extends Widget {
    * Sets the full cooldown of one of the unit's abilities at a level.
    * @remarks
    * A cooldown that is running keeps its length: the new one applies from the next use.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param level - The ability level, counted from 0 (level 1 is 0).
    * @param cooldown - The cooldown, in seconds.
    * @native BlzSetUnitAbilityCooldown
    */
-  public setAbilityCooldown(abilId: number, level: number, cooldown: number) {
+  public setAbilityCooldown(
+    abilId: Rawcode<"ability">,
+    level: number,
+    cooldown: number,
+  ) {
     BlzSetUnitAbilityCooldown(this.handle, abilId, level, cooldown);
   }
 
   /**
    * Sets the remaining cooldown of one of the unit's abilities as a share of its full cooldown.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param percent - The share of the full cooldown left.
    * @native BlzSetUnitAbilityCooldownPercent
    */
-  public setAbilityCooldownPercent(abilId: number, percent: number) {
+  public setAbilityCooldownPercent(
+    abilId: Rawcode<"ability">,
+    percent: number,
+  ) {
     BlzSetUnitAbilityCooldownPercent(this.handle, abilId, percent);
   }
 
   /**
    * Sets the remaining cooldown of one of the unit's abilities.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param seconds - The time left, in seconds.
    * @native BlzSetUnitAbilityCooldownRemaining
    */
-  public setAbilityCooldownRemaining(abilId: number, seconds: number) {
+  public setAbilityCooldownRemaining(
+    abilId: Rawcode<"ability">,
+    seconds: number,
+  ) {
     BlzSetUnitAbilityCooldownRemaining(this.handle, abilId, seconds);
   }
 
@@ -2689,24 +2724,28 @@ export class Unit extends Widget {
    * Sets the level of an ability the unit has, without spending or refunding skill points.
    * @remarks
    * A level below 1 sets level 1, and one above the ability's highest sets the highest.
-   * @param abilCode - The ability's rawcode.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param level - The new level, from 1.
    * @returns The new level, or 0 when the unit lacks the ability.
    * @native SetUnitAbilityLevel
    */
-  public setAbilityLevel(abilCode: number, level: number) {
+  public setAbilityLevel(abilCode: Rawcode<"ability">, level: number) {
     return SetUnitAbilityLevel(this.handle, abilCode, level);
   }
 
   /**
    * Sets the mana cost of one of the unit's abilities at a level.
-   * @param abilId - The ability's rawcode.
+   * @param abilId - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param level - The ability level, counted from 0 (level 1 is 0).
    * @param manaCost - The mana the ability costs to cast at that level, a
    * whole number.
    * @native BlzSetUnitAbilityManaCost
    */
-  public setAbilityManaCost(abilId: number, level: number, manaCost: number) {
+  public setAbilityManaCost(
+    abilId: Rawcode<"ability">,
+    level: number,
+    manaCost: number,
+  ) {
     BlzSetUnitAbilityManaCost(this.handle, abilId, level, manaCost);
   }
 
@@ -3161,11 +3200,11 @@ export class Unit extends Widget {
 
   /**
    * Starts the cooldown of one of the unit's abilities.
-   * @param abilCode - The ability's rawcode.
+   * @param abilCode - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param cooldown - The cooldown, in seconds.
    * @native BlzStartUnitAbilityCooldown
    */
-  public startAbilityCooldown(abilCode: number, cooldown: number) {
+  public startAbilityCooldown(abilCode: Rawcode<"ability">, cooldown: number) {
     BlzStartUnitAbilityCooldown(this.handle, abilCode, cooldown);
   }
 
@@ -3440,7 +3479,8 @@ export class Unit extends Widget {
 
   /**
    * Queues an order to build a structure at a point, after the unit's current orders.
-   * @param unitId - The structure's unit type rawcode.
+   * @param unitId - The structure's unit type rawcode, such as the Barracks',
+   * `FourCC("hbar")`.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @returns True when the unit took the order.
@@ -3448,7 +3488,7 @@ export class Unit extends Widget {
    * @bug It returns true for a structure the unit can build on a free spot, even
    * when the player cannot afford it.
    */
-  public queueBuildOrder(unitId: number, x: number, y: number) {
+  public queueBuildOrder(unitId: Rawcode<"unit">, x: number, y: number) {
     return BlzQueueBuildOrderById(this.handle, unitId, x, y);
   }
 
@@ -3609,21 +3649,21 @@ export class Unit extends Widget {
 
   /**
    * Gets the food a unit type provides to its owner, such as a farm's.
-   * @param unitId - The unit type's rawcode.
+   * @param unitId - The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @returns The food provided.
    * @native GetFoodMade
    */
-  public static foodMadeByType(unitId: number) {
+  public static foodMadeByType(unitId: Rawcode<"unit">) {
     return GetFoodMade(unitId);
   }
 
   /**
    * Gets the food a unit type costs its owner.
-   * @param unitId - The unit type's rawcode.
+   * @param unitId - The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @returns The food used.
    * @native GetFoodUsed
    */
-  public static foodUsedByType(unitId: number) {
+  public static foodUsedByType(unitId: Rawcode<"unit">) {
     return GetFoodUsed(unitId);
   }
 
@@ -3969,32 +4009,32 @@ export class Unit extends Widget {
 
   /**
    * Gets the point value a unit type defines, which the score screen counts.
-   * @param unitType - The unit type's rawcode.
+   * @param unitType - The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @returns The point value.
    * @native GetUnitPointValueByType
    */
-  public static getPointValueByType(unitType: number) {
+  public static getPointValueByType(unitType: Rawcode<"unit">) {
     return GetUnitPointValueByType(unitType);
   }
 
   /**
    * Checks whether a unit type is a hero type.
-   * @param unitId - The unit type's rawcode.
+   * @param unitId - The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @returns True when the type is a hero type.
    * @native IsHeroUnitId
    */
-  public static isUnitIdHero(unitId: number) {
+  public static isUnitIdHero(unitId: Rawcode<"unit">) {
     return IsHeroUnitId(unitId);
   }
 
   /**
    * Checks whether a unit type has a classification, such as `UNIT_TYPE_STRUCTURE`.
-   * @param unitId - The unit type's rawcode.
+   * @param unitId - The unit type's rawcode, such as the Footman's, `FourCC("hfoo")`.
    * @param whichUnitType - The classification.
    * @returns True when the type has it.
    * @native IsUnitIdType
    */
-  public static isUnitIdType(unitId: number, whichUnitType: unittype) {
+  public static isUnitIdType(unitId: Rawcode<"unit">, whichUnitType: unittype) {
     return IsUnitIdType(unitId, whichUnitType);
   }
 }

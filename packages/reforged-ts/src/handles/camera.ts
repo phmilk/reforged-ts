@@ -573,7 +573,7 @@ export class Camera {
    * - In w3ts 3.x it was named `SetCinematicScene`, the one member not in
    *   camelCase.
    * @param portraitUnitId - The rawcode of the unit type whose portrait
-   * shows, such as `FourCC("Hpal")`.
+   * shows, such as the Paladin's, `FourCC("Hpal")`.
    * @param color - The player colour the speaker's name shows in.
    * @param speakerTitle - The speaker's name.
    * @param text - The text the speaker says.
@@ -582,7 +582,7 @@ export class Camera {
    * @native SetCinematicScene
    */
   public static setCinematicScene(
-    portraitUnitId: number,
+    portraitUnitId: Rawcode<"unit">,
     color: playercolor,
     speakerTitle: string,
     text: string,

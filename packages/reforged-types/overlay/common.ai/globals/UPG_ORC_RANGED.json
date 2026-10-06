@@ -2,5 +2,6 @@
   "name": "UPG_ORC_RANGED",
   "source": "common.ai",
   "nullable": false,
+  "kind": "upgrade",
   "origin": "war3-types-strict"
 }

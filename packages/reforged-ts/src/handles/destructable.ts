@@ -10,8 +10,11 @@ import { Widget } from "./widget";
  * takes it.
  */
 export interface DestructableOptions {
-  /** The rawcode of the destructable type. */
-  readonly typeId: number;
+  /**
+   * The destructable type's rawcode, such as the Summer Tree Wall's,
+   * `FourCC("LTlt")`.
+   */
+  readonly typeId: Rawcode<"destructable">;
   /** The x-coordinate, in world units. */
   readonly x: number;
   /** The y-coordinate, in world units. */
@@ -28,8 +31,11 @@ export interface DestructableOptions {
   readonly pitch?: number;
   /** The roll; 0 when only `pitch` is given. */
   readonly roll?: number;
-  /** The skin's rawcode; left out, the type's own model. */
-  readonly skin?: number;
+  /**
+   * The skin's rawcode, a destructable type's, such as the Summer Tree
+   * Wall's, `FourCC("LTlt")`; left out, the type's own model.
+   */
+  readonly skin?: Rawcode<"destructable">;
   /** The team colour of the model. */
   readonly color?: playercolor;
   /** Creates the destructable dead when true; alive by default. */
@@ -51,7 +57,7 @@ export class Destructable extends Widget {
   declare public readonly handle: destructable;
 
   /** The skin the Destructable was created with, when one was given. */
-  public readonly skin?: number;
+  public readonly skin?: Rawcode<"destructable">;
 
   /**
    * Creates a destructable. The options name one of the 32 creation Natives,
@@ -60,7 +66,8 @@ export class Destructable extends Widget {
    * gives it a skin and `color` a team colour.
    * @example
    * {@includeCode ../../examples/harness/destructable-create.ts}
-   * @param options - The rawcode and the position, and the optional axes.
+   * @param options - The type's rawcode, such as the Summer Tree Wall's,
+   * `FourCC("LTlt")`, the position, and the optional axes.
    * @returns The new destructable.
    * @throws When the game returns no handle, for example an unknown rawcode:
    * `reforged-ts: failed to create Destructable (<rawcode>)`, at the calling line.
@@ -570,7 +577,8 @@ export class Destructable extends Widget {
 
   /**
    * Gets the rawcode of the destructable's type.
-   * @returns The type's rawcode, such as `FourCC("LTlt")`.
+   * @returns The type's rawcode, such as the Summer Tree Wall's,
+   * `FourCC("LTlt")`.
    * @native GetDestructableTypeId
    */
   public get typeId() {

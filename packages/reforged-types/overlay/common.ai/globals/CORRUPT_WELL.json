@@ -2,5 +2,6 @@
   "name": "CORRUPT_WELL",
   "source": "common.ai",
   "nullable": false,
+  "kind": "unit",
   "origin": "war3-types-strict"
 }

@@ -23,6 +23,7 @@ import {
 } from "./entry.js";
 import { SOURCES, type Declaration, type SourceName } from "./model.js";
 import { byCodePoint } from "./order.js";
+import { isOverlayKind, OVERLAY_KINDS, type OverlayKind } from "./rawcodes.js";
 
 /**
  * The kind folders inside a source folder and the entries each holds:
@@ -245,6 +246,11 @@ const FIELDS = {
       }
       returns.family = value.family;
     }
+    if (value.kind !== undefined) {
+      const kind = objectKind("returns.kind", value.kind);
+      if (kind instanceof Problem) return kind;
+      returns.kind = kind;
+    }
     return returns;
   },
   params: (value) => {
@@ -270,6 +276,14 @@ const FIELDS = {
           );
         }
         read.type = param.type;
+      }
+      if (param.kind !== undefined) {
+        if (read.type !== undefined) {
+          return new Problem(`${field} has both kind and type; keep one`);
+        }
+        const kind = objectKind(`${field}.kind`, param.kind);
+        if (kind instanceof Problem) return kind;
+        read.kind = kind;
       }
       params.push(read);
     }
@@ -299,7 +313,10 @@ const FIELDS = {
   [K in keyof Omit<FunctionEntry, "file">]: Reader<FunctionEntry[K]>;
 };
 
-/** A global entry's fields: the function entry's readers, and `nullable`. */
+/**
+ * A global entry's fields: the function entry's readers, `nullable` and
+ * `kind`.
+ */
 const GLOBAL_FIELDS = {
   name: FIELDS.name,
   source: FIELDS.source,
@@ -307,6 +324,7 @@ const GLOBAL_FIELDS = {
     typeof value === "boolean"
       ? value
       : new Problem(`nullable must be a boolean, found ${show(value)}`),
+  kind: (value) => (value === undefined ? value : objectKind("kind", value)),
   deprecated: FIELDS.deprecated,
   notes: FIELDS.notes,
   since: FIELDS.since,
@@ -360,9 +378,24 @@ function readEntry(
   return entry as unknown as FunctionEntry | GlobalEntry | TypeEntry;
 }
 
-const PARAM_FIELDS: readonly string[] = ["name", "nullable", "type"];
+const PARAM_FIELDS: readonly string[] = ["name", "nullable", "type", "kind"];
 
-const RETURNS_FIELDS: readonly string[] = ["nullable", "family"];
+const RETURNS_FIELDS: readonly string[] = ["nullable", "family", "kind"];
+
+/**
+ * An Object kind or `"any"`, never TypeScript text: a misspelt kind is an
+ * invalid entry, not a wrong type. Whether the item is an `integer` needs
+ * the Patch, so `resolve.ts` checks it.
+ */
+function objectKind(field: string, value: unknown): OverlayKind | Problem {
+  return isOverlayKind(value)
+    ? value
+    : new Problem(
+        `${field} must be one of ${OVERLAY_KINDS.join(", ")}, found ${show(
+          value,
+        )}`,
+      );
+}
 
 /**
  * Free text a header renders. It may link with `{@link ...}` but neither

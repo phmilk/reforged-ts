@@ -49,7 +49,7 @@
  */
 export class File {
   // The ability used to read and write data.
-  private static readonly dummyAbility: number = FourCC("Amls");
+  private static readonly dummyAbility: Rawcode<"ability"> = FourCC("Amls");
 
   // The icon set before a read: it holds a raw double quote, which the escape
   // contract never leaves in the contents of a file `File.write` wrote.

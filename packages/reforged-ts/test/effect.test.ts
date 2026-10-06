@@ -20,6 +20,29 @@ const target = defined(
 const caster = defined(ConvertEffectType(1), "the caster effect type");
 const thunderClap = FourCC("AHtc");
 
+/**
+ * The spell effects take the ability's name or its Rawcode, never a plain
+ * `number` or another kind's Rawcode. Never called: `tsc` checks it.
+ */
+export function spellRawcodeKinds(count: number): void {
+  const thunderClapType: Rawcode<"ability"> = FourCC("AHtc");
+  const footmanType: Rawcode<"unit"> = FourCC("hfoo");
+  Effect.createSpell("AHtc", caster, 0, 0);
+  Effect.createSpell(thunderClapType, caster, 0, 0);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Effect.createSpell(count, caster, 0, 0);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  Effect.createSpellAttachment(footmanType, caster, target, "origin");
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Effect.createSpellAtPoint(count, caster, Point.create(0, 0));
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  Effect.createSpell(footmanType, caster, 0, 0);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Effect.createSpellAttachment(count, caster, target, "origin");
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  Effect.createSpellAtPoint(footmanType, caster, Point.create(0, 0));
+}
+
 describe("Effect", () => {
   it("is the same object for its handle", () => {
     const effect = Effect.create("model.mdx", 0, 0);

@@ -8,7 +8,8 @@
   "params": [
     {
       "name": "objectid",
-      "nullable": false
+      "nullable": false,
+      "kind": "destructable"
     },
     {
       "name": "x",
@@ -32,7 +33,8 @@
     },
     {
       "name": "skinId",
-      "nullable": false
+      "nullable": false,
+      "kind": "destructable"
     },
     {
       "name": "color",

@@ -109,13 +109,22 @@ export const TYPINGS_FOLDER = "typings";
 export const TYPINGS_DOCS_ID = "typings";
 
 /**
+ * The hand-written declarations of the Rawcode types (`Rawcode`,
+ * `ObjectKind`, `UnknownRawcode`), at the root of the reforged-types package:
+ * every Game version's Jass files use them.
+ */
+export const RAWCODE_TYPES_FILE = "rawcode.d.ts";
+
+/**
  * The reference of the Typings of each Game version `typings` holds (the
  * reforged-types package), oldest first: every folder with a `manifest.json`,
  * so a new Patch adds its subsection. The entry points are the Game version's
- * Jass files, which declare every entry of its manifest and need nothing
- * else. Each Game version gets a tsconfig of its own, written to `tsconfigs`,
- * with its files alone: the Typings of two Game versions declare the same
- * globals and never share a program.
+ * Jass files, which declare every entry of its manifest, and the package's
+ * `RAWCODE_TYPES_FILE` when it has one, which declares the Rawcode types the
+ * Jass files use: each Game version's reference documents them too. Each
+ * Game version gets a tsconfig of its own, written to `tsconfigs`, with its
+ * files alone: the Typings of two Game versions declare the same globals and
+ * never share a program.
  */
 export function typingsReferences(
   typings: string,
@@ -125,12 +134,16 @@ export function typingsReferences(
   const gameVersions = gameVersionFolders(typings).filter((gameVersion) =>
     existsSync(join(typings, gameVersion, "manifest.json")),
   );
+  const rawcodeTypes = join(typings, RAWCODE_TYPES_FILE);
   return gameVersions.map((gameVersion) => {
     const folder = join(typings, gameVersion);
-    const entryPoints = readdirSync(folder)
-      .filter((file) => file.endsWith(".d.ts"))
-      .sort()
-      .map((file) => join(folder, file));
+    const entryPoints = [
+      ...readdirSync(folder)
+        .filter((file) => file.endsWith(".d.ts"))
+        .sort()
+        .map((file) => join(folder, file)),
+      ...(existsSync(rawcodeTypes) ? [rawcodeTypes] : []),
+    ];
     const tsconfig = join(tsconfigs, gameVersion, "tsconfig.json");
     writeIfChanged(
       tsconfig,

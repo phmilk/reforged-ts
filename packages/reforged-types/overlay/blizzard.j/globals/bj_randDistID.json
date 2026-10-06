@@ -2,5 +2,6 @@
   "name": "bj_randDistID",
   "source": "blizzard.j",
   "nullable": false,
+  "kind": "any",
   "origin": "war3-types-strict"
 }

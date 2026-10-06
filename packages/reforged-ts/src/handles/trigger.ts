@@ -549,12 +549,12 @@ export class Trigger extends Handle<trigger> {
   /**
    * Registers a click on the command button of an ability, identified by
    * the ability and its order string.
-   * @param whichAbility - The ability's rawcode, such as `FourCC("AHbz")`.
+   * @param whichAbility - The ability's rawcode, such as Blizzard's, `FourCC("AHbz")`.
    * @param order - The order string of the button, such as `"blizzard"`.
    * @returns The Trigger, for chaining.
    * @native TriggerRegisterCommandEvent
    */
-  public registerCommandEvent(whichAbility: number, order: string) {
+  public registerCommandEvent(whichAbility: Rawcode<"ability">, order: string) {
     TriggerRegisterCommandEvent(this.handle, whichAbility, order);
     return this;
   }
@@ -1036,11 +1036,12 @@ export class Trigger extends Handle<trigger> {
 
   /**
    * Registers a click on the command button of an upgrade.
-   * @param whichUpgrade - The upgrade's rawcode, such as `FourCC("Rhme")`.
+   * @param whichUpgrade - The upgrade's rawcode, such as Iron Forged Swords',
+   * `FourCC("Rhme")`.
    * @returns The Trigger, for chaining.
    * @native TriggerRegisterUpgradeCommandEvent
    */
-  public registerUpgradeCommandEvent(whichUpgrade: number) {
+  public registerUpgradeCommandEvent(whichUpgrade: Rawcode<"upgrade">) {
     TriggerRegisterUpgradeCommandEvent(this.handle, whichUpgrade);
     return this;
   }

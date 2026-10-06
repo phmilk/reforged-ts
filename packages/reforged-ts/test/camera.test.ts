@@ -17,6 +17,21 @@ import { handleRef } from "./support/handle-ref";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
+/**
+ * The cinematic scene takes the speaker's portrait as a unit's Rawcode,
+ * never another kind's or a plain `number`. Never called: `tsc` checks it.
+ */
+export function cinematicRawcodeKinds(count: number): void {
+  const footmanType: Rawcode<"unit"> = FourCC("hfoo");
+  const blizzard: Rawcode<"ability"> = FourCC("AHbz");
+  const blue = PLAYER_COLOR_BLUE;
+  Camera.setCinematicScene(footmanType, blue, "Footman", "Halt!", 5, 4);
+  // @ts-expect-error: an ability's Rawcode is not a unit's.
+  Camera.setCinematicScene(blizzard, blue, "Footman", "Halt!", 5, 4);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Camera.setCinematicScene(count, blue, "Footman", "Halt!", 5, 4);
+}
+
 describe("CameraSetup.create", () => {
   it("wraps the handle CreateCameraSetup returns, and a lookup finds it", () => {
     const setup = CameraSetup.create();

@@ -38,6 +38,25 @@ const frame = Frame.create(
   0,
 );
 
+/**
+ * The command button registrations take the Rawcode of their kind, never a
+ * plain `number` or another kind's Rawcode. Never called: `tsc` checks it.
+ */
+export function commandRawcodeKinds(trigger: Trigger, count: number): void {
+  const blizzardType: Rawcode<"ability"> = FourCC("AHbz");
+  const footmanType: Rawcode<"unit"> = FourCC("hfoo");
+  trigger.registerCommandEvent(blizzardType, "blizzard");
+  trigger.registerUpgradeCommandEvent(FourCC("Rhde"));
+  // @ts-expect-error: a plain number is not a Rawcode.
+  trigger.registerCommandEvent(count, "blizzard");
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  trigger.registerCommandEvent(footmanType, "blizzard");
+  // @ts-expect-error: an ability's Rawcode is not an upgrade's.
+  trigger.registerUpgradeCommandEvent(blizzardType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  trigger.registerUpgradeCommandEvent(count);
+}
+
 const playerRef = handleRef("player", player.handle);
 const unitRef = handleRef("unit", unit.handle);
 const regionRef = handleRef("region", region.handle);

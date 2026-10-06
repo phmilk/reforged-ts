@@ -20,7 +20,8 @@
     },
     {
       "name": "skinId",
-      "nullable": false
+      "nullable": false,
+      "kind": "item"
     }
   ],
   "notes": "Returned nothing in a case of the nullability sweep (itemid: unknown rawcode) on 3.0.0.24268.",

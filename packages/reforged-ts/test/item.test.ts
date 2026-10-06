@@ -17,6 +17,62 @@ import { raisedIn } from "./support/raised-in";
 const ration = FourCC("ratf");
 const skin = FourCC("rde1");
 
+/**
+ * The Rawcodes `Item` takes, by Object kind: a `FourCC` literal goes
+ * anywhere, a Rawcode of another kind or a plain `number` does not. Never
+ * called: `tsc` checks it.
+ */
+export function itemRawcodeKinds(item: Item, count: number): void {
+  const rationType: Rawcode<"item"> = FourCC("ratf");
+  const footmanType: Rawcode<"unit"> = FourCC("hfoo");
+  Item.create(rationType, 0, 0, rationType);
+  // @ts-expect-error: a unit's Rawcode is not an item's.
+  Item.create(footmanType, 0, 0);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Item.create(count, 0, 0);
+  // @ts-expect-error: a skin of `Item` is an item's Rawcode.
+  item.skin = footmanType;
+  // @ts-expect-error: an item's Rawcode is not an ability's.
+  item.addAbility(rationType);
+  item.setDropId(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  item.setDropId(count);
+  // What `Item` returns carries its kind on, without a cast.
+  Item.create(item.typeId, 0, 0, item.skin);
+  item.skin = Item.chooseRandomWithFilter(
+    ITEM_TYPE_ANY,
+    1,
+    EquipmentType.Any,
+    ItemTag.Any,
+  );
+  // @ts-expect-error: a returned item's Rawcode is not an ability's.
+  item.addAbility(item.typeId);
+  // @ts-expect-error: an item's skin is not a unit's Rawcode.
+  item.setDropId(item.skin);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  item.addAbility(count);
+  // @ts-expect-error: an item's Rawcode is not an ability's.
+  item.getAbility(rationType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  item.getAbility(count);
+  // @ts-expect-error: an item's Rawcode is not an ability's.
+  item.removeAbility(rationType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  item.removeAbility(count);
+  // @ts-expect-error: a unit's Rawcode is not an item's.
+  Item.isIdPawnable(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Item.isIdPawnable(count);
+  // @ts-expect-error: a unit's Rawcode is not an item's.
+  Item.isIdPowerup(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Item.isIdPowerup(count);
+  // @ts-expect-error: a unit's Rawcode is not an item's.
+  Item.isIdSellable(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Item.isIdSellable(count);
+}
+
 describe("Item.create", () => {
   it("wraps the handle CreateItem returns, and a lookup finds it", () => {
     const item = Item.create(ration, 10, 20);
@@ -279,19 +335,19 @@ describe("Item.chooseRandomWithFilter", () => {
   });
 
   it("returns 0 when the game finds no item type", () => {
-    expect(
-      withNative(
-        "ChooseRandomItemExWithFilter",
-        () => 0,
-        () =>
-          Item.chooseRandomWithFilter(
-            ITEM_TYPE_ANY,
-            1,
-            EquipmentType.Any,
-            ItemTag.Any,
-          ),
-      ),
-    ).toEqual(0);
+    // A Rawcode widens to number; the game's "no item type" is 0.
+    const id: number = withNative(
+      "ChooseRandomItemExWithFilter",
+      () => 0 as Rawcode<"item">,
+      () =>
+        Item.chooseRandomWithFilter(
+          ITEM_TYPE_ANY,
+          1,
+          EquipmentType.Any,
+          ItemTag.Any,
+        ),
+    );
+    expect(id).toEqual(0);
   });
 });
 

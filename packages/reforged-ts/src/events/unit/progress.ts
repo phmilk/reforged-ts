@@ -62,7 +62,7 @@ export const progressRows = unitEventRows({
     event: EVENT_UNIT_CONSTRUCT_FINISH,
   },
   /**
-   * A unit finishes a research; `researched` is its id.
+   * A unit finishes a research; `researched` is its rawcode.
    * Every field is set.
    * @example Announcing a player's progress
    * {@includeCode ../../../examples/harness/unit-events.ts#progress}
@@ -74,13 +74,16 @@ export const progressRows = unitEventRows({
     read: (unit) => ({
       /** The researching unit. */
       unit,
-      /** The id of the finished research. */
+      /**
+       * The finished research's rawcode, such as Iron Forged Swords',
+       * `FourCC("Rhme")`.
+       */
       researched: GetResearched(),
     }),
   },
   /**
    * The event of `researchFinish` on one Unit: `unit` finishes a research;
-   * `researched` is its id. Every field is set.
+   * `researched` is its rawcode. Every field is set.
    * @example Announcing a player's progress
    * {@includeCode ../../../examples/harness/unit-events.ts#progress}
    * @native TriggerRegisterUnitEvent
@@ -154,7 +157,7 @@ export const progressRows = unitEventRows({
     read: (unit) => ({
       /** The hero learning the skill. */
       unit,
-      /** The id of the learned skill. */
+      /** The learned skill's rawcode, such as Holy Light's, `FourCC("AHhb")`. */
       abilityId: GetLearnedSkill(),
     }),
   },

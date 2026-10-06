@@ -100,6 +100,24 @@ describe("the Typings references", () => {
     });
   });
 
+  it("document the package's Rawcode types with each Game version", async () => {
+    for (const gameVersion of ["2.1.0", "3.0.2"]) {
+      await mkdir(join(temp, gameVersion));
+      await writeFile(join(temp, gameVersion, "manifest.json"), "{}");
+      await writeFile(join(temp, gameVersion, "common.j.d.ts"), "");
+    }
+    await writeFile(join(temp, "rawcode.d.ts"), "");
+
+    const references = typingsReferences(temp, join(temp, "tsconfigs"));
+
+    expect(references.map((reference) => reference.entryPoints)).toEqual(
+      ["2.1.0", "3.0.2"].map((gameVersion) => [
+        join(temp, gameVersion, "common.j.d.ts"),
+        join(temp, "rawcode.d.ts"),
+      ]),
+    );
+  });
+
   it("compile each Game version's Jass files alone", async () => {
     const reference = only(typingsReferences(FIXTURE, temp));
 

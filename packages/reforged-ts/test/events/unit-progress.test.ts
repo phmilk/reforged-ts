@@ -7,7 +7,7 @@
 // Subscription's Trigger with a stubbed context and observe the call log and
 // what the handler received.
 
-import { MapPlayer, Unit, UnitEvents } from "../../src/index";
+import { MapPlayer, on, Unit, UnitEvents } from "../../src/index";
 import { defined } from "../support/defined";
 import {
   describeDescriptor,
@@ -23,6 +23,23 @@ const hero = Unit.create(owner, FourCC("Hpal"), 0, 0);
 hero.setHeroLevel(3, false);
 const research = FourCC("Rhme");
 const skill = FourCC("AHhb");
+
+/**
+ * The researched upgrade's and the learned skill's Rawcodes carry their kind
+ * into the next call, without a cast. Never called: `tsc` checks it.
+ */
+export function progressPayloadKinds(): void {
+  on(UnitEvents.researchFinish, ({ unit, researched }) => {
+    owner.setTechResearched(researched, 1);
+    // @ts-expect-error: the researched upgrade's Rawcode is not an ability's.
+    unit.addAbility(researched);
+  });
+  on(UnitEvents.heroSkill, ({ unit, abilityId }) => {
+    unit.removeAbility(abilityId);
+    // @ts-expect-error: the learned skill's Rawcode is not an upgrade's.
+    owner.setTechResearched(abilityId, 1);
+  });
+}
 
 /** The lines of `trigger` registering the player-unit `event` every slot. */
 function anyUnit(trigger: string, event: string) {

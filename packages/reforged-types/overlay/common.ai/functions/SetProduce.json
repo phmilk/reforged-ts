@@ -11,7 +11,8 @@
     },
     {
       "name": "id",
-      "nullable": false
+      "nullable": false,
+      "kind": "unit"
     },
     {
       "name": "town",

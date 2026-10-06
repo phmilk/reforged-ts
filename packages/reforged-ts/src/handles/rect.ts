@@ -204,13 +204,14 @@ export class Rectangle extends Handle<rect> {
   /**
    * Sets the animation of every doodad of type `doodadId` in the rect,
    * through `SetDoodadAnimationRect`.
-   * @param doodadId - The doodad type's rawcode, such as `FourCC("LTlt")`.
+   * @param doodadId - The doodad type's rawcode, such as the Brazier's,
+   * `FourCC("LObr")`.
    * @param animName - The animation's name, such as `"death"`.
    * @param animRandom - Plays a random animation of that name.
    * @native SetDoodadAnimationRect
    */
   public setDoodadAnimation(
-    doodadId: number,
+    doodadId: Rawcode<"doodad">,
     animName: string,
     animRandom: boolean,
   ) {
@@ -220,11 +221,12 @@ export class Rectangle extends Handle<rect> {
   /**
    * Sets the player color of every doodad of type `doodadId` in the rect,
    * through `SetDoodadColorRect` (3.0.0).
-   * @param doodadId - The doodad type's rawcode, such as `FourCC("LTlt")`.
+   * @param doodadId - The doodad type's rawcode, such as the Brazier's,
+   * `FourCC("LObr")`.
    * @param color - The player colour to tint them with.
    * @native SetDoodadColorRect
    */
-  public setDoodadColor(doodadId: number, color: playercolor) {
+  public setDoodadColor(doodadId: Rawcode<"doodad">, color: playercolor) {
     SetDoodadColorRect(this.handle, doodadId, color);
   }
 

@@ -20,6 +20,51 @@ declare const InitGlobals: () => void;
 // `Players` is filled at the `globals` stage: run it, as `main` would.
 InitGlobals();
 
+/**
+ * The Rawcodes `MapPlayer`'s tech members take: a unit's or an upgrade's,
+ * never another kind's or a plain `number`. Never called: `tsc` checks it.
+ */
+export function techRawcodeKinds(player: MapPlayer, count: number): void {
+  const footmanType: Rawcode<"unit"> = FourCC("hfoo");
+  const ironForged: Rawcode<"upgrade"> = FourCC("Rhme");
+  const rationType: Rawcode<"item"> = FourCC("ratf");
+  player.setTechResearched(FourCC("Rhme"), 1);
+  player.setTechResearched(ironForged, 1);
+  player.setTechMaxAllowed(footmanType, 12);
+  // @ts-expect-error: an item's Rawcode is neither a unit's nor an upgrade's.
+  player.setTechResearched(rationType, 1);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.getTechCount(count, true);
+  // @ts-expect-error: an upgrade's Rawcode is not an ability's.
+  player.setAbilityAvailable(ironForged, false);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.setAbilityAvailable(count, false);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.setTechResearched(count, 1);
+  // @ts-expect-error: an item's Rawcode is neither a unit's nor an upgrade's.
+  player.getTechCount(rationType, true);
+  // @ts-expect-error: an item's Rawcode is neither a unit's nor an upgrade's.
+  player.addTechResearched(rationType, 1);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.addTechResearched(count, 1);
+  // @ts-expect-error: an item's Rawcode is neither a unit's nor an upgrade's.
+  player.decTechResearched(rationType, 1);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.decTechResearched(count, 1);
+  // @ts-expect-error: an item's Rawcode is neither a unit's nor an upgrade's.
+  player.getTechMaxAllowed(rationType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.getTechMaxAllowed(count);
+  // @ts-expect-error: an item's Rawcode is neither a unit's nor an upgrade's.
+  player.getTechResearched(rationType, true);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.getTechResearched(count, true);
+  // @ts-expect-error: an item's Rawcode is neither a unit's nor an upgrade's.
+  player.setTechMaxAllowed(rationType, 12);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.setTechMaxAllowed(count, 12);
+}
+
 /** A Map project's own player model, extending the library's Wrapper. */
 class Contestant extends MapPlayer {
   public score = 0;

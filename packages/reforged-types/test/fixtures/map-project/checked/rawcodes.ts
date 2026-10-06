@@ -1,5 +1,5 @@
-// Positive: Rawcodes typed by Object kind. No Native takes or returns one
-// yet, so the functions that do are declared here.
+// Positive: Rawcodes typed by Object kind, through functions declared here
+// (rawcode-natives.ts passes them to the Natives).
 declare function takeUnit(id: Rawcode<"unit">): void;
 declare function takeItem(id: Rawcode<"item">): void;
 declare function takeAbility(id: Rawcode<"ability">): void;

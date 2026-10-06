@@ -2,5 +2,6 @@
   "name": "VOODOO_LOUNGE",
   "source": "common.ai",
   "nullable": false,
+  "kind": "unit",
   "origin": "war3-types-strict"
 }

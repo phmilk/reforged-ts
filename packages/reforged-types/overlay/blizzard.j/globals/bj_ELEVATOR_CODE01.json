@@ -2,5 +2,6 @@
   "name": "bj_ELEVATOR_CODE01",
   "source": "blizzard.j",
   "nullable": false,
+  "kind": "destructable",
   "origin": "war3-types-strict"
 }
