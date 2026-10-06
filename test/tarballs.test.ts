@@ -134,6 +134,14 @@ const PACKAGES: readonly Expected[] = [
     // package (#50).
     workspacePeers: { "reforged-ts": true, "reforged-types": true },
   },
+  {
+    dir: "reforged-map",
+    allowed: [/^dist\/.+\.(js|d\.ts)$/],
+    required: ["dist/index.js", "dist/index.d.ts"],
+    sideEffectsFree: true,
+    // Required: the generated declarations name the Typings' types.
+    workspacePeers: { "reforged-types": false },
+  },
 ];
 
 /** Folders and files that are sources, tests or tooling, never published. */

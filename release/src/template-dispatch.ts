@@ -18,14 +18,17 @@ export const TEMPLATE_DISPATCH_EVENT = "reforged-ts-release";
 /** Where the raw files of this repository are served, by git ref. */
 const RAW_BASE_URL = "https://raw.githubusercontent.com/phmilk/reforged-ts";
 
-/** One of the four packages of a release, which the Template depends on. */
+/**
+ * One of the five packages of a release, which the Template depends on or
+ * (`reforged-map`, until phmilk/reforged-ts-template#68) will.
+ */
 export type ReleasedPackage = (typeof ROW_PACKAGES)[keyof typeof ROW_PACKAGES];
 
 /** The `client_payload` of the dispatch. */
 export interface ReleasePayload {
   /** The release's git tag: `<package>@<version>`. */
   tag: string;
-  /** The version on npm of each of the four packages, after the release. */
+  /** The version on npm of each of the five packages, after the release. */
   versions: Record<ReleasedPackage, string>;
   /** The raw URL of `CONTEXT.md` at the tag. */
   contextUrl: string;
@@ -50,8 +53,9 @@ export class TemplateDispatchError extends Error {
  * The dispatch of the release in the `changeset pack` output `packDir`,
  * over the workspace at `root`.
  *
- * - `tag`: the git tag of the first of the four packages, in matrix order
- *   (the library, the Typings, the harness, the plugin), the plan publishes.
+ * - `tag`: the git tag of the first of the five packages, in matrix order
+ *   (the library, the Typings, the harness, the plugin, the map reader),
+ *   the plan publishes.
  *   A release without the library dispatches too: its versions change the
  *   Template's ranges.
  * - `versions`: the plan's version of each package it publishes, the
@@ -59,7 +63,7 @@ export class TemplateDispatchError extends Error {
  * - `llmsUrl`: the docs version the packages of the library version link
  *   (`docsLabel`): its `major.minor`, or `next` for a prerelease.
  *
- * Throws a `TemplateDispatchError` when the plan publishes none of the four
+ * Throws a `TemplateDispatchError` when the plan publishes none of the five
  * packages, one of them is in neither the plan nor the workspace, or the
  * library version names no docs version, and a `PublishPlanError` on a plan
  * that cannot be read.

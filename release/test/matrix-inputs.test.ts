@@ -43,6 +43,7 @@ describe("parseMatrix", () => {
       typings: "1.0.0",
       harness: "1.0.0",
       plugin: "1.0.0",
+      map: "1.0.0",
       patch: "3.0.0.24268",
       typescript: "6.0.2",
       typescriptToLua: "^1.37.1",
@@ -54,6 +55,11 @@ describe("parseMatrix", () => {
     };
     expect(() => parseMatrix({ format: 1, rows: [row] })).toThrow(
       "row 0 has cutDate 2026/10/01, not YYYY-MM-DD.",
+    );
+    const withoutMap: Partial<typeof row> = { ...row, cutDate: "2026-10-01" };
+    delete withoutMap.map;
+    expect(() => parseMatrix({ format: 1, rows: [withoutMap] })).toThrow(
+      'row 0 has no valid "map".',
     );
   });
 });

@@ -20,10 +20,22 @@ export const HARNESS_PACKAGE = "reforged-test";
 /** The lint plugin. */
 export const PLUGIN_PACKAGE = "eslint-plugin-reforged";
 
-/** The four packages of a compatibility matrix row, by row field. */
+/**
+ * The map folder reader, which a Map project's build calls to generate its
+ * code. It came after the first four, and the Template takes it up after
+ * its first release (phmilk/reforged-ts-template#68).
+ */
+export const MAP_PACKAGE = "reforged-map";
+
+/**
+ * The five packages of a compatibility matrix row, by row field, in matrix
+ * order: the order of the row's fields, the tables' columns and the
+ * Template dispatch's tag.
+ */
 export const ROW_PACKAGES = {
   library: LIBRARY_PACKAGE,
   typings: TYPINGS_PACKAGE,
   harness: HARNESS_PACKAGE,
   plugin: PLUGIN_PACKAGE,
+  map: MAP_PACKAGE,
 } as const;

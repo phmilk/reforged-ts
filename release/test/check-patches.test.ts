@@ -23,6 +23,7 @@ const AGREEING: Record<string, unknown> = {
   "reforged-types": NEW,
   "reforged-test": OLD,
   "eslint-plugin-reforged": OLD,
+  "reforged-map": OLD,
 };
 
 /**
@@ -66,6 +67,7 @@ describe("checkPatches", () => {
       ok: true,
       patches: [
         { name: "eslint-plugin-reforged", patch: OLD },
+        { name: "reforged-map", patch: OLD },
         { name: "reforged-test", patch: OLD },
         { name: "reforged-ts", patch: NEW },
         { name: "reforged-types", patch: NEW },
@@ -184,24 +186,28 @@ describe("checkPatches", () => {
 
   it("checks a private package that declares a reforged.patch, as one not published yet", async () => {
     const unpublished = [
-      { dir: "packages/reforged-map", name: "reforged-map", private: true },
+      {
+        dir: "packages/reforged-builtins",
+        name: "reforged-builtins",
+        private: true,
+      },
     ];
     const agreeing = await check(
       await workspace(
-        { ...AGREEING, "reforged-map": OLD },
+        { ...AGREEING, "reforged-builtins": OLD },
         [OLD, NEW],
         unpublished,
       ),
     );
     expect(agreeing.ok).toBe(true);
     expect(agreeing.patches).toContainEqual({
-      name: "reforged-map",
+      name: "reforged-builtins",
       patch: OLD,
     });
 
     const unknown = await check(
       await workspace(
-        { ...AGREEING, "reforged-map": "3.0.0.99999" },
+        { ...AGREEING, "reforged-builtins": "3.0.0.99999" },
         [OLD, NEW],
         unpublished,
       ),
@@ -209,9 +215,9 @@ describe("checkPatches", () => {
     expect(unknown.problems).toEqual([
       {
         kind: "unknown-patch",
-        package: "reforged-map",
+        package: "reforged-builtins",
         patch: "3.0.0.99999",
-        message: `reforged-map has reforged.patch 3.0.0.99999, a Patch reforged-types ships no entry for (it ships: ${OLD}, ${NEW}).`,
+        message: `reforged-builtins has reforged.patch 3.0.0.99999, a Patch reforged-types ships no entry for (it ships: ${OLD}, ${NEW}).`,
       },
     ]);
   });
@@ -255,7 +261,6 @@ describe("checkPatches", () => {
     expect(result.problems).toEqual([]);
     expect(result.patches.map(({ name }) => name)).toEqual([
       "eslint-plugin-reforged",
-      // Private until its first release, checked for its reforged.patch.
       "reforged-map",
       "reforged-test",
       "reforged-ts",
@@ -325,7 +330,7 @@ describe("release:check-patches", () => {
       status: 0,
       stdout:
         `Every publishable package names a Patch the Typings ship an entry for, the library the newest (${NEW}): ` +
-        `eslint-plugin-reforged ${OLD}, reforged-test ${OLD}, reforged-ts ${NEW}, reforged-types ${NEW}.\n`,
+        `eslint-plugin-reforged ${OLD}, reforged-map ${OLD}, reforged-test ${OLD}, reforged-ts ${NEW}, reforged-types ${NEW}.\n`,
       stderr: "",
     });
   });
