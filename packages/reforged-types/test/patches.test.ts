@@ -44,7 +44,7 @@ const OLDER = {
     "    constant integer UNIT_A = 1",
     "endglobals",
     "native KillUnit takes unit whichUnit returns nothing",
-    "native RequestExtraBooleanData takes integer dataType returns boolean",
+    "native RequestExtraBooleanData takes integer data returns boolean",
   ].join("\n"),
 };
 
@@ -68,7 +68,7 @@ const OVERLAY = [
   globalEntry("common.j", "UNIT_A"),
   globalEntry("common.j", "EQUIPMENT_A", false, { since: "3.1.0.25000" }),
   entry("common.j", "KillUnit", ["whichUnit"]),
-  entry("common.j", "RequestExtraBooleanData", ["dataType"]),
+  entry("common.j", "RequestExtraBooleanData", ["data"]),
   {
     ...entry("common.j", "GetEquippedItem", ["whichUnit"], true, "lookup"),
     since: "3.1.0.25000",

@@ -342,8 +342,8 @@ describe("generate: invalid inputs", () => {
     ],
     [
       "an unknown returns field",
-      { returns: { nullable: true, kind: "lookup" } },
-      'unknown field "returns.kind"',
+      { returns: { nullable: true, famliy: "lookup" } },
+      'unknown field "returns.famliy"',
     ],
     [
       "a non-boolean parameter nullable",

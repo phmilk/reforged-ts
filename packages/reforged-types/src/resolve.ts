@@ -6,7 +6,8 @@
  * that no vendored Patch declares is an orphan warning, not an error, because
  * the Overlay is shared by all vendored Patches. A function's entry also
  * names the Nullability family of a handle-returning common.j Native, and
- * only of one, and a Native of a nullable family is typed nullable.
+ * only of one, and a Native of a nullable family is typed nullable. Each
+ * Rawcode parameter and return takes its Object kind here (`rawcodes.ts`).
  */
 import { patchList } from "./build.js";
 import type { Diagnostic } from "./diagnostics.js";
@@ -32,10 +33,21 @@ import {
   overlayKey,
   type Overlay,
 } from "./overlay.js";
+import { overlayKind, parameterKind, type RawcodeKind } from "./rawcodes.js";
+
+/**
+ * The Object kinds of a function's Rawcodes: one per parameter, in order,
+ * `undefined` where the parameter is not a Rawcode, and the return's.
+ */
+export interface FunctionRawcodes {
+  params: (RawcodeKind | undefined)[];
+  returns?: RawcodeKind;
+}
 
 /** A function with the Overlay facts that shape its declaration. */
 export interface ResolvedFunction extends FunctionDeclaration {
   overlay: FunctionEntry;
+  rawcodes: FunctionRawcodes;
 }
 
 /** A global with its mandatory Overlay entry. */
@@ -103,7 +115,12 @@ export function resolve(
       diagnostics.push(familyError(entry, familyProblem));
       continue;
     }
-    resolved.push({ ...declaration, overlay: entry });
+    const rawcodes = classify(declaration, entry);
+    if (!("params" in rawcodes)) {
+      diagnostics.push(...rawcodes);
+      continue;
+    }
+    resolved.push({ ...declaration, overlay: entry, rawcodes });
   }
 
   return { declarations: resolved, diagnostics };
@@ -175,6 +192,51 @@ function checkFamily(
   return undefined;
 }
 
+/**
+ * The Object kinds of a function's Rawcodes, or the checklist lines of what
+ * stops it: an Overlay `kind` on an item that is not an `integer`, and a
+ * parameter that looks like a Rawcode and that nothing classifies. An
+ * Overlay `type` override classifies its parameter as what it says, such
+ * as `number` for an order id the table would take for a Rawcode.
+ */
+function classify(
+  fn: FunctionDeclaration,
+  entry: FunctionEntry,
+): FunctionRawcodes | Diagnostic[] {
+  const problems: Diagnostic[] = [];
+  const params = fn.params.map((param, index) => {
+    const { kind, type } = entry.params[index];
+    if (type !== undefined) return undefined;
+    if (kind !== undefined && param.type !== "integer") {
+      problems.push(
+        kindError(
+          entry,
+          `params[${String(index)}].kind on ${fn.name} parameter ${param.name}, ` +
+            `which is ${param.type}, not integer; remove it`,
+        ),
+      );
+      return undefined;
+    }
+    const classified = parameterKind(param, kind);
+    if (classified !== "unclassified") return classified;
+    problems.push(unclassified(entry, fn, index));
+    return undefined;
+  });
+  const { kind } = entry.returns;
+  if (kind !== undefined && fn.returns !== "integer") {
+    problems.push(
+      kindError(
+        entry,
+        `returns.kind on ${fn.name}, which returns ${fn.returns}, not integer; remove it`,
+      ),
+    );
+  }
+  if (problems.length > 0) return problems;
+  return kind === undefined
+    ? { params }
+    : { params, returns: overlayKind(kind) };
+}
+
 function sameParameters(
   fn: FunctionDeclaration,
   entry: FunctionEntry,
@@ -223,6 +285,39 @@ function familyError(entry: FunctionEntry, problem: string): Diagnostic {
     file: entry.file,
     name: entry.name,
     message: `${entry.file}: ${problem}`,
+  };
+}
+
+/** The checklist line of an Overlay `kind` the Patch declaration refuses. */
+function kindError(entry: FunctionEntry, problem: string): Diagnostic {
+  return {
+    severity: "error",
+    kind: "overlay-invalid",
+    file: entry.file,
+    name: entry.name,
+    message: `${entry.file}: ${problem}`,
+  };
+}
+
+/**
+ * The checklist line of a parameter that looks like a Rawcode and that
+ * neither the parameter-name table nor its Overlay `kind` classifies.
+ */
+function unclassified(
+  entry: FunctionEntry,
+  fn: FunctionDeclaration,
+  index: number,
+): Diagnostic {
+  const { name, type } = fn.params[index];
+  return {
+    severity: "error",
+    kind: "unclassified-rawcode",
+    file: entry.file,
+    name: fn.name,
+    message:
+      `${entry.file}: ${fn.name} parameter ${name} (${type}) looks like a Rawcode ` +
+      `but has no Object kind; set params[${String(index)}].kind to an Object kind or "any", ` +
+      `or add ${name} to the parameter-name table`,
   };
 }
 

@@ -1,6 +1,6 @@
-// Negative: a Rawcode of a unit or an upgrade where a unit's is expected.
-declare function takeUnit(id: Rawcode<"unit">): void;
+// Negative: a unit-or-upgrade Rawcode where CreateUnit expects a unit's.
+declare const owner: player;
 declare const tech: Rawcode<"unit" | "upgrade">;
-takeUnit(tech);
+CreateUnit(owner, tech, 0, 0, 0);
 
 export {};

@@ -8,6 +8,7 @@ import { CALLBACK_ALIASES, tsType } from "./jass-types.js";
 import type { SourceName, TypeDeclaration } from "./model.js";
 import { parameterName } from "./names.js";
 import type { PatchIdentity } from "./provenance.js";
+import { rawcodeType } from "./rawcodes.js";
 import type { Resolved, ResolvedFunction, ResolvedGlobal } from "./resolve.js";
 
 export const REGENERATE_COMMAND =
@@ -98,8 +99,10 @@ function globalDeclaration(global: ResolvedGlobal): string[] {
 
 function functionDeclaration(fn: ResolvedFunction): string[] {
   const params = parameterList(fn);
+  const kind = fn.rawcodes.returns;
   const returns =
-    tsType(fn.returns) + (fn.overlay.returns.nullable ? " | undefined" : "");
+    (kind ? rawcodeType(kind) : tsType(fn.returns)) +
+    (fn.overlay.returns.nullable ? " | undefined" : "");
   return [
     ...functionHeader(fn),
     `declare function ${fn.name}(${params}): ${returns};`,
@@ -109,7 +112,8 @@ function functionDeclaration(fn: ResolvedFunction): string[] {
 /**
  * Nullable trailing parameters become optional; a nullable parameter
  * followed by a non-nullable one becomes `T | undefined`. An Overlay `type`
- * override replaces the mapped Jass type; a reserved-word name is suffixed.
+ * override replaces the mapped Jass type, and so does a Rawcode's kind; a
+ * reserved-word name is suffixed.
  */
 function parameterList(fn: ResolvedFunction): string {
   const overlay = fn.overlay.params;
@@ -119,7 +123,8 @@ function parameterList(fn: ResolvedFunction): string {
     .map((param, index) => {
       const { nullable, type: override } = overlay[index];
       const name = parameterName(param.name);
-      const type = override ?? tsType(param.type);
+      const kind = fn.rawcodes.params[index];
+      const type = override ?? (kind ? rawcodeType(kind) : tsType(param.type));
       if (!nullable) return `${name}: ${type}`;
       return index >= firstOptional
         ? `${name}?: ${type}`

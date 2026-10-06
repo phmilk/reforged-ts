@@ -4743,7 +4743,7 @@ declare function TriggerRegisterBuildSubmenuEventBJ(trig: trigger): event | unde
  * @returns event
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterBuildCommandEventBJ}
  */
-declare function TriggerRegisterBuildCommandEventBJ(trig: trigger, unitId: number): event | undefined;
+declare function TriggerRegisterBuildCommandEventBJ(trig: trigger, unitId: Rawcode<"unit">): event | undefined;
 
 /**
  * @param trig - trigger
@@ -4751,7 +4751,7 @@ declare function TriggerRegisterBuildCommandEventBJ(trig: trigger, unitId: numbe
  * @returns event
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterTrainCommandEventBJ}
  */
-declare function TriggerRegisterTrainCommandEventBJ(trig: trigger, unitId: number): event | undefined;
+declare function TriggerRegisterTrainCommandEventBJ(trig: trigger, unitId: Rawcode<"unit">): event | undefined;
 
 /**
  * @param trig - trigger
@@ -4759,7 +4759,7 @@ declare function TriggerRegisterTrainCommandEventBJ(trig: trigger, unitId: numbe
  * @returns event
  * @see {@link https://lep.duckdns.org/jassbot/doc/TriggerRegisterUpgradeCommandEventBJ}
  */
-declare function TriggerRegisterUpgradeCommandEventBJ(trig: trigger, techId: number): event | undefined;
+declare function TriggerRegisterUpgradeCommandEventBJ(trig: trigger, techId: Rawcode<"upgrade">): event | undefined;
 
 /**
  * @param trig - trigger
@@ -4958,7 +4958,7 @@ declare function GetLastCreatedLightningBJ(): lightning | undefined;
  * @returns string
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetAbilityEffectBJ}
  */
-declare function GetAbilityEffectBJ(abilcode: number, t: effecttype, index: number): string | undefined;
+declare function GetAbilityEffectBJ(abilcode: Rawcode<"ability">, t: effecttype, index: number): string | undefined;
 
 /**
  * @param abilcode - integer (32-bit)
@@ -4966,7 +4966,7 @@ declare function GetAbilityEffectBJ(abilcode: number, t: effecttype, index: numb
  * @returns string
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetAbilitySoundBJ}
  */
-declare function GetAbilitySoundBJ(abilcode: number, t: soundtype): string | undefined;
+declare function GetAbilitySoundBJ(abilcode: Rawcode<"ability">, t: soundtype): string | undefined;
 
 /**
  * @param where - location
@@ -5324,7 +5324,7 @@ declare function ResetTerrainFogBJ(): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetDoodadAnimationBJ}
  */
-declare function SetDoodadAnimationBJ(animName: string, doodadID: number, radius: number, center: location): void;
+declare function SetDoodadAnimationBJ(animName: string, doodadID: Rawcode<"doodad">, radius: number, center: location): void;
 
 /**
  * @param animName - string
@@ -5333,7 +5333,7 @@ declare function SetDoodadAnimationBJ(animName: string, doodadID: number, radius
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetDoodadAnimationRectBJ}
  */
-declare function SetDoodadAnimationRectBJ(animName: string, doodadID: number, r: rect): void;
+declare function SetDoodadAnimationRectBJ(animName: string, doodadID: Rawcode<"doodad">, r: rect): void;
 
 /**
  * @param animName - string
@@ -5360,7 +5360,7 @@ declare function AddUnitAnimationPropertiesBJ(add: boolean, animProperties: stri
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetDoodadColorBJ}
  */
-declare function SetDoodadColorBJ(color: playercolor, doodadID: number, radius: number, center: location): void;
+declare function SetDoodadColorBJ(color: playercolor, doodadID: Rawcode<"doodad">, radius: number, center: location): void;
 
 /**
  * @param color - playercolor
@@ -5369,7 +5369,7 @@ declare function SetDoodadColorBJ(color: playercolor, doodadID: number, radius: 
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetDoodadColorRectBJ}
  */
-declare function SetDoodadColorRectBJ(color: playercolor, doodadID: number, r: rect): void;
+declare function SetDoodadColorRectBJ(color: playercolor, doodadID: Rawcode<"doodad">, r: rect): void;
 
 /**
  * @param color - playercolor
@@ -5953,21 +5953,21 @@ declare function DestroyEffectAfterTimeBJ(whichEffect: effect, time: number): vo
  * @returns commandbuttoneffect
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateCommandButtonEffectBJ}
  */
-declare function CreateCommandButtonEffectBJ(abilityId: number, order: string): commandbuttoneffect | undefined;
+declare function CreateCommandButtonEffectBJ(abilityId: Rawcode<"ability">, order: string): commandbuttoneffect | undefined;
 
 /**
  * @param unitId - integer (32-bit)
  * @returns commandbuttoneffect
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateTrainCommandButtonEffectBJ}
  */
-declare function CreateTrainCommandButtonEffectBJ(unitId: number): commandbuttoneffect | undefined;
+declare function CreateTrainCommandButtonEffectBJ(unitId: Rawcode<"unit">): commandbuttoneffect | undefined;
 
 /**
  * @param techId - integer (32-bit)
  * @returns commandbuttoneffect
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUpgradeCommandButtonEffectBJ}
  */
-declare function CreateUpgradeCommandButtonEffectBJ(techId: number): commandbuttoneffect | undefined;
+declare function CreateUpgradeCommandButtonEffectBJ(techId: Rawcode<"upgrade">): commandbuttoneffect | undefined;
 
 /**
  * @param order - string
@@ -5981,14 +5981,14 @@ declare function CreateCommonCommandButtonEffectBJ(order: string): commandbutton
  * @returns commandbuttoneffect
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateLearnCommandButtonEffectBJ}
  */
-declare function CreateLearnCommandButtonEffectBJ(abilityId: number): commandbuttoneffect | undefined;
+declare function CreateLearnCommandButtonEffectBJ(abilityId: Rawcode<"ability">): commandbuttoneffect | undefined;
 
 /**
  * @param unitId - integer (32-bit)
  * @returns commandbuttoneffect
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateBuildCommandButtonEffectBJ}
  */
-declare function CreateBuildCommandButtonEffectBJ(unitId: number): commandbuttoneffect | undefined;
+declare function CreateBuildCommandButtonEffectBJ(unitId: Rawcode<"unit">): commandbuttoneffect | undefined;
 
 /**
  * @returns commandbuttoneffect
@@ -6042,7 +6042,7 @@ declare function SetHeroLevelBJ(whichHero: unit, newLevel: number, showEyeCandy:
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/DecUnitAbilityLevelSwapped}
  */
-declare function DecUnitAbilityLevelSwapped(abilcode: number, whichUnit: unit): number;
+declare function DecUnitAbilityLevelSwapped(abilcode: Rawcode<"ability">, whichUnit: unit): number;
 
 /**
  * @param abilcode - integer (32-bit)
@@ -6050,7 +6050,7 @@ declare function DecUnitAbilityLevelSwapped(abilcode: number, whichUnit: unit): 
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/IncUnitAbilityLevelSwapped}
  */
-declare function IncUnitAbilityLevelSwapped(abilcode: number, whichUnit: unit): number;
+declare function IncUnitAbilityLevelSwapped(abilcode: Rawcode<"ability">, whichUnit: unit): number;
 
 /**
  * @param abilcode - integer (32-bit)
@@ -6059,7 +6059,7 @@ declare function IncUnitAbilityLevelSwapped(abilcode: number, whichUnit: unit): 
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetUnitAbilityLevelSwapped}
  */
-declare function SetUnitAbilityLevelSwapped(abilcode: number, whichUnit: unit, level: number): number;
+declare function SetUnitAbilityLevelSwapped(abilcode: Rawcode<"ability">, whichUnit: unit, level: number): number;
 
 /**
  * @param abilcode - integer (32-bit)
@@ -6067,7 +6067,7 @@ declare function SetUnitAbilityLevelSwapped(abilcode: number, whichUnit: unit, l
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitAbilityLevelSwapped}
  */
-declare function GetUnitAbilityLevelSwapped(abilcode: number, whichUnit: unit): number;
+declare function GetUnitAbilityLevelSwapped(abilcode: Rawcode<"ability">, whichUnit: unit): number;
 
 /**
  * @param whichUnit - unit
@@ -6075,7 +6075,7 @@ declare function GetUnitAbilityLevelSwapped(abilcode: number, whichUnit: unit): 
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitHasBuffBJ}
  */
-declare function UnitHasBuffBJ(whichUnit: unit, buffcode: number): boolean;
+declare function UnitHasBuffBJ(whichUnit: unit, buffcode: Rawcode<"buff">): boolean;
 
 /**
  * @param buffcode - integer (32-bit)
@@ -6083,7 +6083,7 @@ declare function UnitHasBuffBJ(whichUnit: unit, buffcode: number): boolean;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitRemoveBuffBJ}
  */
-declare function UnitRemoveBuffBJ(buffcode: number, whichUnit: unit): boolean;
+declare function UnitRemoveBuffBJ(buffcode: Rawcode<"buff">, whichUnit: unit): boolean;
 
 /**
  * @param whichItem - item
@@ -6099,7 +6099,7 @@ declare function UnitAddItemSwapped(whichItem: item, whichHero: unit): boolean;
  * @returns item
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitAddItemByIdSwapped}
  */
-declare function UnitAddItemByIdSwapped(itemId: number, whichHero: unit): item | undefined;
+declare function UnitAddItemByIdSwapped(itemId: Rawcode<"item">, whichHero: unit): item | undefined;
 
 /**
  * @param whichItem - item
@@ -6123,7 +6123,7 @@ declare function UnitEquipItemSwapped(whichItem: item, whichHero: unit): boolean
  * @returns item
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitEquipItemByIdSwapped}
  */
-declare function UnitEquipItemByIdSwapped(itemId: number, whichHero: unit): item | undefined;
+declare function UnitEquipItemByIdSwapped(itemId: Rawcode<"item">, whichHero: unit): item | undefined;
 
 /**
  * @param itemSlot - integer (32-bit)
@@ -6155,7 +6155,7 @@ declare function UnitUnequipItemFromSlotSwapped(whichHero: unit, slot: loadoutsl
  * @returns item
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateItemLoc}
  */
-declare function CreateItemLoc(itemId: number, loc: location): item | undefined;
+declare function CreateItemLoc(itemId: Rawcode<"item">, loc: location): item | undefined;
 
 /**
  * @returns item
@@ -6385,7 +6385,7 @@ declare function UnitItemInEquipmentSlotBJ(whichUnit: unit, slot: loadoutslot): 
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetInventoryIndexOfItemTypeBJ}
  */
-declare function GetInventoryIndexOfItemTypeBJ(whichUnit: unit, itemId: number): number;
+declare function GetInventoryIndexOfItemTypeBJ(whichUnit: unit, itemId: Rawcode<"item">): number;
 
 /**
  * @param whichUnit - unit
@@ -6393,7 +6393,7 @@ declare function GetInventoryIndexOfItemTypeBJ(whichUnit: unit, itemId: number):
  * @returns item
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetItemOfTypeFromUnitBJ}
  */
-declare function GetItemOfTypeFromUnitBJ(whichUnit: unit, itemId: number): item | undefined;
+declare function GetItemOfTypeFromUnitBJ(whichUnit: unit, itemId: Rawcode<"item">): item | undefined;
 
 /**
  * @param whichUnit - unit
@@ -6401,7 +6401,7 @@ declare function GetItemOfTypeFromUnitBJ(whichUnit: unit, itemId: number): item 
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitHasItemOfTypeBJ}
  */
-declare function UnitHasItemOfTypeBJ(whichUnit: unit, itemId: number): boolean;
+declare function UnitHasItemOfTypeBJ(whichUnit: unit, itemId: Rawcode<"item">): boolean;
 
 /**
  * @param whichUnit - unit
@@ -6409,7 +6409,7 @@ declare function UnitHasItemOfTypeBJ(whichUnit: unit, itemId: number): boolean;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetInventoryBagIndexOfItemTypeBJ}
  */
-declare function GetInventoryBagIndexOfItemTypeBJ(whichUnit: unit, itemId: number): number;
+declare function GetInventoryBagIndexOfItemTypeBJ(whichUnit: unit, itemId: Rawcode<"item">): number;
 
 /**
  * @param whichUnit - unit
@@ -6417,7 +6417,7 @@ declare function GetInventoryBagIndexOfItemTypeBJ(whichUnit: unit, itemId: numbe
  * @returns item
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetItemOfTypeFromUnitBagBJ}
  */
-declare function GetItemOfTypeFromUnitBagBJ(whichUnit: unit, itemId: number): item | undefined;
+declare function GetItemOfTypeFromUnitBagBJ(whichUnit: unit, itemId: Rawcode<"item">): item | undefined;
 
 /**
  * @param whichUnit - unit
@@ -6425,7 +6425,7 @@ declare function GetItemOfTypeFromUnitBagBJ(whichUnit: unit, itemId: number): it
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitHasItemOfTypeBaggedBJ}
  */
-declare function UnitHasItemOfTypeBaggedBJ(whichUnit: unit, itemId: number): boolean;
+declare function UnitHasItemOfTypeBaggedBJ(whichUnit: unit, itemId: Rawcode<"item">): boolean;
 
 /**
  * @param whichUnit - unit
@@ -6449,7 +6449,7 @@ declare function GetItemOfEquipmentTypeFromUnitBagBJ(whichUnit: unit, whichEquip
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetEquipmentInventoryIndexOfItemTypeBJ}
  */
-declare function GetEquipmentInventoryIndexOfItemTypeBJ(whichUnit: unit, itemId: number): number;
+declare function GetEquipmentInventoryIndexOfItemTypeBJ(whichUnit: unit, itemId: Rawcode<"item">): number;
 
 /**
  * @param whichUnit - unit
@@ -6465,7 +6465,7 @@ declare function GetEquipmentInventoryIndexOfEquipmentTypeBJ(whichUnit: unit, wh
  * @returns item
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetItemEquippedByHeroOfTypeBJ}
  */
-declare function GetItemEquippedByHeroOfTypeBJ(whichUnit: unit, itemId: number): item | undefined;
+declare function GetItemEquippedByHeroOfTypeBJ(whichUnit: unit, itemId: Rawcode<"item">): item | undefined;
 
 /**
  * @param whichUnit - unit
@@ -6481,7 +6481,7 @@ declare function GetItemEquippedByHeroOfEquipmentTypeBJ(whichUnit: unit, whichEq
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitHasItemOfTypeEquippedBJ}
  */
-declare function UnitHasItemOfTypeEquippedBJ(whichUnit: unit, itemId: number): boolean;
+declare function UnitHasItemOfTypeEquippedBJ(whichUnit: unit, itemId: Rawcode<"item">): boolean;
 
 /**
  * @param whichUnit - unit
@@ -6647,14 +6647,14 @@ declare function CheckItemStatus(whichItem: item, status: number): boolean;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/CheckItemcodeStatus}
  */
-declare function CheckItemcodeStatus(itemId: number, status: number): boolean;
+declare function CheckItemcodeStatus(itemId: Rawcode<"item">, status: number): boolean;
 
 /**
  * @param unitId - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitId2OrderIdBJ}
  */
-declare function UnitId2OrderIdBJ(unitId: number): number;
+declare function UnitId2OrderIdBJ(unitId: Rawcode<"unit">): number;
 
 /**
  * @param unitIdString - string
@@ -6668,7 +6668,7 @@ declare function String2UnitIdBJ(unitIdString: string): number;
  * @returns string
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitId2StringBJ}
  */
-declare function UnitId2StringBJ(unitId: number): string | undefined;
+declare function UnitId2StringBJ(unitId: Rawcode<"unit">): string | undefined;
 
 /**
  * @param orderIdString - string
@@ -6704,7 +6704,7 @@ declare function GetKillingUnitBJ(): unit | undefined;
  * @returns unit
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUnitAtLocSaveLast}
  */
-declare function CreateUnitAtLocSaveLast(id: player, unitid: number, loc: location, face: number): unit | undefined;
+declare function CreateUnitAtLocSaveLast(id: player, unitid: Rawcode<"unit">, loc: location, face: number): unit | undefined;
 
 /**
  * @returns unit
@@ -6721,7 +6721,7 @@ declare function GetLastCreatedUnit(): unit | undefined;
  * @returns group
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateNUnitsAtLoc}
  */
-declare function CreateNUnitsAtLoc(count: number, unitId: number, whichPlayer: player, loc: location, face: number): group | undefined;
+declare function CreateNUnitsAtLoc(count: number, unitId: Rawcode<"unit">, whichPlayer: player, loc: location, face: number): group | undefined;
 
 /**
  * @param count - integer (32-bit)
@@ -6732,7 +6732,7 @@ declare function CreateNUnitsAtLoc(count: number, unitId: number, whichPlayer: p
  * @returns group
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateNUnitsAtLocFacingLocBJ}
  */
-declare function CreateNUnitsAtLocFacingLocBJ(count: number, unitId: number, whichPlayer: player, loc: location, lookAt: location): group | undefined;
+declare function CreateNUnitsAtLocFacingLocBJ(count: number, unitId: Rawcode<"unit">, whichPlayer: player, loc: location, lookAt: location): group | undefined;
 
 /**
  * @returns nothing
@@ -6753,7 +6753,7 @@ declare function GetLastCreatedGroup(): group | undefined;
  * @returns unit
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateCorpseLocBJ}
  */
-declare function CreateCorpseLocBJ(unitid: number, whichPlayer: player, loc: location): unit | undefined;
+declare function CreateCorpseLocBJ(unitid: Rawcode<"unit">, whichPlayer: player, loc: location): unit | undefined;
 
 /**
  * @param suspend - boolean
@@ -6802,7 +6802,7 @@ declare function DelayedSuspendDecayCreate(): void;
  * @returns unit
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreatePermanentCorpseLocBJ}
  */
-declare function CreatePermanentCorpseLocBJ(style: number, unitid: number, whichPlayer: player, loc: location, facing: number): unit | undefined;
+declare function CreatePermanentCorpseLocBJ(style: number, unitid: Rawcode<"unit">, whichPlayer: player, loc: location, facing: number): unit | undefined;
 
 /**
  * @param whichState - unitstate
@@ -7036,7 +7036,7 @@ declare function IssueHauntOrderAtLocBJ(whichPeon: unit, loc: location): boolean
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IssueBuildOrderByIdLocBJ}
  */
-declare function IssueBuildOrderByIdLocBJ(whichPeon: unit, unitId: number, loc: location): boolean;
+declare function IssueBuildOrderByIdLocBJ(whichPeon: unit, unitId: Rawcode<"unit">, loc: location): boolean;
 
 /**
  * @param whichUnit - unit
@@ -7044,7 +7044,7 @@ declare function IssueBuildOrderByIdLocBJ(whichPeon: unit, unitId: number, loc: 
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IssueTrainOrderByIdBJ}
  */
-declare function IssueTrainOrderByIdBJ(whichUnit: unit, unitId: number): boolean;
+declare function IssueTrainOrderByIdBJ(whichUnit: unit, unitId: Rawcode<"unit">): boolean;
 
 /**
  * @param g - group
@@ -7052,7 +7052,7 @@ declare function IssueTrainOrderByIdBJ(whichUnit: unit, unitId: number): boolean
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/GroupTrainOrderByIdBJ}
  */
-declare function GroupTrainOrderByIdBJ(g: group, unitId: number): boolean;
+declare function GroupTrainOrderByIdBJ(g: group, unitId: Rawcode<"unit">): boolean;
 
 /**
  * @param whichUnit - unit
@@ -7060,7 +7060,7 @@ declare function GroupTrainOrderByIdBJ(g: group, unitId: number): boolean;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/IssueUpgradeOrderByIdBJ}
  */
-declare function IssueUpgradeOrderByIdBJ(whichUnit: unit, techId: number): boolean;
+declare function IssueUpgradeOrderByIdBJ(whichUnit: unit, techId: Rawcode<"upgrade">): boolean;
 
 /**
  * @returns unit
@@ -7244,7 +7244,7 @@ declare function UnitPauseTimedLifeBJ(flag: boolean, whichUnit: unit): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitApplyTimedLifeBJ}
  */
-declare function UnitApplyTimedLifeBJ(duration: number, buffId: number, whichUnit: unit): void;
+declare function UnitApplyTimedLifeBJ(duration: number, buffId: Rawcode<"buff">, whichUnit: unit): void;
 
 /**
  * @param share - boolean
@@ -7291,7 +7291,7 @@ declare function UnitCountBuffsExBJ(polarity: number, resist: number, whichUnit:
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitRemoveAbilityBJ}
  */
-declare function UnitRemoveAbilityBJ(abilityId: number, whichUnit: unit): boolean;
+declare function UnitRemoveAbilityBJ(abilityId: Rawcode<"ability">, whichUnit: unit): boolean;
 
 /**
  * @param abilityId - integer (32-bit)
@@ -7299,7 +7299,7 @@ declare function UnitRemoveAbilityBJ(abilityId: number, whichUnit: unit): boolea
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitAddAbilityBJ}
  */
-declare function UnitAddAbilityBJ(abilityId: number, whichUnit: unit): boolean;
+declare function UnitAddAbilityBJ(abilityId: Rawcode<"ability">, whichUnit: unit): boolean;
 
 /**
  * @param whichType - unittype
@@ -7324,7 +7324,7 @@ declare function UnitAddTypeBJ(whichType: unittype, whichUnit: unit): boolean;
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitMakeAbilityPermanentBJ}
  */
-declare function UnitMakeAbilityPermanentBJ(permanent: boolean, abilityId: number, whichUnit: unit): boolean;
+declare function UnitMakeAbilityPermanentBJ(permanent: boolean, abilityId: Rawcode<"ability">, whichUnit: unit): boolean;
 
 /**
  * @param whichUnit - unit
@@ -7382,7 +7382,7 @@ declare function IsUnitIllusionBJ(whichUnit: unit): boolean;
  * @returns unit
  * @see {@link https://lep.duckdns.org/jassbot/doc/ReplaceUnitBJ}
  */
-declare function ReplaceUnitBJ(whichUnit: unit, newUnitId: number, unitStateMethod: number): unit | undefined;
+declare function ReplaceUnitBJ(whichUnit: unit, newUnitId: Rawcode<"unit">, unitStateMethod: number): unit | undefined;
 
 /**
  * @returns unit
@@ -7416,7 +7416,7 @@ declare function SetUnitPositionLocFacingLocBJ(whichUnit: unit, loc: location, l
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddItemToStockBJ}
  */
-declare function AddItemToStockBJ(itemId: number, whichUnit: unit, currentStock: number, stockMax: number): void;
+declare function AddItemToStockBJ(itemId: Rawcode<"item">, whichUnit: unit, currentStock: number, stockMax: number): void;
 
 /**
  * @param unitId - integer (32-bit)
@@ -7426,7 +7426,7 @@ declare function AddItemToStockBJ(itemId: number, whichUnit: unit, currentStock:
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/AddUnitToStockBJ}
  */
-declare function AddUnitToStockBJ(unitId: number, whichUnit: unit, currentStock: number, stockMax: number): void;
+declare function AddUnitToStockBJ(unitId: Rawcode<"unit">, whichUnit: unit, currentStock: number, stockMax: number): void;
 
 /**
  * @param itemId - integer (32-bit)
@@ -7434,7 +7434,7 @@ declare function AddUnitToStockBJ(unitId: number, whichUnit: unit, currentStock:
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/RemoveItemFromStockBJ}
  */
-declare function RemoveItemFromStockBJ(itemId: number, whichUnit: unit): void;
+declare function RemoveItemFromStockBJ(itemId: Rawcode<"item">, whichUnit: unit): void;
 
 /**
  * @param unitId - integer (32-bit)
@@ -7442,7 +7442,7 @@ declare function RemoveItemFromStockBJ(itemId: number, whichUnit: unit): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/RemoveUnitFromStockBJ}
  */
-declare function RemoveUnitFromStockBJ(unitId: number, whichUnit: unit): void;
+declare function RemoveUnitFromStockBJ(unitId: Rawcode<"unit">, whichUnit: unit): void;
 
 /**
  * @param enable - boolean
@@ -7485,7 +7485,7 @@ declare function UnitDamageTargetBJ(whichUnit: unit, target: unit, amount: numbe
  * @returns destructable
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateDestructableLoc}
  */
-declare function CreateDestructableLoc(objectid: number, loc: location, facing: number, scale: number, variation: number): destructable | undefined;
+declare function CreateDestructableLoc(objectid: Rawcode<"destructable">, loc: location, facing: number, scale: number, variation: number): destructable | undefined;
 
 /**
  * @param objectid - integer (32-bit)
@@ -7496,7 +7496,7 @@ declare function CreateDestructableLoc(objectid: number, loc: location, facing: 
  * @returns destructable
  * @see {@link https://lep.duckdns.org/jassbot/doc/CreateDeadDestructableLocBJ}
  */
-declare function CreateDeadDestructableLocBJ(objectid: number, loc: location, facing: number, scale: number, variation: number): destructable | undefined;
+declare function CreateDeadDestructableLocBJ(objectid: Rawcode<"destructable">, loc: location, facing: number, scale: number, variation: number): destructable | undefined;
 
 /**
  * @returns destructable
@@ -7902,7 +7902,7 @@ declare function GetUnitsOfTypeIdAllFilter(): boolean;
  * @returns group
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitsOfTypeIdAll}
  */
-declare function GetUnitsOfTypeIdAll(unitid: number): group | undefined;
+declare function GetUnitsOfTypeIdAll(unitid: Rawcode<"unit">): group | undefined;
 
 /**
  * @param whichPlayer - player
@@ -7931,7 +7931,7 @@ declare function GetUnitsOfPlayerAndTypeIdFilter(): boolean;
  * @returns group
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetUnitsOfPlayerAndTypeId}
  */
-declare function GetUnitsOfPlayerAndTypeId(whichPlayer: player, unitid: number): group | undefined;
+declare function GetUnitsOfPlayerAndTypeId(whichPlayer: player, unitid: Rawcode<"unit">): group | undefined;
 
 /**
  * @param whichPlayer - player
@@ -8033,7 +8033,7 @@ declare function LivingPlayerUnitsOfTypeIdFilter(): boolean;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/CountLivingPlayerUnitsOfTypeId}
  */
-declare function CountLivingPlayerUnitsOfTypeId(unitId: number, whichPlayer: player): number;
+declare function CountLivingPlayerUnitsOfTypeId(unitId: Rawcode<"unit">, whichPlayer: player): number;
 
 /**
  * @param whichUnit - unit
@@ -9356,7 +9356,7 @@ declare function TryInitCinematicBehaviorBJ(): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetCinematicSceneBJ}
  */
-declare function SetCinematicSceneBJ(soundHandle: sound, portraitUnitId: number, color: playercolor, speakerTitle: string, text: string, sceneDuration: number, voiceoverDuration: number): void;
+declare function SetCinematicSceneBJ(soundHandle: sound, portraitUnitId: Rawcode<"unit">, color: playercolor, speakerTitle: string, text: string, sceneDuration: number, voiceoverDuration: number): void;
 
 /**
  * @param soundHandle - sound
@@ -9388,7 +9388,7 @@ declare function WaitTransmissionDuration(soundHandle: sound, timeType: number, 
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/DoTransmissionBasicsXYBJ}
  */
-declare function DoTransmissionBasicsXYBJ(unitId: number, color: playercolor, x: number, y: number, soundHandle: sound, unitName: string, message: string, duration: number): void;
+declare function DoTransmissionBasicsXYBJ(unitId: Rawcode<"unit">, color: playercolor, x: number, y: number, soundHandle: sound, unitName: string, message: string, duration: number): void;
 
 /**
  * @param toForce - force
@@ -9415,7 +9415,7 @@ declare function TransmissionFromUnitWithNameBJ(toForce: force, whichUnit: unit,
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/PlayDialogueFromSpeakerEx}
  */
-declare function PlayDialogueFromSpeakerEx(toForce: force, speaker: unit, speakerType: number, soundHandle: sound, timeType: number, timeVal: number, wait: boolean): boolean;
+declare function PlayDialogueFromSpeakerEx(toForce: force, speaker: unit, speakerType: Rawcode<"unit">, soundHandle: sound, timeType: number, timeVal: number, wait: boolean): boolean;
 
 /**
  * @param toForce - force
@@ -9429,7 +9429,7 @@ declare function PlayDialogueFromSpeakerEx(toForce: force, speaker: unit, speake
  * @returns boolean
  * @see {@link https://lep.duckdns.org/jassbot/doc/PlayDialogueFromSpeakerTypeEx}
  */
-declare function PlayDialogueFromSpeakerTypeEx(toForce: force, fromPlayer: player, speakerType: number, loc: location, soundHandle: sound, timeType: number, timeVal: number, wait: boolean): boolean;
+declare function PlayDialogueFromSpeakerTypeEx(toForce: force, fromPlayer: player, speakerType: Rawcode<"unit">, loc: location, soundHandle: sound, timeType: number, timeVal: number, wait: boolean): boolean;
 
 /**
  * @param toForce - force
@@ -9445,7 +9445,7 @@ declare function PlayDialogueFromSpeakerTypeEx(toForce: force, fromPlayer: playe
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/TransmissionFromUnitTypeWithNameBJ}
  */
-declare function TransmissionFromUnitTypeWithNameBJ(toForce: force, fromPlayer: player, unitId: number, unitName: string, loc: location, soundHandle: sound, message: string, timeType: number, timeVal: number, wait: boolean): void;
+declare function TransmissionFromUnitTypeWithNameBJ(toForce: force, fromPlayer: player, unitId: Rawcode<"unit">, unitName: string, loc: location, soundHandle: sound, message: string, timeType: number, timeVal: number, wait: boolean): void;
 
 /**
  * @returns real
@@ -9636,7 +9636,7 @@ declare function InitRescuableBehaviorBJ(): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetPlayerTechResearchedSwap}
  */
-declare function SetPlayerTechResearchedSwap(techid: number, levels: number, whichPlayer: player): void;
+declare function SetPlayerTechResearchedSwap(techid: Rawcode<"unit" | "upgrade">, levels: number, whichPlayer: player): void;
 
 /**
  * @param techid - integer (32-bit)
@@ -9645,7 +9645,7 @@ declare function SetPlayerTechResearchedSwap(techid: number, levels: number, whi
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetPlayerTechMaxAllowedSwap}
  */
-declare function SetPlayerTechMaxAllowedSwap(techid: number, maximum: number, whichPlayer: player): void;
+declare function SetPlayerTechMaxAllowedSwap(techid: Rawcode<"unit" | "upgrade">, maximum: number, whichPlayer: player): void;
 
 /**
  * @param maximum - integer (32-bit)
@@ -9661,7 +9661,7 @@ declare function SetPlayerMaxHeroesAllowed(maximum: number, whichPlayer: player)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetPlayerTechCountSimple}
  */
-declare function GetPlayerTechCountSimple(techid: number, whichPlayer: player): number;
+declare function GetPlayerTechCountSimple(techid: Rawcode<"unit" | "upgrade">, whichPlayer: player): number;
 
 /**
  * @param techid - integer (32-bit)
@@ -9669,7 +9669,7 @@ declare function GetPlayerTechCountSimple(techid: number, whichPlayer: player): 
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetPlayerTechMaxAllowedSwap}
  */
-declare function GetPlayerTechMaxAllowedSwap(techid: number, whichPlayer: player): number;
+declare function GetPlayerTechMaxAllowedSwap(techid: Rawcode<"unit" | "upgrade">, whichPlayer: player): number;
 
 /**
  * @param avail - boolean
@@ -9678,7 +9678,7 @@ declare function GetPlayerTechMaxAllowedSwap(techid: number, whichPlayer: player
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetPlayerAbilityAvailableBJ}
  */
-declare function SetPlayerAbilityAvailableBJ(avail: boolean, abilid: number, whichPlayer: player): void;
+declare function SetPlayerAbilityAvailableBJ(avail: boolean, abilid: Rawcode<"ability">, whichPlayer: player): void;
 
 /**
  * @param campaignNumber - integer (32-bit)
@@ -10989,7 +10989,7 @@ declare function SetPlayerColorBJ(whichPlayer: player, color: playercolor, chang
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/SetPlayerUnitAvailableBJ}
  */
-declare function SetPlayerUnitAvailableBJ(unitId: number, allowed: boolean, whichPlayer: player): void;
+declare function SetPlayerUnitAvailableBJ(unitId: Rawcode<"unit">, allowed: boolean, whichPlayer: player): void;
 
 /**
  * @returns nothing
@@ -11151,7 +11151,7 @@ declare function SetBlightRadiusLocBJ(addBlight: boolean, whichPlayer: player, l
  * @returns string
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetAbilityName}
  */
-declare function GetAbilityName(abilcode: number): string | undefined;
+declare function GetAbilityName(abilcode: Rawcode<"ability">): string | undefined;
 
 /**
  * @returns nothing
@@ -11172,7 +11172,7 @@ declare function MeleeStartingResources(): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/ReducePlayerTechMaxAllowed}
  */
-declare function ReducePlayerTechMaxAllowed(whichPlayer: player, techId: number, limit: number): void;
+declare function ReducePlayerTechMaxAllowed(whichPlayer: player, techId: Rawcode<"unit" | "upgrade">, limit: number): void;
 
 /**
  * @returns nothing
@@ -11256,7 +11256,7 @@ declare function MeleeFindNearestMine(src: location, range: number): unit | unde
  * @returns unit
  * @see {@link https://lep.duckdns.org/jassbot/doc/MeleeRandomHeroLoc}
  */
-declare function MeleeRandomHeroLoc(p: player, id1: number, id2: number, id3: number, id4: number, loc: location): unit | undefined;
+declare function MeleeRandomHeroLoc(p: player, id1: Rawcode<"unit">, id2: Rawcode<"unit">, id3: Rawcode<"unit">, id4: Rawcode<"unit">, loc: location): unit | undefined;
 
 /**
  * @param src - location
@@ -11768,7 +11768,7 @@ declare function RandomDistReset(): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/RandomDistAddItem}
  */
-declare function RandomDistAddItem(inID: number, inChance: number): void;
+declare function RandomDistAddItem(inID: Rawcode, inChance: number): void;
 
 /**
  * @returns integer (32-bit)
@@ -11782,7 +11782,7 @@ declare function RandomDistChoose(): number;
  * @returns item
  * @see {@link https://lep.duckdns.org/jassbot/doc/UnitDropItem}
  */
-declare function UnitDropItem(inUnit: unit, inItemID: number): item | undefined;
+declare function UnitDropItem(inUnit: unit, inItemID: Rawcode<"item">): item | undefined;
 
 /**
  * @param inWidget - widget
@@ -11790,7 +11790,7 @@ declare function UnitDropItem(inUnit: unit, inItemID: number): item | undefined;
  * @returns item
  * @see {@link https://lep.duckdns.org/jassbot/doc/WidgetDropItem}
  */
-declare function WidgetDropItem(inWidget: widget, inItemID: number): item | undefined;
+declare function WidgetDropItem(inWidget: widget, inItemID: Rawcode<"item">): item | undefined;
 
 /**
  * @returns boolean
@@ -12004,7 +12004,7 @@ declare function BlzRemoveAbilityStringLevelArrayFieldBJ(whichAbility: ability, 
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzItemAddAbilityBJ}
  */
-declare function BlzItemAddAbilityBJ(whichItem: item, abilCode: number): void;
+declare function BlzItemAddAbilityBJ(whichItem: item, abilCode: Rawcode<"ability">): void;
 
 /**
  * @param whichItem - item
@@ -12012,7 +12012,7 @@ declare function BlzItemAddAbilityBJ(whichItem: item, abilCode: number): void;
  * @returns nothing
  * @see {@link https://lep.duckdns.org/jassbot/doc/BlzItemRemoveAbilityBJ}
  */
-declare function BlzItemRemoveAbilityBJ(whichItem: item, abilCode: number): void;
+declare function BlzItemRemoveAbilityBJ(whichItem: item, abilCode: Rawcode<"ability">): void;
 
 /**
  * @param whichItem - item

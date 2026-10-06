@@ -15,7 +15,8 @@
     },
     {
       "name": "unitid",
-      "nullable": false
+      "nullable": false,
+      "kind": "any"
     },
     {
       "name": "town",

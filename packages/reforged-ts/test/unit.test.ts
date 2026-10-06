@@ -60,6 +60,14 @@ export function unitRawcodeKinds(unit: Unit, count: number): void {
   unit.issueBuildOrder(FourCC("hbar"), 0, 0);
   // @ts-expect-error: a plain number is not a Rawcode.
   unit.issueBuildOrder(count, 0, 0);
+  // A neutral structure sells units and items: a Rawcode of any kind.
+  unit.issueNeutralImmediateOrder(owner, footmanType);
+  unit.queueNeutralImmediateOrder(owner, rationType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.issueNeutralImmediateOrder(owner, count);
+  // The point and target ones take an order id, a plain number.
+  unit.issueNeutralPointOrder(owner, count, 0, 0);
+  unit.queueNeutralTargetOrder(owner, count, unit);
 }
 
 describe("Unit.create", () => {
@@ -456,7 +464,8 @@ describe("Unit inventory", () => {
     const before = stubCalls().length;
     const message = withNative(
       "GetUnitTypeId",
-      () => 0,
+      // A removed unit's type: 0, the id of no type.
+      () => 0 as Rawcode<"unit">,
       () =>
         raisedIn(() => {
           unit.addItemById(ration);

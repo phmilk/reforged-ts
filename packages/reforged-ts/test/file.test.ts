@@ -70,7 +70,11 @@ function runGeneratedFile(filename: string): void {
       error(`${filename} has a double quote inside a string literal`);
     }
   }
-  BlzSetAbilityIcon(tonumber(id) ?? 0, strings.join(""));
+  // The id is read back from the file's text: a number only a cast types.
+  BlzSetAbilityIcon(
+    (tonumber(id) ?? 0) as Rawcode<"ability">,
+    strings.join(""),
+  );
 }
 
 /** `File.read(filename)` with the generated file run as the game would. */

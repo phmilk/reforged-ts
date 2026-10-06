@@ -67,8 +67,15 @@ export function numeric(name: string, typical: number): Param<number> {
   return { name, kind: "numeric", typical, stale: [] };
 }
 
-/** An integer naming an object type: `unitid`, typically `FourCC("hfoo")`. */
-export function rawcode(name: string, typical: number): Param<number> {
+/**
+ * An integer naming an object type: `unitid`, typically `FourCC("hfoo")`.
+ * Its values are of unknown kind, so one declaration fits a Native of any
+ * kind, and the unknown rawcode it varies through is one too.
+ */
+export function rawcode(
+  name: string,
+  typical: UnknownRawcode,
+): Param<UnknownRawcode> {
   return { name, kind: "rawcode", typical, stale: [] };
 }
 

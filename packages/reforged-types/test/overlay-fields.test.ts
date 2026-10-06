@@ -102,9 +102,9 @@ describe("generate: Overlay header facts", () => {
 
   it("orders the tags params, returns, patch, async, deprecated, remarks, see", async () => {
     const text = await commonJ(
-      "type player extends handle\nnative GetPlayer takes integer id returns player",
+      "type player extends handle\nnative GetPlayer takes integer index returns player",
       {
-        ...entry("common.j", "GetPlayer", ["id"], false, "enum-getter"),
+        ...entry("common.j", "GetPlayer", ["index"], false, "enum-getter"),
         async: true,
         deprecated: "Gone soon.",
         notes: "A note.",
@@ -116,7 +116,7 @@ describe("generate: Overlay header facts", () => {
     expect(text).toContain(
       [
         "/**",
-        " * @param id - integer (32-bit)",
+        " * @param index - integer (32-bit)",
         " * @returns player",
         " * @patch 3.0.0.24268",
         " * @async",
@@ -124,7 +124,7 @@ describe("generate: Overlay header facts", () => {
         " * @remarks A note.",
         " * @see {@link https://lep.duckdns.org/jassbot/doc/GetPlayer}",
         " */",
-        "declare function GetPlayer(id: number): player;",
+        "declare function GetPlayer(index: number): player;",
       ].join("\n"),
     );
   });
@@ -147,14 +147,20 @@ describe("generate: Overlay header facts", () => {
       {
         "common.j": [
           "type player extends handle",
-          "native GetPlayer takes integer id, code c returns player",
+          "native GetPlayer takes integer index, code c returns player",
         ].join("\n"),
         "blizzard.j":
           "function Helper takes nothing returns nothing\nendfunction\n",
       },
       [
         {
-          ...entry("common.j", "GetPlayer", ["id", "c?"], true, "enum-getter"),
+          ...entry(
+            "common.j",
+            "GetPlayer",
+            ["index", "c?"],
+            true,
+            "enum-getter",
+          ),
           async: true,
           deprecated: "See {@link Helper}.",
           notes: "Line one.\nLine two.",

@@ -80,7 +80,7 @@ describe("generate: declaration file shape", () => {
         " * @returns unit",
         " * @see {@link https://lep.duckdns.org/jassbot/doc/CreateUnit}",
         " */",
-        "declare function CreateUnit(id: player, unitid: number, x: number, y: number, face: number): unit | undefined;",
+        'declare function CreateUnit(id: player, unitid: Rawcode<"unit">, x: number, y: number, face: number): unit | undefined;',
         "",
       ].join("\n"),
     );

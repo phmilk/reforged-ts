@@ -15,7 +15,8 @@
     },
     {
       "name": "unitId",
-      "nullable": false
+      "nullable": false,
+      "kind": "any"
     }
   ],
   "origin": "war3-types-strict"

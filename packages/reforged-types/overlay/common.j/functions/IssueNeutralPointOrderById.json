@@ -15,7 +15,8 @@
     },
     {
       "name": "unitId",
-      "nullable": false
+      "nullable": false,
+      "type": "number"
     },
     {
       "name": "x",
