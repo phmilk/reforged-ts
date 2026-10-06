@@ -152,9 +152,9 @@ describe("checkPatches", () => {
     ]);
   });
 
-  it("skips private packages that declare no reforged.patch", async () => {
+  it("skips private packages", async () => {
     const root = await workspace(
-      AGREEING,
+      { ...AGREEING, tools: "9.9.9.9" },
       [OLD, NEW],
       [
         { dir: "tools", name: "tools", private: true },
@@ -182,44 +182,6 @@ describe("checkPatches", () => {
         ],
       }).ok,
     ).toBe(true);
-  });
-
-  it("checks a private package that declares a reforged.patch, as one not published yet", async () => {
-    const unpublished = [
-      {
-        dir: "packages/reforged-builtins",
-        name: "reforged-builtins",
-        private: true,
-      },
-    ];
-    const agreeing = await check(
-      await workspace(
-        { ...AGREEING, "reforged-builtins": OLD },
-        [OLD, NEW],
-        unpublished,
-      ),
-    );
-    expect(agreeing.ok).toBe(true);
-    expect(agreeing.patches).toContainEqual({
-      name: "reforged-builtins",
-      patch: OLD,
-    });
-
-    const unknown = await check(
-      await workspace(
-        { ...AGREEING, "reforged-builtins": "3.0.0.99999" },
-        [OLD, NEW],
-        unpublished,
-      ),
-    );
-    expect(unknown.problems).toEqual([
-      {
-        kind: "unknown-patch",
-        package: "reforged-builtins",
-        patch: "3.0.0.99999",
-        message: `reforged-builtins has reforged.patch 3.0.0.99999, a Patch reforged-types ships no entry for (it ships: ${OLD}, ${NEW}).`,
-      },
-    ]);
   });
 
   it("fails when the Typings ship an entry for no Patch", async () => {

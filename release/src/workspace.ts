@@ -37,21 +37,9 @@ export interface PublishablePackage {
 export async function readPublishablePackages(
   root: string,
 ): Promise<PublishablePackage[]> {
-  return (await readWorkspacePackages(root)).filter(
-    ({ manifest }) => manifest.private !== true,
-  );
-}
-
-/**
- * Every package of the workspace at `root`, private ones included, in
- * code-point order of its name. Only a check that also covers a private
- * package (the Patch check, for a package not published yet) reads these.
- */
-export async function readWorkspacePackages(
-  root: string,
-): Promise<PublishablePackage[]> {
   const { packages } = await getPackages(root);
   return packages
+    .filter(({ packageJson }) => packageJson.private !== true)
     .map(({ packageJson, dir, relativeDir }) => ({
       name: packageJson.name,
       version: packageJson.version,
