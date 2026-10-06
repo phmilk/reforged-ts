@@ -9,6 +9,7 @@ import {
   Destructable,
   Item,
   MapPlayer,
+  on,
   Unit,
   UnitEvents,
 } from "../../src/index";
@@ -49,6 +50,18 @@ const spellPayload = {
   targetX: 128,
   targetY: -64,
 };
+
+/**
+ * The spell's ability Rawcode carries its kind into the next call, without
+ * a cast. Never called: `tsc` checks it.
+ */
+export function spellPayloadKinds(): void {
+  on(UnitEvents.spellEffect, ({ caster, abilityId }) => {
+    caster.removeAbility(abilityId);
+    // @ts-expect-error: the spell's ability Rawcode is not a unit's.
+    Unit.create(owner, abilityId, 0, 0);
+  });
+}
 
 const spellOptional = [
   ["targetUnit", "GetSpellTargetUnit"],

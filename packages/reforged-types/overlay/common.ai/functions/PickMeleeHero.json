@@ -2,7 +2,8 @@
   "name": "PickMeleeHero",
   "source": "common.ai",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "kind": "unit"
   },
   "params": [
     {

@@ -2,7 +2,8 @@
   "name": "GetDestructableTypeId",
   "source": "common.j",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "kind": "destructable"
   },
   "params": [
     {

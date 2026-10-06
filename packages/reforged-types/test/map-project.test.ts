@@ -152,6 +152,8 @@ describe("a Map project with the Template's types", () => {
       "src/nullable-return.ts:2 TS2322",
       // A plain number is not a Rawcode.
       "src/rawcode-from-number.ts:4 TS2345",
+      // A returned unit's Rawcode is not an ability's.
+      "src/rawcode-returned-wrong-kind.ts:4 TS2345",
       // A unit's or an upgrade's Rawcode is not a unit's.
       "src/rawcode-union-into-kind.ts:4 TS2345",
       // An ability's Rawcode is not a unit's.

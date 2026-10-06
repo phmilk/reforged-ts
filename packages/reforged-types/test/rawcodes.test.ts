@@ -1,12 +1,13 @@
 // Seam 1: the Rawcode types by Object kind (ADR 0012). A parameter takes its
 // kind from the parameter-name table or from its Overlay `kind`, a return
-// from its Overlay `returns.kind`; the signature carries the kind and the
-// header keeps the Jass type.
+// from its Overlay `returns.kind` and a global from its Overlay `kind`; the
+// signature carries the kind and the header keeps the Jass type.
 import { describe, expect, it } from "vitest";
 import { generate } from "../src/index.js";
 import {
   entry,
   generatedFile,
+  globalEntry,
   writeFixture,
   type OverlayEntryFixture,
 } from "./support/fixture.js";
@@ -247,6 +248,123 @@ describe("generate: Rawcode returns classified by the Overlay returns.kind", () 
   });
 });
 
+describe("generate: Rawcode globals classified by the Overlay kind", () => {
+  const commonAi = [
+    "globals",
+    "    constant integer FOOTMAN = 'hfoo'",
+    "    constant integer FOOTMEN = FOOTMAN",
+    "    integer hero_id = 'Hamg'",
+    "    integer array skill",
+    "    constant integer HOLY_BOLT = 'AHhb'",
+    "endglobals",
+  ].join("\n");
+
+  it("types a global, an alias of one and an array's elements as their Rawcode, and keeps the Jass type in the header", async () => {
+    const result = await generateOk({ "common.ai": commonAi }, [
+      globalEntry("common.ai", "FOOTMAN", false, { kind: "unit" }),
+      globalEntry("common.ai", "FOOTMEN", false, { kind: "unit" }),
+      globalEntry("common.ai", "hero_id", false, { kind: "unit" }),
+      globalEntry("common.ai", "skill", false, { kind: "ability" }),
+      globalEntry("common.ai", "HOLY_BOLT", false, { kind: "any" }),
+    ]);
+
+    expect(result.diagnostics).toEqual([]);
+    const text = generatedFile(result, "3.0.0/common.ai.d.ts");
+    expect(text).toContain(
+      [
+        "/**",
+        " * Jass: constant integer (32-bit)",
+        " * @defaultValue `'hfoo'`",
+        " * @see {@link https://lep.duckdns.org/jassbot/doc/FOOTMAN}",
+        " */",
+        'declare const FOOTMAN: Rawcode<"unit">;',
+      ].join("\n"),
+    );
+    expect(text).toContain('declare const FOOTMEN: Rawcode<"unit">;');
+    expect(text).toContain('declare let hero_id: Rawcode<"unit">;');
+    expect(text).toContain(
+      'declare let skill: Record<number, Rawcode<"ability">>;',
+    );
+    expect(text).toContain("declare const HOLY_BOLT: Rawcode;");
+  });
+
+  it("leaves an integer global whose value is not a four-character literal as number, without a diagnostic", async () => {
+    const result = await generateOk(
+      {
+        "common.ai": [
+          "globals",
+          "    constant integer BUILD_UNIT = 0",
+          "    constant integer LAST_UNIT = BUILD_UNIT",
+          "    constant integer TOO_LONG = 'hfoo1'",
+          "    integer array build_qty",
+          "endglobals",
+        ].join("\n"),
+      },
+      [
+        globalEntry("common.ai", "BUILD_UNIT"),
+        globalEntry("common.ai", "LAST_UNIT"),
+        globalEntry("common.ai", "TOO_LONG"),
+        globalEntry("common.ai", "build_qty"),
+      ],
+    );
+
+    expect(result.diagnostics).toEqual([]);
+    const text = generatedFile(result, "3.0.0/common.ai.d.ts");
+    expect(text).toContain("declare const BUILD_UNIT: number;");
+    expect(text).toContain("declare const LAST_UNIT: number;");
+    expect(text).toContain("declare const TOO_LONG: number;");
+    expect(text).toContain("declare let build_qty: Record<number, number>;");
+  });
+});
+
+describe("generate: Rawcode returns the generator knows", () => {
+  it("leaves a return whose name looks like a Rawcode's and that is not one as number, without a diagnostic", async () => {
+    const result = await generateOk(
+      {
+        "common.j": [
+          ...handles,
+          "native GetHandleId takes handle h returns integer",
+          "native GetPlayerId takes player whichPlayer returns integer",
+          "native OrderId takes string orderIdString returns integer",
+        ].join("\n"),
+      },
+      [
+        entry("common.j", "GetHandleId", ["h"]),
+        entry("common.j", "GetPlayerId", ["whichPlayer"]),
+        entry("common.j", "OrderId", ["orderIdString"]),
+      ],
+    );
+
+    expect(result.diagnostics).toEqual([]);
+    const text = generatedFile(result, "3.0.0/common.j.d.ts");
+    expect(text).toContain("declare function GetHandleId(h: handle): number;");
+    expect(text).toContain(
+      "declare function GetPlayerId(whichPlayer: player): number;",
+    );
+    expect(text).toContain(
+      "declare function OrderId(orderIdString: string): number;",
+    );
+  });
+
+  it("types a return whose name does not look like a Rawcode's from its Overlay kind", async () => {
+    const overlay = entry("common.ai", "SkillArrays");
+    overlay.returns.kind = "ability";
+    const result = await generateOk(
+      {
+        "common.ai": [
+          "function SkillArrays takes nothing returns integer",
+          "endfunction",
+        ].join("\n"),
+      },
+      [overlay],
+    );
+
+    expect(generatedFile(result, "3.0.0/common.ai.d.ts")).toContain(
+      'declare function SkillArrays(): Rawcode<"ability">;',
+    );
+  });
+});
+
 describe("generate: unclassified Rawcodes", () => {
   it("fails on an integer parameter that looks like a Rawcode and that neither the table nor the Overlay classifies, naming its Overlay path", async () => {
     const result = await run(
@@ -303,6 +421,90 @@ describe("generate: unclassified Rawcodes", () => {
         "unclassified-rawcode",
         "common.ai/functions/Paint.json: Paint parameter brushTYPE (integer) looks like a Rawcode but has no Object kind",
       ],
+    ]);
+  });
+});
+
+describe("generate: unclassified Rawcode returns and globals", () => {
+  it("fails on an integer return of a function whose name looks like a Rawcode's and that its Overlay does not classify, naming returns.kind", async () => {
+    const result = await run(
+      {
+        "common.j": [
+          "native GetSpellAbilityId takes nothing returns integer",
+          "native GetResearched takes nothing returns integer",
+          "native GetUnitType takes nothing returns string",
+          "native GetGold takes nothing returns integer",
+        ].join("\n"),
+      },
+      [
+        entry("common.j", "GetSpellAbilityId"),
+        entry("common.j", "GetResearched"),
+        entry("common.j", "GetUnitType"),
+        entry("common.j", "GetGold"),
+      ],
+    );
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics).toEqual([
+      {
+        severity: "error",
+        kind: "unclassified-rawcode",
+        file: "common.j/functions/GetSpellAbilityId.json",
+        name: "GetSpellAbilityId",
+        message:
+          "common.j/functions/GetSpellAbilityId.json: GetSpellAbilityId returns an integer that looks like a Rawcode " +
+          'but has no Object kind; set returns.kind to an Object kind or "any", ' +
+          "or add GetSpellAbilityId to the returns that are not Rawcodes",
+      },
+      {
+        severity: "error",
+        kind: "unclassified-rawcode",
+        file: "common.j/functions/GetResearched.json",
+        name: "GetResearched",
+        message:
+          "common.j/functions/GetResearched.json: GetResearched returns an integer that looks like a Rawcode " +
+          'but has no Object kind; set returns.kind to an Object kind or "any", ' +
+          "or add GetResearched to the returns that are not Rawcodes",
+      },
+    ]);
+  });
+
+  it("fails on an integer global whose value is a four-character literal, or another such global, and that its Overlay does not classify, naming kind", async () => {
+    const result = await run(
+      {
+        "common.ai": [
+          "globals",
+          "    constant integer FOOTMAN = 'hfoo'",
+          "    constant integer FOOTMEN = FOOTMAN",
+          "endglobals",
+        ].join("\n"),
+      },
+      [
+        globalEntry("common.ai", "FOOTMAN"),
+        globalEntry("common.ai", "FOOTMEN"),
+      ],
+    );
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics).toEqual([
+      {
+        severity: "error",
+        kind: "unclassified-rawcode",
+        file: "common.ai/globals/FOOTMAN.json",
+        name: "FOOTMAN",
+        message:
+          "common.ai/globals/FOOTMAN.json: global FOOTMAN (integer = 'hfoo') looks like a Rawcode " +
+          'but has no Object kind; set kind to an Object kind or "any"',
+      },
+      {
+        severity: "error",
+        kind: "unclassified-rawcode",
+        file: "common.ai/globals/FOOTMEN.json",
+        name: "FOOTMEN",
+        message:
+          "common.ai/globals/FOOTMEN.json: global FOOTMEN (integer = FOOTMAN) looks like a Rawcode " +
+          'but has no Object kind; set kind to an Object kind or "any"',
+      },
     ]);
   });
 });
@@ -393,6 +595,52 @@ describe("generate: invalid Overlay kind", () => {
         name: "A",
         message:
           "common.j/functions/A.json: returns.kind on A, which returns real, not integer; remove it",
+      },
+    ]);
+  });
+  it("fails on an unknown kind in a global's kind", async () => {
+    const result = await run(
+      {
+        "common.ai":
+          "globals\n    constant integer FOOTMAN = 'hfoo'\nendglobals",
+      },
+      [],
+      {
+        rawOverlay: {
+          "common.ai/globals/FOOTMAN.json": JSON.stringify(
+            globalEntry("common.ai", "FOOTMAN", false, { kind: "hero" }),
+          ),
+        },
+      },
+    );
+
+    expect(result.diagnostics).toEqual([
+      {
+        severity: "error",
+        kind: "overlay-invalid",
+        file: "common.ai/globals/FOOTMAN.json",
+        name: "FOOTMAN",
+        message:
+          'common.ai/globals/FOOTMAN.json: kind must be one of unit, item, ability, buff, destructable, doodad, upgrade, any, found "hero"',
+      },
+    ]);
+  });
+
+  it("fails on kind on a global that is not an integer", async () => {
+    const result = await run(
+      { "common.ai": "globals\n    constant real RANGE = 1.0\nendglobals" },
+      [globalEntry("common.ai", "RANGE", false, { kind: "unit" })],
+    );
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics).toEqual([
+      {
+        severity: "error",
+        kind: "overlay-invalid",
+        file: "common.ai/globals/RANGE.json",
+        name: "RANGE",
+        message:
+          "common.ai/globals/RANGE.json: kind on RANGE, which is real, not integer; remove it",
       },
     ]);
   });

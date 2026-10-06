@@ -7,8 +7,10 @@
  * A parameter takes its kind from its Overlay `kind`, else from the
  * parameter-name table below; a return or a global takes it from its Overlay
  * `kind` only, since it has no name to look up. The Rawcode-name pattern only
- * decides what must be classified: an `integer` it matches with no kind is
- * an `unclassified-rawcode` error.
+ * decides what must be classified: an `integer` parameter or return it
+ * matches with no kind is an `unclassified-rawcode` error, and so is an
+ * `integer` global whose value is a four-character literal or names such a
+ * global.
  */
 import type { Parameter } from "./model.js";
 
@@ -174,6 +176,103 @@ export function parameterKind(
   if (listed === NOT_A_RAWCODE) return undefined;
   if (listed !== undefined) return listed;
   return looksLikeRawcode(param.name) ? "unclassified" : undefined;
+}
+
+/**
+ * The functions whose name the pattern matches and whose `integer` return is
+ * not a Rawcode: order ids, handle ids, players, point values, counts, and
+ * camera and terrain types. They stay `number` on purpose.
+ */
+const NOT_A_RAWCODE_RETURNS: ReadonlySet<string> = new Set([
+  "OrderId",
+  "GetIssuedOrderId",
+  "GetHandleId",
+  "GetPlayerId",
+  "GetConvertedPlayerId",
+  "GetUnitPointValueByType",
+  "CountLivingPlayerUnitsOfTypeId",
+  "BlzCameraGetCameraType",
+  "BlzCameraSetupGetCameraType",
+  "GetTerrainType",
+]);
+
+/**
+ * The functions of the Patch files whose name the pattern does not match and
+ * whose `integer` return is a Rawcode: the learnt skill, the researched
+ * upgrade, the random picks, the skins, and common.ai's hero picks. Their
+ * Overlay gives the kind; listing them here makes it required.
+ */
+const RAWCODE_RETURNS_OTHERWISE: ReadonlySet<string> = new Set([
+  "GetLearnedSkill",
+  "GetLearnedSkillBJ",
+  "GetResearched",
+  "ChooseRandomCreep",
+  "ChooseRandomCreepBJ",
+  "ChooseRandomNPBuilding",
+  "ChooseRandomNPBuildingBJ",
+  "ChooseRandomItem",
+  "ChooseRandomItemBJ",
+  "ChooseRandomItemEx",
+  "ChooseRandomItemExBJ",
+  "ChooseRandomItemExWithFilter",
+  "ChooseRandomItemExWithFilterBJ",
+  "BlzGetUnitSkin",
+  "BlzGetItemSkin",
+  "String2UnitIdBJ",
+  "RandomDistChoose",
+  "PickMeleeHero",
+  "SkillArrays",
+]);
+
+/**
+ * A function's return kind: its Overlay `returns.kind`; `undefined` when it
+ * is not a Rawcode; `"unclassified"` when it is an `integer` of a function
+ * whose name looks like a Rawcode's (the parameter pattern, or the list
+ * above) that is neither classified nor known not to be one.
+ */
+export function returnKind(
+  fn: { name: string; returns: string },
+  kind: OverlayKind | undefined,
+): RawcodeKind | "unclassified" | undefined {
+  if (kind !== undefined) return overlayKind(kind);
+  if (fn.returns !== "integer" || NOT_A_RAWCODE_RETURNS.has(fn.name)) {
+    return undefined;
+  }
+  return RAWCODE_NAME.test(fn.name) || RAWCODE_RETURNS_OTHERWISE.has(fn.name)
+    ? "unclassified"
+    : undefined;
+}
+
+/** A four-character literal, `'hfoo'`, as a Patch file writes a Rawcode. */
+const FOUR_CHARACTERS = /^'[^']{4}'$/;
+
+/**
+ * The `integer` globals of `globals` that look like Rawcodes: those whose
+ * value is a four-character literal (`FOOTMAN = 'hfoo'`), and those whose
+ * value names another one (`FOOTMEN = FOOTMAN`). An array has no value.
+ */
+export function rawcodeGlobals(
+  globals: readonly {
+    name: string;
+    type: string;
+    array: boolean;
+    initializer?: string;
+  }[],
+): ReadonlySet<string> {
+  const integers = globals.filter((g) => g.type === "integer" && !g.array);
+  const found = new Set(
+    integers
+      .filter((g) => FOUR_CHARACTERS.test(g.initializer?.trim() ?? ""))
+      .map((g) => g.name),
+  );
+  // An alias may name an alias: follow until nothing is added.
+  for (let size = -1; size !== found.size;) {
+    size = found.size;
+    for (const g of integers) {
+      if (found.has(g.initializer?.trim() ?? "")) found.add(g.name);
+    }
+  }
+  return found;
 }
 
 /**

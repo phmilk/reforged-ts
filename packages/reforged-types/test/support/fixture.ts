@@ -83,6 +83,7 @@ export interface GlobalEntryFixture {
   name: string;
   source: string;
   nullable: boolean;
+  kind?: string;
   deprecated?: string;
   notes?: string;
   since?: string;

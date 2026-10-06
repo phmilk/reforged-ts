@@ -81,7 +81,7 @@ declare function GetAiPlayer(): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetHeroId}
  */
-declare function GetHeroId(): number;
+declare function GetHeroId(): Rawcode<"unit">;
 
 /**
  * @returns integer (32-bit)
@@ -862,2758 +862,2758 @@ declare function MeleeDifficulty(): number;
  * @defaultValue `'Hamg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ARCHMAGE}
  */
-declare const ARCHMAGE: number;
+declare const ARCHMAGE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Hpal'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/PALADIN}
  */
-declare const PALADIN: number;
+declare const PALADIN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Hmkg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MTN_KING}
  */
-declare const MTN_KING: number;
+declare const MTN_KING: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Hblm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BLOOD_MAGE}
  */
-declare const BLOOD_MAGE: number;
+declare const BLOOD_MAGE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHav'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/AVATAR}
  */
-declare const AVATAR: number;
+declare const AVATAR: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHbh'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BASH}
  */
-declare const BASH: number;
+declare const BASH: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHtb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/THUNDER_BOLT}
  */
-declare const THUNDER_BOLT: number;
+declare const THUNDER_BOLT: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHtc'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/THUNDER_CLAP}
  */
-declare const THUNDER_CLAP: number;
+declare const THUNDER_CLAP: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHad'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DEVOTION_AURA}
  */
-declare const DEVOTION_AURA: number;
+declare const DEVOTION_AURA: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHds'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DIVINE_SHIELD}
  */
-declare const DIVINE_SHIELD: number;
+declare const DIVINE_SHIELD: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHhb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HOLY_BOLT}
  */
-declare const HOLY_BOLT: number;
+declare const HOLY_BOLT: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHre'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/RESURRECTION}
  */
-declare const RESURRECTION: number;
+declare const RESURRECTION: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHbz'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BLIZZARD}
  */
-declare const BLIZZARD: number;
+declare const BLIZZARD: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHab'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BRILLIANCE_AURA}
  */
-declare const BRILLIANCE_AURA: number;
+declare const BRILLIANCE_AURA: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHmt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MASS_TELEPORT}
  */
-declare const MASS_TELEPORT: number;
+declare const MASS_TELEPORT: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHwe'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/WATER_ELEMENTAL}
  */
-declare const WATER_ELEMENTAL: number;
+declare const WATER_ELEMENTAL: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHbn'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BANISH}
  */
-declare const BANISH: number;
+declare const BANISH: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHfs'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FLAME_STRIKE}
  */
-declare const FLAME_STRIKE: number;
+declare const FLAME_STRIKE: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHpx'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SUMMON_PHOENIX}
  */
-declare const SUMMON_PHOENIX: number;
+declare const SUMMON_PHOENIX: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHdr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SIPHON_MANA}
  */
-declare const SIPHON_MANA: number;
+declare const SIPHON_MANA: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Hjai'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/JAINA}
  */
-declare const JAINA: number;
+declare const JAINA: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Hmbr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MURADIN}
  */
-declare const MURADIN: number;
+declare const MURADIN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Hlgr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/GARITHOS}
  */
-declare const GARITHOS: number;
+declare const GARITHOS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Hkal'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/KAEL}
  */
-declare const KAEL: number;
+declare const KAEL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hgyr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/COPTER}
  */
-declare const COPTER: number;
+declare const COPTER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `COPTER`
  * @see {@link https://lep.duckdns.org/jassbot/doc/GYRO}
  */
-declare const GYRO: number;
+declare const GYRO: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hwat'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ELEMENTAL}
  */
-declare const ELEMENTAL: number;
+declare const ELEMENTAL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hfoo'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FOOTMAN}
  */
-declare const FOOTMAN: number;
+declare const FOOTMAN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `FOOTMAN`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FOOTMEN}
  */
-declare const FOOTMEN: number;
+declare const FOOTMEN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hgry'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/GRYPHON}
  */
-declare const GRYPHON: number;
+declare const GRYPHON: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hkni'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/KNIGHT}
  */
-declare const KNIGHT: number;
+declare const KNIGHT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hmtm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MORTAR}
  */
-declare const MORTAR: number;
+declare const MORTAR: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hpea'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/PEASANT}
  */
-declare const PEASANT: number;
+declare const PEASANT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hmpr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/PRIEST}
  */
-declare const PRIEST: number;
+declare const PRIEST: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hrif'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/RIFLEMAN}
  */
-declare const RIFLEMAN: number;
+declare const RIFLEMAN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `RIFLEMAN`
  * @see {@link https://lep.duckdns.org/jassbot/doc/RIFLEMEN}
  */
-declare const RIFLEMEN: number;
+declare const RIFLEMEN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hsor'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SORCERESS}
  */
-declare const SORCERESS: number;
+declare const SORCERESS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hmtt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/TANK}
  */
-declare const TANK: number;
+declare const TANK: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `TANK`
  * @see {@link https://lep.duckdns.org/jassbot/doc/STEAM_TANK}
  */
-declare const STEAM_TANK: number;
+declare const STEAM_TANK: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hrtt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ROCKET_TANK}
  */
-declare const ROCKET_TANK: number;
+declare const ROCKET_TANK: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hmil'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MILITIA}
  */
-declare const MILITIA: number;
+declare const MILITIA: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hspt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SPELL_BREAKER}
  */
-declare const SPELL_BREAKER: number;
+declare const SPELL_BREAKER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hdhw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HUMAN_DRAGON_HAWK}
  */
-declare const HUMAN_DRAGON_HAWK: number;
+declare const HUMAN_DRAGON_HAWK: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hbep'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BLOOD_PRIEST}
  */
-declare const BLOOD_PRIEST: number;
+declare const BLOOD_PRIEST: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hbes'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BLOOD_SORCERESS}
  */
-declare const BLOOD_SORCERESS: number;
+declare const BLOOD_SORCERESS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nhew'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BLOOD_PEASANT}
  */
-declare const BLOOD_PEASANT: number;
+declare const BLOOD_PEASANT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hgra'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/AVIARY}
  */
-declare const AVIARY: number;
+declare const AVIARY: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hbar'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BARRACKS}
  */
-declare const BARRACKS: number;
+declare const BARRACKS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hbla'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BLACKSMITH}
  */
-declare const BLACKSMITH: number;
+declare const BLACKSMITH: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hctw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CANNON_TOWER}
  */
-declare const CANNON_TOWER: number;
+declare const CANNON_TOWER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hcas'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CASTLE}
  */
-declare const CASTLE: number;
+declare const CASTLE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'htws'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CHURCH}
  */
-declare const CHURCH: number;
+declare const CHURCH: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `CHURCH`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MAGE_TOWER}
  */
-declare const MAGE_TOWER: number;
+declare const MAGE_TOWER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hgtw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/GUARD_TOWER}
  */
-declare const GUARD_TOWER: number;
+declare const GUARD_TOWER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hhou'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HOUSE}
  */
-declare const HOUSE: number;
+declare const HOUSE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'halt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HUMAN_ALTAR}
  */
-declare const HUMAN_ALTAR: number;
+declare const HUMAN_ALTAR: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hkee'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/KEEP}
  */
-declare const KEEP: number;
+declare const KEEP: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hlum'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/LUMBER_MILL}
  */
-declare const LUMBER_MILL: number;
+declare const LUMBER_MILL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hars'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SANCTUM}
  */
-declare const SANCTUM: number;
+declare const SANCTUM: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `SANCTUM`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ARCANE_SANCTUM}
  */
-declare const ARCANE_SANCTUM: number;
+declare const ARCANE_SANCTUM: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'htow'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/TOWN_HALL}
  */
-declare const TOWN_HALL: number;
+declare const TOWN_HALL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hwtw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/WATCH_TOWER}
  */
-declare const WATCH_TOWER: number;
+declare const WATCH_TOWER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'harm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/WORKSHOP}
  */
-declare const WORKSHOP: number;
+declare const WORKSHOP: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hvlt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ARCANE_VAULT}
  */
-declare const ARCANE_VAULT: number;
+declare const ARCANE_VAULT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hatw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ARCANE_TOWER}
  */
-declare const ARCANE_TOWER: number;
+declare const ARCANE_TOWER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhme'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_MELEE}
  */
-declare const UPG_MELEE: number;
+declare const UPG_MELEE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhra'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_RANGED}
  */
-declare const UPG_RANGED: number;
+declare const UPG_RANGED: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhaa'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ARTILLERY}
  */
-declare const UPG_ARTILLERY: number;
+declare const UPG_ARTILLERY: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhar'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ARMOR}
  */
-declare const UPG_ARMOR: number;
+declare const UPG_ARMOR: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhmi'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_GOLD}
  */
-declare const UPG_GOLD: number;
+declare const UPG_GOLD: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhac'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_MASONRY}
  */
-declare const UPG_MASONRY: number;
+declare const UPG_MASONRY: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhss'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_SIGHT}
  */
-declare const UPG_SIGHT: number;
+declare const UPG_SIGHT: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhde'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_DEFEND}
  */
-declare const UPG_DEFEND: number;
+declare const UPG_DEFEND: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhan'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_BREEDING}
  */
-declare const UPG_BREEDING: number;
+declare const UPG_BREEDING: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhpt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_PRAYING}
  */
-declare const UPG_PRAYING: number;
+declare const UPG_PRAYING: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhst'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_SORCERY}
  */
-declare const UPG_SORCERY: number;
+declare const UPG_SORCERY: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhla'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_LEATHER}
  */
-declare const UPG_LEATHER: number;
+declare const UPG_LEATHER: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhri'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_GUN_RANGE}
  */
-declare const UPG_GUN_RANGE: number;
+declare const UPG_GUN_RANGE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhlh'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_WOOD}
  */
-declare const UPG_WOOD: number;
+declare const UPG_WOOD: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhse'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_SENTINEL}
  */
-declare const UPG_SENTINEL: number;
+declare const UPG_SENTINEL: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhsr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_SCATTER}
  */
-declare const UPG_SCATTER: number;
+declare const UPG_SCATTER: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhgb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_BOMBS}
  */
-declare const UPG_BOMBS: number;
+declare const UPG_BOMBS: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhhb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_HAMMERS}
  */
-declare const UPG_HAMMERS: number;
+declare const UPG_HAMMERS: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhss'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_CONT_MAGIC}
  */
-declare const UPG_CONT_MAGIC: number;
+declare const UPG_CONT_MAGIC: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhfs'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_FRAGS}
  */
-declare const UPG_FRAGS: number;
+declare const UPG_FRAGS: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhrt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_TANK}
  */
-declare const UPG_TANK: number;
+declare const UPG_TANK: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhfc'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_FLAK}
  */
-declare const UPG_FLAK: number;
+declare const UPG_FLAK: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rhcd'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_CLOUD}
  */
-declare const UPG_CLOUD: number;
+declare const UPG_CLOUD: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Obla'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BLADE_MASTER}
  */
-declare const BLADE_MASTER: number;
+declare const BLADE_MASTER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ofar'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FAR_SEER}
  */
-declare const FAR_SEER: number;
+declare const FAR_SEER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Otch'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/TAUREN_CHIEF}
  */
-declare const TAUREN_CHIEF: number;
+declare const TAUREN_CHIEF: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Oshd'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SHADOW_HUNTER}
  */
-declare const SHADOW_HUNTER: number;
+declare const SHADOW_HUNTER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ogrh'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/GROM}
  */
-declare const GROM: number;
+declare const GROM: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Othr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/THRALL}
  */
-declare const THRALL: number;
+declare const THRALL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOcr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CRITICAL_STRIKE}
  */
-declare const CRITICAL_STRIKE: number;
+declare const CRITICAL_STRIKE: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOmi'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MIRROR_IMAGE}
  */
-declare const MIRROR_IMAGE: number;
+declare const MIRROR_IMAGE: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOww'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BLADE_STORM}
  */
-declare const BLADE_STORM: number;
+declare const BLADE_STORM: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOwk'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/WIND_WALK}
  */
-declare const WIND_WALK: number;
+declare const WIND_WALK: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOcl'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CHAIN_LIGHTNING}
  */
-declare const CHAIN_LIGHTNING: number;
+declare const CHAIN_LIGHTNING: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOeq'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/EARTHQUAKE}
  */
-declare const EARTHQUAKE: number;
+declare const EARTHQUAKE: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOfs'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FAR_SIGHT}
  */
-declare const FAR_SIGHT: number;
+declare const FAR_SIGHT: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOsf'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SPIRIT_WOLF}
  */
-declare const SPIRIT_WOLF: number;
+declare const SPIRIT_WOLF: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOae'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ENDURANE_AURA}
  */
-declare const ENDURANE_AURA: number;
+declare const ENDURANE_AURA: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOre'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/REINCARNATION}
  */
-declare const REINCARNATION: number;
+declare const REINCARNATION: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOsh'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SHOCKWAVE}
  */
-declare const SHOCKWAVE: number;
+declare const SHOCKWAVE: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOws'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/WAR_STOMP}
  */
-declare const WAR_STOMP: number;
+declare const WAR_STOMP: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOhw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HEALING_WAVE}
  */
-declare const HEALING_WAVE: number;
+declare const HEALING_WAVE: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOhx'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HEX}
  */
-declare const HEX: number;
+declare const HEX: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOsw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SERPENT_WARD}
  */
-declare const SERPENT_WARD: number;
+declare const SERPENT_WARD: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AOvd'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/VOODOO}
  */
-declare const VOODOO: number;
+declare const VOODOO: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'oang'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/GUARDIAN}
  */
-declare const GUARDIAN: number;
+declare const GUARDIAN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ocat'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CATAPULT}
  */
-declare const CATAPULT: number;
+declare const CATAPULT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'odoc'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/WITCH_DOCTOR}
  */
-declare const WITCH_DOCTOR: number;
+declare const WITCH_DOCTOR: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ogru'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/GRUNT}
  */
-declare const GRUNT: number;
+declare const GRUNT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ohun'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HEAD_HUNTER}
  */
-declare const HEAD_HUNTER: number;
+declare const HEAD_HUNTER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'otbk'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BERSERKER}
  */
-declare const BERSERKER: number;
+declare const BERSERKER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'okod'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/KODO_BEAST}
  */
-declare const KODO_BEAST: number;
+declare const KODO_BEAST: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'opeo'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/PEON}
  */
-declare const PEON: number;
+declare const PEON: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'orai'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/RAIDER}
  */
-declare const RAIDER: number;
+declare const RAIDER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'oshm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SHAMAN}
  */
-declare const SHAMAN: number;
+declare const SHAMAN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'otau'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/TAUREN}
  */
-declare const TAUREN: number;
+declare const TAUREN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'owyv'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/WYVERN}
  */
-declare const WYVERN: number;
+declare const WYVERN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'otbr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BATRIDER}
  */
-declare const BATRIDER: number;
+declare const BATRIDER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ospw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SPIRIT_WALKER}
  */
-declare const SPIRIT_WALKER: number;
+declare const SPIRIT_WALKER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ospm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SPIRIT_WALKER_M}
  */
-declare const SPIRIT_WALKER_M: number;
+declare const SPIRIT_WALKER_M: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'oalt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ORC_ALTAR}
  */
-declare const ORC_ALTAR: number;
+declare const ORC_ALTAR: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'obar'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ORC_BARRACKS}
  */
-declare const ORC_BARRACKS: number;
+declare const ORC_BARRACKS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'obea'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BESTIARY}
  */
-declare const BESTIARY: number;
+declare const BESTIARY: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ofor'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FORGE}
  */
-declare const FORGE: number;
+declare const FORGE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ofrt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FORTRESS}
  */
-declare const FORTRESS: number;
+declare const FORTRESS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ogre'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/GREAT_HALL}
  */
-declare const GREAT_HALL: number;
+declare const GREAT_HALL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'osld'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/LODGE}
  */
-declare const LODGE: number;
+declare const LODGE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ostr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/STRONGHOLD}
  */
-declare const STRONGHOLD: number;
+declare const STRONGHOLD: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'otrb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BURROW}
  */
-declare const BURROW: number;
+declare const BURROW: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'otto'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/TOTEM}
  */
-declare const TOTEM: number;
+declare const TOTEM: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'owtw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ORC_WATCH_TOWER}
  */
-declare const ORC_WATCH_TOWER: number;
+declare const ORC_WATCH_TOWER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ovln'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/VOODOO_LOUNGE}
  */
-declare const VOODOO_LOUNGE: number;
+declare const VOODOO_LOUNGE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rome'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_MELEE}
  */
-declare const UPG_ORC_MELEE: number;
+declare const UPG_ORC_MELEE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rora'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_RANGED}
  */
-declare const UPG_ORC_RANGED: number;
+declare const UPG_ORC_RANGED: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Roaa'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_ARTILLERY}
  */
-declare const UPG_ORC_ARTILLERY: number;
+declare const UPG_ORC_ARTILLERY: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Roar'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_ARMOR}
  */
-declare const UPG_ORC_ARMOR: number;
+declare const UPG_ORC_ARMOR: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rwdm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_WAR_DRUMS}
  */
-declare const UPG_ORC_WAR_DRUMS: number;
+declare const UPG_ORC_WAR_DRUMS: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ropg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_PILLAGE}
  */
-declare const UPG_ORC_PILLAGE: number;
+declare const UPG_ORC_PILLAGE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Robs'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_BERSERK}
  */
-declare const UPG_ORC_BERSERK: number;
+declare const UPG_ORC_BERSERK: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rows'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_PULVERIZE}
  */
-declare const UPG_ORC_PULVERIZE: number;
+declare const UPG_ORC_PULVERIZE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Roen'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_ENSNARE}
  */
-declare const UPG_ORC_ENSNARE: number;
+declare const UPG_ORC_ENSNARE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rovs'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_VENOM}
  */
-declare const UPG_ORC_VENOM: number;
+declare const UPG_ORC_VENOM: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rowd'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_DOCS}
  */
-declare const UPG_ORC_DOCS: number;
+declare const UPG_ORC_DOCS: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rost'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_SHAMAN}
  */
-declare const UPG_ORC_SHAMAN: number;
+declare const UPG_ORC_SHAMAN: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rosp'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_SPIKES}
  */
-declare const UPG_ORC_SPIKES: number;
+declare const UPG_ORC_SPIKES: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rorb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_BURROWS}
  */
-declare const UPG_ORC_BURROWS: number;
+declare const UPG_ORC_BURROWS: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rotr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_REGEN}
  */
-declare const UPG_ORC_REGEN: number;
+declare const UPG_ORC_REGEN: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rolf'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_FIRE}
  */
-declare const UPG_ORC_FIRE: number;
+declare const UPG_ORC_FIRE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rowt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_SWALKER}
  */
-declare const UPG_ORC_SWALKER: number;
+declare const UPG_ORC_SWALKER: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Robk'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_BERSERKER}
  */
-declare const UPG_ORC_BERSERKER: number;
+declare const UPG_ORC_BERSERKER: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Robf'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_NAPTHA}
  */
-declare const UPG_ORC_NAPTHA: number;
+declare const UPG_ORC_NAPTHA: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Roch'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ORC_CHAOS}
  */
-declare const UPG_ORC_CHAOS: number;
+declare const UPG_ORC_CHAOS: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nomg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/OGRE_MAGI}
  */
-declare const OGRE_MAGI: number;
+declare const OGRE_MAGI: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nrwm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ORC_DRAGON}
  */
-declare const ORC_DRAGON: number;
+declare const ORC_DRAGON: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ngsp'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SAPPER}
  */
-declare const SAPPER: number;
+declare const SAPPER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nzep'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ZEPPLIN}
  */
-declare const ZEPPLIN: number;
+declare const ZEPPLIN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `ZEPPLIN`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ZEPPELIN}
  */
-declare const ZEPPELIN: number;
+declare const ZEPPELIN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nw2w'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/W2_WARLOCK}
  */
-declare const W2_WARLOCK: number;
+declare const W2_WARLOCK: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'npgf'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/PIG_FARM}
  */
-declare const PIG_FARM: number;
+declare const PIG_FARM: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nftr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FOREST_TROLL}
  */
-declare const FOREST_TROLL: number;
+declare const FOREST_TROLL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ndrb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DRAGON_ROOST}
  */
-declare const DRAGON_ROOST: number;
+declare const DRAGON_ROOST: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nchg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CHAOS_GRUNT}
  */
-declare const CHAOS_GRUNT: number;
+declare const CHAOS_GRUNT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nchw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CHAOS_WARLOCK}
  */
-declare const CHAOS_WARLOCK: number;
+declare const CHAOS_WARLOCK: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nchr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CHAOS_RAIDER}
  */
-declare const CHAOS_RAIDER: number;
+declare const CHAOS_RAIDER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ncpn'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CHAOS_PEON}
  */
-declare const CHAOS_PEON: number;
+declare const CHAOS_PEON: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nckb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CHAOS_KODO}
  */
-declare const CHAOS_KODO: number;
+declare const CHAOS_KODO: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Opgh'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CHAOS_GROM}
  */
-declare const CHAOS_GROM: number;
+declare const CHAOS_GROM: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Nbbc'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CHAOS_BLADEMASTER}
  */
-declare const CHAOS_BLADEMASTER: number;
+declare const CHAOS_BLADEMASTER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ocbw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CHAOS_BURROW}
  */
-declare const CHAOS_BURROW: number;
+declare const CHAOS_BURROW: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Udea'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DEATH_KNIGHT}
  */
-declare const DEATH_KNIGHT: number;
+declare const DEATH_KNIGHT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Udre'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DREAD_LORD}
  */
-declare const DREAD_LORD: number;
+declare const DREAD_LORD: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ulic'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/LICH}
  */
-declare const LICH: number;
+declare const LICH: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ucrl'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CRYPT_LORD}
  */
-declare const CRYPT_LORD: number;
+declare const CRYPT_LORD: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Umal'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MALGANIS}
  */
-declare const MALGANIS: number;
+declare const MALGANIS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Utic'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/TICHONDRIUS}
  */
-declare const TICHONDRIUS: number;
+declare const TICHONDRIUS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Npld'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/PIT_LORD}
  */
-declare const PIT_LORD: number;
+declare const PIT_LORD: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Udth'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DETHEROC}
  */
-declare const DETHEROC: number;
+declare const DETHEROC: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUsl'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SLEEP}
  */
-declare const SLEEP: number;
+declare const SLEEP: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUav'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/VAMP_AURA}
  */
-declare const VAMP_AURA: number;
+declare const VAMP_AURA: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUcs'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CARRION_SWARM}
  */
-declare const CARRION_SWARM: number;
+declare const CARRION_SWARM: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUin'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/INFERNO}
  */
-declare const INFERNO: number;
+declare const INFERNO: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUdr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DARK_RITUAL}
  */
-declare const DARK_RITUAL: number;
+declare const DARK_RITUAL: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUdd'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DEATH_DECAY}
  */
-declare const DEATH_DECAY: number;
+declare const DEATH_DECAY: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUfu'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FROST_ARMOR}
  */
-declare const FROST_ARMOR: number;
+declare const FROST_ARMOR: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUfn'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FROST_NOVA}
  */
-declare const FROST_NOVA: number;
+declare const FROST_NOVA: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUan'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ANIM_DEAD}
  */
-declare const ANIM_DEAD: number;
+declare const ANIM_DEAD: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUdc'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DEATH_COIL}
  */
-declare const DEATH_COIL: number;
+declare const DEATH_COIL: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUdp'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DEATH_PACT}
  */
-declare const DEATH_PACT: number;
+declare const DEATH_PACT: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUau'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UNHOLY_AURA}
  */
-declare const UNHOLY_AURA: number;
+declare const UNHOLY_AURA: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUcb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CARRION_SCARAB}
  */
-declare const CARRION_SCARAB: number;
+declare const CARRION_SCARAB: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUim'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/IMPALE}
  */
-declare const IMPALE: number;
+declare const IMPALE: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUls'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/LOCUST_SWARM}
  */
-declare const LOCUST_SWARM: number;
+declare const LOCUST_SWARM: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AUts'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/THORNY_SHIELD}
  */
-declare const THORNY_SHIELD: number;
+declare const THORNY_SHIELD: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'uabo'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ABOMINATION}
  */
-declare const ABOMINATION: number;
+declare const ABOMINATION: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'uaco'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ACOLYTE}
  */
-declare const ACOLYTE: number;
+declare const ACOLYTE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'uban'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BANSHEE}
  */
-declare const BANSHEE: number;
+declare const BANSHEE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ucry'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/PIT_FIEND}
  */
-declare const PIT_FIEND: number;
+declare const PIT_FIEND: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `PIT_FIEND`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CRYPT_FIEND}
  */
-declare const CRYPT_FIEND: number;
+declare const CRYPT_FIEND: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ufro'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FROST_WYRM}
  */
-declare const FROST_WYRM: number;
+declare const FROST_WYRM: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ugar'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/GARGOYLE}
  */
-declare const GARGOYLE: number;
+declare const GARGOYLE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ugrm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/GARGOYLE_MORPH}
  */
-declare const GARGOYLE_MORPH: number;
+declare const GARGOYLE_MORPH: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ugho'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/GHOUL}
  */
-declare const GHOUL: number;
+declare const GHOUL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'umtw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MEAT_WAGON}
  */
-declare const MEAT_WAGON: number;
+declare const MEAT_WAGON: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'unec'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NECRO}
  */
-declare const NECRO: number;
+declare const NECRO: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'uske'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SKEL_WARRIOR}
  */
-declare const SKEL_WARRIOR: number;
+declare const SKEL_WARRIOR: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ushd'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SHADE}
  */
-declare const SHADE: number;
+declare const SHADE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'uarb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UNDEAD_BARGE}
  */
-declare const UNDEAD_BARGE: number;
+declare const UNDEAD_BARGE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'uobs'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/OBSIDIAN_STATUE}
  */
-declare const OBSIDIAN_STATUE: number;
+declare const OBSIDIAN_STATUE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `OBSIDIAN_STATUE`
  * @see {@link https://lep.duckdns.org/jassbot/doc/OBS_STATUE}
  */
-declare const OBS_STATUE: number;
+declare const OBS_STATUE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ubsp'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BLK_SPHINX}
  */
-declare const BLK_SPHINX: number;
+declare const BLK_SPHINX: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ugol'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UNDEAD_MINE}
  */
-declare const UNDEAD_MINE: number;
+declare const UNDEAD_MINE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'uaod'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UNDEAD_ALTAR}
  */
-declare const UNDEAD_ALTAR: number;
+declare const UNDEAD_ALTAR: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ubon'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BONEYARD}
  */
-declare const BONEYARD: number;
+declare const BONEYARD: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ugsp'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/GARG_SPIRE}
  */
-declare const GARG_SPIRE: number;
+declare const GARG_SPIRE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'unpl'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NECROPOLIS_1}
  */
-declare const NECROPOLIS_1: number;
+declare const NECROPOLIS_1: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'unp1'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NECROPOLIS_2}
  */
-declare const NECROPOLIS_2: number;
+declare const NECROPOLIS_2: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'unp2'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NECROPOLIS_3}
  */
-declare const NECROPOLIS_3: number;
+declare const NECROPOLIS_3: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'usap'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SAC_PIT}
  */
-declare const SAC_PIT: number;
+declare const SAC_PIT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'usep'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CRYPT}
  */
-declare const CRYPT: number;
+declare const CRYPT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'uslh'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SLAUGHTERHOUSE}
  */
-declare const SLAUGHTERHOUSE: number;
+declare const SLAUGHTERHOUSE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'utod'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DAMNED_TEMPLE}
  */
-declare const DAMNED_TEMPLE: number;
+declare const DAMNED_TEMPLE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'uzig'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ZIGGURAT_1}
  */
-declare const ZIGGURAT_1: number;
+declare const ZIGGURAT_1: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'uzg1'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ZIGGURAT_2}
  */
-declare const ZIGGURAT_2: number;
+declare const ZIGGURAT_2: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'uzg2'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ZIGGURAT_FROST}
  */
-declare const ZIGGURAT_FROST: number;
+declare const ZIGGURAT_FROST: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ugrv'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/GRAVEYARD}
  */
-declare const GRAVEYARD: number;
+declare const GRAVEYARD: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'utom'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/TOMB_OF_RELICS}
  */
-declare const TOMB_OF_RELICS: number;
+declare const TOMB_OF_RELICS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rume'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_UNHOLY_STR}
  */
-declare const UPG_UNHOLY_STR: number;
+declare const UPG_UNHOLY_STR: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rura'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_CR_ATTACK}
  */
-declare const UPG_CR_ATTACK: number;
+declare const UPG_CR_ATTACK: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ruar'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_UNHOLY_ARMOR}
  */
-declare const UPG_UNHOLY_ARMOR: number;
+declare const UPG_UNHOLY_ARMOR: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ruac'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_CANNIBALIZE}
  */
-declare const UPG_CANNIBALIZE: number;
+declare const UPG_CANNIBALIZE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rugf'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_GHOUL_FRENZY}
  */
-declare const UPG_GHOUL_FRENZY: number;
+declare const UPG_GHOUL_FRENZY: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ruwb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_FIEND_WEB}
  */
-declare const UPG_FIEND_WEB: number;
+declare const UPG_FIEND_WEB: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ruab'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ABOM}
  */
-declare const UPG_ABOM: number;
+declare const UPG_ABOM: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rusf'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_STONE_FORM}
  */
-declare const UPG_STONE_FORM: number;
+declare const UPG_STONE_FORM: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rune'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_NECROS}
  */
-declare const UPG_NECROS: number;
+declare const UPG_NECROS: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ruba'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_BANSHEE}
  */
-declare const UPG_BANSHEE: number;
+declare const UPG_BANSHEE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rump'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_MEAT_WAGON}
  */
-declare const UPG_MEAT_WAGON: number;
+declare const UPG_MEAT_WAGON: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rufb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_WYRM_BREATH}
  */
-declare const UPG_WYRM_BREATH: number;
+declare const UPG_WYRM_BREATH: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rusl'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_SKEL_LIFE}
  */
-declare const UPG_SKEL_LIFE: number;
+declare const UPG_SKEL_LIFE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rusm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_SKEL_MASTERY}
  */
-declare const UPG_SKEL_MASTERY: number;
+declare const UPG_SKEL_MASTERY: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ruex'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_EXHUME}
  */
-declare const UPG_EXHUME: number;
+declare const UPG_EXHUME: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rurs'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_SACRIFICE}
  */
-declare const UPG_SACRIFICE: number;
+declare const UPG_SACRIFICE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ruax'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ABOM_EXPL}
  */
-declare const UPG_ABOM_EXPL: number;
+declare const UPG_ABOM_EXPL: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rucr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_CR_ARMOR}
  */
-declare const UPG_CR_ARMOR: number;
+declare const UPG_CR_ARMOR: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rupc'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_PLAGUE}
  */
-declare const UPG_PLAGUE: number;
+declare const UPG_PLAGUE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rusp'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_BLK_SPHINX}
  */
-declare const UPG_BLK_SPHINX: number;
+declare const UPG_BLK_SPHINX: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rubu'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_BURROWING}
  */
-declare const UPG_BURROWING: number;
+declare const UPG_BURROWING: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Edem'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DEMON_HUNTER}
  */
-declare const DEMON_HUNTER: number;
+declare const DEMON_HUNTER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Edmm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DEMON_HUNTER_M}
  */
-declare const DEMON_HUNTER_M: number;
+declare const DEMON_HUNTER_M: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ekee'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/KEEPER}
  */
-declare const KEEPER: number;
+declare const KEEPER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Emoo'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MOON_CHICK}
  */
-declare const MOON_CHICK: number;
+declare const MOON_CHICK: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `MOON_CHICK`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MOON_BABE}
  */
-declare const MOON_BABE: number;
+declare const MOON_BABE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `MOON_CHICK`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MOON_HONEY}
  */
-declare const MOON_HONEY: number;
+declare const MOON_HONEY: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ewar'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/WARDEN}
  */
-declare const WARDEN: number;
+declare const WARDEN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Hvwd'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SYLVANUS}
  */
-declare const SYLVANUS: number;
+declare const SYLVANUS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ecen'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CENARIUS}
  */
-declare const CENARIUS: number;
+declare const CENARIUS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Eevi'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ILLIDAN}
  */
-declare const ILLIDAN: number;
+declare const ILLIDAN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Eevm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ILLIDAN_DEMON}
  */
-declare const ILLIDAN_DEMON: number;
+declare const ILLIDAN_DEMON: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Ewrd'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MAIEV}
  */
-declare const MAIEV: number;
+declare const MAIEV: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEfn'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FORCE_NATURE}
  */
-declare const FORCE_NATURE: number;
+declare const FORCE_NATURE: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEer'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ENT_ROOTS}
  */
-declare const ENT_ROOTS: number;
+declare const ENT_ROOTS: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEah'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/THORNS_AURA}
  */
-declare const THORNS_AURA: number;
+declare const THORNS_AURA: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEtq'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/TRANQUILITY}
  */
-declare const TRANQUILITY: number;
+declare const TRANQUILITY: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEev'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/EVASION}
  */
-declare const EVASION: number;
+declare const EVASION: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEim'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/IMMOLATION}
  */
-declare const IMMOLATION: number;
+declare const IMMOLATION: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEmb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MANA_BURN}
  */
-declare const MANA_BURN: number;
+declare const MANA_BURN: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEme'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/METAMORPHOSIS}
  */
-declare const METAMORPHOSIS: number;
+declare const METAMORPHOSIS: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AHfa'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SEARING_ARROWS}
  */
-declare const SEARING_ARROWS: number;
+declare const SEARING_ARROWS: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEst'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SCOUT}
  */
-declare const SCOUT: number;
+declare const SCOUT: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEsf'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/STARFALL}
  */
-declare const STARFALL: number;
+declare const STARFALL: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEar'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/TRUESHOT}
  */
-declare const TRUESHOT: number;
+declare const TRUESHOT: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEbl'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BLINK}
  */
-declare const BLINK: number;
+declare const BLINK: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEfk'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FAN_KNIVES}
  */
-declare const FAN_KNIVES: number;
+declare const FAN_KNIVES: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEsh'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SHADOW_TOUCH}
  */
-declare const SHADOW_TOUCH: number;
+declare const SHADOW_TOUCH: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'AEsv'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/VENGEANCE}
  */
-declare const VENGEANCE: number;
+declare const VENGEANCE: Rawcode<"ability">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ewsp'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/WISP}
  */
-declare const WISP: number;
+declare const WISP: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'earc'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ARCHER}
  */
-declare const ARCHER: number;
+declare const ARCHER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'edot'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DRUID_TALON}
  */
-declare const DRUID_TALON: number;
+declare const DRUID_TALON: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'edtm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DRUID_TALON_M}
  */
-declare const DRUID_TALON_M: number;
+declare const DRUID_TALON_M: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ebal'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BALLISTA}
  */
-declare const BALLISTA: number;
+declare const BALLISTA: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'edoc'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DRUID_CLAW}
  */
-declare const DRUID_CLAW: number;
+declare const DRUID_CLAW: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'edcm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DRUID_CLAW_M}
  */
-declare const DRUID_CLAW_M: number;
+declare const DRUID_CLAW_M: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'edry'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DRYAD}
  */
-declare const DRYAD: number;
+declare const DRYAD: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ehip'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HIPPO}
  */
-declare const HIPPO: number;
+declare const HIPPO: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ehpr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HIPPO_RIDER}
  */
-declare const HIPPO_RIDER: number;
+declare const HIPPO_RIDER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'esen'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HUNTRESS}
  */
-declare const HUNTRESS: number;
+declare const HUNTRESS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'echm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CHIMAERA}
  */
-declare const CHIMAERA: number;
+declare const CHIMAERA: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'efon'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ENT}
  */
-declare const ENT: number;
+declare const ENT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'emtg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MOUNTAIN_GIANT}
  */
-declare const MOUNTAIN_GIANT: number;
+declare const MOUNTAIN_GIANT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'efdr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FAERIE_DRAGON}
  */
-declare const FAERIE_DRAGON: number;
+declare const FAERIE_DRAGON: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nhea'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HIGH_ARCHER}
  */
-declare const HIGH_ARCHER: number;
+declare const HIGH_ARCHER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hcth'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HIGH_FOOTMAN}
  */
-declare const HIGH_FOOTMAN: number;
+declare const HIGH_FOOTMAN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `HIGH_FOOTMAN`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HIGH_FOOTMEN}
  */
-declare const HIGH_FOOTMEN: number;
+declare const HIGH_FOOTMEN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'hhes'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HIGH_SWORDMAN}
  */
-declare const HIGH_SWORDMAN: number;
+declare const HIGH_SWORDMAN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nws1'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DRAGON_HAWK}
  */
-declare const DRAGON_HAWK: number;
+declare const DRAGON_HAWK: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nenc'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CORRUPT_TREANT}
  */
-declare const CORRUPT_TREANT: number;
+declare const CORRUPT_TREANT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nenp'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/POISON_TREANT}
  */
-declare const POISON_TREANT: number;
+declare const POISON_TREANT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nepl'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/PLAGUE_TREANT}
  */
-declare const PLAGUE_TREANT: number;
+declare const PLAGUE_TREANT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'eshd'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SHANDRIS}
  */
-declare const SHANDRIS: number;
+declare const SHANDRIS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'eaoe'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ANCIENT_LORE}
  */
-declare const ANCIENT_LORE: number;
+declare const ANCIENT_LORE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'eaom'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ANCIENT_WAR}
  */
-declare const ANCIENT_WAR: number;
+declare const ANCIENT_WAR: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'eaow'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ANCIENT_WIND}
  */
-declare const ANCIENT_WIND: number;
+declare const ANCIENT_WIND: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'etoa'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/TREE_AGES}
  */
-declare const TREE_AGES: number;
+declare const TREE_AGES: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'etoe'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/TREE_ETERNITY}
  */
-declare const TREE_ETERNITY: number;
+declare const TREE_ETERNITY: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'etol'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/TREE_LIFE}
  */
-declare const TREE_LIFE: number;
+declare const TREE_LIFE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'etrp'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ANCIENT_PROTECT}
  */
-declare const ANCIENT_PROTECT: number;
+declare const ANCIENT_PROTECT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'eate'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ELF_ALTAR}
  */
-declare const ELF_ALTAR: number;
+declare const ELF_ALTAR: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'edol'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/BEAR_DEN}
  */
-declare const BEAR_DEN: number;
+declare const BEAR_DEN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'edos'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CHIMAERA_ROOST}
  */
-declare const CHIMAERA_ROOST: number;
+declare const CHIMAERA_ROOST: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'edob'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HUNTERS_HALL}
  */
-declare const HUNTERS_HALL: number;
+declare const HUNTERS_HALL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'emow'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/MOON_WELL}
  */
-declare const MOON_WELL: number;
+declare const MOON_WELL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'egol'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ELF_MINE}
  */
-declare const ELF_MINE: number;
+declare const ELF_MINE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'eden'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DEN_OF_WONDERS}
  */
-declare const DEN_OF_WONDERS: number;
+declare const DEN_OF_WONDERS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nefm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ELF_FARM}
  */
-declare const ELF_FARM: number;
+declare const ELF_FARM: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'negt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ELF_GUARD_TOWER}
  */
-declare const ELF_GUARD_TOWER: number;
+declare const ELF_GUARD_TOWER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'negm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HIGH_SKY}
  */
-declare const HIGH_SKY: number;
+declare const HIGH_SKY: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'negf'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HIGH_EARTH}
  */
-declare const HIGH_EARTH: number;
+declare const HIGH_EARTH: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'negt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HIGH_TOWER}
  */
-declare const HIGH_TOWER: number;
+declare const HIGH_TOWER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nheb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/ELF_HIGH_BARRACKS}
  */
-declare const ELF_HIGH_BARRACKS: number;
+declare const ELF_HIGH_BARRACKS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nctl'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CORRUPT_LIFE}
  */
-declare const CORRUPT_LIFE: number;
+declare const CORRUPT_LIFE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ncta'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CORRUPT_AGES}
  */
-declare const CORRUPT_AGES: number;
+declare const CORRUPT_AGES: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ncte'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CORRUPT_ETERNITY}
  */
-declare const CORRUPT_ETERNITY: number;
+declare const CORRUPT_ETERNITY: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ncmw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CORRUPT_WELL}
  */
-declare const CORRUPT_WELL: number;
+declare const CORRUPT_WELL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ncap'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CORRUPT_PROTECTOR}
  */
-declare const CORRUPT_PROTECTOR: number;
+declare const CORRUPT_PROTECTOR: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ncaw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/CORRUPT_WAR}
  */
-declare const CORRUPT_WAR: number;
+declare const CORRUPT_WAR: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Resm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_STR_MOON}
  */
-declare const UPG_STR_MOON: number;
+declare const UPG_STR_MOON: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Resw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_STR_WILD}
  */
-declare const UPG_STR_WILD: number;
+declare const UPG_STR_WILD: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rema'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_MOON_ARMOR}
  */
-declare const UPG_MOON_ARMOR: number;
+declare const UPG_MOON_ARMOR: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rerh'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_HIDES}
  */
-declare const UPG_HIDES: number;
+declare const UPG_HIDES: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Reuv'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ULTRAVISION}
  */
-declare const UPG_ULTRAVISION: number;
+declare const UPG_ULTRAVISION: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Renb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_BLESSING}
  */
-declare const UPG_BLESSING: number;
+declare const UPG_BLESSING: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Resc'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_SCOUT}
  */
-declare const UPG_SCOUT: number;
+declare const UPG_SCOUT: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Remg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_GLAIVE}
  */
-declare const UPG_GLAIVE: number;
+declare const UPG_GLAIVE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Reib'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_BOWS}
  */
-declare const UPG_BOWS: number;
+declare const UPG_BOWS: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Remk'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_MARKSMAN}
  */
-declare const UPG_MARKSMAN: number;
+declare const UPG_MARKSMAN: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Redt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_DRUID_TALON}
  */
-declare const UPG_DRUID_TALON: number;
+declare const UPG_DRUID_TALON: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Redc'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_DRUID_CLAW}
  */
-declare const UPG_DRUID_CLAW: number;
+declare const UPG_DRUID_CLAW: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Resi'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_ABOLISH}
  */
-declare const UPG_ABOLISH: number;
+declare const UPG_ABOLISH: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Recb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_CHIM_ACID}
  */
-declare const UPG_CHIM_ACID: number;
+declare const UPG_CHIM_ACID: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Reht'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_HIPPO_TAME}
  */
-declare const UPG_HIPPO_TAME: number;
+declare const UPG_HIPPO_TAME: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Repd'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_BOLT}
  */
-declare const UPG_BOLT: number;
+declare const UPG_BOLT: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Reeb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_MARK_CLAW}
  */
-declare const UPG_MARK_CLAW: number;
+declare const UPG_MARK_CLAW: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Reec'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_MARK_TALON}
  */
-declare const UPG_MARK_TALON: number;
+declare const UPG_MARK_TALON: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rehs'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_HARD_SKIN}
  */
-declare const UPG_HARD_SKIN: number;
+declare const UPG_HARD_SKIN: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rers'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_RESIST_SKIN}
  */
-declare const UPG_RESIST_SKIN: number;
+declare const UPG_RESIST_SKIN: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rews'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_WELL_SPRING}
  */
-declare const UPG_WELL_SPRING: number;
+declare const UPG_WELL_SPRING: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ndmg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DEMON_GATE}
  */
-declare const DEMON_GATE: number;
+declare const DEMON_GATE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nfel'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FELLHOUND}
  */
-declare const FELLHOUND: number;
+declare const FELLHOUND: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'ninf'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/INFERNAL}
  */
-declare const INFERNAL: number;
+declare const INFERNAL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nbal'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/DOOMGUARD}
  */
-declare const DOOMGUARD: number;
+declare const DOOMGUARD: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nsty'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SATYR}
  */
-declare const SATYR: number;
+declare const SATYR: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nsat'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/TRICKSTER}
  */
-declare const TRICKSTER: number;
+declare const TRICKSTER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nsts'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SHADOWDANCER}
  */
-declare const SHADOWDANCER: number;
+declare const SHADOWDANCER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nstl'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SOULSTEALER}
  */
-declare const SOULSTEALER: number;
+declare const SOULSTEALER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nsth'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/HELLCALLER}
  */
-declare const HELLCALLER: number;
+declare const HELLCALLER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nska'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SKEL_ARCHER}
  */
-declare const SKEL_ARCHER: number;
+declare const SKEL_ARCHER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nskm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SKEL_MARKSMAN}
  */
-declare const SKEL_MARKSMAN: number;
+declare const SKEL_MARKSMAN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nskf'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SKEL_BURNING}
  */
-declare const SKEL_BURNING: number;
+declare const SKEL_BURNING: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nskg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/SKEL_GIANT}
  */
-declare const SKEL_GIANT: number;
+declare const SKEL_GIANT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nfrl'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FURBOLG}
  */
-declare const FURBOLG: number;
+declare const FURBOLG: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nfrb'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FURBOLG_TRACKER}
  */
-declare const FURBOLG_TRACKER: number;
+declare const FURBOLG_TRACKER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nfrs'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FURBOLG_SHAMAN}
  */
-declare const FURBOLG_SHAMAN: number;
+declare const FURBOLG_SHAMAN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nfrg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FURBOLG_CHAMP}
  */
-declare const FURBOLG_CHAMP: number;
+declare const FURBOLG_CHAMP: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nfre'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/FURBOLG_ELDER}
  */
-declare const FURBOLG_ELDER: number;
+declare const FURBOLG_ELDER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Nngs'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_SORCERESS}
  */
-declare const NAGA_SORCERESS: number;
+declare const NAGA_SORCERESS: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Hvsh'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_VASHJ}
  */
-declare const NAGA_VASHJ: number;
+declare const NAGA_VASHJ: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nsnp'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_DRAGON}
  */
-declare const NAGA_DRAGON: number;
+declare const NAGA_DRAGON: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nnsw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_WITCH}
  */
-declare const NAGA_WITCH: number;
+declare const NAGA_WITCH: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nwgs'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_SERPENT}
  */
-declare const NAGA_SERPENT: number;
+declare const NAGA_SERPENT: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nhyc'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_HYDRA}
  */
-declare const NAGA_HYDRA: number;
+declare const NAGA_HYDRA: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nmpe'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_SLAVE}
  */
-declare const NAGA_SLAVE: number;
+declare const NAGA_SLAVE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `NAGA_DRAGON`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_SNAP_DRAGON}
  */
-declare const NAGA_SNAP_DRAGON: number;
+declare const NAGA_SNAP_DRAGON: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `NAGA_SERPENT`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_COUATL}
  */
-declare const NAGA_COUATL: number;
+declare const NAGA_COUATL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `NAGA_WITCH`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_SIREN}
  */
-declare const NAGA_SIREN: number;
+declare const NAGA_SIREN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nmyr'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_MYRMIDON}
  */
-declare const NAGA_MYRMIDON: number;
+declare const NAGA_MYRMIDON: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nnmg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_REAVER}
  */
-declare const NAGA_REAVER: number;
+declare const NAGA_REAVER: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `NAGA_HYDRA`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_TURTLE}
  */
-declare const NAGA_TURTLE: number;
+declare const NAGA_TURTLE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nnrg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_ROYAL}
  */
-declare const NAGA_ROYAL: number;
+declare const NAGA_ROYAL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nntt'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_TEMPLE}
  */
-declare const NAGA_TEMPLE: number;
+declare const NAGA_TEMPLE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nnfm'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_CORAL}
  */
-declare const NAGA_CORAL: number;
+declare const NAGA_CORAL: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nnsa'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_SHRINE}
  */
-declare const NAGA_SHRINE: number;
+declare const NAGA_SHRINE: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nnsg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_SPAWNING}
  */
-declare const NAGA_SPAWNING: number;
+declare const NAGA_SPAWNING: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nntg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_GUARDIAN}
  */
-declare const NAGA_GUARDIAN: number;
+declare const NAGA_GUARDIAN: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'nnad'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/NAGA_ALTAR}
  */
-declare const NAGA_ALTAR: number;
+declare const NAGA_ALTAR: Rawcode<"unit">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rnam'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_NAGA_ARMOR}
  */
-declare const UPG_NAGA_ARMOR: number;
+declare const UPG_NAGA_ARMOR: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rnat'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_NAGA_ATTACK}
  */
-declare const UPG_NAGA_ATTACK: number;
+declare const UPG_NAGA_ATTACK: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rnsi'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_NAGA_ABOLISH}
  */
-declare const UPG_NAGA_ABOLISH: number;
+declare const UPG_NAGA_ABOLISH: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rnsw'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_SIREN}
  */
-declare const UPG_SIREN: number;
+declare const UPG_SIREN: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'Rnen'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/UPG_NAGA_ENSNARE}
  */
-declare const UPG_NAGA_ENSNARE: number;
+declare const UPG_NAGA_ENSNARE: Rawcode<"upgrade">;
 
 /**
  * Jass: constant integer (32-bit)
@@ -3877,52 +3877,52 @@ declare let exp_seen: number;
  * @defaultValue `'hhou'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/racial_farm}
  */
-declare let racial_farm: number;
+declare let racial_farm: Rawcode<"unit">;
 
 /**
  * Jass: integer (32-bit)
  * @defaultValue `'Hamg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/hero_id}
  */
-declare let hero_id: number;
+declare let hero_id: Rawcode<"unit">;
 
 /**
  * Jass: integer (32-bit)
  * @defaultValue `'Hmkg'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/hero_id2}
  */
-declare let hero_id2: number;
+declare let hero_id2: Rawcode<"unit">;
 
 /**
  * Jass: integer (32-bit)
  * @defaultValue `'Hpal'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/hero_id3}
  */
-declare let hero_id3: number;
+declare let hero_id3: Rawcode<"unit">;
 
 /**
  * Jass: integer (32-bit) array
  * @see {@link https://lep.duckdns.org/jassbot/doc/skill}
  */
-declare let skill: Record<number, number>;
+declare let skill: Record<number, Rawcode<"ability">>;
 
 /**
  * Jass: integer (32-bit) array
  * @see {@link https://lep.duckdns.org/jassbot/doc/skills1}
  */
-declare let skills1: Record<number, number>;
+declare let skills1: Record<number, Rawcode<"ability">>;
 
 /**
  * Jass: integer (32-bit) array
  * @see {@link https://lep.duckdns.org/jassbot/doc/skills2}
  */
-declare let skills2: Record<number, number>;
+declare let skills2: Record<number, Rawcode<"ability">>;
 
 /**
  * Jass: integer (32-bit) array
  * @see {@link https://lep.duckdns.org/jassbot/doc/skills3}
  */
-declare let skills3: Record<number, number>;
+declare let skills3: Record<number, Rawcode<"ability">>;
 
 /**
  * Jass: integer (32-bit)
@@ -3947,7 +3947,7 @@ declare let harass_max: Record<number, number>;
  * Jass: integer (32-bit) array
  * @see {@link https://lep.duckdns.org/jassbot/doc/harass_units}
  */
-declare let harass_units: Record<number, number>;
+declare let harass_units: Record<number, Rawcode<"unit">>;
 
 /**
  * Jass: integer (32-bit)
@@ -3966,7 +3966,7 @@ declare let defense_qty: Record<number, number>;
  * Jass: integer (32-bit) array
  * @see {@link https://lep.duckdns.org/jassbot/doc/defense_units}
  */
-declare let defense_units: Record<number, number>;
+declare let defense_units: Record<number, Rawcode<"unit">>;
 
 /**
  * Jass: integer (32-bit)
@@ -3991,7 +3991,7 @@ declare let build_type: Record<number, number>;
  * Jass: integer (32-bit) array
  * @see {@link https://lep.duckdns.org/jassbot/doc/build_item}
  */
-declare let build_item: Record<number, number>;
+declare let build_item: Record<number, Rawcode>;
 
 /**
  * Jass: integer (32-bit) array
@@ -5055,7 +5055,7 @@ declare function UnsummonAll(): void;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/SkillArrays}
  */
-declare function SkillArrays(): number;
+declare function SkillArrays(): Rawcode<"ability">;
 
 /**
  * @param index - integer (32-bit)
@@ -5076,4 +5076,4 @@ declare function AwaitMeleeHeroes(): void;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/PickMeleeHero}
  */
-declare function PickMeleeHero(raceid: race): number;
+declare function PickMeleeHero(raceid: race): Rawcode<"unit">;

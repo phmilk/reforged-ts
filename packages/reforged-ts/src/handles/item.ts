@@ -355,8 +355,7 @@ export class Item extends Widget {
    * the item type's own when no skin was set.
    * @native BlzGetItemSkin
    */
-  // eslint-disable-next-line @typescript-eslint/related-getter-setter-pairs -- cleared when the getter returns the Rawcode<"item"> BlzGetItemSkin will return (#490, #491)
-  public get skin(): number {
+  public get skin() {
     return BlzGetItemSkin(this.handle);
   }
 
@@ -681,7 +680,7 @@ export class Item extends Widget {
     level: number,
     equipmentType: EquipmentType,
     tag: ItemTag,
-  ): number {
+  ): Rawcode<"item"> {
     return ChooseRandomItemExWithFilter(
       type,
       level,

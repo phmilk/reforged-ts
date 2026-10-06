@@ -781,8 +781,7 @@ export class Unit extends Widget {
    * @returns The skin's rawcode, such as the Knight's, `FourCC("hkni")`.
    * @native BlzGetUnitSkin
    */
-  // eslint-disable-next-line @typescript-eslint/related-getter-setter-pairs -- cleared when the getter returns the Rawcode<"unit"> BlzGetUnitSkin will return (#490, #491)
-  public get skin(): number {
+  public get skin() {
     return BlzGetUnitSkin(this.handle);
   }
 

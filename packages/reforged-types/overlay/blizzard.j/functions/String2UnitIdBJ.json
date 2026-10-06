@@ -2,7 +2,8 @@
   "name": "String2UnitIdBJ",
   "source": "blizzard.j",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "kind": "unit"
   },
   "params": [
     {

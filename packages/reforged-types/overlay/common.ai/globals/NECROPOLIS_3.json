@@ -2,5 +2,6 @@
   "name": "NECROPOLIS_3",
   "source": "common.ai",
   "nullable": false,
+  "kind": "unit",
   "origin": "war3-types-strict"
 }

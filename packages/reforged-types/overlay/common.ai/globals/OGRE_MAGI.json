@@ -2,5 +2,6 @@
   "name": "OGRE_MAGI",
   "source": "common.ai",
   "nullable": false,
+  "kind": "unit",
   "origin": "war3-types-strict"
 }

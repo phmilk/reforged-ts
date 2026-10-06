@@ -313,7 +313,10 @@ const FIELDS = {
   [K in keyof Omit<FunctionEntry, "file">]: Reader<FunctionEntry[K]>;
 };
 
-/** A global entry's fields: the function entry's readers, and `nullable`. */
+/**
+ * A global entry's fields: the function entry's readers, `nullable` and
+ * `kind`.
+ */
 const GLOBAL_FIELDS = {
   name: FIELDS.name,
   source: FIELDS.source,
@@ -321,6 +324,7 @@ const GLOBAL_FIELDS = {
     typeof value === "boolean"
       ? value
       : new Problem(`nullable must be a boolean, found ${show(value)}`),
+  kind: (value) => (value === undefined ? value : objectKind("kind", value)),
   deprecated: FIELDS.deprecated,
   notes: FIELDS.notes,
   since: FIELDS.since,

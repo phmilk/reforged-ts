@@ -100,7 +100,7 @@ describe("generate: the four global forms", () => {
     expect(result.diagnostics).toEqual([]);
   });
 
-  it("types constants with the primitive or handle type, never a literal", async () => {
+  it("types constants with the primitive, handle or Rawcode type, never a literal", async () => {
     const commonJ = [
       "type race extends handle",
       "globals",
@@ -115,14 +115,19 @@ describe("generate: the four global forms", () => {
     const result = await generateOk(
       { "common.j": commonJ },
       ["TRUE_FLAG", "LABEL", "RAW", "PI", "RACE_HUMAN"].map((name) =>
-        globalEntry("common.j", name),
+        globalEntry(
+          "common.j",
+          name,
+          false,
+          name === "RAW" ? { kind: "unit" } : {},
+        ),
       ),
     );
 
     const text = generatedFile(result, "3.0.0/common.j.d.ts");
     expect(text).toContain("declare const TRUE_FLAG: boolean;");
     expect(text).toContain("declare const LABEL: string;");
-    expect(text).toContain("declare const RAW: number;");
+    expect(text).toContain('declare const RAW: Rawcode<"unit">;');
     expect(text).toContain("declare const PI: number;");
     expect(text).toContain("declare const RACE_HUMAN: race;");
     expect(text).toContain(' * @defaultValue `"a // not a comment"`\n');

@@ -2367,21 +2367,21 @@ declare const bj_CORPSETYPE_BONE: number;
  * @defaultValue `'DTep'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/bj_ELEVATOR_BLOCKER_CODE}
  */
-declare const bj_ELEVATOR_BLOCKER_CODE: number;
+declare const bj_ELEVATOR_BLOCKER_CODE: Rawcode<"destructable">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'DTrf'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/bj_ELEVATOR_CODE01}
  */
-declare const bj_ELEVATOR_CODE01: number;
+declare const bj_ELEVATOR_CODE01: Rawcode<"destructable">;
 
 /**
  * Jass: constant integer (32-bit)
  * @defaultValue `'DTrx'`
  * @see {@link https://lep.duckdns.org/jassbot/doc/bj_ELEVATOR_CODE02}
  */
-declare const bj_ELEVATOR_CODE02: number;
+declare const bj_ELEVATOR_CODE02: Rawcode<"destructable">;
 
 /**
  * Jass: constant integer (32-bit)
@@ -3322,7 +3322,7 @@ declare let bj_randDistCount: number;
  * Jass: integer (32-bit) array
  * @see {@link https://lep.duckdns.org/jassbot/doc/bj_randDistID}
  */
-declare let bj_randDistID: Record<number, number>;
+declare let bj_randDistID: Record<number, Rawcode>;
 
 /**
  * Jass: integer (32-bit) array
@@ -6193,7 +6193,7 @@ declare function SetItemPositionLoc(whichItem: item, loc: location): void;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/GetLearnedSkillBJ}
  */
-declare function GetLearnedSkillBJ(): number;
+declare function GetLearnedSkillBJ(): Rawcode<"ability">;
 
 /**
  * @param flag - boolean
@@ -6571,7 +6571,7 @@ declare function IsItemHiddenBJ(whichItem: item): boolean;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/ChooseRandomItemBJ}
  */
-declare function ChooseRandomItemBJ(level: number): number;
+declare function ChooseRandomItemBJ(level: number): Rawcode<"item">;
 
 /**
  * @param level - integer (32-bit)
@@ -6579,7 +6579,7 @@ declare function ChooseRandomItemBJ(level: number): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/ChooseRandomItemExBJ}
  */
-declare function ChooseRandomItemExBJ(level: number, whichType: itemtype): number;
+declare function ChooseRandomItemExBJ(level: number, whichType: itemtype): Rawcode<"item">;
 
 /**
  * @param level - integer (32-bit)
@@ -6589,20 +6589,20 @@ declare function ChooseRandomItemExBJ(level: number, whichType: itemtype): numbe
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/ChooseRandomItemExWithFilterBJ}
  */
-declare function ChooseRandomItemExWithFilterBJ(level: number, whichType: itemtype, whichEquipmentType: equipmentType, whichTag: itemTag): number;
+declare function ChooseRandomItemExWithFilterBJ(level: number, whichType: itemtype, whichEquipmentType: equipmentType, whichTag: itemTag): Rawcode<"item">;
 
 /**
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/ChooseRandomNPBuildingBJ}
  */
-declare function ChooseRandomNPBuildingBJ(): number;
+declare function ChooseRandomNPBuildingBJ(): Rawcode<"unit">;
 
 /**
  * @param level - integer (32-bit)
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/ChooseRandomCreepBJ}
  */
-declare function ChooseRandomCreepBJ(level: number): number;
+declare function ChooseRandomCreepBJ(level: number): Rawcode<"unit">;
 
 /**
  * @param r - rect
@@ -6661,7 +6661,7 @@ declare function UnitId2OrderIdBJ(unitId: Rawcode<"unit">): number;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/String2UnitIdBJ}
  */
-declare function String2UnitIdBJ(unitIdString: string): number;
+declare function String2UnitIdBJ(unitIdString: string): Rawcode<"unit">;
 
 /**
  * @param unitId - integer (32-bit)
@@ -11774,7 +11774,7 @@ declare function RandomDistAddItem(inID: Rawcode, inChance: number): void;
  * @returns integer (32-bit)
  * @see {@link https://lep.duckdns.org/jassbot/doc/RandomDistChoose}
  */
-declare function RandomDistChoose(): number;
+declare function RandomDistChoose(): Rawcode;
 
 /**
  * @param inUnit - unit

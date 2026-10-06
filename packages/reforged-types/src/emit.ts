@@ -81,11 +81,14 @@ function typeDeclaration({ name, parent }: TypeDeclaration): string {
  * `constant` globals are `declare const`, the others `declare let`. An array
  * is `Record<number, T>`: Jass arrays index from zero, unlike the one-based
  * arrays typescript-to-lua emits. A nullable global is `T | undefined`; for
- * an array, its elements are.
+ * an array, its elements are. A Rawcode's kind replaces the mapped Jass
+ * type, its elements' for an array.
  */
 function globalDeclaration(global: ResolvedGlobal): string[] {
   const keyword = global.constant ? "const" : "let";
-  const type = tsType(global.type);
+  const type = global.rawcode
+    ? rawcodeType(global.rawcode)
+    : tsType(global.type);
   const value = global.overlay.nullable
     ? `${unionMember(type)} | undefined`
     : type;

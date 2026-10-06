@@ -2,5 +2,6 @@
   "name": "UPG_NAGA_ENSNARE",
   "source": "common.ai",
   "nullable": false,
+  "kind": "upgrade",
   "origin": "war3-types-strict"
 }

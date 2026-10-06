@@ -2,7 +2,8 @@
   "name": "GetResearched",
   "source": "common.j",
   "returns": {
-    "nullable": false
+    "nullable": false,
+    "kind": "upgrade"
   },
   "params": [],
   "origin": "war3-types-strict"

@@ -2,5 +2,6 @@
   "name": "SIPHON_MANA",
   "source": "common.ai",
   "nullable": false,
+  "kind": "ability",
   "origin": "war3-types-strict"
 }
