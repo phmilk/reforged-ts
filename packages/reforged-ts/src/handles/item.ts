@@ -28,8 +28,8 @@ export class Item extends Widget {
    * `FourCC("ratf")`.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
-   * @param skinId - The skin's rawcode, such as Claws of Attack +8's,
-   * `FourCC("rat9")`; the item type's own model when left out.
+   * @param skinId - The skin's rawcode, such as Boots of Speed's,
+   * `FourCC("bspd")`; the item type's own model when left out.
    * @returns The new item.
    * @throws When the game returns no handle, for example an unknown rawcode:
    * `reforged-ts: failed to create Item (<rawcode>)`, at the calling line.
@@ -351,7 +351,7 @@ export class Item extends Widget {
 
   /**
    * Gets the rawcode of the skin the item shows.
-   * @returns The skin's rawcode, such as Claws of Attack +8's, `FourCC("rat9")`;
+   * @returns The skin's rawcode, such as Boots of Speed's, `FourCC("bspd")`;
    * the item type's own when no skin was set.
    * @native BlzGetItemSkin
    */
@@ -361,7 +361,7 @@ export class Item extends Widget {
 
   /**
    * The rawcode of the skin the item shows, the model of another item type,
-   * such as Claws of Attack +8's, `FourCC("rat9")`.
+   * such as Boots of Speed's, `FourCC("bspd")`.
    * @native BlzSetItemSkin
    */
   public set skin(skinId: Rawcode<"item">) {

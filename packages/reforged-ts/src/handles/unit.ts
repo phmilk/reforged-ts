@@ -2146,10 +2146,10 @@ export class Unit extends Widget {
   }
 
   /**
-   * Orders this neutral structure (a shop, a tavern) to sell or train `unit` for
-   * `forPlayer`.
+   * Orders this neutral structure (a shop, a tavern) to sell or train
+   * `bought` for `forPlayer`.
    * @param forPlayer - The player who buys.
-   * @param unit - The order name of what is bought, or its rawcode, such as
+   * @param bought - The order name of what is bought, or its rawcode, such as
    * the Gnoll's, `FourCC("ngno")`, bought from a mercenary camp.
    * @returns True when the structure took the order.
    * @native IssueNeutralImmediateOrder
@@ -2157,17 +2157,17 @@ export class Unit extends Widget {
    */
   public issueNeutralImmediateOrder(
     forPlayer: MapPlayer,
-    unit: string | Rawcode,
+    bought: string | Rawcode,
   ) {
-    return typeof unit === "string"
-      ? IssueNeutralImmediateOrder(forPlayer.handle, this.handle, unit)
-      : IssueNeutralImmediateOrderById(forPlayer.handle, this.handle, unit);
+    return typeof bought === "string"
+      ? IssueNeutralImmediateOrder(forPlayer.handle, this.handle, bought)
+      : IssueNeutralImmediateOrderById(forPlayer.handle, this.handle, bought);
   }
 
   /**
-   * Orders this neutral structure to use `unit` for `forPlayer` at a point.
+   * Orders this neutral structure to use `order` for `forPlayer` at a point.
    * @param forPlayer - The player the structure acts for.
-   * @param unit - The order's name, or its id.
+   * @param order - The order's name, or its id.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @returns True when the structure took the order.
@@ -2176,19 +2176,19 @@ export class Unit extends Widget {
    */
   public issueNeutralPointOrder(
     forPlayer: MapPlayer,
-    unit: string | number,
+    order: string | number,
     x: number,
     y: number,
   ) {
-    return typeof unit === "string"
-      ? IssueNeutralPointOrder(forPlayer.handle, this.handle, unit, x, y)
-      : IssueNeutralPointOrderById(forPlayer.handle, this.handle, unit, x, y);
+    return typeof order === "string"
+      ? IssueNeutralPointOrder(forPlayer.handle, this.handle, order, x, y)
+      : IssueNeutralPointOrderById(forPlayer.handle, this.handle, order, x, y);
   }
 
   /**
-   * Orders this neutral structure to use `unit` for `forPlayer` on `target`.
+   * Orders this neutral structure to use `order` for `forPlayer` on `target`.
    * @param forPlayer - The player the structure acts for.
-   * @param unit - The order's name, or its id.
+   * @param order - The order's name, or its id.
    * @param target - The order's target.
    * @returns True when the structure took the order.
    * @native IssueNeutralTargetOrder
@@ -2196,20 +2196,20 @@ export class Unit extends Widget {
    */
   public issueNeutralTargetOrder(
     forPlayer: MapPlayer,
-    unit: string | number,
+    order: string | number,
     target: Widget,
   ) {
-    return typeof unit === "string"
+    return typeof order === "string"
       ? IssueNeutralTargetOrder(
           forPlayer.handle,
           this.handle,
-          unit,
+          order,
           target.handle,
         )
       : IssueNeutralTargetOrderById(
           forPlayer.handle,
           this.handle,
-          unit,
+          order,
           target.handle,
         );
   }
@@ -2419,27 +2419,27 @@ export class Unit extends Widget {
   }
 
   /**
-   * Queues an order on this neutral structure to sell or train `unitId` for
+   * Queues an order on this neutral structure to sell or train `bought` for
    * `forPlayer`, after its current orders.
    * @param forPlayer - The player who buys.
-   * @param unitId - The rawcode of what is bought, such as the Gnoll's,
+   * @param bought - The rawcode of what is bought, such as the Gnoll's,
    * `FourCC("ngno")`, bought from a mercenary camp.
    * @returns True when the structure took the order.
    * @native BlzQueueNeutralImmediateOrderById
    */
-  public queueNeutralImmediateOrder(forPlayer: MapPlayer, unitId: Rawcode) {
+  public queueNeutralImmediateOrder(forPlayer: MapPlayer, bought: Rawcode) {
     return BlzQueueNeutralImmediateOrderById(
       forPlayer.handle,
       this.handle,
-      unitId,
+      bought,
     );
   }
 
   /**
-   * Queues an order on this neutral structure to use `unitId` for
+   * Queues an order on this neutral structure to use `orderId` for
    * `forPlayer` at a point, after its current orders.
    * @param forPlayer - The player the structure acts for.
-   * @param unitId - The order's id.
+   * @param orderId - The order's id.
    * @param x - The x-coordinate, in world units.
    * @param y - The y-coordinate, in world units.
    * @returns True when the structure took the order.
@@ -2447,37 +2447,37 @@ export class Unit extends Widget {
    */
   public queueNeutralPointOrder(
     forPlayer: MapPlayer,
-    unitId: number,
+    orderId: number,
     x: number,
     y: number,
   ) {
     return BlzQueueNeutralPointOrderById(
       forPlayer.handle,
       this.handle,
-      unitId,
+      orderId,
       x,
       y,
     );
   }
 
   /**
-   * Queues an order on this neutral structure to use `unitId` for
+   * Queues an order on this neutral structure to use `orderId` for
    * `forPlayer` on `target`, after its current orders.
    * @param forPlayer - The player the structure acts for.
-   * @param unitId - The order's id.
+   * @param orderId - The order's id.
    * @param target - The order's target.
    * @returns True when the structure took the order.
    * @native BlzQueueNeutralTargetOrderById
    */
   public queueNeutralTargetOrder(
     forPlayer: MapPlayer,
-    unitId: number,
+    orderId: number,
     target: Widget,
   ) {
     return BlzQueueNeutralTargetOrderById(
       forPlayer.handle,
       this.handle,
-      unitId,
+      orderId,
       target.handle,
     );
   }

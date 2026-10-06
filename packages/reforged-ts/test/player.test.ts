@@ -37,6 +37,32 @@ export function techRawcodeKinds(player: MapPlayer, count: number): void {
   player.getTechCount(count, true);
   // @ts-expect-error: an upgrade's Rawcode is not an ability's.
   player.setAbilityAvailable(ironForged, false);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.setAbilityAvailable(count, false);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.setTechResearched(count, 1);
+  // @ts-expect-error: an item's Rawcode is neither a unit's nor an upgrade's.
+  player.getTechCount(rationType, true);
+  // @ts-expect-error: an item's Rawcode is neither a unit's nor an upgrade's.
+  player.addTechResearched(rationType, 1);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.addTechResearched(count, 1);
+  // @ts-expect-error: an item's Rawcode is neither a unit's nor an upgrade's.
+  player.decTechResearched(rationType, 1);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.decTechResearched(count, 1);
+  // @ts-expect-error: an item's Rawcode is neither a unit's nor an upgrade's.
+  player.getTechMaxAllowed(rationType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.getTechMaxAllowed(count);
+  // @ts-expect-error: an item's Rawcode is neither a unit's nor an upgrade's.
+  player.getTechResearched(rationType, true);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.getTechResearched(count, true);
+  // @ts-expect-error: an item's Rawcode is neither a unit's nor an upgrade's.
+  player.setTechMaxAllowed(rationType, 12);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  player.setTechMaxAllowed(count, 12);
 }
 
 /** A Map project's own player model, extending the library's Wrapper. */
