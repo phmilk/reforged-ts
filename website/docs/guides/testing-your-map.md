@@ -68,6 +68,7 @@ describe("the score", () => {
     const trigger = deaths[0]?.[0] as trigger;
     const owner = MapPlayer.fromIndex(0);
     if (owner === undefined) throw new Error("no player in slot 0");
+    // A Footman, `FourCC("hfoo")`, kills a Peasant, `FourCC("hpea")`.
     const killer = Unit.create(owner, FourCC("hfoo"), 0, 0);
     const victim = Unit.create(owner, FourCC("hpea"), 0, 0);
 

@@ -16,6 +16,7 @@ Init.onGameStart(() => {
   if (owner === undefined) {
     return;
   }
+  // A Footman, `FourCC("hfoo")`, at the centre of the map.
   const footman = Unit.create(owner, FourCC("hfoo"), 0, 0);
   footman.moveSpeed = 400;
   footman.issueOrderAt("move", 512, 512);
