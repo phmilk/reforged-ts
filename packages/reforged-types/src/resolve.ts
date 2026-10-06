@@ -11,7 +11,7 @@
  * (`rawcodes.ts`).
  */
 import { patchList } from "./build.js";
-import type { Diagnostic } from "./diagnostics.js";
+import type { Diagnostic, DiagnosticKind } from "./diagnostics.js";
 import {
   NULLABILITY_FAMILIES,
   type BaseEntry,
@@ -37,8 +37,9 @@ import {
 import {
   overlayKind,
   parameterKind,
+  parameterLooksLikeRawcode,
   rawcodeGlobals,
-  returnKind,
+  returnLooksLikeRawcode,
   type RawcodeKind,
 } from "./rawcodes.js";
 
@@ -92,7 +93,7 @@ export function resolve(
     "handle",
     ...declarations.filter((d) => d.kind === "type").map((d) => d.name),
   ]);
-  const looksLikeRawcode = rawcodeGlobals(
+  const rawcodeGlobalNames = rawcodeGlobals(
     declarations.filter((d) => d.kind === "global"),
   );
 
@@ -106,9 +107,9 @@ export function resolve(
     if (declaration.kind === "global") {
       const entry = overlay.globals.get(key);
       if (entry) {
-        const kind = classifyGlobal(declaration, entry, looksLikeRawcode);
-        if ("severity" in kind) diagnostics.push(kind);
-        else resolved.push({ ...declaration, overlay: entry, ...kind });
+        const rawcode = classifyGlobal(declaration, entry, rawcodeGlobalNames);
+        if ("severity" in rawcode) diagnostics.push(rawcode);
+        else resolved.push({ ...declaration, overlay: entry, ...rawcode });
       } else if (!overlay.rejected.has(expectedPath(declaration))) {
         diagnostics.push(missing(declaration));
       }
@@ -128,7 +129,7 @@ export function resolve(
     }
     const familyProblem = checkFamily(declaration, entry, handleTypes);
     if (familyProblem) {
-      diagnostics.push(familyError(entry, familyProblem));
+      diagnostics.push(entryError("nullability-family", entry, familyProblem));
       continue;
     }
     const rawcodes = classify(declaration, entry);
@@ -209,11 +210,19 @@ function checkFamily(
 }
 
 /**
+ * The `type` override that marks a parameter the generator takes for a
+ * Rawcode as not one, on purpose: an order id the table would take for a
+ * unit's Rawcode. Any other `type` text there is refused, so that a `type`
+ * never silences the `unclassified-rawcode` check; a Rawcode takes `kind`.
+ */
+const NOT_A_RAWCODE_TYPE = "number";
+
+/**
  * The Object kinds of a function's Rawcodes, or the checklist lines of what
- * stops it: an Overlay `kind` on an item that is not an `integer`, and a
- * parameter that looks like a Rawcode and that nothing classifies. An
- * Overlay `type` override classifies its parameter as what it says, such
- * as `number` for an order id the table would take for a Rawcode.
+ * stops it: an Overlay `kind` on an item that is not an `integer`, a `type`
+ * other than `number` on a parameter that looks like a Rawcode, and a
+ * parameter or return that looks like a Rawcode and that nothing
+ * classifies.
  */
 function classify(
   fn: FunctionDeclaration,
@@ -222,35 +231,60 @@ function classify(
   const problems: Diagnostic[] = [];
   const params = fn.params.map((param, index) => {
     const { kind, type } = entry.params[index];
-    if (type !== undefined) return undefined;
+    const field = `params[${String(index)}]`;
+    if (type !== undefined) {
+      if (parameterLooksLikeRawcode(param) && type !== NOT_A_RAWCODE_TYPE) {
+        problems.push(
+          entryError(
+            "overlay-invalid",
+            entry,
+            `${field}.type on ${fn.name} parameter ${param.name}, which looks like a Rawcode, ` +
+              `is ${JSON.stringify(type)}; set ${field}.kind to an Object kind or "any" instead, ` +
+              `or type to "${NOT_A_RAWCODE_TYPE}" for an integer that is not a Rawcode`,
+          ),
+        );
+      }
+      return undefined;
+    }
     if (kind !== undefined && param.type !== "integer") {
       problems.push(
-        kindError(
+        entryError(
+          "overlay-invalid",
           entry,
-          `params[${String(index)}].kind on ${fn.name} parameter ${param.name}, ` +
+          `${field}.kind on ${fn.name} parameter ${param.name}, ` +
             `which is ${param.type}, not integer; remove it`,
         ),
       );
       return undefined;
     }
     const classified = parameterKind(param, kind);
-    if (classified !== "unclassified") return classified;
-    problems.push(unclassified(entry, fn, index));
-    return undefined;
+    if (classified === undefined && parameterLooksLikeRawcode(param)) {
+      problems.push(
+        entryError(
+          "unclassified-rawcode",
+          entry,
+          `${fn.name} parameter ${param.name} (${param.type}) looks like a Rawcode ` +
+            `but has no Object kind; set ${field}.kind to an Object kind or "any", ` +
+            `or add ${param.name} to the parameter-name table`,
+        ),
+      );
+    }
+    return classified;
   });
   const { kind } = entry.returns;
   if (kind !== undefined && fn.returns !== "integer") {
     problems.push(
-      kindError(
+      entryError(
+        "overlay-invalid",
         entry,
         `returns.kind on ${fn.name}, which returns ${fn.returns}, not integer; remove it`,
       ),
     );
   }
-  const returns = returnKind(fn, kind);
-  if (returns === "unclassified") {
+  if (kind === undefined && returnLooksLikeRawcode(fn)) {
     problems.push(
-      unclassifiedItem(
+      entryError(
+        "unclassified-rawcode",
         entry,
         `${fn.name} returns an integer that looks like a Rawcode but has no Object kind; ` +
           `set returns.kind to an Object kind or "any", ` +
@@ -259,32 +293,34 @@ function classify(
     );
   }
   if (problems.length > 0) return problems;
-  return returns === undefined || returns === "unclassified"
+  return kind === undefined
     ? { params }
-    : { params, returns };
+    : { params, returns: overlayKind(kind) };
 }
 
 /**
  * A global's Object kind (`{}` when it is not a Rawcode), or the checklist
  * line of what stops it: an Overlay `kind` on a global that is not an
- * `integer`, or a global that looks like a Rawcode (`looksLikeRawcode`)
- * with no `kind`.
+ * `integer`, or a global that looks like a Rawcode (one of
+ * `rawcodeGlobalNames`) with no `kind`.
  */
 function classifyGlobal(
   global: GlobalDeclaration,
   entry: GlobalEntry,
-  looksLikeRawcode: ReadonlySet<string>,
+  rawcodeGlobalNames: ReadonlySet<string>,
 ): { rawcode?: RawcodeKind } | Diagnostic {
   const { kind } = entry;
   if (kind !== undefined && global.type !== "integer") {
-    return kindError(
+    return entryError(
+      "overlay-invalid",
       entry,
       `kind on ${global.name}, which is ${global.type}, not integer; remove it`,
     );
   }
   if (kind !== undefined) return { rawcode: overlayKind(kind) };
-  if (!looksLikeRawcode.has(global.name)) return {};
-  return unclassifiedItem(
+  if (!rawcodeGlobalNames.has(global.name)) return {};
+  return entryError(
+    "unclassified-rawcode",
     entry,
     `global ${global.name} (integer = ${global.initializer?.trim() ?? ""}) ` +
       `looks like a Rawcode but has no Object kind; set kind to an Object kind or "any"`,
@@ -331,51 +367,20 @@ function mismatch(fn: FunctionDeclaration, entry: FunctionEntry): Diagnostic {
   };
 }
 
-/** The checklist line of an entry whose `returns.family` breaks the rule. */
-function familyError(entry: FunctionEntry, problem: string): Diagnostic {
-  return {
-    severity: "error",
-    kind: "nullability-family",
-    file: entry.file,
-    name: entry.name,
-    message: `${entry.file}: ${problem}`,
-  };
-}
-
-/** The checklist line of an Overlay `kind` the Patch declaration refuses. */
-function kindError(entry: BaseEntry, problem: string): Diagnostic {
-  return {
-    severity: "error",
-    kind: "overlay-invalid",
-    file: entry.file,
-    name: entry.name,
-    message: `${entry.file}: ${problem}`,
-  };
-}
-
 /**
- * The checklist line of a parameter that looks like a Rawcode and that
- * neither the parameter-name table nor its Overlay `kind` classifies.
+ * The checklist line of an entry the Patch declaration refuses: a
+ * `returns.family` that breaks the rule (`nullability-family`), an Overlay
+ * `kind` or `type` the item cannot take (`overlay-invalid`), or an item that
+ * looks like a Rawcode and has no kind (`unclassified-rawcode`).
  */
-function unclassified(
-  entry: FunctionEntry,
-  fn: FunctionDeclaration,
-  index: number,
+function entryError(
+  kind: DiagnosticKind,
+  entry: BaseEntry,
+  problem: string,
 ): Diagnostic {
-  const { name, type } = fn.params[index];
-  return unclassifiedItem(
-    entry,
-    `${fn.name} parameter ${name} (${type}) looks like a Rawcode ` +
-      `but has no Object kind; set params[${String(index)}].kind to an Object kind or "any", ` +
-      `or add ${name} to the parameter-name table`,
-  );
-}
-
-/** The checklist line of an item that looks like a Rawcode and has no kind. */
-function unclassifiedItem(entry: BaseEntry, problem: string): Diagnostic {
   return {
     severity: "error",
-    kind: "unclassified-rawcode",
+    kind,
     file: entry.file,
     name: entry.name,
     message: `${entry.file}: ${problem}`,

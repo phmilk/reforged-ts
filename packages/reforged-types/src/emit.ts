@@ -8,7 +8,7 @@ import { CALLBACK_ALIASES, tsType } from "./jass-types.js";
 import type { SourceName, TypeDeclaration } from "./model.js";
 import { parameterName } from "./names.js";
 import type { PatchIdentity } from "./provenance.js";
-import { rawcodeType } from "./rawcodes.js";
+import { rawcodeType, type RawcodeKind } from "./rawcodes.js";
 import type { Resolved, ResolvedFunction, ResolvedGlobal } from "./resolve.js";
 
 export const REGENERATE_COMMAND =
@@ -86,9 +86,7 @@ function typeDeclaration({ name, parent }: TypeDeclaration): string {
  */
 function globalDeclaration(global: ResolvedGlobal): string[] {
   const keyword = global.constant ? "const" : "let";
-  const type = global.rawcode
-    ? rawcodeType(global.rawcode)
-    : tsType(global.type);
+  const type = itemType(global.type, global.rawcode);
   const value = global.overlay.nullable
     ? `${unionMember(type)} | undefined`
     : type;
@@ -102,9 +100,8 @@ function globalDeclaration(global: ResolvedGlobal): string[] {
 
 function functionDeclaration(fn: ResolvedFunction): string[] {
   const params = parameterList(fn);
-  const kind = fn.rawcodes.returns;
   const returns =
-    (kind ? rawcodeType(kind) : tsType(fn.returns)) +
+    itemType(fn.returns, fn.rawcodes.returns) +
     (fn.overlay.returns.nullable ? " | undefined" : "");
   return [
     ...functionHeader(fn),
@@ -126,14 +123,21 @@ function parameterList(fn: ResolvedFunction): string {
     .map((param, index) => {
       const { nullable, type: override } = overlay[index];
       const name = parameterName(param.name);
-      const kind = fn.rawcodes.params[index];
-      const type = override ?? (kind ? rawcodeType(kind) : tsType(param.type));
+      const type = override ?? itemType(param.type, fn.rawcodes.params[index]);
       if (!nullable) return `${name}: ${type}`;
       return index >= firstOptional
         ? `${name}?: ${type}`
         : `${name}: ${unionMember(type)} | undefined`;
     })
     .join(", ");
+}
+
+/**
+ * The TypeScript type of a parameter, return or global of the Jass type
+ * `jassType`: its Rawcode type when it has a kind, else the mapped type.
+ */
+function itemType(jassType: string, kind: RawcodeKind | undefined): string {
+  return kind ? rawcodeType(kind) : tsType(jassType);
 }
 
 /** A function type needs parentheses before `| undefined` joins it. */

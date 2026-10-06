@@ -10,7 +10,9 @@
  * decides what must be classified: an `integer` parameter or return it
  * matches with no kind is an `unclassified-rawcode` error, and so is an
  * `integer` global whose value is a four-character literal or names such a
- * global.
+ * global. On a parameter the pattern or the table takes for a Rawcode, only
+ * the Overlay `type: "number"` stands for a classification, "not a Rawcode,
+ * on purpose"; any other `type` there is refused (`resolve.ts`).
  */
 import type { Parameter } from "./model.js";
 
@@ -150,7 +152,7 @@ const RAWCODE_NAMES_OTHERWISE: ReadonlySet<string> = new Set(
 );
 
 /** Whether a name must be classified when it names an `integer`. */
-function looksLikeRawcode(name: string): boolean {
+function nameLooksLikeRawcode(name: string): boolean {
   return RAWCODE_NAME.test(name) || RAWCODE_NAMES_OTHERWISE.has(name);
 }
 
@@ -159,23 +161,39 @@ export function overlayKind(kind: OverlayKind): RawcodeKind {
   return kind === "any" ? "any" : [kind];
 }
 
+/** The table's line for a parameter name, `undefined` for a name it lacks. */
+function tableLine(
+  name: string,
+): RawcodeKind | typeof NOT_A_RAWCODE | undefined {
+  return Object.hasOwn(PARAMETER_NAMES, name)
+    ? PARAMETER_NAMES[name]
+    : undefined;
+}
+
 /**
  * A parameter's kind: its Overlay `kind`, else the table's; `undefined`
- * when it is not a Rawcode; `"unclassified"` when it looks like one and
- * neither classifies it. Only an `integer` is a Rawcode.
+ * when neither makes it a Rawcode. Only an `integer` is a Rawcode.
  */
 export function parameterKind(
   param: Parameter,
   kind: OverlayKind | undefined,
-): RawcodeKind | "unclassified" | undefined {
+): RawcodeKind | undefined {
   if (kind !== undefined) return overlayKind(kind);
   if (param.type !== "integer") return undefined;
-  const listed = Object.hasOwn(PARAMETER_NAMES, param.name)
-    ? PARAMETER_NAMES[param.name]
-    : undefined;
-  if (listed === NOT_A_RAWCODE) return undefined;
-  if (listed !== undefined) return listed;
-  return looksLikeRawcode(param.name) ? "unclassified" : undefined;
+  const listed = tableLine(param.name);
+  return listed === NOT_A_RAWCODE ? undefined : listed;
+}
+
+/**
+ * Whether the generator takes a parameter for a Rawcode, so that something
+ * must classify it: an `integer` the table gives a kind, or one whose name
+ * the pattern matches and that the table does not mark as not a Rawcode.
+ */
+export function parameterLooksLikeRawcode(param: Parameter): boolean {
+  if (param.type !== "integer") return false;
+  const listed = tableLine(param.name);
+  if (listed === NOT_A_RAWCODE) return false;
+  return listed !== undefined || nameLooksLikeRawcode(param.name);
 }
 
 /**
@@ -225,22 +243,19 @@ const RAWCODE_RETURNS_OTHERWISE: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * A function's return kind: its Overlay `returns.kind`; `undefined` when it
- * is not a Rawcode; `"unclassified"` when it is an `integer` of a function
+ * Whether the generator takes a function's return for a Rawcode, so that
+ * its Overlay `returns.kind` must classify it: an `integer` of a function
  * whose name looks like a Rawcode's (the parameter pattern, or the list
- * above) that is neither classified nor known not to be one.
+ * above) and that is not known not to be one.
  */
-export function returnKind(
-  fn: { name: string; returns: string },
-  kind: OverlayKind | undefined,
-): RawcodeKind | "unclassified" | undefined {
-  if (kind !== undefined) return overlayKind(kind);
+export function returnLooksLikeRawcode(fn: {
+  name: string;
+  returns: string;
+}): boolean {
   if (fn.returns !== "integer" || NOT_A_RAWCODE_RETURNS.has(fn.name)) {
-    return undefined;
+    return false;
   }
-  return RAWCODE_NAME.test(fn.name) || RAWCODE_RETURNS_OTHERWISE.has(fn.name)
-    ? "unclassified"
-    : undefined;
+  return RAWCODE_NAME.test(fn.name) || RAWCODE_RETURNS_OTHERWISE.has(fn.name);
 }
 
 /** A four-character literal, `'hfoo'`, as a Patch file writes a Rawcode. */

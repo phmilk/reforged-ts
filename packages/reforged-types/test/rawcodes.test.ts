@@ -2,12 +2,16 @@
 // kind from the parameter-name table or from its Overlay `kind`, a return
 // from its Overlay `returns.kind` and a global from its Overlay `kind`; the
 // signature carries the kind and the header keeps the Jass type.
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { generate } from "../src/index.js";
+import { OBJECT_KINDS } from "../src/rawcodes.js";
 import {
   entry,
   generatedFile,
   globalEntry,
+  required,
   writeFixture,
   type OverlayEntryFixture,
 } from "./support/fixture.js";
@@ -204,7 +208,45 @@ describe("generate: Rawcode parameters classified by the Overlay kind", () => {
     );
   });
 
-  it("takes an Overlay type override as the parameter's classification, over the table and the pattern", async () => {
+  it("fails on a type override other than number on a parameter that looks like a Rawcode, pointing at kind", async () => {
+    const overlay = entry("common.j", "Pick", ["unitId", "fooId", "func"]);
+    overlay.params[0].type = 'Rawcode<"unit">';
+    overlay.params[1].type = "boolcode";
+    overlay.params[2].type = "boolcode";
+    const result = await run(
+      {
+        "common.j":
+          "native Pick takes integer unitId, integer fooId, code func returns nothing",
+      },
+      [overlay],
+    );
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics).toEqual([
+      {
+        severity: "error",
+        kind: "overlay-invalid",
+        file: "common.j/functions/Pick.json",
+        name: "Pick",
+        message:
+          "common.j/functions/Pick.json: params[0].type on Pick parameter unitId, which looks like a Rawcode, " +
+          'is "Rawcode<\\"unit\\">"; set params[0].kind to an Object kind or "any" instead, ' +
+          'or type to "number" for an integer that is not a Rawcode',
+      },
+      {
+        severity: "error",
+        kind: "overlay-invalid",
+        file: "common.j/functions/Pick.json",
+        name: "Pick",
+        message:
+          "common.j/functions/Pick.json: params[1].type on Pick parameter fooId, which looks like a Rawcode, " +
+          'is "boolcode"; set params[1].kind to an Object kind or "any" instead, ' +
+          'or type to "number" for an integer that is not a Rawcode',
+      },
+    ]);
+  });
+
+  it("takes only the type override number as the classification of a parameter that looks like a Rawcode, over the table and the pattern", async () => {
     const overlay = entry("common.j", "IssueNeutralPointOrderById", [
       "unitId",
       "fooId",
@@ -643,5 +685,22 @@ describe("generate: invalid Overlay kind", () => {
           "common.ai/globals/RANGE.json: kind on RANGE, which is real, not integer; remove it",
       },
     ]);
+  });
+});
+
+describe("the Object kinds", () => {
+  it("are the members of ObjectKind in rawcode.d.ts, in its order", async () => {
+    const text = await readFile(
+      fileURLToPath(new URL("../rawcode.d.ts", import.meta.url)),
+      "utf8",
+    );
+    const union = required(
+      /type ObjectKind =([^;]+);/.exec(text),
+      "the ObjectKind union of rawcode.d.ts",
+    )[1];
+
+    expect([...union.matchAll(/"([^"]+)"/g)].map((m) => m[1])).toEqual(
+      OBJECT_KINDS,
+    );
   });
 });

@@ -167,13 +167,25 @@ describe("a Map project with the Template's types", () => {
 });
 
 describe("a Map project that adds the common.ai path", () => {
-  it("type-checks calls to the AI natives with zero diagnostics", async () => {
+  let diagnostics: string[];
+
+  beforeAll(async () => {
     const project = await createMapProject(workspace, "ai", AI_TYPES);
-
-    const { diagnostics } = typecheck(project);
-
-    expect(diagnostics.map((d) => locate(project, d))).toEqual([]);
+    diagnostics = typecheck(project).diagnostics.map((d) => locate(project, d));
   }, 60_000);
+
+  it("type-checks calls to the AI natives with zero diagnostics", () => {
+    expect(
+      diagnostics.filter((d) => d.startsWith("src/ai-natives.ts")),
+    ).toEqual([]);
+  });
+
+  it("reports exactly the negative fixture's error, by code and line", () => {
+    expect(diagnostics.sort()).toEqual([
+      // common.ai's FOOTMAN is a unit's Rawcode, not an ability's.
+      "src/rawcode-global-wrong-kind.ts:4 TS2345",
+    ]);
+  });
 });
 
 describe("a Map project compiled with typescript-to-lua for Lua 5.3", () => {
