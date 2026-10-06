@@ -1,7 +1,6 @@
 {
   "name": "reforged-map",
   "version": "0.0.0",
-  "private": true,
   "description": "Reads a Warcraft III Reforged map folder and writes the TypeScript declarations and the Lua stub of its Editor globals for a reforged-ts Map project.",
   "license": "MIT",
   "type": "module",
@@ -24,6 +23,9 @@
   },
   "engines": {
     "node": ">=22.13"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "reforged": {
     "patch": "3.0.0.24268"

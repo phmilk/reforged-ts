@@ -1,6 +1,6 @@
 # Releasing
 
-How the four packages of this repository (`reforged-ts`, `reforged-types`, `reforged-test` and `eslint-plugin-reforged`) are versioned and published, for contributors, AI agents and the maintainer. The decision is [ADR 0009](adr/0009-independent-semver-with-changesets-and-patch-field.md); the build is [#46](https://github.com/phmilk/reforged-ts/issues/46).
+How the five packages of this repository (`reforged-ts`, `reforged-types`, `reforged-test`, `eslint-plugin-reforged` and `reforged-map`) are versioned and published, for contributors, AI agents and the maintainer. The decision is [ADR 0009](adr/0009-independent-semver-with-changesets-and-patch-field.md); the build is [#46](https://github.com/phmilk/reforged-ts/issues/46).
 
 [Changesets](https://github.com/changesets/changesets) drives the versions. Each pull request carries a changeset that names the packages it changes and their bumps; the version step turns the pending changesets into versions and changelogs.
 
@@ -131,7 +131,7 @@ Alphas go to npm under the `next` dist-tag, so a Map project installs one with `
 
 ### Starting versions
 
-The first `changeset version` in pre mode must give all four packages exactly `1.0.0-alpha.0`. Changesets computes a prerelease as the bump of the current version plus `-alpha.N`, so the starting point matters: a package at `1.0.0` with a major changeset would get `2.0.0-alpha.0`, and one at `0.0.0` with only minors would get `0.1.0-alpha.0`.
+The first `changeset version` in pre mode must give each of the first four packages exactly `1.0.0-alpha.0`; `reforged-map` came later ([A package that comes later](#a-package-that-comes-later-reforged-map)). Changesets computes a prerelease as the bump of the current version plus `-alpha.N`, so the starting point matters: a package at `1.0.0` with a major changeset would get `2.0.0-alpha.0`, and one at `0.0.0` with only minors would get `0.1.0-alpha.0`.
 
 The mechanism chosen: every publishable package is at `0.0.0`, and `.changeset/first-release.md` majors all four. A major on `0.0.0` is `1.0.0`, so each package gets `1.0.0-alpha.0` whatever else is pending; the first-release entry opens each package's changelog and rolls into its 1.0.0 changelog. `pnpm changeset status` shows the plan, and `release/test/versioning.test.ts` proves the outcome with the real configuration.
 
@@ -166,15 +166,41 @@ Its stages, in order:
 
 It stops at the first failed check, saying what to fix. What npm's CLI cannot show (the trusted publisher, the publishing access, the token's 2FA setting, and the revocation when this run holds no token) it asks the maintainer to confirm. It never stores or prints the token, and removes it from the npm config whenever it exits. It can be re-run after an interruption: a package npm already holds with `next` at `1.0.0-alpha.0` is not published again, and with all four there it asks for no token and goes straight to the npm settings. The dry run runs the read-only checks, only warns about the branch and the working tree, answers every confirmation with yes and opens no browser.
 
+### A package that comes later: `reforged-map`
+
+`reforged-map` ([#497](https://github.com/phmilk/reforged-ts/issues/497)) joined after the first four were on npm. It goes the same way, alone:
+
+- **Its starting version.** It leaves `private: true` at `0.0.0` with a major changeset of its own. The next `changeset version`, in pre mode, gives it `1.0.0-alpha.0`, whatever the other packages are at; `release/test/versioning.test.ts` proves it with the real configuration.
+- **Its peer.** It needs `reforged-types` 1.0.0-alpha.5 or later, the first version that declares the Rawcode types. Its range is `workspace:^`, like every workspace range, so it is published as a caret on the version of `reforged-types` the release holds. That version is 1.0.0-alpha.5 or later, since the changesets that declare Rawcode are versioned no later than the release that first publishes `reforged-map`.
+- **The run that stops.** The release run after the Version Packages pull request that versions it stops at [the publish check](#the-publish-check), which names `reforged-map` as not on npm yet. Nothing is published in that run, the other packages of the release included.
+- **The human step.** The maintainer runs [the first-publish wizard](#the-first-publish-wizard) in its one-package mode on `master`, then re-runs the failed publish job of that run (`gh run rerun <run id> --failed`). `changeset publish` skips `reforged-map@1.0.0-alpha.0`, which npm now holds, and publishes the others. The Template dispatch that follows names `reforged-map` in its `versions`.
+
+### The one-package mode of the wizard
+
+```sh
+bash release/first-publish.sh --package reforged-map --dry-run  # review: prints every command, publishes nothing
+bash release/first-publish.sh --package reforged-map
+```
+
+`--package <name>` publishes one package that npm does not hold yet, alone, and leaves the packages already on npm to the release workflow. Its stages are those of [the wizard](#the-first-publish-wizard), for that package only:
+
+1. **Checks:** the same checks of the checkout and the pre mode, then that the package is in the workspace, not private and at `1.0.0-alpha.0` (it stops here, pointing at the Version Packages pull request, when it is not), and what npm holds for it. The other packages' versions are not checked.
+2. **The token**, as above.
+3. **Publish:** the same build, pack and dist-tag, then the publish plan is rewritten to the package's publish entry alone, and the wizard checks that this entry is `1.0.0-alpha.0` under `next`. `changeset publish --from-pack-dir` then publishes it and tags it. The other packages of the plan are packed but not published.
+4. **The package:** its trusted publisher and its publishing access.
+5. **Revoke the token**, as above.
+
+It ends with the step after it: re-run the failed publish job of the release run that stopped at the publish check.
+
 ## The compatibility matrix
 
-The compatibility matrix tells a Map project author which versions of the four packages, which game Patch and which Toolchain go together. It is generated from the packages and never edited by hand: one row per stable release, only ever appended, written during the version step so the Version Packages pull request shows the row under review (no commit after publishing).
+The compatibility matrix tells a Map project author which versions of the five packages, which game Patch and which Toolchain go together. It is generated from the packages and never edited by hand: one row per stable release, only ever appended, written during the version step so the Version Packages pull request shows the row under review (no commit after publishing).
 
 ### The version step: `release:version`
 
 `pnpm release:version` is the version step of a release, and the command the release workflow's version job runs: `changeset version` in the repository root, then the docs version stamp, then the matrix generator. When a step fails, the steps after it do not run and the command exits 1. It needs what `changeset version` needs: a GitHub token for the changelog generator (see [Versioning locally](#versioning-locally-the-github-token); CI passes `GITHUB_TOKEN`), and at least one pending changeset. It does not run the major-changeset gate: the gate reads the pending changesets, which `changeset version` consumes, so it runs before this step.
 
-**The docs version stamp.** What the packages link of the docs site names the docs version of their release: the version step writes the label of the library's docs version into the lint plugin's `reforged.docs` field, which every rule's documentation URL reads (`https://phmilk.github.io/reforged-ts/docs/<label>/guides/lint-rules/<rule>`), and into the "For AI agents" links of the four package READMEs (`https://phmilk.github.io/reforged-ts/docs/<label>/llms.txt` and `llms-full.txt`), so what ships points at its own docs. The label is the library's `major.minor` for a stable version (`1.0` for 1.0.3), the [docs version URL](#the-docs-version-url) of its minor; a prerelease keeps `next`, the working tree's docs, since a docs version is cut only on a stable minor. The stamp fails, writing nothing, when the plugin has no `reforged.docs` field or a README has no `llms.txt` link of that form; run twice, it changes no byte. Its programmatic entry point is `stampDocsVersion` in `release/src/docs-version.ts`. A stable minor's docs version is cut after it is published ([the docs workflow](#the-docs-workflow)), so its links answer from the cut on. One case stays broken: a lint plugin release that adds a rule while the library's minor stays the same is stamped with that minor's label, whose docs version was frozen at its cut, so the new rule's documentation URL answers 404 until the library's next minor is cut.
+**The docs version stamp.** What the packages link of the docs site names the docs version of their release: the version step writes the label of the library's docs version into the lint plugin's `reforged.docs` field, which every rule's documentation URL reads (`https://phmilk.github.io/reforged-ts/docs/<label>/guides/lint-rules/<rule>`), and into the "For AI agents" links of the five package READMEs (`https://phmilk.github.io/reforged-ts/docs/<label>/llms.txt` and `llms-full.txt`), so what ships points at its own docs. The label is the library's `major.minor` for a stable version (`1.0` for 1.0.3), the [docs version URL](#the-docs-version-url) of its minor; a prerelease keeps `next`, the working tree's docs, since a docs version is cut only on a stable minor. The stamp fails, writing nothing, when the plugin has no `reforged.docs` field or a README has no `llms.txt` link of that form; run twice, it changes no byte. Its programmatic entry point is `stampDocsVersion` in `release/src/docs-version.ts`. A stable minor's docs version is cut after it is published ([the docs workflow](#the-docs-workflow)), so its links answer from the cut on. One case stays broken: a lint plugin release that adds a rule while the library's minor stays the same is stamped with that minor's label, whose docs version was frozen at its cut, so the new rule's documentation URL answers 404 until the library's next minor is cut.
 
 `pnpm release:matrix` runs the generator alone. It rewrites the three files from the committed JSON, so running it twice, or on another day, changes no byte. Exit codes of both: 0 done, 1 a problem (one line each, then a link here), 2 usage. Their programmatic entry points are `generateMatrix` and `buildMatrix` in `release/src/matrix.ts`.
 
@@ -191,7 +217,7 @@ It also reads each publishable package's name, version and `reforged.patch`, the
 
 ### When a row is added
 
-- **One row per stable release.** A row is identified by the four package versions. When the workspace's versions have no row, the generator appends one; when they have one (a version step that released nothing new), every field of it but the cut date must still match, and the row is kept as it is, cut date included. A Typings-only release (a new Patch adopted by `reforged-types` alone) gets its own row, with the library version of the row before it.
+- **One row per stable release.** A row is identified by the five package versions. When the workspace's versions have no row, the generator appends one; when they have one (a version step that released nothing new), every field of it but the cut date must still match, and the row is kept as it is, cut date included. A Typings-only release (a new Patch adopted by `reforged-types` alone) gets its own row, with the library version of the row before it.
 - **Prereleases produce no row.** In pre mode, or when the library's version is a prerelease, the generator adds nothing and rewrites the files unchanged; it still runs the `reforged.patch` check. A stable library with a prerelease package beside it is an error.
 - **The cut date** is the day the version step ran, `YYYY-MM-DD` in UTC.
 
@@ -228,6 +254,7 @@ The generator fails, writing nothing:
       "typings": "1.0.0",
       "harness": "1.0.0",
       "plugin": "1.0.0",
+      "map": "1.0.0",
       "patch": "3.0.0.24268",
       "typescript": "6.0.2",
       "typescriptToLua": "^1.37.1",
@@ -246,6 +273,7 @@ The generator fails, writing nothing:
 | `format`                                    | `1`, the version of this shape.                                                                      |
 | `rows`                                      | One per stable release, oldest first, only ever appended.                                            |
 | `library`, `typings`, `harness`, `plugin`   | The exact versions of `reforged-ts`, `reforged-types`, `reforged-test` and `eslint-plugin-reforged`. |
+| `map`                                       | The exact version of `reforged-map`, added with its first release without a new `format`.            |
 | `patch`                                     | The game Patch, a Build: the library's `reforged.patch`, which is the newest Patch the Typings ship. |
 | `typescript`, `typescriptToLua`, `luaTypes` | The catalog pins as written there: TypeScript exact, the others as caret ranges.                     |
 | `node`                                      | The Node floor, the version of the library's `engines.node` (`>=22.13` gives `22.13`).               |
@@ -301,7 +329,9 @@ The Template is the Reference consumer ([ADR 0006](adr/0006-template-owns-code-e
 
 It takes a Template checkout and the output folder of `changeset pack`, which holds `publish-plan.json` and the tarballs under `packages/`. It checks each tarball against the plan's integrity. It writes one `overrides` entry per package in the plan into the checkout's `pnpm-workspace.yaml` (the file is created when the Template has none; its other settings stay), pointing at that tarball, and runs `pnpm install --no-frozen-lockfile`. It checks that the Template's own dependencies resolved to the packed versions. Then it runs the Template's scripts by name: `build --mode release`, `lint` and `test`. It stops at the first command that fails, or at the first script the Template lacks, and names it. Exit codes: 0 pass, 1 fail, 2 usage.
 
-**Only the packages of the plan.** The spec ([#46](https://github.com/phmilk/reforged-ts/issues/46)) has the gate install the tarballs of all four packages. It installs those of the publish plan only, deliberately: a package the release does not publish is not packed, and what the Template gets for it from npm is the bytes already published, which are the bytes a Map project installs next to this release. Packing it again would test a build that is never published.
+**Only the packages of the plan.** The spec ([#46](https://github.com/phmilk/reforged-ts/issues/46)) has the gate install the tarballs of all the packages. It installs those of the publish plan only, deliberately: a package the release does not publish is not packed, and what the Template gets for it from npm is the bytes already published, which are the bytes a Map project installs next to this release. Packing it again would test a build that is never published.
+
+**A package the Template does not depend on yet.** The plan may hold one: `reforged-map` is released before the Template takes it up ([phmilk/reforged-ts-template#68](https://github.com/phmilk/reforged-ts-template/issues/68)). The gate writes its override all the same, and pnpm leaves it unused; the check that the install put the packed version in place covers only the packages the Template depends on.
 
 The Template is checked out at `v<major>` of the library version. Every 1.x, alphas included, maps to `v1`. A tag and a branch check out the same way. `pnpm --silent release:template-gate --print-ref --pack-dir <dir>` prints the ref for the library version in the plan.
 
@@ -332,7 +362,7 @@ Checked by hand, then `pnpm changeset pre exit` in a pull request; the next Vers
 - [ ] The Template gate is green on the last alpha.
 - [ ] The docs site is deployed green from `master`.
 - [ ] [The compatibility matrix generator](#the-compatibility-matrix) produces the 1.0.0 row without error.
-- [ ] The build-phase notes are gone from the root README and the four package READMEs, and their install commands no longer name `@next`.
+- [ ] The build-phase notes are gone from the root README and the five package READMEs, and their install commands no longer name `@next`.
 - [ ] The migration page for w3ts 3.x to reforged-ts 1.0 is present with its `renames.json` entries (the major-changeset gate checks this mechanically: it treats the first stable release of `reforged-ts` as a major).
 - [ ] pnpm waits a day before it installs a new version again: `minimumReleaseAge: 1440` in `pnpm-workspace.yaml`, and `minimumReleaseAge: "1 day"` with `internalChecksFilter: "strict"` in `renovate.json5`, so Renovate proposes no version pnpm would refuse. It is off during the build phase ([#221](https://github.com/phmilk/reforged-ts/issues/221)).
 
@@ -384,21 +414,21 @@ npm does not expose a package's trusted publisher, so a missing or mismatched on
 
 Once a release is on npm, the `template-dispatch` job sends the Template (`phmilk/reforged-ts-template`) a `repository_dispatch` of the event type `reforged-ts-release`. The Template's sync workflow (`sync.yml`) listens for it: it applies the release to the Template's files (`scripts/sync.ts`), refreshes the lockfile, builds and checks, then opens the sync pull request a Template maintainer merges.
 
-Every release dispatches, the ones that do not publish `reforged-ts` too: a release of the Typings, the harness or the lint plugin alone changes the Template's ranges. A dry run never dispatches.
+Every release dispatches, the ones that do not publish `reforged-ts` too: a release of the Typings, the harness, the lint plugin or `reforged-map` alone changes the Template's ranges. A dry run never dispatches.
 
 `pnpm release:template-dispatch --pack-dir <dir> --out <file> [--await-npm <minutes>]` (`release/src/template-dispatch.ts`, programmatic entries `templateDispatch(packDir, root)` and `awaitOnNpm(versions, wait)`) writes the request body from the publish plan of the `changeset pack` output and the workspace, prints the payload and writes it to the job summary; the job posts the body with `gh api`. The payload is the one the Template's `parsePayload` accepts, and the Template computes none of it:
 
 | Field        | Value                                                                                                                                                                                                                              |
 | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tag`        | The release's git tag, `<package>@<version>`: the tag of the first of `reforged-ts`, `reforged-types`, `reforged-test` and `eslint-plugin-reforged` that the release publishes (`reforged-ts@1.0.0-alpha.3`).                      |
-| `versions`   | The version on npm of each of the four packages: the plan's for a package the release publishes, the workspace's for the others, which npm already holds.                                                                          |
+| `tag`        | The release's git tag, `<package>@<version>`: the tag of the first of `reforged-ts`, `reforged-types`, `reforged-test`, `eslint-plugin-reforged` and `reforged-map` that the release publishes (`reforged-ts@1.0.0-alpha.3`).      |
+| `versions`   | The version on npm of each of the five packages: the plan's for a package the release publishes, the workspace's for the others, which npm already holds. The Template reads the packages it depends on.                           |
 | `contextUrl` | `https://raw.githubusercontent.com/phmilk/reforged-ts/<tag>/CONTEXT.md`.                                                                                                                                                           |
 | `matrixUrl`  | `https://raw.githubusercontent.com/phmilk/reforged-ts/<tag>/release/compatibility/matrix.md`, [the compatibility matrix](#the-compatibility-matrix) fragment at the tag.                                                           |
 | `llmsUrl`    | `https://phmilk.github.io/reforged-ts/docs/<label>/llms.txt`, where the label is the library's docs version as [the docs version stamp](#the-version-step-releaseversion) names it: its `major.minor`, or `next` for a prerelease. |
 
 **Waiting for npm.** npm lists a version it accepted after a delay, and the Template's sync installs the payload's versions as soon as it starts: dispatched too early, it would install the versions before them. With `--await-npm <minutes>` the body is written only once the registry's install metadata (the document `pnpm update` resolves from) lists every version of the payload, asked every 15 seconds. The job waits up to 10 minutes in a release, and not at all in the dry run, whose versions are not published.
 
-It fails, writing and sending nothing, when the plan publishes none of the four packages, one of them is in neither the plan nor the workspace, the library version is not a semantic version, or npm does not list a version in time. Exit codes: 0 written, 1 a plan it cannot read or dispatch, or a release npm does not list in time, 2 usage.
+It fails, writing and sending nothing, when the plan publishes none of the five packages, one of them is in neither the plan nor the workspace, the library version is not a semantic version, or npm does not list a version in time. Exit codes: 0 written, 1 a plan it cannot read or dispatch, or a release npm does not list in time, 2 usage.
 
 The request needs Contents write on the Template: the job mints the App's token for the Template, where the App is installed too ([its prerequisites](#prerequisites-outside-this-repository)), through `.github/actions/app-token` with `repository: reforged-ts-template`.
 
@@ -435,7 +465,7 @@ They gate the dry run and the first tokenless publish, not the merge of the work
 
 - **The GitHub App** ([#48](https://github.com/phmilk/reforged-ts/issues/48)): installed on this repository with contents write, pull requests write and issues write (the Patch watch, `patch-watch.yml`, opens its issue with it), and on the Template (`phmilk/reforged-ts-template`, [its #26](https://github.com/phmilk/reforged-ts-template/issues/26)) with contents write, which [the Template dispatch](#the-template-dispatch) needs; its client ID and a private key stored as above. [The repository-setup wizard](#the-repository-setup-wizard) registers, installs, checks and stores it.
 - **A `v1` ref on the Template**: the gate clones `v<major>` of the library version, and fails naming the ref when the Template has neither a tag nor a branch of that name. Create it on the Template commit that supports the release: `git tag v1 <commit> && git push origin v1`. The Template's own plan cuts a `v1` branch at library 2.0 and keeps `main` as the current major; a `v1` tag now and a `v1` branch then both satisfy the gate, but the tag must be moved (or replaced by the branch) when the Template's `main` moves on.
-- **The four packages on npm with their trusted publisher**: [the first-publish wizard](#the-first-publish-wizard) publishes `1.0.0-alpha.0` of each and configures the publisher (repository `phmilk/reforged-ts`, workflow `release.yml`, no environment). The workflow file name is part of that configuration: renaming `release.yml` breaks publishing until every package's publisher is updated.
+- **The five packages on npm with their trusted publisher**: [the first-publish wizard](#the-first-publish-wizard) publishes `1.0.0-alpha.0` of each (of `reforged-map` in [its one-package mode](#the-one-package-mode-of-the-wizard)) and configures the publisher (repository `phmilk/reforged-ts`, workflow `release.yml`, no environment). The workflow file name is part of that configuration: renaming `release.yml` breaks publishing until every package's publisher is updated.
 
 ### The repository-setup wizard
 
@@ -504,3 +534,5 @@ Done once each by the maintainer; every release after them is tokenless.
 4. Revoke the token.
 5. With [the workflow's prerequisites](#prerequisites-outside-this-repository) in place, run [the dry run](#the-dry-run), then merge the next Version Packages pull request to prove the tokenless publish.
 6. At 1.0.0, run `pnpm changeset pre exit` in a pull request once [the checklist](#leaving-pre-mode-the-100-checklist) is green.
+
+`reforged-map`, which came after the first four, needs steps 1 to 4 once more, for itself: when the release run after its Version Packages pull request stops at the publish check, run `bash release/first-publish.sh --package reforged-map` (`--dry-run` to review it first) on `master`, then re-run the failed publish job of that run ([A package that comes later](#a-package-that-comes-later-reforged-map)).

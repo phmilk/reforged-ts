@@ -15,6 +15,7 @@ import {
 import {
   HARNESS_PACKAGE,
   LIBRARY_PACKAGE,
+  MAP_PACKAGE,
   PLUGIN_PACKAGE,
   TYPINGS_PACKAGE,
 } from "./packages.js";
@@ -34,6 +35,7 @@ const HEADERS = [
   TYPINGS_PACKAGE,
   HARNESS_PACKAGE,
   PLUGIN_PACKAGE,
+  MAP_PACKAGE,
   "Patch",
   "TypeScript",
   "typescript-to-lua",
@@ -53,6 +55,7 @@ function table(rows: readonly MatrixRow[]): string {
       row.typings,
       row.harness,
       row.plugin,
+      row.map,
       row.patch,
       row.typescript,
       row.typescriptToLua,

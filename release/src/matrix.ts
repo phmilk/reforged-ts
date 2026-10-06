@@ -1,7 +1,7 @@
 /**
  * `release:matrix`, programmatic entry point: the compatibility matrix,
  * generated from the packages and never edited by hand. Each stable release
- * appends one row (the four package versions, the game Patch, the Toolchain
+ * appends one row (the five package versions, the game Patch, the Toolchain
  * pins, the Node floor, the 3.0.0 systems covered, the cut date and the docs
  * version URL) to a committed JSON file, from which two Markdown tables are
  * rendered: one for the docs site's compatibility page and one fragment the
@@ -242,6 +242,7 @@ export function buildMatrix(input: MatrixInput): MatrixResult {
     typings: versions.typings ?? "",
     harness: versions.harness ?? "",
     plugin: versions.plugin ?? "",
+    map: versions.map ?? "",
     patch:
       patchCheck.patches.find(({ name }) => name === LIBRARY_PACKAGE)?.patch ??
       "",

@@ -34,6 +34,7 @@ const ON_NPM = {
   "reforged-types": "1.0.0-alpha.1",
   "reforged-test": "1.0.0-alpha.1",
   "eslint-plugin-reforged": "1.0.0-alpha.1",
+  "reforged-map": "1.0.0-alpha.0",
 };
 
 describe("templateDispatch", () => {
@@ -50,6 +51,7 @@ describe("templateDispatch", () => {
           "reforged-types": "1.0.0-alpha.1",
           "reforged-test": "1.0.0-alpha.1",
           "eslint-plugin-reforged": "1.0.0-alpha.1",
+          "reforged-map": "1.0.0-alpha.0",
         },
         contextUrl: `${RAW}/reforged-ts@1.0.0-alpha.3/CONTEXT.md`,
         matrixUrl: `${RAW}/reforged-ts@1.0.0-alpha.3/release/compatibility/matrix.md`,
@@ -58,12 +60,13 @@ describe("templateDispatch", () => {
     });
   });
 
-  it("dispatches a release without the library under the Typings' tag, first of the four", async () => {
+  it("dispatches a release without the library under the Typings' tag, first of the five", async () => {
     const root = await workspace({
       "reforged-ts": "1.2.0",
       "reforged-types": "1.3.0",
       "reforged-test": "1.1.1",
       "eslint-plugin-reforged": "1.2.0",
+      "reforged-map": "1.0.2",
     });
     const pack = await packDir(
       entry("reforged-test", "1.1.1"),
@@ -77,6 +80,7 @@ describe("templateDispatch", () => {
         "reforged-types": "1.3.0",
         "reforged-test": "1.1.1",
         "eslint-plugin-reforged": "1.2.0",
+        "reforged-map": "1.0.2",
       },
       contextUrl: `${RAW}/reforged-types@1.3.0/CONTEXT.md`,
       matrixUrl: `${RAW}/reforged-types@1.3.0/release/compatibility/matrix.md`,
@@ -84,14 +88,45 @@ describe("templateDispatch", () => {
     });
   });
 
-  it("refuses a plan that publishes none of the four packages", async () => {
+  it("dispatches the first release of reforged-map with the version of each package, under the tag of the first of the five", async () => {
+    const root = await workspace({
+      ...ON_NPM,
+      "reforged-types": "1.0.0-alpha.5",
+      "reforged-map": "1.0.0-alpha.0",
+    });
+    const pack = await packDir(
+      entry("reforged-types", "1.0.0-alpha.5"),
+      entry("reforged-map", "1.0.0-alpha.0"),
+    );
+
+    expect((await templateDispatch(pack, root)).client_payload).toMatchObject({
+      tag: "reforged-types@1.0.0-alpha.5",
+      versions: {
+        ...ON_NPM,
+        "reforged-types": "1.0.0-alpha.5",
+        "reforged-map": "1.0.0-alpha.0",
+      },
+    });
+
+    const alone = await packDir(entry("reforged-map", "1.0.1"));
+    expect((await templateDispatch(alone, root)).client_payload).toMatchObject({
+      tag: "reforged-map@1.0.1",
+      versions: {
+        ...ON_NPM,
+        "reforged-types": "1.0.0-alpha.5",
+        "reforged-map": "1.0.1",
+      },
+    });
+  });
+
+  it("refuses a plan that publishes none of the five packages", async () => {
     const root = await workspace(ON_NPM);
     await expect(templateDispatch(await packDir(), root)).rejects.toThrow(
-      "The publish plan publishes none of reforged-ts, reforged-types, reforged-test, eslint-plugin-reforged: there is no release to dispatch.",
+      "The publish plan publishes none of reforged-ts, reforged-types, reforged-test, eslint-plugin-reforged, reforged-map: there is no release to dispatch.",
     );
   });
 
-  it("refuses a workspace without one of the four packages, naming it", async () => {
+  it("refuses a workspace without one of the five packages, naming it", async () => {
     const root = await writeWorkspace(
       PACKAGES.filter(({ name }) => name !== "reforged-test"),
     );
@@ -261,6 +296,7 @@ describe("release:template-dispatch", () => {
       "reforged-types": [["1.0.0-alpha.1"]],
       "reforged-test": [["1.0.0-alpha.1"]],
       "eslint-plugin-reforged": [["1.0.0-alpha.1"]],
+      "reforged-map": [["1.0.0-alpha.0"]],
     });
     const cwd = await tempDir("cwd");
     const args = [
