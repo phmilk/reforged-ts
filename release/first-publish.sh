@@ -399,7 +399,8 @@ packed_requirements() {
     if (!entry || typeof entry.tarball?.path !== "string") process.exit(1);
     process.stdout.write(path.resolve(dir, entry.tarball.path));
   ' "$1" "$2") || return 1
-  tar -xzOf "$tarball" package/package.json | node -e '
+  # From stdin: GNU tar reads the C: of a native path as a remote host.
+  tar -xzO -f - package/package.json <"$tarball" | node -e '
     const manifest = JSON.parse(require("fs").readFileSync(0, "utf8"));
     for (const field of ["peerDependencies", "dependencies"])
       for (const [name, range] of Object.entries(manifest[field] ?? {})) console.log(name, range);
