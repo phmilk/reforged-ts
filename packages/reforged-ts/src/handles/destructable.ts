@@ -11,7 +11,7 @@ import { Widget } from "./widget";
  */
 export interface DestructableOptions {
   /** The rawcode of the destructable type. */
-  readonly typeId: number;
+  readonly typeId: Rawcode<"destructable">;
   /** The x-coordinate, in world units. */
   readonly x: number;
   /** The y-coordinate, in world units. */
@@ -29,7 +29,7 @@ export interface DestructableOptions {
   /** The roll; 0 when only `pitch` is given. */
   readonly roll?: number;
   /** The skin's rawcode; left out, the type's own model. */
-  readonly skin?: number;
+  readonly skin?: Rawcode<"destructable">;
   /** The team colour of the model. */
   readonly color?: playercolor;
   /** Creates the destructable dead when true; alive by default. */
@@ -51,7 +51,7 @@ export class Destructable extends Widget {
   declare public readonly handle: destructable;
 
   /** The skin the Destructable was created with, when one was given. */
-  public readonly skin?: number;
+  public readonly skin?: Rawcode<"destructable">;
 
   /**
    * Creates a destructable. The options name one of the 32 creation Natives,

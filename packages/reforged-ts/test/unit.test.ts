@@ -28,6 +28,40 @@ const knightSkin = FourCC("hkni");
 const ration = FourCC("ratf");
 const owner = defined(MapPlayer.fromIndex(0), "MapPlayer.fromIndex(0)");
 
+/**
+ * The Rawcodes `Unit` takes, by Object kind: a `FourCC` literal goes
+ * anywhere, a Rawcode of another kind or a plain `number` does not. Never
+ * called: `tsc` checks it.
+ */
+export function unitRawcodeKinds(unit: Unit, count: number): void {
+  const blizzard: Rawcode<"ability"> = FourCC("AHbz");
+  const footmanType: Rawcode<"unit"> = FourCC("hfoo");
+  const rationType: Rawcode<"item"> = FourCC("ratf");
+  Unit.create(owner, FourCC("hfoo"), 0, 0);
+  Unit.create(owner, footmanType, 0, 0, 0, footmanType);
+  // @ts-expect-error: an ability's Rawcode is not a unit's.
+  Unit.create(owner, blizzard, 0, 0);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Unit.create(owner, count, 0, 0);
+  // @ts-expect-error: a skin of `Unit` is a unit's Rawcode.
+  Unit.create(owner, footmanType, 0, 0, 0, blizzard);
+  unit.addAbility(blizzard);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.addAbility(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.addAbility(count);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.skin = count;
+  // @ts-expect-error: an item's Rawcode is not a buff's.
+  unit.applyTimedLife(rationType, 1);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.addItemById(count);
+  unit.issueBuildOrder("humanbarracks", 0, 0);
+  unit.issueBuildOrder(FourCC("hbar"), 0, 0);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.issueBuildOrder(count, 0, 0);
+}
+
 describe("Unit.create", () => {
   const ownerRef = handleRef("player", owner.handle);
 

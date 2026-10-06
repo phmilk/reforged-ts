@@ -36,10 +36,10 @@ export class Item extends Widget {
    * @native BlzCreateItemWithSkin
    */
   public static create(
-    itemId: number,
+    itemId: Rawcode<"item">,
     x: number,
     y: number,
-    skinId?: number,
+    skinId?: Rawcode<"item">,
   ): Item {
     return this.expect(
       skinId === undefined
@@ -353,7 +353,8 @@ export class Item extends Widget {
    * @returns The skin's rawcode; the item type's own when no skin was set.
    * @native BlzGetItemSkin
    */
-  public get skin() {
+  // eslint-disable-next-line @typescript-eslint/related-getter-setter-pairs -- cleared when the getter returns the Rawcode<"item"> BlzGetItemSkin will return (#490, #491)
+  public get skin(): number {
     return BlzGetItemSkin(this.handle);
   }
 
@@ -361,7 +362,7 @@ export class Item extends Widget {
    * The rawcode of the skin the item shows, the model of another item type.
    * @native BlzSetItemSkin
    */
-  public set skin(skinId: number) {
+  public set skin(skinId: Rawcode<"item">) {
     BlzSetItemSkin(this.handle, skinId);
   }
 
@@ -410,7 +411,7 @@ export class Item extends Widget {
    * @param abilCode - The ability's rawcode, such as `FourCC("AIat")`.
    * @native BlzItemAddAbility
    */
-  public addAbility(abilCode: number) {
+  public addAbility(abilCode: Rawcode<"ability">) {
     BlzItemAddAbility(this.handle, abilCode);
   }
 
@@ -421,7 +422,7 @@ export class Item extends Widget {
    * ability of that rawcode.
    * @native BlzGetItemAbility
    */
-  public getAbility(abilCode: number) {
+  public getAbility(abilCode: Rawcode<"ability">) {
     return BlzGetItemAbility(this.handle, abilCode);
   }
 
@@ -445,7 +446,7 @@ export class Item extends Widget {
    * @param abilCode - The ability's rawcode, such as `FourCC("AIat")`.
    * @native BlzItemRemoveAbility
    */
-  public removeAbility(abilCode: number) {
+  public removeAbility(abilCode: Rawcode<"ability">) {
     BlzItemRemoveAbility(this.handle, abilCode);
   }
 
@@ -545,7 +546,7 @@ export class Item extends Widget {
    * @param unitId - The unit type's rawcode, such as `FourCC("nfor")`.
    * @native SetItemDropID
    */
-  public setDropId(unitId: number) {
+  public setDropId(unitId: Rawcode<"unit">) {
     SetItemDropID(this.handle, unitId);
   }
 
@@ -790,7 +791,7 @@ export class Item extends Widget {
    * @returns `true` when items of that type can be pawned.
    * @native IsItemIdPawnable
    */
-  public static isIdPawnable(itemId: number) {
+  public static isIdPawnable(itemId: Rawcode<"item">) {
     return IsItemIdPawnable(itemId);
   }
 
@@ -800,7 +801,7 @@ export class Item extends Widget {
    * @returns `true` when items of that type are power-ups.
    * @native IsItemIdPowerup
    */
-  public static isIdPowerup(itemId: number) {
+  public static isIdPowerup(itemId: Rawcode<"item">) {
     return IsItemIdPowerup(itemId);
   }
 
@@ -811,7 +812,7 @@ export class Item extends Widget {
    * @returns `true` when items of that type are sellable.
    * @native IsItemIdSellable
    */
-  public static isIdSellable(itemId: number) {
+  public static isIdSellable(itemId: Rawcode<"item">) {
     return IsItemIdSellable(itemId);
   }
 }
