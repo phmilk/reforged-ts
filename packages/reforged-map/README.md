@@ -6,7 +6,7 @@ A Map project gets it through the [Template](https://github.com/phmilk/reforged-
 
 ## What it reads and writes
 
-`generateEditorGlobals(mapFolder)` reads the map folder's `war3map.lua` and returns two files, each a bare file name and its text, plus the author-facing warnings:
+`generateEditorGlobals(mapFolder)` reads the map folder's `war3map.lua` and `war3map.wtg` and returns two files, each a bare file name and its text, plus the author-facing warnings:
 
 | File                                        | What it holds                                                                                                                                                |
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -23,6 +23,20 @@ const { files, warnings } = generateEditorGlobals("maps/my-map.w3m");
 - A `udg_` global is typed by its initializer (`0` is a `number`, `__jarray("")` a `Record<number, string>`), or, for a handle, by the Native `InitGlobals` assigns it (`NonNullable<ReturnType<typeof CreateGroup>>`).
 - Only the header (the lines before the first column-0 `function`) and the body of `InitGlobals` are read: the map's custom script and the trigger functions are not.
 
+A `udg_` variable of an object type is declared with the Object kind its Variable Editor type names, so `CreateUnit(owner, udg_SpawnType, …)` compiles with no cast and `UnitAddAbility(u, udg_SpawnType)` does not:
+
+| Variable Editor type | Declared                       |
+| -------------------- | ------------------------------ |
+| `unitcode`           | `Rawcode<"unit">`              |
+| `itemcode`           | `Rawcode<"item">`              |
+| `abilcode`           | `Rawcode<"ability">`           |
+| `buffcode`           | `Rawcode<"buff">`              |
+| `destructablecode`   | `Rawcode<"destructable">`      |
+| `techcode`           | `Rawcode<"unit" \| "upgrade">` |
+| `ordercode`          | `number`                       |
+
+An array is a `Record<number, T>` of the same type. The types come from `war3map.wtg` in the 1.31+ format (`WTG!`, format `0x80000004`, sub-version 7), which the 3.0 World Editor and HiveWE write; only its header and its variables block are read, never the triggers, so no `TriggerData.txt` is needed. The list of globals still comes from `war3map.lua`: a variable `war3map.wtg` declares and `war3map.lua` does not is ignored. The wtg type wins over the `war3map.lua` initializer (`0`, `__jarray(0)`, HiveWE's `nil` and `__jarray("")`); every other type keeps the type `war3map.lua` gives it. The Lua stub sets a Rawcode variable to its header literal, as any other.
+
 The package only reads the map folder (ADR 0006). The generated files are git-ignored and read-only in a Map project: a global is added or renamed in the World Editor, never in them.
 
 ## Errors and warnings
@@ -30,12 +44,14 @@ The package only reads the map folder (ADR 0006). The generated files are git-ig
 A missing map folder, or a map folder without `war3map.lua` (a map saved with JASS as its script language), throws a `MapFolderError` whose message says what to do in the World Editor. Everything else is a warning, and the build goes on:
 
 - an unknown `gg_` prefix: the global is declared `handle`;
-- a `udg_` initializer the reader does not recognize: the global is declared `unknown`.
+- a `udg_` initializer the reader does not recognize: the global is declared `unknown`;
+- a missing, truncated or unknown-format `war3map.wtg`: object-type variables are declared as `war3map.lua` types them;
+- a variable `war3map.wtg` and `war3map.lua` disagree is an array: it keeps the type `war3map.lua` gives it.
 
 ## Fixtures
 
-`test/fixtures/blank-map.w3m` holds the `war3map.lua` and `war3map.wtg` of the Template's blank map, as the 3.0 World Editor saved them (the Template's `tests/pipeline/fixtures/blank-map.w3m`). Git stores them byte for byte.
+`test/fixtures/blank-map.w3m` holds the `war3map.lua` and `war3map.wtg` of the Template's blank map, as the 3.0 World Editor saved them (the Template's `tests/pipeline/fixtures/blank-map.w3m`). `test/fixtures/wc3libs` holds the `war3map.wtg` fixtures of [wc3libs](https://github.com/inwc3/wc3libs), three in the 1.31+ format and one older, under the Apache License 2.0 (its `LICENSE` and `NOTICE`). Git stores both byte for byte. The tests build other `war3map.wtg` files in a temporary folder (`test/support/wtg.ts`), and type-check the generated declarations in a Map project against the workspace's `reforged-types` and `reforged-ts` (`test/fixtures/map-project`); run `pnpm build` before running the package's tests on their own.
 
 ## License
 
-MIT.
+MIT. The wc3libs fixtures under `test/fixtures/wc3libs`, which the package does not publish, are Apache-2.0.

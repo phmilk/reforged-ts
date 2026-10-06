@@ -391,9 +391,15 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.19.1
+      '@typescript-to-lua/language-extensions':
+        specifier: 'catalog:'
+        version: 1.19.0
       reforged-test:
         specifier: workspace:^
         version: link:../reforged-test
+      reforged-ts:
+        specifier: workspace:^
+        version: link:../reforged-ts
       reforged-types:
         specifier: workspace:^
         version: link:../reforged-types

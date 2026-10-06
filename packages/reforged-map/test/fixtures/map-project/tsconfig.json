@@ -1,0 +1,22 @@
+{
+  // The Map project fixtures as the editor and the lint see them: sources of
+  // a Map project, not of this package. The test (../../typecheck.test.ts)
+  // copies them into a temporary Map project, with the declarations
+  // generateEditorGlobals writes in place of editor-globals.d.ts (the test
+  // asserts both declare the same) and the workspace's reforged-ts and
+  // reforged-types installed; this file is not copied. Here `reforged-ts`
+  // resolves to the sources, since its declarations exist only once
+  // `pnpm build` has emitted them. The negative fixtures' type errors are what
+  // the test asserts, so this program is never built.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["reforged-types/3.0.0", "@typescript-to-lua/language-extensions"],
+    "strict": true,
+    "noEmit": true,
+    "paths": { "reforged-ts": ["../../../../reforged-ts/src/index.ts"] }
+  },
+  "include": ["."]
+}

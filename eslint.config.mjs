@@ -212,6 +212,19 @@ export default defineConfig(
       },
     },
   },
+  // reforged-map's Map project fixtures import `reforged-ts` as a Map project
+  // does, through the same kind of mapping.
+  {
+    files: ["packages/reforged-map/test/fixtures/map-project/**/*.ts"],
+    settings: {
+      "import-x/resolver": {
+        typescript: {
+          project:
+            "packages/reforged-map/test/fixtures/map-project/tsconfig.json",
+        },
+      },
+    },
+  },
   // The examples the doc comments include import `reforged-ts` as a Map
   // project does, through the same kind of mapping.
   {

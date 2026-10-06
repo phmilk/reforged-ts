@@ -16,6 +16,7 @@ import {
   mapFolder,
   removeTemporary,
 } from "./support/map-folder.js";
+import { buildWtg } from "./support/wtg.js";
 
 afterAll(removeTemporary);
 
@@ -95,9 +96,11 @@ function declaredTypes(output: EditorGlobalsOutput): Record<string, string> {
   );
 }
 
-/** The generated output of a map folder holding this war3map.lua. */
+/** The generated output of a map folder holding this war3map.lua and a war3map.wtg declaring no variable. */
 const generate = (script: string): EditorGlobalsOutput =>
-  generateEditorGlobals(mapFolder({ "war3map.lua": script }));
+  generateEditorGlobals(
+    mapFolder({ "war3map.lua": script, "war3map.wtg": buildWtg([]) }),
+  );
 
 describe("generateEditorGlobals", () => {
   const result = generate(SCRIPT);

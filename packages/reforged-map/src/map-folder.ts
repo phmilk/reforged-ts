@@ -38,3 +38,13 @@ export function readMapScript(mapFolder: string): string {
     .decode(fs.readFileSync(file))
     .replace(/^\uFEFF/, "");
 }
+
+/** The bytes of a file of the map folder, or `undefined` when it has none. */
+export function readMapFile(
+  mapFolder: string,
+  name: string,
+): Uint8Array | undefined {
+  const file = path.join(mapFolder, name);
+  if (!fs.statSync(file, { throwIfNoEntry: false })?.isFile()) return undefined;
+  return fs.readFileSync(file);
+}

@@ -11,6 +11,8 @@ packages/reforged-types/test/fixtures/jass-history/**/*.ai -text
 # (probe/PROVENANCE.md): git stores them byte for byte, as the Template does.
 probe/probe.w3m/** -text -diff
 
-# reforged-map's fixture map folders are copies of editor-saved files: git
-# stores them byte for byte (CRLF line ends included).
-packages/reforged-map/test/fixtures/** -text -diff
+# reforged-map's fixture map folders are copies of editor-saved files, and its
+# wc3libs fixtures copies of wc3libs' files with their license: git stores them
+# byte for byte (CRLF line ends included). The Map project fixtures are text.
+packages/reforged-map/test/fixtures/*.w3m/** -text -diff
+packages/reforged-map/test/fixtures/wc3libs/** -text -diff

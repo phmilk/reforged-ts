@@ -27,7 +27,9 @@ export function makeTempDir(): string {
 }
 
 /** A map folder (`test.w3m`) in a new temporary directory, holding these files by name. */
-export function mapFolder(files: Readonly<Record<string, string>>): string {
+export function mapFolder(
+  files: Readonly<Record<string, string | Uint8Array>>,
+): string {
   const folder = path.join(makeTempDir(), "test.w3m");
   fs.mkdirSync(folder);
   for (const [name, contents] of Object.entries(files)) {

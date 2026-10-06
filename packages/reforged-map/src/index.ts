@@ -2,10 +2,11 @@
 // generated from it. Node only, run at build time; it only reads the map
 // folder (ADR 0006, ADR 0014).
 
-import { readMapScript } from "./map-folder.js";
+import { readMapFile, readMapScript } from "./map-folder.js";
 import { createModel } from "./model.js";
 import { renderDeclarations, renderLuaStub } from "./render.js";
 import { readWar3mapLua } from "./war3map-lua.js";
+import { WTG_FILE, readWar3mapWtg } from "./war3map-wtg.js";
 
 export { MapFolderError } from "./map-folder.js";
 
@@ -39,7 +40,11 @@ export interface EditorGlobalsOutput {
  * @remarks
  * Only the header of `war3map.lua` and the body of `InitGlobals` are read.
  * A `gg_` global is typed by its prefix (`gg_rct_` a `rect`), and a `udg_`
- * one by its initializer or the Native `InitGlobals` assigns it. The stub
+ * one by its initializer or the Native `InitGlobals` assigns it. A `udg_`
+ * variable of an object type is typed by the Object kind its Variable Editor
+ * type names, read from the variables block of `war3map.wtg` (a `unitcode`
+ * variable is a `Rawcode<"unit">`); without a readable `war3map.wtg`, a
+ * warning says so and it keeps the type `war3map.lua` gives it. The stub
  * calls no Native.
  *
  * @param mapFolder - The path of the map folder, saved as a folder by the
@@ -51,6 +56,7 @@ export interface EditorGlobalsOutput {
 export function generateEditorGlobals(mapFolder: string): EditorGlobalsOutput {
   const model = createModel();
   readWar3mapLua(readMapScript(mapFolder), model);
+  readWar3mapWtg(readMapFile(mapFolder, WTG_FILE), model);
   return {
     files: [
       { name: DECLARATIONS_FILE, contents: renderDeclarations(model) },
