@@ -91,6 +91,24 @@
           "applyTo": "closedDocuments",
           "fileLocation": [
             "relative",
+            "${workspaceFolder}/packages/reforged-map"
+          ],
+          "pattern": {
+            "regexp": "^packages/reforged-map \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": [
+            "relative",
             "${workspaceFolder}/packages/reforged-test"
           ],
           "pattern": {
@@ -260,6 +278,24 @@
           ],
           "pattern": {
             "regexp": "^packages/eslint-plugin-reforged \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "code": 5,
+            "message": 6
+          }
+        },
+        {
+          "owner": "typescript",
+          "source": "ts",
+          "applyTo": "closedDocuments",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}/packages/reforged-map"
+          ],
+          "pattern": {
+            "regexp": "^packages/reforged-map \\S+: ([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
             "file": 1,
             "line": 2,
             "column": 3,

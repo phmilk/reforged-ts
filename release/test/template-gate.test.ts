@@ -106,10 +106,15 @@ const fileUrl = (packDir: string, path: string) =>
 /**
  * A runner standing in for pnpm: it records the commands, fails the one
  * named in `failing`, and on install puts in `node_modules` the version
- * each package's override names (or the one of `installs`).
+ * each package's override names (or the one of `installs`), except the
+ * packages of `absent`, which nothing in the Template depends on.
  */
 function fakePnpm(
-  options: { failing?: string; installs?: Record<string, string> } = {},
+  options: {
+    failing?: string;
+    installs?: Record<string, string>;
+    absent?: readonly string[];
+  } = {},
 ): { run: Runner; commands: Command[] } {
   const commands: Command[] = [];
   const run: Runner = async (command) => {
@@ -119,6 +124,7 @@ function fakePnpm(
       // The gate runs every command in the checkout.
       const cwd = command.cwd ?? "";
       for (const [name, spec] of Object.entries(await overridesOf(cwd))) {
+        if (options.absent?.includes(name)) continue;
         const version =
           options.installs?.[name] ??
           /-(\d+\.\d+\.\d+[^/]*)\.tgz$/.exec(spec)?.[1];
@@ -196,6 +202,21 @@ describe("runTemplateGate", () => {
 
     expect(await overridesOf(template)).toEqual({
       "reforged-ts": fileUrl(packDir, `packages/reforged-ts-${ALPHA}.tgz`),
+    });
+  });
+
+  it("passes a plan holding a package the Template does not depend on yet, overriding it all the same", async () => {
+    const packDir = await packOutput([...ALL_FOUR, { name: "reforged-map" }]);
+    const template = await templateCheckout();
+    const pnpm = fakePnpm({ absent: ["reforged-map"] });
+
+    const result = await runTemplateGate({ template, packDir, run: pnpm.run });
+
+    expect(result.ok).toBe(true);
+    expect(lines(pnpm.commands)).toEqual(ALL_STEPS);
+    expect(result.installed.map(({ name }) => name)).toContain("reforged-map");
+    expect(await overridesOf(template)).toMatchObject({
+      "reforged-map": fileUrl(packDir, `packages/reforged-map-${ALPHA}.tgz`),
     });
   });
 

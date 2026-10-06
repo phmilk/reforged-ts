@@ -28,6 +28,18 @@ export default defineConfig({
         },
       },
       {
+        // The map folder reader, in Node, on fixture map folders and ones the
+        // tests build in a temporary folder; its Lua stub runs on the
+        // reforged-test harness.
+        test: {
+          name: "reforged-map",
+          root: "packages/reforged-map",
+          include: ["test/**/*.test.ts"],
+          exclude: ["test/fixtures/**"],
+          environment: "node",
+        },
+      },
+      {
         // The library, compiled with its tests by typescript-to-lua and run
         // on the reforged-test harness, and compiled with its examples, the
         // runnable ones run on the harness too. The global setup compiles

@@ -23,6 +23,7 @@ const AGREEING: Record<string, unknown> = {
   "reforged-types": NEW,
   "reforged-test": OLD,
   "eslint-plugin-reforged": OLD,
+  "reforged-map": OLD,
 };
 
 /**
@@ -66,6 +67,7 @@ describe("checkPatches", () => {
       ok: true,
       patches: [
         { name: "eslint-plugin-reforged", patch: OLD },
+        { name: "reforged-map", patch: OLD },
         { name: "reforged-test", patch: OLD },
         { name: "reforged-ts", patch: NEW },
         { name: "reforged-types", patch: NEW },
@@ -221,6 +223,7 @@ describe("checkPatches", () => {
     expect(result.problems).toEqual([]);
     expect(result.patches.map(({ name }) => name)).toEqual([
       "eslint-plugin-reforged",
+      "reforged-map",
       "reforged-test",
       "reforged-ts",
       "reforged-types",
@@ -289,7 +292,7 @@ describe("release:check-patches", () => {
       status: 0,
       stdout:
         `Every publishable package names a Patch the Typings ship an entry for, the library the newest (${NEW}): ` +
-        `eslint-plugin-reforged ${OLD}, reforged-test ${OLD}, reforged-ts ${NEW}, reforged-types ${NEW}.\n`,
+        `eslint-plugin-reforged ${OLD}, reforged-map ${OLD}, reforged-test ${OLD}, reforged-ts ${NEW}, reforged-types ${NEW}.\n`,
       stderr: "",
     });
   });

@@ -17,12 +17,13 @@ export interface FixturePackage {
   fields?: Record<string, unknown>;
 }
 
-/** The four packages of the real workspace, and the private release one. */
+/** The five packages of the real workspace, and the private release one. */
 export const PACKAGES: readonly FixturePackage[] = [
   { dir: "packages/reforged-ts", name: "reforged-ts" },
   { dir: "packages/reforged-types", name: "reforged-types" },
   { dir: "packages/reforged-test", name: "reforged-test" },
   { dir: "packages/eslint-plugin-reforged", name: "eslint-plugin-reforged" },
+  { dir: "packages/reforged-map", name: "reforged-map" },
   { dir: "release", name: "reforged-ts-release", private: true },
 ];
 

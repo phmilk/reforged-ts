@@ -196,6 +196,21 @@ finish() {
 #   bash release/first-publish.sh            the real run
 #   bash release/first-publish.sh --dry-run  prints every command, runs none
 #
+# The one-package mode (#501) publishes one package that came after the
+# first four, such as reforged-map, alone, the other packages being on npm
+# already:
+#
+#   bash release/first-publish.sh --package reforged-map [--dry-run]
+#
+# It checks that npm does not hold the package yet and that the publish
+# plan's entry for it is 1.0.0-alpha.0 under `next`, and publishes that entry
+# alone: the other packages the plan holds are the release workflow's, whose
+# failed publish job is re-run afterwards. When a peer or dependency packed
+# in the package is a version npm does not hold yet (reforged-types bumped by
+# the same release), it says so and publishes only once the maintainer
+# confirms re-running that job right after. Then it walks through that
+# package's trusted publisher and publishing access, and the token.
+#
 # It checks what the npm CLI and git can check and stops at the first failed
 # check, saying what to fix. What only npmjs.com shows (the trusted
 # publisher, the package's publishing access, the token's 2FA setting and
@@ -209,7 +224,8 @@ finish() {
 # tree, so the wizard can be reviewed from any branch; it answers every
 # confirmation with yes and opens no browser.
 
-readonly PACKAGES=(reforged-ts reforged-types reforged-test eslint-plugin-reforged)
+# The packages of the first publish, without --package.
+readonly FIRST_FOUR=(reforged-ts reforged-types reforged-test eslint-plugin-reforged)
 readonly VERSION=1.0.0-alpha.0
 readonly DIST_TAG=next
 readonly PRE_TAG=alpha
@@ -218,21 +234,40 @@ readonly REPO_NAME=reforged-ts
 readonly WORKFLOW=release.yml
 readonly AUTH_KEY=//registry.npmjs.org/:_authToken
 readonly GUIDE=docs/release.md
-readonly RERUN="bash release/first-publish.sh"
+RERUN="bash release/first-publish.sh"
 
 usage() {
-  printf 'Usage: %s [--dry-run]\n' "$RERUN"
+  printf 'Usage: %s [--dry-run] [--package <name>]\n' "$RERUN"
   printf '  The first publish of %s: docs/release.md, "Human steps".\n' "$VERSION"
+  printf '  --package <name>  publish only <name>, a package npm does not hold yet,\n'
+  printf '                    the others being on npm already\n'
 }
 
 DRY_RUN=false
-if [[ $# -gt 1 ]]; then usage >&2; exit 2; fi
-case "${1:-}" in
-  "") ;;
-  --dry-run) DRY_RUN=true ;;
-  -h | --help) usage; exit 0 ;;
-  *) usage >&2; exit 2 ;;
-esac
+ONE_PACKAGE=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --dry-run) DRY_RUN=true ;;
+    --package)
+      if [[ $# -lt 2 || -z "$2" || "$2" == -* || -n "$ONE_PACKAGE" ]]; then usage >&2; exit 2; fi
+      ONE_PACKAGE="$2"
+      shift
+      ;;
+    -h | --help) usage; exit 0 ;;
+    *) usage >&2; exit 2 ;;
+  esac
+  shift
+done
+
+if [[ -n "$ONE_PACKAGE" ]]; then
+  PACKAGES=("$ONE_PACKAGE")
+  RERUN="$RERUN --package $ONE_PACKAGE"
+  WHAT="$ONE_PACKAGE is"
+else
+  PACKAGES=("${FIRST_FOUR[@]}")
+  WHAT="the four packages are"
+fi
+readonly PACKAGES WHAT
 
 # Git Bash rewrites arguments that look like POSIX paths, and would turn
 # `//registry.npmjs.org/...` into `/registry.npmjs.org/...`. Paths handed to
@@ -325,6 +360,58 @@ npm_has_version() {
   [[ -n "$(npm view "$1@$VERSION" version 2>/dev/null)" ]]
 }
 
+# keep_only_in_plan PLAN PACKAGE rewrites the publish plan PLAN to publish
+# PACKAGE alone: the one-package mode leaves the others to the release
+# workflow. Fails when the plan has no publish entry for PACKAGE.
+keep_only_in_plan() {
+  node -e '
+    const fs = require("fs");
+    const [file, name] = process.argv.slice(1);
+    const plan = JSON.parse(fs.readFileSync(file, "utf8"));
+    plan.plan = plan.plan
+      .map((chunk) => chunk.filter((e) => e.kind === "publish" && e.name === name))
+      .filter((chunk) => chunk.length > 0);
+    if (plan.plan.length === 0) {
+      console.error(`The publish plan has no publish entry for ${name}.`);
+      process.exit(1);
+    }
+    fs.writeFileSync(file, `${JSON.stringify(plan, null, 2)}\n`);
+  ' "$1" "$2"
+}
+
+# packed_requirements PACK_DIR PACKAGE prints "name range", one a line, for
+# each peer and dependency of the package.json packed in PACKAGE's tarball,
+# as the publish plan of PACK_DIR names it: what npm must hold for PACKAGE
+# to install.
+packed_requirements() {
+  local tarball
+  tarball=$(node -e '
+    const path = require("path");
+    const [dir, name] = process.argv.slice(1);
+    const plan = JSON.parse(require("fs").readFileSync(path.join(dir, "publish-plan.json"), "utf8"));
+    const entry = plan.plan.flat().find((e) => e.kind === "publish" && e.name === name);
+    if (!entry || typeof entry.tarball?.path !== "string") process.exit(1);
+    process.stdout.write(path.resolve(dir, entry.tarball.path));
+  ' "$1" "$2") || return 1
+  tar -xzOf "$tarball" package/package.json | node -e '
+    const manifest = JSON.parse(require("fs").readFileSync(0, "utf8"));
+    for (const field of ["peerDependencies", "dependencies"])
+      for (const [name, range] of Object.entries(manifest[field] ?? {})) console.log(name, range);
+  '
+}
+
+# npm_satisfies NAME RANGE: whether npm holds a version of NAME in RANGE.
+# Stops the wizard when npm cannot be asked.
+npm_satisfies() {
+  if [[ -n "$(npm view "$1@$2" version 2>"$ERR_FILE")" ]]; then
+    return 0
+  elif grep -q E404 "$ERR_FILE"; then
+    return 1
+  else
+    fail "npm view $1@$2 failed:" "$(cat "$ERR_FILE")" "Check your network and the npm registry."
+  fi
+}
+
 # manifest_field FILE FIELD prints FIELD of the JSON file FILE.
 manifest_field() {
   node -e 'const v = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))[process.argv[2]]; process.stdout.write(v === undefined ? "" : String(v))' "$1" "$2"
@@ -332,13 +419,15 @@ manifest_field() {
 
 # ──────────────────────────────────────────────────────────────────────────
 
-TOTAL_STAGES=8
+TOTAL_STAGES=$((4 + ${#PACKAGES[@]}))
 PENDING=() # the packages npm does not hold with next at VERSION yet
 
+TITLE="First publish of $VERSION"
+[[ -z "$ONE_PACKAGE" ]] || TITLE="First publish of $ONE_PACKAGE@$VERSION"
 if $DRY_RUN; then
-  banner "First publish of $VERSION (dry run: nothing is published)"
+  banner "$TITLE (dry run: nothing is published)"
 else
-  banner "First publish of $VERSION"
+  banner "$TITLE"
 fi
 
 # ── 1. Before anything ────────────────────────────────────────────────────
@@ -390,19 +479,26 @@ fi
 UNVERSIONED=()
 for pkg in "${PACKAGES[@]}"; do
   manifest="packages/$pkg/package.json"
-  [[ -f "$manifest" ]] || fail "$manifest is missing." "The four packages must be in the workspace: $GUIDE."
+  [[ -f "$manifest" ]] || fail "$manifest is missing." "${PACKAGES[*]} must be in the workspace: $GUIDE."
   name=$(manifest_field "$manifest" name)
   version=$(manifest_field "$manifest" version)
+  private=$(manifest_field "$manifest" private)
   [[ "$name" == "$pkg" ]] || fail "$manifest names the package $name, not $pkg."
+  [[ "$private" != true ]] || fail "$pkg is private: it is never published." "Remove \"private\": true from $manifest first."
   [[ "$version" == "$VERSION" ]] || UNVERSIONED+=("$pkg is at $version")
 done
 if ((${#UNVERSIONED[@]})); then
+  if [[ -n "$ONE_PACKAGE" ]]; then
+    fail "The first version of $ONE_PACKAGE is not applied: it must be at $VERSION." \
+      "${UNVERSIONED[@]}" \
+      "Merge the Version Packages pull request that gives it $VERSION; then pull master."
+  fi
   fail "The versions of the first alpha are not applied: every package must be at $VERSION." \
     "${UNVERSIONED[@]}" \
     "Merge the pull request that applies them (branch release/first-alpha-versions)," \
     "or apply them as $GUIDE, \"Applying the versions\", says; then pull master."
 fi
-ok "the four packages are at $VERSION"
+ok "$WHAT at $VERSION"
 
 say ""
 say "What npm holds:"
@@ -447,7 +543,7 @@ else
   step "Generate New Token → Granular Access Token."
   step "Token name: reforged-ts first publish. Expiration: short; a few days is enough."
   step "Leave 'Bypass two-factor authentication' UNticked: 2FA must protect the token."
-  step "Packages and scopes: Read and write, All Packages (the four do not exist yet)."
+  step "Packages and scopes: Read and write, All Packages (not on npm yet: ${PENDING[*]})."
   step "Organizations: No access. Generate Token, then copy it."
   ask_secret NPM_TOKEN "Paste the token (hidden):"
   [[ -n "$NPM_TOKEN" ]] || fail "No token given."
@@ -471,7 +567,7 @@ fi
 stage "Build, pack and publish"
 
 if ((${#PENDING[@]} == 0)); then
-  ok "The four packages are on npm with $DIST_TAG at $VERSION: nothing to publish."
+  ok "$WHAT on npm with $DIST_TAG at $VERSION: nothing to publish."
   pause "Press Enter to continue"
 else
   say "To publish: ${PENDING[*]}"
@@ -484,6 +580,39 @@ else
   run pnpm changeset pack --out-dir "$PACK_DIR" || fail "changeset pack failed." "Read the error above."
   run pnpm release:dist-tag --pack-dir "$PACK_DIR" ||
     fail "release:dist-tag refused the publish plan." "Read the error above: $GUIDE, \"The dist-tag\"."
+  if [[ -n "$ONE_PACKAGE" ]]; then
+    note "The other packages of the plan are the release workflow's: re-run its failed publish job afterwards."
+    printf '  %s$ (keep only %s in %s)%s\n' "$BOLD" "$ONE_PACKAGE" "$PACK_DIR/publish-plan.json" "$RESET"
+    $DRY_RUN || keep_only_in_plan "$PACK_DIR/publish-plan.json" "$ONE_PACKAGE" ||
+      fail "The publish plan does not publish $ONE_PACKAGE." "Is its version $VERSION on master, and not on npm yet?"
+
+    # A peer the release bumps (reforged-types for reforged-map) is on npm
+    # only once the re-run publish job publishes it: until then the package
+    # published here cannot be installed with it.
+    printf '  %s$ (npm view each peer and dependency packed in %s)%s\n' "$BOLD" "$ONE_PACKAGE" "$RESET"
+    if ! $DRY_RUN; then
+      REQUIREMENTS=$(packed_requirements "$PACK_DIR" "$ONE_PACKAGE") ||
+        fail "The packed package.json of $ONE_PACKAGE cannot be read." "Read the error above."
+      UNMET=()
+      while read -r name range; do
+        [[ -n "$name" ]] || continue
+        npm_satisfies "$name" "$range" || UNMET+=("$name@$range")
+      done <<<"$REQUIREMENTS"
+      if ((${#UNMET[@]})); then
+        warn "$ONE_PACKAGE@$VERSION needs what npm does not hold yet: ${UNMET[*]}."
+        say "Published now, $ONE_PACKAGE cannot be installed with it until the failed"
+        say "publish job of the release run is re-run and publishes it: install it before"
+        say "then, and pnpm reports an unmet peer and the Rawcode types do not resolve."
+        say "Re-run that job right after this wizard: ${BOLD}gh run rerun <run id> --failed${RESET}"
+        confirm "Publish $ONE_PACKAGE now, and re-run the failed publish job right after the wizard?" ||
+          fail "Nothing was published: npm does not hold ${UNMET[*]}." \
+            "The release run's failed publish job publishes it, but only once npm holds $ONE_PACKAGE." \
+            "Re-run this wizard when you can re-run that job right after it."
+      else
+        ok "npm holds every peer and dependency of $ONE_PACKAGE"
+      fi
+    fi
+  fi
 
   PLANNED=()
   if ! $DRY_RUN; then
@@ -553,7 +682,7 @@ else
   pause "Press Enter to continue"
 fi
 
-# ── 4 to 7. Each package: trusted publisher, then no tokens ───────────────
+# ── 4 on. Each package: trusted publisher, then no tokens ─────────────────
 for pkg in "${PACKAGES[@]}"; do
   stage "$pkg: trusted publisher and publishing access"
   open_url "https://www.npmjs.com/package/$pkg/access"
@@ -574,7 +703,7 @@ for pkg in "${PACKAGES[@]}"; do
     fail "$pkg still accepts tokens." "Set it on https://www.npmjs.com/package/$pkg/access"
 done
 
-# ── 8. Revoke the token ───────────────────────────────────────────────────
+# ── Last. Revoke the token ────────────────────────────────────────────────
 stage "Revoke the token"
 
 if $DRY_RUN; then
@@ -615,10 +744,17 @@ finish
 if $DRY_RUN; then
   note "Dry run: nothing was published, set or pushed."
 else
-  ok "The four packages are on npm with $DIST_TAG at $VERSION, publish through $WORKFLOW only, and no token remains."
+  ok "$WHAT on npm with $DIST_TAG at $VERSION, publish through $WORKFLOW only, and no token remains."
 fi
 say ""
-say "Next, human step 5 of $GUIDE: with the workflow's prerequisites in place, run"
-say "the release workflow's dry run, then merge the next Version Packages pull request:"
-say "  ${BOLD}gh workflow run $WORKFLOW --ref master -f dry-run=true${RESET}"
+if [[ -n "$ONE_PACKAGE" ]]; then
+  say "Next: re-run the failed publish job of the release run that stopped at the"
+  say "publish check. It publishes the other packages of the release and skips"
+  say "$ONE_PACKAGE@$VERSION, which npm now holds:"
+  say "  ${BOLD}gh run rerun <run id> --failed${RESET}"
+else
+  say "Next, human step 5 of $GUIDE: with the workflow's prerequisites in place, run"
+  say "the release workflow's dry run, then merge the next Version Packages pull request:"
+  say "  ${BOLD}gh workflow run $WORKFLOW --ref master -f dry-run=true${RESET}"
+fi
 say ""

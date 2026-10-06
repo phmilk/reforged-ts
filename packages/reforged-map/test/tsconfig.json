@@ -1,0 +1,11 @@
+{
+  // The tests: type-checked only; vitest runs them from source.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "noEmit": true
+  },
+  "include": ["."],
+  // The Map project fixtures are another program, with a tsconfig of their own.
+  "exclude": ["fixtures"]
+}

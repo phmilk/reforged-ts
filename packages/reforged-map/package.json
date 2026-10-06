@@ -1,0 +1,60 @@
+{
+  "name": "reforged-map",
+  "version": "0.0.0",
+  "description": "Reads a Warcraft III Reforged map folder and writes the TypeScript declarations and the Lua stub of its Editor globals for a reforged-ts Map project.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "warcraft",
+    "wc3",
+    "reforged",
+    "typescript-to-lua",
+    "world-editor",
+    "war3map"
+  ],
+  "homepage": "https://phmilk.github.io/reforged-ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phmilk/reforged-ts.git",
+    "directory": "packages/reforged-map"
+  },
+  "bugs": {
+    "url": "https://github.com/phmilk/reforged-ts/issues"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "reforged": {
+    "patch": "3.0.0.24268"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "/dist/**/*.js",
+    "/dist/**/*.d.ts",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json",
+    "test": "vitest run --root ../.. --project reforged-map",
+    "prepare": "pnpm run build"
+  },
+  "peerDependencies": {
+    "reforged-types": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@typescript-to-lua/language-extensions": "catalog:",
+    "reforged-test": "workspace:^",
+    "reforged-ts": "workspace:^",
+    "reforged-types": "workspace:^",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

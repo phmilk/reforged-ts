@@ -2,7 +2,7 @@
 
 ## Overview
 
-reforged-ts is a TypeScript API over the Natives of Warcraft III 3.0.0 and later, compiled to Lua with typescript-to-lua; a fork of [cipherxof/w3ts](https://github.com/cipherxof/w3ts). The workspace publishes four packages: the library (Wrappers and Systems), the Typings, the Lua test harness and the lint plugin (the lint layer of the Guards). The Template (`phmilk/reforged-ts-template`) is the Reference consumer every library release must build. The Template's `AGENTS.md` is a Seed that becomes a Map project's own file; this file is not a Seed. `CONTEXT.md` is the vocabulary: use its terms.
+reforged-ts is a TypeScript API over the Natives of Warcraft III 3.0.0 and later, compiled to Lua with typescript-to-lua; a fork of [cipherxof/w3ts](https://github.com/cipherxof/w3ts). The workspace publishes five packages: the library (Wrappers and Systems), the Typings, the Lua test harness, the lint plugin (the lint layer of the Guards) and the map folder reader. The Template (`phmilk/reforged-ts-template`) is the Reference consumer every library release must build. The Template's `AGENTS.md` is a Seed that becomes a Map project's own file; this file is not a Seed. `CONTEXT.md` is the vocabulary: use its terms.
 
 ## Commands
 
@@ -21,6 +21,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `packages/reforged-ts/`: the library, the Wrappers and Systems, and under `examples/` the compiled files every `@example` includes.
 - `packages/reforged-types/`: the Typings, their generator and the Overlay. Read its `AGENTS.md` before changing the package.
 - `packages/reforged-test/`: the Lua test harness the library's tests run on.
+- `packages/reforged-map/`: the reader of a Map project's map folder, run at build time: the declarations and the Lua stub of its Editor globals.
 - `packages/eslint-plugin-reforged/`: the lint layer of the Guards. Read its `AGENTS.md` before adding or changing a rule, its fixtures, docs page or data files.
 - `website/`: the pages of the docs site.
 - `docs/adr/`: the decisions, numbered. `docs/research/`: the research they rely on (the probe map of the game's Lua).

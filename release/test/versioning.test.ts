@@ -20,22 +20,24 @@ const CHANGESET_BIN = createRequire(import.meta.url).resolve(
   "@changesets/cli/bin.js",
 );
 
-const PUBLISHABLE = [
+/** The packages of the first publish. */
+const FIRST_FOUR = [
   "eslint-plugin-reforged",
   "reforged-test",
   "reforged-ts",
   "reforged-types",
 ] as const;
 
-/** Every publishable package at `version`. */
+/** Every package of the first publish at `version`. */
 const all = (version: string) =>
-  Object.fromEntries(PUBLISHABLE.map((name) => [name, version]));
+  Object.fromEntries(FIRST_FOUR.map((name) => [name, version]));
 
 /**
  * A scratch copy of the workspace: every manifest of the repository, each
- * publishable one at `version`, and the repository's Changesets config.
+ * publishable one at `version` (at the repository's version when absent),
+ * and the repository's Changesets config.
  */
-async function scratchWorkspace(version: string): Promise<string> {
+async function scratchWorkspace(version?: string): Promise<string> {
   const root = await tempDir("versioning");
   for (const file of ["package.json", "pnpm-workspace.yaml"]) {
     await writeText(
@@ -47,7 +49,9 @@ async function scratchWorkspace(version: string): Promise<string> {
   const { packages } = await getPackages(repositoryRoot);
   for (const { packageJson, relativeDir } of packages) {
     const manifest =
-      packageJson.private === true ? packageJson : { ...packageJson, version };
+      packageJson.private === true || version === undefined
+        ? packageJson
+        : { ...packageJson, version };
     await writeText(
       root,
       `${relativeDir.split(sep).join(posix.sep)}/package.json`,
@@ -149,9 +153,13 @@ describe("changeset version", { timeout: 60_000 }, () => {
 
     await changeset(root, "version");
 
+    // reforged-map was not part of the first publish: at 0.0.0 its
+    // workspace ranges on the majored packages fall out of range, so
+    // Changesets gives it the patch of updateInternalDependencies.
     expect(await versions(root)).toEqual({
       ...releaseVersions,
       ...all("1.0.0-alpha.0"),
+      "reforged-map": "0.0.1-alpha.0",
     });
     // The versioned changesets wait in the pre folder for the 1.0.0
     // changelog; the ranges stay on the workspace protocol for pnpm publish.
@@ -164,6 +172,25 @@ describe("changeset version", { timeout: 60_000 }, () => {
       "typings-fix.md",
     ]);
     expect(await workspaceRanges(root)).toEqual(ranges);
+  });
+
+  it("gives reforged-map 1.0.0-alpha.0 first, entering at 0.0.0 with a major in the repository's pre mode", async () => {
+    const root = await scratchWorkspace();
+    await writeText(
+      root,
+      ".changeset/pre.json",
+      await readFile(join(repositoryRoot, ".changeset/pre.json"), "utf8"),
+    );
+    const before = await versions(root);
+    expect(before["reforged-map"]).toBe("0.0.0");
+    await addChangeset(root, "reforged-map", { "reforged-map": "major" });
+
+    await changeset(root, "version");
+
+    expect(await versions(root)).toEqual({
+      ...before,
+      "reforged-map": "1.0.0-alpha.0",
+    });
   });
 
   it("moves only the Typings for a minor on the Typings in pre mode", async () => {
@@ -199,6 +226,7 @@ describe("changeset version", { timeout: 60_000 }, () => {
 
     expect(await versions(root)).toMatchObject({
       "eslint-plugin-reforged": "1.0.1",
+      "reforged-map": "1.0.1",
       "reforged-test": "1.0.0",
       "reforged-ts": "1.0.1",
       "reforged-types": "2.0.0",

@@ -16,7 +16,7 @@ A Map project starts from the [Template](https://github.com/phmilk/reforged-ts-t
 | Node             | 24 (the Template's `.node-version`); the packages need 22.13         | The build, the tests and the tools run on it.                                                                               |
 | pnpm             | 12 (the Template's `packageManager`; `npm install --global pnpm@12`) | The package manager of the Template.                                                                                        |
 
-The Template pins the rest of the Toolchain, so there is nothing else to install: TypeScript at the exact version typescript-to-lua supports (6.0.2 with typescript-to-lua 1.37), typescript-to-lua with its language extensions, the [Typings](../guides/typings.md) of the Patch (`reforged-types`), ESLint with `eslint-plugin-reforged`, and vitest with the Lua test harness (`reforged-test`). [Compatibility](../compatibility/index.mdx) lists which versions go together for each release.
+The Template pins the rest of the Toolchain, so there is nothing else to install: TypeScript at the exact version typescript-to-lua supports (6.0.2 with typescript-to-lua 1.37), typescript-to-lua with its language extensions, the [Typings](../guides/typings.md) of the Patch (`reforged-types`), ESLint with `eslint-plugin-reforged`, vitest with the Lua test harness (`reforged-test`), and `reforged-map`, which writes the declarations of the map's Editor globals from the map folder ([GUI variables of an object type](../guides/rawcodes.md#gui-variables-of-an-object-type)). [Compatibility](../compatibility/index.mdx) lists which versions go together for each release.
 
 On Linux the game runs through Wine: set `winePath` in `reforged.config.ts`.
 
