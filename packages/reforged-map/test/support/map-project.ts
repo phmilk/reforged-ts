@@ -1,6 +1,6 @@
 // A throwaway Map project that type-checks the generated declarations as a
-// Map project does: the fixture sources under test/fixtures/map-project
-// copied to its src/, the generated declarations written next to them, and
+// Map project does: the fixture sources of a folder under test/fixtures
+// (map-project by default) copied to its src/, the generated declarations written next to them, and
 // the workspace's reforged-types, reforged-ts and the typescript-to-lua
 // language extensions linked into its node_modules. reforged-ts is read from
 // its emitted declarations (dist/), so `pnpm build` runs first.
@@ -12,7 +12,12 @@ import * as ts from "typescript";
 import { PACKAGE_ROOT, makeTempDir } from "./map-folder.js";
 import type { GeneratedFile } from "../../src/index.js";
 
-const fixturesRoot = path.join(PACKAGE_ROOT, "test", "fixtures", "map-project");
+/** The Map project fixtures of the hand-built map folder. */
+export const MAP_PROJECT_FIXTURES = "map-project";
+
+/** A folder of Map project fixtures, under test/fixtures. */
+const fixturesRoot = (fixtures: string): string =>
+  path.join(PACKAGE_ROOT, "test", "fixtures", fixtures);
 
 /** The `types` entries of a Map project (the Template's). */
 const MAP_PROJECT_TYPES = [
@@ -31,17 +36,23 @@ const LINKED_PACKAGES = [
 export const FIXTURE_DECLARATIONS = "editor-globals.d.ts";
 const NOT_COPIED = new Set(["tsconfig.json", FIXTURE_DECLARATIONS]);
 
-/** The text of a committed fixture file. */
-export function readFixture(name: string): string {
-  return fs.readFileSync(path.join(fixturesRoot, name), "utf8");
+/** The text of a committed fixture file of a Map project fixtures folder. */
+export function readFixture(
+  name: string,
+  fixtures: string = MAP_PROJECT_FIXTURES,
+): string {
+  return fs.readFileSync(path.join(fixturesRoot(fixtures), name), "utf8");
 }
 
 /**
  * A Map project in a new temporary directory, removed by `removeTemporary`:
- * the fixtures and `generated` in src/, a tsconfig.json in the shape of the
- * Template's. Returns the tsconfig's path.
+ * the fixtures of the `fixtures` folder and `generated` in src/, a
+ * tsconfig.json in the shape of the Template's. Returns the tsconfig's path.
  */
-export function createMapProject(generated: readonly GeneratedFile[]): string {
+export function createMapProject(
+  generated: readonly GeneratedFile[],
+  fixtures: string = MAP_PROJECT_FIXTURES,
+): string {
   const dir = makeTempDir();
   const require = createRequire(path.join(PACKAGE_ROOT, "package.json"));
   for (const name of LINKED_PACKAGES) {
@@ -65,9 +76,10 @@ export function createMapProject(generated: readonly GeneratedFile[]): string {
 
   const src = path.join(dir, "src");
   fs.mkdirSync(src);
-  for (const name of fs.readdirSync(fixturesRoot)) {
+  const root = fixturesRoot(fixtures);
+  for (const name of fs.readdirSync(root)) {
     if (!NOT_COPIED.has(name)) {
-      fs.copyFileSync(path.join(fixturesRoot, name), path.join(src, name));
+      fs.copyFileSync(path.join(root, name), path.join(src, name));
     }
   }
   for (const file of generated) {

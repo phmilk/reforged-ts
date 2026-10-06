@@ -1,0 +1,20 @@
+{
+  // The Map project fixtures of the map folder the 3.0 World Editor saved
+  // (../editor-variables.w3m), as the editor and the lint see them. The test
+  // (../../editor-saved.test.ts) copies them into a temporary Map project,
+  // with the declarations generateEditorGlobals writes from that map folder
+  // in place of editor-globals.d.ts (the test asserts both declare the same);
+  // this file is not copied. They use the Natives only, so nothing maps
+  // `reforged-ts`. The negative fixtures' type errors are what the test
+  // asserts, so this program is never built.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["reforged-types/3.0.0", "@typescript-to-lua/language-extensions"],
+    "strict": true,
+    "noEmit": true
+  },
+  "include": ["."]
+}
