@@ -35,6 +35,12 @@ export function spellRawcodeKinds(count: number): void {
   Effect.createSpellAttachment(footmanType, caster, target, "origin");
   // @ts-expect-error: a plain number is not a Rawcode.
   Effect.createSpellAtPoint(count, caster, Point.create(0, 0));
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  Effect.createSpell(footmanType, caster, 0, 0);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Effect.createSpellAttachment(count, caster, target, "origin");
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  Effect.createSpellAtPoint(footmanType, caster, Point.create(0, 0));
 }
 
 describe("Effect", () => {

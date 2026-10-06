@@ -11,6 +11,25 @@ import { describeNatives, nativeCase } from "./support/native-cases";
 import { withNative } from "./support/native-override";
 import { raisedIn } from "./support/raised-in";
 
+/**
+ * The doodad members take a doodad's Rawcode, never another kind's or a
+ * plain `number`. Never called: `tsc` checks it.
+ */
+export function doodadRawcodeKinds(rectangle: Rectangle, count: number): void {
+  const brazierType: Rawcode<"doodad"> = FourCC("LObr");
+  const treeType: Rawcode<"destructable"> = FourCC("LTlt");
+  rectangle.setDoodadAnimation(brazierType, "death", false);
+  rectangle.setDoodadColor(FourCC("LObr"), PLAYER_COLOR_RED);
+  // @ts-expect-error: a destructable's Rawcode is not a doodad's.
+  rectangle.setDoodadAnimation(treeType, "death", false);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  rectangle.setDoodadAnimation(count, "death", false);
+  // @ts-expect-error: a destructable's Rawcode is not a doodad's.
+  rectangle.setDoodadColor(treeType, PLAYER_COLOR_RED);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  rectangle.setDoodadColor(count, PLAYER_COLOR_RED);
+}
+
 describe("Rectangle.create", () => {
   it("wraps the handle Rect returns, and a lookup finds it", () => {
     const rectangle = Rectangle.create(-64, -32, 64, 32);

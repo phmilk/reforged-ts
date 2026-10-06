@@ -77,6 +77,163 @@ export function unitRawcodeKinds(unit: Unit, count: number): void {
   unit.queueNeutralTargetOrder(owner, count, unit);
 }
 
+/**
+ * The rest of `Unit`'s Rawcode members, each refusing a Rawcode of another
+ * kind and a plain `number`. Never called: `tsc` checks it.
+ */
+export function unitMemberRawcodeKinds(unit: Unit, count: number): void {
+  const blizzard: Rawcode<"ability"> = FourCC("AHbz");
+  const footmanType: Rawcode<"unit"> = FourCC("hfoo");
+  const rationType: Rawcode<"item"> = FourCC("ratf");
+  const where = Point.create(0, 0);
+  // @ts-expect-error: an ability's Rawcode is not a unit's.
+  Unit.createAtPoint(owner, blizzard, where);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Unit.createAtPoint(owner, count, where);
+  // @ts-expect-error: an ability's Rawcode is not a unit's.
+  Unit.createCorpse(owner, blizzard, 0, 0);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Unit.createCorpse(owner, count, 0, 0);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.adjustAbilityCooldownPercent(footmanType, 0.5);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.adjustAbilityCooldownPercent(count, 0.5);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.adjustAbilityCooldownRemaining(footmanType, 1);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.adjustAbilityCooldownRemaining(count, 1);
+  // @ts-expect-error: a unit's Rawcode is not an item's.
+  unit.addItemById(footmanType);
+  // @ts-expect-error: a unit's Rawcode is not an item's.
+  unit.addItemToSlotById(footmanType, 0);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.addItemToSlotById(count, 0);
+  // @ts-expect-error: a unit's Rawcode is not an item's.
+  unit.addItemToStock(footmanType, 1, 1);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.addItemToStock(count, 1, 1);
+  // @ts-expect-error: an item's Rawcode is not a unit's.
+  unit.addUnitToStock(rationType, 1, 1);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.addUnitToStock(count, 1, 1);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.applyTimedLife(count, 1);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.decAbilityLevel(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.decAbilityLevel(count);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.disableAbility(footmanType, true, false);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.disableAbility(count, true, false);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.endAbilityCooldown(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.endAbilityCooldown(count);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.getAbility(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.getAbility(count);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.getAbilityCooldown(footmanType, 0);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.getAbilityCooldown(count, 0);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.getAbilityCooldownPercent(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.getAbilityCooldownPercent(count);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.getAbilityCooldownRemaining(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.getAbilityCooldownRemaining(count);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.getAbilityLevel(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.getAbilityLevel(count);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.getAbilityManaCost(footmanType, 0);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.getAbilityManaCost(count, 0);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.hideAbility(footmanType, true);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.hideAbility(count, true);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.incAbilityLevel(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.incAbilityLevel(count);
+  // @ts-expect-error: an ability's Rawcode is not a unit's.
+  unit.issueBuildOrder(blizzard, 0, 0);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.makeAbilityPermanent(true, footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.makeAbilityPermanent(true, count);
+  // @ts-expect-error: an ability's Rawcode is not a unit's.
+  unit.queueBuildOrder(blizzard, 0, 0);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.queueBuildOrder(count, 0, 0);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.queueNeutralImmediateOrder(owner, count);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.removeAbility(count);
+  // @ts-expect-error: a unit's Rawcode is not an item's.
+  unit.removeItemFromStock(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.removeItemFromStock(count);
+  // @ts-expect-error: an item's Rawcode is not a unit's.
+  unit.removeUnitFromStock(rationType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.removeUnitFromStock(count);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.selectSkill(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.selectSkill(count);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.setAbilityCooldown(footmanType, 0, 5);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.setAbilityCooldown(count, 0, 5);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.setAbilityCooldownPercent(footmanType, 0.5);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.setAbilityCooldownPercent(count, 0.5);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.setAbilityCooldownRemaining(footmanType, 1);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.setAbilityCooldownRemaining(count, 1);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.setAbilityLevel(footmanType, 2);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.setAbilityLevel(count, 2);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.setAbilityManaCost(footmanType, 0, 50);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.setAbilityManaCost(count, 0, 50);
+  // @ts-expect-error: a unit's Rawcode is not an ability's.
+  unit.startAbilityCooldown(footmanType, 5);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  unit.startAbilityCooldown(count, 5);
+  // @ts-expect-error: an ability's Rawcode is not a unit's.
+  Unit.foodMadeByType(blizzard);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Unit.foodMadeByType(count);
+  // @ts-expect-error: an ability's Rawcode is not a unit's.
+  Unit.foodUsedByType(blizzard);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Unit.foodUsedByType(count);
+  // @ts-expect-error: an ability's Rawcode is not a unit's.
+  Unit.getPointValueByType(blizzard);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Unit.getPointValueByType(count);
+  // @ts-expect-error: an ability's Rawcode is not a unit's.
+  Unit.isUnitIdHero(blizzard);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Unit.isUnitIdHero(count);
+  // @ts-expect-error: an ability's Rawcode is not a unit's.
+  Unit.isUnitIdType(blizzard, UNIT_TYPE_HERO);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Unit.isUnitIdType(count, UNIT_TYPE_HERO);
+}
+
 describe("Unit.create", () => {
   const ownerRef = handleRef("player", owner.handle);
 

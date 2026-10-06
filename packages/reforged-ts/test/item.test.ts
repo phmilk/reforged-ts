@@ -49,6 +49,28 @@ export function itemRawcodeKinds(item: Item, count: number): void {
   item.addAbility(item.typeId);
   // @ts-expect-error: an item's skin is not a unit's Rawcode.
   item.setDropId(item.skin);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  item.addAbility(count);
+  // @ts-expect-error: an item's Rawcode is not an ability's.
+  item.getAbility(rationType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  item.getAbility(count);
+  // @ts-expect-error: an item's Rawcode is not an ability's.
+  item.removeAbility(rationType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  item.removeAbility(count);
+  // @ts-expect-error: a unit's Rawcode is not an item's.
+  Item.isIdPawnable(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Item.isIdPawnable(count);
+  // @ts-expect-error: a unit's Rawcode is not an item's.
+  Item.isIdPowerup(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Item.isIdPowerup(count);
+  // @ts-expect-error: a unit's Rawcode is not an item's.
+  Item.isIdSellable(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Item.isIdSellable(count);
 }
 
 describe("Item.create", () => {

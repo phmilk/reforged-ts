@@ -53,6 +53,8 @@ export function commandRawcodeKinds(trigger: Trigger, count: number): void {
   trigger.registerCommandEvent(footmanType, "blizzard");
   // @ts-expect-error: an ability's Rawcode is not an upgrade's.
   trigger.registerUpgradeCommandEvent(blizzardType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  trigger.registerUpgradeCommandEvent(count);
 }
 
 const playerRef = handleRef("player", player.handle);
