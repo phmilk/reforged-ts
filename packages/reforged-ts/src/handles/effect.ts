@@ -7,7 +7,7 @@ import { Point } from "./point";
 import { Widget } from "./widget";
 
 /** The creation error's detail for a spell effect: the ability it names. */
-function spellDetail(ability: number | string): string {
+function spellDetail(ability: string | Rawcode<"ability">): string {
   return typeof ability === "number" ? rawcodeToString(ability) : ability;
 }
 
@@ -117,7 +117,7 @@ export class Effect extends Handle<effect> {
    * knows what its ability string is: pass the ability id.
    */
   public static createSpell(
-    ability: number | string,
+    ability: string | Rawcode<"ability">,
     effectType: effecttype,
     x: number,
     y: number,
@@ -150,7 +150,7 @@ export class Effect extends Handle<effect> {
    * string. Pass the ability id.
    */
   public static createSpellAtPoint(
-    ability: number | string,
+    ability: string | Rawcode<"ability">,
     effectType: effecttype,
     where: Point,
   ): Effect {
@@ -189,7 +189,7 @@ export class Effect extends Handle<effect> {
    * @native AddSpellEffectTarget
    */
   public static createSpellAttachment(
-    ability: number | string,
+    ability: string | Rawcode<"ability">,
     effectType: effecttype,
     targetWidget: Widget,
     attachPointName: string,

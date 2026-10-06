@@ -313,7 +313,10 @@ export class MapPlayer extends Handle<player> {
    * @param levels - How many levels to add to its current level.
    * @native AddPlayerTechResearched
    */
-  public addTechResearched(techId: number, levels: number) {
+  public addTechResearched(
+    techId: Rawcode<"unit" | "upgrade">,
+    levels: number,
+  ) {
     AddPlayerTechResearched(this.handle, techId, levels);
   }
 
@@ -325,7 +328,10 @@ export class MapPlayer extends Handle<player> {
    * {@link MapPlayer.addTechResearched}.
    * @native BlzDecPlayerTechResearched
    */
-  public decTechResearched(techId: number, levels: number) {
+  public decTechResearched(
+    techId: Rawcode<"unit" | "upgrade">,
+    levels: number,
+  ) {
     BlzDecPlayerTechResearched(this.handle, techId, levels);
   }
 
@@ -569,7 +575,10 @@ export class MapPlayer extends Handle<player> {
    * units.
    * @native GetPlayerTechCount
    */
-  public getTechCount(techId: number, specificonly: boolean) {
+  public getTechCount(
+    techId: Rawcode<"unit" | "upgrade">,
+    specificonly: boolean,
+  ) {
     return GetPlayerTechCount(this.handle, techId, specificonly);
   }
 
@@ -581,7 +590,7 @@ export class MapPlayer extends Handle<player> {
    * @returns The limit; a very large number when none was set.
    * @native GetPlayerTechMaxAllowed
    */
-  public getTechMaxAllowed(techId: number) {
+  public getTechMaxAllowed(techId: Rawcode<"unit" | "upgrade">) {
     return GetPlayerTechMaxAllowed(this.handle, techId);
   }
 
@@ -595,7 +604,10 @@ export class MapPlayer extends Handle<player> {
    * @returns `true` when the player has it.
    * @native GetPlayerTechResearched
    */
-  public getTechResearched(techId: number, specificonly: boolean) {
+  public getTechResearched(
+    techId: Rawcode<"unit" | "upgrade">,
+    specificonly: boolean,
+  ) {
     return GetPlayerTechResearched(this.handle, techId, specificonly);
   }
 
@@ -775,7 +787,7 @@ export class MapPlayer extends Handle<player> {
    * @param avail - `true` to enable it, `false` to disable it.
    * @native SetPlayerAbilityAvailable
    */
-  public setAbilityAvailable(abilId: number, avail: boolean) {
+  public setAbilityAvailable(abilId: Rawcode<"ability">, avail: boolean) {
     SetPlayerAbilityAvailable(this.handle, abilId, avail);
   }
 
@@ -995,7 +1007,10 @@ export class MapPlayer extends Handle<player> {
    * @param maximum - The limit: 0 forbids the tech, -1 lifts the limit.
    * @native SetPlayerTechMaxAllowed
    */
-  public setTechMaxAllowed(techId: number, maximum: number) {
+  public setTechMaxAllowed(
+    techId: Rawcode<"unit" | "upgrade">,
+    maximum: number,
+  ) {
     SetPlayerTechMaxAllowed(this.handle, techId, maximum);
   }
 
@@ -1006,7 +1021,10 @@ export class MapPlayer extends Handle<player> {
    * current level.
    * @native SetPlayerTechResearched
    */
-  public setTechResearched(techId: number, setToLevel: number) {
+  public setTechResearched(
+    techId: Rawcode<"unit" | "upgrade">,
+    setToLevel: number,
+  ) {
     SetPlayerTechResearched(this.handle, techId, setToLevel);
   }
 

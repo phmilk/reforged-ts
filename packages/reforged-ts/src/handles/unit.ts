@@ -48,11 +48,11 @@ export class Unit extends Widget {
    */
   public static create(
     owner: MapPlayer,
-    unitId: number,
+    unitId: Rawcode<"unit">,
     x: number,
     y: number,
     face: number = bj_UNIT_FACING,
-    skinId?: number,
+    skinId?: Rawcode<"unit">,
   ): Unit {
     return this.expect(
       skinId === undefined
@@ -76,7 +76,7 @@ export class Unit extends Widget {
    */
   public static createAtPoint(
     owner: MapPlayer,
-    unitId: number,
+    unitId: Rawcode<"unit">,
     where: Point,
     face: number = bj_UNIT_FACING,
   ): Unit {
@@ -179,7 +179,7 @@ export class Unit extends Widget {
    */
   public static createCorpse(
     owner: MapPlayer,
-    unitId: number,
+    unitId: Rawcode<"unit">,
     x: number,
     y: number,
     face: number = bj_UNIT_FACING,
@@ -777,7 +777,8 @@ export class Unit extends Widget {
    * @returns The skin's rawcode.
    * @native BlzGetUnitSkin
    */
-  public get skin() {
+  // eslint-disable-next-line @typescript-eslint/related-getter-setter-pairs -- cleared when the getter returns the Rawcode<"unit"> BlzGetUnitSkin will return (#490, #491)
+  public get skin(): number {
     return BlzGetUnitSkin(this.handle);
   }
 
@@ -786,7 +787,7 @@ export class Unit extends Widget {
    * change removes every effect attached to the unit.
    * @native BlzSetUnitSkin
    */
-  public set skin(skinId: number) {
+  public set skin(skinId: Rawcode<"unit">) {
     BlzSetUnitSkin(this.handle, skinId);
   }
 
@@ -974,7 +975,7 @@ export class Unit extends Widget {
    * @returns True when the ability was added, false when the unit already has it.
    * @native UnitAddAbility
    */
-  public addAbility(abilityId: number) {
+  public addAbility(abilityId: Rawcode<"ability">) {
     return UnitAddAbility(this.handle, abilityId);
   }
 
@@ -984,7 +985,10 @@ export class Unit extends Widget {
    * @param delta - The share of the full cooldown to add; negative to shorten the cooldown.
    * @native BlzAdjustUnitAbilityCooldownPercent
    */
-  public adjustAbilityCooldownPercent(abilId: number, delta: number) {
+  public adjustAbilityCooldownPercent(
+    abilId: Rawcode<"ability">,
+    delta: number,
+  ) {
     BlzAdjustUnitAbilityCooldownPercent(this.handle, abilId, delta);
   }
 
@@ -994,7 +998,10 @@ export class Unit extends Widget {
    * @param delta - The seconds to add; negative to shorten the cooldown.
    * @native BlzAdjustUnitAbilityCooldownRemaining
    */
-  public adjustAbilityCooldownRemaining(abilId: number, delta: number) {
+  public adjustAbilityCooldownRemaining(
+    abilId: Rawcode<"ability">,
+    delta: number,
+  ) {
     BlzAdjustUnitAbilityCooldownRemaining(this.handle, abilId, delta);
   }
 
@@ -1078,7 +1085,7 @@ export class Unit extends Widget {
    * @native CreateItem
    * @native UnitAddItem
    */
-  public addItemById(itemId: number): Item {
+  public addItemById(itemId: Rawcode<"item">): Item {
     // A removed unit has no type and reads 0 for its position: no item.
     const created =
       this.typeId === 0 ? undefined : CreateItem(itemId, this.x, this.y);
@@ -1097,7 +1104,7 @@ export class Unit extends Widget {
    * @returns True when the item landed in the slot.
    * @native UnitAddItemToSlotById
    */
-  public addItemToSlotById(itemId: number, itemSlot: number) {
+  public addItemToSlotById(itemId: Rawcode<"item">, itemSlot: number) {
     return UnitAddItemToSlotById(this.handle, itemId, itemSlot);
   }
 
@@ -1109,7 +1116,7 @@ export class Unit extends Widget {
    * @native AddItemToStock
    */
   public addItemToStock(
-    itemId: number,
+    itemId: Rawcode<"item">,
     currentStock: number,
     stockMax: number,
   ) {
@@ -1154,7 +1161,7 @@ export class Unit extends Widget {
    * @native AddUnitToStock
    */
   public addUnitToStock(
-    unitId: number,
+    unitId: Rawcode<"unit">,
     currentStock: number,
     stockMax: number,
   ) {
@@ -1183,7 +1190,7 @@ export class Unit extends Widget {
    * @param duration - The time left to live, in seconds.
    * @native UnitApplyTimedLife
    */
-  public applyTimedLife(buffId: number, duration: number) {
+  public applyTimedLife(buffId: Rawcode<"buff">, duration: number) {
     UnitApplyTimedLife(this.handle, buffId, duration);
   }
 
@@ -1379,7 +1386,7 @@ export class Unit extends Widget {
    * @returns The new ability level.
    * @native DecUnitAbilityLevel
    */
-  public decAbilityLevel(abilCode: number) {
+  public decAbilityLevel(abilCode: Rawcode<"ability">) {
     return DecUnitAbilityLevel(this.handle, abilCode);
   }
 
@@ -1413,7 +1420,11 @@ export class Unit extends Widget {
    * icon several times, as many calls are needed to show it again
    * ([report](https://www.hiveworkshop.com/threads/blzunithideability-and-blzunitdisableability-dont-work.312477/)).
    */
-  public disableAbility(abilId: number, flag: boolean, hideUI: boolean) {
+  public disableAbility(
+    abilId: Rawcode<"ability">,
+    flag: boolean,
+    hideUI: boolean,
+  ) {
     BlzUnitDisableAbility(this.handle, abilId, flag, hideUI);
   }
 
@@ -1463,7 +1474,7 @@ export class Unit extends Widget {
    * @param abilCode - The ability's rawcode.
    * @native BlzEndUnitAbilityCooldown
    */
-  public endAbilityCooldown(abilCode: number) {
+  public endAbilityCooldown(abilCode: Rawcode<"ability">) {
     BlzEndUnitAbilityCooldown(this.handle, abilCode);
   }
 
@@ -1496,7 +1507,7 @@ export class Unit extends Widget {
    * @returns The game's `ability` Handle, or `undefined` when the unit lacks the ability.
    * @native BlzGetUnitAbility
    */
-  public getAbility(abilId: number) {
+  public getAbility(abilId: Rawcode<"ability">) {
     return BlzGetUnitAbility(this.handle, abilId);
   }
 
@@ -1517,7 +1528,7 @@ export class Unit extends Widget {
    * @returns The cooldown, in seconds.
    * @native BlzGetUnitAbilityCooldown
    */
-  public getAbilityCooldown(abilId: number, level: number) {
+  public getAbilityCooldown(abilId: Rawcode<"ability">, level: number) {
     return BlzGetUnitAbilityCooldown(this.handle, abilId, level);
   }
 
@@ -1527,7 +1538,7 @@ export class Unit extends Widget {
    * @returns The share of the cooldown left.
    * @native BlzGetUnitAbilityCooldownPercent
    */
-  public getAbilityCooldownPercent(abilId: number) {
+  public getAbilityCooldownPercent(abilId: Rawcode<"ability">) {
     return BlzGetUnitAbilityCooldownPercent(this.handle, abilId);
   }
 
@@ -1539,7 +1550,7 @@ export class Unit extends Widget {
    * @bug During the cooldown of an ability built on Channel, it sometimes
    * gives 0.
    */
-  public getAbilityCooldownRemaining(abilId: number) {
+  public getAbilityCooldownRemaining(abilId: Rawcode<"ability">) {
     return BlzGetUnitAbilityCooldownRemaining(this.handle, abilId);
   }
 
@@ -1550,7 +1561,7 @@ export class Unit extends Widget {
    * @returns The level, from 1; 0 when the unit lacks the ability.
    * @native GetUnitAbilityLevel
    */
-  public getAbilityLevel(abilCode: number) {
+  public getAbilityLevel(abilCode: Rawcode<"ability">) {
     return GetUnitAbilityLevel(this.handle, abilCode);
   }
 
@@ -1561,7 +1572,7 @@ export class Unit extends Widget {
    * @returns The mana cost.
    * @native BlzGetUnitAbilityManaCost
    */
-  public getAbilityManaCost(abilId: number, level: number) {
+  public getAbilityManaCost(abilId: Rawcode<"ability">, level: number) {
     return BlzGetUnitAbilityManaCost(this.handle, abilId, level);
   }
 
@@ -1846,7 +1857,7 @@ export class Unit extends Widget {
    * @bug The game counts the calls instead of storing the flag: after hiding an
    * icon several times, as many calls are needed to show it again.
    */
-  public hideAbility(abilId: number, flag: boolean) {
+  public hideAbility(abilId: Rawcode<"ability">, flag: boolean) {
     BlzUnitHideAbility(this.handle, abilId, flag);
   }
 
@@ -1860,7 +1871,7 @@ export class Unit extends Widget {
    * @returns The new ability level.
    * @native IncUnitAbilityLevel
    */
-  public incAbilityLevel(abilCode: number) {
+  public incAbilityLevel(abilCode: Rawcode<"ability">) {
     return IncUnitAbilityLevel(this.handle, abilCode);
   }
 
@@ -2045,7 +2056,7 @@ export class Unit extends Widget {
    * @bug It returns true for a structure the unit can build on a free spot, even
    * when the player cannot afford it.
    */
-  public issueBuildOrder(unit: string | number, x: number, y: number) {
+  public issueBuildOrder(unit: string | Rawcode<"unit">, x: number, y: number) {
     return typeof unit === "string"
       ? IssueBuildOrder(this.handle, unit, x, y)
       : IssueBuildOrderById(this.handle, unit, x, y);
@@ -2137,7 +2148,7 @@ export class Unit extends Widget {
    */
   public issueNeutralImmediateOrder(
     forPlayer: MapPlayer,
-    unit: string | number,
+    unit: string | Rawcode<"unit">,
   ) {
     return typeof unit === "string"
       ? IssueNeutralImmediateOrder(forPlayer.handle, this.handle, unit)
@@ -2156,7 +2167,7 @@ export class Unit extends Widget {
    */
   public issueNeutralPointOrder(
     forPlayer: MapPlayer,
-    unit: string | number,
+    unit: string | Rawcode<"unit">,
     x: number,
     y: number,
   ) {
@@ -2176,7 +2187,7 @@ export class Unit extends Widget {
    */
   public issueNeutralTargetOrder(
     forPlayer: MapPlayer,
-    unit: string | number,
+    unit: string | Rawcode<"unit">,
     target: Widget,
   ) {
     return typeof unit === "string"
@@ -2335,7 +2346,10 @@ export class Unit extends Widget {
    * @param abilityId - The ability's rawcode.
    * @native UnitMakeAbilityPermanent
    */
-  public makeAbilityPermanent(permanent: boolean, abilityId: number) {
+  public makeAbilityPermanent(
+    permanent: boolean,
+    abilityId: Rawcode<"ability">,
+  ) {
     UnitMakeAbilityPermanent(this.handle, permanent, abilityId);
   }
 
@@ -2403,7 +2417,10 @@ export class Unit extends Widget {
    * @returns True when the structure took the order.
    * @native BlzQueueNeutralImmediateOrderById
    */
-  public queueNeutralImmediateOrder(forPlayer: MapPlayer, unitId: number) {
+  public queueNeutralImmediateOrder(
+    forPlayer: MapPlayer,
+    unitId: Rawcode<"unit">,
+  ) {
     return BlzQueueNeutralImmediateOrderById(
       forPlayer.handle,
       this.handle,
@@ -2423,7 +2440,7 @@ export class Unit extends Widget {
    */
   public queueNeutralPointOrder(
     forPlayer: MapPlayer,
-    unitId: number,
+    unitId: Rawcode<"unit">,
     x: number,
     y: number,
   ) {
@@ -2447,7 +2464,7 @@ export class Unit extends Widget {
    */
   public queueNeutralTargetOrder(
     forPlayer: MapPlayer,
-    unitId: number,
+    unitId: Rawcode<"unit">,
     target: Widget,
   ) {
     return BlzQueueNeutralTargetOrderById(
@@ -2472,7 +2489,7 @@ export class Unit extends Widget {
    * @returns True when the ability was removed, false when the unit lacks it.
    * @native UnitRemoveAbility
    */
-  public removeAbility(abilityId: number) {
+  public removeAbility(abilityId: Rawcode<"ability">) {
     return UnitRemoveAbility(this.handle, abilityId);
   }
 
@@ -2555,7 +2572,7 @@ export class Unit extends Widget {
    * @param itemId - The item type's rawcode.
    * @native RemoveItemFromStock
    */
-  public removeItemFromStock(itemId: number) {
+  public removeItemFromStock(itemId: Rawcode<"item">) {
     RemoveItemFromStock(this.handle, itemId);
   }
 
@@ -2575,7 +2592,7 @@ export class Unit extends Widget {
    * `FourCC("hfoo")`.
    * @native RemoveUnitFromStock
    */
-  public removeUnitFromStock(unitId: number) {
+  public removeUnitFromStock(unitId: Rawcode<"unit">) {
     RemoveUnitFromStock(this.handle, unitId);
   }
 
@@ -2648,7 +2665,7 @@ export class Unit extends Widget {
    * @param abilCode - The ability's rawcode.
    * @native SelectHeroSkill
    */
-  public selectSkill(abilCode: number) {
+  public selectSkill(abilCode: Rawcode<"ability">) {
     SelectHeroSkill(this.handle, abilCode);
   }
 
@@ -2661,7 +2678,11 @@ export class Unit extends Widget {
    * @param cooldown - The cooldown, in seconds.
    * @native BlzSetUnitAbilityCooldown
    */
-  public setAbilityCooldown(abilId: number, level: number, cooldown: number) {
+  public setAbilityCooldown(
+    abilId: Rawcode<"ability">,
+    level: number,
+    cooldown: number,
+  ) {
     BlzSetUnitAbilityCooldown(this.handle, abilId, level, cooldown);
   }
 
@@ -2671,7 +2692,10 @@ export class Unit extends Widget {
    * @param percent - The share of the full cooldown left.
    * @native BlzSetUnitAbilityCooldownPercent
    */
-  public setAbilityCooldownPercent(abilId: number, percent: number) {
+  public setAbilityCooldownPercent(
+    abilId: Rawcode<"ability">,
+    percent: number,
+  ) {
     BlzSetUnitAbilityCooldownPercent(this.handle, abilId, percent);
   }
 
@@ -2681,7 +2705,10 @@ export class Unit extends Widget {
    * @param seconds - The time left, in seconds.
    * @native BlzSetUnitAbilityCooldownRemaining
    */
-  public setAbilityCooldownRemaining(abilId: number, seconds: number) {
+  public setAbilityCooldownRemaining(
+    abilId: Rawcode<"ability">,
+    seconds: number,
+  ) {
     BlzSetUnitAbilityCooldownRemaining(this.handle, abilId, seconds);
   }
 
@@ -2694,7 +2721,7 @@ export class Unit extends Widget {
    * @returns The new level, or 0 when the unit lacks the ability.
    * @native SetUnitAbilityLevel
    */
-  public setAbilityLevel(abilCode: number, level: number) {
+  public setAbilityLevel(abilCode: Rawcode<"ability">, level: number) {
     return SetUnitAbilityLevel(this.handle, abilCode, level);
   }
 
@@ -2706,7 +2733,11 @@ export class Unit extends Widget {
    * whole number.
    * @native BlzSetUnitAbilityManaCost
    */
-  public setAbilityManaCost(abilId: number, level: number, manaCost: number) {
+  public setAbilityManaCost(
+    abilId: Rawcode<"ability">,
+    level: number,
+    manaCost: number,
+  ) {
     BlzSetUnitAbilityManaCost(this.handle, abilId, level, manaCost);
   }
 
@@ -3165,7 +3196,7 @@ export class Unit extends Widget {
    * @param cooldown - The cooldown, in seconds.
    * @native BlzStartUnitAbilityCooldown
    */
-  public startAbilityCooldown(abilCode: number, cooldown: number) {
+  public startAbilityCooldown(abilCode: Rawcode<"ability">, cooldown: number) {
     BlzStartUnitAbilityCooldown(this.handle, abilCode, cooldown);
   }
 
@@ -3448,7 +3479,7 @@ export class Unit extends Widget {
    * @bug It returns true for a structure the unit can build on a free spot, even
    * when the player cannot afford it.
    */
-  public queueBuildOrder(unitId: number, x: number, y: number) {
+  public queueBuildOrder(unitId: Rawcode<"unit">, x: number, y: number) {
     return BlzQueueBuildOrderById(this.handle, unitId, x, y);
   }
 
@@ -3613,7 +3644,7 @@ export class Unit extends Widget {
    * @returns The food provided.
    * @native GetFoodMade
    */
-  public static foodMadeByType(unitId: number) {
+  public static foodMadeByType(unitId: Rawcode<"unit">) {
     return GetFoodMade(unitId);
   }
 
@@ -3623,7 +3654,7 @@ export class Unit extends Widget {
    * @returns The food used.
    * @native GetFoodUsed
    */
-  public static foodUsedByType(unitId: number) {
+  public static foodUsedByType(unitId: Rawcode<"unit">) {
     return GetFoodUsed(unitId);
   }
 
@@ -3973,7 +4004,7 @@ export class Unit extends Widget {
    * @returns The point value.
    * @native GetUnitPointValueByType
    */
-  public static getPointValueByType(unitType: number) {
+  public static getPointValueByType(unitType: Rawcode<"unit">) {
     return GetUnitPointValueByType(unitType);
   }
 
@@ -3983,7 +4014,7 @@ export class Unit extends Widget {
    * @returns True when the type is a hero type.
    * @native IsHeroUnitId
    */
-  public static isUnitIdHero(unitId: number) {
+  public static isUnitIdHero(unitId: Rawcode<"unit">) {
     return IsHeroUnitId(unitId);
   }
 
@@ -3994,7 +4025,7 @@ export class Unit extends Widget {
    * @returns True when the type has it.
    * @native IsUnitIdType
    */
-  public static isUnitIdType(unitId: number, whichUnitType: unittype) {
+  public static isUnitIdType(unitId: Rawcode<"unit">, whichUnitType: unittype) {
     return IsUnitIdType(unitId, whichUnitType);
   }
 }

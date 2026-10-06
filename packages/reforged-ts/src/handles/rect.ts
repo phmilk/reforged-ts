@@ -210,7 +210,7 @@ export class Rectangle extends Handle<rect> {
    * @native SetDoodadAnimationRect
    */
   public setDoodadAnimation(
-    doodadId: number,
+    doodadId: Rawcode<"doodad">,
     animName: string,
     animRandom: boolean,
   ) {
@@ -224,7 +224,7 @@ export class Rectangle extends Handle<rect> {
    * @param color - The player colour to tint them with.
    * @native SetDoodadColorRect
    */
-  public setDoodadColor(doodadId: number, color: playercolor) {
+  public setDoodadColor(doodadId: Rawcode<"doodad">, color: playercolor) {
     SetDoodadColorRect(this.handle, doodadId, color);
   }
 

@@ -582,7 +582,7 @@ export class Camera {
    * @native SetCinematicScene
    */
   public static setCinematicScene(
-    portraitUnitId: number,
+    portraitUnitId: Rawcode<"unit">,
     color: playercolor,
     speakerTitle: string,
     text: string,

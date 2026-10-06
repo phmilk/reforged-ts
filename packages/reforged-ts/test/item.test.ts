@@ -17,6 +17,28 @@ import { raisedIn } from "./support/raised-in";
 const ration = FourCC("ratf");
 const skin = FourCC("rde1");
 
+/**
+ * The Rawcodes `Item` takes, by Object kind: a `FourCC` literal goes
+ * anywhere, a Rawcode of another kind or a plain `number` does not. Never
+ * called: `tsc` checks it.
+ */
+export function itemRawcodeKinds(item: Item, count: number): void {
+  const rationType: Rawcode<"item"> = FourCC("ratf");
+  const footmanType: Rawcode<"unit"> = FourCC("hfoo");
+  Item.create(rationType, 0, 0, rationType);
+  // @ts-expect-error: a unit's Rawcode is not an item's.
+  Item.create(footmanType, 0, 0);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  Item.create(count, 0, 0);
+  // @ts-expect-error: a skin of `Item` is an item's Rawcode.
+  item.skin = footmanType;
+  // @ts-expect-error: an item's Rawcode is not an ability's.
+  item.addAbility(rationType);
+  item.setDropId(footmanType);
+  // @ts-expect-error: a plain number is not a Rawcode.
+  item.setDropId(count);
+}
+
 describe("Item.create", () => {
   it("wraps the handle CreateItem returns, and a lookup finds it", () => {
     const item = Item.create(ration, 10, 20);
