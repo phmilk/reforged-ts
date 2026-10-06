@@ -153,9 +153,13 @@ describe("changeset version", { timeout: 60_000 }, () => {
 
     await changeset(root, "version");
 
+    // reforged-map was not part of the first publish: at 0.0.0 its
+    // workspace ranges on the majored packages fall out of range, so
+    // Changesets gives it the patch of updateInternalDependencies.
     expect(await versions(root)).toEqual({
       ...releaseVersions,
       ...all("1.0.0-alpha.0"),
+      "reforged-map": "0.0.1-alpha.0",
     });
     // The versioned changesets wait in the pre folder for the 1.0.0
     // changelog; the ranges stay on the workspace protocol for pnpm publish.
