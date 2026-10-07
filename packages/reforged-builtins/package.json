@@ -1,0 +1,51 @@
+{
+  "name": "reforged-builtins",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The Built-in objects of each Warcraft III Reforged Patch, reduced to derived identifiers: Rawcode, Object kind, race, enUS name and Game data sets.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "warcraft",
+    "wc3",
+    "reforged",
+    "typescript-to-lua",
+    "rawcode"
+  ],
+  "homepage": "https://phmilk.github.io/reforged-ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phmilk/reforged-ts.git",
+    "directory": "packages/reforged-builtins"
+  },
+  "bugs": {
+    "url": "https://github.com/phmilk/reforged-ts/issues"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "reforged": {
+    "patch": "3.0.0.24268"
+  },
+  "files": [
+    "/[0-9]*/index.json",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json",
+    "test": "vitest run --root ../.. --project reforged-builtins",
+    "builtins:generate": "tsc -p tsconfig.json && node build/cli/generate.js"
+  },
+  "peerDependencies": {
+    "reforged-types": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "reforged-types": "workspace:^",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

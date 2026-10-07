@@ -120,6 +120,7 @@ export default defineConfig(
     // Build outputs.
     "**/dist/**",
     "packages/reforged-types/build/**",
+    "packages/reforged-builtins/build/**",
     "release/build/**",
     "website/build/**",
     "website/.docusaurus/**",

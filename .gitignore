@@ -156,3 +156,6 @@ probe/.probe/
 
 # eslint-plugin-reforged cost measurement corpus (scripts/measure-cost.mjs removes it)
 packages/eslint-plugin-reforged/test/fixture-project/.cost/
+
+# reforged-builtins generator build output (the index it writes is committed)
+packages/reforged-builtins/build/

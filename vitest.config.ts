@@ -16,6 +16,16 @@ export default defineConfig({
         },
       },
       {
+        // The Built-in objects' generator, in Node, on synthetic CASC
+        // storages the tests write, and the committed index.
+        test: {
+          name: "reforged-builtins",
+          root: "packages/reforged-builtins",
+          include: ["test/**/*.test.ts"],
+          environment: "node",
+        },
+      },
+      {
         // The harness glue, in Node, on hand-written Lua fixtures.
         test: {
           name: "reforged-test",
