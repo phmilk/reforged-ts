@@ -13,6 +13,7 @@ import {
   LIBRARY,
   mutations,
   NOW,
+  OTHER,
   reading,
   STATE,
   TEMPLATE,
@@ -244,6 +245,50 @@ describe("board:reconcile", () => {
     );
   });
 
+  it("refuses a plan that removes more than 10 items, the summary saying what, unless --max-deletes allows them", async () => {
+    const foreign = Array.from({ length: 11 }, (_, i) =>
+      issue(300 + i, { repository: OTHER }),
+    );
+    const swamped = {
+      items: foreign.map((candidate) => item(candidate, "Backlog")),
+      issues: [],
+    };
+    const dir = await tempDir("board-reconcile");
+    await writeText(dir, "summary.md", "");
+    const env = {
+      PROJECT_TOKEN: "pat",
+      GITHUB_STEP_SUMMARY: join(dir, "summary.md"),
+    };
+
+    const refused: Sent[] = [];
+    const result = await run(
+      [],
+      graphQlFetch(reading(STATE, swamped), refused),
+      { env },
+    );
+    expect(result.exitCode).toBe(1);
+    expect(result.stderr).toMatch(
+      /^Refused: the plan removes 11 items from the board, more than the 10 one run may remove, and nothing was sent\. The removals: Remove phmilk\/other#300 from the board: an issue of another repository\. .* When they are right, run board:reconcile --max-deletes 11\.\n$/,
+    );
+    expect(mutations(refused)).toEqual([]);
+    expect(await readFile(join(dir, "summary.md"), "utf8")).toBe(
+      `## Board reconcile\n\n${result.stderr}`,
+    );
+
+    const allowed: Sent[] = [];
+    const raised = await run(
+      ["--max-deletes", "11"],
+      graphQlFetch(reading(STATE, swamped), allowed),
+      { env },
+    );
+    expect(raised.stderr).toBe("");
+    expect(raised.exitCode).toBe(0);
+    expect(raised.stdout).toContain("11 requests:\n");
+    expect(mutations(allowed).map(([operation]) => operation)).toEqual(
+      Array.from({ length: 11 }, () => "DeleteItem"),
+    );
+  });
+
   it("stops without a token, naming both", async () => {
     const sent: Sent[] = [];
     const noAuth: Gh = () => Promise.reject(new Error("not logged in"));
@@ -259,21 +304,24 @@ describe("board:reconcile", () => {
     expect(sent).toEqual([]);
   });
 
-  it.each([[["--apply"]], [["--dry-run", "--dry-run"]], [["--repo", "a/b"]]])(
-    "rejects the arguments %j",
-    async (args) => {
-      const sent: Sent[] = [];
-      const result = await run(
-        args,
-        graphQlFetch(reading(STATE, AGREES), sent),
-      );
+  it.each([
+    [["--apply"]],
+    [["--dry-run", "--dry-run"]],
+    [["--repo", "a/b"]],
+    [["--max-deletes"]],
+    [["--max-deletes", "ten"]],
+    [["--max-deletes", "-1"]],
+    [["--max-deletes", "5", "--max-deletes", "6"]],
+  ])("rejects the arguments %j", async (args) => {
+    const sent: Sent[] = [];
+    const result = await run(args, graphQlFetch(reading(STATE, AGREES), sent));
 
-      expect(result.exitCode).toBe(2);
-      expect(result.stderr).toBe(
-        "Usage: board:reconcile [--dry-run]\n" +
-          "  With the token in PROJECT_TOKEN (the maintainer's classic token, scope project), else the gh login's.\n",
-      );
-      expect(sent).toEqual([]);
-    },
-  );
+    expect(result.exitCode).toBe(2);
+    expect(result.stderr).toBe(
+      "Usage: board:reconcile [--dry-run] [--max-deletes <n>]\n" +
+        "  With the token in PROJECT_TOKEN (the maintainer's classic token, scope project), else the gh login's.\n" +
+        "  --max-deletes <n>: allow a plan that removes up to n items from the board (10 without it).\n",
+    );
+    expect(sent).toEqual([]);
+  });
 });

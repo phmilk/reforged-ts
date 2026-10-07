@@ -178,6 +178,9 @@ async function run(
 const sent = () =>
   received.map(({ method, path, body }) => [`${method} ${path}`, body]);
 
+/** The check itself, as REST names the author of a comment made with GITHUB_TOKEN. */
+const CHECK = { login: "github-actions[bot]", type: "Bot" };
+
 const PULL_REQUEST_EVENT = {
   action: "opened",
   number: 34,
@@ -188,12 +191,13 @@ const PULL_REQUEST_EVENT = {
   },
 };
 
-/** The closing references of #34: #12 of this repository, #5 of the other. */
-function closing(assignees: string[]): unknown {
+/** The closing references of #34: #12 of this repository, #5 of the other; `totalCount` as GitHub counts them. */
+function closing(assignees: string[], totalCount = 2): unknown {
   return {
     repository: {
       pullRequest: {
         closingIssuesReferences: {
+          totalCount,
           nodes: [
             {
               number: 12,
@@ -250,7 +254,7 @@ describe("claim-check pull-request", () => {
       [
         "POST /graphql",
         expect.objectContaining({
-          variables: { owner: "owner", name: "fork", number: 34 },
+          variables: { owner: "owner", name: "fork", number: 34, first: 50 },
         }) as unknown,
       ],
       [`GET ${ISSUES}/12/assignees/alice`, undefined],
@@ -264,6 +268,8 @@ describe("claim-check pull-request", () => {
       ],
     ]);
     expect(received[0]?.authorization).toBe("Bearer t0k");
+    // The count travels with the page: a pull request past it is not passed.
+    expect(JSON.stringify(received[0]?.body)).toContain("totalCount");
   });
 
   it("fails on an issue claimed by another login, with text 2 and an annotation", async () => {
@@ -271,7 +277,9 @@ describe("claim-check pull-request", () => {
     answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 404 };
     answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
       status: 200,
-      body: [{ id: 7, body: `${MARKER}\n\n**Claim check** passed.` }],
+      body: [
+        { id: 7, user: CHECK, body: `${MARKER}\n\n**Claim check** passed.` },
+      ],
     };
     answers.rest[`PATCH /repos/${REPOSITORY}/issues/comments/7`] = {
       status: 200,
@@ -299,7 +307,88 @@ describe("claim-check pull-request", () => {
     });
   });
 
-  it("exits 1 naming the answer it could not read", async () => {
+  it("passes over a marked comment by another login and writes its own", async () => {
+    const planted = {
+      id: 3,
+      user: { login: "mallory", type: "User" },
+      body: `${MARKER}\n\n**Claim check** passed.`,
+    };
+    answers.graphql.closingIssuesReferences = closing(["bob"]);
+    answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 404 };
+    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [planted],
+    };
+    answers.rest[`POST ${ISSUES}/34/comments`] = {
+      status: 201,
+      body: { id: 8 },
+    };
+
+    const result = await run(["pull-request"], PULL_REQUEST_EVENT);
+
+    expect(result.code).toBe(1);
+    expect(result.stdout).toContain("Commented on #34.\n");
+    expect(sent().map(([request]) => request)).toEqual([
+      "POST /graphql",
+      `GET ${ISSUES}/12/assignees/alice`,
+      `GET ${ISSUES}/34/comments?per_page=100&page=1`,
+      `POST ${ISSUES}/34/comments`,
+    ]);
+  });
+
+  it("edits its own marked comment, a planted one before it left alone", async () => {
+    const planted = {
+      id: 3,
+      user: { login: "mallory", type: "User" },
+      body: `${MARKER}\n\n**Claim check** passed.`,
+    };
+    answers.graphql.closingIssuesReferences = closing(["bob"]);
+    answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 404 };
+    answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
+      status: 200,
+      body: [
+        planted,
+        // GraphQL's spelling of the same login, on a Bot: the check's too.
+        {
+          id: 7,
+          user: { login: "github-actions", type: "Bot" },
+          body: `${MARKER}\n\n**Claim check** passed.`,
+        },
+      ],
+    };
+    answers.rest[`PATCH /repos/${REPOSITORY}/issues/comments/7`] = {
+      status: 200,
+      body: { id: 7 },
+    };
+
+    const result = await run(["pull-request"], PULL_REQUEST_EVENT);
+
+    expect(result.code).toBe(1);
+    expect(result.stdout).toContain("Edited the comment on #34.\n");
+    expect(sent().map(([request]) => request)).toContain(
+      `PATCH /repos/${REPOSITORY}/issues/comments/7`,
+    );
+  });
+
+  it("stops, exit 1, on a pull request that closes more issues than it read, the summary saying so", async () => {
+    answers.graphql.closingIssuesReferences = closing([], 51);
+
+    const result = await run(["pull-request"], PULL_REQUEST_EVENT);
+
+    const message =
+      "#34 closes 51 issues, more than the 2 the check read: it cannot pass on an issue it has not read. Name at most 50 issues in the description, or split the pull request, then re-run the check.";
+    expect(result).toEqual({
+      code: 1,
+      stdout: "",
+      stderr: `${message}\n`,
+      summary: `## Claim check\n\n- ${message}\n`,
+      output: "",
+    });
+    // Nothing read further, nothing written.
+    expect(sent().map(([request]) => request)).toEqual(["POST /graphql"]);
+  });
+
+  it("exits 1 naming the answer it could not read, in the summary too", async () => {
     answers.graphql.closingIssuesReferences = closing([]);
     answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
     answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
@@ -313,7 +402,7 @@ describe("claim-check pull-request", () => {
       code: 1,
       stdout: "",
       stderr: `GET ${ISSUES}/34/comments?per_page=100&page=1 answered 500 Server Error.\n`,
-      summary: "",
+      summary: `## Claim check\n\n- GET ${ISSUES}/34/comments?per_page=100&page=1 answered 500 Server Error.\n`,
     });
   });
 });
@@ -350,8 +439,16 @@ describe("claim-check issue", () => {
     answers.rest[`GET ${ISSUES}/12/comments?per_page=100&page=1`] = {
       status: 200,
       body: [
-        { id: 3, body: "A comment by a person." },
-        { id: 7, body: `${MARKER}\n\n**Claim conflict** resolved.` },
+        {
+          id: 3,
+          user: { login: "alice", type: "User" },
+          body: "A comment by a person.",
+        },
+        {
+          id: 7,
+          user: CHECK,
+          body: `${MARKER}\n\n**Claim conflict** resolved.`,
+        },
       ],
     };
     answers.rest[`PATCH /repos/${REPOSITORY}/issues/comments/7`] = {
@@ -440,7 +537,7 @@ describe("claim-check", () => {
       code: 1,
       stdout: "",
       stderr: "GITHUB_TOKEN is not set.\n",
-      summary: "",
+      summary: "## Claim check\n\n- GITHUB_TOKEN is not set.\n",
       output: "",
     });
     expect(received).toEqual([]);

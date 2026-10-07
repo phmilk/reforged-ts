@@ -1,8 +1,9 @@
 /**
  * What the CLIs of the release scripts share: the output streams, error
- * messages, the job summary, the base ref option, writing generated files,
- * running as a script, and the maintainer's authentication (`gh`, and the
- * GitHub API as the holder of its token).
+ * messages, the job summary, the base ref option, the arguments and the
+ * printed plan of a script that plans then applies, writing generated
+ * files, running as a script, and the maintainer's authentication (`gh`,
+ * and the GitHub API as the holder of its token).
  */
 import { execFile } from "node:child_process";
 import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
@@ -93,6 +94,69 @@ export function parseOptions<Option extends string, Required extends Option>(
   if (required.some((option) => !values.has(option))) return undefined;
   return Object.fromEntries(values) as Record<Required, string> &
     Partial<Record<Option, string>>;
+}
+
+/** `count` with `one` or `many`: "1 request", "3 requests". */
+export const plural = (count: number, one: string, many: string): string =>
+  `${String(count)} ${count === 1 ? one : many}`;
+
+/**
+ * The arguments of a script that plans then applies: `--dry-run`, and the
+ * `--<option> <value>` pairs of `options`, each given at most once with a
+ * value neither empty nor another option; `undefined` on anything else.
+ */
+export function parseRunArgs<Option extends string>(
+  args: readonly string[],
+  options: readonly Option[] = [],
+): { dryRun: boolean; options: Partial<Record<Option, string>> } | undefined {
+  let dryRun = false;
+  const values = new Map<string, string>();
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === "--dry-run") {
+      if (dryRun) return undefined;
+      dryRun = true;
+      continue;
+    }
+    const value = args.at(i + 1);
+    if (
+      !(options as readonly string[]).includes(arg) ||
+      values.has(arg) ||
+      value === undefined ||
+      value === "" ||
+      value.startsWith("--")
+    ) {
+      return undefined;
+    }
+    values.set(arg, value);
+    i++;
+  }
+  return {
+    dryRun,
+    options: Object.fromEntries(values) as Partial<Record<Option, string>>,
+  };
+}
+
+/**
+ * A plan for a person: what already matches (`Already set: ...`, one line
+ * each), how many requests (`Dry run, N requests, none sent:` on a dry run,
+ * else `N requests:`), then each request as `describe` renders it, after a
+ * blank line.
+ */
+export function printPlan<Request>(
+  output: Output,
+  plan: { unchanged?: readonly string[]; requests: readonly Request[] },
+  describe: (request: Request) => string,
+  dryRun: boolean,
+): void {
+  for (const line of plan.unchanged ?? []) {
+    output.stdout(`Already set: ${line}\n`);
+  }
+  const count = plural(plan.requests.length, "request", "requests");
+  output.stdout(dryRun ? `Dry run, ${count}, none sent:\n` : `${count}:\n`);
+  for (const request of plan.requests) {
+    output.stdout(`\n${describe(request)}`);
+  }
 }
 
 /**

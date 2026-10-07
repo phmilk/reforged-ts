@@ -11,9 +11,11 @@
  * pure function of an issue and its context) and `planBoardReconcile`,
  * which turns the project's items and the open issues of both repositories
  * into the writes that make the board agree with GitHub, membership and
- * archiving included, on the same state reader and GraphQL layer.
+ * archiving included, on the same state reader. The GraphQL transport and
+ * the pager are `github-graphql.ts`.
  */
-import type { ApiResponse, GitHubApi } from "./repo-settings.js";
+import { graphql, readNodes } from "./github-graphql.js";
+import type { GitHubApi } from "./repo-settings.js";
 import { errorMessage, isRecord } from "./unknown.js";
 
 /** The owner of the project and of both repositories: the maintainer's account. */
@@ -430,8 +432,34 @@ const sameText = (a: string | null, b: string) =>
 const sameNames = (a: readonly string[], b: readonly string[]) =>
   a.length === b.length && a.every((name, i) => sameName(name, b[i]));
 
+/** The `owner` and `name` of a repository named `owner/name`. */
+function ownerAndName(repository: string): { owner: string; name: string } {
+  const slash = repository.indexOf("/");
+  return {
+    owner: repository.slice(0, slash),
+    name: repository.slice(slash + 1),
+  };
+}
+
 /** An id the dry run prints where only the created project will give one. */
 const placeholder = (what: string) => `<${what}>`;
+
+/**
+ * The Status field of `project`, a single select with its options; a
+ * `BoardError` ending in `remedy` when the project has none.
+ */
+function statusFieldOf(
+  project: ProjectState,
+  remedy = "",
+): ProjectField & { options: readonly SelectOption[] } {
+  const field = project.fields.find(({ name }) => sameName(name, STATUS_FIELD));
+  if (field?.options === undefined) {
+    throw new BoardError(
+      `The project has no single select named ${STATUS_FIELD}${remedy}.`,
+    );
+  }
+  return { ...field, options: field.options };
+}
 
 /**
  * The project as `createProjectV2` makes it, with placeholders for the ids
@@ -537,14 +565,7 @@ export function planBoardSetup(state: BoardState): BoardSetupPlan {
   if (!makePublic) unchanged.push("Visibility: public.");
   if (!setReadme) unchanged.push("README: as committed.");
 
-  const status = project.fields.find(({ name }) =>
-    sameName(name, STATUS_FIELD),
-  );
-  if (status?.options === undefined) {
-    throw new BoardError(
-      `The project has no single select named ${STATUS_FIELD}.`,
-    );
-  }
+  const status = statusFieldOf(project);
   const names = STATUS_OPTIONS.map(({ name }) => name).join(", ");
   const current = status.options;
   if (
@@ -655,14 +676,6 @@ export function planBoardSetup(state: BoardState): BoardSetupPlan {
   return { requests, unchanged };
 }
 
-/** The GraphQL endpoint, under the API root the REST calls use. */
-const GRAPHQL_ENDPOINT = "/graphql";
-
-/** The name of a document's operation (`query Projects(...)` gives `Projects`). */
-export function operationName(query: string): string {
-  return /^\s*(?:query|mutation)\s+(\w+)/.exec(query)?.[1] ?? "The request";
-}
-
 /** The operation and its variables, as the document declares them. */
 function signature(query: string): string {
   const brace = query.indexOf("{");
@@ -678,111 +691,6 @@ export function describeRequest({
   summary,
 }: BoardRequest): string {
   return `${summary}\n${signature(query)}\n${JSON.stringify(variables, null, 2)}\n`;
-}
-
-/** GitHub's own message of an error answer, else its status. */
-function apiMessage({ status, body }: ApiResponse): string {
-  return isRecord(body) && typeof body.message === "string"
-    ? `${String(status)} ${body.message}`
-    : String(status);
-}
-
-/** One error of a GraphQL answer, as `type: message`. */
-function graphQlError(error: unknown): string {
-  if (!isRecord(error)) return JSON.stringify(error);
-  const type = typeof error.type === "string" ? error.type : "";
-  const message =
-    typeof error.message === "string" ? error.message : JSON.stringify(error);
-  return type === "" ? message : `${type}: ${message}`;
-}
-
-/**
- * The `data` of the GraphQL document `query`, sent through `api` with
- * `variables`. Stops with a `BoardError` naming the operation on an error
- * answer: GitHub answers 200 with `errors` to most of them, and a missing
- * `project` scope is named with the `gh auth refresh` that adds it.
- */
-export async function graphql(
-  api: GitHubApi,
-  query: string,
-  variables: Readonly<Record<string, unknown>> = {},
-): Promise<Record<string, unknown>> {
-  const operation = operationName(query);
-  const response = await api({
-    method: "POST",
-    endpoint: GRAPHQL_ENDPOINT,
-    body: { query, variables },
-  });
-  if (response.status !== 200) {
-    throw new BoardError(`${operation} answered ${apiMessage(response)}.`);
-  }
-  const { body } = response;
-  if (!isRecord(body)) {
-    throw new BoardError(`${operation} answered no JSON object.`);
-  }
-  const errors = Array.isArray(body.errors) ? (body.errors as unknown[]) : [];
-  if (errors.length > 0) {
-    const scope = errors.some(
-      (error) => isRecord(error) && error.type === "INSUFFICIENT_SCOPES",
-    )
-      ? " The gh login needs the project scope: gh auth refresh -s project."
-      : "";
-    const detail = errors.map(graphQlError).join("; ");
-    throw new BoardError(
-      `${operation} answered: ${detail}${detail.endsWith(".") ? "" : "."}${scope}`,
-    );
-  }
-  if (!isRecord(body.data)) {
-    throw new BoardError(`${operation} answered no data.`);
-  }
-  return body.data;
-}
-
-const PAGE_SIZE = 100;
-
-/** More pages than any connection the board reads fills. */
-const MAX_PAGES = 50;
-
-/**
- * Every node of the connection at `path` in the answers of `query`, page
- * after page: the document takes `$first` (the page size) and `$cursor`
- * (`after`) and selects `pageInfo { hasNextPage endCursor }` and `nodes`.
- */
-export async function readNodes(
-  api: GitHubApi,
-  query: string,
-  variables: Readonly<Record<string, unknown>>,
-  path: readonly string[],
-): Promise<unknown[]> {
-  const what = `${operationName(query)}: ${path.join(".")}`;
-  const nodes: unknown[] = [];
-  let cursor: string | null = null;
-  for (let page = 1; page <= MAX_PAGES; page++) {
-    const data = await graphql(api, query, {
-      ...variables,
-      first: PAGE_SIZE,
-      cursor,
-    });
-    let connection: unknown = data;
-    for (const key of path) {
-      connection = isRecord(connection) ? connection[key] : undefined;
-    }
-    if (
-      !isRecord(connection) ||
-      !Array.isArray(connection.nodes) ||
-      !isRecord(connection.pageInfo)
-    ) {
-      throw new BoardError(`${what} is not a connection in the answer.`);
-    }
-    nodes.push(...(connection.nodes as unknown[]));
-    const { hasNextPage, endCursor } = connection.pageInfo;
-    if (hasNextPage !== true) return nodes;
-    if (typeof endCursor !== "string") {
-      throw new BoardError(`${what} has a next page but no cursor.`);
-    }
-    cursor = endCursor;
-  }
-  throw new BoardError(`${what} has more than ${String(MAX_PAGES)} pages.`);
 }
 
 /** A field node of `ProjectFields`, or nothing when it is not one. */
@@ -906,11 +814,11 @@ export async function readBoardState(api: GitHubApi): Promise<BoardState> {
 
   const repositoryIds: Record<string, string> = {};
   for (const repository of BOARD_REPOSITORIES) {
-    const slash = repository.indexOf("/");
-    const data = await graphql(api, QUERIES.repository, {
-      owner: repository.slice(0, slash),
-      name: repository.slice(slash + 1),
-    });
+    const data = await graphql(
+      api,
+      QUERIES.repository,
+      ownerAndName(repository),
+    );
     if (!isRecord(data.repository) || typeof data.repository.id !== "string") {
       throw new BoardError(`Repository answered no repository ${repository}.`);
     }
@@ -1103,11 +1011,11 @@ export const PARENT_RULE_ORDER: readonly Status[] = [
  * else.
  */
 export function statusOf(issue: BoardIssue, lookup: IssueLookup): Status {
-  return rank(issue, lookup, new Set());
+  return highestStatus(issue, lookup, new Set());
 }
 
 /** `statusOf`, with the parents already on the path, so a cyclic hierarchy ends. */
-function rank(
+function highestStatus(
   issue: BoardIssue,
   lookup: IssueLookup,
   seen: Set<string>,
@@ -1127,7 +1035,7 @@ function rank(
     if (child === undefined) continue;
     highest = Math.max(
       highest,
-      PARENT_RULE_ORDER.indexOf(rank(child, lookup, seen)),
+      PARENT_RULE_ORDER.indexOf(highestStatus(child, lookup, seen)),
     );
   }
   if (highest >= 0) return PARENT_RULE_ORDER[highest];
@@ -1176,7 +1084,7 @@ export interface ReconcileRequest extends BoardRequest {
    * (`addProjectV2ItemById.item.id`); its `itemId` is a placeholder until
    * then.
    */
-  then?: BoardRequest;
+  followUp?: BoardRequest;
 }
 
 export interface BoardReconcilePlan {
@@ -1190,6 +1098,19 @@ export interface BoardReconcilePlan {
 export const ARCHIVE_AFTER_DAYS = 14;
 
 const DAY = 24 * 60 * 60 * 1000;
+
+/**
+ * The most items one run removes from the board unless told otherwise: a
+ * token that sees no issue, or a bug, would otherwise empty it in one run,
+ * and an item removed loses its place and its Status history.
+ */
+export const MAX_DELETES = 10;
+
+/** What a run of the reconcile may do beyond the defaults. */
+export interface ReconcileLimits {
+  /** The most items the plan may remove; `MAX_DELETES` when not given. */
+  maxDeletes?: number;
+}
 
 /** The issue an item holds and keeps a place for, or why the item goes. */
 function membershipOf(
@@ -1235,21 +1156,18 @@ function itemName(content: ItemContent): string {
  * set to what `statusOf` gives its issue when it differs. A closed issue
  * stays Done until its own `updatedAt` is `ARCHIVE_AFTER_DAYS` old, then
  * its item is archived; an archived item whose issue is open is unarchived,
- * and its Status written. A closed issue is never added.
+ * and its Status written. A closed issue is never added. A plan that
+ * removes more items than `limits.maxDeletes` (`MAX_DELETES`) is refused
+ * with a `BoardError` that lists the removals and names the flag that
+ * allows them: the brake against a run that would empty the board.
  */
 export function planBoardReconcile(
   state: ReconcileState,
   now: Date,
+  limits: ReconcileLimits = {},
 ): BoardReconcilePlan {
   const { project, items, issues } = state;
-  const status = project.fields.find(({ name }) =>
-    sameName(name, STATUS_FIELD),
-  );
-  if (status?.options === undefined) {
-    throw new BoardError(
-      `The project has no single select named ${STATUS_FIELD}: run board:setup first.`,
-    );
-  }
+  const status = statusFieldOf(project, ": run board:setup first");
   const options = status.options;
   const optionId = (value: Status): string => {
     const option = options.find(({ name }) => sameName(name, value));
@@ -1356,11 +1274,21 @@ export function planBoardReconcile(
       query: BOARD_MUTATIONS.addItem,
       variables: { projectId, contentId: issue.id },
       summary: `Add ${key} to the board, then set its Status to ${value}.`,
-      then: {
+      followUp: {
         ...statusWrite(placeholder(`the id of the item of ${key}`), value),
         summary: `Set the Status of ${key}, once added, to ${value}.`,
       },
     });
+  }
+
+  const maxDeletes = limits.maxDeletes ?? MAX_DELETES;
+  const deletes = requests.filter(
+    ({ query }) => query === BOARD_MUTATIONS.deleteItem,
+  );
+  if (deletes.length > maxDeletes) {
+    throw new BoardError(
+      `Refused: the plan removes ${String(deletes.length)} items from the board, more than the ${String(maxDeletes)} one run may remove, and nothing was sent. The removals: ${deletes.map(({ summary }) => summary).join(" ")} When they are right, run board:reconcile --max-deletes ${String(deletes.length)}.`,
+    );
   }
 
   return { requests, kept };
@@ -1523,11 +1451,10 @@ export async function readOpenIssues(
   api: GitHubApi,
   repository: string,
 ): Promise<BoardIssue[]> {
-  const slash = repository.indexOf("/");
   const nodes = await readNodes(
     api,
     QUERIES.openIssues,
-    { owner: repository.slice(0, slash), name: repository.slice(slash + 1) },
+    ownerAndName(repository),
     ["repository", "issues"],
   );
   return nodes.map((node) => {
@@ -1578,18 +1505,18 @@ export async function applyBoardReconcile(
   for (const request of plan.requests) {
     const data = await sendOne(api, request);
     sent(request);
-    if (request.then === undefined) continue;
+    if (request.followUp === undefined) continue;
     const added = isRecord(data.addProjectV2ItemById)
       ? data.addProjectV2ItemById.item
       : undefined;
     if (!isRecord(added) || typeof added.id !== "string") {
       throw new BoardError(
-        `AddItem answered no item id. Not done: ${request.then.summary}`,
+        `AddItem answered no item id. Not done: ${request.followUp.summary}`,
       );
     }
     const write: BoardRequest = {
-      ...request.then,
-      variables: { ...request.then.variables, itemId: added.id },
+      ...request.followUp,
+      variables: { ...request.followUp.variables, itemId: added.id },
     };
     await sendOne(api, write);
     sent(write);

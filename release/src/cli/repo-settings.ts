@@ -24,6 +24,8 @@ import {
   ghOutput,
   gitHubApi,
   invokedDirectly,
+  parseRunArgs,
+  printPlan,
   PROCESS_OUTPUT,
   runGh,
   type Gh,
@@ -47,20 +49,11 @@ interface Options {
 
 /** The options of the arguments; `undefined` on a usage error. */
 function parseArgs(args: readonly string[]): Options | undefined {
-  const options: Options = { dryRun: false, repository: null };
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i];
-    if (arg === "--dry-run") {
-      options.dryRun = true;
-      continue;
-    }
-    const value = args.at(i + 1);
-    if (arg !== "--repo" || options.repository !== null) return undefined;
-    if (value === undefined || !isRepository(value)) return undefined;
-    options.repository = value;
-    i++;
-  }
-  return options;
+  const parsed = parseRunArgs(args, ["--repo"]);
+  if (parsed === undefined) return undefined;
+  const repository = parsed.options["--repo"] ?? null;
+  if (repository !== null && !isRepository(repository)) return undefined;
+  return { dryRun: parsed.dryRun, repository };
 }
 
 /** One request for a person to read: what it does, the call, the body. */
@@ -107,14 +100,7 @@ export async function main(
       `${repository}: the gh authentication is an administrator. ` +
         `Ruleset from ${RULESET_FILE}.\n`,
     );
-    for (const line of plan.unchanged) output.stdout(`Already set: ${line}\n`);
-    const count = `${String(plan.requests.length)} ${plan.requests.length === 1 ? "request" : "requests"}`;
-    output.stdout(
-      options.dryRun ? `Dry run, ${count}, none sent:\n` : `${count}:\n`,
-    );
-    for (const request of plan.requests) {
-      output.stdout(`\n${describeRequest(request)}`);
-    }
+    printPlan(output, plan, describeRequest, options.dryRun);
     if (options.dryRun) return 0;
 
     output.stdout("\n");

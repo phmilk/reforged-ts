@@ -6,8 +6,10 @@
  * agrees draws no request. The token is `PROJECT_TOKEN`, the maintainer's
  * classic token with the `project` scope (the secret `board.yml` holds),
  * else, locally, the `gh` login's; it says which. `--dry-run` prints the
- * plan and sends none. Exit codes: 0 applied (or planned), 1 the state
- * cannot be read (no project yet: `board:setup` first), no token, or a
+ * plan and sends none. A plan that removes more than `MAX_DELETES` items is
+ * refused, the job summary saying what, unless `--max-deletes <n>` allows
+ * that many. Exit codes: 0 applied (or planned), 1 the state cannot be read
+ * (no project yet: `board:setup` first), no token, a refused plan or a
  * request failed, 2 usage.
  */
 import {
@@ -16,9 +18,11 @@ import {
   BOARD_REPOSITORIES,
   BOARD_TITLE,
   describeRequest,
+  MAX_DELETES,
   planBoardReconcile,
   readReconcileState,
   type BoardReconcilePlan,
+  type BoardRequest,
   type ReconcileState,
 } from "../board.js";
 import {
@@ -27,18 +31,22 @@ import {
   ghOutput,
   gitHubApi,
   invokedDirectly,
+  parseRunArgs,
+  plural,
+  printPlan,
   PROCESS_OUTPUT,
   runGh,
   type Gh,
   type Output,
 } from "./common.js";
 
-/** The environment variable that holds the token: the repository secret of the same name. */
+/** The environment variable that holds the token: the environment secret of the same name. */
 export const TOKEN_VARIABLE = "PROJECT_TOKEN";
 
 const USAGE =
-  "Usage: board:reconcile [--dry-run]\n" +
-  `  With the token in ${TOKEN_VARIABLE} (the maintainer's classic token, scope project), else the gh login's.\n`;
+  "Usage: board:reconcile [--dry-run] [--max-deletes <n>]\n" +
+  `  With the token in ${TOKEN_VARIABLE} (the maintainer's classic token, scope project), else the gh login's.\n` +
+  `  --max-deletes <n>: allow a plan that removes up to n items from the board (${String(MAX_DELETES)} without it).\n`;
 
 export interface Context {
   env: Readonly<Record<string, string | undefined>>;
@@ -48,11 +56,22 @@ export interface Context {
   now: () => Date;
 }
 
+interface Options {
+  dryRun: boolean;
+  /** `--max-deletes`; `undefined` keeps `MAX_DELETES`. */
+  maxDeletes: number | undefined;
+}
+
 /** The options of the arguments; `undefined` on a usage error. */
-function parseArgs(args: readonly string[]): { dryRun: boolean } | undefined {
-  if (args.length === 0) return { dryRun: false };
-  if (args.length === 1 && args[0] === "--dry-run") return { dryRun: true };
-  return undefined;
+function parseArgs(args: readonly string[]): Options | undefined {
+  const parsed = parseRunArgs(args, ["--max-deletes"]);
+  if (parsed === undefined) return undefined;
+  const maxDeletes = parsed.options["--max-deletes"];
+  if (maxDeletes !== undefined && !/^\d+$/.test(maxDeletes)) return undefined;
+  return {
+    dryRun: parsed.dryRun,
+    maxDeletes: maxDeletes === undefined ? undefined : Number(maxDeletes),
+  };
 }
 
 /** The token and where it came from. */
@@ -73,18 +92,14 @@ async function tokenOf(
   };
 }
 
-const plural = (count: number, one: string, many: string) =>
-  `${String(count)} ${count === 1 ? one : many}`;
-
-/** How many writes the plan holds: an add counts with the Status write that follows it. */
-const writes = (plan: BoardReconcilePlan) =>
-  plan.requests.reduce(
-    (count, request) => count + (request.then === undefined ? 1 : 2),
-    0,
+/** The writes the plan holds, in order: an add, then the Status write that follows it. */
+const writes = (plan: BoardReconcilePlan): BoardRequest[] =>
+  plan.requests.flatMap((request) =>
+    request.followUp === undefined ? [request] : [request, request.followUp],
   );
 
-/** What was found and each request of the plan. */
-function printPlan(
+/** What was found, then the plan: each write, an add with the one that follows it. */
+function printReconcilePlan(
   output: Output,
   state: ReconcileState,
   plan: BoardReconcilePlan,
@@ -101,14 +116,7 @@ function printPlan(
       `${plural(items.length, "item", "items")} on the board, ${String(items.filter(({ archived }) => archived).length)} archived.\n`,
   );
   output.stdout(`As they should be: ${plural(plan.kept, "item", "items")}.\n`);
-  const count = plural(writes(plan), "request", "requests");
-  output.stdout(dryRun ? `Dry run, ${count}, none sent:\n` : `${count}:\n`);
-  for (const request of plan.requests) {
-    output.stdout(`\n${describeRequest(request)}`);
-    if (request.then !== undefined) {
-      output.stdout(`\n${describeRequest(request.then)}`);
-    }
-  }
+  printPlan(output, { requests: writes(plan) }, describeRequest, dryRun);
 }
 
 export async function main(
@@ -136,8 +144,20 @@ export async function main(
     );
     const state = await readReconcileState(api);
     output.stdout(`Token: ${source}, as ${state.viewer}.\n`);
-    const plan = planBoardReconcile(state, context.now());
-    printPlan(output, state, plan, options.dryRun);
+    let plan: BoardReconcilePlan;
+    try {
+      plan = planBoardReconcile(state, context.now(), {
+        maxDeletes: options.maxDeletes,
+      });
+    } catch (error) {
+      // A refused plan (the deletion brake): the summary says what.
+      await appendSummary(
+        context.env,
+        `## Board reconcile\n\n${errorMessage(error)}\n`,
+      );
+      throw error;
+    }
+    printReconcilePlan(output, state, plan, options.dryRun);
     if (options.dryRun) return 0;
 
     const done: string[] = [];
@@ -151,7 +171,7 @@ export async function main(
         context.env,
         "## Board reconcile\n\n" +
           `${plural(plan.kept, "item", "items")} as they should be; ` +
-          `${plural(writes(plan), "request", "requests")}, ${String(done.length)} done.\n` +
+          `${plural(writes(plan).length, "request", "requests")}, ${String(done.length)} done.\n` +
           `${done.map((summary) => `\n- ${summary}`).join("")}${done.length === 0 ? "" : "\n"}`,
       );
     }

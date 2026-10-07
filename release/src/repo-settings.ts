@@ -327,7 +327,7 @@ export type GitHubApi = (request: {
 }) => Promise<ApiResponse>;
 
 /** GitHub's own message of an error answer, else its status. */
-function apiMessage({ status, body }: ApiResponse): string {
+export function apiMessage({ status, body }: ApiResponse): string {
   return isRecord(body) && typeof body.message === "string"
     ? `${String(status)} ${body.message}`
     : String(status);

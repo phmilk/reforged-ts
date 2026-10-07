@@ -28,6 +28,8 @@ import {
   ghOutput,
   gitHubApi,
   invokedDirectly,
+  parseRunArgs,
+  printPlan,
   PROCESS_OUTPUT,
   runGh,
   type Gh,
@@ -43,15 +45,8 @@ export interface Context {
   fetcher: typeof fetch;
 }
 
-/** The options of the arguments; `undefined` on a usage error. */
-function parseArgs(args: readonly string[]): { dryRun: boolean } | undefined {
-  if (args.length === 0) return { dryRun: false };
-  if (args.length === 1 && args[0] === "--dry-run") return { dryRun: true };
-  return undefined;
-}
-
-/** What was found, what already matches, and each request of the plan. */
-function printPlan(
+/** What was found, then the plan: what already matches and each request. */
+function printSetupPlan(
   output: Output,
   state: BoardState,
   plan: BoardSetupPlan,
@@ -62,12 +57,7 @@ function printPlan(
       ? `No project "${BOARD_TITLE}" under ${BOARD_OWNER}: the plan creates it.\n`
       : `Project "${BOARD_TITLE}" under ${BOARD_OWNER}: ${state.project.url} (number ${String(state.project.number)}).\n`,
   );
-  for (const line of plan.unchanged) output.stdout(`Already set: ${line}\n`);
-  const count = `${String(plan.requests.length)} ${plan.requests.length === 1 ? "request" : "requests"}`;
-  output.stdout(dryRun ? `Dry run, ${count}, none sent:\n` : `${count}:\n`);
-  for (const request of plan.requests) {
-    output.stdout(`\n${describeRequest(request)}`);
-  }
+  printPlan(output, plan, describeRequest, dryRun);
 }
 
 /** The dry run's answer when GitHub cannot be read: the plan that creates everything. */
@@ -77,7 +67,7 @@ function printAssumedPlan(output: Output, reason: unknown): number {
       `project exists. ${errorMessage(reason)}\n`,
   );
   const state = assumedState();
-  printPlan(output, state, planBoardSetup(state), true);
+  printSetupPlan(output, state, planBoardSetup(state), true);
   return 0;
 }
 
@@ -86,7 +76,7 @@ export async function main(
   output: Output,
   context: Context = { gh: runGh, fetcher: fetch },
 ): Promise<number> {
-  const options = parseArgs(args);
+  const options = parseRunArgs(args);
   if (options === undefined) {
     output.stderr(USAGE);
     return 2;
@@ -124,7 +114,7 @@ export async function main(
     }
 
     const plan = planBoardSetup(state);
-    printPlan(output, state, plan, options.dryRun);
+    printSetupPlan(output, state, plan, options.dryRun);
     if (options.dryRun) return 0;
 
     output.stdout("\n");

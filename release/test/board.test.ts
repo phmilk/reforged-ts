@@ -15,6 +15,7 @@ import {
   BoardError,
   CLAIM_DOC_URL,
   issueLookup,
+  MAX_DELETES,
   planBoardReconcile,
   planBoardSetup,
   readBoardState,
@@ -29,6 +30,7 @@ import {
   type ReconcileState,
   type SubIssue,
 } from "../src/board.js";
+import { GraphQlError } from "../src/github-graphql.js";
 import { repositoryRoot } from "../src/workspace.js";
 import {
   CONFIGURED,
@@ -539,7 +541,7 @@ describe("readBoardState", () => {
       readBoardState(() =>
         Promise.resolve({ status: 401, body: { message: "Bad credentials" } }),
       ),
-    ).rejects.toThrow(new BoardError("Owner answered 401 Bad credentials."));
+    ).rejects.toThrow(new GraphQlError("Owner answered 401 Bad credentials."));
   });
 });
 
@@ -972,7 +974,7 @@ describe("planBoardReconcile", () => {
           query: BOARD_MUTATIONS.addItem,
           variables: { projectId: PROJECT_ID, contentId: "I_1" },
           summary: `Add ${LIBRARY}#1 to the board, then set its Status to Ready.`,
-          then: {
+          followUp: {
             ...statusWrite(`<the id of the item of ${LIBRARY}#1>`, "Ready"),
             summary: `Set the Status of ${LIBRARY}#1, once added, to Ready.`,
           },
@@ -981,7 +983,7 @@ describe("planBoardReconcile", () => {
           query: BOARD_MUTATIONS.addItem,
           variables: { projectId: PROJECT_ID, contentId: "I_t5" },
           summary: `Add ${TEMPLATE}#5 to the board, then set its Status to Ready.`,
-          then: {
+          followUp: {
             ...statusWrite(`<the id of the item of ${TEMPLATE}#5>`, "Ready"),
             summary: `Set the Status of ${TEMPLATE}#5, once added, to Ready.`,
           },
@@ -1147,6 +1149,42 @@ describe("planBoardReconcile", () => {
     expect(plan.requests.map(({ summary }) => summary)).toEqual([
       `Set the Status of ${LIBRARY}#529 to In progress (was Backlog).`,
     ]);
+  });
+
+  it("refuses a plan that removes more than 10 items, listing them and naming --max-deletes, unless the limit is raised", () => {
+    const foreign = Array.from({ length: 11 }, (_, i) =>
+      issue(300 + i, { repository: OTHER }),
+    );
+    const state: ReconcileState = {
+      ...AGREES,
+      items: [item(ready, "Ready"), ...foreign.map((f) => item(f, "Backlog"))],
+      issues: [ready],
+    };
+
+    expect(MAX_DELETES).toBe(10);
+    expect(() => planBoardReconcile(state, NOW)).toThrow(
+      new BoardError(
+        "Refused: the plan removes 11 items from the board, more than the 10 one run may remove, and nothing was sent. The removals: " +
+          foreign
+            .map(
+              ({ number }) =>
+                `Remove ${OTHER}#${String(number)} from the board: an issue of another repository.`,
+            )
+            .join(" ") +
+          " When they are right, run board:reconcile --max-deletes 11.",
+      ),
+    );
+    expect(
+      planBoardReconcile(
+        { ...state, items: state.items.slice(0, 11) },
+        NOW,
+      ).requests.filter(({ query }) => query === BOARD_MUTATIONS.deleteItem),
+    ).toHaveLength(10);
+    expect(
+      planBoardReconcile(state, NOW, { maxDeletes: 11 }).requests.filter(
+        ({ query }) => query === BOARD_MUTATIONS.deleteItem,
+      ),
+    ).toHaveLength(11);
   });
 
   it("stops on a project without the Status field or one of its options, naming board:setup", () => {
@@ -1352,12 +1390,20 @@ interface Workflow {
   permissions: unknown;
   concurrency: unknown;
   jobs: Partial<
-    Record<string, { if?: string; permissions?: unknown; steps?: Step[] }>
+    Record<
+      string,
+      {
+        if?: string;
+        environment?: unknown;
+        permissions?: unknown;
+        steps?: Step[];
+      }
+    >
   >;
 }
 
 describe("board.yml", () => {
-  it("runs on the issue and pull-request events, hourly and by hand, one group, contents read, master checked out, the token in env", async () => {
+  it("runs on the issue and pull_request_target events, hourly and by hand, one group, contents read, master checked out, the token from the board environment", async () => {
     const text = await readFile(
       join(repositoryRoot, ".github", "workflows", "board.yml"),
       "utf8",
@@ -1378,7 +1424,10 @@ describe("board.yml", () => {
           "unlabeled",
         ],
       },
-      pull_request: {
+      // master's workflow file and checkout, whatever the pull request
+      // holds, and the secret for a fork's pull request too: never
+      // pull_request, whose run takes the merge commit's file.
+      pull_request_target: {
         types: [
           "opened",
           "reopened",
@@ -1400,16 +1449,20 @@ describe("board.yml", () => {
     });
     expect(Object.keys(jobs)).toEqual(["reconcile"]);
     const job = jobs.reconcile;
-    expect(job?.if).toBe(
-      "github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository",
-    );
+    // No fork skip: master's code runs whatever the head, and the
+    // environment's branch policy, master only, guards the secret.
+    expect(job?.if).toBeUndefined();
+    expect(job?.environment).toBe("board");
     expect(job?.permissions).toEqual({ contents: "read" });
     const steps = job?.steps ?? [];
     const checkouts = steps.filter((step) =>
       step.uses?.startsWith("actions/checkout@"),
     );
     expect(checkouts).toHaveLength(1);
-    expect(checkouts[0]?.with).toMatchObject({ ref: "master" });
+    expect(checkouts[0]?.with).toMatchObject({
+      ref: "master",
+      "persist-credentials": false,
+    });
     for (const step of steps) {
       expect(step.run ?? "", "a run step").not.toContain("${{");
     }

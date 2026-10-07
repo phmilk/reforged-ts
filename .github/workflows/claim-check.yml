@@ -38,14 +38,14 @@ jobs:
       issues: write
       # The sticky comment on the pull request.
       pull-requests: write
-      # The board dispatch below. A called job cannot exceed its caller, so
-      # every caller grants it too, the Template's included.
-      actions: write
     # One run per pull request, a newer push or edit replacing the running
     # one; one per issue, every assignment event seen in order.
     concurrency:
       group: claim-${{ github.event_name }}-${{ github.event.pull_request.number || github.event.issue.number }}
       cancel-in-progress: ${{ github.event_name == 'pull_request_target' }}
+    outputs:
+      # The issues the run assigned, comma-separated; empty when none.
+      assigned: ${{ steps.pull-request.outputs.assigned }}
     steps:
       # master of the library, never a ref of the pull request; named in
       # full, since a checkout in a called workflow defaults to the caller's
@@ -65,20 +65,33 @@ jobs:
         name: claim-check pull-request
         if: github.event_name == 'pull_request_target'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: node release/src/claim-check.ts pull-request
       - name: claim-check issue
         if: github.event_name == 'issues'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: node release/src/claim-check.ts issue
-      # An assignment made with GITHUB_TOKEN raises no issues event, so the
-      # board (board.yml) is told here, once the script says it assigned; in
-      # the library only, which holds board.yml, while the Template's items
-      # wait for the board's hourly schedule. A workflow_dispatch is the one
-      # event GITHUB_TOKEN does start.
+
+  # An assignment made with GITHUB_TOKEN raises no issues event, so the
+  # board (board.yml) is told here, once the check says it assigned; in the
+  # library only, which holds board.yml, while the Template's items wait
+  # for the board's hourly schedule. A workflow_dispatch is the one event
+  # GITHUB_TOKEN does start. Its own job, so that `actions: write` is held
+  # by this one step and by nothing that reads the event; it runs when the
+  # check failed too (one issue assigned, another claimed by someone else),
+  # which `!cancelled()` allows and a plain `needs` would not.
+  dispatch:
+    name: dispatch
+    needs: check
+    if: ${{ !cancelled() && github.repository == 'phmilk/reforged-ts' && needs.check.outputs.assigned != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: write
+    steps:
+      # No checkout: gh needs the token and the workflow's name only.
       - name: Dispatch the board
-        if: github.repository == 'phmilk/reforged-ts' && steps.pull-request.outputs.assigned != ''
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: gh workflow run board.yml --repo phmilk/reforged-ts

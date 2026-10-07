@@ -28,8 +28,26 @@ const USAGE = "Usage: node release/src/claim-check.ts <pull-request|issue>\n";
 export const MARKER = "<!-- claim-check -->";
 
 /**
+ * The login the check writes as: `GITHUB_TOKEN` comments as GitHub Actions.
+ * REST spells it with the `[bot]` suffix; the suffix-less spelling counts
+ * only on a user of the `Bot` type.
+ */
+export const CHECK_LOGIN = "github-actions";
+
+/** The head of text 2: a sticky comment holding it holds a failure. */
+const FAILED_HEAD = "**Claim check failed.**";
+
+/**
+ * The most issues one run assigns the author to: a pull request that closes
+ * more unclaimed issues than this claims none past it, so that one
+ * description cannot claim a repository's backlog in one push.
+ */
+export const MAX_ASSIGNMENTS = 20;
+
+/**
  * The check's comment texts (#529, "The check's comment texts"), numbered as
- * there; the tests pin them word for word.
+ * there; the tests pin them word for word. `tooMany` is not the spec's: it
+ * is the line of the assignment cap (`MAX_ASSIGNMENTS`).
  */
 export const TEXTS = {
   /** 1. Assigned: an unclaimed issue, now the author's. */
@@ -37,7 +55,7 @@ export const TEXTS = {
     `**Claim check.** Assigned #${String(issue)} to @${author}. Under the Claim protocol the Claim comes before the work: \`gh issue edit ${String(issue)} --add-assignee @me\`, as the first write. See \`docs/agents/issue-tracker.md\`, "Claim".`,
   /** 2. Failed: an issue claimed by another login. */
   failed: (issue: number, assignee: string): string =>
-    `**Claim check failed.** #${String(issue)} is claimed by @${assignee} (the assignee is the Claim: one login per issue), and this pull request would close it. Coordinate with them or, if the Claim is stale (3 days without a commit on their pull request and without a comment), take it over: comment on #${String(issue)} first, then \`gh issue edit ${String(issue)} --remove-assignee ${assignee} --add-assignee @me\`. Then re-run this check (Actions, "Re-run jobs") or push a commit. See \`docs/agents/issue-tracker.md\`, "Claim".`,
+    `${FAILED_HEAD} #${String(issue)} is claimed by @${assignee} (the assignee is the Claim: one login per issue), and this pull request would close it. Coordinate with them or, if the Claim is stale (3 days without a commit on their pull request and without a comment), take it over: comment on #${String(issue)} first, then \`gh issue edit ${String(issue)} --remove-assignee ${assignee} --add-assignee @me\`. Then re-run this check (Actions, "Re-run jobs") or push a commit. See \`docs/agents/issue-tracker.md\`, "Claim".`,
   /** 3. Not assignable: GitHub will not assign the author. */
   notAssignable: (issue: number, author: string): string =>
     `**Claim check.** #${String(issue)} could not be assigned to @${author}: GitHub assigns only a login with push access or a comment on the issue. Comment on #${String(issue)} and re-run this check, or a maintainer assigns it.`,
@@ -56,6 +74,9 @@ export const TEXTS = {
   resolved: "**Claim conflict** resolved.",
   /** 7. The pull request passes after a failure. */
   passed: "**Claim check** passed.",
+  /** The cap: the issues past `MAX_ASSIGNMENTS` were not assigned. */
+  tooMany: (issues: readonly number[]): string =>
+    `**Claim check.** This pull request closes too many issues to claim them here: at most ${String(MAX_ASSIGNMENTS)} are assigned per run, and ${issues.map((issue) => `#${String(issue)}`).join(", ")} ${issues.length === 1 ? "was" : "were"} not. Claim each one yourself, as the first write: \`gh issue edit <n> --add-assignee @me\`.`,
 } as const;
 
 /** An issue a pull request closes, as the check read it. */
@@ -158,20 +179,21 @@ const sameBody = (a: string, b: string): boolean =>
 
 /**
  * The sticky comment to write on `number`: `lines` under the marker, one
- * per issue. With nothing to say, an earlier comment is rewritten to
- * `settled` (a conflict gone, a pass after a failure) and none is created.
- * Nothing when the comment already reads so.
+ * per issue. With nothing to say, none is created, and an earlier comment
+ * is rewritten to `settled` (a conflict gone, a pass after a failure) when
+ * that is a text, else left as it is. Nothing when the comment already
+ * reads so.
  */
 function upsert(
   number: number,
   lines: readonly string[],
   existing: StickyComment | null,
-  settled: string,
+  settled: string | null,
 ): CommentUpsert[] {
   const body =
     lines.length > 0
       ? [MARKER, ...lines].join("\n\n")
-      : existing === null
+      : existing === null || settled === null
         ? null
         : `${MARKER}\n\n${settled}`;
   if (body === null || (existing !== null && sameBody(existing.body, body))) {
@@ -185,9 +207,13 @@ function upsert(
  * request closes: no assignee, assign the author and say so (text 1), or
  * text 3 when GitHub will not assign them; the author among the assignees,
  * pass (pairing included); assignees that exclude the author, fail with
- * text 2. An issue of another repository is ignored with a summary line; a
- * pull request that closes no issue passes with one. The worst verdict
- * wins: exit 1 when any issue fails.
+ * text 2. At most `MAX_ASSIGNMENTS` issues are assigned in one run: the
+ * unclaimed ones past the cap stay so, with a summary line each and one
+ * line in the comment. An issue of another repository is ignored with a
+ * summary line; a pull request that closes no issue passes with one. The
+ * worst verdict wins: exit 1 when any issue fails. With nothing to say, an
+ * earlier comment is left alone unless it holds a failure, which a pass
+ * replaces with text 7.
  */
 export function planPullRequest(input: PullRequestInput): Plan {
   const { repository, pullRequest, closing, comment } = input;
@@ -195,6 +221,7 @@ export function planPullRequest(input: PullRequestInput): Plan {
   const assignments: Assignment[] = [];
   const lines: string[] = [];
   const summary: string[] = [];
+  const capped: number[] = [];
   let failed = false;
   let seen = 0;
   for (const issue of closing) {
@@ -218,26 +245,35 @@ export function planPullRequest(input: PullRequestInput): Plan {
       summary.push(
         `- #${n}: claimed by ${names(issue.assignees)}, not by the author @${author}; failed.`,
       );
-    } else if (issue.authorAssignable) {
-      assignments.push({ issue: issue.number, login: author });
-      lines.push(TEXTS.assigned(issue.number, author));
-      summary.push(`- #${n}: no assignee; assigned to the author @${author}.`);
-    } else {
+    } else if (!issue.authorAssignable) {
       lines.push(TEXTS.notAssignable(issue.number, author));
       summary.push(
         `- #${n}: no assignee, and the author @${author} cannot be assigned; passed, with a comment.`,
       );
+    } else if (assignments.length < MAX_ASSIGNMENTS) {
+      assignments.push({ issue: issue.number, login: author });
+      lines.push(TEXTS.assigned(issue.number, author));
+      summary.push(`- #${n}: no assignee; assigned to the author @${author}.`);
+    } else {
+      capped.push(issue.number);
+      summary.push(
+        `- #${n}: no assignee; not assigned: the pull request closes too many issues to claim them here (at most ${String(MAX_ASSIGNMENTS)} per run).`,
+      );
     }
   }
+  if (capped.length > 0) lines.push(TEXTS.tooMany(capped));
   if (seen === 0) {
     summary.push(
       `- #${String(pullRequest.number)} closes no issue of this repository; passed.`,
     );
   }
+  // Only a failure is replaced on a pass; a reminder (text 1, text 3) stays.
+  const settled =
+    comment?.body.includes(FAILED_HEAD) === true ? TEXTS.passed : null;
   return {
     verdict: failed ? "failed" : "passed",
     assignments,
-    comments: upsert(pullRequest.number, lines, comment, TEXTS.passed),
+    comments: upsert(pullRequest.number, lines, comment, settled),
     summary,
     exitCode: failed ? 1 : 0,
   };
@@ -250,8 +286,10 @@ export function planPullRequest(input: PullRequestInput): Plan {
  * assignee, pairing, nothing; the sender the repository owner, nothing;
  * otherwise text 4. An open pull request of the same repository by a login
  * outside the assignees draws text 5, read from its own state. With no
- * conflict left, an earlier comment becomes text 6. Comments only, never a
- * reversal: always exit 0.
+ * conflict left (at most one assignee, and no such pull request), an
+ * earlier comment becomes text 6; a second assignee the event did not add
+ * keeps it, since their conflict stands. Comments only, never a reversal:
+ * always exit 0.
  */
 export function planIssue(input: IssueInput): Plan {
   const { repository, action, issue, assignee, sender, owner } = input;
@@ -318,7 +356,12 @@ export function planIssue(input: IssueInput): Plan {
   return {
     verdict: lines.length > 0 ? "conflict" : "clear",
     assignments: [],
-    comments: upsert(issue, lines, comment, TEXTS.resolved),
+    comments: upsert(
+      issue,
+      lines,
+      comment,
+      assignees.length <= 1 ? TEXTS.resolved : null,
+    ),
     summary,
     exitCode: 0,
   };
@@ -500,8 +543,22 @@ const PAGE_SIZE = 100;
 const MAX_PAGES = 10;
 
 /**
+ * Whether a comment's `user` is the check itself, `CHECK_LOGIN`: a marked
+ * comment by anyone else is not the check's, whatever it says.
+ */
+function byCheck(user: unknown): boolean {
+  if (!isRecord(user) || typeof user.login !== "string") return false;
+  return (
+    user.login === `${CHECK_LOGIN}[bot]` ||
+    (user.login === CHECK_LOGIN && user.type === "Bot")
+  );
+}
+
+/**
  * The check's sticky comment on issue or pull request `number`: the first
- * comment whose body opens with the marker.
+ * comment by the check whose body opens with the marker. A marked comment
+ * by another login is passed over, so that nobody can plant the check's
+ * comment.
  */
 async function findComment(
   api: Api,
@@ -525,7 +582,8 @@ async function findComment(
         isRecord(item) &&
         typeof item.id === "number" &&
         typeof item.body === "string" &&
-        item.body.startsWith(MARKER)
+        item.body.startsWith(MARKER) &&
+        byCheck(item.user)
       ) {
         return { id: item.id, body: item.body };
       }
@@ -558,12 +616,19 @@ async function assignable(
   return status === 204;
 }
 
-// The connections are read whole: GitHub links at most ten issues to a pull
-// request by hand, and an issue holds at most ten assignees.
-const CLOSING_ISSUES = `query($owner: String!, $name: String!, $number: Int!) {
+/**
+ * The closing references read in one page. GitHub links at most ten issues
+ * to a pull request by hand; keywords in the description are unbounded, so
+ * the count is read too, and a pull request past the page stops the check.
+ */
+const CLOSING_PAGE = 50;
+
+// An issue holds at most ten assignees: that connection is read whole.
+const CLOSING_ISSUES = `query($owner: String!, $name: String!, $number: Int!, $first: Int!) {
   repository(owner: $owner, name: $name) {
     pullRequest(number: $number) {
-      closingIssuesReferences(first: 50) {
+      closingIssuesReferences(first: $first) {
+        totalCount
         nodes {
           number
           repository { nameWithOwner }
@@ -589,35 +654,64 @@ const CLOSED_BY = `query($owner: String!, $name: String!, $number: Int!) {
   }
 }`;
 
-/** The issues the pull request closes, with whether `author` may be assigned to each one of this repository. */
+/** The `owner` and `name` of a repository named `owner/name`. */
+function ownerAndName(repository: string): { owner: string; name: string } {
+  const slash = repository.indexOf("/");
+  return {
+    owner: repository.slice(0, slash),
+    name: repository.slice(slash + 1),
+  };
+}
+
+/**
+ * The issues the pull request closes, with whether `author` may be assigned
+ * to each one of this repository. Stops when the pull request closes more
+ * issues than one page holds: an issue the check did not read could be
+ * claimed by another login, and the check never passes on one unread.
+ */
 async function readClosingIssues(
   api: Api,
   repository: string,
   pullRequest: { number: number; author: string },
 ): Promise<ClosingIssue[]> {
-  const [owner, name] = repository.split("/");
   const data = await graphql(api, CLOSING_ISSUES, {
-    owner,
-    name,
+    ...ownerAndName(repository),
     number: pullRequest.number,
+    first: CLOSING_PAGE,
   });
+  const connection = at(
+    data,
+    "repository",
+    "pullRequest",
+    "closingIssuesReferences",
+  );
+  const totalCount = at(connection, "totalCount");
+  const nodes = nodesOf(connection);
+  if (typeof totalCount !== "number") {
+    throw new ClaimCheckError(
+      "closingIssuesReferences answered no totalCount.",
+    );
+  }
+  if (totalCount > nodes.length) {
+    throw new ClaimCheckError(
+      `#${String(pullRequest.number)} closes ${String(totalCount)} issues, more than the ${String(nodes.length)} the check read: it cannot pass on an issue it has not read. Name at most ${String(CLOSING_PAGE)} issues in the description, or split the pull request, then re-run the check.`,
+    );
+  }
   const issues: ClosingIssue[] = [];
-  for (const node of nodesOf(
-    at(data, "repository", "pullRequest", "closingIssuesReferences"),
-  )) {
-    const of = at(node, "repository", "nameWithOwner");
+  for (const node of nodes) {
+    const nameWithOwner = at(node, "repository", "nameWithOwner");
     const number = at(node, "number");
-    if (typeof of !== "string" || typeof number !== "number") {
+    if (typeof nameWithOwner !== "string" || typeof number !== "number") {
       throw new ClaimCheckError(
         "closingIssuesReferences answered an issue without a number and a repository.",
       );
     }
     issues.push({
-      repository: of,
+      repository: nameWithOwner,
       number,
       assignees: loginsOf(nodesOf(at(node, "assignees"))),
       authorAssignable:
-        of === repository &&
+        nameWithOwner === repository &&
         (await assignable(api, repository, number, pullRequest.author)),
     });
   }
@@ -630,17 +724,19 @@ async function readClosingPullRequests(
   repository: string,
   number: number,
 ): Promise<ClosingPullRequest[]> {
-  const [owner, name] = repository.split("/");
-  const data = await graphql(api, CLOSED_BY, { owner, name, number });
+  const data = await graphql(api, CLOSED_BY, {
+    ...ownerAndName(repository),
+    number,
+  });
   const pullRequests: ClosingPullRequest[] = [];
   for (const node of nodesOf(
     at(data, "repository", "issue", "closedByPullRequestsReferences"),
   )) {
-    const of = at(node, "repository", "nameWithOwner");
+    const nameWithOwner = at(node, "repository", "nameWithOwner");
     const pullRequest = at(node, "number");
     const state = at(node, "state");
     if (
-      typeof of !== "string" ||
+      typeof nameWithOwner !== "string" ||
       typeof pullRequest !== "number" ||
       (state !== "OPEN" && state !== "CLOSED" && state !== "MERGED")
     ) {
@@ -650,7 +746,7 @@ async function readClosingPullRequests(
     }
     const login = at(node, "author", "login");
     pullRequests.push({
-      repository: of,
+      repository: nameWithOwner,
       number: pullRequest,
       // A deleted account has no author.
       author: typeof login === "string" ? login : "ghost",
@@ -897,11 +993,11 @@ async function checkIssue(
 /**
  * Runs the mode `args[0]` names (`pull-request` or `issue`) on the event
  * of `GITHUB_EVENT_PATH`, in `GITHUB_REPOSITORY`, with `GITHUB_TOKEN`,
- * through the API at `GITHUB_API_URL`; writes a line per issue to the job
- * summary when `GITHUB_STEP_SUMMARY` names one, and the issues it assigned
- * to the step output `assigned` when `GITHUB_OUTPUT` names the file. Exit
- * codes: 0 passed, 1 an issue claimed by another login (pull-request mode)
- * or an error, 2 usage.
+ * through the API at `GITHUB_API_URL`; writes a line per issue, or the
+ * error that stopped it, to the job summary when `GITHUB_STEP_SUMMARY`
+ * names one, and the issues it assigned to the step output `assigned` when
+ * `GITHUB_OUTPUT` names the file. Exit codes: 0 passed, 1 an issue claimed
+ * by another login (pull-request mode) or an error, 2 usage.
  */
 export async function main(
   args: readonly string[],
@@ -945,7 +1041,10 @@ export async function main(
     }
     return plan.exitCode;
   } catch (error) {
-    output.stderr(`${errorMessage(error)}\n`);
+    const message = errorMessage(error);
+    output.stderr(`${message}\n`);
+    // The summary is what a person reads first: the error goes there too.
+    await appendSummary(context.env, `## Claim check\n\n- ${message}\n`);
     return 1;
   }
 }

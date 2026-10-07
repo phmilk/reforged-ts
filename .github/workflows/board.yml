@@ -4,18 +4,24 @@
 # repositories gets a Status derived from its assignees, pull requests,
 # blockers, sub-issues and labels, and only the differences are written. On
 # this repository's issue and pull-request events, hourly (the Template's
-# changes, a fork's pull request and the archive clock) and by hand.
-# docs/release.md, "The board", describes the rules, this workflow and its
-# failure modes.
+# changes and the archive clock) and by hand. docs/release.md, "The board",
+# describes the rules, this workflow and its failure modes.
 #
 # The writes need the maintainer's classic token, the secret PROJECT_TOKEN,
-# since neither GITHUB_TOKEN nor the App reaches a user-owned project. The
-# job checks out master explicitly, so that the token only ever runs the
-# code master holds: a pull request's own release/src/board.ts never runs
-# with it (the default checkout of a pull_request run would be its merge
-# commit). A fork's pull request is skipped, since its run would hold no
-# secret, and waits for the schedule. A dead token fails the run, and the
-# red scheduled run is the signal.
+# since neither GITHUB_TOKEN nor the App reaches a user-owned project. Two
+# things keep the token on master's code alone. The pull-request events are
+# pull_request_target, not pull_request: GitHub then takes this file from
+# master, whatever the pull request's branch holds (a pull_request run takes
+# the merge commit's file, so a branch of this repository, Renovate's weekly
+# one included, could rewrite it and send the secret out), and the job
+# checks out master explicitly, so a pull request's own release/src/board.ts
+# never runs with the token either; a fork's pull request reaches the board
+# at once, since its run holds the secret and runs master's code. And the
+# secret lives in the environment `board`, whose deployment branch policy
+# allows master only: a run on any other ref (a workflow_dispatch of a
+# branch) is refused the secret before any step runs. The repository-setup
+# wizard makes the environment, its policy and the secret. A dead token
+# fails the run, and the red scheduled run is the signal.
 name: board
 
 on:
@@ -32,7 +38,8 @@ on:
         labeled,
         unlabeled,
       ]
-  pull_request:
+  # master's file and checkout, whatever the pull request holds (above).
+  pull_request_target:
     types:
       [opened, reopened, closed, edited, converted_to_draft, ready_for_review]
   workflow_dispatch:
@@ -52,10 +59,10 @@ concurrency:
 jobs:
   reconcile:
     name: reconcile
-    # A fork's pull request runs without the secret: it waits for the schedule.
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # The secret's home: its deployment branch policy admits master alone.
+    environment: board
     permissions:
       contents: read
     steps:

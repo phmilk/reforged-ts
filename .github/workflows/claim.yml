@@ -21,9 +21,10 @@ permissions:
 jobs:
   claim:
     name: claim
-    # The called job can only lower these: the checkout, the assignment and
-    # the comment on the issue, the comment on the pull request, and the
-    # dispatch of board.yml after an assignment.
+    # The called jobs can only lower these: the checkout, the assignment and
+    # the comment on the issue, the comment on the pull request (the check),
+    # and the dispatch of board.yml after an assignment (the dispatch job,
+    # the one that holds actions: write).
     permissions:
       contents: read
       issues: write

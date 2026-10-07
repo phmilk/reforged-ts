@@ -10,7 +10,6 @@ import {
   BOARD_REPOSITORIES,
   BOARD_TITLE,
   BOARD_VIEWS,
-  operationName,
   STATUS_OPTIONS,
   type BoardIssue,
   type BoardState,
@@ -18,6 +17,7 @@ import {
   type ProjectState,
 } from "../../src/board.js";
 import { gitHubApi } from "../../src/cli/common.js";
+import { operationName } from "../../src/github-graphql.js";
 import type { GitHubApi } from "../../src/repo-settings.js";
 import { isRecord } from "../../src/unknown.js";
 
