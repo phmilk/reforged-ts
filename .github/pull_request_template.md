@@ -1,6 +1,6 @@
 ## What and why
 
-<!-- What this pull request changes and why. Link its issue: "Closes #123". One topic per pull request. -->
+<!-- What this pull request changes and why. Link its issue: "Closes #123", an issue assigned to you (CONTRIBUTING.md, "Taking an issue"). One topic per pull request. -->
 
 ## Checklist
 

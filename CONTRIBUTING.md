@@ -63,15 +63,19 @@ Open an issue with one of the forms: **Bug report**, **Feature request** or **Ne
 
 Each form applies its kind label (`bug`, `enhancement` or `game-patch`) and `needs-triage`. The triage label then tells you where your issue stands:
 
-| Label             | What it means for you                                                                                                                                                         |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `needs-triage`    | New: the maintainer has not evaluated it yet.                                                                                                                                 |
-| `needs-info`      | The maintainer is waiting for you. Answer the question in the comments and the issue goes back to triage.                                                                     |
-| `ready-for-agent` | Accepted and specified in full; an AI coding agent will implement it.                                                                                                         |
-| `ready-for-human` | Accepted, and it needs a person: a judgement call, or a check in the game [a Probe run cannot make](probe/README.md#what-stays-for-a-human). Comment before you start on one. |
-| `wontfix`         | It will not be done; the closing comment says why.                                                                                                                            |
+| Label             | What it means for you                                                                                                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `needs-triage`    | New: the maintainer has not evaluated it yet.                                                                                                                                         |
+| `needs-info`      | The maintainer is waiting for you. Answer the question in the comments and the issue goes back to triage.                                                                             |
+| `ready-for-agent` | Accepted and specified in full; an AI coding agent will implement it. Assign yourself before you start on one.                                                                        |
+| `ready-for-human` | Accepted, and it needs a person: a judgement call, or a check in the game [a Probe run cannot make](probe/README.md#what-stays-for-a-human). Assign yourself before you start on one. |
+| `wontfix`         | It will not be done; the closing comment says why.                                                                                                                                    |
 
 The `spec` and `ticket` labels mark the maintainer's planning issues (a spec and the tickets it is split into). [`docs/agents/triage-labels.md`](docs/agents/triage-labels.md) is the reference.
+
+### Taking an issue
+
+An issue is taken by its assignee. Before you start on one, assign yourself (`gh issue edit <n> --add-assignee @me`, or the sidebar), before the branch, the first commit, any comment and the pull request; an AI coding agent you run writes as you, so this covers it too. One login per issue: an issue assigned to someone else is theirs, so coordinate with them instead of opening a second pull request. Without push access you cannot assign yourself: comment on the issue instead, which lets GitHub assign you, and the `claim` check assigns you when your pull request opens. The same check fails a pull request that would close an issue assigned to someone else, with the way out in its comment; until the ruleset requires it, a red check is advisory. An assignment goes stale after 3 days without a commit on its pull request and without a comment: comment on the issue, then take it over. The maintainer may reassign at any time. The rule in full, specs included, is the Claim section of [`docs/agents/issue-tracker.md`](docs/agents/issue-tracker.md#claim), decided in [ADR 0016](docs/adr/0016-the-assignee-is-the-claim-and-the-board-is-a-derived-view.md).
 
 ## The maintainer's repository setup
 

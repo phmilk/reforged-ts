@@ -156,6 +156,18 @@ _Avoid_: import, convert, export
 The reverse of an Object adoption: an object that belongs to an Object definition goes back to the map folder as the code last defined it, and leaves the code and the Object manifest.
 _Avoid_: eject, release (a library release is something else)
 
+**Collaborator**:
+A person with push access to one of the two repositories, `phmilk/reforged-ts` or `phmilk/reforged-ts-template`; the maintainer is one.
+_Avoid_: contributor (anyone who opens a pull request, push access or not), member, dev
+
+**Agent**:
+An AI coding agent a Collaborator runs; GitHub sees it as that Collaborator's login, so everything it writes, a Claim included, is the Collaborator's.
+_Avoid_: bot (the repositories' GitHub App and Renovate), assistant, AI, session
+
+**Claim**:
+The mark that an issue is taken by one login, held while that login is among the issue's assignees; a spec is claimed with its tickets.
+_Avoid_: assignment (the GitHub act; a Claim is what it means), reservation, lock, ownership
+
 **Agent skill**:
 A folder holding a `SKILL.md` that scripts one workflow for an AI coding agent to follow when invoked (`add-wrapper`, `map-feature`).
 _Avoid_: prompt, recipe, playbook

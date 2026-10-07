@@ -42,6 +42,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - Every `@example` is included with `{@includeCode}` from a compiled file under `packages/reforged-ts/examples/`, `harness/` or `game/` ([Examples](docs/documentation.md#examples), ADR 0004).
 - Library code follows the README's "Rules for library code": read them before writing a Wrapper or a System.
 - A fact only the game can settle (a value, a direction, an order, a crash) is checked by a Probe run you write and run with `probe:run`, end to end, in the same piece of work; its result goes where the fact is used (the issue's answer, `docs/research/`, a test's comment). Screen checks and multiplayer go to a human, and an agent without the game stops: [`probe/README.md`](probe/README.md#what-stays-for-a-human).
+- Before working on an issue, claim it: `gh issue edit <n> --add-assignee @me`, your first write, before the branch, the first commit, any comment and the pull request; an issue assigned to another login is theirs. The stale rule and the takeover: `docs/agents/issue-tracker.md`, "Claim".
 
 ## Runtime constraints
 
