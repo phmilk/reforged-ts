@@ -14,7 +14,8 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `pnpm lint`: after an edit, for ESLint and the Prettier check; `pnpm format` fixes the formatting and fixable findings it reports.
 - `pnpm typecheck`: while you edit, faster than a full check.
 - `pnpm typings:generate`: after an Overlay edit or for a new Patch; the loop is in `packages/reforged-types/AGENTS.md`.
-- `pnpm builtins:generate`: on a machine with the game, to extract the Built-in objects' index from its install (`packages/reforged-builtins/README.md`).
+- `pnpm builtins:generate`: on a machine with the game, to extract the Built-in objects' index from its install and emit their artefacts (`packages/reforged-builtins/README.md`).
+- `pnpm builtins:check`: the Built-in objects' drift check, part of `pnpm check`; after an emitter change, `pnpm builtins:check -- --write` emits the artefacts again from the committed index, without the game.
 - `pnpm changeset add`: the changeset of a pull request. Run it without the prompt, as `docs/release.md` ("Adding a changeset") shows.
 
 ## Layout
@@ -23,7 +24,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `packages/reforged-types/`: the Typings, their generator and the Overlay. Read its `AGENTS.md` before changing the package.
 - `packages/reforged-test/`: the Lua test harness the library's tests run on.
 - `packages/reforged-map/`: the reader of a Map project's map folder, run at build time: the declarations and the Lua stub of its Editor globals.
-- `packages/reforged-builtins/`: the Built-in objects of each Patch (ADR 0013), private until its release: the committed JSON index per Game version, its provenance and the unpublished generator that extracts them from an install.
+- `packages/reforged-builtins/`: the Built-in objects of each Patch (ADR 0013), private until its release: the committed JSON index per Game version, its provenance, the `FourCC` overloads and constants emitted from the index, and the unpublished generator that extracts them from an install.
 - `packages/eslint-plugin-reforged/`: the lint layer of the Guards. Read its `AGENTS.md` before adding or changing a rule, its fixtures, docs page or data files.
 - `website/`: the pages of the docs site.
 - `docs/adr/`: the decisions, numbered. `docs/research/`: the research they rely on (the probe map of the game's Lua).

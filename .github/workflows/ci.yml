@@ -61,6 +61,10 @@ jobs:
       # script does not run it, so a leg runs it once.
       - name: typings:check
         run: pnpm run typings:check
+      # The Built-in objects' drift gate: every artefact emitted again from
+      # its committed index, without the game. Its own stage too.
+      - name: builtins:check
+        run: pnpm run builtins:check
       - name: test
         run: pnpm run test
       - id: coverage-report

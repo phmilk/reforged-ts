@@ -8,7 +8,9 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { readFully } from "../src/casc/storage.js";
 import { main, typingsBuild } from "../src/cli/generate.js";
+import { emitArtefacts } from "../src/emit.js";
 import type { InstallMachine } from "../src/install.js";
+import type { BuiltinsIndex } from "../src/model.js";
 import {
   contentKey,
   sha256,
@@ -95,12 +97,23 @@ describe("builtins:generate", () => {
     expect(status).toBe(0);
     expect(stdout).toBe(
       `Read the install at ${storage.installDir} (Build 3.0.0.24268): 5 units.\n` +
-        "Wrote 3.0.0/index.json and 3.0.0/provenance.json.\n",
+        "Wrote 3.0.0/index.json, 3.0.0/provenance.json, 3.0.0.d.ts, 3.0.0/units.d.ts and 3.0.0/units.lua.\n",
     );
-    expect(await readdir(join(outDir, "3.0.0"))).toEqual([
+    expect((await readdir(join(outDir, "3.0.0"))).sort()).toEqual([
       "index.json",
       "provenance.json",
+      "units.d.ts",
+      "units.lua",
     ]);
+    // The artefacts are what the index emits; emit.test.ts asserts their text.
+    const index = await readFile(join(outDir, "3.0.0", "index.json"), "utf8");
+    for (const [path, text] of emitArtefacts(
+      JSON.parse(index) as BuiltinsIndex,
+    )) {
+      expect(await readFile(join(outDir, ...path.split("/")), "utf8")).toBe(
+        text,
+      );
+    }
     expect(await readFile(join(outDir, "3.0.0", "index.json"), "utf8")).toBe(
       `{
   "format": 1,
@@ -333,9 +346,11 @@ describe("builtins:generate", () => {
     );
 
     expect(status).toBe(0);
-    expect(await readdir(join(outDir, "3.0.0"))).toEqual([
+    expect((await readdir(join(outDir, "3.0.0"))).sort()).toEqual([
       "index.json",
       "provenance.json",
+      "units.d.ts",
+      "units.lua",
     ]);
   });
 });

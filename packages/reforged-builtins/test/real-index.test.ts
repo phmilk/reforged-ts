@@ -1,12 +1,14 @@
 /**
  * The committed 3.0.0 index and provenance, extracted by `builtins:generate`
- * from an install of 3.0.0.24268: the facts of the Patch they pin, that the
- * package carries the Patch of reforged-types, and that the published files
- * hold the index alone.
+ * from an install of 3.0.0.24268, and the artefacts emitted from the index:
+ * the facts of the Patch they pin, that the artefacts are what the index
+ * emits, that the package carries the Patch of reforged-types, and which
+ * files it publishes.
  */
 import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
-import { typingsBuild } from "../src/cli/generate.js";
+import { checkArtefacts } from "../src/check.js";
+import { packageRoot, typingsBuild } from "../src/cli/generate.js";
 import {
   serializeIndex,
   serializeProvenance,
@@ -56,6 +58,39 @@ describe("the 3.0.0 index", () => {
   });
 });
 
+describe("the 3.0.0 artefacts", () => {
+  it("are what the committed index emits: builtins:check passes on the package", async () => {
+    const result = await checkArtefacts(packageRoot);
+
+    expect(result.problems).toEqual([]);
+    expect(result.gameVersions).toEqual(["3.0.0"]);
+    expect(result.files).toBe(4);
+  });
+
+  it("hold the 928 units' overloads and constants, the Footman's among them", async () => {
+    const overloads = await read("3.0.0.d.ts");
+    const declarations = await read("3.0.0/units.d.ts");
+    const lua = await read("3.0.0/units.lua");
+
+    expect(overloads.match(/^declare function FourCC\(/gm)).toHaveLength(928);
+    expect(
+      declarations.match(/^ {2}readonly \w+: Rawcode<"unit">;$/gm),
+    ).toHaveLength(928);
+    expect(lua.match(/^ {2}\w+ = \d+,$/gm)).toHaveLength(928);
+    expect(overloads).toContain(
+      [
+        "/**",
+        " * Footman (`hfoo`), a Built-in unit of Patch 3.0.0, race human.",
+        " *",
+        " * Its constant is `Units.Footman_hfoo`, from `reforged-builtins/units`.",
+        " */",
+        'declare function FourCC(id: "hfoo"): Rawcode<"unit">;',
+      ].join("\n"),
+    );
+    expect(lua).toContain(`  Footman_hfoo = ${String(0x68666f6f)},`);
+  });
+});
+
 describe("the package", () => {
   const manifest = async () =>
     JSON.parse(await read("package.json")) as {
@@ -72,9 +107,13 @@ describe("the package", () => {
   });
 
   // npm always adds package.json; the provenance file, the generator (src/,
-  // build/) and the tests match none of these patterns.
-  it("publishes the index, and nothing of the generator, the provenance or the raw files", async () => {
+  // build/) and the tests match none of these patterns. map-project.test.ts
+  // packs the package and lists the tarball.
+  it("publishes the index and its artefacts, and nothing of the generator, the provenance or the raw files", async () => {
     expect((await manifest()).files).toEqual([
+      "/[0-9]*.d.ts",
+      "/[0-9]*/*.d.ts",
+      "/[0-9]*/*.lua",
       "/[0-9]*/index.json",
       "/LICENSE",
       "/README.md",

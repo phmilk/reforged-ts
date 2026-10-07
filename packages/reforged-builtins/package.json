@@ -27,7 +27,21 @@
   "reforged": {
     "patch": "3.0.0.24268"
   },
+  "exports": {
+    "./3.0.0": {
+      "types": "./3.0.0.d.ts"
+    },
+    "./3.0.0/index.json": "./3.0.0/index.json",
+    "./units": {
+      "types": "./3.0.0/units.d.ts",
+      "tstl": "./3.0.0/units"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
+    "/[0-9]*.d.ts",
+    "/[0-9]*/*.d.ts",
+    "/[0-9]*/*.lua",
     "/[0-9]*/index.json",
     "/LICENSE",
     "/README.md"
@@ -37,15 +51,20 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json",
     "test": "vitest run --root ../.. --project reforged-builtins",
-    "builtins:generate": "tsc -p tsconfig.json && node build/cli/generate.js"
+    "builtins:generate": "tsc -p tsconfig.json && node build/cli/generate.js",
+    "builtins:check": "tsc -p tsconfig.json && node build/cli/check.js"
   },
   "peerDependencies": {
     "reforged-types": "workspace:^"
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "@typescript-to-lua/language-extensions": "catalog:",
+    "reforged-test": "workspace:^",
+    "reforged-ts": "workspace:^",
     "reforged-types": "workspace:^",
     "typescript": "catalog:",
+    "typescript-to-lua": "catalog:",
     "vitest": "catalog:"
   }
 }

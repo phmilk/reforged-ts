@@ -1,11 +1,12 @@
 /**
  * `builtins:generate [--install <folder>] [--out <folder>]`: finds the
  * install (`../install.ts`), refuses one whose Build is not
- * `reforged-types`' `reforged.patch`, then writes the index and the
- * provenance file of its Game version under `--out` (the package root by
- * default). Prints the counts, then the warnings; on any error it writes
- * nothing, prints the errors and exits 1. A bad argument exits 2. A leading
- * `--`, which `pnpm builtins:generate -- …` passes through, is skipped.
+ * `reforged-types`' `reforged.patch`, then writes the index, the
+ * provenance file and the artefacts emitted from the index of its Game
+ * version under `--out` (the package root by default). Prints the counts,
+ * then the warnings; on any error it writes nothing, prints the errors and
+ * exits 1. A bad argument exits 2. A leading `--`, which
+ * `pnpm builtins:generate -- …` passes through, is skipped.
  *
  * `isWsl` and `invokedDirectly` mirror the Probe runner's
  * (`probe/src/machine.ts`, `probe/src/cli/common.ts`), as `parseBuildInfo`
@@ -124,7 +125,8 @@ export async function main(
   const counts = Object.entries(result.counts)
     .map(([kind, count]) => `${String(count)} ${kind}s`)
     .join(", ");
-  const written = [...result.files.keys()].join(" and ");
+  const paths = [...result.files.keys()];
+  const written = `${paths.slice(0, -1).join(", ")} and ${paths.at(-1) ?? ""}`;
   output.stdout(
     `Read the install at ${installDir} (Build ${result.build}): ${counts}.\nWrote ${written}.\n` +
       (result.diagnostics.length === 0
