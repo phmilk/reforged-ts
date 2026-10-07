@@ -8,5 +8,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
-  "include": ["."]
+  "include": ["."],
+  // The Map project fixtures are another program, with a tsconfig of their own.
+  "exclude": ["fixtures"]
 }

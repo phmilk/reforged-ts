@@ -17,11 +17,14 @@ export default defineConfig({
       },
       {
         // The Built-in objects' generator, in Node, on synthetic CASC
-        // storages the tests write, and the committed index.
+        // storages the tests write, and the committed artefacts, compiled in
+        // a fixture Map project and run on the reforged-test harness. The
+        // fixtures are Map project sources the tests compile, not tests.
         test: {
           name: "reforged-builtins",
           root: "packages/reforged-builtins",
           include: ["test/**/*.test.ts"],
+          exclude: ["test/fixtures/**"],
           environment: "node",
         },
       },
