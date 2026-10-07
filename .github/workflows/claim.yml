@@ -2,9 +2,9 @@
 # included, when it opens, reopens, is pushed or is edited, and on every
 # assignment and unassignment of an issue, it runs the reusable
 # claim-check.yml, which holds the logic, the texts and the reasons for its
-# run shape. The check reports as `claim / check`; until the ruleset on
-# master names it, a red check is advisory. docs/agents/issue-tracker.md,
-# "Claim", holds the protocol.
+# run shape. The check reports as `claim / check`, a required check of the
+# ruleset on master: renaming either job stops protecting master.
+# docs/agents/issue-tracker.md, "Claim", holds the protocol.
 name: claim
 
 on:

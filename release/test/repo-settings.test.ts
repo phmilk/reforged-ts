@@ -232,7 +232,7 @@ describe("parseRuleset", () => {
 });
 
 describe("the committed ruleset", () => {
-  it("requires exactly the checks of ci.yml's matrix", async () => {
+  it("requires exactly the checks of ci.yml's matrix and the claim check", async () => {
     const ruleset = await readRuleset(repositoryRoot);
     const workflow = parse(
       await readFile(
@@ -259,6 +259,21 @@ describe("the committed ruleset", () => {
     expect(Object.keys(matrix), "ci.yml's ci job: matrix keys").toEqual(["os"]);
     const names = (matrix.os ?? []).map(
       (os) => `${job.name ?? "ci"} (${String(os)})`,
+    );
+
+    // A called workflow's job reports as `<caller job> / <called job>`:
+    // claim.yml's `claim` job calls claim-check.yml, whose job is `check`.
+    const jobName = async (file: string, id: string) => {
+      const { jobs } = parse(
+        await readFile(
+          join(repositoryRoot, ".github", "workflows", file),
+          "utf8",
+        ),
+      ) as { jobs: Partial<Record<string, { name?: string }>> };
+      return jobs[id]?.name ?? id;
+    };
+    names.push(
+      `${await jobName("claim.yml", "claim")} / ${await jobName("claim-check.yml", "check")}`,
     );
 
     expect(requiredStatusChecks(ruleset).toSorted()).toEqual(names.toSorted());
