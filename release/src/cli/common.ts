@@ -1,13 +1,18 @@
 /**
  * What the CLIs of the release scripts share: the output streams, error
  * messages, the job summary, the base ref option, writing generated files,
- * and running as a script.
+ * running as a script, and the maintainer's authentication (`gh`, and the
+ * GitHub API as the holder of its token).
  */
+import { execFile } from "node:child_process";
 import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { promisify } from "node:util";
+import type { GitHubApi } from "../repo-settings.js";
+import { errorMessage, isRecord } from "../unknown.js";
 
-export { errorMessage } from "../unknown.js";
+export { errorMessage };
 
 export interface Output {
   stdout: (text: string) => void;
@@ -105,6 +110,72 @@ export async function update(
   await mkdir(dirname(target), { recursive: true });
   await writeFile(target, text);
   return true;
+}
+
+/** Runs `gh` with `args` and resolves with its standard output. */
+export type Gh = (args: readonly string[]) => Promise<string>;
+
+export const runGh: Gh = async (args) =>
+  (await promisify(execFile)("gh", args, { encoding: "utf8" })).stdout;
+
+/** `gh`'s output for `args`, or an error naming what it was for. */
+export async function ghOutput(
+  gh: Gh,
+  args: readonly string[],
+  what: string,
+): Promise<string> {
+  try {
+    return (await gh(args)).trim();
+  } catch (error) {
+    // execFile's message repeats the command line; its stderr says why.
+    const reason =
+      isRecord(error) && error.code === "ENOENT"
+        ? "gh is not installed (https://cli.github.com)"
+        : isRecord(error) &&
+            typeof error.stderr === "string" &&
+            error.stderr.trim() !== ""
+          ? error.stderr.trim()
+          : errorMessage(error).trim();
+    throw new Error(`gh ${args.join(" ")} (${what}) failed: ${reason}`, {
+      cause: error,
+    });
+  }
+}
+
+const API_ROOT = "https://api.github.com";
+
+/**
+ * The GitHub API as the holder of `token`, over `fetcher`, sending `agent`
+ * as its user agent. A GraphQL request is a `POST` to `/graphql`.
+ */
+export function gitHubApi(
+  fetcher: typeof fetch,
+  token: string,
+  agent: string,
+): GitHubApi {
+  return async ({ method, endpoint, body }) => {
+    const response = await fetcher(`${API_ROOT}${endpoint}`, {
+      method,
+      headers: {
+        accept: "application/vnd.github+json",
+        authorization: `Bearer ${token}`,
+        "x-github-api-version": "2022-11-28",
+        "user-agent": agent,
+        ...(body === undefined ? {} : { "content-type": "application/json" }),
+      },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    });
+    const text = await response.text();
+    let parsed: unknown = null;
+    if (text !== "") {
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        parsed = text;
+      }
+    }
+    return { status: response.status, body: parsed };
+  };
 }
 
 /** Whether the module at `moduleUrl` is the script Node was started with. */

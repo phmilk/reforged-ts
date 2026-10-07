@@ -50,6 +50,7 @@
     "patch-watch:plan": "pnpm --filter reforged-ts-release patch-watch:plan",
     "patch-watch:report": "pnpm --filter reforged-ts-release patch-watch:report",
     "repo:settings": "pnpm --filter reforged-ts-release repo:settings",
+    "board:setup": "pnpm --filter reforged-ts-release board:setup",
     "github-app": "pnpm --filter reforged-ts-release github-app",
     "renovate:check": "pnpm --package=renovate@44.134.1 dlx renovate-config-validator --strict",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run build && pnpm run typings:check && pnpm run test && pnpm run coverage:report && pnpm run docs:audit"
