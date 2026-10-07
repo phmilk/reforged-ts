@@ -18,6 +18,7 @@
     "test": "vitest run",
     "typings:generate": "pnpm --filter reforged-types typings:generate",
     "typings:check": "pnpm --filter reforged-types typings:check",
+    "builtins:generate": "pnpm --filter reforged-builtins builtins:generate",
     "coverage:report": "pnpm --filter reforged-ts-wrapper-coverage coverage:report",
     "data:check": "pnpm --filter reforged-ts build && pnpm --filter reforged-ts-release data:check",
     "examples:build": "pnpm --filter reforged-ts examples:build",

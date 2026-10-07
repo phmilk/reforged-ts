@@ -1,0 +1,54 @@
+{
+  "build": "3.0.0.24268",
+  "buildConfig": "3a9d8f26806936764d2d9ad526a65e04",
+  "inputs": [
+    {
+      "path": "War3.w3mod:Units/UnitData.slk",
+      "contentKey": "3532776c4db124fdd23ace323cf70730",
+      "sha256": "b4830f02053caeebe72defb55f1f24fbeb83343ff8af60456b2b92aaf59cb0d1",
+      "size": 343550
+    },
+    {
+      "path": "War3.w3mod:Units/UnitMetaData.slk",
+      "contentKey": "b4fad691f6809fb51fe3d9e124866acb",
+      "sha256": "eaea4b8314bcdcba38b5330b2bdea500d02cd448df22a789558325df81be09a4",
+      "size": 73808
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/CampaignUnitStrings.txt",
+      "contentKey": "ef0c176f1cae7e709522983c99b405c1",
+      "sha256": "cd7b8ae9dedb976bc57cf3c4550810c534c36470668b7268b11c47f04237cb76",
+      "size": 50261
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/HumanUnitStrings.txt",
+      "contentKey": "389678c68e8960052a42201b5c7b00a9",
+      "sha256": "ea7adbe34031725a8bee15b30650f00f23f1448d0ba0c4c26f9000afe580adf9",
+      "size": 14568
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/NeutralUnitStrings.txt",
+      "contentKey": "aa14c345f5d06b42b8671c985fbf2559",
+      "sha256": "340894cd4c3313ef6f369e2d58d4a30c1bc5f84e407d45bd1879c9988f5e5be3",
+      "size": 75794
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/NightElfUnitStrings.txt",
+      "contentKey": "bba0d56cb2af7455d6ce1c961533931a",
+      "sha256": "aac81e403b8c9fd5f4d78c60b21102da4ee6f104ff29503dd056e01a7ac05271",
+      "size": 16425
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/OrcUnitStrings.txt",
+      "contentKey": "1f0722ef57be70a2e034021dc4607174",
+      "sha256": "0cdea35694ad989cf551d1640015fd9922f64018cab8a5fe78ab5cf92b32a93a",
+      "size": 14434
+    },
+    {
+      "path": "War3.w3mod:_Locales/enUS.w3mod:Units/UndeadUnitStrings.txt",
+      "contentKey": "9e6b564dfa15464700f1e8f4328d00dc",
+      "sha256": "dc67dcc85e611268fc0cbba1e7beb19f609e3afae96ec9955c8391fe51027e6d",
+      "size": 13314
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  // The tests: type-checked only; vitest runs them from source. The root is
+  // the workspace's: probe-parity.test.ts imports the Probe runner's helpers.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "../../..",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  },
+  "include": ["."]
+}

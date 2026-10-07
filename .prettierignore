@@ -1,6 +1,7 @@
 # Build outputs.
 **/dist/
 packages/reforged-types/build/
+packages/reforged-builtins/build/
 packages/reforged-test/lua/
 packages/reforged-ts/dist-test/
 packages/reforged-ts/dist-examples/
@@ -20,6 +21,7 @@ packages/reforged-types/3.0.0/
 packages/reforged-types/3.0.0.d.ts
 packages/reforged-types/vendor/
 packages/reforged-types/scripts/war3-types-strict.json
+packages/reforged-builtins/[0-9]*/
 pnpm-lock.yaml
 
 # The docs versions docs:version cuts: frozen copies of the docs tree, with the
