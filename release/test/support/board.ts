@@ -1,8 +1,8 @@
 /**
  * What the board tests share: a project the script already set up and one
- * as GitHub creates it, both as the API answers them, and GitHub's GraphQL
- * endpoint as a fake that answers each operation from a state and records
- * what it receives.
+ * as GitHub creates it, both as the API answers them, issues and items as
+ * the reconcile reads them, and GitHub's GraphQL endpoint as a fake that
+ * answers each operation from a state and records what it receives.
  */
 import {
   BOARD_OWNER,
@@ -12,7 +12,9 @@ import {
   BOARD_VIEWS,
   operationName,
   STATUS_OPTIONS,
+  type BoardIssue,
   type BoardState,
+  type ProjectItem,
   type ProjectState,
 } from "../../src/board.js";
 import { gitHubApi } from "../../src/cli/common.js";
@@ -127,9 +129,133 @@ export const STATE: BoardState = {
   project: CONFIGURED,
 };
 
+/** The library and the Template, as `owner/name`. */
+export const [LIBRARY, TEMPLATE] = BOARD_REPOSITORIES;
+
+/** A third repository of the owner, whose issues are not members. */
+export const OTHER = `${BOARD_OWNER}/other`;
+
+/** When the reconcile tests run: the archive clock is read against it. */
+export const NOW = new Date("2026-10-07T12:00:00Z");
+
+/** An ISO date `days` days before `NOW`. */
+export const daysAgo = (days: number) =>
+  new Date(NOW.getTime() - days * 24 * 60 * 60 * 1000).toISOString();
+
+/**
+ * An open issue `number` of the library, updated yesterday, with no label,
+ * no assignee, no parent, nothing closing or blocking it and no sub-issue:
+ * Backlog. `more` overrides any field; a Template issue says so with
+ * `repository: TEMPLATE`.
+ */
+export function issue(
+  number: number,
+  more: Partial<BoardIssue> = {},
+): BoardIssue {
+  const repository = more.repository ?? LIBRARY;
+  return {
+    id: `I_${repository === LIBRARY ? "" : "t"}${String(number)}`,
+    number,
+    repository,
+    state: "OPEN",
+    updatedAt: daysAgo(1),
+    bot: false,
+    labels: [],
+    assignees: [],
+    parent: null,
+    pullRequests: [],
+    blockedBy: 0,
+    subIssues: [],
+    ...more,
+  };
+}
+
+/** The item that holds `issue`, with the Status `status` (`null`: none set). */
+export function item(
+  issue: BoardIssue,
+  status: string | null,
+  more: Partial<ProjectItem> = {},
+): ProjectItem {
+  return {
+    id: `PVTI_${issue.id}`,
+    archived: false,
+    content: { type: "ISSUE", issue },
+    status,
+    ...more,
+  };
+}
+
+/** `issue` as the `BoardIssue` fragment answers it. */
+export function issueNode(issue: BoardIssue): Record<string, unknown> {
+  const names = (values: readonly string[], key: string) => ({
+    nodes: values.map((value) => ({ [key]: value })),
+  });
+  return {
+    id: issue.id,
+    number: issue.number,
+    state: issue.state,
+    updatedAt: issue.updatedAt,
+    repository: { nameWithOwner: issue.repository },
+    author: { __typename: issue.bot ? "Bot" : "User" },
+    labels: names(issue.labels, "name"),
+    assignees: names(issue.assignees, "login"),
+    parent:
+      issue.parent === null
+        ? null
+        : {
+            id: `I_parent_${String(issue.parent.number)}`,
+            number: issue.parent.number,
+            repository: { nameWithOwner: issue.parent.repository },
+            labels: names(issue.parent.labels, "name"),
+          },
+    closedByPullRequestsReferences: {
+      nodes: issue.pullRequests.map(({ number, state, draft, author }) => ({
+        number,
+        isDraft: draft,
+        state,
+        author: author === null ? null : { __typename: "User", login: author },
+      })),
+    },
+    issueDependenciesSummary: { blockedBy: issue.blockedBy },
+    subIssues: {
+      nodes: issue.subIssues.map(({ repository, number, state }) => ({
+        id: `I_sub_${String(number)}`,
+        number,
+        state,
+        repository: { nameWithOwner: repository },
+      })),
+    },
+  };
+}
+
+/** `item` as `ProjectItems` answers it. */
+export function itemNode(item: ProjectItem): Record<string, unknown> {
+  const { content } = item;
+  return {
+    id: item.id,
+    type: content.type,
+    isArchived: item.archived,
+    content:
+      content.type === "ISSUE"
+        ? { __typename: "Issue", ...issueNode(content.issue) }
+        : content.type === "PULL_REQUEST"
+          ? {
+              __typename: "PullRequest",
+              number: content.number,
+              repository: { nameWithOwner: content.repository },
+            }
+          : content.type === "DRAFT_ISSUE"
+            ? { __typename: "DraftIssue" }
+            : null,
+    status: item.status === null ? null : { name: item.status },
+  };
+}
+
 export interface Sent {
   kind: "query" | "mutation";
   operation: string;
+  /** The document, as sent. */
+  query: string;
   variables: Record<string, unknown>;
   authorization: string | null;
 }
@@ -150,12 +276,19 @@ const page = (nodes: unknown[]) => ({
 
 /**
  * Answers that read `state` and, once `CreateProject` was answered with its
- * id, the project `created`; every mutation succeeds but `failing`, refused
- * with an error.
+ * id, the project `created`; the project's items are `items` and the open
+ * issues of both repositories `issues` (none by default); every mutation
+ * succeeds but `failing`, refused with an error, and an add answers the id
+ * `PVTI_<the content id>`.
  */
 export function reading(
   state: BoardState,
-  options: { created?: ProjectState; failing?: string } = {},
+  options: {
+    created?: ProjectState;
+    failing?: string;
+    items?: readonly ProjectItem[];
+    issues?: readonly BoardIssue[];
+  } = {},
 ): Answers {
   const projects = [state.project, options.created ?? null];
   const projectOf = (id: unknown) =>
@@ -269,6 +402,32 @@ export function reading(
             },
           },
         };
+      case "ProjectItems":
+        return {
+          data: {
+            node:
+              project === null
+                ? null
+                : { items: page((options.items ?? []).map(itemNode)) },
+          },
+        };
+      case "OpenIssues":
+        return {
+          data: {
+            repository: {
+              issues: page(
+                (options.issues ?? [])
+                  .filter(
+                    ({ repository, state }) =>
+                      repository ===
+                        `${text(variables.owner)}/${text(variables.name)}` &&
+                      state === "OPEN",
+                  )
+                  .map(issueNode),
+              ),
+            },
+          },
+        };
       case "CreateProject": {
         const created = options.created ?? FRESH;
         return {
@@ -283,6 +442,14 @@ export function reading(
           },
         };
       }
+      case "AddItem":
+        return {
+          data: {
+            addProjectV2ItemById: {
+              item: { id: `PVTI_${text(variables.contentId)}` },
+            },
+          },
+        };
       default:
         return { data: { [operation]: { ok: true } } };
     }
@@ -315,6 +482,7 @@ export function graphQlFetch(
         ? "mutation"
         : "query",
       operation,
+      query: body.query,
       variables,
       authorization: request.headers.get("authorization"),
     });

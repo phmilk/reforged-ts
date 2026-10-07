@@ -437,14 +437,19 @@ describe("planIssue", () => {
 });
 
 interface Step {
+  id?: string;
+  if?: string;
   uses?: string;
   with?: Partial<Record<string, unknown>>;
+  env?: Partial<Record<string, string>>;
   run?: string;
 }
 
 interface Workflow {
   on: Partial<Record<string, unknown>>;
-  jobs: Partial<Record<string, { uses?: string; steps?: Step[] }>>;
+  jobs: Partial<
+    Record<string, { uses?: string; permissions?: unknown; steps?: Step[] }>
+  >;
 }
 
 /** The parsed workflow `file` of this repository. */
@@ -481,12 +486,36 @@ describe("claim-check.yml", () => {
     ).toEqual([
       "node release/src/claim-check.ts pull-request",
       "node release/src/claim-check.ts issue",
+      "gh workflow run board.yml --repo phmilk/reforged-ts",
     ]);
+  });
+
+  it("dispatches board.yml after an assignment it made, in the library only, with actions: write", async () => {
+    const { jobs } = await workflow("claim-check.yml");
+    const steps = jobs.check?.steps ?? [];
+    const pullRequest = steps.find(
+      (step) => step.run === "node release/src/claim-check.ts pull-request",
+    );
+    const dispatch = steps.find((step) =>
+      step.run?.startsWith("gh workflow run"),
+    );
+
+    expect(pullRequest?.id).toBe("pull-request");
+    expect(dispatch?.if).toBe(
+      "github.repository == 'phmilk/reforged-ts' && steps.pull-request.outputs.assigned != ''",
+    );
+    expect(dispatch?.env).toEqual({ GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}" });
+    expect(jobs.check?.permissions).toEqual({
+      contents: "read",
+      issues: "write",
+      "pull-requests": "write",
+      actions: "write",
+    });
   });
 });
 
 describe("claim.yml", () => {
-  it("calls the reusable workflow as the job `claim`, on pull requests and assignments", async () => {
+  it("calls the reusable workflow as the job `claim`, on pull requests and assignments, granting what it needs", async () => {
     const { on, jobs } = await workflow("claim.yml");
 
     expect(on).toEqual({
@@ -497,5 +526,11 @@ describe("claim.yml", () => {
     });
     expect(Object.keys(jobs)).toEqual(["claim"]);
     expect(jobs.claim?.uses).toBe("./.github/workflows/claim-check.yml");
+    expect(jobs.claim?.permissions).toEqual({
+      contents: "read",
+      issues: "write",
+      "pull-requests": "write",
+      actions: "write",
+    });
   });
 });

@@ -120,8 +120,8 @@ beforeEach(() => {
 /**
  * Runs the script as the workflow does, `node release/src/claim-check.ts
  * <args>`, in a folder outside the repository, with `event` as the event
- * file and a job summary file; resolves with its exit code, its output and
- * the summary written.
+ * file, a job summary file and a step outputs file; resolves with its exit
+ * code, its output, the summary and the outputs written.
  */
 async function run(
   args: readonly string[],
@@ -131,6 +131,7 @@ async function run(
   const dir = await tempDir("claim-check");
   await writeText(dir, "event.json", JSON.stringify(event));
   await writeText(dir, "summary.md", "");
+  await writeText(dir, "output.txt", "");
   const result = await new Promise<{
     code: number | null;
     stdout: string;
@@ -146,6 +147,7 @@ async function run(
         GITHUB_EVENT_PATH: join(dir, "event.json"),
         GITHUB_API_URL: base,
         GITHUB_STEP_SUMMARY: join(dir, "summary.md"),
+        GITHUB_OUTPUT: join(dir, "output.txt"),
         ...env,
       },
       stdio: ["ignore", "pipe", "pipe"],
@@ -168,6 +170,7 @@ async function run(
   return {
     ...result,
     summary: await readFile(join(dir, "summary.md"), "utf8"),
+    output: await readFile(join(dir, "output.txt"), "utf8"),
   };
 }
 
@@ -210,7 +213,7 @@ function closing(assignees: string[]): unknown {
 }
 
 describe("claim-check pull-request", () => {
-  it("assigns the author, comments text 1 and writes the summary, under node with no install", async () => {
+  it("assigns the author, comments text 1, writes the summary and the assigned output, under node with no install", async () => {
     answers.graphql.closingIssuesReferences = closing([]);
     answers.rest[`GET ${ISSUES}/12/assignees/alice`] = { status: 204 };
     answers.rest[`GET ${ISSUES}/34/comments?per_page=100&page=1`] = {
@@ -240,6 +243,8 @@ describe("claim-check pull-request", () => {
         "## Claim check\n\n" +
         "- #12: no assignee; assigned to the author @alice.\n" +
         "- owner/other#5: an issue of another repository; ignored.\n",
+      // The workflow dispatches the board on it.
+      output: "assigned=12\n",
     });
     expect(sent()).toEqual([
       [
@@ -281,6 +286,8 @@ describe("claim-check pull-request", () => {
       "- #12: claimed by @bob, not by the author @alice; failed.\n",
     );
     expect(result.stdout).toContain("::error title=Claim check failed::");
+    // Nothing assigned: no output, no dispatch.
+    expect(result.output).toBe("");
     expect(sent().map(([request]) => request)).toEqual([
       "POST /graphql",
       `GET ${ISSUES}/12/assignees/alice`,
@@ -362,6 +369,7 @@ describe("claim-check issue", () => {
       stderr: "",
       summary:
         "## Claim check\n\n- #12: @bob added by @bob to an issue claimed by @alice; conflict.\n",
+      output: "",
     });
     expect(sent()).toEqual([
       [`GET ${ISSUES}/12`, undefined],
@@ -401,6 +409,7 @@ describe("claim-check issue", () => {
       stdout: "- #12: claimed by @alice; no conflict.\n",
       stderr: "",
       summary: "## Claim check\n\n- #12: claimed by @alice; no conflict.\n",
+      output: "",
     });
     expect(received.map(({ method }) => method)).toEqual([
       "GET",
@@ -418,6 +427,7 @@ describe("claim-check", () => {
         stdout: "",
         stderr: "Usage: node release/src/claim-check.ts <pull-request|issue>\n",
         summary: "",
+        output: "",
       });
     }
     expect(received).toEqual([]);
@@ -431,6 +441,7 @@ describe("claim-check", () => {
       stdout: "",
       stderr: "GITHUB_TOKEN is not set.\n",
       summary: "",
+      output: "",
     });
     expect(received).toEqual([]);
   });

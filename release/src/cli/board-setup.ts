@@ -17,9 +17,9 @@ import {
   assumedState,
   BOARD_OWNER,
   BOARD_TITLE,
+  describeRequest,
   planBoardSetup,
   readBoardState,
-  type BoardRequest,
   type BoardSetupPlan,
   type BoardState,
 } from "../board.js";
@@ -48,19 +48,6 @@ function parseArgs(args: readonly string[]): { dryRun: boolean } | undefined {
   if (args.length === 0) return { dryRun: false };
   if (args.length === 1 && args[0] === "--dry-run") return { dryRun: true };
   return undefined;
-}
-
-/** The operation and its variables, as the document declares them. */
-function signature(query: string): string {
-  const brace = query.indexOf("{");
-  return (brace === -1 ? query : query.slice(0, brace))
-    .trim()
-    .replaceAll(/\s+/g, " ");
-}
-
-/** One request for a person to read: what it does, the operation, the variables. */
-function describeRequest({ query, variables, summary }: BoardRequest) {
-  return `${summary}\n${signature(query)}\n${JSON.stringify(variables, null, 2)}\n`;
 }
 
 /** What was found, what already matches, and each request of the plan. */

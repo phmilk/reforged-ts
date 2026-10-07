@@ -34,6 +34,7 @@
     "data:check": "tsc -p tsconfig.json && node build/cli/data-check.js",
     "repo:settings": "tsc -p tsconfig.json && node build/cli/repo-settings.js",
     "board:setup": "tsc -p tsconfig.json && node build/cli/board-setup.js",
+    "board:reconcile": "tsc -p tsconfig.json && node build/cli/board-reconcile.js",
     "github-app": "tsc -p tsconfig.json && node build/cli/github-app.js",
     "patch-watch:report": "tsc -p tsconfig.json && node build/cli/patch-watch-report.js"
   },

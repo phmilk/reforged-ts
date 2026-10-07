@@ -747,6 +747,27 @@ async function appendSummary(
   if (file !== undefined && file !== "") await appendFile(file, markdown);
 }
 
+/** The environment variable GitHub Actions names the step's outputs file in. */
+const OUTPUT_VARIABLE = "GITHUB_OUTPUT";
+
+/** The step output that lists the issues the run assigned, comma-separated. */
+export const ASSIGNED_OUTPUT = "assigned";
+
+/**
+ * Sets the step output `name` to `value` when the environment `env` names
+ * the outputs file (a step of GitHub Actions); does nothing elsewhere.
+ */
+async function setOutput(
+  env: Readonly<Record<string, string | undefined>>,
+  name: string,
+  value: string,
+): Promise<void> {
+  const file = env[OUTPUT_VARIABLE];
+  if (file !== undefined && file !== "") {
+    await appendFile(file, `${name}=${value}\n`);
+  }
+}
+
 /** What the environment of the job gives the script. */
 interface Settings {
   token: string;
@@ -877,8 +898,10 @@ async function checkIssue(
  * Runs the mode `args[0]` names (`pull-request` or `issue`) on the event
  * of `GITHUB_EVENT_PATH`, in `GITHUB_REPOSITORY`, with `GITHUB_TOKEN`,
  * through the API at `GITHUB_API_URL`; writes a line per issue to the job
- * summary when `GITHUB_STEP_SUMMARY` names one. Exit codes: 0 passed, 1 an
- * issue claimed by another login (pull-request mode) or an error, 2 usage.
+ * summary when `GITHUB_STEP_SUMMARY` names one, and the issues it assigned
+ * to the step output `assigned` when `GITHUB_OUTPUT` names the file. Exit
+ * codes: 0 passed, 1 an issue claimed by another login (pull-request mode)
+ * or an error, 2 usage.
  */
 export async function main(
   args: readonly string[],
@@ -902,6 +925,15 @@ export async function main(
         : await checkIssue(api, settings, event);
     for (const line of plan.summary) output.stdout(`${line}\n`);
     await apply(api, settings.repository, plan, output);
+    // An assignment made with GITHUB_TOKEN raises no issues event: the
+    // workflow reads this output to tell the board.
+    if (plan.assignments.length > 0) {
+      await setOutput(
+        context.env,
+        ASSIGNED_OUTPUT,
+        plan.assignments.map(({ issue }) => String(issue)).join(","),
+      );
+    }
     await appendSummary(
       context.env,
       `## Claim check\n\n${plan.summary.join("\n")}\n`,

@@ -38,6 +38,9 @@ jobs:
       issues: write
       # The sticky comment on the pull request.
       pull-requests: write
+      # The board dispatch below. A called job cannot exceed its caller, so
+      # every caller grants it too, the Template's included.
+      actions: write
     # One run per pull request, a newer push or edit replacing the running
     # one; one per issue, every assignment event seen in order.
     concurrency:
@@ -58,7 +61,8 @@ jobs:
         with:
           node-version-file: .node-version
           package-manager-cache: false
-      - name: claim-check pull-request
+      - id: pull-request
+        name: claim-check pull-request
         if: github.event_name == 'pull_request_target'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -68,4 +72,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node release/src/claim-check.ts issue
-      # The board dispatch (board.yml, `actions: write`) goes here, after an assignment in phmilk/reforged-ts.
+      # An assignment made with GITHUB_TOKEN raises no issues event, so the
+      # board (board.yml) is told here, once the script says it assigned; in
+      # the library only, which holds board.yml, while the Template's items
+      # wait for the board's hourly schedule. A workflow_dispatch is the one
+      # event GITHUB_TOKEN does start.
+      - name: Dispatch the board
+        if: github.repository == 'phmilk/reforged-ts' && steps.pull-request.outputs.assigned != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run board.yml --repo phmilk/reforged-ts
