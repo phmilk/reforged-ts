@@ -1,0 +1,33 @@
+# The claim check of this repository: on every pull request, drafts
+# included, when it opens, reopens, is pushed or is edited, and on every
+# assignment and unassignment of an issue, it runs the reusable
+# claim-check.yml, which holds the logic, the texts and the reasons for its
+# run shape. The check reports as `claim / check`; until the ruleset on
+# master names it, a red check is advisory. docs/agents/issue-tracker.md,
+# "Claim", holds the protocol.
+name: claim
+
+on:
+  pull_request_target:
+    # Drafts included: the collision begins at the draft. No base-branch
+    # filter: a pull request to another branch closes nothing and passes.
+    types: [opened, reopened, synchronize, edited]
+  issues:
+    types: [assigned, unassigned]
+
+permissions:
+  contents: read
+
+jobs:
+  claim:
+    name: claim
+    # The called jobs can only lower these: the checkout, the assignment and
+    # the comment on the issue, the comment on the pull request (the check),
+    # and the dispatch of board.yml after an assignment (the dispatch job,
+    # the one that holds actions: write).
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+      actions: write
+    uses: ./.github/workflows/claim-check.yml

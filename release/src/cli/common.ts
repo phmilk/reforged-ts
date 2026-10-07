@@ -1,13 +1,19 @@
 /**
  * What the CLIs of the release scripts share: the output streams, error
- * messages, the job summary, the base ref option, writing generated files,
- * and running as a script.
+ * messages, the job summary, the base ref option, the arguments and the
+ * printed plan of a script that plans then applies, writing generated
+ * files, running as a script, and the maintainer's authentication (`gh`,
+ * and the GitHub API as the holder of its token).
  */
+import { execFile } from "node:child_process";
 import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { promisify } from "node:util";
+import type { GitHubApi } from "../repo-settings.js";
+import { errorMessage, isRecord } from "../unknown.js";
 
-export { errorMessage } from "../unknown.js";
+export { errorMessage };
 
 export interface Output {
   stdout: (text: string) => void;
@@ -90,6 +96,69 @@ export function parseOptions<Option extends string, Required extends Option>(
     Partial<Record<Option, string>>;
 }
 
+/** `count` with `one` or `many`: "1 request", "3 requests". */
+export const plural = (count: number, one: string, many: string): string =>
+  `${String(count)} ${count === 1 ? one : many}`;
+
+/**
+ * The arguments of a script that plans then applies: `--dry-run`, and the
+ * `--<option> <value>` pairs of `options`, each given at most once with a
+ * value neither empty nor another option; `undefined` on anything else.
+ */
+export function parseRunArgs<Option extends string>(
+  args: readonly string[],
+  options: readonly Option[] = [],
+): { dryRun: boolean; options: Partial<Record<Option, string>> } | undefined {
+  let dryRun = false;
+  const values = new Map<string, string>();
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === "--dry-run") {
+      if (dryRun) return undefined;
+      dryRun = true;
+      continue;
+    }
+    const value = args.at(i + 1);
+    if (
+      !(options as readonly string[]).includes(arg) ||
+      values.has(arg) ||
+      value === undefined ||
+      value === "" ||
+      value.startsWith("--")
+    ) {
+      return undefined;
+    }
+    values.set(arg, value);
+    i++;
+  }
+  return {
+    dryRun,
+    options: Object.fromEntries(values) as Partial<Record<Option, string>>,
+  };
+}
+
+/**
+ * A plan for a person: what already matches (`Already set: ...`, one line
+ * each), how many requests (`Dry run, N requests, none sent:` on a dry run,
+ * else `N requests:`), then each request as `describe` renders it, after a
+ * blank line.
+ */
+export function printPlan<Request>(
+  output: Output,
+  plan: { unchanged?: readonly string[]; requests: readonly Request[] },
+  describe: (request: Request) => string,
+  dryRun: boolean,
+): void {
+  for (const line of plan.unchanged ?? []) {
+    output.stdout(`Already set: ${line}\n`);
+  }
+  const count = plural(plan.requests.length, "request", "requests");
+  output.stdout(dryRun ? `Dry run, ${count}, none sent:\n` : `${count}:\n`);
+  for (const request of plan.requests) {
+    output.stdout(`\n${describe(request)}`);
+  }
+}
+
 /**
  * Writes `text` at the `/`-separated `path` under `root` unless the file
  * already holds it; resolves with whether it wrote.
@@ -105,6 +174,72 @@ export async function update(
   await mkdir(dirname(target), { recursive: true });
   await writeFile(target, text);
   return true;
+}
+
+/** Runs `gh` with `args` and resolves with its standard output. */
+export type Gh = (args: readonly string[]) => Promise<string>;
+
+export const runGh: Gh = async (args) =>
+  (await promisify(execFile)("gh", args, { encoding: "utf8" })).stdout;
+
+/** `gh`'s output for `args`, or an error naming what it was for. */
+export async function ghOutput(
+  gh: Gh,
+  args: readonly string[],
+  what: string,
+): Promise<string> {
+  try {
+    return (await gh(args)).trim();
+  } catch (error) {
+    // execFile's message repeats the command line; its stderr says why.
+    const reason =
+      isRecord(error) && error.code === "ENOENT"
+        ? "gh is not installed (https://cli.github.com)"
+        : isRecord(error) &&
+            typeof error.stderr === "string" &&
+            error.stderr.trim() !== ""
+          ? error.stderr.trim()
+          : errorMessage(error).trim();
+    throw new Error(`gh ${args.join(" ")} (${what}) failed: ${reason}`, {
+      cause: error,
+    });
+  }
+}
+
+const API_ROOT = "https://api.github.com";
+
+/**
+ * The GitHub API as the holder of `token`, over `fetcher`, sending `agent`
+ * as its user agent. A GraphQL request is a `POST` to `/graphql`.
+ */
+export function gitHubApi(
+  fetcher: typeof fetch,
+  token: string,
+  agent: string,
+): GitHubApi {
+  return async ({ method, endpoint, body }) => {
+    const response = await fetcher(`${API_ROOT}${endpoint}`, {
+      method,
+      headers: {
+        accept: "application/vnd.github+json",
+        authorization: `Bearer ${token}`,
+        "x-github-api-version": "2022-11-28",
+        "user-agent": agent,
+        ...(body === undefined ? {} : { "content-type": "application/json" }),
+      },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    });
+    const text = await response.text();
+    let parsed: unknown = null;
+    if (text !== "") {
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        parsed = text;
+      }
+    }
+    return { status: response.status, body: parsed };
+  };
 }
 
 /** Whether the module at `moduleUrl` is the script Node was started with. */

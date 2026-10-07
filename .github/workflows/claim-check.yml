@@ -1,0 +1,97 @@
+# The claim check, reusable (`on: workflow_call`): on a pull request, the
+# issues of the caller's repository that it closes are claimed for its
+# author (an unclaimed one is assigned, with a reminder) or fail the check
+# (one claimed by another login, the takeover path in the comment); on an
+# assignment, a conflict draws a comment on the issue. It never reverts
+# anything. The library's claim.yml and the Template's call it, so that the
+# check reports as `claim / check` in both; the logic and the texts are
+# release/src/claim-check.ts, the protocol docs/agents/issue-tracker.md,
+# "Claim".
+#
+# The callers run it on pull_request_target, which holds a write token for
+# a fork's pull request too (pull_request from a fork holds none), so that
+# the author can be assigned and the comment written. That token is why the
+# job never checks out the pull request's code: it checks out master of
+# phmilk/reforged-ts (trusted code, in the Template's run too) and the
+# script reads the event from its file, $GITHUB_EVENT_PATH; no event value
+# reaches a shell inline. release/test/claim-check.test.ts holds this file
+# to that.
+name: claim-check
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check
+    # A bot's pull request (Renovate's, the App's "Version Packages") is
+    # outside the protocol: the job is skipped, which counts as success.
+    if: github.event_name != 'pull_request_target' || github.event.pull_request.user.type != 'Bot'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      # The assignment, and the sticky comment on the issue.
+      issues: write
+      # The sticky comment on the pull request.
+      pull-requests: write
+    # One run per pull request, a newer push or edit replacing the running
+    # one; one per issue, every assignment event seen in order.
+    concurrency:
+      group: claim-${{ github.event_name }}-${{ github.event.pull_request.number || github.event.issue.number }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request_target' }}
+    outputs:
+      # The issues the run assigned, comma-separated; empty when none.
+      assigned: ${{ steps.pull-request.outputs.assigned }}
+    steps:
+      # master of the library, never a ref of the pull request; named in
+      # full, since a checkout in a called workflow defaults to the caller's
+      # repository (the Template's, in its run).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: phmilk/reforged-ts
+          ref: master
+          persist-credentials: false
+      # Node alone, at the .node-version of the checkout: the script runs
+      # with no install and no build, and no cache is restored.
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+      - id: pull-request
+        name: claim-check pull-request
+        if: github.event_name == 'pull_request_target'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node release/src/claim-check.ts pull-request
+      - name: claim-check issue
+        if: github.event_name == 'issues'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node release/src/claim-check.ts issue
+
+  # An assignment made with GITHUB_TOKEN raises no issues event, so the
+  # board (board.yml) is told here, once the check says it assigned; in the
+  # library only, which holds board.yml, while the Template's items wait
+  # for the board's hourly schedule. A workflow_dispatch is the one event
+  # GITHUB_TOKEN does start. Its own job, so that `actions: write` is held
+  # by this one step and by nothing that reads the event; it runs when the
+  # check failed too (one issue assigned, another claimed by someone else),
+  # which `!cancelled()` allows and a plain `needs` would not.
+  dispatch:
+    name: dispatch
+    needs: check
+    if: ${{ !cancelled() && github.repository == 'phmilk/reforged-ts' && needs.check.outputs.assigned != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: write
+    steps:
+      # No checkout: gh needs the token and the workflow's name only.
+      - name: Dispatch the board
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run board.yml --repo phmilk/reforged-ts

@@ -9,8 +9,6 @@
  * read, the authentication is not an administrator or a request failed, 2
  * usage.
  */
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
 import {
   applyRequests,
   isRepository,
@@ -19,32 +17,30 @@ import {
   readRuleset,
   RULESET_FILE,
   type ApiRequest,
-  type GitHubApi,
 } from "../repo-settings.js";
-import { isRecord } from "../unknown.js";
 import { repositoryRoot } from "../workspace.js";
 import {
   errorMessage,
+  ghOutput,
+  gitHubApi,
   invokedDirectly,
+  parseRunArgs,
+  printPlan,
   PROCESS_OUTPUT,
+  runGh,
+  type Gh,
   type Output,
 } from "./common.js";
 
-const USAGE = "Usage: repo:settings [--dry-run] [--repo <owner/name>]\n";
+export type { Gh };
 
-/** Runs `gh` with `args` and resolves with its standard output. */
-export type Gh = (args: readonly string[]) => Promise<string>;
+const USAGE = "Usage: repo:settings [--dry-run] [--repo <owner/name>]\n";
 
 export interface Context {
   root: string;
   gh: Gh;
   fetcher: typeof fetch;
 }
-
-const API_ROOT = "https://api.github.com";
-
-const runGh: Gh = async (args) =>
-  (await promisify(execFile)("gh", args, { encoding: "utf8" })).stdout;
 
 interface Options {
   dryRun: boolean;
@@ -53,71 +49,11 @@ interface Options {
 
 /** The options of the arguments; `undefined` on a usage error. */
 function parseArgs(args: readonly string[]): Options | undefined {
-  const options: Options = { dryRun: false, repository: null };
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i];
-    if (arg === "--dry-run") {
-      options.dryRun = true;
-      continue;
-    }
-    const value = args.at(i + 1);
-    if (arg !== "--repo" || options.repository !== null) return undefined;
-    if (value === undefined || !isRepository(value)) return undefined;
-    options.repository = value;
-    i++;
-  }
-  return options;
-}
-
-/** `gh`'s output for `args`, or an error naming what it was for. */
-async function ghOutput(
-  gh: Gh,
-  args: readonly string[],
-  what: string,
-): Promise<string> {
-  try {
-    return (await gh(args)).trim();
-  } catch (error) {
-    // execFile's message repeats the command line; its stderr says why.
-    const reason =
-      isRecord(error) && error.code === "ENOENT"
-        ? "gh is not installed (https://cli.github.com)"
-        : isRecord(error) &&
-            typeof error.stderr === "string" &&
-            error.stderr.trim() !== ""
-          ? error.stderr.trim()
-          : errorMessage(error).trim();
-    throw new Error(`gh ${args.join(" ")} (${what}) failed: ${reason}`, {
-      cause: error,
-    });
-  }
-}
-
-/** The GitHub API as the holder of `token`, over `fetcher`. */
-function gitHubApi(fetcher: typeof fetch, token: string): GitHubApi {
-  return async ({ method, endpoint, body }) => {
-    const response = await fetcher(`${API_ROOT}${endpoint}`, {
-      method,
-      headers: {
-        accept: "application/vnd.github+json",
-        authorization: `Bearer ${token}`,
-        "x-github-api-version": "2022-11-28",
-        "user-agent": "reforged-ts-repo-settings",
-        ...(body === undefined ? {} : { "content-type": "application/json" }),
-      },
-      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
-    });
-    const text = await response.text();
-    let parsed: unknown = null;
-    if (text !== "") {
-      try {
-        parsed = JSON.parse(text);
-      } catch {
-        parsed = text;
-      }
-    }
-    return { status: response.status, body: parsed };
-  };
+  const parsed = parseRunArgs(args, ["--repo"]);
+  if (parsed === undefined) return undefined;
+  const repository = parsed.options["--repo"] ?? null;
+  if (repository !== null && !isRepository(repository)) return undefined;
+  return { dryRun: parsed.dryRun, repository };
 }
 
 /** One request for a person to read: what it does, the call, the body. */
@@ -155,7 +91,7 @@ export async function main(
       ["auth", "token"],
       "the token of the gh authentication; run gh auth login",
     );
-    const api = gitHubApi(context.fetcher, token);
+    const api = gitHubApi(context.fetcher, token, "reforged-ts-repo-settings");
 
     const state = await readRepositoryState(api, repository);
     const plan = planRepositorySettings(repository, ruleset, state);
@@ -164,14 +100,7 @@ export async function main(
       `${repository}: the gh authentication is an administrator. ` +
         `Ruleset from ${RULESET_FILE}.\n`,
     );
-    for (const line of plan.unchanged) output.stdout(`Already set: ${line}\n`);
-    const count = `${String(plan.requests.length)} ${plan.requests.length === 1 ? "request" : "requests"}`;
-    output.stdout(
-      options.dryRun ? `Dry run, ${count}, none sent:\n` : `${count}:\n`,
-    );
-    for (const request of plan.requests) {
-      output.stdout(`\n${describeRequest(request)}`);
-    }
+    printPlan(output, plan, describeRequest, options.dryRun);
     if (options.dryRun) return 0;
 
     output.stdout("\n");

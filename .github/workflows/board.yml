@@ -1,0 +1,81 @@
+# The board: the Claim board, a Projects board on the owner's account over
+# phmilk/reforged-ts and phmilk/reforged-ts-template, kept true to GitHub by
+# `pnpm board:reconcile`, its single writer: every open issue of both
+# repositories gets a Status derived from its assignees, pull requests,
+# blockers, sub-issues and labels, and only the differences are written. On
+# this repository's issue and pull-request events, hourly (the Template's
+# changes and the archive clock) and by hand. docs/release.md, "The board",
+# describes the rules, this workflow and its failure modes.
+#
+# The writes need the maintainer's classic token, the secret PROJECT_TOKEN,
+# since neither GITHUB_TOKEN nor the App reaches a user-owned project. Two
+# things keep the token on master's code alone. The pull-request events are
+# pull_request_target, not pull_request: GitHub then takes this file from
+# master, whatever the pull request's branch holds (a pull_request run takes
+# the merge commit's file, so a branch of this repository, Renovate's weekly
+# one included, could rewrite it and send the secret out), and the job
+# checks out master explicitly, so a pull request's own release/src/board.ts
+# never runs with the token either; a fork's pull request reaches the board
+# at once, since its run holds the secret and runs master's code. And the
+# secret lives in the environment `board`, whose deployment branch policy
+# allows master only: a run on any other ref (a workflow_dispatch of a
+# branch) is refused the secret before any step runs. The repository-setup
+# wizard makes the environment, its policy and the secret. A dead token
+# fails the run, and the red scheduled run is the signal.
+name: board
+
+on:
+  issues:
+    types:
+      [
+        opened,
+        reopened,
+        closed,
+        deleted,
+        transferred,
+        assigned,
+        unassigned,
+        labeled,
+        unlabeled,
+      ]
+  # master's file and checkout, whatever the pull request holds (above).
+  pull_request_target:
+    types:
+      [opened, reopened, closed, edited, converted_to_draft, ready_for_review]
+  workflow_dispatch:
+  schedule:
+    # Hourly, off the hour.
+    - cron: "37 * * * *"
+
+permissions:
+  contents: read
+
+# One reconcile at a time; a newer event waits as the one pending run, which
+# absorbs the events after it, since each run reads everything.
+concurrency:
+  group: board
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    name: reconcile
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # The secret's home: its deployment branch policy admits master alone.
+    environment: board
+    permissions:
+      contents: read
+    steps:
+      # master, never a pull request's merge commit: the token runs only the
+      # code master holds.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: master
+          persist-credentials: false
+      # No dependency cache: this job holds the token, and never restores a
+      # cache another workflow could have written.
+      - uses: ./.github/actions/setup-workspace
+      - name: board:reconcile
+        env:
+          PROJECT_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+        run: pnpm board:reconcile

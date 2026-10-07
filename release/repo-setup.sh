@@ -184,11 +184,15 @@ finish() {
 # Replace the example below. Set TOTAL_STAGES to match the stages you write.
 # ──────────────────────────────────────────────────────────────────────────
 
-# The repository-setup wizard (#198): the one-off human steps of #48. It
-# registers the repository's GitHub App and installs it on this repository,
-# stores its client ID and a private key as the variable APP_CLIENT_ID and
-# the secret APP_PRIVATE_KEY, installs the Renovate GitHub App, and applies
-# the repository settings with `pnpm repo:settings`.
+# The repository-setup wizard (#198): the one-off human steps of #48 and
+# of the Claim board (#529). It registers the repository's GitHub App and
+# installs it on this repository, stores its client ID and a private key as
+# the variable APP_CLIENT_ID and the secret APP_PRIVATE_KEY, installs the
+# Renovate GitHub App, applies the repository settings with
+# `pnpm repo:settings`, and sets up the Claim board: the environment
+# `board`, whose deployment branch policy admits master alone, a classic
+# token of the maintainer as its secret PROJECT_TOKEN, `pnpm board:setup`,
+# the views' hand settings and the first `pnpm board:reconcile`.
 #
 # From the repository root, in Git Bash (Windows) or a Linux shell:
 #
@@ -197,20 +201,24 @@ finish() {
 #
 # It checks what gh can check and stops at the first failed check, saying
 # what to fix. The App's owner, permissions and installation it checks as
-# the App itself (`pnpm github-app check`, a JWT signed with the key); which
+# the App itself (`pnpm github-app check`, a JWT signed with the key); the
+# board's token as its holder (the login, the scopes, the expiration); which
 # repositories an installation reaches, and Renovate's installation scope,
-# it asks the maintainer to confirm. It never prints the private key: the
-# key file goes to `gh secret set` on its standard input. It is safe to
-# re-run: the App stages are skipped when the variable and the secret
-# exist, Renovate's installation when its Dependency Dashboard issue
-# exists, the settings when they read back as committed.
+# it asks the maintainer to confirm. It never prints the private key or the
+# token: the key file goes to `gh secret set` on its standard input, the
+# token is typed hidden and piped the same way. It is safe to re-run: the
+# App stages are skipped when the variable and the secret exist, Renovate's
+# installation when its Dependency Dashboard issue exists, the settings
+# when they read back as committed, the board when its environment, its
+# policy and its secret exist and `pnpm board:setup --dry-run` plans
+# nothing.
 #
 # The dry run still runs `pnpm install` and the read-only checks (gh, git,
-# what the repository holds, `pnpm repo:settings --dry-run`). It only warns
-# about the branch, the working tree and what master lacks, so the wizard
-# can be reviewed from any branch; it answers every confirmation with yes,
-# opens no browser, and prints the commands that change something instead
-# of running them.
+# what the repository holds, `pnpm repo:settings --dry-run`,
+# `pnpm board:setup --dry-run`). It only warns about the branch, the working
+# tree and what master lacks, so the wizard can be reviewed from any branch;
+# it answers every confirmation with yes, opens no browser, and prints the
+# commands that change something instead of running them.
 
 readonly REPO_OWNER=phmilk
 readonly REPO_NAME=reforged-ts
@@ -220,6 +228,15 @@ readonly REPO="$REPO_OWNER/$REPO_NAME"
 readonly TEMPLATE_NAME=reforged-ts-template
 readonly CLIENT_ID_VARIABLE=APP_CLIENT_ID
 readonly PRIVATE_KEY_SECRET=APP_PRIVATE_KEY
+# The board's token: a classic personal access token of the maintainer with
+# the project scope, read by board.yml (docs/release.md, "The board") as a
+# secret of the environment BOARD_ENVIRONMENT, whose deployment branch
+# policy admits BOARD_BRANCH alone: a run on any other ref is refused it.
+readonly PROJECT_TOKEN_SECRET=PROJECT_TOKEN
+readonly BOARD_ENVIRONMENT=board
+readonly BOARD_BRANCH=master
+readonly BOARD_POLICY='{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}'
+readonly TOKEN_PAGE="https://github.com/settings/tokens/new?scopes=project&description=reforged-ts+board"
 readonly RULESET_FILE=.github/rulesets/master.json
 readonly RENOVATE_CONFIG=renovate.json5
 readonly GUIDE=docs/release.md
@@ -227,7 +244,7 @@ readonly RERUN="bash release/repo-setup.sh"
 
 usage() {
   printf 'Usage: %s [--dry-run]\n' "$RERUN"
-  printf '  The one-off setup of %s: its GitHub App, Renovate and settings (#48).\n' "$REPO"
+  printf '  The one-off setup of %s: its GitHub App, Renovate, settings (#48) and Claim board (#529).\n' "$REPO"
 }
 
 DRY_RUN=false
@@ -366,10 +383,18 @@ gh_read() {
   return 0
 }
 
+# secret_stored NAME [ENVIRONMENT]: whether the repository, or its
+# environment when one is named, holds the Actions secret NAME.
+secret_stored() {
+  local name="$1" environment="${2:-}" scope=()
+  [[ -n "$environment" ]] && scope=(--env "$environment")
+  [[ -n "$(gh_read secret list --repo "$REPO" "${scope[@]}" --json name --jq ".[] | select(.name == \"$name\") | .name")" ]]
+}
+
 # app_stored: whether the repository holds the App's variable and secret.
 app_stored() {
   [[ -n "$(gh_read variable get "$CLIENT_ID_VARIABLE" --repo "$REPO")" ]] &&
-    [[ -n "$(gh_read secret list --repo "$REPO" --json name --jq ".[] | select(.name == \"$PRIVATE_KEY_SECRET\") | .name")" ]]
+    secret_stored "$PRIVATE_KEY_SECRET"
 }
 
 # renovate_dashboard: the number of Renovate's open Dependency Dashboard
@@ -411,9 +436,44 @@ settings_problems() {
   [[ -n "$(gh_read api "repos/$REPO/labels/game-patch" --jq .name)" ]] || printf 'No game-patch label.\n'
 }
 
+# board_secret_stored: whether the board's environment holds its token.
+board_secret_stored() {
+  secret_stored "$PROJECT_TOKEN_SECRET" "$BOARD_ENVIRONMENT"
+}
+
+# board_policy_branches prints the branches the board environment's
+# deployment branch policy admits, one per line; nothing when the
+# environment does not exist or admits every branch.
+board_policy_branches() {
+  [[ "$(gh_read api "repos/$REPO/environments/$BOARD_ENVIRONMENT" --jq '.deployment_branch_policy.custom_branch_policies')" == true ]] || return 0
+  gh_read api "repos/$REPO/environments/$BOARD_ENVIRONMENT/deployment-branch-policies" --jq '.branch_policies[] | select(.type == "branch") | .name'
+}
+
+# board_environment_ok: whether the board environment exists and its
+# deployment branch policy admits BOARD_BRANCH alone.
+board_environment_ok() {
+  [[ "$(board_policy_branches)" == "$BOARD_BRANCH" ]]
+}
+
+# board_plan prints what `pnpm board:setup --dry-run` plans, the board's
+# read-back: "Dry run, 0 requests" is the board as committed (the project
+# exists, is public, is linked to both repositories, its Status options and
+# its views as release/src/board.ts holds them). Its notes are shown after
+# it ends and kept in ERR_FILE; a dropped connection is retried, as `show`
+# does.
+board_plan() {
+  retried pnpm --silent board:setup --dry-run
+}
+
+# board_url prints the project's URL from a board_plan, empty when the
+# project does not exist yet.
+board_url() {
+  sed -n 's/^Project "[^"]*" under [^:]*: \([^ ]*\) (number [0-9]*)\.$/\1/p' <<<"$1" | head -n 1
+}
+
 # ──────────────────────────────────────────────────────────────────────────
 
-TOTAL_STAGES=7
+TOTAL_STAGES=8
 APP_DONE=false # the variable and the secret exist and are kept
 CLIENT_ID=""
 KEY_FILE=""
@@ -716,11 +776,194 @@ else
 fi
 pause "Press Enter to continue"
 
+# ── 8. The Claim board ────────────────────────────────────────────────────
+stage "The Claim board, its environment and its token"
+
+say "The Claim board ($GUIDE, \"The board\"): a Projects board on $REPO_OWNER's account"
+say "over $REPO_NAME and $TEMPLATE_NAME, whose Status board.yml writes with a classic"
+say "token of yours, the secret $PROJECT_TOKEN_SECRET of the environment $BOARD_ENVIRONMENT: scope"
+say "project only, expiring in a year. The environment's deployment branch policy"
+say "admits $BOARD_BRANCH alone, so a run on any other ref is refused the secret."
+say ""
+ENVIRONMENT_OK=false
+board_environment_ok && ENVIRONMENT_OK=true
+if $ENVIRONMENT_OK; then
+  ok "the environment $BOARD_ENVIRONMENT exists and admits $BOARD_BRANCH alone"
+else
+  note "not yet: no environment $BOARD_ENVIRONMENT whose policy admits $BOARD_BRANCH alone"
+fi
+SECRET_STORED=false
+board_secret_stored && SECRET_STORED=true
+if $SECRET_STORED; then
+  ok "the secret $PROJECT_TOKEN_SECRET is set on the environment $BOARD_ENVIRONMENT"
+else
+  note "not yet: no secret $PROJECT_TOKEN_SECRET on the environment $BOARD_ENVIRONMENT"
+fi
+# The read-back of the project, in the dry run too: it reads GitHub with the
+# gh login and sends nothing.
+printf '  %s$ pnpm --silent board:setup --dry-run%s\n' "$BOLD" "$RESET"
+BOARD_PLAN=$(board_plan) || fail "pnpm board:setup --dry-run failed: $(head -n 1 "$ERR_FILE")" "Read the error above."
+while IFS= read -r line; do note "  $line"; done <<<"$BOARD_PLAN"
+BOARD_PENDING=true
+grep -q '^Dry run, 0 requests, none sent' <<<"$BOARD_PLAN" && BOARD_PENDING=false
+if $BOARD_PENDING; then
+  note "not yet: the board does not read back as committed (the requests above)"
+else
+  ok "the board reads back as committed: the project exists, is public, is linked to both repositories, its Status options and its views as release/src/board.ts holds them"
+fi
+
+ROTATE=false
+if $ENVIRONMENT_OK && $SECRET_STORED && ! $BOARD_PENDING; then
+  confirm "Replace the token (a rotation: it expires a year after it was made)?" && ROTATE=true
+fi
+
+if ! $ENVIRONMENT_OK; then
+  say ""
+  say "The environment $BOARD_ENVIRONMENT, the secret's home, with a deployment branch policy"
+  say "of its own ($BOARD_BRANCH alone, below); both calls are idempotent:"
+  # The JSON goes to gh on its standard input, as the token does below.
+  printf '  %s$ printf %s | gh api -X PUT repos/%s/environments/%s --input -%s\n' "$BOLD" "'$BOARD_POLICY'" "$REPO" "$BOARD_ENVIRONMENT" "$RESET"
+  if ! $DRY_RUN; then
+    printf '%s' "$BOARD_POLICY" | gh api --silent -X PUT "repos/$REPO/environments/$BOARD_ENVIRONMENT" --input - ||
+      fail "gh api -X PUT repos/$REPO/environments/$BOARD_ENVIRONMENT failed." "Read the error above."
+  fi
+  if grep -qx "$BOARD_BRANCH" <<<"$(board_policy_branches)"; then
+    ok "the policy admits $BOARD_BRANCH"
+  else
+    run gh api --silent -X POST "repos/$REPO/environments/$BOARD_ENVIRONMENT/deployment-branch-policies" -f "name=$BOARD_BRANCH" -f type=branch ||
+      fail "gh api -X POST repos/$REPO/environments/$BOARD_ENVIRONMENT/deployment-branch-policies failed." "Read the error above."
+  fi
+  if $DRY_RUN; then
+    run gh api "repos/$REPO/environments/$BOARD_ENVIRONMENT/deployment-branch-policies"
+    note "A real run then checks that the environment admits $BOARD_BRANCH alone."
+  else
+    board_environment_ok ||
+      fail "The environment $BOARD_ENVIRONMENT does not admit $BOARD_BRANCH alone: its policy admits '$(board_policy_branches | tr '\n' ' ')'." "Remove every other branch from it: https://github.com/$REPO/settings/environments"
+    ok "the environment $BOARD_ENVIRONMENT exists and admits $BOARD_BRANCH alone"
+  fi
+fi
+
+TOKEN=""
+if ! $SECRET_STORED || $ROTATE; then
+  say ""
+  say "A classic personal access token of your account, for the board's workflow:"
+  open_url "$TOKEN_PAGE"
+  say "  Note        ${BOLD}reforged-ts board${RESET} (pre-filled)"
+  say "  Expiration  ${BOLD}Custom, one year from today${RESET}; never No expiration"
+  say "  Scopes      ${BOLD}project${RESET} only (pre-ticked); nothing under repo"
+  step "Generate token, then copy it: the page shows it once."
+  if $DRY_RUN; then
+    note "  (dry run: asks for the token, hidden, and checks it as its holder:"
+    note "   your login, the project scope, an expiration)"
+    TOKEN="<the token>"
+  else
+    ask_secret TOKEN "Paste the token:"
+    TOKEN="${TOKEN//[[:space:]]/}"
+    [[ "$TOKEN" =~ ^ghp_[A-Za-z0-9]+$ ]] ||
+      fail "That is not a classic token (one starts with ghp_)." "Create it on $TOKEN_PAGE"
+    # As the token: whose it is, its scopes and its expiration, from the
+    # headers GitHub answers with.
+    LOGIN=$(GH_TOKEN="$TOKEN" gh api user --jq .login 2>"$ERR_FILE") ||
+      fail "GitHub refuses the token: $(head -n 1 "$ERR_FILE")" "Create it again on $TOKEN_PAGE"
+    [[ "$LOGIN" == "$REPO_OWNER" ]] ||
+      fail "The token is $LOGIN's, not $REPO_OWNER's, and only the owner writes the board." "Create it logged in as $REPO_OWNER: $TOKEN_PAGE"
+    HEADERS=$(GH_TOKEN="$TOKEN" gh api --include user 2>"$ERR_FILE" | tr -d '\r') ||
+      fail "GitHub refuses the token: $(head -n 1 "$ERR_FILE")" "Create it again on $TOKEN_PAGE"
+    SCOPES=$(grep -i '^x-oauth-scopes:' <<<"$HEADERS" | sed 's/^[^:]*: *//' || true)
+    [[ ",${SCOPES// /}," == *,project,* ]] ||
+      fail "The token's scopes are '${SCOPES:-none}', without project." "Create it with the project scope: $TOKEN_PAGE"
+    EXPIRES=$(grep -i '^github-authentication-token-expiration:' <<<"$HEADERS" | sed 's/^[^:]*: *//' || true)
+    [[ -n "$EXPIRES" ]] ||
+      fail "The token has no expiration." "Delete it (https://github.com/settings/tokens) and create one that expires in a year: $TOKEN_PAGE"
+    ok "the token is $LOGIN's, scopes '$SCOPES', expiring $EXPIRES"
+  fi
+  # The token goes to gh on its standard input: never on a command line,
+  # never printed. An environment secret, never a repository one: a
+  # repository secret is readable by a workflow of any branch.
+  printf '  %s$ gh secret set %s --env %s --repo %s < (the token)%s\n' "$BOLD" "$PROJECT_TOKEN_SECRET" "$BOARD_ENVIRONMENT" "$REPO" "$RESET"
+  if $DRY_RUN; then
+    run gh secret list --env "$BOARD_ENVIRONMENT" --repo "$REPO"
+  else
+    printf '%s' "$TOKEN" | gh secret set "$PROJECT_TOKEN_SECRET" --env "$BOARD_ENVIRONMENT" --repo "$REPO" ||
+      fail "gh secret set failed." "Read the error above."
+    WRITTEN_SECRET+=("$PROJECT_TOKEN_SECRET")
+    board_secret_stored || fail "The secret $PROJECT_TOKEN_SECRET is not listed on the environment $BOARD_ENVIRONMENT." "gh secret set $PROJECT_TOKEN_SECRET --env $BOARD_ENVIRONMENT --repo $REPO"
+    ok "the secret $PROJECT_TOKEN_SECRET is set on the environment $BOARD_ENVIRONMENT"
+  fi
+  note "GitHub holds the token as the secret and nothing else does: it is not"
+  note "saved here. It expires in a year; re-run this wizard to rotate it."
+fi
+
+# A repository secret of the same name, from before the environment: every
+# workflow of every branch can read one, which the environment prevents.
+if secret_stored "$PROJECT_TOKEN_SECRET"; then
+  warn "A repository secret $PROJECT_TOKEN_SECRET exists next to the environment's: a workflow of any branch can read it."
+  confirm "Delete the repository secret $PROJECT_TOKEN_SECRET (the environment's stays)?" ||
+    fail "The repository secret $PROJECT_TOKEN_SECRET is still there." "gh secret delete $PROJECT_TOKEN_SECRET --repo $REPO"
+  run gh secret delete "$PROJECT_TOKEN_SECRET" --repo "$REPO" ||
+    fail "gh secret delete failed." "Read the error above."
+fi
+
+if $BOARD_PENDING; then
+  say ""
+  confirm "Send these requests (pnpm board:setup)?" || fail "The board is not set up." "Review them, then re-run."
+  run pnpm --silent board:setup ||
+    fail "pnpm board:setup failed; it stops at the first failed request (above)." "Fix the cause, then re-run: what was applied reads back and is not planned again."
+  say ""
+  say "Reading it back:"
+  printf '  %s$ pnpm --silent board:setup --dry-run%s\n' "$BOLD" "$RESET"
+  if $DRY_RUN; then
+    note "A real run then checks that it plans nothing: the project exists, is"
+    note "public, is linked to both repositories, with the Status options and the"
+    note "views as committed."
+  else
+    BOARD_PLAN=$(board_plan) || fail "pnpm board:setup --dry-run failed: $(head -n 1 "$ERR_FILE")" "Read the error above."
+    grep -q '^Dry run, 0 requests, none sent' <<<"$BOARD_PLAN" ||
+      fail "The board does not read back as committed:" "$BOARD_PLAN"
+    ok "the project exists, is public, is linked to both repositories, its Status options and its views as committed"
+  fi
+fi
+BOARD_URL=$(board_url "$BOARD_PLAN")
+: "${BOARD_URL:=https://github.com/users/$REPO_OWNER/projects/<its number>}"
+
+if $BOARD_PENDING; then
+  say ""
+  say "The settings the API cannot make, on the board's views; each one is saved"
+  say "with Save changes in the view's menu, or it stays yours alone:"
+  open_url "$BOARD_URL"
+  step "View ${BOLD}Board${RESET}: its column field is ${BOLD}Status${RESET} (a board the API makes takes it by itself; check it)."
+  pause "Press Enter once Board shows the Status columns"
+  step "View ${BOLD}By assignee${RESET}: Group by → ${BOLD}Assignees${RESET}, then Save changes."
+  pause "Press Enter once By assignee is grouped and saved"
+  step "View ${BOLD}By parent${RESET}: Group by → ${BOLD}Parent issue${RESET}, then Save changes."
+  pause "Press Enter once By parent is grouped and saved"
+  step "GitHub's own first view, ${BOLD}View 1${RESET}: its menu → Delete view (board:setup leaves it)."
+  pause "Press Enter once View 1 is deleted"
+fi
+
+if $BOARD_PENDING || [[ -n "$TOKEN" ]]; then
+  say ""
+  say "The first reconcile, the board's single writer, as board.yml runs it:"
+  if [[ -n "$TOKEN" ]]; then
+    # With the token, as the workflow: its scope is proven by it.
+    printf '  %s$ PROJECT_TOKEN=<the token> pnpm --silent board:reconcile%s\n' "$BOLD" "$RESET"
+    $DRY_RUN || PROJECT_TOKEN="$TOKEN" retried pnpm --silent board:reconcile ||
+      fail "pnpm board:reconcile failed with the token." "A refused write means the token lacks a scope: project, or public_repo for adding the issues (docs/release.md, \"The board\"). Create it again, then re-run."
+  else
+    note "The token of an earlier run is not at hand: this reconcile runs with your gh login;"
+    note "board.yml runs the next one with the secret within the hour."
+    run pnpm --silent board:reconcile ||
+      fail "pnpm board:reconcile failed." "Read the error above, then re-run."
+  fi
+fi
+unset TOKEN
+pause "Press Enter to continue"
+
 finish
 if $DRY_RUN; then
   note "Dry run: nothing was set, installed or applied."
 else
-  ok "$REPO has its GitHub App, Renovate and its settings."
+  ok "$REPO has its GitHub App, Renovate, its settings and its Claim board."
 fi
 say ""
 say "Next, now that the App exists:"
@@ -730,4 +973,8 @@ say "    ${BOLD}gh workflow run patch-watch.yml --ref master -f simulate_current
 say "    then close its issue and pull request as their bodies say."
 say "  - Human step 5 of $GUIDE (#46): the release workflow's dry run:"
 say "    ${BOLD}gh workflow run release.yml --ref master -f dry-run=true${RESET}"
+say "  - The board's workflow runs hourly and on this repository's issue events;"
+say "    see its first run go green, or start one now (from $BOARD_BRANCH: another ref"
+say "    is refused the secret by the environment $BOARD_ENVIRONMENT):"
+say "    ${BOLD}gh workflow run board.yml --ref $BOARD_BRANCH${RESET}"
 say ""
