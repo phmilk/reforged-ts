@@ -54,8 +54,10 @@ interface KindSource {
   metaData: string;
   /** The metadata's ID of the field the Object Editor shows as the name. */
   nameField: string;
-  /** The profile files of the names, in the enUS layer. */
+  /** The profile files of the names, in the enUS layer, matched without regard to case. */
   strings: RegExp;
+  /** `strings` as a glob, for the messages. */
+  stringsGlob: string;
 }
 
 /** The kinds read, in this order. */
@@ -67,7 +69,8 @@ const KINDS: readonly KindSource[] = [
     raceColumn: "race",
     metaData: "Units/UnitMetaData.slk",
     nameField: "unam",
-    strings: /^Units\/[A-Za-z]*UnitStrings\.txt$/,
+    strings: /^units\/[a-z]*unitstrings\.txt$/i,
+    stringsGlob: "Units/*UnitStrings.txt",
   },
 ];
 
@@ -153,13 +156,26 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
   for (const source of KINDS) {
     const field = await nameField(source, read);
     const profile = new Profile();
-    const stringFiles = storage
-      .paths()
-      .filter(
-        (path) =>
-          path.toLowerCase().startsWith(ENUS_LAYER.toLowerCase()) &&
-          source.strings.test(path.slice(ENUS_LAYER.length)),
+    const seen = new Set<string>();
+    const stringFiles = nameFileOrder(
+      storage.paths().filter((path) => {
+        const lower = path.toLowerCase();
+        if (
+          !lower.startsWith(ENUS_LAYER.toLowerCase()) ||
+          !source.strings.test(path.slice(ENUS_LAYER.length)) ||
+          seen.has(lower)
+        ) {
+          return false;
+        }
+        seen.add(lower);
+        return true;
+      }),
+    );
+    if (stringFiles.length === 0) {
+      throw new CascError(
+        `The root lists no names file ${ENUS_LAYER}${source.stringsGlob}: every ${source.kind} would be unnamed.`,
       );
+    }
     for (const path of stringFiles) profile.add(await read(path), path);
 
     const data = parseSlk(await read(BASE_LAYER + source.data));
@@ -227,20 +243,6 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
     }
   }
 
-  const byConstant = new Map<string, string>();
-  for (const rawcode of Object.keys(objects).sort(byCodePoint)) {
-    const { constant } = objects[rawcode];
-    const first = byConstant.get(constant);
-    if (first !== undefined) {
-      diagnostics.push({
-        severity: "error",
-        message: `${first} and ${rawcode} have one constant name, ${constant}.`,
-      });
-    } else {
-      byConstant.set(constant, rawcode);
-    }
-  }
-
   if (diagnostics.some((d) => d.severity === "error")) {
     return { ok: false, diagnostics };
   }
@@ -270,6 +272,23 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
     counts,
     diagnostics,
   };
+}
+
+/**
+ * The order the names files are read in, the later one's name winning
+ * (`Profile`): the code-point order of their root paths, so
+ * `CampaignUnitStrings.txt` comes before `HumanUnitStrings.txt`.
+ *
+ * Unverified: the game's own load order of these files, and whether a later
+ * value or the first one wins, are assumed here, not settled by a Probe. In
+ * 3.0.0.24268 no unit is named differently by two files, so the order does
+ * not reach the committed index; one unit is named twice within one file
+ * (`Ubtr`, "Noble" then "Death Knight" in `CampaignUnitStrings.txt`), and
+ * its name rests on the last-wins rule. Every name set twice is reported as
+ * a warning, the cue to settle the rule in game with a Probe.
+ */
+export function nameFileOrder(paths: readonly string[]): string[] {
+  return [...paths].sort(byCodePoint);
 }
 
 /**

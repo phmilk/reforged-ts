@@ -1,13 +1,16 @@
 /**
  * The game's profile files (`.txt`): INI-like sections `[<Rawcode>]` of
  * `Key=Value` lines, `//` comments. A quoted value keeps what is between its
- * quotes. A key set twice for one Rawcode, in one file or across files read
- * in order, keeps its last value, and the earlier one is reported.
+ * quotes. Keys are matched without regard to case (`Name` and `name` are one
+ * key); section names are Rawcodes, matched exactly. A key set twice for one
+ * Rawcode, in one file or across files read in order, keeps its last value,
+ * and the earlier one is reported.
  */
 
 /** A key that a later line set again, for the diagnostics. */
 export interface Override {
   section: string;
+  /** The key as the later line spells it. */
   key: string;
   previous: string;
   value: string;
@@ -17,6 +20,7 @@ export interface Override {
 
 /** Each section's keys and values, merged over every file read. */
 export class Profile {
+  /** Each section's values by lower-cased key. */
   readonly #sections = new Map<string, Map<string, string>>();
   readonly overrides: Override[] = [];
 
@@ -39,25 +43,17 @@ export class Profile {
       if (section === undefined || at === -1) continue;
       const key = line.slice(0, at).trim();
       const value = unquote(line.slice(at + 1).trim());
-      const previous = section.get(key);
+      const previous = section.get(key.toLowerCase());
       if (previous !== undefined && previous !== value) {
         this.overrides.push({ section: name, key, previous, value, file });
       }
-      section.set(key, value);
+      section.set(key.toLowerCase(), value);
     }
   }
 
   /** The value of `key` in section `section`, matched without regard to the key's case. */
   get(section: string, key: string): string | undefined {
-    const values = this.#sections.get(section);
-    if (values === undefined) return undefined;
-    const exact = values.get(key);
-    if (exact !== undefined) return exact;
-    const lower = key.toLowerCase();
-    for (const [name, value] of values) {
-      if (name.toLowerCase() === lower) return value;
-    }
-    return undefined;
+    return this.#sections.get(section)?.get(key.toLowerCase());
   }
 }
 

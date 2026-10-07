@@ -4,7 +4,13 @@
  * `reforged-types`' `reforged.patch`, then writes the index and the
  * provenance file of its Game version under `--out` (the package root by
  * default). Prints the counts, then the warnings; on any error it writes
- * nothing, prints the errors and exits 1. A bad argument exits 2.
+ * nothing, prints the errors and exits 1. A bad argument exits 2. A leading
+ * `--`, which `pnpm builtins:generate -- …` passes through, is skipped.
+ *
+ * `isWsl` and `invokedDirectly` mirror the Probe runner's
+ * (`probe/src/machine.ts`, `probe/src/cli/common.ts`), as `parseBuildInfo`
+ * mirrors its `.build.info` reader: the packages share no code, and
+ * `test/probe-parity.test.ts` pins each pair to the same behaviour.
  */
 import { readFileSync, statSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -37,7 +43,13 @@ const USAGE = `Usage: builtins:generate [${INSTALL_OPTION} <folder>] [--out <fol
 /** The real machine. */
 export const systemMachine: InstallMachine = {
   platform: process.platform,
-  wsl: isWsl(),
+  wsl: isWsl(
+    process.platform,
+    process.env,
+    statSync("/proc/version", { throwIfNoEntry: false })?.isFile()
+      ? readFileSync("/proc/version", "utf8")
+      : undefined,
+  ),
   env: process.env,
   isFile: (file) =>
     statSync(file, { throwIfNoEntry: false })?.isFile() ?? false,
@@ -74,7 +86,7 @@ export async function main(
 ): Promise<number> {
   let install: string | undefined;
   let outDir = packageRoot;
-  for (let i = 0; i < args.length; i += 2) {
+  for (let i = args[0] === "--" ? 1 : 0; i < args.length; i += 2) {
     const value = args.at(i + 1);
     if (value === undefined) {
       output.stderr(USAGE);
@@ -132,18 +144,21 @@ export function formatDiagnostics(diagnostics: readonly Diagnostic[]): string {
     .join("");
 }
 
-function isWsl(): boolean {
-  if (process.platform !== "linux") return false;
-  if (process.env.WSL_DISTRO_NAME) return true;
-  try {
-    return /microsoft/i.test(readFileSync("/proc/version", "utf8"));
-  } catch {
-    return false;
+/** Whether Linux runs under WSL: its distribution variable, else `/proc/version`. */
+export function isWsl(
+  platform: NodeJS.Platform,
+  env: Readonly<Record<string, string | undefined>>,
+  procVersion: string | undefined,
+): boolean {
+  if (platform !== "linux") return false;
+  if (env.WSL_DISTRO_NAME !== undefined && env.WSL_DISTRO_NAME !== "") {
+    return true;
   }
+  return /microsoft/i.test(procVersion ?? "");
 }
 
 /** Whether the module at `moduleUrl` is the script Node was started with. */
-function invokedDirectly(moduleUrl: string): boolean {
+export function invokedDirectly(moduleUrl: string): boolean {
   const script = process.argv.at(1);
   return (
     script !== undefined && pathToFileURL(resolve(script)).href === moduleUrl

@@ -6,6 +6,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { readFully } from "../src/casc/storage.js";
 import { main, typingsBuild } from "../src/cli/generate.js";
 import type { InstallMachine } from "../src/install.js";
 import {
@@ -265,6 +266,105 @@ describe("builtins:generate", () => {
       '"Ubtr": {"kind":"unit","name":"Death Knight","race":"undead","sets":["default"],"constant":"DeathKnight_Ubtr"}',
     );
   });
+
+  const LOWER_CASE_STRINGS =
+    "War3.w3mod:_locales/enus.w3mod:units/campaignunitstrings.txt";
+
+  it("matches a name's key and the names files without regard to case", async () => {
+    const storage = await writeStorage({
+      files: {
+        [UNIT_DATA]: unitDataSlk([{ id: "Hpal", race: "human" }]),
+        [UNIT_META_DATA]: unitMetaDataSlk(),
+        // Read second: "_locales" comes after "_Locales" in code-point order.
+        [LOWER_CASE_STRINGS]: "[Hpal]\r\nname=New\r\n",
+        [strings("HumanUnitStrings.txt")]: "[Hpal]\r\nName=Old\r\n",
+      },
+    });
+    const outDir = await tempDir("out");
+
+    const { status, stdout } = await run(storage.installDir, outDir);
+
+    expect(status).toBe(0);
+    expect(stdout).toContain(
+      `- warning: The unit Hpal is named "Old", then "New" in ${LOWER_CASE_STRINGS}: the last name wins.\n`,
+    );
+    expect(
+      await readFile(join(outDir, "3.0.0", "index.json"), "utf8"),
+    ).toContain('"Hpal": {"kind":"unit","name":"New"');
+  });
+
+  it("finds every file of a storage whose encoding file spans many pages", async () => {
+    const filler = Object.fromEntries(
+      Array.from({ length: 120 }, (_, i) => [
+        `War3.w3mod:Filler/f${String(i)}.txt`,
+        `filler ${String(i)}`,
+      ]),
+    );
+    const storage = await writeStorage(
+      unitStorage(HUMAN, CAMPAIGN, { files: filler }),
+    );
+    const outDir = await tempDir("out");
+
+    const { status, stdout } = await run(storage.installDir, outDir);
+
+    expect(status).toBe(0);
+    expect(stdout).toContain(": 5 units.\n");
+  });
+
+  it("skips the -- that pnpm passes before the arguments", async () => {
+    const storage = await writeStorage(unitStorage(HUMAN));
+    const outDir = await tempDir("out");
+
+    const status = await main(
+      ["--", "--install", storage.installDir, "--out", outDir],
+      { stdout: () => undefined, stderr: () => undefined },
+      {
+        machine: {
+          ...NO_GAME,
+          isFile: (file) =>
+            file.startsWith(storage.installDir) && file.endsWith(".build.info"),
+        },
+        cwd: outDir,
+      },
+    );
+
+    expect(status).toBe(0);
+    expect(await readdir(join(outDir, "3.0.0"))).toEqual([
+      "index.json",
+      "provenance.json",
+    ]);
+  });
+});
+
+describe("readFully", () => {
+  it("reads on after a short read, and stops at the end of the file", async () => {
+    const content = Uint8Array.from({ length: 10 }, (_, i) => i + 1);
+    const calls: number[] = [];
+    // A file that returns at most 3 bytes per read.
+    const file = {
+      read: (
+        buffer: Uint8Array,
+        offset: number,
+        length: number,
+        position: number,
+      ) => {
+        calls.push(position);
+        const chunk = content.subarray(
+          position,
+          Math.min(position + Math.min(length, 3), content.byteLength),
+        );
+        buffer.set(chunk, offset);
+        return Promise.resolve({ bytesRead: chunk.byteLength });
+      },
+    };
+
+    const whole = new Uint8Array(8);
+    expect(await readFully(file, whole, 2)).toBe(8);
+    expect([...whole]).toEqual([3, 4, 5, 6, 7, 8, 9, 10]);
+    expect(calls).toEqual([2, 5, 8]);
+
+    expect(await readFully(file, new Uint8Array(8), 6)).toBe(4);
+  });
 });
 
 describe("builtins:generate refuses, writing nothing", () => {
@@ -357,6 +457,20 @@ describe("builtins:generate refuses, writing nothing", () => {
 
     expect(stderr).toContain(
       `- error: ${UNIT_META_DATA}: the field unam is in "UnitUI", not in the profile files the names are read from.\n`,
+    );
+  });
+
+  it("a storage with no names file, rather than unnamed units", async () => {
+    const { stderr } = await refused({
+      files: {
+        [UNIT_DATA]: unitDataSlk(HUMAN),
+        [UNIT_META_DATA]: unitMetaDataSlk(),
+        [strings("UnitSkinStrings.txt")]: "[hfoo]\r\nName=Skin\r\n",
+      },
+    });
+
+    expect(stderr).toContain(
+      "- error: The root lists no names file War3.w3mod:_Locales/enUS.w3mod:Units/*UnitStrings.txt: every unit would be unnamed.\n",
     );
   });
 

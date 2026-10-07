@@ -1,12 +1,12 @@
 /**
  * The committed 3.0.0 index and provenance, extracted by `builtins:generate`
- * from an install of 3.0.0.24268: the facts of the Patch they pin, and that
- * the published files hold the index alone.
+ * from an install of 3.0.0.24268: the facts of the Patch they pin, that the
+ * package carries the Patch of reforged-types, and that the published files
+ * hold the index alone.
  */
-import { execSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import { typingsBuild } from "../src/cli/generate.js";
 import {
   serializeIndex,
   serializeProvenance,
@@ -14,7 +14,6 @@ import {
   type Provenance,
 } from "../src/model.js";
 
-const packageRoot = fileURLToPath(new URL("../", import.meta.url));
 const read = (path: string) =>
   readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
@@ -58,19 +57,27 @@ describe("the 3.0.0 index", () => {
 });
 
 describe("the package", () => {
-  it("publishes the index, and nothing of the generator, the provenance or the raw files", () => {
-    const packed = JSON.parse(
-      execSync("pnpm pack --dry-run --json", {
-        cwd: packageRoot,
-        encoding: "utf8",
-      }),
-    ) as { files: { path: string }[] };
+  const manifest = async () =>
+    JSON.parse(await read("package.json")) as {
+      files: string[];
+      reforged: { patch: string };
+    };
 
-    expect(packed.files.map((file) => file.path).sort()).toEqual([
-      "3.0.0/index.json",
-      "LICENSE",
-      "README.md",
-      "package.json",
+  it("carries the Patch of reforged-types and of its index", async () => {
+    const { reforged } = await manifest();
+    const index = JSON.parse(await read("3.0.0/index.json")) as BuiltinsIndex;
+
+    expect(reforged.patch).toBe(typingsBuild());
+    expect(index.build).toBe(reforged.patch);
+  });
+
+  // npm always adds package.json; the provenance file, the generator (src/,
+  // build/) and the tests match none of these patterns.
+  it("publishes the index, and nothing of the generator, the provenance or the raw files", async () => {
+    expect((await manifest()).files).toEqual([
+      "/[0-9]*/index.json",
+      "/LICENSE",
+      "/README.md",
     ]);
   });
 });

@@ -18,6 +18,11 @@
  * Every file read is checked against its content key (its MD5). A missing
  * file, a key no index or encoding entry resolves, or a malformed structure
  * is a {@link CascError} naming the path.
+ *
+ * The generator reads a handful of files out of a storage of hundreds of
+ * thousands, so nothing is tabulated up front: the indices and the encoding
+ * file stay as bytes and are searched per key (the encoding file's pages by
+ * their first key), and the root is a list searched per path.
  */
 import { createHash } from "node:crypto";
 import { open, readdir, readFile } from "node:fs/promises";
@@ -52,7 +57,7 @@ export interface CascStorage {
   readonly build: string;
   /** The build config's key (its MD5), from `.build.info`. */
   readonly buildConfigKey: string;
-  /** Every path the root lists, as it spells them, in code-point order. */
+  /** Every path the root lists, as it spells them, in the root's order. */
   paths(): readonly string[];
   /** Reads the file at `path`, matched without regard to case. */
   read(path: string): Promise<CascFile>;
@@ -62,6 +67,15 @@ interface IndexEntry {
   archive: number;
   offset: number;
   size: number;
+}
+
+/** A local index file's entries block, searched per key. */
+interface LocalIndex {
+  bytes: Uint8Array;
+  start: number;
+  end: number;
+  entrySize: number;
+  offsetBits: number;
 }
 
 interface RootEntry {
@@ -143,7 +157,7 @@ export async function openStorage(installDir: string): Promise<CascStorage> {
     contentKey: string,
     ekey: string,
   ): Promise<Uint8Array> => {
-    const entry = index.get(ekey.slice(0, INDEX_KEY_SIZE * 2));
+    const entry = findIndexEntry(index, ekey);
     if (entry === undefined) {
       throw new CascError(
         `${path}: its encoding key ${ekey} is in no local index of ${join(dataDir, "data")}.`,
@@ -166,7 +180,7 @@ export async function openStorage(installDir: string): Promise<CascStorage> {
     await readEncoded(encodingLabel, encodingContentKey, encodingKey),
     encodingLabel,
   );
-  const rootEkey = encoding.get(rootContentKey);
+  const rootEkey = encoding(rootContentKey);
   const rootLabel = `the root (${rootContentKey})`;
   if (rootEkey === undefined) {
     throw new CascError(
@@ -178,23 +192,24 @@ export async function openStorage(installDir: string): Promise<CascStorage> {
       await readEncoded(rootLabel, rootContentKey, rootEkey),
     ),
   );
-  const sortedPaths = [...root.values()]
-    .map((entry) => entry.path)
-    .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  const paths = root.map((entry) => entry.path);
 
   return {
     installDir,
     build: info.build,
     buildConfigKey: info.buildConfigKey,
-    paths: () => sortedPaths,
+    paths: () => paths,
     read: async (path) => {
-      const entry = root.get(path.toLowerCase());
+      const lower = path.toLowerCase();
+      const entry = root.find(
+        (e) => e.path.length === path.length && e.path.toLowerCase() === lower,
+      );
       if (entry === undefined) {
         throw new CascError(
           `${path} is not in the root of the storage at ${installDir}.`,
         );
       }
-      const ekey = encoding.get(entry.contentKey);
+      const ekey = encoding(entry.contentKey);
       if (ekey === undefined) {
         throw new CascError(
           `${entry.path}: its content key ${entry.contentKey} is in no entry of the encoding file.`,
@@ -245,10 +260,10 @@ function configValue(
 }
 
 /**
- * Every entry of the newest index of each bucket under `dir`, by the hex of
- * the encoding key's first 9 bytes; the first entry of a key wins.
+ * The newest index of each bucket under `dir`, in file name order: the first
+ * entry of a key, over them in that order, wins.
  */
-async function readIndices(dir: string): Promise<Map<string, IndexEntry>> {
+async function readIndices(dir: string): Promise<LocalIndex[]> {
   let names: string[];
   try {
     names = await readdir(dir);
@@ -270,18 +285,15 @@ async function readIndices(dir: string): Promise<Map<string, IndexEntry>> {
   if (newest.size === 0) {
     throw new CascError(`${dir} holds no local index (.idx).`);
   }
-  const entries = new Map<string, IndexEntry>();
+  const indices: LocalIndex[] = [];
   for (const name of [...newest.values()].sort()) {
-    parseIndex(await readDisk(join(dir, name)), join(dir, name), entries);
+    indices.push(parseIndex(await readDisk(join(dir, name)), join(dir, name)));
   }
-  return entries;
+  return indices;
 }
 
-function parseIndex(
-  bytes: Uint8Array,
-  file: string,
-  into: Map<string, IndexEntry>,
-): void {
+/** Checks an index file's header and locates its entries block. */
+function parseIndex(bytes: Uint8Array, file: string): LocalIndex {
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   const fail = (what: string): never => {
     throw new CascError(`${file}: ${what}.`);
@@ -308,19 +320,42 @@ function parseIndex(
   if (start + blockSize > bytes.byteLength || blockSize % entrySize !== 0) {
     fail(`entries block of ${String(blockSize)} bytes does not fit the file`);
   }
-  const unit = 2 ** offsetBits;
-  for (let at = start; at < start + blockSize; at += entrySize) {
-    const key = hex(bytes.subarray(at, at + keyBytes));
-    if (into.has(key)) continue;
-    let packed = 0;
-    for (let i = 0; i < offsetBytes; i++)
-      packed = packed * 256 + bytes[at + keyBytes + i];
-    into.set(key, {
-      archive: Math.floor(packed / unit),
-      offset: packed % unit,
-      size: view.getUint32(at + keyBytes + offsetBytes, true),
-    });
+  return { bytes, start, end: start + blockSize, entrySize, offsetBits };
+}
+
+/** The first entry, over `indices` in order, of the encoding key `ekey`'s first 9 bytes. */
+function findIndexEntry(
+  indices: readonly LocalIndex[],
+  ekey: string,
+): IndexEntry | undefined {
+  const key = Buffer.from(ekey.slice(0, INDEX_KEY_SIZE * 2), "hex");
+  for (const { bytes, start, end, entrySize, offsetBits } of indices) {
+    for (let at = start; at < end; at += entrySize) {
+      if (!startsWith(bytes, at, key)) continue;
+      let packed = 0;
+      for (let i = 0; i < 5; i++)
+        packed = packed * 256 + bytes[at + INDEX_KEY_SIZE + i];
+      const unit = 2 ** offsetBits;
+      return {
+        archive: Math.floor(packed / unit),
+        offset: packed % unit,
+        size: new DataView(
+          bytes.buffer,
+          bytes.byteOffset,
+          bytes.byteLength,
+        ).getUint32(at + INDEX_KEY_SIZE + 5, true),
+      };
+    }
   }
+  return undefined;
+}
+
+/** Whether `bytes` holds `key` at `at`. */
+function startsWith(bytes: Uint8Array, at: number, key: Uint8Array): boolean {
+  for (let i = 0; i < key.byteLength; i++) {
+    if (bytes[at + i] !== key[i]) return false;
+  }
+  return true;
 }
 
 /** The BLTE stream of an index entry, its 30-byte archive header removed. */
@@ -348,7 +383,7 @@ async function readArchive(
   }
   try {
     const bytes = new Uint8Array(entry.size);
-    const { bytesRead } = await handle.read(bytes, 0, entry.size, entry.offset);
+    const bytesRead = await readFully(handle, bytes, entry.offset);
     if (bytesRead !== entry.size) {
       throw new CascError(
         `${path}: ${file} ends before the ${String(entry.size)} bytes at ${String(entry.offset)}.`,
@@ -369,11 +404,51 @@ async function readArchive(
   }
 }
 
+/** What {@link readFully} reads through: a `FileHandle`, or a test's fake. */
+export interface ReadableFile {
+  read(
+    buffer: Uint8Array,
+    offset: number,
+    length: number,
+    position: number,
+  ): Promise<{ bytesRead: number }>;
+}
+
 /**
- * The encoding file's content key to encoding key table (the first encoding
- * key of each entry). `label` names the file in errors.
+ * Reads into all of `bytes` from `position`, read after read: one read may
+ * return fewer bytes than asked (over a network or WSL's drvfs mount)
+ * without the file ending. Returns the bytes read, fewer only at the end of
+ * the file.
  */
-function parseEncoding(bytes: Uint8Array, label: string): Map<string, string> {
+export async function readFully(
+  file: ReadableFile,
+  bytes: Uint8Array,
+  position: number,
+): Promise<number> {
+  let done = 0;
+  while (done < bytes.byteLength) {
+    const { bytesRead } = await file.read(
+      bytes,
+      done,
+      bytes.byteLength - done,
+      position + done,
+    );
+    if (bytesRead === 0) break;
+    done += bytesRead;
+  }
+  return done;
+}
+
+/**
+ * The encoding file's lookup of a content key's encoding key (the first
+ * encoding key of its entry). Its pages are in the order of their first
+ * content key, which the page table lists: a lookup binary-searches the
+ * table, then scans one page. `label` names the file in errors.
+ */
+function parseEncoding(
+  bytes: Uint8Array,
+  label: string,
+): (contentKey: string) => string | undefined {
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   const fail = (what: string): never => {
     throw new CascError(`${label}: ${what}.`);
@@ -392,27 +467,46 @@ function parseEncoding(bytes: Uint8Array, label: string): Map<string, string> {
       `${String(pageCount)} pages of ${String(pageSize)} bytes overrun the file`,
     );
   }
-  const table = new Map<string, string>();
-  for (let page = 0; page < pageCount; page++) {
+  const tableAt = 22 + especSize;
+  const firstKey = (page: number) =>
+    bytes.subarray(
+      tableAt + page * (ckeySize + 16),
+      tableAt + page * (ckeySize + 16) + ckeySize,
+    );
+  return (contentKey) => {
+    const key = Buffer.from(contentKey, "hex");
+    // The last page whose first key is at most the key.
+    let low = 0;
+    let high = pageCount - 1;
+    let page = -1;
+    while (low <= high) {
+      const mid = (low + high) >> 1;
+      if (Buffer.compare(firstKey(mid), key) <= 0) {
+        page = mid;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+    if (page === -1) return undefined;
     let at = pages + page * pageSize;
     const end = at + pageSize;
     while (at + 6 + ckeySize <= end) {
       const keyCount = bytes[at];
       if (keyCount === 0) break;
-      const ckey = hex(bytes.subarray(at + 6, at + 6 + ckeySize));
       const ekeyAt = at + 6 + ckeySize;
-      if (!table.has(ckey)) {
-        table.set(ckey, hex(bytes.subarray(ekeyAt, ekeyAt + ekeySize)));
+      if (startsWith(bytes, at + 6, key)) {
+        return hex(bytes.subarray(ekeyAt, ekeyAt + ekeySize));
       }
       at = ekeyAt + keyCount * ekeySize;
     }
-  }
-  return table;
+    return undefined;
+  };
 }
 
-/** The plain-text root by lower-cased path. */
-function parseRoot(text: string): Map<string, RootEntry> {
-  const root = new Map<string, RootEntry>();
+/** The plain-text root's entries, in its order. */
+function parseRoot(text: string): RootEntry[] {
+  const root: RootEntry[] = [];
   for (const line of text.split(/\r?\n/)) {
     if (line === "") continue;
     const [path = "", contentKey = ""] = line.split("|");
@@ -421,8 +515,7 @@ function parseRoot(text: string): Map<string, RootEntry> {
         `the root: line ${JSON.stringify(line)} is not path|content key|locale|.`,
       );
     }
-    const key = path.toLowerCase();
-    if (!root.has(key)) root.set(key, { path, contentKey });
+    root.push({ path, contentKey });
   }
   return root;
 }

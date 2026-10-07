@@ -4,7 +4,7 @@ The Built-in objects of each Warcraft III Reforged Patch, reduced to the identif
 
 **Work in progress, not published yet** ([#509](https://github.com/phmilk/reforged-ts/issues/509)). It holds the JSON index of the units of the Default Game data set of Patch 3.0.0.24268; the other Object kinds, the Game data sets, the `FourCC` overloads and the constants come next.
 
-**Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build.
+**Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build, which a test holds to `reforged-types`'.
 
 ## The JSON index
 
@@ -37,7 +37,9 @@ The file is written one object per line, byte-stably: a regeneration from unchan
 
 `pnpm builtins:generate [--install <folder>] [--out <folder>]`, from the repository root, on a machine with the game. It finds the install as the Probe runner finds the game: `--install` (the install folder, or any file in it), else the folder above the executable `WC3_EXECUTABLE` names, else `Warcraft III` under `Program Files (x86)` then `Program Files` (drive C under WSL). It refuses an install whose Build (its `.build.info`) is not `reforged-types`' `reforged.patch`, naming both.
 
-It reads the install's CASC storage with a small TypeScript reader (`src/casc/`: no native code, no dependency, read-only): the base layer's `Units/UnitData.slk` (Rawcode and race), `Units/UnitMetaData.slk` (which profile field holds the name) and the `Units/*UnitStrings.txt` of `_Locales/enUS.w3mod:` (the names). It writes `<Game version>/index.json` and `<Game version>/provenance.json`, which pins each input by CASC path, content key, sha256 and size. Both are committed; the provenance file is never published, and the raw SLK and `.txt` files never enter git. The generator (`src/`) is not published either: the package ships its output alone.
+It reads the install's CASC storage with a small TypeScript reader (`src/casc/`: no native code, no dependency, read-only): the base layer's `Units/UnitData.slk` (Rawcode and race), `Units/UnitMetaData.slk` (which profile field holds the name) and the `Units/*UnitStrings.txt` of `_Locales/enUS.w3mod:` (the names, matched without regard to case; finding none is an error). It writes `<Game version>/index.json` and `<Game version>/provenance.json`, which pins each input by CASC path, content key, sha256 and size. Both are committed; the provenance file is never published, and the raw SLK and `.txt` files never enter git. The generator (`src/`) is not published either: the package ships its output alone.
+
+A unit named twice, in one names file or across them, takes its last name, the files read in the code-point order of their paths (`nameFileOrder` in `src/generate.ts`), with a warning. That rule is assumed, not yet settled by a Probe: in 3.0.0.24268 it decides one name, `Ubtr`'s ("Death Knight", named twice in `CampaignUnitStrings.txt`), and no unit is named differently by two files.
 
 The generator's tests (`pnpm --filter reforged-builtins test`) run it on synthetic CASC storages they write in a temporary folder, with no byte of Blizzard's.
 
