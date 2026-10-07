@@ -24,9 +24,13 @@ import {
   type SyntheticUnit,
 } from "./support/casc.js";
 
-/** A machine with no game where the lookup would look on its own. */
+/**
+ * A machine with no game where the lookup would look on its own. Its
+ * platform is the host's: the tests pass real temporary folders, which
+ * resolve by the host's path rules (drive letters on Windows).
+ */
 const NO_GAME: InstallMachine = {
-  platform: "linux",
+  platform: process.platform,
   wsl: false,
   env: {},
   isFile: () => false,

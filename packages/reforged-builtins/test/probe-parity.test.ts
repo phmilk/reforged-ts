@@ -4,6 +4,7 @@
  * check and the script check. Each pair is run on the same inputs here, so
  * a fix to one that misses the other fails.
  */
+import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { invokedDirectly as probeInvokedDirectly } from "../../../probe/src/cli/common.js";
 import { readClientBuild } from "../../../probe/src/game.js";
@@ -12,6 +13,12 @@ import { parseBuildInfo } from "../src/casc/storage.js";
 import { invokedDirectly, isWsl } from "../src/cli/generate.js";
 
 const KEY = "3a9d8f26806936764d2d9ad526a65e04";
+/**
+ * The Probe runner joins paths by the host's rules, so the executable and
+ * the file it reads are built the same way (backslashes on Windows).
+ */
+const EXECUTABLE = path.join("/x", "_retail_", "x86_64", "Warcraft III.exe");
+const BUILD_INFO = path.join("/x", ".build.info");
 const HEADER = "Branch!STRING:0|Active!DEC:1|Build Key!HEX:16|Version!STRING:0";
 
 /** The Build each reader takes from `text`, or that it refuses it. */
@@ -25,8 +32,8 @@ function both(text: string) {
   })();
   const probe = (() => {
     try {
-      return readClientBuild("/x/_retail_/x86_64/Warcraft III.exe", {
-        readFile: (file) => (file === "/x/.build.info" ? text : undefined),
+      return readClientBuild(EXECUTABLE, {
+        readFile: (file) => (file === BUILD_INFO ? text : undefined),
       }).build;
     } catch {
       return "refused";
