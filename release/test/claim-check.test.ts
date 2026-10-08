@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
+import { BOARD_OWNER, BOARD_REPOSITORIES } from "../src/board.js";
 import {
   MARKER,
   MAX_ASSIGNMENTS,
@@ -570,7 +571,7 @@ describe("claim-check.yml", () => {
     const steps = Object.values(jobs).flatMap((job) => job?.steps ?? []);
 
     expect(Object.keys(on)).toEqual(["workflow_call"]);
-    expect(Object.keys(jobs)).toEqual(["check", "dispatch"]);
+    expect(Object.keys(jobs)).toEqual(["check", "dispatch", "board-dispatch"]);
     expect(steps.length).toBeGreaterThan(0);
     for (const step of steps) {
       if (step.uses?.startsWith("actions/checkout@")) {
@@ -599,7 +600,7 @@ describe("claim-check.yml", () => {
     });
   });
 
-  it("dispatches board.yml from its own job after an assignment, in the library only, the one job with actions: write", async () => {
+  it("dispatches board.yml from its own job after an assignment in the library, the one job with actions: write", async () => {
     const { jobs } = await workflow("claim-check.yml");
     const pullRequest = jobs.check?.steps?.find(
       (step) => step.run === "node release/src/claim-check.ts pull-request",
@@ -628,6 +629,29 @@ describe("claim-check.yml", () => {
       env: { GH_TOKEN: "${{ github.token }}" },
       run: "gh workflow run board.yml --repo phmilk/reforged-ts",
     });
+  });
+
+  it("calls board-dispatch.yml after an assignment in another Board repository, with contents: read alone", async () => {
+    const { jobs } = await workflow("claim-check.yml");
+    const boardDispatch = jobs["board-dispatch"];
+    // board-dispatch.yml fails a repository off its list, red: the job names
+    // the Board repositories, so that a fork of the library, whose claim
+    // check runs too, skips it.
+    const others = BOARD_REPOSITORIES.filter(
+      (repository) => repository !== `${BOARD_OWNER}/reforged-ts`,
+    );
+
+    expect(others.length).toBeGreaterThan(0);
+    expect(boardDispatch?.needs).toBe("check");
+    expect(boardDispatch?.if).toBe(
+      `\${{ !cancelled() && contains(fromJSON('${JSON.stringify(others)}'), github.repository) && needs.check.outputs.assigned != '' }}`,
+    );
+    // Named in full: master of the library, whatever repository calls.
+    expect(boardDispatch?.uses).toBe(
+      "phmilk/reforged-ts/.github/workflows/board-dispatch.yml@master",
+    );
+    expect(boardDispatch?.permissions).toEqual({ contents: "read" });
+    expect(boardDispatch?.steps).toBeUndefined();
   });
 });
 
