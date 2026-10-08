@@ -14,7 +14,7 @@ Run each from the repository root; `package.json` holds what each one runs.
 - `pnpm lint`: after an edit, for ESLint and the Prettier check; `pnpm format` fixes the formatting and fixable findings it reports.
 - `pnpm typecheck`: while you edit, faster than a full check.
 - `pnpm typings:generate`: after an Overlay edit or for a new Patch; the loop is in `packages/reforged-types/AGENTS.md`.
-- `pnpm builtins:generate`: on a machine with the game, to extract the Built-in objects' index from its install (`packages/reforged-builtins/README.md`).
+- `pnpm builtins:generate`: on a machine with the game, to extract the Built-in objects' index from its install and emit its artefacts (`packages/reforged-builtins/README.md`); `pnpm builtins:check`, run by `pnpm check`, emits them again from the committed index, without the game.
 - `pnpm changeset add`: the changeset of a pull request. Run it without the prompt, as `docs/release.md` ("Adding a changeset") shows.
 
 ## Layout

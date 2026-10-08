@@ -1,0 +1,21 @@
+{
+  // The Map project fixtures as the editor and the lint see them: sources of
+  // a Map project that consumes this package, not of it. The tests pack the
+  // package, install it into a temporary Map project with the Template's
+  // tsconfig and the `types` under test, and copy each fixture folder to its
+  // src/; this file is not copied. Here the package resolves to itself (its
+  // `exports`, through the workspace's self-link) and the Typings to the
+  // workspace's. The negative fixtures' type errors are what the tests
+  // assert, so this program is never built.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["reforged-types/3.0.0", "@typescript-to-lua/language-extensions"],
+    "strict": true,
+    "noEmit": true
+  },
+  "files": ["../../../3.0.0.d.ts"],
+  "include": ["."]
+}
