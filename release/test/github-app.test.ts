@@ -1,8 +1,5 @@
 import { createVerify, generateKeyPairSync } from "node:crypto";
-import { readdir, readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { parse } from "yaml";
 import {
   APP_ENVIRONMENT,
   APP_PERMISSIONS,
@@ -12,7 +9,7 @@ import {
   formatPermissions,
   registrationUrl,
 } from "../src/github-app.js";
-import { repositoryRoot } from "../src/workspace.js";
+import { readWorkflows } from "./support/workflows.js";
 
 const REPOSITORY = "phmilk/reforged-ts";
 
@@ -164,21 +161,11 @@ describe("formatPermissions", () => {
   });
 });
 
-interface Step {
-  uses?: string;
-  with?: Partial<Record<string, unknown>>;
-}
-
 describe("the App's permissions", () => {
   it("are exactly what the workflows mint its tokens with", async () => {
-    const folder = join(repositoryRoot, ".github", "workflows");
     const requested: Record<string, "read" | "write"> = { metadata: "read" };
-    for (const file of await readdir(folder)) {
-      if (!/\.ya?ml$/.test(file)) continue;
-      const workflow = parse(await readFile(join(folder, file), "utf8")) as {
-        jobs?: Partial<Record<string, { steps?: Step[] }>>;
-      };
-      for (const job of Object.values(workflow.jobs ?? {})) {
+    for (const { workflow } of await readWorkflows()) {
+      for (const job of Object.values(workflow.jobs)) {
         for (const step of job?.steps ?? []) {
           const uses = step.uses ?? "";
           if (
@@ -211,49 +198,28 @@ describe("the App's permissions", () => {
   });
 });
 
-interface KeyJob {
-  if?: string;
-  environment?: unknown;
-  uses?: string;
-  with?: Partial<Record<string, unknown>>;
-  steps?: (Step & { if?: string })[];
-}
-
-/** Every workflow of the repository, by file name, as text and parsed. */
-async function workflows(): Promise<
-  { file: string; text: string; jobs: Partial<Record<string, KeyJob>> }[]
-> {
-  const folder = join(repositoryRoot, ".github", "workflows");
-  const result = [];
-  for (const file of (await readdir(folder)).sort()) {
-    if (!/\.ya?ml$/.test(file)) continue;
-    const text = await readFile(join(folder, file), "utf8");
-    const { jobs = {} } = parse(text) as {
-      jobs?: Partial<Record<string, KeyJob>>;
-    };
-    result.push({ file, text, jobs });
-  }
-  return result;
-}
-
 const KEY = "secrets.APP_PRIVATE_KEY";
 const count = (text: string) => text.split(KEY).length - 1;
 
 describe("the App's private key", () => {
   it("is read only in a job of an environment that admits master alone", async () => {
-    // board: board-dispatch.yml's job, which runs in the calling Board
-    // repository's environment board (ADR 0017).
-    const environments = [APP_ENVIRONMENT, "board"];
     const readers: string[] = [];
-    for (const { file, text, jobs } of await workflows()) {
+    for (const { file, text, workflow } of await readWorkflows()) {
       let read = 0;
-      for (const [id, job] of Object.entries(jobs)) {
+      for (const [id, job] of Object.entries(workflow.jobs)) {
         const reads = count(JSON.stringify(job ?? {}));
         const mints = (job?.steps ?? []).some(
           (step) => step.uses === "./.github/actions/app-token",
         );
         if (reads === 0 && !mints) continue;
-        expect(environments, `${file}, job ${id}`).toContain(job?.environment);
+        // board-dispatch.yml's job runs in the calling Board repository's
+        // environment board (ADR 0017); every other reader in this one's
+        // environment app.
+        const environment =
+          file === "board-dispatch.yml" && id === "dispatch"
+            ? "board"
+            : APP_ENVIRONMENT;
+        expect(job?.environment, `${file}, job ${id}`).toBe(environment);
         read += reads;
         readers.push(`${file} ${id}`);
       }
@@ -262,6 +228,7 @@ describe("the App's private key", () => {
     }
     expect(readers).toEqual(
       expect.arrayContaining([
+        "board-dispatch.yml dispatch",
         "docs-cut.yml cut-version",
         "patch-watch.yml watch",
         "release.yml version",
@@ -272,9 +239,9 @@ describe("the App's private key", () => {
   });
 
   it("cuts the docs version from master: called by the release and the rehearsal, never by a tag", async () => {
-    const all = await workflows();
-    const callers = all.flatMap(({ file, jobs }) =>
-      Object.entries(jobs)
+    const all = await readWorkflows();
+    const callers = all.flatMap(({ file, workflow }) =>
+      Object.entries(workflow.jobs)
         .filter(([, job]) => job?.uses === "./.github/workflows/docs-cut.yml")
         .map(([id, job]) => ({ at: `${file} ${id}`, with: job?.with })),
     );
@@ -291,22 +258,18 @@ describe("the App's private key", () => {
         },
       },
     ]);
-    const docs = parse(
-      all.find(({ file }) => file === "docs.yml")?.text ?? "",
-    ) as { on: { push: { tags?: unknown } } };
+    const on = (name: string) =>
+      all.find(({ file }) => file === name)?.workflow.on ?? {};
     // A tag's run is on the tag's ref, which the environment refuses.
-    expect(docs.on.push.tags).toBeUndefined();
-    const cut = parse(
-      all.find(({ file }) => file === "docs-cut.yml")?.text ?? "",
-    ) as { on: Record<string, unknown> };
-    expect(Object.keys(cut.on)).toEqual(["workflow_call"]);
+    expect(on("docs.yml").push).not.toHaveProperty("tags");
+    expect(Object.keys(on("docs-cut.yml"))).toEqual(["workflow_call"]);
   });
 
   it("is not needed by the release's dry run, whose jobs run on any branch", async () => {
-    const release = (await workflows()).find(
+    const release = (await readWorkflows()).find(
       ({ file }) => file === "release.yml",
     );
-    const jobs = release?.jobs ?? {};
+    const jobs = release?.workflow.jobs ?? {};
     for (const id of ["version-dry-run", "template-dispatch-dry-run"]) {
       const job = jobs[id];
       expect(job?.if, id).toContain("needs.select.outputs.dry-run == 'true'");
