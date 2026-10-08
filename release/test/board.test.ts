@@ -1466,9 +1466,15 @@ describe("board-dispatch.yml", () => {
     // An environment secret reaches a called job only when the caller
     // passes it (#554): required, so an unpassed key fails the call at
     // startup rather than as an empty key in the token action.
-    expect(Object.keys(on)).toEqual(["workflow_call"]);
-    expect(on.workflow_call).toMatchObject({
-      secrets: { APP_PRIVATE_KEY: { required: true } },
+    expect(on).toEqual({
+      workflow_call: {
+        secrets: {
+          APP_PRIVATE_KEY: {
+            description: expect.any(String) as unknown,
+            required: true,
+          },
+        },
+      },
     });
     expect(permissions).toEqual({ contents: "read" });
     expect(Object.keys(jobs)).toEqual(["dispatch"]);
@@ -1497,6 +1503,10 @@ describe("board-dispatch.yml", () => {
       repositories: "reforged-ts",
       "permission-contents": "write",
     });
+    // `required` checks only that the key is passed, never its value: the
+    // token action alone receives it, and fails on an empty one.
+    // One secret in the whole job, a job-level env included: the token's.
+    expect(JSON.stringify(job).split("secrets.")).toHaveLength(2);
     const run = steps.filter((step) => step.run !== undefined);
     expect(run).toHaveLength(2);
     // The refusal comes first: no token is minted for a repository off the

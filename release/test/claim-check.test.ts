@@ -621,8 +621,15 @@ describe("claim-check.yml", () => {
     expect(boardDispatch?.steps).toBeUndefined();
     // The Template's caller passes the key to this workflow, which passes
     // it on by name; not required, since the library's caller passes none.
-    expect(on.workflow_call).toMatchObject({
-      secrets: { APP_PRIVATE_KEY: { required: false } },
+    expect(on).toEqual({
+      workflow_call: {
+        secrets: {
+          APP_PRIVATE_KEY: {
+            description: expect.any(String) as unknown,
+            required: false,
+          },
+        },
+      },
     });
     expect(boardDispatch?.secrets).toEqual({
       APP_PRIVATE_KEY: "${{ secrets.APP_PRIVATE_KEY }}",
@@ -648,5 +655,7 @@ describe("claim.yml", () => {
       "pull-requests": "write",
       actions: "write",
     });
+    // The library is no caller of board-dispatch.yml: no key to pass.
+    expect(jobs.claim?.secrets).toBeUndefined();
   });
 });
