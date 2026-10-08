@@ -3,13 +3,16 @@ description: >
   A short-lived installation token of the repository's GitHub App, scoped to
   this repository (or to another one of its owner the App is installed on)
   and to the permissions given. Fails naming the repository
-  variable or secret that is missing before trying.
+  variable or the secret that is missing before trying. The calling job runs
+  in the environment app, the secret's home.
 inputs:
   client-id:
     description: The App's client ID, from the repository variable APP_CLIENT_ID.
     required: true
   private-key:
-    description: The App's private key, from the repository secret APP_PRIVATE_KEY.
+    description: >
+      The App's private key, from the secret APP_PRIVATE_KEY of the
+      environment app, whose deployment branch policy admits master alone.
     required: true
   repository:
     description: >
@@ -46,7 +49,7 @@ runs:
       run: |
         missing=()
         [ -n "$CLIENT_ID" ] || missing+=("the repository variable APP_CLIENT_ID")
-        [ -n "$PRIVATE_KEY" ] || missing+=("the repository secret APP_PRIVATE_KEY")
+        [ -n "$PRIVATE_KEY" ] || missing+=("the secret APP_PRIVATE_KEY of the environment app")
         if [ "${#missing[@]}" -gt 0 ]; then
           printf -v list '%s, ' "${missing[@]}"
           echo "::error title=GitHub App not configured::This job needs the repository's GitHub App (#48). Missing: ${list%, }. See docs/release.md, \"Repository variables and secrets\"."

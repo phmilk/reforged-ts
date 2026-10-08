@@ -1,0 +1,154 @@
+# The docs version cut: on each reforged-ts minor, the docs version of that
+# minor through a pull request the App opens with auto-merge, whose merge
+# deploys it. Called by release.yml's docs-cut job after the publish job
+# published a reforged-ts version, and by docs.yml's dispatch, the
+# rehearsal. website/README.md, "Docs versions", describes the cut;
+# docs/release.md, "The docs workflow", the job and the rehearsal.
+#
+# A workflow called by the release, not one a tag triggers: the App's key
+# lives in the environment app, whose deployment branch policy admits master
+# alone, and a tag's run is on the tag's ref, which it refuses. Admitting the
+# reforged-ts@* tags too would reopen the exposure: anyone who can push a
+# tag can push one on a branch's commit, whose workflow would then read the
+# key. The release calls it on master's commit, the one the publish job
+# tagged.
+name: docs-cut
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: >
+          The reforged-ts tag to cut the docs version of, such as
+          reforged-ts@1.1.0; release:docs-cut decides whether it cuts one.
+        type: string
+        required: true
+      rehearsal:
+        description: >
+          A rehearsal: open the pull request with auto-merge turned off
+          again at once.
+        type: boolean
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  cut-version:
+    name: cut-version
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # The App's key lives in the environment app, whose deployment branch
+    # policy admits master alone: a run on any other ref is refused it
+    # before any step (docs/release.md, "Repository variables and secrets").
+    environment: app
+    permissions:
+      contents: read
+    env:
+      REHEARSAL: ${{ inputs.rehearsal }}
+    steps:
+      # The calling run's commit: the release's, which the publish job
+      # tagged, so the docs are frozen as the release left them. A rehearsal
+      # cuts from the dispatched ref.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Minted before any code of the checkout runs (the install's lifecycle
+      # scripts, the check, the build), so none of it can rewrite the local
+      # action that receives the App's private key; minted even when the tag
+      # cuts nothing. The App pushes the branch and opens the pull request,
+      # so CI runs on it.
+      - id: app
+        uses: ./.github/actions/app-token
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      # No dependency cache: this job holds the App token.
+      - uses: ./.github/actions/setup-workspace
+      # Only reforged-ts@<major>.<minor>.0 cuts a docs version; any other
+      # tag ends the job here with a notice.
+      - id: cut
+        name: release:docs-cut
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          decision=$(pnpm --silent release:docs-cut "$TAG")
+          echo "$decision"
+          if [ "$(jq -r .cut <<< "$decision")" = true ]; then
+            version=$(jq -r .version <<< "$decision")
+            label=$(jq -r .label <<< "$decision")
+            {
+              echo "version=$version"
+              echo "label=$label"
+              echo "branch=docs-version/$version"
+            } >> "$GITHUB_OUTPUT"
+            echo "## Docs version $label, from $TAG" >> "$GITHUB_STEP_SUMMARY"
+          else
+            reason=$(jq -r .reason <<< "$decision")
+            echo "::notice title=No docs version::$reason"
+            printf '## No docs version\n\n%s\n' "$reason" >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Build the packages the site reads
+        if: steps.cut.outputs.version != ''
+        run: pnpm --filter "reforged-ts-website^..." build
+      # Freezes Next as the docs version, then keeps the last three minors
+      # of each major.
+      - name: docs:version
+        if: steps.cut.outputs.version != ''
+        env:
+          LABEL: ${{ steps.cut.outputs.label }}
+        run: pnpm run docs:version "$LABEL"
+      - name: Push the branch
+        if: steps.cut.outputs.version != ''
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          APP_TOKEN: ${{ steps.app.outputs.token }}
+          APP_SLUG: ${{ steps.app.outputs.app-slug }}
+          BRANCH: ${{ steps.cut.outputs.branch }}
+          VERSION: ${{ steps.cut.outputs.version }}
+          LABEL: ${{ steps.cut.outputs.label }}
+        run: |
+          git switch --create "$BRANCH"
+          # The three paths a cut writes, the pruned versions' removals
+          # included.
+          git add --all -- website/versioned_docs website/versioned_sidebars website/versions.json
+          git status --short
+          bot="${APP_SLUG}[bot]"
+          id=$(gh api "users/$bot" --jq .id)
+          git config user.name "$bot"
+          git config user.email "$id+$bot@users.noreply.github.com"
+          # No hooks: a hook planted by the checkout's code would receive the
+          # token in this environment.
+          git -c core.hooksPath=/dev/null commit -m "docs: version $VERSION" \
+            -m "pnpm docs:version $LABEL, from $GITHUB_SHA."
+          header=$(printf 'x-access-token:%s' "$APP_TOKEN" | base64 -w0)
+          echo "::add-mask::$header"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $header" \
+            push origin "HEAD:refs/heads/$BRANCH"
+      - name: Open the pull request
+        if: steps.cut.outputs.version != ''
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          BRANCH: ${{ steps.cut.outputs.branch }}
+          VERSION: ${{ steps.cut.outputs.version }}
+          LABEL: ${{ steps.cut.outputs.label }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          body="The docs version $LABEL of reforged-ts $VERSION: \`pnpm docs:version $LABEL\` froze Next, from $GITHUB_SHA, into \`website/versioned_docs/version-$LABEL\`, and kept the last three minors of each major. Its merge deploys the site. Opened by [docs-cut.yml]($RUN_URL)."
+          if [ "$REHEARSAL" = true ]; then
+            body="$body"$'\n\n'"**Rehearsal** (a dispatch): auto-merge is off. Close this pull request and delete its branch."
+          fi
+          url=$(gh pr create --repo "$GITHUB_REPOSITORY" --base master --head "$BRANCH" \
+            --title "docs: version $VERSION" --body "$body")
+          echo "Opened $url"
+          # A rehearsal turns auto-merge off again at once: it proves the
+          # step and never merges a throwaway version.
+          gh pr merge --auto --squash "$url"
+          if [ "$REHEARSAL" = true ]; then
+            gh pr merge --disable-auto "$url"
+            echo "Opened $url; auto-merge enabled, then disabled (rehearsal)." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Opened $url with auto-merge (squash)." >> "$GITHUB_STEP_SUMMARY"
+          fi

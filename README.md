@@ -40,7 +40,7 @@ The Template's README has [the full first run](https://github.com/phmilk/reforge
 
 ## Docs
 
-The documentation site, https://phmilk.github.io/reforged-ts/, serves `master` as "Next" and one docs version per minor of the library: `docs.yml` deploys it on every push to `master` and cuts a docs version on each minor release ([docs/release.md, "The docs workflow"](docs/release.md#the-docs-workflow)). Besides it:
+The documentation site, https://phmilk.github.io/reforged-ts/, serves `master` as "Next" and one docs version per minor of the library: `docs.yml` deploys it on every push to `master`, and the release cuts a docs version on each minor (`docs-cut.yml`) ([docs/release.md, "The docs workflow"](docs/release.md#the-docs-workflow)). Besides it:
 
 - `pnpm docs:start` serves the site locally after `pnpm build`; [`website/README.md`](website/README.md) lists the site's commands.
 - [`CONTEXT.md`](CONTEXT.md) defines the project's terms.

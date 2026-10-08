@@ -75,9 +75,17 @@ jobs:
   version:
     name: version
     needs: select
-    if: needs.select.outputs.mode == 'version'
+    if: needs.select.outputs.mode == 'version' && needs.select.outputs.dry-run != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # The App's key lives in the environment app, whose deployment branch
+    # policy admits master alone: a run on any other ref is refused it
+    # before any step. Every job of the library that mints the App's token
+    # runs in it, one environment for all of them: one copy of the key to
+    # rotate. It is not the environment board, so no job holding the App
+    # sees the board's project token (docs/release.md, "Repository
+    # variables and secrets").
+    environment: app
     permissions:
       contents: read
     steps:
@@ -94,14 +102,13 @@ jobs:
         with:
           client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          permission-contents: ${{ needs.select.outputs.dry-run == 'true' && 'read' || 'write' }}
-          permission-pull-requests: ${{ needs.select.outputs.dry-run == 'true' && 'read' || 'write' }}
+          permission-contents: write
+          permission-pull-requests: write
       - uses: ./.github/actions/setup-workspace
       # Before the version step, which consumes the changesets the gate reads.
       - name: Major-changeset gate
         run: pnpm release:gate
       - name: Open or update the Version Packages pull request
-        if: needs.select.outputs.dry-run != 'true'
         uses: changesets/action/version@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
           github-token: ${{ steps.app.outputs.token }}
@@ -109,13 +116,32 @@ jobs:
           # In pre mode the action appends " (alpha)".
           pr-title: Version Packages
           commit-message: Version Packages
+
+  # The version job of a dry run: no environment and no App, so a dry run
+  # rehearses any branch. The job token reads what the changelog needs.
+  version-dry-run:
+    name: version (dry run)
+    needs: select
+    if: needs.select.outputs.mode == 'version' && needs.select.outputs.dry-run == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      # The changelog generator reads the pull request of each changeset.
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup-workspace
+      - name: Major-changeset gate
+        run: pnpm release:gate
       - name: Version (dry run)
-        if: needs.select.outputs.dry-run == 'true'
         env:
-          GITHUB_TOKEN: ${{ steps.app.outputs.token }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: pnpm release:version
       - name: Would-be pull request (dry run)
-        if: needs.select.outputs.dry-run == 'true'
         run: |
           git add --all
           git diff --cached > "$RUNNER_TEMP/version.diff"
@@ -217,11 +243,16 @@ jobs:
     if: needs.select.outputs.mode == 'publish' && needs.select.outputs.dry-run != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # The App's key's home (the version job). npm's trusted publisher names
+    # no environment, so it accepts this job's in its OIDC token.
+    environment: app
     permissions:
       contents: read
       # Trusted publishing: npm exchanges the job's OIDC token, and attaches
       # provenance.
       id-token: write
+    outputs:
+      library-tag: ${{ steps.library.outputs.tag }}
     steps:
       # Changesets publishes each tarball from its package folder: the
       # checkout, never a build. Checked out first: the App token step is a
@@ -229,9 +260,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      # Tags and releases go through the App, so the reforged-ts tags can
-      # trigger docs.yml, which cuts a docs version on each minor (tags
-      # created with the default token trigger no workflow).
+      # Tags and releases go through the App, so they can trigger a
+      # workflow (tags created with the default token trigger none).
       - id: app
         uses: ./.github/actions/app-token
         with:
@@ -245,25 +275,52 @@ jobs:
         run: pnpm release:publish-check
       # The tarballs and plan the Template gate tested:
       # changeset publish --from-pack-dir, GitHub Releases and per-package tags.
-      - uses: changesets/action/publish@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+      - id: publish
+        uses: changesets/action/publish@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
           github-token: ${{ steps.app.outputs.token }}
           pack-dir-artifact-id: ${{ needs.pack.outputs.artifact-id }}
           create-github-releases: true
           push-git-tags: true
+      # The tag of the reforged-ts version this run published, for the docs
+      # cut; empty when it published none.
+      - id: library
+        name: The library's tag
+        env:
+          PUBLISHED: ${{ steps.publish.outputs.published-packages }}
+        run: |
+          tag=$(jq -r '.[]? | select(.name == "reforged-ts") | "reforged-ts@\(.version)"' <<< "${PUBLISHED:-[]}")
+          echo "Published: ${tag:-no reforged-ts version}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+  # The docs version of a reforged-ts minor, from the commit the publish job
+  # tagged (docs-cut.yml decides whether the version cuts one). Here, not on
+  # the tag's own run: the App's environment admits master alone, and a
+  # tag's run is on the tag's ref; admitting tags would let a tag pushed on a
+  # branch's commit read the key.
+  docs-cut:
+    name: docs-cut
+    needs: publish
+    if: needs.publish.outputs.library-tag != ''
+    permissions:
+      contents: read
+    uses: ./.github/workflows/docs-cut.yml
+    with:
+      tag: ${{ needs.publish.outputs.library-tag }}
+      rehearsal: false
 
   # The Template's sync workflow applies the release and opens the sync pull
-  # request. A dry run writes the payload to the job summary and sends
-  # nothing.
+  # request.
   template-dispatch:
     name: template-dispatch
     needs: [select, pack, template-gate, publish]
     if: >-
       !cancelled() && needs.template-gate.result == 'success' &&
-      (needs.publish.result == 'success' ||
-      (needs.publish.result == 'skipped' && needs.select.outputs.dry-run == 'true'))
+      needs.publish.result == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # The App's key's home (the version job).
+    environment: app
     permissions:
       contents: read
     env:
@@ -282,20 +339,14 @@ jobs:
           artifact-ids: ${{ needs.pack.outputs.artifact-id }}
           path: ${{ runner.temp }}/pack
       # The versions of the plan, the workspace's for a package the release
-      # does not publish; the tag and the URLs follow from them. A release
-      # waits until npm lists them: the Template's sync installs them as soon
-      # as it starts.
+      # does not publish; the tag and the URLs follow from them. It waits
+      # until npm lists them: the Template's sync installs them as soon as it
+      # starts.
       - name: Payload
-        env:
-          DRY_RUN: ${{ needs.select.outputs.dry-run }}
-        run: |
-          wait=(--await-npm 10)
-          if [ "$DRY_RUN" = true ]; then wait=(); fi
-          pnpm release:template-dispatch --pack-dir "$RUNNER_TEMP/pack" --out "$RUNNER_TEMP/dispatch.json" "${wait[@]}"
+        run: pnpm release:template-dispatch --pack-dir "$RUNNER_TEMP/pack" --out "$RUNNER_TEMP/dispatch.json" --await-npm 10
       # repository_dispatch needs Contents write on the Template, where the
       # App is installed too.
       - id: app
-        if: needs.select.outputs.dry-run != 'true'
         uses: ./.github/actions/app-token
         with:
           client-id: ${{ vars.APP_CLIENT_ID }}
@@ -303,8 +354,32 @@ jobs:
           repository: ${{ env.TEMPLATE }}
           permission-contents: write
       - name: Dispatch to the Template
-        if: needs.select.outputs.dry-run != 'true'
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           OWNER: ${{ github.repository_owner }}
         run: gh api --method POST "repos/$OWNER/$TEMPLATE/dispatches" --input "$RUNNER_TEMP/dispatch.json"
+
+  # The template-dispatch job of a dry run: it writes the payload to the job
+  # summary and sends nothing, with no environment and no App, so a dry run
+  # rehearses any branch. Its versions are not published: no wait for npm.
+  template-dispatch-dry-run:
+    name: template-dispatch (dry run)
+    needs: [select, pack, template-gate]
+    if: needs.select.outputs.dry-run == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-workspace
+        with:
+          ignore-scripts: true
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          artifact-ids: ${{ needs.pack.outputs.artifact-id }}
+          path: ${{ runner.temp }}/pack
+      - name: Payload
+        run: pnpm release:template-dispatch --pack-dir "$RUNNER_TEMP/pack" --out "$RUNNER_TEMP/dispatch.json"

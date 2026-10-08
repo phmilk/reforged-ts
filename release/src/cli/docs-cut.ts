@@ -1,6 +1,6 @@
 /**
  * `release:docs-cut <tag>`: whether the tag (`reforged-ts@1.1.0`) cuts a
- * docs version, for `docs.yml`'s `cut-version` job. Prints the decision as
+ * docs version, for `docs-cut.yml`'s `cut-version` job. Prints the decision as
  * one JSON object: `{"cut":true,"version":"1.1.0","label":"1.1"}`, or
  * `{"cut":false,"reason":"…"}`. Exit codes: 0 the decision, cut or not,
  * 2 usage.

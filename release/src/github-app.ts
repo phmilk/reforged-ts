@@ -24,8 +24,16 @@ export const APP_PERMISSIONS: Readonly<Record<string, "read" | "write">> = {
 
 /** The repository variable holding the App's client ID. */
 export const CLIENT_ID_VARIABLE = "APP_CLIENT_ID";
-/** The repository secret holding a private key of the App. */
+/**
+ * The secret holding a private key of the App, in the environment
+ * `APP_ENVIRONMENT`.
+ */
 export const PRIVATE_KEY_SECRET = "APP_PRIVATE_KEY";
+/**
+ * The environment every job minting the App's token runs in, the home of
+ * `PRIVATE_KEY_SECRET`: its deployment branch policy admits master alone.
+ */
+export const APP_ENVIRONMENT = "app";
 
 /**
  * The page registering the App on the personal account `owner/…` of
