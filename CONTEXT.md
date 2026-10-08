@@ -168,6 +168,14 @@ _Avoid_: bot (the repositories' GitHub App and Renovate), assistant, AI, session
 The mark that an issue is taken by one login, held while that login is among the issue's assignees; a spec is claimed with its tickets.
 _Avoid_: assignment (the GitHub act; a Claim is what it means), reservation, lock, ownership
 
+**Claim board**:
+The one Projects board of the project, over every Board repository, where each open issue shows a Status derived from GitHub state; a view of the Claims, never their source, and nobody moves a card by hand.
+_Avoid_: project board (any Projects board), kanban, the board of reforged-ts (it is the project's)
+
+**Board repository**:
+A repository whose open issues are on the Claim board; today `phmilk/reforged-ts` and `phmilk/reforged-ts-template`, and the project may add more.
+_Avoid_: member repository (a member is an item on the board), tracked repository
+
 **Agent skill**:
 A folder holding a `SKILL.md` that scripts one workflow for an AI coding agent to follow when invoked (`add-wrapper`, `map-feature`).
 _Avoid_: prompt, recipe, playbook
