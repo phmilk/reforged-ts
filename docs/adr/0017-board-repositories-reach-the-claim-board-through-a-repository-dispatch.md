@@ -27,3 +27,11 @@ The credential stays inside the project in three layers, any one of which suffic
 - A failed caller run leaves that repository's cards to the hourly run, as before; its red run is the signal.
 - The App's key is still also a repository secret in both repositories, readable by any branch's workflow. The dispatch adds no exposure to it, since the key already mints the same token, and moving every workflow that uses the key onto an environment is a ticket of its own beside this one.
 - The caller is Template maintenance: listed among the files a generated Map project deletes, beside `claim.yml` and `sync.yml`.
+
+## Amendment (2026-10-07)
+
+The App's key left the repository secrets (#557): in the library it is a secret of the environment `app`, which admits `master` alone, as the Template's is one of its environment `board`. A tag's run is on the tag's ref, which that environment refuses, so the docs version cut no longer runs on the push of a `reforged-ts@*` tag: it is the reusable `docs-cut.yml`, which `release.yml` calls on `master`'s commit after the publish job tagged it, and `docs.yml`'s dispatch calls as the rehearsal. Admitting the tags in the environment was rejected: anyone who can push a tag can push one on a branch's commit, whose workflow would then read the key.
+
+The list of Board repositories other than the library has a third copy beside `BOARD_REPOSITORIES` in `release/src/board.ts` and the list of `board-dispatch.yml`: the `if` of the claim check's `board-dispatch` job, which names them so that a fork of the library skips the job rather than turn red. `release/test/claim-check.test.ts` holds it equal to the others, and a new Board repository is added to all three.
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/557

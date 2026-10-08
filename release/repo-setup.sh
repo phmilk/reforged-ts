@@ -495,31 +495,46 @@ board_policy_branches() {
   policy_branches "$BOARD_ENVIRONMENT" "$@"
 }
 
-# make_environment ENVIRONMENT BRANCH creates ENVIRONMENT in this repository
-# with a deployment branch policy of its own that admits BRANCH alone, then
-# checks it. Both calls are idempotent: the PUT sets custom branch policies,
-# the POST adds BRANCH when it is not listed.
+# make_environment ENVIRONMENT BRANCH [REPOSITORY] creates ENVIRONMENT in
+# REPOSITORY (this one by default) with a deployment branch policy of its
+# own that admits BRANCH alone, then checks it (admit_branch_alone). Both
+# calls are idempotent: the PUT sets custom branch policies, the POST adds
+# BRANCH when it is not listed.
 make_environment() {
-  local environment="$1" branch="$2"
+  local environment="$1" branch="$2" repository="${3:-$REPO}"
   # The JSON goes to gh on its standard input, as the secrets do.
-  printf '  %s$ printf %s | gh api -X PUT repos/%s/environments/%s --input -%s\n' "$BOLD" "'$ENVIRONMENT_POLICY'" "$REPO" "$environment" "$RESET"
+  printf '  %s$ printf %s | gh api -X PUT repos/%s/environments/%s --input -%s\n' "$BOLD" "'$ENVIRONMENT_POLICY'" "$repository" "$environment" "$RESET"
   if ! $DRY_RUN; then
-    printf '%s' "$ENVIRONMENT_POLICY" | gh api --silent -X PUT "repos/$REPO/environments/$environment" --input - ||
-      fail "gh api -X PUT repos/$REPO/environments/$environment failed." "Read the error above."
+    printf '%s' "$ENVIRONMENT_POLICY" | gh api --silent -X PUT "repos/$repository/environments/$environment" --input - ||
+      fail "gh api -X PUT repos/$repository/environments/$environment failed." "Read the error above."
   fi
-  if grep -qx "$branch" <<<"$(policy_branches "$environment")"; then
+  admit_branch_alone "$environment" "$branch" "$repository"
+}
+
+# admit_branch_alone ENVIRONMENT BRANCH [REPOSITORY] adds BRANCH to the
+# deployment branch policy of ENVIRONMENT in REPOSITORY (this one by
+# default) when it is not listed, then checks that the policy admits BRANCH
+# alone; in the dry run it only lists the policy.
+admit_branch_alone() {
+  local environment="$1" branch="$2" repository="${3:-$REPO}"
+  local name="the environment $environment" title="The environment $environment"
+  if [[ "$repository" != "$REPO" ]]; then
+    name="${repository#*/}'s environment $environment"
+    title="$name"
+  fi
+  if grep -qx "$branch" <<<"$(policy_branches "$environment" "$repository")"; then
     ok "the policy admits $branch"
   else
-    run gh api --silent -X POST "repos/$REPO/environments/$environment/deployment-branch-policies" -f "name=$branch" -f type=branch ||
-      fail "gh api -X POST repos/$REPO/environments/$environment/deployment-branch-policies failed." "Read the error above."
+    run gh api --silent -X POST "repos/$repository/environments/$environment/deployment-branch-policies" -f "name=$branch" -f type=branch ||
+      fail "gh api -X POST repos/$repository/environments/$environment/deployment-branch-policies failed." "Read the error above."
   fi
   if $DRY_RUN; then
-    run gh api "repos/$REPO/environments/$environment/deployment-branch-policies"
+    run gh api "repos/$repository/environments/$environment/deployment-branch-policies"
     note "A real run then checks that the environment admits $branch alone."
   else
-    [[ "$(policy_branches "$environment")" == "$branch" ]] ||
-      fail "The environment $environment does not admit $branch alone: its policy admits '$(policy_branches "$environment" | tr '\n' ' ')'." "Remove every other branch from it: https://github.com/$REPO/settings/environments"
-    ok "the environment $environment exists and admits $branch alone"
+    [[ "$(policy_branches "$environment" "$repository")" == "$branch" ]] ||
+      fail "$title does not admit $branch alone: its policy admits '$(policy_branches "$environment" "$repository" | tr '\n' ' ')'." "Remove every other branch from it: https://github.com/$repository/settings/environments"
+    ok "$name exists and admits $branch alone"
   fi
 }
 
@@ -562,6 +577,29 @@ ask_key_file() {
   grep -q -- '-----BEGIN RSA PRIVATE KEY-----' "$KEY_FILE" ||
     fail "$KEY_FILE is not a private key the App's page generated." "Give the path of the downloaded .pem file."
   KEY_FILE=$(native_path "$KEY_FILE")
+}
+
+# check_key REPOSITORY [NAME] asks for the App's .pem file (ask_key_file),
+# then checks it as the App installed on REPOSITORY, NAME in the heading
+# (REPOSITORY by default), with the client ID of this repository's
+# variable, which it sets CLIENT_ID to; in the dry run it only prints the
+# check.
+check_key() {
+  local repository="$1" name="${2:-$1}"
+  ask_key_file
+  say ""
+  say "Checking the key as the App, installed on $name:"
+  if $DRY_RUN; then
+    CLIENT_ID="<$CLIENT_ID_VARIABLE>"
+    run pnpm --silent github-app check --repo "$repository" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed
+  else
+    CLIENT_ID=$(gh_read variable get "$CLIENT_ID_VARIABLE" --repo "$REPO")
+    printf '  %s$ pnpm --silent github-app check --repo %s --client-id %s --private-key %s --installed%s\n' "$BOLD" "$repository" "$CLIENT_ID" "$KEY_FILE" "$RESET"
+    REPORT=$(pnpm --silent github-app check --repo "$repository" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed) ||
+      fail "The key is not the App's, or the App is not installed on $repository as the workflows need it (above)." "Give the App's .pem file, or fix the installation: https://github.com/settings/installations"
+    while IFS= read -r line; do note "  $line"; done <<<"$REPORT"
+    ok "the key is the App's, installed on $repository"
+  fi
 }
 
 # board_plan prints what `pnpm board:setup --dry-run` plans, the board's
@@ -705,20 +743,7 @@ elif $KEY_ONLY; then
   say "Give the .pem file of the App's key. If it was deleted, generate another under"
   say "Private keys on the App's settings page: the key $REPO_NAME holds stays valid."
   open_url "https://github.com/settings/apps"
-  ask_key_file
-  say ""
-  say "Checking the key as the App, installed on $REPO:"
-  if $DRY_RUN; then
-    CLIENT_ID="<$CLIENT_ID_VARIABLE>"
-    run pnpm --silent github-app check --repo "$REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed
-  else
-    CLIENT_ID=$(gh_read variable get "$CLIENT_ID_VARIABLE" --repo "$REPO")
-    printf '  %s$ pnpm --silent github-app check --repo %s --client-id %s --private-key %s --installed%s\n' "$BOLD" "$REPO" "$CLIENT_ID" "$KEY_FILE" "$RESET"
-    REPORT=$(pnpm --silent github-app check --repo "$REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed) ||
-      fail "The key is not the App's, or the App is not installed on $REPO as the workflows need it (above)." "Give the App's .pem file, or fix the installation: https://github.com/settings/installations"
-    while IFS= read -r line; do note "  $line"; done <<<"$REPORT"
-    ok "the key is the App's, installed on $REPO"
-  fi
+  check_key "$REPO"
   pause "Press Enter to continue"
 else
   say "On the App's settings page (General):"
@@ -1061,28 +1086,11 @@ if ! $TEMPLATE_OK; then
     [[ "$(gh_read api "repos/$TEMPLATE/environments/$BOARD_ENVIRONMENT" --jq '.deployment_branch_policy.custom_branch_policies')" == true ]] ||
       fail "$TEMPLATE_NAME's environment $BOARD_ENVIRONMENT does not admit selected branches only." \
         "Set its Deployment branches to Selected branches and tags, with $TEMPLATE_BRANCH alone: https://github.com/$TEMPLATE/settings/environments"
+    admit_branch_alone "$BOARD_ENVIRONMENT" "$TEMPLATE_BRANCH" "$TEMPLATE"
   else
     say "$TEMPLATE_NAME's environment $BOARD_ENVIRONMENT, the key's home, with a deployment branch"
     say "policy of its own ($TEMPLATE_BRANCH alone, below); both calls are idempotent:"
-    printf '  %s$ printf %s | gh api -X PUT repos/%s/environments/%s --input -%s\n' "$BOLD" "'$ENVIRONMENT_POLICY'" "$TEMPLATE" "$BOARD_ENVIRONMENT" "$RESET"
-    if ! $DRY_RUN; then
-      printf '%s' "$ENVIRONMENT_POLICY" | gh api --silent -X PUT "repos/$TEMPLATE/environments/$BOARD_ENVIRONMENT" --input - ||
-        fail "gh api -X PUT repos/$TEMPLATE/environments/$BOARD_ENVIRONMENT failed." "Read the error above."
-    fi
-  fi
-  if grep -qx "$TEMPLATE_BRANCH" <<<"$(board_policy_branches "$TEMPLATE")"; then
-    ok "the policy admits $TEMPLATE_BRANCH"
-  else
-    run gh api --silent -X POST "repos/$TEMPLATE/environments/$BOARD_ENVIRONMENT/deployment-branch-policies" -f "name=$TEMPLATE_BRANCH" -f type=branch ||
-      fail "gh api -X POST repos/$TEMPLATE/environments/$BOARD_ENVIRONMENT/deployment-branch-policies failed." "Read the error above."
-  fi
-  if $DRY_RUN; then
-    run gh api "repos/$TEMPLATE/environments/$BOARD_ENVIRONMENT/deployment-branch-policies"
-    note "A real run then checks that the environment admits $TEMPLATE_BRANCH alone."
-  else
-    template_environment_ok ||
-      fail "$TEMPLATE_NAME's environment $BOARD_ENVIRONMENT does not admit $TEMPLATE_BRANCH alone: its policy admits '$(board_policy_branches "$TEMPLATE" | tr '\n' ' ')'." "Remove every other branch from it: https://github.com/$TEMPLATE/settings/environments"
-    ok "$TEMPLATE_NAME's environment $BOARD_ENVIRONMENT exists and admits $TEMPLATE_BRANCH alone"
+    make_environment "$BOARD_ENVIRONMENT" "$TEMPLATE_BRANCH" "$TEMPLATE"
   fi
 fi
 
@@ -1096,19 +1104,7 @@ if ! $TEMPLATE_KEY_STORED || ! $APP_DONE; then
     say "was deleted, generate another under Private keys on the App's settings page: the"
     say "key $REPO_NAME holds stays valid."
     open_url "https://github.com/settings/apps"
-    ask_key_file
-    say ""
-    say "Checking the key as the App, installed on $TEMPLATE_NAME:"
-    if $DRY_RUN; then
-      run pnpm --silent github-app check --repo "$TEMPLATE" --client-id "<$CLIENT_ID_VARIABLE>" --private-key "$KEY_FILE" --installed
-    else
-      CLIENT_ID=$(gh_read variable get "$CLIENT_ID_VARIABLE" --repo "$REPO")
-      printf '  %s$ pnpm --silent github-app check --repo %s --client-id %s --private-key %s --installed%s\n' "$BOLD" "$TEMPLATE" "$CLIENT_ID" "$KEY_FILE" "$RESET"
-      REPORT=$(pnpm --silent github-app check --repo "$TEMPLATE" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed) ||
-        fail "The key is not the App's, or the App is not installed on $TEMPLATE as the workflows need it (above)." "Give the App's .pem file, or fix the installation: https://github.com/settings/installations"
-      while IFS= read -r line; do note "  $line"; done <<<"$REPORT"
-      ok "the key is the App's, installed on $TEMPLATE"
-    fi
+    check_key "$TEMPLATE" "$TEMPLATE_NAME"
   fi
   # The key goes to gh on its standard input, as in the App stages. An
   # environment secret, never a repository one: the environment admits

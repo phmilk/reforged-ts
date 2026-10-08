@@ -45,9 +45,13 @@ on:
         unlabeled,
       ]
   # master's file and checkout, whatever the pull request holds (above).
+  # Pull requests into master alone: a pull_request_target run is on the
+  # base branch's ref, which the environment refuses on any other, and a
+  # closing keyword closes nothing outside the default branch.
   pull_request_target:
     types:
       [opened, reopened, closed, edited, converted_to_draft, ready_for_review]
+    branches: [master]
   # Another Board repository's event; the payload is ignored (above).
   repository_dispatch:
     types: [board-repository-event]

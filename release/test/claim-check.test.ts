@@ -1,7 +1,4 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { parse } from "yaml";
 import { BOARD_OWNER, BOARD_REPOSITORIES } from "../src/board.js";
 import {
   MARKER,
@@ -13,7 +10,7 @@ import {
   type IssueInput,
   type PullRequestInput,
 } from "../src/claim-check.js";
-import { repositoryRoot } from "../src/workspace.js";
+import { readWorkflow } from "./support/workflows.js";
 
 const REPOSITORY = "owner/fork";
 
@@ -532,38 +529,8 @@ describe("planIssue", () => {
   });
 });
 
-interface Step {
-  id?: string;
-  if?: string;
-  uses?: string;
-  with?: Partial<Record<string, unknown>>;
-  env?: Partial<Record<string, string>>;
-  run?: string;
-}
-
-interface Job {
-  uses?: string;
-  needs?: string;
-  if?: string;
-  "timeout-minutes"?: number;
-  permissions?: unknown;
-  outputs?: unknown;
-  steps?: Step[];
-}
-
-interface Workflow {
-  on: Partial<Record<string, unknown>>;
-  jobs: Partial<Record<string, Job>>;
-}
-
 /** The parsed workflow `file` of this repository. */
-async function workflow(file: string): Promise<Workflow> {
-  const text = await readFile(
-    join(repositoryRoot, ".github", "workflows", file),
-    "utf8",
-  );
-  return parse(text) as Workflow;
-}
+const workflow = async (file: string) => (await readWorkflow(file)).workflow;
 
 describe("claim-check.yml", () => {
   it("runs trusted code only: master of the library, no event value inline, the job's own token", async () => {

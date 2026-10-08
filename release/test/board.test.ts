@@ -1,7 +1,4 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { parse } from "yaml";
 import {
   applyBoardReconcile,
   applyBoardSetup,
@@ -31,7 +28,6 @@ import {
   type SubIssue,
 } from "../src/board.js";
 import { GraphQlError } from "../src/github-graphql.js";
-import { repositoryRoot } from "../src/workspace.js";
 import {
   CONFIGURED,
   daysAgo,
@@ -49,6 +45,7 @@ import {
   TEMPLATE,
   type Sent,
 } from "./support/board.js";
+import { readWorkflow } from "./support/workflows.js";
 
 const summaries = (plan: BoardSetupPlan) =>
   plan.requests.map(({ summary }) => summary);
@@ -1378,40 +1375,16 @@ describe("applyBoardReconcile", () => {
   });
 });
 
-interface Step {
-  id?: string;
-  uses?: string;
-  with?: Partial<Record<string, unknown>>;
-  env?: Partial<Record<string, string>>;
-  run?: string;
-}
-
-interface Workflow {
-  on: Partial<Record<string, unknown>>;
-  permissions: unknown;
-  concurrency: unknown;
-  jobs: Partial<
-    Record<
-      string,
-      {
-        if?: string;
-        environment?: unknown;
-        concurrency?: unknown;
-        permissions?: unknown;
-        steps?: Step[];
-      }
-    >
-  >;
-}
-
 describe("board.yml", () => {
   it("runs on the issue and pull_request_target events, another Board repository's dispatch, hourly and by hand, one group, contents read, master checked out, the token from the board environment", async () => {
-    const text = await readFile(
-      join(repositoryRoot, ".github", "workflows", "board.yml"),
-      "utf8",
-    );
-    const { on, permissions, concurrency, jobs } = parse(text) as Workflow;
+    const {
+      text,
+      workflow: { on, permissions, concurrency, jobs },
+    } = await readWorkflow("board.yml");
 
+    // The event type lists have a copy in the Template's board caller, held
+    // equal by tests/pipeline/board.test.ts of phmilk/reforged-ts-template;
+    // neither repository reads the other's files in a test.
     expect(on).toEqual({
       issues: {
         types: [
@@ -1438,6 +1411,10 @@ describe("board.yml", () => {
           "converted_to_draft",
           "ready_for_review",
         ],
+        // Into master alone: the run is on the base branch's ref, which the
+        // environment refuses on any other, and a closing keyword closes
+        // nothing outside the default branch.
+        branches: ["master"],
       },
       // Another Board repository's event, sent by board-dispatch.yml.
       repository_dispatch: { types: ["board-repository-event"] },
@@ -1482,11 +1459,9 @@ describe("board.yml", () => {
 
 describe("board-dispatch.yml", () => {
   it("is called alone, one job in the caller's board environment, contents read, no checkout, the App's token for the library alone with contents write, a board-repository-event dispatch", async () => {
-    const text = await readFile(
-      join(repositoryRoot, ".github", "workflows", "board-dispatch.yml"),
-      "utf8",
-    );
-    const { on, permissions, jobs } = parse(text) as Workflow;
+    const {
+      workflow: { on, permissions, jobs },
+    } = await readWorkflow("board-dispatch.yml");
 
     expect(on).toEqual({ workflow_call: null });
     expect(permissions).toEqual({ contents: "read" });
@@ -1536,11 +1511,9 @@ describe("board-dispatch.yml", () => {
   });
 
   it("lists the board's repositories other than the library", async () => {
-    const text = await readFile(
-      join(repositoryRoot, ".github", "workflows", "board-dispatch.yml"),
-      "utf8",
-    );
-    const { jobs } = parse(text) as Workflow;
+    const {
+      workflow: { jobs },
+    } = await readWorkflow("board-dispatch.yml");
     const listed =
       jobs.dispatch?.steps?.find(
         (step) => step.env?.BOARD_REPOSITORIES !== undefined,
