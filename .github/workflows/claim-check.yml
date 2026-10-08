@@ -2,7 +2,9 @@
 # issues of the caller's repository that it closes are claimed for its
 # author (an unclaimed one is assigned, with a reminder) or fail the check
 # (one claimed by another login, the takeover path in the comment); on an
-# assignment, a conflict draws a comment on the issue. It never reverts
+# assignment, a conflict draws a comment on the issue. After an assignment
+# it made, it tells the Claim board, from the library or from another Board
+# repository (the jobs dispatch and board-dispatch). It never reverts
 # anything. The library's claim.yml and the Template's call it, so that the
 # check reports as `claim / check` in both; the logic and the texts are
 # release/src/claim-check.ts, the protocol docs/agents/issue-tracker.md,
@@ -74,9 +76,9 @@ jobs:
         run: node release/src/claim-check.ts issue
 
   # An assignment made with GITHUB_TOKEN raises no issues event, so the
-  # board (board.yml) is told here, once the check says it assigned; in the
-  # library only, which holds board.yml, while the Template's items wait
-  # for the board's hourly schedule. A workflow_dispatch is the one event
+  # board (board.yml) is told here, once the check says it assigned: in the
+  # library, which holds board.yml, by this job; in another Board repository
+  # by board-dispatch, below. A workflow_dispatch is the one event
   # GITHUB_TOKEN does start. Its own job, so that `actions: write` is held
   # by this one step and by nothing that reads the event; it runs when the
   # check failed too (one issue assigned, another claimed by someone else),
@@ -95,3 +97,20 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run board.yml --repo phmilk/reforged-ts
+
+  # The same, from another Board repository (ADR 0017): its GITHUB_TOKEN
+  # cannot start a workflow of the library, so it calls the reusable
+  # board-dispatch.yml, which sends the library a repository dispatch with
+  # the App's token, minted in the caller's environment `board`. The job
+  # names the Board repositories other than the library, the list of
+  # board-dispatch.yml, since that workflow fails red off its list: a fork
+  # of the library, whose claim check runs too, skips it. Named in full, as
+  # the checkout is: master of the library, whatever repository calls. Its
+  # job holds `contents: read` alone.
+  board-dispatch:
+    name: board-dispatch
+    needs: check
+    if: ${{ !cancelled() && contains(fromJSON('["phmilk/reforged-ts-template"]'), github.repository) && needs.check.outputs.assigned != '' }}
+    permissions:
+      contents: read
+    uses: phmilk/reforged-ts/.github/workflows/board-dispatch.yml@master
