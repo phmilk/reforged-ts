@@ -1,9 +1,7 @@
 import { createVerify, generateKeyPairSync } from "node:crypto";
-import { readdir, readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { parse } from "yaml";
 import {
+  APP_ENVIRONMENT,
   APP_PERMISSIONS,
   appJwt,
   checkApp,
@@ -11,7 +9,7 @@ import {
   formatPermissions,
   registrationUrl,
 } from "../src/github-app.js";
-import { repositoryRoot } from "../src/workspace.js";
+import { readWorkflows } from "./support/workflows.js";
 
 const REPOSITORY = "phmilk/reforged-ts";
 
@@ -163,21 +161,11 @@ describe("formatPermissions", () => {
   });
 });
 
-interface Step {
-  uses?: string;
-  with?: Partial<Record<string, unknown>>;
-}
-
 describe("the App's permissions", () => {
   it("are exactly what the workflows mint its tokens with", async () => {
-    const folder = join(repositoryRoot, ".github", "workflows");
     const requested: Record<string, "read" | "write"> = { metadata: "read" };
-    for (const file of await readdir(folder)) {
-      if (!/\.ya?ml$/.test(file)) continue;
-      const workflow = parse(await readFile(join(folder, file), "utf8")) as {
-        jobs?: Partial<Record<string, { steps?: Step[] }>>;
-      };
-      for (const job of Object.values(workflow.jobs ?? {})) {
+    for (const { workflow } of await readWorkflows()) {
+      for (const job of Object.values(workflow.jobs)) {
         for (const step of job?.steps ?? []) {
           const uses = step.uses ?? "";
           if (
@@ -207,5 +195,98 @@ describe("the App's permissions", () => {
     expect(formatPermissions(requested)).toBe(
       formatPermissions(APP_PERMISSIONS),
     );
+  });
+});
+
+const KEY = "secrets.APP_PRIVATE_KEY";
+const count = (text: string) => text.split(KEY).length - 1;
+
+describe("the App's private key", () => {
+  it("is read only in a job of an environment that admits master alone", async () => {
+    const readers: string[] = [];
+    for (const { file, text, workflow } of await readWorkflows()) {
+      let read = 0;
+      for (const [id, job] of Object.entries(workflow.jobs)) {
+        const reads = count(JSON.stringify(job ?? {}));
+        const mints = (job?.steps ?? []).some(
+          (step) => step.uses === "./.github/actions/app-token",
+        );
+        if (reads === 0 && !mints) continue;
+        // board-dispatch.yml's job runs in the calling Board repository's
+        // environment board (ADR 0017); every other reader in this one's
+        // environment app.
+        const environment =
+          file === "board-dispatch.yml" && id === "dispatch"
+            ? "board"
+            : APP_ENVIRONMENT;
+        expect(job?.environment, `${file}, job ${id}`).toBe(environment);
+        read += reads;
+        readers.push(`${file} ${id}`);
+      }
+      // Nowhere else: no workflow-level env, no comment that hides one.
+      expect(count(text), file).toBe(read);
+    }
+    expect(readers).toEqual(
+      expect.arrayContaining([
+        "board-dispatch.yml dispatch",
+        "docs-cut.yml cut-version",
+        "patch-watch.yml watch",
+        "release.yml version",
+        "release.yml publish",
+        "release.yml template-dispatch",
+      ]),
+    );
+  });
+
+  it("cuts the docs version from master: called by the release and the rehearsal, never by a tag", async () => {
+    const all = await readWorkflows();
+    const callers = all.flatMap(({ file, workflow }) =>
+      Object.entries(workflow.jobs)
+        .filter(([, job]) => job?.uses === "./.github/workflows/docs-cut.yml")
+        .map(([id, job]) => ({ at: `${file} ${id}`, with: job?.with })),
+    );
+    expect(callers).toEqual([
+      {
+        at: "docs.yml cut-version",
+        with: { tag: "reforged-ts@${{ inputs.version }}", rehearsal: true },
+      },
+      {
+        at: "release.yml docs-cut",
+        with: {
+          tag: "${{ needs.publish.outputs.library-tag }}",
+          rehearsal: false,
+        },
+      },
+    ]);
+    const on = (name: string) =>
+      all.find(({ file }) => file === name)?.workflow.on ?? {};
+    // A tag's run is on the tag's ref, which the environment refuses.
+    expect(on("docs.yml").push).not.toHaveProperty("tags");
+    expect(Object.keys(on("docs-cut.yml"))).toEqual(["workflow_call"]);
+  });
+
+  it("is not needed by the release's dry run, whose jobs run on any branch", async () => {
+    const release = (await readWorkflows()).find(
+      ({ file }) => file === "release.yml",
+    );
+    const jobs = release?.workflow.jobs ?? {};
+    for (const id of ["version-dry-run", "template-dispatch-dry-run"]) {
+      const job = jobs[id];
+      expect(job?.if, id).toContain("needs.select.outputs.dry-run == 'true'");
+      expect(job?.environment, id).toBeUndefined();
+      expect(JSON.stringify(job), id).not.toContain("app-token");
+      expect(JSON.stringify(job), id).not.toContain("APP_");
+    }
+    // Their counterparts in the environment never run in a dry run.
+    expect(jobs.version?.if).toContain(
+      "needs.select.outputs.dry-run != 'true'",
+    );
+    expect(jobs.publish?.if).toContain(
+      "needs.select.outputs.dry-run != 'true'",
+    );
+    expect(jobs["template-dispatch"]?.if).toContain(
+      "needs.publish.result == 'success'",
+    );
+    expect(jobs["template-dispatch"]?.if).not.toContain("skipped");
   });
 });

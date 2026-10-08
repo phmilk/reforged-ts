@@ -187,12 +187,17 @@ finish() {
 # The repository-setup wizard (#198): the one-off human steps of #48 and
 # of the Claim board (#529). It registers the repository's GitHub App and
 # installs it on this repository, stores its client ID and a private key as
-# the variable APP_CLIENT_ID and the secret APP_PRIVATE_KEY, installs the
+# the variable APP_CLIENT_ID and the secret APP_PRIVATE_KEY of the
+# environment `app`, whose deployment branch policy admits master alone
+# (every job that mints the App's token runs in it), installs the
 # Renovate GitHub App, applies the repository settings with
 # `pnpm repo:settings`, and sets up the Claim board: the environment
 # `board`, whose deployment branch policy admits master alone, a classic
-# token of the maintainer as its secret PROJECT_TOKEN, `pnpm board:setup`,
-# the views' hand settings and the first `pnpm board:reconcile`.
+# token of the maintainer as its secret PROJECT_TOKEN, the Template's
+# environment `board` (ADR 0017), whose policy admits main alone and whose
+# one secret is the App's key APP_PRIVATE_KEY, read by the Template's board
+# dispatch, `pnpm board:setup`, the views' hand settings and the first
+# `pnpm board:reconcile`.
 #
 # From the repository root, in Git Bash (Windows) or a Linux shell:
 #
@@ -207,11 +212,14 @@ finish() {
 # it asks the maintainer to confirm. It never prints the private key or the
 # token: the key file goes to `gh secret set` on its standard input, the
 # token is typed hidden and piped the same way. It is safe to re-run: the
-# App stages are skipped when the variable and the secret exist, Renovate's
+# App stages are skipped when the variable, the environment app, its policy
+# and its secret exist, and only the key is asked for when the App's key is
+# a repository secret from before that environment; Renovate's
 # installation when its Dependency Dashboard issue exists, the settings
 # when they read back as committed, the board when its environment, its
-# policy and its secret exist and `pnpm board:setup --dry-run` plans
-# nothing.
+# policy and its secret exist in both repositories and
+# `pnpm board:setup --dry-run` plans nothing. An environment that exists
+# is left as it is: only a missing branch policy is added to it.
 #
 # The dry run still runs `pnpm install` and the read-only checks (gh, git,
 # what the repository holds, `pnpm repo:settings --dry-run`,
@@ -227,7 +235,13 @@ readonly REPO="$REPO_OWNER/$REPO_NAME"
 # dispatch").
 readonly TEMPLATE_NAME=reforged-ts-template
 readonly CLIENT_ID_VARIABLE=APP_CLIENT_ID
+# The App's key: the secret PRIVATE_KEY_SECRET of the environment
+# APP_ENVIRONMENT, whose deployment branch policy admits APP_BRANCH alone,
+# so no workflow run from another ref can read it (docs/release.md,
+# "Repository variables and secrets").
 readonly PRIVATE_KEY_SECRET=APP_PRIVATE_KEY
+readonly APP_ENVIRONMENT=app
+readonly APP_BRANCH=master
 # The board's token: a classic personal access token of the maintainer with
 # the project scope, read by board.yml (docs/release.md, "The board") as a
 # secret of the environment BOARD_ENVIRONMENT, whose deployment branch
@@ -235,8 +249,15 @@ readonly PRIVATE_KEY_SECRET=APP_PRIVATE_KEY
 readonly PROJECT_TOKEN_SECRET=PROJECT_TOKEN
 readonly BOARD_ENVIRONMENT=board
 readonly BOARD_BRANCH=master
-readonly BOARD_POLICY='{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}'
+# Custom branch policies: the branches added to the environment, and no other.
+readonly ENVIRONMENT_POLICY='{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}'
 readonly TOKEN_PAGE="https://github.com/settings/tokens/new?scopes=project&description=reforged-ts+board"
+# The Template's environment of the same name (ADR 0017): its board
+# dispatch reads the App's key as the secret PRIVATE_KEY_SECRET of it,
+# whose deployment branch policy admits TEMPLATE_BRANCH alone. The App's
+# client ID stays the Template's repository variable.
+readonly TEMPLATE="$REPO_OWNER/$TEMPLATE_NAME"
+readonly TEMPLATE_BRANCH=main
 readonly RULESET_FILE=.github/rulesets/master.json
 readonly RENOVATE_CONFIG=renovate.json5
 readonly GUIDE=docs/release.md
@@ -383,18 +404,35 @@ gh_read() {
   return 0
 }
 
-# secret_stored NAME [ENVIRONMENT]: whether the repository, or its
-# environment when one is named, holds the Actions secret NAME.
+# secret_stored NAME [ENVIRONMENT [REPOSITORY]]: whether REPOSITORY (this
+# one by default), or its environment when one is named, holds the Actions
+# secret NAME.
 secret_stored() {
-  local name="$1" environment="${2:-}" scope=()
+  local name="$1" environment="${2:-}" repository="${3:-$REPO}" scope=()
   [[ -n "$environment" ]] && scope=(--env "$environment")
-  [[ -n "$(gh_read secret list --repo "$REPO" "${scope[@]}" --json name --jq ".[] | select(.name == \"$name\") | .name")" ]]
+  [[ -n "$(gh_read secret list --repo "$repository" "${scope[@]}" --json name --jq ".[] | select(.name == \"$name\") | .name")" ]]
 }
 
-# app_stored: whether the repository holds the App's variable and secret.
+# app_stored: whether the repository holds the App's variable, and its
+# environment, admitting APP_BRANCH alone, the App's key.
 app_stored() {
-  [[ -n "$(gh_read variable get "$CLIENT_ID_VARIABLE" --repo "$REPO")" ]] &&
-    secret_stored "$PRIVATE_KEY_SECRET"
+  client_id_stored && app_environment_ok && app_key_stored
+}
+
+# client_id_stored: whether the repository holds the App's variable.
+client_id_stored() {
+  [[ -n "$(gh_read variable get "$CLIENT_ID_VARIABLE" --repo "$REPO")" ]]
+}
+
+# app_environment_ok: whether the App's environment exists and its
+# deployment branch policy admits APP_BRANCH alone.
+app_environment_ok() {
+  [[ "$(policy_branches "$APP_ENVIRONMENT")" == "$APP_BRANCH" ]]
+}
+
+# app_key_stored: whether the App's environment holds the App's key.
+app_key_stored() {
+  secret_stored "$PRIVATE_KEY_SECRET" "$APP_ENVIRONMENT"
 }
 
 # renovate_dashboard: the number of Renovate's open Dependency Dashboard
@@ -441,18 +479,127 @@ board_secret_stored() {
   secret_stored "$PROJECT_TOKEN_SECRET" "$BOARD_ENVIRONMENT"
 }
 
-# board_policy_branches prints the branches the board environment's
-# deployment branch policy admits, one per line; nothing when the
-# environment does not exist or admits every branch.
+# policy_branches ENVIRONMENT [REPOSITORY] prints the branches the
+# deployment branch policy of ENVIRONMENT admits in REPOSITORY (this one by
+# default), one per line; nothing when the environment does not exist or
+# admits every branch.
+policy_branches() {
+  local environment="$1" repository="${2:-$REPO}"
+  [[ "$(gh_read api "repos/$repository/environments/$environment" --jq '.deployment_branch_policy.custom_branch_policies')" == true ]] || return 0
+  gh_read api "repos/$repository/environments/$environment/deployment-branch-policies" --jq '.branch_policies[] | select(.type == "branch") | .name'
+}
+
+# board_policy_branches [REPOSITORY]: policy_branches of the board
+# environment.
 board_policy_branches() {
-  [[ "$(gh_read api "repos/$REPO/environments/$BOARD_ENVIRONMENT" --jq '.deployment_branch_policy.custom_branch_policies')" == true ]] || return 0
-  gh_read api "repos/$REPO/environments/$BOARD_ENVIRONMENT/deployment-branch-policies" --jq '.branch_policies[] | select(.type == "branch") | .name'
+  policy_branches "$BOARD_ENVIRONMENT" "$@"
+}
+
+# make_environment ENVIRONMENT BRANCH [REPOSITORY] creates ENVIRONMENT in
+# REPOSITORY (this one by default) with a deployment branch policy of its
+# own that admits BRANCH alone, then checks it (admit_branch_alone). Both
+# calls are idempotent: the PUT sets custom branch policies, the POST adds
+# BRANCH when it is not listed.
+make_environment() {
+  local environment="$1" branch="$2" repository="${3:-$REPO}"
+  # The JSON goes to gh on its standard input, as the secrets do.
+  printf '  %s$ printf %s | gh api -X PUT repos/%s/environments/%s --input -%s\n' "$BOLD" "'$ENVIRONMENT_POLICY'" "$repository" "$environment" "$RESET"
+  if ! $DRY_RUN; then
+    printf '%s' "$ENVIRONMENT_POLICY" | gh api --silent -X PUT "repos/$repository/environments/$environment" --input - ||
+      fail "gh api -X PUT repos/$repository/environments/$environment failed." "Read the error above."
+  fi
+  admit_branch_alone "$environment" "$branch" "$repository"
+}
+
+# admit_branch_alone ENVIRONMENT BRANCH [REPOSITORY] adds BRANCH to the
+# deployment branch policy of ENVIRONMENT in REPOSITORY (this one by
+# default) when it is not listed, then checks that the policy admits BRANCH
+# alone; in the dry run it only lists the policy.
+admit_branch_alone() {
+  local environment="$1" branch="$2" repository="${3:-$REPO}"
+  local name="the environment $environment" title="The environment $environment"
+  if [[ "$repository" != "$REPO" ]]; then
+    name="${repository#*/}'s environment $environment"
+    title="$name"
+  fi
+  if grep -qx "$branch" <<<"$(policy_branches "$environment" "$repository")"; then
+    ok "the policy admits $branch"
+  else
+    run gh api --silent -X POST "repos/$repository/environments/$environment/deployment-branch-policies" -f "name=$branch" -f type=branch ||
+      fail "gh api -X POST repos/$repository/environments/$environment/deployment-branch-policies failed." "Read the error above."
+  fi
+  if $DRY_RUN; then
+    run gh api "repos/$repository/environments/$environment/deployment-branch-policies"
+    note "A real run then checks that the environment admits $branch alone."
+  else
+    [[ "$(policy_branches "$environment" "$repository")" == "$branch" ]] ||
+      fail "$title does not admit $branch alone: its policy admits '$(policy_branches "$environment" "$repository" | tr '\n' ' ')'." "Remove every other branch from it: https://github.com/$repository/settings/environments"
+    ok "$name exists and admits $branch alone"
+  fi
 }
 
 # board_environment_ok: whether the board environment exists and its
 # deployment branch policy admits BOARD_BRANCH alone.
 board_environment_ok() {
   [[ "$(board_policy_branches)" == "$BOARD_BRANCH" ]]
+}
+
+# template_environment_exists: whether the Template has the board
+# environment, whatever its policy.
+template_environment_exists() {
+  [[ -n "$(gh_read api "repos/$TEMPLATE/environments/$BOARD_ENVIRONMENT" --jq .name)" ]]
+}
+
+# template_environment_ok: whether the Template's board environment exists
+# and its deployment branch policy admits TEMPLATE_BRANCH alone.
+template_environment_ok() {
+  [[ "$(board_policy_branches "$TEMPLATE")" == "$TEMPLATE_BRANCH" ]]
+}
+
+# template_key_stored: whether the Template's board environment holds the
+# App's key.
+template_key_stored() {
+  secret_stored "$PRIVATE_KEY_SECRET" "$BOARD_ENVIRONMENT" "$TEMPLATE"
+}
+
+# ask_key_file asks for the path of the App's downloaded .pem file and sets
+# KEY_FILE to it, as native programs read it; in the dry run it only says so.
+ask_key_file() {
+  if $DRY_RUN; then
+    note "  (dry run: asks for the path of the .pem file)"
+    KEY_FILE="<key file>"
+    return 0
+  fi
+  ask KEY_PATH "Path of the downloaded .pem file (its path, not its content):"
+  KEY_FILE=$(shell_path "$KEY_PATH")
+  [[ -f "$KEY_FILE" && -r "$KEY_FILE" ]] ||
+    fail "$KEY_FILE is not a readable file." "Give the path of the downloaded .pem file, such as ~/Downloads/$REPO_NAME-bot.<date>.private-key.pem"
+  grep -q -- '-----BEGIN RSA PRIVATE KEY-----' "$KEY_FILE" ||
+    fail "$KEY_FILE is not a private key the App's page generated." "Give the path of the downloaded .pem file."
+  KEY_FILE=$(native_path "$KEY_FILE")
+}
+
+# check_key REPOSITORY [NAME] asks for the App's .pem file (ask_key_file),
+# then checks it as the App installed on REPOSITORY, NAME in the heading
+# (REPOSITORY by default), with the client ID of this repository's
+# variable, which it sets CLIENT_ID to; in the dry run it only prints the
+# check.
+check_key() {
+  local repository="$1" name="${2:-$1}"
+  ask_key_file
+  say ""
+  say "Checking the key as the App, installed on $name:"
+  if $DRY_RUN; then
+    CLIENT_ID="<$CLIENT_ID_VARIABLE>"
+    run pnpm --silent github-app check --repo "$repository" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed
+  else
+    CLIENT_ID=$(gh_read variable get "$CLIENT_ID_VARIABLE" --repo "$REPO")
+    printf '  %s$ pnpm --silent github-app check --repo %s --client-id %s --private-key %s --installed%s\n' "$BOLD" "$repository" "$CLIENT_ID" "$KEY_FILE" "$RESET"
+    REPORT=$(pnpm --silent github-app check --repo "$repository" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed) ||
+      fail "The key is not the App's, or the App is not installed on $repository as the workflows need it (above)." "Give the App's .pem file, or fix the installation: https://github.com/settings/installations"
+    while IFS= read -r line; do note "  $line"; done <<<"$REPORT"
+    ok "the key is the App's, installed on $repository"
+  fi
 }
 
 # board_plan prints what `pnpm board:setup --dry-run` plans, the board's
@@ -474,7 +621,8 @@ board_url() {
 # ──────────────────────────────────────────────────────────────────────────
 
 TOTAL_STAGES=8
-APP_DONE=false # the variable and the secret exist and are kept
+APP_DONE=false # the variable and the environment's key exist and are kept
+KEY_ONLY=false # the App is kept; only its key moves into the environment
 CLIENT_ID=""
 KEY_FILE=""
 INSTALL_PAGE=""
@@ -506,6 +654,14 @@ if [[ "$ADMIN" == true ]]; then
   ok "gh is logged in as $(gh_read api user --jq .login), an administrator of $REPO"
 else
   fail "gh's login is not an administrator of $REPO${ADMIN:+ (admin: $ADMIN)}. $(head -n 1 "$ERR_FILE")" \
+    "Log in as the maintainer: gh auth login"
+fi
+# The board stage makes the Template's environment board.
+ADMIN=$(gh_read api "repos/$TEMPLATE" --jq .permissions.admin)
+if [[ "$ADMIN" == true ]]; then
+  ok "it is an administrator of $TEMPLATE too"
+else
+  fail "gh's login is not an administrator of $TEMPLATE${ADMIN:+ (admin: $ADMIN)}. $(head -n 1 "$ERR_FILE")" \
     "Log in as the maintainer: gh auth login"
 fi
 
@@ -541,15 +697,22 @@ pause "Press Enter to continue"
 stage "Register the GitHub App"
 
 if app_stored; then
-  ok "$REPO holds the variable $CLIENT_ID_VARIABLE and the secret $PRIVATE_KEY_SECRET: the App was set up on an earlier run."
+  ok "$REPO holds the variable $CLIENT_ID_VARIABLE, and its environment $APP_ENVIRONMENT, admitting $APP_BRANCH alone, the secret $PRIVATE_KEY_SECRET: the App was set up on an earlier run."
   if confirm "Set the App up again (another App, or a new private key)?"; then
     note "For a new key of the same App, do not register another: answer yes below."
   else
     APP_DONE=true
   fi
+# The App's key as a repository secret, from before the environment: the
+# App stays, its key moves.
+elif client_id_stored && secret_stored "$PRIVATE_KEY_SECRET"; then
+  ok "$REPO holds the variable $CLIENT_ID_VARIABLE and the repository secret $PRIVATE_KEY_SECRET: the App was set up before the environment $APP_ENVIRONMENT."
+  say "A repository secret is readable by a workflow of any branch; the environment"
+  say "$APP_ENVIRONMENT admits $APP_BRANCH alone."
+  confirm "Keep the App, and store its key in the environment $APP_ENVIRONMENT?" && KEY_ONLY=true
 fi
 
-if $APP_DONE; then
+if $APP_DONE || $KEY_ONLY; then
   pause "Press Enter to continue"
 else
   say "The workflows open their pull requests and the Patch-watch issue as this"
@@ -575,6 +738,13 @@ stage "The App's client ID and a private key"
 if $APP_DONE; then
   ok "Kept from an earlier run."
   pause "Press Enter to continue"
+elif $KEY_ONLY; then
+  ok "The client ID is kept from an earlier run."
+  say "Give the .pem file of the App's key. If it was deleted, generate another under"
+  say "Private keys on the App's settings page: the key $REPO_NAME holds stays valid."
+  open_url "https://github.com/settings/apps"
+  check_key "$REPO"
+  pause "Press Enter to continue"
 else
   say "On the App's settings page (General):"
   step "Copy the ${BOLD}Client ID${RESET} (it starts with Iv), not the App ID (a number)."
@@ -591,18 +761,7 @@ else
       fail "'$CLIENT_ID' is not a client ID (it starts with Iv)." "Copy the Client ID from the App's settings page."
   fi
   step "Under Private keys, ${BOLD}Generate a private key${RESET}: the browser downloads a .pem file."
-  if $DRY_RUN; then
-    note "  (dry run: asks for the path of the .pem file)"
-    KEY_FILE="<key file>"
-  else
-    ask KEY_PATH "Path of the downloaded .pem file (its path, not its content):"
-    KEY_FILE=$(shell_path "$KEY_PATH")
-    [[ -f "$KEY_FILE" && -r "$KEY_FILE" ]] ||
-      fail "$KEY_FILE is not a readable file." "Give the path of the downloaded .pem file, such as ~/Downloads/$REPO_NAME-bot.<date>.private-key.pem"
-    grep -q -- '-----BEGIN RSA PRIVATE KEY-----' "$KEY_FILE" ||
-      fail "$KEY_FILE is not a private key the App's page generated." "Give the path of the downloaded .pem file."
-    KEY_FILE=$(native_path "$KEY_FILE")
-  fi
+  ask_key_file
   say ""
   say "Checking the App as the App itself (a token signed with the key):"
   if $DRY_RUN; then
@@ -621,7 +780,7 @@ fi
 
 stage "Install the App on $REPO"
 
-if $APP_DONE; then
+if $APP_DONE || $KEY_ONLY; then
   ok "Kept from an earlier run."
   pause "Press Enter to continue"
 else
@@ -631,7 +790,7 @@ else
   step "Install."
   pause "Press Enter once it is installed"
   # This repository, then the Template, which the release dispatches to.
-  for INSTALLED_REPO in "$REPO" "$REPO_OWNER/$TEMPLATE_NAME"; do
+  for INSTALLED_REPO in "$REPO" "$TEMPLATE"; do
     if $DRY_RUN; then
       run pnpm --silent github-app check --repo "$INSTALLED_REPO" --client-id "$CLIENT_ID" --private-key "$KEY_FILE" --installed
     else
@@ -650,35 +809,49 @@ fi
 stage "Store the client ID and the private key"
 
 if $APP_DONE; then
-  ok "Kept from an earlier run: $CLIENT_ID_VARIABLE and $PRIVATE_KEY_SECRET."
-  pause "Press Enter to continue"
+  ok "Kept from an earlier run: $CLIENT_ID_VARIABLE, and $PRIVATE_KEY_SECRET in the environment $APP_ENVIRONMENT."
 else
-  run gh variable set "$CLIENT_ID_VARIABLE" --repo "$REPO" --body "$CLIENT_ID" ||
-    fail "gh variable set failed." "Read the error above."
+  if ! $KEY_ONLY; then
+    run gh variable set "$CLIENT_ID_VARIABLE" --repo "$REPO" --body "$CLIENT_ID" ||
+      fail "gh variable set failed." "Read the error above."
+  fi
+  say "The environment $APP_ENVIRONMENT, the key's home, with a deployment branch policy"
+  say "of its own ($APP_BRANCH alone, below): every job that mints the App's token runs"
+  say "in it, so a run on any other ref is refused the key. Both calls are idempotent:"
+  make_environment "$APP_ENVIRONMENT" "$APP_BRANCH"
   # The key goes to gh on its standard input: never on a command line,
-  # never printed.
-  printf '  %s$ gh secret set %s --repo %s < %s%s\n' "$BOLD" "$PRIVATE_KEY_SECRET" "$REPO" "$KEY_FILE" "$RESET"
+  # never printed. An environment secret, never a repository one.
+  printf '  %s$ gh secret set %s --env %s --repo %s < %s%s\n' "$BOLD" "$PRIVATE_KEY_SECRET" "$APP_ENVIRONMENT" "$REPO" "$KEY_FILE" "$RESET"
   if ! $DRY_RUN; then
-    gh secret set "$PRIVATE_KEY_SECRET" --repo "$REPO" <"$(shell_path "$KEY_FILE")" ||
+    gh secret set "$PRIVATE_KEY_SECRET" --env "$APP_ENVIRONMENT" --repo "$REPO" <"$(shell_path "$KEY_FILE")" ||
       fail "gh secret set failed." "Read the error above."
-    WRITTEN_SECRET+=("$PRIVATE_KEY_SECRET")
+    WRITTEN_SECRET+=("$PRIVATE_KEY_SECRET ($APP_ENVIRONMENT)")
   fi
   say ""
   say "Checking:"
   if $DRY_RUN; then
     run gh variable get "$CLIENT_ID_VARIABLE" --repo "$REPO"
-    run gh secret list --repo "$REPO"
+    run gh secret list --env "$APP_ENVIRONMENT" --repo "$REPO"
   else
     [[ "$(gh_read variable get "$CLIENT_ID_VARIABLE" --repo "$REPO")" == "$CLIENT_ID" ]] ||
       fail "The variable $CLIENT_ID_VARIABLE does not read back as $CLIENT_ID." "gh variable set $CLIENT_ID_VARIABLE --repo $REPO --body <client ID>"
     ok "the variable $CLIENT_ID_VARIABLE is $CLIENT_ID"
-    app_stored || fail "The secret $PRIVATE_KEY_SECRET is not listed." "gh secret set $PRIVATE_KEY_SECRET --repo $REPO < <key file>"
-    ok "the secret $PRIVATE_KEY_SECRET is set"
+    app_key_stored || fail "The secret $PRIVATE_KEY_SECRET is not listed on the environment $APP_ENVIRONMENT." "gh secret set $PRIVATE_KEY_SECRET --env $APP_ENVIRONMENT --repo $REPO < <key file>"
+    ok "the secret $PRIVATE_KEY_SECRET is set on the environment $APP_ENVIRONMENT"
   fi
-  note "The .pem file is no longer needed: delete it, or keep it offline. A lost"
-  note "key is replaced by generating a new one and re-running this wizard."
-  pause "Press Enter to continue"
+  note "Keep the .pem file until the board stage has stored it in $TEMPLATE_NAME's"
+  note "environment $BOARD_ENVIRONMENT; it says when it is no longer needed."
 fi
+# The repository secret of the same name, from before the environment, is
+# left for the maintainer to delete once the workflows have run with the
+# environment's copy: deleting it is the proof that none reads it.
+if secret_stored "$PRIVATE_KEY_SECRET"; then
+  warn "A repository secret $PRIVATE_KEY_SECRET exists next to the environment's: a workflow of any branch can read it."
+  note "Delete it once a run of each workflow that mints the App's token is green on $APP_BRANCH"
+  note "with the environment's copy ($GUIDE, \"Repository variables and secrets\"):"
+  note "  gh secret delete $PRIVATE_KEY_SECRET --repo $REPO"
+fi
+pause "Press Enter to continue"
 
 # ── 6. Renovate ───────────────────────────────────────────────────────────
 stage "Install Renovate"
@@ -777,13 +950,17 @@ fi
 pause "Press Enter to continue"
 
 # ── 8. The Claim board ────────────────────────────────────────────────────
-stage "The Claim board, its environment and its token"
+stage "The Claim board, its environments, its token and the Template's key"
 
 say "The Claim board ($GUIDE, \"The board\"): a Projects board on $REPO_OWNER's account"
 say "over $REPO_NAME and $TEMPLATE_NAME, whose Status board.yml writes with a classic"
 say "token of yours, the secret $PROJECT_TOKEN_SECRET of the environment $BOARD_ENVIRONMENT: scope"
 say "project only, expiring in a year. The environment's deployment branch policy"
 say "admits $BOARD_BRANCH alone, so a run on any other ref is refused the secret."
+say "$TEMPLATE_NAME has an environment $BOARD_ENVIRONMENT too (ADR 0017): its board dispatch"
+say "tells board.yml to run on the Template's issue events, with a token of the App"
+say "minted from the App's key, the secret $PRIVATE_KEY_SECRET of that environment, whose"
+say "policy admits $TEMPLATE_BRANCH alone. It holds that key and nothing else."
 say ""
 ENVIRONMENT_OK=false
 board_environment_ok && ENVIRONMENT_OK=true
@@ -799,6 +976,20 @@ if $SECRET_STORED; then
 else
   note "not yet: no secret $PROJECT_TOKEN_SECRET on the environment $BOARD_ENVIRONMENT"
 fi
+TEMPLATE_OK=false
+template_environment_ok && TEMPLATE_OK=true
+if $TEMPLATE_OK; then
+  ok "$TEMPLATE_NAME's environment $BOARD_ENVIRONMENT exists and admits $TEMPLATE_BRANCH alone"
+else
+  note "not yet: no environment $BOARD_ENVIRONMENT in $TEMPLATE_NAME whose policy admits $TEMPLATE_BRANCH alone"
+fi
+TEMPLATE_KEY_STORED=false
+template_key_stored && TEMPLATE_KEY_STORED=true
+if $TEMPLATE_KEY_STORED; then
+  ok "the secret $PRIVATE_KEY_SECRET is set on $TEMPLATE_NAME's environment $BOARD_ENVIRONMENT"
+else
+  note "not yet: no secret $PRIVATE_KEY_SECRET on $TEMPLATE_NAME's environment $BOARD_ENVIRONMENT"
+fi
 # The read-back of the project, in the dry run too: it reads GitHub with the
 # gh login and sends nothing.
 printf '  %s$ pnpm --silent board:setup --dry-run%s\n' "$BOLD" "$RESET"
@@ -813,7 +1004,7 @@ else
 fi
 
 ROTATE=false
-if $ENVIRONMENT_OK && $SECRET_STORED && ! $BOARD_PENDING; then
+if $ENVIRONMENT_OK && $SECRET_STORED && $TEMPLATE_OK && $TEMPLATE_KEY_STORED && ! $BOARD_PENDING; then
   confirm "Replace the token (a rotation: it expires a year after it was made)?" && ROTATE=true
 fi
 
@@ -821,26 +1012,7 @@ if ! $ENVIRONMENT_OK; then
   say ""
   say "The environment $BOARD_ENVIRONMENT, the secret's home, with a deployment branch policy"
   say "of its own ($BOARD_BRANCH alone, below); both calls are idempotent:"
-  # The JSON goes to gh on its standard input, as the token does below.
-  printf '  %s$ printf %s | gh api -X PUT repos/%s/environments/%s --input -%s\n' "$BOLD" "'$BOARD_POLICY'" "$REPO" "$BOARD_ENVIRONMENT" "$RESET"
-  if ! $DRY_RUN; then
-    printf '%s' "$BOARD_POLICY" | gh api --silent -X PUT "repos/$REPO/environments/$BOARD_ENVIRONMENT" --input - ||
-      fail "gh api -X PUT repos/$REPO/environments/$BOARD_ENVIRONMENT failed." "Read the error above."
-  fi
-  if grep -qx "$BOARD_BRANCH" <<<"$(board_policy_branches)"; then
-    ok "the policy admits $BOARD_BRANCH"
-  else
-    run gh api --silent -X POST "repos/$REPO/environments/$BOARD_ENVIRONMENT/deployment-branch-policies" -f "name=$BOARD_BRANCH" -f type=branch ||
-      fail "gh api -X POST repos/$REPO/environments/$BOARD_ENVIRONMENT/deployment-branch-policies failed." "Read the error above."
-  fi
-  if $DRY_RUN; then
-    run gh api "repos/$REPO/environments/$BOARD_ENVIRONMENT/deployment-branch-policies"
-    note "A real run then checks that the environment admits $BOARD_BRANCH alone."
-  else
-    board_environment_ok ||
-      fail "The environment $BOARD_ENVIRONMENT does not admit $BOARD_BRANCH alone: its policy admits '$(board_policy_branches | tr '\n' ' ')'." "Remove every other branch from it: https://github.com/$REPO/settings/environments"
-    ok "the environment $BOARD_ENVIRONMENT exists and admits $BOARD_BRANCH alone"
-  fi
+  make_environment "$BOARD_ENVIRONMENT" "$BOARD_BRANCH"
 fi
 
 TOKEN=""
@@ -902,6 +1074,55 @@ if secret_stored "$PROJECT_TOKEN_SECRET"; then
     fail "The repository secret $PROJECT_TOKEN_SECRET is still there." "gh secret delete $PROJECT_TOKEN_SECRET --repo $REPO"
   run gh secret delete "$PROJECT_TOKEN_SECRET" --repo "$REPO" ||
     fail "gh secret delete failed." "Read the error above."
+fi
+
+# The Template's environment, for its board dispatch (ADR 0017). One that
+# exists is left as it is: no PUT rewrites its settings, only a missing
+# TEMPLATE_BRANCH policy is added to its custom branch policies.
+if ! $TEMPLATE_OK; then
+  say ""
+  if template_environment_exists; then
+    ok "$TEMPLATE_NAME has the environment $BOARD_ENVIRONMENT: it is left as it is"
+    [[ "$(gh_read api "repos/$TEMPLATE/environments/$BOARD_ENVIRONMENT" --jq '.deployment_branch_policy.custom_branch_policies')" == true ]] ||
+      fail "$TEMPLATE_NAME's environment $BOARD_ENVIRONMENT does not admit selected branches only." \
+        "Set its Deployment branches to Selected branches and tags, with $TEMPLATE_BRANCH alone: https://github.com/$TEMPLATE/settings/environments"
+    admit_branch_alone "$BOARD_ENVIRONMENT" "$TEMPLATE_BRANCH" "$TEMPLATE"
+  else
+    say "$TEMPLATE_NAME's environment $BOARD_ENVIRONMENT, the key's home, with a deployment branch"
+    say "policy of its own ($TEMPLATE_BRANCH alone, below); both calls are idempotent:"
+    make_environment "$BOARD_ENVIRONMENT" "$TEMPLATE_BRANCH" "$TEMPLATE"
+  fi
+fi
+
+# The App's key in it: when it is missing, or when the App stages stored a
+# new key this run, so both repositories hold the same one.
+if ! $TEMPLATE_KEY_STORED || ! $APP_DONE; then
+  say ""
+  say "The App's private key, as the secret $PRIVATE_KEY_SECRET of $TEMPLATE_NAME's environment $BOARD_ENVIRONMENT:"
+  if [[ -z "$KEY_FILE" ]]; then
+    say "the App stages were kept from an earlier run, so give the .pem file again. If it"
+    say "was deleted, generate another under Private keys on the App's settings page: the"
+    say "key $REPO_NAME holds stays valid."
+    open_url "https://github.com/settings/apps"
+    check_key "$TEMPLATE" "$TEMPLATE_NAME"
+  fi
+  # The key goes to gh on its standard input, as in the App stages. An
+  # environment secret, never a repository one: the environment admits
+  # TEMPLATE_BRANCH alone.
+  printf '  %s$ gh secret set %s --env %s --repo %s < %s%s\n' "$BOLD" "$PRIVATE_KEY_SECRET" "$BOARD_ENVIRONMENT" "$TEMPLATE" "$KEY_FILE" "$RESET"
+  if $DRY_RUN; then
+    run gh secret list --env "$BOARD_ENVIRONMENT" --repo "$TEMPLATE"
+  else
+    gh secret set "$PRIVATE_KEY_SECRET" --env "$BOARD_ENVIRONMENT" --repo "$TEMPLATE" <"$(shell_path "$KEY_FILE")" ||
+      fail "gh secret set failed." "Read the error above."
+    WRITTEN_SECRET+=("$PRIVATE_KEY_SECRET ($TEMPLATE_NAME, $BOARD_ENVIRONMENT)")
+    template_key_stored || fail "The secret $PRIVATE_KEY_SECRET is not listed on $TEMPLATE_NAME's environment $BOARD_ENVIRONMENT." "gh secret set $PRIVATE_KEY_SECRET --env $BOARD_ENVIRONMENT --repo $TEMPLATE < <key file>"
+    ok "the secret $PRIVATE_KEY_SECRET is set on $TEMPLATE_NAME's environment $BOARD_ENVIRONMENT"
+  fi
+fi
+if [[ -n "$KEY_FILE" ]]; then
+  note "The .pem file is no longer needed: delete it, or keep it offline. A lost"
+  note "key is replaced by generating a new one and re-running this wizard."
 fi
 
 if $BOARD_PENDING; then

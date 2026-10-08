@@ -22,7 +22,7 @@ on:
       dry_run:
         description: >
           Dry run: print the plan, the issue and the pull request the watch
-          would open; open nothing. Runs from any branch.
+          would open; open nothing. Runs from master only, as every run.
         type: boolean
         default: false
 
@@ -45,17 +45,16 @@ jobs:
       # The reports already open, read with the default token. The App token
       # writes the issue, the branch and the pull request.
       issues: read
+    # The App's key lives in the environment app, whose deployment branch
+    # policy admits master alone: a run on any other ref, a dry run
+    # included, is refused before any step (docs/release.md, "Repository
+    # variables and secrets"). The dry run shares the job, so it rehearses
+    # master only; a branch's change to the watch is tried with its CLIs
+    # locally (pnpm patch-watch:plan, pnpm patch-watch:report).
+    environment: app
     env:
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
-      - name: Dry run or report
-        env:
-          DRY_RUN: ${{ inputs.dry_run == true }}
-        run: |
-          if [ "$DRY_RUN" != true ] && [ "$GITHUB_REF" != refs/heads/master ]; then
-            echo "::error title=Not master::The Patch watch reports from master only; this run is on $GITHUB_REF. Dispatch it with dry_run to rehearse another branch."
-            exit 1
-          fi
       # The report's branch starts from this commit.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

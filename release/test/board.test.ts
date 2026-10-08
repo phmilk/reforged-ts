@@ -1,7 +1,4 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { parse } from "yaml";
 import {
   applyBoardReconcile,
   applyBoardSetup,
@@ -31,7 +28,6 @@ import {
   type SubIssue,
 } from "../src/board.js";
 import { GraphQlError } from "../src/github-graphql.js";
-import { repositoryRoot } from "../src/workspace.js";
 import {
   CONFIGURED,
   daysAgo,
@@ -49,6 +45,7 @@ import {
   TEMPLATE,
   type Sent,
 } from "./support/board.js";
+import { readWorkflow } from "./support/workflows.js";
 
 const summaries = (plan: BoardSetupPlan) =>
   plan.requests.map(({ summary }) => summary);
@@ -1378,38 +1375,16 @@ describe("applyBoardReconcile", () => {
   });
 });
 
-interface Step {
-  uses?: string;
-  with?: Partial<Record<string, unknown>>;
-  env?: Partial<Record<string, string>>;
-  run?: string;
-}
-
-interface Workflow {
-  on: Partial<Record<string, unknown>>;
-  permissions: unknown;
-  concurrency: unknown;
-  jobs: Partial<
-    Record<
-      string,
-      {
-        if?: string;
-        environment?: unknown;
-        permissions?: unknown;
-        steps?: Step[];
-      }
-    >
-  >;
-}
-
 describe("board.yml", () => {
-  it("runs on the issue and pull_request_target events, hourly and by hand, one group, contents read, master checked out, the token from the board environment", async () => {
-    const text = await readFile(
-      join(repositoryRoot, ".github", "workflows", "board.yml"),
-      "utf8",
-    );
-    const { on, permissions, concurrency, jobs } = parse(text) as Workflow;
+  it("runs on the issue and pull_request_target events, another Board repository's dispatch, hourly and by hand, one group, contents read, master checked out, the token from the board environment", async () => {
+    const {
+      text,
+      workflow: { on, permissions, concurrency, jobs },
+    } = await readWorkflow("board.yml");
 
+    // The event type lists have a copy in the Template's board caller, held
+    // equal by tests/pipeline/board.test.ts of phmilk/reforged-ts-template;
+    // neither repository reads the other's files in a test.
     expect(on).toEqual({
       issues: {
         types: [
@@ -1436,12 +1411,20 @@ describe("board.yml", () => {
           "converted_to_draft",
           "ready_for_review",
         ],
+        // Into master alone: the run is on the base branch's ref, which the
+        // environment refuses on any other, and a closing keyword closes
+        // nothing outside the default branch.
+        branches: ["master"],
       },
+      // Another Board repository's event, sent by board-dispatch.yml.
+      repository_dispatch: { types: ["board-repository-event"] },
       workflow_dispatch: null,
       schedule: [
         { cron: expect.stringMatching(/^\d+ \* \* \* \*$/) as unknown },
       ],
     });
+    // Nothing reads the dispatch's payload: each run reads everything.
+    expect(text).not.toContain("client_payload");
     expect(permissions).toEqual({ contents: "read" });
     expect(concurrency).toEqual({
       group: "board",
@@ -1471,5 +1454,75 @@ describe("board.yml", () => {
     expect(run[0]?.env).toEqual({
       PROJECT_TOKEN: "${{ secrets.PROJECT_TOKEN }}",
     });
+  });
+});
+
+describe("board-dispatch.yml", () => {
+  it("is called alone, one job in the caller's board environment, contents read, no checkout, the App's token for the library alone with contents write, a board-repository-event dispatch", async () => {
+    const {
+      workflow: { on, permissions, jobs },
+    } = await readWorkflow("board-dispatch.yml");
+
+    expect(on).toEqual({ workflow_call: null });
+    expect(permissions).toEqual({ contents: "read" });
+    expect(Object.keys(jobs)).toEqual(["dispatch"]);
+    const job = jobs.dispatch;
+    expect(job?.environment).toBe("board");
+    expect(job?.permissions).toEqual({ contents: "read" });
+    // The library's board group coalesces the runs; the caller's has none.
+    expect(job?.concurrency).toBeUndefined();
+    const steps = job?.steps ?? [];
+    for (const step of steps) {
+      expect(step.uses ?? "", "a checkout").not.toMatch(/^actions\/checkout@/);
+      expect(step.run ?? "", "a run step").not.toContain("${{");
+    }
+    // The token action and gh alone: no other action, no install.
+    const uses = steps.flatMap((step) =>
+      step.uses === undefined ? [] : [step.uses],
+    );
+    expect(uses).toEqual([
+      expect.stringMatching(/^actions\/create-github-app-token@[0-9a-f]{40}$/),
+    ]);
+    const token = steps.find((step) => step.uses === uses[0]);
+    expect(token?.with).toEqual({
+      "client-id": "${{ vars.APP_CLIENT_ID }}",
+      "private-key": "${{ secrets.APP_PRIVATE_KEY }}",
+      owner: BOARD_OWNER,
+      repositories: "reforged-ts",
+      "permission-contents": "write",
+    });
+    const run = steps.filter((step) => step.run !== undefined);
+    expect(run).toHaveLength(2);
+    // The refusal comes first: no token is minted for a repository off the
+    // list.
+    expect(steps.map((step) => step.id ?? step.run?.split(/\s/)[0])).toEqual([
+      "for",
+      "app",
+      "gh",
+    ]);
+    expect(run[0]?.env?.REPOSITORY).toBe("${{ github.repository }}");
+    expect(run[0]?.run).toContain("exit 1");
+    expect(token?.id).toBe("app");
+    // No payload: board.yml reads none.
+    expect(run[1]).toMatchObject({
+      env: { GH_TOKEN: "${{ steps.app.outputs.token }}" },
+      run: `gh api --method POST repos/${BOARD_OWNER}/reforged-ts/dispatches -f event_type=board-repository-event`,
+    });
+  });
+
+  it("lists the board's repositories other than the library", async () => {
+    const {
+      workflow: { jobs },
+    } = await readWorkflow("board-dispatch.yml");
+    const listed =
+      jobs.dispatch?.steps?.find(
+        (step) => step.env?.BOARD_REPOSITORIES !== undefined,
+      )?.env?.BOARD_REPOSITORIES ?? "";
+
+    expect(listed.split(/\s+/).filter(Boolean)).toEqual(
+      BOARD_REPOSITORIES.filter(
+        (repository) => repository !== `${BOARD_OWNER}/reforged-ts`,
+      ),
+    );
   });
 });

@@ -3,9 +3,15 @@
 # `pnpm board:reconcile`, its single writer: every open issue of both
 # repositories gets a Status derived from its assignees, pull requests,
 # blockers, sub-issues and labels, and only the differences are written. On
-# this repository's issue and pull-request events, hourly (the Template's
-# changes and the archive clock) and by hand. docs/release.md, "The board",
-# describes the rules, this workflow and its failure modes.
+# this repository's issue and pull-request events, on a repository_dispatch
+# of type board-repository-event from another Board repository (sent by
+# board-dispatch.yml on that repository's events, ADR 0017), hourly (what
+# no event covers, and the archive clock) and by hand. Nothing reads the
+# dispatch's payload: each run reconciles everything from GitHub, as on
+# every other trigger, so the dispatch carries no data and no authority
+# beyond the schedule's; it runs on master, in the same group and the same
+# environment. docs/release.md, "The board", describes the rules, this
+# workflow and its failure modes.
 #
 # The writes need the maintainer's classic token, the secret PROJECT_TOKEN,
 # since neither GITHUB_TOKEN nor the App reaches a user-owned project. Two
@@ -39,9 +45,16 @@ on:
         unlabeled,
       ]
   # master's file and checkout, whatever the pull request holds (above).
+  # Pull requests into master alone: a pull_request_target run is on the
+  # base branch's ref, which the environment refuses on any other, and a
+  # closing keyword closes nothing outside the default branch.
   pull_request_target:
     types:
       [opened, reopened, closed, edited, converted_to_draft, ready_for_review]
+    branches: [master]
+  # Another Board repository's event; the payload is ignored (above).
+  repository_dispatch:
+    types: [board-repository-event]
   workflow_dispatch:
   schedule:
     # Hourly, off the hour.
