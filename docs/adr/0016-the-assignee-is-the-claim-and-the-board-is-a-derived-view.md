@@ -26,5 +26,6 @@ We adopt one Claim protocol for both repositories, GitHub-only: the assignee is 
 - The board costs one secret, a classic personal access token of the maintainer with the `project` scope, stored in `phmilk/reforged-ts` and rotated through the repository-setup wizard; a dead token shows as a red scheduled run. The board's definition is code in the release package (`board:setup`, `board:reconcile`).
 - The `claim` check is one more workflow on `pull_request_target`, without a checkout of the pull request's code; it became a required check (`claim / check`) by a ruleset change, after targeted rehearsals of its paths in both repositories took the place of the planned two-week trial (#536).
 - The Template carries only the thin caller workflow and the tracker doc's Claim section, both Template maintenance, deleted in a generated Map project.
+- The board's writer runs on the library's events, so the Template's cards waited for the hourly run; ADR 0017 has every other Board repository dispatch the reconcile on its own events.
 
 Decision record: https://github.com/phmilk/reforged-ts/issues/518
