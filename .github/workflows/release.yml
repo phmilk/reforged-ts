@@ -81,7 +81,10 @@ jobs:
     # The App's key lives in the environment app, whose deployment branch
     # policy admits master alone: a run on any other ref is refused it
     # before any step. Every job of the library that mints the App's token
-    # runs in it (docs/release.md, "Repository variables and secrets").
+    # runs in it, one environment for all of them: one copy of the key to
+    # rotate. It is not the environment board, so no job holding the App
+    # sees the board's project token (docs/release.md, "Repository
+    # variables and secrets").
     environment: app
     permissions:
       contents: read
@@ -293,7 +296,8 @@ jobs:
   # The docs version of a reforged-ts minor, from the commit the publish job
   # tagged (docs-cut.yml decides whether the version cuts one). Here, not on
   # the tag's own run: the App's environment admits master alone, and a
-  # tag's run is on the tag's ref.
+  # tag's run is on the tag's ref; admitting tags would let a tag pushed on a
+  # branch's commit read the key.
   docs-cut:
     name: docs-cut
     needs: publish

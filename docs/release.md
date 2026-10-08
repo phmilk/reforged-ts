@@ -399,7 +399,7 @@ The jobs that hold the App, `version`, `publish` and `template-dispatch`, run in
 
 The bytes published are the bytes the Template gate tested: the publish job downloads the artifact the gate downloaded, by its id, and `changeset publish --from-pack-dir` uploads those tarballs as they are. Provenance comes with trusted publishing, because the repository is public.
 
-The tags and the releases are created with the App's token, not the job's default one: a tag created with the default token triggers no workflow. The publish job also outputs the tag of the `reforged-ts` version it published, if any, and the `docs-cut` job then calls `docs-cut.yml` with it, which cuts the docs version of a minor ([The docs workflow](#the-docs-workflow)). The cut runs here, on the release's commit, rather than on the tag's own run: a tag's run is on the tag's ref, which the environment `app` refuses.
+The tags and the releases are created with the App's token, not the job's default one: a tag created with the default token triggers no workflow. The publish job also outputs the tag of the `reforged-ts` version it published, if any, and the `docs-cut` job then calls `docs-cut.yml` with it, which cuts the docs version of a minor ([The docs workflow](#the-docs-workflow)). The cut runs here, on the release's commit, rather than on the tag's own run: a tag's run is on the tag's ref, which the environment `app` refuses. Admitting the `reforged-ts@*` tags in the environment would reopen the exposure it closes: anyone who can push a tag can push one on a branch's commit, whose workflow would then read the key.
 
 ### The dist-tag
 

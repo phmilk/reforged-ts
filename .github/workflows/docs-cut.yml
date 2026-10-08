@@ -7,8 +7,11 @@
 #
 # A workflow called by the release, not one a tag triggers: the App's key
 # lives in the environment app, whose deployment branch policy admits master
-# alone, and a tag's run is on the tag's ref, which it refuses. The release
-# calls it on master's commit, the one the publish job tagged.
+# alone, and a tag's run is on the tag's ref, which it refuses. Admitting the
+# reforged-ts@* tags too would reopen the exposure: anyone who can push a
+# tag can push one on a branch's commit, whose workflow would then read the
+# key. The release calls it on master's commit, the one the publish job
+# tagged.
 name: docs-cut
 
 on:
