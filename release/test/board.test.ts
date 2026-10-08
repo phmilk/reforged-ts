@@ -1379,6 +1379,7 @@ describe("applyBoardReconcile", () => {
 });
 
 interface Step {
+  id?: string;
   uses?: string;
   with?: Partial<Record<string, unknown>>;
   env?: Partial<Record<string, string>>;
@@ -1395,6 +1396,7 @@ interface Workflow {
       {
         if?: string;
         environment?: unknown;
+        concurrency?: unknown;
         permissions?: unknown;
         steps?: Step[];
       }
@@ -1403,7 +1405,7 @@ interface Workflow {
 }
 
 describe("board.yml", () => {
-  it("runs on the issue and pull_request_target events, hourly and by hand, one group, contents read, master checked out, the token from the board environment", async () => {
+  it("runs on the issue and pull_request_target events, another Board repository's dispatch, hourly and by hand, one group, contents read, master checked out, the token from the board environment", async () => {
     const text = await readFile(
       join(repositoryRoot, ".github", "workflows", "board.yml"),
       "utf8",
@@ -1437,11 +1439,15 @@ describe("board.yml", () => {
           "ready_for_review",
         ],
       },
+      // Another Board repository's event, sent by board-dispatch.yml.
+      repository_dispatch: { types: ["board-repository-event"] },
       workflow_dispatch: null,
       schedule: [
         { cron: expect.stringMatching(/^\d+ \* \* \* \*$/) as unknown },
       ],
     });
+    // Nothing reads the dispatch's payload: each run reads everything.
+    expect(text).not.toContain("client_payload");
     expect(permissions).toEqual({ contents: "read" });
     expect(concurrency).toEqual({
       group: "board",
@@ -1471,5 +1477,79 @@ describe("board.yml", () => {
     expect(run[0]?.env).toEqual({
       PROJECT_TOKEN: "${{ secrets.PROJECT_TOKEN }}",
     });
+  });
+});
+
+describe("board-dispatch.yml", () => {
+  it("is called alone, one job in the caller's board environment, contents read, no checkout, the App's token for the library alone with contents write, a board-repository-event dispatch", async () => {
+    const text = await readFile(
+      join(repositoryRoot, ".github", "workflows", "board-dispatch.yml"),
+      "utf8",
+    );
+    const { on, permissions, jobs } = parse(text) as Workflow;
+
+    expect(on).toEqual({ workflow_call: null });
+    expect(permissions).toEqual({ contents: "read" });
+    expect(Object.keys(jobs)).toEqual(["dispatch"]);
+    const job = jobs.dispatch;
+    expect(job?.environment).toBe("board");
+    expect(job?.permissions).toEqual({ contents: "read" });
+    // The library's board group coalesces the runs; the caller's has none.
+    expect(job?.concurrency).toBeUndefined();
+    const steps = job?.steps ?? [];
+    for (const step of steps) {
+      expect(step.uses ?? "", "a checkout").not.toMatch(/^actions\/checkout@/);
+      expect(step.run ?? "", "a run step").not.toContain("${{");
+    }
+    // The token action and gh alone: no other action, no install.
+    const uses = steps.flatMap((step) =>
+      step.uses === undefined ? [] : [step.uses],
+    );
+    expect(uses).toEqual([
+      expect.stringMatching(/^actions\/create-github-app-token@[0-9a-f]{40}$/),
+    ]);
+    const token = steps.find((step) => step.uses === uses[0]);
+    expect(token?.with).toEqual({
+      "client-id": "${{ vars.APP_CLIENT_ID }}",
+      "private-key": "${{ secrets.APP_PRIVATE_KEY }}",
+      owner: BOARD_OWNER,
+      repositories: "reforged-ts",
+      "permission-contents": "write",
+    });
+    const run = steps.filter((step) => step.run !== undefined);
+    expect(run).toHaveLength(2);
+    // The refusal comes first: no token is minted for a repository off the
+    // list.
+    expect(steps.map((step) => step.id ?? step.run?.split(/\s/)[0])).toEqual([
+      "for",
+      "app",
+      "gh",
+    ]);
+    expect(run[0]?.env?.REPOSITORY).toBe("${{ github.repository }}");
+    expect(run[0]?.run).toContain("exit 1");
+    expect(token?.id).toBe("app");
+    // No payload: board.yml reads none.
+    expect(run[1]).toMatchObject({
+      env: { GH_TOKEN: "${{ steps.app.outputs.token }}" },
+      run: `gh api --method POST repos/${BOARD_OWNER}/reforged-ts/dispatches -f event_type=board-repository-event`,
+    });
+  });
+
+  it("lists the board's repositories other than the library", async () => {
+    const text = await readFile(
+      join(repositoryRoot, ".github", "workflows", "board-dispatch.yml"),
+      "utf8",
+    );
+    const { jobs } = parse(text) as Workflow;
+    const listed =
+      jobs.dispatch?.steps?.find(
+        (step) => step.env?.BOARD_REPOSITORIES !== undefined,
+      )?.env?.BOARD_REPOSITORIES ?? "";
+
+    expect(listed.split(/\s+/).filter(Boolean)).toEqual(
+      BOARD_REPOSITORIES.filter(
+        (repository) => repository !== `${BOARD_OWNER}/reforged-ts`,
+      ),
+    );
   });
 });
