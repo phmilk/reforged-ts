@@ -1458,12 +1458,24 @@ describe("board.yml", () => {
 });
 
 describe("board-dispatch.yml", () => {
-  it("is called alone, one job in the caller's board environment, contents read, no checkout, the App's token for the library alone with contents write, a board-repository-event dispatch", async () => {
+  it("is called alone with the App's key passed by name, one job in the caller's board environment, contents read, no checkout, the App's token for the library alone with contents write, a board-repository-event dispatch", async () => {
     const {
       workflow: { on, permissions, jobs },
     } = await readWorkflow("board-dispatch.yml");
 
-    expect(on).toEqual({ workflow_call: null });
+    // An environment secret reaches a called job only when the caller
+    // passes it (#554): required, so an unpassed key fails the call at
+    // startup rather than as an empty key in the token action.
+    expect(on).toEqual({
+      workflow_call: {
+        secrets: {
+          APP_PRIVATE_KEY: {
+            description: expect.any(String) as unknown,
+            required: true,
+          },
+        },
+      },
+    });
     expect(permissions).toEqual({ contents: "read" });
     expect(Object.keys(jobs)).toEqual(["dispatch"]);
     const job = jobs.dispatch;
@@ -1491,6 +1503,10 @@ describe("board-dispatch.yml", () => {
       repositories: "reforged-ts",
       "permission-contents": "write",
     });
+    // `required` checks only that the key is passed, never its value: the
+    // token action alone receives it, and fails on an empty one.
+    // One secret in the whole job, a job-level env included: the token's.
+    expect(JSON.stringify(job).split("secrets.")).toHaveLength(2);
     const run = steps.filter((step) => step.run !== undefined);
     expect(run).toHaveLength(2);
     // The refusal comes first: no token is minted for a repository off the
