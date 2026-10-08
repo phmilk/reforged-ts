@@ -25,6 +25,7 @@ export interface Job {
   concurrency?: unknown;
   permissions?: unknown;
   outputs?: unknown;
+  secrets?: unknown;
   "timeout-minutes"?: number;
   steps?: Step[];
 }

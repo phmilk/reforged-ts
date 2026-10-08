@@ -202,16 +202,33 @@ const KEY = "secrets.APP_PRIVATE_KEY";
 const count = (text: string) => text.split(KEY).length - 1;
 
 describe("the App's private key", () => {
-  it("is read only in a job of an environment that admits master alone", async () => {
+  it("is read only in a job of an environment that admits master alone, or passed by name to board-dispatch.yml", async () => {
     const readers: string[] = [];
+    const passers: string[] = [];
     for (const { file, text, workflow } of await readWorkflows()) {
       let read = 0;
       for (const [id, job] of Object.entries(workflow.jobs)) {
+        // inherit would hand the key, unnamed, to any called workflow.
+        expect(job?.secrets, `${file}, job ${id}`).not.toBe("inherit");
         const reads = count(JSON.stringify(job ?? {}));
         const mints = (job?.steps ?? []).some(
           (step) => step.uses === "./.github/actions/app-token",
         );
         if (reads === 0 && !mints) continue;
+        // A job that calls board-dispatch.yml cannot declare an environment:
+        // it passes the key by name, and the called job reads it in the
+        // calling repository's environment board (ADR 0017).
+        if (job?.uses !== undefined) {
+          expect(job.uses, `${file}, job ${id}`).toBe(
+            "phmilk/reforged-ts/.github/workflows/board-dispatch.yml@master",
+          );
+          expect(job.secrets, `${file}, job ${id}`).toEqual({
+            APP_PRIVATE_KEY: `\${{ ${KEY} }}`,
+          });
+          read += reads;
+          passers.push(`${file} ${id}`);
+          continue;
+        }
         // board-dispatch.yml's job runs in the calling Board repository's
         // environment board (ADR 0017); every other reader in this one's
         // environment app.
@@ -236,6 +253,7 @@ describe("the App's private key", () => {
         "release.yml template-dispatch",
       ]),
     );
+    expect(passers).toEqual(["claim-check.yml board-dispatch"]);
   });
 
   it("cuts the docs version from master: called by the release and the rehearsal, never by a tag", async () => {

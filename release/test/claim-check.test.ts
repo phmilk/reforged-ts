@@ -598,8 +598,8 @@ describe("claim-check.yml", () => {
     });
   });
 
-  it("calls board-dispatch.yml after an assignment in another Board repository, with contents: read alone", async () => {
-    const { jobs } = await workflow("claim-check.yml");
+  it("calls board-dispatch.yml after an assignment in another Board repository, with contents: read alone and the App's key passed on by name", async () => {
+    const { on, jobs } = await workflow("claim-check.yml");
     const boardDispatch = jobs["board-dispatch"];
     // board-dispatch.yml fails a repository off its list, red: the job names
     // the Board repositories, so that a fork of the library, whose claim
@@ -619,6 +619,14 @@ describe("claim-check.yml", () => {
     );
     expect(boardDispatch?.permissions).toEqual({ contents: "read" });
     expect(boardDispatch?.steps).toBeUndefined();
+    // The Template's caller passes the key to this workflow, which passes
+    // it on by name; not required, since the library's caller passes none.
+    expect(on.workflow_call).toMatchObject({
+      secrets: { APP_PRIVATE_KEY: { required: false } },
+    });
+    expect(boardDispatch?.secrets).toEqual({
+      APP_PRIVATE_KEY: "${{ secrets.APP_PRIVATE_KEY }}",
+    });
   });
 });
 

@@ -1458,12 +1458,18 @@ describe("board.yml", () => {
 });
 
 describe("board-dispatch.yml", () => {
-  it("is called alone, one job in the caller's board environment, contents read, no checkout, the App's token for the library alone with contents write, a board-repository-event dispatch", async () => {
+  it("is called alone with the App's key passed by name, one job in the caller's board environment, contents read, no checkout, the App's token for the library alone with contents write, a board-repository-event dispatch", async () => {
     const {
       workflow: { on, permissions, jobs },
     } = await readWorkflow("board-dispatch.yml");
 
-    expect(on).toEqual({ workflow_call: null });
+    // An environment secret reaches a called job only when the caller
+    // passes it (#554): required, so an unpassed key fails the call at
+    // startup rather than as an empty key in the token action.
+    expect(Object.keys(on)).toEqual(["workflow_call"]);
+    expect(on.workflow_call).toMatchObject({
+      secrets: { APP_PRIVATE_KEY: { required: true } },
+    });
     expect(permissions).toEqual({ contents: "read" });
     expect(Object.keys(jobs)).toEqual(["dispatch"]);
     const job = jobs.dispatch;

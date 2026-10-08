@@ -10,9 +10,11 @@
 # environment `board` of the calling repository, whose deployment branch
 # policy admits its default branch alone and which holds the App's key, the
 # secret APP_PRIVATE_KEY; the client ID is the caller's repository variable
-# APP_CLIENT_ID. The caller passes no secrets: a caller cannot pass an
-# environment secret, and this job's environment resolves it in the
-# caller's repository. A caller off the list of Board repositories below is
+# APP_CLIENT_ID. The caller passes the key by name: an environment secret
+# reaches a called job only when its caller passes it, and is empty
+# otherwise. Passed, the job receives the environment's value, which wins
+# over a repository secret of the same name, and no repository secret is
+# needed (#554). A caller off the list of Board repositories below is
 # refused before the token is minted. No checkout and no install: the job
 # runs the token action and gh alone, and no event value reaches a shell
 # inline. release/test/board.test.ts holds this file to that, and the list
@@ -22,6 +24,17 @@ name: board-dispatch
 
 on:
   workflow_call:
+    secrets:
+      # Required, so a direct caller that does not pass the key fails at
+      # startup rather than as an empty key in the token action. Required
+      # checks only that the key is passed, not its value: the claim check
+      # always passes it on, so a claim caller that passes none still fails
+      # in the token action.
+      APP_PRIVATE_KEY:
+        description: >
+          The App's private key, passed by name from the caller; the job
+          reads the value of the caller's environment board.
+        required: true
 
 permissions:
   contents: read

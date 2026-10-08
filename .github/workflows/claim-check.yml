@@ -22,6 +22,14 @@ name: claim-check
 
 on:
   workflow_call:
+    secrets:
+      # The Template's caller passes it, for the job board-dispatch alone;
+      # the library's caller passes none.
+      APP_PRIVATE_KEY:
+        description: >
+          The App's private key, passed by name to board-dispatch.yml; that
+          job reads the value of the caller's environment board.
+        required: false
 
 permissions:
   contents: read
@@ -106,7 +114,9 @@ jobs:
   # board-dispatch.yml, since that workflow fails red off its list: a fork
   # of the library, whose claim check runs too, skips it. Named in full, as
   # the checkout is: master of the library, whatever repository calls. Its
-  # job holds `contents: read` alone.
+  # job holds `contents: read` alone, and passes the App's key on by name,
+  # as the caller passed it here: the called job reads the environment's
+  # value, not this one's.
   board-dispatch:
     name: board-dispatch
     needs: check
@@ -114,3 +124,5 @@ jobs:
     permissions:
       contents: read
     uses: phmilk/reforged-ts/.github/workflows/board-dispatch.yml@master
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
