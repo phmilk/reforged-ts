@@ -1,0 +1,25 @@
+# PROTOTYPE, throwaway (#551). Mirrors board-dispatch.yml: declares no
+# secrets and runs its job in the caller's environment `board`. Prints only
+# whether APP_PRIVATE_KEY arrived non-empty and its length, never the value.
+name: reusable
+
+on:
+  workflow_call:
+    inputs:
+      variant:
+        type: string
+        required: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    environment: board
+    steps:
+      - env:
+          S: ${{ secrets.APP_PRIVATE_KEY }}
+          VARIANT: ${{ inputs.variant }}
+        run: |
+          if [ -n "$S" ]; then nonempty=true; else nonempty=false; fi
+          line="variant=$VARIANT nonempty=$nonempty length=${#S}"
+          echo "$line"
+          echo "$line" >> "$GITHUB_STEP_SUMMARY"

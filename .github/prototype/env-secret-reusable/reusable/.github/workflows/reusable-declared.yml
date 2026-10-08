@@ -1,0 +1,28 @@
+# PROTOTYPE, throwaway (#551). As reusable.yml, but declares APP_PRIVATE_KEY
+# in on.workflow_call.secrets (required), so the caller can pass it by an
+# explicit map. Prints only non-empty and length, never the value.
+name: reusable-declared
+
+on:
+  workflow_call:
+    inputs:
+      variant:
+        type: string
+        required: true
+    secrets:
+      APP_PRIVATE_KEY:
+        required: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    environment: board
+    steps:
+      - env:
+          S: ${{ secrets.APP_PRIVATE_KEY }}
+          VARIANT: ${{ inputs.variant }}
+        run: |
+          if [ -n "$S" ]; then nonempty=true; else nonempty=false; fi
+          line="variant=$VARIANT nonempty=$nonempty length=${#S}"
+          echo "$line"
+          echo "$line" >> "$GITHUB_STEP_SUMMARY"

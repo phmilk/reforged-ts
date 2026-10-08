@@ -1,0 +1,55 @@
+# PROTOTYPE, throwaway (#551). The caller, in another private repository of
+# the same user. APP_PRIVATE_KEY lives in this repository's environment
+# `board` (value "probe-123", length 9); in the second round a repository
+# secret of the same name is added (length 21), so the length shows which
+# one won. No job prints the value.
+name: probe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # (a) The rehearsal's shape: the caller passes no secrets.
+  a-no-secrets:
+    uses: phmilk/probe-env-secret-reusable/.github/workflows/reusable.yml@main
+    with:
+      variant: a-no-secrets
+
+  # (b) The caller passes secrets: inherit.
+  b-inherit:
+    uses: phmilk/probe-env-secret-reusable/.github/workflows/reusable.yml@main
+    with:
+      variant: b-inherit
+    secrets: inherit
+
+  # (c) A plain job in the caller with environment, no reusable workflow.
+  c-plain-job:
+    runs-on: ubuntu-latest
+    environment: board
+    steps:
+      - env:
+          S: ${{ secrets.APP_PRIVATE_KEY }}
+        run: |
+          if [ -n "$S" ]; then nonempty=true; else nonempty=false; fi
+          line="variant=c-plain-job nonempty=$nonempty length=${#S}"
+          echo "$line"
+          echo "$line" >> "$GITHUB_STEP_SUMMARY"
+
+  # (d) Extra: the caller passes the secret by an explicit map.
+  d-explicit-map:
+    uses: phmilk/probe-env-secret-reusable/.github/workflows/reusable-declared.yml@main
+    with:
+      variant: d-explicit-map
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+
+  # (e) Extra: the explicit map through a nested call, as the claim path.
+  e-nested-map:
+    uses: phmilk/probe-env-secret-reusable/.github/workflows/outer.yml@main
+    with:
+      variant: e-nested-map
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}

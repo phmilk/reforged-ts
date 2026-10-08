@@ -1,0 +1,22 @@
+# PROTOTYPE, throwaway (#551). The nested shape of the Template's claim path
+# (claim.yml -> claim-check.yml -> board-dispatch.yml): this middle level
+# declares APP_PRIVATE_KEY, not required, and maps it on to the inner call.
+name: outer
+
+on:
+  workflow_call:
+    inputs:
+      variant:
+        type: string
+        required: true
+    secrets:
+      APP_PRIVATE_KEY:
+        required: false
+
+jobs:
+  inner:
+    uses: ./.github/workflows/reusable-declared.yml
+    with:
+      variant: ${{ inputs.variant }}
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
