@@ -645,6 +645,9 @@ importers:
       '@typescript-to-lua/language-extensions':
         specifier: 'catalog:'
         version: 1.19.0
+      reforged-builtins:
+        specifier: workspace:^
+        version: link:../packages/reforged-builtins
       reforged-test:
         specifier: workspace:^
         version: link:../packages/reforged-test

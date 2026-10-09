@@ -76,7 +76,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json",
     "test": "vitest run --root ../.. --project reforged-builtins",
     "builtins:generate": "tsc -p tsconfig.json && node build/cli/generate.js",
-    "builtins:check": "tsc -p tsconfig.json && node build/cli/check.js"
+    "builtins:check": "tsc -p tsconfig.json && node build/cli/check.js",
+    "builtins:measure": "tsc -p tsconfig.json && node build/cli/measure.js"
   },
   "peerDependencies": {
     "reforged-types": "workspace:^"

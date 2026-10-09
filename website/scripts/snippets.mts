@@ -2,7 +2,10 @@
 // TypeScript fence of a page is a Map project snippet, type-checked against
 // the library, the Typings and the test harness as the Template compiles its
 // code. A fence whose meta holds `fragment` is prose only (a signature, a
-// partial statement, the old API of a migration page) and is not checked.
+// partial statement, the old API of a migration page) and is not checked. A
+// fence whose meta holds `builtins` is checked with `reforged-builtins` too,
+// its overloads' entry in `types` as a Map project lists it (#515); those
+// fences of a page form a Map project of their own.
 //
 // Each page is a Map project of its own: a fence with a `title` is the file
 // at that path (```ts title="src/main.ts"), so the fences of one page can
@@ -23,6 +26,8 @@ export interface Snippet {
   /** The Map project path the fence's `title` gives it. */
   readonly title?: string;
   readonly code: string;
+  /** Whether it is checked with the Built-in objects (`builtins`). */
+  readonly builtins?: boolean;
 }
 
 /** A compiler diagnostic, located on its page. */
@@ -38,6 +43,9 @@ const LANGUAGES = new Set(["ts", "typescript"]);
 
 /** The meta word of a fence that is prose only. */
 export const FRAGMENT = "fragment";
+
+/** The meta word of a fence checked with the Built-in objects. */
+export const BUILTINS = "builtins";
 
 const OPENING = /^(\s*)(`{3,}|~{3,})\s*([^\s`]*)(.*)$/;
 const TITLE = /\btitle=(["'])(.*?)\1/;
@@ -59,7 +67,8 @@ export function extractSnippets(markdown: string, page: string): Snippet[] {
     );
     let end = index + 1;
     while (end < lines.length && !closing.test(lines[end] ?? "")) end++;
-    if (LANGUAGES.has(language) && !meta.split(/\s+/).includes(FRAGMENT)) {
+    const words = meta.split(/\s+/);
+    if (LANGUAGES.has(language) && !words.includes(FRAGMENT)) {
       const code = lines
         .slice(index + 1, end)
         .map((line) =>
@@ -74,6 +83,7 @@ export function extractSnippets(markdown: string, page: string): Snippet[] {
         line: index + 2,
         ...(title === undefined ? {} : { title }),
         code: `${code}\n`,
+        ...(words.includes(BUILTINS) ? { builtins: true } : {}),
       });
     }
     index = end;
@@ -96,6 +106,12 @@ export const MAP_PROJECT_OPTIONS: ts.CompilerOptions = {
   skipLibCheck: true,
   noEmit: true,
   types: ["@typescript-to-lua/language-extensions", "reforged-types/3.0.0"],
+};
+
+/** A Map project's options with the Built-in objects' overloads in `types`. */
+export const BUILTINS_OPTIONS: ts.CompilerOptions = {
+  ...MAP_PROJECT_OPTIONS,
+  types: [...(MAP_PROJECT_OPTIONS.types ?? []), "reforged-builtins/3.0.0"],
 };
 
 /**
@@ -128,6 +144,9 @@ declare function __stub_format(value: unknown): string;
 /** The folder, under `base`, that holds the pages' virtual Map projects. */
 const PROJECTS = ".snippets";
 
+/** The folder of the Map projects of the snippets checked with `builtins`. */
+const BUILTINS_PROJECTS = ".snippets-builtins";
+
 export interface CheckOptions {
   /**
    * The folder the snippets' packages resolve from, through its
@@ -147,8 +166,27 @@ export function checkSnippets(
   snippets: readonly Snippet[],
   options: CheckOptions,
 ): SnippetProblem[] {
+  const builtins = snippets.filter((snippet) => snippet.builtins === true);
+  const others = snippets.filter((snippet) => snippet.builtins !== true);
+  return [
+    ...checkProgram(others, options, MAP_PROJECT_OPTIONS, PROJECTS),
+    ...(builtins.length === 0
+      ? []
+      : checkProgram(builtins, options, BUILTINS_OPTIONS, BUILTINS_PROJECTS)),
+  ].sort((a, b) =>
+    a.page < b.page ? -1 : a.page > b.page ? 1 : a.line - b.line,
+  );
+}
+
+/** Type-checks `snippets` in one program with `compilerOptions`, under `projects`. */
+function checkProgram(
+  snippets: readonly Snippet[],
+  options: CheckOptions,
+  compilerOptions: ts.CompilerOptions,
+  projects: string,
+): SnippetProblem[] {
   const problems: SnippetProblem[] = [];
-  const root = join(options.base, PROJECTS);
+  const root = join(options.base, projects);
   /** The virtual files, by absolute `/`-separated path. */
   const files = new Map<string, string>();
   /** Where each snippet's file is, to locate its diagnostics. */
@@ -190,10 +228,10 @@ export function checkSnippets(
     located.set(file, snippet);
   }
 
-  const host = virtualHost(files, options.base);
+  const host = virtualHost(files, options.base, compilerOptions);
   const program = ts.createProgram({
     rootNames: [...files.keys()],
-    options: MAP_PROJECT_OPTIONS,
+    options: compilerOptions,
     host,
   });
   for (const diagnostic of ts.getPreEmitDiagnostics(program)) {
@@ -239,8 +277,9 @@ function snippetPath(snippet: Snippet): string | undefined {
 function virtualHost(
   files: ReadonlyMap<string, string>,
   base: string,
+  options: ts.CompilerOptions,
 ): ts.CompilerHost {
-  const host = ts.createCompilerHost(MAP_PROJECT_OPTIONS);
+  const host = ts.createCompilerHost(options);
   const folders = new Set<string>();
   for (const file of files.keys())
     for (

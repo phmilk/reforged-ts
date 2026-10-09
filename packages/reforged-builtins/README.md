@@ -6,7 +6,77 @@ The Built-in objects of each Warcraft III Reforged Patch, reduced to the identif
 
 **Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build, which a test holds to `reforged-types`'.
 
-## The JSON index
+## In a Map project
+
+Add the overloads' entry of your Game version to `types`, next to the Typings':
+
+```json
+{
+  "compilerOptions": {
+    "types": ["reforged-types/3.0.0", "reforged-builtins/3.0.0"]
+  }
+}
+```
+
+`FourCC("hfoo")` is then a `Rawcode<"unit">`, with the Footman's name on hover, completion of the Built-in Rawcodes inside `FourCC("")`, and no change to the emitted Lua. A literal the package does not know, such as a Custom object's `FourCC("h000")`, stays an `UnknownRawcode` through the Typings' `string` overload and compiles. The order of `types` does not matter.
+
+The constants of a kind come from its entry point, which resolves to the newest Game version the package holds:
+
+```ts
+import { Units } from "reforged-builtins/units";
+
+Unit.create(owner, Units.Footman_hfoo, 0, 0);
+```
+
+Each constant of `Units` is a `Rawcode<"unit">`. typescript-to-lua resolves the entry point through the package's `exports` (its `tstl` condition) to a Lua module of integers, each the value `FourCC` returns for the Rawcode, so `Units.Footman_hfoo === FourCC("hfoo")` in game. Every kind has its entry point and constants object: `reforged-builtins/units` (`Units`), `/items` (`Items`), `/abilities` (`Abilities`), `/buffs` (`Buffs`), `/destructables` (`Destructables`), `/doodads` (`Doodads`) and `/upgrades` (`Upgrades`), each constant a `Rawcode` of its kind. A bundle carries only the kinds it imports, and no entry point holds every kind.
+
+The overloads are optional: a Map project that keeps `types` as it is keeps every `FourCC` literal an `UnknownRawcode`, and the constants still import. Nothing asks a literal to become a constant: both are the same integer in Lua.
+
+## Constant names
+
+A constant is named from the object's enUS name, by these rules in order:
+
+1. strip colour codes, then fold accents to their base letter (NFKD, combining marks dropped);
+2. drop apostrophes (`'` and `’`);
+3. split into words on every character that is not an ASCII letter or digit;
+4. upper-case the first letter of each word, the rest as written;
+5. join; prefix `_` to a result starting with a digit; `Unnamed` when there is no name;
+6. append `_` and the Rawcode exactly as cased.
+
+So the Footman is `Units.Footman_hfoo`, the Paladin `Units.Paladin_Hpal`, Claws of Attack +15 `Items.ClawsOfAttack15_ratf`, Inner Fire's buff `Buffs.InnerFire_Binf` and Iron Forged Swords `Upgrades.IronForgedSwords_Rhme`. The Rawcode suffix keeps two objects of one name apart (`Units.Footman_hfoo`, `Units.Footman_sfoo`) and a constant unique.
+
+## Game data sets
+
+The constants cover the union of the three Game data sets the World Editor offers in its map options: Default, Custom and Melee. An object's TSDoc names the sets that hold it when not every one does ("In the Default Game data set. Not in the Custom and Melee Game data sets."), and says nothing otherwise. A constant of an object the map's set does not hold still compiles, and the Native it is passed to finds no such object in game: check its hover before using it in a Melee or Custom map.
+
+## What it never holds
+
+- **Custom objects and a map's changes to Built-in ones.** A Custom object's Rawcode (`h000`) is not in the package and stays an `UnknownRawcode`; a Built-in object the map renamed keeps its game name here. A map's own objects come from its map folder, through [`reforged-map`](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-map).
+- **Tooltip text, numbers and icons.** The package holds identifiers only: Rawcode, kind, race, enUS name and Game data sets. Tooltips and icons are the hover tool's.
+- **Other locales.** Names and constants are enUS.
+
+## Finding a Rawcode (agents and tools)
+
+To find the Rawcode of an object by its name, search the index of the newest Game version, one object per line: `grep -i '"name":"footman"' packages/reforged-builtins/3.0.0/index.json` (or the installed `node_modules/reforged-builtins/3.0.0/index.json`) gives `"hfoo": {"kind":"unit",…,"constant":"Footman_hfoo"}`. The kind names the entry point to import, one kind at a time: `unit` is `reforged-builtins/units`'s `Units`, `ability` `reforged-builtins/abilities`'s `Abilities`, and so on. Import only the kinds the file uses: each is a module of its own in the bundle.
+
+## Check-time cost
+
+The overloads cost type-check time per `FourCC` call, and nothing at run time. `pnpm --filter reforged-builtins builtins:measure` type-checks the fixture Map project (`test/fixtures/map-project`: its compiler options, the Typings and the language extensions) with a file of literal `FourCC` calls, with and without the 4,651 overloads of 3.0.0, the median of 7 runs. Measured on 2026-10-09 (TypeScript 6, Node 24, an 8-thread WSL machine):
+
+| `FourCC` calls | Without the overloads | With them | Cost                             |
+| -------------- | --------------------- | --------- | -------------------------------- |
+| 100            | 1,242 ms              | 1,927 ms  | +685 ms                          |
+| 1,000          | 1,250 ms              | 8,192 ms  | +6,942 ms, about 6.9 ms per call |
+
+The cost per call is the 1,000-call case's: at 100 calls, the parse of the overloads weighs as much as the calls. Over three runs of the script it was 6.6 to 7.0 ms per call, more than three times the 2 ms per call that [#462](https://github.com/phmilk/reforged-ts/issues/462) estimated.
+
+The cost grows with the number of literal calls, not with the size of the map. A constant costs no overload resolution: `Units.Footman_hfoo` is a property read.
+
+## Versioning
+
+The package follows semver on its constants and overloads. Adding objects is a minor. Removing an object, renaming a constant (its enUS name changed) or changing an object's kind breaks code that names it, so it is a major, with its migration page and its rename entries in `migration/renames.json`. A new Game version adds its folder next to the previous one, and the kind entry points move to it.
+
+## The JSON index (tool authors)
 
 `3.0.0/index.json`, one per Game version, is the model the package's other artefacts come from:
 
@@ -32,34 +102,10 @@ The Built-in objects of each Warcraft III Reforged Patch, reduced to the identif
 }
 ```
 
-- `format` changes only with an incompatible shape, in a major.
+- `format` is the shape's version, 1 today: a tool reads an index whose `format` it knows, and a new `format` comes only with an incompatible shape, in a major of the package.
 - `objects` is keyed by Rawcode, in code-point order. `name` is the enUS name, colour codes and line breaks removed; it is absent when the game gives none. `race` is lower-case, as the game writes it, and absent for a kind without one. `sets` lists the ids of the Game data sets that hold the object; the constants cover their union, and an object's TSDoc names the sets that hold it and those that do not, unless every one does ("In the Default Game data set. Not in the Custom and Melee Game data sets."). `constant` is its constant's name: the enUS name in PascalCase, then `_` and the Rawcode (`Unnamed_<rawcode>` without a name).
 
 The file is written one object per line, byte-stably: a regeneration from unchanged inputs writes the same bytes.
-
-## In a Map project
-
-Add the overloads' entry of your Game version to `types`, next to the Typings':
-
-```json
-{
-  "compilerOptions": {
-    "types": ["reforged-types/3.0.0", "reforged-builtins/3.0.0"]
-  }
-}
-```
-
-`FourCC("hfoo")` is then a `Rawcode<"unit">`, with the Footman's name on hover, completion of the Built-in Rawcodes inside `FourCC("")`, and no change to the emitted Lua. A literal the package does not know, such as a Custom object's `FourCC("h000")`, stays an `UnknownRawcode` through the Typings' `string` overload and compiles. The order of `types` does not matter.
-
-The constants of a kind come from its entry point, which resolves to the newest Game version the package holds:
-
-```ts
-import { Units } from "reforged-builtins/units";
-
-Unit.create(owner, Units.Footman_hfoo, 0, 0);
-```
-
-Each constant of `Units` is a `Rawcode<"unit">` named by the enUS name in PascalCase, then `_` and the Rawcode. typescript-to-lua resolves the entry point through the package's `exports` (its `tstl` condition) to a Lua module of integers, each the value `FourCC` returns for the Rawcode, so `Units.Footman_hfoo === FourCC("hfoo")` in game. Every kind has its entry point and constants object: `reforged-builtins/units` (`Units`), `/items` (`Items`), `/abilities` (`Abilities`), `/buffs` (`Buffs`), `/destructables` (`Destructables`), `/doodads` (`Doodads`) and `/upgrades` (`Upgrades`), each constant a `Rawcode` of its kind. A bundle carries only the kinds it imports, and no entry point holds every kind.
 
 ## The artefacts
 

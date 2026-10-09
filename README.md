@@ -4,13 +4,14 @@ The pnpm workspace of reforged-ts, a TypeScript API for Warcraft III custom maps
 
 ## Packages
 
-| Package                                                     | What it is for                                                                                                                              |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`reforged-ts`](packages/reforged-ts)                       | The library: Wrappers and Systems over the game's Natives, compiled to Lua. What a Map project installs.                                    |
-| [`reforged-types`](packages/reforged-types)                 | The Typings: TypeScript declarations for the Natives of one Patch, generated from the game's Patch files and the Overlay.                   |
-| [`reforged-test`](packages/reforged-test)                   | The Lua test harness: runs tests compiled by typescript-to-lua on real Lua 5.3 with the Natives stubbed in Lua, and reports them to vitest. |
-| [`eslint-plugin-reforged`](packages/eslint-plugin-reforged) | The lint layer of the Guards: type-aware ESLint rules that report the scripting pitfalls (desync, crash, leak) before the map compiles.     |
-| [`reforged-map`](packages/reforged-map)                     | Reads a Map project's map folder at build time and writes the declarations and the Lua stub of its Editor globals.                          |
+| Package                                                     | What it is for                                                                                                                                            |
+| ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`reforged-ts`](packages/reforged-ts)                       | The library: Wrappers and Systems over the game's Natives, compiled to Lua. What a Map project installs.                                                  |
+| [`reforged-types`](packages/reforged-types)                 | The Typings: TypeScript declarations for the Natives of one Patch, generated from the game's Patch files and the Overlay.                                 |
+| [`reforged-test`](packages/reforged-test)                   | The Lua test harness: runs tests compiled by typescript-to-lua on real Lua 5.3 with the Natives stubbed in Lua, and reports them to vitest.               |
+| [`eslint-plugin-reforged`](packages/eslint-plugin-reforged) | The lint layer of the Guards: type-aware ESLint rules that report the scripting pitfalls (desync, crash, leak) before the map compiles.                   |
+| [`reforged-map`](packages/reforged-map)                     | Reads a Map project's map folder at build time and writes the declarations and the Lua stub of its Editor globals.                                        |
+| [`reforged-builtins`](packages/reforged-builtins)           | The Built-in objects of each Patch: `FourCC` overloads by Object kind and a constant per object, derived from the game's data. Private until its release. |
 
 The library's own tests run on `reforged-test`, and the library compiles against `reforged-types/3.0.0`.
 
