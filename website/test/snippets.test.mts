@@ -62,6 +62,14 @@ describe("extractSnippets", () => {
     expect(extractSnippets(page, PAGE)).toEqual([]);
   });
 
+  it("marks a fence whose meta holds builtins", () => {
+    const page = ["```ts builtins", "const a = 1;", "```"].join("\n");
+
+    expect(extractSnippets(page, PAGE)).toEqual([
+      { ...snippet(2, "const a = 1;\n"), builtins: true },
+    ]);
+  });
+
   it("takes the indentation of a fence in a list item off its lines", () => {
     const page = [
       "- An item:",
@@ -103,6 +111,31 @@ describe("checkSnippets", () => {
       check(
         snippet(4, "const shared = 1;\n"),
         snippet(8, "const shared = 2;\n"),
+      ),
+    ).toEqual([]);
+  });
+
+  it("checks a builtins snippet with the Built-in objects' overloads and constants", () => {
+    const code = [
+      'import { Units } from "reforged-builtins/units";',
+      "declare const footman: unit;",
+      "// @ts-expect-error: a unit type's Rawcode where an ability's is expected",
+      'UnitAddAbility(footman, FourCC("hfoo"));',
+      "// @ts-expect-error: a unit type's Rawcode where an ability's is expected",
+      "UnitAddAbility(footman, Units.Footman_hfoo);",
+      "",
+    ].join("\n");
+
+    expect(check({ ...snippet(4, code), builtins: true })).toEqual([]);
+  });
+
+  it("checks every other snippet without them", () => {
+    expect(
+      check(
+        snippet(
+          4,
+          'declare const footman: unit;\nUnitAddAbility(footman, FourCC("hfoo"));\n',
+        ),
       ),
     ).toEqual([]);
   });

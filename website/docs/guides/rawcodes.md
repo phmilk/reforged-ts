@@ -287,6 +287,102 @@ A Map project generated from the Template before `reforged-map` declares its GUI
 
 The generated files keep their names, `editor-globals.d.ts` and `editor-globals.lua`, and the Lua stub the tests load is the same as before.
 
+## The Built-in objects: `reforged-builtins`
+
+`reforged-builtins` holds the Built-in objects of each Patch, the objects the game ships rather than the map: for each one, its Rawcode, its Object kind, its race, its enUS name and the Game data sets that hold it. With it, a `FourCC` literal of a Built-in object has its kind, and each object has a constant named after it. It is optional: a Map project that does not list it keeps every literal an `UnknownRawcode`, as above.
+
+:::note[Not published yet]
+The package is part of the work tracked in [#509](https://github.com/phmilk/reforged-ts/issues/509) and is not on npm yet. This section describes it as it will ship.
+:::
+
+### The overloads: literals with no edit
+
+Add the package's overloads' entry for the Game version next to the Typings' in `types`. The order does not matter:
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "types": ["reforged-types/3.0.0", "reforged-builtins/3.0.0"]
+  }
+}
+```
+
+Every `FourCC` literal of a Built-in object is then a Rawcode of its kind, with no edit to the code: `FourCC("hfoo")` is a `Rawcode<"unit">`, and the Footman's name shows on hover. A literal of the wrong kind becomes a compile error, and a literal the package does not know, such as a Custom object's `FourCC("h000")`, is still an `UnknownRawcode` and compiles everywhere. The emitted Lua does not change:
+
+```ts builtins
+import { Init, MapPlayer, Unit } from "reforged-ts";
+
+Init.onGameStart(() => {
+  const owner = MapPlayer.fromIndex(0);
+  if (owner === undefined) {
+    return;
+  }
+  const footman = Unit.create(owner, FourCC("hfoo"), 0, 0);
+  footman.addAbility(FourCC("AHtc"));
+
+  // @ts-expect-error: Blizzard is an ability, where a unit type's Rawcode is expected
+  Unit.create(owner, FourCC("AHbz"), 0, 0);
+
+  // A Custom object of the map: still an UnknownRawcode.
+  Unit.create(owner, FourCC("h000"), 0, 0);
+});
+```
+
+A constant that holds a literal takes its kind too, with no annotation:
+
+```ts builtins
+const footman = FourCC("hfoo");
+const spawns = [FourCC("hfoo"), FourCC("hkni")];
+
+// @ts-expect-error: a unit type's Rawcode is not an ability's
+const spell: Rawcode<"ability"> = footman;
+
+const firstSpawn: Rawcode<"unit"> = spawns[0];
+```
+
+### The constants
+
+Each Object kind has its entry point and its constants object: `reforged-builtins/units` exports `Units`, `/items` `Items`, `/abilities` `Abilities`, `/buffs` `Buffs`, `/destructables` `Destructables`, `/doodads` `Doodads` and `/upgrades` `Upgrades`. Each constant is a Rawcode of its kind, and in Lua the same integer `FourCC` gives. Import the kinds a file uses, one at a time: a bundle carries only the kinds it imports.
+
+```ts builtins
+import { Abilities } from "reforged-builtins/abilities";
+import { Units } from "reforged-builtins/units";
+import { Init, MapPlayer, Unit } from "reforged-ts";
+
+Init.onGameStart(() => {
+  const owner = MapPlayer.fromIndex(0);
+  if (owner === undefined) {
+    return;
+  }
+  const paladin = Unit.create(owner, Units.Paladin_Hpal, 0, 0);
+  paladin.addAbility(Abilities.Blizzard_AHbz);
+  if (paladin.typeId === Units.Paladin_Hpal) {
+    print("A Paladin, with Blizzard.");
+  }
+});
+```
+
+A constant is named from the enUS name in PascalCase, then `_` and the Rawcode as cased. Colour codes, accents, apostrophes and punctuation are dropped, and a name that starts with a digit gets a leading `_`. Claws of Attack +15 is `Items.ClawsOfAttack15_ratf`, and Iron Forged Swords `Upgrades.IronForgedSwords_Rhme`. The Rawcode suffix keeps two objects of one name apart: `Units.Footman_hfoo` and `Units.Footman_sfoo`. The [package's README](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-builtins) gives the rules in full.
+
+Literals and constants are the same integers, and the overloads check both. Keep the literals a map already has: the constants are there for the names, not as a replacement.
+
+### Game data sets
+
+A map plays with one Game data set, set in the World Editor's map options: Default, Custom or Melee. Each set holds its own objects, so an object of one set may be missing from another. The constants cover all three. An object's hover says which sets hold it when not every one does: the Scarlet Crusade's Footman, `Units.Footman_sfoo`, reads "In the Default Game data set. Not in the Custom and Melee Game data sets." Such a constant still compiles in a Melee map, and the Native it is passed to finds nothing in game: read the hover before using an object outside Default.
+
+### What it does not hold
+
+- **The map's own objects.** Custom objects, and a map's changes to Built-in ones, are in the map folder: [`reforged-map`](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-map) reads it at build time, as for the [GUI variables](#gui-variables-of-an-object-type).
+- **Tooltips, numbers and icons.** The package holds identifiers only. Tooltips and icons are the hover tool's.
+
+### Check-time cost
+
+The overloads cost type-check time for each literal `FourCC` call, and nothing at run time. Measured with `pnpm --filter reforged-builtins builtins:measure` on a Map project with the 4,651 overloads of 3.0.0, the median of 7 runs, 1,000 literal calls took 6,942 ms more to check: about 6.9 ms per call, and between 6.6 and 7.0 ms over three runs on one machine. A Map project of thousands of literal calls pays seconds per check. A constant costs no overload resolution: it is a property read.
+
+### Notice
+
+`reforged-builtins` is not affiliated with or endorsed by Blizzard Entertainment. Warcraft is a trademark of Blizzard Entertainment. The names and Rawcodes are derived from the game's data and are not licensed by the package. Its code is MIT, as the rest of reforged-ts.
+
 ## Codes that are not Rawcodes
 
 Some of the game's four-character codes name something that is not a type of object. They stay `number`:
