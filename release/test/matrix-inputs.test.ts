@@ -44,6 +44,7 @@ describe("parseMatrix", () => {
       harness: "1.0.0",
       plugin: "1.0.0",
       map: "1.0.0",
+      builtins: "1.0.0",
       patch: "3.0.0.24268",
       typescript: "6.0.2",
       typescriptToLua: "^1.37.1",
@@ -60,6 +61,14 @@ describe("parseMatrix", () => {
     delete withoutMap.map;
     expect(() => parseMatrix({ format: 1, rows: [withoutMap] })).toThrow(
       'row 0 has no valid "map".',
+    );
+    const withoutBuiltins: Partial<typeof row> = {
+      ...row,
+      cutDate: "2026-10-01",
+    };
+    delete withoutBuiltins.builtins;
+    expect(() => parseMatrix({ format: 1, rows: [withoutBuiltins] })).toThrow(
+      'row 0 has no valid "builtins".',
     );
   });
 });

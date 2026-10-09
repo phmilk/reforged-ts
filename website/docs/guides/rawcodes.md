@@ -291,8 +291,8 @@ The generated files keep their names, `editor-globals.d.ts` and `editor-globals.
 
 `reforged-builtins` holds the Built-in objects of each Patch, the objects the game ships rather than the map: for each one, its Rawcode, its Object kind, its race, its enUS name and the Game data sets that hold it. With it, a `FourCC` literal of a Built-in object has its kind, and each object has a constant named after it. It is optional: a Map project that does not list it keeps every literal an `UnknownRawcode`, as above.
 
-:::note[Not published yet]
-The package is part of the work tracked in [#509](https://github.com/phmilk/reforged-ts/issues/509) and is not on npm yet. This section describes it as it will ship.
+:::note[Install]
+`pnpm add -D reforged-builtins@next`. The Template does not install it yet: add it to a Map project yourself.
 :::
 
 ### The overloads: literals with no edit

@@ -169,12 +169,14 @@ describe("changeset version", { timeout: 60_000 }, () => {
 
     await changeset(root, "version");
 
-    // reforged-map was not part of the first publish: at 0.0.0 its
-    // workspace ranges on the majored packages fall out of range, so
-    // Changesets gives it the patch of updateInternalDependencies.
+    // reforged-map and reforged-builtins were not part of the first
+    // publish: at 0.0.0 their workspace ranges on the majored packages fall
+    // out of range, so Changesets gives them the patch of
+    // updateInternalDependencies.
     expect(await versions(root)).toEqual({
       ...releaseVersions,
       ...all("1.0.0-alpha.0"),
+      "reforged-builtins": "0.0.1-alpha.0",
       "reforged-map": "0.0.1-alpha.0",
     });
     // The versioned changesets wait in the pre folder for the 1.0.0
@@ -211,6 +213,29 @@ describe("changeset version", { timeout: 60_000 }, () => {
     });
   });
 
+  it("gives reforged-builtins 1.0.0-alpha.0 first, entering at 0.0.0 with a major in the repository's pre mode", async () => {
+    const root = await scratchWorkspace();
+    await writeText(
+      root,
+      ".changeset/pre.json",
+      await readFile(join(repositoryRoot, ".changeset/pre.json"), "utf8"),
+    );
+    // Pinned, not read: the release that publishes reforged-builtins has
+    // already versioned the repository's manifest past 0.0.0.
+    await setVersion(root, "reforged-builtins", "0.0.0");
+    const before = await versions(root);
+    await addChangeset(root, "reforged-builtins", {
+      "reforged-builtins": "major",
+    });
+
+    await changeset(root, "version");
+
+    expect(await versions(root)).toEqual({
+      ...before,
+      "reforged-builtins": "1.0.0-alpha.0",
+    });
+  });
+
   it("moves only the Typings for a minor on the Typings in pre mode", async () => {
     const root = await beforeFirstPublish();
     await changeset(root, "version");
@@ -244,6 +269,7 @@ describe("changeset version", { timeout: 60_000 }, () => {
 
     expect(await versions(root)).toMatchObject({
       "eslint-plugin-reforged": "1.0.1",
+      "reforged-builtins": "1.0.1",
       "reforged-map": "1.0.1",
       "reforged-test": "1.0.0",
       "reforged-ts": "1.0.1",

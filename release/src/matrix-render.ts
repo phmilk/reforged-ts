@@ -13,6 +13,7 @@ import {
   type MatrixRow,
 } from "./matrix-model.js";
 import {
+  BUILTINS_PACKAGE,
   HARNESS_PACKAGE,
   LIBRARY_PACKAGE,
   MAP_PACKAGE,
@@ -36,6 +37,7 @@ const HEADERS = [
   HARNESS_PACKAGE,
   PLUGIN_PACKAGE,
   MAP_PACKAGE,
+  BUILTINS_PACKAGE,
   "Patch",
   "TypeScript",
   "typescript-to-lua",
@@ -56,6 +58,7 @@ function table(rows: readonly MatrixRow[]): string {
       row.harness,
       row.plugin,
       row.map,
+      row.builtins,
       row.patch,
       row.typescript,
       row.typescriptToLua,
