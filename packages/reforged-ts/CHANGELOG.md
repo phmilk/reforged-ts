@@ -1,5 +1,11 @@
 # reforged-ts
 
+## 1.0.0-alpha.18
+
+### Patch Changes
+
+- [#568](https://github.com/phmilk/reforged-ts/pull/568) [`79f90aa`](https://github.com/phmilk/reforged-ts/commit/79f90aa926a41b210e7896d675b2b8cb6bd8708b) Thanks [@wyller](https://github.com/wyller)! - The migration note "Rawcodes are typed by Object kind" points at the opt-in overloads of `reforged-builtins`, which type each `FourCC` literal of a Built-in object by its kind with no edit.
+
 ## 1.0.0-alpha.17
 
 ### Major Changes
