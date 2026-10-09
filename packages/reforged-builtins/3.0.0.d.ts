@@ -130,6 +130,8 @@ declare function FourCC(id: "Ewrd"): Rawcode<"unit">;
 /**
  * High Elf Archmage (`Haah`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.HighElfArchmage_Haah`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Haah"): Rawcode<"unit">;
@@ -179,12 +181,16 @@ declare function FourCC(id: "Hblm"): Rawcode<"unit">;
 /**
  * Guard Lieutenant (`Hct1`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.GuardLieutenant_Hct1`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Hct1"): Rawcode<"unit">;
 
 /**
  * Guard Captain (`Hctl`), a Built-in unit of Patch 3.0.0, race human.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.GuardCaptain_Hctl`, from `reforged-builtins/units`.
  */
@@ -193,12 +199,16 @@ declare function FourCC(id: "Hctl"): Rawcode<"unit">;
 /**
  * Guard Lieutenant (`Hctr`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.GuardLieutenant_Hctr`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Hctr"): Rawcode<"unit">;
 
 /**
  * Master Swordsman (`Hddt`), a Built-in unit of Patch 3.0.0, race human.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Units.MasterSwordsman_Hddt`, from `reforged-builtins/units`.
  */
@@ -235,12 +245,16 @@ declare function FourCC(id: "Hjai"): Rawcode<"unit">;
 /**
  * Ranger (`Hjnd`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.Ranger_Hjnd`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Hjnd"): Rawcode<"unit">;
 
 /**
  * Cleric (`Hjsm`), a Built-in unit of Patch 3.0.0, race human.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Cleric_Hjsm`, from `reforged-builtins/units`.
  */
@@ -255,6 +269,8 @@ declare function FourCC(id: "Hkal"): Rawcode<"unit">;
 
 /**
  * Warrior (`Hleo`), a Built-in unit of Patch 3.0.0, race human.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Warrior_Hleo`, from `reforged-builtins/units`.
  */
@@ -312,12 +328,16 @@ declare function FourCC(id: "Hpb2"): Rawcode<"unit">;
 /**
  * High King (`Hssa`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.HighKing_Hssa`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Hssa"): Rawcode<"unit">;
 
 /**
  * Paladin (`Htmx`), a Built-in unit of Patch 3.0.0, race human.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Paladin_Htmx`, from `reforged-builtins/units`.
  */
@@ -410,6 +430,8 @@ declare function FourCC(id: "Nfir"): Rawcode<"unit">;
 /**
  * Merchant (`Nglx`), a Built-in unit of Patch 3.0.0, race creeps.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.Merchant_Nglx`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Nglx"): Rawcode<"unit">;
@@ -445,6 +467,8 @@ declare function FourCC(id: "Nman"): Rawcode<"unit">;
 /**
  * Murloc Sorcerer (`Nmsr`), a Built-in unit of Patch 3.0.0, race creeps.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.MurlocSorcerer_Nmsr`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Nmsr"): Rawcode<"unit">;
@@ -458,6 +482,8 @@ declare function FourCC(id: "Nngs"): Rawcode<"unit">;
 
 /**
  * Forsaken Paladin (`Npal`), a Built-in unit of Patch 3.0.0, race creeps.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.ForsakenPaladin_Npal`, from `reforged-builtins/units`.
  */
@@ -500,6 +526,8 @@ declare function FourCC(id: "Nsjs"): Rawcode<"unit">;
 
 /**
  * Sea Witch (`Nswt`), a Built-in unit of Patch 3.0.0, race creeps.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Units.SeaWitch_Nswt`, from `reforged-builtins/units`.
  */
@@ -627,6 +655,8 @@ declare function FourCC(id: "Oths"): Rawcode<"unit">;
 /**
  * Scarlet Captain (`Scth`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.ScarletCaptain_Scth`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Scth"): Rawcode<"unit">;
@@ -634,12 +664,16 @@ declare function FourCC(id: "Scth"): Rawcode<"unit">;
 /**
  * Scarlet Commander (`Srmg`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.ScarletCommander_Srmg`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Srmg"): Rawcode<"unit">;
 
 /**
  * High Inquisitor (`Sswm`), a Built-in unit of Patch 3.0.0, race human.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.HighInquisitor_Sswm`, from `reforged-builtins/units`.
  */
@@ -655,12 +689,16 @@ declare function FourCC(id: "Uanb"): Rawcode<"unit">;
 /**
  * Dark Ranger (`Uany`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.DarkRanger_Uany`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Uany"): Rawcode<"unit">;
 
 /**
  * Death Knight (`Uarf`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.DeathKnight_Uarf`, from `reforged-builtins/units`.
  */
@@ -676,12 +714,16 @@ declare function FourCC(id: "Ubal"): Rawcode<"unit">;
 /**
  * Death Knight (`Ubru`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.DeathKnight_Ubru`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Ubru"): Rawcode<"unit">;
 
 /**
  * Death Knight (`Ubtr`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.DeathKnight_Ubtr`, from `reforged-builtins/units`.
  */
@@ -703,6 +745,8 @@ declare function FourCC(id: "Ucrl"): Rawcode<"unit">;
 
 /**
  * Fallen Captain (`Uctl`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.FallenCaptain_Uctl`, from `reforged-builtins/units`.
  */
@@ -739,12 +783,16 @@ declare function FourCC(id: "Uear"): Rawcode<"unit">;
 /**
  * Forsaken (`Ugr2`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.Forsaken_Ugr2`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Ugr2"): Rawcode<"unit">;
 
 /**
  * Forsaken (`Ugr3`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Forsaken_Ugr3`, from `reforged-builtins/units`.
  */
@@ -753,12 +801,16 @@ declare function FourCC(id: "Ugr3"): Rawcode<"unit">;
 /**
  * Forsaken (`Ugrk`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.Forsaken_Ugrk`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Ugrk"): Rawcode<"unit">;
 
 /**
  * Shadow Priest (`Ujsm`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.ShadowPriest_Ujsm`, from `reforged-builtins/units`.
  */
@@ -788,12 +840,16 @@ declare function FourCC(id: "Umal"): Rawcode<"unit">;
 /**
  * Grand Apothecary (`Uput`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.GrandApothecary_Uput`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Uput"): Rawcode<"unit">;
 
 /**
  * Hedge Mage (`Urff`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.HedgeMage_Urff`, from `reforged-builtins/units`.
  */
@@ -802,12 +858,16 @@ declare function FourCC(id: "Urff"): Rawcode<"unit">;
 /**
  * Hedge Mage (`Urfm`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.HedgeMage_Urfm`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Urfm"): Rawcode<"unit">;
 
 /**
  * Lich (`Urfu`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Lich_Urfu`, from `reforged-builtins/units`.
  */
@@ -851,6 +911,8 @@ declare function FourCC(id: "Uwar"): Rawcode<"unit">;
 /**
  * Death Knight (`Uzkf`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.DeathKnight_Uzkf`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Uzkf"): Rawcode<"unit">;
@@ -858,12 +920,16 @@ declare function FourCC(id: "Uzkf"): Rawcode<"unit">;
 /**
  * Death Knight (`Uzkm`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.DeathKnight_Uzkm`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Uzkm"): Rawcode<"unit">;
 
 /**
  * Deathcharger (`Uzrm`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Deathcharger_Uzrm`, from `reforged-builtins/units`.
  */
@@ -1138,12 +1204,16 @@ declare function FourCC(id: "ewsp"): Rawcode<"unit">;
 /**
  * Apothecary (`fapo`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.Apothecary_fapo`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "fapo"): Rawcode<"unit">;
 
 /**
  * Bernd (`fber`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Bernd_fber`, from `reforged-builtins/units`.
  */
@@ -1152,12 +1222,16 @@ declare function FourCC(id: "fber"): Rawcode<"unit">;
 /**
  * Forsaken Ranger (`fdkr`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.ForsakenRanger_fdkr`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "fdkr"): Rawcode<"unit">;
 
 /**
  * Deathguard (`fdtg`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Deathguard_fdtg`, from `reforged-builtins/units`.
  */
@@ -1166,6 +1240,8 @@ declare function FourCC(id: "fdtg"): Rawcode<"unit">;
 /**
  * Laborer (`flab`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.Laborer_flab`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "flab"): Rawcode<"unit">;
@@ -1173,12 +1249,16 @@ declare function FourCC(id: "flab"): Rawcode<"unit">;
 /**
  * Forsaken Villager (`fvil`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.ForsakenVillager_fvil`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "fvil"): Rawcode<"unit">;
 
 /**
  * Forsaken Villager (`fvlw`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.ForsakenVillager_fvlw`, from `reforged-builtins/units`.
  */
@@ -1264,12 +1344,16 @@ declare function FourCC(id: "hcas"): Rawcode<"unit">;
 /**
  * Lordaeron Banner (`hcta`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.LordaeronBanner_hcta`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "hcta"): Rawcode<"unit">;
 
 /**
  * City Guard (`hctg`), a Built-in unit of Patch 3.0.0, race human.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.CityGuard_hctg`, from `reforged-builtins/units`.
  */
@@ -1453,6 +1537,8 @@ declare function FourCC(id: "hrif"): Rawcode<"unit">;
 /**
  * Runner (`hrrh`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.Runner_hrrh`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "hrrh"): Rawcode<"unit">;
@@ -1529,6 +1615,8 @@ declare function FourCC(id: "hwtw"): Rawcode<"unit">;
 
 /**
  * Totem of Battle (`iomw`), a Built-in unit of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.TotemOfBattle_iomw`, from `reforged-builtins/units`.
  */
@@ -1957,12 +2045,16 @@ declare function FourCC(id: "ncbf"): Rawcode<"unit">;
 /**
  * Diablo Cart (`nccd`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.DiabloCart_nccd`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "nccd"): Rawcode<"unit">;
 
 /**
  * Orc Cart (`ncco`), a Built-in unit of Patch 3.0.0, race human.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Units.OrcCart_ncco`, from `reforged-builtins/units`.
  */
@@ -1971,12 +2063,16 @@ declare function FourCC(id: "ncco"): Rawcode<"unit">;
 /**
  * Dwarf Cart (`nccr`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.DwarfCart_nccr`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "nccr"): Rawcode<"unit">;
 
 /**
  * Undead Cart (`nccu`), a Built-in unit of Patch 3.0.0, race human.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Units.UndeadCart_nccu`, from `reforged-builtins/units`.
  */
@@ -2530,6 +2626,8 @@ declare function FourCC(id: "ndtw"): Rawcode<"unit">;
 
 /**
  * Dummy (`ndum`), a Built-in unit of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Dummy_ndum`, from `reforged-builtins/units`.
  */
@@ -3105,6 +3203,8 @@ declare function FourCC(id: "ngdk"): Rawcode<"unit">;
 /**
  * Defender Golem (`nggd`), a Built-in unit of Patch 3.0.0, race creeps.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.DefenderGolem_nggd`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "nggd"): Rawcode<"unit">;
@@ -3112,12 +3212,16 @@ declare function FourCC(id: "nggd"): Rawcode<"unit">;
 /**
  * Guardian Golem (`nggg`), a Built-in unit of Patch 3.0.0, race creeps.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.GuardianGolem_nggg`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "nggg"): Rawcode<"unit">;
 
 /**
  * Moss Covered Granite Golem (`nggm`), a Built-in unit of Patch 3.0.0, race creeps.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Units.MossCoveredGraniteGolem_nggm`, from `reforged-builtins/units`.
  */
@@ -3231,6 +3335,8 @@ declare function FourCC(id: "ngob"): Rawcode<"unit">;
 /**
  * Guard Dog (`ngog`), a Built-in unit of Patch 3.0.0, race critters.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.GuardDog_ngog`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "ngog"): Rawcode<"unit">;
@@ -3245,12 +3351,16 @@ declare function FourCC(id: "ngol"): Rawcode<"unit">;
 /**
  * Snarlmane the Bloodgorger (`ngos`), a Built-in unit of Patch 3.0.0, race creeps.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.SnarlmaneTheBloodgorger_ngos`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "ngos"): Rawcode<"unit">;
 
 /**
  * Gnoll Warlord (`ngow`), a Built-in unit of Patch 3.0.0, race creeps.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Units.GnollWarlord_ngow`, from `reforged-builtins/units`.
  */
@@ -3433,6 +3543,8 @@ declare function FourCC(id: "nhmc"): Rawcode<"unit">;
 
 /**
  * Harpy Nest (`nhn2`), a Built-in unit of Patch 3.0.0, race other.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Units.HarpyNest_nhn2`, from `reforged-builtins/units`.
  */
@@ -3804,6 +3916,8 @@ declare function FourCC(id: "nmg1"): Rawcode<"unit">;
 
 /**
  * Murloc Hut (`nmg2`), a Built-in unit of Patch 3.0.0, race other.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Units.MurlocHut_nmg2`, from `reforged-builtins/units`.
  */
@@ -5121,6 +5235,8 @@ declare function FourCC(id: "ntn2"): Rawcode<"unit">;
 /**
  * Tent (`ntn3`), a Built-in unit of Patch 3.0.0, race other.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.Tent_ntn3`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "ntn3"): Rawcode<"unit">;
@@ -5338,6 +5454,8 @@ declare function FourCC(id: "nwad"): Rawcode<"unit">;
 /**
  * War Wagon (`nwar`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.WarWagon_nwar`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "nwar"): Rawcode<"unit">;
@@ -5366,12 +5484,16 @@ declare function FourCC(id: "nwc2"): Rawcode<"unit">;
 /**
  * Wind Rider Cage (`nwc3`), a Built-in unit of Patch 3.0.0, race orc.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.WindRiderCage_nwc3`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "nwc3"): Rawcode<"unit">;
 
 /**
  * Wind Rider Cage (`nwc4`), a Built-in unit of Patch 3.0.0, race orc.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Units.WindRiderCage_nwc4`, from `reforged-builtins/units`.
  */
@@ -5527,6 +5649,8 @@ declare function FourCC(id: "nwzr"): Rawcode<"unit">;
 /**
  * Blood Wizard (`nwzw`), a Built-in unit of Patch 3.0.0, race creeps.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.BloodWizard_nwzw`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "nwzw"): Rawcode<"unit">;
@@ -5555,6 +5679,8 @@ declare function FourCC(id: "nzlc"): Rawcode<"unit">;
 /**
  * Zombie (`nzof`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.Zombie_nzof`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "nzof"): Rawcode<"unit">;
@@ -5575,6 +5701,8 @@ declare function FourCC(id: "oalt"): Rawcode<"unit">;
 
 /**
  * Baine (`obai`), a Built-in unit of Patch 3.0.0, race orc.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Units.Baine_obai`, from `reforged-builtins/units`.
  */
@@ -5695,12 +5823,16 @@ declare function FourCC(id: "ohwd"): Rawcode<"unit">;
 /**
  * Forsaken Banshee (`oidb`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.ForsakenBanshee_oidb`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "oidb"): Rawcode<"unit">;
 
 /**
  * Deathguard (`oidg`), a Built-in unit of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Deathguard_oidg`, from `reforged-builtins/units`.
  */
@@ -5709,12 +5841,16 @@ declare function FourCC(id: "oidg"): Rawcode<"unit">;
 /**
  * Item Essencium Blizzard (`oie1`), a Built-in unit of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.ItemEssenciumBlizzard_oie1`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "oie1"): Rawcode<"unit">;
 
 /**
  * Item Essencium Rain of Fire (`oie2`), a Built-in unit of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.ItemEssenciumRainOfFire_oie2`, from `reforged-builtins/units`.
  */
@@ -5723,12 +5859,16 @@ declare function FourCC(id: "oie2"): Rawcode<"unit">;
 /**
  * Item Essencium Chain Lightning (`oie3`), a Built-in unit of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.ItemEssenciumChainLightning_oie3`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "oie3"): Rawcode<"unit">;
 
 /**
  * Item Essencium Crushing Wave (`oie4`), a Built-in unit of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.ItemEssenciumCrushingWave_oie4`, from `reforged-builtins/units`.
  */
@@ -5737,12 +5877,16 @@ declare function FourCC(id: "oie4"): Rawcode<"unit">;
 /**
  * Forsaken Ranger (`oifr`), a Built-in unit of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.ForsakenRanger_oifr`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "oifr"): Rawcode<"unit">;
 
 /**
  * Gravelight Soul (`oigs`), a Built-in unit of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.GravelightSoul_oigs`, from `reforged-builtins/units`.
  */
@@ -5751,12 +5895,16 @@ declare function FourCC(id: "oigs"): Rawcode<"unit">;
 /**
  * Item Moonglaive Dummy (`oimd`), a Built-in unit of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.ItemMoonglaiveDummy_oimd`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "oimd"): Rawcode<"unit">;
 
 /**
  * Roaming Fireball (`oirf`), a Built-in unit of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.RoamingFireball_oirf`, from `reforged-builtins/units`.
  */
@@ -5765,12 +5913,16 @@ declare function FourCC(id: "oirf"): Rawcode<"unit">;
 /**
  * Giant Skeleton Warrior (`oisg`), a Built-in unit of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.GiantSkeletonWarrior_oisg`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "oisg"): Rawcode<"unit">;
 
 /**
  * Skeleton Warrior (`oisk`), a Built-in unit of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.SkeletonWarrior_oisk`, from `reforged-builtins/units`.
  */
@@ -5779,12 +5931,16 @@ declare function FourCC(id: "oisk"): Rawcode<"unit">;
 /**
  * Skeletal Marksman (`oism`), a Built-in unit of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.SkeletalMarksman_oism`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "oism"): Rawcode<"unit">;
 
 /**
  * Spitting Spider (`oisp`), a Built-in unit of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.SpittingSpider_oisp`, from `reforged-builtins/units`.
  */
@@ -5996,6 +6152,8 @@ declare function FourCC(id: "ovln"): Rawcode<"unit">;
 /**
  * Slave Master (`owad`), a Built-in unit of Patch 3.0.0, race orc.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Units.SlaveMaster_owad`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "owad"): Rawcode<"unit">;
@@ -6031,12 +6189,16 @@ declare function FourCC(id: "owyv"): Rawcode<"unit">;
 /**
  * Marksman (`sarc`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.Marksman_sarc`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "sarc"): Rawcode<"unit">;
 
 /**
  * Cleric (`scle`), a Built-in unit of Patch 3.0.0, race human.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Cleric_scle`, from `reforged-builtins/units`.
  */
@@ -6045,6 +6207,8 @@ declare function FourCC(id: "scle"): Rawcode<"unit">;
 /**
  * Crusader (`scru`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.Crusader_scru`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "scru"): Rawcode<"unit">;
@@ -6052,12 +6216,16 @@ declare function FourCC(id: "scru"): Rawcode<"unit">;
 /**
  * Footman (`sfoo`), a Built-in unit of Patch 3.0.0, race human.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.Footman_sfoo`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "sfoo"): Rawcode<"unit">;
 
 /**
  * Inquisitor (`sinq`), a Built-in unit of Patch 3.0.0, race human.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Inquisitor_sinq`, from `reforged-builtins/units`.
  */
@@ -6101,6 +6269,8 @@ declare function FourCC(id: "uarb"): Rawcode<"unit">;
 /**
  * Assassin (`uass`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.Assassin_uass`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "uass"): Rawcode<"unit">;
@@ -6128,6 +6298,8 @@ declare function FourCC(id: "ubdr"): Rawcode<"unit">;
 
 /**
  * Blightweaver (`ublw`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Blightweaver_ublw`, from `reforged-builtins/units`.
  */
@@ -6206,6 +6378,8 @@ declare function FourCC(id: "ucsC"): Rawcode<"unit">;
 /**
  * Brute (`ucze`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.Brute_ucze`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "ucze"): Rawcode<"unit">;
@@ -6220,12 +6394,16 @@ declare function FourCC(id: "udes"): Rawcode<"unit">;
 /**
  * Banshee (`ufr2`), a Built-in unit of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Units.Banshee_ufr2`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "ufr2"): Rawcode<"unit">;
 
 /**
  * Banshee (`ufrb`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.Banshee_ufrb`, from `reforged-builtins/units`.
  */
@@ -6247,6 +6425,8 @@ declare function FourCC(id: "ugar"): Rawcode<"unit">;
 
 /**
  * Garithos Abomination (`ugbo`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.GarithosAbomination_ugbo`, from `reforged-builtins/units`.
  */
@@ -6282,6 +6462,8 @@ declare function FourCC(id: "ugrv"): Rawcode<"unit">;
 
 /**
  * Infectious Ghoul (`uigh`), a Built-in unit of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Units.InfectiousGhoul_uigh`, from `reforged-builtins/units`.
  */
@@ -6544,12 +6726,16 @@ declare function FourCC(id: "ankh"): Rawcode<"item">;
 /**
  * Arcane Scroll (`arsc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.ArcaneScroll_arsc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "arsc"): Rawcode<"item">;
 
 /**
  * Arcanite Shield (`arsh`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.ArcaniteShield_arsh`, from `reforged-builtins/items`.
  */
@@ -6558,12 +6744,16 @@ declare function FourCC(id: "arsh"): Rawcode<"item">;
 /**
  * Assassin's Blade (`asbl`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.AssassinsBlade_asbl`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "asbl"): Rawcode<"item">;
 
 /**
  * Ancestral Staff (`axas`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.AncestralStaff_axas`, from `reforged-builtins/items`.
  */
@@ -6586,6 +6776,8 @@ declare function FourCC(id: "belv"): Rawcode<"item">;
 /**
  * Bloodfeather's Heart (`bfhr`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.BloodfeathersHeart_bfhr`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "bfhr"): Rawcode<"item">;
@@ -6599,6 +6791,8 @@ declare function FourCC(id: "bgst"): Rawcode<"item">;
 
 /**
  * Bladebane Armor (`blba`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.BladebaneArmor_blba`, from `reforged-builtins/items`.
  */
@@ -6620,6 +6814,8 @@ declare function FourCC(id: "brag"): Rawcode<"item">;
 
 /**
  * Rusty Plated Boots (`brpb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.RustyPlatedBoots_brpb`, from `reforged-builtins/items`.
  */
@@ -6656,12 +6852,16 @@ declare function FourCC(id: "bzbf"): Rawcode<"item">;
 /**
  * Bandit Lord's Limbs (`cabl`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BanditLordsLimbs_cabl`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "cabl"): Rawcode<"item">;
 
 /**
  * Garithos's Head (`cagh`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GarithossHead_cagh`, from `reforged-builtins/items`.
  */
@@ -6670,12 +6870,16 @@ declare function FourCC(id: "cagh"): Rawcode<"item">;
 /**
  * Broodmother Venom (`cbmv`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BroodmotherVenom_cbmv`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "cbmv"): Rawcode<"item">;
 
 /**
  * Captured Ghoul (`cccg`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.CapturedGhoul_cccg`, from `reforged-builtins/items`.
  */
@@ -6684,6 +6888,8 @@ declare function FourCC(id: "cccg"): Rawcode<"item">;
 /**
  * Consecrated Mixture (`cccm`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ConsecratedMixture_cccm`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "cccm"): Rawcode<"item">;
@@ -6691,12 +6897,16 @@ declare function FourCC(id: "cccm"): Rawcode<"item">;
 /**
  * Elixir of Cunning (`ccec`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ElixirOfCunning_ccec`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ccec"): Rawcode<"item">;
 
 /**
  * Elixir of the Monster Hunter (`ccem`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ElixirOfTheMonsterHunter_ccem`, from `reforged-builtins/items`.
  */
@@ -6712,12 +6922,16 @@ declare function FourCC(id: "ccmd"): Rawcode<"item">;
 /**
  * Valve Wheel (`ccvw`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ValveWheel_ccvw`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ccvw"): Rawcode<"item">;
 
 /**
  * Darkhound Blood (`cdhb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DarkhoundBlood_cdhb`, from `reforged-builtins/items`.
  */
@@ -6726,12 +6940,16 @@ declare function FourCC(id: "cdhb"): Rawcode<"item">;
 /**
  * Elixir of Greater Intelligence (`cegi`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ElixirOfGreaterIntelligence_cegi`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "cegi"): Rawcode<"item">;
 
 /**
  * Elixir of Lesser Intelligence (`celi`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ElixirOfLesserIntelligence_celi`, from `reforged-builtins/items`.
  */
@@ -6740,12 +6958,16 @@ declare function FourCC(id: "celi"): Rawcode<"item">;
 /**
  * Experimental Serum (`cese`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ExperimentalSerum_cese`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "cese"): Rawcode<"item">;
 
 /**
  * Explosive Barrel (`cexp`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ExplosiveBarrel_cexp`, from `reforged-builtins/items`.
  */
@@ -6768,12 +6990,16 @@ declare function FourCC(id: "ciri"): Rawcode<"item">;
 /**
  * Key to the Chamber of Mysteries (`ckcm`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.KeyToTheChamberOfMysteries_ckcm`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ckcm"): Rawcode<"item">;
 
 /**
  * Dungeon Key (`ckdk`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DungeonKey_ckdk`, from `reforged-builtins/items`.
  */
@@ -6796,6 +7022,8 @@ declare function FourCC(id: "clfm"): Rawcode<"item">;
 /**
  * Lump of Meat (`clom`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.LumpOfMeat_clom`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "clom"): Rawcode<"item">;
@@ -6809,6 +7037,8 @@ declare function FourCC(id: "clsd"): Rawcode<"item">;
 
 /**
  * Magical Key (`cmag`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.MagicalKey_cmag`, from `reforged-builtins/items`.
  */
@@ -6831,12 +7061,16 @@ declare function FourCC(id: "cnob"): Rawcode<"item">;
 /**
  * Celestial Orb of Souls (`cosl`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.CelestialOrbOfSouls_cosl`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "cosl"): Rawcode<"item">;
 
 /**
  * Portal Orb (`cpor`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.PortalOrb_cpor`, from `reforged-builtins/items`.
  */
@@ -6845,6 +7079,8 @@ declare function FourCC(id: "cpor"): Rawcode<"item">;
 /**
  * Prison Key (`cprk`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.PrisonKey_cprk`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "cprk"): Rawcode<"item">;
@@ -6852,12 +7088,16 @@ declare function FourCC(id: "cprk"): Rawcode<"item">;
 /**
  * Paladin's Torso (`cptz`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.PaladinsTorso_cptz`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "cptz"): Rawcode<"item">;
 
 /**
  * Crown of the Deathlord (`crdt`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.CrownOfTheDeathlord_crdt`, from `reforged-builtins/items`.
  */
@@ -6873,12 +7113,16 @@ declare function FourCC(id: "crys"): Rawcode<"item">;
 /**
  * The Artifact (`ctat`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.TheArtifact_ctat`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ctat"): Rawcode<"item">;
 
 /**
  * Tome of Agility (`ctoa`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.TomeOfAgility_ctoa`, from `reforged-builtins/items`.
  */
@@ -6887,12 +7131,16 @@ declare function FourCC(id: "ctoa"): Rawcode<"item">;
 /**
  * Tome of Intelligence (`ctoi`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.TomeOfIntelligence_ctoi`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ctoi"): Rawcode<"item">;
 
 /**
  * Tome of Strength (`ctos`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.TomeOfStrength_ctos`, from `reforged-builtins/items`.
  */
@@ -6901,12 +7149,16 @@ declare function FourCC(id: "ctos"): Rawcode<"item">;
 /**
  * Very Very Deep Thoughts (`cvdt`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.VeryVeryDeepThoughts_cvdt`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "cvdt"): Rawcode<"item">;
 
 /**
  * Vile Fin Scale (`cvfs`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.VileFinScale_cvfs`, from `reforged-builtins/items`.
  */
@@ -6915,12 +7167,16 @@ declare function FourCC(id: "cvfs"): Rawcode<"item">;
 /**
  * Vial of Plague Essence (`cvpe`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.VialOfPlagueEssence_cvpe`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "cvpe"): Rawcode<"item">;
 
 /**
  * Vial of Vampire Bat Blood (`cvvb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.VialOfVampireBatBlood_cvvb`, from `reforged-builtins/items`.
  */
@@ -6936,12 +7192,16 @@ declare function FourCC(id: "desc"): Rawcode<"item">;
 /**
  * Keg of Thunderwater (`dkfw`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.KegOfThunderwater_dkfw`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "dkfw"): Rawcode<"item">;
 
 /**
  * Thunder Phoenix Egg (`dphe`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.ThunderPhoenixEgg_dphe`, from `reforged-builtins/items`.
  */
@@ -6964,12 +7224,16 @@ declare function FourCC(id: "dsum"): Rawcode<"item">;
 /**
  * Thunderbloom Bulb (`dthb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.ThunderbloomBulb_dthb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "dthb"): Rawcode<"item">;
 
 /**
  * Drek'thar's Spellbook (`dtsb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.DrektharsSpellbook_dtsb`, from `reforged-builtins/items`.
  */
@@ -6985,12 +7249,16 @@ declare function FourCC(id: "dust"): Rawcode<"item">;
 /**
  * Farstrider's Amulet (`eaaa`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.FarstridersAmulet_eaaa`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eaaa"): Rawcode<"item">;
 
 /**
  * Blacksmith's Apron (`eaba`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.BlacksmithsApron_eaba`, from `reforged-builtins/items`.
  */
@@ -6999,12 +7267,16 @@ declare function FourCC(id: "eaba"): Rawcode<"item">;
 /**
  * Ancient Bronze Helmet (`eabh`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.AncientBronzeHelmet_eabh`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eabh"): Rawcode<"item">;
 
 /**
  * Agitating Totem (`eagt`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.AgitatingTotem_eagt`, from `reforged-builtins/items`.
  */
@@ -7013,12 +7285,16 @@ declare function FourCC(id: "eagt"): Rawcode<"item">;
 /**
  * Amulet of Minor Endurance (`eame`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.AmuletOfMinorEndurance_eame`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eame"): Rawcode<"item">;
 
 /**
  * Armor of Reanimation (`eaor`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ArmorOfReanimation_eaor`, from `reforged-builtins/items`.
  */
@@ -7027,12 +7303,16 @@ declare function FourCC(id: "eaor"): Rawcode<"item">;
 /**
  * Robes of Revenge (`earr`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RobesOfRevenge_earr`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "earr"): Rawcode<"item">;
 
 /**
  * Arcane Spellblade (`easb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ArcaneSpellblade_easb`, from `reforged-builtins/items`.
  */
@@ -7041,12 +7321,16 @@ declare function FourCC(id: "easb"): Rawcode<"item">;
 /**
  * Armor of the Scarlet Crusade (`easc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ArmorOfTheScarletCrusade_easc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "easc"): Rawcode<"item">;
 
 /**
  * Agus's Shambling Hand (`eash`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.AgussShamblingHand_eash`, from `reforged-builtins/items`.
  */
@@ -7055,12 +7339,16 @@ declare function FourCC(id: "eash"): Rawcode<"item">;
 /**
  * Untakable Candle (`eauc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.UntakableCandle_eauc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eauc"): Rawcode<"item">;
 
 /**
  * Vampiric Robes (`eavr`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.VampiricRobes_eavr`, from `reforged-builtins/items`.
  */
@@ -7069,12 +7357,16 @@ declare function FourCC(id: "eavr"): Rawcode<"item">;
 /**
  * Backpack (`ebac`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.Backpack_ebac`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebac"): Rawcode<"item">;
 
 /**
  * Bone Cage Breastplate (`ebcb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.BoneCageBreastplate_ebcb`, from `reforged-builtins/items`.
  */
@@ -7083,12 +7375,16 @@ declare function FourCC(id: "ebcb"): Rawcode<"item">;
 /**
  * Bone Commander's Skull (`ebcs`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BoneCommandersSkull_ebcs`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebcs"): Rawcode<"item">;
 
 /**
  * Blue Dragon Figurine (`ebdf`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.BlueDragonFigurine_ebdf`, from `reforged-builtins/items`.
  */
@@ -7097,12 +7393,16 @@ declare function FourCC(id: "ebdf"): Rawcode<"item">;
 /**
  * Blade Dancer's Greaves (`ebdg`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BladeDancersGreaves_ebdg`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebdg"): Rawcode<"item">;
 
 /**
  * Deathwalkers (`ebdw`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.Deathwalkers_ebdw`, from `reforged-builtins/items`.
  */
@@ -7111,12 +7411,16 @@ declare function FourCC(id: "ebdw"): Rawcode<"item">;
 /**
  * Blade of Frozen Hunger (`ebfh`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BladeOfFrozenHunger_ebfh`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebfh"): Rawcode<"item">;
 
 /**
  * Heavyduty Boots (`ebhb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.HeavydutyBoots_ebhb`, from `reforged-builtins/items`.
  */
@@ -7125,12 +7429,16 @@ declare function FourCC(id: "ebhb"): Rawcode<"item">;
 /**
  * Garek's Backpack (`ebhg`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GareksBackpack_ebhg`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebhg"): Rawcode<"item">;
 
 /**
  * Ilastar's Backpack (`ebhi`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.IlastarsBackpack_ebhi`, from `reforged-builtins/items`.
  */
@@ -7139,12 +7447,16 @@ declare function FourCC(id: "ebhi"): Rawcode<"item">;
 /**
  * Landen's Backpack (`ebhl`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.LandensBackpack_ebhl`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebhl"): Rawcode<"item">;
 
 /**
  * Necromancer's Plaguegreaves (`ebnp`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.NecromancersPlaguegreaves_ebnp`, from `reforged-builtins/items`.
  */
@@ -7153,12 +7465,16 @@ declare function FourCC(id: "ebnp"): Rawcode<"item">;
 /**
  * Blade of Corruption (`eboc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BladeOfCorruption_eboc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eboc"): Rawcode<"item">;
 
 /**
  * Boots of the Forsaken (`ebof`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.BootsOfTheForsaken_ebof`, from `reforged-builtins/items`.
  */
@@ -7167,12 +7483,16 @@ declare function FourCC(id: "ebof"): Rawcode<"item">;
 /**
  * Bindings of Helya (`eboh`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BindingsOfHelya_eboh`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eboh"): Rawcode<"item">;
 
 /**
  * Boots of the Icewalker (`eboi`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.BootsOfTheIcewalker_eboi`, from `reforged-builtins/items`.
  */
@@ -7181,12 +7501,16 @@ declare function FourCC(id: "eboi"): Rawcode<"item">;
 /**
  * Bracers of the Ogre Magi (`ebom`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BracersOfTheOgreMagi_ebom`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebom"): Rawcode<"item">;
 
 /**
  * Overlord's Sabatons (`ebos`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.OverlordsSabatons_ebos`, from `reforged-builtins/items`.
  */
@@ -7195,12 +7519,16 @@ declare function FourCC(id: "ebos"): Rawcode<"item">;
 /**
  * Blackrock Chain Helm (`ebr1`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BlackrockChainHelm_ebr1`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebr1"): Rawcode<"item">;
 
 /**
  * Blademaster's Greatsword (`ebr2`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.BlademastersGreatsword_ebr2`, from `reforged-builtins/items`.
  */
@@ -7209,12 +7537,16 @@ declare function FourCC(id: "ebr2"): Rawcode<"item">;
 /**
  * Blackrock Steel Plate (`ebrp`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BlackrockSteelPlate_ebrp`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebrp"): Rawcode<"item">;
 
 /**
  * Boots of the Scarlet Crusade (`ebsc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.BootsOfTheScarletCrusade_ebsc`, from `reforged-builtins/items`.
  */
@@ -7223,12 +7555,16 @@ declare function FourCC(id: "ebsc"): Rawcode<"item">;
 /**
  * Band of the Sin'dorei (`ebsd`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BandOfTheSindorei_ebsd`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebsd"): Rawcode<"item">;
 
 /**
  * Broken Skinning Knife (`ebsk`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.BrokenSkinningKnife_ebsk`, from `reforged-builtins/items`.
  */
@@ -7237,12 +7573,16 @@ declare function FourCC(id: "ebsk"): Rawcode<"item">;
 /**
  * Band of the Skeletal Mage (`ebsm`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BandOfTheSkeletalMage_ebsm`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebsm"): Rawcode<"item">;
 
 /**
  * Breastplate of the Scarlet Paladin (`ebsp`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.BreastplateOfTheScarletPaladin_ebsp`, from `reforged-builtins/items`.
  */
@@ -7251,12 +7591,16 @@ declare function FourCC(id: "ebsp"): Rawcode<"item">;
 /**
  * Stormwalkers (`ebsw`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.Stormwalkers_ebsw`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebsw"): Rawcode<"item">;
 
 /**
  * Tactician's Boots (`ebtb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.TacticiansBoots_ebtb`, from `reforged-builtins/items`.
  */
@@ -7265,12 +7609,16 @@ declare function FourCC(id: "ebtb"): Rawcode<"item">;
 /**
  * Alicia's Favor (`ebtf`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.AliciasFavor_ebtf`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebtf"): Rawcode<"item">;
 
 /**
  * Bramblethorn Vestments (`ebtv`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.BramblethornVestments_ebtv`, from `reforged-builtins/items`.
  */
@@ -7279,12 +7627,16 @@ declare function FourCC(id: "ebtv"): Rawcode<"item">;
 /**
  * Anya's Backpack (`ebua`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.AnyasBackpack_ebua`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebua"): Rawcode<"item">;
 
 /**
  * Garek's Backpack (`ebug`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GareksBackpack_ebug`, from `reforged-builtins/items`.
  */
@@ -7293,12 +7645,16 @@ declare function FourCC(id: "ebug"): Rawcode<"item">;
 /**
  * Leonid's Backpack (`ebul`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.LeonidsBackpack_ebul`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebul"): Rawcode<"item">;
 
 /**
  * Butcher's Cleaver (`ebut`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ButchersCleaver_ebut`, from `reforged-builtins/items`.
  */
@@ -7307,12 +7663,16 @@ declare function FourCC(id: "ebut"): Rawcode<"item">;
 /**
  * Blightweaver Boots (`ebwb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BlightweaverBoots_ebwb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebwb"): Rawcode<"item">;
 
 /**
  * Wayfarer Greaves (`ebwg`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.WayfarerGreaves_ebwg`, from `reforged-builtins/items`.
  */
@@ -7321,12 +7681,16 @@ declare function FourCC(id: "ebwg"): Rawcode<"item">;
 /**
  * Boots of the Warm Hearth (`ebwh`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BootsOfTheWarmHearth_ebwh`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ebwh"): Rawcode<"item">;
 
 /**
  * Worn Sandals (`ebws`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.WornSandals_ebws`, from `reforged-builtins/items`.
  */
@@ -7335,12 +7699,16 @@ declare function FourCC(id: "ebws"): Rawcode<"item">;
 /**
  * Citrine Adorned Boots (`ecab`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.CitrineAdornedBoots_ecab`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ecab"): Rawcode<"item">;
 
 /**
  * Shoddy Cap (`ecap`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ShoddyCap_ecap`, from `reforged-builtins/items`.
  */
@@ -7349,12 +7717,16 @@ declare function FourCC(id: "ecap"): Rawcode<"item">;
 /**
  * Amulet of Vitality (`ecav`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.AmuletOfVitality_ecav`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ecav"): Rawcode<"item">;
 
 /**
  * Colossal Battleaxe (`ecba`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ColossalBattleaxe_ecba`, from `reforged-builtins/items`.
  */
@@ -7363,12 +7735,16 @@ declare function FourCC(id: "ecba"): Rawcode<"item">;
 /**
  * Coldbringer's Reach (`ecbr`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ColdbringersReach_ecbr`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ecbr"): Rawcode<"item">;
 
 /**
  * Chipped Circlet of Clarity (`eccc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ChippedCircletOfClarity_eccc`, from `reforged-builtins/items`.
  */
@@ -7377,12 +7753,16 @@ declare function FourCC(id: "eccc"): Rawcode<"item">;
 /**
  * Dreaded Chestplate (`ecdc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.DreadedChestplate_ecdc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ecdc"): Rawcode<"item">;
 
 /**
  * Druidic Leafguard (`ecdl`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DruidicLeafguard_ecdl`, from `reforged-builtins/items`.
  */
@@ -7391,12 +7771,16 @@ declare function FourCC(id: "ecdl"): Rawcode<"item">;
 /**
  * Guardsman Boots (`ecgb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GuardsmanBoots_ecgb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ecgb"): Rawcode<"item">;
 
 /**
  * Guardsman Chestplate (`ecgc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GuardsmanChestplate_ecgc`, from `reforged-builtins/items`.
  */
@@ -7405,12 +7789,16 @@ declare function FourCC(id: "ecgc"): Rawcode<"item">;
 /**
  * Guardsman Helmet (`ecgh`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GuardsmanHelmet_ecgh`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ecgh"): Rawcode<"item">;
 
 /**
  * Cursed Golden Ring (`ecgr`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.CursedGoldenRing_ecgr`, from `reforged-builtins/items`.
  */
@@ -7419,12 +7807,16 @@ declare function FourCC(id: "ecgr"): Rawcode<"item">;
 /**
  * Staff of the Crimson Heart (`ech1`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.StaffOfTheCrimsonHeart_ech1`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ech1"): Rawcode<"item">;
 
 /**
  * Blade of the Crimson Heart (`ech2`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.BladeOfTheCrimsonHeart_ech2`, from `reforged-builtins/items`.
  */
@@ -7433,12 +7825,16 @@ declare function FourCC(id: "ech2"): Rawcode<"item">;
 /**
  * Guardian of the Crimson Heart (`ech3`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GuardianOfTheCrimsonHeart_ech3`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ech3"): Rawcode<"item">;
 
 /**
  * Immortal Guardian's Chestplate (`ecig`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ImmortalGuardiansChestplate_ecig`, from `reforged-builtins/items`.
  */
@@ -7447,12 +7843,16 @@ declare function FourCC(id: "ecig"): Rawcode<"item">;
 /**
  * Chestpiece of Lesser Cunning (`eclc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ChestpieceOfLesserCunning_eclc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eclc"): Rawcode<"item">;
 
 /**
  * Deerskin Gloves (`eclg`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DeerskinGloves_eclg`, from `reforged-builtins/items`.
  */
@@ -7461,12 +7861,16 @@ declare function FourCC(id: "eclg"): Rawcode<"item">;
 /**
  * Chronomaster's Gloves (`ecmg`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ChronomastersGloves_ecmg`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ecmg"): Rawcode<"item">;
 
 /**
  * Novice Rags (`ecnr`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.NoviceRags_ecnr`, from `reforged-builtins/items`.
  */
@@ -7475,12 +7879,16 @@ declare function FourCC(id: "ecnr"): Rawcode<"item">;
 /**
  * Convergence of Fates (`ecof`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ConvergenceOfFates_ecof`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ecof"): Rawcode<"item">;
 
 /**
  * Crown of the Resolute Monarch (`ecrm`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.CrownOfTheResoluteMonarch_ecrm`, from `reforged-builtins/items`.
  */
@@ -7489,12 +7897,16 @@ declare function FourCC(id: "ecrm"): Rawcode<"item">;
 /**
  * Cardinal Ruby of the Necrolyte (`ecrn`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.CardinalRubyOfTheNecrolyte_ecrn`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ecrn"): Rawcode<"item">;
 
 /**
  * Ring of Regeneration (`ecrr`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.RingOfRegeneration_ecrr`, from `reforged-builtins/items`.
  */
@@ -7503,12 +7915,16 @@ declare function FourCC(id: "ecrr"): Rawcode<"item">;
 /**
  * Steel Sword (`ecss`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.SteelSword_ecss`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ecss"): Rawcode<"item">;
 
 /**
  * Diamond Adorned Chestplate (`edac`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DiamondAdornedChestplate_edac`, from `reforged-builtins/items`.
  */
@@ -7517,12 +7933,16 @@ declare function FourCC(id: "edac"): Rawcode<"item">;
 /**
  * Deathbringer's Boots (`edbb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.DeathbringersBoots_edbb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "edbb"): Rawcode<"item">;
 
 /**
  * Deathbloom Leaves (`edbl`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DeathbloomLeaves_edbl`, from `reforged-builtins/items`.
  */
@@ -7531,12 +7951,16 @@ declare function FourCC(id: "edbl"): Rawcode<"item">;
 /**
  * Drained Bloodstone (`edbs`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.DrainedBloodstone_edbs`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "edbs"): Rawcode<"item">;
 
 /**
  * Deepsea Bag (`edbw`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DeepseaBag_edbw`, from `reforged-builtins/items`.
  */
@@ -7545,12 +7969,16 @@ declare function FourCC(id: "edbw"): Rawcode<"item">;
 /**
  * Diamond Staff of Dalaran (`edds`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.DiamondStaffOfDalaran_edds`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "edds"): Rawcode<"item">;
 
 /**
  * Dark Iron Breastplate (`edib`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DarkIronBreastplate_edib`, from `reforged-builtins/items`.
  */
@@ -7559,12 +7987,16 @@ declare function FourCC(id: "edib"): Rawcode<"item">;
 /**
  * Dark Iron Greaves (`edif`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.DarkIronGreaves_edif`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "edif"): Rawcode<"item">;
 
 /**
  * Dark Iron Gauntlets (`edig`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DarkIronGauntlets_edig`, from `reforged-builtins/items`.
  */
@@ -7573,12 +8005,16 @@ declare function FourCC(id: "edig"): Rawcode<"item">;
 /**
  * Dark Iron Helm (`edih`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.DarkIronHelm_edih`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "edih"): Rawcode<"item">;
 
 /**
  * Dark Iron Shield (`edis`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DarkIronShield_edis`, from `reforged-builtins/items`.
  */
@@ -7587,12 +8023,16 @@ declare function FourCC(id: "edis"): Rawcode<"item">;
 /**
  * Dark Ranger's Bracers (`edrb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.DarkRangersBracers_edrb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "edrb"): Rawcode<"item">;
 
 /**
  * Dark Ranger's Chestguard (`edrc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DarkRangersChestguard_edrc`, from `reforged-builtins/items`.
  */
@@ -7601,12 +8041,16 @@ declare function FourCC(id: "edrc"): Rawcode<"item">;
 /**
  * Dark Ranger's Hood (`edrh`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.DarkRangersHood_edrh`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "edrh"): Rawcode<"item">;
 
 /**
  * Dark Ranger's Insignia (`edri`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DarkRangersInsignia_edri`, from `reforged-builtins/items`.
  */
@@ -7615,12 +8059,16 @@ declare function FourCC(id: "edri"): Rawcode<"item">;
 /**
  * Dark Ranger's Shadows (`edrs`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.DarkRangersShadows_edrs`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "edrs"): Rawcode<"item">;
 
 /**
  * Damaged Spellbreaker Helmet (`edsh`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DamagedSpellbreakerHelmet_edsh`, from `reforged-builtins/items`.
  */
@@ -7629,12 +8077,16 @@ declare function FourCC(id: "edsh"): Rawcode<"item">;
 /**
  * Decrepit Sorcerer's Mantle (`edsm`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.DecrepitSorcerersMantle_edsm`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "edsm"): Rawcode<"item">;
 
 /**
  * Dalaran Sapphire Robes (`edsr`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DalaranSapphireRobes_edsr`, from `reforged-builtins/items`.
  */
@@ -7643,12 +8095,16 @@ declare function FourCC(id: "edsr"): Rawcode<"item">;
 /**
  * Desecrated Tower Shield (`edts`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.DesecratedTowerShield_edts`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "edts"): Rawcode<"item">;
 
 /**
  * Demonic Warglaives (`edwg`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DemonicWarglaives_edwg`, from `reforged-builtins/items`.
  */
@@ -7657,12 +8113,16 @@ declare function FourCC(id: "edwg"): Rawcode<"item">;
 /**
  * Endless Flask of Restoration (`eefr`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.EndlessFlaskOfRestoration_eefr`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eefr"): Rawcode<"item">;
 
 /**
  * Essencium, the Gathering of Elements (`eege`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.EssenciumTheGatheringOfElements_eege`, from `reforged-builtins/items`.
  */
@@ -7671,12 +8131,16 @@ declare function FourCC(id: "eege"): Rawcode<"item">;
 /**
  * Lesser Engineering Goggles (`eeh1`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.LesserEngineeringGoggles_eeh1`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eeh1"): Rawcode<"item">;
 
 /**
  * Greater Engineering Goggles (`eeh2`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GreaterEngineeringGoggles_eeh2`, from `reforged-builtins/items`.
  */
@@ -7685,12 +8149,16 @@ declare function FourCC(id: "eeh2"): Rawcode<"item">;
 /**
  * Master Engineering Goggles (`eeh3`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.MasterEngineeringGoggles_eeh3`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eeh3"): Rawcode<"item">;
 
 /**
  * Enchanted Inscription Tools (`eeit`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.EnchantedInscriptionTools_eeit`, from `reforged-builtins/items`.
  */
@@ -7699,12 +8167,16 @@ declare function FourCC(id: "eeit"): Rawcode<"item">;
 /**
  * Edge of the Ruined City (`eerc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.EdgeOfTheRuinedCity_eerc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eerc"): Rawcode<"item">;
 
 /**
  * Essence of the Spider Queen (`eesq`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.EssenceOfTheSpiderQueen_eesq`, from `reforged-builtins/items`.
  */
@@ -7713,12 +8185,16 @@ declare function FourCC(id: "eesq"): Rawcode<"item">;
 /**
  * Forsaken Champion's Helm (`efch`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ForsakenChampionsHelm_efch`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "efch"): Rawcode<"item">;
 
 /**
  * Forgotten Frost Lotus (`effl`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ForgottenFrostLotus_effl`, from `reforged-builtins/items`.
  */
@@ -7727,12 +8203,16 @@ declare function FourCC(id: "effl"): Rawcode<"item">;
 /**
  * Frenzied Ghoul Claws (`efgc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.FrenziedGhoulClaws_efgc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "efgc"): Rawcode<"item">;
 
 /**
  * Flesh Golem Ribcage (`efgh`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.FleshGolemRibcage_efgh`, from `reforged-builtins/items`.
  */
@@ -7741,12 +8221,16 @@ declare function FourCC(id: "efgh"): Rawcode<"item">;
 /**
  * Frayed Headwear of the Magehunter (`efhm`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.FrayedHeadwearOfTheMagehunter_efhm`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "efhm"): Rawcode<"item">;
 
 /**
  * Frail Leather Armor (`efla`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.FrailLeatherArmor_efla`, from `reforged-builtins/items`.
  */
@@ -7755,12 +8239,16 @@ declare function FourCC(id: "efla"): Rawcode<"item">;
 /**
  * Flame of Al'ar (`efoa`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.FlameOfAlar_efoa`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "efoa"): Rawcode<"item">;
 
 /**
  * Forsaken Plaguebow (`efpb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ForsakenPlaguebow_efpb`, from `reforged-builtins/items`.
  */
@@ -7769,12 +8257,16 @@ declare function FourCC(id: "efpb"): Rawcode<"item">;
 /**
  * Forest Ranger's Gloves (`efrg`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ForestRangersGloves_efrg`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "efrg"): Rawcode<"item">;
 
 /**
  * Frayed Sorcerer's Handwraps (`efsh`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.FrayedSorcerersHandwraps_efsh`, from `reforged-builtins/items`.
  */
@@ -7783,12 +8275,16 @@ declare function FourCC(id: "efsh"): Rawcode<"item">;
 /**
  * Aviana's Talons (`egat`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.AvianasTalons_egat`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "egat"): Rawcode<"item">;
 
 /**
  * Crusader's Gauntlets (`egcg`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.CrusadersGauntlets_egcg`, from `reforged-builtins/items`.
  */
@@ -7797,12 +8293,16 @@ declare function FourCC(id: "egcg"): Rawcode<"item">;
 /**
  * Gloves of the Deathbringer (`egdb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GlovesOfTheDeathbringer_egdb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "egdb"): Rawcode<"item">;
 
 /**
  * Gravelight, the Echoing Flames (`egef`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GravelightTheEchoingFlames_egef`, from `reforged-builtins/items`.
  */
@@ -7811,12 +8311,16 @@ declare function FourCC(id: "egef"): Rawcode<"item">;
 /**
  * Forsaken Gauntlets (`egfg`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ForsakenGauntlets_egfg`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "egfg"): Rawcode<"item">;
 
 /**
  * Gloves of the Flamewalker (`egfw`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GlovesOfTheFlamewalker_egfw`, from `reforged-builtins/items`.
  */
@@ -7825,12 +8329,16 @@ declare function FourCC(id: "egfw"): Rawcode<"item">;
 /**
  * Gloves of Necromancy (`eggn`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GlovesOfNecromancy_eggn`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eggn"): Rawcode<"item">;
 
 /**
  * Gloves of the Phoenix (`eggp`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GlovesOfThePhoenix_eggp`, from `reforged-builtins/items`.
  */
@@ -7839,12 +8347,16 @@ declare function FourCC(id: "eggp"): Rawcode<"item">;
 /**
  * Gloves of Lesser Cunning (`eglc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GlovesOfLesserCunning_eglc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eglc"): Rawcode<"item">;
 
 /**
  * Golden Necklace of Serenity (`egns`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GoldenNecklaceOfSerenity_egns`, from `reforged-builtins/items`.
  */
@@ -7853,12 +8365,16 @@ declare function FourCC(id: "egns"): Rawcode<"item">;
 /**
  * Gloves of the Battlemage (`egob`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GlovesOfTheBattlemage_egob`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "egob"): Rawcode<"item">;
 
 /**
  * Gloves of Perfection (`egop`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GlovesOfPerfection_egop`, from `reforged-builtins/items`.
  */
@@ -7867,12 +8383,16 @@ declare function FourCC(id: "egop"): Rawcode<"item">;
 /**
  * Magister's Handguards (`egos`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.MagistersHandguards_egos`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "egos"): Rawcode<"item">;
 
 /**
  * Gift of the Wilds (`egow`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GiftOfTheWilds_egow`, from `reforged-builtins/items`.
  */
@@ -7881,12 +8401,16 @@ declare function FourCC(id: "egow"): Rawcode<"item">;
 /**
  * Giant Skeleton Bone (`egsb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GiantSkeletonBone_egsb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "egsb"): Rawcode<"item">;
 
 /**
  * Gloves of the Scarlet Crusade (`egsc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GlovesOfTheScarletCrusade_egsc`, from `reforged-builtins/items`.
  */
@@ -7895,12 +8419,16 @@ declare function FourCC(id: "egsc"): Rawcode<"item">;
 /**
  * Selene, Grand Scepter of Elune (`egse`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.SeleneGrandScepterOfElune_egse`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "egse"): Rawcode<"item">;
 
 /**
  * Sage's Gloves (`egsg`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.SagesGloves_egsg`, from `reforged-builtins/items`.
  */
@@ -7909,12 +8437,16 @@ declare function FourCC(id: "egsg"): Rawcode<"item">;
 /**
  * Glacial Shard (`egsh`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GlacialShard_egsh`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "egsh"): Rawcode<"item">;
 
 /**
  * Gloves of Ultimate Vampirism (`eguv`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GlovesOfUltimateVampirism_eguv`, from `reforged-builtins/items`.
  */
@@ -7923,12 +8455,16 @@ declare function FourCC(id: "eguv"): Rawcode<"item">;
 /**
  * Gnoll Warlord Hide (`egwh`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GnollWarlordHide_egwh`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "egwh"): Rawcode<"item">;
 
 /**
  * Gnomish Zapper X-4000 (`egzx`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GnomishZapperX4000_egzx`, from `reforged-builtins/items`.
  */
@@ -7937,12 +8473,16 @@ declare function FourCC(id: "egzx"): Rawcode<"item">;
 /**
  * Bandit Mask (`ehbm`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BanditMask_ehbm`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ehbm"): Rawcode<"item">;
 
 /**
  * Helm of the Cenarion Circle (`ehcc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.HelmOfTheCenarionCircle_ehcc`, from `reforged-builtins/items`.
  */
@@ -7951,12 +8491,16 @@ declare function FourCC(id: "ehcc"): Rawcode<"item">;
 /**
  * Huge Citrine of the Fierce (`ehcf`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.HugeCitrineOfTheFierce_ehcf`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ehcf"): Rawcode<"item">;
 
 /**
  * Crimson Helm of Opportunity (`ehco`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.CrimsonHelmOfOpportunity_ehco`, from `reforged-builtins/items`.
  */
@@ -7965,12 +8509,16 @@ declare function FourCC(id: "ehco"): Rawcode<"item">;
 /**
  * Helm of the Dark Rider (`ehdr`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.HelmOfTheDarkRider_ehdr`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ehdr"): Rawcode<"item">;
 
 /**
  * Diamond Tiara (`ehdt`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DiamondTiara_ehdt`, from `reforged-builtins/items`.
  */
@@ -7979,12 +8527,16 @@ declare function FourCC(id: "ehdt"): Rawcode<"item">;
 /**
  * Ring of Holy Fire (`ehfi`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RingOfHolyFire_ehfi`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ehfi"): Rawcode<"item">;
 
 /**
  * Gilnean Headpiece (`ehgh`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GilneanHeadpiece_ehgh`, from `reforged-builtins/items`.
  */
@@ -7993,12 +8545,16 @@ declare function FourCC(id: "ehgh"): Rawcode<"item">;
 /**
  * Headpiece of the High Inquisitor (`ehhi`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.HeadpieceOfTheHighInquisitor_ehhi`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ehhi"): Rawcode<"item">;
 
 /**
  * Helm of the Iron Guardian (`ehig`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.HelmOfTheIronGuardian_ehig`, from `reforged-builtins/items`.
  */
@@ -8007,12 +8563,16 @@ declare function FourCC(id: "ehig"): Rawcode<"item">;
 /**
  * Horn of the Lost Spirits (`ehls`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.HornOfTheLostSpirits_ehls`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ehls"): Rawcode<"item">;
 
 /**
  * Moonstone Circlet (`ehmc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.MoonstoneCirclet_ehmc`, from `reforged-builtins/items`.
  */
@@ -8021,12 +8581,16 @@ declare function FourCC(id: "ehmc"): Rawcode<"item">;
 /**
  * Heart of the Lake (`ehol`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.HeartOfTheLake_ehol`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ehol"): Rawcode<"item">;
 
 /**
  * Pirate Hat (`ehph`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.PirateHat_ehph`, from `reforged-builtins/items`.
  */
@@ -8035,12 +8599,16 @@ declare function FourCC(id: "ehph"): Rawcode<"item">;
 /**
  * Helm of the Rimelord (`ehrl`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.HelmOfTheRimelord_ehrl`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ehrl"): Rawcode<"item">;
 
 /**
  * Helm of the Scarlet Captain (`ehsc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.HelmOfTheScarletCaptain_ehsc`, from `reforged-builtins/items`.
  */
@@ -8049,12 +8617,16 @@ declare function FourCC(id: "ehsc"): Rawcode<"item">;
 /**
  * Hammer of the Silver Hand (`ehsh`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.HammerOfTheSilverHand_ehsh`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ehsh"): Rawcode<"item">;
 
 /**
  * High Templar's Conqueror (`ehtc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.HighTemplarsConqueror_ehtc`, from `reforged-builtins/items`.
  */
@@ -8063,12 +8635,16 @@ declare function FourCC(id: "ehtc"): Rawcode<"item">;
 /**
  * High Templar's Flame (`ehtf`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.HighTemplarsFlame_ehtf`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ehtf"): Rawcode<"item">;
 
 /**
  * High Templar's Judgment (`ehtj`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.HighTemplarsJudgment_ehtj`, from `reforged-builtins/items`.
  */
@@ -8077,12 +8653,16 @@ declare function FourCC(id: "ehtj"): Rawcode<"item">;
 /**
  * Handful of Throwing Knives (`ehtk`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.HandfulOfThrowingKnives_ehtk`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ehtk"): Rawcode<"item">;
 
 /**
  * High Templar's March (`ehtm`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.HighTemplarsMarch_ehtm`, from `reforged-builtins/items`.
  */
@@ -8091,12 +8671,16 @@ declare function FourCC(id: "ehtm"): Rawcode<"item">;
 /**
  * High Templar's Visage (`ehtv`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.HighTemplarsVisage_ehtv`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ehtv"): Rawcode<"item">;
 
 /**
  * Icecrown Ring (`eicc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.IcecrownRing_eicc`, from `reforged-builtins/items`.
  */
@@ -8105,12 +8689,16 @@ declare function FourCC(id: "eicc"): Rawcode<"item">;
 /**
  * Ice Cold Diamond (`eicd`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.IceColdDiamond_eicd`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eicd"): Rawcode<"item">;
 
 /**
  * Intricate Emerald Pendant (`eiep`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.IntricateEmeraldPendant_eiep`, from `reforged-builtins/items`.
  */
@@ -8119,12 +8707,16 @@ declare function FourCC(id: "eiep"): Rawcode<"item">;
 /**
  * Infectious Ghoul Charm (`eigc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.InfectiousGhoulCharm_eigc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eigc"): Rawcode<"item">;
 
 /**
  * Iron Grip Gauntlets (`eigg`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.IronGripGauntlets_eigg`, from `reforged-builtins/items`.
  */
@@ -8133,12 +8725,16 @@ declare function FourCC(id: "eigg"): Rawcode<"item">;
 /**
  * Blade of Inferno (`einf`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BladeOfInferno_einf`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "einf"): Rawcode<"item">;
 
 /**
  * Jagged Jade Ring (`ejjr`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.JaggedJadeRing_ejjr`, from `reforged-builtins/items`.
  */
@@ -8147,12 +8743,16 @@ declare function FourCC(id: "ejjr"): Rawcode<"item">;
 /**
  * Kaldorei Moonglaive (`ekmg`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.KaldoreiMoonglaive_ekmg`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ekmg"): Rawcode<"item">;
 
 /**
  * Kobold Mining Helm (`ekmh`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.KoboldMiningHelm_ekmh`, from `reforged-builtins/items`.
  */
@@ -8161,12 +8761,16 @@ declare function FourCC(id: "ekmh"): Rawcode<"item">;
 /**
  * Aegis (`elae`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.Aegis_elae`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "elae"): Rawcode<"item">;
 
 /**
  * Lesser Blade of the Cultist (`elbc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.LesserBladeOfTheCultist_elbc`, from `reforged-builtins/items`.
  */
@@ -8175,12 +8779,16 @@ declare function FourCC(id: "elbc"): Rawcode<"item">;
 /**
  * Lesser Band of the Paladin (`elbp`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.LesserBandOfThePaladin_elbp`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "elbp"): Rawcode<"item">;
 
 /**
  * Lance of the Frozen Phoenix (`elfp`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.LanceOfTheFrozenPhoenix_elfp`, from `reforged-builtins/items`.
  */
@@ -8189,12 +8797,16 @@ declare function FourCC(id: "elfp"): Rawcode<"item">;
 /**
  * Lost Forsaken Quiver (`elfq`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.LostForsakenQuiver_elfq`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "elfq"): Rawcode<"item">;
 
 /**
  * Tigerskin Helmet of Precision (`elhp`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.TigerskinHelmetOfPrecision_elhp`, from `reforged-builtins/items`.
  */
@@ -8203,12 +8815,16 @@ declare function FourCC(id: "elhp"): Rawcode<"item">;
 /**
  * Lesser Mark of the Forsaken (`elmf`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.LesserMarkOfTheForsaken_elmf`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "elmf"): Rawcode<"item">;
 
 /**
  * Lesser Mark of Time (`elmt`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.LesserMarkOfTime_elmt`, from `reforged-builtins/items`.
  */
@@ -8217,12 +8833,16 @@ declare function FourCC(id: "elmt"): Rawcode<"item">;
 /**
  * Lance of the Dawn (`elod`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.LanceOfTheDawn_elod`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "elod"): Rawcode<"item">;
 
 /**
  * Captain's Helmet of Bravery (`elvl`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.CaptainsHelmetOfBravery_elvl`, from `reforged-builtins/items`.
  */
@@ -8231,12 +8851,16 @@ declare function FourCC(id: "elvl"): Rawcode<"item">;
 /**
  * Murloc Costume Gloves (`emcg`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.MurlocCostumeGloves_emcg`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "emcg"): Rawcode<"item">;
 
 /**
  * Manuscript of the Forsaken (`emof`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ManuscriptOfTheForsaken_emof`, from `reforged-builtins/items`.
  */
@@ -8245,6 +8869,8 @@ declare function FourCC(id: "emof"): Rawcode<"item">;
 /**
  * Mantle of the Highborne (`emoh`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.MantleOfTheHighborne_emoh`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "emoh"): Rawcode<"item">;
@@ -8252,12 +8878,16 @@ declare function FourCC(id: "emoh"): Rawcode<"item">;
 /**
  * Mutated Rat's Whiptail (`emrw`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.MutatedRatsWhiptail_emrw`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "emrw"): Rawcode<"item">;
 
 /**
  * Mysterious Twilight Opal (`emto`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.MysteriousTwilightOpal_emto`, from `reforged-builtins/items`.
  */
@@ -8280,12 +8910,16 @@ declare function FourCC(id: "engs"): Rawcode<"item">;
 /**
  * Nevermelting Ice (`enmi`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.NevermeltingIce_enmi`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "enmi"): Rawcode<"item">;
 
 /**
  * Enchanted Vial (`envl`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.EnchantedVial_envl`, from `reforged-builtins/items`.
  */
@@ -8294,12 +8928,16 @@ declare function FourCC(id: "envl"): Rawcode<"item">;
 /**
  * Bone Buckler (`eobb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BoneBuckler_eobb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eobb"): Rawcode<"item">;
 
 /**
  * Chipped Shield (`eocs`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ChippedShield_eocs`, from `reforged-builtins/items`.
  */
@@ -8308,12 +8946,16 @@ declare function FourCC(id: "eocs"): Rawcode<"item">;
 /**
  * Overlord's Dreadplate (`eodp`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.OverlordsDreadplate_eodp`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eodp"): Rawcode<"item">;
 
 /**
  * Fractured Skull (`eofs`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.FracturedSkull_eofs`, from `reforged-builtins/items`.
  */
@@ -8322,12 +8964,16 @@ declare function FourCC(id: "eofs"): Rawcode<"item">;
 /**
  * Grieving Blade (`eogb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GrievingBlade_eogb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eogb"): Rawcode<"item">;
 
 /**
  * Ironforge Defender (`eoid`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.IronforgeDefender_eoid`, from `reforged-builtins/items`.
  */
@@ -8336,12 +8982,16 @@ declare function FourCC(id: "eoid"): Rawcode<"item">;
 /**
  * Malachite Shortsword (`eoms`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.MalachiteShortsword_eoms`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eoms"): Rawcode<"item">;
 
 /**
  * Phalanx Shield (`eops`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.PhalanxShield_eops`, from `reforged-builtins/items`.
  */
@@ -8350,12 +9000,16 @@ declare function FourCC(id: "eops"): Rawcode<"item">;
 /**
  * Shield of the Scarlet Crusade (`eosc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ShieldOfTheScarletCrusade_eosc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eosc"): Rawcode<"item">;
 
 /**
  * Arcane Cleaver (`epac`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ArcaneCleaver_epac`, from `reforged-builtins/items`.
  */
@@ -8364,12 +9018,16 @@ declare function FourCC(id: "epac"): Rawcode<"item">;
 /**
  * Abomination's Hook (`epah`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.AbominationsHook_epah`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "epah"): Rawcode<"item">;
 
 /**
  * Plaguebearer Cuirass (`epbc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.PlaguebearerCuirass_epbc`, from `reforged-builtins/items`.
  */
@@ -8378,12 +9036,16 @@ declare function FourCC(id: "epbc"): Rawcode<"item">;
 /**
  * Plaguebearer Shortsword (`epbs`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.PlaguebearerShortsword_epbs`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "epbs"): Rawcode<"item">;
 
 /**
  * Corrupted Greatsword (`epcg`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.CorruptedGreatsword_epcg`, from `reforged-builtins/items`.
  */
@@ -8392,12 +9054,16 @@ declare function FourCC(id: "epcg"): Rawcode<"item">;
 /**
  * Crystal Sword (`epcs`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.CrystalSword_epcs`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "epcs"): Rawcode<"item">;
 
 /**
  * Daybreaker (`epdb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.Daybreaker_epdb`, from `reforged-builtins/items`.
  */
@@ -8406,12 +9072,16 @@ declare function FourCC(id: "epdb"): Rawcode<"item">;
 /**
  * Deathwhisper (`epdw`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.Deathwhisper_epdw`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "epdw"): Rawcode<"item">;
 
 /**
  * Ghoulish Claw (`epfc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GhoulishClaw_epfc`, from `reforged-builtins/items`.
  */
@@ -8420,12 +9090,16 @@ declare function FourCC(id: "epfc"): Rawcode<"item">;
 /**
  * Gilnean Battleaxe (`epgb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GilneanBattleaxe_epgb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "epgb"): Rawcode<"item">;
 
 /**
  * Guardsman Dagger (`epgd`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GuardsmanDagger_epgd`, from `reforged-builtins/items`.
  */
@@ -8434,12 +9108,16 @@ declare function FourCC(id: "epgd"): Rawcode<"item">;
 /**
  * Guardsman Longsword (`epgl`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GuardsmanLongsword_epgl`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "epgl"): Rawcode<"item">;
 
 /**
  * Huge Flail (`ephf`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.HugeFlail_ephf`, from `reforged-builtins/items`.
  */
@@ -8448,12 +9126,16 @@ declare function FourCC(id: "ephf"): Rawcode<"item">;
 /**
  * Portable Lightning Rod (`eplr`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.PortableLightningRod_eplr`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eplr"): Rawcode<"item">;
 
 /**
  * Mograine's Might (`epmb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.MograinesMight_epmb`, from `reforged-builtins/items`.
  */
@@ -8462,12 +9144,16 @@ declare function FourCC(id: "epmb"): Rawcode<"item">;
 /**
  * Monastery Mace (`epmm`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.MonasteryMace_epmm`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "epmm"): Rawcode<"item">;
 
 /**
  * Mundane Wand (`epmw`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.MundaneWand_epmw`, from `reforged-builtins/items`.
  */
@@ -8476,12 +9162,16 @@ declare function FourCC(id: "epmw"): Rawcode<"item">;
 /**
  * Nightfall (`epnf`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.Nightfall_epnf`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "epnf"): Rawcode<"item">;
 
 /**
  * Suspicious Concoction (`epoa`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.SuspiciousConcoction_epoa`, from `reforged-builtins/items`.
  */
@@ -8490,12 +9180,16 @@ declare function FourCC(id: "epoa"): Rawcode<"item">;
 /**
  * Ogre Warclub (`epow`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.OgreWarclub_epow`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "epow"): Rawcode<"item">;
 
 /**
  * Quarry Pickaxe (`epqp`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.QuarryPickaxe_epqp`, from `reforged-builtins/items`.
  */
@@ -8504,12 +9198,16 @@ declare function FourCC(id: "epqp"): Rawcode<"item">;
 /**
  * Primal Ring of Magic (`eprm`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.PrimalRingOfMagic_eprm`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eprm"): Rawcode<"item">;
 
 /**
  * Skeletal Bow (`epsb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.SkeletalBow_epsb`, from `reforged-builtins/items`.
  */
@@ -8518,12 +9216,16 @@ declare function FourCC(id: "epsb"): Rawcode<"item">;
 /**
  * Sharpened Cleaver (`epsc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.SharpenedCleaver_epsc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "epsc"): Rawcode<"item">;
 
 /**
  * Sword of the Ghostlands (`epsg`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.SwordOfTheGhostlands_epsg`, from `reforged-builtins/items`.
  */
@@ -8532,12 +9234,16 @@ declare function FourCC(id: "epsg"): Rawcode<"item">;
 /**
  * Protector of the Silver Hand (`epsh`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ProtectorOfTheSilverHand_epsh`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "epsh"): Rawcode<"item">;
 
 /**
  * Staff of Jordan (`epsj`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.StaffOfJordan_epsj`, from `reforged-builtins/items`.
  */
@@ -8546,12 +9252,16 @@ declare function FourCC(id: "epsj"): Rawcode<"item">;
 /**
  * Soulstealer (`epss`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.Soulstealer_epss`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "epss"): Rawcode<"item">;
 
 /**
  * The Kingbreaker (`eptk`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.TheKingbreaker_eptk`, from `reforged-builtins/items`.
  */
@@ -8560,12 +9270,16 @@ declare function FourCC(id: "eptk"): Rawcode<"item">;
 /**
  * Thornguard Rapier (`eptr`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ThornguardRapier_eptr`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eptr"): Rawcode<"item">;
 
 /**
  * Plaguewrought, Blight Incarnate (`epwb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.PlaguewroughtBlightIncarnate_epwb`, from `reforged-builtins/items`.
  */
@@ -8574,12 +9288,16 @@ declare function FourCC(id: "epwb"): Rawcode<"item">;
 /**
  * Painted Wooden Sword (`epws`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.PaintedWoodenSword_epws`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "epws"): Rawcode<"item">;
 
 /**
  * Ring of the Archdruid (`erad`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.RingOfTheArchdruid_erad`, from `reforged-builtins/items`.
  */
@@ -8588,12 +9306,16 @@ declare function FourCC(id: "erad"): Rawcode<"item">;
 /**
  * Ring of Agitated Fervor (`eraf`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RingOfAgitatedFervor_eraf`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eraf"): Rawcode<"item">;
 
 /**
  * Rusty Bronze Gauntlets (`erbg`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.RustyBronzeGauntlets_erbg`, from `reforged-builtins/items`.
  */
@@ -8602,12 +9324,16 @@ declare function FourCC(id: "erbg"): Rawcode<"item">;
 /**
  * Robes of the Battlemage (`erbm`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RobesOfTheBattlemage_erbm`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "erbm"): Rawcode<"item">;
 
 /**
  * Caged Soul (`ercs`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.CagedSoul_ercs`, from `reforged-builtins/items`.
  */
@@ -8616,12 +9342,16 @@ declare function FourCC(id: "ercs"): Rawcode<"item">;
 /**
  * Diamond Ring (`erdr`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.DiamondRing_erdr`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "erdr"): Rawcode<"item">;
 
 /**
  * Energy Band (`ereb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.EnergyBand_ereb`, from `reforged-builtins/items`.
  */
@@ -8630,12 +9360,16 @@ declare function FourCC(id: "ereb"): Rawcode<"item">;
 /**
  * Echoes of the Fallen (`eref`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.EchoesOfTheFallen_eref`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eref"): Rawcode<"item">;
 
 /**
  * Earthen Signet (`eres`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.EarthenSignet_eres`, from `reforged-builtins/items`.
  */
@@ -8644,12 +9378,16 @@ declare function FourCC(id: "eres"): Rawcode<"item">;
 /**
  * Ring of the Fortunate Adventurer (`erfa`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RingOfTheFortunateAdventurer_erfa`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "erfa"): Rawcode<"item">;
 
 /**
  * Ring of the Firelands (`erfl`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.RingOfTheFirelands_erfl`, from `reforged-builtins/items`.
  */
@@ -8658,12 +9396,16 @@ declare function FourCC(id: "erfl"): Rawcode<"item">;
 /**
  * Gift of Greed (`ergg`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GiftOfGreed_ergg`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ergg"): Rawcode<"item">;
 
 /**
  * Ring of Greater Mana Efficiency (`ergm`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.RingOfGreaterManaEfficiency_ergm`, from `reforged-builtins/items`.
  */
@@ -8672,12 +9414,16 @@ declare function FourCC(id: "ergm"): Rawcode<"item">;
 /**
  * Gift of Pride (`ergp`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GiftOfPride_ergp`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ergp"): Rawcode<"item">;
 
 /**
  * Gift of Sloth (`ergs`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.GiftOfSloth_ergs`, from `reforged-builtins/items`.
  */
@@ -8686,12 +9432,16 @@ declare function FourCC(id: "ergs"): Rawcode<"item">;
 /**
  * Gift of Wrath (`ergw`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GiftOfWrath_ergw`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ergw"): Rawcode<"item">;
 
 /**
  * Honed Edge (`erhe`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.HonedEdge_erhe`, from `reforged-builtins/items`.
  */
@@ -8700,12 +9450,16 @@ declare function FourCC(id: "erhe"): Rawcode<"item">;
 /**
  * Heart of the Firelord (`erhf`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.HeartOfTheFirelord_erhf`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "erhf"): Rawcode<"item">;
 
 /**
  * Ravage, Herald of Obliteration (`erho`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.RavageHeraldOfObliteration_erho`, from `reforged-builtins/items`.
  */
@@ -8714,12 +9468,16 @@ declare function FourCC(id: "erho"): Rawcode<"item">;
 /**
  * Razorice, Harbinger of Winter (`erhw`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RazoriceHarbingerOfWinter_erhw`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "erhw"): Rawcode<"item">;
 
 /**
  * Robes of the Kirin Tor (`erkt`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.RobesOfTheKirinTor_erkt`, from `reforged-builtins/items`.
  */
@@ -8728,12 +9486,16 @@ declare function FourCC(id: "erkt"): Rawcode<"item">;
 /**
  * Ring of Lesser Restoration (`erlr`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RingOfLesserRestoration_erlr`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "erlr"): Rawcode<"item">;
 
 /**
  * Nerubian Necklace (`ernn`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.NerubianNecklace_ernn`, from `reforged-builtins/items`.
  */
@@ -8742,12 +9504,16 @@ declare function FourCC(id: "ernn"): Rawcode<"item">;
 /**
  * Ruby Necklace of Power (`ernp`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RubyNecklaceOfPower_ernp`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ernp"): Rawcode<"item">;
 
 /**
  * Ring of Assassination (`eroa`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.RingOfAssassination_eroa`, from `reforged-builtins/items`.
  */
@@ -8756,12 +9522,16 @@ declare function FourCC(id: "eroa"): Rawcode<"item">;
 /**
  * Ring of Evasion (`eroe`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RingOfEvasion_eroe`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eroe"): Rawcode<"item">;
 
 /**
  * Rune of Fire (`erof`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.RuneOfFire_erof`, from `reforged-builtins/items`.
  */
@@ -8770,12 +9540,16 @@ declare function FourCC(id: "erof"): Rawcode<"item">;
 /**
  * Ogre Gauntlets (`erog`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.OgreGauntlets_erog`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "erog"): Rawcode<"item">;
 
 /**
  * Purifier Blade (`erpb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.PurifierBlade_erpb`, from `reforged-builtins/items`.
  */
@@ -8784,12 +9558,16 @@ declare function FourCC(id: "erpb"): Rawcode<"item">;
 /**
  * Ring of the Runeweaver (`errw`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RingOfTheRuneweaver_errw`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "errw"): Rawcode<"item">;
 
 /**
  * Signet of Blood (`ersb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.SignetOfBlood_ersb`, from `reforged-builtins/items`.
  */
@@ -8798,12 +9576,16 @@ declare function FourCC(id: "ersb"): Rawcode<"item">;
 /**
  * Signet of Decay (`ersd`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.SignetOfDecay_ersd`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ersd"): Rawcode<"item">;
 
 /**
  * Star of Elune (`erse`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.StarOfElune_erse`, from `reforged-builtins/items`.
  */
@@ -8812,12 +9594,16 @@ declare function FourCC(id: "erse"): Rawcode<"item">;
 /**
  * Ring of Stone Fortitude (`ersf`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RingOfStoneFortitude_ersf`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ersf"): Rawcode<"item">;
 
 /**
  * Ring of the Sacred Grove (`ersg`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.RingOfTheSacredGrove_ersg`, from `reforged-builtins/items`.
  */
@@ -8826,12 +9612,16 @@ declare function FourCC(id: "ersg"): Rawcode<"item">;
 /**
  * Tome of Azjol-Nerub (`ersk`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.TomeOfAzjolNerub_ersk`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ersk"): Rawcode<"item">;
 
 /**
  * Ring of Sacred Magic (`ersm`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.RingOfSacredMagic_ersm`, from `reforged-builtins/items`.
  */
@@ -8840,12 +9630,16 @@ declare function FourCC(id: "ersm"): Rawcode<"item">;
 /**
  * Spellbreaker's Necklace (`ersn`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.SpellbreakersNecklace_ersn`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ersn"): Rawcode<"item">;
 
 /**
  * Ursoc's Gift (`erug`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.UrsocsGift_erug`, from `reforged-builtins/items`.
  */
@@ -8854,6 +9648,8 @@ declare function FourCC(id: "erug"): Rawcode<"item">;
 /**
  * Sanctified Chestplate (`esa1`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.SanctifiedChestplate_esa1`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "esa1"): Rawcode<"item">;
@@ -8861,12 +9657,16 @@ declare function FourCC(id: "esa1"): Rawcode<"item">;
 /**
  * Sanctified Gauntlets (`esa2`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.SanctifiedGauntlets_esa2`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "esa2"): Rawcode<"item">;
 
 /**
  * Staff of Arcane Hunger (`esah`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.StaffOfArcaneHunger_esah`, from `reforged-builtins/items`.
  */
@@ -8882,12 +9682,16 @@ declare function FourCC(id: "esaz"): Rawcode<"item">;
 /**
  * Bone Staff (`esbs`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BoneStaff_esbs`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "esbs"): Rawcode<"item">;
 
 /**
  * Spellbreaker Circlet (`esbt`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.SpellbreakerCirclet_esbt`, from `reforged-builtins/items`.
  */
@@ -8896,12 +9700,16 @@ declare function FourCC(id: "esbt"): Rawcode<"item">;
 /**
  * Signet of the Crypt Lord (`escl`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.SignetOfTheCryptLord_escl`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "escl"): Rawcode<"item">;
 
 /**
  * The Screecher (`escr`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.TheScreecher_escr`, from `reforged-builtins/items`.
  */
@@ -8910,12 +9718,16 @@ declare function FourCC(id: "escr"): Rawcode<"item">;
 /**
  * Cork Shooter (`escs`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.CorkShooter_escs`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "escs"): Rawcode<"item">;
 
 /**
  * Silverpine Forest Shiv (`esfs`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.SilverpineForestShiv_esfs`, from `reforged-builtins/items`.
  */
@@ -8924,12 +9736,16 @@ declare function FourCC(id: "esfs"): Rawcode<"item">;
 /**
  * Shepherd's Curse (`eshc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ShepherdsCurse_eshc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eshc"): Rawcode<"item">;
 
 /**
  * Wildhammer Breastplate (`esib`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.WildhammerBreastplate_esib`, from `reforged-builtins/items`.
  */
@@ -8938,12 +9754,16 @@ declare function FourCC(id: "esib"): Rawcode<"item">;
 /**
  * Kris, the Everburning (`eske`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.KrisTheEverburning_eske`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eske"): Rawcode<"item">;
 
 /**
  * Shredder's Left Arm (`esla`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ShreddersLeftArm_esla`, from `reforged-builtins/items`.
  */
@@ -8952,12 +9772,16 @@ declare function FourCC(id: "esla"): Rawcode<"item">;
 /**
  * Shattered Scourgelord's Crown (`eslc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ShatteredScourgelordsCrown_eslc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eslc"): Rawcode<"item">;
 
 /**
  * Lich Orb (`eslo`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.LichOrb_eslo`, from `reforged-builtins/items`.
  */
@@ -8966,12 +9790,16 @@ declare function FourCC(id: "eslo"): Rawcode<"item">;
 /**
  * Lordaeron Shield (`esls`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.LordaeronShield_esls`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "esls"): Rawcode<"item">;
 
 /**
  * Necrolyte's March (`esnm`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.NecrolytesMarch_esnm`, from `reforged-builtins/items`.
  */
@@ -8980,12 +9808,16 @@ declare function FourCC(id: "esnm"): Rawcode<"item">;
 /**
  * Nexus Shiv (`esns`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.NexusShiv_esns`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "esns"): Rawcode<"item">;
 
 /**
  * Scepter of Darkness (`esod`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ScepterOfDarkness_esod`, from `reforged-builtins/items`.
  */
@@ -8994,12 +9826,16 @@ declare function FourCC(id: "esod"): Rawcode<"item">;
 /**
  * Scythe of Frost (`esof`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ScytheOfFrost_esof`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "esof"): Rawcode<"item">;
 
 /**
  * Seal of Sylvanas (`esos`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.SealOfSylvanas_esos`, from `reforged-builtins/items`.
  */
@@ -9008,12 +9844,16 @@ declare function FourCC(id: "esos"): Rawcode<"item">;
 /**
  * Shield of the Titans (`esot`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ShieldOfTheTitans_esot`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "esot"): Rawcode<"item">;
 
 /**
  * Spell Parrying Buckler (`espb`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.SpellParryingBuckler_espb`, from `reforged-builtins/items`.
  */
@@ -9022,12 +9862,16 @@ declare function FourCC(id: "espb"): Rawcode<"item">;
 /**
  * Sucker Punch Gauntlets (`espg`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.SuckerPunchGauntlets_espg`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "espg"): Rawcode<"item">;
 
 /**
  * Poison Nettle (`espn`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.PoisonNettle_espn`, from `reforged-builtins/items`.
  */
@@ -9036,12 +9880,16 @@ declare function FourCC(id: "espn"): Rawcode<"item">;
 /**
  * Seal of the Red Court (`esrc`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.SealOfTheRedCourt_esrc`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "esrc"): Rawcode<"item">;
 
 /**
  * Blade of the Scarlet Crusade (`essc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.BladeOfTheScarletCrusade_essc`, from `reforged-builtins/items`.
  */
@@ -9050,12 +9898,16 @@ declare function FourCC(id: "essc"): Rawcode<"item">;
 /**
  * Staff of the Scarlet Inquisitor (`essi`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.StaffOfTheScarletInquisitor_essi`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "essi"): Rawcode<"item">;
 
 /**
  * Sticky Slime Ring (`essr`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.StickySlimeRing_essr`, from `reforged-builtins/items`.
  */
@@ -9064,12 +9916,16 @@ declare function FourCC(id: "essr"): Rawcode<"item">;
 /**
  * Bag of Dust (`etbd`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BagOfDust_etbd`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "etbd"): Rawcode<"item">;
 
 /**
  * Shamanistic Headwear (`etbh`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ShamanisticHeadwear_etbh`, from `reforged-builtins/items`.
  */
@@ -9078,12 +9934,16 @@ declare function FourCC(id: "etbh"): Rawcode<"item">;
 /**
  * Bottled Storm (`etbs`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BottledStorm_etbs`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "etbs"): Rawcode<"item">;
 
 /**
  * Edric's Eye (`etee`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.EdricsEye_etee`, from `reforged-builtins/items`.
  */
@@ -9092,12 +9952,16 @@ declare function FourCC(id: "etee"): Rawcode<"item">;
 /**
  * Forsaken Fangs (`etff`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ForsakenFangs_etff`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "etff"): Rawcode<"item">;
 
 /**
  * The Impenetrable Fortress (`etif`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.TheImpenetrableFortress_etif`, from `reforged-builtins/items`.
  */
@@ -9106,12 +9970,16 @@ declare function FourCC(id: "etif"): Rawcode<"item">;
 /**
  * Knight's Javelin (`etkj`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.KnightsJavelin_etkj`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "etkj"): Rawcode<"item">;
 
 /**
  * Tiara of the Kirin Tor (`etkt`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.TiaraOfTheKirinTor_etkt`, from `reforged-builtins/items`.
  */
@@ -9120,12 +9988,16 @@ declare function FourCC(id: "etkt"): Rawcode<"item">;
 /**
  * Mana Bauble (`etmb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ManaBauble_etmb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "etmb"): Rawcode<"item">;
 
 /**
  * Talisman of Minor Insight (`etmi`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.TalismanOfMinorInsight_etmi`, from `reforged-builtins/items`.
  */
@@ -9134,12 +10006,16 @@ declare function FourCC(id: "etmi"): Rawcode<"item">;
 /**
  * Mark of the Phoenix (`etmp`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.MarkOfThePhoenix_etmp`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "etmp"): Rawcode<"item">;
 
 /**
  * Talisman of the Northern Winds (`etnw`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.TalismanOfTheNorthernWinds_etnw`, from `reforged-builtins/items`.
  */
@@ -9148,12 +10024,16 @@ declare function FourCC(id: "etnw"): Rawcode<"item">;
 /**
  * Totem of the Ogre Magi (`etom`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.TotemOfTheOgreMagi_etom`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "etom"): Rawcode<"item">;
 
 /**
  * Talisman of Nightmares (`eton`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.TalismanOfNightmares_eton`, from `reforged-builtins/items`.
  */
@@ -9162,12 +10042,16 @@ declare function FourCC(id: "eton"): Rawcode<"item">;
 /**
  * Twilight Opal Orb (`etoo`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.TwilightOpalOrb_etoo`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "etoo"): Rawcode<"item">;
 
 /**
  * Talisman of Willpower (`etow`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.TalismanOfWillpower_etow`, from `reforged-builtins/items`.
  */
@@ -9176,12 +10060,16 @@ declare function FourCC(id: "etow"): Rawcode<"item">;
 /**
  * Restorative Balm (`etrb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RestorativeBalm_etrb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "etrb"): Rawcode<"item">;
 
 /**
  * Undercity Chain Robes (`eucr`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.UndercityChainRobes_eucr`, from `reforged-builtins/items`.
  */
@@ -9190,6 +10078,8 @@ declare function FourCC(id: "eucr"): Rawcode<"item">;
 /**
  * Vampiric Gargoyle Mask (`evgm`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.VampiricGargoyleMask_evgm`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "evgm"): Rawcode<"item">;
@@ -9197,12 +10087,16 @@ declare function FourCC(id: "evgm"): Rawcode<"item">;
 /**
  * Vestments of the Wavespeaker (`evow`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.VestmentsOfTheWavespeaker_evow`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "evow"): Rawcode<"item">;
 
 /**
  * Vestments of the Storm King (`evsk`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.VestmentsOfTheStormKing_evsk`, from `reforged-builtins/items`.
  */
@@ -9218,12 +10112,16 @@ declare function FourCC(id: "evtl"): Rawcode<"item">;
 /**
  * Worn Adventurer's Outfit (`ewao`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.WornAdventurersOutfit_ewao`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ewao"): Rawcode<"item">;
 
 /**
  * Mordo's Club (`ewbl`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.MordosClub_ewbl`, from `reforged-builtins/items`.
  */
@@ -9232,12 +10130,16 @@ declare function FourCC(id: "ewbl"): Rawcode<"item">;
 /**
  * Wicked Fang Blade (`ewfb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.WickedFangBlade_ewfb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ewfb"): Rawcode<"item">;
 
 /**
  * Wand of the Apprentice (`ewoa`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.WandOfTheApprentice_ewoa`, from `reforged-builtins/items`.
  */
@@ -9246,12 +10148,16 @@ declare function FourCC(id: "ewoa"): Rawcode<"item">;
 /**
  * Wand of the Battlemage (`ewob`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.WandOfTheBattlemage_ewob`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ewob"): Rawcode<"item">;
 
 /**
  * Worn Steel Plate (`ews1`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.WornSteelPlate_ews1`, from `reforged-builtins/items`.
  */
@@ -9260,12 +10166,16 @@ declare function FourCC(id: "ews1"): Rawcode<"item">;
 /**
  * Worn Thief's Boots (`ewtb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.WornThiefsBoots_ewtb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ewtb"): Rawcode<"item">;
 
 /**
  * Webweaver's Gloves (`ewwg`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.WebweaversGloves_ewwg`, from `reforged-builtins/items`.
  */
@@ -9274,6 +10184,8 @@ declare function FourCC(id: "ewwg"): Rawcode<"item">;
 /**
  * Borelgore, the Corpulent One (`eymo`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.BorelgoreTheCorpulentOne_eymo`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "eymo"): Rawcode<"item">;
@@ -9281,12 +10193,16 @@ declare function FourCC(id: "eymo"): Rawcode<"item">;
 /**
  * Zombie Arm (`ezba`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.ZombieArm_ezba`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ezba"): Rawcode<"item">;
 
 /**
  * Zandalari Giantcrusher (`ezgc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.ZandalariGiantcrusher_ezgc`, from `reforged-builtins/items`.
  */
@@ -9351,12 +10267,16 @@ declare function FourCC(id: "flag"): Rawcode<"item">;
 /**
  * Frostguard (`frgd`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.Frostguard_frgd`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "frgd"): Rawcode<"item">;
 
 /**
  * Firehand Gauntlets (`frhg`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.FirehandGauntlets_frhg`, from `reforged-builtins/items`.
  */
@@ -9407,6 +10327,8 @@ declare function FourCC(id: "glsk"): Rawcode<"item">;
 /**
  * Glix's Special (`glxb`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.GlixsSpecial_glxb`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "glxb"): Rawcode<"item">;
@@ -9449,6 +10371,8 @@ declare function FourCC(id: "gopr"): Rawcode<"item">;
 /**
  * Grimoire of Souls (`grsl`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.GrimoireOfSouls_grsl`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "grsl"): Rawcode<"item">;
@@ -9470,12 +10394,16 @@ declare function FourCC(id: "guvi"): Rawcode<"item">;
 /**
  * Gloves of Spell Mastery (`gvsm`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.GlovesOfSpellMastery_gvsm`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "gvsm"): Rawcode<"item">;
 
 /**
  * Helm of Battlethirst (`hbth`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.HelmOfBattlethirst_hbth`, from `reforged-builtins/items`.
  */
@@ -9498,6 +10426,8 @@ declare function FourCC(id: "hlst"): Rawcode<"item">;
 /**
  * Sacred Relic (`horl`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.SacredRelic_horl`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "horl"): Rawcode<"item">;
@@ -9511,6 +10441,8 @@ declare function FourCC(id: "hslv"): Rawcode<"item">;
 
 /**
  * Skeletal Mage Mask (`hsmm`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.SkeletalMageMask_hsmm`, from `reforged-builtins/items`.
  */
@@ -9582,12 +10514,16 @@ declare function FourCC(id: "k3m3"): Rawcode<"item">;
 /**
  * Keg of Ale (`kgal`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.KegOfAle_kgal`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "kgal"): Rawcode<"item">;
 
 /**
  * Killmaim (`klmm`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.Killmaim_klmm`, from `reforged-builtins/items`.
  */
@@ -9701,6 +10637,8 @@ declare function FourCC(id: "mcri"): Rawcode<"item">;
 /**
  * Magic Key Chain (`mgtk`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.MagicKeyChain_mgtk`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "mgtk"): Rawcode<"item">;
@@ -9714,6 +10652,8 @@ declare function FourCC(id: "mlst"): Rawcode<"item">;
 
 /**
  * Mindstaff (`mnsf`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.Mindstaff_mnsf`, from `reforged-builtins/items`.
  */
@@ -9742,6 +10682,8 @@ declare function FourCC(id: "moon"): Rawcode<"item">;
 
 /**
  * Mogrin's Report (`mort`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.MogrinsReport_mort`, from `reforged-builtins/items`.
  */
@@ -9791,6 +10733,8 @@ declare function FourCC(id: "oflg"): Rawcode<"item">;
 
 /**
  * Orb of Fire (`ofr2`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.OrbOfFire_ofr2`, from `reforged-builtins/items`.
  */
@@ -9848,6 +10792,8 @@ declare function FourCC(id: "pclr"): Rawcode<"item">;
 /**
  * Potion of Divinity (`pdi2`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.PotionOfDivinity_pdi2`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "pdi2"): Rawcode<"item">;
@@ -9868,6 +10814,8 @@ declare function FourCC(id: "penr"): Rawcode<"item">;
 
 /**
  * Essence of Undeath (`peou`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.EssenceOfUndeath_peou`, from `reforged-builtins/items`.
  */
@@ -9981,12 +10929,16 @@ declare function FourCC(id: "pspd"): Rawcode<"item">;
 /**
  * Potion of Ultimate Healing (`puhe`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.PotionOfUltimateHealing_puhe`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "puhe"): Rawcode<"item">;
 
 /**
  * Potion of Ultimate Mana (`puma`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.PotionOfUltimateMana_puma`, from `reforged-builtins/items`.
  */
@@ -10064,6 +11016,8 @@ declare function FourCC(id: "ratf"): Rawcode<"item">;
 
 /**
  * Boots of Haste (`rcdr`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.BootsOfHaste_rcdr`, from `reforged-builtins/items`.
  */
@@ -10219,6 +11173,8 @@ declare function FourCC(id: "rman"): Rawcode<"item">;
 /**
  * Ring of Mana Efficiency (`rmef`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RingOfManaEfficiency_rmef`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "rmef"): Rawcode<"item">;
@@ -10239,6 +11195,8 @@ declare function FourCC(id: "rnsp"): Rawcode<"item">;
 
 /**
  * Scepter of the Sea (`rots`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.ScepterOfTheSea_rots`, from `reforged-builtins/items`.
  */
@@ -10275,12 +11233,16 @@ declare function FourCC(id: "rres"): Rawcode<"item">;
 /**
  * Lion's Heart (`rrsl`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.LionsHeart_rrsl`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "rrsl"): Rawcode<"item">;
 
 /**
  * Dalaran Signet Ring (`rspa`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Items.DalaranSignetRing_rspa`, from `reforged-builtins/items`.
  */
@@ -10310,6 +11272,8 @@ declare function FourCC(id: "rsps"): Rawcode<"item">;
 /**
  * Ring of Leeching (`rspv`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.RingOfLeeching_rspv`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "rspv"): Rawcode<"item">;
@@ -10324,12 +11288,16 @@ declare function FourCC(id: "rst1"): Rawcode<"item">;
 /**
  * Runed Gauntlets (`rugt`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.RunedGauntlets_rugt`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "rugt"): Rawcode<"item">;
 
 /**
  * Rusty Mining Pick (`rump`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.RustyMiningPick_rump`, from `reforged-builtins/items`.
  */
@@ -10380,6 +11348,8 @@ declare function FourCC(id: "scav"): Rawcode<"item">;
 /**
  * Scepter of Healing (`schl`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.ScepterOfHealing_schl`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "schl"): Rawcode<"item">;
@@ -10393,6 +11363,8 @@ declare function FourCC(id: "sclp"): Rawcode<"item">;
 
 /**
  * Scroll of the Unholy Legion (`scul`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.ScrollOfTheUnholyLegion_scul`, from `reforged-builtins/items`.
  */
@@ -10429,12 +11401,16 @@ declare function FourCC(id: "shas"): Rawcode<"item">;
 /**
  * Shaman Claws (`shcw`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.ShamanClaws_shcw`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "shcw"): Rawcode<"item">;
 
 /**
  * Shield of the Deathlord (`shdt`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.ShieldOfTheDeathlord_shdt`, from `reforged-builtins/items`.
  */
@@ -10450,6 +11426,8 @@ declare function FourCC(id: "shea"): Rawcode<"item">;
 /**
  * Enchanted Shield (`shen`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.EnchantedShield_shen`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "shen"): Rawcode<"item">;
@@ -10457,12 +11435,16 @@ declare function FourCC(id: "shen"): Rawcode<"item">;
 /**
  * Shield of Honor (`shhn`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.ShieldOfHonor_shhn`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "shhn"): Rawcode<"item">;
 
 /**
  * Shimmerglaze Roast (`shrs`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.ShimmerglazeRoast_shrs`, from `reforged-builtins/items`.
  */
@@ -10637,7 +11619,18 @@ declare function FourCC(id: "spro"): Rawcode<"item">;
 declare function FourCC(id: "spsh"): Rawcode<"item">;
 
 /**
+ * `spur`, unnamed, a Built-in item of Patch 3.0.0.
+ *
+ * In the Melee Game data set. Not in the Default and Custom Game data sets.
+ *
+ * Its constant is `Items.Unnamed_spur`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "spur"): Rawcode<"item">;
+
+/**
  * Searing Blade (`srbd`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.SearingBlade_srbd`, from `reforged-builtins/items`.
  */
@@ -10674,6 +11667,8 @@ declare function FourCC(id: "srrc"): Rawcode<"item">;
 /**
  * Serathil (`srtl`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.Serathil_srtl`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "srtl"): Rawcode<"item">;
@@ -10702,6 +11697,8 @@ declare function FourCC(id: "stel"): Rawcode<"item">;
 /**
  * Clockwork Penguin (`stpg`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.ClockworkPenguin_stpg`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "stpg"): Rawcode<"item">;
@@ -10709,12 +11706,16 @@ declare function FourCC(id: "stpg"): Rawcode<"item">;
 /**
  * Staff of Reanimation (`stre`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.StaffOfReanimation_stre`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "stre"): Rawcode<"item">;
 
 /**
  * Sturdy War Axe (`stwa`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.SturdyWarAxe_stwa`, from `reforged-builtins/items`.
  */
@@ -10730,12 +11731,16 @@ declare function FourCC(id: "stwp"): Rawcode<"item">;
 /**
  * Seed of Expulsion (`sxpl`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.SeedOfExpulsion_sxpl`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "sxpl"): Rawcode<"item">;
 
 /**
  * Tiny Altar of Kings (`tbak`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.TinyAltarOfKings_tbak`, from `reforged-builtins/items`.
  */
@@ -10744,12 +11749,16 @@ declare function FourCC(id: "tbak"): Rawcode<"item">;
 /**
  * Tiny Barracks (`tbar`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.TinyBarracks_tbar`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "tbar"): Rawcode<"item">;
 
 /**
  * Tiny Blacksmith (`tbsm`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.TinyBlacksmith_tbsm`, from `reforged-builtins/items`.
  */
@@ -10793,6 +11802,8 @@ declare function FourCC(id: "texp"): Rawcode<"item">;
 /**
  * Tiny Farm (`tfar`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.TinyFarm_tfar`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "tfar"): Rawcode<"item">;
@@ -10813,6 +11824,8 @@ declare function FourCC(id: "tgxp"): Rawcode<"item">;
 
 /**
  * Thunderlizard Diamond (`thdm`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.ThunderlizardDiamond_thdm`, from `reforged-builtins/items`.
  */
@@ -10849,6 +11862,8 @@ declare function FourCC(id: "tkno"): Rawcode<"item">;
 /**
  * Tiny Lumber Mill (`tlum`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.TinyLumberMill_tlum`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "tlum"): Rawcode<"item">;
@@ -10862,6 +11877,8 @@ declare function FourCC(id: "tmmt"): Rawcode<"item">;
 
 /**
  * Tome of Sacrifices (`tmsc`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.TomeOfSacrifices_tmsc`, from `reforged-builtins/items`.
  */
@@ -10912,6 +11929,8 @@ declare function FourCC(id: "tstr"): Rawcode<"item">;
 /**
  * Tome of Talent (`ttal`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Items.TomeOfTalent_ttal`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "ttal"): Rawcode<"item">;
@@ -10939,6 +11958,8 @@ declare function FourCC(id: "vddl"): Rawcode<"item">;
 
 /**
  * Vine of Purification (`vpur`), a Built-in item of Patch 3.0.0.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Items.VineOfPurification_vpur`, from `reforged-builtins/items`.
  */
@@ -11010,6 +12031,8 @@ declare function FourCC(id: "wneu"): Rawcode<"item">;
 /**
  * Wirt's Other Leg (`wolg`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.WirtsOtherLeg_wolg`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "wolg"): Rawcode<"item">;
@@ -11038,6 +12061,8 @@ declare function FourCC(id: "wswd"): Rawcode<"item">;
 /**
  * Wirt's Leg (`wtlg`), a Built-in item of Patch 3.0.0.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Items.WirtsLeg_wtlg`, from `reforged-builtins/items`.
  */
 declare function FourCC(id: "wtlg"): Rawcode<"item">;
@@ -11047,12 +12072,16 @@ declare function FourCC(id: "wtlg"): Rawcode<"item">;
 /**
  * Item Hero Stat Bonus (`AA12`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHeroStatBonus_AA12`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AA12"): Rawcode<"ability">;
 
 /**
  * Item Armor Corrupt 5 (`AACe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemArmorCorrupt5_AACe`, from `reforged-builtins/abilities`.
  */
@@ -11061,12 +12090,16 @@ declare function FourCC(id: "AACe"): Rawcode<"ability">;
 /**
  * Item Armor Corrupt 2 (`AACq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemArmorCorrupt2_AACq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AACq"): Rawcode<"ability">;
 
 /**
  * Item Armor Corrupt 3 (`AACw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemArmorCorrupt3_AACw`, from `reforged-builtins/abilities`.
  */
@@ -11075,12 +12108,16 @@ declare function FourCC(id: "AACw"): Rawcode<"ability">;
 /**
  * Item Spell Damage 8 (`AADe`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellDamage8_AADe`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AADe"): Rawcode<"ability">;
 
 /**
  * Item Spell Damage 7 (`AADi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellDamage7_AADi`, from `reforged-builtins/abilities`.
  */
@@ -11089,12 +12126,16 @@ declare function FourCC(id: "AADi"): Rawcode<"ability">;
 /**
  * Item Spell Damage 2 (`AADo`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellDamage2_AADo`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AADo"): Rawcode<"ability">;
 
 /**
  * Item Spell Damage 3 (`AADq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellDamage3_AADq`, from `reforged-builtins/abilities`.
  */
@@ -11103,12 +12144,16 @@ declare function FourCC(id: "AADq"): Rawcode<"ability">;
 /**
  * Item Spell Damage 4 (`AADr`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellDamage4_AADr`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AADr"): Rawcode<"ability">;
 
 /**
  * Item Spell Damage 10 (`AADt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellDamage10_AADt`, from `reforged-builtins/abilities`.
  */
@@ -11117,12 +12162,16 @@ declare function FourCC(id: "AADt"): Rawcode<"ability">;
 /**
  * Item Spell Damage 6 (`AADu`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellDamage6_AADu`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AADu"): Rawcode<"ability">;
 
 /**
  * Item Spell Damage 5 (`AADw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellDamage5_AADw`, from `reforged-builtins/abilities`.
  */
@@ -11131,12 +12180,16 @@ declare function FourCC(id: "AADw"): Rawcode<"ability">;
 /**
  * Item Spell Damage 12 (`AADy`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellDamage12_AADy`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AADy"): Rawcode<"ability">;
 
 /**
  * Item Spell Amp 20 (`AAPa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellAmp20_AAPa`, from `reforged-builtins/abilities`.
  */
@@ -11145,12 +12198,16 @@ declare function FourCC(id: "AAPa"): Rawcode<"ability">;
 /**
  * Item Spell Amp 3 (`AAPe`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellAmp3_AAPe`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AAPe"): Rawcode<"ability">;
 
 /**
  * Item Spell Amp 4 (`AAPi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellAmp4_AAPi`, from `reforged-builtins/abilities`.
  */
@@ -11159,12 +12216,16 @@ declare function FourCC(id: "AAPi"): Rawcode<"ability">;
 /**
  * Item Spell Amp 6 (`AAPo`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellAmp6_AAPo`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AAPo"): Rawcode<"ability">;
 
 /**
  * Item Spell Amp 15 (`AAPp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellAmp15_AAPp`, from `reforged-builtins/abilities`.
  */
@@ -11173,12 +12234,16 @@ declare function FourCC(id: "AAPp"): Rawcode<"ability">;
 /**
  * Item Spell Amp 12 (`AAPq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellAmp12_AAPq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AAPq"): Rawcode<"ability">;
 
 /**
  * Item Spell Amp 8 (`AAPr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellAmp8_AAPr`, from `reforged-builtins/abilities`.
  */
@@ -11187,12 +12252,16 @@ declare function FourCC(id: "AAPr"): Rawcode<"ability">;
 /**
  * Item Spell Amp 10 (`AAPs`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellAmp10_AAPs`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AAPs"): Rawcode<"ability">;
 
 /**
  * Item Spell Amp 13 (`AAPt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellAmp13_AAPt`, from `reforged-builtins/abilities`.
  */
@@ -11201,12 +12270,16 @@ declare function FourCC(id: "AAPt"): Rawcode<"ability">;
 /**
  * Item Spell Amp 18 (`AAPu`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellAmp18_AAPu`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AAPu"): Rawcode<"ability">;
 
 /**
  * Item Spell Amp 5 (`AAPw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellAmp5_AAPw`, from `reforged-builtins/abilities`.
  */
@@ -11215,12 +12288,16 @@ declare function FourCC(id: "AAPw"): Rawcode<"ability">;
 /**
  * Item Spell Amp 26 (`AAPx`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellAmp26_AAPx`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AAPx"): Rawcode<"ability">;
 
 /**
  * Item Spell Amp 7 (`AAPy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellAmp7_AAPy`, from `reforged-builtins/abilities`.
  */
@@ -11229,12 +12306,16 @@ declare function FourCC(id: "AAPy"): Rawcode<"ability">;
 /**
  * Item Health Regen Aura 3 (`AARe`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHealthRegenAura3_AARe`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AARe"): Rawcode<"ability">;
 
 /**
  * Item Health Regen Aura 1 (`AARq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHealthRegenAura1_AARq`, from `reforged-builtins/abilities`.
  */
@@ -11243,12 +12324,16 @@ declare function FourCC(id: "AARq"): Rawcode<"ability">;
 /**
  * Item Health Regen Aura 2 (`AARw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHealthRegenAura2_AARw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AARw"): Rawcode<"ability">;
 
 /**
  * Item Attack Speed -10 (`AASa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAttackSpeed10_AASa`, from `reforged-builtins/abilities`.
  */
@@ -11257,12 +12342,16 @@ declare function FourCC(id: "AASa"): Rawcode<"ability">;
 /**
  * Item Attack Speed 4 (`AASd`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAttackSpeed4_AASd`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AASd"): Rawcode<"ability">;
 
 /**
  * Item Attack Speed Bonus 8 (`AASe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAttackSpeedBonus8_AASe`, from `reforged-builtins/abilities`.
  */
@@ -11271,12 +12360,16 @@ declare function FourCC(id: "AASe"): Rawcode<"ability">;
 /**
  * Item Attack Speed 24 (`AASf`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAttackSpeed24_AASf`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AASf"): Rawcode<"ability">;
 
 /**
  * Item Attack Speed 30 (`AASg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAttackSpeed30_AASg`, from `reforged-builtins/abilities`.
  */
@@ -11285,12 +12378,16 @@ declare function FourCC(id: "AASg"): Rawcode<"ability">;
 /**
  * Item Attack Speed -20 (`AASh`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAttackSpeed20_AASh`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AASh"): Rawcode<"ability">;
 
 /**
  * Item Attack Speed 12 (`AASi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAttackSpeed12_AASi`, from `reforged-builtins/abilities`.
  */
@@ -11299,12 +12396,16 @@ declare function FourCC(id: "AASi"): Rawcode<"ability">;
 /**
  * Item Attack Speed 25 (`AASo`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAttackSpeed25_AASo`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AASo"): Rawcode<"ability">;
 
 /**
  * Item Attack Speed 20 (`AASp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAttackSpeed20_AASp`, from `reforged-builtins/abilities`.
  */
@@ -11313,12 +12414,16 @@ declare function FourCC(id: "AASp"): Rawcode<"ability">;
 /**
  * Item Attack Speed Bonus 15 (`AASq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAttackSpeedBonus15_AASq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AASq"): Rawcode<"ability">;
 
 /**
  * Item Attack Speed Bonus 10 (`AASr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAttackSpeedBonus10_AASr`, from `reforged-builtins/abilities`.
  */
@@ -11327,12 +12432,16 @@ declare function FourCC(id: "AASr"): Rawcode<"ability">;
 /**
  * Item Attack Speed 3 (`AASs`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAttackSpeed3_AASs`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AASs"): Rawcode<"ability">;
 
 /**
  * Item Attack Speed 16 (`AASu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAttackSpeed16_AASu`, from `reforged-builtins/abilities`.
  */
@@ -11341,12 +12450,16 @@ declare function FourCC(id: "AASu"): Rawcode<"ability">;
 /**
  * Item Attack Speed Bonus 9 (`AASw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAttackSpeedBonus9_AASw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AASw"): Rawcode<"ability">;
 
 /**
  * Item Attack Speed 6 (`AASy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAttackSpeed6_AASy`, from `reforged-builtins/abilities`.
  */
@@ -11362,12 +12475,16 @@ declare function FourCC(id: "AAns"): Rawcode<"ability">;
 /**
  * Item Ability Speed 25 (`ACDa`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAbilitySpeed25_ACDa`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACDa"): Rawcode<"ability">;
 
 /**
  * Item Ability Speed 15 (`ACDd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAbilitySpeed15_ACDd`, from `reforged-builtins/abilities`.
  */
@@ -11376,12 +12493,16 @@ declare function FourCC(id: "ACDd"): Rawcode<"ability">;
 /**
  * Item Ability Speed 20 (`ACDf`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAbilitySpeed20_ACDf`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACDf"): Rawcode<"ability">;
 
 /**
  * Item Ability Speed 8 (`ACDi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAbilitySpeed8_ACDi`, from `reforged-builtins/abilities`.
  */
@@ -11390,12 +12511,16 @@ declare function FourCC(id: "ACDi"): Rawcode<"ability">;
 /**
  * Item Ability Speed 10 (`ACDo`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAbilitySpeed10_ACDo`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACDo"): Rawcode<"ability">;
 
 /**
  * Item Ability Speed 2 (`ACDp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAbilitySpeed2_ACDp`, from `reforged-builtins/abilities`.
  */
@@ -11404,12 +12529,16 @@ declare function FourCC(id: "ACDp"): Rawcode<"ability">;
 /**
  * Item Ability Speed 12 (`ACDq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAbilitySpeed12_ACDq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACDq"): Rawcode<"ability">;
 
 /**
  * Item Ability Speed 5 (`ACDt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAbilitySpeed5_ACDt`, from `reforged-builtins/abilities`.
  */
@@ -11418,12 +12547,16 @@ declare function FourCC(id: "ACDt"): Rawcode<"ability">;
 /**
  * Item Ability Speed 6 (`ACDu`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAbilitySpeed6_ACDu`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACDu"): Rawcode<"ability">;
 
 /**
  * Item Ability Speed 3 (`ACDw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAbilitySpeed3_ACDw`, from `reforged-builtins/abilities`.
  */
@@ -11432,12 +12565,16 @@ declare function FourCC(id: "ACDw"): Rawcode<"ability">;
 /**
  * Item Ability Speed 4 (`ACDy`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAbilitySpeed4_ACDy`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACDy"): Rawcode<"ability">;
 
 /**
  * Item Chronomaster's Gloves Ally (`ACGa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemChronomastersGlovesAlly_ACGa`, from `reforged-builtins/abilities`.
  */
@@ -11446,12 +12583,16 @@ declare function FourCC(id: "ACGa"): Rawcode<"ability">;
 /**
  * Item Chronomaster's Gloves Enemy (`ACGe`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemChronomastersGlovesEnemy_ACGe`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACGe"): Rawcode<"ability">;
 
 /**
  * Item Cleave 30 (`ACLw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCleave30_ACLw`, from `reforged-builtins/abilities`.
  */
@@ -11460,12 +12601,16 @@ declare function FourCC(id: "ACLw"): Rawcode<"ability">;
 /**
  * Item Critical Chance 20 (`ACSb`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCriticalChance20_ACSb`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACSb"): Rawcode<"ability">;
 
 /**
  * Item Critical Chance 12 (`ACSc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCriticalChance12_ACSc`, from `reforged-builtins/abilities`.
  */
@@ -11474,12 +12619,16 @@ declare function FourCC(id: "ACSc"): Rawcode<"ability">;
 /**
  * Item Critical Chance 7 (`ACSd`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCriticalChance7_ACSd`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACSd"): Rawcode<"ability">;
 
 /**
  * Item Critical Chance 3 (`ACSe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCriticalChance3_ACSe`, from `reforged-builtins/abilities`.
  */
@@ -11488,12 +12637,16 @@ declare function FourCC(id: "ACSe"): Rawcode<"ability">;
 /**
  * Item Critical Chance 30 (`ACSg`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCriticalChance30_ACSg`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACSg"): Rawcode<"ability">;
 
 /**
  * Item Critical Chance 6 (`ACSj`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCriticalChance6_ACSj`, from `reforged-builtins/abilities`.
  */
@@ -11502,12 +12655,16 @@ declare function FourCC(id: "ACSj"): Rawcode<"ability">;
 /**
  * Item Critical Chance 16 (`ACSn`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCriticalChance16_ACSn`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACSn"): Rawcode<"ability">;
 
 /**
  * Item Critical Chance 8 (`ACSo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCriticalChance8_ACSo`, from `reforged-builtins/abilities`.
  */
@@ -11516,12 +12673,16 @@ declare function FourCC(id: "ACSo"): Rawcode<"ability">;
 /**
  * Item Critical Chance 10 (`ACSq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCriticalChance10_ACSq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACSq"): Rawcode<"ability">;
 
 /**
  * Item Critical Chance 2 (`ACSr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCriticalChance2_ACSr`, from `reforged-builtins/abilities`.
  */
@@ -11530,12 +12691,16 @@ declare function FourCC(id: "ACSr"): Rawcode<"ability">;
 /**
  * Item Critical Chance 4 (`ACSu`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCriticalChance4_ACSu`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACSu"): Rawcode<"ability">;
 
 /**
  * Item Critical Chance 18 (`ACSv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCriticalChance18_ACSv`, from `reforged-builtins/abilities`.
  */
@@ -11544,12 +12709,16 @@ declare function FourCC(id: "ACSv"): Rawcode<"ability">;
 /**
  * Item Critical Chance 15 (`ACSx`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCriticalChance15_ACSx`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACSx"): Rawcode<"ability">;
 
 /**
  * Item Critical Chance 5 (`ACSy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCriticalChance5_ACSy`, from `reforged-builtins/abilities`.
  */
@@ -11558,12 +12727,16 @@ declare function FourCC(id: "ACSy"): Rawcode<"ability">;
 /**
  * Item Critical Chance 25 (`ACSz`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCriticalChance25_ACSz`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACSz"): Rawcode<"ability">;
 
 /**
  * Item Critical Damage 10 (`ACXe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCriticalDamage10_ACXe`, from `reforged-builtins/abilities`.
  */
@@ -11572,12 +12745,16 @@ declare function FourCC(id: "ACXe"): Rawcode<"ability">;
 /**
  * Item Critical Damage 20 (`ACXi`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCriticalDamage20_ACXi`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACXi"): Rawcode<"ability">;
 
 /**
  * Item Critical Damage 12 (`ACXo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCriticalDamage12_ACXo`, from `reforged-builtins/abilities`.
  */
@@ -11586,12 +12763,16 @@ declare function FourCC(id: "ACXo"): Rawcode<"ability">;
 /**
  * Item Critical Damage 5 (`ACXq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCriticalDamage5_ACXq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACXq"): Rawcode<"ability">;
 
 /**
  * Item Critical Damage 13 (`ACXr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCriticalDamage13_ACXr`, from `reforged-builtins/abilities`.
  */
@@ -11600,12 +12781,16 @@ declare function FourCC(id: "ACXr"): Rawcode<"ability">;
 /**
  * Item Critical Damage 30 (`ACXt`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCriticalDamage30_ACXt`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACXt"): Rawcode<"ability">;
 
 /**
  * Item Critical Damage 25 (`ACXu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCriticalDamage25_ACXu`, from `reforged-builtins/abilities`.
  */
@@ -11614,12 +12799,16 @@ declare function FourCC(id: "ACXu"): Rawcode<"ability">;
 /**
  * Item Critical Damage 15 (`ACXw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCriticalDamage15_ACXw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ACXw"): Rawcode<"ability">;
 
 /**
  * Item Critical Damage 40 (`ACXy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCriticalDamage40_ACXy`, from `reforged-builtins/abilities`.
  */
@@ -12335,12 +13524,16 @@ declare function FourCC(id: "ACwe"): Rawcode<"ability">;
 /**
  * Item Damage Bonus +18 (`AD18`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemDamageBonus18_AD18`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AD18"): Rawcode<"ability">;
 
 /**
  * Item Damage 20 (`AD20`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemDamage20_AD20`, from `reforged-builtins/abilities`.
  */
@@ -12349,12 +13542,16 @@ declare function FourCC(id: "AD20"): Rawcode<"ability">;
 /**
  * Item Damage Bonus +24 (`AD24`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemDamageBonus24_AD24`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AD24"): Rawcode<"ability">;
 
 /**
  * Item Damage Bonus +45 (`AD45`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemDamageBonus45_AD45`, from `reforged-builtins/abilities`.
  */
@@ -12363,12 +13560,16 @@ declare function FourCC(id: "AD45"): Rawcode<"ability">;
 /**
  * Item Daybreaker Attack (`ADBa`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemDaybreakerAttack_ADBa`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ADBa"): Rawcode<"ability">;
 
 /**
  * Item Daybreaker FS (`ADBf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemDaybreakerFS_ADBf`, from `reforged-builtins/abilities`.
  */
@@ -12377,12 +13578,16 @@ declare function FourCC(id: "ADBf"): Rawcode<"ability">;
 /**
  * Item Dark Commander's Aura (`ADCa`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemDarkCommandersAura_ADCa`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ADCa"): Rawcode<"ability">;
 
 /**
  * Item Disease Cloud 1 (`ADCq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemDiseaseCloud1_ADCq`, from `reforged-builtins/abilities`.
  */
@@ -12391,12 +13596,16 @@ declare function FourCC(id: "ADCq"): Rawcode<"ability">;
 /**
  * Item Dark Mistress' Aura (`ADMa`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemDarkMistressAura_ADMa`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ADMa"): Rawcode<"ability">;
 
 /**
  * Item Damage Bonus -5 (`ADN5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemDamageBonus5_ADN5`, from `reforged-builtins/abilities`.
  */
@@ -12405,12 +13614,16 @@ declare function FourCC(id: "ADN5"): Rawcode<"ability">;
 /**
  * Item Damage Reflect 15% (`ADRq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemDamageReflect15_ADRq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ADRq"): Rawcode<"ability">;
 
 /**
  * Item Damage Reflect 20% (`ADRw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemDamageReflect20_ADRw`, from `reforged-builtins/abilities`.
  */
@@ -12419,12 +13632,16 @@ declare function FourCC(id: "ADRw"): Rawcode<"ability">;
 /**
  * Life Regeneration Aura (`ADhr`), a Built-in ability of Patch 3.0.0, race creeps.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.LifeRegenerationAura_ADhr`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ADhr"): Rawcode<"ability">;
 
 /**
  * Mana Regeneration Aura (`ADmr`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ManaRegenerationAura_ADmr`, from `reforged-builtins/abilities`.
  */
@@ -12496,6 +13713,8 @@ declare function FourCC(id: "AEfn"): Rawcode<"ability">;
 /**
  * Purifier Blade Holy Light (`AEhl`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.PurifierBladeHolyLight_AEhl`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AEhl"): Rawcode<"ability">;
@@ -12531,12 +13750,16 @@ declare function FourCC(id: "AEpa"): Rawcode<"ability">;
 /**
  * Purifier Blade Orb (`AEpb`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.PurifierBladeOrb_AEpb`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AEpb"): Rawcode<"ability">;
 
 /**
  * `AEqu`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Unnamed_AEqu`, from `reforged-builtins/abilities`.
  */
@@ -12594,12 +13817,16 @@ declare function FourCC(id: "AEvi"): Rawcode<"ability">;
 /**
  * Item Feedback 4 (`AFBq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemFeedback4_AFBq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AFBq"): Rawcode<"ability">;
 
 /**
  * Item Finger of Death 8 (`AFDe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemFingerOfDeath8_AFDe`, from `reforged-builtins/abilities`.
  */
@@ -12608,12 +13835,16 @@ declare function FourCC(id: "AFDe"): Rawcode<"ability">;
 /**
  * Item Finger of Death 12 (`AFDq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemFingerOfDeath12_AFDq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AFDq"): Rawcode<"ability">;
 
 /**
  * Item Finger of Death 15 (`AFDw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemFingerOfDeath15_AFDw`, from `reforged-builtins/abilities`.
  */
@@ -12622,12 +13853,16 @@ declare function FourCC(id: "AFDw"): Rawcode<"ability">;
 /**
  * Item Summon Banshee (`AFRq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSummonBanshee_AFRq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AFRq"): Rawcode<"ability">;
 
 /**
  * Summon Banshee (`AFRw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.SummonBanshee_AFRw`, from `reforged-builtins/abilities`.
  */
@@ -12636,12 +13871,16 @@ declare function FourCC(id: "AFRw"): Rawcode<"ability">;
 /**
  * Item Dark Ranger's Bracers Attack (`AFRx`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemDarkRangersBracersAttack_AFRx`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AFRx"): Rawcode<"ability">;
 
 /**
  * Item Dark Ranger's Hood Spellcast (`AFRy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemDarkRangersHoodSpellcast_AFRy`, from `reforged-builtins/abilities`.
  */
@@ -12650,12 +13889,16 @@ declare function FourCC(id: "AFRy"): Rawcode<"ability">;
 /**
  * Item Gnomish Zapper Attack (`AGZa`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemGnomishZapperAttack_AGZa`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AGZa"): Rawcode<"ability">;
 
 /**
  * Item Forked Lightning (`AGZf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemForkedLightning_AGZf`, from `reforged-builtins/abilities`.
  */
@@ -12671,12 +13914,16 @@ declare function FourCC(id: "AGbu"): Rawcode<"ability">;
 /**
  * Warcry Cleave (`AGca`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.WarcryCleave_AGca`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AGca"): Rawcode<"ability">;
 
 /**
  * Warcry Lifesteal (`AGls`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.WarcryLifesteal_AGls`, from `reforged-builtins/abilities`.
  */
@@ -12685,12 +13932,16 @@ declare function FourCC(id: "AGls"): Rawcode<"ability">;
 /**
  * Warcry Ability Vamp (`AGsv`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.WarcryAbilityVamp_AGsv`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AGsv"): Rawcode<"ability">;
 
 /**
  * Item Hero Damage x1.25 (`AHDq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHeroDamageX125_AHDq`, from `reforged-builtins/abilities`.
  */
@@ -12699,12 +13950,16 @@ declare function FourCC(id: "AHDq"): Rawcode<"ability">;
 /**
  * Item Hero Damage x1.15 (`AHDw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHeroDamageX115_AHDw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHDw"): Rawcode<"ability">;
 
 /**
  * Item Health Regeneration 5 (`AHRa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHealthRegeneration5_AHRa`, from `reforged-builtins/abilities`.
  */
@@ -12713,12 +13968,16 @@ declare function FourCC(id: "AHRa"): Rawcode<"ability">;
 /**
  * Item Health Regeneration 10 (`AHRd`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHealthRegeneration10_AHRd`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHRd"): Rawcode<"ability">;
 
 /**
  * Item Health Regeneration 15 (`AHRf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHealthRegeneration15_AHRf`, from `reforged-builtins/abilities`.
  */
@@ -12727,12 +13986,16 @@ declare function FourCC(id: "AHRf"): Rawcode<"ability">;
 /**
  * Item Health Regeneration 8 (`AHRo`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHealthRegeneration8_AHRo`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHRo"): Rawcode<"ability">;
 
 /**
  * Item Health Regeneration -3 (`AHRq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHealthRegeneration3_AHRq`, from `reforged-builtins/abilities`.
  */
@@ -12741,12 +14004,16 @@ declare function FourCC(id: "AHRq"): Rawcode<"ability">;
 /**
  * Item Health Regeneration 7 (`AHRs`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHealthRegeneration7_AHRs`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHRs"): Rawcode<"ability">;
 
 /**
  * Item Health Regeneration -5 (`AHRt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHealthRegeneration5_AHRt`, from `reforged-builtins/abilities`.
  */
@@ -12755,12 +14022,16 @@ declare function FourCC(id: "AHRt"): Rawcode<"ability">;
 /**
  * Item Health Regeneration 6 (`AHRu`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHealthRegeneration6_AHRu`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHRu"): Rawcode<"ability">;
 
 /**
  * Item Health Regeneration 3 (`AHRw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHealthRegeneration3_AHRw`, from `reforged-builtins/abilities`.
  */
@@ -12769,12 +14040,16 @@ declare function FourCC(id: "AHRw"): Rawcode<"ability">;
 /**
  * Item Health Regeneration 4 (`AHRy`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHealthRegeneration4_AHRy`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHRy"): Rawcode<"ability">;
 
 /**
  * Item Hardened Skin 100 7 MT RT (`AHSe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHardenedSkin1007MTRT_AHSe`, from `reforged-builtins/abilities`.
  */
@@ -12783,12 +14058,16 @@ declare function FourCC(id: "AHSe"): Rawcode<"ability">;
 /**
  * Item Hardened Skin 100 2 MT RT (`AHSq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHardenedSkin1002MTRT_AHSq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHSq"): Rawcode<"ability">;
 
 /**
  * Item High Templar's Flame Incinerate (`AHTf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHighTemplarsFlameIncinerate_AHTf`, from `reforged-builtins/abilities`.
  */
@@ -12797,12 +14076,16 @@ declare function FourCC(id: "AHTf"): Rawcode<"ability">;
 /**
  * Item High Templar's Conqueror Heal (`AHTh`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHighTemplarsConquerorHeal_AHTh`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHTh"): Rawcode<"ability">;
 
 /**
  * Item High Templar's Visage IF (`AHTi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHighTemplarsVisageIF_AHTi`, from `reforged-builtins/abilities`.
  */
@@ -12811,12 +14094,16 @@ declare function FourCC(id: "AHTi"): Rawcode<"ability">;
 /**
  * Item High Templar's Judgment Attack (`AHTj`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHighTemplarsJudgmentAttack_AHTj`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHTj"): Rawcode<"ability">;
 
 /**
  * Item High Templar's Conqueror Attack (`AHTq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHighTemplarsConquerorAttack_AHTq`, from `reforged-builtins/abilities`.
  */
@@ -12825,12 +14112,16 @@ declare function FourCC(id: "AHTq"): Rawcode<"ability">;
 /**
  * Item High Templar's Judgment Shockwave (`AHTs`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHighTemplarsJudgmentShockwave_AHTs`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHTs"): Rawcode<"ability">;
 
 /**
  * Item High Templar's Visage Attack (`AHTv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHighTemplarsVisageAttack_AHTv`, from `reforged-builtins/abilities`.
  */
@@ -12839,6 +14130,8 @@ declare function FourCC(id: "AHTv"): Rawcode<"ability">;
 /**
  * Sacred Aura (`AHa1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.SacredAura_AHa1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHa1"): Rawcode<"ability">;
@@ -12846,12 +14139,16 @@ declare function FourCC(id: "AHa1"): Rawcode<"ability">;
 /**
  * Sacred Aura (`AHa2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.SacredAura_AHa2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHa2"): Rawcode<"ability">;
 
 /**
  * Sacred Aura (`AHa3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.SacredAura_AHa3`, from `reforged-builtins/abilities`.
  */
@@ -12874,6 +14171,8 @@ declare function FourCC(id: "AHad"): Rawcode<"ability">;
 /**
  * Avatar Of Light (`AHal`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.AvatarOfLight_AHal`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHal"): Rawcode<"ability">;
@@ -12881,12 +14180,16 @@ declare function FourCC(id: "AHal"): Rawcode<"ability">;
 /**
  * Apprehend (`AHap`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Apprehend_AHap`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHap"): Rawcode<"ability">;
 
 /**
  * Sacred Aura (`AHas`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.SacredAura_AHas`, from `reforged-builtins/abilities`.
  */
@@ -12902,12 +14205,16 @@ declare function FourCC(id: "AHav"): Rawcode<"ability">;
 /**
  * Unyielding Guard (`AHb1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.UnyieldingGuard_AHb1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHb1"): Rawcode<"ability">;
 
 /**
  * Unyielding Guard (`AHb2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.UnyieldingGuard_AHb2`, from `reforged-builtins/abilities`.
  */
@@ -12916,12 +14223,16 @@ declare function FourCC(id: "AHb2"): Rawcode<"ability">;
 /**
  * Unyielding Guard (`AHb3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.UnyieldingGuard_AHb3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHb3"): Rawcode<"ability">;
 
 /**
  * Unyielding Guard (`AHbd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.UnyieldingGuard_AHbd`, from `reforged-builtins/abilities`.
  */
@@ -12958,6 +14269,8 @@ declare function FourCC(id: "AHbz"): Rawcode<"ability">;
 /**
  * Valiant Charge (`AHc1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ValiantCharge_AHc1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHc1"): Rawcode<"ability">;
@@ -12965,12 +14278,16 @@ declare function FourCC(id: "AHc1"): Rawcode<"ability">;
 /**
  * Valiant Charge (`AHc2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ValiantCharge_AHc2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHc2"): Rawcode<"ability">;
 
 /**
  * Valiant Charge (`AHc3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ValiantCharge_AHc3`, from `reforged-builtins/abilities`.
  */
@@ -12986,12 +14303,16 @@ declare function FourCC(id: "AHca"): Rawcode<"ability">;
 /**
  * Valiant Charge (`AHch`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ValiantCharge_AHch`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHch"): Rawcode<"ability">;
 
 /**
  * Cleansing Fire (`AHcl`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.CleansingFire_AHcl`, from `reforged-builtins/abilities`.
  */
@@ -13000,12 +14321,16 @@ declare function FourCC(id: "AHcl"): Rawcode<"ability">;
 /**
  * Consecration (`AHcr`), a Built-in ability of Patch 3.0.0, race creeps.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Consecration_AHcr`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHcr"): Rawcode<"ability">;
 
 /**
  * Raise the Banner (`AHct`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.RaiseTheBanner_AHct`, from `reforged-builtins/abilities`.
  */
@@ -13028,6 +14353,8 @@ declare function FourCC(id: "AHds"): Rawcode<"ability">;
 /**
  * Apprehend (`AHe2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Apprehend_AHe2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHe2"): Rawcode<"ability">;
@@ -13035,12 +14362,16 @@ declare function FourCC(id: "AHe2"): Rawcode<"ability">;
 /**
  * Apprehend (`AHe3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Apprehend_AHe3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHe3"): Rawcode<"ability">;
 
 /**
  * Apprehend (`AHen`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Apprehend_AHen`, from `reforged-builtins/abilities`.
  */
@@ -13055,6 +14386,8 @@ declare function FourCC(id: "AHer"): Rawcode<"ability">;
 
 /**
  * Evasion (`AHes`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Evasion_AHes`, from `reforged-builtins/abilities`.
  */
@@ -13077,12 +14410,16 @@ declare function FourCC(id: "AHfs"): Rawcode<"ability">;
 /**
  * Grit (`AHg1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Grit_AHg1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHg1"): Rawcode<"ability">;
 
 /**
  * Grit (`AHg2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Grit_AHg2`, from `reforged-builtins/abilities`.
  */
@@ -13091,12 +14428,16 @@ declare function FourCC(id: "AHg2"): Rawcode<"ability">;
 /**
  * Grit (`AHg3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Grit_AHg3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHg3"): Rawcode<"ability">;
 
 /**
  * Guiding Hand (`AHgh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.GuidingHand_AHgh`, from `reforged-builtins/abilities`.
  */
@@ -13105,12 +14446,16 @@ declare function FourCC(id: "AHgh"): Rawcode<"ability">;
 /**
  * Grit (`AHgr`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Grit_AHgr`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHgr"): Rawcode<"ability">;
 
 /**
  * Headsplitter (`AHh1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Headsplitter_AHh1`, from `reforged-builtins/abilities`.
  */
@@ -13119,12 +14464,16 @@ declare function FourCC(id: "AHh1"): Rawcode<"ability">;
 /**
  * Headsplitter (`AHh2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Headsplitter_AHh2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHh2"): Rawcode<"ability">;
 
 /**
  * Headsplitter (`AHh3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Headsplitter_AHh3`, from `reforged-builtins/abilities`.
  */
@@ -13140,12 +14489,16 @@ declare function FourCC(id: "AHhb"): Rawcode<"ability">;
 /**
  * Provoke (`AHhc`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Provoke_AHhc`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHhc"): Rawcode<"ability">;
 
 /**
  * Headsplitter (`AHhr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Headsplitter_AHhr`, from `reforged-builtins/abilities`.
  */
@@ -13154,12 +14507,16 @@ declare function FourCC(id: "AHhr"): Rawcode<"ability">;
 /**
  * Heroic Slash (`AHhs`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.HeroicSlash_AHhs`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHhs"): Rawcode<"ability">;
 
 /**
  * Inspire Courage (`AHi1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.InspireCourage_AHi1`, from `reforged-builtins/abilities`.
  */
@@ -13168,12 +14525,16 @@ declare function FourCC(id: "AHi1"): Rawcode<"ability">;
 /**
  * Inspire Courage (`AHi2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.InspireCourage_AHi2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHi2"): Rawcode<"ability">;
 
 /**
  * Inspire Courage (`AHi3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.InspireCourage_AHi3`, from `reforged-builtins/abilities`.
  */
@@ -13182,12 +14543,16 @@ declare function FourCC(id: "AHi3"): Rawcode<"ability">;
 /**
  * Inspire Courage (`AHic`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.InspireCourage_AHic`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHic"): Rawcode<"ability">;
 
 /**
  * Surge of Light (`AHl1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.SurgeOfLight_AHl1`, from `reforged-builtins/abilities`.
  */
@@ -13196,12 +14561,16 @@ declare function FourCC(id: "AHl1"): Rawcode<"ability">;
 /**
  * Surge of Light (`AHl2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.SurgeOfLight_AHl2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHl2"): Rawcode<"ability">;
 
 /**
  * Surge of Light (`AHl3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.SurgeOfLight_AHl3`, from `reforged-builtins/abilities`.
  */
@@ -13210,12 +14579,16 @@ declare function FourCC(id: "AHl3"): Rawcode<"ability">;
 /**
  * Light's Mercy (`AHm1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.LightsMercy_AHm1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHm1"): Rawcode<"ability">;
 
 /**
  * Light's Mercy (`AHm2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.LightsMercy_AHm2`, from `reforged-builtins/abilities`.
  */
@@ -13224,12 +14597,16 @@ declare function FourCC(id: "AHm2"): Rawcode<"ability">;
 /**
  * Light's Mercy (`AHm3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.LightsMercy_AHm3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHm3"): Rawcode<"ability">;
 
 /**
  * Mind Control (`AHmc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.MindControl_AHmc`, from `reforged-builtins/abilities`.
  */
@@ -13245,6 +14622,8 @@ declare function FourCC(id: "AHmt"): Rawcode<"ability">;
 /**
  * Challenging Call (`AHnt`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ChallengingCall_AHnt`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHnt"): Rawcode<"ability">;
@@ -13252,12 +14631,16 @@ declare function FourCC(id: "AHnt"): Rawcode<"ability">;
 /**
  * Sacred Aura (`AHpa`), a Built-in ability of Patch 3.0.0, race creeps.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.SacredAura_AHpa`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHpa"): Rawcode<"ability">;
 
 /**
  * Holy Wrath (`AHpb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.HolyWrath_AHpb`, from `reforged-builtins/abilities`.
  */
@@ -13273,6 +14656,8 @@ declare function FourCC(id: "AHpx"): Rawcode<"ability">;
 /**
  * Guiding Hand (`AHq1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.GuidingHand_AHq1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHq1"): Rawcode<"ability">;
@@ -13280,12 +14665,16 @@ declare function FourCC(id: "AHq1"): Rawcode<"ability">;
 /**
  * Guiding Hand (`AHq2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.GuidingHand_AHq2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHq2"): Rawcode<"ability">;
 
 /**
  * Guiding Hand (`AHq3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.GuidingHand_AHq3`, from `reforged-builtins/abilities`.
  */
@@ -13301,12 +14690,16 @@ declare function FourCC(id: "AHre"): Rawcode<"ability">;
 /**
  * Sweeping Strike (`AHs1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.SweepingStrike_AHs1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHs1"): Rawcode<"ability">;
 
 /**
  * Sweeping Strike (`AHs2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.SweepingStrike_AHs2`, from `reforged-builtins/abilities`.
  */
@@ -13315,12 +14708,16 @@ declare function FourCC(id: "AHs2"): Rawcode<"ability">;
 /**
  * Sweeping Strike (`AHs3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.SweepingStrike_AHs3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHs3"): Rawcode<"ability">;
 
 /**
  * Light's Mercy (`AHsf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.LightsMercy_AHsf`, from `reforged-builtins/abilities`.
  */
@@ -13329,6 +14726,8 @@ declare function FourCC(id: "AHsf"): Rawcode<"ability">;
 /**
  * Surge of Light (`AHsl`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.SurgeOfLight_AHsl`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHsl"): Rawcode<"ability">;
@@ -13336,12 +14735,16 @@ declare function FourCC(id: "AHsl"): Rawcode<"ability">;
 /**
  * Hardened Skin (`AHss`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.HardenedSkin_AHss`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHss"): Rawcode<"ability">;
 
 /**
  * Sweeping Strike (`AHsw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.SweepingStrike_AHsw`, from `reforged-builtins/abilities`.
  */
@@ -13371,12 +14774,16 @@ declare function FourCC(id: "AHtc"): Rawcode<"ability">;
 /**
  * Provoke (`AHu1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Provoke_AHu1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHu1"): Rawcode<"ability">;
 
 /**
  * Provoke (`AHu2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Provoke_AHu2`, from `reforged-builtins/abilities`.
  */
@@ -13385,12 +14792,16 @@ declare function FourCC(id: "AHu2"): Rawcode<"ability">;
 /**
  * Provoke (`AHu3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Provoke_AHu3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHu3"): Rawcode<"ability">;
 
 /**
  * Heroic Slash (`AHv1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.HeroicSlash_AHv1`, from `reforged-builtins/abilities`.
  */
@@ -13399,12 +14810,16 @@ declare function FourCC(id: "AHv1"): Rawcode<"ability">;
 /**
  * Heroic Slash (`AHv2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.HeroicSlash_AHv2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHv2"): Rawcode<"ability">;
 
 /**
  * Heroic Slash (`AHv3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.HeroicSlash_AHv3`, from `reforged-builtins/abilities`.
  */
@@ -13413,12 +14828,16 @@ declare function FourCC(id: "AHv3"): Rawcode<"ability">;
 /**
  * Warcry (`AHw1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Warcry_AHw1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHw1"): Rawcode<"ability">;
 
 /**
  * Warcry (`AHw2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Warcry_AHw2`, from `reforged-builtins/abilities`.
  */
@@ -13427,12 +14846,16 @@ declare function FourCC(id: "AHw2"): Rawcode<"ability">;
 /**
  * Warcry (`AHw3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Warcry_AHw3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHw3"): Rawcode<"ability">;
 
 /**
  * `AHw4`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Unnamed_AHw4`, from `reforged-builtins/abilities`.
  */
@@ -13441,12 +14864,16 @@ declare function FourCC(id: "AHw4"): Rawcode<"ability">;
 /**
  * `AHw5`, unnamed, a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Unnamed_AHw5`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHw5"): Rawcode<"ability">;
 
 /**
  * `AHw6`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Unnamed_AHw6`, from `reforged-builtins/abilities`.
  */
@@ -13455,12 +14882,16 @@ declare function FourCC(id: "AHw6"): Rawcode<"ability">;
 /**
  * `AHw7`, unnamed, a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Unnamed_AHw7`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHw7"): Rawcode<"ability">;
 
 /**
  * `AHw8`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Unnamed_AHw8`, from `reforged-builtins/abilities`.
  */
@@ -13469,12 +14900,16 @@ declare function FourCC(id: "AHw8"): Rawcode<"ability">;
 /**
  * `AHw9`, unnamed, a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Unnamed_AHw9`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHw9"): Rawcode<"ability">;
 
 /**
  * Warcry (`AHwc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Warcry_AHwc`, from `reforged-builtins/abilities`.
  */
@@ -13490,12 +14925,16 @@ declare function FourCC(id: "AHwe"): Rawcode<"ability">;
 /**
  * Mind Control (`AHz1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.MindControl_AHz1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHz1"): Rawcode<"ability">;
 
 /**
  * Mind Control (`AHz2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.MindControl_AHz2`, from `reforged-builtins/abilities`.
  */
@@ -13504,12 +14943,16 @@ declare function FourCC(id: "AHz2"): Rawcode<"ability">;
 /**
  * Mind Control (`AHz3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.MindControl_AHz3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AHz3"): Rawcode<"ability">;
 
 /**
  * Item Hero Stat Bonus (`AI10`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHeroStatBonus_AI10`, from `reforged-builtins/abilities`.
  */
@@ -13518,12 +14961,16 @@ declare function FourCC(id: "AI10"): Rawcode<"ability">;
 /**
  * Item Hero Stat Bonus (`AI11`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHeroStatBonus_AI11`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AI11"): Rawcode<"ability">;
 
 /**
  * Item Hero Stat Bonus (`AI12`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHeroStatBonus_AI12`, from `reforged-builtins/abilities`.
  */
@@ -13539,12 +14986,16 @@ declare function FourCC(id: "AI2m"): Rawcode<"ability">;
 /**
  * Item Armor Bonus -1 (`AIAq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemArmorBonus1_AIAq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIAq"): Rawcode<"ability">;
 
 /**
  * Item Armor Bonus -2 (`AIAw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemArmorBonus2_AIAw`, from `reforged-builtins/abilities`.
  */
@@ -13553,12 +15004,16 @@ declare function FourCC(id: "AIAw"): Rawcode<"ability">;
 /**
  * Item Bash (15, 25, 1) (`AIBq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBash15251_AIBq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIBq"): Rawcode<"ability">;
 
 /**
  * Item Bash (10, 25, 2) (`AIBw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBash10252_AIBw`, from `reforged-builtins/abilities`.
  */
@@ -13567,12 +15022,16 @@ declare function FourCC(id: "AIBw"): Rawcode<"ability">;
 /**
  * Item Evasion 12 (`AIEi`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemEvasion12_AIEi`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIEi"): Rawcode<"ability">;
 
 /**
  * Item Evasion 2 (`AIEq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemEvasion2_AIEq`, from `reforged-builtins/abilities`.
  */
@@ -13581,12 +15040,16 @@ declare function FourCC(id: "AIEq"): Rawcode<"ability">;
 /**
  * Item Evasion 5 (`AIEr`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemEvasion5_AIEr`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIEr"): Rawcode<"ability">;
 
 /**
  * Item Evasion 7 (`AIEt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemEvasion7_AIEt`, from `reforged-builtins/abilities`.
  */
@@ -13595,12 +15058,16 @@ declare function FourCC(id: "AIEt"): Rawcode<"ability">;
 /**
  * Item Evasion 10 (`AIEu`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemEvasion10_AIEu`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIEu"): Rawcode<"ability">;
 
 /**
  * Item Evasion 4 (`AIEw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemEvasion4_AIEw`, from `reforged-builtins/abilities`.
  */
@@ -13609,12 +15076,16 @@ declare function FourCC(id: "AIEw"): Rawcode<"ability">;
 /**
  * Item Evasion 8 (`AIEy`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemEvasion8_AIEy`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIEy"): Rawcode<"ability">;
 
 /**
  * Item Life Bonus 250 (`AILa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemLifeBonus250_AILa`, from `reforged-builtins/abilities`.
  */
@@ -13623,12 +15094,16 @@ declare function FourCC(id: "AILa"): Rawcode<"ability">;
 /**
  * Item Life Bonus 280 (`AILe`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemLifeBonus280_AILe`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AILe"): Rawcode<"ability">;
 
 /**
  * Item Life Bonus 40 (`AILi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemLifeBonus40_AILi`, from `reforged-builtins/abilities`.
  */
@@ -13637,12 +15112,16 @@ declare function FourCC(id: "AILi"): Rawcode<"ability">;
 /**
  * Item Life Bonus 60 (`AILr`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemLifeBonus60_AILr`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AILr"): Rawcode<"ability">;
 
 /**
  * Item Life Bonus 200 (`AILt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemLifeBonus200_AILt`, from `reforged-builtins/abilities`.
  */
@@ -13651,12 +15130,16 @@ declare function FourCC(id: "AILt"): Rawcode<"ability">;
 /**
  * Item Life Bonus 50 (`AILw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemLifeBonus50_AILw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AILw"): Rawcode<"ability">;
 
 /**
  * Item Life Bonus 20 (`AILy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemLifeBonus20_AILy`, from `reforged-builtins/abilities`.
  */
@@ -13665,12 +15148,16 @@ declare function FourCC(id: "AILy"): Rawcode<"ability">;
 /**
  * Item Resolve 5 (`AIR5`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemResolve5_AIR5`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIR5"): Rawcode<"ability">;
 
 /**
  * Item Resolve 20 (`AIRo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemResolve20_AIRo`, from `reforged-builtins/abilities`.
  */
@@ -13679,12 +15166,16 @@ declare function FourCC(id: "AIRo"): Rawcode<"ability">;
 /**
  * Item Resolve 12 (`AIRp`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemResolve12_AIRp`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIRp"): Rawcode<"ability">;
 
 /**
  * Item Resolve 10 (`AIRq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemResolve10_AIRq`, from `reforged-builtins/abilities`.
  */
@@ -13693,6 +15184,8 @@ declare function FourCC(id: "AIRq"): Rawcode<"ability">;
 /**
  * Item Resolve 16 (`AIRu`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemResolve16_AIRu`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIRu"): Rawcode<"ability">;
@@ -13700,12 +15193,16 @@ declare function FourCC(id: "AIRu"): Rawcode<"ability">;
 /**
  * Item Resolve 8 (`AIRw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemResolve8_AIRw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIRw"): Rawcode<"ability">;
 
 /**
  * Item Resolve 6 (`AIRy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemResolve6_AIRy`, from `reforged-builtins/abilities`.
  */
@@ -13720,6 +15217,8 @@ declare function FourCC(id: "AIa1"): Rawcode<"ability">;
 
 /**
  * `AIa2`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Unnamed_AIa2`, from `reforged-builtins/abilities`.
  */
@@ -13742,6 +15241,8 @@ declare function FourCC(id: "AIa4"): Rawcode<"ability">;
 /**
  * Item Hero Stat Bonus (`AIa5`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHeroStatBonus_AIa5`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIa5"): Rawcode<"ability">;
@@ -13756,12 +15257,16 @@ declare function FourCC(id: "AIa6"): Rawcode<"ability">;
 /**
  * Item Hero Stat Bonus (`AIa7`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHeroStatBonus_AIa7`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIa7"): Rawcode<"ability">;
 
 /**
  * Item Hero Stat Bonus (`AIa8`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHeroStatBonus_AIa8`, from `reforged-builtins/abilities`.
  */
@@ -13804,6 +15309,8 @@ declare function FourCC(id: "AIan"): Rawcode<"ability">;
 
 /**
  * Item Spell Amp (`AIap`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellAmp_AIap`, from `reforged-builtins/abilities`.
  */
@@ -13980,12 +15487,16 @@ declare function FourCC(id: "AIco"): Rawcode<"ability">;
 /**
  * Item Aura Command 8 (`AIcq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAuraCommand8_AIcq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIcq"): Rawcode<"ability">;
 
 /**
  * Item Cooldown Reduction (`AIcr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCooldownReduction_AIcr`, from `reforged-builtins/abilities`.
  */
@@ -14056,6 +15567,8 @@ declare function FourCC(id: "AId5"): Rawcode<"ability">;
 
 /**
  * Item Armor Bonus (`AId6`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemArmorBonus_AId6`, from `reforged-builtins/abilities`.
  */
@@ -14168,6 +15681,8 @@ declare function FourCC(id: "AIe2"): Rawcode<"ability">;
 
 /**
  * Item Edric's Eye (`AIee`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemEdricsEye_AIee`, from `reforged-builtins/abilities`.
  */
@@ -14400,12 +15915,16 @@ declare function FourCC(id: "AIh3"): Rawcode<"ability">;
 /**
  * Item Healing (`AIh4`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHealing_AIh4`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIh4"): Rawcode<"ability">;
 
 /**
  * Item Healing (`AIh5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHealing_AIh5`, from `reforged-builtins/abilities`.
  */
@@ -14442,6 +15961,8 @@ declare function FourCC(id: "AIhm"): Rawcode<"ability">;
 /**
  * Item Hardened Skin (`AIhs`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHardenedSkin_AIhs`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIhs"): Rawcode<"ability">;
@@ -14470,6 +15991,8 @@ declare function FourCC(id: "AIi1"): Rawcode<"ability">;
 /**
  * `AIi2`, unnamed, a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Unnamed_AIi2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIi2"): Rawcode<"ability">;
@@ -14491,6 +16014,8 @@ declare function FourCC(id: "AIi4"): Rawcode<"ability">;
 /**
  * Item Hero Stat Bonus (`AIi5`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHeroStatBonus_AIi5`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIi5"): Rawcode<"ability">;
@@ -14504,6 +16029,8 @@ declare function FourCC(id: "AIi6"): Rawcode<"ability">;
 
 /**
  * Item Hero Stat Bonus (`AIi8`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHeroStatBonus_AIi8`, from `reforged-builtins/abilities`.
  */
@@ -14540,6 +16067,8 @@ declare function FourCC(id: "AIir"): Rawcode<"ability">;
 /**
  * Item Kris Incinerate (`AIki`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemKrisIncinerate_AIki`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIki"): Rawcode<"ability">;
@@ -14560,6 +16089,8 @@ declare function FourCC(id: "AIl2"): Rawcode<"ability">;
 
 /**
  * Item Life Bonus 25 (`AIl3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemLifeBonus25_AIl3`, from `reforged-builtins/abilities`.
  */
@@ -14596,6 +16127,8 @@ declare function FourCC(id: "AIlm"): Rawcode<"ability">;
 /**
  * Item Lich Orb (`AIlo`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemLichOrb_AIlo`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIlo"): Rawcode<"ability">;
@@ -14609,6 +16142,8 @@ declare function FourCC(id: "AIlp"): Rawcode<"ability">;
 
 /**
  * Item Life Bonus 100 (`AIlq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemLifeBonus100_AIlq`, from `reforged-builtins/abilities`.
  */
@@ -14630,6 +16165,8 @@ declare function FourCC(id: "AIlu"): Rawcode<"ability">;
 
 /**
  * Item Resolve 30 (`AIlv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemResolve30_AIlv`, from `reforged-builtins/abilities`.
  */
@@ -14666,6 +16203,8 @@ declare function FourCC(id: "AIm2"): Rawcode<"ability">;
 /**
  * Item Mana Regain (`AIm4`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemManaRegain_AIm4`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIm4"): Rawcode<"ability">;
@@ -14679,6 +16218,8 @@ declare function FourCC(id: "AImb"): Rawcode<"ability">;
 
 /**
  * Item Mana Efficiency (`AIme`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemManaEfficiency_AIme`, from `reforged-builtins/abilities`.
  */
@@ -14700,6 +16241,8 @@ declare function FourCC(id: "AImo"): Rawcode<"ability">;
 
 /**
  * Item Mana Efficiency 2 (`AImq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemManaEfficiency2_AImq`, from `reforged-builtins/abilities`.
  */
@@ -14736,6 +16279,8 @@ declare function FourCC(id: "AImv"): Rawcode<"ability">;
 /**
  * Item Mana Efficiency 5 (`AImw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemManaEfficiency5_AImw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AImw"): Rawcode<"ability">;
@@ -14764,6 +16309,8 @@ declare function FourCC(id: "AInd"): Rawcode<"ability">;
 /**
  * Expanded Inventory (`AIni`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ExpandedInventory_AIni`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIni"): Rawcode<"ability">;
@@ -14778,12 +16325,16 @@ declare function FourCC(id: "AInm"): Rawcode<"ability">;
 /**
  * Slow (Orb of Slow New) (`AIno`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Abilities.SlowOrbOfSlowNew_AIno`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIno"): Rawcode<"ability">;
 
 /**
  * Item Necromancer's Plaguegreaves (`AInp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemNecromancersPlaguegreaves_AInp`, from `reforged-builtins/abilities`.
  */
@@ -14798,6 +16349,8 @@ declare function FourCC(id: "AInv"): Rawcode<"ability">;
 
 /**
  * Equipment Inventory (`AInx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.EquipmentInventory_AInx`, from `reforged-builtins/abilities`.
  */
@@ -14819,6 +16372,8 @@ declare function FourCC(id: "AIos"): Rawcode<"ability">;
 
 /**
  * Item Ogre Warclub Stats (`AIow`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemOgreWarclubStats_AIow`, from `reforged-builtins/abilities`.
  */
@@ -14917,6 +16472,8 @@ declare function FourCC(id: "AIpv"): Rawcode<"ability">;
 
 /**
  * Item Purge (`AIpw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemPurge_AIpw`, from `reforged-builtins/abilities`.
  */
@@ -15065,6 +16622,8 @@ declare function FourCC(id: "AIs4"): Rawcode<"ability">;
 /**
  * Item Hero Stat Bonus (`AIs5`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHeroStatBonus_AIs5`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIs5"): Rawcode<"ability">;
@@ -15079,12 +16638,16 @@ declare function FourCC(id: "AIs6"): Rawcode<"ability">;
 /**
  * Item Hero Stat Bonus (`AIs7`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHeroStatBonus_AIs7`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIs7"): Rawcode<"ability">;
 
 /**
  * Item Hero Stat Bonus (`AIs8`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHeroStatBonus_AIs8`, from `reforged-builtins/abilities`.
  */
@@ -15107,12 +16670,16 @@ declare function FourCC(id: "AIsb"): Rawcode<"ability">;
 /**
  * Item Spell Crit (`AIsc`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellCrit_AIsc`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIsc"): Rawcode<"ability">;
 
 /**
  * Item Signet of Decay (`AIsd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSignetOfDecay_AIsd`, from `reforged-builtins/abilities`.
  */
@@ -15170,6 +16737,8 @@ declare function FourCC(id: "AIsp"): Rawcode<"ability">;
 /**
  * Item Attack Speed Bonus 5 (`AIsq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAttackSpeedBonus5_AIsq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIsq"): Rawcode<"ability">;
@@ -15184,12 +16753,16 @@ declare function FourCC(id: "AIsr"): Rawcode<"ability">;
 /**
  * Spell Damage Reduction Stacking (`AIss`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.SpellDamageReductionStacking_AIss`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIss"): Rawcode<"ability">;
 
 /**
  * Item Spell Vamp (`AIsv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellVamp_AIsv`, from `reforged-builtins/abilities`.
  */
@@ -15401,6 +16974,8 @@ declare function FourCC(id: "AIvl"): Rawcode<"ability">;
 /**
  * `AIvm`, unnamed, a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Unnamed_AIvm`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIvm"): Rawcode<"ability">;
@@ -15414,6 +16989,8 @@ declare function FourCC(id: "AIvu"): Rawcode<"ability">;
 
 /**
  * Item Life Steal Stacking (`AIvx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemLifeStealStacking_AIvx`, from `reforged-builtins/abilities`.
  */
@@ -15478,12 +17055,16 @@ declare function FourCC(id: "AIx5"): Rawcode<"ability">;
 /**
  * Item Hero Stat Bonus (`AIx6`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHeroStatBonus_AIx6`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIx6"): Rawcode<"ability">;
 
 /**
  * Item Hero Stat Bonus (`AIx7`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHeroStatBonus_AIx7`, from `reforged-builtins/abilities`.
  */
@@ -15506,6 +17087,8 @@ declare function FourCC(id: "AIxm"): Rawcode<"ability">;
 /**
  * Item Critical Strike System (`AIxr`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCriticalStrikeSystem_AIxr`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIxr"): Rawcode<"ability">;
@@ -15527,12 +17110,16 @@ declare function FourCC(id: "AIzb"): Rawcode<"ability">;
 /**
  * Item Lifesteal 10 (`AL10`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemLifesteal10_AL10`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AL10"): Rawcode<"ability">;
 
 /**
  * Item Lance of the Dawn Attack (`ALDa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemLanceOfTheDawnAttack_ALDa`, from `reforged-builtins/abilities`.
  */
@@ -15541,12 +17128,16 @@ declare function FourCC(id: "ALDa"): Rawcode<"ability">;
 /**
  * Slow (`ALmt`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Slow_ALmt`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ALmt"): Rawcode<"ability">;
 
 /**
  * Item Life Steal 1 (`ALs1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemLifeSteal1_ALs1`, from `reforged-builtins/abilities`.
  */
@@ -15555,12 +17146,16 @@ declare function FourCC(id: "ALs1"): Rawcode<"ability">;
 /**
  * Item Lifesteal 3 (`ALs3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemLifesteal3_ALs3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ALs3"): Rawcode<"ability">;
 
 /**
  * Item Lifesteal 4 (`ALs4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemLifesteal4_ALs4`, from `reforged-builtins/abilities`.
  */
@@ -15569,12 +17164,16 @@ declare function FourCC(id: "ALs4"): Rawcode<"ability">;
 /**
  * Item Lifesteal 5 (`ALs5`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemLifesteal5_ALs5`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ALs5"): Rawcode<"ability">;
 
 /**
  * Item Lifesteal 8 (`ALs8`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemLifesteal8_ALs8`, from `reforged-builtins/abilities`.
  */
@@ -15583,12 +17182,16 @@ declare function FourCC(id: "ALs8"): Rawcode<"ability">;
 /**
  * Item Mana Efficiency 12 (`AMEi`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemManaEfficiency12_AMEi`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AMEi"): Rawcode<"ability">;
 
 /**
  * Item Mana Efficiency 7 (`AMEq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemManaEfficiency7_AMEq`, from `reforged-builtins/abilities`.
  */
@@ -15597,12 +17200,16 @@ declare function FourCC(id: "AMEq"): Rawcode<"ability">;
 /**
  * Item Mana Efficiency 4 (`AMEr`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemManaEfficiency4_AMEr`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AMEr"): Rawcode<"ability">;
 
 /**
  * Item Mana Efficiency 8 (`AMEt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemManaEfficiency8_AMEt`, from `reforged-builtins/abilities`.
  */
@@ -15611,12 +17218,16 @@ declare function FourCC(id: "AMEt"): Rawcode<"ability">;
 /**
  * Item Mana Efficiency 15 (`AMEu`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemManaEfficiency15_AMEu`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AMEu"): Rawcode<"ability">;
 
 /**
  * Item Mana Efficiency 6 (`AMEw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemManaEfficiency6_AMEw`, from `reforged-builtins/abilities`.
  */
@@ -15625,12 +17236,16 @@ declare function FourCC(id: "AMEw"): Rawcode<"ability">;
 /**
  * Item Mana Efficiency 10 (`AMEy`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemManaEfficiency10_AMEy`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AMEy"): Rawcode<"ability">;
 
 /**
  * Item Mana Refund 5 (`AMFq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemManaRefund5_AMFq`, from `reforged-builtins/abilities`.
  */
@@ -15639,12 +17254,16 @@ declare function FourCC(id: "AMFq"): Rawcode<"ability">;
 /**
  * Item Mana Bonus 120 (`AMMe`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemManaBonus120_AMMe`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AMMe"): Rawcode<"ability">;
 
 /**
  * Item Mana Bonus 25 (`AMMq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemManaBonus25_AMMq`, from `reforged-builtins/abilities`.
  */
@@ -15653,12 +17272,16 @@ declare function FourCC(id: "AMMq"): Rawcode<"ability">;
 /**
  * Item Mana Bonus 150 (`AMMw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemManaBonus150_AMMw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AMMw"): Rawcode<"ability">;
 
 /**
  * Item Mana Regeneration 70 (`AMRe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemManaRegeneration70_AMRe`, from `reforged-builtins/abilities`.
  */
@@ -15667,12 +17290,16 @@ declare function FourCC(id: "AMRe"): Rawcode<"ability">;
 /**
  * Item Mana Regeneration 75 (`AMRi`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemManaRegeneration75_AMRi`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AMRi"): Rawcode<"ability">;
 
 /**
  * Item Mana Regeneration 65 (`AMRo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemManaRegeneration65_AMRo`, from `reforged-builtins/abilities`.
  */
@@ -15681,12 +17308,16 @@ declare function FourCC(id: "AMRo"): Rawcode<"ability">;
 /**
  * Item Mana Regeneration 40 (`AMRp`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemManaRegeneration40_AMRp`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AMRp"): Rawcode<"ability">;
 
 /**
  * Item Mana Regeneration 100 (`AMRq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemManaRegeneration100_AMRq`, from `reforged-builtins/abilities`.
  */
@@ -15695,12 +17326,16 @@ declare function FourCC(id: "AMRq"): Rawcode<"ability">;
 /**
  * Item Mana Regeneration 35 (`AMRt`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemManaRegeneration35_AMRt`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AMRt"): Rawcode<"ability">;
 
 /**
  * Item Mana Regeneration 30 (`AMRu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemManaRegeneration30_AMRu`, from `reforged-builtins/abilities`.
  */
@@ -15709,12 +17344,16 @@ declare function FourCC(id: "AMRu"): Rawcode<"ability">;
 /**
  * Item Mana Regeneration -50 (`AMRw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemManaRegeneration50_AMRw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AMRw"): Rawcode<"ability">;
 
 /**
  * Item Mana Regeneration 25 (`AMRy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemManaRegeneration25_AMRy`, from `reforged-builtins/abilities`.
  */
@@ -15723,12 +17362,16 @@ declare function FourCC(id: "AMRy"): Rawcode<"ability">;
 /**
  * Item Move Speed 20 (`AMSe`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemMoveSpeed20_AMSe`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AMSe"): Rawcode<"ability">;
 
 /**
  * Item Move Speed Bonus 10 (`AMSq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemMoveSpeedBonus10_AMSq`, from `reforged-builtins/abilities`.
  */
@@ -15737,6 +17380,8 @@ declare function FourCC(id: "AMSq"): Rawcode<"ability">;
 /**
  * Item Move Speed Bonus 30 (`AMSr`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemMoveSpeedBonus30_AMSr`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AMSr"): Rawcode<"ability">;
@@ -15744,12 +17389,16 @@ declare function FourCC(id: "AMSr"): Rawcode<"ability">;
 /**
  * Item Move Speed Bonus 40 (`AMSt`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemMoveSpeedBonus40_AMSt`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AMSt"): Rawcode<"ability">;
 
 /**
  * Item Movement Speed -15 (`AMSw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemMovementSpeed15_AMSw`, from `reforged-builtins/abilities`.
  */
@@ -15883,6 +17532,8 @@ declare function FourCC(id: "ANcl"): Rawcode<"ability">;
 
 /**
  * Righteous Fury (`ANcp`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.RighteousFury_ANcp`, from `reforged-builtins/abilities`.
  */
@@ -16633,12 +18284,16 @@ declare function FourCC(id: "ARal"): Rawcode<"ability">;
 /**
  * Item Hero Stat Bonus (`AS10`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHeroStatBonus_AS10`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AS10"): Rawcode<"ability">;
 
 /**
  * Item Hero Stat Bonus (`AS12`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHeroStatBonus_AS12`, from `reforged-builtins/abilities`.
  */
@@ -16647,12 +18302,16 @@ declare function FourCC(id: "AS12"): Rawcode<"ability">;
 /**
  * Item Hero Stat Bonus (`AS20`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHeroStatBonus_AS20`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AS20"): Rawcode<"ability">;
 
 /**
  * Item Spell Crit Chance 8 (`ASC8`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellCritChance8_ASC8`, from `reforged-builtins/abilities`.
  */
@@ -16661,12 +18320,16 @@ declare function FourCC(id: "ASC8"): Rawcode<"ability">;
 /**
  * Item Spell Crit Chance 12 (`ASCe`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellCritChance12_ASCe`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASCe"): Rawcode<"ability">;
 
 /**
  * Item Spell Crit Chance 15 (`ASCq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellCritChance15_ASCq`, from `reforged-builtins/abilities`.
  */
@@ -16675,12 +18338,16 @@ declare function FourCC(id: "ASCq"): Rawcode<"ability">;
 /**
  * Item Spell Crit Chance 18 (`ASCr`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellCritChance18_ASCr`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASCr"): Rawcode<"ability">;
 
 /**
  * Item Spell Crit Chance 5 (`ASCs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellCritChance5_ASCs`, from `reforged-builtins/abilities`.
  */
@@ -16689,12 +18356,16 @@ declare function FourCC(id: "ASCs"): Rawcode<"ability">;
 /**
  * Item Spell Crit Chance 6 (`ASCt`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellCritChance6_ASCt`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASCt"): Rawcode<"ability">;
 
 /**
  * Item Spell Crit Chance 4 (`ASCu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellCritChance4_ASCu`, from `reforged-builtins/abilities`.
  */
@@ -16703,12 +18374,16 @@ declare function FourCC(id: "ASCu"): Rawcode<"ability">;
 /**
  * Item Spell Crit Chance 10 (`ASCw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellCritChance10_ASCw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASCw"): Rawcode<"ability">;
 
 /**
  * Item Spell Crit Chance 30 (`ASCy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellCritChance30_ASCy`, from `reforged-builtins/abilities`.
  */
@@ -16717,12 +18392,16 @@ declare function FourCC(id: "ASCy"): Rawcode<"ability">;
 /**
  * Item Splash Damage 4 (`ASD4`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSplashDamage4_ASD4`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASD4"): Rawcode<"ability">;
 
 /**
  * Item Spell Crit Damage 20 (`ASDq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellCritDamage20_ASDq`, from `reforged-builtins/abilities`.
  */
@@ -16731,12 +18410,16 @@ declare function FourCC(id: "ASDq"): Rawcode<"ability">;
 /**
  * Item Spell Crit Damage 15 (`ASDw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellCritDamage15_ASDw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASDw"): Rawcode<"ability">;
 
 /**
  * Item Spell Resistance 5 (`ASRe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellResistance5_ASRe`, from `reforged-builtins/abilities`.
  */
@@ -16745,12 +18428,16 @@ declare function FourCC(id: "ASRe"): Rawcode<"ability">;
 /**
  * Item Spell Resistance 10 (`ASRi`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellResistance10_ASRi`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASRi"): Rawcode<"ability">;
 
 /**
  * Item Spell Resistance 25 (`ASRo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellResistance25_ASRo`, from `reforged-builtins/abilities`.
  */
@@ -16759,12 +18446,16 @@ declare function FourCC(id: "ASRo"): Rawcode<"ability">;
 /**
  * Item Spell Resistance 33 (`ASRp`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellResistance33_ASRp`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASRp"): Rawcode<"ability">;
 
 /**
  * Item Spell Resistance 7 (`ASRq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellResistance7_ASRq`, from `reforged-builtins/abilities`.
  */
@@ -16773,12 +18464,16 @@ declare function FourCC(id: "ASRq"): Rawcode<"ability">;
 /**
  * Item Spell Resistance 14 (`ASRt`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellResistance14_ASRt`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASRt"): Rawcode<"ability">;
 
 /**
  * Item Spell Resistance 4 (`ASRu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellResistance4_ASRu`, from `reforged-builtins/abilities`.
  */
@@ -16787,12 +18482,16 @@ declare function FourCC(id: "ASRu"): Rawcode<"ability">;
 /**
  * Item Spell Resistance 3 (`ASRw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellResistance3_ASRw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASRw"): Rawcode<"ability">;
 
 /**
  * Item Spell Resistance 8 (`ASRy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellResistance8_ASRy`, from `reforged-builtins/abilities`.
  */
@@ -16801,12 +18500,16 @@ declare function FourCC(id: "ASRy"): Rawcode<"ability">;
 /**
  * Item Spell Vamp 7 (`ASVe`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellVamp7_ASVe`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASVe"): Rawcode<"ability">;
 
 /**
  * Item Spell Vamp 8 (`ASVi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellVamp8_ASVi`, from `reforged-builtins/abilities`.
  */
@@ -16815,12 +18518,16 @@ declare function FourCC(id: "ASVi"): Rawcode<"ability">;
 /**
  * Item Spell Vamp 5 (`ASVq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellVamp5_ASVq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASVq"): Rawcode<"ability">;
 
 /**
  * Item Spell Vamp 3 (`ASVr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellVamp3_ASVr`, from `reforged-builtins/abilities`.
  */
@@ -16829,12 +18536,16 @@ declare function FourCC(id: "ASVr"): Rawcode<"ability">;
 /**
  * Item Spell Vamp 4 (`ASVt`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellVamp4_ASVt`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASVt"): Rawcode<"ability">;
 
 /**
  * Item Spell Vamp 6 (`ASVu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellVamp6_ASVu`, from `reforged-builtins/abilities`.
  */
@@ -16843,12 +18554,16 @@ declare function FourCC(id: "ASVu"): Rawcode<"ability">;
 /**
  * Item Spell Vamp 2 (`ASVw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellVamp2_ASVw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASVw"): Rawcode<"ability">;
 
 /**
  * Item Spell Vamp 10 (`ASVy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellVamp10_ASVy`, from `reforged-builtins/abilities`.
  */
@@ -16857,12 +18572,16 @@ declare function FourCC(id: "ASVy"): Rawcode<"ability">;
 /**
  * Stat Details (`ASde`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.StatDetails_ASde`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ASde"): Rawcode<"ability">;
 
 /**
  * `ASpc`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Unnamed_ASpc`, from `reforged-builtins/abilities`.
  */
@@ -16871,12 +18590,16 @@ declare function FourCC(id: "ASpc"): Rawcode<"ability">;
 /**
  * Rain of Arrows (`AT1a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.RainOfArrows_AT1a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AT1a"): Rawcode<"ability">;
 
 /**
  * Deathmark (`AT1b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Deathmark_AT1b`, from `reforged-builtins/abilities`.
  */
@@ -16885,12 +18608,16 @@ declare function FourCC(id: "AT1b"): Rawcode<"ability">;
 /**
  * Deadeye (`AT1c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Deadeye_AT1c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AT1c"): Rawcode<"ability">;
 
 /**
  * Spirit Leech (`AT2a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.SpiritLeech_AT2a`, from `reforged-builtins/abilities`.
  */
@@ -16899,12 +18626,16 @@ declare function FourCC(id: "AT2a"): Rawcode<"ability">;
 /**
  * Wraithguard (`AT2b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Wraithguard_AT2b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AT2b"): Rawcode<"ability">;
 
 /**
  * Guiding Light (`AT2c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.GuidingLight_AT2c`, from `reforged-builtins/abilities`.
  */
@@ -16913,12 +18644,16 @@ declare function FourCC(id: "AT2c"): Rawcode<"ability">;
 /**
  * Death Sentence (`AT3a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.DeathSentence_AT3a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AT3a"): Rawcode<"ability">;
 
 /**
  * Flow State (`AT3b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.FlowState_AT3b`, from `reforged-builtins/abilities`.
  */
@@ -16927,12 +18662,16 @@ declare function FourCC(id: "AT3b"): Rawcode<"ability">;
 /**
  * Umbral Rupture (`AT3c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.UmbralRupture_AT3c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AT3c"): Rawcode<"ability">;
 
 /**
  * Soul Harvest (`AT4a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.SoulHarvest_AT4a`, from `reforged-builtins/abilities`.
  */
@@ -16941,12 +18680,16 @@ declare function FourCC(id: "AT4a"): Rawcode<"ability">;
 /**
  * Curse of the Darkfallen (`AT4b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.CurseOfTheDarkfallen_AT4b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AT4b"): Rawcode<"ability">;
 
 /**
  * Howling Tempest (`AT4c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.HowlingTempest_AT4c`, from `reforged-builtins/abilities`.
  */
@@ -16955,12 +18698,16 @@ declare function FourCC(id: "AT4c"): Rawcode<"ability">;
 /**
  * Marksmanship (`AT5a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Marksmanship_AT5a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AT5a"): Rawcode<"ability">;
 
 /**
  * Arcane Archer (`AT5b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ArcaneArcher_AT5b`, from `reforged-builtins/abilities`.
  */
@@ -16969,12 +18716,16 @@ declare function FourCC(id: "AT5b"): Rawcode<"ability">;
 /**
  * Poison-tipped Arrows (`AT5c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.PoisonTippedArrows_AT5c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AT5c"): Rawcode<"ability">;
 
 /**
  * Ranger's Dexterity (`AT6a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.RangersDexterity_AT6a`, from `reforged-builtins/abilities`.
  */
@@ -16983,12 +18734,16 @@ declare function FourCC(id: "AT6a"): Rawcode<"ability">;
 /**
  * Heightened Reflexes (`AT6b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.HeightenedReflexes_AT6b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AT6b"): Rawcode<"ability">;
 
 /**
  * Blackened Soul (`AT6c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.BlackenedSoul_AT6c`, from `reforged-builtins/abilities`.
  */
@@ -16997,12 +18752,16 @@ declare function FourCC(id: "AT6c"): Rawcode<"ability">;
 /**
  * Talents (`ATal`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Talents_ATal`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ATal"): Rawcode<"ability">;
 
 /**
  * Grant Talent Point (`ATap`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.GrantTalentPoint_ATap`, from `reforged-builtins/abilities`.
  */
@@ -17011,12 +18770,16 @@ declare function FourCC(id: "ATap"): Rawcode<"ability">;
 /**
  * Strength Training (`ATce`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.StrengthTraining_ATce`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ATce"): Rawcode<"ability">;
 
 /**
  * Endurance Training (`ATcr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.EnduranceTraining_ATcr`, from `reforged-builtins/abilities`.
  */
@@ -17025,12 +18788,16 @@ declare function FourCC(id: "ATcr"): Rawcode<"ability">;
 /**
  * Talents (`AThg`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Talents_AThg`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AThg"): Rawcode<"ability">;
 
 /**
  * Talents (`AThi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Talents_AThi`, from `reforged-builtins/abilities`.
  */
@@ -17039,12 +18806,16 @@ declare function FourCC(id: "AThi"): Rawcode<"ability">;
 /**
  * Talents (`AThl`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Talents_AThl`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AThl"): Rawcode<"ability">;
 
 /**
  * Stamina Training (`ATme`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.StaminaTraining_ATme`, from `reforged-builtins/abilities`.
  */
@@ -17053,12 +18824,16 @@ declare function FourCC(id: "ATme"): Rawcode<"ability">;
 /**
  * Talents (`ATua`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Talents_ATua`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ATua"): Rawcode<"ability">;
 
 /**
  * Talents (`ATug`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Talents_ATug`, from `reforged-builtins/abilities`.
  */
@@ -17067,12 +18842,16 @@ declare function FourCC(id: "ATug"): Rawcode<"ability">;
 /**
  * Talents (`ATul`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Talents_ATul`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "ATul"): Rawcode<"ability">;
 
 /**
  * Item Unit Damage x1.25 (`AUDq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemUnitDamageX125_AUDq`, from `reforged-builtins/abilities`.
  */
@@ -17081,12 +18860,16 @@ declare function FourCC(id: "AUDq"): Rawcode<"ability">;
 /**
  * Item Unit Damage x1.15 (`AUDw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemUnitDamageX115_AUDw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUDw"): Rawcode<"ability">;
 
 /**
  * Animate Dead (`AUa2`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.AnimateDead_AUa2`, from `reforged-builtins/abilities`.
  */
@@ -17116,12 +18899,16 @@ declare function FourCC(id: "AUav"): Rawcode<"ability">;
 /**
  * Undying Defiance (`AUb1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.UndyingDefiance_AUb1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUb1"): Rawcode<"ability">;
 
 /**
  * Undying Defiance (`AUb2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.UndyingDefiance_AUb2`, from `reforged-builtins/abilities`.
  */
@@ -17130,6 +18917,8 @@ declare function FourCC(id: "AUb2"): Rawcode<"ability">;
 /**
  * Undying Defiance (`AUb3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.UndyingDefiance_AUb3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUb3"): Rawcode<"ability">;
@@ -17137,12 +18926,16 @@ declare function FourCC(id: "AUb3"): Rawcode<"ability">;
 /**
  * Undying Defiance (`AUbd`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.UndyingDefiance_AUbd`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUbd"): Rawcode<"ability">;
 
 /**
  * Battering Ram (`AUbr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.BatteringRam_AUbr`, from `reforged-builtins/abilities`.
  */
@@ -17172,12 +18965,16 @@ declare function FourCC(id: "AUcs"): Rawcode<"ability">;
 /**
  * Deathseeker Arrows (`AUd1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.DeathseekerArrows_AUd1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUd1"): Rawcode<"ability">;
 
 /**
  * Deathseeker Arrows (`AUd2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.DeathseekerArrows_AUd2`, from `reforged-builtins/abilities`.
  */
@@ -17186,12 +18983,16 @@ declare function FourCC(id: "AUd2"): Rawcode<"ability">;
 /**
  * Deathseeker Arrows (`AUd3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.DeathseekerArrows_AUd3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUd3"): Rawcode<"ability">;
 
 /**
  * Deathseeker Arrows (`AUdb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.DeathseekerArrows_AUdb`, from `reforged-builtins/abilities`.
  */
@@ -17256,6 +19057,8 @@ declare function FourCC(id: "AUfu"): Rawcode<"ability">;
 /**
  * Banshee's Wail (`AUi1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.BansheesWail_AUi1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUi1"): Rawcode<"ability">;
@@ -17263,12 +19066,16 @@ declare function FourCC(id: "AUi1"): Rawcode<"ability">;
 /**
  * Banshee's Wail (`AUi2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.BansheesWail_AUi2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUi2"): Rawcode<"ability">;
 
 /**
  * Banshee's Wail (`AUi3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.BansheesWail_AUi3`, from `reforged-builtins/abilities`.
  */
@@ -17291,12 +19098,16 @@ declare function FourCC(id: "AUin"): Rawcode<"ability">;
 /**
  * Soul Lantern (`AUl1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.SoulLantern_AUl1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUl1"): Rawcode<"ability">;
 
 /**
  * Soul Lantern (`AUl2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.SoulLantern_AUl2`, from `reforged-builtins/abilities`.
  */
@@ -17305,12 +19116,16 @@ declare function FourCC(id: "AUl2"): Rawcode<"ability">;
 /**
  * Soul Lantern (`AUl3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.SoulLantern_AUl3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUl3"): Rawcode<"ability">;
 
 /**
  * Soul Lantern (`AUla`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.SoulLantern_AUla`, from `reforged-builtins/abilities`.
  */
@@ -17326,12 +19141,16 @@ declare function FourCC(id: "AUls"): Rawcode<"ability">;
 /**
  * Battering Ram (`AUr1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.BatteringRam_AUr1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUr1"): Rawcode<"ability">;
 
 /**
  * Battering Ram (`AUr2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.BatteringRam_AUr2`, from `reforged-builtins/abilities`.
  */
@@ -17340,12 +19159,16 @@ declare function FourCC(id: "AUr2"): Rawcode<"ability">;
 /**
  * Battering Ram (`AUr3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.BatteringRam_AUr3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUr3"): Rawcode<"ability">;
 
 /**
  * Relentless Cleave (`AUs1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.RelentlessCleave_AUs1`, from `reforged-builtins/abilities`.
  */
@@ -17354,12 +19177,16 @@ declare function FourCC(id: "AUs1"): Rawcode<"ability">;
 /**
  * Relentless Cleave (`AUs2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.RelentlessCleave_AUs2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUs2"): Rawcode<"ability">;
 
 /**
  * Relentless Cleave (`AUs3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.RelentlessCleave_AUs3`, from `reforged-builtins/abilities`.
  */
@@ -17375,12 +19202,16 @@ declare function FourCC(id: "AUsl"): Rawcode<"ability">;
 /**
  * Thorn Shield (`AUss`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ThornShield_AUss`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUss"): Rawcode<"ability">;
 
 /**
  * Relentless Cleave (`AUsw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.RelentlessCleave_AUsw`, from `reforged-builtins/abilities`.
  */
@@ -17396,12 +19227,16 @@ declare function FourCC(id: "AUts"): Rawcode<"ability">;
 /**
  * Grim Conviction (`AUv1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.GrimConviction_AUv1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUv1"): Rawcode<"ability">;
 
 /**
  * Grim Conviction (`AUv2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.GrimConviction_AUv2`, from `reforged-builtins/abilities`.
  */
@@ -17410,12 +19245,16 @@ declare function FourCC(id: "AUv2"): Rawcode<"ability">;
 /**
  * Grim Conviction (`AUv3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.GrimConviction_AUv3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUv3"): Rawcode<"ability">;
 
 /**
  * Grim Conviction (`AUvg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.GrimConviction_AUvg`, from `reforged-builtins/abilities`.
  */
@@ -17424,12 +19263,16 @@ declare function FourCC(id: "AUvg"): Rawcode<"ability">;
 /**
  * Withering Fire (`AUw1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.WitheringFire_AUw1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUw1"): Rawcode<"ability">;
 
 /**
  * Withering Fire (`AUw2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.WitheringFire_AUw2`, from `reforged-builtins/abilities`.
  */
@@ -17438,12 +19281,16 @@ declare function FourCC(id: "AUw2"): Rawcode<"ability">;
 /**
  * Withering Fire (`AUw3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.WitheringFire_AUw3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUw3"): Rawcode<"ability">;
 
 /**
  * Banshee's Wail (`AUwc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.BansheesWail_AUwc`, from `reforged-builtins/abilities`.
  */
@@ -17452,12 +19299,16 @@ declare function FourCC(id: "AUwc"): Rawcode<"ability">;
 /**
  * Withering Fire (`AUwf`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.WitheringFire_AUwf`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AUwf"): Rawcode<"ability">;
 
 /**
  * Item Vampiric Aura 4 (`AVAq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemVampiricAura4_AVAq`, from `reforged-builtins/abilities`.
  */
@@ -17466,6 +19317,8 @@ declare function FourCC(id: "AVAq"): Rawcode<"ability">;
 /**
  * Fire Hands (`AViq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.FireHands_AViq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AViq"): Rawcode<"ability">;
@@ -17473,12 +19326,16 @@ declare function FourCC(id: "AViq"): Rawcode<"ability">;
 /**
  * Shop Indicator (`AVsb`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ShopIndicator_AVsb`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AVsb"): Rawcode<"ability">;
 
 /**
  * Item Hero Stat Bonus (`AX10`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHeroStatBonus_AX10`, from `reforged-builtins/abilities`.
  */
@@ -17501,12 +19358,16 @@ declare function FourCC(id: "Aabs"): Rawcode<"ability">;
 /**
  * Item Armor SC Heal (`Aac1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemArmorSCHeal_Aac1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aac1"): Rawcode<"ability">;
 
 /**
  * Item Armor SC Attack (`Aac2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemArmorSCAttack_Aac2`, from `reforged-builtins/abilities`.
  */
@@ -17515,12 +19376,16 @@ declare function FourCC(id: "Aac2"): Rawcode<"ability">;
 /**
  * Item Chill Attack 3 (`Aac3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemChillAttack3_Aac3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aac3"): Rawcode<"ability">;
 
 /**
  * Item Chill Attack 5 (`Aac5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemChillAttack5_Aac5`, from `reforged-builtins/abilities`.
  */
@@ -17529,12 +19394,16 @@ declare function FourCC(id: "Aac5"): Rawcode<"ability">;
 /**
  * Raise the Banner (`Aaca`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.RaiseTheBanner_Aaca`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aaca"): Rawcode<"ability">;
 
 /**
  * Curse (`Aacr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Curse_Aacr`, from `reforged-builtins/abilities`.
  */
@@ -17550,12 +19419,16 @@ declare function FourCC(id: "Aadm"): Rawcode<"ability">;
 /**
  * Item Aura of Darkness (`Aadx`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAuraOfDarkness_Aadx`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aadx"): Rawcode<"ability">;
 
 /**
  * Item Agitating Totem (`Aagt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAgitatingTotem_Aagt`, from `reforged-builtins/abilities`.
  */
@@ -17564,6 +19437,8 @@ declare function FourCC(id: "Aagt"): Rawcode<"ability">;
 /**
  * Item Armor Corrupt Attack 2 (`Aah2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemArmorCorruptAttack2_Aah2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aah2"): Rawcode<"ability">;
@@ -17571,12 +19446,16 @@ declare function FourCC(id: "Aah2"): Rawcode<"ability">;
 /**
  * Item Armor Corrupt Attack 3 (`Aah3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemArmorCorruptAttack3_Aah3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aah3"): Rawcode<"ability">;
 
 /**
  * Item Armor Corrupt Attack 5 (`Aah5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemArmorCorruptAttack5_Aah5`, from `reforged-builtins/abilities`.
  */
@@ -17613,6 +19492,8 @@ declare function FourCC(id: "Aalr"): Rawcode<"ability">;
 /**
  * On Basic Attack, Cast Spell (`Aals`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.OnBasicAttackCastSpell_Aals`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aals"): Rawcode<"ability">;
@@ -17633,6 +19514,8 @@ declare function FourCC(id: "Aamk"): Rawcode<"ability">;
 
 /**
  * Attribute Bonus (`Aaml`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.AttributeBonus_Aaml`, from `reforged-builtins/abilities`.
  */
@@ -17676,12 +19559,16 @@ declare function FourCC(id: "Aap4"): Rawcode<"ability">;
 /**
  * Disease Cloud (`Aap5`), a Built-in ability of Patch 3.0.0, race undead.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.DiseaseCloud_Aap5`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aap5"): Rawcode<"ability">;
 
 /**
  * Item Armor of Reanimation Summon (`Aar1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemArmorOfReanimationSummon_Aar1`, from `reforged-builtins/abilities`.
  */
@@ -17690,12 +19577,16 @@ declare function FourCC(id: "Aar1"): Rawcode<"ability">;
 /**
  * Item Armor of Reanimation Attack (`Aar2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemArmorOfReanimationAttack_Aar2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aar2"): Rawcode<"ability">;
 
 /**
  * Item Armor Corrupt Spell 2 (`Aas2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemArmorCorruptSpell2_Aas2`, from `reforged-builtins/abilities`.
  */
@@ -17704,12 +19595,16 @@ declare function FourCC(id: "Aas2"): Rawcode<"ability">;
 /**
  * Item Armor Corrupt Spell 3 (`Aas3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemArmorCorruptSpell3_Aas3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aas3"): Rawcode<"ability">;
 
 /**
  * Item Armor Corrupt Spell 5 (`Aas5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemArmorCorruptSpell5_Aas5`, from `reforged-builtins/abilities`.
  */
@@ -17718,12 +19613,16 @@ declare function FourCC(id: "Aas5"): Rawcode<"ability">;
 /**
  * Item Arcane Spellblade (`Aasb`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemArcaneSpellblade_Aasb`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aasb"): Rawcode<"ability">;
 
 /**
  * Raise the Banner Spell Crit (`Aasc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.RaiseTheBannerSpellCrit_Aasc`, from `reforged-builtins/abilities`.
  */
@@ -17746,6 +19645,8 @@ declare function FourCC(id: "Aast"): Rawcode<"ability">;
 /**
  * Item Aviana's Talons Mana (`Aat1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAvianasTalonsMana_Aat1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aat1"): Rawcode<"ability">;
@@ -17753,12 +19654,16 @@ declare function FourCC(id: "Aat1"): Rawcode<"ability">;
 /**
  * Item Aviana's Talons Attack 1 (`Aat2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAvianasTalonsAttack1_Aat2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aat2"): Rawcode<"ability">;
 
 /**
  * Item Aviana's Talons Attack 2 (`Aat3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemAvianasTalonsAttack2_Aat3`, from `reforged-builtins/abilities`.
  */
@@ -17795,12 +19700,16 @@ declare function FourCC(id: "Aawa"): Rawcode<"ability">;
 /**
  * Raise the Banner Crit (`Aaxr`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.RaiseTheBannerCrit_Aaxr`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aaxr"): Rawcode<"ability">;
 
 /**
  * Item Butchers Aura 1 (`Aba1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemButchersAura1_Aba1`, from `reforged-builtins/abilities`.
  */
@@ -17809,6 +19718,8 @@ declare function FourCC(id: "Aba1"): Rawcode<"ability">;
 /**
  * Item Butchers Aura 2 (`Aba2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemButchersAura2_Aba2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aba2"): Rawcode<"ability">;
@@ -17816,12 +19727,16 @@ declare function FourCC(id: "Aba2"): Rawcode<"ability">;
 /**
  * Item Aura of Twisted Bones (`Abcs`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemAuraOfTwistedBones_Abcs`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Abcs"): Rawcode<"ability">;
 
 /**
  * Item Blue Dragon Figurine (`Abdf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBlueDragonFigurine_Abdf`, from `reforged-builtins/abilities`.
  */
@@ -17851,12 +19766,16 @@ declare function FourCC(id: "Abdt"): Rawcode<"ability">;
 /**
  * Item Blade of Frozen Hunger Attack (`Abfa`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBladeOfFrozenHungerAttack_Abfa`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Abfa"): Rawcode<"ability">;
 
 /**
  * Item Blade of Frozen Hunger Heal (`Abfh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBladeOfFrozenHungerHeal_Abfh`, from `reforged-builtins/abilities`.
  */
@@ -17886,12 +19805,16 @@ declare function FourCC(id: "Abgs"): Rawcode<"ability">;
 /**
  * Item Bindings of Helya CW (`Abh1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBindingsOfHelyaCW_Abh1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Abh1"): Rawcode<"ability">;
 
 /**
  * Item Bindings of Helya Attack (`Abh2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBindingsOfHelyaAttack_Abh2`, from `reforged-builtins/abilities`.
  */
@@ -17900,12 +19823,16 @@ declare function FourCC(id: "Abh2"): Rawcode<"ability">;
 /**
  * Item Boots of the Icewalker BoF (`Abi1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBootsOfTheIcewalkerBoF_Abi1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Abi1"): Rawcode<"ability">;
 
 /**
  * Item Boots of the Icewalker Attack (`Abi2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBootsOfTheIcewalkerAttack_Abi2`, from `reforged-builtins/abilities`.
  */
@@ -17928,6 +19855,8 @@ declare function FourCC(id: "Ablp"): Rawcode<"ability">;
 /**
  * Banshee (`Abns`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Banshee_Abns`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Abns"): Rawcode<"ability">;
@@ -17942,6 +19871,8 @@ declare function FourCC(id: "Abof"): Rawcode<"ability">;
 /**
  * Item Bottled Storm (`Abos`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBottledStorm_Abos`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Abos"): Rawcode<"ability">;
@@ -17949,12 +19880,16 @@ declare function FourCC(id: "Abos"): Rawcode<"ability">;
 /**
  * Item Brimstone Spell 1 (`Abr1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBrimstoneSpell1_Abr1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Abr1"): Rawcode<"ability">;
 
 /**
  * Item Brimstone Spell 2 (`Abr2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBrimstoneSpell2_Abr2`, from `reforged-builtins/abilities`.
  */
@@ -17970,6 +19905,8 @@ declare function FourCC(id: "Abrf"): Rawcode<"ability">;
 /**
  * Item Bottled Storm CL (`Abs1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBottledStormCL_Abs1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Abs1"): Rawcode<"ability">;
@@ -17977,12 +19914,16 @@ declare function FourCC(id: "Abs1"): Rawcode<"ability">;
 /**
  * Item Bottled Storm Attack (`Abs2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBottledStormAttack_Abs2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Abs2"): Rawcode<"ability">;
 
 /**
  * Curse Orb (`Absc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.CurseOrb_Absc`, from `reforged-builtins/abilities`.
  */
@@ -18040,6 +19981,8 @@ declare function FourCC(id: "Abur"): Rawcode<"ability">;
 /**
  * Item Borelgore Attack (`Abx1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBorelgoreAttack_Abx1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Abx1"): Rawcode<"ability">;
@@ -18047,12 +19990,16 @@ declare function FourCC(id: "Abx1"): Rawcode<"ability">;
 /**
  * Item Brimstone Attack 1 (`Abz1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBrimstoneAttack1_Abz1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Abz1"): Rawcode<"ability">;
 
 /**
  * Item Brimstone Attack 2 (`Abz2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBrimstoneAttack2_Abz2`, from `reforged-builtins/abilities`.
  */
@@ -18067,6 +20014,8 @@ declare function FourCC(id: "Acan"): Rawcode<"ability">;
 
 /**
  * Item Consecrated Mixture (`Accm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemConsecratedMixture_Accm`, from `reforged-builtins/abilities`.
  */
@@ -18089,12 +20038,16 @@ declare function FourCC(id: "Acdh"): Rawcode<"ability">;
 /**
  * Item Helm Cenarion Heal (`Ace1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHelmCenarionHeal_Ace1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ace1"): Rawcode<"ability">;
 
 /**
  * Item Helm Cenarion Attack (`Ace2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHelmCenarionAttack_Ace2`, from `reforged-builtins/abilities`.
  */
@@ -18103,12 +20056,16 @@ declare function FourCC(id: "Ace2"): Rawcode<"ability">;
 /**
  * Item Helm Cenarion Spellcast (`Ace3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHelmCenarionSpellcast_Ace3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ace3"): Rawcode<"ability">;
 
 /**
  * Item Elixir of Cunnning (`Acec`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemElixirOfCunnning_Acec`, from `reforged-builtins/abilities`.
  */
@@ -18124,12 +20081,16 @@ declare function FourCC(id: "Acef"): Rawcode<"ability">;
 /**
  * Item Elixir of the Monster Hunter (`Acem`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemElixirOfTheMonsterHunter_Acem`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Acem"): Rawcode<"ability">;
 
 /**
  * Item Elixir of Greater Intelligence (`Acgi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemElixirOfGreaterIntelligence_Acgi`, from `reforged-builtins/abilities`.
  */
@@ -18138,12 +20099,16 @@ declare function FourCC(id: "Acgi"): Rawcode<"ability">;
 /**
  * Item Cursed Golden Ring Crit (`Acgr`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemCursedGoldenRingCrit_Acgr`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Acgr"): Rawcode<"ability">;
 
 /**
  * Item Staff CH TC (`Ach1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemStaffCHTC_Ach1`, from `reforged-builtins/abilities`.
  */
@@ -18152,12 +20117,16 @@ declare function FourCC(id: "Ach1"): Rawcode<"ability">;
 /**
  * Item Staff CH Spellcast (`Ach2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemStaffCHSpellcast_Ach2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ach2"): Rawcode<"ability">;
 
 /**
  * Item Blade CH Damage (`Ach3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBladeCHDamage_Ach3`, from `reforged-builtins/abilities`.
  */
@@ -18166,6 +20135,8 @@ declare function FourCC(id: "Ach3"): Rawcode<"ability">;
 /**
  * Item Blade CH Heal (`Ach4`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBladeCHHeal_Ach4`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ach4"): Rawcode<"ability">;
@@ -18173,12 +20144,16 @@ declare function FourCC(id: "Ach4"): Rawcode<"ability">;
 /**
  * Item Blade Attack 1 (`Ach5`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBladeAttack1_Ach5`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ach5"): Rawcode<"ability">;
 
 /**
  * Item Blade Attack 2 (`Ach6`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBladeAttack2_Ach6`, from `reforged-builtins/abilities`.
  */
@@ -18222,12 +20197,16 @@ declare function FourCC(id: "Aclf"): Rawcode<"ability">;
 /**
  * Item Elixir of Lesser Intelligence (`Acli`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemElixirOfLesserIntelligence_Acli`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Acli"): Rawcode<"ability">;
 
 /**
  * Item Cleave 15 (`Aclq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCleave15_Aclq`, from `reforged-builtins/abilities`.
  */
@@ -18313,12 +20292,16 @@ declare function FourCC(id: "Acrs"): Rawcode<"ability">;
 /**
  * Item Coldbringer's Reach Attack (`Acrx`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemColdbringersReachAttack_Acrx`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Acrx"): Rawcode<"ability">;
 
 /**
  * Item Coldbringer's Reach Frost Nova (`Acrz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemColdbringersReachFrostNova_Acrz`, from `reforged-builtins/abilities`.
  */
@@ -18334,12 +20317,16 @@ declare function FourCC(id: "Acyc"): Rawcode<"ability">;
 /**
  * Item Deathbringer's Boots Parasite (`Adb1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemDeathbringersBootsParasite_Adb1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Adb1"): Rawcode<"ability">;
 
 /**
  * Item Deathbringer's Boots Attack (`Adb2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemDeathbringersBootsAttack_Adb2`, from `reforged-builtins/abilities`.
  */
@@ -18348,12 +20335,16 @@ declare function FourCC(id: "Adb2"): Rawcode<"ability">;
 /**
  * Item Deathbloom Leaves (`Adbl`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemDeathbloomLeaves_Adbl`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Adbl"): Rawcode<"ability">;
 
 /**
  * Item Deepsea Bag CW (`Adbw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemDeepseaBagCW_Adbw`, from `reforged-builtins/abilities`.
  */
@@ -18481,6 +20472,8 @@ declare function FourCC(id: "Aeat"): Rawcode<"ability">;
 /**
  * Item Endless Flask of Restoration (`Aefr`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemEndlessFlaskOfRestoration_Aefr`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aefr"): Rawcode<"ability">;
@@ -18551,12 +20544,16 @@ declare function FourCC(id: "Aenw"): Rawcode<"ability">;
 /**
  * Item Essencium Main Summon (`Aes1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemEssenciumMainSummon_Aes1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aes1"): Rawcode<"ability">;
 
 /**
  * Item Essencium Blizzard (`Aes2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemEssenciumBlizzard_Aes2`, from `reforged-builtins/abilities`.
  */
@@ -18565,12 +20562,16 @@ declare function FourCC(id: "Aes2"): Rawcode<"ability">;
 /**
  * Item Essencium Rain of Fire (`Aes3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemEssenciumRainOfFire_Aes3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aes3"): Rawcode<"ability">;
 
 /**
  * Item Essencium Chain Lightning (`Aes4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemEssenciumChainLightning_Aes4`, from `reforged-builtins/abilities`.
  */
@@ -18579,12 +20580,16 @@ declare function FourCC(id: "Aes4"): Rawcode<"ability">;
 /**
  * Item Essencium Crushing Wave (`Aes5`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemEssenciumCrushingWave_Aes5`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aes5"): Rawcode<"ability">;
 
 /**
  * Item Essencium Attack 1 (`Aes6`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemEssenciumAttack1_Aes6`, from `reforged-builtins/abilities`.
  */
@@ -18593,12 +20598,16 @@ declare function FourCC(id: "Aes6"): Rawcode<"ability">;
 /**
  * Item Essencium Attack 2 (`Aes7`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemEssenciumAttack2_Aes7`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aes7"): Rawcode<"ability">;
 
 /**
  * Item Essencium Attack 3 (`Aes8`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemEssenciumAttack3_Aes8`, from `reforged-builtins/abilities`.
  */
@@ -18607,12 +20616,16 @@ declare function FourCC(id: "Aes8"): Rawcode<"ability">;
 /**
  * Item Essencium Attack 4 (`Aes9`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemEssenciumAttack4_Aes9`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aes9"): Rawcode<"ability">;
 
 /**
  * Item Earthen Signet Attack (`Aesa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemEarthenSignetAttack_Aesa`, from `reforged-builtins/abilities`.
  */
@@ -18628,6 +20641,8 @@ declare function FourCC(id: "Aesn"): Rawcode<"ability">;
 /**
  * Item Essence of the Spider Queen (`Aesq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemEssenceOfTheSpiderQueen_Aesq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aesq"): Rawcode<"ability">;
@@ -18641,6 +20656,8 @@ declare function FourCC(id: "Aesr"): Rawcode<"ability">;
 
 /**
  * Item Earthen Signet WS (`Aesw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemEarthenSignetWS_Aesw`, from `reforged-builtins/abilities`.
  */
@@ -18698,6 +20715,8 @@ declare function FourCC(id: "Afa2"): Rawcode<"ability">;
 /**
  * Acid Bomb (`Afab`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.AcidBomb_Afab`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Afab"): Rawcode<"ability">;
@@ -18740,12 +20759,16 @@ declare function FourCC(id: "Afbt"): Rawcode<"ability">;
 /**
  * Item Forgotten Frost Lotus (`Affl`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemForgottenFrostLotus_Affl`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Affl"): Rawcode<"ability">;
 
 /**
  * Healing Spray (`Afhs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.HealingSpray_Afhs`, from `reforged-builtins/abilities`.
  */
@@ -18803,6 +20826,8 @@ declare function FourCC(id: "Aflk"): Rawcode<"ability">;
 /**
  * Item Gloves of the Flamewalker Swarm (`Afm1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemGlovesOfTheFlamewalkerSwarm_Afm1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Afm1"): Rawcode<"ability">;
@@ -18810,12 +20835,16 @@ declare function FourCC(id: "Afm1"): Rawcode<"ability">;
 /**
  * Item Gloves of the Flamewalker Attack (`Afm2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemGlovesOfTheFlamewalkerAttack_Afm2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Afm2"): Rawcode<"ability">;
 
 /**
  * Item Flame of Al'ar (`Afoa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemFlameOfAlar_Afoa`, from `reforged-builtins/abilities`.
  */
@@ -18873,6 +20902,8 @@ declare function FourCC(id: "Afsh"): Rawcode<"ability">;
 /**
  * Chemical Frenzy (`Afuf`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ChemicalFrenzy_Afuf`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Afuf"): Rawcode<"ability">;
@@ -18887,12 +20918,16 @@ declare function FourCC(id: "Afzy"): Rawcode<"ability">;
 /**
  * Item Gift of Wrath Attack (`Agga`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemGiftOfWrathAttack_Agga`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Agga"): Rawcode<"ability">;
 
 /**
  * Item Gift of Greed Pillage (`Aggp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemGiftOfGreedPillage_Aggp`, from `reforged-builtins/abilities`.
  */
@@ -18901,6 +20936,8 @@ declare function FourCC(id: "Aggp"): Rawcode<"ability">;
 /**
  * Item Gift of Sloth Slow (`Aggs`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemGiftOfSlothSlow_Aggs`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aggs"): Rawcode<"ability">;
@@ -18908,12 +20945,16 @@ declare function FourCC(id: "Aggs"): Rawcode<"ability">;
 /**
  * Item Gift of Wrath Bloodlust (`Aggw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemGiftOfWrathBloodlust_Aggw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aggw"): Rawcode<"ability">;
 
 /**
  * Item Curse of Pride (`Aggx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemCurseOfPride_Aggx`, from `reforged-builtins/abilities`.
  */
@@ -18936,12 +20977,16 @@ declare function FourCC(id: "Agld"): Rawcode<"ability">;
 /**
  * Item Glix's Bomb (`Aglx`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemGlixsBomb_Aglx`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aglx"): Rawcode<"ability">;
 
 /**
  * Item Gloves of Necromancy Summon (`Agn1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemGlovesOfNecromancySummon_Agn1`, from `reforged-builtins/abilities`.
  */
@@ -18950,12 +20995,16 @@ declare function FourCC(id: "Agn1"): Rawcode<"ability">;
 /**
  * Item Gloves of Necromancy Attack (`Agn2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemGlovesOfNecromancyAttack_Agn2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Agn2"): Rawcode<"ability">;
 
 /**
  * Item Golden Necklace Heal (`Agnh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemGoldenNecklaceHeal_Agnh`, from `reforged-builtins/abilities`.
  */
@@ -18964,12 +21013,16 @@ declare function FourCC(id: "Agnh"): Rawcode<"ability">;
 /**
  * Item Golden Necklace Spellcast (`Agns`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemGoldenNecklaceSpellcast_Agns`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Agns"): Rawcode<"ability">;
 
 /**
  * Item Gloves of the Phoenix Spellcast (`Agpa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemGlovesOfThePhoenixSpellcast_Agpa`, from `reforged-builtins/abilities`.
  */
@@ -18978,12 +21031,16 @@ declare function FourCC(id: "Agpa"): Rawcode<"ability">;
 /**
  * Item Gloves of the Phoenix Damage (`Agpd`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemGlovesOfThePhoenixDamage_Agpd`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Agpd"): Rawcode<"ability">;
 
 /**
  * Item Gravelight DoT (`Agr1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemGravelightDoT_Agr1`, from `reforged-builtins/abilities`.
  */
@@ -18992,12 +21049,16 @@ declare function FourCC(id: "Agr1"): Rawcode<"ability">;
 /**
  * Item Gravelight Main Swarm (`Agr2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemGravelightMainSwarm_Agr2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Agr2"): Rawcode<"ability">;
 
 /**
  * Item Gravelight Side Swarm (`Agr3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemGravelightSideSwarm_Agr3`, from `reforged-builtins/abilities`.
  */
@@ -19006,12 +21067,16 @@ declare function FourCC(id: "Agr3"): Rawcode<"ability">;
 /**
  * Item Gravelight Attack Main (`Agr4`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemGravelightAttackMain_Agr4`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Agr4"): Rawcode<"ability">;
 
 /**
  * Item Gravelight Attack Side (`Agr5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemGravelightAttackSide_Agr5`, from `reforged-builtins/abilities`.
  */
@@ -19026,6 +21091,8 @@ declare function FourCC(id: "Agra"): Rawcode<"ability">;
 
 /**
  * Item Glacial Shard (`Agsh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemGlacialShard_Agsh`, from `reforged-builtins/abilities`.
  */
@@ -19076,12 +21143,16 @@ declare function FourCC(id: "Ahea"): Rawcode<"ability">;
 /**
  * Healing modifier (`Ahem`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.HealingModifier_Ahem`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ahem"): Rawcode<"ability">;
 
 /**
  * Item Huge Flail WS (`Ahf1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHugeFlailWS_Ahf1`, from `reforged-builtins/abilities`.
  */
@@ -19090,12 +21161,16 @@ declare function FourCC(id: "Ahf1"): Rawcode<"ability">;
 /**
  * Item Huge Flail Attack (`Ahf2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHugeFlailAttack_Ahf2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ahf2"): Rawcode<"ability">;
 
 /**
  * Item Heart of the Firebender BoF (`Ahfb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHeartOfTheFirebenderBoF_Ahfb`, from `reforged-builtins/abilities`.
  */
@@ -19104,12 +21179,16 @@ declare function FourCC(id: "Ahfb"): Rawcode<"ability">;
 /**
  * Item Heart of the Firebender Orb (`Ahfo`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHeartOfTheFirebenderOrb_Ahfo`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ahfo"): Rawcode<"ability">;
 
 /**
  * Item Headpiece of the High Inquisitor (`Ahhi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHeadpieceOfTheHighInquisitor_Ahhi`, from `reforged-builtins/abilities`.
  */
@@ -19181,6 +21260,8 @@ declare function FourCC(id: "Ahrp"): Rawcode<"ability">;
 /**
  * Item Helm of the Rimelord Spellcast (`Ahrx`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHelmOfTheRimelordSpellcast_Ahrx`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ahrx"): Rawcode<"ability">;
@@ -19188,12 +21269,16 @@ declare function FourCC(id: "Ahrx"): Rawcode<"ability">;
 /**
  * Item Helm of the Rimelord TC (`Ahrz`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHelmOfTheRimelordTC_Ahrz`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ahrz"): Rawcode<"ability">;
 
 /**
  * Item Hammer of the Silver Hand Attack (`Ahsa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHammerOfTheSilverHandAttack_Ahsa`, from `reforged-builtins/abilities`.
  */
@@ -19209,12 +21294,16 @@ declare function FourCC(id: "Ahsb"): Rawcode<"ability">;
 /**
  * Item Hammer of the Silver Hand Heal (`Ahsh`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemHammerOfTheSilverHandHeal_Ahsh`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ahsh"): Rawcode<"ability">;
 
 /**
  * Item Handful of Throwing Knives (`Ahtk`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemHandfulOfThrowingKnives_Ahtk`, from `reforged-builtins/abilities`.
  */
@@ -19230,12 +21319,16 @@ declare function FourCC(id: "Ahwd"): Rawcode<"ability">;
 /**
  * Item Icecrown Ring Frost Nova (`Aic1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemIcecrownRingFrostNova_Aic1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aic1"): Rawcode<"ability">;
 
 /**
  * Item Icecrown Ring Attack (`Aic2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemIcecrownRingAttack_Aic2`, from `reforged-builtins/abilities`.
  */
@@ -19265,12 +21358,16 @@ declare function FourCC(id: "Aimp"): Rawcode<"ability">;
 /**
  * Item Blade of Inferno Rain of Fire (`Ain1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBladeOfInfernoRainOfFire_Ain1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ain1"): Rawcode<"ability">;
 
 /**
  * Item Blade of Inferno Attack (`Ain2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBladeOfInfernoAttack_Ain2`, from `reforged-builtins/abilities`.
  */
@@ -19293,6 +21390,8 @@ declare function FourCC(id: "Aion"): Rawcode<"ability">;
 /**
  * `Aisy`, unnamed, a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Unnamed_Aisy`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aisy"): Rawcode<"ability">;
@@ -19314,12 +21413,16 @@ declare function FourCC(id: "Aivs"): Rawcode<"ability">;
 /**
  * Item Kaldorei Moonglaive Attack (`Akma`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemKaldoreiMoonglaiveAttack_Akma`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Akma"): Rawcode<"ability">;
 
 /**
  * Item Kaldorei Moonglaive Summon (`Akms`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemKaldoreiMoonglaiveSummon_Akms`, from `reforged-builtins/abilities`.
  */
@@ -19335,6 +21438,8 @@ declare function FourCC(id: "Alam"): Rawcode<"ability">;
 /**
  * Item Lance of the Frozen Phoenix (`Alfp`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemLanceOfTheFrozenPhoenix_Alfp`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Alfp"): Rawcode<"ability">;
@@ -19342,12 +21447,16 @@ declare function FourCC(id: "Alfp"): Rawcode<"ability">;
 /**
  * Item Summon Forsaken Rangers (`Alfq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSummonForsakenRangers_Alfq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Alfq"): Rawcode<"ability">;
 
 /**
  * Item Lionskin Helmet of Precision (`Alhp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemLionskinHelmetOfPrecision_Alhp`, from `reforged-builtins/abilities`.
  */
@@ -19370,6 +21479,8 @@ declare function FourCC(id: "Alit"): Rawcode<"ability">;
 /**
  * Item Lesser Mark of the Forsaken (`Almf`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemLesserMarkOfTheForsaken_Almf`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Almf"): Rawcode<"ability">;
@@ -19391,12 +21502,16 @@ declare function FourCC(id: "Aloc"): Rawcode<"ability">;
 /**
  * Item Portable Lightning Rod Attack (`Alra`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemPortableLightningRodAttack_Alra`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Alra"): Rawcode<"ability">;
 
 /**
  * Item Portable Lightning Rod CL (`Alrc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemPortableLightningRodCL_Alrc`, from `reforged-builtins/abilities`.
  */
@@ -19440,12 +21555,16 @@ declare function FourCC(id: "Ambt"): Rawcode<"ability">;
 /**
  * Item Mordo's Club (`Amcx`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemMordosClub_Amcx`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Amcx"): Rawcode<"ability">;
 
 /**
  * Banshee's Wail (`Amda`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.BansheesWail_Amda`, from `reforged-builtins/abilities`.
  */
@@ -19489,12 +21608,16 @@ declare function FourCC(id: "Amfl"): Rawcode<"ability">;
 /**
  * Item Summon Deathguards (`Amfs`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSummonDeathguards_Amfs`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Amfs"): Rawcode<"ability">;
 
 /**
  * Bouncing Missile Filter (`Amgi`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.BouncingMissileFilter_Amgi`, from `reforged-builtins/abilities`.
  */
@@ -19552,12 +21675,16 @@ declare function FourCC(id: "Amls"): Rawcode<"ability">;
 /**
  * Item Monastery Mace Heal (`Amm1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemMonasteryMaceHeal_Amm1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Amm1"): Rawcode<"ability">;
 
 /**
  * Item Monastery Mace Attack (`Amm2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemMonasteryMaceAttack_Amm2`, from `reforged-builtins/abilities`.
  */
@@ -19594,6 +21721,8 @@ declare function FourCC(id: "Amov"): Rawcode<"ability">;
 /**
  * Item Mark of the Phoenix BoF (`Ampb`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemMarkOfThePhoenixBoF_Ampb`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ampb"): Rawcode<"ability">;
@@ -19608,12 +21737,16 @@ declare function FourCC(id: "Amrf"): Rawcode<"ability">;
 /**
  * Item Malachite Sword Curse (`Amsc`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemMalachiteSwordCurse_Amsc`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Amsc"): Rawcode<"ability">;
 
 /**
  * Item Malachite Sword Orb (`Amso`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemMalachiteSwordOrb_Amso`, from `reforged-builtins/abilities`.
  */
@@ -19671,6 +21804,8 @@ declare function FourCC(id: "Anhe"): Rawcode<"ability">;
 /**
  * Item Nevermelting Ice (`Anmi`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemNevermeltingIce_Anmi`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Anmi"): Rawcode<"ability">;
@@ -19713,12 +21848,16 @@ declare function FourCC(id: "Aobs"): Rawcode<"ability">;
 /**
  * Item Orb Chill 3s (`Aoc3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemOrbChill3s_Aoc3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aoc3"): Rawcode<"ability">;
 
 /**
  * On Hit Lightning Attack (`Aohl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.OnHitLightningAttack_Aohl`, from `reforged-builtins/abilities`.
  */
@@ -19727,12 +21866,16 @@ declare function FourCC(id: "Aohl"): Rawcode<"ability">;
 /**
  * Item Totem Ogre Magi Attack (`Aoma`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemTotemOgreMagiAttack_Aoma`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aoma"): Rawcode<"ability">;
 
 /**
  * Item Totem Ogre Magi Bloodlust (`Aomb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemTotemOgreMagiBloodlust_Aomb`, from `reforged-builtins/abilities`.
  */
@@ -19741,12 +21884,16 @@ declare function FourCC(id: "Aomb"): Rawcode<"ability">;
 /**
  * Item Bracers Ogre Magi CL (`Aomc`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBracersOgreMagiCL_Aomc`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aomc"): Rawcode<"ability">;
 
 /**
  * Item Bracers Ogre Magi HW (`Aomh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBracersOgreMagiHW_Aomh`, from `reforged-builtins/abilities`.
  */
@@ -19755,6 +21902,8 @@ declare function FourCC(id: "Aomh"): Rawcode<"ability">;
 /**
  * Item Totem Ogre Magi Summon (`Aoms`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemTotemOgreMagiSummon_Aoms`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aoms"): Rawcode<"ability">;
@@ -19762,12 +21911,16 @@ declare function FourCC(id: "Aoms"): Rawcode<"ability">;
 /**
  * Item Bracers Ogre Magi Attack 2 (`Aomx`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBracersOgreMagiAttack2_Aomx`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aomx"): Rawcode<"ability">;
 
 /**
  * Item Bracers Ogre Magi Attack 1 (`Aomz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBracersOgreMagiAttack1_Aomz`, from `reforged-builtins/abilities`.
  */
@@ -19811,12 +21964,16 @@ declare function FourCC(id: "Apak"): Rawcode<"ability">;
 /**
  * Item Plaguebearer Shortsword (`Apbs`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemPlaguebearerShortsword_Apbs`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Apbs"): Rawcode<"ability">;
 
 /**
  * Disease Cloud (`Apbw`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.DiseaseCloud_Apbw`, from `reforged-builtins/abilities`.
  */
@@ -19860,12 +22017,16 @@ declare function FourCC(id: "Apiv"): Rawcode<"ability">;
 /**
  * Item Plaguegreaves Spell (`Apl1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemPlaguegreavesSpell_Apl1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Apl1"): Rawcode<"ability">;
 
 /**
  * Item Plaguegreaves Attack (`Apl2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemPlaguegreavesAttack_Apl2`, from `reforged-builtins/abilities`.
  */
@@ -19888,12 +22049,16 @@ declare function FourCC(id: "Apmf"): Rawcode<"ability">;
 /**
  * Item Poison Nettle Attack (`Apna`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemPoisonNettleAttack_Apna`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Apna"): Rawcode<"ability">;
 
 /**
  * Item Poison Nettle ER (`Apne`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemPoisonNettleER_Apne`, from `reforged-builtins/abilities`.
  */
@@ -19908,6 +22073,8 @@ declare function FourCC(id: "Apo2"): Rawcode<"ability">;
 
 /**
  * Item Drunken Haze (Pint of Ale) (`Apoa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemDrunkenHazePintOfAle_Apoa`, from `reforged-builtins/abilities`.
  */
@@ -19951,6 +22118,8 @@ declare function FourCC(id: "Apsh"): Rawcode<"ability">;
 /**
  * Item Phalanx Shield Aura (`Apsq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemPhalanxShieldAura_Apsq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Apsq"): Rawcode<"ability">;
@@ -19958,12 +22127,16 @@ declare function FourCC(id: "Apsq"): Rawcode<"ability">;
 /**
  * Item Protector SH Stun (`Apsx`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemProtectorSHStun_Apsx`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Apsx"): Rawcode<"ability">;
 
 /**
  * Item Protector SH Attack (`Apsz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemProtectorSHAttack_Apsz`, from `reforged-builtins/abilities`.
  */
@@ -19979,6 +22152,8 @@ declare function FourCC(id: "Apts"): Rawcode<"ability">;
 /**
  * Item Plaguewrought Attack (`Apwa`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemPlaguewroughtAttack_Apwa`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Apwa"): Rawcode<"ability">;
@@ -19986,12 +22161,16 @@ declare function FourCC(id: "Apwa"): Rawcode<"ability">;
 /**
  * Item Plaguewrought Poison (`Apwp`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemPlaguewroughtPoison_Apwp`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Apwp"): Rawcode<"ability">;
 
 /**
  * Item Plaguewrought CS (`Apws`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemPlaguewroughtCS_Apws`, from `reforged-builtins/abilities`.
  */
@@ -20028,6 +22207,8 @@ declare function FourCC(id: "Arav"): Rawcode<"ability">;
 /**
  * Item Restorative Balm (`Arba`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemRestorativeBalm_Arba`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Arba"): Rawcode<"ability">;
@@ -20041,6 +22222,8 @@ declare function FourCC(id: "Arbr"): Rawcode<"ability">;
 
 /**
  * Item Diamond Ring CDR (`Ardr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemDiamondRingCDR_Ardr`, from `reforged-builtins/abilities`.
  */
@@ -20091,12 +22274,16 @@ declare function FourCC(id: "Arev"): Rawcode<"ability">;
 /**
  * Item Ring of Holy Fire Immo (`Arf1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemRingOfHolyFireImmo_Arf1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Arf1"): Rawcode<"ability">;
 
 /**
  * Item Ring of Holy Fire FL (`Arf2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemRingOfHolyFireFL_Arf2`, from `reforged-builtins/abilities`.
  */
@@ -20105,6 +22292,8 @@ declare function FourCC(id: "Arf2"): Rawcode<"ability">;
 /**
  * Item Ring of Holy Fire Attack (`Arf3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemRingOfHolyFireAttack_Arf3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Arf3"): Rawcode<"ability">;
@@ -20112,12 +22301,16 @@ declare function FourCC(id: "Arf3"): Rawcode<"ability">;
 /**
  * Item Ring of the Firelands Attack (`Arfa`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemRingOfTheFirelandsAttack_Arfa`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Arfa"): Rawcode<"ability">;
 
 /**
  * Item Ring of the Firelands CR (`Arfc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemRingOfTheFirelandsCR_Arfc`, from `reforged-builtins/abilities`.
  */
@@ -20140,12 +22333,16 @@ declare function FourCC(id: "Argl"): Rawcode<"ability">;
 /**
  * Item Razorice Attack 1 (`Ari1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemRazoriceAttack1_Ari1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ari1"): Rawcode<"ability">;
 
 /**
  * Item Razorice Attack 2 (`Ari2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemRazoriceAttack2_Ari2`, from `reforged-builtins/abilities`.
  */
@@ -20154,12 +22351,16 @@ declare function FourCC(id: "Ari2"): Rawcode<"ability">;
 /**
  * Item Razorice BoF (`Ari3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemRazoriceBoF_Ari3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ari3"): Rawcode<"ability">;
 
 /**
  * Item Razorice Attack 4 (`Ari4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemRazoriceAttack4_Ari4`, from `reforged-builtins/abilities`.
  */
@@ -20217,6 +22418,8 @@ declare function FourCC(id: "Aroc"): Rawcode<"ability">;
 /**
  * Item Rune of Fire (`Arof`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemRuneOfFire_Arof`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Arof"): Rawcode<"ability">;
@@ -20244,6 +22447,8 @@ declare function FourCC(id: "Arpm"): Rawcode<"ability">;
 
 /**
  * Item Robes of Revenge Attack (`Arr1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemRobesOfRevengeAttack_Arr1`, from `reforged-builtins/abilities`.
  */
@@ -20292,6 +22497,15 @@ declare function FourCC(id: "Arst"): Rawcode<"ability">;
 declare function FourCC(id: "Arsw"): Rawcode<"ability">;
 
 /**
+ * `Asa2`, unnamed, a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * In the Custom Game data set. Not in the Default and Melee Game data sets.
+ *
+ * Its constant is `Abilities.Unnamed_Asa2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asa2"): Rawcode<"ability">;
+
+/**
  * Sacrifice (`Asac`), a Built-in ability of Patch 3.0.0, race undead.
  *
  * Its constant is `Abilities.Sacrifice_Asac`, from `reforged-builtins/abilities`.
@@ -20307,6 +22521,8 @@ declare function FourCC(id: "Asal"): Rawcode<"ability">;
 
 /**
  * On Magic Attack, Cast Spell (`Asas`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.OnMagicAttackCastSpell_Asas`, from `reforged-builtins/abilities`.
  */
@@ -20336,12 +22552,16 @@ declare function FourCC(id: "Asb3"): Rawcode<"ability">;
 /**
  * Item Sanctified Chestplate Heal (`Asc1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSanctifiedChestplateHeal_Asc1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asc1"): Rawcode<"ability">;
 
 /**
  * Item Sanctified Chestplate Spellcast (`Asc2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSanctifiedChestplateSpellcast_Asc2`, from `reforged-builtins/abilities`.
  */
@@ -20350,12 +22570,16 @@ declare function FourCC(id: "Asc2"): Rawcode<"ability">;
 /**
  * Item Chill Nova 3 (`Asc3`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemChillNova3_Asc3`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asc3"): Rawcode<"ability">;
 
 /**
  * Item Chill Nova 5 (`Asc5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemChillNova5_Asc5`, from `reforged-builtins/abilities`.
  */
@@ -20364,6 +22588,8 @@ declare function FourCC(id: "Asc5"): Rawcode<"ability">;
 /**
  * Item Shield of the Scarlet Crusade Attack (`Asca`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemShieldOfTheScarletCrusadeAttack_Asca`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asca"): Rawcode<"ability">;
@@ -20371,12 +22597,16 @@ declare function FourCC(id: "Asca"): Rawcode<"ability">;
 /**
  * Item Shield of the Scarlet Crusade Heal (`Asch`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemShieldOfTheScarletCrusadeHeal_Asch`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asch"): Rawcode<"ability">;
 
 /**
  * Item Sanctified Chestplate Immo (`Asci`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSanctifiedChestplateImmo_Asci`, from `reforged-builtins/abilities`.
  */
@@ -20399,6 +22629,8 @@ declare function FourCC(id: "Asd3"): Rawcode<"ability">;
 /**
  * Item Scepter of Darkness Summon (`Asdd`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemScepterOfDarknessSummon_Asdd`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asdd"): Rawcode<"ability">;
@@ -20412,6 +22644,8 @@ declare function FourCC(id: "Asdg"): Rawcode<"ability">;
 
 /**
  * Dispel Magic (`Asdi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.DispelMagic_Asdi`, from `reforged-builtins/abilities`.
  */
@@ -20427,12 +22661,16 @@ declare function FourCC(id: "Asds"): Rawcode<"ability">;
 /**
  * Item Scepter of Darkness Spellcast (`Asdx`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemScepterOfDarknessSpellcast_Asdx`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asdx"): Rawcode<"ability">;
 
 /**
  * Heal (`Asea`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Heal_Asea`, from `reforged-builtins/abilities`.
  */
@@ -20441,12 +22679,16 @@ declare function FourCC(id: "Asea"): Rawcode<"ability">;
 /**
  * Flame Strike (`Asfs`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.FlameStrike_Asfs`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asfs"): Rawcode<"ability">;
 
 /**
  * Item Sanctified Gauntlets Impale (`Asg1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSanctifiedGauntletsImpale_Asg1`, from `reforged-builtins/abilities`.
  */
@@ -20455,12 +22697,16 @@ declare function FourCC(id: "Asg1"): Rawcode<"ability">;
 /**
  * Item Sanctified Gauntlets Attack (`Asg2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSanctifiedGauntletsAttack_Asg2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asg2"): Rawcode<"ability">;
 
 /**
  * Item Sword of the Ghostlands Attack (`Asga`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSwordOfTheGhostlandsAttack_Asga`, from `reforged-builtins/abilities`.
  */
@@ -20469,12 +22715,16 @@ declare function FourCC(id: "Asga"): Rawcode<"ability">;
 /**
  * Item Sword of the Ghostlands HoT (`Asgh`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSwordOfTheGhostlandsHoT_Asgh`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asgh"): Rawcode<"ability">;
 
 /**
  * Item Shepherd's Curse (`Ashc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemShepherdsCurse_Ashc`, from `reforged-builtins/abilities`.
  */
@@ -20497,6 +22747,8 @@ declare function FourCC(id: "Ashs"): Rawcode<"ability">;
 /**
  * Item Summon Infectious Ghoul (`Asic`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSummonInfectiousGhoul_Asic`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asic"): Rawcode<"ability">;
@@ -20511,12 +22763,16 @@ declare function FourCC(id: "Asid"): Rawcode<"ability">;
 /**
  * Inner Fire (`Asif`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.InnerFire_Asif`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asif"): Rawcode<"ability">;
 
 /**
  * Item Vestments Storm King MS (`Ask1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemVestmentsStormKingMS_Ask1`, from `reforged-builtins/abilities`.
  */
@@ -20525,6 +22781,8 @@ declare function FourCC(id: "Ask1"): Rawcode<"ability">;
 /**
  * Item Vestments Storm King Spellcast (`Ask2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemVestmentsStormKingSpellcast_Ask2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ask2"): Rawcode<"ability">;
@@ -20532,12 +22790,16 @@ declare function FourCC(id: "Ask2"): Rawcode<"ability">;
 /**
  * Item Tome of the Spiderkind Attack (`Aska`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemTomeOfTheSpiderkindAttack_Aska`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aska"): Rawcode<"ability">;
 
 /**
  * Item Tome of the Spiderkind Summon (`Asks`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemTomeOfTheSpiderkindSummon_Asks`, from `reforged-builtins/abilities`.
  */
@@ -20567,12 +22829,16 @@ declare function FourCC(id: "Aslp"): Rawcode<"ability">;
 /**
  * Item Band of the Skeletal Mage Frost Nova (`Asmn`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBandOfTheSkeletalMageFrostNova_Asmn`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asmn"): Rawcode<"ability">;
 
 /**
  * Item Band of the Skeletal Mage Orb (`Asmo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBandOfTheSkeletalMageOrb_Asmo`, from `reforged-builtins/abilities`.
  */
@@ -20587,6 +22853,8 @@ declare function FourCC(id: "Asod"): Rawcode<"ability">;
 
 /**
  * Item Scythe of Frost Aura (`Asof`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemScytheOfFrostAura_Asof`, from `reforged-builtins/abilities`.
  */
@@ -20721,12 +22989,16 @@ declare function FourCC(id: "Aspy"): Rawcode<"ability">;
 /**
  * Item Soulstealer Mana (`Asr1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSoulstealerMana_Asr1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asr1"): Rawcode<"ability">;
 
 /**
  * Item Soulstealer Attack (`Asr2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSoulstealerAttack_Asr2`, from `reforged-builtins/abilities`.
  */
@@ -20735,6 +23007,8 @@ declare function FourCC(id: "Asr2"): Rawcode<"ability">;
 /**
  * Item Selene Starfall (`Ass1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSeleneStarfall_Ass1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ass1"): Rawcode<"ability">;
@@ -20742,12 +23016,16 @@ declare function FourCC(id: "Ass1"): Rawcode<"ability">;
 /**
  * Item Selene Spellcast (`Ass2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSeleneSpellcast_Ass2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ass2"): Rawcode<"ability">;
 
 /**
  * Soul Burn (`Assb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.SoulBurn_Assb`, from `reforged-builtins/abilities`.
  */
@@ -20770,12 +23048,16 @@ declare function FourCC(id: "Assp"): Rawcode<"ability">;
 /**
  * Item Spell Shield 15 (`Assq`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemSpellShield15_Assq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Assq"): Rawcode<"ability">;
 
 /**
  * Item Spell Shield 12 (`Assw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemSpellShield12_Assw`, from `reforged-builtins/abilities`.
  */
@@ -20826,6 +23108,8 @@ declare function FourCC(id: "Asud"): Rawcode<"ability">;
 /**
  * Item Stormwalkers TC (`Asw1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemStormwalkersTC_Asw1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asw1"): Rawcode<"ability">;
@@ -20833,12 +23117,16 @@ declare function FourCC(id: "Asw1"): Rawcode<"ability">;
 /**
  * Item Stormwalkers Spellcast (`Asw2`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemStormwalkersSpellcast_Asw2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asw2"): Rawcode<"ability">;
 
 /**
  * Item Wildhammer Breastplate CL (`Asx1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemWildhammerBreastplateCL_Asx1`, from `reforged-builtins/abilities`.
  */
@@ -20853,6 +23141,8 @@ declare function FourCC(id: "Atau"): Rawcode<"ability">;
 
 /**
  * Throw Dust (`Atbd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ThrowDust_Atbd`, from `reforged-builtins/abilities`.
  */
@@ -20875,6 +23165,8 @@ declare function FourCC(id: "Atdp"): Rawcode<"ability">;
 /**
  * Item Forsaken Fangs (`Atff`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemForsakenFangs_Atff`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Atff"): Rawcode<"ability">;
@@ -20882,12 +23174,16 @@ declare function FourCC(id: "Atff"): Rawcode<"ability">;
 /**
  * Item Knight's Javelin (`Atkj`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemKnightsJavelin_Atkj`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Atkj"): Rawcode<"ability">;
 
 /**
  * Item Tiara of the Kirin'Tor (`Atkt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemTiaraOfTheKirinTor_Atkt`, from `reforged-builtins/abilities`.
  */
@@ -20903,6 +23199,8 @@ declare function FourCC(id: "Atlp"): Rawcode<"ability">;
 /**
  * Item Mana Bauble (`Atmb`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemManaBauble_Atmb`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Atmb"): Rawcode<"ability">;
@@ -20910,12 +23208,16 @@ declare function FourCC(id: "Atmb"): Rawcode<"ability">;
 /**
  * Item Talisman of Nightmares Orb (`Atno`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemTalismanOfNightmaresOrb_Atno`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Atno"): Rawcode<"ability">;
 
 /**
  * Item Talisman of Nightmares Curse (`Atns`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemTalismanOfNightmaresCurse_Atns`, from `reforged-builtins/abilities`.
  */
@@ -20931,12 +23233,16 @@ declare function FourCC(id: "Atol"): Rawcode<"ability">;
 /**
  * Item Thornguard Rapier Attack (`Atra`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemThornguardRapierAttack_Atra`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Atra"): Rawcode<"ability">;
 
 /**
  * Item Thornguard Rapier Rejuvenation (`Atrr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemThornguardRapierRejuvenation_Atrr`, from `reforged-builtins/abilities`.
  */
@@ -20952,12 +23258,16 @@ declare function FourCC(id: "Atru"): Rawcode<"ability">;
 /**
  * Item The Screecher HoT (`Ats1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemTheScreecherHoT_Ats1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ats1"): Rawcode<"ability">;
 
 /**
  * Item The Screecher Attack (`Ats2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemTheScreecherAttack_Ats2`, from `reforged-builtins/abilities`.
  */
@@ -21015,6 +23325,8 @@ declare function FourCC(id: "Auhf"): Rawcode<"ability">;
 /**
  * Item Infectious Claws (`Auic`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemInfectiousClaws_Auic`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Auic"): Rawcode<"ability">;
@@ -21050,12 +23362,16 @@ declare function FourCC(id: "Auuf"): Rawcode<"ability">;
 /**
  * Item Lost Spirits Heal (`Avb1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemLostSpiritsHeal_Avb1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Avb1"): Rawcode<"ability">;
 
 /**
  * Item Lost Spirits Spellcast (`Avb2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemLostSpiritsSpellcast_Avb2`, from `reforged-builtins/abilities`.
  */
@@ -21071,12 +23387,16 @@ declare function FourCC(id: "Aven"): Rawcode<"ability">;
 /**
  * Item Vestments Wave Heal (`Avm1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemVestmentsWaveHeal_Avm1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Avm1"): Rawcode<"ability">;
 
 /**
  * Item Vestments Wave Spellcast (`Avm2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemVestmentsWaveSpellcast_Avm2`, from `reforged-builtins/abilities`.
  */
@@ -21092,12 +23412,16 @@ declare function FourCC(id: "Avng"): Rawcode<"ability">;
 /**
  * Item Bloodstone Heal (`Avs1`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemBloodstoneHeal_Avs1`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Avs1"): Rawcode<"ability">;
 
 /**
  * Item Bloodstone Attack (`Avs2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemBloodstoneAttack_Avs2`, from `reforged-builtins/abilities`.
  */
@@ -21183,12 +23507,16 @@ declare function FourCC(id: "Awrs"): Rawcode<"ability">;
 /**
  * Item Zandalari Giantcrusher WS (`Azgw`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ItemZandalariGiantcrusherWS_Azgw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Azgw"): Rawcode<"ability">;
 
 /**
  * Item Zandalari Giantcrusher Attack (`Azgx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ItemZandalariGiantcrusherAttack_Azgx`, from `reforged-builtins/abilities`.
  */
@@ -21197,12 +23525,16 @@ declare function FourCC(id: "Azgx"): Rawcode<"ability">;
 /**
  * Battle Fury (`BT1a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.BattleFury_BT1a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "BT1a"): Rawcode<"ability">;
 
 /**
  * Staggering Impact (`BT1b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.StaggeringImpact_BT1b`, from `reforged-builtins/abilities`.
  */
@@ -21211,12 +23543,16 @@ declare function FourCC(id: "BT1b"): Rawcode<"ability">;
 /**
  * Meteor Strike (`BT1c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.MeteorStrike_BT1c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "BT1c"): Rawcode<"ability">;
 
 /**
  * Reckless Abandon (`BT2a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.RecklessAbandon_BT2a`, from `reforged-builtins/abilities`.
  */
@@ -21225,12 +23561,16 @@ declare function FourCC(id: "BT2a"): Rawcode<"ability">;
 /**
  * Eye for Eye (`BT2b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.EyeForEye_BT2b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "BT2b"): Rawcode<"ability">;
 
 /**
  * Indomitable (`BT2c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Indomitable_BT2c`, from `reforged-builtins/abilities`.
  */
@@ -21239,12 +23579,16 @@ declare function FourCC(id: "BT2c"): Rawcode<"ability">;
 /**
  * Retribution (`BT3a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Retribution_BT3a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "BT3a"): Rawcode<"ability">;
 
 /**
  * Unbreakable Spirit (`BT3b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.UnbreakableSpirit_BT3b`, from `reforged-builtins/abilities`.
  */
@@ -21253,12 +23597,16 @@ declare function FourCC(id: "BT3b"): Rawcode<"ability">;
 /**
  * Tenacity (`BT3c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Tenacity_BT3c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "BT3c"): Rawcode<"ability">;
 
 /**
  * Last Stand (`BT4a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.LastStand_BT4a`, from `reforged-builtins/abilities`.
  */
@@ -21267,12 +23615,16 @@ declare function FourCC(id: "BT4a"): Rawcode<"ability">;
 /**
  * Martial Mastery (`BT4b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.MartialMastery_BT4b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "BT4b"): Rawcode<"ability">;
 
 /**
  * Hand of Justice (`BT4c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.HandOfJustice_BT4c`, from `reforged-builtins/abilities`.
  */
@@ -21281,12 +23633,16 @@ declare function FourCC(id: "BT4c"): Rawcode<"ability">;
 /**
  * Iron Will (`BT5a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.IronWill_BT5a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "BT5a"): Rawcode<"ability">;
 
 /**
  * Veteran's Resilience (`BT5b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.VeteransResilience_BT5b`, from `reforged-builtins/abilities`.
  */
@@ -21295,12 +23651,16 @@ declare function FourCC(id: "BT5b"): Rawcode<"ability">;
 /**
  * Undead Vitality (`BT5c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.UndeadVitality_BT5c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "BT5c"): Rawcode<"ability">;
 
 /**
  * Juggernaut (`BT6a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Juggernaut_BT6a`, from `reforged-builtins/abilities`.
  */
@@ -21309,12 +23669,16 @@ declare function FourCC(id: "BT6a"): Rawcode<"ability">;
 /**
  * Thick Skin (`BT6b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ThickSkin_BT6b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "BT6b"): Rawcode<"ability">;
 
 /**
  * Discipline (`BT6c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Discipline_BT6c`, from `reforged-builtins/abilities`.
  */
@@ -21323,12 +23687,16 @@ declare function FourCC(id: "BT6c"): Rawcode<"ability">;
 /**
  * Crippling Blow (`GT1a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.CripplingBlow_GT1a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "GT1a"): Rawcode<"ability">;
 
 /**
  * Rend Armor (`GT1b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.RendArmor_GT1b`, from `reforged-builtins/abilities`.
  */
@@ -21337,12 +23705,16 @@ declare function FourCC(id: "GT1b"): Rawcode<"ability">;
 /**
  * Storm of Steel (`GT1c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.StormOfSteel_GT1c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "GT1c"): Rawcode<"ability">;
 
 /**
  * Retaliation (`GT2a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Retaliation_GT2a`, from `reforged-builtins/abilities`.
  */
@@ -21351,12 +23723,16 @@ declare function FourCC(id: "GT2a"): Rawcode<"ability">;
 /**
  * Riposte (`GT2b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Riposte_GT2b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "GT2b"): Rawcode<"ability">;
 
 /**
  * Blade Mastery (`GT2c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.BladeMastery_GT2c`, from `reforged-builtins/abilities`.
  */
@@ -21365,12 +23741,16 @@ declare function FourCC(id: "GT2c"): Rawcode<"ability">;
 /**
  * Into the Fray! (`GT3a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.IntoTheFray_GT3a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "GT3a"): Rawcode<"ability">;
 
 /**
  * Shoulder Bash (`GT3b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ShoulderBash_GT3b`, from `reforged-builtins/abilities`.
  */
@@ -21379,12 +23759,16 @@ declare function FourCC(id: "GT3b"): Rawcode<"ability">;
 /**
  * Stamina Training (`GT3c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.StaminaTraining_GT3c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "GT3c"): Rawcode<"ability">;
 
 /**
  * Unbreakable (`GT4a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Unbreakable_GT4a`, from `reforged-builtins/abilities`.
  */
@@ -21393,12 +23777,16 @@ declare function FourCC(id: "GT4a"): Rawcode<"ability">;
 /**
  * Combat Tempo (`GT4b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.CombatTempo_GT4b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "GT4b"): Rawcode<"ability">;
 
 /**
  * Unstoppable Might (`GT4c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.UnstoppableMight_GT4c`, from `reforged-builtins/abilities`.
  */
@@ -21407,12 +23795,16 @@ declare function FourCC(id: "GT4c"): Rawcode<"ability">;
 /**
  * Purifying Flame (`IT1a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.PurifyingFlame_IT1a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "IT1a"): Rawcode<"ability">;
 
 /**
  * Holy Nova (`IT1b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.HolyNova_IT1b`, from `reforged-builtins/abilities`.
  */
@@ -21421,12 +23813,16 @@ declare function FourCC(id: "IT1b"): Rawcode<"ability">;
 /**
  * Radiant Embrace (`IT1c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.RadiantEmbrace_IT1c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "IT1c"): Rawcode<"ability">;
 
 /**
  * Unwilling Bomb (`IT2a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.UnwillingBomb_IT2a`, from `reforged-builtins/abilities`.
  */
@@ -21435,12 +23831,16 @@ declare function FourCC(id: "IT2a"): Rawcode<"ability">;
 /**
  * Mindbreaker (`IT2b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Mindbreaker_IT2b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "IT2b"): Rawcode<"ability">;
 
 /**
  * Voice of Authority (`IT2c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.VoiceOfAuthority_IT2c`, from `reforged-builtins/abilities`.
  */
@@ -21449,12 +23849,16 @@ declare function FourCC(id: "IT2c"): Rawcode<"ability">;
 /**
  * Sacred Rebuke (`IT3a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.SacredRebuke_IT3a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "IT3a"): Rawcode<"ability">;
 
 /**
  * Clarity of Mind (`IT3b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ClarityOfMind_IT3b`, from `reforged-builtins/abilities`.
  */
@@ -21463,12 +23867,16 @@ declare function FourCC(id: "IT3b"): Rawcode<"ability">;
 /**
  * Spiritual Renewal (`IT3c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.SpiritualRenewal_IT3c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "IT3c"): Rawcode<"ability">;
 
 /**
  * Divine Reservoir (`IT4a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.DivineReservoir_IT4a`, from `reforged-builtins/abilities`.
  */
@@ -21477,12 +23885,16 @@ declare function FourCC(id: "IT4a"): Rawcode<"ability">;
 /**
  * Light's Grace (`IT4b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.LightsGrace_IT4b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "IT4b"): Rawcode<"ability">;
 
 /**
  * Holy Light (`IT4c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.HolyLight_IT4c`, from `reforged-builtins/abilities`.
  */
@@ -21491,12 +23903,16 @@ declare function FourCC(id: "IT4c"): Rawcode<"ability">;
 /**
  * `IT6c`, unnamed, a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Unnamed_IT6c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "IT6c"): Rawcode<"ability">;
 
 /**
  * Valor's Reward (`LT1a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ValorsReward_LT1a`, from `reforged-builtins/abilities`.
  */
@@ -21505,12 +23921,16 @@ declare function FourCC(id: "LT1a"): Rawcode<"ability">;
 /**
  * Judgement (`LT1b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Judgement_LT1b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "LT1b"): Rawcode<"ability">;
 
 /**
  * Press the Attack (`LT1c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.PressTheAttack_LT1c`, from `reforged-builtins/abilities`.
  */
@@ -21519,12 +23939,16 @@ declare function FourCC(id: "LT1c"): Rawcode<"ability">;
 /**
  * Mass Arrest (`LT2a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.MassArrest_LT2a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "LT2a"): Rawcode<"ability">;
 
 /**
  * Weighted Net (`LT2b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.WeightedNet_LT2b`, from `reforged-builtins/abilities`.
  */
@@ -21533,12 +23957,16 @@ declare function FourCC(id: "LT2b"): Rawcode<"ability">;
 /**
  * Exposed Defenses (`LT2c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ExposedDefenses_LT2c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "LT2c"): Rawcode<"ability">;
 
 /**
  * Rally (`LT3a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Rally_LT3a`, from `reforged-builtins/abilities`.
  */
@@ -21547,12 +23975,16 @@ declare function FourCC(id: "LT3a"): Rawcode<"ability">;
 /**
  * Second Wind (`LT3b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.SecondWind_LT3b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "LT3b"): Rawcode<"ability">;
 
 /**
  * Born Leader (`LT3c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.BornLeader_LT3c`, from `reforged-builtins/abilities`.
  */
@@ -21561,6 +23993,8 @@ declare function FourCC(id: "LT3c"): Rawcode<"ability">;
 /**
  * Perseverance (`LT4a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Perseverance_LT4a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "LT4a"): Rawcode<"ability">;
@@ -21568,12 +24002,16 @@ declare function FourCC(id: "LT4a"): Rawcode<"ability">;
 /**
  * Against All Odds (`LT4b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.AgainstAllOdds_LT4b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "LT4b"): Rawcode<"ability">;
 
 /**
  * Renewed Vigor (`LT4c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.RenewedVigor_LT4c`, from `reforged-builtins/abilities`.
  */
@@ -21771,12 +24209,16 @@ declare function FourCC(id: "Suhf"): Rawcode<"ability">;
 /**
  * Forsaken Might (`UT1a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ForsakenMight_UT1a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "UT1a"): Rawcode<"ability">;
 
 /**
  * Bloodthirst (`UT1b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Bloodthirst_UT1b`, from `reforged-builtins/abilities`.
  */
@@ -21785,12 +24227,16 @@ declare function FourCC(id: "UT1b"): Rawcode<"ability">;
 /**
  * Bladestorm (`UT1c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Bladestorm_UT1c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "UT1c"): Rawcode<"ability">;
 
 /**
  * Counter Attack (`UT2a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.CounterAttack_UT2a`, from `reforged-builtins/abilities`.
  */
@@ -21799,12 +24245,16 @@ declare function FourCC(id: "UT2a"): Rawcode<"ability">;
 /**
  * Parry (`UT2b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Parry_UT2b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "UT2b"): Rawcode<"ability">;
 
 /**
  * The Best Defense... (`UT2c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.TheBestDefense_UT2c`, from `reforged-builtins/abilities`.
  */
@@ -21813,12 +24263,16 @@ declare function FourCC(id: "UT2c"): Rawcode<"ability">;
 /**
  * Endurance (`UT3a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Endurance_UT3a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "UT3a"): Rawcode<"ability">;
 
 /**
  * Thirst For Battle (`UT3b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.ThirstForBattle_UT3b`, from `reforged-builtins/abilities`.
  */
@@ -21827,12 +24281,16 @@ declare function FourCC(id: "UT3b"): Rawcode<"ability">;
 /**
  * Furious Charge (`UT3c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.FuriousCharge_UT3c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "UT3c"): Rawcode<"ability">;
 
 /**
  * Inner Fire (`UT4a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.InnerFire_UT4a`, from `reforged-builtins/abilities`.
  */
@@ -21841,12 +24299,16 @@ declare function FourCC(id: "UT4a"): Rawcode<"ability">;
 /**
  * Soulthirst (`UT4b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.Soulthirst_UT4b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "UT4b"): Rawcode<"ability">;
 
 /**
  * Unending Fury (`UT4c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.UnendingFury_UT4c`, from `reforged-builtins/abilities`.
  */
@@ -21855,12 +24317,16 @@ declare function FourCC(id: "UT4c"): Rawcode<"ability">;
 /**
  * Improved Armor (`UT5a`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.ImprovedArmor_UT5a`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "UT5a"): Rawcode<"ability">;
 
 /**
  * Swordsmanship (`UT5b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.Swordsmanship_UT5b`, from `reforged-builtins/abilities`.
  */
@@ -21869,12 +24335,16 @@ declare function FourCC(id: "UT5b"): Rawcode<"ability">;
 /**
  * All Brawn (`UT5c`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.AllBrawn_UT5c`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "UT5c"): Rawcode<"ability">;
 
 /**
  * Mighty Swing (`UT6a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.MightySwing_UT6a`, from `reforged-builtins/abilities`.
  */
@@ -21883,12 +24353,16 @@ declare function FourCC(id: "UT6a"): Rawcode<"ability">;
 /**
  * Quick Recovery (`UT6b`), a Built-in ability of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Abilities.QuickRecovery_UT6b`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "UT6b"): Rawcode<"ability">;
 
 /**
  * Warrior's Focus (`UT6c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Abilities.WarriorsFocus_UT6c`, from `reforged-builtins/abilities`.
  */
@@ -21920,12 +24394,16 @@ declare function FourCC(id: "ANmd"): Rawcode<"buff">;
 /**
  * Poisoned Arrows (`BApa`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.PoisonedArrows_BApa`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BApa"): Rawcode<"buff">;
 
 /**
  * Chronomancy (`BCGb`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Chronomancy_BCGb`, from `reforged-builtins/buffs`.
  */
@@ -21948,12 +24426,16 @@ declare function FourCC(id: "BCtc"): Rawcode<"buff">;
 /**
  * Dark Commander's Presence (`BDCa`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.DarkCommandersPresence_BDCa`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BDCa"): Rawcode<"buff">;
 
 /**
  * Dark Mistress' Presence (`BDMa`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.DarkMistressPresence_BDMa`, from `reforged-builtins/buffs`.
  */
@@ -22039,12 +24521,16 @@ declare function FourCC(id: "BFig"): Rawcode<"buff">;
 /**
  * Templar's Flame (`BHTf`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.TemplarsFlame_BHTf`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHTf"): Rawcode<"buff">;
 
 /**
  * Apprehend (`BHaa`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Apprehend_BHaa`, from `reforged-builtins/buffs`.
  */
@@ -22067,12 +24553,16 @@ declare function FourCC(id: "BHad"): Rawcode<"buff">;
 /**
  * Apprehend (`BHag`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Apprehend_BHag`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHag"): Rawcode<"buff">;
 
 /**
  * Avatar Of Light (`BHal`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.AvatarOfLight_BHal`, from `reforged-builtins/buffs`.
  */
@@ -22081,12 +24571,16 @@ declare function FourCC(id: "BHal"): Rawcode<"buff">;
 /**
  * Apprehend (`BHap`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Apprehend_BHap`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHap"): Rawcode<"buff">;
 
 /**
  * Sacred Aura (`BHas`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.SacredAura_BHas`, from `reforged-builtins/buffs`.
  */
@@ -22116,12 +24610,16 @@ declare function FourCC(id: "BHbn"): Rawcode<"buff">;
 /**
  * Unyielding Guard Bonus (`BHbo`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.UnyieldingGuardBonus_BHbo`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHbo"): Rawcode<"buff">;
 
 /**
  * Unyielding Guard (`BHbt`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.UnyieldingGuard_BHbt`, from `reforged-builtins/buffs`.
  */
@@ -22144,12 +24642,16 @@ declare function FourCC(id: "BHca"): Rawcode<"buff">;
 /**
  * Consecration (`BHce`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Consecration_BHce`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHce"): Rawcode<"buff">;
 
 /**
  * Consecration (`BHcf`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Consecration_BHcf`, from `reforged-builtins/buffs`.
  */
@@ -22158,12 +24660,16 @@ declare function FourCC(id: "BHcf"): Rawcode<"buff">;
 /**
  * Valiant Charge (`BHch`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.ValiantCharge_BHch`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHch"): Rawcode<"buff">;
 
 /**
  * Cleansing Fire (`BHcl`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.CleansingFire_BHcl`, from `reforged-builtins/buffs`.
  */
@@ -22186,12 +24692,16 @@ declare function FourCC(id: "BHfs"): Rawcode<"buff">;
 /**
  * Guiding Hand (`BHgh`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.GuidingHand_BHgh`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHgh"): Rawcode<"buff">;
 
 /**
  * Grit (`BHgr`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Grit_BHgr`, from `reforged-builtins/buffs`.
  */
@@ -22200,12 +24710,16 @@ declare function FourCC(id: "BHgr"): Rawcode<"buff">;
 /**
  * Guiding Hand (`BHgu`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.GuidingHand_BHgu`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHgu"): Rawcode<"buff">;
 
 /**
  * Provoke (`BHhc`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Provoke_BHhc`, from `reforged-builtins/buffs`.
  */
@@ -22214,12 +24728,16 @@ declare function FourCC(id: "BHhc"): Rawcode<"buff">;
 /**
  * Headsplitter (`BHhh`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Headsplitter_BHhh`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHhh"): Rawcode<"buff">;
 
 /**
  * Headsplitter (`BHhr`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Headsplitter_BHhr`, from `reforged-builtins/buffs`.
  */
@@ -22228,12 +24746,16 @@ declare function FourCC(id: "BHhr"): Rawcode<"buff">;
 /**
  * Provoke (`BHht`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Provoke_BHht`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHht"): Rawcode<"buff">;
 
 /**
  * Inspire Courage (`BHic`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.InspireCourage_BHic`, from `reforged-builtins/buffs`.
  */
@@ -22242,12 +24764,16 @@ declare function FourCC(id: "BHic"): Rawcode<"buff">;
 /**
  * Mind Control (`BHmc`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.MindControl_BHmc`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHmc"): Rawcode<"buff">;
 
 /**
  * Holy Wrath (`BHpb`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.HolyWrath_BHpb`, from `reforged-builtins/buffs`.
  */
@@ -22256,12 +24782,16 @@ declare function FourCC(id: "BHpb"): Rawcode<"buff">;
 /**
  * Surge of Light (`BHsa`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.SurgeOfLight_BHsa`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHsa"): Rawcode<"buff">;
 
 /**
  * Light's Mercy (`BHsf`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.LightsMercy_BHsf`, from `reforged-builtins/buffs`.
  */
@@ -22270,12 +24800,16 @@ declare function FourCC(id: "BHsf"): Rawcode<"buff">;
 /**
  * Surge of Light (`BHss`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.SurgeOfLight_BHss`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHss"): Rawcode<"buff">;
 
 /**
  * Bleed (`BHsw`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Bleed_BHsw`, from `reforged-builtins/buffs`.
  */
@@ -22291,12 +24825,16 @@ declare function FourCC(id: "BHtc"): Rawcode<"buff">;
 /**
  * Warcry (`BHw1`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Warcry_BHw1`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHw1"): Rawcode<"buff">;
 
 /**
  * Warcry (`BHw2`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Warcry_BHw2`, from `reforged-builtins/buffs`.
  */
@@ -22305,12 +24843,16 @@ declare function FourCC(id: "BHw2"): Rawcode<"buff">;
 /**
  * Warcry (`BHw3`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Warcry_BHw3`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BHw3"): Rawcode<"buff">;
 
 /**
  * Warcry (`BHwc`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Warcry_BHwc`, from `reforged-builtins/buffs`.
  */
@@ -22326,6 +24868,8 @@ declare function FourCC(id: "BHwe"): Rawcode<"buff">;
 /**
  * Corruption (`BIc2`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Corruption_BIc2`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BIc2"): Rawcode<"buff">;
@@ -22333,12 +24877,16 @@ declare function FourCC(id: "BIc2"): Rawcode<"buff">;
 /**
  * Corruption (`BIc3`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Corruption_BIc3`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BIc3"): Rawcode<"buff">;
 
 /**
  * Corruption (`BIc5`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Corruption_BIc5`, from `reforged-builtins/buffs`.
  */
@@ -22361,12 +24909,16 @@ declare function FourCC(id: "BIcf"): Rawcode<"buff">;
 /**
  * Terrified! (`BIee`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Terrified_BIee`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BIee"): Rawcode<"buff">;
 
 /**
  * Heal Reduction (`BIhm`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Buffs.HealReduction_BIhm`, from `reforged-builtins/buffs`.
  */
@@ -22381,6 +24933,8 @@ declare function FourCC(id: "BIil"): Rawcode<"buff">;
 
 /**
  * Smashed! (`BImc`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Smashed_BImc`, from `reforged-builtins/buffs`.
  */
@@ -22402,6 +24956,8 @@ declare function FourCC(id: "BIpv"): Rawcode<"buff">;
 
 /**
  * Queen's Hunger (`BIqh`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.QueensHunger_BIqh`, from `reforged-builtins/buffs`.
  */
@@ -22438,6 +24994,8 @@ declare function FourCC(id: "BIrm"): Rawcode<"buff">;
 /**
  * Aura of Decay (`BIsd`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.AuraOfDecay_BIsd`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BIsd"): Rawcode<"buff">;
@@ -22451,6 +25009,8 @@ declare function FourCC(id: "BIsh"): Rawcode<"buff">;
 
 /**
  * Summoned Unit (`BIsu`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.SummonedUnit_BIsu`, from `reforged-builtins/buffs`.
  */
@@ -22661,6 +25221,8 @@ declare function FourCC(id: "BNrf"): Rawcode<"buff">;
 
 /**
  * Righteous Fury (`BNrs`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.RighteousFury_BNrs`, from `reforged-builtins/buffs`.
  */
@@ -22900,6 +25462,8 @@ declare function FourCC(id: "BUav"): Rawcode<"buff">;
 /**
  * Undying Defiance Bonus (`BUbo`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.UndyingDefianceBonus_BUbo`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BUbo"): Rawcode<"buff">;
@@ -22907,12 +25471,16 @@ declare function FourCC(id: "BUbo"): Rawcode<"buff">;
 /**
  * Battering Ram (`BUbr`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.BatteringRam_BUbr`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BUbr"): Rawcode<"buff">;
 
 /**
  * Undying Defiance (`BUbt`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.UndyingDefiance_BUbt`, from `reforged-builtins/buffs`.
  */
@@ -22934,6 +25502,8 @@ declare function FourCC(id: "BUcs"): Rawcode<"buff">;
 
 /**
  * Deathseeker Arrows (`BUdb`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.DeathseekerArrows_BUdb`, from `reforged-builtins/buffs`.
  */
@@ -22963,6 +25533,8 @@ declare function FourCC(id: "BUim"): Rawcode<"buff">;
 /**
  * Soul Lantern (`BUla`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.SoulLantern_BUla`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BUla"): Rawcode<"buff">;
@@ -22970,12 +25542,16 @@ declare function FourCC(id: "BUla"): Rawcode<"buff">;
 /**
  * Soul Lantern (`BUlc`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.SoulLantern_BUlc`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BUlc"): Rawcode<"buff">;
 
 /**
  * Soul Lantern (`BUle`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.SoulLantern_BUle`, from `reforged-builtins/buffs`.
  */
@@ -23019,12 +25595,16 @@ declare function FourCC(id: "BUtt"): Rawcode<"buff">;
 /**
  * Grim Conviction (`BUvg`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.GrimConviction_BUvg`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BUvg"): Rawcode<"buff">;
 
 /**
  * Withering Fire (`BUwf`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.WitheringFire_BUwf`, from `reforged-builtins/buffs`.
  */
@@ -23040,12 +25620,16 @@ declare function FourCC(id: "Babr"): Rawcode<"buff">;
 /**
  * Raise the Banner (`Baca`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.RaiseTheBanner_Baca`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Baca"): Rawcode<"buff">;
 
 /**
  * Enveloping Darkness (`Badx`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.EnvelopingDarkness_Badx`, from `reforged-builtins/buffs`.
  */
@@ -23102,6 +25686,8 @@ declare function FourCC(id: "Bbar"): Rawcode<"buff">;
 
 /**
  * Twisted Bones (`Bbcs`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.TwistedBones_Bbcs`, from `reforged-builtins/buffs`.
  */
@@ -23201,6 +25787,8 @@ declare function FourCC(id: "Bcyc"): Rawcode<"buff">;
 /**
  * Plague (`Bdb1`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Plague_Bdb1`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Bdb1"): Rawcode<"buff">;
@@ -23235,6 +25823,8 @@ declare function FourCC(id: "Bdef"): Rawcode<"buff">;
 
 /**
  * Armor Reduction (`Bder`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.ArmorReduction_Bder`, from `reforged-builtins/buffs`.
  */
@@ -23327,6 +25917,8 @@ declare function FourCC(id: "Bfae"): Rawcode<"buff">;
 /**
  * Chemical Frenzy (`Bfcf`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.ChemicalFrenzy_Bfcf`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Bfcf"): Rawcode<"buff">;
@@ -23362,12 +25954,16 @@ declare function FourCC(id: "Bfzy"): Rawcode<"buff">;
 /**
  * Curse of Sloth (`Bggs`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.CurseOfSloth_Bggs`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Bggs"): Rawcode<"buff">;
 
 /**
  * Unfathomable Rage (`Bggw`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.UnfathomableRage_Bggw`, from `reforged-builtins/buffs`.
  */
@@ -23376,6 +25972,8 @@ declare function FourCC(id: "Bggw"): Rawcode<"buff">;
 /**
  * Pride's Downfall (`Bggx`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.PridesDownfall_Bggx`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Bggx"): Rawcode<"buff">;
@@ -23383,12 +25981,16 @@ declare function FourCC(id: "Bggx"): Rawcode<"buff">;
 /**
  * Echoing Flame (`Bgr1`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.EchoingFlame_Bgr1`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Bgr1"): Rawcode<"buff">;
 
 /**
  * Echoing Flame (`Bgr2`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.EchoingFlame_Bgr2`, from `reforged-builtins/buffs`.
  */
@@ -23411,12 +26013,16 @@ declare function FourCC(id: "Bhea"): Rawcode<"buff">;
 /**
  * Consecration Aura (`Bhhi`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.ConsecrationAura_Bhhi`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Bhhi"): Rawcode<"buff">;
 
 /**
  * Slowed (`Bhrz`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Slowed_Bhrz`, from `reforged-builtins/buffs`.
  */
@@ -23474,6 +26080,8 @@ declare function FourCC(id: "Blsh"): Rawcode<"buff">;
 /**
  * Banshee's Wail (`Bmda`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.BansheesWail_Bmda`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Bmda"): Rawcode<"buff">;
@@ -23522,6 +26130,8 @@ declare function FourCC(id: "Bmlt"): Rawcode<"buff">;
 
 /**
  * Blinded (`Bmss`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Blinded_Bmss`, from `reforged-builtins/buffs`.
  */
@@ -23593,6 +26203,8 @@ declare function FourCC(id: "Bprg"): Rawcode<"buff">;
 /**
  * `Bps1`, unnamed, a Built-in buff of Patch 3.0.0, race nightelf.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Buffs.Unnamed_Bps1`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Bps1"): Rawcode<"buff">;
@@ -23642,6 +26254,8 @@ declare function FourCC(id: "Brej"): Rawcode<"buff">;
 /**
  * Brimstone (`Brim`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Brimstone_Brim`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Brim"): Rawcode<"buff">;
@@ -23677,12 +26291,16 @@ declare function FourCC(id: "Brpm"): Rawcode<"buff">;
 /**
  * Holy Fire (`Bsci`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.HolyFire_Bsci`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Bsci"): Rawcode<"buff">;
 
 /**
  * Light Struck (`Bsg1`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.LightStruck_Bsg1`, from `reforged-builtins/buffs`.
  */
@@ -23712,12 +26330,16 @@ declare function FourCC(id: "Bslo"): Rawcode<"buff">;
 /**
  * Freezing Presence (`Bsof`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.FreezingPresence_Bsof`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Bsof"): Rawcode<"buff">;
 
 /**
  * Orb of Slow (`Bson`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.OrbOfSlow_Bson`, from `reforged-builtins/buffs`.
  */
@@ -23775,12 +26397,16 @@ declare function FourCC(id: "Bstt"): Rawcode<"buff">;
 /**
  * Taunt (`Btab`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Taunt_Btab`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Btab"): Rawcode<"buff">;
 
 /**
  * Taunt (`Btad`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Taunt_Btad`, from `reforged-builtins/buffs`.
  */
@@ -23789,12 +26415,16 @@ declare function FourCC(id: "Btad"): Rawcode<"buff">;
 /**
  * Taunt (`Btau`), a Built-in buff of Patch 3.0.0, race other.
  *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
+ *
  * Its constant is `Buffs.Taunt_Btau`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Btau"): Rawcode<"buff">;
 
 /**
  * Blinded (`Btbd`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Blinded_Btbd`, from `reforged-builtins/buffs`.
  */
@@ -23809,6 +26439,8 @@ declare function FourCC(id: "Btdg"): Rawcode<"buff">;
 
 /**
  * Magic Missile (`Btkt`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.MagicMissile_Btkt`, from `reforged-builtins/buffs`.
  */
@@ -23844,6 +26476,8 @@ declare function FourCC(id: "Buhf"): Rawcode<"buff">;
 
 /**
  * Infected (`Buic`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
  * Its constant is `Buffs.Infected_Buic`, from `reforged-builtins/buffs`.
  */
@@ -31957,6 +34591,8 @@ declare function FourCC(id: "Redt"): Rawcode<"upgrade">;
 /**
  * Mark of the Claw (`Reeb`), a Built-in upgrade of Patch 3.0.0, race nightelf.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.MarkOfTheClaw_Reeb`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Reeb"): Rawcode<"upgrade">;
@@ -31964,12 +34600,16 @@ declare function FourCC(id: "Reeb"): Rawcode<"upgrade">;
 /**
  * Mark of the Talon (`Reec`), a Built-in upgrade of Patch 3.0.0, race nightelf.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.MarkOfTheTalon_Reec`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Reec"): Rawcode<"upgrade">;
 
 /**
  * Hardened Skin (`Rehs`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Upgrades.HardenedSkin_Rehs`, from `reforged-builtins/upgrades`.
  */
@@ -32027,6 +34667,8 @@ declare function FourCC(id: "Repb"): Rawcode<"upgrade">;
 /**
  * Backpack (`Repm`), a Built-in upgrade of Patch 3.0.0, race nightelf.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.Backpack_Repm`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Repm"): Rawcode<"upgrade">;
@@ -32040,6 +34682,8 @@ declare function FourCC(id: "Rerh"): Rawcode<"upgrade">;
 
 /**
  * Resistant Skin (`Rers`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Upgrades.ResistantSkin_Rers`, from `reforged-builtins/upgrades`.
  */
@@ -32083,6 +34727,8 @@ declare function FourCC(id: "Reuv"): Rawcode<"upgrade">;
 /**
  * Well Spring (`Rews`), a Built-in upgrade of Patch 3.0.0, race nightelf.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.WellSpring_Rews`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rews"): Rawcode<"upgrade">;
@@ -32090,12 +34736,16 @@ declare function FourCC(id: "Rews"): Rawcode<"upgrade">;
 /**
  * Glyph of Fortification (`Rgfo`), a Built-in upgrade of Patch 3.0.0, race unknown.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.GlyphOfFortification_Rgfo`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rgfo"): Rawcode<"upgrade">;
 
 /**
  * Glyph of Ultravision (`Rguv`), a Built-in upgrade of Patch 3.0.0, race unknown.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Upgrades.GlyphOfUltravision_Rguv`, from `reforged-builtins/upgrades`.
  */
@@ -32125,6 +34775,8 @@ declare function FourCC(id: "Rhar"): Rawcode<"upgrade">;
 /**
  * Cloud (`Rhcd`), a Built-in upgrade of Patch 3.0.0, race human.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.Cloud_Rhcd`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rhcd"): Rawcode<"upgrade">;
@@ -32139,6 +34791,8 @@ declare function FourCC(id: "Rhde"): Rawcode<"upgrade">;
 /**
  * Flak Cannons (`Rhfc`), a Built-in upgrade of Patch 3.0.0, race human.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.FlakCannons_Rhfc`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rhfc"): Rawcode<"upgrade">;
@@ -32152,6 +34806,8 @@ declare function FourCC(id: "Rhfl"): Rawcode<"upgrade">;
 
 /**
  * Fragmentation Shards (`Rhfs`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Upgrades.FragmentationShards_Rhfs`, from `reforged-builtins/upgrades`.
  */
@@ -32195,6 +34851,8 @@ declare function FourCC(id: "Rhme"): Rawcode<"upgrade">;
 /**
  * Backpack (`Rhpm`), a Built-in upgrade of Patch 3.0.0, race human.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.Backpack_Rhpm`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rhpm"): Rawcode<"upgrade">;
@@ -32223,12 +34881,16 @@ declare function FourCC(id: "Rhri"): Rawcode<"upgrade">;
 /**
  * Barrage (`Rhrt`), a Built-in upgrade of Patch 3.0.0, race human.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.Barrage_Rhrt`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rhrt"): Rawcode<"upgrade">;
 
 /**
  * Sundering Blades (`Rhsb`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Upgrades.SunderingBlades_Rhsb`, from `reforged-builtins/upgrades`.
  */
@@ -32244,6 +34906,8 @@ declare function FourCC(id: "Rhse"): Rawcode<"upgrade">;
 /**
  * Control Magic (`Rhss`), a Built-in upgrade of Patch 3.0.0, race human.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.ControlMagic_Rhss`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rhss"): Rawcode<"upgrade">;
@@ -32258,12 +34922,16 @@ declare function FourCC(id: "Rhst"): Rawcode<"upgrade">;
 /**
  * Coral Scales (`Rnam`), a Built-in upgrade of Patch 3.0.0, race naga.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.CoralScales_Rnam`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rnam"): Rawcode<"upgrade">;
 
 /**
  * Coral Blades (`Rnat`), a Built-in upgrade of Patch 3.0.0, race naga.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Upgrades.CoralBlades_Rnat`, from `reforged-builtins/upgrades`.
  */
@@ -32272,12 +34940,16 @@ declare function FourCC(id: "Rnat"): Rawcode<"upgrade">;
 /**
  * Ensnare (`Rnen`), a Built-in upgrade of Patch 3.0.0, race naga.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.Ensnare_Rnen`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rnen"): Rawcode<"upgrade">;
 
 /**
  * Submerge (`Rnsb`), a Built-in upgrade of Patch 3.0.0, race naga.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Upgrades.Submerge_Rnsb`, from `reforged-builtins/upgrades`.
  */
@@ -32286,12 +34958,16 @@ declare function FourCC(id: "Rnsb"): Rawcode<"upgrade">;
 /**
  * Abolish Magic (`Rnsi`), a Built-in upgrade of Patch 3.0.0, race naga.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.AbolishMagic_Rnsi`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rnsi"): Rawcode<"upgrade">;
 
 /**
  * Naga Siren Adept Training (`Rnsw`), a Built-in upgrade of Patch 3.0.0, race naga.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Upgrades.NagaSirenAdeptTraining_Rnsw`, from `reforged-builtins/upgrades`.
  */
@@ -32307,12 +34983,16 @@ declare function FourCC(id: "Roar"): Rawcode<"upgrade">;
 /**
  * Burning Oil (`Robf`), a Built-in upgrade of Patch 3.0.0, race orc.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.BurningOil_Robf`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Robf"): Rawcode<"upgrade">;
 
 /**
  * Berserker Upgrade (`Robk`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Upgrades.BerserkerUpgrade_Robk`, from `reforged-builtins/upgrades`.
  */
@@ -32342,6 +35022,8 @@ declare function FourCC(id: "Roen"): Rawcode<"upgrade">;
 /**
  * Liquid Fire (`Rolf`), a Built-in upgrade of Patch 3.0.0, race orc.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.LiquidFire_Rolf`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rolf"): Rawcode<"upgrade">;
@@ -32363,6 +35045,8 @@ declare function FourCC(id: "Ropg"): Rawcode<"upgrade">;
 /**
  * Backpack (`Ropm`), a Built-in upgrade of Patch 3.0.0, race orc.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.Backpack_Ropm`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Ropm"): Rawcode<"upgrade">;
@@ -32376,6 +35060,8 @@ declare function FourCC(id: "Rora"): Rawcode<"upgrade">;
 
 /**
  * Reinforced Defenses (`Rorb`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Upgrades.ReinforcedDefenses_Rorb`, from `reforged-builtins/upgrades`.
  */
@@ -32426,6 +35112,8 @@ declare function FourCC(id: "Rows"): Rawcode<"upgrade">;
 /**
  * Spirit Walker Adept Training (`Rowt`), a Built-in upgrade of Patch 3.0.0, race orc.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.SpiritWalkerAdeptTraining_Rowt`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rowt"): Rawcode<"upgrade">;
@@ -32454,6 +35142,8 @@ declare function FourCC(id: "Ruba"): Rawcode<"upgrade">;
 /**
  * Burrow (`Rubu`), a Built-in upgrade of Patch 3.0.0, race undead.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.Burrow_Rubu`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rubu"): Rawcode<"upgrade">;
@@ -32467,6 +35157,8 @@ declare function FourCC(id: "Rucr"): Rawcode<"upgrade">;
 
 /**
  * Exhume Corpses (`Ruex`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Upgrades.ExhumeCorpses_Ruex`, from `reforged-builtins/upgrades`.
  */
@@ -32510,6 +35202,8 @@ declare function FourCC(id: "Rupc"): Rawcode<"upgrade">;
 /**
  * Backpack (`Rupm`), a Built-in upgrade of Patch 3.0.0, race undead.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.Backpack_Rupm`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rupm"): Rawcode<"upgrade">;
@@ -32538,12 +35232,16 @@ declare function FourCC(id: "Rusl"): Rawcode<"upgrade">;
 /**
  * Skeletal Mastery (`Rusm`), a Built-in upgrade of Patch 3.0.0, race undead.
  *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
+ *
  * Its constant is `Upgrades.SkeletalMastery_Rusm`, from `reforged-builtins/upgrades`.
  */
 declare function FourCC(id: "Rusm"): Rawcode<"upgrade">;
 
 /**
  * Destroyer Form (`Rusp`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * In the Default and Custom Game data sets. Not in the Melee Game data set.
  *
  * Its constant is `Upgrades.DestroyerForm_Rusp`, from `reforged-builtins/upgrades`.
  */

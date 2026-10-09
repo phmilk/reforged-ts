@@ -2,7 +2,7 @@
 
 The Built-in objects of each Warcraft III Reforged Patch, reduced to the identifiers code needs to name them: Rawcode, Object kind, race, enUS name and the Game data sets that hold the object ([ADR 0013](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0013-built-in-objects-ship-as-derived-identifiers-in-their-own-package.md)). It never holds tooltip text, numbers or icons.
 
-**Work in progress, not published yet** ([#509](https://github.com/phmilk/reforged-ts/issues/509)). It holds the Built-in objects of the Default Game data set of Patch 3.0.0.24268, in the seven Object kinds: their JSON index, their `FourCC` overloads and their constants. The other Game data sets come next.
+**Work in progress, not published yet** ([#509](https://github.com/phmilk/reforged-ts/issues/509)). It holds the Built-in objects of Patch 3.0.0.24268, in the seven Object kinds and the three Game data sets: their JSON index, their `FourCC` overloads and their constants.
 
 **Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build, which a test holds to `reforged-types`'.
 
@@ -15,13 +15,17 @@ The Built-in objects of each Warcraft III Reforged Patch, reduced to the identif
   "format": 1,
   "build": "3.0.0.24268",
   "gameVersion": "3.0.0",
-  "gameDataSets": [{ "id": "default", "label": "Default" }],
+  "gameDataSets": [
+    { "id": "default", "label": "Default" },
+    { "id": "custom", "label": "Custom" },
+    { "id": "melee", "label": "Melee" }
+  ],
   "objects": {
     "hfoo": {
       "kind": "unit",
       "name": "Footman",
       "race": "human",
-      "sets": ["default"],
+      "sets": ["default", "custom", "melee"],
       "constant": "Footman_hfoo"
     }
   }
@@ -29,7 +33,7 @@ The Built-in objects of each Warcraft III Reforged Patch, reduced to the identif
 ```
 
 - `format` changes only with an incompatible shape, in a major.
-- `objects` is keyed by Rawcode, in code-point order. `name` is the enUS name, colour codes and line breaks removed; it is absent when the game gives none. `race` is lower-case, as the game writes it, and absent for a kind without one. `sets` lists the ids of the Game data sets that hold the object. `constant` is its constant's name: the enUS name in PascalCase, then `_` and the Rawcode (`Unnamed_<rawcode>` without a name).
+- `objects` is keyed by Rawcode, in code-point order. `name` is the enUS name, colour codes and line breaks removed; it is absent when the game gives none. `race` is lower-case, as the game writes it, and absent for a kind without one. `sets` lists the ids of the Game data sets that hold the object; the constants cover their union, and an object's TSDoc names the sets that hold it and those that do not, unless every one does ("In the Default Game data set. Not in the Custom and Melee Game data sets."). `constant` is its constant's name: the enUS name in PascalCase, then `_` and the Rawcode (`Unnamed_<rawcode>` without a name).
 
 The file is written one object per line, byte-stably: a regeneration from unchanged inputs writes the same bytes.
 
@@ -67,7 +71,9 @@ Each Game version's index is emitted three ways, every file with a banner that s
 
 `pnpm builtins:generate [--install <folder>] [--out <folder>]`, from the repository root, on a machine with the game. It finds the install as the Probe runner finds the game: `--install` (the install folder, or any file in it), else the folder above the executable `WC3_EXECUTABLE` names, else `Warcraft III` under `Program Files (x86)` then `Program Files` (drive C under WSL). It refuses an install whose Build is not `reforged-types`' `reforged.patch`, naming both. The Build is the one the build config names (`build-name`), which describes the content: the Battle.net app has been seen to give `.build.info` another Version for the same build config (3.0.0.24248 for the build config of 3.0.0.24268), which is then a warning.
 
-It reads the install's CASC storage with a small TypeScript reader (`src/casc/`: no native code, no dependency, read-only). Per Object kind, the base layer's data file gives the Rawcodes and, where it has the column, the race: `Units/UnitData.slk`, `Units/ItemData.slk`, `Units/AbilityData.slk`, `Units/AbilityBuffData.slk`, `Units/DestructableData.slk`, `Doodads/Doodads.slk` and `Units/UpgradeData.slk`; heroes are units, and a row with no Rawcode cell is skipped with a warning. The kind's `*MetaData.slk` locates the field the Object Editor shows as the name:
+It reads the install's CASC storage with a small TypeScript reader (`src/casc/`: no native code, no dependency, read-only). The Game data sets are those the World Editor of 3.0 offers in its map options: Default, which reads the base layer `War3.w3mod:`; Custom, which reads `_Balance/Custom_V1.w3mod:` (its layer for The Frozen Throne; Reign of Chaos reads `Custom_V0`); and Melee, which reads `_Balance/Melee_V0.w3mod:`. Each layer's file of a kind replaces the base layer's whole, and a set whose layer has none reads the base layer's: no layer has destructables or doodads. Which layer a map of the Game Data Version Forsaken Kingdom reads, which has none of its own, is not yet settled in game ([#564](https://github.com/phmilk/reforged-ts/issues/564)). Names are read from the enUS layer, which no set replaces.
+
+Per Object kind and Game data set, the data file gives the Rawcodes and, where it has the column, the race (an object's row from the first set that holds it, in the order above): `Units/UnitData.slk`, `Units/ItemData.slk`, `Units/AbilityData.slk`, `Units/AbilityBuffData.slk`, `Units/DestructableData.slk`, `Doodads/Doodads.slk` and `Units/UpgradeData.slk`; heroes are units, and a row with no Rawcode cell is skipped with a warning. The kind's `*MetaData.slk` locates the field the Object Editor shows as the name:
 
 - in the profile files of `_Locales/enUS.w3mod:` (`Units/*UnitStrings.txt`, `Units/ItemStrings.txt`, `Units/*AbilityStrings.txt` for abilities and buffs, `Units/*UpgradeStrings.txt`; finding none is an error), keys matched without regard to case;
 - or in the data file itself, as for destructables and doodads, whose names are `WESTRING_` keys of `UI/WorldEditGameStrings.txt` and `UI/WorldEditStrings.txt` (a key neither holds leaves the object unnamed, with a warning).

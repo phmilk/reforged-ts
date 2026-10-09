@@ -27,15 +27,19 @@ describe("the 3.0.0 index", () => {
     expect(index.format).toBe(1);
     expect(index.build).toBe("3.0.0.24268");
     expect(index.gameVersion).toBe("3.0.0");
-    expect(index.gameDataSets).toEqual([{ id: "default", label: "Default" }]);
+    expect(index.gameDataSets).toEqual([
+      { id: "default", label: "Default" },
+      { id: "custom", label: "Custom" },
+      { id: "melee", label: "Melee" },
+    ]);
     const counts: Record<string, number> = {};
     for (const entry of Object.values(index.objects)) {
       counts[entry.kind] = (counts[entry.kind] ?? 0) + 1;
     }
     expect(counts).toEqual({
       unit: 928,
-      item: 648,
-      ability: 1550,
+      item: 649,
+      ability: 1551,
       buff: 318,
       destructable: 344,
       doodad: 771,
@@ -45,9 +49,27 @@ describe("the 3.0.0 index", () => {
       kind: "unit",
       name: "Footman",
       race: "human",
-      sets: ["default"],
+      sets: ["default", "custom", "melee"],
       constant: "Footman_hfoo",
     });
+  });
+
+  it("holds each Game data set's units, the Scarlet Crusade's Footman in Default alone", async () => {
+    const index = JSON.parse(await read("3.0.0/index.json")) as BuiltinsIndex;
+
+    const units = Object.values(index.objects).filter((e) => e.kind === "unit");
+    const count = (set: string) =>
+      units.filter((entry) => entry.sets.includes(set)).length;
+    expect([count("default"), count("custom"), count("melee")]).toEqual([
+      928, 864, 837,
+    ]);
+    expect(index.objects.sfoo).toMatchObject({
+      name: "Footman",
+      sets: ["default"],
+    });
+    expect(await read("3.0.0/units.d.ts")).toContain(
+      "In the Default Game data set. Not in the Custom and Melee Game data sets.",
+    );
   });
 
   // The examples of #512. Its `Buffs.TimedLife_BTLF` is no Built-in buff:

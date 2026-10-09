@@ -596,6 +596,7 @@ return {
     SpiderRing_sprn = 1936749166,
     ScrollOfProtection_spro = 1936749167,
     AmuletOfSpellShield_spsh = 1936749416,
+    Unnamed_spur = 1936749938,
     SearingBlade_srbd = 1936876132,
     ScrollOfRegeneration_sreg = 1936876903,
     ScrollOfRestoration_sres = 1936876915,
