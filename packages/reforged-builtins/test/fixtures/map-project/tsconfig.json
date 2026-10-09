@@ -5,7 +5,8 @@
   // tsconfig and the `types` under test, and copy each fixture folder to its
   // src/; this file is not copied. Here the package resolves to itself (its
   // `exports`, through the workspace's self-link) and the Typings to the
-  // workspace's. The negative fixtures' type errors are what the tests
+  // workspace's, and `reforged-ts` to its sources, since its declarations
+  // exist only once `pnpm build` has emitted them. The negative fixtures' type errors are what the tests
   // assert, so this program is never built.
   "compilerOptions": {
     "target": "ESNext",
@@ -14,7 +15,8 @@
     "moduleResolution": "bundler",
     "types": ["reforged-types/3.0.0", "@typescript-to-lua/language-extensions"],
     "strict": true,
-    "noEmit": true
+    "noEmit": true,
+    "paths": { "reforged-ts": ["../../../../reforged-ts/src/index.ts"] }
   },
   "files": ["../../../3.0.0.d.ts"],
   "include": ["."]
