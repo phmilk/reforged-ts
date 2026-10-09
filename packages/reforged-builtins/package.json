@@ -1,7 +1,6 @@
 {
   "name": "reforged-builtins",
   "version": "0.0.0",
-  "private": true,
   "description": "The Built-in objects of each Warcraft III Reforged Patch, reduced to derived identifiers: Rawcode, Object kind, race, enUS name and Game data sets.",
   "license": "MIT",
   "type": "module",
@@ -23,6 +22,9 @@
   },
   "engines": {
     "node": ">=22.13"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "reforged": {
     "patch": "3.0.0.24268"

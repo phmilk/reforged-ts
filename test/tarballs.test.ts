@@ -142,6 +142,28 @@ const PACKAGES: readonly Expected[] = [
     // Required: the generated declarations name the Typings' types.
     workspacePeers: { "reforged-types": false },
   },
+  {
+    dir: "reforged-builtins",
+    // The overloads per Game version, and per Object kind the constants'
+    // declarations and Lua module, with the index for tools; never the
+    // provenance file or the generator.
+    allowed: [
+      /^\d+\.\d+\.\d+\.d\.ts$/,
+      /^\d+\.\d+\.\d+\/[a-z]+\.(d\.ts|lua)$/,
+      /^\d+\.\d+\.\d+\/index\.json$/,
+    ],
+    required: [
+      "3.0.0.d.ts",
+      "3.0.0/index.json",
+      "3.0.0/units.d.ts",
+      "3.0.0/units.lua",
+      "3.0.0/abilities.d.ts",
+      "3.0.0/abilities.lua",
+    ],
+    sideEffectsFree: true,
+    // Required: the overloads and constants are the Typings' Rawcode types.
+    workspacePeers: { "reforged-types": false },
+  },
 ];
 
 /** Folders and files that are sources, tests or tooling, never published. */

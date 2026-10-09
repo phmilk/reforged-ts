@@ -61,6 +61,8 @@ export interface MatrixRow {
   plugin: string;
   /** `reforged-map`'s version. */
   map: string;
+  /** `reforged-builtins`' version. */
+  builtins: string;
   /** The game Patch, a Build: the library's `reforged.patch`. */
   patch: string;
   /** The catalog pins: TypeScript exact, the others as ranges. */
@@ -116,6 +118,7 @@ export const ROW_FIELDS = [
   "harness",
   "plugin",
   "map",
+  "builtins",
   "patch",
   "typescript",
   "typescriptToLua",
@@ -138,6 +141,7 @@ export function canonicalRow(row: MatrixRow): MatrixRow {
     harness: row.harness,
     plugin: row.plugin,
     map: row.map,
+    builtins: row.builtins,
     patch: row.patch,
     typescript: row.typescript,
     typescriptToLua: row.typescriptToLua,
@@ -159,7 +163,7 @@ export function docsUrl(libraryVersion: string): string {
   return `${DOCS_BASE_URL}/${minorLabel(libraryVersion)}`;
 }
 
-/** The five packages of a row and their versions, for messages. */
+/** The six packages of a row and their versions, for messages. */
 export const releaseName = (row: Pick<MatrixRow, PackageField>) =>
   PACKAGE_FIELDS.map((field) => `${ROW_PACKAGES[field]} ${row[field]}`).join(
     ", ",

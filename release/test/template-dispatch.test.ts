@@ -35,6 +35,7 @@ const ON_NPM = {
   "reforged-test": "1.0.0-alpha.1",
   "eslint-plugin-reforged": "1.0.0-alpha.1",
   "reforged-map": "1.0.0-alpha.0",
+  "reforged-builtins": "1.0.0-alpha.0",
 };
 
 describe("templateDispatch", () => {
@@ -52,6 +53,7 @@ describe("templateDispatch", () => {
           "reforged-test": "1.0.0-alpha.1",
           "eslint-plugin-reforged": "1.0.0-alpha.1",
           "reforged-map": "1.0.0-alpha.0",
+          "reforged-builtins": "1.0.0-alpha.0",
         },
         contextUrl: `${RAW}/reforged-ts@1.0.0-alpha.3/CONTEXT.md`,
         matrixUrl: `${RAW}/reforged-ts@1.0.0-alpha.3/release/compatibility/matrix.md`,
@@ -60,13 +62,14 @@ describe("templateDispatch", () => {
     });
   });
 
-  it("dispatches a release without the library under the Typings' tag, first of the five", async () => {
+  it("dispatches a release without the library under the Typings' tag, first of the six", async () => {
     const root = await workspace({
       "reforged-ts": "1.2.0",
       "reforged-types": "1.3.0",
       "reforged-test": "1.1.1",
       "eslint-plugin-reforged": "1.2.0",
       "reforged-map": "1.0.2",
+      "reforged-builtins": "1.0.1",
     });
     const pack = await packDir(
       entry("reforged-test", "1.1.1"),
@@ -81,6 +84,7 @@ describe("templateDispatch", () => {
         "reforged-test": "1.1.1",
         "eslint-plugin-reforged": "1.2.0",
         "reforged-map": "1.0.2",
+        "reforged-builtins": "1.0.1",
       },
       contextUrl: `${RAW}/reforged-types@1.3.0/CONTEXT.md`,
       matrixUrl: `${RAW}/reforged-types@1.3.0/release/compatibility/matrix.md`,
@@ -88,7 +92,7 @@ describe("templateDispatch", () => {
     });
   });
 
-  it("dispatches the first release of reforged-map with the version of each package, under the tag of the first of the five", async () => {
+  it("dispatches the first release of reforged-map with the version of each package, under the tag of the first of the six", async () => {
     const root = await workspace({
       ...ON_NPM,
       "reforged-types": "1.0.0-alpha.5",
@@ -119,14 +123,35 @@ describe("templateDispatch", () => {
     });
   });
 
-  it("refuses a plan that publishes none of the five packages", async () => {
+  it("dispatches the first release of reforged-builtins with the version of each package, under its own tag when alone", async () => {
+    const root = await workspace({
+      ...ON_NPM,
+      "reforged-builtins": "1.0.0-alpha.0",
+    });
+    const alone = await packDir(entry("reforged-builtins", "1.0.0-alpha.0"));
+
+    expect((await templateDispatch(alone, root)).client_payload).toMatchObject({
+      tag: "reforged-builtins@1.0.0-alpha.0",
+      versions: ON_NPM,
+    });
+
+    const withLibrary = await packDir(
+      entry("reforged-builtins", "1.0.0-alpha.0"),
+      entry("reforged-ts", "1.0.0-alpha.2"),
+    );
+    expect(
+      (await templateDispatch(withLibrary, root)).client_payload,
+    ).toMatchObject({ tag: "reforged-ts@1.0.0-alpha.2", versions: ON_NPM });
+  });
+
+  it("refuses a plan that publishes none of the six packages", async () => {
     const root = await workspace(ON_NPM);
     await expect(templateDispatch(await packDir(), root)).rejects.toThrow(
-      "The publish plan publishes none of reforged-ts, reforged-types, reforged-test, eslint-plugin-reforged, reforged-map: there is no release to dispatch.",
+      "The publish plan publishes none of reforged-ts, reforged-types, reforged-test, eslint-plugin-reforged, reforged-map, reforged-builtins: there is no release to dispatch.",
     );
   });
 
-  it("refuses a workspace without one of the five packages, naming it", async () => {
+  it("refuses a workspace without one of the six packages, naming it", async () => {
     const root = await writeWorkspace(
       PACKAGES.filter(({ name }) => name !== "reforged-test"),
     );
@@ -297,6 +322,7 @@ describe("release:template-dispatch", () => {
       "reforged-test": [["1.0.0-alpha.1"]],
       "eslint-plugin-reforged": [["1.0.0-alpha.1"]],
       "reforged-map": [["1.0.0-alpha.0"]],
+      "reforged-builtins": [["1.0.0-alpha.0"]],
     });
     const cwd = await tempDir("cwd");
     const args = [

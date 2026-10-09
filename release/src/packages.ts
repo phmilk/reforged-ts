@@ -28,13 +28,14 @@ export const PLUGIN_PACKAGE = "eslint-plugin-reforged";
 export const MAP_PACKAGE = "reforged-map";
 
 /**
- * The Built-in objects of each Patch (ADR 0013), private until its release;
- * the major-changeset gate covers its majors too.
+ * The Built-in objects of each Patch (ADR 0013); the major-changeset gate
+ * covers its majors too. It came after the map folder reader, and the
+ * Template takes it up in the Object data slice of `reforged-map`.
  */
 export const BUILTINS_PACKAGE = "reforged-builtins";
 
 /**
- * The five packages of a compatibility matrix row, by row field, in matrix
+ * The six packages of a compatibility matrix row, by row field, in matrix
  * order: the order of the row's fields, the tables' columns and the
  * Template dispatch's tag.
  */
@@ -44,4 +45,5 @@ export const ROW_PACKAGES = {
   harness: HARNESS_PACKAGE,
   plugin: PLUGIN_PACKAGE,
   map: MAP_PACKAGE,
+  builtins: BUILTINS_PACKAGE,
 } as const;

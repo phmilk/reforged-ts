@@ -31,13 +31,15 @@ interface Fixture {
   renames?: unknown[];
 }
 
+/** The fixture's packages but `reforged-builtins`. */
+const OTHERS = PACKAGES.filter(({ name }) => name !== "reforged-builtins");
+
 async function workspace(fixture: Fixture, version = "1.2.0"): Promise<string> {
   const root = await writeWorkspace([
-    ...PACKAGES,
+    ...OTHERS,
     {
       dir: "packages/reforged-builtins",
       name: "reforged-builtins",
-      private: true,
       fields: { version },
     },
   ]);
@@ -198,7 +200,7 @@ describe("the major-changeset gate on reforged-builtins", () => {
   });
 
   it("requires nothing of a workspace without the package", async () => {
-    const root = await writeWorkspace();
+    const root = await writeWorkspace(OTHERS);
     await writeText(
       root,
       ".changeset/x.md",
