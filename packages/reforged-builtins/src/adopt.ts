@@ -85,27 +85,50 @@ export async function updateManifest(
 
 /**
  * The version pair of the package's next major, from the version of its
- * manifest: `reforged-builtins@1` to `reforged-builtins@2` from 1.x.
+ * manifest, as the major-changeset gate computes it: `reforged-builtins@1`
+ * to `reforged-builtins@2` from 1.x and from 2.0.0's prereleases (a major
+ * bump releases 2.0.0 from those). Undefined below 1.0.0: no released major
+ * to migrate from, so no rename entry.
  */
 export async function nextMajorPair(
   root: string,
-): Promise<{ from: string; to: string }> {
+): Promise<{ from: string; to: string } | undefined> {
   const text = await readText(join(root, "package.json"));
   const version =
     text === undefined
       ? "0.0.0"
       : ((JSON.parse(text) as { version?: string }).version ?? "0.0.0");
-  const major = Number(version.split(".")[0]);
+  const match = /^(\d+)\.(\d+)\.(\d+)(-.+)?$/.exec(version);
+  if (match === null)
+    throw new Error(
+      `${PACKAGE} has version "${version}", which is not semver.`,
+    );
+  const [major, minor, patch] = [match[1], match[2], match[3]].map(Number);
+  const prerelease = version.includes("-");
+  const next = prerelease && minor === 0 && patch === 0 ? major : major + 1;
+  if (next <= 1) return undefined;
   return {
-    from: `${PACKAGE}@${String(major)}`,
-    to: `${PACKAGE}@${String(major + 1)}`,
+    from: `${PACKAGE}@${String(next - 1)}`,
+    to: `${PACKAGE}@${String(next)}`,
   };
 }
 
+/** An item of the rename map: an entry, or a pair's no-renames marker. */
+type RenameMapItem =
+  | RenameEntry
+  | { kind: "noRenames"; versions: RenameEntry["versions"]; note: string };
+
+const samePair = (a: RenameEntry["versions"], b: RenameEntry["versions"]) =>
+  a.from === b.from && a.to === b.to;
+
 /**
- * Merges `entries` into the root's rename map, created when missing: an
- * entry of the same old symbol and version pair is replaced, every other
- * kept. Returns the number written.
+ * Merges `entries` into the root's rename map, created when missing, and
+ * returns the number of entries it holds for their pairs. Within one pair,
+ * the major not yet released: an entry whose old name another entry
+ * renamed to chains onto it (`Footman` to `Militia`, then `Militia` to
+ * `Guard`, is `Footman` to `Guard`), an entry renamed back to its old name
+ * is dropped, an entry of the same old name is replaced, and the pair's
+ * no-renames marker gives way. Entries of other pairs are kept.
  */
 export async function mergeRenameEntries(
   root: string,
@@ -114,15 +137,43 @@ export async function mergeRenameEntries(
   if (entries.length === 0) return 0;
   const file = join(root, RENAMES_FILE);
   const text = await readText(file);
-  const map = text === undefined ? [] : (JSON.parse(text) as RenameEntry[]);
-  const key = (entry: RenameEntry) =>
-    `${entry.old} ${entry.versions.from} ${entry.versions.to}`;
-  const replaced = new Set(entries.map(key));
-  const merged = [
-    ...map.filter((entry) => !replaced.has(key(entry))),
-    ...entries,
-  ];
+  let map = text === undefined ? [] : (JSON.parse(text) as RenameMapItem[]);
+  for (const entry of entries) {
+    map = map.filter(
+      (item) =>
+        !(item.kind === "noRenames" && samePair(item.versions, entry.versions)),
+    );
+    const chained = map.find(
+      (item): item is RenameEntry =>
+        item.kind !== "noRenames" &&
+        samePair(item.versions, entry.versions) &&
+        item.new === entry.old,
+    );
+    if (chained === undefined) {
+      map = [
+        ...map.filter(
+          (item) =>
+            item.kind === "noRenames" ||
+            !(
+              item.old === entry.old && samePair(item.versions, entry.versions)
+            ),
+        ),
+        entry,
+      ];
+    } else if (chained.old === entry.new) {
+      map = map.filter((item) => item !== chained);
+    } else {
+      chained.new = entry.new;
+      chained.oneToOne = chained.oneToOne && entry.oneToOne;
+      chained.note = entry.note;
+    }
+  }
   await mkdir(dirname(file), { recursive: true });
-  await writeFile(file, `${JSON.stringify(merged, null, 2)}\n`);
-  return entries.length;
+  await writeFile(file, `${JSON.stringify(map, null, 2)}\n`);
+  const pairs = entries.map((entry) => entry.versions);
+  return map.filter(
+    (item) =>
+      item.kind !== "noRenames" &&
+      pairs.some((pair) => samePair(pair, item.versions)),
+  ).length;
 }

@@ -1,11 +1,11 @@
 /**
  * `release:gate`: the major-changeset gate on the workspace, for the
- * library and for `reforged-builtins`. It takes no arguments. The verdict goes to stdout, or to stderr when the gate fails;
- * when the environment variable `GITHUB_STEP_SUMMARY` names a file (a step
- * of GitHub Actions), a requirement and what is missing are appended to it
- * as the job summary. Exit codes: 0 pass, or missing artefacts reported in
- * pre mode; 1 missing artefacts for a stable version, or the inputs cannot
- * be read; 2 usage.
+ * library and for `reforged-builtins`. It takes no arguments. The verdict
+ * goes to stdout, or to stderr when the gate fails; when the environment
+ * variable `GITHUB_STEP_SUMMARY` names a file (a step of GitHub Actions), a
+ * requirement and what is missing are appended to it as the job summary.
+ * Exit codes: 0 pass, or missing artefacts reported in pre mode; 1 missing
+ * artefacts for a stable version, or the inputs cannot be read; 2 usage.
  */
 import { builtinsGate } from "../builtins-gate.js";
 import {

@@ -10,7 +10,8 @@
  * - each replacement of those entries resolved against the constants the
  *   package emits for its newest Game version (`<version>/<kind>.d.ts`).
  *
- * Unlike the library's, it has no first stable rule: only a major counts.
+ * Unlike the library's, it has no first stable rule: only a major counts,
+ * and the major that releases the package first (to 1.0.0) needs nothing.
  * Pre mode reports and passes, as the library's gate does.
  */
 import { getPackages } from "@manypkg/get-packages";
@@ -131,6 +132,9 @@ export async function builtinsGate(root: string): Promise<GateResult> {
   if (majors.length === 0) return pass;
 
   const major = majorAfterBump(parseVersion(builtins.packageJson.version));
+  // The major that releases the package first (0.x to 1.0.0) migrates from
+  // no released major: it needs no page and no entries.
+  if (major <= 1) return pass;
   const pair: VersionPair = {
     from: `${BUILTINS_PACKAGE}@${String(major - 1)}`,
     to: `${BUILTINS_PACKAGE}@${String(major)}`,
@@ -148,10 +152,12 @@ export async function builtinsGate(root: string): Promise<GateResult> {
     missing.push({ kind: "page", path: requirement.page });
   }
   // The package's map has the schema of the library's, kept next to it.
-  const schemaFile = join(library?.dir ?? root, RENAMES_FILE).replace(
-    /renames\.json$/,
-    "renames.schema.json",
-  );
+  if (library === undefined) {
+    throw new Error(
+      `The workspace has no ${LIBRARY_PACKAGE}, whose renames.schema.json ${renamesFile} follows.`,
+    );
+  }
+  const schemaFile = join(library.dir, "migration", "renames.schema.json");
   let items: RenameMapItem[] = [];
   try {
     items = await loadRenameMap(join(root, renamesFile), schemaFile);

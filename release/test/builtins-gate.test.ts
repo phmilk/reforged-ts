@@ -31,14 +31,14 @@ interface Fixture {
   renames?: unknown[];
 }
 
-async function workspace(fixture: Fixture): Promise<string> {
+async function workspace(fixture: Fixture, version = "1.2.0"): Promise<string> {
   const root = await writeWorkspace([
     ...PACKAGES,
     {
       dir: "packages/reforged-builtins",
       name: "reforged-builtins",
       private: true,
-      fields: { version: "1.2.0" },
+      fields: { version },
     },
   ]);
   await writeText(
@@ -110,6 +110,40 @@ describe("the major-changeset gate on reforged-builtins", () => {
       { kind: "page", path: PAGE },
       { kind: "renames", file: RENAMES },
     ]);
+  });
+
+  it("fails a major with its page alone, naming the entries", async () => {
+    const root = await workspace({ pending: MAJOR, pages: [PAGE] });
+
+    expect((await builtinsGate(root)).missing).toEqual([
+      { kind: "renames", file: RENAMES },
+    ]);
+  });
+
+  it("fails a major with its entries alone, naming the page", async () => {
+    const root = await workspace({
+      pending: MAJOR,
+      renames: [entry("Units.Footman_hfoo", "Units.Militia_hfoo")],
+    });
+
+    expect((await builtinsGate(root)).missing).toEqual([
+      { kind: "page", path: PAGE },
+    ]);
+  });
+
+  it("names the pair after the major a pending major gives a prerelease", async () => {
+    const root = await workspace({ pending: MAJOR }, "2.0.0-alpha.0");
+
+    expect((await builtinsGate(root)).requirement?.pair).toEqual(PAIR);
+  });
+
+  it("requires nothing of the major that releases the package first, below 1.0.0", async () => {
+    const root = await workspace({ pending: MAJOR }, "0.0.0");
+
+    const result = await builtinsGate(root);
+
+    expect(result.requirement).toBeUndefined();
+    expect(result.verdict).toBe("pass");
   });
 
   it("passes a major with its page and entries whose replacements its newest constants declare", async () => {

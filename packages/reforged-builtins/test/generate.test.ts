@@ -1075,7 +1075,7 @@ describe("builtins:generate adopting a Build", () => {
         "- renamed (major): Units.Footman_hfoo to Units.Militia_hfoo (hfoo)\n",
     );
     expect(stdout).toContain(
-      "Wrote 2 rename entries for reforged-builtins@1 to reforged-builtins@2 to migration/renames.json.\n",
+      "migration/renames.json holds 2 rename entries for reforged-builtins@1 to reforged-builtins@2.\n",
     );
     const renames = JSON.parse(
       await readFile(join(outDir, "migration", "renames.json"), "utf8"),

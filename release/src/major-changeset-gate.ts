@@ -240,7 +240,7 @@ export function verdictOf(
   return missing.length === 0 ? "pass" : preMode === "pre" ? "report" : "fail";
 }
 
-export async function readRenames(file: string): Promise<unknown[]> {
+async function readRenames(file: string): Promise<unknown[]> {
   let text: string;
   try {
     text = await readFile(file, "utf8");

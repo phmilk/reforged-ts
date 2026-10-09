@@ -141,10 +141,14 @@ export async function main(
   await updateManifest(outDir, result.build);
   const record = recordOf(previous, result.index);
   const pair = await nextMajorPair(outDir);
-  const renamed = await mergeRenameEntries(
-    outDir,
-    renameEntriesOf(record, pair),
-  );
+  const renamed =
+    pair === undefined
+      ? 0
+      : await mergeRenameEntries(outDir, renameEntriesOf(record, pair));
+  const renames =
+    pair === undefined || renamed === 0
+      ? ""
+      : `${RENAMES_FILE} holds ${String(renamed)} rename ${renamed === 1 ? "entry" : "entries"} for ${pair.from} to ${pair.to}.\n`;
   const counts = list(
     Object.entries(result.counts).map(
       ([kind, count]) =>
@@ -154,9 +158,7 @@ export async function main(
   const written = list([...result.files.keys()]);
   output.stdout(
     `Read the install at ${installDir} (Build ${result.build}): ${counts}.\nWrote ${written}.\n\n${formatRecord(record)}` +
-      (renamed === 0
-        ? ""
-        : `Wrote ${String(renamed)} rename ${renamed === 1 ? "entry" : "entries"} for ${pair.from} to ${pair.to} to ${RENAMES_FILE}.\n`) +
+      renames +
       (result.diagnostics.length === 0
         ? ""
         : `\n${formatDiagnostics(result.diagnostics)}`),
