@@ -40,9 +40,9 @@ const NEGATIVES = [
   "src/ability-into-unit-create.ts:5 TS2345",
   // A unit's constant is not an ability's Rawcode.
   "src/constant-into-ability.ts:4 TS2345",
-  // A Built-in unit's literal is a unit's Rawcode, not an ability's.
   // An item's constant is neither a unit's nor an upgrade's Rawcode.
   "src/item-into-tech.ts:4 TS2345",
+  // A Built-in unit's literal is a unit's Rawcode, not an ability's.
   "src/literal-into-ability.ts:3 TS2345",
 ];
 

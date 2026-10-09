@@ -11,7 +11,7 @@ describe("constantName", () => {
     ["|cffffcc00Paladin|r", "Hpal", "Paladin_Hpal"],
     ["Claws of Attack +15", "ratf", "ClawsOfAttack15_ratf"],
     ["Blizzard", "AHbz", "Blizzard_AHbz"],
-    ["Timed Life", "BTLF", "TimedLife_BTLF"],
+    ["Inner Fire", "Binf", "InnerFire_Binf"],
     ["Summer Tree Wall", "LTlt", "SummerTreeWall_LTlt"],
     ["Brazier", "LObr", "Brazier_LObr"],
     ["Iron Forged Swords", "Rhme", "IronForgedSwords_Rhme"],

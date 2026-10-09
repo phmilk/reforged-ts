@@ -533,6 +533,17 @@ describe("builtins:generate refuses, writing nothing", () => {
     );
   });
 
+  it("a storage it cannot read, still warning that .build.info gives another Build", async () => {
+    const { stderr, storage } = await refused({
+      ...unitStorage(HUMAN, [], { buildInfoVersion: "3.0.0.24248" }),
+      notInEncoding: [UNIT_DATA],
+    });
+
+    expect(stderr).toContain(
+      `- warning: ${join(storage.installDir, ".build.info")} gives Version 3.0.0.24248, and its build config ${buildConfigFile(storage)} names 3.0.0.24268, the Build of the content read.\n`,
+    );
+  });
+
   it("an install whose build config names another Build than reforged-types', whatever .build.info gives", async () => {
     const { stderr, storage } = await refused(
       unitStorage(HUMAN, [], {
@@ -684,17 +695,19 @@ function allKinds(
     ]),
     [strings("HumanAbilityStrings.txt")]: profile({
       AHbz: { Name: "Blizzard", EditorSuffix: " (Caster)" },
+      // Named by its EditorName: its Bufftip set again, read later, is no rename.
+      BHbz: { Bufftip: "Blizzard (Other)" },
     }),
     [strings("ItemAbilityStrings.txt")]: profile({
       Aitb: { Name: "Item Bash (10, 25, 2)" },
       BHbz: { EditorName: "Blizzard (Caster)", Bufftip: "Blizzard" },
-      BTLF: { Bufftip: "Timed Life" },
+      Binf: { Bufftip: "Inner Fire" },
     }),
     [base("Units/AbilityBuffData.slk")]: slkTable(
       ["alias", "race"],
       [
         ["BHbz", "human"],
-        ["BTLF", "other"],
+        ["Binf", "human"],
       ],
     ),
     [base("Units/AbilityBuffMetaData.slk")]: metaDataSlk([
@@ -735,6 +748,10 @@ function allKinds(
       Rhme: {
         Name: "Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords",
       },
+    }),
+    // Its second level renamed, read later: the name is the first level's.
+    [strings("NeutralUpgradeStrings.txt")]: profile({
+      Rhme: { Name: "Iron Forged Swords,Steel Swords" },
     }),
     ...extra,
   };
@@ -781,7 +798,7 @@ describe("builtins:generate on every Object kind", () => {
       AHbz: ["ability", "Blizzard", "human", "Blizzard_AHbz"],
       Aitb: ["ability", "Item Bash (10, 25, 2)", "other", "ItemBash10252_Aitb"],
       BHbz: ["buff", "Blizzard (Caster)", "human", "BlizzardCaster_BHbz"],
-      BTLF: ["buff", "Timed Life", "other", "TimedLife_BTLF"],
+      Binf: ["buff", "Inner Fire", "human", "InnerFire_Binf"],
       Hpal: ["unit", "Paladin", "human", "Paladin_Hpal"],
       LObr: ["doodad", "Brazier", undefined, "Brazier_LObr"],
       LTlt: [
@@ -812,6 +829,15 @@ describe("builtins:generate on every Object kind", () => {
       "upgrades.d.ts",
       "upgrades.lua",
     ]);
+  });
+
+  it("warns of a name set twice only when the name it gives changes", async () => {
+    const storage = await writeStorage(allKinds());
+    const outDir = await tempDir("out");
+
+    const { stdout } = await run(storage.installDir, outDir);
+
+    expect(stdout).not.toContain("the last name wins");
   });
 
   it("skips a row with no Rawcode cell, with a warning", async () => {

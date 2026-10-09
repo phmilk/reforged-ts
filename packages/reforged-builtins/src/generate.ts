@@ -75,11 +75,23 @@ interface KindSource {
    * shows its tooltip's title.
    */
   nameFields: readonly string[];
-  /** The profile files of the names, in the enUS layer, matched without regard to case. */
-  strings?: RegExp;
-  /** `strings` as a glob, for the messages. */
-  stringsGlob?: string;
+  /** The profile files of the names, in the enUS layer, for a kind with a name in them. */
+  strings?: NamesFiles;
 }
+
+/** A kind's names files, matched without regard to case. */
+interface NamesFiles {
+  /** Their paths inside the enUS layer. */
+  pattern: RegExp;
+  /** `pattern` as a glob, for the messages. */
+  glob: string;
+}
+
+/** The names files of abilities and buffs, which share them. */
+const ABILITY_STRINGS: NamesFiles = {
+  pattern: /^units\/[a-z]*abilitystrings\.txt$/i,
+  glob: "Units/*AbilityStrings.txt",
+};
 
 /** The kinds read, in this order. */
 const KINDS: readonly KindSource[] = [
@@ -91,8 +103,10 @@ const KINDS: readonly KindSource[] = [
     raceColumn: "race",
     metaData: "Units/UnitMetaData.slk",
     nameFields: ["unam"],
-    strings: /^units\/[a-z]*unitstrings\.txt$/i,
-    stringsGlob: "Units/*UnitStrings.txt",
+    strings: {
+      pattern: /^units\/[a-z]*unitstrings\.txt$/i,
+      glob: "Units/*UnitStrings.txt",
+    },
   },
   {
     kind: "item",
@@ -101,8 +115,10 @@ const KINDS: readonly KindSource[] = [
     idColumn: "itemID",
     metaData: "Units/UnitMetaData.slk",
     nameFields: ["unam"],
-    strings: /^units\/itemstrings\.txt$/i,
-    stringsGlob: "Units/ItemStrings.txt",
+    strings: {
+      pattern: /^units\/itemstrings\.txt$/i,
+      glob: "Units/ItemStrings.txt",
+    },
   },
   {
     kind: "ability",
@@ -112,8 +128,7 @@ const KINDS: readonly KindSource[] = [
     raceColumn: "race",
     metaData: "Units/AbilityMetaData.slk",
     nameFields: ["anam"],
-    strings: /^units\/[a-z]*abilitystrings\.txt$/i,
-    stringsGlob: "Units/*AbilityStrings.txt",
+    strings: ABILITY_STRINGS,
   },
   {
     kind: "buff",
@@ -123,8 +138,7 @@ const KINDS: readonly KindSource[] = [
     raceColumn: "race",
     metaData: "Units/AbilityBuffMetaData.slk",
     nameFields: ["fnam", "ftip"],
-    strings: /^units\/[a-z]*abilitystrings\.txt$/i,
-    stringsGlob: "Units/*AbilityStrings.txt",
+    strings: ABILITY_STRINGS,
   },
   {
     kind: "destructable",
@@ -150,8 +164,10 @@ const KINDS: readonly KindSource[] = [
     raceColumn: "race",
     metaData: "Units/UpgradeMetaData.slk",
     nameFields: ["gnam"],
-    strings: /^units\/[a-z]*upgradestrings\.txt$/i,
-    stringsGlob: "Units/*UpgradeStrings.txt",
+    strings: {
+      pattern: /^units\/[a-z]*upgradestrings\.txt$/i,
+      glob: "Units/*UpgradeStrings.txt",
+    },
   },
 ];
 
@@ -221,19 +237,20 @@ export async function generate(
       `The install at ${options.installDir} is on Build ${storage.build} (its build config, ${storage.buildConfigFile}), not on ${options.build}, the Patch of reforged-types (its reforged.patch): the Built-in objects and the Typings would come from different Builds.`,
     );
   }
+  let result: GenerateResult;
   try {
-    const result = await extract(storage);
-    if (storage.buildInfoVersion !== storage.build) {
-      result.diagnostics.unshift({
-        severity: "warning",
-        message: `${join(options.installDir, BUILD_INFO_FILE)} gives Version ${storage.buildInfoVersion}, and its build config ${storage.buildConfigFile} names ${storage.build}, the Build of the content read.`,
-      });
-    }
-    return result;
+    result = await extract(storage);
   } catch (error) {
-    if (error instanceof CascError) return fail(error.message);
-    throw error;
+    if (!(error instanceof CascError)) throw error;
+    result = fail(error.message);
   }
+  if (storage.buildInfoVersion !== storage.build) {
+    result.diagnostics.unshift({
+      severity: "warning",
+      message: `${join(options.installDir, BUILD_INFO_FILE)} gives Version ${storage.buildInfoVersion}, and its build config ${storage.buildConfigFile} names ${storage.build}, the Build of the content read.`,
+    });
+  }
+  return result;
 }
 
 async function extract(storage: CascStorage): Promise<GenerateResult> {
@@ -285,6 +302,8 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
       );
     }
     const rawcodes = new Set<string>();
+    /** The profile field that gave each object its name. */
+    const namedBy = new Map<string, NameField>();
     let keyless = 0;
     for (const row of data.rows) {
       const rawcode = row.get(source.idColumn);
@@ -331,7 +350,10 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
           }
         }
         name = text === undefined ? "" : displayName(text);
-        if (name !== "") break;
+        if (name !== "") {
+          if (field.inProfile) namedBy.set(rawcode, field);
+          break;
+        }
       }
       const race =
         source.raceColumn === undefined
@@ -362,19 +384,16 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
       });
     }
     counts[source.kind] = rawcodes.size;
-    const profileFields = new Set(
-      fields.filter((f) => f.inProfile).map((f) => f.field.toLowerCase()),
-    );
     for (const override of profile.overrides) {
-      if (
-        !rawcodes.has(override.section) ||
-        !profileFields.has(override.key.toLowerCase())
-      ) {
-        continue;
-      }
+      const field = namedBy.get(override.section);
+      if (field?.field.toLowerCase() !== override.key.toLowerCase()) continue;
+      const [previous, value] = field.perLevel
+        ? [override.previousFirst, override.valueFirst]
+        : [override.previous, override.value];
+      if (previous === value) continue;
       diagnostics.push({
         severity: "warning",
-        message: `The ${source.kind} ${override.section} is named ${JSON.stringify(override.previous)}, then ${JSON.stringify(override.value)} in ${override.file}: the last name wins.`,
+        message: `The ${source.kind} ${override.section} is named ${JSON.stringify(previous)}, then ${JSON.stringify(value)} in ${override.file}: the last name wins.`,
       });
     }
   }
@@ -436,14 +455,14 @@ async function namesProfile(
       `The ${source.kind}s have a name in the profile files and no names files.`,
     );
   }
-  const strings = source.strings;
+  const { pattern, glob } = source.strings;
   const seen = new Set<string>();
   const stringFiles = nameFileOrder(
     storage.paths().filter((path) => {
       const lower = path.toLowerCase();
       if (
         !lower.startsWith(ENUS_LAYER.toLowerCase()) ||
-        !strings.test(path.slice(ENUS_LAYER.length)) ||
+        !pattern.test(path.slice(ENUS_LAYER.length)) ||
         seen.has(lower)
       ) {
         return false;
@@ -454,7 +473,7 @@ async function namesProfile(
   );
   if (stringFiles.length === 0) {
     throw new CascError(
-      `The root lists no names file ${ENUS_LAYER}${source.stringsGlob ?? ""}: every ${source.kind} would be unnamed.`,
+      `The root lists no names file ${ENUS_LAYER}${glob}: every ${source.kind} would be unnamed.`,
     );
   }
   for (const path of stringFiles) profile.add(await read(path), path);
@@ -472,7 +491,7 @@ async function namesProfile(
  * `CampaignUnitStrings.txt` ("Noble" then "Death Knight"), and 13 abilities'
  * and buffs' that `ItemAbilityStrings.txt` names again (`Almf`, "Death Coil"
  * before it, "Item Lesser Mark of the Forsaken" in it). Every name set twice
- * is reported as a warning, the cue to settle the rule.
+ * is reported as a warning, the cue to settle the rule (#564).
  */
 export function nameFileOrder(paths: readonly string[]): string[] {
   return [...paths].sort(byCodePoint);

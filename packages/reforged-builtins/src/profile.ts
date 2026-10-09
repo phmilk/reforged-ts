@@ -15,6 +15,9 @@ export interface Override {
   key: string;
   previous: string;
   value: string;
+  /** The first items of `previous` and `value`, as a field of one value per level reads them. */
+  previousFirst: string;
+  valueFirst: string;
   /** The file of the later line. */
   file: string;
 }
@@ -51,6 +54,8 @@ export class Profile {
           key,
           previous: unquote(previous),
           value: unquote(value),
+          previousFirst: firstItem(previous),
+          valueFirst: firstItem(value),
           file,
         });
       }
@@ -64,14 +69,21 @@ export class Profile {
     return value === undefined ? undefined : unquote(value);
   }
 
-  /** The first item of the list `key` holds, as a field of one value per level gives its first level's. */
+  /**
+   * The first item of the list `key` holds, as a field of one value per
+   * level gives its first level's.
+   */
   first(section: string, key: string): string | undefined {
     const value = this.#sections.get(section)?.get(key.toLowerCase());
-    if (value === undefined) return undefined;
-    if (value.startsWith('"')) return unquote(value);
-    const comma = value.indexOf(",");
-    return (comma === -1 ? value : value.slice(0, comma)).trim();
+    return value === undefined ? undefined : firstItem(value);
   }
+}
+
+/** The first item of a value as a line spells it: a quoted one whole, else up to the first `,`. */
+function firstItem(value: string): string {
+  if (value.startsWith('"')) return unquote(value);
+  const comma = value.indexOf(",");
+  return (comma === -1 ? value : value.slice(0, comma)).trim();
 }
 
 function unquote(value: string): string {
