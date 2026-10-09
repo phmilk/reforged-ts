@@ -22497,11 +22497,11 @@ declare function FourCC(id: "Arst"): Rawcode<"ability">;
 declare function FourCC(id: "Arsw"): Rawcode<"ability">;
 
 /**
- * `Asa2`, unnamed, a Built-in ability of Patch 3.0.0, race orc.
+ * Pillage (`Asa2`), a Built-in ability of Patch 3.0.0, race orc.
  *
  * In the Custom Game data set. Not in the Default and Melee Game data sets.
  *
- * Its constant is `Abilities.Unnamed_Asa2`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.Pillage_Asa2`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asa2"): Rawcode<"ability">;
 

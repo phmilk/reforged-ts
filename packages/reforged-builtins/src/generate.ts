@@ -44,14 +44,19 @@ export const ENUS_LAYER = "War3.w3mod:_Locales/enUS.w3mod:";
 interface LayeredGameDataSet extends GameDataSet {
   /** The layer whose file of a kind replaces the base layer's, when it has one. */
   layer: string;
+  /**
+   * The qualifier of its own values in the profile files, which no layer
+   * replaces: `Name:custom,V1=` names an object in the Custom set, over
+   * `Name=`.
+   */
+  qualifier?: string;
 }
 
 /**
  * The Game data sets the index lists, by stable id, as the World Editor of
- * 3.0 offers them in its map options (Default, Custom, Melee). Custom reads
- * `Custom_V1`, its layer for The Frozen Throne; which layer a map of the
- * Game Data Version Forsaken Kingdom reads, which has none of its own, is
- * not yet settled in game (#564).
+ * 3.0 offers them in its map options (Default, Custom, Melee), each with the
+ * layer #509 gives it. Which layer a map reads for each Game Data Version
+ * is not yet settled in game (#564).
  */
 export const GAME_DATA_SETS: readonly LayeredGameDataSet[] = [
   { id: "default", label: "Default", layer: BASE_LAYER },
@@ -59,11 +64,13 @@ export const GAME_DATA_SETS: readonly LayeredGameDataSet[] = [
     id: "custom",
     label: "Custom",
     layer: `${BASE_LAYER}_Balance/Custom_V1.w3mod:`,
+    qualifier: "custom,V1",
   },
   {
     id: "melee",
     label: "Melee",
     layer: `${BASE_LAYER}_Balance/Melee_V0.w3mod:`,
+    qualifier: "melee,V0",
   },
 ];
 
@@ -361,12 +368,25 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
       kindOf.set(rawcode, source.kind);
       rawcodes.add(rawcode);
 
+      // The name of the first set that holds the object: its own value in
+      // the profile files, else the one every set shares.
+      const qualifier = GAME_DATA_SETS.find(
+        (set) => set.id === sets[0],
+      )?.qualifier;
+      const keys = (field: NameField) =>
+        qualifier === undefined
+          ? [field.field]
+          : [`${field.field}:${qualifier}`, field.field];
       let name = "";
       for (const field of fields) {
         let text = field.inProfile
-          ? field.perLevel
-            ? profile.first(rawcode, field.field)
-            : profile.get(rawcode, field.field)
+          ? keys(field)
+              .map((key) =>
+                field.perLevel
+                  ? profile.first(rawcode, key)
+                  : profile.get(rawcode, key),
+              )
+              .find((value) => value !== undefined)
           : row.get(field.field);
         if (text?.startsWith("WESTRING_")) {
           const key = text;

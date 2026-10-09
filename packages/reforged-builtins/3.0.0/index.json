@@ -1381,7 +1381,7 @@
     "Arsq": {"kind":"ability","name":"Summon Quilbeast","race":"creeps","sets":["default","custom","melee"],"constant":"SummonQuilbeast_Arsq"},
     "Arst": {"kind":"ability","name":"Restore","race":"undead","sets":["default","custom","melee"],"constant":"Restore_Arst"},
     "Arsw": {"kind":"ability","name":"Serpent Ward","race":"orc","sets":["default","custom","melee"],"constant":"SerpentWard_Arsw"},
-    "Asa2": {"kind":"ability","race":"orc","sets":["custom"],"constant":"Unnamed_Asa2"},
+    "Asa2": {"kind":"ability","name":"Pillage","race":"orc","sets":["custom"],"constant":"Pillage_Asa2"},
     "Asac": {"kind":"ability","name":"Sacrifice","race":"undead","sets":["default","custom","melee"],"constant":"Sacrifice_Asac"},
     "Asal": {"kind":"ability","name":"Pillage","race":"orc","sets":["default","custom","melee"],"constant":"Pillage_Asal"},
     "Asas": {"kind":"ability","name":"On Magic Attack, Cast Spell","race":"other","sets":["default"],"constant":"OnMagicAttackCastSpell_Asas"},

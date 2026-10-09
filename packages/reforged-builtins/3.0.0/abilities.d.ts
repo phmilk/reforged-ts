@@ -7794,11 +7794,11 @@ export declare const Abilities: {
   readonly SerpentWard_Arsw: Rawcode<"ability">;
 
   /**
-   * `Asa2`, unnamed, a Built-in ability of Patch 3.0.0, race orc.
+   * Pillage (`Asa2`), a Built-in ability of Patch 3.0.0, race orc.
    *
    * In the Custom Game data set. Not in the Default and Melee Game data sets.
    */
-  readonly Unnamed_Asa2: Rawcode<"ability">;
+  readonly Pillage_Asa2: Rawcode<"ability">;
 
   /**
    * Sacrifice (`Asac`), a Built-in ability of Patch 3.0.0, race undead.

@@ -889,6 +889,12 @@ describe("builtins:generate on every Game data set", () => {
   async function layered() {
     const storage = await writeStorage(
       allKinds({
+        // The base's units add a Knight no layer has.
+        [UNIT_DATA]: unitDataSlk([
+          { id: "hfoo", race: "human" },
+          { id: "Hpal", race: "human" },
+          { id: "hkni", race: "human" },
+        ]),
         // Melee's units have no Paladin.
         [`${MELEE}Units/UnitData.slk`]: unitDataSlk([
           { id: "hfoo", race: "human" },
@@ -900,9 +906,17 @@ describe("builtins:generate on every Game data set", () => {
           { id: "hcus", race: "human" },
         ]),
         [strings("HumanUnitStrings.txt")]: profile({
-          hfoo: { Name: "Footman" },
+          // A name of the Melee set, or of the HD graphics, is not the name
+          // of an object the Default set holds.
+          hfoo: {
+            Name: "Footman",
+            "Name:melee,V0": "Melee Footman",
+            "Name:hd": "HD Footman",
+          },
           Hpal: { Name: "Paladin" },
-          hcus: { Name: "Custom Footman" },
+          hkni: { Name: "Knight" },
+          // Named for the Custom set alone, as its layer holds it alone.
+          hcus: { "Name:custom,V1": "Custom Footman" },
         }),
       }),
     );
@@ -911,7 +925,7 @@ describe("builtins:generate on every Game data set", () => {
     return { ...result, outDir };
   }
 
-  it("takes a set's objects from its layer's file of the kind, else from the base layer's", async () => {
+  it("takes a set's objects from its layer's file of the kind, else from the base layer's, and names one by the first set that holds it", async () => {
     const { status, stderr, outDir } = await layered();
 
     expect(stderr).toBe("");
@@ -934,10 +948,12 @@ describe("builtins:generate on every Game data set", () => {
       hfoo: ["default", "custom", "melee"],
       Hpal: ["default", "custom"],
       hcus: ["custom"],
+      hkni: ["default"],
       // No layer has a file of items: every set reads the base layer's.
       ratf: ["default", "custom", "melee"],
     });
     expect(index.objects.hcus.name).toBe("Custom Footman");
+    expect(index.objects.hfoo.name).toBe("Footman");
   });
 
   it("says in the TSDoc which sets hold an object, and nothing when every one does", async () => {
