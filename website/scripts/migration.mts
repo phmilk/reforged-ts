@@ -47,6 +47,12 @@ export interface MigrationGuideOptions {
    */
   readonly pages: string;
   /**
+   * The package whose majors the map's pairs are: a page whose target side
+   * names another package (`reforged-builtins-1-to-reforged-builtins-2.md`)
+   * is that package's, which the release gate checks, not a page of this map.
+   */
+  readonly package: string;
+  /**
    * The docs tree folder of the partials, `_`-prefixed so that Docusaurus
    * serves none: one folder per pair, named as its page, holding
    * `renames.md` and, when the pair has a note, `behaviour-changes.md`.
@@ -66,6 +72,11 @@ export interface MigrationGuideOptions {
  */
 export function migrationGuide(options: MigrationGuideOptions): Source {
   const { name, map, declarations, pages, to, behaviourChanges } = options;
+  /** Whether a page's target side names the package: `-to-reforged-ts-2.md`. */
+  const ownPage = (file: string) =>
+    new RegExp(
+      `-to-${options.package.replace(/\./g, "\\.")}-\\d+\\.mdx?$`,
+    ).test(file);
   return {
     name,
     from: map,
@@ -86,7 +97,9 @@ export function migrationGuide(options: MigrationGuideOptions): Source {
       const { items, missing } = check;
       const pairs = versionPairs(items);
       const written = (await readdir(join(root, pages)).catch(() => []))
-        .filter((file) => /^(?!_|index\.)[^/]+\.mdx?$/.test(file))
+        .filter(
+          (file) => /^(?!_|index\.)[^/]+\.mdx?$/.test(file) && ownPage(file),
+        )
         .map((file) => `${pages}/${file}`);
       const isPageOf = (page: string, pair: VersionPair) =>
         page === migrationPagePath(pair) ||

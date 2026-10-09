@@ -3,7 +3,7 @@
  * in a temporary folder, with synthetic SLK and `.txt` files. The tests
  * assert the files it writes, its output and its exit code.
  */
-import { readdir, readFile } from "node:fs/promises";
+import { readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { readFully } from "../src/casc/storage.js";
@@ -43,7 +43,7 @@ const NO_GAME: InstallMachine = {
   isFile: () => false,
 };
 
-async function run(installDir: string, outDir: string) {
+async function run(installDir: string, outDir: string, build?: string) {
   let stdout = "";
   let stderr = "";
   const status = await main(
@@ -56,6 +56,7 @@ async function run(installDir: string, outDir: string) {
           file.startsWith(installDir) && file.endsWith(".build.info"),
       },
       cwd: outDir,
+      ...(build !== undefined && { typingsBuild: build }),
     },
   );
   return { status, stdout, stderr };
@@ -103,7 +104,13 @@ describe("builtins:generate", () => {
     expect(status).toBe(0);
     expect(stdout).toBe(
       `Read the install at ${storage.installDir} (Build 3.0.0.24268): 5 units, 0 items, 0 abilities, 0 buffs, 0 destructables, 0 doodads and 0 upgrades.\n` +
-        "Wrote 3.0.0/index.json, 3.0.0/provenance.json, 3.0.0.d.ts, 3.0.0/units.d.ts and 3.0.0/units.lua.\n",
+        "Wrote 3.0.0/index.json, 3.0.0/provenance.json, 3.0.0.d.ts, 3.0.0/units.d.ts and 3.0.0/units.lua.\n\n" +
+        "The record against no previous model: a minor.\n" +
+        "- added (minor): Units.Paladin_Hpal (Hpal)\n" +
+        "- added (minor): Units.Footman_hfoo (hfoo)\n" +
+        "- added (minor): Units.Knight_hkni (hkni)\n" +
+        "- added (minor): Units.MurgulSlave_nmrl (nmrl)\n" +
+        "- added (minor): Units.Footman_sfoo (sfoo)\n",
     );
     expect(await readdir(outDir)).toEqual(["3.0.0", "3.0.0.d.ts"]);
     expect(await readdir(join(outDir, "3.0.0"))).toEqual([
@@ -1014,5 +1021,120 @@ describe("builtins:generate refuses every kind's errors, writing nothing", () =>
     expect(stderr).toContain(
       `- error: ${base("Doodads/DoodadMetaData.slk")}: the field dnam is in "DoodadSkin", neither in the profile files nor in DoodadData, where the names are read from.\n`,
     );
+  });
+});
+
+describe("builtins:generate adopting a Build", () => {
+  /** A package root holding a manifest, as the package's own. */
+  async function packageRoot(version = "1.2.0") {
+    const outDir = await tempDir("package");
+    await writeFile(
+      join(outDir, "package.json"),
+      JSON.stringify(
+        {
+          name: "reforged-builtins",
+          version,
+          reforged: { patch: "3.0.0.24268" },
+          exports: {},
+        },
+        null,
+        2,
+      ) + "\n",
+    );
+    return outDir;
+  }
+  const manifest = async (outDir: string) =>
+    JSON.parse(await readFile(join(outDir, "package.json"), "utf8")) as {
+      reforged: { patch: string };
+      exports: Record<string, unknown>;
+    };
+
+  it("prints the record against the committed model, and writes a major's rename entries", async () => {
+    const outDir = await packageRoot();
+    const first = await writeStorage(unitStorage(HUMAN, CAMPAIGN));
+    expect((await run(first.installDir, outDir)).stdout).toContain(
+      "The record against no previous model: a minor.\n",
+    );
+
+    const second = await writeStorage(
+      unitStorage(
+        [
+          { id: "hfoo", race: "human", name: "Militia" },
+          { id: "Hpal", race: "human", name: "Paladin" },
+          { id: "hkni", race: "human", name: "Knight" },
+        ],
+        [{ id: "nmrl", race: "naga", name: "Mur'gul Slave" }],
+      ),
+    );
+    const { status, stdout } = await run(second.installDir, outDir);
+
+    expect(status).toBe(0);
+    expect(stdout).toContain(
+      "The record against Game version 3.0.0 (Build 3.0.0.24268): a major.\n" +
+        "- removed (major): Units.Footman_sfoo (sfoo)\n" +
+        "- renamed (major): Units.Footman_hfoo to Units.Militia_hfoo (hfoo)\n",
+    );
+    expect(stdout).toContain(
+      "migration/renames.json holds 2 rename entries for reforged-builtins@1 to reforged-builtins@2.\n",
+    );
+    const renames = JSON.parse(
+      await readFile(join(outDir, "migration", "renames.json"), "utf8"),
+    ) as { old: string; new: string | null }[];
+    expect(renames.map((entry) => [entry.old, entry.new])).toEqual([
+      ["Units.Footman_hfoo", "Units.Militia_hfoo"],
+      ["Units.Footman_sfoo", null],
+    ]);
+
+    // Run again: the record is empty, and the entries stay.
+    const again = await run(second.installDir, outDir);
+    expect(again.stdout).toContain(": no change.\n");
+    expect(
+      JSON.parse(
+        await readFile(join(outDir, "migration", "renames.json"), "utf8"),
+      ),
+    ).toHaveLength(2);
+  });
+
+  it("puts a new Game version's folder next to the previous one, and moves the entry points and the Patch to it", async () => {
+    const outDir = await packageRoot();
+    await run((await writeStorage(unitStorage(HUMAN))).installDir, outDir);
+
+    const next = await writeStorage(
+      unitStorage(
+        [...HUMAN, { id: "hrif", race: "human", name: "Rifleman" }],
+        [],
+        {
+          build: "3.0.1.25000",
+        },
+      ),
+    );
+    const { status, stdout } = await run(
+      next.installDir,
+      outDir,
+      "3.0.1.25000",
+    );
+
+    expect(status).toBe(0);
+    expect(stdout).toContain(
+      "The record against Game version 3.0.0 (Build 3.0.0.24268): a minor.\n" +
+        "- added (minor): Units.Rifleman_hrif (hrif)\n",
+    );
+    expect((await readdir(outDir)).sort()).toEqual([
+      "3.0.0",
+      "3.0.0.d.ts",
+      "3.0.1",
+      "3.0.1.d.ts",
+      "package.json",
+    ]);
+    const { reforged, exports } = await manifest(outDir);
+    expect(reforged.patch).toBe("3.0.1.25000");
+    expect(exports).toEqual({
+      "./3.0.0": { types: "./3.0.0.d.ts" },
+      "./3.0.0/index.json": "./3.0.0/index.json",
+      "./3.0.1": { types: "./3.0.1.d.ts" },
+      "./3.0.1/index.json": "./3.0.1/index.json",
+      "./units": { types: "./3.0.1/units.d.ts", tstl: "./3.0.1/units" },
+      "./package.json": "./package.json",
+    });
   });
 });

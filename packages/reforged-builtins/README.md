@@ -84,6 +84,16 @@ A buff's name is its editor name, else its tooltip's title (`Bufftip`), as most 
 
 An object named twice, in one names file or across them, takes its last name, the files read in the code-point order of their paths (`nameFileOrder` in `src/generate.ts`), with a warning. That rule is assumed, not yet settled in the World Editor ([#564](https://github.com/phmilk/reforged-ts/issues/564)): in 3.0.0.24268 it decides 14 names, `Ubtr`'s ("Death Knight", named twice in `CampaignUnitStrings.txt`), 12 abilities' and one buff's that `ItemAbilityStrings.txt` names again (`Almf` is "Death Coil" before it, "Item Lesser Mark of the Forsaken" in it).
 
+### Adopting a Build
+
+Each run compares the new model with the committed one of the same Game version, or with the previous Game version's when the Build opens a new one, and prints the record of the Patch, one line per change with its verdict:
+
+- an added object: additive, a minor;
+- a removed object, a renamed constant (the same Rawcode, a new name) and an object whose kind changed: breaking, a major;
+- a change of the Game data sets that hold an object: additive.
+
+A breaking change also gets a rename entry in `migration/renames.json`, a map with the schema of the library's (`packages/reforged-ts/migration/renames.schema.json`), for the pair from the package's current major to the next. A renamed constant maps the old name to the new one (`Units.Footman_hfoo` to `Units.Militia_hfoo`), a constant moved to another kind's object maps to its new one, and a removed one has no replacement. A run keeps the entries already there: within the pair, the major not yet released, a constant renamed by two Patches chains into one entry from its released name to the newest, one renamed back loses its entry, and the pair's no-renames marker gives way to the entries. Below 1.0.0 no major has been released, so no entry is written. A new Game version gets its folder next to the previous one, and the run moves the kind entry points of `exports` to it and `reforged.patch` to the Build. A major of the package needs its migration page and these entries: the major-changeset gate (`docs/release.md`) checks both, and that each replacement resolves against the constants of the newest Game version.
+
 The generator's tests (`pnpm --filter reforged-builtins test`) run it on synthetic CASC storages they write in a temporary folder, with no byte of Blizzard's.
 
 ## Notice

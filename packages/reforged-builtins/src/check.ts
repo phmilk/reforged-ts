@@ -44,13 +44,18 @@ export interface CheckResult {
   problems: string[];
 }
 
-/** Checks the package whose root is `root`. */
-export async function checkPackage(root: string): Promise<CheckResult> {
-  const problems: string[] = [];
-  const gameVersions = (await readdir(root, { withFileTypes: true }))
+/** The Game version folders of the package root `root`, oldest first. */
+export async function gameVersionFolders(root: string): Promise<string[]> {
+  return (await readdir(root, { withFileTypes: true }))
     .filter((item) => item.isDirectory() && GAME_VERSION.test(item.name))
     .map((item) => item.name)
     .sort(compareVersions);
+}
+
+/** Checks the package whose root is `root`. */
+export async function checkPackage(root: string): Promise<CheckResult> {
+  const problems: string[] = [];
+  const gameVersions = await gameVersionFolders(root);
   if (gameVersions.length === 0) {
     problems.push(`${root} holds no Game version folder.`);
   }
@@ -287,7 +292,7 @@ async function checkExports(
 }
 
 /** Game versions in numeric order: `3.0.0` before `3.0.10`. */
-function compareVersions(a: string, b: string): number {
+export function compareVersions(a: string, b: string): number {
   const pa = a.split(".").map(Number);
   const pb = b.split(".").map(Number);
   for (let i = 0; i < Math.max(pa.length, pb.length); i++) {

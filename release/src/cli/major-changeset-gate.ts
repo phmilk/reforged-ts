@@ -1,12 +1,13 @@
 /**
- * `release:gate`: the major-changeset gate on the workspace. It takes no
- * arguments. The verdict goes to stdout, or to stderr when the gate fails;
- * when the environment variable `GITHUB_STEP_SUMMARY` names a file (a step
- * of GitHub Actions), a requirement and what is missing are appended to it
- * as the job summary. Exit codes: 0 pass, or missing artefacts reported in
- * pre mode; 1 missing artefacts for a stable version, or the inputs cannot
- * be read; 2 usage.
+ * `release:gate`: the major-changeset gate on the workspace, for the
+ * library and for `reforged-builtins`. It takes no arguments. The verdict
+ * goes to stdout, or to stderr when the gate fails; when the environment
+ * variable `GITHUB_STEP_SUMMARY` names a file (a step of GitHub Actions), a
+ * requirement and what is missing are appended to it as the job summary.
+ * Exit codes: 0 pass, or missing artefacts reported in pre mode; 1 missing
+ * artefacts for a stable version, or the inputs cannot be read; 2 usage.
  */
+import { builtinsGate } from "../builtins-gate.js";
 import {
   formatGate,
   majorChangesetGate,
@@ -39,19 +40,23 @@ export async function main(
     return 2;
   }
 
-  let result: GateResult;
+  let results: GateResult[];
   try {
-    result = await majorChangesetGate(context.root);
+    const library = await majorChangesetGate(context.root);
+    const builtins = await builtinsGate(context.root);
+    // The package's gate is shown only when it requires something.
+    results =
+      builtins.requirement === undefined ? [library] : [library, builtins];
   } catch (error) {
     output.stderr(`${errorMessage(error)}\n`);
     return 1;
   }
 
-  const text = formatGate(result);
-  if (result.requirement !== undefined) {
+  const text = results.map((result) => formatGate(result)).join("\n");
+  if (results.some((result) => result.requirement !== undefined)) {
     await appendSummary(context.env, `## Major-changeset gate\n\n${text}\n`);
   }
-  if (result.verdict === "fail") {
+  if (results.some((result) => result.verdict === "fail")) {
     output.stderr(text);
     return 1;
   }

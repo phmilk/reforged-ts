@@ -19,7 +19,15 @@ import { createRequire } from "node:module";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { KIND_CONSTANTS, list } from "../emit.js";
+import {
+  mergeRenameEntries,
+  nextMajorPair,
+  previousIndex,
+  RENAMES_FILE,
+  updateManifest,
+} from "../adopt.js";
 import { generate, type Diagnostic } from "../generate.js";
+import { formatRecord, recordOf, renameEntriesOf } from "../record.js";
 import type { ObjectKind } from "../model.js";
 import {
   findInstall,
@@ -76,6 +84,8 @@ export interface Context {
   machine: InstallMachine;
   /** What a relative argument resolves against. */
   cwd: string;
+  /** The Build to adopt; `typingsBuild()` by default. */
+  typingsBuild?: string;
 }
 
 export async function main(
@@ -112,18 +122,33 @@ export async function main(
     return 1;
   }
 
-  const result = await generate({ installDir, build: typingsBuild() });
+  const result = await generate({
+    installDir,
+    build: context.typingsBuild ?? typingsBuild(),
+  });
   if (!result.ok) {
     output.stderr(
       `Generation failed. No file was written.\n\n${formatDiagnostics(result.diagnostics)}`,
     );
     return 1;
   }
+  const previous = await previousIndex(outDir, result.gameVersion);
   for (const [path, text] of result.files) {
     const target = join(outDir, path);
     await mkdir(dirname(target), { recursive: true });
     await writeFile(target, text);
   }
+  await updateManifest(outDir, result.build);
+  const record = recordOf(previous, result.index);
+  const pair = await nextMajorPair(outDir);
+  const renamed =
+    pair === undefined
+      ? 0
+      : await mergeRenameEntries(outDir, renameEntriesOf(record, pair));
+  const renames =
+    pair === undefined || renamed === 0
+      ? ""
+      : `${RENAMES_FILE} holds ${String(renamed)} rename ${renamed === 1 ? "entry" : "entries"} for ${pair.from} to ${pair.to}.\n`;
   const counts = list(
     Object.entries(result.counts).map(
       ([kind, count]) =>
@@ -132,7 +157,8 @@ export async function main(
   );
   const written = list([...result.files.keys()]);
   output.stdout(
-    `Read the install at ${installDir} (Build ${result.build}): ${counts}.\nWrote ${written}.\n` +
+    `Read the install at ${installDir} (Build ${result.build}): ${counts}.\nWrote ${written}.\n\n${formatRecord(record)}` +
+      renames +
       (result.diagnostics.length === 0
         ? ""
         : `\n${formatDiagnostics(result.diagnostics)}`),

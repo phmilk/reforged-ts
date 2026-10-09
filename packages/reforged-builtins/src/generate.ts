@@ -30,7 +30,7 @@ import {
   type ObjectKind,
   type ProvenanceInput,
 } from "./model.js";
-import { emit, KIND_CONSTANTS } from "./emit.js";
+import { emit, KIND_CONSTANTS, withArticle } from "./emit.js";
 import { constantName, displayName, duplicateConstants } from "./names.js";
 import { Profile } from "./profile.js";
 import { parseSlk } from "./slk.js";
@@ -232,6 +232,8 @@ export interface GenerateSuccess {
   ok: true;
   build: string;
   gameVersion: string;
+  /** The model the files hold. */
+  index: BuiltinsIndex;
   /** Each file's text by its `/`-separated path under the package root. */
   files: Map<string, string>;
   /** The number of objects per kind. */
@@ -361,7 +363,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
       if (other !== undefined) {
         diagnostics.push({
           severity: "error",
-          message: `${rawcode} is both ${article(other)} and ${article(source.kind)}: an overload has one kind.`,
+          message: `${rawcode} is both ${withArticle(other)} and ${withArticle(source.kind)}: an overload has one kind.`,
         });
         continue;
       }
@@ -456,6 +458,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
     ok: true,
     build: storage.build,
     gameVersion,
+    index,
     files: new Map([
       [`${gameVersion}/index.json`, serializeIndex(index)],
       [
@@ -518,11 +521,6 @@ async function kindRows(
     });
   }
   return rows;
-}
-
-/** `a unit`, `an ability`. */
-function article(kind: ObjectKind): string {
-  return `${/^[aeiou]/.test(kind) ? "an" : "a"} ${kind}`;
 }
 
 /**
