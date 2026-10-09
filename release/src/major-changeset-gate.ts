@@ -101,9 +101,18 @@ export interface Requirement {
 }
 
 export type Missing =
-  { kind: "page"; path: string } | { kind: "renames"; file: string };
+  | { kind: "page"; path: string }
+  | { kind: "renames"; file: string }
+  | {
+      kind: "replacements";
+      file: string;
+      /** The replacements of the pair's entries no declaration exports. */
+      symbols: string[];
+    };
 
 export interface GateResult {
+  /** The package the gate is about. */
+  package: string;
   /**
    * `pass`: nothing required, or everything required present. `report`:
    * something missing while pre mode is active. `fail`: something missing
@@ -116,7 +125,7 @@ export interface GateResult {
   preMode: PreMode;
 }
 
-function parseVersion(version: string): SemVer {
+export function parseVersion(version: string): SemVer {
   const parsed = parseSemver(version);
   if (parsed === undefined) {
     throw new Error(
@@ -139,7 +148,7 @@ const FIRST_STABLE: SemVer = {
  * The major a major bump gives: `X.0.0-pre` becomes `X.0.0`, as Changesets
  * computes it, and any other version `X+1.0.0`.
  */
-function majorAfterBump(version: SemVer): number {
+export function majorAfterBump(version: SemVer): number {
   return isPrerelease(version) && version.minor === 0 && version.patch === 0
     ? version.major
     : version.major + 1;
@@ -153,7 +162,10 @@ function pairTo(major: number): VersionPair {
 }
 
 /** Whether the rename map has an entry or the marker for `pair`. */
-function hasRenames(renames: readonly unknown[], pair: VersionPair): boolean {
+export function hasRenames(
+  renames: readonly unknown[],
+  pair: VersionPair,
+): boolean {
   return renames.some((item) => {
     const versions = isRecord(item) ? item.versions : undefined;
     return (
@@ -212,19 +224,23 @@ export function evaluateGate(input: GateInput): GateResult {
   }
 
   return {
-    verdict:
-      missing.length === 0
-        ? "pass"
-        : input.preMode === "pre"
-          ? "report"
-          : "fail",
+    package: LIBRARY_PACKAGE,
+    verdict: verdictOf(missing, input.preMode),
     requirement,
     missing,
     preMode: input.preMode,
   };
 }
 
-async function readRenames(file: string): Promise<unknown[]> {
+/** `pass` with nothing missing; else `report` in pre mode, `fail` out of it. */
+export function verdictOf(
+  missing: readonly Missing[],
+  preMode: PreMode,
+): GateResult["verdict"] {
+  return missing.length === 0 ? "pass" : preMode === "pre" ? "report" : "fail";
+}
+
+export async function readRenames(file: string): Promise<unknown[]> {
   let text: string;
   try {
     text = await readFile(file, "utf8");
@@ -239,7 +255,7 @@ async function readRenames(file: string): Promise<unknown[]> {
   return map as unknown[];
 }
 
-async function readPages(root: string): Promise<Set<string>> {
+export async function readPages(root: string): Promise<Set<string>> {
   try {
     const names = await readdir(join(root, MIGRATION_DIR));
     return new Set(names.map((name) => `${MIGRATION_DIR}/${name}`));
@@ -292,13 +308,15 @@ export async function majorChangesetGate(root: string): Promise<GateResult> {
 export function formatGate(result: GateResult): string {
   const { requirement } = result;
   if (requirement === undefined) {
-    return `No major of ${LIBRARY_PACKAGE} is pending and its next stable version is not its first: no migration page is required.\n`;
+    return result.package === LIBRARY_PACKAGE
+      ? `No major of ${LIBRARY_PACKAGE} is pending and its next stable version is not its first: no migration page is required.\n`
+      : `No major of ${result.package} is pending: no migration page is required.\n`;
   }
   const pair = formatPair(requirement.pair);
   const why =
     requirement.reason.kind === "first-stable"
       ? `The next stable version of ${LIBRARY_PACKAGE} is its first (1.0.0), a major relative to ${PREDECESSOR}`
-      : `A major of ${LIBRARY_PACKAGE} is pending (${requirement.reason.changesets.map((file) => `\`${file}\``).join(", ")})`;
+      : `A major of ${result.package} is pending (${requirement.reason.changesets.map((file) => `\`${file}\``).join(", ")})`;
   const lines = [`${why}: version pair ${pair}.`];
   if (result.missing.length === 0) {
     lines.push(
@@ -311,14 +329,16 @@ export function formatGate(result: GateResult): string {
     lines.push(
       missing.kind === "page"
         ? `- [ ] Missing migration page for ${pair}: \`${missing.path}\`.`
-        : `- [ ] Missing renames for ${pair}: \`${missing.file}\` has no entry with \`versions\` \`${requirement.pair.from}\` to \`${requirement.pair.to}\` and no no-renames marker (\`{ "kind": "${NO_RENAMES_KIND}", "versions", "note" }\`) for the pair.`,
+        : missing.kind === "renames"
+          ? `- [ ] Missing renames for ${pair}: \`${missing.file}\` has no entry with \`versions\` \`${requirement.pair.from}\` to \`${requirement.pair.to}\` and no no-renames marker (\`{ "kind": "${NO_RENAMES_KIND}", "versions", "note" }\`) for the pair.`
+          : `- [ ] Unresolved replacements for ${pair} in \`${missing.file}\`: ${missing.symbols.map((symbol) => `\`${symbol}\``).join(", ")}, which the package's newest constants do not declare.`,
     );
   }
   lines.push("");
   lines.push(
     result.verdict === "report"
       ? "Pre mode is active (`.changeset/pre.json`): reported only. The gate fails once pre mode is exited and the version is stable."
-      : `The next version of ${LIBRARY_PACKAGE} is stable, so this blocks the release. See "The major-changeset gate" in docs/release.md.`,
+      : `The next version of ${result.package} is stable, so this blocks the release. See "The major-changeset gate" in docs/release.md.`,
   );
   return `${lines.join("\n")}\n`;
 }

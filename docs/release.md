@@ -63,10 +63,12 @@ A new game Patch is adopted in one pull request: the Typings are regenerated for
 - **A Patch that adds Natives:** a minor for `reforged-types` (new declarations); a minor for `reforged-ts` when new Wrappers ship; a minor for `reforged-test` when stubs are added; no bump for `eslint-plugin-reforged` unless one of its data files changes.
 - **A Patch that changes or removes a Native the public API depends on:** a major for `reforged-ts` only if its public API breaks, otherwise a minor with a changelog note naming the Native. A major needs its migration page and `renames.json` entries.
 - **A generator fix in the Typings:** a patch release of `reforged-types`.
+- **The Built-in objects:** `reforged-builtins` takes the verdict of the record `pnpm builtins:generate` prints for the Patch (loop step 5): a minor for added objects or changed Game data sets, a major for a removed object, a renamed constant or an object whose kind changed. A major needs its migration page and the package's rename entries, which the generator writes ([The major-changeset gate](#the-major-changeset-gate)).
 
 Which fields move:
 
 - `reforged-types` and `reforged-ts` move to the new Patch every time, since the library pins the newest Patch the Typings ship.
+- `reforged-builtins` moves to the new Patch every time it is regenerated for it: `builtins:generate` writes its `reforged.patch`, and its `exports` move to a Game version the Build opens.
 - Another package moves when the minimum Patch it supports changes.
 - When the new Build shares its Game version with the old one (`3.0.0.24268` then `3.0.0.24277`), the Game version folder is regenerated from the new Build and the old Build loses its entry: every field naming the old Build moves to the new one.
 
@@ -293,6 +295,8 @@ No stable major of `reforged-ts` ships without its migration guide. `pnpm releas
 - at least one entry of `packages/reforged-ts/migration/renames.json` whose `versions` are the pair, or the pair's no-renames marker.
 
 Missing either fails with a message naming the page path expected and the pair. A minor or a patch of `reforged-ts`, and a major of another package, require nothing.
+
+**A major of `reforged-builtins`.** The gate covers the Built-in objects too (`release/src/builtins-gate.ts`, programmatic entry `builtinsGate(root)`). When a changeset bumps `reforged-builtins` by a major, it requires, for the pair `reforged-builtins@<n>` to `reforged-builtins@<n+1>`, the page `website/docs/migration/reforged-builtins-<n>-to-reforged-builtins-<n+1>.md` and the package's own rename entries for the pair (or its no-renames marker) in `packages/reforged-builtins/migration/renames.json`, a map with the schema of the library's. Each replacement of those entries must resolve against the constants the package emits for its newest Game version (`<Game version>/<kind>.d.ts`); an unresolved one fails, named. `builtins:generate` writes the entries from the record of a Patch: a renamed constant maps the old name to the new one, a constant moved to another kind's object to its new one, and a removed one has no replacement. There is no first stable rule: only a major counts. `release:gate` runs both gates and shows the package's only when it requires something. The docs site's collector reads the library's map alone and leaves a page whose target side names another package to that package's gate.
 
 **The version pair.** Written as the rename map writes it, the package and its major on each side: the previous major to the next one, `reforged-ts@1` to `reforged-ts@2`. The first pair is `w3ts@3` to `reforged-ts@1` (w3ts 3.x to reforged-ts 1.0).
 

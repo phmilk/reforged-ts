@@ -28,6 +28,12 @@ export const PLUGIN_PACKAGE = "eslint-plugin-reforged";
 export const MAP_PACKAGE = "reforged-map";
 
 /**
+ * The Built-in objects of each Patch (ADR 0013), private until its release;
+ * the major-changeset gate covers its majors too.
+ */
+export const BUILTINS_PACKAGE = "reforged-builtins";
+
+/**
  * The five packages of a compatibility matrix row, by row field, in matrix
  * order: the order of the row's fields, the tables' columns and the
  * Template dispatch's tag.

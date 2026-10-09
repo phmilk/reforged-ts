@@ -209,6 +209,11 @@ function describeObject(
   return lines;
 }
 
+/** A kind with its article: `a unit`, `an ability`. */
+export function withArticle(kind: ObjectKind): string {
+  return `${kind === "ability" || kind === "item" || kind === "upgrade" ? "an" : "a"} ${kind}`;
+}
+
 /** `A`, `A and B`, `A, B and C`. */
 export function list(items: string[]): string {
   return items.length < 2

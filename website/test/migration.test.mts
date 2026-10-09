@@ -196,6 +196,16 @@ Text.
     );
   });
 
+  it("leaves the page of another package's major to that package", async () => {
+    const workspace = await fixture(
+      changed({
+        "website/docs/migration/reforged-builtins-1-to-reforged-builtins-2.md":
+          "# reforged-builtins 1 to 2\n",
+      }),
+    );
+    await expect(collect(workspace)).resolves.not.toThrow();
+  });
+
   it("fails naming the items of a map that does not match the schema next to it", async () => {
     const [first, ...rest] = RENAMES;
     const workspace = await fixture(

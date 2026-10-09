@@ -113,6 +113,7 @@ describe("the major-changeset gate", () => {
       renames: [],
     });
     expect(await majorChangesetGate(root)).toEqual({
+      package: "reforged-ts",
       verdict: "pass",
       requirement: undefined,
       missing: [],
@@ -142,6 +143,7 @@ describe("the major-changeset gate", () => {
       renames: [entry(FIRST), entry(SECOND)],
     });
     expect(await majorChangesetGate(root)).toEqual({
+      package: "reforged-ts",
       verdict: "pass",
       requirement: {
         pair: SECOND,
@@ -241,6 +243,7 @@ describe("the major-changeset gate", () => {
       });
       const result = await majorChangesetGate(root);
       expect(result).toEqual({
+        package: "reforged-ts",
         verdict: "fail",
         requirement: {
           pair: FIRST,

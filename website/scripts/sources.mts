@@ -47,6 +47,7 @@ export const SOURCES: readonly Source[] = [
     map: "packages/reforged-ts/migration/renames.json",
     declarations: "packages/reforged-ts/dist/index.d.ts",
     pages: "website/docs/migration",
+    package: "reforged-ts",
     to: "migration/_generated",
     behaviourChanges: [
       {
