@@ -10,7 +10,14 @@ import { readFully } from "../src/casc/storage.js";
 import { main, typingsBuild } from "../src/cli/generate.js";
 import type { InstallMachine } from "../src/install.js";
 import {
+  base,
   contentKey,
+  metaDataSlk,
+  profile,
+  slkTable,
+  WORLD_EDIT_GAME_STRINGS,
+  WORLD_EDIT_STRINGS,
+  NO_OTHER_KINDS,
   sha256,
   strings,
   tempDir,
@@ -54,7 +61,7 @@ async function run(installDir: string, outDir: string) {
   return { status, stdout, stderr };
 }
 
-/** The storage of a units-only Patch: data, metadata and two strings files. */
+/** The storage of a Patch of units alone: data, metadata and two strings files, and no other kind's object. */
 function unitStorage(
   human: readonly SyntheticUnit[],
   campaign: readonly SyntheticUnit[] = [],
@@ -63,6 +70,7 @@ function unitStorage(
   return {
     ...extra,
     files: {
+      ...NO_OTHER_KINDS,
       [UNIT_DATA]: unitDataSlk([...human, ...campaign]),
       [UNIT_META_DATA]: unitMetaDataSlk(),
       [strings("HumanUnitStrings.txt")]: unitStrings(human),
@@ -94,7 +102,7 @@ describe("builtins:generate", () => {
     expect(stderr).toBe("");
     expect(status).toBe(0);
     expect(stdout).toBe(
-      `Read the install at ${storage.installDir} (Build 3.0.0.24268): 5 units.\n` +
+      `Read the install at ${storage.installDir} (Build 3.0.0.24268): 5 units, 0 items, 0 abilities, 0 buffs, 0 destructables, 0 doodads and 0 upgrades.\n` +
         "Wrote 3.0.0/index.json, 3.0.0/provenance.json, 3.0.0.d.ts, 3.0.0/units.d.ts and 3.0.0/units.lua.\n",
     );
     expect(await readdir(outDir)).toEqual(["3.0.0", "3.0.0.d.ts"]);
@@ -140,12 +148,11 @@ describe("builtins:generate", () => {
     ).toEqual({
       build: "3.0.0.24268",
       buildConfig: storage.buildConfigKey,
-      inputs: [
-        input(UNIT_DATA),
-        input(UNIT_META_DATA),
-        input(strings("CampaignUnitStrings.txt")),
-        input(strings("HumanUnitStrings.txt")),
-      ],
+      // Every file but the skins' strings, which no kind reads.
+      inputs: Object.keys(files)
+        .filter((path) => path !== strings("UnitSkinStrings.txt"))
+        .sort()
+        .map(input),
     });
   });
 
@@ -367,6 +374,7 @@ return {
   it("matches a name's key and the names files without regard to case", async () => {
     const storage = await writeStorage({
       files: {
+        ...NO_OTHER_KINDS,
         [UNIT_DATA]: unitDataSlk([{ id: "Hpal", race: "human" }]),
         [UNIT_META_DATA]: unitMetaDataSlk(),
         // Read second: "_locales" comes after "_Locales" in code-point order.
@@ -402,7 +410,9 @@ return {
     const { status, stdout } = await run(storage.installDir, outDir);
 
     expect(status).toBe(0);
-    expect(stdout).toContain(": 5 units.\n");
+    expect(stdout).toContain(
+      ": 5 units, 0 items, 0 abilities, 0 buffs, 0 destructables, 0 doodads and 0 upgrades.\n",
+    );
   });
 
   it("skips the -- that pnpm passes before the arguments", async () => {
@@ -463,17 +473,18 @@ describe("readFully", () => {
   });
 });
 
-describe("builtins:generate refuses, writing nothing", () => {
-  async function refused(options: StorageOptions) {
-    const storage = await writeStorage(options);
-    const outDir = await tempDir("out");
-    const result = await run(storage.installDir, outDir);
-    expect(result.status).toBe(1);
-    expect(result.stdout).toBe("");
-    expect(await readdir(outDir)).toEqual([]);
-    return { ...result, storage };
-  }
+/** Runs the generator on a storage it must refuse, and asserts nothing is written. */
+async function refused(options: StorageOptions) {
+  const storage = await writeStorage(options);
+  const outDir = await tempDir("out");
+  const result = await run(storage.installDir, outDir);
+  expect(result.status).toBe(1);
+  expect(result.stdout).toBe("");
+  expect(await readdir(outDir)).toEqual([]);
+  return { ...result, storage };
+}
 
+describe("builtins:generate refuses, writing nothing", () => {
   it("an install on another Build than reforged-types', naming both", async () => {
     expect(typingsBuild()).toBe("3.0.0.24268");
     const { stderr, storage } = await refused(
@@ -552,7 +563,7 @@ describe("builtins:generate refuses, writing nothing", () => {
     });
 
     expect(stderr).toContain(
-      `- error: ${UNIT_META_DATA}: the field unam is in "UnitUI", not in the profile files the names are read from.\n`,
+      `- error: ${UNIT_META_DATA}: the field unam is in "UnitUI", neither in the profile files nor in UnitData, where the names are read from.\n`,
     );
   });
 
@@ -583,6 +594,256 @@ describe("builtins:generate refuses, writing nothing", () => {
     expect(status).toBe(1);
     expect(stderr).toBe(
       `--install is set to "${installDir}", and no .build.info is at or above ${installDir}.\n`,
+    );
+  });
+});
+
+/** The files of every Object kind, with the examples of #512 and `extra` over them. */
+function allKinds(
+  extra: Readonly<Record<string, string | undefined>> = {},
+): StorageOptions {
+  const files: Record<string, string | undefined> = {
+    [UNIT_DATA]: unitDataSlk([
+      { id: "hfoo", race: "human" },
+      { id: "Hpal", race: "human" },
+    ]),
+    [UNIT_META_DATA]: metaDataSlk([
+      { id: "unam", field: "Name", slk: "Profile" },
+    ]),
+    [strings("HumanUnitStrings.txt")]: profile({
+      hfoo: { Name: "Footman" },
+      Hpal: { Name: "Paladin", Propernames: "Granis Darkhammer,Jorn" },
+    }),
+    [base("Units/ItemData.slk")]: slkTable(
+      ["itemID", "class"],
+      [["ratf", "Permanent"]],
+    ),
+    [strings("ItemStrings.txt")]: profile({
+      ratf: { Name: "Claws of Attack +15", Tip: "Purchase Claws" },
+    }),
+    [base("Units/AbilityData.slk")]: slkTable(
+      ["alias", "code", "race"],
+      [
+        ["AHbz", "AHbz", "human"],
+        ["Aitb", "Aitb", "other"],
+        // A row with no Rawcode cell: a fragment of the table, no object.
+        [undefined, "Afrg", "other"],
+      ],
+    ),
+    [base("Units/AbilityMetaData.slk")]: metaDataSlk([
+      { id: "anam", field: "Name", slk: "Profile", repeat: "0" },
+    ]),
+    [strings("HumanAbilityStrings.txt")]: profile({
+      AHbz: { Name: "Blizzard", EditorSuffix: " (Caster)" },
+    }),
+    [strings("ItemAbilityStrings.txt")]: profile({
+      Aitb: { Name: "Item Bash (10, 25, 2)" },
+      BHbz: { EditorName: "Blizzard (Caster)", Bufftip: "Blizzard" },
+      BTLF: { Bufftip: "Timed Life" },
+    }),
+    [base("Units/AbilityBuffData.slk")]: slkTable(
+      ["alias", "race"],
+      [
+        ["BHbz", "human"],
+        ["BTLF", "other"],
+      ],
+    ),
+    [base("Units/AbilityBuffMetaData.slk")]: metaDataSlk([
+      { id: "fnam", field: "EditorName", slk: "Profile" },
+      { id: "ftip", field: "Bufftip", slk: "Profile" },
+    ]),
+    [base("Units/DestructableData.slk")]: slkTable(
+      ["DestructableID", "Name", "EditorSuffix"],
+      [["LTlt", "WESTRING_DEST_SUMMER_TREE_WALL", "_"]],
+    ),
+    [base("Units/DestructableMetaData.slk")]: metaDataSlk([
+      { id: "bnam", field: "Name", slk: "DestructableData" },
+    ]),
+    [base("Doodads/Doodads.slk")]: slkTable(
+      ["doodID", "Name"],
+      [["LObr", "WESTRING_DOOD_LObr"]],
+    ),
+    [base("Doodads/DoodadMetaData.slk")]: metaDataSlk([
+      { id: "dnam", field: "Name", slk: "DoodadData" },
+    ]),
+    [WORLD_EDIT_STRINGS]: profile({
+      WorldEditStrings: {
+        WESTRING_DEST_SUMMER_TREE_WALL: "Summer Tree Wall",
+      },
+    }),
+    // The keys match without regard to case, here as in the game's files.
+    [WORLD_EDIT_GAME_STRINGS]: profile({
+      WorldEditStrings: { WESTRING_DOOD_LOBR: "Brazier" },
+    }),
+    [base("Units/UpgradeData.slk")]: slkTable(
+      ["upgradeid", "race"],
+      [["Rhme", "human"]],
+    ),
+    [base("Units/UpgradeMetaData.slk")]: metaDataSlk([
+      { id: "gnam", field: "Name", slk: "Profile", repeat: "1" },
+    ]),
+    [strings("HumanUpgradeStrings.txt")]: profile({
+      Rhme: {
+        Name: "Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords",
+      },
+    }),
+    ...extra,
+  };
+  return {
+    files: Object.fromEntries(
+      Object.entries(files).filter(
+        (entry): entry is [string, string] => entry[1] !== undefined,
+      ),
+    ),
+  };
+}
+
+/** The index's objects as `[kind, name, race, constant]`. */
+async function objectsIn(outDir: string) {
+  const index = JSON.parse(
+    await readFile(join(outDir, "3.0.0", "index.json"), "utf8"),
+  ) as {
+    objects: Record<
+      string,
+      { kind: string; name?: string; race?: string; constant: string }
+    >;
+  };
+  return Object.fromEntries(
+    Object.entries(index.objects).map(([id, e]) => [
+      id,
+      [e.kind, e.name, e.race, e.constant],
+    ]),
+  );
+}
+
+describe("builtins:generate on every Object kind", () => {
+  it("reads the seven kinds, each named by the field the Object Editor shows", async () => {
+    const storage = await writeStorage(allKinds());
+    const outDir = await tempDir("out");
+
+    const { status, stdout, stderr } = await run(storage.installDir, outDir);
+
+    expect(stderr).toBe("");
+    expect(status).toBe(0);
+    expect(stdout).toContain(
+      "2 units, 1 item, 2 abilities, 2 buffs, 1 destructable, 1 doodad and 1 upgrade.\n",
+    );
+    expect(await objectsIn(outDir)).toEqual({
+      AHbz: ["ability", "Blizzard", "human", "Blizzard_AHbz"],
+      Aitb: ["ability", "Item Bash (10, 25, 2)", "other", "ItemBash10252_Aitb"],
+      BHbz: ["buff", "Blizzard (Caster)", "human", "BlizzardCaster_BHbz"],
+      BTLF: ["buff", "Timed Life", "other", "TimedLife_BTLF"],
+      Hpal: ["unit", "Paladin", "human", "Paladin_Hpal"],
+      LObr: ["doodad", "Brazier", undefined, "Brazier_LObr"],
+      LTlt: [
+        "destructable",
+        "Summer Tree Wall",
+        undefined,
+        "SummerTreeWall_LTlt",
+      ],
+      Rhme: ["upgrade", "Iron Forged Swords", "human", "IronForgedSwords_Rhme"],
+      hfoo: ["unit", "Footman", "human", "Footman_hfoo"],
+      ratf: ["item", "Claws of Attack +15", undefined, "ClawsOfAttack15_ratf"],
+    });
+    expect((await readdir(join(outDir, "3.0.0"))).sort()).toEqual([
+      "abilities.d.ts",
+      "abilities.lua",
+      "buffs.d.ts",
+      "buffs.lua",
+      "destructables.d.ts",
+      "destructables.lua",
+      "doodads.d.ts",
+      "doodads.lua",
+      "index.json",
+      "items.d.ts",
+      "items.lua",
+      "provenance.json",
+      "units.d.ts",
+      "units.lua",
+      "upgrades.d.ts",
+      "upgrades.lua",
+    ]);
+  });
+
+  it("skips a row with no Rawcode cell, with a warning", async () => {
+    const storage = await writeStorage(allKinds());
+    const outDir = await tempDir("out");
+
+    const { stdout } = await run(storage.installDir, outDir);
+
+    expect(stdout).toContain(
+      `- warning: ${base("Units/AbilityData.slk")}: 1 row has no alias, the Rawcode's column: it is no ability and is skipped.\n`,
+    );
+  });
+
+  it("leaves unnamed, with a warning, a WESTRING_ key neither editor strings file holds", async () => {
+    const storage = await writeStorage(
+      allKinds({
+        [base("Doodads/Doodads.slk")]: slkTable(
+          ["doodID", "Name"],
+          [["LObr", "WESTRING_DOOD_Missing"]],
+        ),
+      }),
+    );
+    const outDir = await tempDir("out");
+
+    const { status, stdout } = await run(storage.installDir, outDir);
+
+    expect(status).toBe(0);
+    expect((await objectsIn(outDir)).LObr).toEqual([
+      "doodad",
+      undefined,
+      undefined,
+      "Unnamed_LObr",
+    ]);
+    expect(stdout).toContain(
+      `- warning: The doodad LObr is named WESTRING_DOOD_Missing, which neither ${WORLD_EDIT_GAME_STRINGS} nor ${WORLD_EDIT_STRINGS} holds.\n`,
+    );
+    expect(stdout).toContain(
+      "- warning: The doodad LObr has no enUS name; its constant is Unnamed_LObr.\n",
+    );
+  });
+});
+
+describe("builtins:generate refuses every kind's errors, writing nothing", () => {
+  it("a Rawcode two kinds share", async () => {
+    const { stderr } = await refused(
+      allKinds({
+        [base("Units/AbilityBuffData.slk")]: slkTable(
+          ["alias", "race"],
+          [["AHbz", "human"]],
+        ),
+      }),
+    );
+
+    expect(stderr).toContain(
+      "- error: AHbz is both an ability and a buff: an overload has one kind.\n",
+    );
+  });
+
+  it("a Rawcode that is not four letters or digits, in any kind", async () => {
+    const { stderr } = await refused(
+      allKinds({
+        [base("Units/ItemData.slk")]: slkTable(["itemID"], [["rat"]]),
+      }),
+    );
+
+    expect(stderr).toContain(
+      `- error: ${base("Units/ItemData.slk")}: the item "rat" is not a Rawcode of four characters of [A-Za-z0-9].\n`,
+    );
+  });
+
+  it("a name the metadata places in neither the profile files nor the kind's data", async () => {
+    const { stderr } = await refused(
+      allKinds({
+        [base("Doodads/DoodadMetaData.slk")]: metaDataSlk([
+          { id: "dnam", field: "Name", slk: "DoodadSkin" },
+        ]),
+      }),
+    );
+
+    expect(stderr).toContain(
+      `- error: ${base("Doodads/DoodadMetaData.slk")}: the field dnam is in "DoodadSkin", neither in the profile files nor in DoodadData, where the names are read from.\n`,
     );
   });
 });

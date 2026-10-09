@@ -3,6 +3,8 @@
  * its constant (#509, "Constant names"): the enUS name in PascalCase, then
  * `_` and the Rawcode exactly as cased.
  */
+import { KIND_CONSTANTS, list } from "./emit.js";
+import { byCodePoint, type IndexEntry, type ObjectKind } from "./model.js";
 
 /** The constant's name stem of an object without an enUS name. */
 export const UNNAMED = "Unnamed";
@@ -48,4 +50,26 @@ export function constantName(
   if (/^[0-9]/.test(stem)) stem = `_${stem}`;
   if (stem === "") stem = UNNAMED;
   return `${stem}_${rawcode}`;
+}
+
+/**
+ * One message per constant that two objects of one kind share: one
+ * constants object cannot hold both. The Rawcode suffix makes this
+ * impossible under the rules above; the check guards a change to them.
+ */
+export function duplicateConstants(
+  objects: Readonly<Record<string, IndexEntry>>,
+): string[] {
+  const byConstant = new Map<string, string[]>();
+  for (const [rawcode, entry] of Object.entries(objects)) {
+    const key = `${entry.kind}\0${entry.constant}`;
+    byConstant.set(key, [...(byConstant.get(key) ?? []), rawcode]);
+  }
+  return [...byConstant.entries()]
+    .filter(([, rawcodes]) => rawcodes.length > 1)
+    .map(([key, rawcodes]) => {
+      const [kind, constant] = key.split("\0") as [ObjectKind, string];
+      const { object, entry } = KIND_CONSTANTS[kind];
+      return `The ${entry} ${list([...rawcodes].sort(byCodePoint))} share the constant ${object}.${constant}.`;
+    });
 }

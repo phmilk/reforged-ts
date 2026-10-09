@@ -131,7 +131,7 @@ function emitConstants(index: BuiltinsIndex, kind: ObjectKind): string {
     ...banner(index).map((line) => `// ${line}`),
     "",
     ...docComment("", [
-      `The Built-in ${kind}s of Patch ${index.gameVersion}, each named by its enUS name and Rawcode, such as \`${object}.${firstConstant(index, kind)}\`.`,
+      `The Built-in ${KIND_CONSTANTS[kind].entry} of Patch ${index.gameVersion}, each named by its enUS name and Rawcode, such as \`${object}.${firstConstant(index, kind)}\`.`,
     ]),
     `export declare const ${object}: {`,
   ];

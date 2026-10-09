@@ -1,16 +1,19 @@
 /**
  * The committed 3.0.0 index and provenance, extracted by `builtins:generate`
- * from an install of 3.0.0.24268: the facts of the Patch they pin, that the
+ * from an install of 3.0.0.24268: the facts of the Patch they pin (the count
+ * of each Object kind and the examples of #512), that the
  * package carries the Patch of reforged-types, and that the published files
  * hold the index alone.
  */
 import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 import { typingsBuild } from "../src/cli/generate.js";
+import { KIND_CONSTANTS } from "../src/emit.js";
 import {
   serializeIndex,
   serializeProvenance,
   type BuiltinsIndex,
+  type ObjectKind,
   type Provenance,
 } from "../src/model.js";
 
@@ -18,16 +21,26 @@ const read = (path: string) =>
   readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
 describe("the 3.0.0 index", () => {
-  it("holds the 928 units of the base layer of 3.0.0.24268", async () => {
+  it("holds the seven Object kinds of the base layer of 3.0.0.24268", async () => {
     const index = JSON.parse(await read("3.0.0/index.json")) as BuiltinsIndex;
 
     expect(index.format).toBe(1);
     expect(index.build).toBe("3.0.0.24268");
     expect(index.gameVersion).toBe("3.0.0");
     expect(index.gameDataSets).toEqual([{ id: "default", label: "Default" }]);
-    const entries = Object.values(index.objects);
-    expect(entries).toHaveLength(928);
-    expect(entries.every((entry) => entry.kind === "unit")).toBe(true);
+    const counts: Record<string, number> = {};
+    for (const entry of Object.values(index.objects)) {
+      counts[entry.kind] = (counts[entry.kind] ?? 0) + 1;
+    }
+    expect(counts).toEqual({
+      unit: 928,
+      item: 648,
+      ability: 1550,
+      buff: 318,
+      destructable: 344,
+      doodad: 771,
+      upgrade: 90,
+    });
     expect(index.objects.hfoo).toEqual({
       kind: "unit",
       name: "Footman",
@@ -35,7 +48,27 @@ describe("the 3.0.0 index", () => {
       sets: ["default"],
       constant: "Footman_hfoo",
     });
-    expect(index.objects.Hpal.constant).toBe("Paladin_Hpal");
+  });
+
+  // The examples of #512. Its `Buffs.TimedLife_BTLF` is no Built-in buff:
+  // `AbilityBuffData.slk` has no BTLF, only the skin and strings files a
+  // `[Btlf]` section. `Binf` stands in, named by its Bufftip as a buff
+  // without an EditorName is.
+  it.each([
+    ["Hpal", "unit", "Paladin_Hpal"],
+    ["ratf", "item", "ClawsOfAttack15_ratf"],
+    ["AHbz", "ability", "Blizzard_AHbz"],
+    ["BHbz", "buff", "BlizzardCaster_BHbz"],
+    ["Binf", "buff", "InnerFire_Binf"],
+    ["LTlt", "destructable", "SummerTreeWall_LTlt"],
+    ["LObr", "doodad", "Brazier_LObr"],
+    ["Rhme", "upgrade", "IronForgedSwords_Rhme"],
+  ])("names %s, %s, %s", async (rawcode, kind, constant) => {
+    const index = JSON.parse(await read("3.0.0/index.json")) as BuiltinsIndex;
+    expect(index.objects[rawcode]).toMatchObject({ kind, constant });
+    expect(
+      await read(`3.0.0/${KIND_CONSTANTS[kind as ObjectKind].entry}.d.ts`),
+    ).toContain(`  readonly ${constant}: Rawcode<"${kind}">;`);
   });
 
   it("is written as the generator writes it", async () => {

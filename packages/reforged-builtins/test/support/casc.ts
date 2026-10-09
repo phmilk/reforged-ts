@@ -323,3 +323,98 @@ export const UNIT_DATA = "War3.w3mod:Units/UnitData.slk";
 export const UNIT_META_DATA = "War3.w3mod:Units/UnitMetaData.slk";
 export const strings = (file: string): string =>
   `War3.w3mod:_Locales/enUS.w3mod:Units/${file}`;
+
+/** A synthetic SLK table: row 1 names `columns`, each later row one object. */
+export function slkTable(
+  columns: readonly string[],
+  rows: readonly (readonly (string | undefined)[])[],
+): string {
+  const lines = [
+    "ID;PWXL;N;E",
+    `B;X${String(columns.length)};Y${String(rows.length + 1)};D0`,
+  ];
+  columns.forEach((column, x) => {
+    lines.push(`C;X${String(x + 1)};Y1;K"${column}"`);
+  });
+  rows.forEach((row, y) => {
+    row.forEach((value, x) => {
+      if (value !== undefined) {
+        lines.push(`C;X${String(x + 1)};Y${String(y + 2)};K"${value}"`);
+      }
+    });
+  });
+  lines.push("E");
+  return lines.join("\r\n") + "\r\n";
+}
+
+/** A metadata row: the ID, its field, the table that holds it and its repeat. */
+export interface SyntheticMeta {
+  id: string;
+  field: string;
+  slk: string;
+  repeat?: string;
+}
+
+/** A synthetic `*MetaData.slk` of the given rows. */
+export function metaDataSlk(rows: readonly SyntheticMeta[]): string {
+  return slkTable(
+    ["ID", "field", "slk", "repeat"],
+    rows.map((row) => [row.id, row.field, row.slk, row.repeat]),
+  );
+}
+
+/** A synthetic profile file: one section per entry, its keys in order. */
+export function profile(
+  sections: Readonly<Record<string, Readonly<Record<string, string>>>>,
+): string {
+  return Object.entries(sections)
+    .map(
+      ([section, keys]) =>
+        `[${section}]\r\n` +
+        Object.entries(keys)
+          .map(([key, value]) => `${key}=${value}\r\n`)
+          .join(""),
+    )
+    .join("\r\n");
+}
+
+export const base = (file: string): string => `War3.w3mod:${file}`;
+export const WORLD_EDIT_STRINGS =
+  "War3.w3mod:_Locales/enUS.w3mod:UI/WorldEditStrings.txt";
+export const WORLD_EDIT_GAME_STRINGS =
+  "War3.w3mod:_Locales/enUS.w3mod:UI/WorldEditGameStrings.txt";
+
+/**
+ * The other six kinds' files, with no object: data tables of no row, their
+ * metadata, and empty names files.
+ */
+export const NO_OTHER_KINDS: Readonly<Record<string, string>> = {
+  [base("Units/ItemData.slk")]: slkTable(["itemID"], []),
+  [strings("ItemStrings.txt")]: "",
+  [base("Units/AbilityData.slk")]: slkTable(["alias", "race"], []),
+  [base("Units/AbilityMetaData.slk")]: metaDataSlk([
+    { id: "anam", field: "Name", slk: "Profile", repeat: "0" },
+  ]),
+  [strings("HumanAbilityStrings.txt")]: "",
+  [base("Units/AbilityBuffData.slk")]: slkTable(["alias", "race"], []),
+  [base("Units/AbilityBuffMetaData.slk")]: metaDataSlk([
+    { id: "fnam", field: "EditorName", slk: "Profile" },
+    { id: "ftip", field: "Bufftip", slk: "Profile" },
+  ]),
+  [base("Units/DestructableData.slk")]: slkTable(
+    ["DestructableID", "Name"],
+    [],
+  ),
+  [base("Units/DestructableMetaData.slk")]: metaDataSlk([
+    { id: "bnam", field: "Name", slk: "DestructableData" },
+  ]),
+  [base("Doodads/Doodads.slk")]: slkTable(["doodID", "Name"], []),
+  [base("Doodads/DoodadMetaData.slk")]: metaDataSlk([
+    { id: "dnam", field: "Name", slk: "DoodadData" },
+  ]),
+  [base("Units/UpgradeData.slk")]: slkTable(["upgradeid", "race"], []),
+  [base("Units/UpgradeMetaData.slk")]: metaDataSlk([
+    { id: "gnam", field: "Name", slk: "Profile", repeat: "1" },
+  ]),
+  [strings("HumanUpgradeStrings.txt")]: "",
+};
