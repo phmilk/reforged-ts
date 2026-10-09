@@ -5,8 +5,8 @@
  * provenance file of its Game version, and the artefacts emitted from the
  * index, under `--out` (the package root by default). Prints the counts,
  * then the warnings; on any error it writes nothing, prints the errors and
- * exits 1. A bad argument exits 2. A leading
- * `--`, which `pnpm builtins:generate -- …` passes through, is skipped.
+ * exits 1. A bad argument exits 2. A leading `--`, which
+ * `pnpm builtins:generate -- …` passes through, is skipped.
  *
  * `isWsl` and `invokedDirectly` mirror the Probe runner's
  * (`probe/src/machine.ts`, `probe/src/cli/common.ts`), as `parseBuildInfo`
