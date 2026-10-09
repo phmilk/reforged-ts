@@ -22,6 +22,7 @@ import {
   unitDataSlk,
   unitMetaDataSlk,
   unitStrings,
+  NO_OTHER_KINDS,
   writeStorage,
 } from "./support/casc.js";
 
@@ -42,6 +43,7 @@ const EXPORTS = {
 async function regenerate(root: string): Promise<void> {
   const storage = await writeStorage({
     files: {
+      ...NO_OTHER_KINDS,
       [UNIT_DATA]: unitDataSlk(UNITS),
       [UNIT_META_DATA]: unitMetaDataSlk(),
       [strings("HumanUnitStrings.txt")]: unitStrings(UNITS),

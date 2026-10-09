@@ -36,8 +36,12 @@ afterAll(async () => {
 
 /** The negative fixtures' errors, by code and line. */
 const NEGATIVES = [
+  // A Built-in ability's literal is not a unit's Rawcode.
+  "src/ability-into-unit-create.ts:5 TS2345",
   // A unit's constant is not an ability's Rawcode.
   "src/constant-into-ability.ts:4 TS2345",
+  // An item's constant is neither a unit's nor an upgrade's Rawcode.
+  "src/item-into-tech.ts:4 TS2345",
   // A Built-in unit's literal is a unit's Rawcode, not an ability's.
   "src/literal-into-ability.ts:3 TS2345",
 ];
@@ -56,7 +60,7 @@ describe.each([
     diagnostics = result.diagnostics.map((d) => locate(project, d)).sort();
   }, 60_000);
 
-  it("type-checks literals and constants into CreateUnit and Unit.create, an unknown literal anywhere, and typeId against a constant", () => {
+  it("type-checks every kind's literals and constants where their kind is expected, an unknown literal anywhere, and typeId against a constant", () => {
     expect(diagnostics.filter((d) => d.startsWith("src/rawcodes.ts"))).toEqual(
       [],
     );
@@ -87,7 +91,7 @@ describe.each([
     expect(typeOf("custom")).toBe("UnknownRawcode");
   });
 
-  it("reads the package from the installed tarball: its overloads' entry and the units' declarations", () => {
+  it("reads the package from the installed tarball: its overloads' entry and the declarations of the kinds imported", () => {
     const installed = normalize(workspace.installed);
     const files = program
       .getSourceFiles()
@@ -96,7 +100,16 @@ describe.each([
       .map((f) => f.slice(installed.length))
       .sort();
 
-    expect(files).toEqual(["/3.0.0.d.ts", "/3.0.0/units.d.ts"]);
+    expect(files).toEqual([
+      "/3.0.0.d.ts",
+      "/3.0.0/abilities.d.ts",
+      "/3.0.0/buffs.d.ts",
+      "/3.0.0/destructables.d.ts",
+      "/3.0.0/doodads.d.ts",
+      "/3.0.0/items.d.ts",
+      "/3.0.0/units.d.ts",
+      "/3.0.0/upgrades.d.ts",
+    ]);
   });
 });
 

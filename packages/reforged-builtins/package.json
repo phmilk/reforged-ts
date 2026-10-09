@@ -36,6 +36,30 @@
       "types": "./3.0.0/units.d.ts",
       "tstl": "./3.0.0/units"
     },
+    "./items": {
+      "types": "./3.0.0/items.d.ts",
+      "tstl": "./3.0.0/items"
+    },
+    "./abilities": {
+      "types": "./3.0.0/abilities.d.ts",
+      "tstl": "./3.0.0/abilities"
+    },
+    "./buffs": {
+      "types": "./3.0.0/buffs.d.ts",
+      "tstl": "./3.0.0/buffs"
+    },
+    "./destructables": {
+      "types": "./3.0.0/destructables.d.ts",
+      "tstl": "./3.0.0/destructables"
+    },
+    "./doodads": {
+      "types": "./3.0.0/doodads.d.ts",
+      "tstl": "./3.0.0/doodads"
+    },
+    "./upgrades": {
+      "types": "./3.0.0/upgrades.d.ts",
+      "tstl": "./3.0.0/upgrades"
+    },
     "./package.json": "./package.json"
   },
   "files": [

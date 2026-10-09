@@ -18,8 +18,9 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { list } from "../emit.js";
+import { KIND_CONSTANTS, list } from "../emit.js";
 import { generate, type Diagnostic } from "../generate.js";
+import type { ObjectKind } from "../model.js";
 import {
   findInstall,
   INSTALL_OPTION,
@@ -123,9 +124,12 @@ export async function main(
     await mkdir(dirname(target), { recursive: true });
     await writeFile(target, text);
   }
-  const counts = Object.entries(result.counts)
-    .map(([kind, count]) => `${String(count)} ${kind}s`)
-    .join(", ");
+  const counts = list(
+    Object.entries(result.counts).map(
+      ([kind, count]) =>
+        `${String(count)} ${count === 1 ? kind : KIND_CONSTANTS[kind as ObjectKind].entry}`,
+    ),
+  );
   const written = list([...result.files.keys()]);
   output.stdout(
     `Read the install at ${installDir} (Build ${result.build}): ${counts}.\nWrote ${written}.\n` +

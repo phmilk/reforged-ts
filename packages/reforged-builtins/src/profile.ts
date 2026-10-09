@@ -1,7 +1,8 @@
 /**
  * The game's profile files (`.txt`): INI-like sections `[<Rawcode>]` of
  * `Key=Value` lines, `//` comments. A quoted value keeps what is between its
- * quotes. Keys are matched without regard to case (`Name` and `name` are one
+ * quotes; a value is also a list, its items split on `,` outside quotes, as
+ * a field of one value per level holds them. Keys are matched without regard to case (`Name` and `name` are one
  * key); section names are Rawcodes, matched exactly. A key set twice for one
  * Rawcode, in one file or across files read in order, keeps its last value,
  * and the earlier one is reported.
@@ -14,13 +15,16 @@ export interface Override {
   key: string;
   previous: string;
   value: string;
+  /** The first items of `previous` and `value`, as a field of one value per level reads them. */
+  previousFirst: string;
+  valueFirst: string;
   /** The file of the later line. */
   file: string;
 }
 
 /** Each section's keys and values, merged over every file read. */
 export class Profile {
-  /** Each section's values by lower-cased key. */
+  /** Each section's values by lower-cased key, as the line spells them. */
   readonly #sections = new Map<string, Map<string, string>>();
   readonly overrides: Override[] = [];
 
@@ -42,10 +46,18 @@ export class Profile {
       const at = line.indexOf("=");
       if (section === undefined || at === -1) continue;
       const key = line.slice(0, at).trim();
-      const value = unquote(line.slice(at + 1).trim());
+      const value = line.slice(at + 1).trim();
       const previous = section.get(key.toLowerCase());
-      if (previous !== undefined && previous !== value) {
-        this.overrides.push({ section: name, key, previous, value, file });
+      if (previous !== undefined && unquote(previous) !== unquote(value)) {
+        this.overrides.push({
+          section: name,
+          key,
+          previous: unquote(previous),
+          value: unquote(value),
+          previousFirst: firstItem(previous),
+          valueFirst: firstItem(value),
+          file,
+        });
       }
       section.set(key.toLowerCase(), value);
     }
@@ -53,8 +65,25 @@ export class Profile {
 
   /** The value of `key` in section `section`, matched without regard to the key's case. */
   get(section: string, key: string): string | undefined {
-    return this.#sections.get(section)?.get(key.toLowerCase());
+    const value = this.#sections.get(section)?.get(key.toLowerCase());
+    return value === undefined ? undefined : unquote(value);
   }
+
+  /**
+   * The first item of the list `key` holds, as a field of one value per
+   * level gives its first level's.
+   */
+  first(section: string, key: string): string | undefined {
+    const value = this.#sections.get(section)?.get(key.toLowerCase());
+    return value === undefined ? undefined : firstItem(value);
+  }
+}
+
+/** The first item of a value as a line spells it: a quoted one whole, else up to the first `,`. */
+function firstItem(value: string): string {
+  if (value.startsWith('"')) return unquote(value);
+  const comma = value.indexOf(",");
+  return (comma === -1 ? value : value.slice(0, comma)).trim();
 }
 
 function unquote(value: string): string {
