@@ -3,8 +3,9 @@
  * install (`../install.ts`), refuses one whose Build is not
  * `reforged-types`' `reforged.patch`, then writes the index and the
  * provenance file of its Game version, and the artefacts emitted from the
- * index, under `--out` (the package root by default). Prints the counts, then the warnings; on any error it writes
- * nothing, prints the errors and exits 1. A bad argument exits 2. A leading
+ * index, under `--out` (the package root by default). Prints the counts,
+ * then the warnings; on any error it writes nothing, prints the errors and
+ * exits 1. A bad argument exits 2. A leading
  * `--`, which `pnpm builtins:generate -- …` passes through, is skipped.
  *
  * `isWsl` and `invokedDirectly` mirror the Probe runner's
@@ -17,6 +18,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { list } from "../emit.js";
 import { generate, type Diagnostic } from "../generate.js";
 import {
   findInstall,
@@ -124,8 +126,7 @@ export async function main(
   const counts = Object.entries(result.counts)
     .map(([kind, count]) => `${String(count)} ${kind}s`)
     .join(", ");
-  const paths = [...result.files.keys()];
-  const written = `${paths.slice(0, -1).join(", ")} and ${paths.at(-1) ?? ""}`;
+  const written = list([...result.files.keys()]);
   output.stdout(
     `Read the install at ${installDir} (Build ${result.build}): ${counts}.\nWrote ${written}.\n` +
       (result.diagnostics.length === 0

@@ -11,7 +11,7 @@ import {
   emit,
   KIND_CONSTANTS,
   kindsOf,
-  luaPath,
+  luaModule,
   overloadsPath,
 } from "./emit.js";
 import {
@@ -219,11 +219,14 @@ async function stale(
   unchecked: ReadonlySet<string>,
   generated: ReadonlySet<string>,
 ): Promise<string[]> {
-  const candidates = (await readdir(root)).filter(
-    (name) =>
-      /^\d+\.\d+\.\d+\.d\.ts$/.test(name) &&
-      !unchecked.has(name.slice(0, -".d.ts".length)),
-  );
+  const candidates = (await readdir(root)).filter((name) => {
+    const gameVersion = name.replace(/\.d\.ts$/, "");
+    return (
+      GAME_VERSION.test(gameVersion) &&
+      overloadsPath(gameVersion) === name &&
+      !unchecked.has(gameVersion)
+    );
+  });
   for (const gameVersion of gameVersions) {
     if (unchecked.has(gameVersion)) continue;
     for (const name of await readdir(join(root, gameVersion))) {
@@ -258,7 +261,7 @@ export function expectedExports(
     for (const kind of kindsByVersion.get(newest) ?? []) {
       exports[`./${KIND_CONSTANTS[kind].entry}`] = {
         types: `./${constantsPath(newest, kind)}`,
-        tstl: `./${luaPath(newest, kind).replace(/\.lua$/, "")}`,
+        tstl: `./${luaModule(newest, kind)}`,
       };
     }
   }
