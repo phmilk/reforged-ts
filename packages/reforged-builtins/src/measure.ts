@@ -8,7 +8,7 @@
  * estimated about 2 ms per call at 6,000 overloads.
  */
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { performance } from "node:perf_hooks";
 import * as ts from "typescript";
 import { overloadsPath } from "./emit.js";
@@ -92,13 +92,15 @@ function checkTime(
   source: string,
 ): number {
   const host = ts.createCompilerHost(options);
+  // TypeScript hands the host `/`-separated paths, also on Windows.
+  const isMain = (name: string) => resolve(name) === resolve(main);
   const getSourceFile = host.getSourceFile.bind(host);
   host.getSourceFile = (name, language, onError, create) =>
-    name === main
+    isMain(name)
       ? ts.createSourceFile(name, source, language)
       : getSourceFile(name, language, onError, create);
   const fileExists = host.fileExists.bind(host);
-  host.fileExists = (name) => name === main || fileExists(name);
+  host.fileExists = (name) => isMain(name) || fileExists(name);
   const start = performance.now();
   const program = ts.createProgram({ rootNames, options, host });
   const diagnostics = ts.getPreEmitDiagnostics(program);
