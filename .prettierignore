@@ -22,6 +22,7 @@ packages/reforged-types/3.0.0.d.ts
 packages/reforged-types/vendor/
 packages/reforged-types/scripts/war3-types-strict.json
 packages/reforged-builtins/[0-9]*/
+packages/reforged-builtins/[0-9]*.d.ts
 pnpm-lock.yaml
 
 # The docs versions docs:version cuts: frozen copies of the docs tree, with the

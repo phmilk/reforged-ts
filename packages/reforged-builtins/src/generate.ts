@@ -1,6 +1,7 @@
 /**
  * Seam 1: from the CASC storage of an install to the files of the model,
- * the JSON index and the provenance file of the install's Game version.
+ * the JSON index and the provenance file of the install's Game version, and
+ * the artefacts emitted from the index (`./emit.ts`).
  *
  * For now it reads the units of the Default Game data set: the base layer's
  * unit data (Rawcode and race) and the enUS names from
@@ -27,6 +28,7 @@ import {
   type ObjectKind,
   type ProvenanceInput,
 } from "./model.js";
+import { emit } from "./emit.js";
 import { constantName, displayName } from "./names.js";
 import { Profile } from "./profile.js";
 import { parseSlk } from "./slk.js";
@@ -268,6 +270,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
           inputs,
         }),
       ],
+      ...emit(index),
     ]),
     counts,
     diagnostics,

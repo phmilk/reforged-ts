@@ -73,8 +73,11 @@ describe("the package", () => {
 
   // npm always adds package.json; the provenance file, the generator (src/,
   // build/) and the tests match none of these patterns.
-  it("publishes the index, and nothing of the generator, the provenance or the raw files", async () => {
+  it("publishes the index and its artefacts, and nothing of the generator, the provenance or the raw files", async () => {
     expect((await manifest()).files).toEqual([
+      "/[0-9]*.d.ts",
+      "/[0-9]*/*.d.ts",
+      "/[0-9]*/*.lua",
       "/[0-9]*/index.json",
       "/LICENSE",
       "/README.md",

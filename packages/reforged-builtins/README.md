@@ -2,7 +2,7 @@
 
 The Built-in objects of each Warcraft III Reforged Patch, reduced to the identifiers code needs to name them: Rawcode, Object kind, race, enUS name and the Game data sets that hold the object ([ADR 0013](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0013-built-in-objects-ship-as-derived-identifiers-in-their-own-package.md)). It never holds tooltip text, numbers or icons.
 
-**Work in progress, not published yet** ([#509](https://github.com/phmilk/reforged-ts/issues/509)). It holds the JSON index of the units of the Default Game data set of Patch 3.0.0.24268; the other Object kinds, the Game data sets, the `FourCC` overloads and the constants come next.
+**Work in progress, not published yet** ([#509](https://github.com/phmilk/reforged-ts/issues/509)). It holds the units of the Default Game data set of Patch 3.0.0.24268: their JSON index, their `FourCC` overloads and their constants. The other Object kinds and the Game data sets come next.
 
 **Supported Patch: 3.0.0.24268.** The `reforged.patch` field of `package.json` carries the same Build, which a test holds to `reforged-types`'.
 
@@ -33,11 +33,41 @@ The Built-in objects of each Warcraft III Reforged Patch, reduced to the identif
 
 The file is written one object per line, byte-stably: a regeneration from unchanged inputs writes the same bytes.
 
+## In a Map project
+
+Add the overloads' entry of your Game version to `types`, next to the Typings':
+
+```json
+{
+  "compilerOptions": {
+    "types": ["reforged-types/3.0.0", "reforged-builtins/3.0.0"]
+  }
+}
+```
+
+`FourCC("hfoo")` is then a `Rawcode<"unit">`, with the Footman's name on hover, completion of the Built-in Rawcodes inside `FourCC("")`, and no change to the emitted Lua. A literal the package does not know, such as a Custom object's `FourCC("h000")`, stays an `UnknownRawcode` through the Typings' `string` overload and compiles. The order of `types` does not matter.
+
+The constants of a kind come from its entry point, which resolves to the newest Game version the package holds:
+
+```ts
+import { Units } from "reforged-builtins/units";
+
+Unit.create(owner, Units.Footman_hfoo, 0, 0);
+```
+
+Each constant is a `Rawcode<"unit">` named by the enUS name in PascalCase, then `_` and the Rawcode. typescript-to-lua resolves the entry point through the package's `exports` (its `tstl` condition) to a Lua module of integers, each the value `FourCC` returns for the Rawcode, so `Units.Footman_hfoo === FourCC("hfoo")` in game. A bundle carries only the kinds it imports, and no entry point holds every kind.
+
+## The artefacts
+
+Each Game version's index is emitted three ways, every file with a banner that says so: `3.0.0.d.ts`, one ambient `FourCC` overload per Rawcode with the object's TSDoc; and per Object kind, `3.0.0/units.d.ts`, which exports the constants, and `3.0.0/units.lua`, the module that returns them. The TSDoc gives the name and Rawcode, the Game version (never the Build) and the race, and, on the overload, the constant and its entry point. It never holds tooltip text.
+
+`pnpm builtins:check`, which `pnpm check` runs, needs no game: it emits every artefact from each committed index again and fails on any difference, on a file no index emits, on an index of the wrong shape, on a Game version without its provenance file, and on `exports` that do not point the kind entry points at the newest Game version.
+
 ## Generating it (maintainers)
 
 `pnpm builtins:generate [--install <folder>] [--out <folder>]`, from the repository root, on a machine with the game. It finds the install as the Probe runner finds the game: `--install` (the install folder, or any file in it), else the folder above the executable `WC3_EXECUTABLE` names, else `Warcraft III` under `Program Files (x86)` then `Program Files` (drive C under WSL). It refuses an install whose Build (its `.build.info`) is not `reforged-types`' `reforged.patch`, naming both.
 
-It reads the install's CASC storage with a small TypeScript reader (`src/casc/`: no native code, no dependency, read-only): the base layer's `Units/UnitData.slk` (Rawcode and race), `Units/UnitMetaData.slk` (which profile field holds the name) and the `Units/*UnitStrings.txt` of `_Locales/enUS.w3mod:` (the names, matched without regard to case; finding none is an error). It writes `<Game version>/index.json` and `<Game version>/provenance.json`, which pins each input by CASC path, content key, sha256 and size. Both are committed; the provenance file is never published, and the raw SLK and `.txt` files never enter git. The generator (`src/`) is not published either: the package ships its output alone.
+It reads the install's CASC storage with a small TypeScript reader (`src/casc/`: no native code, no dependency, read-only): the base layer's `Units/UnitData.slk` (Rawcode and race), `Units/UnitMetaData.slk` (which profile field holds the name) and the `Units/*UnitStrings.txt` of `_Locales/enUS.w3mod:` (the names, matched without regard to case; finding none is an error). It writes `<Game version>/index.json`, `<Game version>/provenance.json`, which pins each input by CASC path, content key, sha256 and size, and the artefacts emitted from the index. All are committed; the provenance file is never published, and the raw SLK and `.txt` files never enter git. The generator (`src/`) is not published either: the package ships its output alone.
 
 A unit named twice, in one names file or across them, takes its last name, the files read in the code-point order of their paths (`nameFileOrder` in `src/generate.ts`), with a warning. That rule is assumed, not yet settled by a Probe: in 3.0.0.24268 it decides one name, `Ubtr`'s ("Death Knight", named twice in `CampaignUnitStrings.txt`), and no unit is named differently by two files.
 

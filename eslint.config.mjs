@@ -138,6 +138,9 @@ export default defineConfig(
     "packages/reforged-types/vendor/**",
     "packages/reforged-types/3.0.0/**",
     "packages/reforged-types/3.0.0.d.ts",
+    // The Built-in objects' artefacts, emitted from each Game version's index.
+    "packages/reforged-builtins/[0-9]*/**",
+    "packages/reforged-builtins/[0-9]*.d.ts",
     // Lua is not linted.
     "**/*.lua",
     // Agent worktrees and local state.
@@ -222,6 +225,20 @@ export default defineConfig(
         typescript: {
           project:
             "packages/reforged-map/test/fixtures/map-project/tsconfig.json",
+        },
+      },
+    },
+  },
+  // reforged-builtins' Map project fixtures import `reforged-ts` and the
+  // package's own entry points as a Map project does, through the same kind
+  // of mapping.
+  {
+    files: ["packages/reforged-builtins/test/fixtures/map-project/**/*.ts"],
+    settings: {
+      "import-x/resolver": {
+        typescript: {
+          project:
+            "packages/reforged-builtins/test/fixtures/map-project/tsconfig.json",
         },
       },
     },
