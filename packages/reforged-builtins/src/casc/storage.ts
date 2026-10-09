@@ -2,10 +2,11 @@
  * A read-only reader of the local CASC storage of a Warcraft III install, in
  * TypeScript with no native code. It reads, in order:
  *
- * - `.build.info` at the install's root: the active row's Build (`Version`)
- *   and build config key (`Build Key`);
- * - the build config, `Data/config/<k0k1>/<k2k3>/<key>`: the content and
- *   encoding keys of the encoding file, and the content key of the root;
+ * - `.build.info` at the install's root: the active row's build config key
+ *   (`Build Key`) and its Build label (`Version`);
+ * - the build config, `Data/config/<k0k1>/<k2k3>/<key>`: the Build of the
+ *   content (`build-name`), the content and encoding keys of the encoding
+ *   file, and the content key of the root;
  * - the local indices, `Data/data/<bucket><version>.idx`, the newest version
  *   of each bucket: an encoding key's first 9 bytes to an archive, an offset
  *   and a size;
@@ -53,10 +54,20 @@ export interface CascFile {
 export interface CascStorage {
   /** The install folder, which holds `.build.info`. */
   readonly installDir: string;
-  /** The Build of the active row of `.build.info`, e.g. `3.0.0.24268`. */
+  /**
+   * The Build of the content, e.g. `3.0.0.24268`: the one the build config
+   * names (`build-name`), else `.build.info`'s Version. The build config is
+   * keyed by its own MD5, so it describes what the storage holds; the
+   * Battle.net app has been seen to give `.build.info` another Version for
+   * the same build config.
+   */
   readonly build: string;
+  /** The Version of the active row of `.build.info`. */
+  readonly buildInfoVersion: string;
   /** The build config's key (its MD5), from `.build.info`. */
   readonly buildConfigKey: string;
+  /** The build config's file. */
+  readonly buildConfigFile: string;
   /** Every path the root lists, as it spells them, in the root's order. */
   paths(): readonly string[];
   /** Reads the file at `path`, matched without regard to case. */
@@ -134,6 +145,9 @@ export async function openStorage(installDir: string): Promise<CascStorage> {
     );
   }
   const config = parseConfig(new TextDecoder().decode(configBytes));
+  const buildName = /^\d+\.\d+\.\d+\.\d+/.exec(
+    config.get("build-name")?.[0] ?? "",
+  )?.[0];
   const encodingKeys = configValue(config, "encoding", configFile);
   const [encodingContentKey, encodingKey] = encodingKeys;
   if (
@@ -196,8 +210,10 @@ export async function openStorage(installDir: string): Promise<CascStorage> {
 
   return {
     installDir,
-    build: info.build,
+    build: buildName ?? info.build,
+    buildInfoVersion: info.build,
     buildConfigKey: info.buildConfigKey,
+    buildConfigFile: configFile,
     paths: () => paths,
     read: async (path) => {
       const lower = path.toLowerCase();

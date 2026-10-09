@@ -442,6 +442,42 @@ return {
   });
 });
 
+/** The build config file of a synthetic storage. */
+function buildConfigFile(storage: {
+  installDir: string;
+  buildConfigKey: string;
+}) {
+  const key = storage.buildConfigKey;
+  return join(
+    storage.installDir,
+    "Data",
+    "config",
+    key.slice(0, 2),
+    key.slice(2, 4),
+    key,
+  );
+}
+
+describe("the Build of an install", () => {
+  it("is the one its build config names, with a warning when .build.info gives another", async () => {
+    const storage = await writeStorage(
+      unitStorage(HUMAN, [], { buildInfoVersion: "3.0.0.24248" }),
+    );
+    const outDir = await tempDir("out");
+
+    const { status, stdout } = await run(storage.installDir, outDir);
+
+    expect(status).toBe(0);
+    expect(stdout).toContain("(Build 3.0.0.24268)");
+    expect(stdout).toContain(
+      `- warning: ${join(storage.installDir, ".build.info")} gives Version 3.0.0.24248, and its build config ${buildConfigFile(storage)} names 3.0.0.24268, the Build of the content read.\n`,
+    );
+    expect(
+      JSON.parse(await readFile(join(outDir, "3.0.0", "index.json"), "utf8")),
+    ).toMatchObject({ build: "3.0.0.24268" });
+  });
+});
+
 describe("readFully", () => {
   it("reads on after a short read, and stops at the end of the file", async () => {
     const content = Uint8Array.from({ length: 10 }, (_, i) => i + 1);
@@ -493,7 +529,20 @@ describe("builtins:generate refuses, writing nothing", () => {
 
     expect(stderr).toBe(
       "Generation failed. No file was written.\n\n" +
-        `- error: The install at ${storage.installDir} is on Build 3.0.1.25000 (${join(storage.installDir, ".build.info")}), not on 3.0.0.24268, the Patch of reforged-types (its reforged.patch): the Built-in objects and the Typings would come from different Builds.\n`,
+        `- error: The install at ${storage.installDir} is on Build 3.0.1.25000 (its build config, ${buildConfigFile(storage)}), not on 3.0.0.24268, the Patch of reforged-types (its reforged.patch): the Built-in objects and the Typings would come from different Builds.\n`,
+    );
+  });
+
+  it("an install whose build config names another Build than reforged-types', whatever .build.info gives", async () => {
+    const { stderr, storage } = await refused(
+      unitStorage(HUMAN, [], {
+        build: "3.0.1.25000",
+        buildInfoVersion: "3.0.0.24268",
+      }),
+    );
+
+    expect(stderr).toContain(
+      `- error: The install at ${storage.installDir} is on Build 3.0.1.25000 (its build config, ${buildConfigFile(storage)}), not on 3.0.0.24268,`,
     );
   });
 

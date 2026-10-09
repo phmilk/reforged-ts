@@ -19,8 +19,10 @@ import { deflateSync } from "node:zlib";
 export type Framing = "plain" | "zlib" | "mixed" | (string & {});
 
 export interface StorageOptions {
-  /** The Build of `.build.info`; 3.0.0.24268 by default. */
+  /** The Build the build config names (`build-name`); 3.0.0.24268 by default. */
   build?: string;
+  /** The Version of `.build.info`; `build` by default. */
+  buildInfoVersion?: string;
   /** Each file's content by its CASC path. */
   files: Record<string, string | Uint8Array>;
   /** How each file is framed; `zlib` by default, alternating with `plain`. */
@@ -177,7 +179,7 @@ export async function writeStorage(options: StorageOptions): Promise<Storage> {
     join(installDir, ".build.info"),
     "Branch!STRING:0|Active!DEC:1|Build Key!HEX:16|CDN Key!HEX:16|Version!STRING:0|Product!STRING:0\n" +
       `eu|0|${"0".repeat(32)}|${"0".repeat(32)}|1.0.0.1|w3\n` +
-      `us|1|${buildConfigKey}|${"0".repeat(32)}|${options.build ?? "3.0.0.24268"}|w3\n`,
+      `us|1|${buildConfigKey}|${"0".repeat(32)}|${options.buildInfoVersion ?? options.build ?? "3.0.0.24268"}|w3\n`,
   );
   return { installDir, buildConfigKey, contentKeys };
 }

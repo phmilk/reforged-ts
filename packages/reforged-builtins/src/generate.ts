@@ -218,11 +218,18 @@ export async function generate(
   }
   if (storage.build !== options.build) {
     return fail(
-      `The install at ${options.installDir} is on Build ${storage.build} (${join(options.installDir, BUILD_INFO_FILE)}), not on ${options.build}, the Patch of reforged-types (its reforged.patch): the Built-in objects and the Typings would come from different Builds.`,
+      `The install at ${options.installDir} is on Build ${storage.build} (its build config, ${storage.buildConfigFile}), not on ${options.build}, the Patch of reforged-types (its reforged.patch): the Built-in objects and the Typings would come from different Builds.`,
     );
   }
   try {
-    return await extract(storage);
+    const result = await extract(storage);
+    if (storage.buildInfoVersion !== storage.build) {
+      result.diagnostics.unshift({
+        severity: "warning",
+        message: `${join(options.installDir, BUILD_INFO_FILE)} gives Version ${storage.buildInfoVersion}, and its build config ${storage.buildConfigFile} names ${storage.build}, the Build of the content read.`,
+      });
+    }
+    return result;
   } catch (error) {
     if (error instanceof CascError) return fail(error.message);
     throw error;

@@ -6503,3 +6503,26062 @@ declare function FourCC(id: "zsmc"): Rawcode<"unit">;
  * Its constant is `Units.Zergling_zzrg`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "zzrg"): Rawcode<"unit">;
+
+// Items.
+
+/**
+ * Alleria's Flute of Accuracy (`afac`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AlleriasFluteOfAccuracy_afac`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "afac"): Rawcode<"item">;
+
+/**
+ * Ancient Janggo of Endurance (`ajen`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AncientJanggoOfEndurance_ajen`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ajen"): Rawcode<"item">;
+
+/**
+ * Amulet of Recall (`amrc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AmuletOfRecall_amrc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "amrc"): Rawcode<"item">;
+
+/**
+ * Ancient Figurine (`anfg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AncientFigurine_anfg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "anfg"): Rawcode<"item">;
+
+/**
+ * Ankh of Reincarnation (`ankh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AnkhOfReincarnation_ankh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ankh"): Rawcode<"item">;
+
+/**
+ * Arcane Scroll (`arsc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ArcaneScroll_arsc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "arsc"): Rawcode<"item">;
+
+/**
+ * Arcanite Shield (`arsh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ArcaniteShield_arsh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "arsh"): Rawcode<"item">;
+
+/**
+ * Assassin's Blade (`asbl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AssassinsBlade_asbl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "asbl"): Rawcode<"item">;
+
+/**
+ * Ancestral Staff (`axas`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AncestralStaff_axas`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "axas"): Rawcode<"item">;
+
+/**
+ * Heart of Aszune (`azhr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HeartOfAszune_azhr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "azhr"): Rawcode<"item">;
+
+/**
+ * Boots of Quel'Thalas +6 (`belv`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BootsOfQuelThalas6_belv`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "belv"): Rawcode<"item">;
+
+/**
+ * Bloodfeather's Heart (`bfhr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BloodfeathersHeart_bfhr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "bfhr"): Rawcode<"item">;
+
+/**
+ * Belt of Giant Strength +6 (`bgst`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BeltOfGiantStrength6_bgst`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "bgst"): Rawcode<"item">;
+
+/**
+ * Bladebane Armor (`blba`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BladebaneArmor_blba`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "blba"): Rawcode<"item">;
+
+/**
+ * Runed Bracers (`brac`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RunedBracers_brac`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "brac"): Rawcode<"item">;
+
+/**
+ * Bracer of Agility (`brag`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BracerOfAgility_brag`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "brag"): Rawcode<"item">;
+
+/**
+ * Rusty Plated Boots (`brpb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RustyPlatedBoots_brpb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "brpb"): Rawcode<"item">;
+
+/**
+ * Boots of Speed (`bspd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BootsOfSpeed_bspd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "bspd"): Rawcode<"item">;
+
+/**
+ * Battle Standard (`btst`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BattleStandard_btst`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "btst"): Rawcode<"item">;
+
+/**
+ * Empty Vial (`bzbe`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EmptyVial_bzbe`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "bzbe"): Rawcode<"item">;
+
+/**
+ * Full Vial (`bzbf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.FullVial_bzbf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "bzbf"): Rawcode<"item">;
+
+/**
+ * Bandit Lord's Limbs (`cabl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BanditLordsLimbs_cabl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cabl"): Rawcode<"item">;
+
+/**
+ * Garithos's Head (`cagh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GarithossHead_cagh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cagh"): Rawcode<"item">;
+
+/**
+ * Broodmother Venom (`cbmv`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BroodmotherVenom_cbmv`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cbmv"): Rawcode<"item">;
+
+/**
+ * Captured Ghoul (`cccg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CapturedGhoul_cccg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cccg"): Rawcode<"item">;
+
+/**
+ * Consecrated Mixture (`cccm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ConsecratedMixture_cccm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cccm"): Rawcode<"item">;
+
+/**
+ * Elixir of Cunning (`ccec`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ElixirOfCunning_ccec`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ccec"): Rawcode<"item">;
+
+/**
+ * Elixir of the Monster Hunter (`ccem`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ElixirOfTheMonsterHunter_ccem`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ccem"): Rawcode<"item">;
+
+/**
+ * Scepter of Mastery (`ccmd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScepterOfMastery_ccmd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ccmd"): Rawcode<"item">;
+
+/**
+ * Valve Wheel (`ccvw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ValveWheel_ccvw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ccvw"): Rawcode<"item">;
+
+/**
+ * Darkhound Blood (`cdhb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DarkhoundBlood_cdhb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cdhb"): Rawcode<"item">;
+
+/**
+ * Elixir of Greater Intelligence (`cegi`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ElixirOfGreaterIntelligence_cegi`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cegi"): Rawcode<"item">;
+
+/**
+ * Elixir of Lesser Intelligence (`celi`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ElixirOfLesserIntelligence_celi`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "celi"): Rawcode<"item">;
+
+/**
+ * Experimental Serum (`cese`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ExperimentalSerum_cese`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cese"): Rawcode<"item">;
+
+/**
+ * Explosive Barrel (`cexp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ExplosiveBarrel_cexp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cexp"): Rawcode<"item">;
+
+/**
+ * Cheese (`ches`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Cheese_ches`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ches"): Rawcode<"item">;
+
+/**
+ * Robe of the Magi +6 (`ciri`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RobeOfTheMagi6_ciri`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ciri"): Rawcode<"item">;
+
+/**
+ * Key to the Chamber of Mysteries (`ckcm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.KeyToTheChamberOfMysteries_ckcm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ckcm"): Rawcode<"item">;
+
+/**
+ * Dungeon Key (`ckdk`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DungeonKey_ckdk`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ckdk"): Rawcode<"item">;
+
+/**
+ * Crown of Kings +5 (`ckng`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CrownOfKings5_ckng`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ckng"): Rawcode<"item">;
+
+/**
+ * Cloak of Flames (`clfm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CloakOfFlames_clfm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "clfm"): Rawcode<"item">;
+
+/**
+ * Lump of Meat (`clom`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LumpOfMeat_clom`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "clom"): Rawcode<"item">;
+
+/**
+ * Cloak of Shadows (`clsd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CloakOfShadows_clsd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "clsd"): Rawcode<"item">;
+
+/**
+ * Magical Key (`cmag`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MagicalKey_cmag`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cmag"): Rawcode<"item">;
+
+/**
+ * Horn of Cenarius (`cnhn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HornOfCenarius_cnhn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cnhn"): Rawcode<"item">;
+
+/**
+ * Circlet of Nobility (`cnob`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CircletOfNobility_cnob`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cnob"): Rawcode<"item">;
+
+/**
+ * Celestial Orb of Souls (`cosl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CelestialOrbOfSouls_cosl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cosl"): Rawcode<"item">;
+
+/**
+ * Portal Orb (`cpor`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PortalOrb_cpor`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cpor"): Rawcode<"item">;
+
+/**
+ * Prison Key (`cprk`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PrisonKey_cprk`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cprk"): Rawcode<"item">;
+
+/**
+ * Paladin's Torso (`cptz`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PaladinsTorso_cptz`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cptz"): Rawcode<"item">;
+
+/**
+ * Crown of the Deathlord (`crdt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CrownOfTheDeathlord_crdt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "crdt"): Rawcode<"item">;
+
+/**
+ * Crystal Ball (`crys`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CrystalBall_crys`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "crys"): Rawcode<"item">;
+
+/**
+ * The Artifact (`ctat`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TheArtifact_ctat`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ctat"): Rawcode<"item">;
+
+/**
+ * Tome of Agility (`ctoa`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfAgility_ctoa`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ctoa"): Rawcode<"item">;
+
+/**
+ * Tome of Intelligence (`ctoi`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfIntelligence_ctoi`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ctoi"): Rawcode<"item">;
+
+/**
+ * Tome of Strength (`ctos`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfStrength_ctos`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ctos"): Rawcode<"item">;
+
+/**
+ * Very Very Deep Thoughts (`cvdt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.VeryVeryDeepThoughts_cvdt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cvdt"): Rawcode<"item">;
+
+/**
+ * Vile Fin Scale (`cvfs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.VileFinScale_cvfs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cvfs"): Rawcode<"item">;
+
+/**
+ * Vial of Plague Essence (`cvpe`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.VialOfPlagueEssence_cvpe`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cvpe"): Rawcode<"item">;
+
+/**
+ * Vial of Vampire Bat Blood (`cvvb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.VialOfVampireBatBlood_cvvb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "cvvb"): Rawcode<"item">;
+
+/**
+ * Kelen's Dagger of Escape (`desc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.KelensDaggerOfEscape_desc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "desc"): Rawcode<"item">;
+
+/**
+ * Keg of Thunderwater (`dkfw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.KegOfThunderwater_dkfw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "dkfw"): Rawcode<"item">;
+
+/**
+ * Thunder Phoenix Egg (`dphe`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ThunderPhoenixEgg_dphe`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "dphe"): Rawcode<"item">;
+
+/**
+ * Druid Pouch (`drph`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DruidPouch_drph`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "drph"): Rawcode<"item">;
+
+/**
+ * Diamond of Summoning (`dsum`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DiamondOfSummoning_dsum`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "dsum"): Rawcode<"item">;
+
+/**
+ * Thunderbloom Bulb (`dthb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ThunderbloomBulb_dthb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "dthb"): Rawcode<"item">;
+
+/**
+ * Drek'thar's Spellbook (`dtsb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DrektharsSpellbook_dtsb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "dtsb"): Rawcode<"item">;
+
+/**
+ * Dust of Appearance (`dust`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DustOfAppearance_dust`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "dust"): Rawcode<"item">;
+
+/**
+ * Farstrider's Amulet (`eaaa`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.FarstridersAmulet_eaaa`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eaaa"): Rawcode<"item">;
+
+/**
+ * Blacksmith's Apron (`eaba`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BlacksmithsApron_eaba`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eaba"): Rawcode<"item">;
+
+/**
+ * Ancient Bronze Helmet (`eabh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AncientBronzeHelmet_eabh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eabh"): Rawcode<"item">;
+
+/**
+ * Agitating Totem (`eagt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AgitatingTotem_eagt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eagt"): Rawcode<"item">;
+
+/**
+ * Amulet of Minor Endurance (`eame`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AmuletOfMinorEndurance_eame`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eame"): Rawcode<"item">;
+
+/**
+ * Armor of Reanimation (`eaor`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ArmorOfReanimation_eaor`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eaor"): Rawcode<"item">;
+
+/**
+ * Robes of Revenge (`earr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RobesOfRevenge_earr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "earr"): Rawcode<"item">;
+
+/**
+ * Arcane Spellblade (`easb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ArcaneSpellblade_easb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "easb"): Rawcode<"item">;
+
+/**
+ * Armor of the Scarlet Crusade (`easc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ArmorOfTheScarletCrusade_easc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "easc"): Rawcode<"item">;
+
+/**
+ * Agus's Shambling Hand (`eash`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AgussShamblingHand_eash`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eash"): Rawcode<"item">;
+
+/**
+ * Untakable Candle (`eauc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.UntakableCandle_eauc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eauc"): Rawcode<"item">;
+
+/**
+ * Vampiric Robes (`eavr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.VampiricRobes_eavr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eavr"): Rawcode<"item">;
+
+/**
+ * Backpack (`ebac`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Backpack_ebac`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebac"): Rawcode<"item">;
+
+/**
+ * Bone Cage Breastplate (`ebcb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BoneCageBreastplate_ebcb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebcb"): Rawcode<"item">;
+
+/**
+ * Bone Commander's Skull (`ebcs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BoneCommandersSkull_ebcs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebcs"): Rawcode<"item">;
+
+/**
+ * Blue Dragon Figurine (`ebdf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BlueDragonFigurine_ebdf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebdf"): Rawcode<"item">;
+
+/**
+ * Blade Dancer's Greaves (`ebdg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BladeDancersGreaves_ebdg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebdg"): Rawcode<"item">;
+
+/**
+ * Deathwalkers (`ebdw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Deathwalkers_ebdw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebdw"): Rawcode<"item">;
+
+/**
+ * Blade of Frozen Hunger (`ebfh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BladeOfFrozenHunger_ebfh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebfh"): Rawcode<"item">;
+
+/**
+ * Heavyduty Boots (`ebhb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HeavydutyBoots_ebhb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebhb"): Rawcode<"item">;
+
+/**
+ * Garek's Backpack (`ebhg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GareksBackpack_ebhg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebhg"): Rawcode<"item">;
+
+/**
+ * Ilastar's Backpack (`ebhi`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.IlastarsBackpack_ebhi`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebhi"): Rawcode<"item">;
+
+/**
+ * Landen's Backpack (`ebhl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LandensBackpack_ebhl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebhl"): Rawcode<"item">;
+
+/**
+ * Necromancer's Plaguegreaves (`ebnp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.NecromancersPlaguegreaves_ebnp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebnp"): Rawcode<"item">;
+
+/**
+ * Blade of Corruption (`eboc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BladeOfCorruption_eboc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eboc"): Rawcode<"item">;
+
+/**
+ * Boots of the Forsaken (`ebof`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BootsOfTheForsaken_ebof`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebof"): Rawcode<"item">;
+
+/**
+ * Bindings of Helya (`eboh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BindingsOfHelya_eboh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eboh"): Rawcode<"item">;
+
+/**
+ * Boots of the Icewalker (`eboi`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BootsOfTheIcewalker_eboi`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eboi"): Rawcode<"item">;
+
+/**
+ * Bracers of the Ogre Magi (`ebom`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BracersOfTheOgreMagi_ebom`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebom"): Rawcode<"item">;
+
+/**
+ * Overlord's Sabatons (`ebos`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OverlordsSabatons_ebos`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebos"): Rawcode<"item">;
+
+/**
+ * Blackrock Chain Helm (`ebr1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BlackrockChainHelm_ebr1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebr1"): Rawcode<"item">;
+
+/**
+ * Blademaster's Greatsword (`ebr2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BlademastersGreatsword_ebr2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebr2"): Rawcode<"item">;
+
+/**
+ * Blackrock Steel Plate (`ebrp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BlackrockSteelPlate_ebrp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebrp"): Rawcode<"item">;
+
+/**
+ * Boots of the Scarlet Crusade (`ebsc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BootsOfTheScarletCrusade_ebsc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebsc"): Rawcode<"item">;
+
+/**
+ * Band of the Sin'dorei (`ebsd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BandOfTheSindorei_ebsd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebsd"): Rawcode<"item">;
+
+/**
+ * Broken Skinning Knife (`ebsk`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BrokenSkinningKnife_ebsk`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebsk"): Rawcode<"item">;
+
+/**
+ * Band of the Skeletal Mage (`ebsm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BandOfTheSkeletalMage_ebsm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebsm"): Rawcode<"item">;
+
+/**
+ * Breastplate of the Scarlet Paladin (`ebsp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BreastplateOfTheScarletPaladin_ebsp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebsp"): Rawcode<"item">;
+
+/**
+ * Stormwalkers (`ebsw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Stormwalkers_ebsw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebsw"): Rawcode<"item">;
+
+/**
+ * Tactician's Boots (`ebtb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TacticiansBoots_ebtb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebtb"): Rawcode<"item">;
+
+/**
+ * Alicia's Favor (`ebtf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AliciasFavor_ebtf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebtf"): Rawcode<"item">;
+
+/**
+ * Bramblethorn Vestments (`ebtv`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BramblethornVestments_ebtv`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebtv"): Rawcode<"item">;
+
+/**
+ * Anya's Backpack (`ebua`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AnyasBackpack_ebua`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebua"): Rawcode<"item">;
+
+/**
+ * Garek's Backpack (`ebug`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GareksBackpack_ebug`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebug"): Rawcode<"item">;
+
+/**
+ * Leonid's Backpack (`ebul`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LeonidsBackpack_ebul`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebul"): Rawcode<"item">;
+
+/**
+ * Butcher's Cleaver (`ebut`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ButchersCleaver_ebut`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebut"): Rawcode<"item">;
+
+/**
+ * Blightweaver Boots (`ebwb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BlightweaverBoots_ebwb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebwb"): Rawcode<"item">;
+
+/**
+ * Wayfarer Greaves (`ebwg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WayfarerGreaves_ebwg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebwg"): Rawcode<"item">;
+
+/**
+ * Boots of the Warm Hearth (`ebwh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BootsOfTheWarmHearth_ebwh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebwh"): Rawcode<"item">;
+
+/**
+ * Worn Sandals (`ebws`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WornSandals_ebws`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ebws"): Rawcode<"item">;
+
+/**
+ * Citrine Adorned Boots (`ecab`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CitrineAdornedBoots_ecab`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecab"): Rawcode<"item">;
+
+/**
+ * Shoddy Cap (`ecap`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShoddyCap_ecap`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecap"): Rawcode<"item">;
+
+/**
+ * Amulet of Vitality (`ecav`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AmuletOfVitality_ecav`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecav"): Rawcode<"item">;
+
+/**
+ * Colossal Battleaxe (`ecba`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ColossalBattleaxe_ecba`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecba"): Rawcode<"item">;
+
+/**
+ * Coldbringer's Reach (`ecbr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ColdbringersReach_ecbr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecbr"): Rawcode<"item">;
+
+/**
+ * Chipped Circlet of Clarity (`eccc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ChippedCircletOfClarity_eccc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eccc"): Rawcode<"item">;
+
+/**
+ * Dreaded Chestplate (`ecdc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DreadedChestplate_ecdc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecdc"): Rawcode<"item">;
+
+/**
+ * Druidic Leafguard (`ecdl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DruidicLeafguard_ecdl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecdl"): Rawcode<"item">;
+
+/**
+ * Guardsman Boots (`ecgb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GuardsmanBoots_ecgb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecgb"): Rawcode<"item">;
+
+/**
+ * Guardsman Chestplate (`ecgc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GuardsmanChestplate_ecgc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecgc"): Rawcode<"item">;
+
+/**
+ * Guardsman Helmet (`ecgh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GuardsmanHelmet_ecgh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecgh"): Rawcode<"item">;
+
+/**
+ * Cursed Golden Ring (`ecgr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CursedGoldenRing_ecgr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecgr"): Rawcode<"item">;
+
+/**
+ * Staff of the Crimson Heart (`ech1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.StaffOfTheCrimsonHeart_ech1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ech1"): Rawcode<"item">;
+
+/**
+ * Blade of the Crimson Heart (`ech2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BladeOfTheCrimsonHeart_ech2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ech2"): Rawcode<"item">;
+
+/**
+ * Guardian of the Crimson Heart (`ech3`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GuardianOfTheCrimsonHeart_ech3`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ech3"): Rawcode<"item">;
+
+/**
+ * Immortal Guardian's Chestplate (`ecig`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ImmortalGuardiansChestplate_ecig`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecig"): Rawcode<"item">;
+
+/**
+ * Chestpiece of Lesser Cunning (`eclc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ChestpieceOfLesserCunning_eclc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eclc"): Rawcode<"item">;
+
+/**
+ * Deerskin Gloves (`eclg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DeerskinGloves_eclg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eclg"): Rawcode<"item">;
+
+/**
+ * Chronomaster's Gloves (`ecmg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ChronomastersGloves_ecmg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecmg"): Rawcode<"item">;
+
+/**
+ * Novice Rags (`ecnr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.NoviceRags_ecnr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecnr"): Rawcode<"item">;
+
+/**
+ * Convergence of Fates (`ecof`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ConvergenceOfFates_ecof`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecof"): Rawcode<"item">;
+
+/**
+ * Crown of the Resolute Monarch (`ecrm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CrownOfTheResoluteMonarch_ecrm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecrm"): Rawcode<"item">;
+
+/**
+ * Cardinal Ruby of the Necrolyte (`ecrn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CardinalRubyOfTheNecrolyte_ecrn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecrn"): Rawcode<"item">;
+
+/**
+ * Ring of Regeneration (`ecrr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfRegeneration_ecrr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecrr"): Rawcode<"item">;
+
+/**
+ * Steel Sword (`ecss`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SteelSword_ecss`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ecss"): Rawcode<"item">;
+
+/**
+ * Diamond Adorned Chestplate (`edac`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DiamondAdornedChestplate_edac`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edac"): Rawcode<"item">;
+
+/**
+ * Deathbringer's Boots (`edbb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DeathbringersBoots_edbb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edbb"): Rawcode<"item">;
+
+/**
+ * Deathbloom Leaves (`edbl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DeathbloomLeaves_edbl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edbl"): Rawcode<"item">;
+
+/**
+ * Drained Bloodstone (`edbs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DrainedBloodstone_edbs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edbs"): Rawcode<"item">;
+
+/**
+ * Deepsea Bag (`edbw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DeepseaBag_edbw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edbw"): Rawcode<"item">;
+
+/**
+ * Diamond Staff of Dalaran (`edds`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DiamondStaffOfDalaran_edds`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edds"): Rawcode<"item">;
+
+/**
+ * Dark Iron Breastplate (`edib`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DarkIronBreastplate_edib`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edib"): Rawcode<"item">;
+
+/**
+ * Dark Iron Greaves (`edif`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DarkIronGreaves_edif`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edif"): Rawcode<"item">;
+
+/**
+ * Dark Iron Gauntlets (`edig`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DarkIronGauntlets_edig`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edig"): Rawcode<"item">;
+
+/**
+ * Dark Iron Helm (`edih`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DarkIronHelm_edih`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edih"): Rawcode<"item">;
+
+/**
+ * Dark Iron Shield (`edis`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DarkIronShield_edis`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edis"): Rawcode<"item">;
+
+/**
+ * Dark Ranger's Bracers (`edrb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DarkRangersBracers_edrb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edrb"): Rawcode<"item">;
+
+/**
+ * Dark Ranger's Chestguard (`edrc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DarkRangersChestguard_edrc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edrc"): Rawcode<"item">;
+
+/**
+ * Dark Ranger's Hood (`edrh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DarkRangersHood_edrh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edrh"): Rawcode<"item">;
+
+/**
+ * Dark Ranger's Insignia (`edri`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DarkRangersInsignia_edri`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edri"): Rawcode<"item">;
+
+/**
+ * Dark Ranger's Shadows (`edrs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DarkRangersShadows_edrs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edrs"): Rawcode<"item">;
+
+/**
+ * Damaged Spellbreaker Helmet (`edsh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DamagedSpellbreakerHelmet_edsh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edsh"): Rawcode<"item">;
+
+/**
+ * Decrepit Sorcerer's Mantle (`edsm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DecrepitSorcerersMantle_edsm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edsm"): Rawcode<"item">;
+
+/**
+ * Dalaran Sapphire Robes (`edsr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DalaranSapphireRobes_edsr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edsr"): Rawcode<"item">;
+
+/**
+ * Desecrated Tower Shield (`edts`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DesecratedTowerShield_edts`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edts"): Rawcode<"item">;
+
+/**
+ * Demonic Warglaives (`edwg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DemonicWarglaives_edwg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "edwg"): Rawcode<"item">;
+
+/**
+ * Endless Flask of Restoration (`eefr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EndlessFlaskOfRestoration_eefr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eefr"): Rawcode<"item">;
+
+/**
+ * Essencium, the Gathering of Elements (`eege`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EssenciumTheGatheringOfElements_eege`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eege"): Rawcode<"item">;
+
+/**
+ * Lesser Engineering Goggles (`eeh1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LesserEngineeringGoggles_eeh1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eeh1"): Rawcode<"item">;
+
+/**
+ * Greater Engineering Goggles (`eeh2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GreaterEngineeringGoggles_eeh2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eeh2"): Rawcode<"item">;
+
+/**
+ * Master Engineering Goggles (`eeh3`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MasterEngineeringGoggles_eeh3`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eeh3"): Rawcode<"item">;
+
+/**
+ * Enchanted Inscription Tools (`eeit`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EnchantedInscriptionTools_eeit`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eeit"): Rawcode<"item">;
+
+/**
+ * Edge of the Ruined City (`eerc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EdgeOfTheRuinedCity_eerc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eerc"): Rawcode<"item">;
+
+/**
+ * Essence of the Spider Queen (`eesq`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EssenceOfTheSpiderQueen_eesq`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eesq"): Rawcode<"item">;
+
+/**
+ * Forsaken Champion's Helm (`efch`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ForsakenChampionsHelm_efch`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "efch"): Rawcode<"item">;
+
+/**
+ * Forgotten Frost Lotus (`effl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ForgottenFrostLotus_effl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "effl"): Rawcode<"item">;
+
+/**
+ * Frenzied Ghoul Claws (`efgc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.FrenziedGhoulClaws_efgc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "efgc"): Rawcode<"item">;
+
+/**
+ * Flesh Golem Ribcage (`efgh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.FleshGolemRibcage_efgh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "efgh"): Rawcode<"item">;
+
+/**
+ * Frayed Headwear of the Magehunter (`efhm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.FrayedHeadwearOfTheMagehunter_efhm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "efhm"): Rawcode<"item">;
+
+/**
+ * Frail Leather Armor (`efla`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.FrailLeatherArmor_efla`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "efla"): Rawcode<"item">;
+
+/**
+ * Flame of Al'ar (`efoa`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.FlameOfAlar_efoa`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "efoa"): Rawcode<"item">;
+
+/**
+ * Forsaken Plaguebow (`efpb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ForsakenPlaguebow_efpb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "efpb"): Rawcode<"item">;
+
+/**
+ * Forest Ranger's Gloves (`efrg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ForestRangersGloves_efrg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "efrg"): Rawcode<"item">;
+
+/**
+ * Frayed Sorcerer's Handwraps (`efsh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.FrayedSorcerersHandwraps_efsh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "efsh"): Rawcode<"item">;
+
+/**
+ * Aviana's Talons (`egat`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AvianasTalons_egat`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egat"): Rawcode<"item">;
+
+/**
+ * Crusader's Gauntlets (`egcg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CrusadersGauntlets_egcg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egcg"): Rawcode<"item">;
+
+/**
+ * Gloves of the Deathbringer (`egdb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlovesOfTheDeathbringer_egdb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egdb"): Rawcode<"item">;
+
+/**
+ * Gravelight, the Echoing Flames (`egef`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GravelightTheEchoingFlames_egef`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egef"): Rawcode<"item">;
+
+/**
+ * Forsaken Gauntlets (`egfg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ForsakenGauntlets_egfg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egfg"): Rawcode<"item">;
+
+/**
+ * Gloves of the Flamewalker (`egfw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlovesOfTheFlamewalker_egfw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egfw"): Rawcode<"item">;
+
+/**
+ * Gloves of Necromancy (`eggn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlovesOfNecromancy_eggn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eggn"): Rawcode<"item">;
+
+/**
+ * Gloves of the Phoenix (`eggp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlovesOfThePhoenix_eggp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eggp"): Rawcode<"item">;
+
+/**
+ * Gloves of Lesser Cunning (`eglc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlovesOfLesserCunning_eglc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eglc"): Rawcode<"item">;
+
+/**
+ * Golden Necklace of Serenity (`egns`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GoldenNecklaceOfSerenity_egns`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egns"): Rawcode<"item">;
+
+/**
+ * Gloves of the Battlemage (`egob`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlovesOfTheBattlemage_egob`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egob"): Rawcode<"item">;
+
+/**
+ * Gloves of Perfection (`egop`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlovesOfPerfection_egop`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egop"): Rawcode<"item">;
+
+/**
+ * Magister's Handguards (`egos`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MagistersHandguards_egos`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egos"): Rawcode<"item">;
+
+/**
+ * Gift of the Wilds (`egow`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GiftOfTheWilds_egow`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egow"): Rawcode<"item">;
+
+/**
+ * Giant Skeleton Bone (`egsb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GiantSkeletonBone_egsb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egsb"): Rawcode<"item">;
+
+/**
+ * Gloves of the Scarlet Crusade (`egsc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlovesOfTheScarletCrusade_egsc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egsc"): Rawcode<"item">;
+
+/**
+ * Selene, Grand Scepter of Elune (`egse`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SeleneGrandScepterOfElune_egse`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egse"): Rawcode<"item">;
+
+/**
+ * Sage's Gloves (`egsg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SagesGloves_egsg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egsg"): Rawcode<"item">;
+
+/**
+ * Glacial Shard (`egsh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlacialShard_egsh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egsh"): Rawcode<"item">;
+
+/**
+ * Gloves of Ultimate Vampirism (`eguv`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlovesOfUltimateVampirism_eguv`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eguv"): Rawcode<"item">;
+
+/**
+ * Gnoll Warlord Hide (`egwh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GnollWarlordHide_egwh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egwh"): Rawcode<"item">;
+
+/**
+ * Gnomish Zapper X-4000 (`egzx`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GnomishZapperX4000_egzx`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "egzx"): Rawcode<"item">;
+
+/**
+ * Bandit Mask (`ehbm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BanditMask_ehbm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehbm"): Rawcode<"item">;
+
+/**
+ * Helm of the Cenarion Circle (`ehcc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HelmOfTheCenarionCircle_ehcc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehcc"): Rawcode<"item">;
+
+/**
+ * Huge Citrine of the Fierce (`ehcf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HugeCitrineOfTheFierce_ehcf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehcf"): Rawcode<"item">;
+
+/**
+ * Crimson Helm of Opportunity (`ehco`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CrimsonHelmOfOpportunity_ehco`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehco"): Rawcode<"item">;
+
+/**
+ * Helm of the Dark Rider (`ehdr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HelmOfTheDarkRider_ehdr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehdr"): Rawcode<"item">;
+
+/**
+ * Diamond Tiara (`ehdt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DiamondTiara_ehdt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehdt"): Rawcode<"item">;
+
+/**
+ * Ring of Holy Fire (`ehfi`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfHolyFire_ehfi`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehfi"): Rawcode<"item">;
+
+/**
+ * Gilnean Headpiece (`ehgh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GilneanHeadpiece_ehgh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehgh"): Rawcode<"item">;
+
+/**
+ * Headpiece of the High Inquisitor (`ehhi`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HeadpieceOfTheHighInquisitor_ehhi`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehhi"): Rawcode<"item">;
+
+/**
+ * Helm of the Iron Guardian (`ehig`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HelmOfTheIronGuardian_ehig`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehig"): Rawcode<"item">;
+
+/**
+ * Horn of the Lost Spirits (`ehls`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HornOfTheLostSpirits_ehls`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehls"): Rawcode<"item">;
+
+/**
+ * Moonstone Circlet (`ehmc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MoonstoneCirclet_ehmc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehmc"): Rawcode<"item">;
+
+/**
+ * Heart of the Lake (`ehol`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HeartOfTheLake_ehol`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehol"): Rawcode<"item">;
+
+/**
+ * Pirate Hat (`ehph`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PirateHat_ehph`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehph"): Rawcode<"item">;
+
+/**
+ * Helm of the Rimelord (`ehrl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HelmOfTheRimelord_ehrl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehrl"): Rawcode<"item">;
+
+/**
+ * Helm of the Scarlet Captain (`ehsc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HelmOfTheScarletCaptain_ehsc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehsc"): Rawcode<"item">;
+
+/**
+ * Hammer of the Silver Hand (`ehsh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HammerOfTheSilverHand_ehsh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehsh"): Rawcode<"item">;
+
+/**
+ * High Templar's Conqueror (`ehtc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HighTemplarsConqueror_ehtc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehtc"): Rawcode<"item">;
+
+/**
+ * High Templar's Flame (`ehtf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HighTemplarsFlame_ehtf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehtf"): Rawcode<"item">;
+
+/**
+ * High Templar's Judgment (`ehtj`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HighTemplarsJudgment_ehtj`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehtj"): Rawcode<"item">;
+
+/**
+ * Handful of Throwing Knives (`ehtk`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HandfulOfThrowingKnives_ehtk`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehtk"): Rawcode<"item">;
+
+/**
+ * High Templar's March (`ehtm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HighTemplarsMarch_ehtm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehtm"): Rawcode<"item">;
+
+/**
+ * High Templar's Visage (`ehtv`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HighTemplarsVisage_ehtv`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ehtv"): Rawcode<"item">;
+
+/**
+ * Icecrown Ring (`eicc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.IcecrownRing_eicc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eicc"): Rawcode<"item">;
+
+/**
+ * Ice Cold Diamond (`eicd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.IceColdDiamond_eicd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eicd"): Rawcode<"item">;
+
+/**
+ * Intricate Emerald Pendant (`eiep`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.IntricateEmeraldPendant_eiep`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eiep"): Rawcode<"item">;
+
+/**
+ * Infectious Ghoul Charm (`eigc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.InfectiousGhoulCharm_eigc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eigc"): Rawcode<"item">;
+
+/**
+ * Iron Grip Gauntlets (`eigg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.IronGripGauntlets_eigg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eigg"): Rawcode<"item">;
+
+/**
+ * Blade of Inferno (`einf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BladeOfInferno_einf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "einf"): Rawcode<"item">;
+
+/**
+ * Jagged Jade Ring (`ejjr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.JaggedJadeRing_ejjr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ejjr"): Rawcode<"item">;
+
+/**
+ * Kaldorei Moonglaive (`ekmg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.KaldoreiMoonglaive_ekmg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ekmg"): Rawcode<"item">;
+
+/**
+ * Kobold Mining Helm (`ekmh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.KoboldMiningHelm_ekmh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ekmh"): Rawcode<"item">;
+
+/**
+ * Aegis (`elae`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Aegis_elae`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "elae"): Rawcode<"item">;
+
+/**
+ * Lesser Blade of the Cultist (`elbc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LesserBladeOfTheCultist_elbc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "elbc"): Rawcode<"item">;
+
+/**
+ * Lesser Band of the Paladin (`elbp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LesserBandOfThePaladin_elbp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "elbp"): Rawcode<"item">;
+
+/**
+ * Lance of the Frozen Phoenix (`elfp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LanceOfTheFrozenPhoenix_elfp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "elfp"): Rawcode<"item">;
+
+/**
+ * Lost Forsaken Quiver (`elfq`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LostForsakenQuiver_elfq`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "elfq"): Rawcode<"item">;
+
+/**
+ * Tigerskin Helmet of Precision (`elhp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TigerskinHelmetOfPrecision_elhp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "elhp"): Rawcode<"item">;
+
+/**
+ * Lesser Mark of the Forsaken (`elmf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LesserMarkOfTheForsaken_elmf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "elmf"): Rawcode<"item">;
+
+/**
+ * Lesser Mark of Time (`elmt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LesserMarkOfTime_elmt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "elmt"): Rawcode<"item">;
+
+/**
+ * Lance of the Dawn (`elod`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LanceOfTheDawn_elod`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "elod"): Rawcode<"item">;
+
+/**
+ * Captain's Helmet of Bravery (`elvl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CaptainsHelmetOfBravery_elvl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "elvl"): Rawcode<"item">;
+
+/**
+ * Murloc Costume Gloves (`emcg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MurlocCostumeGloves_emcg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "emcg"): Rawcode<"item">;
+
+/**
+ * Manuscript of the Forsaken (`emof`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ManuscriptOfTheForsaken_emof`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "emof"): Rawcode<"item">;
+
+/**
+ * Mantle of the Highborne (`emoh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MantleOfTheHighborne_emoh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "emoh"): Rawcode<"item">;
+
+/**
+ * Mutated Rat's Whiptail (`emrw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MutatedRatsWhiptail_emrw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "emrw"): Rawcode<"item">;
+
+/**
+ * Mysterious Twilight Opal (`emto`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MysteriousTwilightOpal_emto`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "emto"): Rawcode<"item">;
+
+/**
+ * Engraved Scale (`engr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EngravedScale_engr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "engr"): Rawcode<"item">;
+
+/**
+ * Enchanted Gemstone (`engs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EnchantedGemstone_engs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "engs"): Rawcode<"item">;
+
+/**
+ * Nevermelting Ice (`enmi`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.NevermeltingIce_enmi`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "enmi"): Rawcode<"item">;
+
+/**
+ * Enchanted Vial (`envl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EnchantedVial_envl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "envl"): Rawcode<"item">;
+
+/**
+ * Bone Buckler (`eobb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BoneBuckler_eobb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eobb"): Rawcode<"item">;
+
+/**
+ * Chipped Shield (`eocs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ChippedShield_eocs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eocs"): Rawcode<"item">;
+
+/**
+ * Overlord's Dreadplate (`eodp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OverlordsDreadplate_eodp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eodp"): Rawcode<"item">;
+
+/**
+ * Fractured Skull (`eofs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.FracturedSkull_eofs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eofs"): Rawcode<"item">;
+
+/**
+ * Grieving Blade (`eogb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GrievingBlade_eogb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eogb"): Rawcode<"item">;
+
+/**
+ * Ironforge Defender (`eoid`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.IronforgeDefender_eoid`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eoid"): Rawcode<"item">;
+
+/**
+ * Malachite Shortsword (`eoms`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MalachiteShortsword_eoms`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eoms"): Rawcode<"item">;
+
+/**
+ * Phalanx Shield (`eops`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PhalanxShield_eops`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eops"): Rawcode<"item">;
+
+/**
+ * Shield of the Scarlet Crusade (`eosc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShieldOfTheScarletCrusade_eosc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eosc"): Rawcode<"item">;
+
+/**
+ * Arcane Cleaver (`epac`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ArcaneCleaver_epac`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epac"): Rawcode<"item">;
+
+/**
+ * Abomination's Hook (`epah`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AbominationsHook_epah`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epah"): Rawcode<"item">;
+
+/**
+ * Plaguebearer Cuirass (`epbc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PlaguebearerCuirass_epbc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epbc"): Rawcode<"item">;
+
+/**
+ * Plaguebearer Shortsword (`epbs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PlaguebearerShortsword_epbs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epbs"): Rawcode<"item">;
+
+/**
+ * Corrupted Greatsword (`epcg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CorruptedGreatsword_epcg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epcg"): Rawcode<"item">;
+
+/**
+ * Crystal Sword (`epcs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CrystalSword_epcs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epcs"): Rawcode<"item">;
+
+/**
+ * Daybreaker (`epdb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Daybreaker_epdb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epdb"): Rawcode<"item">;
+
+/**
+ * Deathwhisper (`epdw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Deathwhisper_epdw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epdw"): Rawcode<"item">;
+
+/**
+ * Ghoulish Claw (`epfc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GhoulishClaw_epfc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epfc"): Rawcode<"item">;
+
+/**
+ * Gilnean Battleaxe (`epgb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GilneanBattleaxe_epgb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epgb"): Rawcode<"item">;
+
+/**
+ * Guardsman Dagger (`epgd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GuardsmanDagger_epgd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epgd"): Rawcode<"item">;
+
+/**
+ * Guardsman Longsword (`epgl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GuardsmanLongsword_epgl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epgl"): Rawcode<"item">;
+
+/**
+ * Huge Flail (`ephf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HugeFlail_ephf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ephf"): Rawcode<"item">;
+
+/**
+ * Portable Lightning Rod (`eplr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PortableLightningRod_eplr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eplr"): Rawcode<"item">;
+
+/**
+ * Mograine's Might (`epmb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MograinesMight_epmb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epmb"): Rawcode<"item">;
+
+/**
+ * Monastery Mace (`epmm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MonasteryMace_epmm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epmm"): Rawcode<"item">;
+
+/**
+ * Mundane Wand (`epmw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MundaneWand_epmw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epmw"): Rawcode<"item">;
+
+/**
+ * Nightfall (`epnf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Nightfall_epnf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epnf"): Rawcode<"item">;
+
+/**
+ * Suspicious Concoction (`epoa`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SuspiciousConcoction_epoa`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epoa"): Rawcode<"item">;
+
+/**
+ * Ogre Warclub (`epow`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OgreWarclub_epow`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epow"): Rawcode<"item">;
+
+/**
+ * Quarry Pickaxe (`epqp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.QuarryPickaxe_epqp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epqp"): Rawcode<"item">;
+
+/**
+ * Primal Ring of Magic (`eprm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PrimalRingOfMagic_eprm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eprm"): Rawcode<"item">;
+
+/**
+ * Skeletal Bow (`epsb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SkeletalBow_epsb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epsb"): Rawcode<"item">;
+
+/**
+ * Sharpened Cleaver (`epsc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SharpenedCleaver_epsc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epsc"): Rawcode<"item">;
+
+/**
+ * Sword of the Ghostlands (`epsg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SwordOfTheGhostlands_epsg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epsg"): Rawcode<"item">;
+
+/**
+ * Protector of the Silver Hand (`epsh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ProtectorOfTheSilverHand_epsh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epsh"): Rawcode<"item">;
+
+/**
+ * Staff of Jordan (`epsj`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.StaffOfJordan_epsj`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epsj"): Rawcode<"item">;
+
+/**
+ * Soulstealer (`epss`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Soulstealer_epss`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epss"): Rawcode<"item">;
+
+/**
+ * The Kingbreaker (`eptk`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TheKingbreaker_eptk`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eptk"): Rawcode<"item">;
+
+/**
+ * Thornguard Rapier (`eptr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ThornguardRapier_eptr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eptr"): Rawcode<"item">;
+
+/**
+ * Plaguewrought, Blight Incarnate (`epwb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PlaguewroughtBlightIncarnate_epwb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epwb"): Rawcode<"item">;
+
+/**
+ * Painted Wooden Sword (`epws`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PaintedWoodenSword_epws`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "epws"): Rawcode<"item">;
+
+/**
+ * Ring of the Archdruid (`erad`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfTheArchdruid_erad`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erad"): Rawcode<"item">;
+
+/**
+ * Ring of Agitated Fervor (`eraf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfAgitatedFervor_eraf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eraf"): Rawcode<"item">;
+
+/**
+ * Rusty Bronze Gauntlets (`erbg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RustyBronzeGauntlets_erbg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erbg"): Rawcode<"item">;
+
+/**
+ * Robes of the Battlemage (`erbm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RobesOfTheBattlemage_erbm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erbm"): Rawcode<"item">;
+
+/**
+ * Caged Soul (`ercs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CagedSoul_ercs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ercs"): Rawcode<"item">;
+
+/**
+ * Diamond Ring (`erdr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DiamondRing_erdr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erdr"): Rawcode<"item">;
+
+/**
+ * Energy Band (`ereb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EnergyBand_ereb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ereb"): Rawcode<"item">;
+
+/**
+ * Echoes of the Fallen (`eref`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EchoesOfTheFallen_eref`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eref"): Rawcode<"item">;
+
+/**
+ * Earthen Signet (`eres`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EarthenSignet_eres`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eres"): Rawcode<"item">;
+
+/**
+ * Ring of the Fortunate Adventurer (`erfa`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfTheFortunateAdventurer_erfa`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erfa"): Rawcode<"item">;
+
+/**
+ * Ring of the Firelands (`erfl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfTheFirelands_erfl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erfl"): Rawcode<"item">;
+
+/**
+ * Gift of Greed (`ergg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GiftOfGreed_ergg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ergg"): Rawcode<"item">;
+
+/**
+ * Ring of Greater Mana Efficiency (`ergm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfGreaterManaEfficiency_ergm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ergm"): Rawcode<"item">;
+
+/**
+ * Gift of Pride (`ergp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GiftOfPride_ergp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ergp"): Rawcode<"item">;
+
+/**
+ * Gift of Sloth (`ergs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GiftOfSloth_ergs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ergs"): Rawcode<"item">;
+
+/**
+ * Gift of Wrath (`ergw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GiftOfWrath_ergw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ergw"): Rawcode<"item">;
+
+/**
+ * Honed Edge (`erhe`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HonedEdge_erhe`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erhe"): Rawcode<"item">;
+
+/**
+ * Heart of the Firelord (`erhf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HeartOfTheFirelord_erhf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erhf"): Rawcode<"item">;
+
+/**
+ * Ravage, Herald of Obliteration (`erho`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RavageHeraldOfObliteration_erho`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erho"): Rawcode<"item">;
+
+/**
+ * Razorice, Harbinger of Winter (`erhw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RazoriceHarbingerOfWinter_erhw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erhw"): Rawcode<"item">;
+
+/**
+ * Robes of the Kirin Tor (`erkt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RobesOfTheKirinTor_erkt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erkt"): Rawcode<"item">;
+
+/**
+ * Ring of Lesser Restoration (`erlr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfLesserRestoration_erlr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erlr"): Rawcode<"item">;
+
+/**
+ * Nerubian Necklace (`ernn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.NerubianNecklace_ernn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ernn"): Rawcode<"item">;
+
+/**
+ * Ruby Necklace of Power (`ernp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RubyNecklaceOfPower_ernp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ernp"): Rawcode<"item">;
+
+/**
+ * Ring of Assassination (`eroa`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfAssassination_eroa`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eroa"): Rawcode<"item">;
+
+/**
+ * Ring of Evasion (`eroe`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfEvasion_eroe`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eroe"): Rawcode<"item">;
+
+/**
+ * Rune of Fire (`erof`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfFire_erof`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erof"): Rawcode<"item">;
+
+/**
+ * Ogre Gauntlets (`erog`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OgreGauntlets_erog`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erog"): Rawcode<"item">;
+
+/**
+ * Purifier Blade (`erpb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PurifierBlade_erpb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erpb"): Rawcode<"item">;
+
+/**
+ * Ring of the Runeweaver (`errw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfTheRuneweaver_errw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "errw"): Rawcode<"item">;
+
+/**
+ * Signet of Blood (`ersb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SignetOfBlood_ersb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ersb"): Rawcode<"item">;
+
+/**
+ * Signet of Decay (`ersd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SignetOfDecay_ersd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ersd"): Rawcode<"item">;
+
+/**
+ * Star of Elune (`erse`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.StarOfElune_erse`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erse"): Rawcode<"item">;
+
+/**
+ * Ring of Stone Fortitude (`ersf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfStoneFortitude_ersf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ersf"): Rawcode<"item">;
+
+/**
+ * Ring of the Sacred Grove (`ersg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfTheSacredGrove_ersg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ersg"): Rawcode<"item">;
+
+/**
+ * Tome of Azjol-Nerub (`ersk`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfAzjolNerub_ersk`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ersk"): Rawcode<"item">;
+
+/**
+ * Ring of Sacred Magic (`ersm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfSacredMagic_ersm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ersm"): Rawcode<"item">;
+
+/**
+ * Spellbreaker's Necklace (`ersn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SpellbreakersNecklace_ersn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ersn"): Rawcode<"item">;
+
+/**
+ * Ursoc's Gift (`erug`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.UrsocsGift_erug`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "erug"): Rawcode<"item">;
+
+/**
+ * Sanctified Chestplate (`esa1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SanctifiedChestplate_esa1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esa1"): Rawcode<"item">;
+
+/**
+ * Sanctified Gauntlets (`esa2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SanctifiedGauntlets_esa2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esa2"): Rawcode<"item">;
+
+/**
+ * Staff of Arcane Hunger (`esah`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.StaffOfArcaneHunger_esah`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esah"): Rawcode<"item">;
+
+/**
+ * Essence of Aszune (`esaz`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EssenceOfAszune_esaz`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esaz"): Rawcode<"item">;
+
+/**
+ * Bone Staff (`esbs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BoneStaff_esbs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esbs"): Rawcode<"item">;
+
+/**
+ * Spellbreaker Circlet (`esbt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SpellbreakerCirclet_esbt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esbt"): Rawcode<"item">;
+
+/**
+ * Signet of the Crypt Lord (`escl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SignetOfTheCryptLord_escl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "escl"): Rawcode<"item">;
+
+/**
+ * The Screecher (`escr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TheScreecher_escr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "escr"): Rawcode<"item">;
+
+/**
+ * Cork Shooter (`escs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.CorkShooter_escs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "escs"): Rawcode<"item">;
+
+/**
+ * Silverpine Forest Shiv (`esfs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SilverpineForestShiv_esfs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esfs"): Rawcode<"item">;
+
+/**
+ * Shepherd's Curse (`eshc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShepherdsCurse_eshc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eshc"): Rawcode<"item">;
+
+/**
+ * Wildhammer Breastplate (`esib`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WildhammerBreastplate_esib`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esib"): Rawcode<"item">;
+
+/**
+ * Kris, the Everburning (`eske`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.KrisTheEverburning_eske`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eske"): Rawcode<"item">;
+
+/**
+ * Shredder's Left Arm (`esla`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShreddersLeftArm_esla`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esla"): Rawcode<"item">;
+
+/**
+ * Shattered Scourgelord's Crown (`eslc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShatteredScourgelordsCrown_eslc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eslc"): Rawcode<"item">;
+
+/**
+ * Lich Orb (`eslo`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LichOrb_eslo`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eslo"): Rawcode<"item">;
+
+/**
+ * Lordaeron Shield (`esls`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LordaeronShield_esls`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esls"): Rawcode<"item">;
+
+/**
+ * Necrolyte's March (`esnm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.NecrolytesMarch_esnm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esnm"): Rawcode<"item">;
+
+/**
+ * Nexus Shiv (`esns`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.NexusShiv_esns`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esns"): Rawcode<"item">;
+
+/**
+ * Scepter of Darkness (`esod`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScepterOfDarkness_esod`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esod"): Rawcode<"item">;
+
+/**
+ * Scythe of Frost (`esof`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScytheOfFrost_esof`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esof"): Rawcode<"item">;
+
+/**
+ * Seal of Sylvanas (`esos`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SealOfSylvanas_esos`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esos"): Rawcode<"item">;
+
+/**
+ * Shield of the Titans (`esot`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShieldOfTheTitans_esot`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esot"): Rawcode<"item">;
+
+/**
+ * Spell Parrying Buckler (`espb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SpellParryingBuckler_espb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "espb"): Rawcode<"item">;
+
+/**
+ * Sucker Punch Gauntlets (`espg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SuckerPunchGauntlets_espg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "espg"): Rawcode<"item">;
+
+/**
+ * Poison Nettle (`espn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PoisonNettle_espn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "espn"): Rawcode<"item">;
+
+/**
+ * Seal of the Red Court (`esrc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SealOfTheRedCourt_esrc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "esrc"): Rawcode<"item">;
+
+/**
+ * Blade of the Scarlet Crusade (`essc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BladeOfTheScarletCrusade_essc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "essc"): Rawcode<"item">;
+
+/**
+ * Staff of the Scarlet Inquisitor (`essi`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.StaffOfTheScarletInquisitor_essi`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "essi"): Rawcode<"item">;
+
+/**
+ * Sticky Slime Ring (`essr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.StickySlimeRing_essr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "essr"): Rawcode<"item">;
+
+/**
+ * Bag of Dust (`etbd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BagOfDust_etbd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etbd"): Rawcode<"item">;
+
+/**
+ * Shamanistic Headwear (`etbh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShamanisticHeadwear_etbh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etbh"): Rawcode<"item">;
+
+/**
+ * Bottled Storm (`etbs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BottledStorm_etbs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etbs"): Rawcode<"item">;
+
+/**
+ * Edric's Eye (`etee`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EdricsEye_etee`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etee"): Rawcode<"item">;
+
+/**
+ * Forsaken Fangs (`etff`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ForsakenFangs_etff`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etff"): Rawcode<"item">;
+
+/**
+ * The Impenetrable Fortress (`etif`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TheImpenetrableFortress_etif`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etif"): Rawcode<"item">;
+
+/**
+ * Knight's Javelin (`etkj`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.KnightsJavelin_etkj`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etkj"): Rawcode<"item">;
+
+/**
+ * Tiara of the Kirin Tor (`etkt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TiaraOfTheKirinTor_etkt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etkt"): Rawcode<"item">;
+
+/**
+ * Mana Bauble (`etmb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ManaBauble_etmb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etmb"): Rawcode<"item">;
+
+/**
+ * Talisman of Minor Insight (`etmi`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TalismanOfMinorInsight_etmi`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etmi"): Rawcode<"item">;
+
+/**
+ * Mark of the Phoenix (`etmp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MarkOfThePhoenix_etmp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etmp"): Rawcode<"item">;
+
+/**
+ * Talisman of the Northern Winds (`etnw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TalismanOfTheNorthernWinds_etnw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etnw"): Rawcode<"item">;
+
+/**
+ * Totem of the Ogre Magi (`etom`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TotemOfTheOgreMagi_etom`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etom"): Rawcode<"item">;
+
+/**
+ * Talisman of Nightmares (`eton`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TalismanOfNightmares_eton`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eton"): Rawcode<"item">;
+
+/**
+ * Twilight Opal Orb (`etoo`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TwilightOpalOrb_etoo`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etoo"): Rawcode<"item">;
+
+/**
+ * Talisman of Willpower (`etow`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TalismanOfWillpower_etow`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etow"): Rawcode<"item">;
+
+/**
+ * Restorative Balm (`etrb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RestorativeBalm_etrb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "etrb"): Rawcode<"item">;
+
+/**
+ * Undercity Chain Robes (`eucr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.UndercityChainRobes_eucr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eucr"): Rawcode<"item">;
+
+/**
+ * Vampiric Gargoyle Mask (`evgm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.VampiricGargoyleMask_evgm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "evgm"): Rawcode<"item">;
+
+/**
+ * Vestments of the Wavespeaker (`evow`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.VestmentsOfTheWavespeaker_evow`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "evow"): Rawcode<"item">;
+
+/**
+ * Vestments of the Storm King (`evsk`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.VestmentsOfTheStormKing_evsk`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "evsk"): Rawcode<"item">;
+
+/**
+ * Talisman of Evasion (`evtl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TalismanOfEvasion_evtl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "evtl"): Rawcode<"item">;
+
+/**
+ * Worn Adventurer's Outfit (`ewao`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WornAdventurersOutfit_ewao`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ewao"): Rawcode<"item">;
+
+/**
+ * Mordo's Club (`ewbl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MordosClub_ewbl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ewbl"): Rawcode<"item">;
+
+/**
+ * Wicked Fang Blade (`ewfb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WickedFangBlade_ewfb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ewfb"): Rawcode<"item">;
+
+/**
+ * Wand of the Apprentice (`ewoa`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WandOfTheApprentice_ewoa`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ewoa"): Rawcode<"item">;
+
+/**
+ * Wand of the Battlemage (`ewob`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WandOfTheBattlemage_ewob`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ewob"): Rawcode<"item">;
+
+/**
+ * Worn Steel Plate (`ews1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WornSteelPlate_ews1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ews1"): Rawcode<"item">;
+
+/**
+ * Worn Thief's Boots (`ewtb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WornThiefsBoots_ewtb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ewtb"): Rawcode<"item">;
+
+/**
+ * Webweaver's Gloves (`ewwg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WebweaversGloves_ewwg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ewwg"): Rawcode<"item">;
+
+/**
+ * Borelgore, the Corpulent One (`eymo`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BorelgoreTheCorpulentOne_eymo`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "eymo"): Rawcode<"item">;
+
+/**
+ * Zombie Arm (`ezba`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ZombieArm_ezba`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ezba"): Rawcode<"item">;
+
+/**
+ * Zandalari Giantcrusher (`ezgc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ZandalariGiantcrusher_ezgc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ezgc"): Rawcode<"item">;
+
+/**
+ * Blue Drake Egg (`fgbd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BlueDrakeEgg_fgbd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "fgbd"): Rawcode<"item">;
+
+/**
+ * Demonic Figurine (`fgdg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DemonicFigurine_fgdg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "fgdg"): Rawcode<"item">;
+
+/**
+ * Spiked Collar (`fgfh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SpikedCollar_fgfh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "fgfh"): Rawcode<"item">;
+
+/**
+ * Red Drake Egg (`fgrd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RedDrakeEgg_fgrd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "fgrd"): Rawcode<"item">;
+
+/**
+ * Stone Token (`fgrg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.StoneToken_fgrg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "fgrg"): Rawcode<"item">;
+
+/**
+ * Book of the Dead (`fgsk`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BookOfTheDead_fgsk`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "fgsk"): Rawcode<"item">;
+
+/**
+ * Flare Gun (`fgun`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.FlareGun_fgun`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "fgun"): Rawcode<"item">;
+
+/**
+ * Human Flag (`flag`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HumanFlag_flag`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "flag"): Rawcode<"item">;
+
+/**
+ * Frostguard (`frgd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Frostguard_frgd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "frgd"): Rawcode<"item">;
+
+/**
+ * Firehand Gauntlets (`frhg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.FirehandGauntlets_frhg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "frhg"): Rawcode<"item">;
+
+/**
+ * Frost Wyrm Skull Shield (`fwss`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.FrostWyrmSkullShield_fwss`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "fwss"): Rawcode<"item">;
+
+/**
+ * Gloves of Haste (`gcel`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlovesOfHaste_gcel`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "gcel"): Rawcode<"item">;
+
+/**
+ * Gem of True Seeing (`gemt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GemOfTrueSeeing_gemt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "gemt"): Rawcode<"item">;
+
+/**
+ * Glyph of Fortification (`gfor`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlyphOfFortification_gfor`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "gfor"): Rawcode<"item">;
+
+/**
+ * Orb of Kil'jaeden (`gldo`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OrbOfKiljaeden_gldo`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "gldo"): Rawcode<"item">;
+
+/**
+ * Skull of Gul'dan (`glsk`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SkullOfGuldan_glsk`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "glsk"): Rawcode<"item">;
+
+/**
+ * Glix's Special (`glxb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlixsSpecial_glxb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "glxb"): Rawcode<"item">;
+
+/**
+ * Gem Fragment (`gmfr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GemFragment_gmfr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "gmfr"): Rawcode<"item">;
+
+/**
+ * Goblin Land Mines (`gobm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GoblinLandMines_gobm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "gobm"): Rawcode<"item">;
+
+/**
+ * Gold Coins (`gold`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GoldCoins_gold`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "gold"): Rawcode<"item">;
+
+/**
+ * Glyph of Omniscience (`gomn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlyphOfOmniscience_gomn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "gomn"): Rawcode<"item">;
+
+/**
+ * Glyph of Purification (`gopr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlyphOfPurification_gopr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "gopr"): Rawcode<"item">;
+
+/**
+ * Grimoire of Souls (`grsl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GrimoireOfSouls_grsl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "grsl"): Rawcode<"item">;
+
+/**
+ * Soul Gem (`gsou`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SoulGem_gsou`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "gsou"): Rawcode<"item">;
+
+/**
+ * Glyph of Ultravision (`guvi`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlyphOfUltravision_guvi`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "guvi"): Rawcode<"item">;
+
+/**
+ * Gloves of Spell Mastery (`gvsm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GlovesOfSpellMastery_gvsm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "gvsm"): Rawcode<"item">;
+
+/**
+ * Helm of Battlethirst (`hbth`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HelmOfBattlethirst_hbth`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "hbth"): Rawcode<"item">;
+
+/**
+ * Hood of Cunning (`hcun`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HoodOfCunning_hcun`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "hcun"): Rawcode<"item">;
+
+/**
+ * Health Stone (`hlst`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HealthStone_hlst`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "hlst"): Rawcode<"item">;
+
+/**
+ * Sacred Relic (`horl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SacredRelic_horl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "horl"): Rawcode<"item">;
+
+/**
+ * Healing Salve (`hslv`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HealingSalve_hslv`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "hslv"): Rawcode<"item">;
+
+/**
+ * Skeletal Mage Mask (`hsmm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SkeletalMageMask_hsmm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "hsmm"): Rawcode<"item">;
+
+/**
+ * Helm of Valor (`hval`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HelmOfValor_hval`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "hval"): Rawcode<"item">;
+
+/**
+ * Inferno Stone (`infs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.InfernoStone_infs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "infs"): Rawcode<"item">;
+
+/**
+ * Idol of the Wild (`iotw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.IdolOfTheWild_iotw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "iotw"): Rawcode<"item">;
+
+/**
+ * Ironwood Branch (`iwbr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.IronwoodBranch_iwbr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "iwbr"): Rawcode<"item">;
+
+/**
+ * Jade Ring (`jdrn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.JadeRing_jdrn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "jdrn"): Rawcode<"item">;
+
+/**
+ * Note to Jaina Proudmoore (`jpnt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.NoteToJainaProudmoore_jpnt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "jpnt"): Rawcode<"item">;
+
+/**
+ * Mooncrystal (`k3m1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Mooncrystal_k3m1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "k3m1"): Rawcode<"item">;
+
+/**
+ * Partial Key of the Three Moons (`k3m2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PartialKeyOfTheThreeMoons_k3m2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "k3m2"): Rawcode<"item">;
+
+/**
+ * Key of Three Moons (`k3m3`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.KeyOfThreeMoons_k3m3`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "k3m3"): Rawcode<"item">;
+
+/**
+ * Keg of Ale (`kgal`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.KegOfAle_kgal`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "kgal"): Rawcode<"item">;
+
+/**
+ * Killmaim (`klmm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Killmaim_klmm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "klmm"): Rawcode<"item">;
+
+/**
+ * Khadgar's Pipe of Insight (`kpin`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.KhadgarsPipeOfInsight_kpin`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "kpin"): Rawcode<"item">;
+
+/**
+ * Urn of King Terenas (`ktrm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.UrnOfKingTerenas_ktrm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ktrm"): Rawcode<"item">;
+
+/**
+ * Blood Key (`kybl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BloodKey_kybl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "kybl"): Rawcode<"item">;
+
+/**
+ * Ghost Key (`kygh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GhostKey_kygh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "kygh"): Rawcode<"item">;
+
+/**
+ * Moon Key (`kymn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MoonKey_kymn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "kymn"): Rawcode<"item">;
+
+/**
+ * Sun Key (`kysn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SunKey_kysn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "kysn"): Rawcode<"item">;
+
+/**
+ * Gerard's Lost Ledger (`ledg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GerardsLostLedger_ledg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ledg"): Rawcode<"item">;
+
+/**
+ * Legion Doom-Horn (`lgdh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LegionDoomHorn_lgdh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "lgdh"): Rawcode<"item">;
+
+/**
+ * The Lion Horn of Stormwind (`lhst`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TheLionHornOfStormwind_lhst`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "lhst"): Rawcode<"item">;
+
+/**
+ * Bundle of Lumber (`lmbr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BundleOfLumber_lmbr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "lmbr"): Rawcode<"item">;
+
+/**
+ * Lion's Ring (`lnrn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LionsRing_lnrn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "lnrn"): Rawcode<"item">;
+
+/**
+ * Monster Lure (`lure`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MonsterLure_lure`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "lure"): Rawcode<"item">;
+
+/**
+ * Manual of Health (`manh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ManualOfHealth_manh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "manh"): Rawcode<"item">;
+
+/**
+ * Medallion of Courage (`mcou`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MedallionOfCourage_mcou`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "mcou"): Rawcode<"item">;
+
+/**
+ * Mechanical Critter (`mcri`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MechanicalCritter_mcri`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "mcri"): Rawcode<"item">;
+
+/**
+ * Magic Key Chain (`mgtk`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MagicKeyChain_mgtk`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "mgtk"): Rawcode<"item">;
+
+/**
+ * Maul of Strength (`mlst`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MaulOfStrength_mlst`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "mlst"): Rawcode<"item">;
+
+/**
+ * Mindstaff (`mnsf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Mindstaff_mnsf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "mnsf"): Rawcode<"item">;
+
+/**
+ * Mana Stone (`mnst`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ManaStone_mnst`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "mnst"): Rawcode<"item">;
+
+/**
+ * Mask of Death (`modt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MaskOfDeath_modt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "modt"): Rawcode<"item">;
+
+/**
+ * Moonstone (`moon`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Moonstone_moon`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "moon"): Rawcode<"item">;
+
+/**
+ * Mogrin's Report (`mort`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MogrinsReport_mort`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "mort"): Rawcode<"item">;
+
+/**
+ * Night Elf Flag (`nflg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.NightElfFlag_nflg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "nflg"): Rawcode<"item">;
+
+/**
+ * Necklace of Spell Immunity (`nspi`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.NecklaceOfSpellImmunity_nspi`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "nspi"): Rawcode<"item">;
+
+/**
+ * Orb of Corruption (`ocor`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OrbOfCorruption_ocor`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ocor"): Rawcode<"item">;
+
+/**
+ * Orb of Darkness (`odef`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OrbOfDarkness_odef`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "odef"): Rawcode<"item">;
+
+/**
+ * Orb of Fire (`ofir`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OrbOfFire_ofir`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ofir"): Rawcode<"item">;
+
+/**
+ * Orc Flag (`oflg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OrcFlag_oflg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "oflg"): Rawcode<"item">;
+
+/**
+ * Orb of Fire (`ofr2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OrbOfFire_ofr2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ofr2"): Rawcode<"item">;
+
+/**
+ * Orb of Frost (`ofro`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OrbOfFrost_ofro`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ofro"): Rawcode<"item">;
+
+/**
+ * Orb of Lightning (`oli2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OrbOfLightning_oli2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "oli2"): Rawcode<"item">;
+
+/**
+ * Orb of Lightning (`olig`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OrbOfLightning_olig`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "olig"): Rawcode<"item">;
+
+/**
+ * Orb of Slow (`oslo`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OrbOfSlow_oslo`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "oslo"): Rawcode<"item">;
+
+/**
+ * Orb of Venom (`oven`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.OrbOfVenom_oven`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "oven"): Rawcode<"item">;
+
+/**
+ * Anti-magic Potion (`pams`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AntiMagicPotion_pams`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pams"): Rawcode<"item">;
+
+/**
+ * Clarity Potion (`pclr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ClarityPotion_pclr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pclr"): Rawcode<"item">;
+
+/**
+ * Potion of Divinity (`pdi2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfDivinity_pdi2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pdi2"): Rawcode<"item">;
+
+/**
+ * Potion of Divinity (`pdiv`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfDivinity_pdiv`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pdiv"): Rawcode<"item">;
+
+/**
+ * Pendant of Energy (`penr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PendantOfEnergy_penr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "penr"): Rawcode<"item">;
+
+/**
+ * Essence of Undeath (`peou`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EssenceOfUndeath_peou`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "peou"): Rawcode<"item">;
+
+/**
+ * Potion of Greater Healing (`pghe`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfGreaterHealing_pghe`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pghe"): Rawcode<"item">;
+
+/**
+ * Potion of Greater Invisibility (`pgin`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfGreaterInvisibility_pgin`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pgin"): Rawcode<"item">;
+
+/**
+ * Potion of Greater Mana (`pgma`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfGreaterMana_pgma`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pgma"): Rawcode<"item">;
+
+/**
+ * Potion of Healing (`phea`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfHealing_phea`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "phea"): Rawcode<"item">;
+
+/**
+ * Phat Lewt (`phlt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PhatLewt_phlt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "phlt"): Rawcode<"item">;
+
+/**
+ * Potion of Invisibility (`pinv`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfInvisibility_pinv`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pinv"): Rawcode<"item">;
+
+/**
+ * Lesser Clarity Potion (`plcl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LesserClarityPotion_plcl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "plcl"): Rawcode<"item">;
+
+/**
+ * Potion of Mana (`pman`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfMana_pman`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pman"): Rawcode<"item">;
+
+/**
+ * Pendant of Mana (`pmna`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PendantOfMana_pmna`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pmna"): Rawcode<"item">;
+
+/**
+ * Potion of Lesser Invulnerability (`pnvl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfLesserInvulnerability_pnvl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pnvl"): Rawcode<"item">;
+
+/**
+ * Potion of Invulnerability (`pnvu`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfInvulnerability_pnvu`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pnvu"): Rawcode<"item">;
+
+/**
+ * Potion of Omniscience (`pomn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfOmniscience_pomn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pomn"): Rawcode<"item">;
+
+/**
+ * Potion of Restoration (`pres`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfRestoration_pres`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pres"): Rawcode<"item">;
+
+/**
+ * Periapt of Vitality (`prvt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PeriaptOfVitality_prvt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "prvt"): Rawcode<"item">;
+
+/**
+ * Potion of Speed (`pspd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfSpeed_pspd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "pspd"): Rawcode<"item">;
+
+/**
+ * Potion of Ultimate Healing (`puhe`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfUltimateHealing_puhe`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "puhe"): Rawcode<"item">;
+
+/**
+ * Potion of Ultimate Mana (`puma`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.PotionOfUltimateMana_puma`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "puma"): Rawcode<"item">;
+
+/**
+ * Slippers of Agility +3 (`rag1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SlippersOfAgility3_rag1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rag1"): Rawcode<"item">;
+
+/**
+ * Ring of the Archmagi (`ram1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfTheArchmagi_ram1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ram1"): Rawcode<"item">;
+
+/**
+ * Ring of the Archmagi (`ram2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfTheArchmagi_ram2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ram2"): Rawcode<"item">;
+
+/**
+ * Ring of the Archmagi (`ram3`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfTheArchmagi_ram3`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ram3"): Rawcode<"item">;
+
+/**
+ * Ring of the Archmagi (`ram4`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfTheArchmagi_ram4`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ram4"): Rawcode<"item">;
+
+/**
+ * Claws of Attack +3 (`rat3`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ClawsOfAttack3_rat3`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rat3"): Rawcode<"item">;
+
+/**
+ * Claws of Attack +5 (`rat6`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ClawsOfAttack5_rat6`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rat6"): Rawcode<"item">;
+
+/**
+ * Claws of Attack +8 (`rat9`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ClawsOfAttack8_rat9`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rat9"): Rawcode<"item">;
+
+/**
+ * Claws of Attack +12 (`ratc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ClawsOfAttack12_ratc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ratc"): Rawcode<"item">;
+
+/**
+ * Claws of Attack +15 (`ratf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ClawsOfAttack15_ratf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ratf"): Rawcode<"item">;
+
+/**
+ * Boots of Haste (`rcdr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.BootsOfHaste_rcdr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rcdr"): Rawcode<"item">;
+
+/**
+ * Ring of Protection +1 (`rde0`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfProtection1_rde0`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rde0"): Rawcode<"item">;
+
+/**
+ * Ring of Protection +2 (`rde1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfProtection2_rde1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rde1"): Rawcode<"item">;
+
+/**
+ * Ring of Protection +3 (`rde2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfProtection3_rde2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rde2"): Rawcode<"item">;
+
+/**
+ * Ring of Protection +4 (`rde3`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfProtection4_rde3`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rde3"): Rawcode<"item">;
+
+/**
+ * Ring of Protection +5 (`rde4`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfProtection5_rde4`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rde4"): Rawcode<"item">;
+
+/**
+ * Rune of Dispel Magic (`rdis`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfDispelMagic_rdis`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rdis"): Rawcode<"item">;
+
+/**
+ * Minor Replenishment Potion (`rej1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MinorReplenishmentPotion_rej1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rej1"): Rawcode<"item">;
+
+/**
+ * Lesser Replenishment Potion (`rej2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LesserReplenishmentPotion_rej2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rej2"): Rawcode<"item">;
+
+/**
+ * Replenishment Potion (`rej3`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ReplenishmentPotion_rej3`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rej3"): Rawcode<"item">;
+
+/**
+ * Greater Replenishment Potion (`rej4`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GreaterReplenishmentPotion_rej4`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rej4"): Rawcode<"item">;
+
+/**
+ * Lesser Scroll of Replenishment (`rej5`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LesserScrollOfReplenishment_rej5`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rej5"): Rawcode<"item">;
+
+/**
+ * Greater Scroll of Replenishment (`rej6`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GreaterScrollOfReplenishment_rej6`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rej6"): Rawcode<"item">;
+
+/**
+ * Rune of Lesser Healing (`rhe1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfLesserHealing_rhe1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rhe1"): Rawcode<"item">;
+
+/**
+ * Rune of Healing (`rhe2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfHealing_rhe2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rhe2"): Rawcode<"item">;
+
+/**
+ * Rune of Greater Healing (`rhe3`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfGreaterHealing_rhe3`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rhe3"): Rawcode<"item">;
+
+/**
+ * Khadgar's Gem of Health (`rhth`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.KhadgarsGemOfHealth_rhth`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rhth"): Rawcode<"item">;
+
+/**
+ * Mantle of Intelligence +3 (`rin1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.MantleOfIntelligence3_rin1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rin1"): Rawcode<"item">;
+
+/**
+ * Ritual Dagger (`ritd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RitualDagger_ritd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ritd"): Rawcode<"item">;
+
+/**
+ * Ring of Regeneration (`rlif`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfRegeneration_rlif`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rlif"): Rawcode<"item">;
+
+/**
+ * Rune of Greater Mana (`rma2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfGreaterMana_rma2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rma2"): Rawcode<"item">;
+
+/**
+ * Rune of Mana (`rman`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfMana_rman`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rman"): Rawcode<"item">;
+
+/**
+ * Ring of Mana Efficiency (`rmef`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfManaEfficiency_rmef`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rmef"): Rawcode<"item">;
+
+/**
+ * Rod of Necromancy (`rnec`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RodOfNecromancy_rnec`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rnec"): Rawcode<"item">;
+
+/**
+ * Ring of Superiority (`rnsp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfSuperiority_rnsp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rnsp"): Rawcode<"item">;
+
+/**
+ * Scepter of the Sea (`rots`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScepterOfTheSea_rots`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rots"): Rawcode<"item">;
+
+/**
+ * Rune of Lesser Resurrection (`rre1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfLesserResurrection_rre1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rre1"): Rawcode<"item">;
+
+/**
+ * Rune of Greater Resurrection (`rre2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfGreaterResurrection_rre2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rre2"): Rawcode<"item">;
+
+/**
+ * Rune of Rebirth (`rreb`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfRebirth_rreb`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rreb"): Rawcode<"item">;
+
+/**
+ * Rune of Restoration (`rres`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfRestoration_rres`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rres"): Rawcode<"item">;
+
+/**
+ * Lion's Heart (`rrsl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.LionsHeart_rrsl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rrsl"): Rawcode<"item">;
+
+/**
+ * Dalaran Signet Ring (`rspa`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.DalaranSignetRing_rspa`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rspa"): Rawcode<"item">;
+
+/**
+ * Rune of Speed (`rspd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfSpeed_rspd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rspd"): Rawcode<"item">;
+
+/**
+ * Rune of Spirit Link (`rspl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfSpiritLink_rspl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rspl"): Rawcode<"item">;
+
+/**
+ * Rune of Shielding (`rsps`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfShielding_rsps`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rsps"): Rawcode<"item">;
+
+/**
+ * Ring of Leeching (`rspv`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RingOfLeeching_rspv`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rspv"): Rawcode<"item">;
+
+/**
+ * Gauntlets of Ogre Strength +3 (`rst1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GauntletsOfOgreStrength3_rst1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rst1"): Rawcode<"item">;
+
+/**
+ * Runed Gauntlets (`rugt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RunedGauntlets_rugt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rugt"): Rawcode<"item">;
+
+/**
+ * Rusty Mining Pick (`rump`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RustyMiningPick_rump`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rump"): Rawcode<"item">;
+
+/**
+ * Rune of the Watcher (`rwat`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.RuneOfTheWatcher_rwat`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rwat"): Rawcode<"item">;
+
+/**
+ * Sobi Mask (`rwiz`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SobiMask_rwiz`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "rwiz"): Rawcode<"item">;
+
+/**
+ * Scroll of Animate Dead (`sand`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScrollOfAnimateDead_sand`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sand"): Rawcode<"item">;
+
+/**
+ * Scourge Bone Chimes (`sbch`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScourgeBoneChimes_sbch`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sbch"): Rawcode<"item">;
+
+/**
+ * Spell Book (`sbok`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SpellBook_sbok`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sbok"): Rawcode<"item">;
+
+/**
+ * Scepter of Avarice (`scav`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScepterOfAvarice_scav`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "scav"): Rawcode<"item">;
+
+/**
+ * Scepter of Healing (`schl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScepterOfHealing_schl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "schl"): Rawcode<"item">;
+
+/**
+ * Secret Level Powerup (`sclp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SecretLevelPowerup_sclp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sclp"): Rawcode<"item">;
+
+/**
+ * Scroll of the Unholy Legion (`scul`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScrollOfTheUnholyLegion_scul`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "scul"): Rawcode<"item">;
+
+/**
+ * The Heart of Searinox (`sehr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TheHeartOfSearinox_sehr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sehr"): Rawcode<"item">;
+
+/**
+ * Horn of the Clouds (`sfog`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HornOfTheClouds_sfog`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sfog"): Rawcode<"item">;
+
+/**
+ * Ice Shard (`shar`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.IceShard_shar`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "shar"): Rawcode<"item">;
+
+/**
+ * Scroll of Speed (`shas`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScrollOfSpeed_shas`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "shas"): Rawcode<"item">;
+
+/**
+ * Shaman Claws (`shcw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShamanClaws_shcw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "shcw"): Rawcode<"item">;
+
+/**
+ * Shield of the Deathlord (`shdt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShieldOfTheDeathlord_shdt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "shdt"): Rawcode<"item">;
+
+/**
+ * Scroll of Healing (`shea`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScrollOfHealing_shea`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "shea"): Rawcode<"item">;
+
+/**
+ * Enchanted Shield (`shen`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.EnchantedShield_shen`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "shen"): Rawcode<"item">;
+
+/**
+ * Shield of Honor (`shhn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShieldOfHonor_shhn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "shhn"): Rawcode<"item">;
+
+/**
+ * Shimmerglaze Roast (`shrs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShimmerglazeRoast_shrs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "shrs"): Rawcode<"item">;
+
+/**
+ * Shamanic Totem (`shtm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShamanicTotem_shtm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "shtm"): Rawcode<"item">;
+
+/**
+ * Shimmerweed (`shwd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Shimmerweed_shwd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "shwd"): Rawcode<"item">;
+
+/**
+ * Spider Silk Broach (`silk`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SpiderSilkBroach_silk`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "silk"): Rawcode<"item">;
+
+/**
+ * Skeletal Artifact (`skrt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SkeletalArtifact_skrt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "skrt"): Rawcode<"item">;
+
+/**
+ * Skull Shield (`sksh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SkullShield_sksh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sksh"): Rawcode<"item">;
+
+/**
+ * Sacrificial Skull (`skul`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SacrificialSkull_skul`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "skul"): Rawcode<"item">;
+
+/**
+ * Scroll of Mana (`sman`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScrollOfMana_sman`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sman"): Rawcode<"item">;
+
+/**
+ * Staff of Negation (`sneg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.StaffOfNegation_sneg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sneg"): Rawcode<"item">;
+
+/**
+ * Shadow Orb +1 (`sor1`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShadowOrb1_sor1`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sor1"): Rawcode<"item">;
+
+/**
+ * Shadow Orb +2 (`sor2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShadowOrb2_sor2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sor2"): Rawcode<"item">;
+
+/**
+ * Shadow Orb +3 (`sor3`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShadowOrb3_sor3`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sor3"): Rawcode<"item">;
+
+/**
+ * Shadow Orb +4 (`sor4`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShadowOrb4_sor4`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sor4"): Rawcode<"item">;
+
+/**
+ * Shadow Orb +5 (`sor5`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShadowOrb5_sor5`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sor5"): Rawcode<"item">;
+
+/**
+ * Shadow Orb +6 (`sor6`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShadowOrb6_sor6`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sor6"): Rawcode<"item">;
+
+/**
+ * Shadow Orb +7 (`sor7`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShadowOrb7_sor7`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sor7"): Rawcode<"item">;
+
+/**
+ * Shadow Orb +8 (`sor8`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShadowOrb8_sor8`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sor8"): Rawcode<"item">;
+
+/**
+ * Shadow Orb +9 (`sor9`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShadowOrb9_sor9`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sor9"): Rawcode<"item">;
+
+/**
+ * Shadow Orb +10 (`sora`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShadowOrb10_sora`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sora"): Rawcode<"item">;
+
+/**
+ * Shadow Orb Fragment (`sorf`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ShadowOrbFragment_sorf`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sorf"): Rawcode<"item">;
+
+/**
+ * Soul (`soul`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Soul_soul`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "soul"): Rawcode<"item">;
+
+/**
+ * Staff of Preservation (`spre`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.StaffOfPreservation_spre`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "spre"): Rawcode<"item">;
+
+/**
+ * Spider Ring (`sprn`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SpiderRing_sprn`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sprn"): Rawcode<"item">;
+
+/**
+ * Scroll of Protection (`spro`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScrollOfProtection_spro`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "spro"): Rawcode<"item">;
+
+/**
+ * Amulet of Spell Shield (`spsh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AmuletOfSpellShield_spsh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "spsh"): Rawcode<"item">;
+
+/**
+ * Searing Blade (`srbd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SearingBlade_srbd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "srbd"): Rawcode<"item">;
+
+/**
+ * Scroll of Regeneration (`sreg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScrollOfRegeneration_sreg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sreg"): Rawcode<"item">;
+
+/**
+ * Scroll of Restoration (`sres`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScrollOfRestoration_sres`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sres"): Rawcode<"item">;
+
+/**
+ * Scroll of the Beast (`sror`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScrollOfTheBeast_sror`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sror"): Rawcode<"item">;
+
+/**
+ * Scroll of Resurrection (`srrc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScrollOfResurrection_srrc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "srrc"): Rawcode<"item">;
+
+/**
+ * Serathil (`srtl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.Serathil_srtl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "srtl"): Rawcode<"item">;
+
+/**
+ * Staff of Sanctuary (`ssan`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.StaffOfSanctuary_ssan`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ssan"): Rawcode<"item">;
+
+/**
+ * Staff of Silence (`ssil`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.StaffOfSilence_ssil`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ssil"): Rawcode<"item">;
+
+/**
+ * Staff of Teleportation (`stel`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.StaffOfTeleportation_stel`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "stel"): Rawcode<"item">;
+
+/**
+ * Clockwork Penguin (`stpg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ClockworkPenguin_stpg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "stpg"): Rawcode<"item">;
+
+/**
+ * Staff of Reanimation (`stre`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.StaffOfReanimation_stre`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "stre"): Rawcode<"item">;
+
+/**
+ * Sturdy War Axe (`stwa`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SturdyWarAxe_stwa`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "stwa"): Rawcode<"item">;
+
+/**
+ * Scroll of Town Portal (`stwp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ScrollOfTownPortal_stwp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "stwp"): Rawcode<"item">;
+
+/**
+ * Seed of Expulsion (`sxpl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SeedOfExpulsion_sxpl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "sxpl"): Rawcode<"item">;
+
+/**
+ * Tiny Altar of Kings (`tbak`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TinyAltarOfKings_tbak`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tbak"): Rawcode<"item">;
+
+/**
+ * Tiny Barracks (`tbar`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TinyBarracks_tbar`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tbar"): Rawcode<"item">;
+
+/**
+ * Tiny Blacksmith (`tbsm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TinyBlacksmith_tbsm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tbsm"): Rawcode<"item">;
+
+/**
+ * Tiny Castle (`tcas`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TinyCastle_tcas`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tcas"): Rawcode<"item">;
+
+/**
+ * Tome of Agility (`tdex`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfAgility_tdex`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tdex"): Rawcode<"item">;
+
+/**
+ * Tome of Agility +2 (`tdx2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfAgility2_tdx2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tdx2"): Rawcode<"item">;
+
+/**
+ * Goblin Night Scope (`tels`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.GoblinNightScope_tels`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tels"): Rawcode<"item">;
+
+/**
+ * Tome of Experience (`texp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfExperience_texp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "texp"): Rawcode<"item">;
+
+/**
+ * Tiny Farm (`tfar`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TinyFarm_tfar`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tfar"): Rawcode<"item">;
+
+/**
+ * Tiny Great Hall (`tgrh`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TinyGreatHall_tgrh`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tgrh"): Rawcode<"item">;
+
+/**
+ * Tome of Greater Experience (`tgxp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfGreaterExperience_tgxp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tgxp"): Rawcode<"item">;
+
+/**
+ * Thunderlizard Diamond (`thdm`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ThunderlizardDiamond_thdm`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "thdm"): Rawcode<"item">;
+
+/**
+ * Thunder Lizard Egg (`thle`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.ThunderLizardEgg_thle`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "thle"): Rawcode<"item">;
+
+/**
+ * Tome of Intelligence +2 (`tin2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfIntelligence2_tin2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tin2"): Rawcode<"item">;
+
+/**
+ * Tome of Intelligence (`tint`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfIntelligence_tint`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tint"): Rawcode<"item">;
+
+/**
+ * Tome of Power (`tkno`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfPower_tkno`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tkno"): Rawcode<"item">;
+
+/**
+ * Tiny Lumber Mill (`tlum`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TinyLumberMill_tlum`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tlum"): Rawcode<"item">;
+
+/**
+ * Totem of Might (`tmmt`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TotemOfMight_tmmt`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tmmt"): Rawcode<"item">;
+
+/**
+ * Tome of Sacrifices (`tmsc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfSacrifices_tmsc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tmsc"): Rawcode<"item">;
+
+/**
+ * Talisman of the Wild (`totw`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TalismanOfTheWild_totw`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "totw"): Rawcode<"item">;
+
+/**
+ * Tome of Knowledge (`tpow`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfKnowledge_tpow`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tpow"): Rawcode<"item">;
+
+/**
+ * Tome of Retraining (`tret`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfRetraining_tret`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tret"): Rawcode<"item">;
+
+/**
+ * Ivory Tower (`tsct`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.IvoryTower_tsct`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tsct"): Rawcode<"item">;
+
+/**
+ * Tome of Strength +2 (`tst2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfStrength2_tst2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tst2"): Rawcode<"item">;
+
+/**
+ * Tome of Strength (`tstr`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfStrength_tstr`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "tstr"): Rawcode<"item">;
+
+/**
+ * Tome of Talent (`ttal`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.TomeOfTalent_ttal`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ttal"): Rawcode<"item">;
+
+/**
+ * Undead Flag (`uflg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.UndeadFlag_uflg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "uflg"): Rawcode<"item">;
+
+/**
+ * Vampiric Potion (`vamp`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.VampiricPotion_vamp`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "vamp"): Rawcode<"item">;
+
+/**
+ * Voodoo Doll (`vddl`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.VoodooDoll_vddl`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "vddl"): Rawcode<"item">;
+
+/**
+ * Vine of Purification (`vpur`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.VineOfPurification_vpur`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "vpur"): Rawcode<"item">;
+
+/**
+ * Warsong Battle Drums (`war2`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WarsongBattleDrums_war2`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "war2"): Rawcode<"item">;
+
+/**
+ * Warsong Battle Drums (`ward`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WarsongBattleDrums_ward`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "ward"): Rawcode<"item">;
+
+/**
+ * Wand of the Wind (`wcyc`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WandOfTheWind_wcyc`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "wcyc"): Rawcode<"item">;
+
+/**
+ * Healing Wards (`whwd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.HealingWards_whwd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "whwd"): Rawcode<"item">;
+
+/**
+ * Amulet of the Wild (`wild`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.AmuletOfTheWild_wild`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "wild"): Rawcode<"item">;
+
+/**
+ * Wand of Illusion (`will`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WandOfIllusion_will`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "will"): Rawcode<"item">;
+
+/**
+ * Wand of Lightning Shield (`wlsd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WandOfLightningShield_wlsd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "wlsd"): Rawcode<"item">;
+
+/**
+ * Wand of Negation (`wneg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WandOfNegation_wneg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "wneg"): Rawcode<"item">;
+
+/**
+ * Wand of Neutralization (`wneu`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WandOfNeutralization_wneu`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "wneu"): Rawcode<"item">;
+
+/**
+ * Wirt's Other Leg (`wolg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WirtsOtherLeg_wolg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "wolg"): Rawcode<"item">;
+
+/**
+ * Wand of Mana Stealing (`woms`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WandOfManaStealing_woms`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "woms"): Rawcode<"item">;
+
+/**
+ * Wand of Shadowsight (`wshs`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WandOfShadowsight_wshs`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "wshs"): Rawcode<"item">;
+
+/**
+ * Sentry Wards (`wswd`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.SentryWards_wswd`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "wswd"): Rawcode<"item">;
+
+/**
+ * Wirt's Leg (`wtlg`), a Built-in item of Patch 3.0.0.
+ *
+ * Its constant is `Items.WirtsLeg_wtlg`, from `reforged-builtins/items`.
+ */
+declare function FourCC(id: "wtlg"): Rawcode<"item">;
+
+// Abilities.
+
+/**
+ * Item Hero Stat Bonus (`AA12`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AA12`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AA12"): Rawcode<"ability">;
+
+/**
+ * Item Armor Corrupt 5 (`AACe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorCorrupt5_AACe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AACe"): Rawcode<"ability">;
+
+/**
+ * Item Armor Corrupt 2 (`AACq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorCorrupt2_AACq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AACq"): Rawcode<"ability">;
+
+/**
+ * Item Armor Corrupt 3 (`AACw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorCorrupt3_AACw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AACw"): Rawcode<"ability">;
+
+/**
+ * Item Spell Damage 8 (`AADe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellDamage8_AADe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AADe"): Rawcode<"ability">;
+
+/**
+ * Item Spell Damage 7 (`AADi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellDamage7_AADi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AADi"): Rawcode<"ability">;
+
+/**
+ * Item Spell Damage 2 (`AADo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellDamage2_AADo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AADo"): Rawcode<"ability">;
+
+/**
+ * Item Spell Damage 3 (`AADq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellDamage3_AADq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AADq"): Rawcode<"ability">;
+
+/**
+ * Item Spell Damage 4 (`AADr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellDamage4_AADr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AADr"): Rawcode<"ability">;
+
+/**
+ * Item Spell Damage 10 (`AADt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellDamage10_AADt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AADt"): Rawcode<"ability">;
+
+/**
+ * Item Spell Damage 6 (`AADu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellDamage6_AADu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AADu"): Rawcode<"ability">;
+
+/**
+ * Item Spell Damage 5 (`AADw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellDamage5_AADw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AADw"): Rawcode<"ability">;
+
+/**
+ * Item Spell Damage 12 (`AADy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellDamage12_AADy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AADy"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp 20 (`AAPa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp20_AAPa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAPa"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp 3 (`AAPe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp3_AAPe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAPe"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp 4 (`AAPi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp4_AAPi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAPi"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp 6 (`AAPo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp6_AAPo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAPo"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp 15 (`AAPp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp15_AAPp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAPp"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp 12 (`AAPq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp12_AAPq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAPq"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp 8 (`AAPr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp8_AAPr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAPr"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp 10 (`AAPs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp10_AAPs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAPs"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp 13 (`AAPt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp13_AAPt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAPt"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp 18 (`AAPu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp18_AAPu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAPu"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp 5 (`AAPw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp5_AAPw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAPw"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp 26 (`AAPx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp26_AAPx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAPx"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp 7 (`AAPy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp7_AAPy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAPy"): Rawcode<"ability">;
+
+/**
+ * Item Health Regen Aura 3 (`AARe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealthRegenAura3_AARe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AARe"): Rawcode<"ability">;
+
+/**
+ * Item Health Regen Aura 1 (`AARq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealthRegenAura1_AARq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AARq"): Rawcode<"ability">;
+
+/**
+ * Item Health Regen Aura 2 (`AARw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealthRegenAura2_AARw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AARw"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed -10 (`AASa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeed10_AASa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASa"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed 4 (`AASd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeed4_AASd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASd"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed Bonus 8 (`AASe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeedBonus8_AASe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASe"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed 24 (`AASf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeed24_AASf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASf"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed 30 (`AASg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeed30_AASg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASg"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed -20 (`AASh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeed20_AASh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASh"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed 12 (`AASi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeed12_AASi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASi"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed 25 (`AASo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeed25_AASo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASo"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed 20 (`AASp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeed20_AASp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASp"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed Bonus 15 (`AASq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeedBonus15_AASq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASq"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed Bonus 10 (`AASr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeedBonus10_AASr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASr"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed 3 (`AASs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeed3_AASs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASs"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed 16 (`AASu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeed16_AASu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASu"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed Bonus 9 (`AASw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeedBonus9_AASw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASw"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed 6 (`AASy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeed6_AASy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AASy"): Rawcode<"ability">;
+
+/**
+ * Charge Gold and Lumber (`AAns`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ChargeGoldAndLumber_AAns`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AAns"): Rawcode<"ability">;
+
+/**
+ * Item Ability Speed 25 (`ACDa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAbilitySpeed25_ACDa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACDa"): Rawcode<"ability">;
+
+/**
+ * Item Ability Speed 15 (`ACDd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAbilitySpeed15_ACDd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACDd"): Rawcode<"ability">;
+
+/**
+ * Item Ability Speed 20 (`ACDf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAbilitySpeed20_ACDf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACDf"): Rawcode<"ability">;
+
+/**
+ * Item Ability Speed 8 (`ACDi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAbilitySpeed8_ACDi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACDi"): Rawcode<"ability">;
+
+/**
+ * Item Ability Speed 10 (`ACDo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAbilitySpeed10_ACDo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACDo"): Rawcode<"ability">;
+
+/**
+ * Item Ability Speed 2 (`ACDp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAbilitySpeed2_ACDp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACDp"): Rawcode<"ability">;
+
+/**
+ * Item Ability Speed 12 (`ACDq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAbilitySpeed12_ACDq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACDq"): Rawcode<"ability">;
+
+/**
+ * Item Ability Speed 5 (`ACDt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAbilitySpeed5_ACDt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACDt"): Rawcode<"ability">;
+
+/**
+ * Item Ability Speed 6 (`ACDu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAbilitySpeed6_ACDu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACDu"): Rawcode<"ability">;
+
+/**
+ * Item Ability Speed 3 (`ACDw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAbilitySpeed3_ACDw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACDw"): Rawcode<"ability">;
+
+/**
+ * Item Ability Speed 4 (`ACDy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAbilitySpeed4_ACDy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACDy"): Rawcode<"ability">;
+
+/**
+ * Item Chronomaster's Gloves Ally (`ACGa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemChronomastersGlovesAlly_ACGa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACGa"): Rawcode<"ability">;
+
+/**
+ * Item Chronomaster's Gloves Enemy (`ACGe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemChronomastersGlovesEnemy_ACGe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACGe"): Rawcode<"ability">;
+
+/**
+ * Item Cleave 30 (`ACLw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCleave30_ACLw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACLw"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 20 (`ACSb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance20_ACSb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSb"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 12 (`ACSc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance12_ACSc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSc"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 7 (`ACSd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance7_ACSd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSd"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 3 (`ACSe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance3_ACSe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSe"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 30 (`ACSg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance30_ACSg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSg"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 6 (`ACSj`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance6_ACSj`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSj"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 16 (`ACSn`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance16_ACSn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSn"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 8 (`ACSo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance8_ACSo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSo"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 10 (`ACSq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance10_ACSq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSq"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 2 (`ACSr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance2_ACSr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSr"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 4 (`ACSu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance4_ACSu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSu"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 18 (`ACSv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance18_ACSv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSv"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 15 (`ACSx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance15_ACSx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSx"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 5 (`ACSy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance5_ACSy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSy"): Rawcode<"ability">;
+
+/**
+ * Item Critical Chance 25 (`ACSz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalChance25_ACSz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACSz"): Rawcode<"ability">;
+
+/**
+ * Item Critical Damage 10 (`ACXe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalDamage10_ACXe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACXe"): Rawcode<"ability">;
+
+/**
+ * Item Critical Damage 20 (`ACXi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalDamage20_ACXi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACXi"): Rawcode<"ability">;
+
+/**
+ * Item Critical Damage 12 (`ACXo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalDamage12_ACXo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACXo"): Rawcode<"ability">;
+
+/**
+ * Item Critical Damage 5 (`ACXq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalDamage5_ACXq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACXq"): Rawcode<"ability">;
+
+/**
+ * Item Critical Damage 13 (`ACXr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalDamage13_ACXr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACXr"): Rawcode<"ability">;
+
+/**
+ * Item Critical Damage 30 (`ACXt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalDamage30_ACXt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACXt"): Rawcode<"ability">;
+
+/**
+ * Item Critical Damage 25 (`ACXu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalDamage25_ACXu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACXu"): Rawcode<"ability">;
+
+/**
+ * Item Critical Damage 15 (`ACXw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalDamage15_ACXw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACXw"): Rawcode<"ability">;
+
+/**
+ * Item Critical Damage 40 (`ACXy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalDamage40_ACXy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACXy"): Rawcode<"ability">;
+
+/**
+ * Command Aura (`ACac`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.CommandAura_ACac`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACac"): Rawcode<"ability">;
+
+/**
+ * Animate Dead (`ACad`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.AnimateDead_ACad`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACad"): Rawcode<"ability">;
+
+/**
+ * Thorns Aura (`ACah`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ThornsAura_ACah`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACah"): Rawcode<"ability">;
+
+/**
+ * Anti-magic Shell (`ACam`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.AntiMagicShell_ACam`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACam"): Rawcode<"ability">;
+
+/**
+ * Trueshot Aura (`ACat`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.TrueshotAura_ACat`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACat"): Rawcode<"ability">;
+
+/**
+ * Devotion Aura (`ACav`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DevotionAura_ACav`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACav"): Rawcode<"ability">;
+
+/**
+ * Brilliance Aura (`ACba`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.BrillianceAura_ACba`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACba"): Rawcode<"ability">;
+
+/**
+ * Bloodlust (`ACbb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Bloodlust_ACbb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACbb"): Rawcode<"ability">;
+
+/**
+ * Breath of Fire (`ACbc`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.BreathOfFire_ACbc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACbc"): Rawcode<"ability">;
+
+/**
+ * Breath of Frost (`ACbf`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.BreathOfFrost_ACbf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACbf"): Rawcode<"ability">;
+
+/**
+ * Bash (`ACbh`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Bash_ACbh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACbh"): Rawcode<"ability">;
+
+/**
+ * Black Arrow (`ACbk`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.BlackArrow_ACbk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACbk"): Rawcode<"ability">;
+
+/**
+ * Bloodlust (`ACbl`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Bloodlust_ACbl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACbl"): Rawcode<"ability">;
+
+/**
+ * Banish (`ACbn`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Banish_ACbn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACbn"): Rawcode<"ability">;
+
+/**
+ * Blizzard (`ACbz`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Blizzard_ACbz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACbz"): Rawcode<"ability">;
+
+/**
+ * Crushing Wave (`ACc2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.CrushingWave_ACc2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACc2"): Rawcode<"ability">;
+
+/**
+ * Crushing Wave (`ACc3`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.CrushingWave_ACc3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACc3"): Rawcode<"ability">;
+
+/**
+ * Carrion Swarm (`ACca`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.CarrionSwarm_ACca`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACca"): Rawcode<"ability">;
+
+/**
+ * Frost Bolt (`ACcb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FrostBolt_ACcb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACcb"): Rawcode<"ability">;
+
+/**
+ * Cleaving Attack (`ACce`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.CleavingAttack_ACce`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACce"): Rawcode<"ability">;
+
+/**
+ * Charm (`ACch`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Charm_ACch`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACch"): Rawcode<"ability">;
+
+/**
+ * Chain Lightning (`ACcl`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ChainLightning_ACcl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACcl"): Rawcode<"ability">;
+
+/**
+ * Cannibalize (`ACcn`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Cannibalize_ACcn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACcn"): Rawcode<"ability">;
+
+/**
+ * Cripple (`ACcr`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Cripple_ACcr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACcr"): Rawcode<"ability">;
+
+/**
+ * Curse (`ACcs`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Curse_ACcs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACcs"): Rawcode<"ability">;
+
+/**
+ * Critical Strike (`ACct`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.CriticalStrike_ACct`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACct"): Rawcode<"ability">;
+
+/**
+ * Crushing Wave (`ACcv`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.CrushingWave_ACcv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACcv"): Rawcode<"ability">;
+
+/**
+ * Cold Arrows (`ACcw`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ColdArrows_ACcw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACcw"): Rawcode<"ability">;
+
+/**
+ * Cyclone (`ACcy`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Cyclone_ACcy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACcy"): Rawcode<"ability">;
+
+/**
+ * Abolish Magic (`ACd2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.AbolishMagic_ACd2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACd2"): Rawcode<"ability">;
+
+/**
+ * Death Coil (`ACdc`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DeathCoil_ACdc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACdc"): Rawcode<"ability">;
+
+/**
+ * Devour Magic (`ACde`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DevourMagic_ACde`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACde"): Rawcode<"ability">;
+
+/**
+ * Abolish Magic (`ACdm`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.AbolishMagic_ACdm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACdm"): Rawcode<"ability">;
+
+/**
+ * Life Drain (`ACdr`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.LifeDrain_ACdr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACdr"): Rawcode<"ability">;
+
+/**
+ * Divine Shield (`ACds`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DivineShield_ACds`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACds"): Rawcode<"ability">;
+
+/**
+ * Devour (`ACdv`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Devour_ACdv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACdv"): Rawcode<"ability">;
+
+/**
+ * Ensnare (`ACen`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Ensnare_ACen`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACen"): Rawcode<"ability">;
+
+/**
+ * Evasion (`ACes`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Evasion_ACes`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACes"): Rawcode<"ability">;
+
+/**
+ * Evasion (`ACev`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Evasion_ACev`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACev"): Rawcode<"ability">;
+
+/**
+ * Frost Armor (`ACf2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FrostArmor_ACf2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACf2"): Rawcode<"ability">;
+
+/**
+ * Finger of Pain (`ACf3`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FingerOfPain_ACf3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACf3"): Rawcode<"ability">;
+
+/**
+ * Frost Armor (`ACfa`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FrostArmor_ACfa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACfa"): Rawcode<"ability">;
+
+/**
+ * Firebolt (`ACfb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Firebolt_ACfb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACfb"): Rawcode<"ability">;
+
+/**
+ * Finger of Pain (`ACfd`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FingerOfPain_ACfd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACfd"): Rawcode<"ability">;
+
+/**
+ * Faerie Fire (`ACff`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FaerieFire_ACff`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACff"): Rawcode<"ability">;
+
+/**
+ * Forked Lightning (`ACfl`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ForkedLightning_ACfl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACfl"): Rawcode<"ability">;
+
+/**
+ * Frost Nova (`ACfn`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FrostNova_ACfn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACfn"): Rawcode<"ability">;
+
+/**
+ * Force of Nature (`ACfr`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ForceOfNature_ACfr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACfr"): Rawcode<"ability">;
+
+/**
+ * Flame Strike (`ACfs`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FlameStrike_ACfs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACfs"): Rawcode<"ability">;
+
+/**
+ * Frost Armor (`ACfu`), a Built-in ability of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Abilities.FrostArmor_ACfu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACfu"): Rawcode<"ability">;
+
+/**
+ * Healing Wave (`AChv`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.HealingWave_AChv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AChv"): Rawcode<"ability">;
+
+/**
+ * Healing Ward (`AChw`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.HealingWard_AChw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AChw"): Rawcode<"ability">;
+
+/**
+ * Hex (`AChx`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Hex_AChx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AChx"): Rawcode<"ability">;
+
+/**
+ * Inner Fire (`ACif`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.InnerFire_ACif`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACif"): Rawcode<"ability">;
+
+/**
+ * Immolation (`ACim`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Immolation_ACim`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACim"): Rawcode<"ability">;
+
+/**
+ * Lightning Shield (`ACls`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.LightningShield_ACls`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACls"): Rawcode<"ability">;
+
+/**
+ * Spell Immunity, Spell Immunity (`ACm2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SpellImmunitySpellImmunity_ACm2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACm2"): Rawcode<"ability">;
+
+/**
+ * Spell Immunity, Spell Immunity (`ACm3`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SpellImmunitySpellImmunity_ACm3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACm3"): Rawcode<"ability">;
+
+/**
+ * Mana Shield (`ACmf`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ManaShield_ACmf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACmf"): Rawcode<"ability">;
+
+/**
+ * Spell Immunity (`ACmi`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SpellImmunity_ACmi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACmi"): Rawcode<"ability">;
+
+/**
+ * Monsoon (`ACmo`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Monsoon_ACmo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACmo"): Rawcode<"ability">;
+
+/**
+ * Impale (`ACmp`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Impale_ACmp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACmp"): Rawcode<"ability">;
+
+/**
+ * Life Regeneration Aura (`ACnr`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.LifeRegenerationAura_ACnr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACnr"): Rawcode<"ability">;
+
+/**
+ * Parasite (`ACpa`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Parasite_ACpa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACpa"): Rawcode<"ability">;
+
+/**
+ * Possession (`ACps`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Possession_ACps`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACps"): Rawcode<"ability">;
+
+/**
+ * Purge (`ACpu`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Purge_ACpu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACpu"): Rawcode<"ability">;
+
+/**
+ * Pulverize (`ACpv`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Pulverize_ACpv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACpv"): Rawcode<"ability">;
+
+/**
+ * Polymorph (`ACpy`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Polymorph_ACpy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACpy"): Rawcode<"ability">;
+
+/**
+ * Roar (`ACr1`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Roar_ACr1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACr1"): Rawcode<"ability">;
+
+/**
+ * Rejuvenation (`ACr2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Rejuvenation_ACr2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACr2"): Rawcode<"ability">;
+
+/**
+ * Raise Dead (`ACrd`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.RaiseDead_ACrd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACrd"): Rawcode<"ability">;
+
+/**
+ * Rain of Fire (`ACrf`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.RainOfFire_ACrf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACrf"): Rawcode<"ability">;
+
+/**
+ * Rain of Fire (`ACrg`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.RainOfFire_ACrg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACrg"): Rawcode<"ability">;
+
+/**
+ * Rejuvenation (`ACrj`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Rejuvenation_ACrj`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACrj"): Rawcode<"ability">;
+
+/**
+ * Resistant Skin (`ACrk`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ResistantSkin_ACrk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACrk"): Rawcode<"ability">;
+
+/**
+ * Reincarnation (`ACrn`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Reincarnation_ACrn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACrn"): Rawcode<"ability">;
+
+/**
+ * Roar (`ACro`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Roar_ACro`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACro"): Rawcode<"ability">;
+
+/**
+ * Feral Spirit (`ACs7`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FeralSpirit_ACs7`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACs7"): Rawcode<"ability">;
+
+/**
+ * Spirit Beast (`ACs8`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SpiritBeast_ACs8`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACs8"): Rawcode<"ability">;
+
+/**
+ * Feral Spirit (`ACs9`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FeralSpirit_ACs9`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACs9"): Rawcode<"ability">;
+
+/**
+ * Searing Arrows (`ACsa`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SearingArrows_ACsa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACsa"): Rawcode<"ability">;
+
+/**
+ * Feral Spirit (`ACsf`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FeralSpirit_ACsf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACsf"): Rawcode<"ability">;
+
+/**
+ * Shockwave (`ACsh`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Shockwave_ACsh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACsh"): Rawcode<"ability">;
+
+/**
+ * Silence (`ACsi`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Silence_ACsi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACsi"): Rawcode<"ability">;
+
+/**
+ * Resistant Skin (`ACsk`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ResistantSkin_ACsk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACsk"): Rawcode<"ability">;
+
+/**
+ * Sleep (`ACsl`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Sleep_ACsl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACsl"): Rawcode<"ability">;
+
+/**
+ * Siphon Mana (`ACsm`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SiphonMana_ACsm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACsm"): Rawcode<"ability">;
+
+/**
+ * Sleep (`ACsp`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Sleep_ACsp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACsp"): Rawcode<"ability">;
+
+/**
+ * `ACss`, unnamed, a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Unnamed_ACss`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACss"): Rawcode<"ability">;
+
+/**
+ * Shockwave (`ACst`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Shockwave_ACst`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACst"): Rawcode<"ability">;
+
+/**
+ * Slow (`ACsw`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Slow_ACsw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACsw"): Rawcode<"ability">;
+
+/**
+ * Slam (`ACt2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Slam_ACt2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACt2"): Rawcode<"ability">;
+
+/**
+ * Hurl Boulder (`ACtb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.HurlBoulder_ACtb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACtb"): Rawcode<"ability">;
+
+/**
+ * Slam (`ACtc`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Slam_ACtc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACtc"): Rawcode<"ability">;
+
+/**
+ * Spawn Tentacle (`ACtn`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SpawnTentacle_ACtn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACtn"): Rawcode<"ability">;
+
+/**
+ * Unholy Aura (`ACua`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.UnholyAura_ACua`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACua"): Rawcode<"ability">;
+
+/**
+ * Unholy Frenzy (`ACuf`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.UnholyFrenzy_ACuf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACuf"): Rawcode<"ability">;
+
+/**
+ * Vampiric Aura (`ACvp`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.VampiricAura_ACvp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACvp"): Rawcode<"ability">;
+
+/**
+ * Envenomed Weapons (`ACvs`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.EnvenomedWeapons_ACvs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACvs"): Rawcode<"ability">;
+
+/**
+ * Web (`ACwb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Web_ACwb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACwb"): Rawcode<"ability">;
+
+/**
+ * Summon Sea Elemental (`ACwe`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SummonSeaElemental_ACwe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ACwe"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus +18 (`AD18`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus18_AD18`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AD18"): Rawcode<"ability">;
+
+/**
+ * Item Damage 20 (`AD20`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamage20_AD20`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AD20"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus +24 (`AD24`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus24_AD24`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AD24"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus +45 (`AD45`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus45_AD45`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AD45"): Rawcode<"ability">;
+
+/**
+ * Item Daybreaker Attack (`ADBa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDaybreakerAttack_ADBa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ADBa"): Rawcode<"ability">;
+
+/**
+ * Item Daybreaker FS (`ADBf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDaybreakerFS_ADBf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ADBf"): Rawcode<"ability">;
+
+/**
+ * Item Dark Commander's Aura (`ADCa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDarkCommandersAura_ADCa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ADCa"): Rawcode<"ability">;
+
+/**
+ * Item Disease Cloud 1 (`ADCq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDiseaseCloud1_ADCq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ADCq"): Rawcode<"ability">;
+
+/**
+ * Item Dark Mistress' Aura (`ADMa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDarkMistressAura_ADMa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ADMa"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus -5 (`ADN5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus5_ADN5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ADN5"): Rawcode<"ability">;
+
+/**
+ * Item Damage Reflect 15% (`ADRq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageReflect15_ADRq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ADRq"): Rawcode<"ability">;
+
+/**
+ * Item Damage Reflect 20% (`ADRw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageReflect20_ADRw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ADRw"): Rawcode<"ability">;
+
+/**
+ * Life Regeneration Aura (`ADhr`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.LifeRegenerationAura_ADhr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ADhr"): Rawcode<"ability">;
+
+/**
+ * Mana Regeneration Aura (`ADmr`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ManaRegenerationAura_ADmr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ADmr"): Rawcode<"ability">;
+
+/**
+ * Metamorphosis (`AEIl`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Metamorphosis_AEIl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEIl"): Rawcode<"ability">;
+
+/**
+ * Thorns Aura (`AEah`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.ThornsAura_AEah`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEah"): Rawcode<"ability">;
+
+/**
+ * Trueshot Aura (`AEar`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.TrueshotAura_AEar`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEar"): Rawcode<"ability">;
+
+/**
+ * Blink (`AEbl`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Blink_AEbl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEbl"): Rawcode<"ability">;
+
+/**
+ * Build (Night Elf) (`AEbu`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.BuildNightElf_AEbu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEbu"): Rawcode<"ability">;
+
+/**
+ * Entangling Roots (`AEer`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.EntanglingRoots_AEer`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEer"): Rawcode<"ability">;
+
+/**
+ * Evasion (`AEev`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Evasion_AEev`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEev"): Rawcode<"ability">;
+
+/**
+ * Fan of Knives (`AEfk`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.FanOfKnives_AEfk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEfk"): Rawcode<"ability">;
+
+/**
+ * Force of Nature (`AEfn`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.ForceOfNature_AEfn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEfn"): Rawcode<"ability">;
+
+/**
+ * Purifier Blade Holy Light (`AEhl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PurifierBladeHolyLight_AEhl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEhl"): Rawcode<"ability">;
+
+/**
+ * Immolation (`AEim`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Immolation_AEim`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEim"): Rawcode<"ability">;
+
+/**
+ * Mana Burn (`AEmb`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.ManaBurn_AEmb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEmb"): Rawcode<"ability">;
+
+/**
+ * Metamorphosis (`AEme`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Metamorphosis_AEme`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEme"): Rawcode<"ability">;
+
+/**
+ * Poison Arrows (`AEpa`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.PoisonArrows_AEpa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEpa"): Rawcode<"ability">;
+
+/**
+ * Purifier Blade Orb (`AEpb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PurifierBladeOrb_AEpb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEpb"): Rawcode<"ability">;
+
+/**
+ * `AEqu`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AEqu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEqu"): Rawcode<"ability">;
+
+/**
+ * Starfall (`AEsb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Starfall_AEsb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEsb"): Rawcode<"ability">;
+
+/**
+ * Starfall (`AEsf`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Starfall_AEsf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEsf"): Rawcode<"ability">;
+
+/**
+ * Shadow Strike (`AEsh`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.ShadowStrike_AEsh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEsh"): Rawcode<"ability">;
+
+/**
+ * Scout (`AEst`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Scout_AEst`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEst"): Rawcode<"ability">;
+
+/**
+ * Vengeance (`AEsv`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Vengeance_AEsv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEsv"): Rawcode<"ability">;
+
+/**
+ * Tranquility (`AEtq`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Tranquility_AEtq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEtq"): Rawcode<"ability">;
+
+/**
+ * Metamorphosis (`AEvi`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Metamorphosis_AEvi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AEvi"): Rawcode<"ability">;
+
+/**
+ * Item Feedback 4 (`AFBq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemFeedback4_AFBq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AFBq"): Rawcode<"ability">;
+
+/**
+ * Item Finger of Death 8 (`AFDe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemFingerOfDeath8_AFDe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AFDe"): Rawcode<"ability">;
+
+/**
+ * Item Finger of Death 12 (`AFDq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemFingerOfDeath12_AFDq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AFDq"): Rawcode<"ability">;
+
+/**
+ * Item Finger of Death 15 (`AFDw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemFingerOfDeath15_AFDw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AFDw"): Rawcode<"ability">;
+
+/**
+ * Item Summon Banshee (`AFRq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSummonBanshee_AFRq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AFRq"): Rawcode<"ability">;
+
+/**
+ * Summon Banshee (`AFRw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SummonBanshee_AFRw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AFRw"): Rawcode<"ability">;
+
+/**
+ * Item Dark Ranger's Bracers Attack (`AFRx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDarkRangersBracersAttack_AFRx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AFRx"): Rawcode<"ability">;
+
+/**
+ * Item Dark Ranger's Hood Spellcast (`AFRy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDarkRangersHoodSpellcast_AFRy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AFRy"): Rawcode<"ability">;
+
+/**
+ * Item Gnomish Zapper Attack (`AGZa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGnomishZapperAttack_AGZa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AGZa"): Rawcode<"ability">;
+
+/**
+ * Item Forked Lightning (`AGZf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemForkedLightning_AGZf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AGZf"): Rawcode<"ability">;
+
+/**
+ * Build (Naga) (`AGbu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BuildNaga_AGbu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AGbu"): Rawcode<"ability">;
+
+/**
+ * Warcry Cleave (`AGca`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.WarcryCleave_AGca`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AGca"): Rawcode<"ability">;
+
+/**
+ * Warcry Lifesteal (`AGls`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.WarcryLifesteal_AGls`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AGls"): Rawcode<"ability">;
+
+/**
+ * Warcry Ability Vamp (`AGsv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.WarcryAbilityVamp_AGsv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AGsv"): Rawcode<"ability">;
+
+/**
+ * Item Hero Damage x1.25 (`AHDq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroDamageX125_AHDq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHDq"): Rawcode<"ability">;
+
+/**
+ * Item Hero Damage x1.15 (`AHDw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroDamageX115_AHDw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHDw"): Rawcode<"ability">;
+
+/**
+ * Item Health Regeneration 5 (`AHRa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealthRegeneration5_AHRa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHRa"): Rawcode<"ability">;
+
+/**
+ * Item Health Regeneration 10 (`AHRd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealthRegeneration10_AHRd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHRd"): Rawcode<"ability">;
+
+/**
+ * Item Health Regeneration 15 (`AHRf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealthRegeneration15_AHRf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHRf"): Rawcode<"ability">;
+
+/**
+ * Item Health Regeneration 8 (`AHRo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealthRegeneration8_AHRo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHRo"): Rawcode<"ability">;
+
+/**
+ * Item Health Regeneration -3 (`AHRq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealthRegeneration3_AHRq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHRq"): Rawcode<"ability">;
+
+/**
+ * Item Health Regeneration 7 (`AHRs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealthRegeneration7_AHRs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHRs"): Rawcode<"ability">;
+
+/**
+ * Item Health Regeneration -5 (`AHRt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealthRegeneration5_AHRt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHRt"): Rawcode<"ability">;
+
+/**
+ * Item Health Regeneration 6 (`AHRu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealthRegeneration6_AHRu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHRu"): Rawcode<"ability">;
+
+/**
+ * Item Health Regeneration 3 (`AHRw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealthRegeneration3_AHRw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHRw"): Rawcode<"ability">;
+
+/**
+ * Item Health Regeneration 4 (`AHRy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealthRegeneration4_AHRy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHRy"): Rawcode<"ability">;
+
+/**
+ * Item Hardened Skin 100 7 MT RT (`AHSe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHardenedSkin1007MTRT_AHSe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHSe"): Rawcode<"ability">;
+
+/**
+ * Item Hardened Skin 100 2 MT RT (`AHSq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHardenedSkin1002MTRT_AHSq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHSq"): Rawcode<"ability">;
+
+/**
+ * Item High Templar's Flame Incinerate (`AHTf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHighTemplarsFlameIncinerate_AHTf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHTf"): Rawcode<"ability">;
+
+/**
+ * Item High Templar's Conqueror Heal (`AHTh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHighTemplarsConquerorHeal_AHTh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHTh"): Rawcode<"ability">;
+
+/**
+ * Item High Templar's Visage IF (`AHTi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHighTemplarsVisageIF_AHTi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHTi"): Rawcode<"ability">;
+
+/**
+ * Item High Templar's Judgment Attack (`AHTj`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHighTemplarsJudgmentAttack_AHTj`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHTj"): Rawcode<"ability">;
+
+/**
+ * Item High Templar's Conqueror Attack (`AHTq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHighTemplarsConquerorAttack_AHTq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHTq"): Rawcode<"ability">;
+
+/**
+ * Item High Templar's Judgment Shockwave (`AHTs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHighTemplarsJudgmentShockwave_AHTs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHTs"): Rawcode<"ability">;
+
+/**
+ * Item High Templar's Visage Attack (`AHTv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHighTemplarsVisageAttack_AHTv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHTv"): Rawcode<"ability">;
+
+/**
+ * Sacred Aura (`AHa1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SacredAura_AHa1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHa1"): Rawcode<"ability">;
+
+/**
+ * Sacred Aura (`AHa2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SacredAura_AHa2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHa2"): Rawcode<"ability">;
+
+/**
+ * Sacred Aura (`AHa3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SacredAura_AHa3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHa3"): Rawcode<"ability">;
+
+/**
+ * Brilliance Aura (`AHab`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.BrillianceAura_AHab`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHab"): Rawcode<"ability">;
+
+/**
+ * Devotion Aura (`AHad`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.DevotionAura_AHad`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHad"): Rawcode<"ability">;
+
+/**
+ * Avatar Of Light (`AHal`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.AvatarOfLight_AHal`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHal"): Rawcode<"ability">;
+
+/**
+ * Apprehend (`AHap`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Apprehend_AHap`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHap"): Rawcode<"ability">;
+
+/**
+ * Sacred Aura (`AHas`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SacredAura_AHas`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHas"): Rawcode<"ability">;
+
+/**
+ * Avatar (`AHav`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Avatar_AHav`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHav"): Rawcode<"ability">;
+
+/**
+ * Unyielding Guard (`AHb1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnyieldingGuard_AHb1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHb1"): Rawcode<"ability">;
+
+/**
+ * Unyielding Guard (`AHb2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnyieldingGuard_AHb2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHb2"): Rawcode<"ability">;
+
+/**
+ * Unyielding Guard (`AHb3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnyieldingGuard_AHb3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHb3"): Rawcode<"ability">;
+
+/**
+ * Unyielding Guard (`AHbd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnyieldingGuard_AHbd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHbd"): Rawcode<"ability">;
+
+/**
+ * Bash (`AHbh`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Bash_AHbh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHbh"): Rawcode<"ability">;
+
+/**
+ * Banish (`AHbn`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Banish_AHbn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHbn"): Rawcode<"ability">;
+
+/**
+ * Build (Human) (`AHbu`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.BuildHuman_AHbu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHbu"): Rawcode<"ability">;
+
+/**
+ * Blizzard (`AHbz`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Blizzard_AHbz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHbz"): Rawcode<"ability">;
+
+/**
+ * Valiant Charge (`AHc1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ValiantCharge_AHc1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHc1"): Rawcode<"ability">;
+
+/**
+ * Valiant Charge (`AHc2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ValiantCharge_AHc2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHc2"): Rawcode<"ability">;
+
+/**
+ * Valiant Charge (`AHc3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ValiantCharge_AHc3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHc3"): Rawcode<"ability">;
+
+/**
+ * Cold Arrows (`AHca`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ColdArrows_AHca`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHca"): Rawcode<"ability">;
+
+/**
+ * Valiant Charge (`AHch`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ValiantCharge_AHch`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHch"): Rawcode<"ability">;
+
+/**
+ * Cleansing Fire (`AHcl`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.CleansingFire_AHcl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHcl"): Rawcode<"ability">;
+
+/**
+ * Consecration (`AHcr`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Consecration_AHcr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHcr"): Rawcode<"ability">;
+
+/**
+ * Raise the Banner (`AHct`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RaiseTheBanner_AHct`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHct"): Rawcode<"ability">;
+
+/**
+ * Siphon Mana (`AHdr`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.SiphonMana_AHdr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHdr"): Rawcode<"ability">;
+
+/**
+ * Divine Shield (`AHds`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.DivineShield_AHds`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHds"): Rawcode<"ability">;
+
+/**
+ * Apprehend (`AHe2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Apprehend_AHe2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHe2"): Rawcode<"ability">;
+
+/**
+ * Apprehend (`AHe3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Apprehend_AHe3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHe3"): Rawcode<"ability">;
+
+/**
+ * Apprehend (`AHen`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Apprehend_AHen`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHen"): Rawcode<"ability">;
+
+/**
+ * Hero (`AHer`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Hero_AHer`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHer"): Rawcode<"ability">;
+
+/**
+ * Evasion (`AHes`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Evasion_AHes`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHes"): Rawcode<"ability">;
+
+/**
+ * Searing Arrows (`AHfa`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.SearingArrows_AHfa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHfa"): Rawcode<"ability">;
+
+/**
+ * Flame Strike (`AHfs`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.FlameStrike_AHfs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHfs"): Rawcode<"ability">;
+
+/**
+ * Grit (`AHg1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Grit_AHg1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHg1"): Rawcode<"ability">;
+
+/**
+ * Grit (`AHg2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Grit_AHg2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHg2"): Rawcode<"ability">;
+
+/**
+ * Grit (`AHg3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Grit_AHg3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHg3"): Rawcode<"ability">;
+
+/**
+ * Guiding Hand (`AHgh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GuidingHand_AHgh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHgh"): Rawcode<"ability">;
+
+/**
+ * Grit (`AHgr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Grit_AHgr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHgr"): Rawcode<"ability">;
+
+/**
+ * Headsplitter (`AHh1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Headsplitter_AHh1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHh1"): Rawcode<"ability">;
+
+/**
+ * Headsplitter (`AHh2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Headsplitter_AHh2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHh2"): Rawcode<"ability">;
+
+/**
+ * Headsplitter (`AHh3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Headsplitter_AHh3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHh3"): Rawcode<"ability">;
+
+/**
+ * Holy Light (`AHhb`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.HolyLight_AHhb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHhb"): Rawcode<"ability">;
+
+/**
+ * Provoke (`AHhc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Provoke_AHhc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHhc"): Rawcode<"ability">;
+
+/**
+ * Headsplitter (`AHhr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Headsplitter_AHhr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHhr"): Rawcode<"ability">;
+
+/**
+ * Heroic Slash (`AHhs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HeroicSlash_AHhs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHhs"): Rawcode<"ability">;
+
+/**
+ * Inspire Courage (`AHi1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.InspireCourage_AHi1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHi1"): Rawcode<"ability">;
+
+/**
+ * Inspire Courage (`AHi2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.InspireCourage_AHi2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHi2"): Rawcode<"ability">;
+
+/**
+ * Inspire Courage (`AHi3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.InspireCourage_AHi3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHi3"): Rawcode<"ability">;
+
+/**
+ * Inspire Courage (`AHic`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.InspireCourage_AHic`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHic"): Rawcode<"ability">;
+
+/**
+ * Surge of Light (`AHl1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SurgeOfLight_AHl1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHl1"): Rawcode<"ability">;
+
+/**
+ * Surge of Light (`AHl2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SurgeOfLight_AHl2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHl2"): Rawcode<"ability">;
+
+/**
+ * Surge of Light (`AHl3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SurgeOfLight_AHl3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHl3"): Rawcode<"ability">;
+
+/**
+ * Light's Mercy (`AHm1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.LightsMercy_AHm1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHm1"): Rawcode<"ability">;
+
+/**
+ * Light's Mercy (`AHm2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.LightsMercy_AHm2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHm2"): Rawcode<"ability">;
+
+/**
+ * Light's Mercy (`AHm3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.LightsMercy_AHm3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHm3"): Rawcode<"ability">;
+
+/**
+ * Mind Control (`AHmc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MindControl_AHmc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHmc"): Rawcode<"ability">;
+
+/**
+ * Mass Teleport (`AHmt`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.MassTeleport_AHmt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHmt"): Rawcode<"ability">;
+
+/**
+ * Challenging Call (`AHnt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ChallengingCall_AHnt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHnt"): Rawcode<"ability">;
+
+/**
+ * Sacred Aura (`AHpa`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SacredAura_AHpa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHpa"): Rawcode<"ability">;
+
+/**
+ * Holy Wrath (`AHpb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HolyWrath_AHpb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHpb"): Rawcode<"ability">;
+
+/**
+ * Phoenix (`AHpx`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Phoenix_AHpx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHpx"): Rawcode<"ability">;
+
+/**
+ * Guiding Hand (`AHq1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GuidingHand_AHq1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHq1"): Rawcode<"ability">;
+
+/**
+ * Guiding Hand (`AHq2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GuidingHand_AHq2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHq2"): Rawcode<"ability">;
+
+/**
+ * Guiding Hand (`AHq3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GuidingHand_AHq3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHq3"): Rawcode<"ability">;
+
+/**
+ * Resurrection (`AHre`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Resurrection_AHre`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHre"): Rawcode<"ability">;
+
+/**
+ * Sweeping Strike (`AHs1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SweepingStrike_AHs1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHs1"): Rawcode<"ability">;
+
+/**
+ * Sweeping Strike (`AHs2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SweepingStrike_AHs2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHs2"): Rawcode<"ability">;
+
+/**
+ * Sweeping Strike (`AHs3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SweepingStrike_AHs3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHs3"): Rawcode<"ability">;
+
+/**
+ * Light's Mercy (`AHsf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.LightsMercy_AHsf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHsf"): Rawcode<"ability">;
+
+/**
+ * Surge of Light (`AHsl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SurgeOfLight_AHsl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHsl"): Rawcode<"ability">;
+
+/**
+ * Hardened Skin (`AHss`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HardenedSkin_AHss`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHss"): Rawcode<"ability">;
+
+/**
+ * Sweeping Strike (`AHsw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SweepingStrike_AHsw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHsw"): Rawcode<"ability">;
+
+/**
+ * Reveal (`AHta`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Reveal_AHta`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHta"): Rawcode<"ability">;
+
+/**
+ * Storm Bolt (`AHtb`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.StormBolt_AHtb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHtb"): Rawcode<"ability">;
+
+/**
+ * Thunder Clap (`AHtc`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.ThunderClap_AHtc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHtc"): Rawcode<"ability">;
+
+/**
+ * Provoke (`AHu1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Provoke_AHu1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHu1"): Rawcode<"ability">;
+
+/**
+ * Provoke (`AHu2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Provoke_AHu2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHu2"): Rawcode<"ability">;
+
+/**
+ * Provoke (`AHu3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Provoke_AHu3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHu3"): Rawcode<"ability">;
+
+/**
+ * Heroic Slash (`AHv1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HeroicSlash_AHv1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHv1"): Rawcode<"ability">;
+
+/**
+ * Heroic Slash (`AHv2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HeroicSlash_AHv2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHv2"): Rawcode<"ability">;
+
+/**
+ * Heroic Slash (`AHv3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HeroicSlash_AHv3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHv3"): Rawcode<"ability">;
+
+/**
+ * Warcry (`AHw1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Warcry_AHw1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHw1"): Rawcode<"ability">;
+
+/**
+ * Warcry (`AHw2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Warcry_AHw2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHw2"): Rawcode<"ability">;
+
+/**
+ * Warcry (`AHw3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Warcry_AHw3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHw3"): Rawcode<"ability">;
+
+/**
+ * `AHw4`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AHw4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHw4"): Rawcode<"ability">;
+
+/**
+ * `AHw5`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AHw5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHw5"): Rawcode<"ability">;
+
+/**
+ * `AHw6`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AHw6`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHw6"): Rawcode<"ability">;
+
+/**
+ * `AHw7`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AHw7`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHw7"): Rawcode<"ability">;
+
+/**
+ * `AHw8`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AHw8`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHw8"): Rawcode<"ability">;
+
+/**
+ * `AHw9`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AHw9`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHw9"): Rawcode<"ability">;
+
+/**
+ * Warcry (`AHwc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Warcry_AHwc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHwc"): Rawcode<"ability">;
+
+/**
+ * Summon Water Elemental (`AHwe`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.SummonWaterElemental_AHwe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHwe"): Rawcode<"ability">;
+
+/**
+ * Mind Control (`AHz1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MindControl_AHz1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHz1"): Rawcode<"ability">;
+
+/**
+ * Mind Control (`AHz2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MindControl_AHz2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHz2"): Rawcode<"ability">;
+
+/**
+ * Mind Control (`AHz3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MindControl_AHz3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AHz3"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AI10`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AI10`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AI10"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AI11`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AI11`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AI11"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AI12`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AI12`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AI12"): Rawcode<"ability">;
+
+/**
+ * Item Mana Bonus (200) (`AI2m`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaBonus200_AI2m`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AI2m"): Rawcode<"ability">;
+
+/**
+ * Item Armor Bonus -1 (`AIAq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorBonus1_AIAq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIAq"): Rawcode<"ability">;
+
+/**
+ * Item Armor Bonus -2 (`AIAw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorBonus2_AIAw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIAw"): Rawcode<"ability">;
+
+/**
+ * Item Bash (15, 25, 1) (`AIBq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBash15251_AIBq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIBq"): Rawcode<"ability">;
+
+/**
+ * Item Bash (10, 25, 2) (`AIBw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBash10252_AIBw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIBw"): Rawcode<"ability">;
+
+/**
+ * Item Evasion 12 (`AIEi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEvasion12_AIEi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIEi"): Rawcode<"ability">;
+
+/**
+ * Item Evasion 2 (`AIEq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEvasion2_AIEq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIEq"): Rawcode<"ability">;
+
+/**
+ * Item Evasion 5 (`AIEr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEvasion5_AIEr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIEr"): Rawcode<"ability">;
+
+/**
+ * Item Evasion 7 (`AIEt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEvasion7_AIEt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIEt"): Rawcode<"ability">;
+
+/**
+ * Item Evasion 10 (`AIEu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEvasion10_AIEu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIEu"): Rawcode<"ability">;
+
+/**
+ * Item Evasion 4 (`AIEw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEvasion4_AIEw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIEw"): Rawcode<"ability">;
+
+/**
+ * Item Evasion 8 (`AIEy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEvasion8_AIEy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIEy"): Rawcode<"ability">;
+
+/**
+ * Item Life Bonus 250 (`AILa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeBonus250_AILa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AILa"): Rawcode<"ability">;
+
+/**
+ * Item Life Bonus 280 (`AILe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeBonus280_AILe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AILe"): Rawcode<"ability">;
+
+/**
+ * Item Life Bonus 40 (`AILi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeBonus40_AILi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AILi"): Rawcode<"ability">;
+
+/**
+ * Item Life Bonus 60 (`AILr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeBonus60_AILr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AILr"): Rawcode<"ability">;
+
+/**
+ * Item Life Bonus 200 (`AILt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeBonus200_AILt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AILt"): Rawcode<"ability">;
+
+/**
+ * Item Life Bonus 50 (`AILw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeBonus50_AILw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AILw"): Rawcode<"ability">;
+
+/**
+ * Item Life Bonus 20 (`AILy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeBonus20_AILy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AILy"): Rawcode<"ability">;
+
+/**
+ * Item Resolve 5 (`AIR5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemResolve5_AIR5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIR5"): Rawcode<"ability">;
+
+/**
+ * Item Resolve 20 (`AIRo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemResolve20_AIRo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIRo"): Rawcode<"ability">;
+
+/**
+ * Item Resolve 12 (`AIRp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemResolve12_AIRp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIRp"): Rawcode<"ability">;
+
+/**
+ * Item Resolve 10 (`AIRq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemResolve10_AIRq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIRq"): Rawcode<"ability">;
+
+/**
+ * Item Resolve 16 (`AIRu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemResolve16_AIRu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIRu"): Rawcode<"ability">;
+
+/**
+ * Item Resolve 8 (`AIRw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemResolve8_AIRw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIRw"): Rawcode<"ability">;
+
+/**
+ * Item Resolve 6 (`AIRy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemResolve6_AIRy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIRy"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIa1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIa1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIa1"): Rawcode<"ability">;
+
+/**
+ * `AIa2`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIa2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIa2"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIa3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIa3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIa3"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIa4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIa4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIa4"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIa5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIa5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIa5"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIa6`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIa6`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIa6"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIa7`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIa7`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIa7"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIa8`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIa8`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIa8"): Rawcode<"ability">;
+
+/**
+ * Item Permanent Damage Gain, Item Attack Damage Gain (`AIaa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPermanentDamageGainItemAttackDamageGain_AIaa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIaa"): Rawcode<"ability">;
+
+/**
+ * `AIad`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIad`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIad"): Rawcode<"ability">;
+
+/**
+ * `AIae`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIae`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIae"): Rawcode<"ability">;
+
+/**
+ * Item Agility Gain (`AIam`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAgilityGain_AIam`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIam"): Rawcode<"ability">;
+
+/**
+ * Item Animate Dead (`AIan`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAnimateDead_AIan`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIan"): Rawcode<"ability">;
+
+/**
+ * Item Spell Amp (`AIap`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellAmp_AIap`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIap"): Rawcode<"ability">;
+
+/**
+ * `AIar`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIar`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIar"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus (`AIat`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus_AIat`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIat"): Rawcode<"ability">;
+
+/**
+ * `AIau`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIau`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIau"): Rawcode<"ability">;
+
+/**
+ * `AIav`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIav`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIav"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIaz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIaz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIaz"): Rawcode<"ability">;
+
+/**
+ * `AIba`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIba`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIba"): Rawcode<"ability">;
+
+/**
+ * Build Tiny Blacksmith (`AIbb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BuildTinyBlacksmith_AIbb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIbb"): Rawcode<"ability">;
+
+/**
+ * `AIbd`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIbd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIbd"): Rawcode<"ability">;
+
+/**
+ * Build Tiny Farm (`AIbf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BuildTinyFarm_AIbf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIbf"): Rawcode<"ability">;
+
+/**
+ * Build Tiny Great Hall (`AIbg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BuildTinyGreatHall_AIbg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIbg"): Rawcode<"ability">;
+
+/**
+ * Build Tiny Altar of Kings (`AIbh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BuildTinyAltarOfKings_AIbh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIbh"): Rawcode<"ability">;
+
+/**
+ * Blink (Item Version) (`AIbk`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BlinkItemVersion_AIbk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIbk"): Rawcode<"ability">;
+
+/**
+ * Build Tiny Castle (`AIbl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BuildTinyCastle_AIbl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIbl"): Rawcode<"ability">;
+
+/**
+ * Item Mana Bonus (`AIbm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaBonus_AIbm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIbm"): Rawcode<"ability">;
+
+/**
+ * Build Tiny Lumber Mill (`AIbr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BuildTinyLumberMill_AIbr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIbr"): Rawcode<"ability">;
+
+/**
+ * Build Tiny Barracks (`AIbs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BuildTinyBarracks_AIbs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIbs"): Rawcode<"ability">;
+
+/**
+ * Build Tiny Scout Tower (`AIbt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BuildTinyScoutTower_AIbt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIbt"): Rawcode<"ability">;
+
+/**
+ * Bash (`AIbx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Bash_AIbx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIbx"): Rawcode<"ability">;
+
+/**
+ * Item Attack Corruption Bonus (`AIcb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackCorruptionBonus_AIcb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIcb"): Rawcode<"ability">;
+
+/**
+ * `AIcd`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIcd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIcd"): Rawcode<"ability">;
+
+/**
+ * Item Immolation (`AIcf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemImmolation_AIcf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIcf"): Rawcode<"ability">;
+
+/**
+ * Chain Lightning (`AIcl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ChainLightning_AIcl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIcl"): Rawcode<"ability">;
+
+/**
+ * Control Magic (`AIcm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ControlMagic_AIcm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIcm"): Rawcode<"ability">;
+
+/**
+ * Item Command (`AIco`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCommand_AIco`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIco"): Rawcode<"ability">;
+
+/**
+ * Item Aura Command 8 (`AIcq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAuraCommand8_AIcq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIcq"): Rawcode<"ability">;
+
+/**
+ * Item Cooldown Reduction (`AIcr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCooldownReduction_AIcr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIcr"): Rawcode<"ability">;
+
+/**
+ * Critical Strike (`AIcs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.CriticalStrike_AIcs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIcs"): Rawcode<"ability">;
+
+/**
+ * Change Time of Day (`AIct`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ChangeTimeOfDay_AIct`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIct"): Rawcode<"ability">;
+
+/**
+ * Cyclone (`AIcy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Cyclone_AIcy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIcy"): Rawcode<"ability">;
+
+/**
+ * Item Armor Bonus (`AId0`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorBonus_AId0`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AId0"): Rawcode<"ability">;
+
+/**
+ * Item Armor Bonus (`AId1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorBonus_AId1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AId1"): Rawcode<"ability">;
+
+/**
+ * Item Armor Bonus (`AId2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorBonus_AId2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AId2"): Rawcode<"ability">;
+
+/**
+ * Item Armor Bonus (`AId3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorBonus_AId3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AId3"): Rawcode<"ability">;
+
+/**
+ * Item Armor Bonus (`AId4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorBonus_AId4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AId4"): Rawcode<"ability">;
+
+/**
+ * Item Armor Bonus (`AId5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorBonus_AId5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AId5"): Rawcode<"ability">;
+
+/**
+ * Item Armor Bonus (`AId6`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorBonus_AId6`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AId6"): Rawcode<"ability">;
+
+/**
+ * Item Armor Bonus (`AId7`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorBonus_AId7`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AId7"): Rawcode<"ability">;
+
+/**
+ * Item Armor Bonus (`AId8`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorBonus_AId8`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AId8"): Rawcode<"ability">;
+
+/**
+ * Item Temporary Area Armor Bonus (`AIda`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTemporaryAreaArmorBonus_AIda`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIda"): Rawcode<"ability">;
+
+/**
+ * Item Temporary Area Armor Bonus (`AIdb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTemporaryAreaArmorBonus_AIdb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIdb"): Rawcode<"ability">;
+
+/**
+ * Item Chain Dispel (`AIdc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemChainDispel_AIdc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIdc"): Rawcode<"ability">;
+
+/**
+ * Defend, Passive Defense (`AIdd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.DefendPassiveDefense_AIdd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIdd"): Rawcode<"ability">;
+
+/**
+ * Item Attack Black Arrow Bonus (`AIdf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackBlackArrowBonus_AIdf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIdf"): Rawcode<"ability">;
+
+/**
+ * Ritual Dagger (`AIdg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RitualDagger_AIdg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIdg"): Rawcode<"ability">;
+
+/**
+ * Item Dispel (`AIdi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDispel_AIdi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIdi"): Rawcode<"ability">;
+
+/**
+ * Item Area tree/wall damage (`AIdm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAreaTreeWallDamage_AIdm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIdm"): Rawcode<"ability">;
+
+/**
+ * Shadow Orb Ability (`AIdn`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ShadowOrbAbility_AIdn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIdn"): Rawcode<"ability">;
+
+/**
+ * Death Pact (`AIdp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.DeathPact_AIdp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIdp"): Rawcode<"ability">;
+
+/**
+ * Item Dispel (`AIds`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDispel_AIds`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIds"): Rawcode<"ability">;
+
+/**
+ * Item Divine Shield (`AIdv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDivineShield_AIdv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIdv"): Rawcode<"ability">;
+
+/**
+ * Item Experience Gain (`AIe2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemExperienceGain_AIe2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIe2"): Rawcode<"ability">;
+
+/**
+ * Item Edric's Eye (`AIee`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEdricsEye_AIee`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIee"): Rawcode<"ability">;
+
+/**
+ * Item Experience Gain (`AIem`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemExperienceGain_AIem`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIem"): Rawcode<"ability">;
+
+/**
+ * `AIes`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIes`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIes"): Rawcode<"ability">;
+
+/**
+ * Evasion (`AIev`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Evasion_AIev`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIev"): Rawcode<"ability">;
+
+/**
+ * Item Attack Heal Reduction Bonus (`AIf2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackHealReductionBonus_AIf2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIf2"): Rawcode<"ability">;
+
+/**
+ * Flare Gun (`AIfa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.FlareGun_AIfa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfa"): Rawcode<"ability">;
+
+/**
+ * Item Attack Fire Bonus (`AIfb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackFireBonus_AIfb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfb"): Rawcode<"ability">;
+
+/**
+ * Item Blue Drake Summon (`AIfd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBlueDrakeSummon_AIfd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfd"): Rawcode<"ability">;
+
+/**
+ * Item Capture The Flag (`AIfe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCaptureTheFlag_AIfe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfe"): Rawcode<"ability">;
+
+/**
+ * Item Blue Dragonspawn Overseer Summon (`AIff`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBlueDragonspawnOverseerSummon_AIff`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIff"): Rawcode<"ability">;
+
+/**
+ * Cloud of Fog (`AIfg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.CloudOfFog_AIfg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfg"): Rawcode<"ability">;
+
+/**
+ * Item Fel Stalker Summon (`AIfh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemFelStalkerSummon_AIfh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfh"): Rawcode<"ability">;
+
+/**
+ * Item Capture The Flag (`AIfl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCaptureTheFlag_AIfl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfl"): Rawcode<"ability">;
+
+/**
+ * Item Capture The Flag (`AIfm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCaptureTheFlag_AIfm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfm"): Rawcode<"ability">;
+
+/**
+ * Item Capture The Flag (`AIfn`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCaptureTheFlag_AIfn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfn"): Rawcode<"ability">;
+
+/**
+ * Item Capture The Flag (`AIfo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCaptureTheFlag_AIfo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfo"): Rawcode<"ability">;
+
+/**
+ * Item Rock Golem Summon (`AIfr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRockGolemSummon_AIfr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfr"): Rawcode<"ability">;
+
+/**
+ * Item Skeleton Summon (`AIfs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSkeletonSummon_AIfs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfs"): Rawcode<"ability">;
+
+/**
+ * Melee Cold Damage Bonus (`AIft`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MeleeColdDamageBonus_AIft`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIft"): Rawcode<"ability">;
+
+/**
+ * Item Doom Guard Summon (`AIfu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDoomGuardSummon_AIfu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfu"): Rawcode<"ability">;
+
+/**
+ * Melee Fire Damage Bonus (`AIfw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MeleeFireDamageBonus_AIfw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfw"): Rawcode<"ability">;
+
+/**
+ * Item Orcish Battle Standard (`AIfx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemOrcishBattleStandard_AIfx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfx"): Rawcode<"ability">;
+
+/**
+ * Finger of Death (`AIfz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.FingerOfDeath_AIfz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIfz"): Rawcode<"ability">;
+
+/**
+ * Ritual Dagger (`AIg2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RitualDagger_AIg2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIg2"): Rawcode<"ability">;
+
+/**
+ * Item Attack Fire Bonus (`AIgd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackFireBonus_AIgd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIgd"): Rawcode<"ability">;
+
+/**
+ * Glyph of Fortification (`AIgf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GlyphOfFortification_AIgf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIgf"): Rawcode<"ability">;
+
+/**
+ * Item Agility Gain (`AIgm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAgilityGain_AIgm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIgm"): Rawcode<"ability">;
+
+/**
+ * Chest of Gold (`AIgo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ChestOfGold_AIgo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIgo"): Rawcode<"ability">;
+
+/**
+ * Glyph of Fortification (`AIgu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GlyphOfFortification_AIgu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIgu"): Rawcode<"ability">;
+
+/**
+ * Regeneration Aura (`AIgx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RegenerationAura_AIgx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIgx"): Rawcode<"ability">;
+
+/**
+ * Item Healing (`AIh1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealing_AIh1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIh1"): Rawcode<"ability">;
+
+/**
+ * Item Healing (`AIh2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealing_AIh2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIh2"): Rawcode<"ability">;
+
+/**
+ * Least Healing (`AIh3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.LeastHealing_AIh3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIh3"): Rawcode<"ability">;
+
+/**
+ * Item Healing (`AIh4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealing_AIh4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIh4"): Rawcode<"ability">;
+
+/**
+ * Item Healing (`AIh5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealing_AIh5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIh5"): Rawcode<"ability">;
+
+/**
+ * Item Area Healing (`AIha`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAreaHealing_AIha`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIha"): Rawcode<"ability">;
+
+/**
+ * Item Area Healing (`AIhb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAreaHealing_AIhb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIhb"): Rawcode<"ability">;
+
+/**
+ * Holy Light (`AIhl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HolyLight_AIhl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIhl"): Rawcode<"ability">;
+
+/**
+ * Shadow Meld (Item) (`AIhm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ShadowMeldItem_AIhm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIhm"): Rawcode<"ability">;
+
+/**
+ * Item Hardened Skin (`AIhs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHardenedSkin_AIhs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIhs"): Rawcode<"ability">;
+
+/**
+ * Healing Ward (`AIhw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HealingWard_AIhw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIhw"): Rawcode<"ability">;
+
+/**
+ * Item Healing (`AIhx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealing_AIhx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIhx"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIi1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIi1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIi1"): Rawcode<"ability">;
+
+/**
+ * `AIi2`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIi2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIi2"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIi3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIi3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIi3"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIi4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIi4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIi4"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIi5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIi5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIi5"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIi6`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIi6`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIi6"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIi8`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIi8`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIi8"): Rawcode<"ability">;
+
+/**
+ * Item Illusions (`AIil`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemIllusions_AIil`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIil"): Rawcode<"ability">;
+
+/**
+ * Item Intelligence Gain (`AIim`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemIntelligenceGain_AIim`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIim"): Rawcode<"ability">;
+
+/**
+ * `AIin`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIin`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIin"): Rawcode<"ability">;
+
+/**
+ * Item Ice Revenant Summon (`AIir`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemIceRevenantSummon_AIir`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIir"): Rawcode<"ability">;
+
+/**
+ * Item Kris Incinerate (`AIki`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemKrisIncinerate_AIki`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIki"): Rawcode<"ability">;
+
+/**
+ * Item Life Bonus (`AIl1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeBonus_AIl1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIl1"): Rawcode<"ability">;
+
+/**
+ * Item Life Bonus (`AIl2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeBonus_AIl2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIl2"): Rawcode<"ability">;
+
+/**
+ * Item Life Bonus 25 (`AIl3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeBonus25_AIl3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIl3"): Rawcode<"ability">;
+
+/**
+ * Item Attack Lightning Bonus (`AIlb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackLightningBonus_AIlb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIlb"): Rawcode<"ability">;
+
+/**
+ * Item Life Bonus (`AIlf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeBonus_AIlf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIlf"): Rawcode<"ability">;
+
+/**
+ * Item Attack Lightning Bonus (new) (`AIll`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackLightningBonusNew_AIll`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIll"): Rawcode<"ability">;
+
+/**
+ * Item Level Gain (`AIlm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLevelGain_AIlm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIlm"): Rawcode<"ability">;
+
+/**
+ * Item Lich Orb (`AIlo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLichOrb_AIlo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIlo"): Rawcode<"ability">;
+
+/**
+ * Item Purge (`AIlp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPurge_AIlp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIlp"): Rawcode<"ability">;
+
+/**
+ * Item Life Bonus 100 (`AIlq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeBonus100_AIlq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIlq"): Rawcode<"ability">;
+
+/**
+ * Lightning Shield (`AIls`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.LightningShield_AIls`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIls"): Rawcode<"ability">;
+
+/**
+ * Bundle of Lumber (`AIlu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BundleOfLumber_AIlu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIlu"): Rawcode<"ability">;
+
+/**
+ * Item Resolve 30 (`AIlv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemResolve30_AIlv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIlv"): Rawcode<"ability">;
+
+/**
+ * Melee Lightning Damage Bonus (`AIlx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MeleeLightningDamageBonus_AIlx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIlx"): Rawcode<"ability">;
+
+/**
+ * Item Life Bonus (`AIlz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeBonus_AIlz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIlz"): Rawcode<"ability">;
+
+/**
+ * Item Mana Regain (`AIm1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRegain_AIm1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIm1"): Rawcode<"ability">;
+
+/**
+ * Item Mana Regain (`AIm2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRegain_AIm2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIm2"): Rawcode<"ability">;
+
+/**
+ * Item Mana Regain (`AIm4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRegain_AIm4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIm4"): Rawcode<"ability">;
+
+/**
+ * Item Mana Bonus (`AImb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaBonus_AImb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AImb"): Rawcode<"ability">;
+
+/**
+ * Item Mana Efficiency (`AIme`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaEfficiency_AIme`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIme"): Rawcode<"ability">;
+
+/**
+ * Item Permanent Life Gain (`AImh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPermanentLifeGain_AImh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AImh"): Rawcode<"ability">;
+
+/**
+ * Monster Lure (`AImo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MonsterLure_AImo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AImo"): Rawcode<"ability">;
+
+/**
+ * Item Mana Efficiency 2 (`AImq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaEfficiency2_AImq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AImq"): Rawcode<"ability">;
+
+/**
+ * Item Area Mana Regain (`AImr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAreaManaRegain_AImr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AImr"): Rawcode<"ability">;
+
+/**
+ * Item Move Speed Bonus (`AIms`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemMoveSpeedBonus_AIms`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIms"): Rawcode<"ability">;
+
+/**
+ * Staff of Teleportation (`AImt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.StaffOfTeleportation_AImt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AImt"): Rawcode<"ability">;
+
+/**
+ * Item Mana Bonus (75) (`AImv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaBonus75_AImv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AImv"): Rawcode<"ability">;
+
+/**
+ * Item Mana Efficiency 5 (`AImw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaEfficiency5_AImw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AImw"): Rawcode<"ability">;
+
+/**
+ * Spell Immunity (`AImx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SpellImmunity_AImx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AImx"): Rawcode<"ability">;
+
+/**
+ * Item Mana Bonus (100) (`AImz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaBonus100_AImz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AImz"): Rawcode<"ability">;
+
+/**
+ * Reanimation (`AInd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Reanimation_AInd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AInd"): Rawcode<"ability">;
+
+/**
+ * Expanded Inventory (`AIni`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ExpandedInventory_AIni`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIni"): Rawcode<"ability">;
+
+/**
+ * Item Strength Gain (`AInm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemStrengthGain_AInm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AInm"): Rawcode<"ability">;
+
+/**
+ * Slow (Orb of Slow New) (`AIno`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SlowOrbOfSlowNew_AIno`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIno"): Rawcode<"ability">;
+
+/**
+ * Item Necromancer's Plaguegreaves (`AInp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemNecromancersPlaguegreaves_AInp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AInp"): Rawcode<"ability">;
+
+/**
+ * Inventory (`AInv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Inventory_AInv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AInv"): Rawcode<"ability">;
+
+/**
+ * Equipment Inventory (`AInx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.EquipmentInventory_AInx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AInx"): Rawcode<"ability">;
+
+/**
+ * Item Attack Frost Bonus (`AIob`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackFrostBonus_AIob`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIob"): Rawcode<"ability">;
+
+/**
+ * Item Slow (`AIos`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSlow_AIos`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIos"): Rawcode<"ability">;
+
+/**
+ * Item Ogre Warclub Stats (`AIow`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemOgreWarclubStats_AIow`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIow"): Rawcode<"ability">;
+
+/**
+ * Generic Item-Rejuv Effect (`AIp1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GenericItemRejuvEffect_AIp1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIp1"): Rawcode<"ability">;
+
+/**
+ * Generic Item-Rejuv Effect (`AIp2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GenericItemRejuvEffect_AIp2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIp2"): Rawcode<"ability">;
+
+/**
+ * Generic Item-Rejuv Effect (`AIp3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GenericItemRejuvEffect_AIp3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIp3"): Rawcode<"ability">;
+
+/**
+ * Generic Item-Rejuv Effect (`AIp4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GenericItemRejuvEffect_AIp4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIp4"): Rawcode<"ability">;
+
+/**
+ * Generic Item-Rejuv Effect (`AIp5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GenericItemRejuvEffect_AIp5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIp5"): Rawcode<"ability">;
+
+/**
+ * Generic Item-Rejuv Effect (`AIp6`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GenericItemRejuvEffect_AIp6`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIp6"): Rawcode<"ability">;
+
+/**
+ * Item Attack Poison Bonus (`AIpb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackPoisonBonus_AIpb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIpb"): Rawcode<"ability">;
+
+/**
+ * Item Purge (`AIpg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPurge_AIpg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIpg"): Rawcode<"ability">;
+
+/**
+ * Lesser Clarity Potion (`AIpl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.LesserClarityPotion_AIpl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIpl"): Rawcode<"ability">;
+
+/**
+ * Item Place Goblin Land Mine (`AIpm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPlaceGoblinLandMine_AIpm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIpm"): Rawcode<"ability">;
+
+/**
+ * Clarity Potion (`AIpr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ClarityPotion_AIpr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIpr"): Rawcode<"ability">;
+
+/**
+ * Item Purge (`AIps`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPurge_AIps`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIps"): Rawcode<"ability">;
+
+/**
+ * Vampiric Potion (`AIpv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.VampiricPotion_AIpv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIpv"): Rawcode<"ability">;
+
+/**
+ * Item Purge (`AIpw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPurge_AIpw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIpw"): Rawcode<"ability">;
+
+/**
+ * Item Permanent Life Gain (`AIpx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPermanentLifeGain_AIpx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIpx"): Rawcode<"ability">;
+
+/**
+ * Penguin Squeek (`AIpz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PenguinSqueek_AIpz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIpz"): Rawcode<"ability">;
+
+/**
+ * Item Area Heal/Mana Regain (`AIra`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAreaHealManaRegain_AIra`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIra"): Rawcode<"ability">;
+
+/**
+ * Rebirth (`AIrb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Rebirth_AIrb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIrb"): Rawcode<"ability">;
+
+/**
+ * Item Reincarnation (`AIrc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemReincarnation_AIrc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIrc"): Rawcode<"ability">;
+
+/**
+ * Raise Dead (Item) (`AIrd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RaiseDeadItem_AIrd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIrd"): Rawcode<"ability">;
+
+/**
+ * Item Heal/Mana Regain (`AIre`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHealManaRegain_AIre`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIre"): Rawcode<"ability">;
+
+/**
+ * Random Item (`AIri`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RandomItem_AIri`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIri"): Rawcode<"ability">;
+
+/**
+ * Healing Salve (`AIrl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HealingSalve_AIrl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIrl"): Rawcode<"ability">;
+
+/**
+ * Item Mana Regeneration (`AIrm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRegeneration_AIrm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIrm"): Rawcode<"ability">;
+
+/**
+ * `AIrn`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIrn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIrn"): Rawcode<"ability">;
+
+/**
+ * Roar (`AIrr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Roar_AIrr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIrr"): Rawcode<"ability">;
+
+/**
+ * Item Resurrection (`AIrs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemResurrection_AIrs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIrs"): Rawcode<"ability">;
+
+/**
+ * Item Recall (`AIrt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRecall_AIrt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIrt"): Rawcode<"ability">;
+
+/**
+ * Item Reveal Entire Map (`AIrv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRevealEntireMap_AIrv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIrv"): Rawcode<"ability">;
+
+/**
+ * Item Resurrection (`AIrx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemResurrection_AIrx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIrx"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIs1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIs1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIs1"): Rawcode<"ability">;
+
+/**
+ * `AIs2`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIs2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIs2"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIs3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIs3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIs3"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIs4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIs4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIs4"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIs5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIs5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIs5"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIs6`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIs6`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIs6"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIs7`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIs7`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIs7"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIs8`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIs8`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIs8"): Rawcode<"ability">;
+
+/**
+ * Scroll of Haste (`AIsa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ScrollOfHaste_AIsa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsa"): Rawcode<"ability">;
+
+/**
+ * Item Attack Slow Bonus (`AIsb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSlowBonus_AIsb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsb"): Rawcode<"ability">;
+
+/**
+ * Item Spell Crit (`AIsc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellCrit_AIsc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsc"): Rawcode<"ability">;
+
+/**
+ * Item Signet of Decay (`AIsd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSignetOfDecay_AIsd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsd"): Rawcode<"ability">;
+
+/**
+ * Item Silence (`AIse`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSilence_AIse`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIse"): Rawcode<"ability">;
+
+/**
+ * Summon Headhunter (`AIsh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SummonHeadhunter_AIsh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsh"): Rawcode<"ability">;
+
+/**
+ * Item Sight Range Bonus (`AIsi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSightRangeBonus_AIsi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsi"): Rawcode<"ability">;
+
+/**
+ * Scroll of Regeneration (`AIsl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ScrollOfRegeneration_AIsl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsl"): Rawcode<"ability">;
+
+/**
+ * Item Strength Gain (`AIsm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemStrengthGain_AIsm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsm"): Rawcode<"ability">;
+
+/**
+ * Item Soul Theft (`AIso`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSoulTheft_AIso`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIso"): Rawcode<"ability">;
+
+/**
+ * Item Temporary Speed Bonus (`AIsp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTemporarySpeedBonus_AIsp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsp"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed Bonus 5 (`AIsq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeedBonus5_AIsq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsq"): Rawcode<"ability">;
+
+/**
+ * Spell Damage Reduction (`AIsr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SpellDamageReduction_AIsr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsr"): Rawcode<"ability">;
+
+/**
+ * Spell Damage Reduction Stacking (`AIss`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SpellDamageReductionStacking_AIss`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIss"): Rawcode<"ability">;
+
+/**
+ * Item Spell Vamp (`AIsv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellVamp_AIsv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsv"): Rawcode<"ability">;
+
+/**
+ * Sentry Ward (`AIsw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SentryWard_AIsw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsw"): Rawcode<"ability">;
+
+/**
+ * Item Attack Speed Bonus (`AIsx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAttackSpeedBonus_AIsx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsx"): Rawcode<"ability">;
+
+/**
+ * Slow Poison (`AIsz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SlowPoison_AIsz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIsz"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus (`AIt6`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus_AIt6`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIt6"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus (`AIt9`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus_AIt9`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIt9"): Rawcode<"ability">;
+
+/**
+ * Item Area Detection (`AIta`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAreaDetection_AIta`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIta"): Rawcode<"ability">;
+
+/**
+ * Dust of Appearance (`AItb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.DustOfAppearance_AItb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AItb"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus (`AItc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus_AItc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AItc"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus (`AItf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus_AItf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AItf"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus (`AItg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus_AItg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AItg"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus (`AIth`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus_AIth`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIth"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus (`AIti`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus_AIti`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIti"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus (`AItj`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus_AItj`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AItj"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus (`AItk`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus_AItk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AItk"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus (`AItl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus_AItl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AItl"): Rawcode<"ability">;
+
+/**
+ * Item Intelligence Gain (`AItm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemIntelligenceGain_AItm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AItm"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus (`AItn`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus_AItn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AItn"): Rawcode<"ability">;
+
+/**
+ * Item Town Portal (`AItp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTownPortal_AItp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AItp"): Rawcode<"ability">;
+
+/**
+ * Item Transmute (`AIts`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTransmute_AIts`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIts"): Rawcode<"ability">;
+
+/**
+ * Item Damage Bonus (`AItx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDamageBonus_AItx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AItx"): Rawcode<"ability">;
+
+/**
+ * Unholy Frenzy (`AIuf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnholyFrenzy_AIuf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIuf"): Rawcode<"ability">;
+
+/**
+ * Item Furbolg Tracker Summon (`AIut`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemFurbolgTrackerSummon_AIut`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIut"): Rawcode<"ability">;
+
+/**
+ * Ultravision (`AIuv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Ultravision_AIuv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIuv"): Rawcode<"ability">;
+
+/**
+ * Item Ursa Warrior Summon (`AIuw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemUrsaWarriorSummon_AIuw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIuw"): Rawcode<"ability">;
+
+/**
+ * Item Temporary Invisibility (`AIv1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTemporaryInvisibility_AIv1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIv1"): Rawcode<"ability">;
+
+/**
+ * Item Temporary Invisibility (`AIv2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTemporaryInvisibility_AIv2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIv2"): Rawcode<"ability">;
+
+/**
+ * Item Life Steal (`AIva`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeSteal_AIva`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIva"): Rawcode<"ability">;
+
+/**
+ * Item Temporary Invulnerability (`AIvg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTemporaryInvulnerability_AIvg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIvg"): Rawcode<"ability">;
+
+/**
+ * Item Temporary Invulnerability (`AIvl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTemporaryInvulnerability_AIvl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIvl"): Rawcode<"ability">;
+
+/**
+ * `AIvm`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIvm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIvm"): Rawcode<"ability">;
+
+/**
+ * Item Temporary Invulnerability (`AIvu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTemporaryInvulnerability_AIvu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIvu"): Rawcode<"ability">;
+
+/**
+ * Item Life Steal Stacking (`AIvx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeStealStacking_AIvx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIvx"): Rawcode<"ability">;
+
+/**
+ * Item Web (`AIwb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemWeb_AIwb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIwb"): Rawcode<"ability">;
+
+/**
+ * `AIwd`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_AIwd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIwd"): Rawcode<"ability">;
+
+/**
+ * Watery Minion (`AIwm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.WateryMinion_AIwm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIwm"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIx1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIx1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIx1"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIx2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIx2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIx2"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIx3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIx3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIx3"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIx4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIx4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIx4"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIx5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIx5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIx5"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIx6`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIx6`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIx6"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AIx7`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AIx7`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIx7"): Rawcode<"ability">;
+
+/**
+ * Berserk (`AIxk`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Berserk_AIxk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIxk"): Rawcode<"ability">;
+
+/**
+ * Item Int/Agi/Str gain (`AIxm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemIntAgiStrGain_AIxm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIxm"): Rawcode<"ability">;
+
+/**
+ * Item Critical Strike System (`AIxr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCriticalStrikeSystem_AIxr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIxr"): Rawcode<"ability">;
+
+/**
+ * Item Anti-Magic Shell (`AIxs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAntiMagicShell_AIxs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIxs"): Rawcode<"ability">;
+
+/**
+ * Item Freeze Damage Bonus (`AIzb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemFreezeDamageBonus_AIzb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AIzb"): Rawcode<"ability">;
+
+/**
+ * Item Lifesteal 10 (`AL10`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifesteal10_AL10`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AL10"): Rawcode<"ability">;
+
+/**
+ * Item Lance of the Dawn Attack (`ALDa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLanceOfTheDawnAttack_ALDa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ALDa"): Rawcode<"ability">;
+
+/**
+ * Slow (`ALmt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Slow_ALmt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ALmt"): Rawcode<"ability">;
+
+/**
+ * Item Life Steal 1 (`ALs1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeSteal1_ALs1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ALs1"): Rawcode<"ability">;
+
+/**
+ * Item Lifesteal 3 (`ALs3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifesteal3_ALs3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ALs3"): Rawcode<"ability">;
+
+/**
+ * Item Lifesteal 4 (`ALs4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifesteal4_ALs4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ALs4"): Rawcode<"ability">;
+
+/**
+ * Item Lifesteal 5 (`ALs5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifesteal5_ALs5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ALs5"): Rawcode<"ability">;
+
+/**
+ * Item Lifesteal 8 (`ALs8`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifesteal8_ALs8`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ALs8"): Rawcode<"ability">;
+
+/**
+ * Item Mana Efficiency 12 (`AMEi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaEfficiency12_AMEi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMEi"): Rawcode<"ability">;
+
+/**
+ * Item Mana Efficiency 7 (`AMEq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaEfficiency7_AMEq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMEq"): Rawcode<"ability">;
+
+/**
+ * Item Mana Efficiency 4 (`AMEr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaEfficiency4_AMEr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMEr"): Rawcode<"ability">;
+
+/**
+ * Item Mana Efficiency 8 (`AMEt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaEfficiency8_AMEt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMEt"): Rawcode<"ability">;
+
+/**
+ * Item Mana Efficiency 15 (`AMEu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaEfficiency15_AMEu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMEu"): Rawcode<"ability">;
+
+/**
+ * Item Mana Efficiency 6 (`AMEw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaEfficiency6_AMEw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMEw"): Rawcode<"ability">;
+
+/**
+ * Item Mana Efficiency 10 (`AMEy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaEfficiency10_AMEy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMEy"): Rawcode<"ability">;
+
+/**
+ * Item Mana Refund 5 (`AMFq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRefund5_AMFq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMFq"): Rawcode<"ability">;
+
+/**
+ * Item Mana Bonus 120 (`AMMe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaBonus120_AMMe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMMe"): Rawcode<"ability">;
+
+/**
+ * Item Mana Bonus 25 (`AMMq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaBonus25_AMMq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMMq"): Rawcode<"ability">;
+
+/**
+ * Item Mana Bonus 150 (`AMMw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaBonus150_AMMw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMMw"): Rawcode<"ability">;
+
+/**
+ * Item Mana Regeneration 70 (`AMRe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRegeneration70_AMRe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMRe"): Rawcode<"ability">;
+
+/**
+ * Item Mana Regeneration 75 (`AMRi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRegeneration75_AMRi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMRi"): Rawcode<"ability">;
+
+/**
+ * Item Mana Regeneration 65 (`AMRo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRegeneration65_AMRo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMRo"): Rawcode<"ability">;
+
+/**
+ * Item Mana Regeneration 40 (`AMRp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRegeneration40_AMRp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMRp"): Rawcode<"ability">;
+
+/**
+ * Item Mana Regeneration 100 (`AMRq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRegeneration100_AMRq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMRq"): Rawcode<"ability">;
+
+/**
+ * Item Mana Regeneration 35 (`AMRt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRegeneration35_AMRt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMRt"): Rawcode<"ability">;
+
+/**
+ * Item Mana Regeneration 30 (`AMRu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRegeneration30_AMRu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMRu"): Rawcode<"ability">;
+
+/**
+ * Item Mana Regeneration -50 (`AMRw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRegeneration50_AMRw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMRw"): Rawcode<"ability">;
+
+/**
+ * Item Mana Regeneration 25 (`AMRy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaRegeneration25_AMRy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMRy"): Rawcode<"ability">;
+
+/**
+ * Item Move Speed 20 (`AMSe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemMoveSpeed20_AMSe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMSe"): Rawcode<"ability">;
+
+/**
+ * Item Move Speed Bonus 10 (`AMSq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemMoveSpeedBonus10_AMSq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMSq"): Rawcode<"ability">;
+
+/**
+ * Item Move Speed Bonus 30 (`AMSr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemMoveSpeedBonus30_AMSr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMSr"): Rawcode<"ability">;
+
+/**
+ * Item Move Speed Bonus 40 (`AMSt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemMoveSpeedBonus40_AMSt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMSt"): Rawcode<"ability">;
+
+/**
+ * Item Movement Speed -15 (`AMSw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemMovementSpeed15_AMSw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AMSw"): Rawcode<"ability">;
+
+/**
+ * Acid Bomb (`ANab`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.AcidBomb_ANab`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANab"): Rawcode<"ability">;
+
+/**
+ * Quill Spray (`ANak`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.QuillSpray_ANak`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANak"): Rawcode<"ability">;
+
+/**
+ * Avatar (`ANav`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Avatar_ANav`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANav"): Rawcode<"ability">;
+
+/**
+ * Maul (`ANb2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Maul_ANb2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANb2"): Rawcode<"ability">;
+
+/**
+ * Black Arrow (`ANba`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.BlackArrow_ANba`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANba"): Rawcode<"ability">;
+
+/**
+ * Breath of Fire (`ANbf`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.BreathOfFire_ANbf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANbf"): Rawcode<"ability">;
+
+/**
+ * Bash (`ANbh`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Bash_ANbh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANbh"): Rawcode<"ability">;
+
+/**
+ * Blink (`ANbl`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Blink_ANbl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANbl"): Rawcode<"ability">;
+
+/**
+ * Battle Roar (`ANbr`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.BattleRoar_ANbr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANbr"): Rawcode<"ability">;
+
+/**
+ * Item Black Arrow (`ANbs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBlackArrow_ANbs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANbs"): Rawcode<"ability">;
+
+/**
+ * Build (Neutral) (`ANbu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BuildNeutral_ANbu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANbu"): Rawcode<"ability">;
+
+/**
+ * Cluster Rockets (`ANc1`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ClusterRockets_ANc1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANc1"): Rawcode<"ability">;
+
+/**
+ * Cluster Rockets (`ANc2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ClusterRockets_ANc2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANc2"): Rawcode<"ability">;
+
+/**
+ * Cluster Rockets (`ANc3`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ClusterRockets_ANc3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANc3"): Rawcode<"ability">;
+
+/**
+ * Cleaving Attack (`ANca`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.CleavingAttack_ANca`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANca"): Rawcode<"ability">;
+
+/**
+ * Breath of Fire (`ANcf`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.BreathOfFire_ANcf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANcf"): Rawcode<"ability">;
+
+/**
+ * Charm (`ANch`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Charm_ANch`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANch"): Rawcode<"ability">;
+
+/**
+ * Channel (`ANcl`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Channel_ANcl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANcl"): Rawcode<"ability">;
+
+/**
+ * Righteous Fury (`ANcp`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.RighteousFury_ANcp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANcp"): Rawcode<"ability">;
+
+/**
+ * Chemical Rage (`ANcr`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ChemicalRage_ANcr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANcr"): Rawcode<"ability">;
+
+/**
+ * Cluster Rockets (`ANcs`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ClusterRockets_ANcs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANcs"): Rawcode<"ability">;
+
+/**
+ * Demolish (`ANd1`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Demolish_ANd1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANd1"): Rawcode<"ability">;
+
+/**
+ * Demolish (`ANd2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Demolish_ANd2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANd2"): Rawcode<"ability">;
+
+/**
+ * Demolish (`ANd3`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Demolish_ANd3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANd3"): Rawcode<"ability">;
+
+/**
+ * Drunken Brawler (`ANdb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DrunkenBrawler_ANdb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANdb"): Rawcode<"ability">;
+
+/**
+ * Dark Conversion (`ANdc`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DarkConversion_ANdc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANdc"): Rawcode<"ability">;
+
+/**
+ * Demolish (`ANde`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Demolish_ANde`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANde"): Rawcode<"ability">;
+
+/**
+ * Drunken Haze (`ANdh`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DrunkenHaze_ANdh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANdh"): Rawcode<"ability">;
+
+/**
+ * Doom (`ANdo`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Doom_ANdo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANdo"): Rawcode<"ability">;
+
+/**
+ * Dark Portal (`ANdp`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DarkPortal_ANdp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANdp"): Rawcode<"ability">;
+
+/**
+ * Life Drain (`ANdr`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.LifeDrain_ANdr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANdr"): Rawcode<"ability">;
+
+/**
+ * Storm, Earth, And Fire (`ANef`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.StormEarthAndFire_ANef`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANef"): Rawcode<"ability">;
+
+/**
+ * Engineering Upgrade (`ANeg`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.EngineeringUpgrade_ANeg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANeg"): Rawcode<"ability">;
+
+/**
+ * Ensnare (`ANen`), a Built-in ability of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Abilities.Ensnare_ANen`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANen"): Rawcode<"ability">;
+
+/**
+ * Frost Arrows (`ANfa`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FrostArrows_ANfa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANfa"): Rawcode<"ability">;
+
+/**
+ * Firebolt (`ANfb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Firebolt_ANfb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANfb"): Rawcode<"ability">;
+
+/**
+ * Finger of Death (`ANfd`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FingerOfDeath_ANfd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANfd"): Rawcode<"ability">;
+
+/**
+ * Forked Lightning (`ANfl`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ForkedLightning_ANfl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANfl"): Rawcode<"ability">;
+
+/**
+ * Flame Strike (`ANfs`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FlameStrike_ANfs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANfs"): Rawcode<"ability">;
+
+/**
+ * Factory (`ANfy`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Factory_ANfy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANfy"): Rawcode<"ability">;
+
+/**
+ * Robo-Goblin (`ANg1`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.RoboGoblin_ANg1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANg1"): Rawcode<"ability">;
+
+/**
+ * Robo-Goblin (`ANg2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.RoboGoblin_ANg2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANg2"): Rawcode<"ability">;
+
+/**
+ * Robo-Goblin (`ANg3`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.RoboGoblin_ANg3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANg3"): Rawcode<"ability">;
+
+/**
+ * Harvest (`ANha`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Harvest_ANha`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANha"): Rawcode<"ability">;
+
+/**
+ * Healing Spray (`ANhs`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.HealingSpray_ANhs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANhs"): Rawcode<"ability">;
+
+/**
+ * Howl of Terror (`ANht`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.HowlOfTerror_ANht`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANht"): Rawcode<"ability">;
+
+/**
+ * Healing Wave (`ANhw`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.HealingWave_ANhw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANhw"): Rawcode<"ability">;
+
+/**
+ * Hex (`ANhx`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Hex_ANhx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANhx"): Rawcode<"ability">;
+
+/**
+ * Incinerate (`ANia`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Incinerate_ANia`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANia"): Rawcode<"ability">;
+
+/**
+ * Incinerate (`ANic`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Incinerate_ANic`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANic"): Rawcode<"ability">;
+
+/**
+ * Inferno (`ANin`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Inferno_ANin`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANin"): Rawcode<"ability">;
+
+/**
+ * Summon Lava Spawn (`ANlm`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SummonLavaSpawn_ANlm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANlm"): Rawcode<"ability">;
+
+/**
+ * Monsoon (`ANmo`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Monsoon_ANmo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANmo"): Rawcode<"ability">;
+
+/**
+ * Mind Rot (`ANmr`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.MindRot_ANmr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANmr"): Rawcode<"ability">;
+
+/**
+ * Mana Shield (`ANms`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ManaShield_ANms`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANms"): Rawcode<"ability">;
+
+/**
+ * Parasite (`ANpa`), a Built-in ability of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Abilities.Parasite_ANpa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANpa"): Rawcode<"ability">;
+
+/**
+ * Permanent Immolation (`ANpi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PermanentImmolation_ANpi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANpi"): Rawcode<"ability">;
+
+/**
+ * Staff of Preservation (`ANpr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.StaffOfPreservation_ANpr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANpr"): Rawcode<"ability">;
+
+/**
+ * Reincarnation (`ANr2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Reincarnation_ANr2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANr2"): Rawcode<"ability">;
+
+/**
+ * Rain of Chaos (`ANr3`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.RainOfChaos_ANr3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANr3"): Rawcode<"ability">;
+
+/**
+ * Rain of Chaos (`ANrc`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.RainOfChaos_ANrc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANrc"): Rawcode<"ability">;
+
+/**
+ * Mana Regeneration, Life Regeneration Aura (`ANre`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ManaRegenerationLifeRegenerationAura_ANre`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANre"): Rawcode<"ability">;
+
+/**
+ * Rain of Fire (`ANrf`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.RainOfFire_ANrf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANrf"): Rawcode<"ability">;
+
+/**
+ * Robo-Goblin (`ANrg`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.RoboGoblin_ANrg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANrg"): Rawcode<"ability">;
+
+/**
+ * Reincarnation (`ANrn`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Reincarnation_ANrn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANrn"): Rawcode<"ability">;
+
+/**
+ * Pocket Factory (`ANs1`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.PocketFactory_ANs1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANs1"): Rawcode<"ability">;
+
+/**
+ * Pocket Factory (`ANs2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.PocketFactory_ANs2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANs2"): Rawcode<"ability">;
+
+/**
+ * Pocket Factory (`ANs3`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.PocketFactory_ANs3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANs3"): Rawcode<"ability">;
+
+/**
+ * Staff of Sanctuary (`ANsa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.StaffOfSanctuary_ANsa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANsa"): Rawcode<"ability">;
+
+/**
+ * Storm Bolt (`ANsb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.StormBolt_ANsb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANsb"): Rawcode<"ability">;
+
+/**
+ * Spell Shield (`ANse`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SpellShield_ANse`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANse"): Rawcode<"ability">;
+
+/**
+ * Summon Bear (`ANsg`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SummonBear_ANsg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANsg"): Rawcode<"ability">;
+
+/**
+ * Shockwave (`ANsh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Shockwave_ANsh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANsh"): Rawcode<"ability">;
+
+/**
+ * Silence (`ANsi`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Silence_ANsi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANsi"): Rawcode<"ability">;
+
+/**
+ * Soul Preservation (`ANsl`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SoulPreservation_ANsl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANsl"): Rawcode<"ability">;
+
+/**
+ * Soul Burn (`ANso`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SoulBurn_ANso`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANso"): Rawcode<"ability">;
+
+/**
+ * Summon Quilbeast (`ANsq`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SummonQuilbeast_ANsq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANsq"): Rawcode<"ability">;
+
+/**
+ * Spell Shield (`ANss`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SpellShield_ANss`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANss"): Rawcode<"ability">;
+
+/**
+ * Stampede (`ANst`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Stampede_ANst`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANst"): Rawcode<"ability">;
+
+/**
+ * Summon Hawk (`ANsw`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SummonHawk_ANsw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANsw"): Rawcode<"ability">;
+
+/**
+ * Pocket Factory (`ANsy`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.PocketFactory_ANsy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANsy"): Rawcode<"ability">;
+
+/**
+ * Spiked Shell (`ANt2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SpikedShell_ANt2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANt2"): Rawcode<"ability">;
+
+/**
+ * Taunt (`ANta`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Taunt_ANta`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANta"): Rawcode<"ability">;
+
+/**
+ * Spiked Shell (`ANth`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SpikedShell_ANth`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANth"): Rawcode<"ability">;
+
+/**
+ * Transmute (`ANtm`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Transmute_ANtm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANtm"): Rawcode<"ability">;
+
+/**
+ * Tornado (`ANto`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Tornado_ANto`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANto"): Rawcode<"ability">;
+
+/**
+ * True Sight (`ANtr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.TrueSight_ANtr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANtr"): Rawcode<"ability">;
+
+/**
+ * Volcano (`ANvc`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Volcano_ANvc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANvc"): Rawcode<"ability">;
+
+/**
+ * Wind Walk (`ANwk`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.WindWalk_ANwk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANwk"): Rawcode<"ability">;
+
+/**
+ * Watery Minion (`ANwm`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.WateryMinion_ANwm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ANwm"): Rawcode<"ability">;
+
+/**
+ * Endurance Aura (`AOae`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.EnduranceAura_AOae`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOae"): Rawcode<"ability">;
+
+/**
+ * Build (Orc) (`AObu`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.BuildOrc_AObu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AObu"): Rawcode<"ability">;
+
+/**
+ * Chain Lightning (`AOcl`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.ChainLightning_AOcl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOcl"): Rawcode<"ability">;
+
+/**
+ * Critical Strike (`AOcr`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.CriticalStrike_AOcr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOcr"): Rawcode<"ability">;
+
+/**
+ * Earthquake (`AOeq`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Earthquake_AOeq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOeq"): Rawcode<"ability">;
+
+/**
+ * Far Sight (`AOfs`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.FarSight_AOfs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOfs"): Rawcode<"ability">;
+
+/**
+ * Healing Wave (`AOhw`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.HealingWave_AOhw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOhw"): Rawcode<"ability">;
+
+/**
+ * Hex (`AOhx`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Hex_AOhx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOhx"): Rawcode<"ability">;
+
+/**
+ * Voodoo Spirits (`AOls`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.VoodooSpirits_AOls`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOls"): Rawcode<"ability">;
+
+/**
+ * Mirror Image (`AOmi`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.MirrorImage_AOmi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOmi"): Rawcode<"ability">;
+
+/**
+ * Endurance Aura (`AOr2`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.EnduranceAura_AOr2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOr2"): Rawcode<"ability">;
+
+/**
+ * Reincarnation (`AOr3`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Reincarnation_AOr3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOr3"): Rawcode<"ability">;
+
+/**
+ * Reincarnation (`AOre`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Reincarnation_AOre`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOre"): Rawcode<"ability">;
+
+/**
+ * Shockwave (`AOs2`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Shockwave_AOs2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOs2"): Rawcode<"ability">;
+
+/**
+ * Feral Spirit (`AOsf`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.FeralSpirit_AOsf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOsf"): Rawcode<"ability">;
+
+/**
+ * Shockwave (`AOsh`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Shockwave_AOsh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOsh"): Rawcode<"ability">;
+
+/**
+ * Serpent Ward (`AOsw`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.SerpentWard_AOsw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOsw"): Rawcode<"ability">;
+
+/**
+ * Big Bad Voodoo (`AOvd`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.BigBadVoodoo_AOvd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOvd"): Rawcode<"ability">;
+
+/**
+ * War Stomp (`AOw2`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.WarStomp_AOw2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOw2"): Rawcode<"ability">;
+
+/**
+ * Wind Walk (`AOwk`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.WindWalk_AOwk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOwk"): Rawcode<"ability">;
+
+/**
+ * War Stomp (`AOws`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.WarStomp_AOws`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOws"): Rawcode<"ability">;
+
+/**
+ * Bladestorm (`AOww`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Bladestorm_AOww`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AOww"): Rawcode<"ability">;
+
+/**
+ * `APai`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_APai`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "APai"): Rawcode<"ability">;
+
+/**
+ * Powerup Dispel (`APdi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PowerupDispel_APdi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "APdi"): Rawcode<"ability">;
+
+/**
+ * Powerup Area Healing Lesser (`APh1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PowerupAreaHealingLesser_APh1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "APh1"): Rawcode<"ability">;
+
+/**
+ * Powerup Area Healing (`APh2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PowerupAreaHealing_APh2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "APh2"): Rawcode<"ability">;
+
+/**
+ * Powerup Area Healing Greater (`APh3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PowerupAreaHealingGreater_APh3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "APh3"): Rawcode<"ability">;
+
+/**
+ * Rune Area Mana Regain Greater (`APmg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RuneAreaManaRegainGreater_APmg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "APmg"): Rawcode<"ability">;
+
+/**
+ * Rune Area Mana Regain (`APmr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RuneAreaManaRegain_APmr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "APmr"): Rawcode<"ability">;
+
+/**
+ * Rune Area Heal/Mana Regain (`APra`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RuneAreaHealManaRegain_APra`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "APra"): Rawcode<"ability">;
+
+/**
+ * Lesser Rune Resurrection (`APrl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.LesserRuneResurrection_APrl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "APrl"): Rawcode<"ability">;
+
+/**
+ * Greater Rune Resurrection (`APrr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GreaterRuneResurrection_APrr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "APrr"): Rawcode<"ability">;
+
+/**
+ * Rune of Speed (`APsa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RuneOfSpeed_APsa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "APsa"): Rawcode<"ability">;
+
+/**
+ * Rune of the Watcher (`APwt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RuneOfTheWatcher_APwt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "APwt"): Rawcode<"ability">;
+
+/**
+ * Rally (`ARal`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Rally_ARal`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ARal"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AS10`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AS10`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AS10"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AS12`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AS12`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AS12"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AS20`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AS20`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AS20"): Rawcode<"ability">;
+
+/**
+ * Item Spell Crit Chance 8 (`ASC8`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellCritChance8_ASC8`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASC8"): Rawcode<"ability">;
+
+/**
+ * Item Spell Crit Chance 12 (`ASCe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellCritChance12_ASCe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASCe"): Rawcode<"ability">;
+
+/**
+ * Item Spell Crit Chance 15 (`ASCq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellCritChance15_ASCq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASCq"): Rawcode<"ability">;
+
+/**
+ * Item Spell Crit Chance 18 (`ASCr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellCritChance18_ASCr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASCr"): Rawcode<"ability">;
+
+/**
+ * Item Spell Crit Chance 5 (`ASCs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellCritChance5_ASCs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASCs"): Rawcode<"ability">;
+
+/**
+ * Item Spell Crit Chance 6 (`ASCt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellCritChance6_ASCt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASCt"): Rawcode<"ability">;
+
+/**
+ * Item Spell Crit Chance 4 (`ASCu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellCritChance4_ASCu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASCu"): Rawcode<"ability">;
+
+/**
+ * Item Spell Crit Chance 10 (`ASCw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellCritChance10_ASCw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASCw"): Rawcode<"ability">;
+
+/**
+ * Item Spell Crit Chance 30 (`ASCy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellCritChance30_ASCy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASCy"): Rawcode<"ability">;
+
+/**
+ * Item Splash Damage 4 (`ASD4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSplashDamage4_ASD4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASD4"): Rawcode<"ability">;
+
+/**
+ * Item Spell Crit Damage 20 (`ASDq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellCritDamage20_ASDq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASDq"): Rawcode<"ability">;
+
+/**
+ * Item Spell Crit Damage 15 (`ASDw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellCritDamage15_ASDw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASDw"): Rawcode<"ability">;
+
+/**
+ * Item Spell Resistance 5 (`ASRe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellResistance5_ASRe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASRe"): Rawcode<"ability">;
+
+/**
+ * Item Spell Resistance 10 (`ASRi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellResistance10_ASRi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASRi"): Rawcode<"ability">;
+
+/**
+ * Item Spell Resistance 25 (`ASRo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellResistance25_ASRo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASRo"): Rawcode<"ability">;
+
+/**
+ * Item Spell Resistance 33 (`ASRp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellResistance33_ASRp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASRp"): Rawcode<"ability">;
+
+/**
+ * Item Spell Resistance 7 (`ASRq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellResistance7_ASRq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASRq"): Rawcode<"ability">;
+
+/**
+ * Item Spell Resistance 14 (`ASRt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellResistance14_ASRt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASRt"): Rawcode<"ability">;
+
+/**
+ * Item Spell Resistance 4 (`ASRu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellResistance4_ASRu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASRu"): Rawcode<"ability">;
+
+/**
+ * Item Spell Resistance 3 (`ASRw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellResistance3_ASRw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASRw"): Rawcode<"ability">;
+
+/**
+ * Item Spell Resistance 8 (`ASRy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellResistance8_ASRy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASRy"): Rawcode<"ability">;
+
+/**
+ * Item Spell Vamp 7 (`ASVe`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellVamp7_ASVe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASVe"): Rawcode<"ability">;
+
+/**
+ * Item Spell Vamp 8 (`ASVi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellVamp8_ASVi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASVi"): Rawcode<"ability">;
+
+/**
+ * Item Spell Vamp 5 (`ASVq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellVamp5_ASVq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASVq"): Rawcode<"ability">;
+
+/**
+ * Item Spell Vamp 3 (`ASVr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellVamp3_ASVr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASVr"): Rawcode<"ability">;
+
+/**
+ * Item Spell Vamp 4 (`ASVt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellVamp4_ASVt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASVt"): Rawcode<"ability">;
+
+/**
+ * Item Spell Vamp 6 (`ASVu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellVamp6_ASVu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASVu"): Rawcode<"ability">;
+
+/**
+ * Item Spell Vamp 2 (`ASVw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellVamp2_ASVw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASVw"): Rawcode<"ability">;
+
+/**
+ * Item Spell Vamp 10 (`ASVy`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellVamp10_ASVy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASVy"): Rawcode<"ability">;
+
+/**
+ * Stat Details (`ASde`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.StatDetails_ASde`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASde"): Rawcode<"ability">;
+
+/**
+ * `ASpc`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_ASpc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ASpc"): Rawcode<"ability">;
+
+/**
+ * Rain of Arrows (`AT1a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RainOfArrows_AT1a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT1a"): Rawcode<"ability">;
+
+/**
+ * Deathmark (`AT1b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Deathmark_AT1b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT1b"): Rawcode<"ability">;
+
+/**
+ * Deadeye (`AT1c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Deadeye_AT1c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT1c"): Rawcode<"ability">;
+
+/**
+ * Spirit Leech (`AT2a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SpiritLeech_AT2a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT2a"): Rawcode<"ability">;
+
+/**
+ * Wraithguard (`AT2b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Wraithguard_AT2b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT2b"): Rawcode<"ability">;
+
+/**
+ * Guiding Light (`AT2c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GuidingLight_AT2c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT2c"): Rawcode<"ability">;
+
+/**
+ * Death Sentence (`AT3a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.DeathSentence_AT3a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT3a"): Rawcode<"ability">;
+
+/**
+ * Flow State (`AT3b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.FlowState_AT3b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT3b"): Rawcode<"ability">;
+
+/**
+ * Umbral Rupture (`AT3c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UmbralRupture_AT3c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT3c"): Rawcode<"ability">;
+
+/**
+ * Soul Harvest (`AT4a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SoulHarvest_AT4a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT4a"): Rawcode<"ability">;
+
+/**
+ * Curse of the Darkfallen (`AT4b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.CurseOfTheDarkfallen_AT4b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT4b"): Rawcode<"ability">;
+
+/**
+ * Howling Tempest (`AT4c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HowlingTempest_AT4c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT4c"): Rawcode<"ability">;
+
+/**
+ * Marksmanship (`AT5a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Marksmanship_AT5a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT5a"): Rawcode<"ability">;
+
+/**
+ * Arcane Archer (`AT5b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ArcaneArcher_AT5b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT5b"): Rawcode<"ability">;
+
+/**
+ * Poison-tipped Arrows (`AT5c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PoisonTippedArrows_AT5c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT5c"): Rawcode<"ability">;
+
+/**
+ * Ranger's Dexterity (`AT6a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RangersDexterity_AT6a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT6a"): Rawcode<"ability">;
+
+/**
+ * Heightened Reflexes (`AT6b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HeightenedReflexes_AT6b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT6b"): Rawcode<"ability">;
+
+/**
+ * Blackened Soul (`AT6c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BlackenedSoul_AT6c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AT6c"): Rawcode<"ability">;
+
+/**
+ * Talents (`ATal`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Talents_ATal`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ATal"): Rawcode<"ability">;
+
+/**
+ * Grant Talent Point (`ATap`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GrantTalentPoint_ATap`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ATap"): Rawcode<"ability">;
+
+/**
+ * Strength Training (`ATce`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.StrengthTraining_ATce`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ATce"): Rawcode<"ability">;
+
+/**
+ * Endurance Training (`ATcr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.EnduranceTraining_ATcr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ATcr"): Rawcode<"ability">;
+
+/**
+ * Talents (`AThg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Talents_AThg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AThg"): Rawcode<"ability">;
+
+/**
+ * Talents (`AThi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Talents_AThi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AThi"): Rawcode<"ability">;
+
+/**
+ * Talents (`AThl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Talents_AThl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AThl"): Rawcode<"ability">;
+
+/**
+ * Stamina Training (`ATme`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.StaminaTraining_ATme`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ATme"): Rawcode<"ability">;
+
+/**
+ * Talents (`ATua`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Talents_ATua`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ATua"): Rawcode<"ability">;
+
+/**
+ * Talents (`ATug`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Talents_ATug`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ATug"): Rawcode<"ability">;
+
+/**
+ * Talents (`ATul`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Talents_ATul`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "ATul"): Rawcode<"ability">;
+
+/**
+ * Item Unit Damage x1.25 (`AUDq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemUnitDamageX125_AUDq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUDq"): Rawcode<"ability">;
+
+/**
+ * Item Unit Damage x1.15 (`AUDw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemUnitDamageX115_AUDw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUDw"): Rawcode<"ability">;
+
+/**
+ * Animate Dead (`AUa2`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.AnimateDead_AUa2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUa2"): Rawcode<"ability">;
+
+/**
+ * Animate Dead (`AUan`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.AnimateDead_AUan`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUan"): Rawcode<"ability">;
+
+/**
+ * Unholy Aura (`AUau`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.UnholyAura_AUau`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUau"): Rawcode<"ability">;
+
+/**
+ * Vampiric Aura (`AUav`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.VampiricAura_AUav`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUav"): Rawcode<"ability">;
+
+/**
+ * Undying Defiance (`AUb1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UndyingDefiance_AUb1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUb1"): Rawcode<"ability">;
+
+/**
+ * Undying Defiance (`AUb2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UndyingDefiance_AUb2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUb2"): Rawcode<"ability">;
+
+/**
+ * Undying Defiance (`AUb3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UndyingDefiance_AUb3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUb3"): Rawcode<"ability">;
+
+/**
+ * Undying Defiance (`AUbd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UndyingDefiance_AUbd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUbd"): Rawcode<"ability">;
+
+/**
+ * Battering Ram (`AUbr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BatteringRam_AUbr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUbr"): Rawcode<"ability">;
+
+/**
+ * Build (Undead) (`AUbu`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.BuildUndead_AUbu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUbu"): Rawcode<"ability">;
+
+/**
+ * Carrion Beetles (`AUcb`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.CarrionBeetles_AUcb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUcb"): Rawcode<"ability">;
+
+/**
+ * Carrion Swarm (`AUcs`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.CarrionSwarm_AUcs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUcs"): Rawcode<"ability">;
+
+/**
+ * Deathseeker Arrows (`AUd1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.DeathseekerArrows_AUd1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUd1"): Rawcode<"ability">;
+
+/**
+ * Deathseeker Arrows (`AUd2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.DeathseekerArrows_AUd2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUd2"): Rawcode<"ability">;
+
+/**
+ * Deathseeker Arrows (`AUd3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.DeathseekerArrows_AUd3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUd3"): Rawcode<"ability">;
+
+/**
+ * Deathseeker Arrows (`AUdb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.DeathseekerArrows_AUdb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUdb"): Rawcode<"ability">;
+
+/**
+ * Death Coil (`AUdc`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.DeathCoil_AUdc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUdc"): Rawcode<"ability">;
+
+/**
+ * Death And Decay (`AUdd`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.DeathAndDecay_AUdd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUdd"): Rawcode<"ability">;
+
+/**
+ * Death Pact (`AUdp`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.DeathPact_AUdp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUdp"): Rawcode<"ability">;
+
+/**
+ * Dark Ritual (`AUdr`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.DarkRitual_AUdr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUdr"): Rawcode<"ability">;
+
+/**
+ * Dark Summoning (`AUds`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.DarkSummoning_AUds`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUds"): Rawcode<"ability">;
+
+/**
+ * Frost Armor (`AUfa`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.FrostArmor_AUfa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUfa"): Rawcode<"ability">;
+
+/**
+ * Frost Nova (`AUfn`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.FrostNova_AUfn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUfn"): Rawcode<"ability">;
+
+/**
+ * Frost Armor (`AUfu`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.FrostArmor_AUfu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUfu"): Rawcode<"ability">;
+
+/**
+ * Banshee's Wail (`AUi1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BansheesWail_AUi1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUi1"): Rawcode<"ability">;
+
+/**
+ * Banshee's Wail (`AUi2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BansheesWail_AUi2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUi2"): Rawcode<"ability">;
+
+/**
+ * Banshee's Wail (`AUi3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BansheesWail_AUi3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUi3"): Rawcode<"ability">;
+
+/**
+ * Impale (`AUim`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Impale_AUim`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUim"): Rawcode<"ability">;
+
+/**
+ * Inferno (`AUin`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Inferno_AUin`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUin"): Rawcode<"ability">;
+
+/**
+ * Soul Lantern (`AUl1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SoulLantern_AUl1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUl1"): Rawcode<"ability">;
+
+/**
+ * Soul Lantern (`AUl2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SoulLantern_AUl2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUl2"): Rawcode<"ability">;
+
+/**
+ * Soul Lantern (`AUl3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SoulLantern_AUl3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUl3"): Rawcode<"ability">;
+
+/**
+ * Soul Lantern (`AUla`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SoulLantern_AUla`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUla"): Rawcode<"ability">;
+
+/**
+ * Locust Swarm (`AUls`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.LocustSwarm_AUls`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUls"): Rawcode<"ability">;
+
+/**
+ * Battering Ram (`AUr1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BatteringRam_AUr1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUr1"): Rawcode<"ability">;
+
+/**
+ * Battering Ram (`AUr2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BatteringRam_AUr2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUr2"): Rawcode<"ability">;
+
+/**
+ * Battering Ram (`AUr3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BatteringRam_AUr3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUr3"): Rawcode<"ability">;
+
+/**
+ * Relentless Cleave (`AUs1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RelentlessCleave_AUs1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUs1"): Rawcode<"ability">;
+
+/**
+ * Relentless Cleave (`AUs2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RelentlessCleave_AUs2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUs2"): Rawcode<"ability">;
+
+/**
+ * Relentless Cleave (`AUs3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RelentlessCleave_AUs3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUs3"): Rawcode<"ability">;
+
+/**
+ * Sleep (`AUsl`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Sleep_AUsl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUsl"): Rawcode<"ability">;
+
+/**
+ * Thorn Shield (`AUss`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ThornShield_AUss`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUss"): Rawcode<"ability">;
+
+/**
+ * Relentless Cleave (`AUsw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RelentlessCleave_AUsw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUsw"): Rawcode<"ability">;
+
+/**
+ * Spiked Carapace (`AUts`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.SpikedCarapace_AUts`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUts"): Rawcode<"ability">;
+
+/**
+ * Grim Conviction (`AUv1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GrimConviction_AUv1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUv1"): Rawcode<"ability">;
+
+/**
+ * Grim Conviction (`AUv2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GrimConviction_AUv2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUv2"): Rawcode<"ability">;
+
+/**
+ * Grim Conviction (`AUv3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GrimConviction_AUv3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUv3"): Rawcode<"ability">;
+
+/**
+ * Grim Conviction (`AUvg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GrimConviction_AUvg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUvg"): Rawcode<"ability">;
+
+/**
+ * Withering Fire (`AUw1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.WitheringFire_AUw1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUw1"): Rawcode<"ability">;
+
+/**
+ * Withering Fire (`AUw2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.WitheringFire_AUw2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUw2"): Rawcode<"ability">;
+
+/**
+ * Withering Fire (`AUw3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.WitheringFire_AUw3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUw3"): Rawcode<"ability">;
+
+/**
+ * Banshee's Wail (`AUwc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BansheesWail_AUwc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUwc"): Rawcode<"ability">;
+
+/**
+ * Withering Fire (`AUwf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.WitheringFire_AUwf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AUwf"): Rawcode<"ability">;
+
+/**
+ * Item Vampiric Aura 4 (`AVAq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemVampiricAura4_AVAq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AVAq"): Rawcode<"ability">;
+
+/**
+ * Fire Hands (`AViq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.FireHands_AViq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AViq"): Rawcode<"ability">;
+
+/**
+ * Shop Indicator (`AVsb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ShopIndicator_AVsb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AVsb"): Rawcode<"ability">;
+
+/**
+ * Item Hero Stat Bonus (`AX10`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeroStatBonus_AX10`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "AX10"): Rawcode<"ability">;
+
+/**
+ * Aura of Blight (`Aabr`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.AuraOfBlight_Aabr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aabr"): Rawcode<"ability">;
+
+/**
+ * Absorb Mana (`Aabs`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.AbsorbMana_Aabs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aabs"): Rawcode<"ability">;
+
+/**
+ * Item Armor SC Heal (`Aac1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorSCHeal_Aac1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aac1"): Rawcode<"ability">;
+
+/**
+ * Item Armor SC Attack (`Aac2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorSCAttack_Aac2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aac2"): Rawcode<"ability">;
+
+/**
+ * Item Chill Attack 3 (`Aac3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemChillAttack3_Aac3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aac3"): Rawcode<"ability">;
+
+/**
+ * Item Chill Attack 5 (`Aac5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemChillAttack5_Aac5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aac5"): Rawcode<"ability">;
+
+/**
+ * Raise the Banner (`Aaca`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RaiseTheBanner_Aaca`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aaca"): Rawcode<"ability">;
+
+/**
+ * Curse (`Aacr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Curse_Aacr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aacr"): Rawcode<"ability">;
+
+/**
+ * Abolish Magic (`Aadm`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.AbolishMagic_Aadm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aadm"): Rawcode<"ability">;
+
+/**
+ * Item Aura of Darkness (`Aadx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAuraOfDarkness_Aadx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aadx"): Rawcode<"ability">;
+
+/**
+ * Item Agitating Totem (`Aagt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAgitatingTotem_Aagt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aagt"): Rawcode<"ability">;
+
+/**
+ * Item Armor Corrupt Attack 2 (`Aah2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorCorruptAttack2_Aah2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aah2"): Rawcode<"ability">;
+
+/**
+ * Item Armor Corrupt Attack 3 (`Aah3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorCorruptAttack3_Aah3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aah3"): Rawcode<"ability">;
+
+/**
+ * Item Armor Corrupt Attack 5 (`Aah5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorCorruptAttack5_Aah5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aah5"): Rawcode<"ability">;
+
+/**
+ * Gather (`Aaha`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Gather_Aaha`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aaha"): Rawcode<"ability">;
+
+/**
+ * War Drums (`Aakb`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.WarDrums_Aakb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aakb"): Rawcode<"ability">;
+
+/**
+ * Shop Sharing, Allied Bldg. (`Aall`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ShopSharingAlliedBldg_Aall`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aall"): Rawcode<"ability">;
+
+/**
+ * Alarm (`Aalr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Alarm_Aalr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aalr"): Rawcode<"ability">;
+
+/**
+ * On Basic Attack, Cast Spell (`Aals`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.OnBasicAttackCastSpell_Aals`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aals"): Rawcode<"ability">;
+
+/**
+ * Anti-magic Shell (`Aam2`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.AntiMagicShell_Aam2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aam2"): Rawcode<"ability">;
+
+/**
+ * Attribute Bonus (`Aamk`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.AttributeBonus_Aamk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aamk"): Rawcode<"ability">;
+
+/**
+ * Attribute Bonus (`Aaml`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.AttributeBonus_Aaml`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aaml"): Rawcode<"ability">;
+
+/**
+ * Anti-magic Shell (`Aams`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.AntiMagicShell_Aams`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aams"): Rawcode<"ability">;
+
+/**
+ * Disease Cloud (`Aap1`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.DiseaseCloud_Aap1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aap1"): Rawcode<"ability">;
+
+/**
+ * Disease Cloud (`Aap2`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.DiseaseCloud_Aap2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aap2"): Rawcode<"ability">;
+
+/**
+ * Disease Cloud (`Aap3`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DiseaseCloud_Aap3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aap3"): Rawcode<"ability">;
+
+/**
+ * Disease Cloud (`Aap4`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DiseaseCloud_Aap4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aap4"): Rawcode<"ability">;
+
+/**
+ * Disease Cloud (`Aap5`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.DiseaseCloud_Aap5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aap5"): Rawcode<"ability">;
+
+/**
+ * Item Armor of Reanimation Summon (`Aar1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorOfReanimationSummon_Aar1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aar1"): Rawcode<"ability">;
+
+/**
+ * Item Armor of Reanimation Attack (`Aar2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorOfReanimationAttack_Aar2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aar2"): Rawcode<"ability">;
+
+/**
+ * Item Armor Corrupt Spell 2 (`Aas2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorCorruptSpell2_Aas2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aas2"): Rawcode<"ability">;
+
+/**
+ * Item Armor Corrupt Spell 3 (`Aas3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorCorruptSpell3_Aas3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aas3"): Rawcode<"ability">;
+
+/**
+ * Item Armor Corrupt Spell 5 (`Aas5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArmorCorruptSpell5_Aas5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aas5"): Rawcode<"ability">;
+
+/**
+ * Item Arcane Spellblade (`Aasb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemArcaneSpellblade_Aasb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aasb"): Rawcode<"ability">;
+
+/**
+ * Raise the Banner Spell Crit (`Aasc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RaiseTheBannerSpellCrit_Aasc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aasc"): Rawcode<"ability">;
+
+/**
+ * Slow Aura (`Aasl`), a Built-in ability of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Abilities.SlowAura_Aasl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aasl"): Rawcode<"ability">;
+
+/**
+ * Ancestral Spirit (`Aast`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.AncestralSpirit_Aast`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aast"): Rawcode<"ability">;
+
+/**
+ * Item Aviana's Talons Mana (`Aat1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAvianasTalonsMana_Aat1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aat1"): Rawcode<"ability">;
+
+/**
+ * Item Aviana's Talons Attack 1 (`Aat2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAvianasTalonsAttack1_Aat2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aat2"): Rawcode<"ability">;
+
+/**
+ * Item Aviana's Talons Attack 2 (`Aat3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAvianasTalonsAttack2_Aat3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aat3"): Rawcode<"ability">;
+
+/**
+ * Attack (`Aatk`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Attack_Aatk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aatk"): Rawcode<"ability">;
+
+/**
+ * Prioritize (`Aatp`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Prioritize_Aatp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aatp"): Rawcode<"ability">;
+
+/**
+ * Destroyer Form (`Aave`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.DestroyerForm_Aave`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aave"): Rawcode<"ability">;
+
+/**
+ * Revive Hero Instantly (`Aawa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ReviveHeroInstantly_Aawa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aawa"): Rawcode<"ability">;
+
+/**
+ * Raise the Banner Crit (`Aaxr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RaiseTheBannerCrit_Aaxr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aaxr"): Rawcode<"ability">;
+
+/**
+ * Item Butchers Aura 1 (`Aba1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemButchersAura1_Aba1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aba1"): Rawcode<"ability">;
+
+/**
+ * Item Butchers Aura 2 (`Aba2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemButchersAura2_Aba2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aba2"): Rawcode<"ability">;
+
+/**
+ * Item Aura of Twisted Bones (`Abcs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemAuraOfTwistedBones_Abcs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abcs"): Rawcode<"ability">;
+
+/**
+ * Item Blue Dragon Figurine (`Abdf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBlueDragonFigurine_Abdf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abdf"): Rawcode<"ability">;
+
+/**
+ * Blight Dispel Large (`Abdl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BlightDispelLarge_Abdl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abdl"): Rawcode<"ability">;
+
+/**
+ * Blight Dispel Small (`Abds`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BlightDispelSmall_Abds`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abds"): Rawcode<"ability">;
+
+/**
+ * Burrow Detection (`Abdt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BurrowDetection_Abdt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abdt"): Rawcode<"ability">;
+
+/**
+ * Item Blade of Frozen Hunger Attack (`Abfa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBladeOfFrozenHungerAttack_Abfa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abfa"): Rawcode<"ability">;
+
+/**
+ * Item Blade of Frozen Hunger Heal (`Abfh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBladeOfFrozenHungerHeal_Abfh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abfh"): Rawcode<"ability">;
+
+/**
+ * Blight Growth Large (`Abgl`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.BlightGrowthLarge_Abgl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abgl"): Rawcode<"ability">;
+
+/**
+ * Blighted Gold Mine Ability (`Abgm`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.BlightedGoldMineAbility_Abgm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abgm"): Rawcode<"ability">;
+
+/**
+ * Blight Growth Small (`Abgs`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.BlightGrowthSmall_Abgs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abgs"): Rawcode<"ability">;
+
+/**
+ * Item Bindings of Helya CW (`Abh1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBindingsOfHelyaCW_Abh1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abh1"): Rawcode<"ability">;
+
+/**
+ * Item Bindings of Helya Attack (`Abh2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBindingsOfHelyaAttack_Abh2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abh2"): Rawcode<"ability">;
+
+/**
+ * Item Boots of the Icewalker BoF (`Abi1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBootsOfTheIcewalkerBoF_Abi1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abi1"): Rawcode<"ability">;
+
+/**
+ * Item Boots of the Icewalker Attack (`Abi2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBootsOfTheIcewalkerAttack_Abi2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abi2"): Rawcode<"ability">;
+
+/**
+ * Bloodlust (`Ablo`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Bloodlust_Ablo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ablo"): Rawcode<"ability">;
+
+/**
+ * Blight Placement (`Ablp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BlightPlacement_Ablp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ablp"): Rawcode<"ability">;
+
+/**
+ * Banshee (`Abns`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Banshee_Abns`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abns"): Rawcode<"ability">;
+
+/**
+ * Burning Oil (`Abof`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.BurningOil_Abof`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abof"): Rawcode<"ability">;
+
+/**
+ * Item Bottled Storm (`Abos`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBottledStorm_Abos`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abos"): Rawcode<"ability">;
+
+/**
+ * Item Brimstone Spell 1 (`Abr1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBrimstoneSpell1_Abr1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abr1"): Rawcode<"ability">;
+
+/**
+ * Item Brimstone Spell 2 (`Abr2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBrimstoneSpell2_Abr2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abr2"): Rawcode<"ability">;
+
+/**
+ * Bear Form (`Abrf`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.BearForm_Abrf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abrf"): Rawcode<"ability">;
+
+/**
+ * Item Bottled Storm CL (`Abs1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBottledStormCL_Abs1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abs1"): Rawcode<"ability">;
+
+/**
+ * Item Bottled Storm Attack (`Abs2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBottledStormAttack_Abs2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abs2"): Rawcode<"ability">;
+
+/**
+ * Curse Orb (`Absc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.CurseOrb_Absc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Absc"): Rawcode<"ability">;
+
+/**
+ * Berserk (`Absk`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Berserk_Absk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Absk"): Rawcode<"ability">;
+
+/**
+ * Battle Stations (`Abtl`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.BattleStations_Abtl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abtl"): Rawcode<"ability">;
+
+/**
+ * Burrow (`Abu2`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Burrow_Abu2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abu2"): Rawcode<"ability">;
+
+/**
+ * Burrow (`Abu3`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Burrow_Abu3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abu3"): Rawcode<"ability">;
+
+/**
+ * Burrow (`Abu5`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Burrow_Abu5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abu5"): Rawcode<"ability">;
+
+/**
+ * Cargo Hold (Orc Burrow) (`Abun`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.CargoHoldOrcBurrow_Abun`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abun"): Rawcode<"ability">;
+
+/**
+ * Burrow (`Abur`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Burrow_Abur`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abur"): Rawcode<"ability">;
+
+/**
+ * Item Borelgore Attack (`Abx1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBorelgoreAttack_Abx1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abx1"): Rawcode<"ability">;
+
+/**
+ * Item Brimstone Attack 1 (`Abz1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBrimstoneAttack1_Abz1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abz1"): Rawcode<"ability">;
+
+/**
+ * Item Brimstone Attack 2 (`Abz2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBrimstoneAttack2_Abz2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Abz2"): Rawcode<"ability">;
+
+/**
+ * Cannibalize (`Acan`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Cannibalize_Acan`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acan"): Rawcode<"ability">;
+
+/**
+ * Item Consecrated Mixture (`Accm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemConsecratedMixture_Accm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Accm"): Rawcode<"ability">;
+
+/**
+ * Drunken Brawler (`Acdb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DrunkenBrawler_Acdb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acdb"): Rawcode<"ability">;
+
+/**
+ * Drunken Haze (`Acdh`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DrunkenHaze_Acdh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acdh"): Rawcode<"ability">;
+
+/**
+ * Item Helm Cenarion Heal (`Ace1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHelmCenarionHeal_Ace1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ace1"): Rawcode<"ability">;
+
+/**
+ * Item Helm Cenarion Attack (`Ace2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHelmCenarionAttack_Ace2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ace2"): Rawcode<"ability">;
+
+/**
+ * Item Helm Cenarion Spellcast (`Ace3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHelmCenarionSpellcast_Ace3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ace3"): Rawcode<"ability">;
+
+/**
+ * Item Elixir of Cunnning (`Acec`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemElixirOfCunnning_Acec`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acec"): Rawcode<"ability">;
+
+/**
+ * Storm, Earth, And Fire (`Acef`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.StormEarthAndFire_Acef`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acef"): Rawcode<"ability">;
+
+/**
+ * Item Elixir of the Monster Hunter (`Acem`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemElixirOfTheMonsterHunter_Acem`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acem"): Rawcode<"ability">;
+
+/**
+ * Item Elixir of Greater Intelligence (`Acgi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemElixirOfGreaterIntelligence_Acgi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acgi"): Rawcode<"ability">;
+
+/**
+ * Item Cursed Golden Ring Crit (`Acgr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCursedGoldenRingCrit_Acgr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acgr"): Rawcode<"ability">;
+
+/**
+ * Item Staff CH TC (`Ach1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemStaffCHTC_Ach1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ach1"): Rawcode<"ability">;
+
+/**
+ * Item Staff CH Spellcast (`Ach2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemStaffCHSpellcast_Ach2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ach2"): Rawcode<"ability">;
+
+/**
+ * Item Blade CH Damage (`Ach3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBladeCHDamage_Ach3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ach3"): Rawcode<"ability">;
+
+/**
+ * Item Blade CH Heal (`Ach4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBladeCHHeal_Ach4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ach4"): Rawcode<"ability">;
+
+/**
+ * Item Blade Attack 1 (`Ach5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBladeAttack1_Ach5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ach5"): Rawcode<"ability">;
+
+/**
+ * Item Blade Attack 2 (`Ach6`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBladeAttack2_Ach6`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ach6"): Rawcode<"ability">;
+
+/**
+ * Cargo Hold Death (`Achd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.CargoHoldDeath_Achd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Achd"): Rawcode<"ability">;
+
+/**
+ * Ray of Disruption (`Ache`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.RayOfDisruption_Ache`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ache"): Rawcode<"ability">;
+
+/**
+ * Chaos Cargo Load (`Achl`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.ChaosCargoLoad_Achl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Achl"): Rawcode<"ability">;
+
+/**
+ * Howl of Terror (`Acht`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.HowlOfTerror_Acht`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acht"): Rawcode<"ability">;
+
+/**
+ * Cloud (`Aclf`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Cloud_Aclf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aclf"): Rawcode<"ability">;
+
+/**
+ * Item Elixir of Lesser Intelligence (`Acli`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemElixirOfLesserIntelligence_Acli`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acli"): Rawcode<"ability">;
+
+/**
+ * Item Cleave 15 (`Aclq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCleave15_Aclq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aclq"): Rawcode<"ability">;
+
+/**
+ * Control Magic (`Acmg`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.ControlMagic_Acmg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acmg"): Rawcode<"ability">;
+
+/**
+ * Cannibalize (`Acn2`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Cannibalize_Acn2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acn2"): Rawcode<"ability">;
+
+/**
+ * Cyclone (`Acny`), a Built-in ability of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Abilities.Cyclone_Acny`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acny"): Rawcode<"ability">;
+
+/**
+ * Mount Hippogryph (`Aco2`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.MountHippogryph_Aco2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aco2"): Rawcode<"ability">;
+
+/**
+ * Pick up Archer (`Aco3`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.PickUpArcher_Aco3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aco3"): Rawcode<"ability">;
+
+/**
+ * Mount Hippogryph (`Acoa`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.MountHippogryph_Acoa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acoa"): Rawcode<"ability">;
+
+/**
+ * Pick up Archer (`Acoh`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.PickUpArcher_Acoh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acoh"): Rawcode<"ability">;
+
+/**
+ * Corrosive Breath (`Acor`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.CorrosiveBreath_Acor`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acor"): Rawcode<"ability">;
+
+/**
+ * Corporeal Form (`Acpf`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.CorporealForm_Acpf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acpf"): Rawcode<"ability">;
+
+/**
+ * Cripple (`Acri`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Cripple_Acri`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acri"): Rawcode<"ability">;
+
+/**
+ * Curse (`Acrs`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Curse_Acrs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acrs"): Rawcode<"ability">;
+
+/**
+ * Item Coldbringer's Reach Attack (`Acrx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemColdbringersReachAttack_Acrx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acrx"): Rawcode<"ability">;
+
+/**
+ * Item Coldbringer's Reach Frost Nova (`Acrz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemColdbringersReachFrostNova_Acrz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acrz"): Rawcode<"ability">;
+
+/**
+ * Cyclone (`Acyc`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Cyclone_Acyc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Acyc"): Rawcode<"ability">;
+
+/**
+ * Item Deathbringer's Boots Parasite (`Adb1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDeathbringersBootsParasite_Adb1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adb1"): Rawcode<"ability">;
+
+/**
+ * Item Deathbringer's Boots Attack (`Adb2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDeathbringersBootsAttack_Adb2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adb2"): Rawcode<"ability">;
+
+/**
+ * Item Deathbloom Leaves (`Adbl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDeathbloomLeaves_Adbl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adbl"): Rawcode<"ability">;
+
+/**
+ * Item Deepsea Bag CW (`Adbw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDeepseaBagCW_Adbw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adbw"): Rawcode<"ability">;
+
+/**
+ * Disenchant (`Adch`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Disenchant_Adch`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adch"): Rawcode<"ability">;
+
+/**
+ * Disenchant (`Adcn`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Disenchant_Adcn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adcn"): Rawcode<"ability">;
+
+/**
+ * AOE damage upon death (`Adda`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.AOEDamageUponDeath_Adda`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adda"): Rawcode<"ability">;
+
+/**
+ * Dismount (`Adec`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Dismount_Adec`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adec"): Rawcode<"ability">;
+
+/**
+ * Defend (`Adef`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Defend_Adef`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adef"): Rawcode<"ability">;
+
+/**
+ * Devour (`Adev`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Devour_Adev`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adev"): Rawcode<"ability">;
+
+/**
+ * Dispel Magic (`Adis`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.DispelMagic_Adis`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adis"): Rawcode<"ability">;
+
+/**
+ * Unload Instant (`Adri`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnloadInstant_Adri`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adri"): Rawcode<"ability">;
+
+/**
+ * Unload (`Adro`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unload_Adro`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adro"): Rawcode<"ability">;
+
+/**
+ * Dispel Magic (`Adsm`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DispelMagic_Adsm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adsm"): Rawcode<"ability">;
+
+/**
+ * Detector (`Adt1`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Detector_Adt1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adt1"): Rawcode<"ability">;
+
+/**
+ * True Sight (`Adtg`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.TrueSight_Adtg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adtg"): Rawcode<"ability">;
+
+/**
+ * Detonate (`Adtn`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Detonate_Adtn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adtn"): Rawcode<"ability">;
+
+/**
+ * Magic Sentry (`Adts`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.MagicSentry_Adts`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Adts"): Rawcode<"ability">;
+
+/**
+ * Devour Cargo (`Advc`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.DevourCargo_Advc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Advc"): Rawcode<"ability">;
+
+/**
+ * Devour Magic (`Advm`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.DevourMagic_Advm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Advm"): Rawcode<"ability">;
+
+/**
+ * Eat Tree (`Aeat`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.EatTree_Aeat`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aeat"): Rawcode<"ability">;
+
+/**
+ * Item Endless Flask of Restoration (`Aefr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEndlessFlaskOfRestoration_Aefr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aefr"): Rawcode<"ability">;
+
+/**
+ * Entangled Gold Mine Ability (`Aegm`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.EntangledGoldMineAbility_Aegm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aegm"): Rawcode<"ability">;
+
+/**
+ * Elune's Grace (`Aegr`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.ElunesGrace_Aegr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aegr"): Rawcode<"ability">;
+
+/**
+ * Improved Bows (`Aeib`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.ImprovedBows_Aeib`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aeib"): Rawcode<"ability">;
+
+/**
+ * Marksmanship (`Aemk`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Marksmanship_Aemk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aemk"): Rawcode<"ability">;
+
+/**
+ * Load (`Aenc`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Load_Aenc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aenc"): Rawcode<"ability">;
+
+/**
+ * Entangling Roots (`Aenr`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.EntanglingRoots_Aenr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aenr"): Rawcode<"ability">;
+
+/**
+ * Ensnare (`Aens`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Ensnare_Aens`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aens"): Rawcode<"ability">;
+
+/**
+ * Entangle Gold Mine (`Aent`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.EntangleGoldMine_Aent`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aent"): Rawcode<"ability">;
+
+/**
+ * Entangling Roots (`Aenw`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.EntanglingRoots_Aenw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aenw"): Rawcode<"ability">;
+
+/**
+ * Item Essencium Main Summon (`Aes1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEssenciumMainSummon_Aes1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aes1"): Rawcode<"ability">;
+
+/**
+ * Item Essencium Blizzard (`Aes2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEssenciumBlizzard_Aes2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aes2"): Rawcode<"ability">;
+
+/**
+ * Item Essencium Rain of Fire (`Aes3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEssenciumRainOfFire_Aes3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aes3"): Rawcode<"ability">;
+
+/**
+ * Item Essencium Chain Lightning (`Aes4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEssenciumChainLightning_Aes4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aes4"): Rawcode<"ability">;
+
+/**
+ * Item Essencium Crushing Wave (`Aes5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEssenciumCrushingWave_Aes5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aes5"): Rawcode<"ability">;
+
+/**
+ * Item Essencium Attack 1 (`Aes6`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEssenciumAttack1_Aes6`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aes6"): Rawcode<"ability">;
+
+/**
+ * Item Essencium Attack 2 (`Aes7`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEssenciumAttack2_Aes7`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aes7"): Rawcode<"ability">;
+
+/**
+ * Item Essencium Attack 3 (`Aes8`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEssenciumAttack3_Aes8`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aes8"): Rawcode<"ability">;
+
+/**
+ * Item Essencium Attack 4 (`Aes9`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEssenciumAttack4_Aes9`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aes9"): Rawcode<"ability">;
+
+/**
+ * Item Earthen Signet Attack (`Aesa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEarthenSignetAttack_Aesa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aesa"): Rawcode<"ability">;
+
+/**
+ * Sentinel (`Aesn`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Sentinel_Aesn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aesn"): Rawcode<"ability">;
+
+/**
+ * Item Essence of the Spider Queen (`Aesq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEssenceOfTheSpiderQueen_Aesq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aesq"): Rawcode<"ability">;
+
+/**
+ * Sentinel (`Aesr`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Sentinel_Aesr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aesr"): Rawcode<"ability">;
+
+/**
+ * Item Earthen Signet WS (`Aesw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemEarthenSignetWS_Aesw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aesw"): Rawcode<"ability">;
+
+/**
+ * Ethereal Form (`Aetf`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.EtherealForm_Aetf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aetf"): Rawcode<"ability">;
+
+/**
+ * Ghost (`Aeth`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Ghost_Aeth`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aeth"): Rawcode<"ability">;
+
+/**
+ * Ethereal (`Aetl`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Ethereal_Aetl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aetl"): Rawcode<"ability">;
+
+/**
+ * Well Spring (`Aews`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.WellSpring_Aews`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aews"): Rawcode<"ability">;
+
+/**
+ * Exhume Corpses (`Aexh`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.ExhumeCorpses_Aexh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aexh"): Rawcode<"ability">;
+
+/**
+ * Sentry Ward (`Aeye`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.SentryWard_Aeye`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aeye"): Rawcode<"ability">;
+
+/**
+ * Faerie Fire (`Afa2`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.FaerieFire_Afa2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afa2"): Rawcode<"ability">;
+
+/**
+ * Acid Bomb (`Afab`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.AcidBomb_Afab`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afab"): Rawcode<"ability">;
+
+/**
+ * Faerie Fire (`Afae`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.FaerieFire_Afae`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afae"): Rawcode<"ability">;
+
+/**
+ * Orb of Annihilation (`Afak`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.OrbOfAnnihilation_Afak`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afak"): Rawcode<"ability">;
+
+/**
+ * Feedback (`Afbb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Feedback_Afbb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afbb"): Rawcode<"ability">;
+
+/**
+ * Feedback (`Afbk`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Feedback_Afbk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afbk"): Rawcode<"ability">;
+
+/**
+ * Feedback (`Afbt`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Feedback_Afbt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afbt"): Rawcode<"ability">;
+
+/**
+ * Item Forgotten Frost Lotus (`Affl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemForgottenFrostLotus_Affl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Affl"): Rawcode<"ability">;
+
+/**
+ * Healing Spray (`Afhs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HealingSpray_Afhs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afhs"): Rawcode<"ability">;
+
+/**
+ * On Fire (Human) (`Afih`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.OnFireHuman_Afih`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afih"): Rawcode<"ability">;
+
+/**
+ * On Fire (Night Elf) (`Afin`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.OnFireNightElf_Afin`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afin"): Rawcode<"ability">;
+
+/**
+ * On Fire (Orc) (`Afio`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.OnFireOrc_Afio`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afio"): Rawcode<"ability">;
+
+/**
+ * On Fire (`Afir`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.OnFire_Afir`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afir"): Rawcode<"ability">;
+
+/**
+ * On Fire (Undead) (`Afiu`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.OnFireUndead_Afiu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afiu"): Rawcode<"ability">;
+
+/**
+ * Flare (`Afla`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Flare_Afla`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afla"): Rawcode<"ability">;
+
+/**
+ * Flak Cannons (`Aflk`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.FlakCannons_Aflk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aflk"): Rawcode<"ability">;
+
+/**
+ * Item Gloves of the Flamewalker Swarm (`Afm1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGlovesOfTheFlamewalkerSwarm_Afm1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afm1"): Rawcode<"ability">;
+
+/**
+ * Item Gloves of the Flamewalker Attack (`Afm2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGlovesOfTheFlamewalkerAttack_Afm2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afm2"): Rawcode<"ability">;
+
+/**
+ * Item Flame of Al'ar (`Afoa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemFlameOfAlar_Afoa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afoa"): Rawcode<"ability">;
+
+/**
+ * Finger of Death (`Afod`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.FingerOfDeath_Afod`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afod"): Rawcode<"ability">;
+
+/**
+ * Frost Attack (`Afr2`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.FrostAttack_Afr2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afr2"): Rawcode<"ability">;
+
+/**
+ * Frost Attack (`Afra`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.FrostAttack_Afra`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afra"): Rawcode<"ability">;
+
+/**
+ * Frost Breath (`Afrb`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.FrostBreath_Afrb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afrb"): Rawcode<"ability">;
+
+/**
+ * Frost Attack (`Afrc`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.FrostAttack_Afrc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afrc"): Rawcode<"ability">;
+
+/**
+ * Freezing Breath (`Afrz`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.FreezingBreath_Afrz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afrz"): Rawcode<"ability">;
+
+/**
+ * Fragmentation Shards (`Afsh`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.FragmentationShards_Afsh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afsh"): Rawcode<"ability">;
+
+/**
+ * Chemical Frenzy (`Afuf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ChemicalFrenzy_Afuf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afuf"): Rawcode<"ability">;
+
+/**
+ * Frenzy (`Afzy`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Frenzy_Afzy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Afzy"): Rawcode<"ability">;
+
+/**
+ * Item Gift of Wrath Attack (`Agga`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGiftOfWrathAttack_Agga`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agga"): Rawcode<"ability">;
+
+/**
+ * Item Gift of Greed Pillage (`Aggp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGiftOfGreedPillage_Aggp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aggp"): Rawcode<"ability">;
+
+/**
+ * Item Gift of Sloth Slow (`Aggs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGiftOfSlothSlow_Aggs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aggs"): Rawcode<"ability">;
+
+/**
+ * Item Gift of Wrath Bloodlust (`Aggw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGiftOfWrathBloodlust_Aggw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aggw"): Rawcode<"ability">;
+
+/**
+ * Item Curse of Pride (`Aggx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemCurseOfPride_Aggx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aggx"): Rawcode<"ability">;
+
+/**
+ * Ghost (`Agho`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Ghost_Agho`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agho"): Rawcode<"ability">;
+
+/**
+ * Gold Mine ability (`Agld`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.GoldMineAbility_Agld`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agld"): Rawcode<"ability">;
+
+/**
+ * Item Glix's Bomb (`Aglx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGlixsBomb_Aglx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aglx"): Rawcode<"ability">;
+
+/**
+ * Item Gloves of Necromancy Summon (`Agn1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGlovesOfNecromancySummon_Agn1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agn1"): Rawcode<"ability">;
+
+/**
+ * Item Gloves of Necromancy Attack (`Agn2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGlovesOfNecromancyAttack_Agn2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agn2"): Rawcode<"ability">;
+
+/**
+ * Item Golden Necklace Heal (`Agnh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGoldenNecklaceHeal_Agnh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agnh"): Rawcode<"ability">;
+
+/**
+ * Item Golden Necklace Spellcast (`Agns`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGoldenNecklaceSpellcast_Agns`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agns"): Rawcode<"ability">;
+
+/**
+ * Item Gloves of the Phoenix Spellcast (`Agpa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGlovesOfThePhoenixSpellcast_Agpa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agpa"): Rawcode<"ability">;
+
+/**
+ * Item Gloves of the Phoenix Damage (`Agpd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGlovesOfThePhoenixDamage_Agpd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agpd"): Rawcode<"ability">;
+
+/**
+ * Item Gravelight DoT (`Agr1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGravelightDoT_Agr1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agr1"): Rawcode<"ability">;
+
+/**
+ * Item Gravelight Main Swarm (`Agr2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGravelightMainSwarm_Agr2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agr2"): Rawcode<"ability">;
+
+/**
+ * Item Gravelight Side Swarm (`Agr3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGravelightSideSwarm_Agr3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agr3"): Rawcode<"ability">;
+
+/**
+ * Item Gravelight Attack Main (`Agr4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGravelightAttackMain_Agr4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agr4"): Rawcode<"ability">;
+
+/**
+ * Item Gravelight Attack Side (`Agr5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGravelightAttackSide_Agr5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agr5"): Rawcode<"ability">;
+
+/**
+ * War Club (`Agra`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.WarClub_Agra`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agra"): Rawcode<"ability">;
+
+/**
+ * Item Glacial Shard (`Agsh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemGlacialShard_Agsh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agsh"): Rawcode<"ability">;
+
+/**
+ * Flying Machine Bombs (`Agyb`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.FlyingMachineBombs_Agyb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agyb"): Rawcode<"ability">;
+
+/**
+ * Create Corpse (`Agyd`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.CreateCorpse_Agyd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agyd"): Rawcode<"ability">;
+
+/**
+ * True Sight (`Agyv`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.TrueSight_Agyv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Agyv"): Rawcode<"ability">;
+
+/**
+ * Animal War Training (`Ahan`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.AnimalWarTraining_Ahan`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahan"): Rawcode<"ability">;
+
+/**
+ * Harvest (`Ahar`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Harvest_Ahar`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahar"): Rawcode<"ability">;
+
+/**
+ * Heal (`Ahea`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Heal_Ahea`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahea"): Rawcode<"ability">;
+
+/**
+ * Healing modifier (`Ahem`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HealingModifier_Ahem`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahem"): Rawcode<"ability">;
+
+/**
+ * Item Huge Flail WS (`Ahf1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHugeFlailWS_Ahf1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahf1"): Rawcode<"ability">;
+
+/**
+ * Item Huge Flail Attack (`Ahf2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHugeFlailAttack_Ahf2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahf2"): Rawcode<"ability">;
+
+/**
+ * Item Heart of the Firebender BoF (`Ahfb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeartOfTheFirebenderBoF_Ahfb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahfb"): Rawcode<"ability">;
+
+/**
+ * Item Heart of the Firebender Orb (`Ahfo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeartOfTheFirebenderOrb_Ahfo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahfo"): Rawcode<"ability">;
+
+/**
+ * Item Headpiece of the High Inquisitor (`Ahhi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHeadpieceOfTheHighInquisitor_Ahhi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahhi"): Rawcode<"ability">;
+
+/**
+ * Shadow Meld (`Ahid`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ShadowMeld_Ahid`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahid"): Rawcode<"ability">;
+
+/**
+ * Improved Lumber Harvesting,Improved Lumber Harvesting,Advanced Lumber Harvesting (`Ahlh`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.ImprovedLumberHarvestingImprovedLumberHarvestingAdvancedLumberHarvesting_Ahlh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahlh"): Rawcode<"ability">;
+
+/**
+ * Summoning Ritual (`Ahnl`), a Built-in ability of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Abilities.SummoningRitual_Ahnl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahnl"): Rawcode<"ability">;
+
+/**
+ * Phoenix (`Ahpe`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Phoenix_Ahpe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahpe"): Rawcode<"ability">;
+
+/**
+ * Harvest (`Ahr2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Harvest_Ahr2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahr2"): Rawcode<"ability">;
+
+/**
+ * Harvest (`Ahr3`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Harvest_Ahr3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahr3"): Rawcode<"ability">;
+
+/**
+ * Long Rifles (`Ahri`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.LongRifles_Ahri`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahri"): Rawcode<"ability">;
+
+/**
+ * Harvest (`Ahrl`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Harvest_Ahrl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahrl"): Rawcode<"ability">;
+
+/**
+ * Repair (`Ahrp`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Repair_Ahrp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahrp"): Rawcode<"ability">;
+
+/**
+ * Item Helm of the Rimelord Spellcast (`Ahrx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHelmOfTheRimelordSpellcast_Ahrx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahrx"): Rawcode<"ability">;
+
+/**
+ * Item Helm of the Rimelord TC (`Ahrz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHelmOfTheRimelordTC_Ahrz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahrz"): Rawcode<"ability">;
+
+/**
+ * Item Hammer of the Silver Hand Attack (`Ahsa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHammerOfTheSilverHandAttack_Ahsa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahsa"): Rawcode<"ability">;
+
+/**
+ * Sundering Blades (`Ahsb`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.SunderingBlades_Ahsb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahsb"): Rawcode<"ability">;
+
+/**
+ * Item Hammer of the Silver Hand Heal (`Ahsh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHammerOfTheSilverHandHeal_Ahsh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahsh"): Rawcode<"ability">;
+
+/**
+ * Item Handful of Throwing Knives (`Ahtk`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemHandfulOfThrowingKnives_Ahtk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahtk"): Rawcode<"ability">;
+
+/**
+ * Healing Ward (`Ahwd`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.HealingWard_Ahwd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ahwd"): Rawcode<"ability">;
+
+/**
+ * Item Icecrown Ring Frost Nova (`Aic1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemIcecrownRingFrostNova_Aic1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aic1"): Rawcode<"ability">;
+
+/**
+ * Item Icecrown Ring Attack (`Aic2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemIcecrownRingAttack_Aic2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aic2"): Rawcode<"ability">;
+
+/**
+ * Unit Inventory (`Aien`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnitInventory_Aien`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aien"): Rawcode<"ability">;
+
+/**
+ * Unit Inventory (`Aihn`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnitInventory_Aihn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aihn"): Rawcode<"ability">;
+
+/**
+ * `Aimp`, unnamed, a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Unnamed_Aimp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aimp"): Rawcode<"ability">;
+
+/**
+ * Item Blade of Inferno Rain of Fire (`Ain1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBladeOfInfernoRainOfFire_Ain1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ain1"): Rawcode<"ability">;
+
+/**
+ * Item Blade of Inferno Attack (`Ain2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBladeOfInfernoAttack_Ain2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ain2"): Rawcode<"ability">;
+
+/**
+ * Inner Fire (`Ainf`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.InnerFire_Ainf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ainf"): Rawcode<"ability">;
+
+/**
+ * Unit Inventory (`Aion`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnitInventory_Aion`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aion"): Rawcode<"ability">;
+
+/**
+ * `Aisy`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_Aisy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aisy"): Rawcode<"ability">;
+
+/**
+ * Unit Inventory (`Aiun`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnitInventory_Aiun`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aiun"): Rawcode<"ability">;
+
+/**
+ * Invisibility (`Aivs`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Invisibility_Aivs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aivs"): Rawcode<"ability">;
+
+/**
+ * Item Kaldorei Moonglaive Attack (`Akma`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemKaldoreiMoonglaiveAttack_Akma`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Akma"): Rawcode<"ability">;
+
+/**
+ * Item Kaldorei Moonglaive Summon (`Akms`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemKaldoreiMoonglaiveSummon_Akms`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Akms"): Rawcode<"ability">;
+
+/**
+ * Sacrifice (`Alam`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Sacrifice_Alam`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Alam"): Rawcode<"ability">;
+
+/**
+ * Item Lance of the Frozen Phoenix (`Alfp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLanceOfTheFrozenPhoenix_Alfp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Alfp"): Rawcode<"ability">;
+
+/**
+ * Item Summon Forsaken Rangers (`Alfq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSummonForsakenRangers_Alfq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Alfq"): Rawcode<"ability">;
+
+/**
+ * Item Lionskin Helmet of Precision (`Alhp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLionskinHelmetOfPrecision_Alhp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Alhp"): Rawcode<"ability">;
+
+/**
+ * Liquid Fire (`Aliq`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.LiquidFire_Aliq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aliq"): Rawcode<"ability">;
+
+/**
+ * Lightning Attack (`Alit`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.LightningAttack_Alit`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Alit"): Rawcode<"ability">;
+
+/**
+ * Item Lesser Mark of the Forsaken (`Almf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLesserMarkOfTheForsaken_Almf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Almf"): Rawcode<"ability">;
+
+/**
+ * Load (`Aloa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Load_Aloa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aloa"): Rawcode<"ability">;
+
+/**
+ * Locust (`Aloc`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Locust_Aloc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aloc"): Rawcode<"ability">;
+
+/**
+ * Item Portable Lightning Rod Attack (`Alra`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPortableLightningRodAttack_Alra`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Alra"): Rawcode<"ability">;
+
+/**
+ * Item Portable Lightning Rod CL (`Alrc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPortableLightningRodCL_Alrc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Alrc"): Rawcode<"ability">;
+
+/**
+ * Lightning Shield (`Alsh`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.LightningShield_Alsh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Alsh"): Rawcode<"ability">;
+
+/**
+ * Replenish Mana (`Amb2`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.ReplenishMana_Amb2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amb2"): Rawcode<"ability">;
+
+/**
+ * Mana Burn (`Ambb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ManaBurn_Ambb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ambb"): Rawcode<"ability">;
+
+/**
+ * Mana Burn (`Ambd`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ManaBurn_Ambd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ambd"): Rawcode<"ability">;
+
+/**
+ * Replenish Mana and Life (`Ambt`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.ReplenishManaAndLife_Ambt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ambt"): Rawcode<"ability">;
+
+/**
+ * Item Mordo's Club (`Amcx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemMordosClub_Amcx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amcx"): Rawcode<"ability">;
+
+/**
+ * Banshee's Wail (`Amda`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BansheesWail_Amda`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amda"): Rawcode<"ability">;
+
+/**
+ * Magic Defense (`Amdf`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.MagicDefense_Amdf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amdf"): Rawcode<"ability">;
+
+/**
+ * Mechanical Critter (`Amec`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MechanicalCritter_Amec`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amec"): Rawcode<"ability">;
+
+/**
+ * Drop Corpse (`Amed`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.DropCorpse_Amed`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amed"): Rawcode<"ability">;
+
+/**
+ * Get Corpse (`Amel`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.GetCorpse_Amel`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amel"): Rawcode<"ability">;
+
+/**
+ * Mana Flare (`Amfl`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.ManaFlare_Amfl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amfl"): Rawcode<"ability">;
+
+/**
+ * Item Summon Deathguards (`Amfs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSummonDeathguards_Amfs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amfs"): Rawcode<"ability">;
+
+/**
+ * Bouncing Missile Filter (`Amgi`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.BouncingMissileFilter_Amgi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amgi"): Rawcode<"ability">;
+
+/**
+ * Moon Glaive (`Amgl`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.MoonGlaive_Amgl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amgl"): Rawcode<"ability">;
+
+/**
+ * Moon Glaive (`Amgr`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.MoonGlaive_Amgr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amgr"): Rawcode<"ability">;
+
+/**
+ * Call To Arms (`Amic`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.CallToArms_Amic`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amic"): Rawcode<"ability">;
+
+/**
+ * Call to Arms (`Amil`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.CallToArms_Amil`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amil"): Rawcode<"ability">;
+
+/**
+ * Spell Immunity (`Amim`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.SpellImmunity_Amim`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amim"): Rawcode<"ability">;
+
+/**
+ * Mine - exploding (`Amin`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MineExploding_Amin`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amin"): Rawcode<"ability">;
+
+/**
+ * Aerial Shackles (`Amls`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.AerialShackles_Amls`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amls"): Rawcode<"ability">;
+
+/**
+ * Item Monastery Mace Heal (`Amm1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemMonasteryMaceHeal_Amm1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amm1"): Rawcode<"ability">;
+
+/**
+ * Item Monastery Mace Attack (`Amm2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemMonasteryMaceAttack_Amm2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amm2"): Rawcode<"ability">;
+
+/**
+ * Mana Burn (`Amnb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ManaBurn_Amnb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amnb"): Rawcode<"ability">;
+
+/**
+ * AOE damage upon death (`Amnx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.AOEDamageUponDeath_Amnx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amnx"): Rawcode<"ability">;
+
+/**
+ * AOE damage upon death (`Amnz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.AOEDamageUponDeath_Amnz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amnz"): Rawcode<"ability">;
+
+/**
+ * Move (`Amov`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Move_Amov`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amov"): Rawcode<"ability">;
+
+/**
+ * Item Mark of the Phoenix BoF (`Ampb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemMarkOfThePhoenixBoF_Ampb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ampb"): Rawcode<"ability">;
+
+/**
+ * Crow Form (`Amrf`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.CrowForm_Amrf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amrf"): Rawcode<"ability">;
+
+/**
+ * Item Malachite Sword Curse (`Amsc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemMalachiteSwordCurse_Amsc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amsc"): Rawcode<"ability">;
+
+/**
+ * Item Malachite Sword Orb (`Amso`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemMalachiteSwordOrb_Amso`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Amso"): Rawcode<"ability">;
+
+/**
+ * Abolish Magic (`Andm`), a Built-in ability of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Abilities.AbolishMagic_Andm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Andm"): Rawcode<"ability">;
+
+/**
+ * Reveal (`Andt`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Reveal_Andt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Andt"): Rawcode<"ability">;
+
+/**
+ * Select Unit (`Ane2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SelectUnit_Ane2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ane2"): Rawcode<"ability">;
+
+/**
+ * Select Hero (`Aneu`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SelectHero_Aneu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aneu"): Rawcode<"ability">;
+
+/**
+ * Heal (`Anh1`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Heal_Anh1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Anh1"): Rawcode<"ability">;
+
+/**
+ * Heal (`Anh2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Heal_Anh2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Anh2"): Rawcode<"ability">;
+
+/**
+ * Heal (`Anhe`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Heal_Anhe`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Anhe"): Rawcode<"ability">;
+
+/**
+ * Item Nevermelting Ice (`Anmi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemNevermeltingIce_Anmi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Anmi"): Rawcode<"ability">;
+
+/**
+ * Hardened Skin (`Ansk`), a Built-in ability of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Abilities.HardenedSkin_Ansk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ansk"): Rawcode<"ability">;
+
+/**
+ * `Ansp`, unnamed, a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Unnamed_Ansp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ansp"): Rawcode<"ability">;
+
+/**
+ * Healing Ward Aura (`Aoar`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.HealingWardAura_Aoar`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aoar"): Rawcode<"ability">;
+
+/**
+ * Berserker Upgrade (`Aobk`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.BerserkerUpgrade_Aobk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aobk"): Rawcode<"ability">;
+
+/**
+ * Brute Strength (`Aobs`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.BruteStrength_Aobs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aobs"): Rawcode<"ability">;
+
+/**
+ * Item Orb Chill 3s (`Aoc3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemOrbChill3s_Aoc3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aoc3"): Rawcode<"ability">;
+
+/**
+ * On Hit Lightning Attack (`Aohl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.OnHitLightningAttack_Aohl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aohl"): Rawcode<"ability">;
+
+/**
+ * Item Totem Ogre Magi Attack (`Aoma`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTotemOgreMagiAttack_Aoma`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aoma"): Rawcode<"ability">;
+
+/**
+ * Item Totem Ogre Magi Bloodlust (`Aomb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.ItemTotemOgreMagiBloodlust_Aomb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aomb"): Rawcode<"ability">;
+
+/**
+ * Item Bracers Ogre Magi CL (`Aomc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBracersOgreMagiCL_Aomc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aomc"): Rawcode<"ability">;
+
+/**
+ * Item Bracers Ogre Magi HW (`Aomh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBracersOgreMagiHW_Aomh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aomh"): Rawcode<"ability">;
+
+/**
+ * Item Totem Ogre Magi Summon (`Aoms`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTotemOgreMagiSummon_Aoms`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aoms"): Rawcode<"ability">;
+
+/**
+ * Item Bracers Ogre Magi Attack 2 (`Aomx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBracersOgreMagiAttack2_Aomx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aomx"): Rawcode<"ability">;
+
+/**
+ * Item Bracers Ogre Magi Attack 1 (`Aomz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBracersOgreMagiAttack1_Aomz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aomz"): Rawcode<"ability">;
+
+/**
+ * Reinforced Defenses (`Aorb`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.ReinforcedDefenses_Aorb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aorb"): Rawcode<"ability">;
+
+/**
+ * Spiked Barricades,Spiked Barricades,Improved Spiked Barricades (`Aosp`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.SpikedBarricadesSpikedBarricadesImprovedSpikedBarricades_Aosp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aosp"): Rawcode<"ability">;
+
+/**
+ * `Aoth`, unnamed, a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Unnamed_Aoth`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aoth"): Rawcode<"ability">;
+
+/**
+ * Troll Regeneration (`Aotr`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.TrollRegeneration_Aotr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aotr"): Rawcode<"ability">;
+
+/**
+ * Pack Mule (`Apak`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.PackMule_Apak`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apak"): Rawcode<"ability">;
+
+/**
+ * Item Plaguebearer Shortsword (`Apbs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPlaguebearerShortsword_Apbs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apbs"): Rawcode<"ability">;
+
+/**
+ * Disease Cloud (`Apbw`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.DiseaseCloud_Apbw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apbw"): Rawcode<"ability">;
+
+/**
+ * Purge (`Apg2`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Purge_Apg2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apg2"): Rawcode<"ability">;
+
+/**
+ * Phoenix Morphing (Egg Related) (`Aphx`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.PhoenixMorphingEggRelated_Aphx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aphx"): Rawcode<"ability">;
+
+/**
+ * Permanent Immolation (`Apig`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PermanentImmolation_Apig`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apig"): Rawcode<"ability">;
+
+/**
+ * Shop Purchase Item (`Apit`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ShopPurchaseItem_Apit`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apit"): Rawcode<"ability">;
+
+/**
+ * Permanent Invisibility (`Apiv`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PermanentInvisibility_Apiv`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apiv"): Rawcode<"ability">;
+
+/**
+ * Item Plaguegreaves Spell (`Apl1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPlaguegreavesSpell_Apl1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apl1"): Rawcode<"ability">;
+
+/**
+ * Item Plaguegreaves Attack (`Apl2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPlaguegreavesAttack_Apl2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apl2"): Rawcode<"ability">;
+
+/**
+ * Polymorph (`Aply`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Polymorph_Aply`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aply"): Rawcode<"ability">;
+
+/**
+ * Phoenix Fire (`Apmf`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PhoenixFire_Apmf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apmf"): Rawcode<"ability">;
+
+/**
+ * Item Poison Nettle Attack (`Apna`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPoisonNettleAttack_Apna`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apna"): Rawcode<"ability">;
+
+/**
+ * Item Poison Nettle ER (`Apne`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPoisonNettleER_Apne`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apne"): Rawcode<"ability">;
+
+/**
+ * Poison Sting (`Apo2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PoisonSting_Apo2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apo2"): Rawcode<"ability">;
+
+/**
+ * Item Drunken Haze (Pint of Ale) (`Apoa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDrunkenHazePintOfAle_Apoa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apoa"): Rawcode<"ability">;
+
+/**
+ * Poison Sting (`Apoi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PoisonSting_Apoi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apoi"): Rawcode<"ability">;
+
+/**
+ * Possession (`Apos`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Possession_Apos`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apos"): Rawcode<"ability">;
+
+/**
+ * Purge (`Aprg`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Purge_Aprg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aprg"): Rawcode<"ability">;
+
+/**
+ * Possession (`Aps2`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Possession_Aps2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aps2"): Rawcode<"ability">;
+
+/**
+ * Phase Shift (`Apsh`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.PhaseShift_Apsh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apsh"): Rawcode<"ability">;
+
+/**
+ * Item Phalanx Shield Aura (`Apsq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPhalanxShieldAura_Apsq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apsq"): Rawcode<"ability">;
+
+/**
+ * Item Protector SH Stun (`Apsx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemProtectorSHStun_Apsx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apsx"): Rawcode<"ability">;
+
+/**
+ * Item Protector SH Attack (`Apsz`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemProtectorSHAttack_Apsz`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apsz"): Rawcode<"ability">;
+
+/**
+ * Disease Cloud (`Apts`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.DiseaseCloud_Apts`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apts"): Rawcode<"ability">;
+
+/**
+ * Item Plaguewrought Attack (`Apwa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPlaguewroughtAttack_Apwa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apwa"): Rawcode<"ability">;
+
+/**
+ * Item Plaguewrought Poison (`Apwp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPlaguewroughtPoison_Apwp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apwp"): Rawcode<"ability">;
+
+/**
+ * Item Plaguewrought CS (`Apws`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemPlaguewroughtCS_Apws`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apws"): Rawcode<"ability">;
+
+/**
+ * Phoenix Fire (`Apxf`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.PhoenixFire_Apxf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Apxf"): Rawcode<"ability">;
+
+/**
+ * Roar (`Ara2`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Roar_Ara2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ara2"): Rawcode<"ability">;
+
+/**
+ * Raise Dead (`Arai`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.RaiseDead_Arai`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arai"): Rawcode<"ability">;
+
+/**
+ * Storm Crow Form (`Arav`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.StormCrowForm_Arav`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arav"): Rawcode<"ability">;
+
+/**
+ * Item Restorative Balm (`Arba`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRestorativeBalm_Arba`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arba"): Rawcode<"ability">;
+
+/**
+ * Reinforced Burrows Upgrade (`Arbr`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.ReinforcedBurrowsUpgrade_Arbr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arbr"): Rawcode<"ability">;
+
+/**
+ * Item Diamond Ring CDR (`Ardr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemDiamondRingCDR_Ardr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ardr"): Rawcode<"ability">;
+
+/**
+ * Rejuvenation (`Arej`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Rejuvenation_Arej`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arej"): Rawcode<"ability">;
+
+/**
+ * Item Life Regeneration (`Arel`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeRegeneration_Arel`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arel"): Rawcode<"ability">;
+
+/**
+ * Renew (`Aren`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Renew_Aren`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aren"): Rawcode<"ability">;
+
+/**
+ * Repair (`Arep`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Repair_Arep`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arep"): Rawcode<"ability">;
+
+/**
+ * Tome of Retraining (`Aret`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.TomeOfRetraining_Aret`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aret"): Rawcode<"ability">;
+
+/**
+ * Revive Hero (`Arev`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ReviveHero_Arev`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arev"): Rawcode<"ability">;
+
+/**
+ * Item Ring of Holy Fire Immo (`Arf1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRingOfHolyFireImmo_Arf1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arf1"): Rawcode<"ability">;
+
+/**
+ * Item Ring of Holy Fire FL (`Arf2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRingOfHolyFireFL_Arf2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arf2"): Rawcode<"ability">;
+
+/**
+ * Item Ring of Holy Fire Attack (`Arf3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRingOfHolyFireAttack_Arf3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arf3"): Rawcode<"ability">;
+
+/**
+ * Item Ring of the Firelands Attack (`Arfa`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRingOfTheFirelandsAttack_Arfa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arfa"): Rawcode<"ability">;
+
+/**
+ * Item Ring of the Firelands CR (`Arfc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRingOfTheFirelandsCR_Arfc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arfc"): Rawcode<"ability">;
+
+/**
+ * Return Gold (`Argd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ReturnGold_Argd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Argd"): Rawcode<"ability">;
+
+/**
+ * Return Gold and Lumber (`Argl`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ReturnGoldAndLumber_Argl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Argl"): Rawcode<"ability">;
+
+/**
+ * Item Razorice Attack 1 (`Ari1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRazoriceAttack1_Ari1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ari1"): Rawcode<"ability">;
+
+/**
+ * Item Razorice Attack 2 (`Ari2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRazoriceAttack2_Ari2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ari2"): Rawcode<"ability">;
+
+/**
+ * Item Razorice BoF (`Ari3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRazoriceBoF_Ari3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ari3"): Rawcode<"ability">;
+
+/**
+ * Item Razorice Attack 4 (`Ari4`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRazoriceAttack4_Ari4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ari4"): Rawcode<"ability">;
+
+/**
+ * Item Life Regeneration (`Arll`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLifeRegeneration_Arll`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arll"): Rawcode<"ability">;
+
+/**
+ * Return Lumber (`Arlm`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ReturnLumber_Arlm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arlm"): Rawcode<"ability">;
+
+/**
+ * Revenge (`Arng`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Revenge_Arng`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arng"): Rawcode<"ability">;
+
+/**
+ * Root (`Aro1`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Root_Aro1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aro1"): Rawcode<"ability">;
+
+/**
+ * Root (`Aro2`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Root_Aro2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aro2"): Rawcode<"ability">;
+
+/**
+ * Roar (`Aroa`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Roar_Aroa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aroa"): Rawcode<"ability">;
+
+/**
+ * Barrage (`Aroc`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Barrage_Aroc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aroc"): Rawcode<"ability">;
+
+/**
+ * Item Rune of Fire (`Arof`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRuneOfFire_Arof`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arof"): Rawcode<"ability">;
+
+/**
+ * Replenish (`Arpb`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Replenish_Arpb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arpb"): Rawcode<"ability">;
+
+/**
+ * Essence of Blight (`Arpl`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.EssenceOfBlight_Arpl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arpl"): Rawcode<"ability">;
+
+/**
+ * Spirit Touch (`Arpm`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.SpiritTouch_Arpm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arpm"): Rawcode<"ability">;
+
+/**
+ * Item Robes of Revenge Attack (`Arr1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemRobesOfRevengeAttack_Arr1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arr1"): Rawcode<"ability">;
+
+/**
+ * Summon Misha (`Arsg`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SummonMisha_Arsg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arsg"): Rawcode<"ability">;
+
+/**
+ * Resistant Skin (`Arsk`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.ResistantSkin_Arsk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arsk"): Rawcode<"ability">;
+
+/**
+ * Stampede (`Arsp`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Stampede_Arsp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arsp"): Rawcode<"ability">;
+
+/**
+ * Summon Quilbeast (`Arsq`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SummonQuilbeast_Arsq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arsq"): Rawcode<"ability">;
+
+/**
+ * Restore (`Arst`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Restore_Arst`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arst"): Rawcode<"ability">;
+
+/**
+ * Serpent Ward (`Arsw`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.SerpentWard_Arsw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Arsw"): Rawcode<"ability">;
+
+/**
+ * Sacrifice (`Asac`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Sacrifice_Asac`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asac"): Rawcode<"ability">;
+
+/**
+ * Pillage (`Asal`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Pillage_Asal`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asal"): Rawcode<"ability">;
+
+/**
+ * On Magic Attack, Cast Spell (`Asas`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.OnMagicAttackCastSpell_Asas`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asas"): Rawcode<"ability">;
+
+/**
+ * Submerge (`Asb1`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Submerge_Asb1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asb1"): Rawcode<"ability">;
+
+/**
+ * Submerge (`Asb2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Submerge_Asb2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asb2"): Rawcode<"ability">;
+
+/**
+ * Submerge (`Asb3`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Submerge_Asb3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asb3"): Rawcode<"ability">;
+
+/**
+ * Item Sanctified Chestplate Heal (`Asc1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSanctifiedChestplateHeal_Asc1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asc1"): Rawcode<"ability">;
+
+/**
+ * Item Sanctified Chestplate Spellcast (`Asc2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSanctifiedChestplateSpellcast_Asc2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asc2"): Rawcode<"ability">;
+
+/**
+ * Item Chill Nova 3 (`Asc3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemChillNova3_Asc3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asc3"): Rawcode<"ability">;
+
+/**
+ * Item Chill Nova 5 (`Asc5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemChillNova5_Asc5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asc5"): Rawcode<"ability">;
+
+/**
+ * Item Shield of the Scarlet Crusade Attack (`Asca`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemShieldOfTheScarletCrusadeAttack_Asca`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asca"): Rawcode<"ability">;
+
+/**
+ * Item Shield of the Scarlet Crusade Heal (`Asch`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemShieldOfTheScarletCrusadeHeal_Asch`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asch"): Rawcode<"ability">;
+
+/**
+ * Item Sanctified Chestplate Immo (`Asci`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSanctifiedChestplateImmo_Asci`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asci"): Rawcode<"ability">;
+
+/**
+ * Kaboom! (`Asd2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Kaboom_Asd2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asd2"): Rawcode<"ability">;
+
+/**
+ * Kaboom! (`Asd3`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Kaboom_Asd3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asd3"): Rawcode<"ability">;
+
+/**
+ * Item Scepter of Darkness Summon (`Asdd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemScepterOfDarknessSummon_Asdd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asdd"): Rawcode<"ability">;
+
+/**
+ * Kaboom! (`Asdg`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Kaboom_Asdg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asdg"): Rawcode<"ability">;
+
+/**
+ * Dispel Magic (`Asdi`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.DispelMagic_Asdi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asdi"): Rawcode<"ability">;
+
+/**
+ * Kaboom! (`Asds`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Kaboom_Asds`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asds"): Rawcode<"ability">;
+
+/**
+ * Item Scepter of Darkness Spellcast (`Asdx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemScepterOfDarknessSpellcast_Asdx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asdx"): Rawcode<"ability">;
+
+/**
+ * Heal (`Asea`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Heal_Asea`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asea"): Rawcode<"ability">;
+
+/**
+ * Flame Strike (`Asfs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.FlameStrike_Asfs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asfs"): Rawcode<"ability">;
+
+/**
+ * Item Sanctified Gauntlets Impale (`Asg1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSanctifiedGauntletsImpale_Asg1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asg1"): Rawcode<"ability">;
+
+/**
+ * Item Sanctified Gauntlets Attack (`Asg2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSanctifiedGauntletsAttack_Asg2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asg2"): Rawcode<"ability">;
+
+/**
+ * Item Sword of the Ghostlands Attack (`Asga`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSwordOfTheGhostlandsAttack_Asga`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asga"): Rawcode<"ability">;
+
+/**
+ * Item Sword of the Ghostlands HoT (`Asgh`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSwordOfTheGhostlandsHoT_Asgh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asgh"): Rawcode<"ability">;
+
+/**
+ * Item Shepherd's Curse (`Ashc`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemShepherdsCurse_Ashc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ashc"): Rawcode<"ability">;
+
+/**
+ * Shadow Meld (`Ashm`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.ShadowMeld_Ashm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ashm"): Rawcode<"ability">;
+
+/**
+ * Wand of Shadowsight (`Ashs`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.WandOfShadowsight_Ashs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ashs"): Rawcode<"ability">;
+
+/**
+ * Item Summon Infectious Ghoul (`Asic`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSummonInfectiousGhoul_Asic`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asic"): Rawcode<"ability">;
+
+/**
+ * Sell Items (`Asid`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SellItems_Asid`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asid"): Rawcode<"ability">;
+
+/**
+ * Inner Fire (`Asif`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.InnerFire_Asif`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asif"): Rawcode<"ability">;
+
+/**
+ * Item Vestments Storm King MS (`Ask1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemVestmentsStormKingMS_Ask1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ask1"): Rawcode<"ability">;
+
+/**
+ * Item Vestments Storm King Spellcast (`Ask2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemVestmentsStormKingSpellcast_Ask2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ask2"): Rawcode<"ability">;
+
+/**
+ * Item Tome of the Spiderkind Attack (`Aska`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTomeOfTheSpiderkindAttack_Aska`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aska"): Rawcode<"ability">;
+
+/**
+ * Item Tome of the Spiderkind Summon (`Asks`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTomeOfTheSpiderkindSummon_Asks`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asks"): Rawcode<"ability">;
+
+/**
+ * Sleep Always (`Asla`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SleepAlways_Asla`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asla"): Rawcode<"ability">;
+
+/**
+ * Slow (`Aslo`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Slow_Aslo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aslo"): Rawcode<"ability">;
+
+/**
+ * Summon Prawns (`Aslp`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SummonPrawns_Aslp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aslp"): Rawcode<"ability">;
+
+/**
+ * Item Band of the Skeletal Mage Frost Nova (`Asmn`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBandOfTheSkeletalMageFrostNova_Asmn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asmn"): Rawcode<"ability">;
+
+/**
+ * Item Band of the Skeletal Mage Orb (`Asmo`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBandOfTheSkeletalMageOrb_Asmo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asmo"): Rawcode<"ability">;
+
+/**
+ * Spawn Skeleton (`Asod`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SpawnSkeleton_Asod`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asod"): Rawcode<"ability">;
+
+/**
+ * Item Scythe of Frost Aura (`Asof`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemScytheOfFrostAura_Asof`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asof"): Rawcode<"ability">;
+
+/**
+ * Item Soul Possession (`Asou`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSoulPossession_Asou`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asou"): Rawcode<"ability">;
+
+/**
+ * Sphere (`Asp1`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Sphere_Asp1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asp1"): Rawcode<"ability">;
+
+/**
+ * Sphere (`Asp2`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Sphere_Asp2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asp2"): Rawcode<"ability">;
+
+/**
+ * Sphere (`Asp3`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Sphere_Asp3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asp3"): Rawcode<"ability">;
+
+/**
+ * Sphere (`Asp4`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Sphere_Asp4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asp4"): Rawcode<"ability">;
+
+/**
+ * Sphere (`Asp5`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Sphere_Asp5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asp5"): Rawcode<"ability">;
+
+/**
+ * Sphere (`Asp6`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Sphere_Asp6`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asp6"): Rawcode<"ability">;
+
+/**
+ * Spider Attack (`Aspa`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.SpiderAttack_Aspa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aspa"): Rawcode<"ability">;
+
+/**
+ * Spell Book (`Aspb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SpellBook_Aspb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aspb"): Rawcode<"ability">;
+
+/**
+ * Spawn Spiders (`Aspd`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SpawnSpiders_Aspd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aspd"): Rawcode<"ability">;
+
+/**
+ * Sphere (`Asph`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Sphere_Asph`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asph"): Rawcode<"ability">;
+
+/**
+ * Spiked Barricades (`Aspi`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.SpikedBarricades_Aspi`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aspi"): Rawcode<"ability">;
+
+/**
+ * Spirit Link (`Aspl`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.SpiritLink_Aspl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aspl"): Rawcode<"ability">;
+
+/**
+ * Slow Poison (`Aspo`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.SlowPoison_Aspo`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aspo"): Rawcode<"ability">;
+
+/**
+ * Spirit Link (`Aspp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SpiritLink_Aspp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aspp"): Rawcode<"ability">;
+
+/**
+ * Spell Steal (`Asps`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.SpellSteal_Asps`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asps"): Rawcode<"ability">;
+
+/**
+ * Spawn Hydra Hatchling (`Aspt`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SpawnHydraHatchling_Aspt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aspt"): Rawcode<"ability">;
+
+/**
+ * Spawn Hydra (`Aspy`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SpawnHydra_Aspy`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aspy"): Rawcode<"ability">;
+
+/**
+ * Item Soulstealer Mana (`Asr1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSoulstealerMana_Asr1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asr1"): Rawcode<"ability">;
+
+/**
+ * Item Soulstealer Attack (`Asr2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSoulstealerAttack_Asr2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asr2"): Rawcode<"ability">;
+
+/**
+ * Item Selene Starfall (`Ass1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSeleneStarfall_Ass1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ass1"): Rawcode<"ability">;
+
+/**
+ * Item Selene Spellcast (`Ass2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSeleneSpellcast_Ass2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ass2"): Rawcode<"ability">;
+
+/**
+ * Soul Burn (`Assb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SoulBurn_Assb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Assb"): Rawcode<"ability">;
+
+/**
+ * Hardened Skin (`Assk`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.HardenedSkin_Assk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Assk"): Rawcode<"ability">;
+
+/**
+ * Spawn Spiderlings (`Assp`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.SpawnSpiderlings_Assp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Assp"): Rawcode<"ability">;
+
+/**
+ * Item Spell Shield 15 (`Assq`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellShield15_Assq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Assq"): Rawcode<"ability">;
+
+/**
+ * Item Spell Shield 12 (`Assw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemSpellShield12_Assw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Assw"): Rawcode<"ability">;
+
+/**
+ * Stasis Trap (`Asta`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.StasisTrap_Asta`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asta"): Rawcode<"ability">;
+
+/**
+ * Stand Down (`Astd`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.StandDown_Astd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Astd"): Rawcode<"ability">;
+
+/**
+ * Steal (`Aste`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Steal_Aste`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aste"): Rawcode<"ability">;
+
+/**
+ * Storm Hammers (`Asth`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.StormHammers_Asth`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asth"): Rawcode<"ability">;
+
+/**
+ * Stone Form (`Astn`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.StoneForm_Astn`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Astn"): Rawcode<"ability">;
+
+/**
+ * Sell Units (`Asud`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SellUnits_Asud`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asud"): Rawcode<"ability">;
+
+/**
+ * Item Stormwalkers TC (`Asw1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemStormwalkersTC_Asw1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asw1"): Rawcode<"ability">;
+
+/**
+ * Item Stormwalkers Spellcast (`Asw2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemStormwalkersSpellcast_Asw2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asw2"): Rawcode<"ability">;
+
+/**
+ * Item Wildhammer Breastplate CL (`Asx1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemWildhammerBreastplateCL_Asx1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Asx1"): Rawcode<"ability">;
+
+/**
+ * Taunt (`Atau`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Taunt_Atau`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atau"): Rawcode<"ability">;
+
+/**
+ * Throw Dust (`Atbd`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ThrowDust_Atbd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atbd"): Rawcode<"ability">;
+
+/**
+ * Building Damage Aura (`Atdg`), a Built-in ability of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Abilities.BuildingDamageAura_Atdg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atdg"): Rawcode<"ability">;
+
+/**
+ * Drop Pilot (`Atdp`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.DropPilot_Atdp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atdp"): Rawcode<"ability">;
+
+/**
+ * Item Forsaken Fangs (`Atff`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemForsakenFangs_Atff`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atff"): Rawcode<"ability">;
+
+/**
+ * Item Knight's Javelin (`Atkj`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemKnightsJavelin_Atkj`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atkj"): Rawcode<"ability">;
+
+/**
+ * Item Tiara of the Kirin'Tor (`Atkt`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTiaraOfTheKirinTor_Atkt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atkt"): Rawcode<"ability">;
+
+/**
+ * Load Pilot (`Atlp`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.LoadPilot_Atlp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atlp"): Rawcode<"ability">;
+
+/**
+ * Item Mana Bauble (`Atmb`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemManaBauble_Atmb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atmb"): Rawcode<"ability">;
+
+/**
+ * Item Talisman of Nightmares Orb (`Atno`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTalismanOfNightmaresOrb_Atno`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atno"): Rawcode<"ability">;
+
+/**
+ * Item Talisman of Nightmares Curse (`Atns`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTalismanOfNightmaresCurse_Atns`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atns"): Rawcode<"ability">;
+
+/**
+ * Tree of Life upgrade ability (`Atol`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.TreeOfLifeUpgradeAbility_Atol`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atol"): Rawcode<"ability">;
+
+/**
+ * Item Thornguard Rapier Attack (`Atra`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemThornguardRapierAttack_Atra`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atra"): Rawcode<"ability">;
+
+/**
+ * Item Thornguard Rapier Rejuvenation (`Atrr`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemThornguardRapierRejuvenation_Atrr`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atrr"): Rawcode<"ability">;
+
+/**
+ * True Sight (`Atru`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.TrueSight_Atru`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atru"): Rawcode<"ability">;
+
+/**
+ * Item The Screecher HoT (`Ats1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTheScreecherHoT_Ats1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ats1"): Rawcode<"ability">;
+
+/**
+ * Item The Screecher Attack (`Ats2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemTheScreecherAttack_Ats2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ats2"): Rawcode<"ability">;
+
+/**
+ * Tornado Spin (`Atsp`), a Built-in ability of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Abilities.TornadoSpin_Atsp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atsp"): Rawcode<"ability">;
+
+/**
+ * Turret (`Attu`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Turret_Attu`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Attu"): Rawcode<"ability">;
+
+/**
+ * Tornado Wander (`Atwa`), a Built-in ability of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Abilities.TornadoWander_Atwa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Atwa"): Rawcode<"ability">;
+
+/**
+ * Unstable Concoction (`Auco`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.UnstableConcoction_Auco`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Auco"): Rawcode<"ability">;
+
+/**
+ * Ghoul Frenzy (`Augf`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.GhoulFrenzy_Augf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Augf"): Rawcode<"ability">;
+
+/**
+ * Shade (`Augh`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Shade_Augh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Augh"): Rawcode<"ability">;
+
+/**
+ * Unholy Frenzy (`Auhf`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.UnholyFrenzy_Auhf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Auhf"): Rawcode<"ability">;
+
+/**
+ * Item Infectious Claws (`Auic`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemInfectiousClaws_Auic`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Auic"): Rawcode<"ability">;
+
+/**
+ * Ultravision (`Ault`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Ultravision_Ault`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ault"): Rawcode<"ability">;
+
+/**
+ * Unsummon Building (`Auns`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.UnsummonBuilding_Auns`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Auns"): Rawcode<"ability">;
+
+/**
+ * Skeletal Mastery (`Ausm`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.SkeletalMastery_Ausm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Ausm"): Rawcode<"ability">;
+
+/**
+ * Incite Unholy Frenzy (`Auuf`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.InciteUnholyFrenzy_Auuf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Auuf"): Rawcode<"ability">;
+
+/**
+ * Item Lost Spirits Heal (`Avb1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLostSpiritsHeal_Avb1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Avb1"): Rawcode<"ability">;
+
+/**
+ * Item Lost Spirits Spellcast (`Avb2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemLostSpiritsSpellcast_Avb2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Avb2"): Rawcode<"ability">;
+
+/**
+ * Envenomed Spears (`Aven`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.EnvenomedSpears_Aven`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aven"): Rawcode<"ability">;
+
+/**
+ * Item Vestments Wave Heal (`Avm1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemVestmentsWaveHeal_Avm1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Avm1"): Rawcode<"ability">;
+
+/**
+ * Item Vestments Wave Spellcast (`Avm2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemVestmentsWaveSpellcast_Avm2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Avm2"): Rawcode<"ability">;
+
+/**
+ * Spirit of Vengeance (`Avng`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.SpiritOfVengeance_Avng`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Avng"): Rawcode<"ability">;
+
+/**
+ * Item Bloodstone Heal (`Avs1`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBloodstoneHeal_Avs1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Avs1"): Rawcode<"ability">;
+
+/**
+ * Item Bloodstone Attack (`Avs2`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemBloodstoneAttack_Avs2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Avs2"): Rawcode<"ability">;
+
+/**
+ * Invulnerable (`Avul`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Invulnerable_Avul`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Avul"): Rawcode<"ability">;
+
+/**
+ * Wander (`Awan`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Wander_Awan`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Awan"): Rawcode<"ability">;
+
+/**
+ * Pulverize,Pulverize (`Awar`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.PulverizePulverize_Awar`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Awar"): Rawcode<"ability">;
+
+/**
+ * Web (`Aweb`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Web_Aweb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Aweb"): Rawcode<"ability">;
+
+/**
+ * Firebolt (`Awfb`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Firebolt_Awfb`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Awfb"): Rawcode<"ability">;
+
+/**
+ * Gather (`Awh2`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Gather_Awh2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Awh2"): Rawcode<"ability">;
+
+/**
+ * Gather (`Awha`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.Gather_Awha`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Awha"): Rawcode<"ability">;
+
+/**
+ * War Stomp (`Awrg`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.WarStomp_Awrg`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Awrg"): Rawcode<"ability">;
+
+/**
+ * War Stomp (`Awrh`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.WarStomp_Awrh`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Awrh"): Rawcode<"ability">;
+
+/**
+ * Waygate ability (`Awrp`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.WaygateAbility_Awrp`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Awrp"): Rawcode<"ability">;
+
+/**
+ * War Stomp (`Awrs`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.WarStomp_Awrs`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Awrs"): Rawcode<"ability">;
+
+/**
+ * Item Zandalari Giantcrusher WS (`Azgw`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemZandalariGiantcrusherWS_Azgw`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Azgw"): Rawcode<"ability">;
+
+/**
+ * Item Zandalari Giantcrusher Attack (`Azgx`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ItemZandalariGiantcrusherAttack_Azgx`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Azgx"): Rawcode<"ability">;
+
+/**
+ * Battle Fury (`BT1a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BattleFury_BT1a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT1a"): Rawcode<"ability">;
+
+/**
+ * Staggering Impact (`BT1b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.StaggeringImpact_BT1b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT1b"): Rawcode<"ability">;
+
+/**
+ * Meteor Strike (`BT1c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MeteorStrike_BT1c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT1c"): Rawcode<"ability">;
+
+/**
+ * Reckless Abandon (`BT2a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RecklessAbandon_BT2a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT2a"): Rawcode<"ability">;
+
+/**
+ * Eye for Eye (`BT2b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.EyeForEye_BT2b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT2b"): Rawcode<"ability">;
+
+/**
+ * Indomitable (`BT2c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Indomitable_BT2c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT2c"): Rawcode<"ability">;
+
+/**
+ * Retribution (`BT3a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Retribution_BT3a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT3a"): Rawcode<"ability">;
+
+/**
+ * Unbreakable Spirit (`BT3b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnbreakableSpirit_BT3b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT3b"): Rawcode<"ability">;
+
+/**
+ * Tenacity (`BT3c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Tenacity_BT3c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT3c"): Rawcode<"ability">;
+
+/**
+ * Last Stand (`BT4a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.LastStand_BT4a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT4a"): Rawcode<"ability">;
+
+/**
+ * Martial Mastery (`BT4b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MartialMastery_BT4b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT4b"): Rawcode<"ability">;
+
+/**
+ * Hand of Justice (`BT4c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HandOfJustice_BT4c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT4c"): Rawcode<"ability">;
+
+/**
+ * Iron Will (`BT5a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.IronWill_BT5a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT5a"): Rawcode<"ability">;
+
+/**
+ * Veteran's Resilience (`BT5b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.VeteransResilience_BT5b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT5b"): Rawcode<"ability">;
+
+/**
+ * Undead Vitality (`BT5c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UndeadVitality_BT5c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT5c"): Rawcode<"ability">;
+
+/**
+ * Juggernaut (`BT6a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Juggernaut_BT6a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT6a"): Rawcode<"ability">;
+
+/**
+ * Thick Skin (`BT6b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ThickSkin_BT6b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT6b"): Rawcode<"ability">;
+
+/**
+ * Discipline (`BT6c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Discipline_BT6c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "BT6c"): Rawcode<"ability">;
+
+/**
+ * Crippling Blow (`GT1a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.CripplingBlow_GT1a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "GT1a"): Rawcode<"ability">;
+
+/**
+ * Rend Armor (`GT1b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RendArmor_GT1b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "GT1b"): Rawcode<"ability">;
+
+/**
+ * Storm of Steel (`GT1c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.StormOfSteel_GT1c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "GT1c"): Rawcode<"ability">;
+
+/**
+ * Retaliation (`GT2a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Retaliation_GT2a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "GT2a"): Rawcode<"ability">;
+
+/**
+ * Riposte (`GT2b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Riposte_GT2b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "GT2b"): Rawcode<"ability">;
+
+/**
+ * Blade Mastery (`GT2c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BladeMastery_GT2c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "GT2c"): Rawcode<"ability">;
+
+/**
+ * Into the Fray! (`GT3a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.IntoTheFray_GT3a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "GT3a"): Rawcode<"ability">;
+
+/**
+ * Shoulder Bash (`GT3b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ShoulderBash_GT3b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "GT3b"): Rawcode<"ability">;
+
+/**
+ * Stamina Training (`GT3c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.StaminaTraining_GT3c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "GT3c"): Rawcode<"ability">;
+
+/**
+ * Unbreakable (`GT4a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unbreakable_GT4a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "GT4a"): Rawcode<"ability">;
+
+/**
+ * Combat Tempo (`GT4b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.CombatTempo_GT4b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "GT4b"): Rawcode<"ability">;
+
+/**
+ * Unstoppable Might (`GT4c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnstoppableMight_GT4c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "GT4c"): Rawcode<"ability">;
+
+/**
+ * Purifying Flame (`IT1a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PurifyingFlame_IT1a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "IT1a"): Rawcode<"ability">;
+
+/**
+ * Holy Nova (`IT1b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HolyNova_IT1b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "IT1b"): Rawcode<"ability">;
+
+/**
+ * Radiant Embrace (`IT1c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RadiantEmbrace_IT1c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "IT1c"): Rawcode<"ability">;
+
+/**
+ * Unwilling Bomb (`IT2a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnwillingBomb_IT2a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "IT2a"): Rawcode<"ability">;
+
+/**
+ * Mindbreaker (`IT2b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Mindbreaker_IT2b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "IT2b"): Rawcode<"ability">;
+
+/**
+ * Voice of Authority (`IT2c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.VoiceOfAuthority_IT2c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "IT2c"): Rawcode<"ability">;
+
+/**
+ * Sacred Rebuke (`IT3a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SacredRebuke_IT3a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "IT3a"): Rawcode<"ability">;
+
+/**
+ * Clarity of Mind (`IT3b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ClarityOfMind_IT3b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "IT3b"): Rawcode<"ability">;
+
+/**
+ * Spiritual Renewal (`IT3c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SpiritualRenewal_IT3c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "IT3c"): Rawcode<"ability">;
+
+/**
+ * Divine Reservoir (`IT4a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.DivineReservoir_IT4a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "IT4a"): Rawcode<"ability">;
+
+/**
+ * Light's Grace (`IT4b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.LightsGrace_IT4b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "IT4b"): Rawcode<"ability">;
+
+/**
+ * Holy Light (`IT4c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.HolyLight_IT4c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "IT4c"): Rawcode<"ability">;
+
+/**
+ * `IT6c`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unnamed_IT6c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "IT6c"): Rawcode<"ability">;
+
+/**
+ * Valor's Reward (`LT1a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ValorsReward_LT1a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "LT1a"): Rawcode<"ability">;
+
+/**
+ * Judgement (`LT1b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Judgement_LT1b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "LT1b"): Rawcode<"ability">;
+
+/**
+ * Press the Attack (`LT1c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.PressTheAttack_LT1c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "LT1c"): Rawcode<"ability">;
+
+/**
+ * Mass Arrest (`LT2a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MassArrest_LT2a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "LT2a"): Rawcode<"ability">;
+
+/**
+ * Weighted Net (`LT2b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.WeightedNet_LT2b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "LT2b"): Rawcode<"ability">;
+
+/**
+ * Exposed Defenses (`LT2c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ExposedDefenses_LT2c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "LT2c"): Rawcode<"ability">;
+
+/**
+ * Rally (`LT3a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Rally_LT3a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "LT3a"): Rawcode<"ability">;
+
+/**
+ * Second Wind (`LT3b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.SecondWind_LT3b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "LT3b"): Rawcode<"ability">;
+
+/**
+ * Born Leader (`LT3c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.BornLeader_LT3c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "LT3c"): Rawcode<"ability">;
+
+/**
+ * Perseverance (`LT4a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Perseverance_LT4a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "LT4a"): Rawcode<"ability">;
+
+/**
+ * Against All Odds (`LT4b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.AgainstAllOdds_LT4b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "LT4b"): Rawcode<"ability">;
+
+/**
+ * Renewed Vigor (`LT4c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.RenewedVigor_LT4c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "LT4c"): Rawcode<"ability">;
+
+/**
+ * Endurance Aura (`SCae`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.EnduranceAura_SCae`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "SCae"): Rawcode<"ability">;
+
+/**
+ * Cyclone (`SCc1`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Cyclone_SCc1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "SCc1"): Rawcode<"ability">;
+
+/**
+ * Life Steal (`SCva`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.LifeSteal_SCva`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "SCva"): Rawcode<"ability">;
+
+/**
+ * Dark Conversion (`SNdc`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DarkConversion_SNdc`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "SNdc"): Rawcode<"ability">;
+
+/**
+ * Death And Decay (`SNdd`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.DeathAndDecay_SNdd`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "SNdd"): Rawcode<"ability">;
+
+/**
+ * Earthquake (`SNeq`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Earthquake_SNeq`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "SNeq"): Rawcode<"ability">;
+
+/**
+ * Inferno (`SNin`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.Inferno_SNin`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "SNin"): Rawcode<"ability">;
+
+/**
+ * Berserker Upgrade (`Sbsk`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.BerserkerUpgrade_Sbsk`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sbsk"): Rawcode<"ability">;
+
+/**
+ * Battle Stations (`Sbtl`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.BattleStations_Sbtl`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sbtl"): Rawcode<"ability">;
+
+/**
+ * `Sca1`, unnamed, a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Unnamed_Sca1`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sca1"): Rawcode<"ability">;
+
+/**
+ * `Sca2`, unnamed, a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Unnamed_Sca2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sca2"): Rawcode<"ability">;
+
+/**
+ * `Sca3`, unnamed, a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Unnamed_Sca3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sca3"): Rawcode<"ability">;
+
+/**
+ * `Sca4`, unnamed, a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Unnamed_Sca4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sca4"): Rawcode<"ability">;
+
+/**
+ * `Sca5`, unnamed, a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Unnamed_Sca5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sca5"): Rawcode<"ability">;
+
+/**
+ * `Sca6`, unnamed, a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Unnamed_Sca6`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sca6"): Rawcode<"ability">;
+
+/**
+ * Cargo Hold (`Sch2`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.CargoHold_Sch2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sch2"): Rawcode<"ability">;
+
+/**
+ * Cargo Hold (`Sch3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.CargoHold_Sch3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sch3"): Rawcode<"ability">;
+
+/**
+ * Cargo Hold (`Sch4`), a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.CargoHold_Sch4`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sch4"): Rawcode<"ability">;
+
+/**
+ * Cargo Hold (`Sch5`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.CargoHold_Sch5`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sch5"): Rawcode<"ability">;
+
+/**
+ * Cripple (`Scri`), a Built-in ability of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Abilities.Cripple_Scri`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Scri"): Rawcode<"ability">;
+
+/**
+ * Unload (`Sdro`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Unload_Sdro`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sdro"): Rawcode<"ability">;
+
+/**
+ * Load Wisp (`Slo2`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.LoadWisp_Slo2`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Slo2"): Rawcode<"ability">;
+
+/**
+ * Load (`Slo3`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Load_Slo3`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Slo3"): Rawcode<"ability">;
+
+/**
+ * Load (`Sloa`), a Built-in ability of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Abilities.Load_Sloa`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sloa"): Rawcode<"ability">;
+
+/**
+ * `Srtt`, unnamed, a Built-in ability of Patch 3.0.0, race human.
+ *
+ * Its constant is `Abilities.Unnamed_Srtt`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Srtt"): Rawcode<"ability">;
+
+/**
+ * Shadow Meld (`Sshm`), a Built-in ability of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Abilities.ShadowMeld_Sshm`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Sshm"): Rawcode<"ability">;
+
+/**
+ * Unholy Frenzy (`Suhf`), a Built-in ability of Patch 3.0.0, race creeps.
+ *
+ * Its constant is `Abilities.UnholyFrenzy_Suhf`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "Suhf"): Rawcode<"ability">;
+
+/**
+ * Forsaken Might (`UT1a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ForsakenMight_UT1a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT1a"): Rawcode<"ability">;
+
+/**
+ * Bloodthirst (`UT1b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Bloodthirst_UT1b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT1b"): Rawcode<"ability">;
+
+/**
+ * Bladestorm (`UT1c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Bladestorm_UT1c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT1c"): Rawcode<"ability">;
+
+/**
+ * Counter Attack (`UT2a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.CounterAttack_UT2a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT2a"): Rawcode<"ability">;
+
+/**
+ * Parry (`UT2b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Parry_UT2b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT2b"): Rawcode<"ability">;
+
+/**
+ * The Best Defense... (`UT2c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.TheBestDefense_UT2c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT2c"): Rawcode<"ability">;
+
+/**
+ * Endurance (`UT3a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Endurance_UT3a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT3a"): Rawcode<"ability">;
+
+/**
+ * Thirst For Battle (`UT3b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ThirstForBattle_UT3b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT3b"): Rawcode<"ability">;
+
+/**
+ * Furious Charge (`UT3c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.FuriousCharge_UT3c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT3c"): Rawcode<"ability">;
+
+/**
+ * Inner Fire (`UT4a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.InnerFire_UT4a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT4a"): Rawcode<"ability">;
+
+/**
+ * Soulthirst (`UT4b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Soulthirst_UT4b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT4b"): Rawcode<"ability">;
+
+/**
+ * Unending Fury (`UT4c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.UnendingFury_UT4c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT4c"): Rawcode<"ability">;
+
+/**
+ * Improved Armor (`UT5a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.ImprovedArmor_UT5a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT5a"): Rawcode<"ability">;
+
+/**
+ * Swordsmanship (`UT5b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.Swordsmanship_UT5b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT5b"): Rawcode<"ability">;
+
+/**
+ * All Brawn (`UT5c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.AllBrawn_UT5c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT5c"): Rawcode<"ability">;
+
+/**
+ * Mighty Swing (`UT6a`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.MightySwing_UT6a`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT6a"): Rawcode<"ability">;
+
+/**
+ * Quick Recovery (`UT6b`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.QuickRecovery_UT6b`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT6b"): Rawcode<"ability">;
+
+/**
+ * Warrior's Focus (`UT6c`), a Built-in ability of Patch 3.0.0, race other.
+ *
+ * Its constant is `Abilities.WarriorsFocus_UT6c`, from `reforged-builtins/abilities`.
+ */
+declare function FourCC(id: "UT6c"): Rawcode<"ability">;
+
+// Buffs.
+
+/**
+ * Starfall (Target) (`AEsd`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.StarfallTarget_AEsd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "AEsd"): Rawcode<"buff">;
+
+/**
+ * Tranquility (Target) (`AEtr`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.TranquilityTarget_AEtr`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "AEtr"): Rawcode<"buff">;
+
+/**
+ * Monsoon (`ANmd`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Monsoon_ANmd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "ANmd"): Rawcode<"buff">;
+
+/**
+ * Poisoned Arrows (`BApa`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.PoisonedArrows_BApa`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BApa"): Rawcode<"buff">;
+
+/**
+ * Chronomancy (`BCGb`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Chronomancy_BCGb`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BCGb"): Rawcode<"buff">;
+
+/**
+ * Breath of Frost (`BCbf`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.BreathOfFrost_BCbf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BCbf"): Rawcode<"buff">;
+
+/**
+ * Slam (`BCtc`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Slam_BCtc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BCtc"): Rawcode<"buff">;
+
+/**
+ * Dark Commander's Presence (`BDCa`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.DarkCommandersPresence_BDCa`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BDCa"): Rawcode<"buff">;
+
+/**
+ * Dark Mistress' Presence (`BDMa`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.DarkMistressPresence_BDMa`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BDMa"): Rawcode<"buff">;
+
+/**
+ * Thorns Aura (`BEah`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.ThornsAura_BEah`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BEah"): Rawcode<"buff">;
+
+/**
+ * Trueshot Aura (`BEar`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.TrueshotAura_BEar`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BEar"): Rawcode<"buff">;
+
+/**
+ * Entangling Roots (`BEer`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.EntanglingRoots_BEer`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BEer"): Rawcode<"buff">;
+
+/**
+ * Force of Nature (`BEfn`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.ForceOfNature_BEfn`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BEfn"): Rawcode<"buff">;
+
+/**
+ * Immolation (Caster) (`BEia`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.ImmolationCaster_BEia`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BEia"): Rawcode<"buff">;
+
+/**
+ * Immolation (`BEim`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.Immolation_BEim`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BEim"): Rawcode<"buff">;
+
+/**
+ * Metamorphosis (`BEme`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.Metamorphosis_BEme`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BEme"): Rawcode<"buff">;
+
+/**
+ * Shadow Strike (`BEsh`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.ShadowStrike_BEsh`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BEsh"): Rawcode<"buff">;
+
+/**
+ * Scout (`BEst`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.Scout_BEst`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BEst"): Rawcode<"buff">;
+
+/**
+ * Vengeance (`BEsv`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.Vengeance_BEsv`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BEsv"): Rawcode<"buff">;
+
+/**
+ * Summoned Unit (`BFig`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SummonedUnit_BFig`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BFig"): Rawcode<"buff">;
+
+/**
+ * Templar's Flame (`BHTf`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.TemplarsFlame_BHTf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHTf"): Rawcode<"buff">;
+
+/**
+ * Apprehend (`BHaa`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Apprehend_BHaa`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHaa"): Rawcode<"buff">;
+
+/**
+ * Brilliance Aura (`BHab`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.BrillianceAura_BHab`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHab"): Rawcode<"buff">;
+
+/**
+ * Devotion Aura (`BHad`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.DevotionAura_BHad`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHad"): Rawcode<"buff">;
+
+/**
+ * Apprehend (`BHag`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Apprehend_BHag`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHag"): Rawcode<"buff">;
+
+/**
+ * Avatar Of Light (`BHal`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.AvatarOfLight_BHal`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHal"): Rawcode<"buff">;
+
+/**
+ * Apprehend (`BHap`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Apprehend_BHap`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHap"): Rawcode<"buff">;
+
+/**
+ * Sacred Aura (`BHas`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SacredAura_BHas`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHas"): Rawcode<"buff">;
+
+/**
+ * Avatar (`BHav`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.Avatar_BHav`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHav"): Rawcode<"buff">;
+
+/**
+ * Blizzard (`BHbd`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.Blizzard_BHbd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHbd"): Rawcode<"buff">;
+
+/**
+ * Banish (`BHbn`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.Banish_BHbn`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHbn"): Rawcode<"buff">;
+
+/**
+ * Unyielding Guard Bonus (`BHbo`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.UnyieldingGuardBonus_BHbo`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHbo"): Rawcode<"buff">;
+
+/**
+ * Unyielding Guard (`BHbt`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.UnyieldingGuard_BHbt`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHbt"): Rawcode<"buff">;
+
+/**
+ * Blizzard (Caster) (`BHbz`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.BlizzardCaster_BHbz`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHbz"): Rawcode<"buff">;
+
+/**
+ * Cold Arrows (`BHca`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ColdArrows_BHca`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHca"): Rawcode<"buff">;
+
+/**
+ * Consecration (`BHce`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Consecration_BHce`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHce"): Rawcode<"buff">;
+
+/**
+ * Consecration (`BHcf`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Consecration_BHcf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHcf"): Rawcode<"buff">;
+
+/**
+ * Valiant Charge (`BHch`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ValiantCharge_BHch`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHch"): Rawcode<"buff">;
+
+/**
+ * Cleansing Fire (`BHcl`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.CleansingFire_BHcl`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHcl"): Rawcode<"buff">;
+
+/**
+ * Divine Shield (`BHds`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.DivineShield_BHds`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHds"): Rawcode<"buff">;
+
+/**
+ * Flame Strike (`BHfs`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.FlameStrike_BHfs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHfs"): Rawcode<"buff">;
+
+/**
+ * Guiding Hand (`BHgh`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.GuidingHand_BHgh`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHgh"): Rawcode<"buff">;
+
+/**
+ * Grit (`BHgr`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Grit_BHgr`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHgr"): Rawcode<"buff">;
+
+/**
+ * Guiding Hand (`BHgu`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.GuidingHand_BHgu`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHgu"): Rawcode<"buff">;
+
+/**
+ * Provoke (`BHhc`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Provoke_BHhc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHhc"): Rawcode<"buff">;
+
+/**
+ * Headsplitter (`BHhh`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Headsplitter_BHhh`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHhh"): Rawcode<"buff">;
+
+/**
+ * Headsplitter (`BHhr`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Headsplitter_BHhr`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHhr"): Rawcode<"buff">;
+
+/**
+ * Provoke (`BHht`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Provoke_BHht`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHht"): Rawcode<"buff">;
+
+/**
+ * Inspire Courage (`BHic`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.InspireCourage_BHic`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHic"): Rawcode<"buff">;
+
+/**
+ * Mind Control (`BHmc`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.MindControl_BHmc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHmc"): Rawcode<"buff">;
+
+/**
+ * Holy Wrath (`BHpb`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.HolyWrath_BHpb`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHpb"): Rawcode<"buff">;
+
+/**
+ * Surge of Light (`BHsa`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SurgeOfLight_BHsa`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHsa"): Rawcode<"buff">;
+
+/**
+ * Light's Mercy (`BHsf`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.LightsMercy_BHsf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHsf"): Rawcode<"buff">;
+
+/**
+ * Surge of Light (`BHss`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SurgeOfLight_BHss`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHss"): Rawcode<"buff">;
+
+/**
+ * Bleed (`BHsw`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Bleed_BHsw`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHsw"): Rawcode<"buff">;
+
+/**
+ * Thunder Clap (`BHtc`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.ThunderClap_BHtc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHtc"): Rawcode<"buff">;
+
+/**
+ * Warcry (`BHw1`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Warcry_BHw1`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHw1"): Rawcode<"buff">;
+
+/**
+ * Warcry (`BHw2`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Warcry_BHw2`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHw2"): Rawcode<"buff">;
+
+/**
+ * Warcry (`BHw3`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Warcry_BHw3`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHw3"): Rawcode<"buff">;
+
+/**
+ * Warcry (`BHwc`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Warcry_BHwc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHwc"): Rawcode<"buff">;
+
+/**
+ * Water Elemental (`BHwe`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.WaterElemental_BHwe`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BHwe"): Rawcode<"buff">;
+
+/**
+ * Corruption (`BIc2`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Corruption_BIc2`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIc2"): Rawcode<"buff">;
+
+/**
+ * Corruption (`BIc3`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Corruption_BIc3`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIc3"): Rawcode<"buff">;
+
+/**
+ * Corruption (`BIc5`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Corruption_BIc5`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIc5"): Rawcode<"buff">;
+
+/**
+ * Corruption (`BIcb`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Corruption_BIcb`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIcb"): Rawcode<"buff">;
+
+/**
+ * Cloak of Flames (`BIcf`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.CloakOfFlames_BIcf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIcf"): Rawcode<"buff">;
+
+/**
+ * Terrified! (`BIee`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Terrified_BIee`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIee"): Rawcode<"buff">;
+
+/**
+ * Heal Reduction (`BIhm`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.HealReduction_BIhm`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIhm"): Rawcode<"buff">;
+
+/**
+ * Illusion (`BIil`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Illusion_BIil`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIil"): Rawcode<"buff">;
+
+/**
+ * Smashed! (`BImc`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Smashed_BImc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BImc"): Rawcode<"buff">;
+
+/**
+ * Monster Lure (`BImo`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.MonsterLure_BImo`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BImo"): Rawcode<"buff">;
+
+/**
+ * Vampiric Potion (`BIpv`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.VampiricPotion_BIpv`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIpv"): Rawcode<"buff">;
+
+/**
+ * Queen's Hunger (`BIqh`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.QueensHunger_BIqh`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIqh"): Rawcode<"buff">;
+
+/**
+ * Reborn (`BIrb`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Reborn_BIrb`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIrb"): Rawcode<"buff">;
+
+/**
+ * Rejuvenation (`BIrg`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Rejuvenation_BIrg`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIrg"): Rawcode<"buff">;
+
+/**
+ * Regeneration (`BIrl`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Regeneration_BIrl`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIrl"): Rawcode<"buff">;
+
+/**
+ * Clarity Potion (`BIrm`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ClarityPotion_BIrm`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIrm"): Rawcode<"buff">;
+
+/**
+ * Aura of Decay (`BIsd`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.AuraOfDecay_BIsd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIsd"): Rawcode<"buff">;
+
+/**
+ * Headhunter Spirit (`BIsh`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.HeadhunterSpirit_BIsh`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIsh"): Rawcode<"buff">;
+
+/**
+ * Summoned Unit (`BIsu`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SummonedUnit_BIsu`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIsu"): Rawcode<"buff">;
+
+/**
+ * Soul Theft (`BIsv`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SoulTheft_BIsv`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIsv"): Rawcode<"buff">;
+
+/**
+ * Item Web (`BIwb`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ItemWeb_BIwb`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BIwb"): Rawcode<"buff">;
+
+/**
+ * Acid Bomb (`BNab`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.AcidBomb_BNab`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNab"): Rawcode<"buff">;
+
+/**
+ * Black Arrow (`BNba`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.BlackArrow_BNba`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNba"): Rawcode<"buff">;
+
+/**
+ * Breath of Fire (`BNbf`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.BreathOfFire_BNbf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNbf"): Rawcode<"buff">;
+
+/**
+ * Battle Roar (`BNbr`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.BattleRoar_BNbr`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNbr"): Rawcode<"buff">;
+
+/**
+ * Clockwerk Goblin (`BNcg`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ClockwerkGoblin_BNcg`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNcg"): Rawcode<"buff">;
+
+/**
+ * Chemical Rage (`BNcr`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ChemicalRage_BNcr`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNcr"): Rawcode<"buff">;
+
+/**
+ * Cluster Rockets (`BNcs`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ClusterRockets_BNcs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNcs"): Rawcode<"buff">;
+
+/**
+ * Dark Conversion (`BNdc`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.DarkConversion_BNdc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNdc"): Rawcode<"buff">;
+
+/**
+ * Drunken Haze (`BNdh`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.DrunkenHaze_BNdh`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNdh"): Rawcode<"buff">;
+
+/**
+ * Doom (`BNdi`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Doom_BNdi`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNdi"): Rawcode<"buff">;
+
+/**
+ * Dark Minion (`BNdm`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.DarkMinion_BNdm`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNdm"): Rawcode<"buff">;
+
+/**
+ * Doom (`BNdo`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Doom_BNdo`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNdo"): Rawcode<"buff">;
+
+/**
+ * Pandaren Elemental (`BNef`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.PandarenElemental_BNef`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNef"): Rawcode<"buff">;
+
+/**
+ * Engineering Upgrade (`BNeg`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.EngineeringUpgrade_BNeg`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNeg"): Rawcode<"buff">;
+
+/**
+ * Pocket Factory (`BNfy`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.PocketFactory_BNfy`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNfy"): Rawcode<"buff">;
+
+/**
+ * Healing Spray (`BNhs`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.HealingSpray_BNhs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNhs"): Rawcode<"buff">;
+
+/**
+ * Howl of Terror (`BNht`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.HowlOfTerror_BNht`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNht"): Rawcode<"buff">;
+
+/**
+ * Incinerate (`BNic`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Incinerate_BNic`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNic"): Rawcode<"buff">;
+
+/**
+ * Infernal (`BNin`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Infernal_BNin`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNin"): Rawcode<"buff">;
+
+/**
+ * Lava Spawn (`BNlm`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.LavaSpawn_BNlm`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNlm"): Rawcode<"buff">;
+
+/**
+ * Mind Rot (`BNmr`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.MindRot_BNmr`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNmr"): Rawcode<"buff">;
+
+/**
+ * Mana Shield (`BNms`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ManaShield_BNms`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNms"): Rawcode<"buff">;
+
+/**
+ * Parasite (`BNpa`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Parasite_BNpa`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNpa"): Rawcode<"buff">;
+
+/**
+ * Permanent Immolation (`BNpi`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.PermanentImmolation_BNpi`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNpi"): Rawcode<"buff">;
+
+/**
+ * Parasite (`BNpm`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Parasite_BNpm`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNpm"): Rawcode<"buff">;
+
+/**
+ * Rain of Fire (`BNrd`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.RainOfFire_BNrd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNrd"): Rawcode<"buff">;
+
+/**
+ * Rain of Fire (Area) (`BNrf`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.RainOfFireArea_BNrf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNrf"): Rawcode<"buff">;
+
+/**
+ * Righteous Fury (`BNrs`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.RighteousFury_BNrs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNrs"): Rawcode<"buff">;
+
+/**
+ * Sanctuary (`BNsa`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Sanctuary_BNsa`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNsa"): Rawcode<"buff">;
+
+/**
+ * Bear (`BNsg`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Bear_BNsg`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNsg"): Rawcode<"buff">;
+
+/**
+ * Silence (`BNsi`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Silence_BNsi`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNsi"): Rawcode<"buff">;
+
+/**
+ * Soul Preservation (`BNsl`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SoulPreservation_BNsl`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNsl"): Rawcode<"buff">;
+
+/**
+ * Soul Burn (`BNso`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SoulBurn_BNso`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNso"): Rawcode<"buff">;
+
+/**
+ * Quilbeast (`BNsq`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Quilbeast_BNsq`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNsq"): Rawcode<"buff">;
+
+/**
+ * Spell Shield (`BNss`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SpellShield_BNss`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNss"): Rawcode<"buff">;
+
+/**
+ * Stampede (`BNst`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Stampede_BNst`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNst"): Rawcode<"buff">;
+
+/**
+ * Hawk (`BNsw`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Hawk_BNsw`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNsw"): Rawcode<"buff">;
+
+/**
+ * Transmute (`BNtm`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Transmute_BNtm`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNtm"): Rawcode<"buff">;
+
+/**
+ * Tornado (`BNto`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Tornado_BNto`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNto"): Rawcode<"buff">;
+
+/**
+ * Volcano (Area) (`BNva`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.VolcanoArea_BNva`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNva"): Rawcode<"buff">;
+
+/**
+ * Volcano (`BNvc`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Volcano_BNvc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNvc"): Rawcode<"buff">;
+
+/**
+ * Watery Minion (`BNwm`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.WateryMinion_BNwm`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BNwm"): Rawcode<"buff">;
+
+/**
+ * `BOac`, unnamed, a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.Unnamed_BOac`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BOac"): Rawcode<"buff">;
+
+/**
+ * Endurance Aura (`BOae`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.EnduranceAura_BOae`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BOae"): Rawcode<"buff">;
+
+/**
+ * Earthquake (Caster) (`BOea`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.EarthquakeCaster_BOea`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BOea"): Rawcode<"buff">;
+
+/**
+ * Earthquake (`BOeq`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.Earthquake_BOeq`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BOeq"): Rawcode<"buff">;
+
+/**
+ * Hex (`BOhx`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.Hex_BOhx`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BOhx"): Rawcode<"buff">;
+
+/**
+ * Mirror Image (`BOmi`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.MirrorImage_BOmi`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BOmi"): Rawcode<"buff">;
+
+/**
+ * Feral Spirit (`BOsf`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.FeralSpirit_BOsf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BOsf"): Rawcode<"buff">;
+
+/**
+ * Shockwave (Caster) (`BOsh`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.ShockwaveCaster_BOsh`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BOsh"): Rawcode<"buff">;
+
+/**
+ * Big Bad Voodoo (Caster) (`BOvc`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.BigBadVoodooCaster_BOvc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BOvc"): Rawcode<"buff">;
+
+/**
+ * Big Bad Voodoo (`BOvd`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.BigBadVoodoo_BOvd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BOvd"): Rawcode<"buff">;
+
+/**
+ * Ward (`BOwd`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.Ward_BOwd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BOwd"): Rawcode<"buff">;
+
+/**
+ * Wind Walk (`BOwk`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.WindWalk_BOwk`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BOwk"): Rawcode<"buff">;
+
+/**
+ * Bladestorm (Caster) (`BOww`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.BladestormCaster_BOww`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BOww"): Rawcode<"buff">;
+
+/**
+ * Stunned (`BPSE`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Stunned_BPSE`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BPSE"): Rawcode<"buff">;
+
+/**
+ * Stunned (`BSTN`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Stunned_BSTN`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BSTN"): Rawcode<"buff">;
+
+/**
+ * Animate Dead (Extra) (`BUad`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.AnimateDeadExtra_BUad`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUad"): Rawcode<"buff">;
+
+/**
+ * Animate Dead (`BUan`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.AnimateDead_BUan`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUan"): Rawcode<"buff">;
+
+/**
+ * Unholy Aura (`BUau`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.UnholyAura_BUau`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUau"): Rawcode<"buff">;
+
+/**
+ * Vampiric Aura (`BUav`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.VampiricAura_BUav`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUav"): Rawcode<"buff">;
+
+/**
+ * Undying Defiance Bonus (`BUbo`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.UndyingDefianceBonus_BUbo`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUbo"): Rawcode<"buff">;
+
+/**
+ * Battering Ram (`BUbr`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.BatteringRam_BUbr`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUbr"): Rawcode<"buff">;
+
+/**
+ * Undying Defiance (`BUbt`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.UndyingDefiance_BUbt`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUbt"): Rawcode<"buff">;
+
+/**
+ * Carrion Beetles (`BUcb`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.CarrionBeetles_BUcb`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUcb"): Rawcode<"buff">;
+
+/**
+ * Carrion Swarm (Caster) (`BUcs`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.CarrionSwarmCaster_BUcs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUcs"): Rawcode<"buff">;
+
+/**
+ * Deathseeker Arrows (`BUdb`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.DeathseekerArrows_BUdb`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUdb"): Rawcode<"buff">;
+
+/**
+ * Death and Decay (`BUdd`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.DeathAndDecay_BUdd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUdd"): Rawcode<"buff">;
+
+/**
+ * Frost Armor (`BUfa`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.FrostArmor_BUfa`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUfa"): Rawcode<"buff">;
+
+/**
+ * Impale (`BUim`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.Impale_BUim`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUim"): Rawcode<"buff">;
+
+/**
+ * Soul Lantern (`BUla`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SoulLantern_BUla`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUla"): Rawcode<"buff">;
+
+/**
+ * Soul Lantern (`BUlc`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SoulLantern_BUlc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUlc"): Rawcode<"buff">;
+
+/**
+ * Soul Lantern (`BUle`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SoulLantern_BUle`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUle"): Rawcode<"buff">;
+
+/**
+ * Sleep (`BUsl`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.Sleep_BUsl`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUsl"): Rawcode<"buff">;
+
+/**
+ * Sleep (Pause) (`BUsp`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.SleepPause_BUsp`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUsp"): Rawcode<"buff">;
+
+/**
+ * Sleep (Stun) (`BUst`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.SleepStun_BUst`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUst"): Rawcode<"buff">;
+
+/**
+ * Spiked Carapace (`BUts`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.SpikedCarapace_BUts`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUts"): Rawcode<"buff">;
+
+/**
+ * `BUtt`, unnamed, a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.Unnamed_BUtt`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUtt"): Rawcode<"buff">;
+
+/**
+ * Grim Conviction (`BUvg`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.GrimConviction_BUvg`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUvg"): Rawcode<"buff">;
+
+/**
+ * Withering Fire (`BUwf`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.WitheringFire_BUwf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "BUwf"): Rawcode<"buff">;
+
+/**
+ * Aura of Blight (`Babr`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.AuraOfBlight_Babr`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Babr"): Rawcode<"buff">;
+
+/**
+ * Raise the Banner (`Baca`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.RaiseTheBanner_Baca`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Baca"): Rawcode<"buff">;
+
+/**
+ * Enveloping Darkness (`Badx`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.EnvelopingDarkness_Badx`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Badx"): Rawcode<"buff">;
+
+/**
+ * War Drums (`Bakb`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.WarDrums_Bakb`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bakb"): Rawcode<"buff">;
+
+/**
+ * Anti-magic Shell (`Bam2`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.AntiMagicShell_Bam2`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bam2"): Rawcode<"buff">;
+
+/**
+ * Anti-magic Shell (`Bams`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.AntiMagicShell_Bams`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bams"): Rawcode<"buff">;
+
+/**
+ * Disease (`Bapl`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.Disease_Bapl`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bapl"): Rawcode<"buff">;
+
+/**
+ * Mana Regeneration Aura (`Barm`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.ManaRegenerationAura_Barm`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Barm"): Rawcode<"buff">;
+
+/**
+ * Tornado (`Basl`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Tornado_Basl`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Basl"): Rawcode<"buff">;
+
+/**
+ * Barkskin (`Bbar`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.Barkskin_Bbar`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bbar"): Rawcode<"buff">;
+
+/**
+ * Twisted Bones (`Bbcs`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.TwistedBones_Bbcs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bbcs"): Rawcode<"buff">;
+
+/**
+ * Bloodlust (`Bblo`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.Bloodlust_Bblo`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bblo"): Rawcode<"buff">;
+
+/**
+ * Burning Oil (`Bbof`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.BurningOil_Bbof`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bbof"): Rawcode<"buff">;
+
+/**
+ * Berserk (`Bbsk`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.Berserk_Bbsk`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bbsk"): Rawcode<"buff">;
+
+/**
+ * Dizziness (`Bchd`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Dizziness_Bchd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bchd"): Rawcode<"buff">;
+
+/**
+ * Cloud (`Bclf`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.Cloud_Bclf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bclf"): Rawcode<"buff">;
+
+/**
+ * Control Magic (`Bcmg`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.ControlMagic_Bcmg`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bcmg"): Rawcode<"buff">;
+
+/**
+ * Corrosive Breath (`Bcor`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.CorrosiveBreath_Bcor`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bcor"): Rawcode<"buff">;
+
+/**
+ * Cripple (`Bcri`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.Cripple_Bcri`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bcri"): Rawcode<"buff">;
+
+/**
+ * Curse (`Bcrs`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.Curse_Bcrs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bcrs"): Rawcode<"buff">;
+
+/**
+ * Cold Arrows (`Bcsd`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ColdArrows_Bcsd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bcsd"): Rawcode<"buff">;
+
+/**
+ * Cold Arrows (`Bcsi`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ColdArrows_Bcsi`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bcsi"): Rawcode<"buff">;
+
+/**
+ * Cyclone (`Bcy2`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.Cyclone_Bcy2`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bcy2"): Rawcode<"buff">;
+
+/**
+ * Cyclone (`Bcyc`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.Cyclone_Bcyc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bcyc"): Rawcode<"buff">;
+
+/**
+ * Plague (`Bdb1`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Plague_Bdb1`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bdb1"): Rawcode<"buff">;
+
+/**
+ * Drain Life & Mana (Caster) (`Bdcb`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.DrainLifeManaCaster_Bdcb`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bdcb"): Rawcode<"buff">;
+
+/**
+ * Drain Life (Caster) (`Bdcl`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.DrainLifeCaster_Bdcl`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bdcl"): Rawcode<"buff">;
+
+/**
+ * Drain Mana (Caster) (`Bdcm`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.DrainManaCaster_Bdcm`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bdcm"): Rawcode<"buff">;
+
+/**
+ * Scroll of Protection (`Bdef`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ScrollOfProtection_Bdef`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bdef"): Rawcode<"buff">;
+
+/**
+ * Armor Reduction (`Bder`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ArmorReduction_Bder`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bder"): Rawcode<"buff">;
+
+/**
+ * Dust of Appearance (`Bdet`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.DustOfAppearance_Bdet`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bdet"): Rawcode<"buff">;
+
+/**
+ * Devour (Caster) (`Bdig`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.DevourCaster_Bdig`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bdig"): Rawcode<"buff">;
+
+/**
+ * Drain Life & Mana (Target) (`Bdtb`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.DrainLifeManaTarget_Bdtb`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bdtb"): Rawcode<"buff">;
+
+/**
+ * Drain Life (Target) (`Bdtl`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.DrainLifeTarget_Bdtl`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bdtl"): Rawcode<"buff">;
+
+/**
+ * Drain Mana (Target) (`Bdtm`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.DrainManaTarget_Bdtm`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bdtm"): Rawcode<"buff">;
+
+/**
+ * Devour (`Bdvv`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.Devour_Bdvv`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bdvv"): Rawcode<"buff">;
+
+/**
+ * Eat Tree (`Beat`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.EatTree_Beat`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Beat"): Rawcode<"buff">;
+
+/**
+ * Ensnare (`Bena`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.Ensnare_Bena`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bena"): Rawcode<"buff">;
+
+/**
+ * Ensnare (`Beng`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.Ensnare_Beng`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Beng"): Rawcode<"buff">;
+
+/**
+ * Ensnare (General) (`Bens`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.EnsnareGeneral_Bens`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bens"): Rawcode<"buff">;
+
+/**
+ * Sentry Ward (`Beye`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.SentryWard_Beye`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Beye"): Rawcode<"buff">;
+
+/**
+ * Faerie Fire (`Bfae`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.FaerieFire_Bfae`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bfae"): Rawcode<"buff">;
+
+/**
+ * Chemical Frenzy (`Bfcf`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ChemicalFrenzy_Bfcf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bfcf"): Rawcode<"buff">;
+
+/**
+ * Freeze (`Bfre`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Freeze_Bfre`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bfre"): Rawcode<"buff">;
+
+/**
+ * Slowed (`Bfro`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Slowed_Bfro`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bfro"): Rawcode<"buff">;
+
+/**
+ * Freezing Breath (`Bfrz`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.FreezingBreath_Bfrz`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bfrz"): Rawcode<"buff">;
+
+/**
+ * Frenzy (`Bfzy`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Frenzy_Bfzy`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bfzy"): Rawcode<"buff">;
+
+/**
+ * Curse of Sloth (`Bggs`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.CurseOfSloth_Bggs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bggs"): Rawcode<"buff">;
+
+/**
+ * Unfathomable Rage (`Bggw`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.UnfathomableRage_Bggw`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bggw"): Rawcode<"buff">;
+
+/**
+ * Pride's Downfall (`Bggx`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.PridesDownfall_Bggx`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bggx"): Rawcode<"buff">;
+
+/**
+ * Echoing Flame (`Bgr1`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.EchoingFlame_Bgr1`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bgr1"): Rawcode<"buff">;
+
+/**
+ * Echoing Flame (`Bgr2`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.EchoingFlame_Bgr2`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bgr2"): Rawcode<"buff">;
+
+/**
+ * War Club (`Bgra`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.WarClub_Bgra`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bgra"): Rawcode<"buff">;
+
+/**
+ * Heal (`Bhea`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.Heal_Bhea`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bhea"): Rawcode<"buff">;
+
+/**
+ * Consecration Aura (`Bhhi`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ConsecrationAura_Bhhi`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bhhi"): Rawcode<"buff">;
+
+/**
+ * Slowed (`Bhrz`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Slowed_Bhrz`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bhrz"): Rawcode<"buff">;
+
+/**
+ * Healing Ward (`Bhwd`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.HealingWard_Bhwd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bhwd"): Rawcode<"buff">;
+
+/**
+ * Inner Fire (`Binf`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.InnerFire_Binf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Binf"): Rawcode<"buff">;
+
+/**
+ * Invisibility (`Binv`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.Invisibility_Binv`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Binv"): Rawcode<"buff">;
+
+/**
+ * Invisibility (Extra) (`Bivs`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.InvisibilityExtra_Bivs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bivs"): Rawcode<"buff">;
+
+/**
+ * Liquid Fire (`Bliq`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.LiquidFire_Bliq`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bliq"): Rawcode<"buff">;
+
+/**
+ * Lightning Shield (Caster) (`Blsa`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.LightningShieldCaster_Blsa`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Blsa"): Rawcode<"buff">;
+
+/**
+ * Lightning Shield (`Blsh`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.LightningShield_Blsh`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Blsh"): Rawcode<"buff">;
+
+/**
+ * Banshee's Wail (`Bmda`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.BansheesWail_Bmda`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bmda"): Rawcode<"buff">;
+
+/**
+ * Mechanical Critter (`Bmec`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.MechanicalCritter_Bmec`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bmec"): Rawcode<"buff">;
+
+/**
+ * Mana Flare (`Bmfa`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.ManaFlare_Bmfa`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bmfa"): Rawcode<"buff">;
+
+/**
+ * Mana Flare (`Bmfl`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.ManaFlare_Bmfl`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bmfl"): Rawcode<"buff">;
+
+/**
+ * Militia (`Bmil`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.Militia_Bmil`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bmil"): Rawcode<"buff">;
+
+/**
+ * Aerial Shackles (Caster) (`Bmlc`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.AerialShacklesCaster_Bmlc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bmlc"): Rawcode<"buff">;
+
+/**
+ * Aerial Shackles (`Bmlt`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.AerialShackles_Bmlt`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bmlt"): Rawcode<"buff">;
+
+/**
+ * Blinded (`Bmss`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Blinded_Bmss`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bmss"): Rawcode<"buff">;
+
+/**
+ * Healing Ward Aura (`Boar`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.HealingWardAura_Boar`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Boar"): Rawcode<"buff">;
+
+/**
+ * Phoenix (`Bphx`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.Phoenix_Bphx`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bphx"): Rawcode<"buff">;
+
+/**
+ * Permanent Immolation (`Bpig`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.PermanentImmolation_Bpig`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bpig"): Rawcode<"buff">;
+
+/**
+ * Disease Cloud (`Bplg`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.DiseaseCloud_Bplg`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bplg"): Rawcode<"buff">;
+
+/**
+ * Polymorph (`Bply`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.Polymorph_Bply`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bply"): Rawcode<"buff">;
+
+/**
+ * Possession (Caster) (`Bpoc`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.PossessionCaster_Bpoc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bpoc"): Rawcode<"buff">;
+
+/**
+ * Poison (`Bpoi`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Poison_Bpoi`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bpoi"): Rawcode<"buff">;
+
+/**
+ * Possession (`Bpos`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.Possession_Bpos`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bpos"): Rawcode<"buff">;
+
+/**
+ * Purge (`Bprg`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.Purge_Bprg`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bprg"): Rawcode<"buff">;
+
+/**
+ * `Bps1`, unnamed, a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.Unnamed_Bps1`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bps1"): Rawcode<"buff">;
+
+/**
+ * Poison (`Bpsd`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Poison_Bpsd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bpsd"): Rawcode<"buff">;
+
+/**
+ * Phase Shift (`Bpsh`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.PhaseShift_Bpsh`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bpsh"): Rawcode<"buff">;
+
+/**
+ * Poison (Info) (`Bpsi`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.PoisonInfo_Bpsi`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bpsi"): Rawcode<"buff">;
+
+/**
+ * Phoenix Fire (`Bpxf`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.PhoenixFire_Bpxf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bpxf"): Rawcode<"buff">;
+
+/**
+ * Skeletal Minion (`Brai`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.SkeletalMinion_Brai`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Brai"): Rawcode<"buff">;
+
+/**
+ * Rejuvenation (`Brej`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.Rejuvenation_Brej`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Brej"): Rawcode<"buff">;
+
+/**
+ * Brimstone (`Brim`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Brimstone_Brim`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Brim"): Rawcode<"buff">;
+
+/**
+ * Roar (`Broa`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.Roar_Broa`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Broa"): Rawcode<"buff">;
+
+/**
+ * Replenish (`Brpb`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.Replenish_Brpb`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Brpb"): Rawcode<"buff">;
+
+/**
+ * Essence of Blight (`Brpl`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.EssenceOfBlight_Brpl`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Brpl"): Rawcode<"buff">;
+
+/**
+ * Spirit Touch (`Brpm`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.SpiritTouch_Brpm`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Brpm"): Rawcode<"buff">;
+
+/**
+ * Holy Fire (`Bsci`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.HolyFire_Bsci`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bsci"): Rawcode<"buff">;
+
+/**
+ * Light Struck (`Bsg1`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.LightStruck_Bsg1`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bsg1"): Rawcode<"buff">;
+
+/**
+ * Shared Vision (`Bsha`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SharedVision_Bsha`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bsha"): Rawcode<"buff">;
+
+/**
+ * Wand of Shadowsight (`Bshs`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.WandOfShadowsight_Bshs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bshs"): Rawcode<"buff">;
+
+/**
+ * Slow (`Bslo`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.Slow_Bslo`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bslo"): Rawcode<"buff">;
+
+/**
+ * Freezing Presence (`Bsof`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.FreezingPresence_Bsof`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bsof"): Rawcode<"buff">;
+
+/**
+ * Orb of Slow (`Bson`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.OrbOfSlow_Bson`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bson"): Rawcode<"buff">;
+
+/**
+ * Spiderling (`Bspa`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.Spiderling_Bspa`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bspa"): Rawcode<"buff">;
+
+/**
+ * Speed Bonus (`Bspe`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.SpeedBonus_Bspe`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bspe"): Rawcode<"buff">;
+
+/**
+ * Spirit Link (`Bspl`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.SpiritLink_Bspl`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bspl"): Rawcode<"buff">;
+
+/**
+ * Slow Poison (`Bspo`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.SlowPoison_Bspo`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bspo"): Rawcode<"buff">;
+
+/**
+ * Slow Poison (`Bssd`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.SlowPoison_Bssd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bssd"): Rawcode<"buff">;
+
+/**
+ * Slow Poison (Info) (`Bssi`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.SlowPoisonInfo_Bssi`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bssi"): Rawcode<"buff">;
+
+/**
+ * Stasis Trap (`Bstt`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.StasisTrap_Bstt`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bstt"): Rawcode<"buff">;
+
+/**
+ * Taunt (`Btab`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Taunt_Btab`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Btab"): Rawcode<"buff">;
+
+/**
+ * Taunt (`Btad`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Taunt_Btad`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Btad"): Rawcode<"buff">;
+
+/**
+ * Taunt (`Btau`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Taunt_Btau`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Btau"): Rawcode<"buff">;
+
+/**
+ * Blinded (`Btbd`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Blinded_Btbd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Btbd"): Rawcode<"buff">;
+
+/**
+ * Tornado Damage (`Btdg`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.TornadoDamage_Btdg`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Btdg"): Rawcode<"buff">;
+
+/**
+ * Magic Missile (`Btkt`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.MagicMissile_Btkt`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Btkt"): Rawcode<"buff">;
+
+/**
+ * Teleport Reveal (`Btrv`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.TeleportReveal_Btrv`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Btrv"): Rawcode<"buff">;
+
+/**
+ * Tornado Spin (Area) (`Btsa`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.TornadoSpinArea_Btsa`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Btsa"): Rawcode<"buff">;
+
+/**
+ * Tornado Spin (`Btsp`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.TornadoSpin_Btsp`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Btsp"): Rawcode<"buff">;
+
+/**
+ * Unholy Frenzy (`Buhf`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.UnholyFrenzy_Buhf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Buhf"): Rawcode<"buff">;
+
+/**
+ * Infected (`Buic`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Infected_Buic`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Buic"): Rawcode<"buff">;
+
+/**
+ * Ultravision (`Bult`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.Ultravision_Bult`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bult"): Rawcode<"buff">;
+
+/**
+ * Unsummon (`Buns`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.Unsummon_Buns`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Buns"): Rawcode<"buff">;
+
+/**
+ * Spirit of Vengeance (`Bvng`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.SpiritOfVengeance_Bvng`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bvng"): Rawcode<"buff">;
+
+/**
+ * Invulnerable (`Bvul`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.Invulnerable_Bvul`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bvul"): Rawcode<"buff">;
+
+/**
+ * Web (`Bwea`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.Web_Bwea`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bwea"): Rawcode<"buff">;
+
+/**
+ * Web (`Bweb`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.Web_Bweb`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Bweb"): Rawcode<"buff">;
+
+/**
+ * Rain of Chaos (Effect) (`XErc`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.RainOfChaosEffect_XErc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XErc"): Rawcode<"buff">;
+
+/**
+ * Rain of Fire (Effect) (`XErf`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.RainOfFireEffect_XErf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XErf"): Rawcode<"buff">;
+
+/**
+ * Starfall (Effect) (`XEsf`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.StarfallEffect_XEsf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XEsf"): Rawcode<"buff">;
+
+/**
+ * Tranquility (Effect) (`XEtq`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.TranquilityEffect_XEtq`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XEtq"): Rawcode<"buff">;
+
+/**
+ * Blizzard (Effect) (`XHbz`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.BlizzardEffect_XHbz`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XHbz"): Rawcode<"buff">;
+
+/**
+ * Flame Strike (Effect) (`XHfs`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.FlameStrikeEffect_XHfs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XHfs"): Rawcode<"buff">;
+
+/**
+ * Item Change Time of Day (`XIct`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ItemChangeTimeOfDay_XIct`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XIct"): Rawcode<"buff">;
+
+/**
+ * Cluster Rockets (Effect) (`XNcs`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.ClusterRocketsEffect_XNcs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XNcs"): Rawcode<"buff">;
+
+/**
+ * Healing Spray (Effect) (`XNhs`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.HealingSprayEffect_XNhs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XNhs"): Rawcode<"buff">;
+
+/**
+ * Monsoon (Effect) (`XNmo`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.MonsoonEffect_XNmo`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XNmo"): Rawcode<"buff">;
+
+/**
+ * Volcano (Effect) (`XNvc`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.VolcanoEffect_XNvc`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XNvc"): Rawcode<"buff">;
+
+/**
+ * Earthquake (Effect) (`XOeq`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.EarthquakeEffect_XOeq`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XOeq"): Rawcode<"buff">;
+
+/**
+ * Reincarnation (Effect) (`XOre`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.ReincarnationEffect_XOre`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XOre"): Rawcode<"buff">;
+
+/**
+ * Death And Decay (Effect) (`XUdd`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.DeathAndDecayEffect_XUdd`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "XUdd"): Rawcode<"buff">;
+
+/**
+ * Reveal (Effect) (`Xbdt`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.RevealEffect_Xbdt`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xbdt"): Rawcode<"buff">;
+
+/**
+ * Blight (Effect) (`Xbli`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.BlightEffect_Xbli`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xbli"): Rawcode<"buff">;
+
+/**
+ * Burning Oil (Effect) (`Xbof`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.BurningOilEffect_Xbof`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xbof"): Rawcode<"buff">;
+
+/**
+ * Cloud (Effect) (`Xclf`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.CloudEffect_Xclf`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xclf"): Rawcode<"buff">;
+
+/**
+ * Hero Dissipate (Effect) (`Xdis`), a Built-in buff of Patch 3.0.0, race other.
+ *
+ * Its constant is `Buffs.HeroDissipateEffect_Xdis`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xdis"): Rawcode<"buff">;
+
+/**
+ * `Xesn`, unnamed, a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.Unnamed_Xesn`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xesn"): Rawcode<"buff">;
+
+/**
+ * Building Damage - Human Large (`Xfhl`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.BuildingDamageHumanLarge_Xfhl`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xfhl"): Rawcode<"buff">;
+
+/**
+ * Building Damage - Human Medium (`Xfhm`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.BuildingDamageHumanMedium_Xfhm`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xfhm"): Rawcode<"buff">;
+
+/**
+ * Building Damage - Human Small (`Xfhs`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.BuildingDamageHumanSmall_Xfhs`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xfhs"): Rawcode<"buff">;
+
+/**
+ * Flare (Effect) (`Xfla`), a Built-in buff of Patch 3.0.0, race human.
+ *
+ * Its constant is `Buffs.FlareEffect_Xfla`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xfla"): Rawcode<"buff">;
+
+/**
+ * Building Damage - Night Elf Large (`Xfnl`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.BuildingDamageNightElfLarge_Xfnl`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xfnl"): Rawcode<"buff">;
+
+/**
+ * Building Damage - Night Elf Medium (`Xfnm`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.BuildingDamageNightElfMedium_Xfnm`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xfnm"): Rawcode<"buff">;
+
+/**
+ * Building Damage - Night Elf Small (`Xfns`), a Built-in buff of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Buffs.BuildingDamageNightElfSmall_Xfns`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xfns"): Rawcode<"buff">;
+
+/**
+ * Building Damage - Orc Large (`Xfol`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.BuildingDamageOrcLarge_Xfol`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xfol"): Rawcode<"buff">;
+
+/**
+ * Building Damage - Orc Medium (`Xfom`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.BuildingDamageOrcMedium_Xfom`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xfom"): Rawcode<"buff">;
+
+/**
+ * Building Damage - Orc Small (`Xfos`), a Built-in buff of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Buffs.BuildingDamageOrcSmall_Xfos`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xfos"): Rawcode<"buff">;
+
+/**
+ * Building Damage - Undead Large (`Xful`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.BuildingDamageUndeadLarge_Xful`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xful"): Rawcode<"buff">;
+
+/**
+ * Building Damage - Undead Medium (`Xfum`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.BuildingDamageUndeadMedium_Xfum`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xfum"): Rawcode<"buff">;
+
+/**
+ * Building Damage - Undead Small (`Xfus`), a Built-in buff of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Buffs.BuildingDamageUndeadSmall_Xfus`, from `reforged-builtins/buffs`.
+ */
+declare function FourCC(id: "Xfus"): Rawcode<"buff">;
+
+// Destructables.
+
+/**
+ * Demonic Gate (`ATg1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DemonicGate_ATg1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ATg1"): Rawcode<"destructable">;
+
+/**
+ * Demonic Gate (`ATg2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DemonicGate_ATg2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ATg2"): Rawcode<"destructable">;
+
+/**
+ * Demonic Gate (`ATg3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DemonicGate_ATg3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ATg3"): Rawcode<"destructable">;
+
+/**
+ * Demonic Gate (`ATg4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DemonicGate_ATg4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ATg4"): Rawcode<"destructable">;
+
+/**
+ * Tree Bridge (`ATt0`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.TreeBridge_ATt0`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ATt0"): Rawcode<"destructable">;
+
+/**
+ * Tree Bridge (`ATt1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.TreeBridge_ATt1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ATt1"): Rawcode<"destructable">;
+
+/**
+ * Ashenvale Canopy Tree (`ATtc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.AshenvaleCanopyTree_ATtc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ATtc"): Rawcode<"destructable">;
+
+/**
+ * Ashenvale Tree Wall (`ATtr`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.AshenvaleTreeWall_ATtr`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ATtr"): Rawcode<"destructable">;
+
+/**
+ * Wharf (`ATwf`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Wharf_ATwf`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ATwf"): Rawcode<"destructable">;
+
+/**
+ * Resurrection Stone (`BTrs`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ResurrectionStone_BTrs`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "BTrs"): Rawcode<"destructable">;
+
+/**
+ * Resurrection Stone (`BTrx`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ResurrectionStone_BTrx`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "BTrx"): Rawcode<"destructable">;
+
+/**
+ * Lordaeron City Main Gate Column Destroyed (`BTs1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LordaeronCityMainGateColumnDestroyed_BTs1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "BTs1"): Rawcode<"destructable">;
+
+/**
+ * Lion Statue (`BTs2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LionStatue_BTs2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "BTs2"): Rawcode<"destructable">;
+
+/**
+ * Lion Statue Destroyed (`BTs3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LionStatueDestroyed_BTs3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "BTs3"): Rawcode<"destructable">;
+
+/**
+ * Lordaeron City Spire (`BTs4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LordaeronCitySpire_BTs4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "BTs4"): Rawcode<"destructable">;
+
+/**
+ * Lordaeron City Spire Destroyed (`BTs5`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LordaeronCitySpireDestroyed_BTs5`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "BTs5"): Rawcode<"destructable">;
+
+/**
+ * Support Column (`BTsc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.SupportColumn_BTsc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "BTsc"): Rawcode<"destructable">;
+
+/**
+ * Lordaeron City Main Gate Column (`BTsk`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LordaeronCityMainGateColumn_BTsk`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "BTsk"): Rawcode<"destructable">;
+
+/**
+ * Barrens Canopy Tree (`BTtc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.BarrensCanopyTree_BTtc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "BTtc"): Rawcode<"destructable">;
+
+/**
+ * Barrens Tree Wall (`BTtw`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.BarrensTreeWall_BTtw`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "BTtw"): Rawcode<"destructable">;
+
+/**
+ * Felwood Canopy Tree (`CTtc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.FelwoodCanopyTree_CTtc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "CTtc"): Rawcode<"destructable">;
+
+/**
+ * Felwood Tree Wall (`CTtr`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.FelwoodTreeWall_CTtr`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "CTtr"): Rawcode<"destructable">;
+
+/**
+ * Cliff Cave Gate (`DTc1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.CliffCaveGate_DTc1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTc1"): Rawcode<"destructable">;
+
+/**
+ * Cliff Cave Gate (`DTc2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.CliffCaveGate_DTc2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTc2"): Rawcode<"destructable">;
+
+/**
+ * Elevator Wall (`DTep`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ElevatorWall_DTep`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTep"): Rawcode<"destructable">;
+
+/**
+ * Egg Sack (`DTes`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.EggSack_DTes`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTes"): Rawcode<"destructable">;
+
+/**
+ * Foot Switch (`DTfp`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.FootSwitch_DTfp`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTfp"): Rawcode<"destructable">;
+
+/**
+ * Foot Switch (`DTfx`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.FootSwitch_DTfx`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTfx"): Rawcode<"destructable">;
+
+/**
+ * Dungeon Gate (`DTg1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DungeonGate_DTg1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTg1"): Rawcode<"destructable">;
+
+/**
+ * Dungeon Gate (`DTg2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DungeonGate_DTg2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTg2"): Rawcode<"destructable">;
+
+/**
+ * Dungeon Gate (`DTg3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DungeonGate_DTg3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTg3"): Rawcode<"destructable">;
+
+/**
+ * Dungeon Gate (`DTg4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DungeonGate_DTg4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTg4"): Rawcode<"destructable">;
+
+/**
+ * Iron Gate (`DTg5`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IronGate_DTg5`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTg5"): Rawcode<"destructable">;
+
+/**
+ * Iron Gate (`DTg6`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IronGate_DTg6`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTg6"): Rawcode<"destructable">;
+
+/**
+ * Iron Gate (`DTg7`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IronGate_DTg7`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTg7"): Rawcode<"destructable">;
+
+/**
+ * Iron Gate (`DTg8`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IronGate_DTg8`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTg8"): Rawcode<"destructable">;
+
+/**
+ * Lever (`DTlv`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Lever_DTlv`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTlv"): Rawcode<"destructable">;
+
+/**
+ * Rock Chunks (`DTrc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RockChunks_DTrc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTrc"): Rawcode<"destructable">;
+
+/**
+ * Elevator (`DTrf`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Elevator_DTrf`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTrf"): Rawcode<"destructable">;
+
+/**
+ * Elevator (`DTrx`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Elevator_DTrx`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTrx"): Rawcode<"destructable">;
+
+/**
+ * Force Bridge (`DTs0`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ForceBridge_DTs0`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTs0"): Rawcode<"destructable">;
+
+/**
+ * Force Bridge (`DTs1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ForceBridge_DTs1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTs1"): Rawcode<"destructable">;
+
+/**
+ * Force Bridge (`DTs2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ForceBridge_DTs2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTs2"): Rawcode<"destructable">;
+
+/**
+ * Force Bridge (`DTs3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ForceBridge_DTs3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTs3"): Rawcode<"destructable">;
+
+/**
+ * Dungeon Tree Wall (`DTsh`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DungeonTreeWall_DTsh`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTsh"): Rawcode<"destructable">;
+
+/**
+ * Dungeon Spikes (`DTsp`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DungeonSpikes_DTsp`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "DTsp"): Rawcode<"destructable">;
+
+/**
+ * ForceWall (`Dofv`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ForceWall_Dofv`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "Dofv"): Rawcode<"destructable">;
+
+/**
+ * ForceWall (`Dofw`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ForceWall_Dofw`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "Dofw"): Rawcode<"destructable">;
+
+/**
+ * Green Force Wall (`Dogv`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.GreenForceWall_Dogv`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "Dogv"): Rawcode<"destructable">;
+
+/**
+ * Green Force Wall (`Dogw`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.GreenForceWall_Dogw`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "Dogw"): Rawcode<"destructable">;
+
+/**
+ * Short Elven Bridge (`EB00`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortElvenBridge_EB00`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "EB00"): Rawcode<"destructable">;
+
+/**
+ * Short Elven Bridge (`EB01`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortElvenBridge_EB01`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "EB01"): Rawcode<"destructable">;
+
+/**
+ * Short Elven Bridge (`EB02`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortElvenBridge_EB02`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "EB02"): Rawcode<"destructable">;
+
+/**
+ * Short Elven Bridge (`EB03`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortElvenBridge_EB03`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "EB03"): Rawcode<"destructable">;
+
+/**
+ * Long Elven Bridge (`EB04`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongElvenBridge_EB04`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "EB04"): Rawcode<"destructable">;
+
+/**
+ * Long Elven Bridge (`EB05`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongElvenBridge_EB05`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "EB05"): Rawcode<"destructable">;
+
+/**
+ * Long Elven Bridge (`EB06`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongElvenBridge_EB06`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "EB06"): Rawcode<"destructable">;
+
+/**
+ * Long Elven Bridge (`EB07`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongElvenBridge_EB07`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "EB07"): Rawcode<"destructable">;
+
+/**
+ * Wide Elven Bridge (`EB08`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideElvenBridge_EB08`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "EB08"): Rawcode<"destructable">;
+
+/**
+ * Wide Elven Bridge (`EB09`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideElvenBridge_EB09`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "EB09"): Rawcode<"destructable">;
+
+/**
+ * Wide Elven Bridge (`EB10`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideElvenBridge_EB10`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "EB10"): Rawcode<"destructable">;
+
+/**
+ * Wide Elven Bridge (`EB11`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideElvenBridge_EB11`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "EB11"): Rawcode<"destructable">;
+
+/**
+ * Fall Tree Wall (`FTtw`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.FallTreeWall_FTtw`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "FTtw"): Rawcode<"destructable">;
+
+/**
+ * Underground Tree Wall (`GTsh`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.UndergroundTreeWall_GTsh`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "GTsh"): Rawcode<"destructable">;
+
+/**
+ * Icecrown Throne (`IOt0`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IcecrownThrone_IOt0`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "IOt0"): Rawcode<"destructable">;
+
+/**
+ * Icecrown Throne (Diagonal 1) (`IOt1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IcecrownThroneDiagonal1_IOt1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "IOt1"): Rawcode<"destructable">;
+
+/**
+ * Icecrown Throne (Diagonal 1) (`IOt2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IcecrownThroneDiagonal1_IOt2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "IOt2"): Rawcode<"destructable">;
+
+/**
+ * Rockin Arthas (`ITag`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RockinArthas_ITag`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITag"): Rawcode<"destructable">;
+
+/**
+ * Icey Rock (`ITcr`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IceyRock_ITcr`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITcr"): Rawcode<"destructable">;
+
+/**
+ * Rolling Stone Door (`ITd1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RollingStoneDoor_ITd1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITd1"): Rawcode<"destructable">;
+
+/**
+ * Rolling Stone Door (`ITd2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RollingStoneDoor_ITd2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITd2"): Rawcode<"destructable">;
+
+/**
+ * Rolling Stone Door (`ITd3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RollingStoneDoor_ITd3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITd3"): Rawcode<"destructable">;
+
+/**
+ * Rolling Stone Door (`ITd4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RollingStoneDoor_ITd4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITd4"): Rawcode<"destructable">;
+
+/**
+ * Ice Floe (`ITf1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IceFloe_ITf1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITf1"): Rawcode<"destructable">;
+
+/**
+ * Ice Floe (`ITf2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IceFloe_ITf2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITf2"): Rawcode<"destructable">;
+
+/**
+ * Ice Floe (`ITf3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IceFloe_ITf3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITf3"): Rawcode<"destructable">;
+
+/**
+ * Ice Floe (`ITf4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IceFloe_ITf4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITf4"): Rawcode<"destructable">;
+
+/**
+ * Icy Gate (`ITg1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IcyGate_ITg1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITg1"): Rawcode<"destructable">;
+
+/**
+ * Icy Gate (`ITg2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IcyGate_ITg2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITg2"): Rawcode<"destructable">;
+
+/**
+ * Icy Gate (`ITg3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IcyGate_ITg3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITg3"): Rawcode<"destructable">;
+
+/**
+ * Icy Gate (`ITg4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IcyGate_ITg4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITg4"): Rawcode<"destructable">;
+
+/**
+ * Ice Bridge (`ITi2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IceBridge_ITi2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITi2"): Rawcode<"destructable">;
+
+/**
+ * Ice Bridge (`ITi3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IceBridge_ITi3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITi3"): Rawcode<"destructable">;
+
+/**
+ * Ice Bridge (`ITi4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IceBridge_ITi4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITi4"): Rawcode<"destructable">;
+
+/**
+ * Ice Bridge (`ITib`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IceBridge_ITib`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITib"): Rawcode<"destructable">;
+
+/**
+ * Igloo (`ITig`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Igloo_ITig`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITig"): Rawcode<"destructable">;
+
+/**
+ * Icecrown Canopy Tree (`ITtc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IcecrownCanopyTree_ITtc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITtc"): Rawcode<"destructable">;
+
+/**
+ * Frozen Throne Gate (`ITtg`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.FrozenThroneGate_ITtg`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITtg"): Rawcode<"destructable">;
+
+/**
+ * Icecrown Tree Wall (`ITtw`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IcecrownTreeWall_ITtw`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITtw"): Rawcode<"destructable">;
+
+/**
+ * Stone Wall (`ITw0`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneWall_ITw0`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITw0"): Rawcode<"destructable">;
+
+/**
+ * Stone Wall (`ITw1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneWall_ITw1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITw1"): Rawcode<"destructable">;
+
+/**
+ * Stone Wall (`ITw2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneWall_ITw2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITw2"): Rawcode<"destructable">;
+
+/**
+ * Stone Wall (`ITw3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneWall_ITw3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITw3"): Rawcode<"destructable">;
+
+/**
+ * Ice Rock Gate (`ITx1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IceRockGate_ITx1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITx1"): Rawcode<"destructable">;
+
+/**
+ * Ice Rock Gate (`ITx2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IceRockGate_ITx2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITx2"): Rawcode<"destructable">;
+
+/**
+ * Ice Rock Gate (`ITx3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IceRockGate_ITx3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITx3"): Rawcode<"destructable">;
+
+/**
+ * Ice Rock Gate (`ITx4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IceRockGate_ITx4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ITx4"): Rawcode<"destructable">;
+
+/**
+ * Cityscape Ruined Tree Wall (`JTct`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.CityscapeRuinedTreeWall_JTct`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "JTct"): Rawcode<"destructable">;
+
+/**
+ * Dalaran Ruins Tree Wall (`JTtw`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DalaranRuinsTreeWall_JTtw`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "JTtw"): Rawcode<"destructable">;
+
+/**
+ * Black Citadel Tree Wall (`KTtw`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.BlackCitadelTreeWall_KTtw`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "KTtw"): Rawcode<"destructable">;
+
+/**
+ * Cage (`LOcg`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Cage_LOcg`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LOcg"): Rawcode<"destructable">;
+
+/**
+ * Short Wooden Bridge (`LT00`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortWoodenBridge_LT00`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LT00"): Rawcode<"destructable">;
+
+/**
+ * Short Wooden Bridge (`LT01`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortWoodenBridge_LT01`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LT01"): Rawcode<"destructable">;
+
+/**
+ * Short Wooden Bridge (`LT02`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortWoodenBridge_LT02`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LT02"): Rawcode<"destructable">;
+
+/**
+ * Short Wooden Bridge (`LT03`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortWoodenBridge_LT03`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LT03"): Rawcode<"destructable">;
+
+/**
+ * Long Wooden Bridge (`LT04`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongWoodenBridge_LT04`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LT04"): Rawcode<"destructable">;
+
+/**
+ * Long Wooden Bridge (`LT05`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongWoodenBridge_LT05`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LT05"): Rawcode<"destructable">;
+
+/**
+ * Long Wooden Bridge (`LT06`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongWoodenBridge_LT06`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LT06"): Rawcode<"destructable">;
+
+/**
+ * Long Wooden Bridge (`LT07`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongWoodenBridge_LT07`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LT07"): Rawcode<"destructable">;
+
+/**
+ * Wide Wooden Bridge (`LT08`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideWoodenBridge_LT08`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LT08"): Rawcode<"destructable">;
+
+/**
+ * Wide Wooden Bridge (`LT09`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideWoodenBridge_LT09`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LT09"): Rawcode<"destructable">;
+
+/**
+ * Wide Wooden Bridge (`LT10`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideWoodenBridge_LT10`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LT10"): Rawcode<"destructable">;
+
+/**
+ * Wide Wooden Bridge (`LT11`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideWoodenBridge_LT11`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LT11"): Rawcode<"destructable">;
+
+/**
+ * Barricade (`LTba`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Barricade_LTba`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTba"): Rawcode<"destructable">;
+
+/**
+ * Barrel (`LTbr`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Barrel_LTbr`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTbr"): Rawcode<"destructable">;
+
+/**
+ * Barrel (`LTbs`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Barrel_LTbs`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTbs"): Rawcode<"destructable">;
+
+/**
+ * Barrel (`LTbx`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Barrel_LTbx`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTbx"): Rawcode<"destructable">;
+
+/**
+ * Crates (`LTcr`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Crates_LTcr`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTcr"): Rawcode<"destructable">;
+
+/**
+ * Elven Gate (`LTe1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ElvenGate_LTe1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTe1"): Rawcode<"destructable">;
+
+/**
+ * Elven Gate (`LTe2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ElvenGate_LTe2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTe2"): Rawcode<"destructable">;
+
+/**
+ * Elven Gate (`LTe3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ElvenGate_LTe3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTe3"): Rawcode<"destructable">;
+
+/**
+ * Elven Gate (`LTe4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ElvenGate_LTe4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTe4"): Rawcode<"destructable">;
+
+/**
+ * Barrel of Explosives (`LTex`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.BarrelOfExplosives_LTex`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTex"): Rawcode<"destructable">;
+
+/**
+ * Gate (`LTg1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Gate_LTg1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTg1"): Rawcode<"destructable">;
+
+/**
+ * Gate (`LTg2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Gate_LTg2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTg2"): Rawcode<"destructable">;
+
+/**
+ * Gate (`LTg3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Gate_LTg3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTg3"): Rawcode<"destructable">;
+
+/**
+ * Gate (`LTg4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Gate_LTg4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTg4"): Rawcode<"destructable">;
+
+/**
+ * Summer Tree Wall (`LTlt`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.SummerTreeWall_LTlt`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTlt"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTr1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTr1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTr1"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTr2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTr2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTr2"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTr3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTr3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTr3"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTr4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTr4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTr4"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTr5`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTr5`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTr5"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTr6`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTr6`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTr6"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTr7`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTr7`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTr7"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTr8`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTr8`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTr8"): Rawcode<"destructable">;
+
+/**
+ * Rock Chunks (`LTrc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RockChunks_LTrc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTrc"): Rawcode<"destructable">;
+
+/**
+ * Rock Chunks (`LTrt`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RockChunks_LTrt`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTrt"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTs1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTs1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTs1"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTs2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTs2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTs2"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTs3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTs3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTs3"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTs4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTs4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTs4"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTs5`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTs5`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTs5"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTs6`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTs6`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTs6"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTs7`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTs7`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTs7"): Rawcode<"destructable">;
+
+/**
+ * Stone Ramp (`LTs8`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneRamp_LTs8`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTs8"): Rawcode<"destructable">;
+
+/**
+ * Tree Bridge (`LTt0`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.TreeBridge_LTt0`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTt0"): Rawcode<"destructable">;
+
+/**
+ * Tree Bridge (`LTt1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.TreeBridge_LTt1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTt1"): Rawcode<"destructable">;
+
+/**
+ * Tree Bridge (`LTt2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.TreeBridge_LTt2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTt2"): Rawcode<"destructable">;
+
+/**
+ * Tree Bridge (`LTt3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.TreeBridge_LTt3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTt3"): Rawcode<"destructable">;
+
+/**
+ * Tree Bridge (`LTt4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.TreeBridge_LTt4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTt4"): Rawcode<"destructable">;
+
+/**
+ * Tree Bridge (`LTt5`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.TreeBridge_LTt5`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTt5"): Rawcode<"destructable">;
+
+/**
+ * Last Hope Bridge (`LTtc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LastHopeBridge_LTtc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTtc"): Rawcode<"destructable">;
+
+/**
+ * Last Hope Bridge (`LTtx`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LastHopeBridge_LTtx`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTtx"): Rawcode<"destructable">;
+
+/**
+ * Stone Wall (`LTw0`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneWall_LTw0`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTw0"): Rawcode<"destructable">;
+
+/**
+ * Stone Wall (`LTw1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneWall_LTw1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTw1"): Rawcode<"destructable">;
+
+/**
+ * Stone Wall (`LTw2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneWall_LTw2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTw2"): Rawcode<"destructable">;
+
+/**
+ * Stone Wall (`LTw3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneWall_LTw3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "LTw3"): Rawcode<"destructable">;
+
+/**
+ * Short Night Elven Wooden Bridge (`NB00`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortNightElvenWoodenBridge_NB00`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NB00"): Rawcode<"destructable">;
+
+/**
+ * Short Night Elven Wooden Bridge (`NB01`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortNightElvenWoodenBridge_NB01`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NB01"): Rawcode<"destructable">;
+
+/**
+ * Short Night Elven Wooden Bridge (`NB02`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortNightElvenWoodenBridge_NB02`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NB02"): Rawcode<"destructable">;
+
+/**
+ * Short Night Elven Wooden Bridge (`NB03`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortNightElvenWoodenBridge_NB03`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NB03"): Rawcode<"destructable">;
+
+/**
+ * Long Night Elven Wooden Bridge (`NB04`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongNightElvenWoodenBridge_NB04`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NB04"): Rawcode<"destructable">;
+
+/**
+ * Long Night Elven Wooden Bridge (`NB05`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongNightElvenWoodenBridge_NB05`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NB05"): Rawcode<"destructable">;
+
+/**
+ * Long Night Elven Wooden Bridge (`NB06`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongNightElvenWoodenBridge_NB06`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NB06"): Rawcode<"destructable">;
+
+/**
+ * Long Night Elven Wooden Bridge (`NB07`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongNightElvenWoodenBridge_NB07`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NB07"): Rawcode<"destructable">;
+
+/**
+ * Wide Night Elven Wooden Bridge (`NB08`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideNightElvenWoodenBridge_NB08`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NB08"): Rawcode<"destructable">;
+
+/**
+ * Wide Night Elven Wooden Bridge (`NB09`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideNightElvenWoodenBridge_NB09`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NB09"): Rawcode<"destructable">;
+
+/**
+ * Wide Night Elven Wooden Bridge (`NB10`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideNightElvenWoodenBridge_NB10`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NB10"): Rawcode<"destructable">;
+
+/**
+ * Wide Night Elven Wooden Bridge (`NB11`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideNightElvenWoodenBridge_NB11`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NB11"): Rawcode<"destructable">;
+
+/**
+ * Ship (`NTbd`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Ship_NTbd`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NTbd"): Rawcode<"destructable">;
+
+/**
+ * Northrend Icy Tree Wall (`NTiw`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.NorthrendIcyTreeWall_NTiw`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NTiw"): Rawcode<"destructable">;
+
+/**
+ * Northrend Canopy Tree (`NTtc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.NorthrendCanopyTree_NTtc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NTtc"): Rawcode<"destructable">;
+
+/**
+ * Northrend Tree Wall (`NTtw`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.NorthrendTreeWall_NTtw`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "NTtw"): Rawcode<"destructable">;
+
+/**
+ * Short Overgrown Bridge (`OG00`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortOvergrownBridge_OG00`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OG00"): Rawcode<"destructable">;
+
+/**
+ * Short Overgrown Bridge (`OG01`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortOvergrownBridge_OG01`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OG01"): Rawcode<"destructable">;
+
+/**
+ * Short Overgrown Bridge (`OG02`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortOvergrownBridge_OG02`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OG02"): Rawcode<"destructable">;
+
+/**
+ * Short Overgrown Bridge (`OG03`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortOvergrownBridge_OG03`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OG03"): Rawcode<"destructable">;
+
+/**
+ * Long Overgrown Bridge (`OG04`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongOvergrownBridge_OG04`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OG04"): Rawcode<"destructable">;
+
+/**
+ * Long Overgrown Bridge (`OG05`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongOvergrownBridge_OG05`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OG05"): Rawcode<"destructable">;
+
+/**
+ * Long Overgrown Bridge (`OG06`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongOvergrownBridge_OG06`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OG06"): Rawcode<"destructable">;
+
+/**
+ * Long Overgrown Bridge (`OG07`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongOvergrownBridge_OG07`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OG07"): Rawcode<"destructable">;
+
+/**
+ * Wide Overgrown Bridge (`OG08`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideOvergrownBridge_OG08`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OG08"): Rawcode<"destructable">;
+
+/**
+ * Wide Overgrown Bridge (`OG09`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideOvergrownBridge_OG09`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OG09"): Rawcode<"destructable">;
+
+/**
+ * Wide Overgrown Bridge (`OG10`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideOvergrownBridge_OG10`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OG10"): Rawcode<"destructable">;
+
+/**
+ * Wide Overgrown Bridge (`OG11`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideOvergrownBridge_OG11`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OG11"): Rawcode<"destructable">;
+
+/**
+ * Demon Storm (`OTds`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DemonStorm_OTds`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OTds"): Rawcode<"destructable">;
+
+/**
+ * Invisible Platform (`OTip`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.InvisiblePlatform_OTip`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OTip"): Rawcode<"destructable">;
+
+/**
+ * Invisible Platform (small) (`OTis`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.InvisiblePlatformSmall_OTis`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OTis"): Rawcode<"destructable">;
+
+/**
+ * Shimmering Portal (`OTsp`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShimmeringPortal_OTsp`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OTsp"): Rawcode<"destructable">;
+
+/**
+ * Outland Tree Wall (`OTtw`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.OutlandTreeWall_OTtw`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "OTtw"): Rawcode<"destructable">;
+
+/**
+ * Short Rickety Wooden Bridge (`RW00`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortRicketyWoodenBridge_RW00`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "RW00"): Rawcode<"destructable">;
+
+/**
+ * Short Rickety Wooden Bridge (`RW01`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortRicketyWoodenBridge_RW01`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "RW01"): Rawcode<"destructable">;
+
+/**
+ * Short Rickety Wooden Bridge (`RW02`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortRicketyWoodenBridge_RW02`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "RW02"): Rawcode<"destructable">;
+
+/**
+ * Short Rickety Wooden Bridge (`RW03`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortRicketyWoodenBridge_RW03`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "RW03"): Rawcode<"destructable">;
+
+/**
+ * Long Rickety Wooden Bridge (`RW04`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongRicketyWoodenBridge_RW04`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "RW04"): Rawcode<"destructable">;
+
+/**
+ * Long Rickety Wooden Bridge (`RW05`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongRicketyWoodenBridge_RW05`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "RW05"): Rawcode<"destructable">;
+
+/**
+ * Long Rickety Wooden Bridge (`RW06`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongRicketyWoodenBridge_RW06`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "RW06"): Rawcode<"destructable">;
+
+/**
+ * Long Rickety Wooden Bridge (`RW07`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongRicketyWoodenBridge_RW07`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "RW07"): Rawcode<"destructable">;
+
+/**
+ * Wide Rickety Wooden Bridge (`RW08`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideRicketyWoodenBridge_RW08`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "RW08"): Rawcode<"destructable">;
+
+/**
+ * Wide Rickety Wooden Bridge (`RW09`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideRicketyWoodenBridge_RW09`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "RW09"): Rawcode<"destructable">;
+
+/**
+ * Wide Rickety Wooden Bridge (`RW10`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideRicketyWoodenBridge_RW10`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "RW10"): Rawcode<"destructable">;
+
+/**
+ * Wide Rickety Wooden Bridge (`RW11`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideRicketyWoodenBridge_RW11`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "RW11"): Rawcode<"destructable">;
+
+/**
+ * Long Undercity Bridge (`UB01`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongUndercityBridge_UB01`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "UB01"): Rawcode<"destructable">;
+
+/**
+ * Long Undercity Bridge (`UB02`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongUndercityBridge_UB02`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "UB02"): Rawcode<"destructable">;
+
+/**
+ * Long Undercity Bridge (`UB03`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongUndercityBridge_UB03`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "UB03"): Rawcode<"destructable">;
+
+/**
+ * Long Undercity Bridge (`UB04`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongUndercityBridge_UB04`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "UB04"): Rawcode<"destructable">;
+
+/**
+ * Village Tree Wall (`VTlt`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.VillageTreeWall_VTlt`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "VTlt"): Rawcode<"destructable">;
+
+/**
+ * Volcano (`Volc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.Volcano_Volc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "Volc"): Rawcode<"destructable">;
+
+/**
+ * Waygate Ramp (`WGTR`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WaygateRamp_WGTR`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "WGTR"): Rawcode<"destructable">;
+
+/**
+ * Snowy Tree Wall (`WTst`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.SnowyTreeWall_WTst`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "WTst"): Rawcode<"destructable">;
+
+/**
+ * Winter Tree Wall (`WTtw`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WinterTreeWall_WTtw`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "WTtw"): Rawcode<"destructable">;
+
+/**
+ * King's Throne (Diagonal 1) (`XOk1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.KingsThroneDiagonal1_XOk1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XOk1"): Rawcode<"destructable">;
+
+/**
+ * King's Throne (Diagonal 1) (`XOk2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.KingsThroneDiagonal1_XOk2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XOk2"): Rawcode<"destructable">;
+
+/**
+ * King's Throne (`XOkt`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.KingsThrone_XOkt`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XOkt"): Rawcode<"destructable">;
+
+/**
+ * Dalaran Building (`XTbd`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DalaranBuilding_XTbd`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTbd"): Rawcode<"destructable">;
+
+/**
+ * Magical Pen (`XTm5`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.MagicalPen_XTm5`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTm5"): Rawcode<"destructable">;
+
+/**
+ * Magical Pen (`XTmp`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.MagicalPen_XTmp`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTmp"): Rawcode<"destructable">;
+
+/**
+ * Magical Pen Wall (`XTmx`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.MagicalPenWall_XTmx`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTmx"): Rawcode<"destructable">;
+
+/**
+ * Lordaeron City Dome (`XTv1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LordaeronCityDome_XTv1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTv1"): Rawcode<"destructable">;
+
+/**
+ * Lordaeron City Dome Destroyed (`XTv2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LordaeronCityDomeDestroyed_XTv2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTv2"): Rawcode<"destructable">;
+
+/**
+ * Lordaeron City Main Building (`XTv3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LordaeronCityMainBuilding_XTv3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTv3"): Rawcode<"destructable">;
+
+/**
+ * Lordaeron City Main Building Destroyed (`XTv4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LordaeronCityMainBuildingDestroyed_XTv4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTv4"): Rawcode<"destructable">;
+
+/**
+ * Orgrimmar Wall Segment Under Construction (`XTv5`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.OrgrimmarWallSegmentUnderConstruction_XTv5`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTv5"): Rawcode<"destructable">;
+
+/**
+ * Orgrimmar Wall Segment Completed (`XTv6`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.OrgrimmarWallSegmentCompleted_XTv6`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTv6"): Rawcode<"destructable">;
+
+/**
+ * Orgrimmar Tower Under Construction (`XTv7`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.OrgrimmarTowerUnderConstruction_XTv7`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTv7"): Rawcode<"destructable">;
+
+/**
+ * Orgrimmar Tower Completed (`XTv8`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.OrgrimmarTowerCompleted_XTv8`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTv8"): Rawcode<"destructable">;
+
+/**
+ * Dalaran Violet Citadel (`XTvt`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.DalaranVioletCitadel_XTvt`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTvt"): Rawcode<"destructable">;
+
+/**
+ * Magical Pen Wall (`XTx5`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.MagicalPenWall_XTx5`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "XTx5"): Rawcode<"destructable">;
+
+/**
+ * Bridge Destroyed (`YSdb`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.BridgeDestroyed_YSdb`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YSdb"): Rawcode<"destructable">;
+
+/**
+ * Bridge Destroyed (`YSdc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.BridgeDestroyed_YSdc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YSdc"): Rawcode<"destructable">;
+
+/**
+ * Short Natural Bridge (`YT00`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortNaturalBridge_YT00`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT00"): Rawcode<"destructable">;
+
+/**
+ * Short Natural Bridge (`YT01`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortNaturalBridge_YT01`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT01"): Rawcode<"destructable">;
+
+/**
+ * Short Natural Bridge (`YT02`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortNaturalBridge_YT02`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT02"): Rawcode<"destructable">;
+
+/**
+ * Short Natural Bridge (`YT03`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortNaturalBridge_YT03`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT03"): Rawcode<"destructable">;
+
+/**
+ * Long Natural Bridge (`YT04`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongNaturalBridge_YT04`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT04"): Rawcode<"destructable">;
+
+/**
+ * Long Natural Bridge (`YT05`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongNaturalBridge_YT05`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT05"): Rawcode<"destructable">;
+
+/**
+ * Long Natural Bridge (`YT06`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongNaturalBridge_YT06`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT06"): Rawcode<"destructable">;
+
+/**
+ * Long Natural Bridge (`YT07`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongNaturalBridge_YT07`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT07"): Rawcode<"destructable">;
+
+/**
+ * Wide Natural Bridge (`YT08`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideNaturalBridge_YT08`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT08"): Rawcode<"destructable">;
+
+/**
+ * Wide Natural Bridge (`YT09`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideNaturalBridge_YT09`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT09"): Rawcode<"destructable">;
+
+/**
+ * Wide Natural Bridge (`YT10`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideNaturalBridge_YT10`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT10"): Rawcode<"destructable">;
+
+/**
+ * Wide Natural Bridge (`YT11`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideNaturalBridge_YT11`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT11"): Rawcode<"destructable">;
+
+/**
+ * Short Stone Bridge (`YT12`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortStoneBridge_YT12`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT12"): Rawcode<"destructable">;
+
+/**
+ * Short Stone Bridge (`YT13`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortStoneBridge_YT13`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT13"): Rawcode<"destructable">;
+
+/**
+ * Short Stone Bridge (`YT14`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortStoneBridge_YT14`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT14"): Rawcode<"destructable">;
+
+/**
+ * Short Stone Bridge (`YT15`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortStoneBridge_YT15`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT15"): Rawcode<"destructable">;
+
+/**
+ * Long Stone Bridge (`YT16`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongStoneBridge_YT16`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT16"): Rawcode<"destructable">;
+
+/**
+ * Long Stone Bridge (`YT17`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongStoneBridge_YT17`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT17"): Rawcode<"destructable">;
+
+/**
+ * Long Stone Bridge (`YT18`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongStoneBridge_YT18`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT18"): Rawcode<"destructable">;
+
+/**
+ * Long Stone Bridge (`YT19`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongStoneBridge_YT19`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT19"): Rawcode<"destructable">;
+
+/**
+ * Wide Stone Bridge (`YT20`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideStoneBridge_YT20`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT20"): Rawcode<"destructable">;
+
+/**
+ * Wide Stone Bridge (`YT21`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideStoneBridge_YT21`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT21"): Rawcode<"destructable">;
+
+/**
+ * Wide Stone Bridge (`YT22`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideStoneBridge_YT22`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT22"): Rawcode<"destructable">;
+
+/**
+ * Wide Stone Bridge (`YT23`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideStoneBridge_YT23`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT23"): Rawcode<"destructable">;
+
+/**
+ * Short Natural Bridge (`YT24`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortNaturalBridge_YT24`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT24"): Rawcode<"destructable">;
+
+/**
+ * Short Natural Bridge (`YT25`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortNaturalBridge_YT25`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT25"): Rawcode<"destructable">;
+
+/**
+ * Short Natural Bridge (`YT26`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortNaturalBridge_YT26`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT26"): Rawcode<"destructable">;
+
+/**
+ * Short Natural Bridge (`YT27`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortNaturalBridge_YT27`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT27"): Rawcode<"destructable">;
+
+/**
+ * Long Natural Bridge (`YT28`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongNaturalBridge_YT28`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT28"): Rawcode<"destructable">;
+
+/**
+ * Long Natural Bridge (`YT29`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongNaturalBridge_YT29`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT29"): Rawcode<"destructable">;
+
+/**
+ * Long Natural Bridge (`YT30`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongNaturalBridge_YT30`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT30"): Rawcode<"destructable">;
+
+/**
+ * Long Natural Bridge (`YT31`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongNaturalBridge_YT31`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT31"): Rawcode<"destructable">;
+
+/**
+ * Wide Natural Bridge (`YT32`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideNaturalBridge_YT32`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT32"): Rawcode<"destructable">;
+
+/**
+ * Wide Natural Bridge (`YT33`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideNaturalBridge_YT33`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT33"): Rawcode<"destructable">;
+
+/**
+ * Wide Natural Bridge (`YT34`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideNaturalBridge_YT34`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT34"): Rawcode<"destructable">;
+
+/**
+ * Wide Natural Bridge (`YT35`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideNaturalBridge_YT35`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT35"): Rawcode<"destructable">;
+
+/**
+ * Short Stone Bridge (`YT36`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortStoneBridge_YT36`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT36"): Rawcode<"destructable">;
+
+/**
+ * Short Stone Bridge (`YT37`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortStoneBridge_YT37`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT37"): Rawcode<"destructable">;
+
+/**
+ * Short Stone Bridge (`YT38`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortStoneBridge_YT38`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT38"): Rawcode<"destructable">;
+
+/**
+ * Short Stone Bridge (`YT39`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortStoneBridge_YT39`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT39"): Rawcode<"destructable">;
+
+/**
+ * Long Stone Bridge (`YT40`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongStoneBridge_YT40`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT40"): Rawcode<"destructable">;
+
+/**
+ * Long Stone Bridge (`YT41`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongStoneBridge_YT41`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT41"): Rawcode<"destructable">;
+
+/**
+ * Long Stone Bridge (`YT42`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongStoneBridge_YT42`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT42"): Rawcode<"destructable">;
+
+/**
+ * Long Stone Bridge (`YT43`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongStoneBridge_YT43`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT43"): Rawcode<"destructable">;
+
+/**
+ * Wide Stone Bridge (`YT44`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideStoneBridge_YT44`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT44"): Rawcode<"destructable">;
+
+/**
+ * Wide Stone Bridge (`YT45`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideStoneBridge_YT45`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT45"): Rawcode<"destructable">;
+
+/**
+ * Wide Stone Bridge (`YT46`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideStoneBridge_YT46`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT46"): Rawcode<"destructable">;
+
+/**
+ * Wide Stone Bridge (`YT47`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideStoneBridge_YT47`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT47"): Rawcode<"destructable">;
+
+/**
+ * Extra Wide Natural Bridge (`YT48`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ExtraWideNaturalBridge_YT48`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT48"): Rawcode<"destructable">;
+
+/**
+ * Extra Wide Natural Bridge (`YT49`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ExtraWideNaturalBridge_YT49`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT49"): Rawcode<"destructable">;
+
+/**
+ * Extra Wide Natural Bridge (`YT50`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ExtraWideNaturalBridge_YT50`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT50"): Rawcode<"destructable">;
+
+/**
+ * Extra Wide Natural Bridge (`YT51`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ExtraWideNaturalBridge_YT51`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT51"): Rawcode<"destructable">;
+
+/**
+ * Special Ice Bridge (`YT66`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.SpecialIceBridge_YT66`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT66"): Rawcode<"destructable">;
+
+/**
+ * Elven Bridge (`YT67`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ElvenBridge_YT67`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YT67"): Rawcode<"destructable">;
+
+/**
+ * Pathing Blocker (Air) (`YTab`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.PathingBlockerAir_YTab`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTab"): Rawcode<"destructable">;
+
+/**
+ * Pathing Blocker (Air) (Large) (`YTac`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.PathingBlockerAirLarge_YTac`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTac"): Rawcode<"destructable">;
+
+/**
+ * Icecrown Citadel Entrance (`YTc1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.IcecrownCitadelEntrance_YTc1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTc1"): Rawcode<"destructable">;
+
+/**
+ * Lordaeron City Main Gate (`YTc2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LordaeronCityMainGate_YTc2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTc2"): Rawcode<"destructable">;
+
+/**
+ * Lordaeron City Main Gate Destroyed (`YTc4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LordaeronCityMainGateDestroyed_YTc4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTc4"): Rawcode<"destructable">;
+
+/**
+ * City Entrance (`YTce`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.CityEntrance_YTce`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTce"): Rawcode<"destructable">;
+
+/**
+ * Orgrimmar Gate (`YTcn`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.OrgrimmarGate_YTcn`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTcn"): Rawcode<"destructable">;
+
+/**
+ * Cityscape Summer Tree Wall (`YTct`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.CityscapeSummerTreeWall_YTct`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTct"): Rawcode<"destructable">;
+
+/**
+ * City Entrance (`YTcx`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.CityEntrance_YTcx`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTcx"): Rawcode<"destructable">;
+
+/**
+ * Pathing Blocker (Both) (`YTfb`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.PathingBlockerBoth_YTfb`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTfb"): Rawcode<"destructable">;
+
+/**
+ * Pathing Blocker (Both) (Large) (`YTfc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.PathingBlockerBothLarge_YTfc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTfc"): Rawcode<"destructable">;
+
+/**
+ * Cityscape Fall Tree Wall (`YTft`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.CityscapeFallTreeWall_YTft`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTft"): Rawcode<"destructable">;
+
+/**
+ * Line of Sight Blocker (`YTlb`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LineOfSightBlocker_YTlb`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTlb"): Rawcode<"destructable">;
+
+/**
+ * Pathing Blocker (Ground) (`YTpb`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.PathingBlockerGround_YTpb`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTpb"): Rawcode<"destructable">;
+
+/**
+ * Pathing Blocker (Ground) (Large) (`YTpc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.PathingBlockerGroundLarge_YTpc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTpc"): Rawcode<"destructable">;
+
+/**
+ * Pathing Blocker (Ground) (Thin) (Rotatable) (`YTpl`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.PathingBlockerGroundThinRotatable_YTpl`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTpl"): Rawcode<"destructable">;
+
+/**
+ * Pathing Blocker (Ground) (Tiny) (Rotatable) (`YTps`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.PathingBlockerGroundTinyRotatable_YTps`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTps"): Rawcode<"destructable">;
+
+/**
+ * Cityscape Snowy Tree Wall (`YTst`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.CityscapeSnowyTreeWall_YTst`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTst"): Rawcode<"destructable">;
+
+/**
+ * Cityscape Winter Tree Wall (`YTwt`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.CityscapeWinterTreeWall_YTwt`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YTwt"): Rawcode<"destructable">;
+
+/**
+ * Short Stratholme Bridge (`YY12`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortStratholmeBridge_YY12`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YY12"): Rawcode<"destructable">;
+
+/**
+ * Short Stratholme Bridge (`YY13`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortStratholmeBridge_YY13`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YY13"): Rawcode<"destructable">;
+
+/**
+ * Short Stratholme Bridge (`YY14`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortStratholmeBridge_YY14`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YY14"): Rawcode<"destructable">;
+
+/**
+ * Short Stratholme Bridge (`YY15`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ShortStratholmeBridge_YY15`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YY15"): Rawcode<"destructable">;
+
+/**
+ * Long Stratholme Bridge (`YY16`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongStratholmeBridge_YY16`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YY16"): Rawcode<"destructable">;
+
+/**
+ * Long Stratholme Bridge (`YY17`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongStratholmeBridge_YY17`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YY17"): Rawcode<"destructable">;
+
+/**
+ * Long Stratholme Bridge (`YY18`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongStratholmeBridge_YY18`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YY18"): Rawcode<"destructable">;
+
+/**
+ * Long Stratholme Bridge (`YY19`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LongStratholmeBridge_YY19`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YY19"): Rawcode<"destructable">;
+
+/**
+ * Wide Stratholme Bridge (`YY20`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideStratholmeBridge_YY20`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YY20"): Rawcode<"destructable">;
+
+/**
+ * Wide Stratholme Bridge (`YY21`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideStratholmeBridge_YY21`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YY21"): Rawcode<"destructable">;
+
+/**
+ * Wide Stratholme Bridge (`YY22`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideStratholmeBridge_YY22`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YY22"): Rawcode<"destructable">;
+
+/**
+ * Wide Stratholme Bridge (`YY23`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.WideStratholmeBridge_YY23`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "YY23"): Rawcode<"destructable">;
+
+/**
+ * Line of Sight Blocker (Large) (`Ytlc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.LineOfSightBlockerLarge_Ytlc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "Ytlc"): Rawcode<"destructable">;
+
+/**
+ * Silvermoon Tree (`Yts1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.SilvermoonTree_Yts1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "Yts1"): Rawcode<"destructable">;
+
+/**
+ * Scorched Tree Wall (`Ytsc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.ScorchedTreeWall_Ytsc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "Ytsc"): Rawcode<"destructable">;
+
+/**
+ * Rolling Stone Door (`ZTd1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RollingStoneDoor_ZTd1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTd1"): Rawcode<"destructable">;
+
+/**
+ * Rolling Stone Door (`ZTd2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RollingStoneDoor_ZTd2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTd2"): Rawcode<"destructable">;
+
+/**
+ * Rolling Stone Door (`ZTd3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RollingStoneDoor_ZTd3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTd3"): Rawcode<"destructable">;
+
+/**
+ * Rolling Stone Door (`ZTd4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RollingStoneDoor_ZTd4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTd4"): Rawcode<"destructable">;
+
+/**
+ * Rolling Stone Door (`ZTd5`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RollingStoneDoor_ZTd5`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTd5"): Rawcode<"destructable">;
+
+/**
+ * Rolling Stone Door (`ZTd6`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RollingStoneDoor_ZTd6`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTd6"): Rawcode<"destructable">;
+
+/**
+ * Rolling Stone Door (`ZTd7`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RollingStoneDoor_ZTd7`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTd7"): Rawcode<"destructable">;
+
+/**
+ * Rolling Stone Door (`ZTd8`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RollingStoneDoor_ZTd8`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTd8"): Rawcode<"destructable">;
+
+/**
+ * Ruined Gate (`ZTg1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RuinedGate_ZTg1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTg1"): Rawcode<"destructable">;
+
+/**
+ * Ruined Gate (`ZTg2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RuinedGate_ZTg2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTg2"): Rawcode<"destructable">;
+
+/**
+ * Ruined Gate (`ZTg3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RuinedGate_ZTg3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTg3"): Rawcode<"destructable">;
+
+/**
+ * Ruined Gate (`ZTg4`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RuinedGate_ZTg4`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTg4"): Rawcode<"destructable">;
+
+/**
+ * Ruins Naga Circle (`ZTnc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RuinsNagaCircle_ZTnc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTnc"): Rawcode<"destructable">;
+
+/**
+ * Ramp Naga Small (Left) (`ZTr0`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RampNagaSmallLeft_ZTr0`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTr0"): Rawcode<"destructable">;
+
+/**
+ * Ramp Naga Small (Top) (`ZTr1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RampNagaSmallTop_ZTr1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTr1"): Rawcode<"destructable">;
+
+/**
+ * Ramp Naga Small (Right) (`ZTr2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RampNagaSmallRight_ZTr2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTr2"): Rawcode<"destructable">;
+
+/**
+ * Ramp Naga Small (Bottom) (`ZTr3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RampNagaSmallBottom_ZTr3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTr3"): Rawcode<"destructable">;
+
+/**
+ * Massive Ruined Gate (`ZTsg`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.MassiveRuinedGate_ZTsg`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTsg"): Rawcode<"destructable">;
+
+/**
+ * Massive Ruined Gate (`ZTsx`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.MassiveRuinedGate_ZTsx`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTsx"): Rawcode<"destructable">;
+
+/**
+ * Ruins Canopy Tree (`ZTtc`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RuinsCanopyTree_ZTtc`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTtc"): Rawcode<"destructable">;
+
+/**
+ * Ruins Tree Wall (`ZTtw`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.RuinsTreeWall_ZTtw`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTtw"): Rawcode<"destructable">;
+
+/**
+ * Stone Wall (`ZTw0`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneWall_ZTw0`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTw0"): Rawcode<"destructable">;
+
+/**
+ * Stone Wall (`ZTw1`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneWall_ZTw1`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTw1"): Rawcode<"destructable">;
+
+/**
+ * Stone Wall (`ZTw2`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneWall_ZTw2`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTw2"): Rawcode<"destructable">;
+
+/**
+ * Stone Wall (`ZTw3`), a Built-in destructable of Patch 3.0.0.
+ *
+ * Its constant is `Destructables.StoneWall_ZTw3`, from `reforged-builtins/destructables`.
+ */
+declare function FourCC(id: "ZTw3"): Rawcode<"destructable">;
+
+// Doodads.
+
+/**
+ * Androhal Clock Tower (`ACt0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.AndrohalClockTower_ACt0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ACt0"): Rawcode<"doodad">;
+
+/**
+ * Androhal Clock Tower (Destroyed) (`ACtd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.AndrohalClockTowerDestroyed_ACtd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ACtd"): Rawcode<"doodad">;
+
+/**
+ * Birds (`AObd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Birds_AObd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AObd"): Rawcode<"doodad">;
+
+/**
+ * Obelisk Broken (`AObo`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ObeliskBroken_AObo`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AObo"): Rawcode<"doodad">;
+
+/**
+ * Brazier Skull (`AObr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BrazierSkull_AObr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AObr"): Rawcode<"doodad">;
+
+/**
+ * Statue Guardian of Aszune (`AOgs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StatueGuardianOfAszune_AOgs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AOgs"): Rawcode<"doodad">;
+
+/**
+ * Stump Hollow (`AOhs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StumpHollow_AOhs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AOhs"): Rawcode<"doodad">;
+
+/**
+ * Statue Keeper (`AOks`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StatueKeeper_AOks`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AOks"): Rawcode<"doodad">;
+
+/**
+ * Log Angled (`AOla`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LogAngled_AOla`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AOla"): Rawcode<"doodad">;
+
+/**
+ * Log Straight (`AOlg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LogStraight_AOlg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AOlg"): Rawcode<"doodad">;
+
+/**
+ * Totem Lantern (`AOnt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TotemLantern_AOnt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AOnt"): Rawcode<"doodad">;
+
+/**
+ * Obelisk Glowing (`AOob`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ObeliskGlowing_AOob`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AOob"): Rawcode<"doodad">;
+
+/**
+ * Obelisk (`AOsk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Obelisk_AOsk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AOsk"): Rawcode<"doodad">;
+
+/**
+ * Remains Scorched (`AOsr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RemainsScorched_AOsr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AOsr"): Rawcode<"doodad">;
+
+/**
+ * Bush (`APbs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Bush_APbs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "APbs"): Rawcode<"doodad">;
+
+/**
+ * Cattail (`APct`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Cattail_APct`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "APct"): Rawcode<"doodad">;
+
+/**
+ * Mushrooms (`APms`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Mushrooms_APms`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "APms"): Rawcode<"doodad">;
+
+/**
+ * Vines Thorny (`APtv`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.VinesThorny_APtv`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "APtv"): Rawcode<"doodad">;
+
+/**
+ * Rocks (`ARrk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rocks_ARrk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ARrk"): Rawcode<"doodad">;
+
+/**
+ * Blocks Ruined (`ASHB`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BlocksRuined_ASHB`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASHB"): Rawcode<"doodad">;
+
+/**
+ * Broken Column (`ASbc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BrokenColumn_ASbc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASbc"): Rawcode<"doodad">;
+
+/**
+ * Rubble (`ASbr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rubble_ASbr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASbr"): Rawcode<"doodad">;
+
+/**
+ * Archway (Standard Dimension) (`ASd0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayStandardDimension_ASd0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASd0"): Rawcode<"doodad">;
+
+/**
+ * Pier, Pier (`ASpr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PierPier_ASpr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASpr"): Rawcode<"doodad">;
+
+/**
+ * Pier Ruined (`ASpt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PierRuined_ASpt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASpt"): Rawcode<"doodad">;
+
+/**
+ * Rock Archway Diagonal (`ASr1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockArchwayDiagonal_ASr1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASr1"): Rawcode<"doodad">;
+
+/**
+ * Rock Archway (`ASra`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockArchway_ASra`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASra"): Rawcode<"doodad">;
+
+/**
+ * Night Elf Fishing Village (`ASv0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NightElfFishingVillage_ASv0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASv0"): Rawcode<"doodad">;
+
+/**
+ * Night Elf Fishing Village (`ASv1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NightElfFishingVillage_ASv1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASv1"): Rawcode<"doodad">;
+
+/**
+ * Night Elf Fishing Village (`ASv2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NightElfFishingVillage_ASv2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASv2"): Rawcode<"doodad">;
+
+/**
+ * Night Elf Fishing Village (`ASv3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NightElfFishingVillage_ASv3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASv3"): Rawcode<"doodad">;
+
+/**
+ * Night Elf Fishing Village (`ASv4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NightElfFishingVillage_ASv4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASv4"): Rawcode<"doodad">;
+
+/**
+ * World Tree (`ASwt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WorldTree_ASwt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASwt"): Rawcode<"doodad">;
+
+/**
+ * Night Elf Fishing Village Ruined (`ASx0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NightElfFishingVillageRuined_ASx0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASx0"): Rawcode<"doodad">;
+
+/**
+ * Night Elf Fishing Village Ruined (`ASx1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NightElfFishingVillageRuined_ASx1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASx1"): Rawcode<"doodad">;
+
+/**
+ * Night Elf Fishing Village Ruined (`ASx2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NightElfFishingVillageRuined_ASx2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ASx2"): Rawcode<"doodad">;
+
+/**
+ * Lily Pads Floating (`AWfl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LilyPadsFloating_AWfl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AWfl"): Rawcode<"doodad">;
+
+/**
+ * Fish (`AWfs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Fish_AWfs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AWfs"): Rawcode<"doodad">;
+
+/**
+ * Lily Pads (`AWlp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LilyPads_AWlp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AWlp"): Rawcode<"doodad">;
+
+/**
+ * Ruined Ship (`AZrf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedShip_AZrf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "AZrf"): Rawcode<"doodad">;
+
+/**
+ * Building A (`BA00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BuildingA_BA00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BA00"): Rawcode<"doodad">;
+
+/**
+ * Building B (`BB00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BuildingB_BB00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BB00"): Rawcode<"doodad">;
+
+/**
+ * Building C (`BC00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BuildingC_BC00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BC00"): Rawcode<"doodad">;
+
+/**
+ * Brill Clock Tower (`BCt0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BrillClockTower_BCt0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BCt0"): Rawcode<"doodad">;
+
+/**
+ * Bones (`BObo`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Bones_BObo`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BObo"): Rawcode<"doodad">;
+
+/**
+ * Totem Centaur (`BOct`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TotemCentaur_BOct`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BOct"): Rawcode<"doodad">;
+
+/**
+ * Throne (`BOth`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Throne_BOth`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BOth"): Rawcode<"doodad">;
+
+/**
+ * Totem Tauren (`BOtt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TotemTauren_BOtt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BOtt"): Rawcode<"doodad">;
+
+/**
+ * Cactus (`BPca`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Cactus_BPca`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BPca"): Rawcode<"doodad">;
+
+/**
+ * Barrens Tree (Indestructible) (`BPtw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BarrensTreeIndestructible_BPtw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BPtw"): Rawcode<"doodad">;
+
+/**
+ * Crater (`BRcr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Crater_BRcr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BRcr"): Rawcode<"doodad">;
+
+/**
+ * Fissure (`BRfs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Fissure_BRfs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BRfs"): Rawcode<"doodad">;
+
+/**
+ * Geyser (`BRgs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Geyser_BRgs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BRgs"): Rawcode<"doodad">;
+
+/**
+ * Rock Spires (Cinematic) (`BRrc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockSpiresCinematic_BRrc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BRrc"): Rawcode<"doodad">;
+
+/**
+ * Rocks (`BRrk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rocks_BRrk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BRrk"): Rawcode<"doodad">;
+
+/**
+ * Rock Pillar (`BRrp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockPillar_BRrp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BRrp"): Rawcode<"doodad">;
+
+/**
+ * Rock Spires (`BRrs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockSpires_BRrs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BRrs"): Rawcode<"doodad">;
+
+/**
+ * Rock Spires Small (`BRsp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockSpiresSmall_BRsp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BRsp"): Rawcode<"doodad">;
+
+/**
+ * Ruined Arch (`BSar`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedArch_BSar`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BSar"): Rawcode<"doodad">;
+
+/**
+ * Rock Archway Diagonal (`BSr1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockArchwayDiagonal_BSr1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BSr1"): Rawcode<"doodad">;
+
+/**
+ * Rock Archway (`BSra`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockArchway_BSra`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BSra"): Rawcode<"doodad">;
+
+/**
+ * Ruined Chunk (`BSrc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedChunk_BSrc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BSrc"): Rawcode<"doodad">;
+
+/**
+ * Ruined Curved Wall (`BSrv`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedCurvedWall_BSrv`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BSrv"): Rawcode<"doodad">;
+
+/**
+ * Ruined Wall (`BSrw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedWall_BSrw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "BSrw"): Rawcode<"doodad">;
+
+/**
+ * Corpse of Gul Dan (`CGd0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CorpseOfGulDan_CGd0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CGd0"): Rawcode<"doodad">;
+
+/**
+ * UtherTomeClosed (`CNuc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UtherTomeClosed_CNuc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CNuc"): Rawcode<"doodad">;
+
+/**
+ * UtherTome (`CNut`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UtherTome_CNut`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CNut"): Rawcode<"doodad">;
+
+/**
+ * Blighted Mist (`CObl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BlightedMist_CObl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CObl"): Rawcode<"doodad">;
+
+/**
+ * Obelisk Broken (`CObo`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ObeliskBroken_CObo`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CObo"): Rawcode<"doodad">;
+
+/**
+ * Fish Dead (`COdf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FishDead_COdf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "COdf"): Rawcode<"doodad">;
+
+/**
+ * Stump Hollow (`COhs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StumpHollow_COhs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "COhs"): Rawcode<"doodad">;
+
+/**
+ * Log Angled (`COla`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LogAngled_COla`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "COla"): Rawcode<"doodad">;
+
+/**
+ * Log Straight (`COlg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LogStraight_COlg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "COlg"): Rawcode<"doodad">;
+
+/**
+ * Obelisk (`COob`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Obelisk_COob`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "COob"): Rawcode<"doodad">;
+
+/**
+ * Bush (`CPbs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Bush_CPbs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CPbs"): Rawcode<"doodad">;
+
+/**
+ * Cattail (`CPct`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Cattail_CPct`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CPct"): Rawcode<"doodad">;
+
+/**
+ * Lily Pad (`CPlp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LilyPad_CPlp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CPlp"): Rawcode<"doodad">;
+
+/**
+ * Mushrooms (`CPms`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Mushrooms_CPms`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CPms"): Rawcode<"doodad">;
+
+/**
+ * Fissure (`CRfs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Fissure_CRfs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CRfs"): Rawcode<"doodad">;
+
+/**
+ * Rocks (`CRrk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rocks_CRrk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CRrk"): Rawcode<"doodad">;
+
+/**
+ * Rock Spires (`CRrs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockSpires_CRrs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CRrs"): Rawcode<"doodad">;
+
+/**
+ * Broken Column (`CSbc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BrokenColumn_CSbc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CSbc"): Rawcode<"doodad">;
+
+/**
+ * Blocks Ruined (`CSbl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BlocksRuined_CSbl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CSbl"): Rawcode<"doodad">;
+
+/**
+ * Rubble (`CSbr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rubble_CSbr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CSbr"): Rawcode<"doodad">;
+
+/**
+ * Archway Angled (`CSr1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayAngled_CSr1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CSr1"): Rawcode<"doodad">;
+
+/**
+ * Archway (`CSra`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Archway_CSra`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "CSra"): Rawcode<"doodad">;
+
+/**
+ * Bookshelf Angled (`DOab`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BookshelfAngled_DOab`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOab"): Rawcode<"doodad">;
+
+/**
+ * Statue of Azshara (`DOas`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StatueOfAzshara_DOas`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOas"): Rawcode<"doodad">;
+
+/**
+ * Bench (`DObh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Bench_DObh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DObh"): Rawcode<"doodad">;
+
+/**
+ * Bookshelf (`DObk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Bookshelf_DObk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DObk"): Rawcode<"doodad">;
+
+/**
+ * Bookshelf Long (`DObw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BookshelfLong_DObw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DObw"): Rawcode<"doodad">;
+
+/**
+ * Chains (`DOch`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Chains_DOch`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOch"): Rawcode<"doodad">;
+
+/**
+ * Chain Post (`DOcp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ChainPost_DOcp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOcp"): Rawcode<"doodad">;
+
+/**
+ * Chair (`DOcr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Chair_DOcr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOcr"): Rawcode<"doodad">;
+
+/**
+ * Iron Maiden (`DOim`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.IronMaiden_DOim`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOim"): Rawcode<"doodad">;
+
+/**
+ * Pile of Junk (`DOjp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PileOfJunk_DOjp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOjp"): Rawcode<"doodad">;
+
+/**
+ * Bookshelf Large (`DOkb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BookshelfLarge_DOkb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOkb"): Rawcode<"doodad">;
+
+/**
+ * Lava Cracks (`DOlc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LavaCracks_DOlc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOlc"): Rawcode<"doodad">;
+
+/**
+ * Mine Cart (`DOmc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MineCart_DOmc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOmc"): Rawcode<"doodad">;
+
+/**
+ * Mine Cart Empty (`DOme`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MineCartEmpty_DOme`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOme"): Rawcode<"doodad">;
+
+/**
+ * Obelisk (`DOob`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Obelisk_DOob`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOob"): Rawcode<"doodad">;
+
+/**
+ * Sewer Vents (`DOsv`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SewerVents_DOsv`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOsv"): Rawcode<"doodad">;
+
+/**
+ * Sewer Wallpipes (`DOsw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SewerWallpipes_DOsw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOsw"): Rawcode<"doodad">;
+
+/**
+ * Table (`DOtb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Table_DOtb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOtb"): Rawcode<"doodad">;
+
+/**
+ * Table and Chair (`DOtc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TableAndChair_DOtc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOtc"): Rawcode<"doodad">;
+
+/**
+ * Pile of Treasure (`DOtp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PileOfTreasure_DOtp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOtp"): Rawcode<"doodad">;
+
+/**
+ * Table Torture (`DOtt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TableTorture_DOtt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DOtt"): Rawcode<"doodad">;
+
+/**
+ * Crater Fiery (`DRfc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CraterFiery_DRfc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DRfc"): Rawcode<"doodad">;
+
+/**
+ * Rocks (`DRrk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rocks_DRrk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DRrk"): Rawcode<"doodad">;
+
+/**
+ * Stalagmite (`DRst`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Stalagmite_DRst`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DRst"): Rawcode<"doodad">;
+
+/**
+ * Archway Angled (`DSa1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayAngled_DSa1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DSa1"): Rawcode<"doodad">;
+
+/**
+ * Archway Angled Stone (`DSa2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayAngledStone_DSa2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DSa2"): Rawcode<"doodad">;
+
+/**
+ * Archway Stone (`DSah`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayStone_DSah`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DSah"): Rawcode<"doodad">;
+
+/**
+ * Archway (`DSar`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Archway_DSar`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DSar"): Rawcode<"doodad">;
+
+/**
+ * Wall Barred Small (`DSp0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallBarredSmall_DSp0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DSp0"): Rawcode<"doodad">;
+
+/**
+ * Wall Barred Large (`DSp9`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallBarredLarge_DSp9`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "DSp9"): Rawcode<"doodad">;
+
+/**
+ * Exterior Gate (`EG00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ExteriorGate_EG00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "EG00"): Rawcode<"doodad">;
+
+/**
+ * Enclave House (`EH00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.EnclaveHouse_EH00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "EH00"): Rawcode<"doodad">;
+
+/**
+ * Enclave House B (`EHb0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.EnclaveHouseB_EHb0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "EHb0"): Rawcode<"doodad">;
+
+/**
+ * Enclave Main Structure (`EMs0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.EnclaveMainStructure_EMs0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "EMs0"): Rawcode<"doodad">;
+
+/**
+ * Exterior Main Tower (`EMt0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ExteriorMainTower_EMt0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "EMt0"): Rawcode<"doodad">;
+
+/**
+ * Scaffolding (`EOcr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Scaffolding_EOcr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "EOcr"): Rawcode<"doodad">;
+
+/**
+ * Grate (`EOgr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Grate_EOgr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "EOgr"): Rawcode<"doodad">;
+
+/**
+ * Manhole (`EOmh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Manhole_EOmh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "EOmh"): Rawcode<"doodad">;
+
+/**
+ * Shipyard Crane (`EOsk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ShipyardCrane_EOsk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "EOsk"): Rawcode<"doodad">;
+
+/**
+ * Smithy Tools (`EOst`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SmithyTools_EOst`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "EOst"): Rawcode<"doodad">;
+
+/**
+ * Enclave Spire (`ES00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.EnclaveSpire_ES00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ES00"): Rawcode<"doodad">;
+
+/**
+ * Exterior Tower (`ET00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ExteriorTower_ET00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ET00"): Rawcode<"doodad">;
+
+/**
+ * Enclave Turret (`ET01`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.EnclaveTurret_ET01`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ET01"): Rawcode<"doodad">;
+
+/**
+ * Exterior Wall (`EW00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ExteriorWall_EW00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "EW00"): Rawcode<"doodad">;
+
+/**
+ * Forsaken Standing Banners (`FSsb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ForsakenStandingBanners_FSsb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "FSsb"): Rawcode<"doodad">;
+
+/**
+ * Goblin Racing arrow post (`GLap`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GoblinRacingArrowPost_GLap`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GLap"): Rawcode<"doodad">;
+
+/**
+ * GoblinRacing CheckerBanner (`GLcb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GoblinRacingCheckerBanner_GLcb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GLcb"): Rawcode<"doodad">;
+
+/**
+ * GoblinRacing Sign (`GLsg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GoblinRacingSign_GLsg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GLsg"): Rawcode<"doodad">;
+
+/**
+ * Lava Cracks (`GOlc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LavaCracks_GOlc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GOlc"): Rawcode<"doodad">;
+
+/**
+ * Obelisk (`GOob`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Obelisk_GOob`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GOob"): Rawcode<"doodad">;
+
+/**
+ * Mushroom Blue (`GPsh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MushroomBlue_GPsh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GPsh"): Rawcode<"doodad">;
+
+/**
+ * Crater Fiery (`GRfc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CraterFiery_GRfc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GRfc"): Rawcode<"doodad">;
+
+/**
+ * Rocks (`GRrk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rocks_GRrk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GRrk"): Rawcode<"doodad">;
+
+/**
+ * Stalagmite (`GRst`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Stalagmite_GRst`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GRst"): Rawcode<"doodad">;
+
+/**
+ * Archway Angled (`GSa1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayAngled_GSa1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GSa1"): Rawcode<"doodad">;
+
+/**
+ * Archway Angled Stone (`GSa2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayAngledStone_GSa2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GSa2"): Rawcode<"doodad">;
+
+/**
+ * Archway Stone (`GSah`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayStone_GSah`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GSah"): Rawcode<"doodad">;
+
+/**
+ * Archway (`GSar`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Archway_GSar`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GSar"): Rawcode<"doodad">;
+
+/**
+ * Wall Barred Small (`GSp0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallBarredSmall_GSp0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GSp0"): Rawcode<"doodad">;
+
+/**
+ * Wall Barred Large (`GSp9`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallBarredLarge_GSp9`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "GSp9"): Rawcode<"doodad">;
+
+/**
+ * Hearthglen Abbey (`HA00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.HearthglenAbbey_HA00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "HA00"): Rawcode<"doodad">;
+
+/**
+ * High Elf Crest Hanging Banners (`HEch`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.HighElfCrestHangingBanners_HEch`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "HEch"): Rawcode<"doodad">;
+
+/**
+ * High Elf Crest Standing Banners (`HEcs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.HighElfCrestStandingBanners_HEcs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "HEcs"): Rawcode<"doodad">;
+
+/**
+ * Chair (`IOch`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Chair_IOch`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IOch"): Rawcode<"doodad">;
+
+/**
+ * Chair Icey (`IOic`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ChairIcey_IOic`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IOic"): Rawcode<"doodad">;
+
+/**
+ * Obelisk (`IOob`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Obelisk_IOob`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IOob"): Rawcode<"doodad">;
+
+/**
+ * Pillar (`IOpr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Pillar_IOpr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IOpr"): Rawcode<"doodad">;
+
+/**
+ * Statue Ice Spider (`IOsl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StatueIceSpider_IOsl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IOsl"): Rawcode<"doodad">;
+
+/**
+ * Snowman (`IOsm`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Snowman_IOsm`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IOsm"): Rawcode<"doodad">;
+
+/**
+ * Ice Spider on Pedestal (`IOss`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.IceSpiderOnPedestal_IOss`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IOss"): Rawcode<"doodad">;
+
+/**
+ * Skull Torch (`IOst`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SkullTorch_IOst`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IOst"): Rawcode<"doodad">;
+
+/**
+ * Crystal (`IRcy`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Crystal_IRcy`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IRcy"): Rawcode<"doodad">;
+
+/**
+ * Glacier (`IRgc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Glacier_IRgc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IRgc"): Rawcode<"doodad">;
+
+/**
+ * Ice Block (`IRic`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.IceBlock_IRic`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IRic"): Rawcode<"doodad">;
+
+/**
+ * Rocks (`IRrk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rocks_IRrk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IRrk"): Rawcode<"doodad">;
+
+/**
+ * Snowy Rock (`IRrs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SnowyRock_IRrs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IRrs"): Rawcode<"doodad">;
+
+/**
+ * Archway Angled Icy (`ISa1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayAngledIcy_ISa1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ISa1"): Rawcode<"doodad">;
+
+/**
+ * Archway Icy (`ISar`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayIcy_ISar`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ISar"): Rawcode<"doodad">;
+
+/**
+ * Rubble (`ISrb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rubble_ISrb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ISrb"): Rawcode<"doodad">;
+
+/**
+ * Archway Angled Icecrown Stone (`ISs1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayAngledIcecrownStone_ISs1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ISs1"): Rawcode<"doodad">;
+
+/**
+ * Archway Icecrown Stone (`ISsr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayIcecrownStone_ISsr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ISsr"): Rawcode<"doodad">;
+
+/**
+ * Bubbles Steam (`IWbg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BubblesSteam_IWbg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IWbg"): Rawcode<"doodad">;
+
+/**
+ * Ice Floating (`IWie`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.IceFloating_IWie`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IWie"): Rawcode<"doodad">;
+
+/**
+ * Icy Waterfall (`IWw0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.IcyWaterfall_IWw0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IWw0"): Rawcode<"doodad">;
+
+/**
+ * The Frozen Throne (`IZft`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TheFrozenThrone_IZft`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IZft"): Rawcode<"doodad">;
+
+/**
+ * Rising Water (`IZrw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RisingWater_IZrw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IZrw"): Rawcode<"doodad">;
+
+/**
+ * Rising Water Wide (`IZww`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RisingWaterWide_IZww`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "IZww"): Rawcode<"doodad">;
+
+/**
+ * Glowing Runes (`JOgr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GlowingRunes_JOgr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "JOgr"): Rawcode<"doodad">;
+
+/**
+ * Archway Ruined (`JSar`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayRuined_JSar`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "JSar"): Rawcode<"doodad">;
+
+/**
+ * Archway Ruined (`JSax`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayRuined_JSax`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "JSax"): Rawcode<"doodad">;
+
+/**
+ * Column Semi Circle Ruined (`JSc2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnSemiCircleRuined_JSc2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "JSc2"): Rawcode<"doodad">;
+
+/**
+ * Column Semi Circle Ruined (`JSc3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnSemiCircleRuined_JSc3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "JSc3"): Rawcode<"doodad">;
+
+/**
+ * Column Semi Circle Ruined (`JSc4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnSemiCircleRuined_JSc4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "JSc4"): Rawcode<"doodad">;
+
+/**
+ * Column Ruined (`JSco`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnRuined_JSco`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "JSco"): Rawcode<"doodad">;
+
+/**
+ * Column Semi Circle Ruined (`JScs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnSemiCircleRuined_JScs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "JScs"): Rawcode<"doodad">;
+
+/**
+ * Column Ruined with Cap (`JScx`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnRuinedWithCap_JScx`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "JScx"): Rawcode<"doodad">;
+
+/**
+ * City Building Base Ruined (`JSr6`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingBaseRuined_JSr6`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "JSr6"): Rawcode<"doodad">;
+
+/**
+ * City Building Large Base Ruined (`JSrc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingLargeBaseRuined_JSrc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "JSrc"): Rawcode<"doodad">;
+
+/**
+ * Invulnerability Field (`JZif`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.InvulnerabilityField_JZif`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "JZif"): Rawcode<"doodad">;
+
+/**
+ * Underground Dome (`JZud`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndergroundDome_JZud`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "JZud"): Rawcode<"doodad">;
+
+/**
+ * Runes (`KOdr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Runes_KOdr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "KOdr"): Rawcode<"doodad">;
+
+/**
+ * Statue Black Citadel (`KOst`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StatueBlackCitadel_KOst`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "KOst"): Rawcode<"doodad">;
+
+/**
+ * Arch with Pillar (`LCap`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchWithPillar_LCap`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCap"): Rawcode<"doodad">;
+
+/**
+ * Arch (`LCar`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Arch_LCar`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCar"): Rawcode<"doodad">;
+
+/**
+ * Throneroom Banner Large (`LCb1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ThroneroomBannerLarge_LCb1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCb1"): Rawcode<"doodad">;
+
+/**
+ * Throneroom Banner Medium 01 (`LCb2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ThroneroomBannerMedium01_LCb2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCb2"): Rawcode<"doodad">;
+
+/**
+ * Throneroom Banner Medium 02 (`LCb3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ThroneroomBannerMedium02_LCb3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCb3"): Rawcode<"doodad">;
+
+/**
+ * Lordaeron Banner Medium 01 (`LCb4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronBannerMedium01_LCb4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCb4"): Rawcode<"doodad">;
+
+/**
+ * Lordaeron Banner Medium 02 (`LCb5`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronBannerMedium02_LCb5`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCb5"): Rawcode<"doodad">;
+
+/**
+ * Throneroom Banner Small (`LCb6`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ThroneroomBannerSmall_LCb6`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCb6"): Rawcode<"doodad">;
+
+/**
+ * Lordaeron Banner Small (`LCb7`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronBannerSmall_LCb7`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCb7"): Rawcode<"doodad">;
+
+/**
+ * Throneroom Banner Large Half (`LCb8`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ThroneroomBannerLargeHalf_LCb8`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCb8"): Rawcode<"doodad">;
+
+/**
+ * Cliff Cave (`LCc0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CliffCave_LCc0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCc0"): Rawcode<"doodad">;
+
+/**
+ * Cliff Cave 2 (`LCc2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CliffCave2_LCc2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCc2"): Rawcode<"doodad">;
+
+/**
+ * Capital Bridge (`LCcb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CapitalBridge_LCcb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCcb"): Rawcode<"doodad">;
+
+/**
+ * Capital Door Ornate (`LCcd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CapitalDoorOrnate_LCcd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCcd"): Rawcode<"doodad">;
+
+/**
+ * Capital Door Plain (`LCcp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CapitalDoorPlain_LCcp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCcp"): Rawcode<"doodad">;
+
+/**
+ * Crater Wall (`LCcr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CraterWall_LCcr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCcr"): Rawcode<"doodad">;
+
+/**
+ * Capital Tower (`LCct`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CapitalTower_LCct`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCct"): Rawcode<"doodad">;
+
+/**
+ * Lordaeron Entrance (`LCet`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronEntrance_LCet`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCet"): Rawcode<"doodad">;
+
+/**
+ * ThroneRoom Hero Floor (`LChf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ThroneRoomHeroFloor_LChf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LChf"): Rawcode<"doodad">;
+
+/**
+ * Capital Bridge Large (`LClb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CapitalBridgeLarge_LClb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LClb"): Rawcode<"doodad">;
+
+/**
+ * Capital Tower Large (`LClt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CapitalTowerLarge_LClt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LClt"): Rawcode<"doodad">;
+
+/**
+ * Modular Stair (`LCms`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ModularStair_LCms`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCms"): Rawcode<"doodad">;
+
+/**
+ * Palace Arch (`LCpa`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PalaceArch_LCpa`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCpa"): Rawcode<"doodad">;
+
+/**
+ * Palace Doorway (`LCpd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PalaceDoorway_LCpd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCpd"): Rawcode<"doodad">;
+
+/**
+ * Pillar Endcap (`LCpe`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PillarEndcap_LCpe`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCpe"): Rawcode<"doodad">;
+
+/**
+ * Pillar Interior (`LCpi`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PillarInterior_LCpi`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCpi"): Rawcode<"doodad">;
+
+/**
+ * Palace Pillar (`LCpr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PalacePillar_LCpr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCpr"): Rawcode<"doodad">;
+
+/**
+ * Pillar Short (`LCps`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PillarShort_LCps`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCps"): Rawcode<"doodad">;
+
+/**
+ * Pillar Tall (`LCpt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PillarTall_LCpt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCpt"): Rawcode<"doodad">;
+
+/**
+ * Statue Broken (`LCsb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StatueBroken_LCsb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCsb"): Rawcode<"doodad">;
+
+/**
+ * Throneroom Sculpture (`LCsc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ThroneroomSculpture_LCsc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCsc"): Rawcode<"doodad">;
+
+/**
+ * Statue Shield (`LCsd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StatueShield_LCsd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCsd"): Rawcode<"doodad">;
+
+/**
+ * Statue Sword (`LCss`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StatueSword_LCss`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCss"): Rawcode<"doodad">;
+
+/**
+ * Stair (`LCst`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Stair_LCst`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCst"): Rawcode<"doodad">;
+
+/**
+ * Statue Sword Base (`LCsx`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StatueSwordBase_LCsx`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCsx"): Rawcode<"doodad">;
+
+/**
+ * Throneroom Wall BackEnd (`LCtb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ThroneroomWallBackEnd_LCtb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCtb"): Rawcode<"doodad">;
+
+/**
+ * Terenas Crown (`LCtc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TerenasCrown_LCtc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCtc"): Rawcode<"doodad">;
+
+/**
+ * Throneroom Wall Entrance (`LCte`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ThroneroomWallEntrance_LCte`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCte"): Rawcode<"doodad">;
+
+/**
+ * Lordaeron Throne (`LCth`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronThrone_LCth`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCth"): Rawcode<"doodad">;
+
+/**
+ * Lordearon Planter (`LCtp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordearonPlanter_LCtp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCtp"): Rawcode<"doodad">;
+
+/**
+ * Terenas (`LCtr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Terenas_LCtr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCtr"): Rawcode<"doodad">;
+
+/**
+ * Throneroom Wall Balcony (`LCtw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ThroneroomWallBalcony_LCtw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCtw"): Rawcode<"doodad">;
+
+/**
+ * Lordaeron Window (`LCwd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronWindow_LCwd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCwd"): Rawcode<"doodad">;
+
+/**
+ * Palace Wall Interior (`LCwi`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PalaceWallInterior_LCwi`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCwi"): Rawcode<"doodad">;
+
+/**
+ * Palace Wall Short (`LCws`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PalaceWallShort_LCws`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCws"): Rawcode<"doodad">;
+
+/**
+ * Palace Wall Tall (`LCwt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PalaceWallTall_LCwt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCwt"): Rawcode<"doodad">;
+
+/**
+ * Palace Wall Statue (`LCwv`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PalaceWallStatue_LCwv`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LCwv"): Rawcode<"doodad">;
+
+/**
+ * Fall Grass (`LFgs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FallGrass_LFgs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LFgs"): Rawcode<"doodad">;
+
+/**
+ * Rack Armor (`LOam`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RackArmor_LOam`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOam"): Rawcode<"doodad">;
+
+/**
+ * Archery Target (`LOar`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArcheryTarget_LOar`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOar"): Rawcode<"doodad">;
+
+/**
+ * Brazier (`LObr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Brazier_LObr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LObr"): Rawcode<"doodad">;
+
+/**
+ * Lordaeron Bookshelf (`LObs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronBookshelf_LObs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LObs"): Rawcode<"doodad">;
+
+/**
+ * Brazier Glowing (`LObz`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BrazierGlowing_LObz`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LObz"): Rawcode<"doodad">;
+
+/**
+ * Cauldron with heads (`LOca`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CauldronWithHeads_LOca`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOca"): Rawcode<"doodad">;
+
+/**
+ * Hay Cart Broken (`LOcb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.HayCartBroken_LOcb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOcb"): Rawcode<"doodad">;
+
+/**
+ * Cage Empty (`LOce`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CageEmpty_LOce`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOce"): Rawcode<"doodad">;
+
+/**
+ * LordaeronCathedral Fence (`LOcf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronCathedralFence_LOcf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOcf"): Rawcode<"doodad">;
+
+/**
+ * Hay Cart (`LOch`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.HayCart_LOch`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOch"): Rawcode<"doodad">;
+
+/**
+ * LordaeronCathedral Pillar (`LOcl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronCathedralPillar_LOcl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOcl"): Rawcode<"doodad">;
+
+/**
+ * Lordaeron Carpet (`LOcp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronCarpet_LOcp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOcp"): Rawcode<"doodad">;
+
+/**
+ * Cage Trashed (`LOct`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CageTrashed_LOct`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOct"): Rawcode<"doodad">;
+
+/**
+ * LordaeronCathedral Wall (`LOcw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronCathedralWall_LOcw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOcw"): Rawcode<"doodad">;
+
+/**
+ * Flies (`LOfl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Flies_LOfl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOfl"): Rawcode<"doodad">;
+
+/**
+ * Lordaeron Furniture (`LOfn`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronFurniture_LOfn`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOfn"): Rawcode<"doodad">;
+
+/**
+ * Grave (`LOgr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Grave_LOgr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOgr"): Rawcode<"doodad">;
+
+/**
+ * Banner Human (`LOh1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BannerHuman_LOh1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOh1"): Rawcode<"doodad">;
+
+/**
+ * Hay (`LOhb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Hay_LOhb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOhb"): Rawcode<"doodad">;
+
+/**
+ * Hay Clump (`LOhc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.HayClump_LOhc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOhc"): Rawcode<"doodad">;
+
+/**
+ * Post Hitching (`LOhp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PostHitching_LOhp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOhp"): Rawcode<"doodad">;
+
+/**
+ * Corpse Impaled (`LOic`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CorpseImpaled_LOic`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOic"): Rawcode<"doodad">;
+
+/**
+ * Post Lantern (`LOlp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PostLantern_LOlp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOlp"): Rawcode<"doodad">;
+
+/**
+ * Misc Props (`LOmp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MiscProps_LOmp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOmp"): Rawcode<"doodad">;
+
+/**
+ * Banner Orc (`LOo1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BannerOrc_LOo1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOo1"): Rawcode<"doodad">;
+
+/**
+ * Banner Tutorial Orc (`LOo2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BannerTutorialOrc_LOo2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOo2"): Rawcode<"doodad">;
+
+/**
+ * Grave Peasant (`LOpg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GravePeasant_LOpg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOpg"): Rawcode<"doodad">;
+
+/**
+ * Bones Rib (`LOrb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BonesRib_LOrb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOrb"): Rawcode<"doodad">;
+
+/**
+ * Hay Cart (Infected) (`LOrc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.HayCartInfected_LOrc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOrc"): Rawcode<"doodad">;
+
+/**
+ * Hay (Infected) (`LOrh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.HayInfected_LOrh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOrh"): Rawcode<"doodad">;
+
+/**
+ * LordaeronCathedral Stair (`LOsa`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronCathedralStair_LOsa`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOsa"): Rawcode<"doodad">;
+
+/**
+ * Corpse Sitting (`LOsc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CorpseSitting_LOsc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOsc"): Rawcode<"doodad">;
+
+/**
+ * Head on Spear (`LOsh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.HeadOnSpear_LOsh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOsh"): Rawcode<"doodad">;
+
+/**
+ * Skull Pile (`LOsk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SkullPile_LOsk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOsk"): Rawcode<"doodad">;
+
+/**
+ * Smoke Smudge (`LOsm`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SmokeSmudge_LOsm`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOsm"): Rawcode<"doodad">;
+
+/**
+ * Post Sign (`LOsp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PostSign_LOsp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOsp"): Rawcode<"doodad">;
+
+/**
+ * Skulls on Sticks (`LOss`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SkullsOnSticks_LOss`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOss"): Rawcode<"doodad">;
+
+/**
+ * Stairsteps (`LOst`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Stairsteps_LOst`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOst"): Rawcode<"doodad">;
+
+/**
+ * Wall Stone (`LOsw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStone_LOsw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOsw"): Rawcode<"doodad">;
+
+/**
+ * Trash (`LOt1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Trash_LOt1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOt1"): Rawcode<"doodad">;
+
+/**
+ * Torch (`LOth`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Torch_LOth`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOth"): Rawcode<"doodad">;
+
+/**
+ * Trough (`LOtr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Trough_LOtr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOtr"): Rawcode<"doodad">;
+
+/**
+ * Torch Glowing (`LOtz`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TorchGlowing_LOtz`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOtz"): Rawcode<"doodad">;
+
+/**
+ * Wheelbarrow (`LOwb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Wheelbarrow_LOwb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOwb"): Rawcode<"doodad">;
+
+/**
+ * Lordaeron Wall Deco (`LOwd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronWallDeco_LOwd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOwd"): Rawcode<"doodad">;
+
+/**
+ * Wall Fountain (`LOwf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallFountain_LOwf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOwf"): Rawcode<"doodad">;
+
+/**
+ * Rack Weapon (`LOwp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RackWeapon_LOwp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOwp"): Rawcode<"doodad">;
+
+/**
+ * Wheelbarrow Broken (`LOwr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WheelbarrowBroken_LOwr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOwr"): Rawcode<"doodad">;
+
+/**
+ * Hay Cart Broken (Infected) (`LOxx`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.HayCartBrokenInfected_LOxx`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LOxx"): Rawcode<"doodad">;
+
+/**
+ * Corn (`LPcr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Corn_LPcr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LPcr"): Rawcode<"doodad">;
+
+/**
+ * Grain Scorched (`LPcw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GrainScorched_LPcw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LPcw"): Rawcode<"doodad">;
+
+/**
+ * Lily Pads Floating (`LPfp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LilyPadsFloating_LPfp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LPfp"): Rawcode<"doodad">;
+
+/**
+ * Grass Patch (`LPgp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GrassPatch_LPgp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LPgp"): Rawcode<"doodad">;
+
+/**
+ * Lily Pad (`LPlp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LilyPad_LPlp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LPlp"): Rawcode<"doodad">;
+
+/**
+ * River Rushes (`LPrs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RiverRushes_LPrs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LPrs"): Rawcode<"doodad">;
+
+/**
+ * Wheat Bunch (`LPwb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WheatBunch_LPwb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LPwb"): Rawcode<"doodad">;
+
+/**
+ * Wheat (`LPwh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Wheat_LPwh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LPwh"): Rawcode<"doodad">;
+
+/**
+ * Rocks (`LRrk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rocks_LRrk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LRrk"): Rawcode<"doodad">;
+
+/**
+ * LordaeronStanding Banners (`LRsb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LordaeronStandingBanners_LRsb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LRsb"): Rawcode<"doodad">;
+
+/**
+ * Simple Rocks (`LRsr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SimpleRocks_LRsr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LRsr"): Rawcode<"doodad">;
+
+/**
+ * Barn (`LSba`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Barn_LSba`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSba"): Rawcode<"doodad">;
+
+/**
+ * Elven Building (`LSeb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ElvenBuilding_LSeb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSeb"): Rawcode<"doodad">;
+
+/**
+ * Summer Grass (`LSga`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SummerGrass_LSga`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSga"): Rawcode<"doodad">;
+
+/**
+ * Granary (`LSgr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Granary_LSgr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSgr"): Rawcode<"doodad">;
+
+/**
+ * Granary Scorched (`LSgs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GranaryScorched_LSgs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSgs"): Rawcode<"doodad">;
+
+/**
+ * Inn (`LSin`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Inn_LSin`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSin"): Rawcode<"doodad">;
+
+/**
+ * Palisade (`LSpl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Palisade_LSpl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSpl"): Rawcode<"doodad">;
+
+/**
+ * Rock Archway Diagonal (`LSr1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockArchwayDiagonal_LSr1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSr1"): Rawcode<"doodad">;
+
+/**
+ * Rock Archway (`LSra`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockArchway_LSra`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSra"): Rawcode<"doodad">;
+
+/**
+ * Ruined Goblin Shipyard (`LSrg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedGoblinShipyard_LSrg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSrg"): Rawcode<"doodad">;
+
+/**
+ * Barn Scorched (`LSsb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BarnScorched_LSsb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSsb"): Rawcode<"doodad">;
+
+/**
+ * Farm Scorched (`LSsf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FarmScorched_LSsf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSsf"): Rawcode<"doodad">;
+
+/**
+ * Inn Scorched (`LSsi`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.InnScorched_LSsi`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSsi"): Rawcode<"doodad">;
+
+/**
+ * Tower Scorched (`LSst`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TowerScorched_LSst`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSst"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Tower (X-Large) (`LSt0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonTowerXLarge_LSt0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSt0"): Rawcode<"doodad">;
+
+/**
+ * Windmill Burned (`LSwb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WindmillBurned_LSwb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSwb"): Rawcode<"doodad">;
+
+/**
+ * Well (`LSwl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Well_LSwl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSwl"): Rawcode<"doodad">;
+
+/**
+ * Windmill (`LSwm`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Windmill_LSwm`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LSwm"): Rawcode<"doodad">;
+
+/**
+ * Waterfall (`LWw0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Waterfall_LWw0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LWw0"): Rawcode<"doodad">;
+
+/**
+ * Thrall's Hut (`LZth`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ThrallsHut_LZth`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "LZth"): Rawcode<"doodad">;
+
+/**
+ * Capital Entrance (`Lccn`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CapitalEntrance_Lccn`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "Lccn"): Rawcode<"doodad">;
+
+/**
+ * Statue Shield Base (`Lcsy`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StatueShieldBase_Lcsy`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "Lcsy"): Rawcode<"doodad">;
+
+/**
+ * Magus Conservatory (`MC00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MagusConservatory_MC00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "MC00"): Rawcode<"doodad">;
+
+/**
+ * Magus Highrise (`MH00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MagusHighrise_MH00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "MH00"): Rawcode<"doodad">;
+
+/**
+ * Magus Turret (`MT00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MagusTurret_MT00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "MT00"): Rawcode<"doodad">;
+
+/**
+ * Fence Angled (`NOal`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FenceAngled_NOal`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NOal"): Rawcode<"doodad">;
+
+/**
+ * Column Broken (`NObc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnBroken_NObc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NObc"): Rawcode<"doodad">;
+
+/**
+ * Obelisk Broken (`NObk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ObeliskBroken_NObk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NObk"): Rawcode<"doodad">;
+
+/**
+ * Bones (`NObo`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Bones_NObo`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NObo"): Rawcode<"doodad">;
+
+/**
+ * Bats (`NObt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Bats_NObt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NObt"): Rawcode<"doodad">;
+
+/**
+ * Fire Pit with Pig (`NOfg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FirePitWithPig_NOfg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NOfg"): Rawcode<"doodad">;
+
+/**
+ * Fence (`NOfl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Fence_NOfl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NOfl"): Rawcode<"doodad">;
+
+/**
+ * Fire Pit (`NOfp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FirePit_NOfp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NOfp"): Rawcode<"doodad">;
+
+/**
+ * Fire Pit Trashed (`NOft`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FirePitTrashed_NOft`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NOft"): Rawcode<"doodad">;
+
+/**
+ * Grave Stone (`NOgv`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GraveStone_NOgv`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NOgv"): Rawcode<"doodad">;
+
+/**
+ * Obelisk (`NOok`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Obelisk_NOok`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NOok"): Rawcode<"doodad">;
+
+/**
+ * Tombstone (`NOtb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Tombstone_NOtb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NOtb"): Rawcode<"doodad">;
+
+/**
+ * Vines Thorny (`NPth`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.VinesThorny_NPth`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NPth"): Rawcode<"doodad">;
+
+/**
+ * Fissure (`NRfs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Fissure_NRfs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NRfs"): Rawcode<"doodad">;
+
+/**
+ * Ice Claws (`NRic`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.IceClaws_NRic`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NRic"): Rawcode<"doodad">;
+
+/**
+ * Rocks (`NRrk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rocks_NRrk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NRrk"): Rawcode<"doodad">;
+
+/**
+ * Rocks Webbed (`NRwr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RocksWebbed_NRwr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NRwr"): Rawcode<"doodad">;
+
+/**
+ * Crypt (`NSct`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Crypt_NSct`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NSct"): Rawcode<"doodad">;
+
+/**
+ * Archway Angled (`NSr1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayAngled_NSr1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NSr1"): Rawcode<"doodad">;
+
+/**
+ * Archway (`NSra`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Archway_NSra`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NSra"): Rawcode<"doodad">;
+
+/**
+ * Rubble (`NSrb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rubble_NSrb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NSrb"): Rawcode<"doodad">;
+
+/**
+ * Ice Floe (`NWf1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.IceFloe_NWf1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWf1"): Rawcode<"doodad">;
+
+/**
+ * Ice Floe (`NWf2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.IceFloe_NWf2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWf2"): Rawcode<"doodad">;
+
+/**
+ * Ice Floe (`NWf3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.IceFloe_NWf3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWf3"): Rawcode<"doodad">;
+
+/**
+ * Ice Floe (`NWf4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.IceFloe_NWf4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWf4"): Rawcode<"doodad">;
+
+/**
+ * Floating Box (`NWfb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FloatingBox_NWfb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWfb"): Rawcode<"doodad">;
+
+/**
+ * Floating Barrel (`NWfl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FloatingBarrel_NWfl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWfl"): Rawcode<"doodad">;
+
+/**
+ * Floating Plank (`NWfp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FloatingPlank_NWfp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWfp"): Rawcode<"doodad">;
+
+/**
+ * Iceberg (`NWi1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Iceberg_NWi1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWi1"): Rawcode<"doodad">;
+
+/**
+ * Iceberg (`NWi2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Iceberg_NWi2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWi2"): Rawcode<"doodad">;
+
+/**
+ * Iceberg (`NWi3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Iceberg_NWi3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWi3"): Rawcode<"doodad">;
+
+/**
+ * Iceberg (`NWi4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Iceberg_NWi4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWi4"): Rawcode<"doodad">;
+
+/**
+ * Floating Panel (`NWpa`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FloatingPanel_NWpa`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWpa"): Rawcode<"doodad">;
+
+/**
+ * Rowboat Destroyed (`NWrd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RowboatDestroyed_NWrd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWrd"): Rawcode<"doodad">;
+
+/**
+ * Rowboat (`NWrw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rowboat_NWrw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWrw"): Rawcode<"doodad">;
+
+/**
+ * Ship Destroyed (`NWsd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ShipDestroyed_NWsd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWsd"): Rawcode<"doodad">;
+
+/**
+ * Ship (`NWsp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Ship_NWsp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWsp"): Rawcode<"doodad">;
+
+/**
+ * Whale (`NWwh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Whale_NWwh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "NWwh"): Rawcode<"doodad">;
+
+/**
+ * Altar (`OOal`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Altar_OOal`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "OOal"): Rawcode<"doodad">;
+
+/**
+ * Flame Grate (`OOgr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FlameGrate_OOgr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "OOgr"): Rawcode<"doodad">;
+
+/**
+ * Obstacle (`OOob`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Obstacle_OOob`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "OOob"): Rawcode<"doodad">;
+
+/**
+ * Standard (`OOsd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Standard_OOsd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "OOsd"): Rawcode<"doodad">;
+
+/**
+ * Skull (`OOsk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Skull_OOsk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "OOsk"): Rawcode<"doodad">;
+
+/**
+ * Stake (`OOst`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Stake_OOst`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "OOst"): Rawcode<"doodad">;
+
+/**
+ * Outland Plants (`OPop`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.OutlandPlants_OPop`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "OPop"): Rawcode<"doodad">;
+
+/**
+ * Rocks Floating (`ORfk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RocksFloating_ORfk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ORfk"): Rawcode<"doodad">;
+
+/**
+ * Rock Magma (`ORmk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockMagma_ORmk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ORmk"): Rawcode<"doodad">;
+
+/**
+ * Rocks (`ORrk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rocks_ORrk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ORrk"): Rawcode<"doodad">;
+
+/**
+ * Rubble (`ORrr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rubble_ORrr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ORrr"): Rawcode<"doodad">;
+
+/**
+ * Rock Spires (`ORrs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockSpires_ORrs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ORrs"): Rawcode<"doodad">;
+
+/**
+ * Archway Angled Outland (`OSa1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayAngledOutland_OSa1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "OSa1"): Rawcode<"doodad">;
+
+/**
+ * Archway Outland (`OSar`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayOutland_OSar`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "OSar"): Rawcode<"doodad">;
+
+/**
+ * Rocks Cluster Floating (`OZfc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RocksClusterFloating_OZfc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "OZfc"): Rawcode<"doodad">;
+
+/**
+ * Shimmering Portal (`OZsp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ShimmeringPortal_OZsp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "OZsp"): Rawcode<"doodad">;
+
+/**
+ * Pyrewood Village Clock Tower (Destroyed) (`PVct`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PyrewoodVillageClockTowerDestroyed_PVct`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "PVct"): Rawcode<"doodad">;
+
+/**
+ * Runeweaver Square Fountain (`RSf0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuneweaverSquareFountain_RSf0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "RSf0"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Archway (`SA00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonArchway_SA00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SA00"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Archway (45) (`SA01`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonArchway45_SA01`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SA01"): Rawcode<"doodad">;
+
+/**
+ * Statue of Azshara (`SA02`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StatueOfAzshara_SA02`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SA02"): Rawcode<"doodad">;
+
+/**
+ * Sunreaver Archway (`SA03`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SunreaverArchway_SA03`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SA03"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Archway Entrance (`SAe0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonArchwayEntrance_SAe0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SAe0"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Archway Entrance (45) (`SAe1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonArchwayEntrance45_SAe1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SAe1"): Rawcode<"doodad">;
+
+/**
+ * ScarletCrusadeStandingBanners (`SCsb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ScarletCrusadeStandingBanners_SCsb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SCsb"): Rawcode<"doodad">;
+
+/**
+ * Strahnbrad Clock Tower (`SCt0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StrahnbradClockTower_SCt0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SCt0"): Rawcode<"doodad">;
+
+/**
+ * Sunreaver Dome (`SD00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SunreaverDome_SD00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SD00"): Rawcode<"doodad">;
+
+/**
+ * Sunreaver Dome (Small) (`SDs0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SunreaverDomeSmall_SDs0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SDs0"): Rawcode<"doodad">;
+
+/**
+ * SilverHandStandingBanners (`SHsb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilverHandStandingBanners_SHsb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SHsb"): Rawcode<"doodad">;
+
+/**
+ * Strahnbrad Large Tree (`SLt0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StrahnbradLargeTree_SLt0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SLt0"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Buildings (Diagonal 1) (`SRbc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonBuildingsDiagonal1_SRbc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SRbc"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Buildings (Diagonal 2) (`SRbe`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonBuildingsDiagonal2_SRbe`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SRbe"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Buildings (Horizontal) (`SRbh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonBuildingsHorizontal_SRbh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SRbh"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Buildings (Vertical) (`SRbv`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonBuildingsVertical_SRbv`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SRbv"): Rawcode<"doodad">;
+
+/**
+ * Sunreaver Spire (`SS00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SunreaverSpire_SS00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SS00"): Rawcode<"doodad">;
+
+/**
+ * Sunfury Spire Main Tower (`SSmt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SunfurySpireMainTower_SSmt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SSmt"): Rawcode<"doodad">;
+
+/**
+ * Sunfury Spire Side Tower (`SSst`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SunfurySpireSideTower_SSst`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SSst"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Tower (Large) (`STdl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonTowerLarge_STdl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "STdl"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Tower (Medium) (`STdm`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonTowerMedium_STdm`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "STdm"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Tower (Small) (`STds`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonTowerSmall_STds`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "STds"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Wall Corner (`SWc0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonWallCorner_SWc0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SWc0"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Wall Endcap (`SWe0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonWallEndcap_SWe0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SWe0"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Wall (`SWs0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonWall_SWs0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SWs0"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Wall Door (`SWsd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonWallDoor_SWsd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SWsd"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Wall Door (Short) (`SWse`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonWallDoorShort_SWse`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SWse"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Wall (Long) (`SWsl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonWallLong_SWsl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SWsl"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Wall (Short) (`SWss`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonWallShort_SWss`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SWss"): Rawcode<"doodad">;
+
+/**
+ * Silvermoon Wall_T (`SWt0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SilvermoonWallT_SWt0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "SWt0"): Rawcode<"doodad">;
+
+/**
+ * Team Color Standing Banners (`TCsb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TeamColorStandingBanners_TCsb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "TCsb"): Rawcode<"doodad">;
+
+/**
+ * Undercity Arch A (`UCaa`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityArchA_UCaa`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCaa"): Rawcode<"doodad">;
+
+/**
+ * Arch Large (`UCal`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchLarge_UCal`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCal"): Rawcode<"doodad">;
+
+/**
+ * ForsakenBanner (`UCbn`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ForsakenBanner_UCbn`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCbn"): Rawcode<"doodad">;
+
+/**
+ * Draw Bridge (`UCbr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.DrawBridge_UCbr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCbr"): Rawcode<"doodad">;
+
+/**
+ * Plague Cauldron (`UCca`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PlagueCauldron_UCca`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCca"): Rawcode<"doodad">;
+
+/**
+ * Cell Door (`UCcd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CellDoor_UCcd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCcd"): Rawcode<"doodad">;
+
+/**
+ * Pipe Console Closed (`UCda`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PipeConsoleClosed_UCda`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCda"): Rawcode<"doodad">;
+
+/**
+ * Pipe Console Open (`UCdb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PipeConsoleOpen_UCdb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCdb"): Rawcode<"doodad">;
+
+/**
+ * Dark Pipe Divider Horizontal (`UCdc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.DarkPipeDividerHorizontal_UCdc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCdc"): Rawcode<"doodad">;
+
+/**
+ * Dark Pipe Divider Vertical (`UCdd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.DarkPipeDividerVertical_UCdd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCdd"): Rawcode<"doodad">;
+
+/**
+ * Dark Pipe Long Vertical 01 (`UCde`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.DarkPipeLongVertical01_UCde`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCde"): Rawcode<"doodad">;
+
+/**
+ * Dark Pipe Long Vertical 02 (`UCdf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.DarkPipeLongVertical02_UCdf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCdf"): Rawcode<"doodad">;
+
+/**
+ * Dark Pipe Long Horizontal 01 (`UCdg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.DarkPipeLongHorizontal01_UCdg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCdg"): Rawcode<"doodad">;
+
+/**
+ * Dark Pipe Long Horizontal 02 (`UCdh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.DarkPipeLongHorizontal02_UCdh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCdh"): Rawcode<"doodad">;
+
+/**
+ * Dark Pipe Horizontal Straight (`UCdi`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.DarkPipeHorizontalStraight_UCdi`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCdi"): Rawcode<"doodad">;
+
+/**
+ * Dark Pipe Vertical Straight (`UCdj`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.DarkPipeVerticalStraight_UCdj`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCdj"): Rawcode<"doodad">;
+
+/**
+ * Path End Large (`UCel`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PathEndLarge_UCel`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCel"): Rawcode<"doodad">;
+
+/**
+ * Path End Small (`UCes`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PathEndSmall_UCes`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCes"): Rawcode<"doodad">;
+
+/**
+ * Green Pipe Corner 01 (`UCgc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GreenPipeCorner01_UCgc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCgc"): Rawcode<"doodad">;
+
+/**
+ * Green Pipe Divider (`UCgd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GreenPipeDivider_UCgd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCgd"): Rawcode<"doodad">;
+
+/**
+ * Ground Grate Square (`UCgg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GroundGrateSquare_UCgg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCgg"): Rawcode<"doodad">;
+
+/**
+ * Green Pipe Corner 02 (`UCgo`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GreenPipeCorner02_UCgo`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCgo"): Rawcode<"doodad">;
+
+/**
+ * Ground Grate Round (`UCgr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GroundGrateRound_UCgr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCgr"): Rawcode<"doodad">;
+
+/**
+ * Green Pipe Straight 01 (`UCgs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GreenPipeStraight01_UCgs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCgs"): Rawcode<"doodad">;
+
+/**
+ * Ground Tile (`UCgt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GroundTile_UCgt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCgt"): Rawcode<"doodad">;
+
+/**
+ * Green Pipe Straight 02 (`UCgx`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GreenPipeStraight02_UCgx`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCgx"): Rawcode<"doodad">;
+
+/**
+ * Green Pipe Straight 03 (`UCgy`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GreenPipeStraight03_UCgy`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCgy"): Rawcode<"doodad">;
+
+/**
+ * Undercity Lantern (`UClt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityLantern_UClt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UClt"): Rawcode<"doodad">;
+
+/**
+ * Naxx Arch (`UCna`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NaxxArch_UCna`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCna"): Rawcode<"doodad">;
+
+/**
+ * Naxx Wall B (`UCnb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NaxxWallB_UCnb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCnb"): Rawcode<"doodad">;
+
+/**
+ * Naxx Crystal (`UCnc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NaxxCrystal_UCnc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCnc"): Rawcode<"doodad">;
+
+/**
+ * Naxx Deco (`UCnd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NaxxDeco_UCnd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCnd"): Rawcode<"doodad">;
+
+/**
+ * Naxx Fence (`UCnf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NaxxFence_UCnf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCnf"): Rawcode<"doodad">;
+
+/**
+ * Naxx Generator (`UCng`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NaxxGenerator_UCng`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCng"): Rawcode<"doodad">;
+
+/**
+ * Naxx Pillar (`UCnp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NaxxPillar_UCnp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCnp"): Rawcode<"doodad">;
+
+/**
+ * Naxx Stair (`UCns`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NaxxStair_UCns`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCns"): Rawcode<"doodad">;
+
+/**
+ * Naxx Wall A (`UCnw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NaxxWallA_UCnw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCnw"): Rawcode<"doodad">;
+
+/**
+ * Pathway Corner Left (`UCpc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PathwayCornerLeft_UCpc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCpc"): Rawcode<"doodad">;
+
+/**
+ * Green Pipe Grate Long (`UCpg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GreenPipeGrateLong_UCpg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCpg"): Rawcode<"doodad">;
+
+/**
+ * Pillar (`UCpl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Pillar_UCpl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCpl"): Rawcode<"doodad">;
+
+/**
+ * Pathway Corner Right (`UCpr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PathwayCornerRight_UCpr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCpr"): Rawcode<"doodad">;
+
+/**
+ * Pathway Straight (`UCps`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PathwayStraight_UCps`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCps"): Rawcode<"doodad">;
+
+/**
+ * Green Pipe Grate Short (`UCpx`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GreenPipeGrateShort_UCpx`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCpx"): Rawcode<"doodad">;
+
+/**
+ * Rope Bridge (`UCrb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RopeBridge_UCrb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCrb"): Rawcode<"doodad">;
+
+/**
+ * Naxx Spidergate (`UCsg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NaxxSpidergate_UCsg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCsg"): Rawcode<"doodad">;
+
+/**
+ * Ground Tile Decal (`UCtd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GroundTileDecal_UCtd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCtd"): Rawcode<"doodad">;
+
+/**
+ * Undead Lab (`UCul`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndeadLab_UCul`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCul"): Rawcode<"doodad">;
+
+/**
+ * Wall Curve (`UCwc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallCurve_UCwc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCwc"): Rawcode<"doodad">;
+
+/**
+ * Naxx WallDeco (`UCwd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NaxxWallDeco_UCwd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCwd"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight Half (`UCwh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraightHalf_UCwh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCwh"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight (`UCws`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraight_UCws`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCws"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight Long Half (`UCwx`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraightLongHalf_UCwx`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCwx"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight Short Half (`UCwy`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraightShortHalf_UCwy`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UCwy"): Rawcode<"doodad">;
+
+/**
+ * Mine Hole (`UEmh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MineHole_UEmh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UEmh"): Rawcode<"doodad">;
+
+/**
+ * Mine Rock Wall (`UErw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MineRockWall_UErw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UErw"): Rawcode<"doodad">;
+
+/**
+ * Ruined House (`UFrh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedHouse_UFrh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UFrh"): Rawcode<"doodad">;
+
+/**
+ * Underground Simple Rock (`UGsr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndergroundSimpleRock_UGsr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UGsr"): Rawcode<"doodad">;
+
+/**
+ * Black Box (`UObb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BlackBox_UObb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UObb"): Rawcode<"doodad">;
+
+/**
+ * Undercity Bone Deco (`UObd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityBoneDeco_UObd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UObd"): Rawcode<"doodad">;
+
+/**
+ * Undercity Chair (`UOch`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityChair_UOch`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOch"): Rawcode<"doodad">;
+
+/**
+ * Wooden Coffin (`UOcw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WoodenCoffin_UOcw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOcw"): Rawcode<"doodad">;
+
+/**
+ * Undercity Doorway A (`UOda`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityDoorwayA_UOda`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOda"): Rawcode<"doodad">;
+
+/**
+ * Undercity Deco (`UOdc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityDeco_UOdc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOdc"): Rawcode<"doodad">;
+
+/**
+ * Undercity Door (`UOdo`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityDoor_UOdo`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOdo"): Rawcode<"doodad">;
+
+/**
+ * Undercity Door B (`UOdt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityDoorB_UOdt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOdt"): Rawcode<"doodad">;
+
+/**
+ * Undercity Floor Deco (`UOfd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityFloorDeco_UOfd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOfd"): Rawcode<"doodad">;
+
+/**
+ * Undercity Gate A (`UOga`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityGateA_UOga`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOga"): Rawcode<"doodad">;
+
+/**
+ * Undercity Grate Door (`UOgd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityGrateDoor_UOgd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOgd"): Rawcode<"doodad">;
+
+/**
+ * Undercity Grate Floor (`UOgr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityGrateFloor_UOgr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOgr"): Rawcode<"doodad">;
+
+/**
+ * Mine Track (`UOmt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MineTrack_UOmt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOmt"): Rawcode<"doodad">;
+
+/**
+ * Undercity Pillar A (`UOpa`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityPillarA_UOpa`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOpa"): Rawcode<"doodad">;
+
+/**
+ * Undercity Pillar B (`UOpb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityPillarB_UOpb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOpb"): Rawcode<"doodad">;
+
+/**
+ * Undercity Pillar C (`UOpc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityPillarC_UOpc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOpc"): Rawcode<"doodad">;
+
+/**
+ * Undercity Pillar D (`UOpd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityPillarD_UOpd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOpd"): Rawcode<"doodad">;
+
+/**
+ * Volumetric Fog (`UOvf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.VolumetricFog_UOvf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOvf"): Rawcode<"doodad">;
+
+/**
+ * White Box (`UOwb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WhiteBox_UOwb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UOwb"): Rawcode<"doodad">;
+
+/**
+ * Cinematic Altar of Darkness (`USad`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CinematicAltarOfDarkness_USad`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "USad"): Rawcode<"doodad">;
+
+/**
+ * Undercity Bridge A (`USba`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityBridgeA_USba`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "USba"): Rawcode<"doodad">;
+
+/**
+ * Undercity Floor A (`USfa`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityFloorA_USfa`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "USfa"): Rawcode<"doodad">;
+
+/**
+ * Undercity Floor B (`USfb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityFloorB_USfb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "USfb"): Rawcode<"doodad">;
+
+/**
+ * Undercity Outer Ring (`USta`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityOuterRing_USta`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "USta"): Rawcode<"doodad">;
+
+/**
+ * Undercity Tower B (`UStb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityTowerB_UStb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UStb"): Rawcode<"doodad">;
+
+/**
+ * Undercity Trap Floor (`UStf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityTrapFloor_UStf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "UStf"): Rawcode<"doodad">;
+
+/**
+ * Undercity Wall A (`USwa`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.UndercityWallA_USwa`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "USwa"): Rawcode<"doodad">;
+
+/**
+ * Violet Hold Archway Endpiece (`VHae`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.VioletHoldArchwayEndpiece_VHae`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "VHae"): Rawcode<"doodad">;
+
+/**
+ * VioletHoldMainStructure (`VHms`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.VioletHoldMainStructure_VHms`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "VHms"): Rawcode<"doodad">;
+
+/**
+ * Violet Hold Spire (`VHs0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.VioletHoldSpire_VHs0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "VHs0"): Rawcode<"doodad">;
+
+/**
+ * Violet Hold Spire (Small) (`VHss`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.VioletHoldSpireSmall_VHss`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "VHss"): Rawcode<"doodad">;
+
+/**
+ * Fence Angled Long (`VOal`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FenceAngledLong_VOal`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "VOal"): Rawcode<"doodad">;
+
+/**
+ * Fence Angled Short (`VOas`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FenceAngledShort_VOas`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "VOas"): Rawcode<"doodad">;
+
+/**
+ * Fence Long (`VOfl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FenceLong_VOfl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "VOfl"): Rawcode<"doodad">;
+
+/**
+ * Fence Short (`VOfs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FenceShort_VOfs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "VOfs"): Rawcode<"doodad">;
+
+/**
+ * Building (`VSvb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Building_VSvb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "VSvb"): Rawcode<"doodad">;
+
+/**
+ * Wall 90 Degree (`WD00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Wall90Degree_WD00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "WD00"): Rawcode<"doodad">;
+
+/**
+ * Wall Endcap (`WE00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallEndcap_WE00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "WE00"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight (`WS00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraight_WS00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "WS00"): Rawcode<"doodad">;
+
+/**
+ * Wall Spire (`WS01`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallSpire_WS01`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "WS01"): Rawcode<"doodad">;
+
+/**
+ * Wall Spire Alt (`WSa0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallSpireAlt_WSa0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "WSa0"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight Long (`WSl0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraightLong_WSl0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "WSl0"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight Short (`WSs0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraightShort_WSs0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "WSs0"): Rawcode<"doodad">;
+
+/**
+ * Wall T (`WT00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallT_WT00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "WT00"): Rawcode<"doodad">;
+
+/**
+ * Wall T Alt (`WTa0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallTAlt_WTa0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "WTa0"): Rawcode<"doodad">;
+
+/**
+ * Magical Lantern (`XOcl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MagicalLantern_XOcl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "XOcl"): Rawcode<"doodad">;
+
+/**
+ * Power Generator (`XOcs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PowerGenerator_XOcs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "XOcs"): Rawcode<"doodad">;
+
+/**
+ * Magical Runes (`XOmr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MagicalRunes_XOmr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "XOmr"): Rawcode<"doodad">;
+
+/**
+ * Blood Decals (`YCbd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BloodDecals_YCbd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCbd"): Rawcode<"doodad">;
+
+/**
+ * Broken Floor Decals (`YCbf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BrokenFloorDecals_YCbf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCbf"): Rawcode<"doodad">;
+
+/**
+ * Brick Debris (`YCbr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BrickDebris_YCbr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCbr"): Rawcode<"doodad">;
+
+/**
+ * Cave City Cliff (North Right) (`YCc1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CaveCityCliffNorthRight_YCc1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCc1"): Rawcode<"doodad">;
+
+/**
+ * Cave City Cliff (North Left) (`YCc2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CaveCityCliffNorthLeft_YCc2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCc2"): Rawcode<"doodad">;
+
+/**
+ * Cave City Cliff (West) (`YCc3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CaveCityCliffWest_YCc3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCc3"): Rawcode<"doodad">;
+
+/**
+ * Cave City Cliff (East) (`YCc4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CaveCityCliffEast_YCc4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCc4"): Rawcode<"doodad">;
+
+/**
+ * Ruined City Cliff (North) (`YCd1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedCityCliffNorth_YCd1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCd1"): Rawcode<"doodad">;
+
+/**
+ * Ruined City Cliff (East) (`YCd2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedCityCliffEast_YCd2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCd2"): Rawcode<"doodad">;
+
+/**
+ * Ruined City Cliff (South) (`YCd3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedCityCliffSouth_YCd3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCd3"): Rawcode<"doodad">;
+
+/**
+ * Ruined City Cliff (West) (`YCd4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedCityCliffWest_YCd4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCd4"): Rawcode<"doodad">;
+
+/**
+ * Wood Debris 01 (`YCda`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WoodDebris01_YCda`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCda"): Rawcode<"doodad">;
+
+/**
+ * Wood Debris 02 (`YCdb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WoodDebris02_YCdb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCdb"): Rawcode<"doodad">;
+
+/**
+ * Wood Debris 03 (`YCdc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WoodDebris03_YCdc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCdc"): Rawcode<"doodad">;
+
+/**
+ * Wood Debris 04 (`YCdd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WoodDebris04_YCdd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCdd"): Rawcode<"doodad">;
+
+/**
+ * Wood Debris Barrels 01 (`YCde`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WoodDebrisBarrels01_YCde`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCde"): Rawcode<"doodad">;
+
+/**
+ * Wood Debris Barrels 02 (`YCdf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WoodDebrisBarrels02_YCdf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCdf"): Rawcode<"doodad">;
+
+/**
+ * Wood Debris Barrels 03 (`YCdg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WoodDebrisBarrels03_YCdg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCdg"): Rawcode<"doodad">;
+
+/**
+ * Slide Natural Cliff (North) (`YCg1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideNaturalCliffNorth_YCg1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCg1"): Rawcode<"doodad">;
+
+/**
+ * Slide Natural Cliff (East) (`YCg2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideNaturalCliffEast_YCg2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCg2"): Rawcode<"doodad">;
+
+/**
+ * Slide Natural Cliff (South) (`YCg3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideNaturalCliffSouth_YCg3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCg3"): Rawcode<"doodad">;
+
+/**
+ * Slide Natural Cliff (West) (`YCg4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideNaturalCliffWest_YCg4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCg4"): Rawcode<"doodad">;
+
+/**
+ * Ruined Natural Cliff Short (North) (`YCl1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedNaturalCliffShortNorth_YCl1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCl1"): Rawcode<"doodad">;
+
+/**
+ * Ruined Natural Cliff Short (East) (`YCl2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedNaturalCliffShortEast_YCl2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCl2"): Rawcode<"doodad">;
+
+/**
+ * Ruined Natural Cliff Short (South) (`YCl3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedNaturalCliffShortSouth_YCl3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCl3"): Rawcode<"doodad">;
+
+/**
+ * Ruined Natural Cliff Short (West) (`YCl4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedNaturalCliffShortWest_YCl4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCl4"): Rawcode<"doodad">;
+
+/**
+ * Slide City Cliff Short (North) (`YCo1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideCityCliffShortNorth_YCo1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCo1"): Rawcode<"doodad">;
+
+/**
+ * Slide City Cliff Short (East) (`YCo2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideCityCliffShortEast_YCo2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCo2"): Rawcode<"doodad">;
+
+/**
+ * Slide City Cliff Short (South) (`YCo3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideCityCliffShortSouth_YCo3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCo3"): Rawcode<"doodad">;
+
+/**
+ * Slide City Cliff Short (West) (`YCo4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideCityCliffShortWest_YCo4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCo4"): Rawcode<"doodad">;
+
+/**
+ * Ruined Natural Cliff (North) (`YCp1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedNaturalCliffNorth_YCp1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCp1"): Rawcode<"doodad">;
+
+/**
+ * Ruined Natural Cliff (East) (`YCp2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedNaturalCliffEast_YCp2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCp2"): Rawcode<"doodad">;
+
+/**
+ * Ruined Natural Cliff (South) (`YCp3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedNaturalCliffSouth_YCp3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCp3"): Rawcode<"doodad">;
+
+/**
+ * Ruined Natural Cliff (West) (`YCp4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedNaturalCliffWest_YCp4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCp4"): Rawcode<"doodad">;
+
+/**
+ * Cave Natural Cliff (North Right) (`YCr1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CaveNaturalCliffNorthRight_YCr1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCr1"): Rawcode<"doodad">;
+
+/**
+ * Cave Natural Cliff (North Left) (`YCr2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CaveNaturalCliffNorthLeft_YCr2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCr2"): Rawcode<"doodad">;
+
+/**
+ * Cave Natural Cliff (West) (`YCr3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CaveNaturalCliffWest_YCr3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCr3"): Rawcode<"doodad">;
+
+/**
+ * Cave Natural Cliff (East) (`YCr4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CaveNaturalCliffEast_YCr4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCr4"): Rawcode<"doodad">;
+
+/**
+ * Slide City Cliff (North) (`YCs1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideCityCliffNorth_YCs1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCs1"): Rawcode<"doodad">;
+
+/**
+ * Slide City Cliff (East) (`YCs2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideCityCliffEast_YCs2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCs2"): Rawcode<"doodad">;
+
+/**
+ * Slide City Cliff (South) (`YCs3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideCityCliffSouth_YCs3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCs3"): Rawcode<"doodad">;
+
+/**
+ * Slide City Cliff (West) (`YCs4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideCityCliffWest_YCs4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCs4"): Rawcode<"doodad">;
+
+/**
+ * Ruined City Cliff Short (North) (`YCt1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedCityCliffShortNorth_YCt1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCt1"): Rawcode<"doodad">;
+
+/**
+ * Ruined City Cliff Short (East) (`YCt2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedCityCliffShortEast_YCt2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCt2"): Rawcode<"doodad">;
+
+/**
+ * Ruined City Cliff Short (South) (`YCt3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedCityCliffShortSouth_YCt3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCt3"): Rawcode<"doodad">;
+
+/**
+ * Ruined City Cliff Short (West) (`YCt4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedCityCliffShortWest_YCt4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCt4"): Rawcode<"doodad">;
+
+/**
+ * Slide Natural Cliff Short (North) (`YCu1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideNaturalCliffShortNorth_YCu1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCu1"): Rawcode<"doodad">;
+
+/**
+ * Slide Natural Cliff Short (East) (`YCu2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideNaturalCliffShortEast_YCu2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCu2"): Rawcode<"doodad">;
+
+/**
+ * Slide Natural Cliff Short (South) (`YCu3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideNaturalCliffShortSouth_YCu3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCu3"): Rawcode<"doodad">;
+
+/**
+ * Slide Natural Cliff Short (West) (`YCu4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SlideNaturalCliffShortWest_YCu4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCu4"): Rawcode<"doodad">;
+
+/**
+ * Water (`YCwa`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Water_YCwa`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCwa"): Rawcode<"doodad">;
+
+/**
+ * Ruined Ground (2x2) (`YCx1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedGround2x2_YCx1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCx1"): Rawcode<"doodad">;
+
+/**
+ * Ruined Ground (2x2) (`YCx2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedGround2x2_YCx2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCx2"): Rawcode<"doodad">;
+
+/**
+ * Ruined Ground (2x2) (`YCx3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedGround2x2_YCx3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCx3"): Rawcode<"doodad">;
+
+/**
+ * Ruined Ground (2x2) (`YCx4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedGround2x2_YCx4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCx4"): Rawcode<"doodad">;
+
+/**
+ * Ruined Ground (4x4) (`YCx5`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedGround4x4_YCx5`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCx5"): Rawcode<"doodad">;
+
+/**
+ * Ruined Ground (4x4) (`YCx6`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedGround4x4_YCx6`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCx6"): Rawcode<"doodad">;
+
+/**
+ * Ruined Ground (4x2) (`YCx7`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedGround4x2_YCx7`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCx7"): Rawcode<"doodad">;
+
+/**
+ * Ruined Ground (4x2) (`YCx8`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedGround4x2_YCx8`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YCx8"): Rawcode<"doodad">;
+
+/**
+ * Alchemy Set (`YOac`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.AlchemySet_YOac`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOac"): Rawcode<"doodad">;
+
+/**
+ * Banner Long Blue (`YObb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BannerLongBlue_YObb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YObb"): Rawcode<"doodad">;
+
+/**
+ * Sign Bob's Guns (`YObg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SignBobsGuns_YObg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YObg"): Rawcode<"doodad">;
+
+/**
+ * Books (`YObk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Books_YObk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YObk"): Rawcode<"doodad">;
+
+/**
+ * Bones (`YObo`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Bones_YObo`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YObo"): Rawcode<"doodad">;
+
+/**
+ * Bench Stone (`YObs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BenchStone_YObs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YObs"): Rawcode<"doodad">;
+
+/**
+ * Bench Wood (`YObw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BenchWood_YObw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YObw"): Rawcode<"doodad">;
+
+/**
+ * Ceiling Chain (`YOch`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CeilingChain_YOch`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOch"): Rawcode<"doodad">;
+
+/**
+ * Camera Prop (`YOcp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CameraProp_YOcp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOcp"): Rawcode<"doodad">;
+
+/**
+ * Meatwagon Corpse (`YOcr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MeatwagonCorpse_YOcr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOcr"): Rawcode<"doodad">;
+
+/**
+ * Detonator (`YOdt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Detonator_YOdt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOdt"): Rawcode<"doodad">;
+
+/**
+ * Crates Empty (`YOec`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CratesEmpty_YOec`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOec"): Rawcode<"doodad">;
+
+/**
+ * Explosives (`YOex`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Explosives_YOex`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOex"): Rawcode<"doodad">;
+
+/**
+ * Trap Side Fire (`YOf1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TrapSideFire_YOf1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOf1"): Rawcode<"doodad">;
+
+/**
+ * Trap Fire (`YOf2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TrapFire_YOf2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOf2"): Rawcode<"doodad">;
+
+/**
+ * Fire Gust (`YOf3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FireGust_YOf3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOf3"): Rawcode<"doodad">;
+
+/**
+ * Fire Blue (`YOfb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FireBlue_YOfb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOfb"): Rawcode<"doodad">;
+
+/**
+ * Fountain (`YOfn`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Fountain_YOfn`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOfn"): Rawcode<"doodad">;
+
+/**
+ * Fountain Ruined (`YOfr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FountainRuined_YOfr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOfr"): Rawcode<"doodad">;
+
+/**
+ * Fire Small (`YOfs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FireSmall_YOfs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOfs"): Rawcode<"doodad">;
+
+/**
+ * Gold (`YOgo`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Gold_YOgo`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOgo"): Rawcode<"doodad">;
+
+/**
+ * Grave (Cityscape) (`YOgr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GraveCityscape_YOgr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOgr"): Rawcode<"doodad">;
+
+/**
+ * Haze (`YOhz`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Haze_YOhz`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOhz"): Rawcode<"doodad">;
+
+/**
+ * Iron Gate (B) (`YOi1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.IronGateB_YOi1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOi1"): Rawcode<"doodad">;
+
+/**
+ * Iron Gate (A) (`YOig`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.IronGateA_YOig`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOig"): Rawcode<"doodad">;
+
+/**
+ * Statue Shieldless (`YOks`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StatueShieldless_YOks`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOks"): Rawcode<"doodad">;
+
+/**
+ * Lightning Bolt (`YOlb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LightningBolt_YOlb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOlb"): Rawcode<"doodad">;
+
+/**
+ * Post Lantern (`YOlp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PostLantern_YOlp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOlp"): Rawcode<"doodad">;
+
+/**
+ * Market Stall (Small) (`YOm1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MarketStallSmall_YOm1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOm1"): Rawcode<"doodad">;
+
+/**
+ * Market Item Baubles (`YOm2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MarketItemBaubles_YOm2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOm2"): Rawcode<"doodad">;
+
+/**
+ * Market Item Baubles (Alt) (`YOm3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MarketItemBaublesAlt_YOm3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOm3"): Rawcode<"doodad">;
+
+/**
+ * Market Item Produce (`YOm4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MarketItemProduce_YOm4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOm4"): Rawcode<"doodad">;
+
+/**
+ * Market Item Produce (Alt) (`YOm5`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MarketItemProduceAlt_YOm5`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOm5"): Rawcode<"doodad">;
+
+/**
+ * Market Item Textiles (`YOm6`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MarketItemTextiles_YOm6`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOm6"): Rawcode<"doodad">;
+
+/**
+ * Market Item Textiles (Alt) (`YOm7`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MarketItemTextilesAlt_YOm7`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOm7"): Rawcode<"doodad">;
+
+/**
+ * City Tower (`YOmb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityTower_YOmb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOmb"): Rawcode<"doodad">;
+
+/**
+ * Market Stall (Large) (`YOms`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.MarketStallLarge_YOms`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOms"): Rawcode<"doodad">;
+
+/**
+ * Naxx Cinematic (`YOna`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.NaxxCinematic_YOna`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOna"): Rawcode<"doodad">;
+
+/**
+ * Obelisk (`YOob`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Obelisk_YOob`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOob"): Rawcode<"doodad">;
+
+/**
+ * Omni Light Orange (`YOol`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.OmniLightOrange_YOol`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOol"): Rawcode<"doodad">;
+
+/**
+ * Pirate Booty (`YOpb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PirateBooty_YOpb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOpb"): Rawcode<"doodad">;
+
+/**
+ * Trap Side Frost (`YOr1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TrapSideFrost_YOr1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOr1"): Rawcode<"doodad">;
+
+/**
+ * Trap Frost (`YOr2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TrapFrost_YOr2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOr2"): Rawcode<"doodad">;
+
+/**
+ * Trap Side Steam (`YOs1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TrapSideSteam_YOs1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOs1"): Rawcode<"doodad">;
+
+/**
+ * Trap Steam (`YOs2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TrapSteam_YOs2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOs2"): Rawcode<"doodad">;
+
+/**
+ * Bench Angled Stone (`YOsa`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BenchAngledStone_YOsa`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOsa"): Rawcode<"doodad">;
+
+/**
+ * Alonsus Chapel (`YOsb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.AlonsusChapel_YOsb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOsb"): Rawcode<"doodad">;
+
+/**
+ * Scarecrow (`YOsc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Scarecrow_YOsc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOsc"): Rawcode<"doodad">;
+
+/**
+ * Spider Web (`YOsp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SpiderWeb_YOsp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOsp"): Rawcode<"doodad">;
+
+/**
+ * King Terenas Statue (`YOss`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.KingTerenasStatue_YOss`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOss"): Rawcode<"doodad">;
+
+/**
+ * Statue (`YOst`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Statue_YOst`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOst"): Rawcode<"doodad">;
+
+/**
+ * Sun Well (`YOsw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SunWell_YOsw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOsw"): Rawcode<"doodad">;
+
+/**
+ * Sign Tracey's Armory (`YOta`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SignTraceysArmory_YOta`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOta"): Rawcode<"doodad">;
+
+/**
+ * Treasure Chest (`YOtc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TreasureChest_YOtc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOtc"): Rawcode<"doodad">;
+
+/**
+ * Fire (`YOtf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Fire_YOtf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOtf"): Rawcode<"doodad">;
+
+/**
+ * Throne (`YOth`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Throne_YOth`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOth"): Rawcode<"doodad">;
+
+/**
+ * Sign Tavern (`YOts`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SignTavern_YOts`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOts"): Rawcode<"doodad">;
+
+/**
+ * Bench Angled Wood (`YOwa`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BenchAngledWood_YOwa`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOwa"): Rawcode<"doodad">;
+
+/**
+ * Banner Long White (`YOwb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.BannerLongWhite_YOwb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOwb"): Rawcode<"doodad">;
+
+/**
+ * Statue White (`YOws`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.StatueWhite_YOws`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YOws"): Rawcode<"doodad">;
+
+/**
+ * Bush (`YPbs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Bush_YPbs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YPbs"): Rawcode<"doodad">;
+
+/**
+ * Flower Bed Angled (`YPfa`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FlowerBedAngled_YPfa`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YPfa"): Rawcode<"doodad">;
+
+/**
+ * Flower Bed Straight (`YPfs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FlowerBedStraight_YPfs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YPfs"): Rawcode<"doodad">;
+
+/**
+ * Potted Plant (`YPpp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PottedPlant_YPpp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YPpp"): Rawcode<"doodad">;
+
+/**
+ * Tree Planter (`YPtp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.TreePlanter_YPtp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YPtp"): Rawcode<"doodad">;
+
+/**
+ * City Building (Diagonal 1, Red) (`YS00`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingDiagonal1Red_YS00`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS00"): Rawcode<"doodad">;
+
+/**
+ * City Building (Diagonal 1, Green) (`YS01`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingDiagonal1Green_YS01`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS01"): Rawcode<"doodad">;
+
+/**
+ * City Building (Diagonal 1, Purple) (`YS02`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingDiagonal1Purple_YS02`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS02"): Rawcode<"doodad">;
+
+/**
+ * City Building (Horizontal, Blue) (`YS03`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingHorizontalBlue_YS03`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS03"): Rawcode<"doodad">;
+
+/**
+ * City Building (Horizontal, Green) (`YS04`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingHorizontalGreen_YS04`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS04"): Rawcode<"doodad">;
+
+/**
+ * City Building (Horizontal, Red) (`YS05`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingHorizontalRed_YS05`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS05"): Rawcode<"doodad">;
+
+/**
+ * City Building (Diagonal 2, Purple) (`YS06`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingDiagonal2Purple_YS06`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS06"): Rawcode<"doodad">;
+
+/**
+ * City Building (Diagonal 2, Green) (`YS07`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingDiagonal2Green_YS07`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS07"): Rawcode<"doodad">;
+
+/**
+ * City Building (Diagonal 2, Blue) (`YS08`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingDiagonal2Blue_YS08`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS08"): Rawcode<"doodad">;
+
+/**
+ * City Building (Vertical, Green) (`YS09`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingVerticalGreen_YS09`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS09"): Rawcode<"doodad">;
+
+/**
+ * City Building (Vertical, Red) (`YS10`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingVerticalRed_YS10`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS10"): Rawcode<"doodad">;
+
+/**
+ * City Building (Vertical, Blue) (`YS11`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingVerticalBlue_YS11`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS11"): Rawcode<"doodad">;
+
+/**
+ * City Building Large (Vertical, Purple) (`YS12`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingLargeVerticalPurple_YS12`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS12"): Rawcode<"doodad">;
+
+/**
+ * City Building Large (Diagonal 1, Red) (`YS13`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingLargeDiagonal1Red_YS13`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS13"): Rawcode<"doodad">;
+
+/**
+ * City Building Large (Horizontal, Green) (`YS14`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingLargeHorizontalGreen_YS14`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS14"): Rawcode<"doodad">;
+
+/**
+ * City Building Large (Diagonal 2, Blue) (`YS15`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingLargeDiagonal2Blue_YS15`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YS15"): Rawcode<"doodad">;
+
+/**
+ * Archway Angled (`YSa1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayAngled_YSa1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSa1"): Rawcode<"doodad">;
+
+/**
+ * Archway Entrance (`YSa2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayEntrance_YSa2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSa2"): Rawcode<"doodad">;
+
+/**
+ * Archway Entrance (Angled) (`YSa3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayEntranceAngled_YSa3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSa3"): Rawcode<"doodad">;
+
+/**
+ * Archway (`YSaw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Archway_YSaw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSaw"): Rawcode<"doodad">;
+
+/**
+ * City Building Row (Group 2) (`YSb1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRowGroup2_YSb1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSb1"): Rawcode<"doodad">;
+
+/**
+ * City Building Row (Group 3) (`YSb2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRowGroup3_YSb2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSb2"): Rawcode<"doodad">;
+
+/**
+ * City Building Row (Group 1) (`YSbr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRowGroup1_YSbr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSbr"): Rawcode<"doodad">;
+
+/**
+ * Column Semi Circle (`YSc2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnSemiCircle_YSc2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSc2"): Rawcode<"doodad">;
+
+/**
+ * Column Semi Circle (`YSc3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnSemiCircle_YSc3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSc3"): Rawcode<"doodad">;
+
+/**
+ * Column Semi Circle (`YSc4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnSemiCircle_YSc4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSc4"): Rawcode<"doodad">;
+
+/**
+ * Column Angled Double (`YSc5`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnAngledDouble_YSc5`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSc5"): Rawcode<"doodad">;
+
+/**
+ * Cathedral (`YSca`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Cathedral_YSca`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSca"): Rawcode<"doodad">;
+
+/**
+ * Column Double (`YScd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnDouble_YScd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YScd"): Rawcode<"doodad">;
+
+/**
+ * Column Single (`YSco`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnSingle_YSco`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSco"): Rawcode<"doodad">;
+
+/**
+ * Cathedral Ruined (`YScr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CathedralRuined_YScr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YScr"): Rawcode<"doodad">;
+
+/**
+ * Column Semi Circle (`YScs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ColumnSemiCircle_YScs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YScs"): Rawcode<"doodad">;
+
+/**
+ * Wall End Lantern (`YSll`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallEndLantern_YSll`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSll"): Rawcode<"doodad">;
+
+/**
+ * Wall End Short (`YSls`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallEndShort_YSls`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSls"): Rawcode<"doodad">;
+
+/**
+ * Wall End Tall (`YSlt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallEndTall_YSlt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSlt"): Rawcode<"doodad">;
+
+/**
+ * Wall End Lantern No Light (`YSlx`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallEndLanternNoLight_YSlx`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSlx"): Rawcode<"doodad">;
+
+/**
+ * Modular House Kit (`YSmh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ModularHouseKit_YSmh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSmh"): Rawcode<"doodad">;
+
+/**
+ * Modular House Kit 2 (`YSmt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ModularHouseKit2_YSmt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSmt"): Rawcode<"doodad">;
+
+/**
+ * City Building Ruined (Diagonal 1, Red) (`YSr0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRuinedDiagonal1Red_YSr0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSr0"): Rawcode<"doodad">;
+
+/**
+ * City Building Ruined (Diagonal 1, Green) (`YSr1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRuinedDiagonal1Green_YSr1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSr1"): Rawcode<"doodad">;
+
+/**
+ * City Building Ruined (Diagonal 1, Purple) (`YSr2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRuinedDiagonal1Purple_YSr2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSr2"): Rawcode<"doodad">;
+
+/**
+ * City Building Ruined (Horizontal, Blue) (`YSr3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRuinedHorizontalBlue_YSr3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSr3"): Rawcode<"doodad">;
+
+/**
+ * City Building Ruined (Horizontal, Green) (`YSr4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRuinedHorizontalGreen_YSr4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSr4"): Rawcode<"doodad">;
+
+/**
+ * City Building Ruined (Horizontal, Red) (`YSr5`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRuinedHorizontalRed_YSr5`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSr5"): Rawcode<"doodad">;
+
+/**
+ * City Building Ruined (Diagonal 2, Purple) (`YSr6`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRuinedDiagonal2Purple_YSr6`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSr6"): Rawcode<"doodad">;
+
+/**
+ * City Building Ruined (Diagonal 2, Green) (`YSr7`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRuinedDiagonal2Green_YSr7`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSr7"): Rawcode<"doodad">;
+
+/**
+ * City Building Ruined (Diagonal 2, Blue) (`YSr8`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRuinedDiagonal2Blue_YSr8`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSr8"): Rawcode<"doodad">;
+
+/**
+ * City Building Ruined (Vertical, Green) (`YSr9`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRuinedVerticalGreen_YSr9`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSr9"): Rawcode<"doodad">;
+
+/**
+ * City Building Ruined (Vertical, Red) (`YSra`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRuinedVerticalRed_YSra`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSra"): Rawcode<"doodad">;
+
+/**
+ * City Building Ruined (Vertical, Blue) (`YSrb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingRuinedVerticalBlue_YSrb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSrb"): Rawcode<"doodad">;
+
+/**
+ * City Building Large Ruined (Vertical, Purple) (`YSrc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingLargeRuinedVerticalPurple_YSrc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSrc"): Rawcode<"doodad">;
+
+/**
+ * City Building Large Ruined (Diagonal 1, Red) (`YSrd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingLargeRuinedDiagonal1Red_YSrd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSrd"): Rawcode<"doodad">;
+
+/**
+ * City Building Large Ruined (Horizontal, Green) (`YSre`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingLargeRuinedHorizontalGreen_YSre`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSre"): Rawcode<"doodad">;
+
+/**
+ * City Building Large Ruined (Diagonal 2, Blue) (`YSrf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CityBuildingLargeRuinedDiagonal2Blue_YSrf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSrf"): Rawcode<"doodad">;
+
+/**
+ * Wall Corner 2nd Floor (`YSs1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallCorner2ndFloor_YSs1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSs1"): Rawcode<"doodad">;
+
+/**
+ * Wall Corner Alt 2nd Floor (`YSs2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallCornerAlt2ndFloor_YSs2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSs2"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight 2nd Floor (`YSs3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraight2ndFloor_YSs3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSs3"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight Long 2nd Floor (`YSs4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraightLong2ndFloor_YSs4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSs4"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight Short 2nd Floor (`YSs5`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraightShort2ndFloor_YSs5`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSs5"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight Broken (`YSs6`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraightBroken_YSs6`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSs6"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight Broken 2nd Floor (`YSs7`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraightBroken2ndFloor_YSs7`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSs7"): Rawcode<"doodad">;
+
+/**
+ * Wall Entrance Grateless (`YSsd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallEntranceGrateless_YSsd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSsd"): Rawcode<"doodad">;
+
+/**
+ * Tavern (`YSta`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Tavern_YSta`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSta"): Rawcode<"doodad">;
+
+/**
+ * Wall Low (Horizontal) (`YSw0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallLowHorizontal_YSw0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSw0"): Rawcode<"doodad">;
+
+/**
+ * Wall Low (Diagonal 1) (`YSw1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallLowDiagonal1_YSw1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSw1"): Rawcode<"doodad">;
+
+/**
+ * Wall Low (Vertical) (`YSw2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallLowVertical_YSw2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSw2"): Rawcode<"doodad">;
+
+/**
+ * Wall Low (Diagonal 2) (`YSw3`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallLowDiagonal2_YSw3`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSw3"): Rawcode<"doodad">;
+
+/**
+ * Wall Corner (`YSw4`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallCorner_YSw4`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSw4"): Rawcode<"doodad">;
+
+/**
+ * Wall Endcap (`YSw5`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallEndcap_YSw5`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSw5"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight (`YSw6`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraight_YSw6`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSw6"): Rawcode<"doodad">;
+
+/**
+ * Wall Corner (Alt) (`YSw7`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallCornerAlt_YSw7`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSw7"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight (Long) (`YSw8`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraightLong_YSw8`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSw8"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight (Short) (`YSw9`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraightShort_YSw9`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSw9"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight (Tee) (`YSwA`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraightTee_YSwA`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSwA"): Rawcode<"doodad">;
+
+/**
+ * Wall Straight (Tee Alt) (`YSwB`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallStraightTeeAlt_YSwB`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSwB"): Rawcode<"doodad">;
+
+/**
+ * Wall Endcap (Entrance) (`YSwC`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallEndcapEntrance_YSwC`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSwC"): Rawcode<"doodad">;
+
+/**
+ * Wall Door (`YSwD`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallDoor_YSwD`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSwD"): Rawcode<"doodad">;
+
+/**
+ * Wall Door (Short) (`YSwE`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.WallDoorShort_YSwE`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YSwE"): Rawcode<"doodad">;
+
+/**
+ * Energy Field (`YZef`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.EnergyField_YZef`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "YZef"): Rawcode<"doodad">;
+
+/**
+ * General Decals (`Ycgd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GeneralDecals_Ycgd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "Ycgd"): Rawcode<"doodad">;
+
+/**
+ * Shadow Blocker (`Yosh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ShadowBlocker_Yosh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "Yosh"): Rawcode<"doodad">;
+
+/**
+ * Vines Cliffside (`ZCv1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.VinesCliffside_ZCv1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZCv1"): Rawcode<"doodad">;
+
+/**
+ * Vines Cliffside (`ZCv2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.VinesCliffside_ZCv2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZCv2"): Rawcode<"doodad">;
+
+/**
+ * Ruins Bloody Altar (`ZOba`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinsBloodyAltar_ZOba`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOba"): Rawcode<"doodad">;
+
+/**
+ * Ruins Brazier (`ZObz`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinsBrazier_ZObz`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZObz"): Rawcode<"doodad">;
+
+/**
+ * Ruined Tower (`ZOd2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedTower_ZOd2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOd2"): Rawcode<"doodad">;
+
+/**
+ * Ruined Tower (`ZOdt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedTower_ZOdt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOdt"): Rawcode<"doodad">;
+
+/**
+ * Ruins Fountain (`ZOfo`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinsFountain_ZOfo`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOfo"): Rawcode<"doodad">;
+
+/**
+ * Ruins Firepot (`ZOfp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinsFirepot_ZOfp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOfp"): Rawcode<"doodad">;
+
+/**
+ * Ruins Library Shelf (`ZOls`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinsLibraryShelf_ZOls`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOls"): Rawcode<"doodad">;
+
+/**
+ * Ruins Obelisk (`ZOob`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinsObelisk_ZOob`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOob"): Rawcode<"doodad">;
+
+/**
+ * Pulley System (`ZOps`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.PulleySystem_ZOps`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOps"): Rawcode<"doodad">;
+
+/**
+ * Ruined Tower Base (`ZOrb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedTowerBase_ZOrb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOrb"): Rawcode<"doodad">;
+
+/**
+ * Ruined Crystal Tower (`ZOrc`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedCrystalTower_ZOrc`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOrc"): Rawcode<"doodad">;
+
+/**
+ * Ruins Pillars (`ZOrp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinsPillars_ZOrp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOrp"): Rawcode<"doodad">;
+
+/**
+ * Ruins Throne (`ZOrt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinsThrone_ZOrt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOrt"): Rawcode<"doodad">;
+
+/**
+ * Ruins Broken Statue (`ZOsb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinsBrokenStatue_ZOsb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOsb"): Rawcode<"doodad">;
+
+/**
+ * Shells (`ZOsh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Shells_ZOsh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOsh"): Rawcode<"doodad">;
+
+/**
+ * Ruins Stones (`ZOss`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinsStones_ZOss`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOss"): Rawcode<"doodad">;
+
+/**
+ * Ruins Statue (`ZOst`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinsStatue_ZOst`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOst"): Rawcode<"doodad">;
+
+/**
+ * Ruined Double Base (`ZOt2`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedDoubleBase_ZOt2`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOt2"): Rawcode<"doodad">;
+
+/**
+ * Ruined Double Base (`ZOtb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinedDoubleBase_ZOtb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOtb"): Rawcode<"doodad">;
+
+/**
+ * Ruins Trash (`ZOtr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RuinsTrash_ZOtr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOtr"): Rawcode<"doodad">;
+
+/**
+ * Dalaran Violet Citadel Ruined (`ZOvr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.DalaranVioletCitadelRuined_ZOvr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZOvr"): Rawcode<"doodad">;
+
+/**
+ * Tulips (`ZPf0`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Tulips_ZPf0`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZPf0"): Rawcode<"doodad">;
+
+/**
+ * Flowers (`ZPfw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Flowers_ZPfw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZPfw"): Rawcode<"doodad">;
+
+/**
+ * Lily Pad (`ZPlp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.LilyPad_ZPlp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZPlp"): Rawcode<"doodad">;
+
+/**
+ * Mushrooms (`ZPms`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Mushrooms_ZPms`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZPms"): Rawcode<"doodad">;
+
+/**
+ * Cattail (`ZPru`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Cattail_ZPru`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZPru"): Rawcode<"doodad">;
+
+/**
+ * Shrub (`ZPsh`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Shrub_ZPsh`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZPsh"): Rawcode<"doodad">;
+
+/**
+ * Sunken Ruins Tree (Indestructible) (`ZPtw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.SunkenRuinsTreeIndestructible_ZPtw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZPtw"): Rawcode<"doodad">;
+
+/**
+ * Viny Plant (`ZPvp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.VinyPlant_ZPvp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZPvp"): Rawcode<"doodad">;
+
+/**
+ * Rubble Large (`ZRbd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RubbleLarge_ZRbd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZRbd"): Rawcode<"doodad">;
+
+/**
+ * Rubble Small (`ZRbs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RubbleSmall_ZRbs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZRbs"): Rawcode<"doodad">;
+
+/**
+ * Rocks (`ZRrk`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Rocks_ZRrk`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZRrk"): Rawcode<"doodad">;
+
+/**
+ * Rock Spires (`ZRrs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockSpires_ZRrs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZRrs"): Rawcode<"doodad">;
+
+/**
+ * Rock Spires Small (`ZRsp`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.RockSpiresSmall_ZRsp`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZRsp"): Rawcode<"doodad">;
+
+/**
+ * Archway Angled Natural (`ZSa1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayAngledNatural_ZSa1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZSa1"): Rawcode<"doodad">;
+
+/**
+ * Archway (`ZSab`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Archway_ZSab`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZSab"): Rawcode<"doodad">;
+
+/**
+ * Archway Natural (`ZSar`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayNatural_ZSar`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZSar"): Rawcode<"doodad">;
+
+/**
+ * Archway (`ZSas`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Archway_ZSas`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZSas"): Rawcode<"doodad">;
+
+/**
+ * Archway Angled (`ZSb1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayAngled_ZSb1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZSb1"): Rawcode<"doodad">;
+
+/**
+ * Ruins (`ZSrb`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Ruins_ZSrb`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZSrb"): Rawcode<"doodad">;
+
+/**
+ * Archway Angled (`ZSs1`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.ArchwayAngled_ZSs1`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZSs1"): Rawcode<"doodad">;
+
+/**
+ * Bubbles (`ZWbg`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Bubbles_ZWbg`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZWbg"): Rawcode<"doodad">;
+
+/**
+ * Coral Arch (`ZWca`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.CoralArch_ZWca`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZWca"): Rawcode<"doodad">;
+
+/**
+ * Coral (`ZWcl`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Coral_ZWcl`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZWcl"): Rawcode<"doodad">;
+
+/**
+ * Fish Green (`ZWfs`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FishGreen_ZWfs`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZWfs"): Rawcode<"doodad">;
+
+/**
+ * Fish School (`ZWsf`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FishSchool_ZWsf`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZWsf"): Rawcode<"doodad">;
+
+/**
+ * Seaweed (`ZWsw`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Seaweed_ZWsw`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZWsw"): Rawcode<"doodad">;
+
+/**
+ * Dust (`ZZcd`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.Dust_ZZcd`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZZcd"): Rawcode<"doodad">;
+
+/**
+ * Footprints Demonic (`ZZdt`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.FootprintsDemonic_ZZdt`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZZdt"): Rawcode<"doodad">;
+
+/**
+ * Gul'dan's Runes (`ZZgr`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.GuldansRunes_ZZgr`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZZgr"): Rawcode<"doodad">;
+
+/**
+ * Eye of Sargeras (`ZZys`), a Built-in doodad of Patch 3.0.0.
+ *
+ * Its constant is `Doodads.EyeOfSargeras_ZZys`, from `reforged-builtins/doodads`.
+ */
+declare function FourCC(id: "ZZys"): Rawcode<"doodad">;
+
+// Upgrades.
+
+/**
+ * Corrosive Breath (`Recb`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.CorrosiveBreath_Recb`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Recb"): Rawcode<"upgrade">;
+
+/**
+ * Druid of the Claw Adept Training (`Redc`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.DruidOfTheClawAdeptTraining_Redc`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Redc"): Rawcode<"upgrade">;
+
+/**
+ * Druid of the Talon Adept Training (`Redt`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.DruidOfTheTalonAdeptTraining_Redt`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Redt"): Rawcode<"upgrade">;
+
+/**
+ * Mark of the Claw (`Reeb`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.MarkOfTheClaw_Reeb`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Reeb"): Rawcode<"upgrade">;
+
+/**
+ * Mark of the Talon (`Reec`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.MarkOfTheTalon_Reec`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Reec"): Rawcode<"upgrade">;
+
+/**
+ * Hardened Skin (`Rehs`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.HardenedSkin_Rehs`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rehs"): Rawcode<"upgrade">;
+
+/**
+ * Hippogryph Taming (`Reht`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.HippogryphTaming_Reht`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Reht"): Rawcode<"upgrade">;
+
+/**
+ * Improved Bows (`Reib`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.ImprovedBows_Reib`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Reib"): Rawcode<"upgrade">;
+
+/**
+ * Moon Armor (`Rema`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.MoonArmor_Rema`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rema"): Rawcode<"upgrade">;
+
+/**
+ * Upgrade Moon Glaive (`Remg`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.UpgradeMoonGlaive_Remg`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Remg"): Rawcode<"upgrade">;
+
+/**
+ * Marksmanship (`Remk`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.Marksmanship_Remk`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Remk"): Rawcode<"upgrade">;
+
+/**
+ * Nature's Blessing (`Renb`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.NaturesBlessing_Renb`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Renb"): Rawcode<"upgrade">;
+
+/**
+ * Vorpal Blades (`Repb`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.VorpalBlades_Repb`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Repb"): Rawcode<"upgrade">;
+
+/**
+ * Backpack (`Repm`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.Backpack_Repm`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Repm"): Rawcode<"upgrade">;
+
+/**
+ * Reinforced Hides (`Rerh`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.ReinforcedHides_Rerh`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rerh"): Rawcode<"upgrade">;
+
+/**
+ * Resistant Skin (`Rers`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.ResistantSkin_Rers`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rers"): Rawcode<"upgrade">;
+
+/**
+ * Sentinel (`Resc`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.Sentinel_Resc`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Resc"): Rawcode<"upgrade">;
+
+/**
+ * Abolish Magic (`Resi`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.AbolishMagic_Resi`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Resi"): Rawcode<"upgrade">;
+
+/**
+ * Strength of the Moon (`Resm`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.StrengthOfTheMoon_Resm`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Resm"): Rawcode<"upgrade">;
+
+/**
+ * Strength of the Wild (`Resw`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.StrengthOfTheWild_Resw`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Resw"): Rawcode<"upgrade">;
+
+/**
+ * Ultravision (`Reuv`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.Ultravision_Reuv`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Reuv"): Rawcode<"upgrade">;
+
+/**
+ * Well Spring (`Rews`), a Built-in upgrade of Patch 3.0.0, race nightelf.
+ *
+ * Its constant is `Upgrades.WellSpring_Rews`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rews"): Rawcode<"upgrade">;
+
+/**
+ * Glyph of Fortification (`Rgfo`), a Built-in upgrade of Patch 3.0.0, race unknown.
+ *
+ * Its constant is `Upgrades.GlyphOfFortification_Rgfo`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rgfo"): Rawcode<"upgrade">;
+
+/**
+ * Glyph of Ultravision (`Rguv`), a Built-in upgrade of Patch 3.0.0, race unknown.
+ *
+ * Its constant is `Upgrades.GlyphOfUltravision_Rguv`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rguv"): Rawcode<"upgrade">;
+
+/**
+ * Improved Masonry (`Rhac`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.ImprovedMasonry_Rhac`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhac"): Rawcode<"upgrade">;
+
+/**
+ * Animal War Training (`Rhan`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.AnimalWarTraining_Rhan`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhan"): Rawcode<"upgrade">;
+
+/**
+ * Iron Plating (`Rhar`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.IronPlating_Rhar`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhar"): Rawcode<"upgrade">;
+
+/**
+ * Cloud (`Rhcd`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.Cloud_Rhcd`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhcd"): Rawcode<"upgrade">;
+
+/**
+ * Defend (`Rhde`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.Defend_Rhde`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhde"): Rawcode<"upgrade">;
+
+/**
+ * Flak Cannons (`Rhfc`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.FlakCannons_Rhfc`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhfc"): Rawcode<"upgrade">;
+
+/**
+ * Flare (`Rhfl`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.Flare_Rhfl`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhfl"): Rawcode<"upgrade">;
+
+/**
+ * Fragmentation Shards (`Rhfs`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.FragmentationShards_Rhfs`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhfs"): Rawcode<"upgrade">;
+
+/**
+ * Flying Machine Bombs (`Rhgb`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.FlyingMachineBombs_Rhgb`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhgb"): Rawcode<"upgrade">;
+
+/**
+ * Storm Hammers (`Rhhb`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.StormHammers_Rhhb`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhhb"): Rawcode<"upgrade">;
+
+/**
+ * Studded Leather Armor (`Rhla`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.StuddedLeatherArmor_Rhla`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhla"): Rawcode<"upgrade">;
+
+/**
+ * Improved Lumber Harvesting (`Rhlh`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.ImprovedLumberHarvesting_Rhlh`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhlh"): Rawcode<"upgrade">;
+
+/**
+ * Iron Forged Swords (`Rhme`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.IronForgedSwords_Rhme`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhme"): Rawcode<"upgrade">;
+
+/**
+ * Backpack (`Rhpm`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.Backpack_Rhpm`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhpm"): Rawcode<"upgrade">;
+
+/**
+ * Priest Adept Training (`Rhpt`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.PriestAdeptTraining_Rhpt`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhpt"): Rawcode<"upgrade">;
+
+/**
+ * Black Gunpowder (`Rhra`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.BlackGunpowder_Rhra`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhra"): Rawcode<"upgrade">;
+
+/**
+ * Long Rifles (`Rhri`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.LongRifles_Rhri`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhri"): Rawcode<"upgrade">;
+
+/**
+ * Barrage (`Rhrt`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.Barrage_Rhrt`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhrt"): Rawcode<"upgrade">;
+
+/**
+ * Sundering Blades (`Rhsb`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.SunderingBlades_Rhsb`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhsb"): Rawcode<"upgrade">;
+
+/**
+ * Magic Sentry (`Rhse`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.MagicSentry_Rhse`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhse"): Rawcode<"upgrade">;
+
+/**
+ * Control Magic (`Rhss`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.ControlMagic_Rhss`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhss"): Rawcode<"upgrade">;
+
+/**
+ * Sorceress Adept Training (`Rhst`), a Built-in upgrade of Patch 3.0.0, race human.
+ *
+ * Its constant is `Upgrades.SorceressAdeptTraining_Rhst`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rhst"): Rawcode<"upgrade">;
+
+/**
+ * Coral Scales (`Rnam`), a Built-in upgrade of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Upgrades.CoralScales_Rnam`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rnam"): Rawcode<"upgrade">;
+
+/**
+ * Coral Blades (`Rnat`), a Built-in upgrade of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Upgrades.CoralBlades_Rnat`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rnat"): Rawcode<"upgrade">;
+
+/**
+ * Ensnare (`Rnen`), a Built-in upgrade of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Upgrades.Ensnare_Rnen`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rnen"): Rawcode<"upgrade">;
+
+/**
+ * Submerge (`Rnsb`), a Built-in upgrade of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Upgrades.Submerge_Rnsb`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rnsb"): Rawcode<"upgrade">;
+
+/**
+ * Abolish Magic (`Rnsi`), a Built-in upgrade of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Upgrades.AbolishMagic_Rnsi`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rnsi"): Rawcode<"upgrade">;
+
+/**
+ * Naga Siren Adept Training (`Rnsw`), a Built-in upgrade of Patch 3.0.0, race naga.
+ *
+ * Its constant is `Upgrades.NagaSirenAdeptTraining_Rnsw`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rnsw"): Rawcode<"upgrade">;
+
+/**
+ * Steel Armor (`Roar`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.SteelArmor_Roar`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Roar"): Rawcode<"upgrade">;
+
+/**
+ * Burning Oil (`Robf`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.BurningOil_Robf`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Robf"): Rawcode<"upgrade">;
+
+/**
+ * Berserker Upgrade (`Robk`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.BerserkerUpgrade_Robk`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Robk"): Rawcode<"upgrade">;
+
+/**
+ * Brute Strength (`Robs`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.BruteStrength_Robs`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Robs"): Rawcode<"upgrade">;
+
+/**
+ * Chaos (`Roch`), a Built-in upgrade of Patch 3.0.0, race demon.
+ *
+ * Its constant is `Upgrades.Chaos_Roch`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Roch"): Rawcode<"upgrade">;
+
+/**
+ * Ensnare (`Roen`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.Ensnare_Roen`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Roen"): Rawcode<"upgrade">;
+
+/**
+ * Liquid Fire (`Rolf`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.LiquidFire_Rolf`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rolf"): Rawcode<"upgrade">;
+
+/**
+ * Steel Melee Weapons (`Rome`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.SteelMeleeWeapons_Rome`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rome"): Rawcode<"upgrade">;
+
+/**
+ * Pillage (`Ropg`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.Pillage_Ropg`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Ropg"): Rawcode<"upgrade">;
+
+/**
+ * Backpack (`Ropm`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.Backpack_Ropm`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Ropm"): Rawcode<"upgrade">;
+
+/**
+ * Steel Ranged Weapons (`Rora`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.SteelRangedWeapons_Rora`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rora"): Rawcode<"upgrade">;
+
+/**
+ * Reinforced Defenses (`Rorb`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.ReinforcedDefenses_Rorb`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rorb"): Rawcode<"upgrade">;
+
+/**
+ * Spiked Barricades (`Rosp`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.SpikedBarricades_Rosp`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rosp"): Rawcode<"upgrade">;
+
+/**
+ * Shaman Adept Training (`Rost`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.ShamanAdeptTraining_Rost`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rost"): Rawcode<"upgrade">;
+
+/**
+ * Troll Regeneration (`Rotr`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.TrollRegeneration_Rotr`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rotr"): Rawcode<"upgrade">;
+
+/**
+ * Envenomed Spears (`Rovs`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.EnvenomedSpears_Rovs`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rovs"): Rawcode<"upgrade">;
+
+/**
+ * Witch Doctor Adept Training (`Rowd`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.WitchDoctorAdeptTraining_Rowd`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rowd"): Rawcode<"upgrade">;
+
+/**
+ * Pulverize Damage Increase (`Rows`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.PulverizeDamageIncrease_Rows`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rows"): Rawcode<"upgrade">;
+
+/**
+ * Spirit Walker Adept Training (`Rowt`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.SpiritWalkerAdeptTraining_Rowt`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rowt"): Rawcode<"upgrade">;
+
+/**
+ * Cannibalize (`Ruac`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.Cannibalize_Ruac`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Ruac"): Rawcode<"upgrade">;
+
+/**
+ * Unholy Armor (`Ruar`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.UnholyArmor_Ruar`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Ruar"): Rawcode<"upgrade">;
+
+/**
+ * Banshee Adept Training (`Ruba`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.BansheeAdeptTraining_Ruba`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Ruba"): Rawcode<"upgrade">;
+
+/**
+ * Burrow (`Rubu`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.Burrow_Rubu`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rubu"): Rawcode<"upgrade">;
+
+/**
+ * Creature Carapace (`Rucr`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.CreatureCarapace_Rucr`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rucr"): Rawcode<"upgrade">;
+
+/**
+ * Exhume Corpses (`Ruex`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.ExhumeCorpses_Ruex`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Ruex"): Rawcode<"upgrade">;
+
+/**
+ * Freezing Breath (`Rufb`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.FreezingBreath_Rufb`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rufb"): Rawcode<"upgrade">;
+
+/**
+ * Ghoul Frenzy (`Rugf`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.GhoulFrenzy_Rugf`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rugf"): Rawcode<"upgrade">;
+
+/**
+ * Unholy Strength (`Rume`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.UnholyStrength_Rume`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rume"): Rawcode<"upgrade">;
+
+/**
+ * Necromancer Adept Training (`Rune`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.NecromancerAdeptTraining_Rune`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rune"): Rawcode<"upgrade">;
+
+/**
+ * Disease Cloud (`Rupc`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.DiseaseCloud_Rupc`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rupc"): Rawcode<"upgrade">;
+
+/**
+ * Backpack (`Rupm`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.Backpack_Rupm`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rupm"): Rawcode<"upgrade">;
+
+/**
+ * Creature Attack (`Rura`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.CreatureAttack_Rura`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rura"): Rawcode<"upgrade">;
+
+/**
+ * Stone Form (`Rusf`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.StoneForm_Rusf`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rusf"): Rawcode<"upgrade">;
+
+/**
+ * Skeletal Longevity (`Rusl`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.SkeletalLongevity_Rusl`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rusl"): Rawcode<"upgrade">;
+
+/**
+ * Skeletal Mastery (`Rusm`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.SkeletalMastery_Rusm`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rusm"): Rawcode<"upgrade">;
+
+/**
+ * Destroyer Form (`Rusp`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.DestroyerForm_Rusp`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rusp"): Rawcode<"upgrade">;
+
+/**
+ * Web (`Ruwb`), a Built-in upgrade of Patch 3.0.0, race undead.
+ *
+ * Its constant is `Upgrades.Web_Ruwb`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Ruwb"): Rawcode<"upgrade">;
+
+/**
+ * War Drums Damage Increase (`Rwdm`), a Built-in upgrade of Patch 3.0.0, race orc.
+ *
+ * Its constant is `Upgrades.WarDrumsDamageIncrease_Rwdm`, from `reforged-builtins/upgrades`.
+ */
+declare function FourCC(id: "Rwdm"): Rawcode<"upgrade">;
