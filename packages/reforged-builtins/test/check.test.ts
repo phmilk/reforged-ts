@@ -155,7 +155,7 @@ describe("builtins:check", () => {
     const path = join(root, "3.0.0", "index.json");
     const index = JSON.parse(await readFile(path, "utf8")) as BuiltinsIndex;
     const objects = index.objects as Record<string, unknown>;
-    objects.hfoo = { ...index.objects.hfoo, kind: "hero", sets: ["melee"] };
+    objects.hfoo = { ...index.objects.hfoo, kind: "hero", sets: ["campaign"] };
     objects.Hpal = { ...index.objects.Hpal, constant: "Footman_hfoo" };
     objects["h-1"] = { kind: "unit", sets: ["default"], constant: "X_h-1" };
     await writeFile(
@@ -175,7 +175,7 @@ describe("builtins:check", () => {
           'gameVersion is "3.0.1", not 3.0.0, its folder.',
           'objects.Hpal.constant is "Footman_hfoo", not an identifier ending in _Hpal.',
           'objects.hfoo.kind is "hero", not an Object kind.',
-          'objects.hfoo.sets is ["melee"], not a list of the index\'s Game data sets.',
+          'objects.hfoo.sets is ["campaign"], not a list of the index\'s Game data sets.',
           "objects.h-1: not a Rawcode of four characters of [A-Za-z0-9].",
           'objects.h-1.constant is "X_h-1", not an identifier ending in _h-1.',
         ]

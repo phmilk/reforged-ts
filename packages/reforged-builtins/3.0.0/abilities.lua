@@ -1327,6 +1327,7 @@ return {
     SummonQuilbeast_Arsq = 1098019697,
     Restore_Arst = 1098019700,
     SerpentWard_Arsw = 1098019703,
+    Pillage_Asa2 = 1098080562,
     Sacrifice_Asac = 1098080611,
     Pillage_Asal = 1098080620,
     OnMagicAttackCastSpell_Asas = 1098080627,

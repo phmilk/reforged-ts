@@ -81,6 +81,66 @@
       "size": 9796
     },
     {
+      "path": "War3.w3mod:_Balance/Custom_V1.w3mod:Units/AbilityBuffData.slk",
+      "contentKey": "589a64993c583ff5870cffa388451d21",
+      "sha256": "39ebbe352109eccb16361ad1d123aad596f9868b258c2207898b42b6c692056a",
+      "size": 31125
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V1.w3mod:Units/AbilityData.slk",
+      "contentKey": "910fa67d09ce92bc8e936e92c3391c24",
+      "sha256": "052195ebf094e49ded0a0ebc281cada420e30a46a0a40ca83f52748daac8c9d3",
+      "size": 862143
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V1.w3mod:Units/ItemData.slk",
+      "contentKey": "ffa9e7a1f4dc4b982ecec872a9f967c1",
+      "sha256": "54d04b08f9e8e3068603261acfdf371cb97e9be5ae5b536e06e6eb0d133bd084",
+      "size": 102976
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V1.w3mod:Units/UnitData.slk",
+      "contentKey": "09dc022ad8a002789f2699537332f2f2",
+      "sha256": "60ae721088aae8f1bba4f399bec7e955665280a7f8bf183e9085de8b482232ea",
+      "size": 320130
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V1.w3mod:Units/UpgradeData.slk",
+      "contentKey": "46569960c9fba3f5d3b50f550aac46b8",
+      "sha256": "2b4bd5cacf7f9c365817e5a1039054a43dfa56b32601d7cfed9483d963dba313",
+      "size": 36769
+    },
+    {
+      "path": "War3.w3mod:_Balance/Melee_V0.w3mod:Units/AbilityBuffData.slk",
+      "contentKey": "2e305104b26fd76ae531e7f63089f242",
+      "sha256": "3217dcff134e7500da3f836ced19a8a02d970a347586d220e7d67909010487a1",
+      "size": 30865
+    },
+    {
+      "path": "War3.w3mod:_Balance/Melee_V0.w3mod:Units/AbilityData.slk",
+      "contentKey": "fbc2eb5414e51492e53efab8901d1f35",
+      "sha256": "aed918adf6984598578f5951863a961480cddca7496e1e75c77d69635d0cd996",
+      "size": 860086
+    },
+    {
+      "path": "War3.w3mod:_Balance/Melee_V0.w3mod:Units/ItemData.slk",
+      "contentKey": "d6e28507827680a54181b6180c93ca40",
+      "sha256": "06b267e50b143ddbcf0ce7a68befd87d6652b57c7e23557a4f324f619c882daa",
+      "size": 84365
+    },
+    {
+      "path": "War3.w3mod:_Balance/Melee_V0.w3mod:Units/UnitData.slk",
+      "contentKey": "056e50a7e5378010ba3bade5131f341a",
+      "sha256": "9987a1380b9a3f89e7679017890f44d261417f21029570db9f15e11ac9c5e995",
+      "size": 310315
+    },
+    {
+      "path": "War3.w3mod:_Balance/Melee_V0.w3mod:Units/UpgradeData.slk",
+      "contentKey": "04495879216787893996620f5b49d670",
+      "sha256": "a7972d9ec94b41e7319d2390bfe295a6c6ecacbcc92b839d99dd0f0ec570078e",
+      "size": 24004
+    },
+    {
       "path": "War3.w3mod:_Locales/enUS.w3mod:UI/WorldEditGameStrings.txt",
       "contentKey": "764b96fc0565db0480b81b20f71c1734",
       "sha256": "469954dbe272c316e62dd183a9e1363de040c9e1dffd5d4e7fb6b31aafa614fc",

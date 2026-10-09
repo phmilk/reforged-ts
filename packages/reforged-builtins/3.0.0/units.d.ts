@@ -95,6 +95,8 @@ export declare const Units: {
 
   /**
    * High Elf Archmage (`Haah`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly HighElfArchmage_Haah: Rawcode<"unit">;
 
@@ -130,21 +132,29 @@ export declare const Units: {
 
   /**
    * Guard Lieutenant (`Hct1`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly GuardLieutenant_Hct1: Rawcode<"unit">;
 
   /**
    * Guard Captain (`Hctl`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly GuardCaptain_Hctl: Rawcode<"unit">;
 
   /**
    * Guard Lieutenant (`Hctr`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly GuardLieutenant_Hctr: Rawcode<"unit">;
 
   /**
    * Master Swordsman (`Hddt`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly MasterSwordsman_Hddt: Rawcode<"unit">;
 
@@ -170,11 +180,15 @@ export declare const Units: {
 
   /**
    * Ranger (`Hjnd`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly Ranger_Hjnd: Rawcode<"unit">;
 
   /**
    * Cleric (`Hjsm`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Cleric_Hjsm: Rawcode<"unit">;
 
@@ -185,6 +199,8 @@ export declare const Units: {
 
   /**
    * Warrior (`Hleo`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Warrior_Hleo: Rawcode<"unit">;
 
@@ -225,11 +241,15 @@ export declare const Units: {
 
   /**
    * High King (`Hssa`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly HighKing_Hssa: Rawcode<"unit">;
 
   /**
    * Paladin (`Htmx`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Paladin_Htmx: Rawcode<"unit">;
 
@@ -295,6 +315,8 @@ export declare const Units: {
 
   /**
    * Merchant (`Nglx`), a Built-in unit of Patch 3.0.0, race creeps.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Merchant_Nglx: Rawcode<"unit">;
 
@@ -320,6 +342,8 @@ export declare const Units: {
 
   /**
    * Murloc Sorcerer (`Nmsr`), a Built-in unit of Patch 3.0.0, race creeps.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly MurlocSorcerer_Nmsr: Rawcode<"unit">;
 
@@ -330,6 +354,8 @@ export declare const Units: {
 
   /**
    * Forsaken Paladin (`Npal`), a Built-in unit of Patch 3.0.0, race creeps.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ForsakenPaladin_Npal: Rawcode<"unit">;
 
@@ -360,6 +386,8 @@ export declare const Units: {
 
   /**
    * Sea Witch (`Nswt`), a Built-in unit of Patch 3.0.0, race creeps.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly SeaWitch_Nswt: Rawcode<"unit">;
 
@@ -450,16 +478,22 @@ export declare const Units: {
 
   /**
    * Scarlet Captain (`Scth`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ScarletCaptain_Scth: Rawcode<"unit">;
 
   /**
    * Scarlet Commander (`Srmg`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ScarletCommander_Srmg: Rawcode<"unit">;
 
   /**
    * High Inquisitor (`Sswm`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly HighInquisitor_Sswm: Rawcode<"unit">;
 
@@ -470,11 +504,15 @@ export declare const Units: {
 
   /**
    * Dark Ranger (`Uany`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly DarkRanger_Uany: Rawcode<"unit">;
 
   /**
    * Death Knight (`Uarf`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly DeathKnight_Uarf: Rawcode<"unit">;
 
@@ -485,11 +523,15 @@ export declare const Units: {
 
   /**
    * Death Knight (`Ubru`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly DeathKnight_Ubru: Rawcode<"unit">;
 
   /**
    * Death Knight (`Ubtr`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly DeathKnight_Ubtr: Rawcode<"unit">;
 
@@ -505,6 +547,8 @@ export declare const Units: {
 
   /**
    * Fallen Captain (`Uctl`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly FallenCaptain_Uctl: Rawcode<"unit">;
 
@@ -530,21 +574,29 @@ export declare const Units: {
 
   /**
    * Forsaken (`Ugr2`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Forsaken_Ugr2: Rawcode<"unit">;
 
   /**
    * Forsaken (`Ugr3`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Forsaken_Ugr3: Rawcode<"unit">;
 
   /**
    * Forsaken (`Ugrk`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Forsaken_Ugrk: Rawcode<"unit">;
 
   /**
    * Shadow Priest (`Ujsm`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ShadowPriest_Ujsm: Rawcode<"unit">;
 
@@ -565,21 +617,29 @@ export declare const Units: {
 
   /**
    * Grand Apothecary (`Uput`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly GrandApothecary_Uput: Rawcode<"unit">;
 
   /**
    * Hedge Mage (`Urff`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly HedgeMage_Urff: Rawcode<"unit">;
 
   /**
    * Hedge Mage (`Urfm`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly HedgeMage_Urfm: Rawcode<"unit">;
 
   /**
    * Lich (`Urfu`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Lich_Urfu: Rawcode<"unit">;
 
@@ -610,16 +670,22 @@ export declare const Units: {
 
   /**
    * Death Knight (`Uzkf`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly DeathKnight_Uzkf: Rawcode<"unit">;
 
   /**
    * Death Knight (`Uzkm`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly DeathKnight_Uzkm: Rawcode<"unit">;
 
   /**
    * Deathcharger (`Uzrm`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Deathcharger_Uzrm: Rawcode<"unit">;
 
@@ -815,36 +881,50 @@ export declare const Units: {
 
   /**
    * Apothecary (`fapo`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Apothecary_fapo: Rawcode<"unit">;
 
   /**
    * Bernd (`fber`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Bernd_fber: Rawcode<"unit">;
 
   /**
    * Forsaken Ranger (`fdkr`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ForsakenRanger_fdkr: Rawcode<"unit">;
 
   /**
    * Deathguard (`fdtg`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Deathguard_fdtg: Rawcode<"unit">;
 
   /**
    * Laborer (`flab`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Laborer_flab: Rawcode<"unit">;
 
   /**
    * Forsaken Villager (`fvil`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ForsakenVillager_fvil: Rawcode<"unit">;
 
   /**
    * Forsaken Villager (`fvlw`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ForsakenVillager_fvlw: Rawcode<"unit">;
 
@@ -905,11 +985,15 @@ export declare const Units: {
 
   /**
    * Lordaeron Banner (`hcta`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly LordaeronBanner_hcta: Rawcode<"unit">;
 
   /**
    * City Guard (`hctg`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly CityGuard_hctg: Rawcode<"unit">;
 
@@ -1040,6 +1124,8 @@ export declare const Units: {
 
   /**
    * Runner (`hrrh`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly Runner_hrrh: Rawcode<"unit">;
 
@@ -1095,6 +1181,8 @@ export declare const Units: {
 
   /**
    * Totem of Battle (`iomw`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly TotemOfBattle_iomw: Rawcode<"unit">;
 
@@ -1400,21 +1488,29 @@ export declare const Units: {
 
   /**
    * Diablo Cart (`nccd`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly DiabloCart_nccd: Rawcode<"unit">;
 
   /**
    * Orc Cart (`ncco`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly OrcCart_ncco: Rawcode<"unit">;
 
   /**
    * Dwarf Cart (`nccr`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly DwarfCart_nccr: Rawcode<"unit">;
 
   /**
    * Undead Cart (`nccu`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly UndeadCart_nccu: Rawcode<"unit">;
 
@@ -1810,6 +1906,8 @@ export declare const Units: {
 
   /**
    * Dummy (`ndum`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Dummy_ndum: Rawcode<"unit">;
 
@@ -2220,16 +2318,22 @@ export declare const Units: {
 
   /**
    * Defender Golem (`nggd`), a Built-in unit of Patch 3.0.0, race creeps.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly DefenderGolem_nggd: Rawcode<"unit">;
 
   /**
    * Guardian Golem (`nggg`), a Built-in unit of Patch 3.0.0, race creeps.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly GuardianGolem_nggg: Rawcode<"unit">;
 
   /**
    * Moss Covered Granite Golem (`nggm`), a Built-in unit of Patch 3.0.0, race creeps.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly MossCoveredGraniteGolem_nggm: Rawcode<"unit">;
 
@@ -2310,6 +2414,8 @@ export declare const Units: {
 
   /**
    * Guard Dog (`ngog`), a Built-in unit of Patch 3.0.0, race critters.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly GuardDog_ngog: Rawcode<"unit">;
 
@@ -2320,11 +2426,15 @@ export declare const Units: {
 
   /**
    * Snarlmane the Bloodgorger (`ngos`), a Built-in unit of Patch 3.0.0, race creeps.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly SnarlmaneTheBloodgorger_ngos: Rawcode<"unit">;
 
   /**
    * Gnoll Warlord (`ngow`), a Built-in unit of Patch 3.0.0, race creeps.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly GnollWarlord_ngow: Rawcode<"unit">;
 
@@ -2455,6 +2565,8 @@ export declare const Units: {
 
   /**
    * Harpy Nest (`nhn2`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly HarpyNest_nhn2: Rawcode<"unit">;
 
@@ -2720,6 +2832,8 @@ export declare const Units: {
 
   /**
    * Murloc Hut (`nmg2`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly MurlocHut_nmg2: Rawcode<"unit">;
 
@@ -3660,6 +3774,8 @@ export declare const Units: {
 
   /**
    * Tent (`ntn3`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly Tent_ntn3: Rawcode<"unit">;
 
@@ -3815,6 +3931,8 @@ export declare const Units: {
 
   /**
    * War Wagon (`nwar`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly WarWagon_nwar: Rawcode<"unit">;
 
@@ -3835,11 +3953,15 @@ export declare const Units: {
 
   /**
    * Wind Rider Cage (`nwc3`), a Built-in unit of Patch 3.0.0, race orc.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly WindRiderCage_nwc3: Rawcode<"unit">;
 
   /**
    * Wind Rider Cage (`nwc4`), a Built-in unit of Patch 3.0.0, race orc.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly WindRiderCage_nwc4: Rawcode<"unit">;
 
@@ -3950,6 +4072,8 @@ export declare const Units: {
 
   /**
    * Blood Wizard (`nwzw`), a Built-in unit of Patch 3.0.0, race creeps.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly BloodWizard_nwzw: Rawcode<"unit">;
 
@@ -3970,6 +4094,8 @@ export declare const Units: {
 
   /**
    * Zombie (`nzof`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly Zombie_nzof: Rawcode<"unit">;
 
@@ -3985,6 +4111,8 @@ export declare const Units: {
 
   /**
    * Baine (`obai`), a Built-in unit of Patch 3.0.0, race orc.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly Baine_obai: Rawcode<"unit">;
 
@@ -4070,71 +4198,99 @@ export declare const Units: {
 
   /**
    * Forsaken Banshee (`oidb`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ForsakenBanshee_oidb: Rawcode<"unit">;
 
   /**
    * Deathguard (`oidg`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Deathguard_oidg: Rawcode<"unit">;
 
   /**
    * Item Essencium Blizzard (`oie1`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ItemEssenciumBlizzard_oie1: Rawcode<"unit">;
 
   /**
    * Item Essencium Rain of Fire (`oie2`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ItemEssenciumRainOfFire_oie2: Rawcode<"unit">;
 
   /**
    * Item Essencium Chain Lightning (`oie3`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ItemEssenciumChainLightning_oie3: Rawcode<"unit">;
 
   /**
    * Item Essencium Crushing Wave (`oie4`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ItemEssenciumCrushingWave_oie4: Rawcode<"unit">;
 
   /**
    * Forsaken Ranger (`oifr`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ForsakenRanger_oifr: Rawcode<"unit">;
 
   /**
    * Gravelight Soul (`oigs`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly GravelightSoul_oigs: Rawcode<"unit">;
 
   /**
    * Item Moonglaive Dummy (`oimd`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly ItemMoonglaiveDummy_oimd: Rawcode<"unit">;
 
   /**
    * Roaming Fireball (`oirf`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly RoamingFireball_oirf: Rawcode<"unit">;
 
   /**
    * Giant Skeleton Warrior (`oisg`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly GiantSkeletonWarrior_oisg: Rawcode<"unit">;
 
   /**
    * Skeleton Warrior (`oisk`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly SkeletonWarrior_oisk: Rawcode<"unit">;
 
   /**
    * Skeletal Marksman (`oism`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly SkeletalMarksman_oism: Rawcode<"unit">;
 
   /**
    * Spitting Spider (`oisp`), a Built-in unit of Patch 3.0.0, race other.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly SpittingSpider_oisp: Rawcode<"unit">;
 
@@ -4285,6 +4441,8 @@ export declare const Units: {
 
   /**
    * Slave Master (`owad`), a Built-in unit of Patch 3.0.0, race orc.
+   *
+   * In the Default and Custom Game data sets. Not in the Melee Game data set.
    */
   readonly SlaveMaster_owad: Rawcode<"unit">;
 
@@ -4310,26 +4468,36 @@ export declare const Units: {
 
   /**
    * Marksman (`sarc`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Marksman_sarc: Rawcode<"unit">;
 
   /**
    * Cleric (`scle`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Cleric_scle: Rawcode<"unit">;
 
   /**
    * Crusader (`scru`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Crusader_scru: Rawcode<"unit">;
 
   /**
    * Footman (`sfoo`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Footman_sfoo: Rawcode<"unit">;
 
   /**
    * Inquisitor (`sinq`), a Built-in unit of Patch 3.0.0, race human.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Inquisitor_sinq: Rawcode<"unit">;
 
@@ -4360,6 +4528,8 @@ export declare const Units: {
 
   /**
    * Assassin (`uass`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Assassin_uass: Rawcode<"unit">;
 
@@ -4380,6 +4550,8 @@ export declare const Units: {
 
   /**
    * Blightweaver (`ublw`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Blightweaver_ublw: Rawcode<"unit">;
 
@@ -4435,6 +4607,8 @@ export declare const Units: {
 
   /**
    * Brute (`ucze`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Brute_ucze: Rawcode<"unit">;
 
@@ -4445,11 +4619,15 @@ export declare const Units: {
 
   /**
    * Banshee (`ufr2`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Banshee_ufr2: Rawcode<"unit">;
 
   /**
    * Banshee (`ufrb`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly Banshee_ufrb: Rawcode<"unit">;
 
@@ -4465,6 +4643,8 @@ export declare const Units: {
 
   /**
    * Garithos Abomination (`ugbo`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly GarithosAbomination_ugbo: Rawcode<"unit">;
 
@@ -4490,6 +4670,8 @@ export declare const Units: {
 
   /**
    * Infectious Ghoul (`uigh`), a Built-in unit of Patch 3.0.0, race undead.
+   *
+   * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
   readonly InfectiousGhoul_uigh: Rawcode<"unit">;
 

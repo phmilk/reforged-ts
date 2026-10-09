@@ -3,8 +3,9 @@
  * the JSON index and the provenance file of the install's Game version, and
  * the artefacts emitted from the index (`./emit.ts`).
  *
- * It reads the seven Object kinds of the Default Game data set: each kind's
- * base-layer data (Rawcode and race) and its enUS names, located through the
+ * It reads the seven Object kinds of every Game data set: each kind's data
+ * (Rawcode and race) from the set's layer when it has the kind's file, else
+ * from the base layer's, and its enUS names, located through the
  * kind's metadata, in the profile files of `_Locales/enUS.w3mod:` or in the
  * data itself as a `WESTRING_` key of the editor strings. Nothing is
  * written here: the caller writes the files of a successful result.
@@ -39,9 +40,38 @@ export const BASE_LAYER = "War3.w3mod:";
 /** The enUS locale layer, which holds the names. */
 export const ENUS_LAYER = "War3.w3mod:_Locales/enUS.w3mod:";
 
-/** The Game data sets the index lists, by stable id. */
-export const GAME_DATA_SETS: readonly GameDataSet[] = [
-  { id: "default", label: "Default" },
+/** A Game data set and the layer its object data comes from. */
+interface LayeredGameDataSet extends GameDataSet {
+  /** The layer whose file of a kind replaces the base layer's, when it has one. */
+  layer: string;
+  /**
+   * The qualifier of its own values in the profile files, which no layer
+   * replaces: `Name:custom,V1=` names an object in the Custom set, over
+   * `Name=`.
+   */
+  qualifier?: string;
+}
+
+/**
+ * The Game data sets the index lists, by stable id, as the World Editor of
+ * 3.0 offers them in its map options (Default, Custom, Melee), each with the
+ * layer #509 gives it. Which layer a map reads for each Game Data Version
+ * is not yet settled in game (#564).
+ */
+export const GAME_DATA_SETS: readonly LayeredGameDataSet[] = [
+  { id: "default", label: "Default", layer: BASE_LAYER },
+  {
+    id: "custom",
+    label: "Custom",
+    layer: `${BASE_LAYER}_Balance/Custom_V1.w3mod:`,
+    qualifier: "custom,V1",
+  },
+  {
+    id: "melee",
+    label: "Melee",
+    layer: `${BASE_LAYER}_Balance/Melee_V0.w3mod:`,
+    qualifier: "melee,V0",
+  },
 ];
 
 /**
@@ -285,6 +315,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
     return editorStrings;
   };
 
+  const listed = new Set(storage.paths().map((path) => path.toLowerCase()));
   const objects: Record<string, IndexEntry> = {};
   const kindOf = new Map<string, ObjectKind>();
   const counts: Partial<Record<ObjectKind, number>> = {};
@@ -295,49 +326,67 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
     }
     const profile = await namesProfile(storage, source, fields, read);
 
-    const data = parseSlk(await read(BASE_LAYER + source.data));
-    if (!data.columns.includes(source.idColumn)) {
-      throw new CascError(
-        `${BASE_LAYER}${source.data} has no column ${source.idColumn}.`,
-      );
+    // Each set's file of the kind: its layer's when the layer has one, else
+    // the base layer's. Each file is checked once, however many sets read it.
+    const rowsByFile = new Map<
+      string,
+      Map<string, ReadonlyMap<string, string>>
+    >();
+    const setFiles = GAME_DATA_SETS.map((set) =>
+      listed.has((set.layer + source.data).toLowerCase())
+        ? set.layer + source.data
+        : BASE_LAYER + source.data,
+    );
+    for (const path of new Set(setFiles)) {
+      rowsByFile.set(path, await kindRows(source, path, read, diagnostics));
     }
+    /** Each object's row, from the first set that holds it, and its sets. */
+    const held = new Map<
+      string,
+      { row: ReadonlyMap<string, string>; sets: string[] }
+    >();
+    GAME_DATA_SETS.forEach((set, i) => {
+      for (const [rawcode, row] of rowsByFile.get(setFiles[i]) ?? []) {
+        const entry = held.get(rawcode);
+        if (entry === undefined) held.set(rawcode, { row, sets: [set.id] });
+        else entry.sets.push(set.id);
+      }
+    });
+
     const rawcodes = new Set<string>();
     /** The profile field that gave each object its name. */
     const namedBy = new Map<string, NameField>();
-    let keyless = 0;
-    for (const row of data.rows) {
-      const rawcode = row.get(source.idColumn);
-      if (rawcode === undefined) {
-        keyless++;
-        continue;
-      }
-      if (!RAWCODE.test(rawcode)) {
-        diagnostics.push({
-          severity: "error",
-          message: `${BASE_LAYER}${source.data}: the ${source.kind} ${JSON.stringify(rawcode)} is not a Rawcode of four characters of [A-Za-z0-9].`,
-        });
-        continue;
-      }
+    for (const [rawcode, { row, sets }] of held) {
       const other = kindOf.get(rawcode);
       if (other !== undefined) {
         diagnostics.push({
           severity: "error",
-          message:
-            other === source.kind
-              ? `${BASE_LAYER}${source.data}: the ${source.kind} ${rawcode} has two rows.`
-              : `${rawcode} is both ${article(other)} and ${article(source.kind)}: an overload has one kind.`,
+          message: `${rawcode} is both ${article(other)} and ${article(source.kind)}: an overload has one kind.`,
         });
         continue;
       }
       kindOf.set(rawcode, source.kind);
       rawcodes.add(rawcode);
 
+      // The name of the first set that holds the object: its own value in
+      // the profile files, else the one every set shares.
+      const qualifier = GAME_DATA_SETS.find(
+        (set) => set.id === sets[0],
+      )?.qualifier;
+      const keys = (field: NameField) =>
+        qualifier === undefined
+          ? [field.field]
+          : [`${field.field}:${qualifier}`, field.field];
       let name = "";
       for (const field of fields) {
         let text = field.inProfile
-          ? field.perLevel
-            ? profile.first(rawcode, field.field)
-            : profile.get(rawcode, field.field)
+          ? keys(field)
+              .map((key) =>
+                field.perLevel
+                  ? profile.first(rawcode, key)
+                  : profile.get(rawcode, key),
+              )
+              .find((value) => value !== undefined)
           : row.get(field.field);
         if (text?.startsWith("WESTRING_")) {
           const key = text;
@@ -370,18 +419,9 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
         kind: source.kind,
         ...(name !== "" && { name }),
         ...(race !== undefined && race !== "" && { race }),
-        sets: GAME_DATA_SETS.map((set) => set.id),
+        sets,
         constant,
       };
-    }
-    if (keyless > 0) {
-      diagnostics.push({
-        severity: "warning",
-        message:
-          keyless === 1
-            ? `${BASE_LAYER}${source.data}: 1 row has no ${source.idColumn}, the Rawcode's column: it is no ${source.kind} and is skipped.`
-            : `${BASE_LAYER}${source.data}: ${String(keyless)} rows have no ${source.idColumn}, the Rawcode's column: they are no ${KIND_CONSTANTS[source.kind].entry} and are skipped.`,
-      });
     }
     counts[source.kind] = rawcodes.size;
     for (const override of profile.overrides) {
@@ -409,7 +449,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
     format: INDEX_FORMAT,
     build: storage.build,
     gameVersion,
-    gameDataSets: [...GAME_DATA_SETS],
+    gameDataSets: GAME_DATA_SETS.map(({ id, label }) => ({ id, label })),
     objects,
   };
   return {
@@ -431,6 +471,53 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
     counts,
     diagnostics,
   };
+}
+
+/**
+ * The rows of a kind's data file by Rawcode. A Rawcode not of four
+ * `[A-Za-z0-9]` characters, or with two rows, is an error and left out; rows
+ * with no Rawcode cell are fragments of the table, skipped with a warning.
+ */
+async function kindRows(
+  source: KindSource,
+  path: string,
+  read: (path: string) => Promise<string>,
+  diagnostics: Diagnostic[],
+): Promise<Map<string, ReadonlyMap<string, string>>> {
+  const data = parseSlk(await read(path));
+  if (!data.columns.includes(source.idColumn)) {
+    throw new CascError(`${path} has no column ${source.idColumn}.`);
+  }
+  const rows = new Map<string, ReadonlyMap<string, string>>();
+  let keyless = 0;
+  for (const row of data.rows) {
+    const rawcode = row.get(source.idColumn);
+    if (rawcode === undefined) {
+      keyless++;
+    } else if (!RAWCODE.test(rawcode)) {
+      diagnostics.push({
+        severity: "error",
+        message: `${path}: the ${source.kind} ${JSON.stringify(rawcode)} is not a Rawcode of four characters of [A-Za-z0-9].`,
+      });
+    } else if (rows.has(rawcode)) {
+      diagnostics.push({
+        severity: "error",
+        message: `${path}: the ${source.kind} ${rawcode} has two rows.`,
+      });
+    } else {
+      rows.set(rawcode, row);
+    }
+  }
+  if (keyless > 0) {
+    diagnostics.push({
+      severity: "warning",
+      message:
+        keyless === 1
+          ? `${path}: 1 row has no ${source.idColumn}, the Rawcode's column: it is no ${source.kind} and is skipped.`
+          : `${path}: ${String(keyless)} rows have no ${source.idColumn}, the Rawcode's column: they are no ${KIND_CONSTANTS[source.kind].entry} and are skipped.`,
+    });
+  }
+  return rows;
 }
 
 /** `a unit`, `an ability`. */

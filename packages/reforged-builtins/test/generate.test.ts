@@ -118,14 +118,16 @@ describe("builtins:generate", () => {
   "build": "3.0.0.24268",
   "gameVersion": "3.0.0",
   "gameDataSets": [
-    {"id":"default","label":"Default"}
+    {"id":"default","label":"Default"},
+    {"id":"custom","label":"Custom"},
+    {"id":"melee","label":"Melee"}
   ],
   "objects": {
-    "Hpal": {"kind":"unit","name":"Paladin","race":"human","sets":["default"],"constant":"Paladin_Hpal"},
-    "hfoo": {"kind":"unit","name":"Footman","race":"human","sets":["default"],"constant":"Footman_hfoo"},
-    "hkni": {"kind":"unit","name":"Knight","race":"human","sets":["default"],"constant":"Knight_hkni"},
-    "nmrl": {"kind":"unit","name":"Mur'gul Slave","race":"naga","sets":["default"],"constant":"MurgulSlave_nmrl"},
-    "sfoo": {"kind":"unit","name":"Footman","race":"human","sets":["default"],"constant":"Footman_sfoo"}
+    "Hpal": {"kind":"unit","name":"Paladin","race":"human","sets":["default","custom","melee"],"constant":"Paladin_Hpal"},
+    "hfoo": {"kind":"unit","name":"Footman","race":"human","sets":["default","custom","melee"],"constant":"Footman_hfoo"},
+    "hkni": {"kind":"unit","name":"Knight","race":"human","sets":["default","custom","melee"],"constant":"Knight_hkni"},
+    "nmrl": {"kind":"unit","name":"Mur'gul Slave","race":"naga","sets":["default","custom","melee"],"constant":"MurgulSlave_nmrl"},
+    "sfoo": {"kind":"unit","name":"Footman","race":"human","sets":["default","custom","melee"],"constant":"Footman_sfoo"}
   }
 }
 `,
@@ -364,7 +366,7 @@ return {
     expect(
       await readFile(join(outDir, "3.0.0", "index.json"), "utf8"),
     ).toContain(
-      '"Ubtr": {"kind":"unit","name":"Death Knight","race":"undead","sets":["default"],"constant":"DeathKnight_Ubtr"}',
+      '"Ubtr": {"kind":"unit","name":"Death Knight","race":"undead","sets":["default","custom","melee"],"constant":"DeathKnight_Ubtr"}',
     );
   });
 
@@ -877,6 +879,98 @@ describe("builtins:generate on every Object kind", () => {
     expect(stdout).toContain(
       "- warning: The doodad LObr has no enUS name; its constant is Unnamed_LObr.\n",
     );
+  });
+});
+
+describe("builtins:generate on every Game data set", () => {
+  const MELEE = "War3.w3mod:_Balance/Melee_V0.w3mod:";
+  const CUSTOM = "War3.w3mod:_Balance/Custom_V1.w3mod:";
+
+  async function layered() {
+    const storage = await writeStorage(
+      allKinds({
+        // The base's units add a Knight no layer has.
+        [UNIT_DATA]: unitDataSlk([
+          { id: "hfoo", race: "human" },
+          { id: "Hpal", race: "human" },
+          { id: "hkni", race: "human" },
+        ]),
+        // Melee's units have no Paladin.
+        [`${MELEE}Units/UnitData.slk`]: unitDataSlk([
+          { id: "hfoo", race: "human" },
+        ]),
+        // Custom's units add a unit of their own.
+        [`${CUSTOM}Units/UnitData.slk`]: unitDataSlk([
+          { id: "hfoo", race: "human" },
+          { id: "Hpal", race: "human" },
+          { id: "hcus", race: "human" },
+        ]),
+        [strings("HumanUnitStrings.txt")]: profile({
+          // A name of the Melee set, or of the HD graphics, is not the name
+          // of an object the Default set holds.
+          hfoo: {
+            Name: "Footman",
+            "Name:melee,V0": "Melee Footman",
+            "Name:hd": "HD Footman",
+          },
+          Hpal: { Name: "Paladin" },
+          hkni: { Name: "Knight" },
+          // Named for the Custom set alone, as its layer holds it alone.
+          hcus: { "Name:custom,V1": "Custom Footman" },
+        }),
+      }),
+    );
+    const outDir = await tempDir("out");
+    const result = await run(storage.installDir, outDir);
+    return { ...result, outDir };
+  }
+
+  it("takes a set's objects from its layer's file of the kind, else from the base layer's, and names one by the first set that holds it", async () => {
+    const { status, stderr, outDir } = await layered();
+
+    expect(stderr).toBe("");
+    expect(status).toBe(0);
+    const index = JSON.parse(
+      await readFile(join(outDir, "3.0.0", "index.json"), "utf8"),
+    ) as {
+      gameDataSets: unknown;
+      objects: Record<string, { sets: string[]; name?: string }>;
+    };
+    expect(index.gameDataSets).toEqual([
+      { id: "default", label: "Default" },
+      { id: "custom", label: "Custom" },
+      { id: "melee", label: "Melee" },
+    ]);
+    const sets = Object.fromEntries(
+      Object.entries(index.objects).map(([id, entry]) => [id, entry.sets]),
+    );
+    expect(sets).toMatchObject({
+      hfoo: ["default", "custom", "melee"],
+      Hpal: ["default", "custom"],
+      hcus: ["custom"],
+      hkni: ["default"],
+      // No layer has a file of items: every set reads the base layer's.
+      ratf: ["default", "custom", "melee"],
+    });
+    expect(index.objects.hcus.name).toBe("Custom Footman");
+    expect(index.objects.hfoo.name).toBe("Footman");
+  });
+
+  it("says in the TSDoc which sets hold an object, and nothing when every one does", async () => {
+    const { outDir } = await layered();
+
+    const units = await readFile(join(outDir, "3.0.0", "units.d.ts"), "utf8");
+    const docOf = (constant: string) => {
+      const end = units.indexOf(`  readonly ${constant}:`);
+      return units.slice(units.lastIndexOf("/**", end), end);
+    };
+    expect(docOf("Paladin_Hpal")).toContain(
+      "In the Default and Custom Game data sets. Not in the Melee Game data set.",
+    );
+    expect(docOf("CustomFootman_hcus")).toContain(
+      "In the Custom Game data set. Not in the Default and Melee Game data sets.",
+    );
+    expect(docOf("Footman_hfoo")).not.toContain("Game data set");
   });
 });
 
