@@ -1,0 +1,10 @@
+---
+"reforged-builtins": major
+---
+
+The Built-in objects take the names the game gives, measured in game on 3.0.0.24268 ([#564](https://github.com/phmilk/reforged-ts/issues/564)): an object named twice in the names files takes its first name, not its last, and a profile section names its Rawcode whatever its case (`[ANsp]` names `Ansp`). 19 constants change name, which breaks code that names them:
+
+- named twice: `Units.DeathKnight_Ubtr` is `Units.Noble_Ubtr`; `Abilities.ItemLesserMarkOfTheForsaken_Almf` is `Abilities.DeathCoil_Almf`; `Abilities.ItemBlueDrakeSummon_AIfd` is `Abilities.ItemRedDrakeSummon_AIfd`; `Abilities.ItemBlueDragonspawnOverseerSummon_AIff` is `Abilities.ItemFurbolgSummon_AIff`; `Abilities.ItemBlueDragonFigurine_Abdf` is `Abilities.BreathOfFrost_Abdf`; `Abilities.ItemEdricsEye_AIee` is `Abilities.ForsakenGaze_AIee`; `Abilities.ItemEssenceOfTheSpiderQueen_Aesq` is `Abilities.EssenceOfTheSpiderQueen_Aesq`; `Abilities.ItemKnightsJavelin_Atkj` is `Abilities.KnightsJavelin_Atkj`; `Abilities.ItemForsakenFangs_Atff` is `Abilities.Cannibalize_Atff`; `Abilities.ItemDrunkenHazePintOfAle_Apoa` is `Abilities.DrunkenHaze_Apoa`; `Abilities.ItemInfectiousClaws_Auic` is `Abilities.InfectiousClaws_Auic`; `Abilities.ItemSummonInfectiousGhoul_Asic` is `Abilities.SummonInfectiousGhoul_Asic`; `Abilities.SummonBanshee_AFRw` is `Abilities.ItemSummonBanshee_AFRw`; `Buffs.DustOfAppearance_Bdet` is `Buffs.Detected_Bdet`.
+- a section cased unlike its Rawcode, unnamed until now: `Abilities.Unnamed_Ansp` is `Abilities.Spy_Ansp`; `Abilities.Unnamed_Aisy` is `Abilities.ItemAttackSpeedBonus_Aisy`; `Abilities.Unnamed_AEqu` is `Abilities.EquipmentSlots_AEqu`; `Buffs.Unnamed_BOac` is `Buffs.CommandAura_BOac`; `Buffs.Unnamed_Xesn` is `Buffs.SentinelEffect_Xesn`.
+
+No Native gives a buff's name, so `Bdet`, `BOac` and `Xesn` follow the abilities' rules by inference, whose names files they share. Their check on screen is [#581](https://github.com/phmilk/reforged-ts/issues/581); should it disagree, a later release renames them again.

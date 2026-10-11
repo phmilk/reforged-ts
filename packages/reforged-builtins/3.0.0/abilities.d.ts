@@ -1270,11 +1270,11 @@ export declare const Abilities: {
   readonly PurifierBladeOrb_AEpb: Rawcode<"ability">;
 
   /**
-   * `AEqu`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+   * Equipment Slots (`AEqu`), a Built-in ability of Patch 3.0.0, race other.
    *
    * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
-  readonly Unnamed_AEqu: Rawcode<"ability">;
+  readonly EquipmentSlots_AEqu: Rawcode<"ability">;
 
   /**
    * Starfall (`AEsb`), a Built-in ability of Patch 3.0.0, race creeps.
@@ -1347,11 +1347,11 @@ export declare const Abilities: {
   readonly ItemSummonBanshee_AFRq: Rawcode<"ability">;
 
   /**
-   * Summon Banshee (`AFRw`), a Built-in ability of Patch 3.0.0, race other.
+   * Item Summon Banshee (`AFRw`), a Built-in ability of Patch 3.0.0, race other.
    *
    * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
-  readonly SummonBanshee_AFRw: Rawcode<"ability">;
+  readonly ItemSummonBanshee_AFRw: Rawcode<"ability">;
 
   /**
    * Item Dark Ranger's Bracers Attack (`AFRx`), a Built-in ability of Patch 3.0.0, race other.
@@ -2727,11 +2727,11 @@ export declare const Abilities: {
   readonly ItemExperienceGain_AIe2: Rawcode<"ability">;
 
   /**
-   * Item Edric's Eye (`AIee`), a Built-in ability of Patch 3.0.0, race other.
+   * Forsaken Gaze (`AIee`), a Built-in ability of Patch 3.0.0, race other.
    *
    * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
-  readonly ItemEdricsEye_AIee: Rawcode<"ability">;
+  readonly ForsakenGaze_AIee: Rawcode<"ability">;
 
   /**
    * Item Experience Gain (`AIem`), a Built-in ability of Patch 3.0.0, race other.
@@ -2764,9 +2764,9 @@ export declare const Abilities: {
   readonly ItemAttackFireBonus_AIfb: Rawcode<"ability">;
 
   /**
-   * Item Blue Drake Summon (`AIfd`), a Built-in ability of Patch 3.0.0, race other.
+   * Item Red Drake Summon (`AIfd`), a Built-in ability of Patch 3.0.0, race other.
    */
-  readonly ItemBlueDrakeSummon_AIfd: Rawcode<"ability">;
+  readonly ItemRedDrakeSummon_AIfd: Rawcode<"ability">;
 
   /**
    * Item Capture The Flag (`AIfe`), a Built-in ability of Patch 3.0.0, race other.
@@ -2774,9 +2774,9 @@ export declare const Abilities: {
   readonly ItemCaptureTheFlag_AIfe: Rawcode<"ability">;
 
   /**
-   * Item Blue Dragonspawn Overseer Summon (`AIff`), a Built-in ability of Patch 3.0.0, race other.
+   * Item Furbolg Summon (`AIff`), a Built-in ability of Patch 3.0.0, race other.
    */
-  readonly ItemBlueDragonspawnOverseerSummon_AIff: Rawcode<"ability">;
+  readonly ItemFurbolgSummon_AIff: Rawcode<"ability">;
 
   /**
    * Cloud of Fog (`AIfg`), a Built-in ability of Patch 3.0.0, race other.
@@ -5737,11 +5737,11 @@ export declare const Abilities: {
   readonly ItemAuraOfTwistedBones_Abcs: Rawcode<"ability">;
 
   /**
-   * Item Blue Dragon Figurine (`Abdf`), a Built-in ability of Patch 3.0.0, race other.
+   * Breath of Frost (`Abdf`), a Built-in ability of Patch 3.0.0, race other.
    *
    * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
-  readonly ItemBlueDragonFigurine_Abdf: Rawcode<"ability">;
+  readonly BreathOfFrost_Abdf: Rawcode<"ability">;
 
   /**
    * Blight Dispel Large (`Abdl`), a Built-in ability of Patch 3.0.0, race other.
@@ -6412,11 +6412,11 @@ export declare const Abilities: {
   readonly Sentinel_Aesn: Rawcode<"ability">;
 
   /**
-   * Item Essence of the Spider Queen (`Aesq`), a Built-in ability of Patch 3.0.0, race other.
+   * Essence of the Spider Queen (`Aesq`), a Built-in ability of Patch 3.0.0, race other.
    *
    * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
-  readonly ItemEssenceOfTheSpiderQueen_Aesq: Rawcode<"ability">;
+  readonly EssenceOfTheSpiderQueen_Aesq: Rawcode<"ability">;
 
   /**
    * Sentinel (`Aesr`), a Built-in ability of Patch 3.0.0, race nightelf.
@@ -6971,11 +6971,11 @@ export declare const Abilities: {
   readonly UnitInventory_Aion: Rawcode<"ability">;
 
   /**
-   * `Aisy`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+   * Item Attack Speed Bonus (`Aisy`), a Built-in ability of Patch 3.0.0, race other.
    *
    * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
-  readonly Unnamed_Aisy: Rawcode<"ability">;
+  readonly ItemAttackSpeedBonus_Aisy: Rawcode<"ability">;
 
   /**
    * Unit Inventory (`Aiun`), a Built-in ability of Patch 3.0.0, race other.
@@ -7038,11 +7038,11 @@ export declare const Abilities: {
   readonly LightningAttack_Alit: Rawcode<"ability">;
 
   /**
-   * Item Lesser Mark of the Forsaken (`Almf`), a Built-in ability of Patch 3.0.0, race other.
+   * Death Coil (`Almf`), a Built-in ability of Patch 3.0.0, race other.
    *
    * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
-  readonly ItemLesserMarkOfTheForsaken_Almf: Rawcode<"ability">;
+  readonly DeathCoil_Almf: Rawcode<"ability">;
 
   /**
    * Load (`Aloa`), a Built-in ability of Patch 3.0.0, race other.
@@ -7289,9 +7289,9 @@ export declare const Abilities: {
   readonly HardenedSkin_Ansk: Rawcode<"ability">;
 
   /**
-   * `Ansp`, unnamed, a Built-in ability of Patch 3.0.0, race creeps.
+   * Spy (`Ansp`), a Built-in ability of Patch 3.0.0, race creeps.
    */
-  readonly Unnamed_Ansp: Rawcode<"ability">;
+  readonly Spy_Ansp: Rawcode<"ability">;
 
   /**
    * Healing Ward Aura (`Aoar`), a Built-in ability of Patch 3.0.0, race orc.
@@ -7479,11 +7479,11 @@ export declare const Abilities: {
   readonly PoisonSting_Apo2: Rawcode<"ability">;
 
   /**
-   * Item Drunken Haze (Pint of Ale) (`Apoa`), a Built-in ability of Patch 3.0.0, race other.
+   * Drunken Haze (`Apoa`), a Built-in ability of Patch 3.0.0, race other.
    *
    * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
-  readonly ItemDrunkenHazePintOfAle_Apoa: Rawcode<"ability">;
+  readonly DrunkenHaze_Apoa: Rawcode<"ability">;
 
   /**
    * Poison Sting (`Apoi`), a Built-in ability of Patch 3.0.0, race other.
@@ -7982,11 +7982,11 @@ export declare const Abilities: {
   readonly WandOfShadowsight_Ashs: Rawcode<"ability">;
 
   /**
-   * Item Summon Infectious Ghoul (`Asic`), a Built-in ability of Patch 3.0.0, race other.
+   * Summon Infectious Ghoul (`Asic`), a Built-in ability of Patch 3.0.0, race other.
    *
    * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
-  readonly ItemSummonInfectiousGhoul_Asic: Rawcode<"ability">;
+  readonly SummonInfectiousGhoul_Asic: Rawcode<"ability">;
 
   /**
    * Sell Items (`Asid`), a Built-in ability of Patch 3.0.0, race other.
@@ -8292,18 +8292,18 @@ export declare const Abilities: {
   readonly DropPilot_Atdp: Rawcode<"ability">;
 
   /**
-   * Item Forsaken Fangs (`Atff`), a Built-in ability of Patch 3.0.0, race other.
+   * Cannibalize (`Atff`), a Built-in ability of Patch 3.0.0, race other.
    *
    * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
-  readonly ItemForsakenFangs_Atff: Rawcode<"ability">;
+  readonly Cannibalize_Atff: Rawcode<"ability">;
 
   /**
-   * Item Knight's Javelin (`Atkj`), a Built-in ability of Patch 3.0.0, race other.
+   * Knight's Javelin (`Atkj`), a Built-in ability of Patch 3.0.0, race other.
    *
    * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
-  readonly ItemKnightsJavelin_Atkj: Rawcode<"ability">;
+  readonly KnightsJavelin_Atkj: Rawcode<"ability">;
 
   /**
    * Item Tiara of the Kirin'Tor (`Atkt`), a Built-in ability of Patch 3.0.0, race other.
@@ -8412,11 +8412,11 @@ export declare const Abilities: {
   readonly UnholyFrenzy_Auhf: Rawcode<"ability">;
 
   /**
-   * Item Infectious Claws (`Auic`), a Built-in ability of Patch 3.0.0, race other.
+   * Infectious Claws (`Auic`), a Built-in ability of Patch 3.0.0, race other.
    *
    * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
-  readonly ItemInfectiousClaws_Auic: Rawcode<"ability">;
+  readonly InfectiousClaws_Auic: Rawcode<"ability">;
 
   /**
    * Ultravision (`Ault`), a Built-in ability of Patch 3.0.0, race nightelf.

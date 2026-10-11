@@ -42,6 +42,31 @@ const ELSEWHERE = path.resolve("elsewhere", "wc3");
 /** The `.build.info` of ELSEWHERE's install: the folder above it. */
 const BUILD_INFO = path.join(path.dirname(ELSEWHERE), ".build.info");
 
+/** The build config `buildInfo` names, in ELSEWHERE's install. */
+const BUILD_CONFIG = path.join(
+  path.dirname(ELSEWHERE),
+  "Data",
+  "config",
+  "3a",
+  "9d",
+  "3a9d8f26806936764d2d9ad526a65e04",
+);
+
+/**
+ * A build config's lines around `build-name` (read on 3.0.0.24268), with
+ * `name` as its `build-name`, or none when `name` is null.
+ */
+function buildConfig(name: string | null): string {
+  return [
+    "# Build Configuration",
+    "",
+    "root = 6d1bd1a0e3f6e6bba8bd6b4fd8b3d1c2",
+    ...(name === null ? [] : [`build-name = ${name}`]),
+    "build-product = W3",
+    "",
+  ].join("\n");
+}
+
 /** The Build of the Typings' manifest the Probes compile against. */
 const TYPINGS_PATCH = readPatch(PROBE_FOLDERS.manifest);
 
@@ -184,6 +209,11 @@ interface Scenario {
    * default; null for an install without one.
    */
   client?: string | null;
+  /**
+   * The build config `.build.info` names: its text, `buildConfig(...)`;
+   * none by default.
+   */
+  config?: string;
 }
 
 interface Ran {
@@ -212,6 +242,7 @@ async function run(scenario: Scenario = {}): Promise<Ran> {
   const files: Record<string, string> = {
     [ELSEWHERE]: "",
     ...(client !== null && { [BUILD_INFO]: buildInfo(client) }),
+    ...(scenario.config !== undefined && { [BUILD_CONFIG]: scenario.config }),
   };
   let file = "";
   const machine = fakeMachine({
@@ -659,6 +690,65 @@ describe("probe:run", () => {
     );
     expect(events).toEqual([]);
     expect(existsSync(context.folders.output)).toBe(false);
+  });
+
+  it("takes the Build the build config names, as builtins:generate does, saying so without failing when .build.info gives another Version", async () => {
+    const { code, stdout, stderr, context } = await run({
+      client: "3.0.0.24248",
+      config: buildConfig(`${TYPINGS_PATCH}-retail`),
+      script: game(12),
+    });
+
+    expect(stderr).toBe("");
+    expect(code).toBe(0);
+    expect(stdout.split("\n")[0]).toBe(
+      `${BUILD_INFO} gives the Version 3.0.0.24248, but its build config ${BUILD_CONFIG} names ${TYPINGS_PATCH}: the install's content is ${TYPINGS_PATCH}, which the run takes. The Battle.net app writes a wrong Version there at times; the client needs no update.`,
+    );
+    expect(stdout.split("\n")[1]).toMatch(/^Built Probe hello, run /);
+    const read = readProbeRun("hello", {
+      machine: context.machine,
+      stateFolder: context.folders.state,
+    });
+    expect(read).toMatchObject({ state: "finished", client: TYPINGS_PATCH });
+  });
+
+  it("prints nothing of the Build when the build config and .build.info agree", async () => {
+    const { code, stdout } = await run({
+      config: buildConfig(`${TYPINGS_PATCH}-retail`),
+      script: game(12),
+    });
+
+    expect(code).toBe(0);
+    expect(stdout).toMatch(/^Built Probe hello, run /);
+  });
+
+  it("refuses a build config that names another Build than the Typings' Patch, naming the build config, whatever .build.info gives", async () => {
+    const { code, stderr, events } = await run({
+      config: buildConfig("3.0.0.24000-retail"),
+    });
+
+    expect(code).toBe(4);
+    expect(stderr).toBe(
+      `probe:run failed: The game client is on Build 3.0.0.24000 (${BUILD_CONFIG}), not on ${TYPINGS_PATCH}, the Patch of the Typings: a run would test another Build than the one the Typings declare. Update the game through the Battle.net app when it is behind; when it is ahead, the run of ${TYPINGS_PATCH} is skipped.\n`,
+    );
+    expect(events).toEqual([]);
+  });
+
+  it("takes .build.info's Version when the build config names no build-name", async () => {
+    const agrees = await run({ config: buildConfig(null), script: game(12) });
+    expect(agrees.code).toBe(0);
+    expect(agrees.stdout).toMatch(/^Built Probe hello, run /);
+
+    const { code, stderr } = await run({
+      client: "3.0.0.24000",
+      config: buildConfig(null),
+    });
+    expect(code).toBe(4);
+    expect(
+      stderr.startsWith(
+        `probe:run failed: The game client is on Build 3.0.0.24000 (${BUILD_INFO}),`,
+      ),
+    ).toBe(true);
   });
 
   it("refuses an install without a .build.info before any build, naming where it looked, exit code 4", async () => {

@@ -353,7 +353,9 @@ return {
     );
   });
 
-  it("keeps the last name a unit is given, with a warning", async () => {
+  // The rules of the names files below are the game's, measured by the
+  // Probe builtins-names on 3.0.0.24268 (docs/research/builtins-names.md).
+  it("keeps the first name a unit is given, as the game does, with a warning", async () => {
     const storage = await writeStorage(
       unitStorage([{ id: "Ubtr", race: "undead", name: "Noble" }], [], {
         files: {
@@ -368,12 +370,12 @@ return {
 
     expect(status).toBe(0);
     expect(stdout).toContain(
-      `- warning: The unit Ubtr is named "Noble", then "Death Knight" in ${strings("HumanUnitStrings.txt")}: the last name wins.\n`,
+      `- warning: The unit Ubtr is named "Noble", then "Death Knight" in ${strings("HumanUnitStrings.txt")}: the first name wins.\n`,
     );
     expect(
       await readFile(join(outDir, "3.0.0", "index.json"), "utf8"),
     ).toContain(
-      '"Ubtr": {"kind":"unit","name":"Death Knight","race":"undead","sets":["default","custom","melee"],"constant":"DeathKnight_Ubtr"}',
+      '"Ubtr": {"kind":"unit","name":"Noble","race":"undead","sets":["default","custom","melee"],"constant":"Noble_Ubtr"}',
     );
   });
 
@@ -397,11 +399,27 @@ return {
 
     expect(status).toBe(0);
     expect(stdout).toContain(
-      `- warning: The unit Hpal is named "Old", then "New" in ${LOWER_CASE_STRINGS}: the last name wins.\n`,
+      `- warning: The unit Hpal is named "Old", then "New" in ${LOWER_CASE_STRINGS}: the first name wins.\n`,
     );
     expect(
       await readFile(join(outDir, "3.0.0", "index.json"), "utf8"),
-    ).toContain('"Hpal": {"kind":"unit","name":"New"');
+    ).toContain('"Hpal": {"kind":"unit","name":"Old"');
+  });
+
+  it("matches a section to its Rawcode without regard to case, as the game does", async () => {
+    const storage = await writeStorage(
+      unitStorage([{ id: "Ansp", race: "creeps" }], [], {
+        files: { [strings("HumanUnitStrings.txt")]: "[ANsp]\r\nName=Spy\r\n" },
+      }),
+    );
+    const outDir = await tempDir("out");
+
+    const { status } = await run(storage.installDir, outDir);
+
+    expect(status).toBe(0);
+    expect(
+      await readFile(join(outDir, "3.0.0", "index.json"), "utf8"),
+    ).toContain('"Ansp": {"kind":"unit","name":"Spy","race":"creeps"');
   });
 
   it("finds every file of a storage whose encoding file spans many pages", async () => {
@@ -846,7 +864,7 @@ describe("builtins:generate on every Object kind", () => {
 
     const { stdout } = await run(storage.installDir, outDir);
 
-    expect(stdout).not.toContain("the last name wins");
+    expect(stdout).not.toContain("the first name wins");
   });
 
   it("skips a row with no Rawcode cell, with a warning", async () => {
@@ -858,6 +876,31 @@ describe("builtins:generate on every Object kind", () => {
     expect(stdout).toContain(
       `- warning: ${base("Units/AbilityData.slk")}: 1 row has no alias, the Rawcode's column: it is no ability and is skipped.\n`,
     );
+  });
+
+  it("keeps the later value of a WESTRING_ key both editor strings files set, without a warning", async () => {
+    const storage = await writeStorage(
+      allKinds({
+        [WORLD_EDIT_STRINGS]: profile({
+          WorldEditStrings: {
+            WESTRING_DEST_SUMMER_TREE_WALL: "Summer Tree Wall",
+            WESTRING_DOOD_LOBR: "Brazier (A)",
+          },
+        }),
+      }),
+    );
+    const outDir = await tempDir("out");
+
+    const { status, stdout } = await run(storage.installDir, outDir);
+
+    expect(status).toBe(0);
+    expect((await objectsIn(outDir)).LObr).toEqual([
+      "doodad",
+      "Brazier (A)",
+      undefined,
+      "BrazierA_LObr",
+    ]);
+    expect(stdout).not.toContain("name wins");
   });
 
   it("leaves unnamed, with a warning, a WESTRING_ key neither editor strings file holds", async () => {

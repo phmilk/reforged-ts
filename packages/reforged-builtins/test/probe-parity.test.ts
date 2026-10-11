@@ -1,7 +1,8 @@
 /**
  * The generator mirrors three helpers of the Probe runner, which it cannot
- * import (the packages share no code): the `.build.info` reader, the WSL
- * check and the script check. Each pair is run on the same inputs here, so
+ * import (the packages share no code): the reader of the Build (from
+ * `.build.info` and the build config it names), the WSL check and the
+ * script check. Each pair is run on the same inputs here, so
  * a fix to one that misses the other fails.
  */
 import path from "node:path";
@@ -9,7 +10,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { invokedDirectly as probeInvokedDirectly } from "../../../probe/src/cli/common.js";
 import { readClientBuild } from "../../../probe/src/game.js";
 import { isWsl as probeIsWsl } from "../../../probe/src/machine.js";
-import { parseBuildInfo } from "../src/casc/storage.js";
+import { buildConfigName, parseBuildInfo } from "../src/casc/storage.js";
 import { invokedDirectly, isWsl } from "../src/cli/generate.js";
 
 const KEY = "3a9d8f26806936764d2d9ad526a65e04";
@@ -68,6 +69,50 @@ describe("parseBuildInfo and the Probe runner's readClientBuild", () => {
     ],
   ])("agree on %s", (_, text, build) => {
     expect(both(text)).toEqual({ ours: build, probe: build });
+  });
+});
+
+/** The build config `KEY` names, in the install above EXECUTABLE. */
+const BUILD_CONFIG = path.join("/x", "Data", "config", "3a", "9d", KEY);
+
+describe("buildConfigName and the Probe runner's readClientBuild", () => {
+  it.each([
+    ["a retail build-name", "build-name = 3.0.0.24268-retail\n", "3.0.0.24268"],
+    [
+      "comments and CRLF line ends",
+      "# Build Configuration\r\n\r\nroot = abc\r\nbuild-name = 3.0.0.24268-retail\r\n",
+      "3.0.0.24268",
+    ],
+    ["no spaces around =", "build-name=3.0.0.24268\n", "3.0.0.24268"],
+    ["no build-name", "root = abc\nbuild-product = W3\n", undefined],
+    ["a build-name of no Build", "build-name = WOW-1234patch\n", undefined],
+    ["a commented build-name", "# build-name = 3.0.0.1\n", undefined],
+    [
+      "a build-name set twice, the last kept",
+      "build-name = 3.0.0.1\nbuild-name = 3.0.0.2\n",
+      "3.0.0.2",
+    ],
+    [
+      "a build-name set again to no Build",
+      "build-name = 3.0.0.1\nbuild-name = WOW-1234patch\n",
+      undefined,
+    ],
+    [
+      "a build-name of several words",
+      "build-name = 3.0.0.24268-retail extra\n",
+      "3.0.0.24268",
+    ],
+  ])("agree on %s", (_, config, build) => {
+    const probe = readClientBuild(EXECUTABLE, {
+      readFile: (file) =>
+        file === BUILD_INFO
+          ? `${HEADER}\nus|1|${KEY}|3.0.0.24248\n`
+          : file === BUILD_CONFIG
+            ? config
+            : undefined,
+    }).build;
+    expect(buildConfigName(config)).toBe(build);
+    expect(probe).toBe(build ?? "3.0.0.24248");
   });
 });
 

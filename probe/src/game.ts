@@ -100,20 +100,40 @@ export function resolveGameExecutable(
 /** The file the Battle.net app keeps the installed Build in, at the install's root. */
 export const BUILD_INFO_FILE = ".build.info";
 
-/** The client's Build, and the `.build.info` it was read from. */
+/** The client's Build, and where it was read from. */
 export interface ClientBuild {
+  /**
+   * The Build of the install's content: the one its build config names
+   * (`build-name`), else `.build.info`'s Version.
+   */
   build: string;
+  /** The file `build` was read from: the build config, else `.build.info`. */
   file: string;
+  /** The `.build.info` the build config was found from. */
+  buildInfoFile: string;
+  /** The Version of `.build.info`'s active row, which may differ from `build`. */
+  buildInfoVersion: string;
 }
 
+// The reading of .build.info and of the build config's build-name mirrors
+// parseBuildInfo and buildConfigName in
+// packages/reforged-builtins/src/casc/storage.ts, which the Probe runner
+// does not depend on: change both together.
+// packages/reforged-builtins/test/probe-parity.test.ts runs both.
+
 /**
- * The Build of the game client the executable belongs to: the `Version`
- * of the active row (`Active` 1) of the nearest `.build.info` in a folder
- * above the executable, the install's root (`<install>\_retail_\x86_64`
- * holds the executable). The file is a table the Battle.net app writes: a
- * header of `<name>!<type>:<size>` columns separated by `|`, then one row
- * per region. No such file, or one without an active `Version`, is an
- * AuthorError.
+ * The Build of the game client the executable belongs to, read as
+ * `builtins:generate` reads it. The nearest `.build.info` in a folder above
+ * the executable, at the install's root (`<install>\_retail_\x86_64` holds
+ * the executable), is a table the Battle.net app writes: a header of
+ * `<name>!<type>:<size>` columns separated by `|`, then one row per region.
+ * Its active row (`Active` 1) names the build config (`Build Key`), at
+ * `Data\config\<k0k1>\<k2k3>\<key>`, whose `build-name` is the Build of the
+ * content; without one, the active row's `Version` is the Build. The build
+ * config is the authority: the Battle.net app has written 3.0.0.24248 as the
+ * Version of the build config that names 3.0.0.24268, a Build that never
+ * existed (#564). No `.build.info`, or one without an active `Version`, is
+ * an AuthorError.
  */
 export function readClientBuild(
   executable: string,
@@ -133,17 +153,59 @@ export function readClientBuild(
     const columns = header.split("|").map((column) => column.split("!")[0]);
     const active = columns.indexOf("Active");
     const version = columns.indexOf("Version");
-    const build = rows
-      .map((row) => row.split("|"))
-      .find((cells) => active === -1 || cells[active] === "1")?.[version];
-    if (version === -1 || build === undefined || build === "") {
+    const key = columns.indexOf("Build Key");
+    const row = rows
+      .map((line) => line.split("|"))
+      .find((cells) => active === -1 || cells[active] === "1");
+    const buildInfoVersion = version === -1 ? undefined : row?.[version];
+    if (buildInfoVersion === undefined || buildInfoVersion === "") {
       throw new AuthorError(
         `${file} names no Version in an active row: probe:run reads the client's Build from it.`,
       );
     }
-    return { build, file };
+    const fallback = {
+      build: buildInfoVersion,
+      file,
+      buildInfoFile: file,
+      buildInfoVersion,
+    };
+    const buildConfigKey = key === -1 ? undefined : row?.[key];
+    if (
+      buildConfigKey === undefined ||
+      !/^[0-9a-f]{32}$/.test(buildConfigKey)
+    ) {
+      return fallback;
+    }
+    const configFile = path.join(
+      folder,
+      "Data",
+      "config",
+      buildConfigKey.slice(0, 2),
+      buildConfigKey.slice(2, 4),
+      buildConfigKey,
+    );
+    const buildName = buildConfigName(machine.readFile(configFile) ?? "");
+    return buildName === undefined
+      ? fallback
+      : { ...fallback, build: buildName, file: configFile };
   }
   throw new AuthorError(
     `No ${BUILD_INFO_FILE} above the game's executable ${executable}: probe:run reads the client's Build from it.`,
   );
+}
+
+/**
+ * The Build a build config names, `3.0.0.24268` of
+ * `build-name = 3.0.0.24268-retail`; undefined when it names none. A key
+ * set twice keeps its last value, as the generator's config reader does.
+ */
+function buildConfigName(config: string): string | undefined {
+  let value = "";
+  for (const line of config.split(/\r?\n/)) {
+    if (line.startsWith("#")) continue;
+    const at = line.indexOf("=");
+    if (at === -1 || line.slice(0, at).trim() !== "build-name") continue;
+    value = line.slice(at + 1).trim();
+  }
+  return /^\d+\.\d+\.\d+\.\d+/.exec(value)?.[0];
 }

@@ -721,11 +721,11 @@ declare function FourCC(id: "Ubal"): Rawcode<"unit">;
 declare function FourCC(id: "Ubru"): Rawcode<"unit">;
 
 /**
- * Death Knight (`Ubtr`), a Built-in unit of Patch 3.0.0, race undead.
+ * Noble (`Ubtr`), a Built-in unit of Patch 3.0.0, race undead.
  *
  * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
- * Its constant is `Units.DeathKnight_Ubtr`, from `reforged-builtins/units`.
+ * Its constant is `Units.Noble_Ubtr`, from `reforged-builtins/units`.
  */
 declare function FourCC(id: "Ubtr"): Rawcode<"unit">;
 
@@ -13757,11 +13757,11 @@ declare function FourCC(id: "AEpa"): Rawcode<"ability">;
 declare function FourCC(id: "AEpb"): Rawcode<"ability">;
 
 /**
- * `AEqu`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ * Equipment Slots (`AEqu`), a Built-in ability of Patch 3.0.0, race other.
  *
  * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
- * Its constant is `Abilities.Unnamed_AEqu`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.EquipmentSlots_AEqu`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AEqu"): Rawcode<"ability">;
 
@@ -13860,11 +13860,11 @@ declare function FourCC(id: "AFDw"): Rawcode<"ability">;
 declare function FourCC(id: "AFRq"): Rawcode<"ability">;
 
 /**
- * Summon Banshee (`AFRw`), a Built-in ability of Patch 3.0.0, race other.
+ * Item Summon Banshee (`AFRw`), a Built-in ability of Patch 3.0.0, race other.
  *
  * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
- * Its constant is `Abilities.SummonBanshee_AFRw`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.ItemSummonBanshee_AFRw`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AFRw"): Rawcode<"ability">;
 
@@ -15680,11 +15680,11 @@ declare function FourCC(id: "AIdv"): Rawcode<"ability">;
 declare function FourCC(id: "AIe2"): Rawcode<"ability">;
 
 /**
- * Item Edric's Eye (`AIee`), a Built-in ability of Patch 3.0.0, race other.
+ * Forsaken Gaze (`AIee`), a Built-in ability of Patch 3.0.0, race other.
  *
  * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
- * Its constant is `Abilities.ItemEdricsEye_AIee`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.ForsakenGaze_AIee`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIee"): Rawcode<"ability">;
 
@@ -15731,9 +15731,9 @@ declare function FourCC(id: "AIfa"): Rawcode<"ability">;
 declare function FourCC(id: "AIfb"): Rawcode<"ability">;
 
 /**
- * Item Blue Drake Summon (`AIfd`), a Built-in ability of Patch 3.0.0, race other.
+ * Item Red Drake Summon (`AIfd`), a Built-in ability of Patch 3.0.0, race other.
  *
- * Its constant is `Abilities.ItemBlueDrakeSummon_AIfd`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.ItemRedDrakeSummon_AIfd`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIfd"): Rawcode<"ability">;
 
@@ -15745,9 +15745,9 @@ declare function FourCC(id: "AIfd"): Rawcode<"ability">;
 declare function FourCC(id: "AIfe"): Rawcode<"ability">;
 
 /**
- * Item Blue Dragonspawn Overseer Summon (`AIff`), a Built-in ability of Patch 3.0.0, race other.
+ * Item Furbolg Summon (`AIff`), a Built-in ability of Patch 3.0.0, race other.
  *
- * Its constant is `Abilities.ItemBlueDragonspawnOverseerSummon_AIff`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.ItemFurbolgSummon_AIff`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "AIff"): Rawcode<"ability">;
 
@@ -19734,11 +19734,11 @@ declare function FourCC(id: "Aba2"): Rawcode<"ability">;
 declare function FourCC(id: "Abcs"): Rawcode<"ability">;
 
 /**
- * Item Blue Dragon Figurine (`Abdf`), a Built-in ability of Patch 3.0.0, race other.
+ * Breath of Frost (`Abdf`), a Built-in ability of Patch 3.0.0, race other.
  *
  * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
- * Its constant is `Abilities.ItemBlueDragonFigurine_Abdf`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.BreathOfFrost_Abdf`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Abdf"): Rawcode<"ability">;
 
@@ -20639,11 +20639,11 @@ declare function FourCC(id: "Aesa"): Rawcode<"ability">;
 declare function FourCC(id: "Aesn"): Rawcode<"ability">;
 
 /**
- * Item Essence of the Spider Queen (`Aesq`), a Built-in ability of Patch 3.0.0, race other.
+ * Essence of the Spider Queen (`Aesq`), a Built-in ability of Patch 3.0.0, race other.
  *
  * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
- * Its constant is `Abilities.ItemEssenceOfTheSpiderQueen_Aesq`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.EssenceOfTheSpiderQueen_Aesq`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aesq"): Rawcode<"ability">;
 
@@ -21388,11 +21388,11 @@ declare function FourCC(id: "Ainf"): Rawcode<"ability">;
 declare function FourCC(id: "Aion"): Rawcode<"ability">;
 
 /**
- * `Aisy`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+ * Item Attack Speed Bonus (`Aisy`), a Built-in ability of Patch 3.0.0, race other.
  *
  * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
- * Its constant is `Abilities.Unnamed_Aisy`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.ItemAttackSpeedBonus_Aisy`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Aisy"): Rawcode<"ability">;
 
@@ -21477,11 +21477,11 @@ declare function FourCC(id: "Aliq"): Rawcode<"ability">;
 declare function FourCC(id: "Alit"): Rawcode<"ability">;
 
 /**
- * Item Lesser Mark of the Forsaken (`Almf`), a Built-in ability of Patch 3.0.0, race other.
+ * Death Coil (`Almf`), a Built-in ability of Patch 3.0.0, race other.
  *
  * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
- * Its constant is `Abilities.ItemLesserMarkOfTheForsaken_Almf`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.DeathCoil_Almf`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Almf"): Rawcode<"ability">;
 
@@ -21818,9 +21818,9 @@ declare function FourCC(id: "Anmi"): Rawcode<"ability">;
 declare function FourCC(id: "Ansk"): Rawcode<"ability">;
 
 /**
- * `Ansp`, unnamed, a Built-in ability of Patch 3.0.0, race creeps.
+ * Spy (`Ansp`), a Built-in ability of Patch 3.0.0, race creeps.
  *
- * Its constant is `Abilities.Unnamed_Ansp`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.Spy_Ansp`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Ansp"): Rawcode<"ability">;
 
@@ -22072,11 +22072,11 @@ declare function FourCC(id: "Apne"): Rawcode<"ability">;
 declare function FourCC(id: "Apo2"): Rawcode<"ability">;
 
 /**
- * Item Drunken Haze (Pint of Ale) (`Apoa`), a Built-in ability of Patch 3.0.0, race other.
+ * Drunken Haze (`Apoa`), a Built-in ability of Patch 3.0.0, race other.
  *
  * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
- * Its constant is `Abilities.ItemDrunkenHazePintOfAle_Apoa`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.DrunkenHaze_Apoa`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Apoa"): Rawcode<"ability">;
 
@@ -22745,11 +22745,11 @@ declare function FourCC(id: "Ashm"): Rawcode<"ability">;
 declare function FourCC(id: "Ashs"): Rawcode<"ability">;
 
 /**
- * Item Summon Infectious Ghoul (`Asic`), a Built-in ability of Patch 3.0.0, race other.
+ * Summon Infectious Ghoul (`Asic`), a Built-in ability of Patch 3.0.0, race other.
  *
  * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
- * Its constant is `Abilities.ItemSummonInfectiousGhoul_Asic`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.SummonInfectiousGhoul_Asic`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Asic"): Rawcode<"ability">;
 
@@ -23163,20 +23163,20 @@ declare function FourCC(id: "Atdg"): Rawcode<"ability">;
 declare function FourCC(id: "Atdp"): Rawcode<"ability">;
 
 /**
- * Item Forsaken Fangs (`Atff`), a Built-in ability of Patch 3.0.0, race other.
+ * Cannibalize (`Atff`), a Built-in ability of Patch 3.0.0, race other.
  *
  * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
- * Its constant is `Abilities.ItemForsakenFangs_Atff`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.Cannibalize_Atff`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Atff"): Rawcode<"ability">;
 
 /**
- * Item Knight's Javelin (`Atkj`), a Built-in ability of Patch 3.0.0, race other.
+ * Knight's Javelin (`Atkj`), a Built-in ability of Patch 3.0.0, race other.
  *
  * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
- * Its constant is `Abilities.ItemKnightsJavelin_Atkj`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.KnightsJavelin_Atkj`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Atkj"): Rawcode<"ability">;
 
@@ -23323,11 +23323,11 @@ declare function FourCC(id: "Augh"): Rawcode<"ability">;
 declare function FourCC(id: "Auhf"): Rawcode<"ability">;
 
 /**
- * Item Infectious Claws (`Auic`), a Built-in ability of Patch 3.0.0, race other.
+ * Infectious Claws (`Auic`), a Built-in ability of Patch 3.0.0, race other.
  *
  * In the Default Game data set. Not in the Custom and Melee Game data sets.
  *
- * Its constant is `Abilities.ItemInfectiousClaws_Auic`, from `reforged-builtins/abilities`.
+ * Its constant is `Abilities.InfectiousClaws_Auic`, from `reforged-builtins/abilities`.
  */
 declare function FourCC(id: "Auic"): Rawcode<"ability">;
 
@@ -25327,9 +25327,9 @@ declare function FourCC(id: "BNvc"): Rawcode<"buff">;
 declare function FourCC(id: "BNwm"): Rawcode<"buff">;
 
 /**
- * `BOac`, unnamed, a Built-in buff of Patch 3.0.0, race orc.
+ * Command Aura (`BOac`), a Built-in buff of Patch 3.0.0, race orc.
  *
- * Its constant is `Buffs.Unnamed_BOac`, from `reforged-builtins/buffs`.
+ * Its constant is `Buffs.CommandAura_BOac`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "BOac"): Rawcode<"buff">;
 
@@ -25831,9 +25831,9 @@ declare function FourCC(id: "Bdef"): Rawcode<"buff">;
 declare function FourCC(id: "Bder"): Rawcode<"buff">;
 
 /**
- * Dust of Appearance (`Bdet`), a Built-in buff of Patch 3.0.0, race other.
+ * Detected (`Bdet`), a Built-in buff of Patch 3.0.0, race other.
  *
- * Its constant is `Buffs.DustOfAppearance_Bdet`, from `reforged-builtins/buffs`.
+ * Its constant is `Buffs.Detected_Bdet`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Bdet"): Rawcode<"buff">;
 
@@ -26659,9 +26659,9 @@ declare function FourCC(id: "Xclf"): Rawcode<"buff">;
 declare function FourCC(id: "Xdis"): Rawcode<"buff">;
 
 /**
- * `Xesn`, unnamed, a Built-in buff of Patch 3.0.0, race nightelf.
+ * Sentinel (Effect) (`Xesn`), a Built-in buff of Patch 3.0.0, race nightelf.
  *
- * Its constant is `Buffs.Unnamed_Xesn`, from `reforged-builtins/buffs`.
+ * Its constant is `Buffs.SentinelEffect_Xesn`, from `reforged-builtins/buffs`.
  */
 declare function FourCC(id: "Xesn"): Rawcode<"buff">;
 
