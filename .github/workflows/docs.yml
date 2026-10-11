@@ -70,6 +70,7 @@ jobs:
     with:
       tag: reforged-ts@${{ inputs.version }}
       rehearsal: true
-    # The App's key, alone and by name: the called job receives it only so.
+    # The App's key, alone and by name: an environment secret reaches the
+    # called job only when its caller passes it.
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}

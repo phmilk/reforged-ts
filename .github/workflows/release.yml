@@ -308,7 +308,8 @@ jobs:
     with:
       tag: ${{ needs.publish.outputs.library-tag }}
       rehearsal: false
-    # The App's key, alone and by name: the called job receives it only so.
+    # The App's key, alone and by name: an environment secret reaches the
+    # called job only when its caller passes it.
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 

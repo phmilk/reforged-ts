@@ -402,7 +402,7 @@ Fixes land only on the latest minor of the latest major. There are no maintenanc
 | `docs-cut`                  | after `publish`, when it published a `reforged-ts` version     | `contents: read`, the App                    | Calls `docs-cut.yml` with that version's tag and the App's key, passed alone by name: [the docs version cut](#the-docs-workflow), on a minor.                                                                                                             |
 | `template-dispatch-dry-run` | in the dry run only, after `template-gate`                     | `contents: read`                             | Writes the payload a release would send the Template to the job summary, and sends nothing.                                                                                                                                                               |
 
-The jobs that hold the App, `version`, `publish` and `template-dispatch`, run in the environment `app`, the home of the App's key ([Repository variables and secrets](#repository-variables-and-secrets)), and none of them runs in the dry run: its two jobs of their own, `version-dry-run` and `template-dispatch-dry-run`, do without the App, so a dry run rehearses any branch. npm's trusted publisher names no environment, so the publish job's environment changes nothing for npm.
+The jobs that hold the App, `version`, `publish` and `template-dispatch`, run in the environment `app` (`docs-cut` passes the key to `docs-cut.yml`, whose job runs there), the home of the App's key ([Repository variables and secrets](#repository-variables-and-secrets)), and none of them runs in the dry run: its two jobs of their own, `version-dry-run` and `template-dispatch-dry-run`, do without the App, so a dry run rehearses any branch. npm's trusted publisher names no environment, so the publish job's environment changes nothing for npm.
 
 The bytes published are the bytes the Template gate tested: the publish job downloads the artifact the gate downloaded, by its id, and `changeset publish --from-pack-dir` uploads those tarballs as they are. Provenance comes with trusted publishing, because the repository is public.
 
@@ -542,7 +542,7 @@ The cut starts from the release run's commit, the one the publish job tagged, so
 gh workflow run docs.yml --ref master -f version=1.99.0
 ```
 
-**When a job fails.** `deploy-next`: the site keeps the previous deployment; fix the cause on `master`, or re-run the job. `cut-version`: nothing is merged. Delete the branch `docs-version/<version>` if it was pushed (a re-run pushes it again), close its pull request if one was opened, then re-run the release's failed `docs-cut` job. A re-run publish job that published the library on its first attempt outputs no tag, so no cut follows it: run `pnpm docs:version <major.minor>` on the tag's commit and open the pull request by hand.
+**When a job fails.** `deploy-next`: the site keeps the previous deployment; fix the cause on `master`, or re-run the job. `cut-version`: nothing is merged. A caller that does not pass the App's key fails at startup, naming `APP_PRIVATE_KEY`: pass it by name, as above. Delete the branch `docs-version/<version>` if it was pushed (a re-run pushes it again), close its pull request if one was opened, then re-run the release's failed `docs-cut` job. A re-run publish job that published the library on its first attempt outputs no tag, so no cut follows it: run `pnpm docs:version <major.minor>` on the tag's commit and open the pull request by hand.
 
 ## The board
 

@@ -200,6 +200,8 @@ describe("the App's permissions", () => {
 
 const KEY = "secrets.APP_PRIVATE_KEY";
 const count = (text: string) => text.split(KEY).length - 1;
+/** How a calling job passes the key: alone, by name. */
+const PASSED = { APP_PRIVATE_KEY: `\${{ ${KEY} }}` };
 
 describe("the App's private key", () => {
   it("is read only in a job of an environment that admits master alone, or passed by name to board-dispatch.yml and docs-cut.yml", async () => {
@@ -227,9 +229,7 @@ describe("the App's private key", () => {
             ],
             `${file}, job ${id}`,
           ).toContain(job.uses);
-          expect(job.secrets, `${file}, job ${id}`).toEqual({
-            APP_PRIVATE_KEY: `\${{ ${KEY} }}`,
-          });
+          expect(job.secrets, `${file}, job ${id}`).toEqual(PASSED);
           read += reads;
           passers.push(`${file} ${id}`);
           continue;
@@ -279,12 +279,11 @@ describe("the App's private key", () => {
     // An environment secret reaches a called job only when its caller
     // passes it, and is empty otherwise (#554): each caller passes the key
     // alone, by name.
-    const secrets = { APP_PRIVATE_KEY: `\${{ ${KEY} }}` };
     expect(callers).toEqual([
       {
         at: "docs.yml cut-version",
         with: { tag: "reforged-ts@${{ inputs.version }}", rehearsal: true },
-        secrets,
+        secrets: PASSED,
       },
       {
         at: "release.yml docs-cut",
@@ -292,7 +291,7 @@ describe("the App's private key", () => {
           tag: "${{ needs.publish.outputs.library-tag }}",
           rehearsal: false,
         },
-        secrets,
+        secrets: PASSED,
       },
     ]);
     const on = (name: string) =>
@@ -319,6 +318,10 @@ describe("the App's private key", () => {
     ];
     expect(cut?.environment).toBe(APP_ENVIRONMENT);
     expect(JSON.stringify(cut).split("secrets.")).toHaveLength(2);
+    const token = cut?.steps?.find(
+      (step) => step.uses === "./.github/actions/app-token",
+    );
+    expect(token?.with?.["private-key"]).toBe(PASSED.APP_PRIVATE_KEY);
   });
 
   it("is not needed by the release's dry run, whose jobs run on any branch", async () => {
