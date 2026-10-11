@@ -5,13 +5,14 @@
  * a field of one value per level holds them.
  *
  * As the game reads them, measured by the Probe `builtins-names` on
- * 3.0.0.24268 (run 3adad009-fea9-452b-badd-38261defcde5,
+ * 3.0.0.24268 (run 1d12b599-e41f-482d-a4eb-e24ce230d9c9,
  * `docs/research/builtins-names.md`): keys and section names are matched
  * without regard to case (`Name` and `name` are one key, `[ANsp]` names
  * `Ansp`), and a key set twice for one Rawcode, in one file or across files
  * read in order, keeps its first value; the later one is reported. The
- * World Editor's own strings files are read with `keep: "last"`, a rule the
- * game cannot settle (`EDITOR_STRINGS` in `generate.ts`).
+ * World Editor's own strings files are read with `new Profile("last")`, a
+ * rule the game cannot settle (`EDITOR_STRINGS` in `generate.ts`); their
+ * one section matches without regard to case too.
  */
 
 /** A key that a later line set again, for the diagnostics. */
@@ -37,13 +38,13 @@ export type Keep = "first" | "last";
 /** Each section's keys and values, merged over every file read. */
 export class Profile {
   /** The value a key set twice keeps: the first, as the game's names files, by default. */
-  readonly keep: Keep;
+  readonly #keep: Keep;
   /** Each section's values by lower-cased key, as the line spells them, by lower-cased section. */
   readonly #sections = new Map<string, Map<string, string>>();
   readonly overrides: Override[] = [];
 
   constructor(keep: Keep = "first") {
-    this.keep = keep;
+    this.#keep = keep;
   }
 
   /** Merges the text of the profile file `file` into the profile. */
@@ -56,10 +57,11 @@ export class Profile {
       const header = /^\[([^\]]*)\]/.exec(line);
       if (header) {
         name = header[1].trim();
-        section = this.#sections.get(name.toLowerCase());
+        const lower = name.toLowerCase();
+        section = this.#sections.get(lower);
         if (section === undefined) {
           section = new Map<string, string>();
-          this.#sections.set(name.toLowerCase(), section);
+          this.#sections.set(lower, section);
         }
         continue;
       }
@@ -68,7 +70,7 @@ export class Profile {
       const key = line.slice(0, at).trim();
       const value = line.slice(at + 1).trim();
       const previous = section.get(key.toLowerCase());
-      if (previous === undefined || this.keep === "last") {
+      if (previous === undefined || this.#keep === "last") {
         section.set(key.toLowerCase(), value);
       }
       if (previous !== undefined && unquote(previous) !== unquote(value)) {
@@ -87,9 +89,7 @@ export class Profile {
 
   /** The value of `key` in section `section`, both matched without regard to case. */
   get(section: string, key: string): string | undefined {
-    const value = this.#sections
-      .get(section.toLowerCase())
-      ?.get(key.toLowerCase());
+    const value = this.#raw(section, key);
     return value === undefined ? undefined : unquote(value);
   }
 
@@ -98,10 +98,13 @@ export class Profile {
    * level gives its first level's.
    */
   first(section: string, key: string): string | undefined {
-    const value = this.#sections
-      .get(section.toLowerCase())
-      ?.get(key.toLowerCase());
+    const value = this.#raw(section, key);
     return value === undefined ? undefined : firstItem(value);
+  }
+
+  /** The value of `key` in section `section` as its line spells it, both matched without regard to case. */
+  #raw(section: string, key: string): string | undefined {
+    return this.#sections.get(section.toLowerCase())?.get(key.toLowerCase());
   }
 }
 

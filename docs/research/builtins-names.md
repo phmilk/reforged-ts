@@ -6,17 +6,17 @@ Which name the game gives a Built-in object when its enUS names files set it twi
 
 - **A name set twice: the first one wins** (Observed), within one section (`Ubtr` is "Noble", not "Death Knight") and across files (`Almf` is "Death Coil" from `CampaignAbilityStrings.txt`, not "Item Lesser Mark of the Forsaken" from `ItemAbilityStrings.txt`). The generator assumed the last one.
 - **Sections match their Rawcode regardless of case** (Observed): `Ansp` is "Spy" from `[ANsp]`, `Aisy` and `AEqu` are named from `[AIsy]` and `[Aequ]`. The generator matched exactly, so they were `Unnamed_`.
-- **Buffs: no Native gives their name** (Observed), so the rules apply to them by inference: they share the abilities' names files and the profile reader (Inferred).
+- **Buffs: no Native the run tried gives their name** (Observed), so the rules apply to them by inference: they share the abilities' names files and the profile reader (Inferred). The check on screen is [#581](https://github.com/phmilk/reforged-ts/issues/581), for a human.
 - The generator now follows the game: 19 constants change name.
 
 ## The run
 
 - Probe: `probe/probes/builtins-names.ts`.
-- Run `3adad009-fea9-452b-badd-38261defcde5`, 2026-10-10, `finished`, 65 records. An earlier run of the Probe without its buff steps, `aac34446-5ba3-441d-8a72-570e28a6ca0e`, gave the same records for every unit and ability.
+- Run `1d12b599-e41f-482d-a4eb-e24ce230d9c9`, 2026-10-10, `finished`, 65 records. Two earlier runs gave the same records: `3adad009-fea9-452b-badd-38261defcde5`, of the same steps before the Probe's helpers were refactored, and `aac34446-5ba3-441d-8a72-570e28a6ca0e`, without the buff steps, for every unit and ability.
 - Build 3.0.0.24268 (Patch of the Typings and of the client, from the install's build config; its `.build.info` gives 3.0.0.24248, see [#564](https://github.com/phmilk/reforged-ts/issues/564)).
 - Locale: enUS. The controls named once read as their enUS names (`hfoo` "Footman", `AHhb` "Holy Light"), although the Battle.net app is set to ptBR and the install holds ptBR text too.
 
-The Natives: `GetObjectName` for every object, `GetUnitName` of a unit created for each unit, `BlzGetAbilityTooltip` at level 0 for each ability and buff. For buffs also `BlzGetAbilityExtendedTooltip`, the buff added to a unit with `UnitAddAbility` and read with `BlzGetUnitAbility`, and the buff of an aura (`BOac` of `AOac`, `BHab` of `AHab`) read the same way 3 seconds after the aura was added.
+The Natives: `GetObjectName` for every object, `GetUnitName` of a unit created for each unit, `BlzGetAbilityTooltip` at level 0 for each ability and buff. For buffs also `BlzGetAbilityExtendedTooltip` at level 0; the buff's Rawcode added to a unit with `UnitAddAbility`, then read with `BlzGetUnitAbility`, and, had it found one, `BlzGetAbilityStringField` (`ABILITY_SF_NAME`) and `BlzGetAbilityStringLevelField` (`ABILITY_SLF_TOOLTIP_NORMAL`, level 0); and the buff of an aura (`BOac` of `AOac`, `BHab` of `AHab`), its `GetUnitAbilityLevel` and the same reading, 3 seconds after the aura was added to a unit.
 
 ## Names set twice
 
@@ -55,7 +55,7 @@ The first two columns are the enUS names files, read in the code-point order of 
 
 ## Buffs
 
-**Observed:** for every buff, the controls `BHbd` and `BHab` included, `GetObjectName` gives "Default string", `BlzGetAbilityTooltip` "Tool tip missing!" and `BlzGetAbilityExtendedTooltip` an empty string; `UnitAddAbility` of a buff's Rawcode returns `false`, and `BlzGetUnitAbility` finds nothing, after it and on the bearer of an aura (whose `GetUnitAbilityLevel` of the aura's buff stayed 0). No Native the run tried reads a buff's name, so the buffs `Bdet`, `BOac` and `Xesn` are not measured. A buff's tooltip title shows on screen only, a check for a human.
+**Observed:** for every buff, the controls `BHbd` and `BHab` included, `GetObjectName` gives "Default string", `BlzGetAbilityTooltip` "Tool tip missing!" and `BlzGetAbilityExtendedTooltip` an empty string; `UnitAddAbility` of a buff's Rawcode returns `false`, and `BlzGetUnitAbility` then finds nothing. The aura step settles nothing: the aura's buff never reached its bearer (`GetUnitAbilityLevel` 0 for `BOac` and for the control `BHab` alike), so reading the name of a buff a unit actually has is still untried. No Native the run tried reads a buff's name, so the buffs `Bdet`, `BOac` and `Xesn` are not measured. A buff's tooltip title shows on screen only: the check for a human is [#581](https://github.com/phmilk/reforged-ts/issues/581).
 
 **Inferred:** buffs are named in the same `Units/*AbilityStrings.txt` files as abilities, the same sections of them (`[Boac]` sits in `NeutralAbilityStrings.txt` beside `[ANsp]`), so the profile reader that gives the abilities their names gives the buffs theirs. The generator applies the same two rules to them.
 

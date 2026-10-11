@@ -10,7 +10,8 @@
  *
  * `isWsl` and `invokedDirectly` mirror the Probe runner's
  * (`probe/src/machine.ts`, `probe/src/cli/common.ts`), as `parseBuildInfo`
- * mirrors its `.build.info` reader: the packages share no code, and
+ * and `buildConfigName` (`src/casc/storage.ts`) mirror its reader of the
+ * Build, `readClientBuild` (`probe/src/game.ts`): the packages share no code, and
  * `test/probe-parity.test.ts` pins each pair to the same behaviour.
  */
 import { readFileSync, statSync } from "node:fs";

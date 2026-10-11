@@ -574,7 +574,7 @@ async function namesProfile(
  * `CampaignUnitStrings.txt` comes before `HumanUnitStrings.txt`.
  *
  * Settled in game by the Probe `builtins-names` on 3.0.0.24268 (run
- * 3adad009-fea9-452b-badd-38261defcde5, `docs/research/builtins-names.md`,
+ * 1d12b599-e41f-482d-a4eb-e24ce230d9c9, `docs/research/builtins-names.md`,
  * #564): of 14 names set twice, the game gives the first. `Ubtr` is
  * "Noble", the first of two names in `CampaignUnitStrings.txt`, and `Almf`
  * is "Death Coil", from `CampaignAbilityStrings.txt`, not "Item Lesser Mark

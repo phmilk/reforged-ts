@@ -184,7 +184,7 @@ export function readClientBuild(
       buildConfigKey.slice(2, 4),
       buildConfigKey,
     );
-    const buildName = buildNameOf(machine.readFile(configFile) ?? "");
+    const buildName = buildConfigName(machine.readFile(configFile) ?? "");
     return buildName === undefined
       ? fallback
       : { ...fallback, build: buildName, file: configFile };
@@ -196,14 +196,16 @@ export function readClientBuild(
 
 /**
  * The Build a build config names, `3.0.0.24268` of
- * `build-name = 3.0.0.24268-retail`; undefined when it names none.
+ * `build-name = 3.0.0.24268-retail`; undefined when it names none. A key
+ * set twice keeps its last value, as the generator's config reader does.
  */
-function buildNameOf(config: string): string | undefined {
+function buildConfigName(config: string): string | undefined {
+  let value = "";
   for (const line of config.split(/\r?\n/)) {
     if (line.startsWith("#")) continue;
     const at = line.indexOf("=");
     if (at === -1 || line.slice(0, at).trim() !== "build-name") continue;
-    return /^\d+\.\d+\.\d+\.\d+/.exec(line.slice(at + 1).trim())?.[0];
+    value = line.slice(at + 1).trim();
   }
-  return undefined;
+  return /^\d+\.\d+\.\d+\.\d+/.exec(value)?.[0];
 }

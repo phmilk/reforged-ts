@@ -87,6 +87,21 @@ describe("buildConfigName and the Probe runner's readClientBuild", () => {
     ["no build-name", "root = abc\nbuild-product = W3\n", undefined],
     ["a build-name of no Build", "build-name = WOW-1234patch\n", undefined],
     ["a commented build-name", "# build-name = 3.0.0.1\n", undefined],
+    [
+      "a build-name set twice, the last kept",
+      "build-name = 3.0.0.1\nbuild-name = 3.0.0.2\n",
+      "3.0.0.2",
+    ],
+    [
+      "a build-name set again to no Build",
+      "build-name = 3.0.0.1\nbuild-name = WOW-1234patch\n",
+      undefined,
+    ],
+    [
+      "a build-name of several words",
+      "build-name = 3.0.0.24268-retail extra\n",
+      "3.0.0.24268",
+    ],
   ])("agree on %s", (_, config, build) => {
     const probe = readClientBuild(EXECUTABLE, {
       readFile: (file) =>
