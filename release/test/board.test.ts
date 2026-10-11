@@ -119,6 +119,11 @@ describe("the definition", () => {
     }
   });
 
+  it("is titled Reforged-TS, and the README opens with the title", () => {
+    expect(BOARD_TITLE).toBe("Reforged-TS");
+    expect(BOARD_README.split("\n")[0]).toBe(`# ${BOARD_TITLE}`);
+  });
+
   it("spans both repositories of the owner", () => {
     expect(BOARD_REPOSITORIES).toEqual([
       `${BOARD_OWNER}/reforged-ts`,
