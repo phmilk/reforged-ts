@@ -26,17 +26,24 @@ describe("readGameData", () => {
   // The Template's map declares Melee, at 0x95, and Forsaken Kingdom, at
   // 0xdb: the values the World Editor of 3.0 gives a new map.
   it("reads the Template's Game Data Set and Game Data Version", () => {
-    expect(readGameData(TEMPLATE_W3I)).toEqual({ set: "melee", version: "fk" });
+    expect(readGameData(TEMPLATE_W3I)).toEqual({
+      set: "melee",
+      version: "fk",
+      melee: false,
+    });
     expect(int32At(TEMPLATE_W3I, 0x95)).toBe(2);
     expect(int32At(TEMPLATE_W3I, 0xdb)).toBe(2);
   });
 
-  it("refuses a format without a Game Data Version", () => {
-    const old = TEMPLATE_W3I.slice();
-    new DataView(old.buffer).setInt32(0, 28, true);
-    expect(() => readGameData(old)).toThrow(AuthorError);
-    expect(() => readGameData(old)).toThrow(/format 28/);
-  });
+  it.each([28, 33])(
+    "refuses format %i, of another layout than 39",
+    (format) => {
+      const other = TEMPLATE_W3I.slice();
+      new DataView(other.buffer).setInt32(0, format, true);
+      expect(() => readGameData(other)).toThrow(AuthorError);
+      expect(() => readGameData(other)).toThrow(`format ${String(format)}`);
+    },
+  );
 
   it("refuses a file that ends before its Game Data Version", () => {
     expect(() => readGameData(TEMPLATE_W3I.slice(0, 0xdc))).toThrow(
@@ -69,14 +76,36 @@ describe("writeGameData", () => {
       expect(readGameData(written)).toEqual({
         set: GAME_DATA_SETS[set],
         version: GAME_DATA_VERSIONS[version],
+        melee: false,
       });
     },
   );
 
-  it("leaves its input unchanged", () => {
-    const before = TEMPLATE_W3I.slice();
-    writeGameData(TEMPLATE_W3I, { set: "custom", version: "roc" });
-    expect(TEMPLATE_W3I).toEqual(before);
+  it("leaves its input unchanged, a Buffer included", () => {
+    const buffer = readFileSync(join(PROBE_FOLDERS.map, "war3map.w3i"));
+    const before = Buffer.from(buffer);
+    writeGameData(buffer, { set: "custom", version: "roc", melee: true });
+    expect(buffer).toEqual(before);
+  });
+
+  // The flags field, at 0x84, holds the melee map flag as its bit 0x0004.
+  it("sets the melee map flag, and no other bit", () => {
+    const written = writeGameData(TEMPLATE_W3I, { melee: true });
+
+    expect(readGameData(written)).toEqual({
+      set: "melee",
+      version: "fk",
+      melee: true,
+    });
+    expect(int32At(written, 0x84)).toBe(int32At(TEMPLATE_W3I, 0x84) | 0x0004);
+  });
+
+  it("writes nothing where the fields hold a value it does not know", () => {
+    const moved = TEMPLATE_W3I.slice();
+    new DataView(moved.buffer).setInt32(0xdb, 7, true);
+    expect(() => writeGameData(moved, { set: "custom" })).toThrow(
+      /Game Data Version 7/,
+    );
   });
 });
 
@@ -110,6 +139,9 @@ describe("gameDataMessage", () => {
     );
     expect(gameDataMessage({ version: "fk" })).toBe(
       " under the Game Data Version Forsaken Kingdom",
+    );
+    expect(gameDataMessage({ set: "default", melee: true })).toBe(
+      " under the Game Data Set Default and the melee map flag",
     );
   });
 });

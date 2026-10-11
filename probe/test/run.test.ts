@@ -390,7 +390,10 @@ describe("probe:run", () => {
         "war3map.w3i",
       ),
     );
-    expect(readGameData(staged)).toEqual({ set: "melee", version: "roc" });
+    expect(readGameData(staged)).toMatchObject({
+      set: "melee",
+      version: "roc",
+    });
   });
 
   it("records the client's Build in the run, beside the Typings' Patch, for the reader", async () => {

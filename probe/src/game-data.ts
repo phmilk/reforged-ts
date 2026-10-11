@@ -2,9 +2,11 @@
  * The Game Data Set and the Game Data Version a staged map declares in its
  * `war3map.w3i`, which a Probe run may choose (`--game-data-set`,
  * `--game-data-version`) without changing the committed map folder (#575).
+ * It may also set the melee map flag (`--melee-map`), which Default reads.
  * The fields are located as HiveWE's reader of the format locates them
- * (`src/base/map_info.ixx`), formats 31 to 39: the Game Data Version came
- * with format 31, and the World Editor of 3.0 saves format 39.
+ * (`src/base/map_info.ixx`), in format 39 alone, the World Editor of 3.0's
+ * and the Template's: a field another format adds or drops before them
+ * would move them.
  */
 import { AuthorError } from "./errors.js";
 
@@ -30,18 +32,22 @@ const LABELS: Readonly<Record<GameDataSet | GameDataVersion, string>> = {
 export interface GameData {
   set?: GameDataSet;
   version?: GameDataVersion;
+  /** The flag "Melee Map" of the map's options: set when true. */
+  melee?: boolean;
 }
 
 /** The command-line option of each field, without its `--`. */
 export const GAME_DATA_OPTIONS = {
   set: "game-data-set",
   version: "game-data-version",
+  melee: "melee-map",
 } as const;
 
 /** The options of `GAME_DATA_OPTIONS` as `parseArgs` takes them. */
 export const GAME_DATA_ARGS = {
   [GAME_DATA_OPTIONS.set]: { type: "string" },
   [GAME_DATA_OPTIONS.version]: { type: "string" },
+  [GAME_DATA_OPTIONS.melee]: { type: "boolean" },
 } as const;
 
 /** The Game data of the options `parseArgs` read with `GAME_DATA_ARGS`. */
@@ -52,20 +58,23 @@ export function gameDataOf(
     const value = values[name];
     return typeof value === "string" ? value : undefined;
   };
-  return parseGameData(
-    option(GAME_DATA_OPTIONS.set),
-    option(GAME_DATA_OPTIONS.version),
-  );
+  return {
+    ...parseGameData(
+      option(GAME_DATA_OPTIONS.set),
+      option(GAME_DATA_OPTIONS.version),
+    ),
+    ...(values[GAME_DATA_OPTIONS.melee] === true && { melee: true }),
+  };
 }
 
-/** The first format that stores the Game Data Version. */
-const FIRST_FORMAT = 31;
-/** The last format, the World Editor of 3.0's, which adds the loading screen's source and the fog's linear fields. */
-const LAST_FORMAT = 39;
+/** The format the runner reads, the World Editor of 3.0's. */
+const FORMAT = 39;
+/** The bit of the melee map flag in the flags field. */
+const MELEE_FLAG = 0x0004;
 
-/** The Game Data Set and the Game Data Version a `war3map.w3i` declares. */
+/** The Game Data Set, the Game Data Version and the melee flag a `war3map.w3i` declares. */
 export function readGameData(w3i: Uint8Array): Required<GameData> {
-  const { view, set, version } = locate(w3i);
+  const { view, flags, set, version } = locate(w3i);
   return {
     set: byIndex(GAME_DATA_SETS, view.getInt32(set, true), "Game Data Set"),
     version: byIndex(
@@ -73,18 +82,28 @@ export function readGameData(w3i: Uint8Array): Required<GameData> {
       view.getInt32(version, true),
       "Game Data Version",
     ),
+    melee: (view.getUint32(flags, true) & MELEE_FLAG) !== 0,
   };
 }
 
-/** A copy of `w3i` declaring what `gameData` sets, every other byte unchanged. */
+/**
+ * A copy of `w3i` declaring what `gameData` sets, every other byte
+ * unchanged. Its own values are read first: one the runner does not know
+ * means the fields are not where it looks, and it writes nothing.
+ */
 export function writeGameData(w3i: Uint8Array, gameData: GameData): Uint8Array {
-  const copy = w3i.slice();
-  const { view, set, version } = locate(copy);
+  readGameData(w3i);
+  // A copy: `slice` of a Buffer would share the caller's bytes.
+  const copy = new Uint8Array(w3i);
+  const { view, flags, set, version } = locate(copy);
   if (gameData.set !== undefined) {
     view.setInt32(set, GAME_DATA_SETS.indexOf(gameData.set), true);
   }
   if (gameData.version !== undefined) {
     view.setInt32(version, GAME_DATA_VERSIONS.indexOf(gameData.version), true);
+  }
+  if (gameData.melee === true) {
+    view.setUint32(flags, view.getUint32(flags, true) | MELEE_FLAG, true);
   }
   return copy;
 }
@@ -114,6 +133,7 @@ export function gameDataMessage(gameData: GameData): string {
     gameData.set !== undefined && `the Game Data Set ${LABELS[gameData.set]}`,
     gameData.version !== undefined &&
       `the Game Data Version ${LABELS[gameData.version]}`,
+    gameData.melee === true && "the melee map flag",
   ].filter((part) => part !== false);
   return parts.length === 0 ? "" : ` under ${parts.join(" and ")}`;
 }
@@ -141,9 +161,10 @@ function byIndex<T>(ids: readonly T[], index: number, field: string): T {
   return id;
 }
 
-/** The offsets of the two fields, read through the fields before them. */
+/** The offsets of the three fields, read through the fields before them. */
 function locate(w3i: Uint8Array): {
   view: DataView;
+  flags: number;
   set: number;
   version: number;
 } {
@@ -167,9 +188,9 @@ function locate(w3i: Uint8Array): {
 
   need(4);
   const format = view.getInt32(0, true);
-  if (format < FIRST_FORMAT || format > LAST_FORMAT) {
+  if (format !== FORMAT) {
     throw new AuthorError(
-      `war3map.w3i is of format ${String(format)}: the runner sets the Game data of formats ${String(FIRST_FORMAT)} to ${String(LAST_FORMAT)}. Save the map folder with the World Editor of 3.0.`,
+      `war3map.w3i is of format ${String(format)}: the runner sets the Game data of format ${String(FORMAT)}, the World Editor of 3.0's. Save the map folder with it.`,
     );
   }
   // Format, saves, editor version, and the game version's four parts.
@@ -177,24 +198,27 @@ function locate(w3i: Uint8Array): {
   // Name, author, description, recommended players.
   for (let i = 0; i < 4; i++) skipString();
   // Camera bounds (8 floats) and their complements (4 integers), playable
-  // width and height, flags, then the main tileset (1 byte).
-  skip(4 * 8 + 4 * 4 + 4 * 3 + 1);
-  // The loading screen's number, from 39 its source, then its model, text,
-  // title and subtitle.
-  skip(format >= LAST_FORMAT ? 8 : 4);
+  // width and height.
+  skip(4 * 8 + 4 * 4 + 4 * 2);
+  const flags = offset;
+  // The flags, then the main tileset (1 byte).
+  skip(4 + 1);
+  // The loading screen's number and source, then its model, text, title
+  // and subtitle.
+  skip(8);
   for (let i = 0; i < 4; i++) skipString();
   const set = offset;
   skip(4);
   // The prologue's model, text, title and subtitle.
   for (let i = 0; i < 4; i++) skipString();
   // Fog style, its start and end heights and density, its colour (4
-  // bytes), the weather, and from 39 six more fog fields.
-  skip(4 * 6 + (format >= LAST_FORMAT ? 4 * 6 : 0));
+  // bytes), the weather, and six more fog fields.
+  skip(4 * 6 + 4 * 6);
   // The sound environment, the light tileset (1 byte), the water colour
   // (4 bytes), the script language, the supported modes.
   skipString();
   skip(1 + 4 + 4 + 4);
   const version = offset;
   skip(4);
-  return { view, set, version };
+  return { view, flags, set, version };
 }

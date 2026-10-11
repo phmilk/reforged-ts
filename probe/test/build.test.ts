@@ -110,8 +110,35 @@ describe("buildProbe", () => {
 
     expect(
       readGameData(await readFile(join(result.stagingFolder, "war3map.w3i"))),
-    ).toEqual({ set: "custom", version: "roc" });
+    ).toMatchObject({ set: "custom", version: "roc" });
     expect(await readFile(join(folders.map, "war3map.w3i"))).toEqual(before);
+  });
+
+  it("keeps the Game data it staged in the Probe's state file", async () => {
+    const folders = await tempFolders();
+    buildProbe("hello", folders, {
+      gameData: { set: "default", melee: true },
+    });
+
+    expect(
+      JSON.parse(await readFile(stateFile(folders.state, "hello"), "utf8")),
+    ).toMatchObject({ gameData: { set: "default", melee: true } });
+  });
+
+  it("refuses Game data for a map folder without war3map.w3i, with a one-line author error", async () => {
+    const map = await mkdtemp(join(tmpdir(), "probe-map-"));
+    await writeFile(
+      join(map, "war3map.lua"),
+      await readFile(join(PROBE_FOLDERS.map, "war3map.lua")),
+    );
+    const folders = await tempFolders({ map });
+
+    expect(() =>
+      buildProbe("hello", folders, { gameData: { set: "custom" } }),
+    ).toThrow(AuthorError);
+    expect(() =>
+      buildProbe("hello", folders, { gameData: { set: "custom" } }),
+    ).toThrow(/has no war3map\.w3i/);
   });
 
   it("keeps the map's Game data when it is given none", async () => {
@@ -122,7 +149,7 @@ describe("buildProbe", () => {
 
     expect(
       readGameData(await readFile(join(result.stagingFolder, "war3map.w3i"))),
-    ).toEqual({ set: "melee", version: "tft" });
+    ).toMatchObject({ set: "melee", version: "tft" });
   });
 
   it("bakes the runId into the bundle and stores it in the Probe's state file", async () => {
@@ -297,7 +324,7 @@ describe("probe:build", () => {
           join(folders.output, "hello", "staging", "probe.w3m", "war3map.w3i"),
         ),
       ),
-    ).toEqual({ set: "custom", version: "fk" });
+    ).toMatchObject({ set: "custom", version: "fk" });
   });
 
   it("refuses an unknown Game Data Version on one line, with exit code 1", async () => {

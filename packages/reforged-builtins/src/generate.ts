@@ -38,10 +38,13 @@ import { parseSlk } from "./slk.js";
 /** The column of the Game Data Version an object came with, in the data of the versioned kinds. */
 const VERSION_COLUMN = "version";
 
-/** A row's Game Data Version: 0 without a cell, and, for a cell that is no number, none a set leaves out. */
+/** The version of a row whose cell is no number: below every set's, so every set holds it. */
+const NO_VERSION = -1;
+
+/** A row's Game Data Version: 0 without a cell, `NO_VERSION` for a cell that is no number. */
 function versionOf(row: ReadonlyMap<string, string>): number {
   const version = Number(row.get(VERSION_COLUMN) ?? 0);
-  return Number.isNaN(version) ? -1 : version;
+  return Number.isNaN(version) ? NO_VERSION : version;
 }
 
 /** The base layer: the object data of the sets of Forsaken Kingdom. */
@@ -65,9 +68,10 @@ interface LayeredGameDataSet extends GameDataSet {
   /**
    * The qualifier of its own values in the profile files, which no layer
    * replaces: `Name:custom,V1=` names an object in the Custom set of The
-   * Frozen Throne, over `Name=`.
+   * Frozen Throne, over `Name=`. The sets of Forsaken Kingdom, which read
+   * the base layer, have none.
    */
-  qualifier: string;
+  qualifier?: string;
 }
 
 /** A map's Game Data Sets, as the World Editor of 3.0 offers them, but Default. */
@@ -99,7 +103,9 @@ export const GAME_DATA_SETS: readonly LayeredGameDataSet[] = VERSIONS.flatMap(
       label: `${set.label} (${version.label})`,
       layer: `${BASE_LAYER}_Balance/${set.layer}_V${String(version.version)}.w3mod:`,
       version: version.version,
-      qualifier: `${set.id},V${String(version.version)}`,
+      ...(version.id !== "fk" && {
+        qualifier: `${set.id},V${String(version.version)}`,
+      }),
     })),
 );
 
@@ -554,15 +560,10 @@ async function kindRows(
       });
     } else {
       rows.set(rawcode, row);
-      const version = row.get(VERSION_COLUMN);
-      if (
-        source.versioned === true &&
-        version !== undefined &&
-        Number.isNaN(Number(version))
-      ) {
+      if (source.versioned === true && versionOf(row) === NO_VERSION) {
         diagnostics.push({
           severity: "warning",
-          message: `${path}: the ${source.kind} ${rawcode}'s version is ${JSON.stringify(version)}, not a number: every set holds it.`,
+          message: `${path}: the ${source.kind} ${rawcode}'s version is ${JSON.stringify(row.get(VERSION_COLUMN))}, not a number: every set holds it.`,
         });
       }
     }

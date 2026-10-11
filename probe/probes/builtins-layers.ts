@@ -68,6 +68,8 @@ export function run(p: ProbeContext): void {
       p.record("unit", { rawcode, created: "false" });
       continue;
     }
+    risky(p, `${rawcode} BlzGetUnitMaxHP`);
+    const hp = String(BlzGetUnitMaxHP(created));
     // GetUnitGoldCost of a hero crashes the game (Hct1, run eb5ea727).
     const hero = IsHeroUnitId(id);
     if (!hero) risky(p, `${rawcode} GetUnitGoldCost`);
@@ -75,7 +77,7 @@ export function run(p: ProbeContext): void {
       rawcode,
       created: "true",
       ...(!hero && { gold: String(GetUnitGoldCost(id)) }),
-      hp: String(BlzGetUnitMaxHP(created)),
+      hp,
     });
     RemoveUnit(created);
   }

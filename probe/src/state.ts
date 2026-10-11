@@ -6,6 +6,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { AuthorError } from "./errors.js";
+import type { GameData } from "./game-data.js";
 import type { Machine } from "./machine.js";
 
 export interface ProbeState {
@@ -17,6 +18,8 @@ export interface ProbeState {
    * build config; undefined for a build `probe:build` made alone.
    */
   client?: string;
+  /** The Game data the last build staged, for the report; absent when it kept the map's own. */
+  gameData?: GameData;
 }
 
 /** The state file of `probe` in the state folder. */
