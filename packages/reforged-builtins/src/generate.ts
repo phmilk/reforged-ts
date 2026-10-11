@@ -92,9 +92,10 @@ const VERSIONS = [
  * Version of a map, latest version first, as Probe runs on 3.0.0.24268
  * settled them (#575, docs/research/builtins-layers.md). A map reads the
  * layer `_Balance/<Set>_V<version>` where the install has it, else the
- * base layer, and leaves out every object of a later version: all the sets
- * of Forsaken Kingdom read the base layer whole. A map's Default set reads
- * Custom when the map is not a melee map, so it has no set of its own.
+ * base layer, and leaves out the units, items and abilities of a later
+ * version: all the sets of Forsaken Kingdom read the base layer whole. A
+ * map's Default set reads Custom, or Melee on a melee map, so it has no set
+ * of its own.
  */
 export const GAME_DATA_SETS: readonly LayeredGameDataSet[] = VERSIONS.flatMap(
   (version) =>

@@ -8,7 +8,7 @@ Which layer of the install's object data the game reads for a map's Game Data Se
 - **A unit, an item or an ability whose `version` cell is above the map's Game Data Version is left out** (Observed): under The Frozen Throne the base layer's Forsaken Kingdom hero `Hct1`, item `ecss` and ability `AIhs` (version 2) do not exist; under Reign of Chaos, the item `spur` and the ability `AHfs` (version 1) do not either.
 - **A destructable is not** (Observed): the base layer's `LTbr`, of version 1, is created under Reign of Chaos. Buffs, doodads and upgrades are not measured: no Native creates one where a Probe can see it.
 - **Forsaken Kingdom, which a new map gets, holds every object of the base layer, whatever the set** (Observed). So the Template's map, Melee of Forsaken Kingdom, plays with the base layer whole.
-- **Default reads Custom on a map that is not a melee map** (Observed, the Template's map): its three runs match Custom's. On a melee map it reads Melee, by the World Editor's label "based on map melee status" (Inferred; no run sets the melee flag).
+- **Default reads Custom on a map that is not a melee map, and Melee on a melee map** (Observed): its three runs on the Template's map match Custom's, and its runs with the "Melee Map" flag set (`--melee-map`) match Melee's.
 - The generator now follows the game: one Game data set per Game Data Set and Game Data Version, `custom-fk` to `melee-roc`, the version rule on units, items and abilities only, and the item `spur`, which no set holds, leaves the index.
 
 ## The runs
@@ -27,6 +27,8 @@ Which layer of the install's object data the game reads for a map's Game Data Se
 | Melee         | Reign of Chaos    | `dc26cd9c-fdfd-472f-a709-df0bac6e250e` |
 | Melee         | The Frozen Throne | `d205bd45-dfb7-4a26-9a2c-8c676bc87e20` |
 | Melee         | Forsaken Kingdom  | `945d70b5-efcf-4ec7-9ffd-04d7d72c4603` |
+
+With the melee map flag set (`--melee-map`, the bit `0x0004` of the flags), after the abilities' round, 16 records each: Default of The Frozen Throne `5df608fb-9be6-4b34-ab5f-0aee6251e8fa`, read Melee's base layer without `Hct1` (`hpea` 240, no `Asa2`), and Default of Reign of Chaos `0bc41dd4-2ad7-49b1-a219-d3bd82fea8fd`, read `Melee_V0` (no `nzof`, `hsor` 325). A last run of Melee of Forsaken Kingdom, `aeeebf98-3554-4003-a86e-866223ec58c3`, of the Probe as committed, gave every record of the rounds before.
 
 Two later rounds added the version rule's objects of the other kinds, under Custom and Melee (Default is Custom's), each `finished` with the records above unchanged:
 
