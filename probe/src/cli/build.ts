@@ -1,6 +1,6 @@
 /**
  * `probe:build [<probe> ...] [--game-data-set <set>] [--game-data-version
- * <version>]`: builds each Probe named, or every Probe of `probe/probes/`
+ * <version>] [--melee-map]`: builds each Probe named, or every Probe of `probe/probes/`
  * when none is, its staged map declaring the Game data the options set, and
  * prints where each was staged with the runId it bakes. Stops at the first
  * failure. Exit codes: 0 built; 1 a failure, an author error printed on

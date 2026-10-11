@@ -1,7 +1,7 @@
 /**
  * `probe:run <probe> [--game-executable <file>] [--begin-timeout <seconds>]
  * [--stall-timeout <seconds>] [--game-data-set <set>] [--game-data-version
- * <version>]`: run by the agent, native Windows only. Runs
+ * <version>] [--melee-map]`: run by the agent, native Windows only. Runs
  * the Probe in the game end to end and blocks until the run ends, printing
  * one progress line per event, then exactly what `probe:read` prints for the
  * run. Exit codes are `probe:read`'s: 0 `finished`, 1 `failed`, 2 `crashed`
@@ -32,7 +32,7 @@ import {
   type Output,
 } from "./common.js";
 
-const USAGE = `Usage: probe:run <probe> [${OPTION_FLAGS.gameExecutable} <file>] [--begin-timeout <seconds>] [--stall-timeout <seconds>] [--${GAME_DATA_OPTIONS.set} ${GAME_DATA_SETS.join("|")}] [--${GAME_DATA_OPTIONS.version} ${GAME_DATA_VERSIONS.join("|")}]\n`;
+const USAGE = `Usage: probe:run <probe> [${OPTION_FLAGS.gameExecutable} <file>] [--begin-timeout <seconds>] [--stall-timeout <seconds>] [--${GAME_DATA_OPTIONS.set} ${GAME_DATA_SETS.join("|")}] [--${GAME_DATA_OPTIONS.version} ${GAME_DATA_VERSIONS.join("|")}] [--${GAME_DATA_OPTIONS.melee}]\n`;
 
 /** Where the command builds, the machine it runs the game on, and the workspace its paths are relative to. */
 export type Context = Omit<RunContext, "progress">;

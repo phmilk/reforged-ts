@@ -32,8 +32,8 @@ const LABELS: Readonly<Record<GameDataSet | GameDataVersion, string>> = {
 export interface GameData {
   set?: GameDataSet;
   version?: GameDataVersion;
-  /** The flag "Melee Map" of the map's options: set when true. */
-  melee?: boolean;
+  /** The flag "Melee Map" of the map's options, set; the map's own when absent. */
+  melee?: true;
 }
 
 /** The command-line option of each field, without its `--`. */
@@ -73,7 +73,9 @@ const FORMAT = 39;
 const MELEE_FLAG = 0x0004;
 
 /** The Game Data Set, the Game Data Version and the melee flag a `war3map.w3i` declares. */
-export function readGameData(w3i: Uint8Array): Required<GameData> {
+export function readGameData(
+  w3i: Uint8Array,
+): Required<Omit<GameData, "melee">> & { melee: boolean } {
   const { view, flags, set, version } = locate(w3i);
   return {
     set: byIndex(GAME_DATA_SETS, view.getInt32(set, true), "Game Data Set"),

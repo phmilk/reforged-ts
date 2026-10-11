@@ -68,8 +68,9 @@ interface LayeredGameDataSet extends GameDataSet {
   /**
    * The qualifier of its own values in the profile files, which no layer
    * replaces: `Name:custom,V1=` names an object in the Custom set of The
-   * Frozen Throne, over `Name=`. The sets of Forsaken Kingdom, which read
-   * the base layer, have none.
+   * Frozen Throne, over `Name=`. The sets of Forsaken Kingdom have none:
+   * the profile files hold no `V2` value. Melee of The Frozen Throne keeps
+   * `melee,V1`, which they hold, though it reads the base layer.
    */
   qualifier?: string;
 }

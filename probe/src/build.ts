@@ -112,7 +112,8 @@ export function buildProbe(
   cleanOutputFolder(outputFolder);
   const stagingFolder = stagingFolderFor(outputFolder, folders.map);
   stageMapFolder(folders.map, stagingFolder);
-  if (Object.keys(gameData).length > 0) {
+  const setsGameData = Object.keys(gameData).length > 0;
+  if (setsGameData) {
     const w3i = path.join(stagingFolder, MAP_INFO);
     if (!fs.statSync(w3i, { throwIfNoEntry: false })?.isFile()) {
       throw new AuthorError(
@@ -145,7 +146,7 @@ export function buildProbe(
     probe,
     runId,
     ...(client !== undefined && { client }),
-    ...(Object.keys(gameData).length > 0 && { gameData }),
+    ...(setsGameData && { gameData }),
   });
   return {
     probe,
