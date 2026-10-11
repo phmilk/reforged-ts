@@ -19,7 +19,7 @@
 // - The stub value is nil or the header literal only, so the stub calls no
 //   Native.
 
-import type { EditorGlobal, EditorGlobalsModel } from "./model.js";
+import type { EditorGlobal, MapFolderModel } from "./model.js";
 
 /** The root of the handle types, for a `gg_` prefix the table does not know. */
 const ROOT_HANDLE = "handle";
@@ -52,7 +52,7 @@ const CALL = /^([A-Za-z_][A-Za-z0-9_]*)[ \t]*\(.*\)$/;
  * already removed by `readMapScript`, in the model; the first header
  * assignment of a name wins.
  */
-export function readWar3mapLua(text: string, model: EditorGlobalsModel): void {
+export function readWar3mapLua(text: string, model: MapFolderModel): void {
   const lines = text.split(/\r?\n/);
   const headerEnd = lines.findIndex((line) => FUNCTION_LINE.test(line));
   const header = headerEnd === -1 ? lines : lines.slice(0, headerEnd);
