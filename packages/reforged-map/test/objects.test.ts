@@ -455,3 +455,208 @@ describe("the warnings", () => {
     expect(constantsOf(customUnits(output))).toEqual([]);
   });
 });
+
+describe("the other six Object kinds", () => {
+  it.each([
+    [
+      "item",
+      "w3t",
+      "unam",
+      "I000",
+      "ratf",
+      "Claws of Attack +15",
+      "CustomItems",
+      false,
+    ],
+    [
+      "ability",
+      "w3a",
+      "anam",
+      "A000",
+      "AHbz",
+      "Blizzard",
+      "CustomAbilities",
+      true,
+    ],
+    ["buff", "w3h", "fnam", "B000", "Binf", "Inner Fire", "CustomBuffs", false],
+    [
+      "destructable",
+      "w3b",
+      "bnam",
+      "D000",
+      "LTlt",
+      "Summer Tree Wall",
+      "CustomDestructables",
+      false,
+    ],
+    ["doodad", "w3d", "dnam", "D001", "LObr", "Brazier", "CustomDoodads", true],
+    [
+      "upgrade",
+      "w3q",
+      "gnam",
+      "R000",
+      "Rhme",
+      "Iron Forged Swords",
+      "CustomUpgrades",
+      true,
+    ],
+  ] as const)(
+    "writes the overload and the constant of a Custom %s, from war3map.%s's %s",
+    (kind, extension, field, rawcode, base, baseName, constants, levels) => {
+      const output = generateObjects(
+        mapFolder({
+          [`war3mapSkin.${extension}`]: buildObjectData({
+            levels,
+            custom: [
+              {
+                original: base,
+                custom: rawcode,
+                modifications: [
+                  {
+                    field,
+                    value: "TRIGSTR_004",
+                    ...(levels && { level: field === "gnam" ? 1 : 0 }),
+                  },
+                ],
+              },
+            ],
+          }),
+          "war3map.wts": buildWts({ 4: "My Object" }),
+        }),
+        WITH_BUILTINS,
+      );
+      const description = `My Object (\`${rawcode}\`), a Custom ${kind} of this map, derived from ${baseName} (\`${base}\`).`;
+
+      expect(output.warnings).toEqual([]);
+      expect(overloads(output)).toContain(
+        [
+          "/**",
+          ` * ${description}`,
+          " *",
+          ` * Its constant is \`${constants}.MyObject_${rawcode}\`, from the generated \`${CONSTANTS_FILES[kind]}\`.`,
+          " */",
+          `declare function FourCC(id: "${rawcode}"): Rawcode<"${kind}">;`,
+        ].join("\n"),
+      );
+      expect(file(output, CONSTANTS_FILES[kind])).toContain(
+        [
+          `export const ${constants} = {`,
+          "  /**",
+          `   * ${description}`,
+          "   */",
+          `  MyObject_${rawcode}: ${String(Buffer.from(rawcode, "latin1").readUInt32BE(0))} as Rawcode<"${kind}">,`,
+          "} as const;",
+        ].join("\n"),
+      );
+    },
+  );
+
+  it("names a buff without an editor name by its tooltip's title, and one with both by its editor name", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3h": buildObjectData({
+          custom: [
+            {
+              original: "Binf",
+              custom: "B000",
+              modifications: [{ field: "ftip", value: "Holy Light" }],
+            },
+            {
+              original: "Binf",
+              custom: "B001",
+              modifications: [
+                { field: "ftip", value: "Tooltip" },
+                { field: "fnam", value: "Editor Name" },
+              ],
+            },
+          ],
+        }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(constantsOf(file(output, CONSTANTS_FILES.buff))).toEqual([
+      "HolyLight_B000",
+      "EditorName_B001",
+    ]);
+  });
+
+  it("names an upgrade by its first level's name", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3q": buildObjectData({
+          levels: true,
+          custom: [
+            {
+              original: "Rhme",
+              custom: "R000",
+              modifications: [
+                { field: "gnam", level: 3, value: "Steel Swords" },
+                { field: "gnam", level: 1, value: "Bronze Swords" },
+                { field: "gnam", level: 2, value: "Iron Swords" },
+              ],
+            },
+          ],
+        }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(constantsOf(file(output, CONSTANTS_FILES.upgrade))).toEqual([
+      "BronzeSwords_R000",
+    ]);
+  });
+
+  it("names an ability by its name when its other fields have levels", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3a": buildObjectData({
+          levels: true,
+          custom: [
+            {
+              original: "AHbz",
+              custom: "A000",
+              modifications: [
+                { field: "Hbz1", level: 1, dataPointer: 1, value: 5 },
+                { field: "anam", value: "Frost Storm" },
+                { field: "Hbz1", level: 2, dataPointer: 1, value: 8 },
+              ],
+            },
+          ],
+        }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(output.warnings).toEqual([]);
+    expect(constantsOf(file(output, CONSTANTS_FILES.ability))).toEqual([
+      "FrostStorm_A000",
+    ]);
+  });
+
+  it("writes every kind's objects in its own module, and the overloads kind by kind", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3u": buildObjectData({
+          custom: [customUnit("h000", "hfoo", "Captain")],
+        }),
+        "war3map.w3t": buildObjectData({
+          custom: [
+            {
+              original: "ratf",
+              custom: "I000",
+              modifications: [{ field: "unam", value: "Blade" }],
+            },
+          ],
+        }),
+      }),
+      withoutBuiltins(),
+    );
+
+    expect(overloadedOf(overloads(output))).toEqual(["h000", "I000"]);
+    expect(constantsOf(customUnits(output))).toEqual(["Captain_h000"]);
+    expect(constantsOf(file(output, CONSTANTS_FILES.item))).toEqual([
+      "Blade_I000",
+    ]);
+  });
+});

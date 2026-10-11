@@ -8,3 +8,17 @@
  * Its constant is `CustomUnits.Captain_h000`, from the generated `custom-units.ts`.
  */
 declare function FourCC(id: "h000"): Rawcode<"unit">;
+
+/**
+ * Blade (`I000`), a Custom item of this map, derived from Claws of Attack +15 (`ratf`).
+ *
+ * Its constant is `CustomItems.Blade_I000`, from the generated `custom-items.ts`.
+ */
+declare function FourCC(id: "I000"): Rawcode<"item">;
+
+/**
+ * Frost Storm (`A000`), a Custom ability of this map, derived from Blizzard (`AHbz`).
+ *
+ * Its constant is `CustomAbilities.FrostStorm_A000`, from the generated `custom-abilities.ts`.
+ */
+declare function FourCC(id: "A000"): Rawcode<"ability">;
