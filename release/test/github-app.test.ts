@@ -202,7 +202,7 @@ const KEY = "secrets.APP_PRIVATE_KEY";
 const count = (text: string) => text.split(KEY).length - 1;
 
 describe("the App's private key", () => {
-  it("is read only in a job of an environment that admits master alone, or passed by name to board-dispatch.yml", async () => {
+  it("is read only in a job of an environment that admits master alone, or passed by name to board-dispatch.yml and docs-cut.yml", async () => {
     const readers: string[] = [];
     const passers: string[] = [];
     for (const { file, text, workflow } of await readWorkflows()) {
@@ -215,13 +215,18 @@ describe("the App's private key", () => {
           (step) => step.uses === "./.github/actions/app-token",
         );
         if (reads === 0 && !mints) continue;
-        // A job that calls board-dispatch.yml cannot declare an environment:
-        // it passes the key by name, and the called job reads it in the
-        // calling repository's environment board (ADR 0017).
+        // A job that calls a reusable workflow cannot declare an
+        // environment: it passes the key by name, and the called job reads
+        // it in its own environment, board-dispatch.yml's in the calling
+        // repository's board (ADR 0017), docs-cut.yml's in app (#571).
         if (job?.uses !== undefined) {
-          expect(job.uses, `${file}, job ${id}`).toBe(
-            "phmilk/reforged-ts/.github/workflows/board-dispatch.yml@master",
-          );
+          expect(
+            [
+              "phmilk/reforged-ts/.github/workflows/board-dispatch.yml@master",
+              "./.github/workflows/docs-cut.yml",
+            ],
+            `${file}, job ${id}`,
+          ).toContain(job.uses);
           expect(job.secrets, `${file}, job ${id}`).toEqual({
             APP_PRIVATE_KEY: `\${{ ${KEY} }}`,
           });
@@ -253,20 +258,33 @@ describe("the App's private key", () => {
         "release.yml template-dispatch",
       ]),
     );
-    expect(passers).toEqual(["claim-check.yml board-dispatch"]);
+    expect(passers).toEqual([
+      "claim-check.yml board-dispatch",
+      "docs.yml cut-version",
+      "release.yml docs-cut",
+    ]);
   });
 
-  it("cuts the docs version from master: called by the release and the rehearsal, never by a tag", async () => {
+  it("cuts the docs version from master: called by the release and the rehearsal with the key passed by name, never by a tag", async () => {
     const all = await readWorkflows();
     const callers = all.flatMap(({ file, workflow }) =>
       Object.entries(workflow.jobs)
         .filter(([, job]) => job?.uses === "./.github/workflows/docs-cut.yml")
-        .map(([id, job]) => ({ at: `${file} ${id}`, with: job?.with })),
+        .map(([id, job]) => ({
+          at: `${file} ${id}`,
+          with: job?.with,
+          secrets: job?.secrets,
+        })),
     );
+    // An environment secret reaches a called job only when its caller
+    // passes it, and is empty otherwise (#554): each caller passes the key
+    // alone, by name.
+    const secrets = { APP_PRIVATE_KEY: `\${{ ${KEY} }}` };
     expect(callers).toEqual([
       {
         at: "docs.yml cut-version",
         with: { tag: "reforged-ts@${{ inputs.version }}", rehearsal: true },
+        secrets,
       },
       {
         at: "release.yml docs-cut",
@@ -274,6 +292,7 @@ describe("the App's private key", () => {
           tag: "${{ needs.publish.outputs.library-tag }}",
           rehearsal: false,
         },
+        secrets,
       },
     ]);
     const on = (name: string) =>
@@ -281,6 +300,25 @@ describe("the App's private key", () => {
     // A tag's run is on the tag's ref, which the environment refuses.
     expect(on("docs.yml").push).not.toHaveProperty("tags");
     expect(Object.keys(on("docs-cut.yml"))).toEqual(["workflow_call"]);
+    // Required, so a caller that does not pass the key fails at startup
+    // rather than as an empty key in the token action.
+    expect(on("docs-cut.yml").workflow_call).toEqual({
+      inputs: expect.any(Object) as unknown,
+      secrets: {
+        APP_PRIVATE_KEY: {
+          description: expect.any(String) as unknown,
+          required: true,
+        },
+      },
+    });
+    // `required` checks only that the key is passed, never its value: the
+    // token action alone receives it, in the environment app. One secret in
+    // the whole job, a job-level env included: the token's.
+    const cut = all.find(({ file }) => file === "docs-cut.yml")?.workflow.jobs[
+      "cut-version"
+    ];
+    expect(cut?.environment).toBe(APP_ENVIRONMENT);
+    expect(JSON.stringify(cut).split("secrets.")).toHaveLength(2);
   });
 
   it("is not needed by the release's dry run, whose jobs run on any branch", async () => {

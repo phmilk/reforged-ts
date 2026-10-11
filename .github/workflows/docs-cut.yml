@@ -12,6 +12,13 @@
 # tag can push one on a branch's commit, whose workflow would then read the
 # key. The release calls it on master's commit, the one the publish job
 # tagged.
+#
+# The caller passes the key by name: an environment secret reaches a called
+# job only when its caller passes it, and is empty otherwise, even when the
+# job declares the environment (#554, #571). Passed, the job receives the
+# value of the environment app, which wins over a repository secret of the
+# same name. release/test/github-app.test.ts holds the declaration and both
+# callers' maps.
 name: docs-cut
 
 on:
@@ -28,6 +35,15 @@ on:
           A rehearsal: open the pull request with auto-merge turned off
           again at once.
         type: boolean
+        required: true
+    secrets:
+      # Required, so a caller that does not pass the key fails at startup
+      # rather than as an empty key in the token action. Required checks
+      # only that the key is passed, not its value.
+      APP_PRIVATE_KEY:
+        description: >
+          The App's private key, passed by name from the caller; the job
+          reads the value of the environment app.
         required: true
 
 permissions:

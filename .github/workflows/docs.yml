@@ -70,3 +70,6 @@ jobs:
     with:
       tag: reforged-ts@${{ inputs.version }}
       rehearsal: true
+    # The App's key, alone and by name: the called job receives it only so.
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
