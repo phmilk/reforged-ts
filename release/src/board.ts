@@ -21,8 +21,12 @@ import { errorMessage, isRecord } from "./unknown.js";
 /** The owner of the project and of both repositories: the maintainer's account. */
 export const BOARD_OWNER = "phmilk";
 
-/** The project's title: how `board:setup` finds it among the owner's projects. */
-export const BOARD_TITLE = "Claim board";
+/**
+ * The project's title: how `board:setup` and `board:reconcile` find it among
+ * the owner's projects. A rename of the project on GitHub changes this and
+ * the project together: under any other title neither command finds it.
+ */
+export const BOARD_TITLE = "Reforged-TS";
 
 /** The repositories the board spans and is linked to, as `owner/name`. */
 export const BOARD_REPOSITORIES: readonly string[] = [
@@ -139,9 +143,9 @@ export const CLAIM_DOC_URL =
   "https://github.com/phmilk/reforged-ts/blob/master/docs/agents/issue-tracker.md#claim";
 
 /** The project's README: the rules in prose, and that nothing here is moved by hand. */
-export const BOARD_README = `# Claim board
+export const BOARD_README = `# ${BOARD_TITLE}
 
-Every open issue of [phmilk/reforged-ts](https://github.com/phmilk/reforged-ts) and [phmilk/reforged-ts-template](https://github.com/phmilk/reforged-ts-template), with a Status derived from GitHub state. One reconcile workflow in phmilk/reforged-ts is the board's single writer: it reads every open issue of both repositories, computes each Status by the rules below and writes only the differences, hourly and on every issue and pull-request event. Every value is derived, and nothing here is moved by hand: a card moved by hand is put back by the next run.
+The Claim board: every open issue of [phmilk/reforged-ts](https://github.com/phmilk/reforged-ts) and [phmilk/reforged-ts-template](https://github.com/phmilk/reforged-ts-template), with a Status derived from GitHub state. One reconcile workflow in phmilk/reforged-ts is the board's single writer: it reads every open issue of both repositories, computes each Status by the rules below and writes only the differences, hourly and on every issue and pull-request event. Every value is derived, and nothing here is moved by hand: a card moved by hand is put back by the next run.
 
 ## Status
 
