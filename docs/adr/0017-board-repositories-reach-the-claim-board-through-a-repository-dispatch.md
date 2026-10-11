@@ -45,6 +45,8 @@ The called job keeps `environment: board`: it is the only place the environment'
 - `secrets: inherit`. The probe showed it delivers the key between repositories of a user account too, but it hands the library's workflow every secret the caller can reach (`SYNC_TOKEN` in the Template if set, any future one), where a map hands one; a copy of the caller that drops its `if` would hand its owner's secrets to code at the library's `master`; and the docs promise `inherit` only within an organization or an enterprise, not between repositories of a user. `release/test/github-app.test.ts` refuses `inherit` in any workflow of the library.
 - A plain job in each Board repository that mints the token and sends the dispatch itself. The list of Board repositories would live in copied code that its copier can delete, the logic would be duplicated in the Template's `board.yml` and `claim.yml`, the claim check would need outputs to tell the caller when to dispatch, and the central decision above, a reusable workflow in the library, would be reversed.
 
+The first amendment's `docs-cut.yml`, whose job declares `environment: app`, rested on the same assumption and failed the same way in the release that published `reforged-builtins@1.0.0-alpha.0` (#571). Its callers, the release's `docs-cut` job and `docs.yml`'s rehearsal, now pass the key the same way, alone and by name, and it declares the key required.
+
 The three layers above hold unchanged: the caller's `if`, the list check before any token is minted, and the key and the App's installation in the Board repositories alone, the key in each one's environment `board` under its branch policy.
 
 Amendment record: https://github.com/phmilk/reforged-ts/issues/561
