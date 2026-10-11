@@ -32,7 +32,7 @@ afterAll(removeTemporary);
 
 const FIXTURES = "objects-map-project";
 
-/** The map folder of the fixtures: the Custom unit Captain (`h000`), named in the Skin file. */
+/** The map folder of the fixtures: the Custom unit Captain (`h000`), named in the Skin file, the Custom ability Frost Storm (`A000`) and the Custom item Blade (`I000`). */
 function generate(): ObjectsOutput {
   return generateObjects(
     mapFolder({
@@ -45,6 +45,25 @@ function generate(): ObjectsOutput {
             original: "hfoo",
             custom: "h000",
             modifications: [{ field: "unam", value: "TRIGSTR_001" }],
+          },
+        ],
+      }),
+      "war3map.w3a": buildObjectData({
+        levels: true,
+        custom: [
+          {
+            original: "AHbz",
+            custom: "A000",
+            modifications: [{ field: "anam", value: "Frost Storm" }],
+          },
+        ],
+      }),
+      "war3map.w3t": buildObjectData({
+        custom: [
+          {
+            original: "ratf",
+            custom: "I000",
+            modifications: [{ field: "unam", value: "Blade" }],
           },
         ],
       }),
@@ -67,26 +86,35 @@ describe("the generated objects in a Map project", () => {
 
   it("are the files the fixtures stand in for", () => {
     expect(output.warnings).toEqual([]);
-    for (const name of [OBJECTS_DECLARATIONS_FILE, CONSTANTS_FILES.unit]) {
+    for (const name of [
+      OBJECTS_DECLARATIONS_FILE,
+      CONSTANTS_FILES.unit,
+      CONSTANTS_FILES.item,
+      CONSTANTS_FILES.ability,
+    ]) {
       expect(output.files.find((f) => f.name === name)?.contents, name).toBe(
         readFixture(name, FIXTURES),
       );
     }
   });
 
-  it("type-check a Custom unit's constant and its FourCC literal into Unit.create and CreateUnit, with no cast", () => {
+  it("type-check a Custom unit's constant and its FourCC literal into Unit.create and CreateUnit, and a Custom ability's into UnitAddAbility, with no cast", () => {
     expect(
-      diagnostics.filter((d) =>
-        d.startsWith("src/custom-units-into-unit-create.ts"),
+      diagnostics.filter(
+        (d) =>
+          d.startsWith("src/custom-units-into-unit-create.ts") ||
+          d.startsWith("src/custom-ability-into-unit-add-ability.ts"),
       ),
     ).toEqual([]);
   });
 
   it("reports exactly the negative fixtures' errors, by code and line", () => {
     expect(diagnostics).toEqual([
+      // A Custom item's constant is not a unit's Rawcode.
+      "src/custom-item-into-unit.ts:7 TS2345",
       // A Custom unit's constant is not an ability's Rawcode.
       "src/custom-unit-into-ability.ts:6 TS2345",
-      // Nor is its FourCC literal.
+      // Nor is a Custom unit's FourCC literal an ability's.
       "src/literal-into-ability.ts:4 TS2345",
     ]);
   });

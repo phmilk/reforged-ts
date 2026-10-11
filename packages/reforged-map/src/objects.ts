@@ -42,12 +42,19 @@ export const KIND_CONSTANTS: Readonly<
 };
 
 /**
- * The field that holds each kind's name, as the Object Editor shows it:
- * the field reforged-builtins' generator locates from the kind's
- * `*MetaData.slk`. Only the kinds read so far.
+ * The fields that hold each kind's name, as the Object Editor shows it,
+ * the first one set winning: the fields reforged-builtins' generator
+ * locates from the kind's `*MetaData.slk`. A buff without an editor name
+ * shows its tooltip's title; an upgrade's name is its first level's.
  */
-const NAME_FIELDS: Readonly<Partial<Record<ObjectKind, string>>> = {
-  unit: "unam",
+const NAME_FIELDS: Readonly<Record<ObjectKind, readonly string[]>> = {
+  unit: ["unam"],
+  item: ["unam"],
+  ability: ["anam"],
+  buff: ["fnam", "ftip"],
+  destructable: ["bnam"],
+  doodad: ["dnam"],
+  upgrade: ["gnam"],
 };
 
 /** One Custom object of the map. */
@@ -148,20 +155,40 @@ function nameOf(
   fields: ReadonlyMap<string, ReadModification>,
   model: MapFolderModel,
 ): string | undefined {
-  const field = NAME_FIELDS[kind];
-  const read = field === undefined ? undefined : fields.get(fieldKey(field, 0));
-  if (read === undefined || typeof read.modification.value !== "string") {
-    return undefined;
+  for (const field of NAME_FIELDS[kind]) {
+    const read = firstLevel(fields, field);
+    if (read === undefined || typeof read.modification.value !== "string") {
+      continue;
+    }
+    const text = resolveString(read.modification.value, model);
+    if (text === undefined) {
+      model.warnings.push(
+        `${read.file}: the name of ${rawcode} is ${read.modification.value}, which war3map.wts does not hold; ${rawcode} is named as if it set none.`,
+      );
+      return undefined;
+    }
+    const name = displayName(text);
+    return name === "" ? undefined : name;
   }
-  const text = resolveString(read.modification.value, model);
-  if (text === undefined) {
-    model.warnings.push(
-      `${read.file}: the name of ${rawcode} is ${read.modification.value}, which war3map.wts does not hold; ${rawcode} is named as if it set none.`,
-    );
-    return undefined;
+  return undefined;
+}
+
+/** The modification of `field` at its lowest level: a field without levels is at level 0, an upgrade's first level at 1. */
+function firstLevel(
+  fields: ReadonlyMap<string, ReadModification>,
+  field: string,
+): ReadModification | undefined {
+  let first: ReadModification | undefined;
+  for (const read of fields.values()) {
+    if (read.modification.field !== field) continue;
+    if (
+      first === undefined ||
+      (read.modification.level ?? 0) < (first.modification.level ?? 0)
+    ) {
+      first = read;
+    }
   }
-  const name = displayName(text);
-  return name === "" ? undefined : name;
+  return first;
 }
 
 const BANNER = [

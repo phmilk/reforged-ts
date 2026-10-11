@@ -114,9 +114,10 @@ export interface ObjectsOptions {
  * written, empty when the map has none of that kind.
  *
  * @remarks
- * The Custom units are read so far, from `war3map.w3u` and
- * `war3mapSkin.w3u` in format version 3, their names through
- * `war3map.wts`. The Object kind of an object is its file's. A constant is
+ * The Custom objects of the seven Object kinds are read from
+ * `war3map.w3u`, `.w3t`, `.w3a`, `.w3h`, `.w3b`, `.w3d` and `.w3q` and
+ * their `war3mapSkin` counterparts, in format version 3, their names
+ * through `war3map.wts`. The Object kind of an object is its file's. A constant is
  * named by the rules of `reforged-builtins`, from the object's name, else
  * its base's enUS name from the index of `reforged-builtins`, an optional
  * peer resolved from the Map project, else `Unnamed`, with a warning. A file
@@ -135,7 +136,7 @@ export function generateObjects(
 ): ObjectsOutput {
   checkMapFolder(mapFolder);
   const model = createModel();
-  readObjectData(mapFolder, ["unit"], model);
+  readObjectData(mapFolder, OBJECT_KINDS, model);
   readWar3mapWts(mapFolder, model);
   const builtins = loadBuiltins(options.projectRoot ?? mapFolder);
   const { objects, keptBaseName } = customObjects(model, {
