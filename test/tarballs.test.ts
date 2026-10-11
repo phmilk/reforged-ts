@@ -140,7 +140,8 @@ const PACKAGES: readonly Expected[] = [
     required: ["dist/index.js", "dist/index.d.ts"],
     sideEffectsFree: true,
     // Required: the generated declarations name the Typings' types.
-    workspacePeers: { "reforged-types": false },
+    // Optional: the index names a Custom object that keeps its base's name.
+    workspacePeers: { "reforged-builtins": true, "reforged-types": false },
   },
   {
     dir: "reforged-builtins",

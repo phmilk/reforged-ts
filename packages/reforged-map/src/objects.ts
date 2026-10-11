@@ -141,7 +141,7 @@ export function customObjects(
   return { objects, keptBaseName };
 }
 
-/** The object's own name, or undefined when it sets none (or names a string war3map.wts lacks). */
+/** The object's own name, or undefined when it sets none, an empty one, or a string war3map.wts lacks. */
 function nameOf(
   kind: ObjectKind,
   rawcode: string,
@@ -160,7 +160,8 @@ function nameOf(
     );
     return undefined;
   }
-  return displayName(text);
+  const name = displayName(text);
+  return name === "" ? undefined : name;
 }
 
 const BANNER = [

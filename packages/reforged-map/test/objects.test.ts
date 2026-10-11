@@ -266,6 +266,15 @@ describe("the name of a Custom unit", () => {
     expect(overloadedOf(overloads(output))).toEqual(["h000", "h001"]);
   });
 
+  it("names a Custom unit whose name is empty after its base", () => {
+    const output = generateObjects(
+      unitsMap([customUnit("h000", "hfoo", "|cffff0000|r")]),
+      WITH_BUILTINS,
+    );
+
+    expect(constantsOf(customUnits(output))).toEqual(["Footman_h000"]);
+  });
+
   it("removes colour codes and line breaks from the name", () => {
     const output = generateObjects(
       unitsMap([customUnit("h000", "hfoo", "|cffff0000Royal|r|nGuard")]),

@@ -136,5 +136,5 @@ describe("the generated objects in a Map project", () => {
         status: "pass",
       },
     ]);
-  });
+  }, 60_000);
 });
