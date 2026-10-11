@@ -17,6 +17,7 @@ import {
   resolveGameExecutable,
   type GameOptions,
 } from "./game.js";
+import type { GameData } from "./game-data.js";
 import { readPatch } from "./manifest.js";
 import type { GameProcess, Machine, SpawnCommand } from "./machine.js";
 import {
@@ -83,6 +84,11 @@ export const KEY_REPEAT_MILLISECONDS = 2000;
 /** How long the command waits for the game's process to go once ended, in milliseconds. */
 export const END_WAIT_MILLISECONDS = 10_000;
 
+/** Where the game is, and the Game data the staged map declares (`buildProbe`'s). */
+export interface RunOptions extends GameOptions {
+  gameData?: GameData;
+}
+
 /** Where `probe:run` builds, the machine it runs the game on, and what it reports to. */
 export interface RunContext {
   folders: ProbeFolders;
@@ -117,7 +123,7 @@ export function captureFile(
  */
 export async function runProbe(
   probe: string,
-  options: GameOptions,
+  options: RunOptions,
   timeouts: RunTimeouts,
   context: RunContext,
 ): Promise<ProbeRun> {
@@ -145,7 +151,10 @@ export async function runProbe(
       `The game client is on Build ${client.build} (${client.file}), not on ${patch}, the Patch of the Typings: a run would test another Build than the one the Typings declare. Update the game through the Battle.net app when it is behind; when it is ahead, the run of ${patch} is skipped.`,
     );
   }
-  const build = buildProbe(probe, folders, undefined, client.build);
+  const build = buildProbe(probe, folders, {
+    client: client.build,
+    ...(options.gameData !== undefined && { gameData: options.gameData }),
+  });
   progress(builtMessage(build));
 
   const startedAt = machine.now();

@@ -28,9 +28,12 @@ describe("the 3.0.0 index", () => {
     expect(index.build).toBe("3.0.0.24268");
     expect(index.gameVersion).toBe("3.0.0");
     expect(index.gameDataSets).toEqual([
-      { id: "default", label: "Default" },
-      { id: "custom", label: "Custom" },
-      { id: "melee", label: "Melee" },
+      { id: "custom-fk", label: "Custom (Forsaken Kingdom)" },
+      { id: "melee-fk", label: "Melee (Forsaken Kingdom)" },
+      { id: "custom-tft", label: "Custom (The Frozen Throne)" },
+      { id: "melee-tft", label: "Melee (The Frozen Throne)" },
+      { id: "custom-roc", label: "Custom (Reign of Chaos)" },
+      { id: "melee-roc", label: "Melee (Reign of Chaos)" },
     ]);
     const counts: Record<string, number> = {};
     for (const entry of Object.values(index.objects)) {
@@ -38,7 +41,7 @@ describe("the 3.0.0 index", () => {
     }
     expect(counts).toEqual({
       unit: 928,
-      item: 649,
+      item: 648,
       ability: 1551,
       buff: 318,
       destructable: 344,
@@ -49,26 +52,41 @@ describe("the 3.0.0 index", () => {
       kind: "unit",
       name: "Footman",
       race: "human",
-      sets: ["default", "custom", "melee"],
+      sets: [
+        "custom-fk",
+        "melee-fk",
+        "custom-tft",
+        "melee-tft",
+        "custom-roc",
+        "melee-roc",
+      ],
       constant: "Footman_hfoo",
     });
   });
 
-  it("holds each Game data set's units, the Scarlet Crusade's Footman in Default alone", async () => {
+  // The counts of the sets the Probe runs of #575 read: a set of Reign of
+  // Chaos holds no unit of a later version, and Forsaken Kingdom the base
+  // layer whole.
+  it("holds each Game data set's units, the Scarlet Crusade's Footman in Forsaken Kingdom alone", async () => {
     const index = JSON.parse(await read("3.0.0/index.json")) as BuiltinsIndex;
 
     const units = Object.values(index.objects).filter((e) => e.kind === "unit");
     const count = (set: string) =>
       units.filter((entry) => entry.sets.includes(set)).length;
-    expect([count("default"), count("custom"), count("melee")]).toEqual([
-      928, 864, 837,
+    expect(index.gameDataSets.map((set) => [set.id, count(set.id)])).toEqual([
+      ["custom-fk", 928],
+      ["melee-fk", 928],
+      ["custom-tft", 864],
+      ["melee-tft", 865],
+      ["custom-roc", 470],
+      ["melee-roc", 469],
     ]);
     expect(index.objects.sfoo).toMatchObject({
       name: "Footman",
-      sets: ["default"],
+      sets: ["custom-fk", "melee-fk"],
     });
     expect(await read("3.0.0/units.d.ts")).toContain(
-      "In the Default Game data set. Not in the Custom and Melee Game data sets.",
+      "In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.",
     );
   });
 

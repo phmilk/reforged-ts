@@ -117,7 +117,7 @@ A map's definitions of its types of object (units, items, abilities, buffs, dest
 _Avoid_: object editor data, w3o
 
 **Game data set**:
-The set of Built-in objects a map selects in its options, one of several a Patch ships (the default, Custom v1, Melee), which differ in which objects exist and in their stats.
+The set of Built-in objects a map plays with, which its Game Data Set (Default, Custom, Melee) and its Game Data Version (Reign of Chaos, The Frozen Throne, Forsaken Kingdom) in its options select together; the sets differ in which objects exist and in their stats.
 _Avoid_: data set (alone), game data, balance
 
 **Built-in object**:

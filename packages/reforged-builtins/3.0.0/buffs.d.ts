@@ -26,14 +26,14 @@ export declare const Buffs: {
   /**
    * Poisoned Arrows (`BApa`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PoisonedArrows_BApa: Rawcode<"buff">;
 
   /**
    * Chronomancy (`BCGb`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Chronomancy_BCGb: Rawcode<"buff">;
 
@@ -50,14 +50,14 @@ export declare const Buffs: {
   /**
    * Dark Commander's Presence (`BDCa`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DarkCommandersPresence_BDCa: Rawcode<"buff">;
 
   /**
    * Dark Mistress' Presence (`BDMa`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DarkMistressPresence_BDMa: Rawcode<"buff">;
 
@@ -119,14 +119,14 @@ export declare const Buffs: {
   /**
    * Templar's Flame (`BHTf`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly TemplarsFlame_BHTf: Rawcode<"buff">;
 
   /**
    * Apprehend (`BHaa`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Apprehend_BHaa: Rawcode<"buff">;
 
@@ -143,28 +143,28 @@ export declare const Buffs: {
   /**
    * Apprehend (`BHag`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Apprehend_BHag: Rawcode<"buff">;
 
   /**
    * Avatar Of Light (`BHal`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AvatarOfLight_BHal: Rawcode<"buff">;
 
   /**
    * Apprehend (`BHap`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Apprehend_BHap: Rawcode<"buff">;
 
   /**
    * Sacred Aura (`BHas`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SacredAura_BHas: Rawcode<"buff">;
 
@@ -186,14 +186,14 @@ export declare const Buffs: {
   /**
    * Unyielding Guard Bonus (`BHbo`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnyieldingGuardBonus_BHbo: Rawcode<"buff">;
 
   /**
    * Unyielding Guard (`BHbt`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnyieldingGuard_BHbt: Rawcode<"buff">;
 
@@ -210,28 +210,28 @@ export declare const Buffs: {
   /**
    * Consecration (`BHce`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Consecration_BHce: Rawcode<"buff">;
 
   /**
    * Consecration (`BHcf`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Consecration_BHcf: Rawcode<"buff">;
 
   /**
    * Valiant Charge (`BHch`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ValiantCharge_BHch: Rawcode<"buff">;
 
   /**
    * Cleansing Fire (`BHcl`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CleansingFire_BHcl: Rawcode<"buff">;
 
@@ -248,98 +248,98 @@ export declare const Buffs: {
   /**
    * Guiding Hand (`BHgh`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GuidingHand_BHgh: Rawcode<"buff">;
 
   /**
    * Grit (`BHgr`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Grit_BHgr: Rawcode<"buff">;
 
   /**
    * Guiding Hand (`BHgu`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GuidingHand_BHgu: Rawcode<"buff">;
 
   /**
    * Provoke (`BHhc`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Provoke_BHhc: Rawcode<"buff">;
 
   /**
    * Headsplitter (`BHhh`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Headsplitter_BHhh: Rawcode<"buff">;
 
   /**
    * Headsplitter (`BHhr`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Headsplitter_BHhr: Rawcode<"buff">;
 
   /**
    * Provoke (`BHht`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Provoke_BHht: Rawcode<"buff">;
 
   /**
    * Inspire Courage (`BHic`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly InspireCourage_BHic: Rawcode<"buff">;
 
   /**
    * Mind Control (`BHmc`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MindControl_BHmc: Rawcode<"buff">;
 
   /**
    * Holy Wrath (`BHpb`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HolyWrath_BHpb: Rawcode<"buff">;
 
   /**
    * Surge of Light (`BHsa`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SurgeOfLight_BHsa: Rawcode<"buff">;
 
   /**
    * Light's Mercy (`BHsf`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LightsMercy_BHsf: Rawcode<"buff">;
 
   /**
    * Surge of Light (`BHss`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SurgeOfLight_BHss: Rawcode<"buff">;
 
   /**
    * Bleed (`BHsw`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Bleed_BHsw: Rawcode<"buff">;
 
@@ -351,28 +351,28 @@ export declare const Buffs: {
   /**
    * Warcry (`BHw1`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Warcry_BHw1: Rawcode<"buff">;
 
   /**
    * Warcry (`BHw2`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Warcry_BHw2: Rawcode<"buff">;
 
   /**
    * Warcry (`BHw3`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Warcry_BHw3: Rawcode<"buff">;
 
   /**
    * Warcry (`BHwc`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Warcry_BHwc: Rawcode<"buff">;
 
@@ -384,21 +384,21 @@ export declare const Buffs: {
   /**
    * Corruption (`BIc2`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Corruption_BIc2: Rawcode<"buff">;
 
   /**
    * Corruption (`BIc3`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Corruption_BIc3: Rawcode<"buff">;
 
   /**
    * Corruption (`BIc5`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Corruption_BIc5: Rawcode<"buff">;
 
@@ -415,14 +415,14 @@ export declare const Buffs: {
   /**
    * Terrified! (`BIee`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Terrified_BIee: Rawcode<"buff">;
 
   /**
    * Heal Reduction (`BIhm`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HealReduction_BIhm: Rawcode<"buff">;
 
@@ -434,7 +434,7 @@ export declare const Buffs: {
   /**
    * Smashed! (`BImc`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Smashed_BImc: Rawcode<"buff">;
 
@@ -451,7 +451,7 @@ export declare const Buffs: {
   /**
    * Queen's Hunger (`BIqh`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly QueensHunger_BIqh: Rawcode<"buff">;
 
@@ -478,7 +478,7 @@ export declare const Buffs: {
   /**
    * Aura of Decay (`BIsd`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AuraOfDecay_BIsd: Rawcode<"buff">;
 
@@ -490,7 +490,7 @@ export declare const Buffs: {
   /**
    * Summoned Unit (`BIsu`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SummonedUnit_BIsu: Rawcode<"buff">;
 
@@ -642,7 +642,7 @@ export declare const Buffs: {
   /**
    * Righteous Fury (`BNrs`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RighteousFury_BNrs: Rawcode<"buff">;
 
@@ -814,21 +814,21 @@ export declare const Buffs: {
   /**
    * Undying Defiance Bonus (`BUbo`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UndyingDefianceBonus_BUbo: Rawcode<"buff">;
 
   /**
    * Battering Ram (`BUbr`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BatteringRam_BUbr: Rawcode<"buff">;
 
   /**
    * Undying Defiance (`BUbt`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UndyingDefiance_BUbt: Rawcode<"buff">;
 
@@ -845,7 +845,7 @@ export declare const Buffs: {
   /**
    * Deathseeker Arrows (`BUdb`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DeathseekerArrows_BUdb: Rawcode<"buff">;
 
@@ -867,21 +867,21 @@ export declare const Buffs: {
   /**
    * Soul Lantern (`BUla`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SoulLantern_BUla: Rawcode<"buff">;
 
   /**
    * Soul Lantern (`BUlc`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SoulLantern_BUlc: Rawcode<"buff">;
 
   /**
    * Soul Lantern (`BUle`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SoulLantern_BUle: Rawcode<"buff">;
 
@@ -913,14 +913,14 @@ export declare const Buffs: {
   /**
    * Grim Conviction (`BUvg`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GrimConviction_BUvg: Rawcode<"buff">;
 
   /**
    * Withering Fire (`BUwf`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WitheringFire_BUwf: Rawcode<"buff">;
 
@@ -932,14 +932,14 @@ export declare const Buffs: {
   /**
    * Raise the Banner (`Baca`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RaiseTheBanner_Baca: Rawcode<"buff">;
 
   /**
    * Enveloping Darkness (`Badx`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly EnvelopingDarkness_Badx: Rawcode<"buff">;
 
@@ -981,7 +981,7 @@ export declare const Buffs: {
   /**
    * Twisted Bones (`Bbcs`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly TwistedBones_Bbcs: Rawcode<"buff">;
 
@@ -1053,7 +1053,7 @@ export declare const Buffs: {
   /**
    * Plague (`Bdb1`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Plague_Bdb1: Rawcode<"buff">;
 
@@ -1080,7 +1080,7 @@ export declare const Buffs: {
   /**
    * Armor Reduction (`Bder`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ArmorReduction_Bder: Rawcode<"buff">;
 
@@ -1147,7 +1147,7 @@ export declare const Buffs: {
   /**
    * Chemical Frenzy (`Bfcf`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ChemicalFrenzy_Bfcf: Rawcode<"buff">;
 
@@ -1174,35 +1174,35 @@ export declare const Buffs: {
   /**
    * Curse of Sloth (`Bggs`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CurseOfSloth_Bggs: Rawcode<"buff">;
 
   /**
    * Unfathomable Rage (`Bggw`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnfathomableRage_Bggw: Rawcode<"buff">;
 
   /**
    * Pride's Downfall (`Bggx`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PridesDownfall_Bggx: Rawcode<"buff">;
 
   /**
    * Echoing Flame (`Bgr1`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly EchoingFlame_Bgr1: Rawcode<"buff">;
 
   /**
    * Echoing Flame (`Bgr2`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly EchoingFlame_Bgr2: Rawcode<"buff">;
 
@@ -1219,14 +1219,14 @@ export declare const Buffs: {
   /**
    * Consecration Aura (`Bhhi`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ConsecrationAura_Bhhi: Rawcode<"buff">;
 
   /**
    * Slowed (`Bhrz`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Slowed_Bhrz: Rawcode<"buff">;
 
@@ -1268,7 +1268,7 @@ export declare const Buffs: {
   /**
    * Banshee's Wail (`Bmda`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BansheesWail_Bmda: Rawcode<"buff">;
 
@@ -1305,7 +1305,7 @@ export declare const Buffs: {
   /**
    * Blinded (`Bmss`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Blinded_Bmss: Rawcode<"buff">;
 
@@ -1357,7 +1357,7 @@ export declare const Buffs: {
   /**
    * `Bps1`, unnamed, a Built-in buff of Patch 3.0.0, race nightelf.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_Bps1: Rawcode<"buff">;
 
@@ -1394,7 +1394,7 @@ export declare const Buffs: {
   /**
    * Brimstone (`Brim`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Brimstone_Brim: Rawcode<"buff">;
 
@@ -1421,14 +1421,14 @@ export declare const Buffs: {
   /**
    * Holy Fire (`Bsci`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HolyFire_Bsci: Rawcode<"buff">;
 
   /**
    * Light Struck (`Bsg1`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LightStruck_Bsg1: Rawcode<"buff">;
 
@@ -1450,14 +1450,14 @@ export declare const Buffs: {
   /**
    * Freezing Presence (`Bsof`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FreezingPresence_Bsof: Rawcode<"buff">;
 
   /**
    * Orb of Slow (`Bson`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly OrbOfSlow_Bson: Rawcode<"buff">;
 
@@ -1499,28 +1499,28 @@ export declare const Buffs: {
   /**
    * Taunt (`Btab`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Taunt_Btab: Rawcode<"buff">;
 
   /**
    * Taunt (`Btad`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Taunt_Btad: Rawcode<"buff">;
 
   /**
    * Taunt (`Btau`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Taunt_Btau: Rawcode<"buff">;
 
   /**
    * Blinded (`Btbd`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Blinded_Btbd: Rawcode<"buff">;
 
@@ -1532,7 +1532,7 @@ export declare const Buffs: {
   /**
    * Magic Missile (`Btkt`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MagicMissile_Btkt: Rawcode<"buff">;
 
@@ -1559,7 +1559,7 @@ export declare const Buffs: {
   /**
    * Infected (`Buic`), a Built-in buff of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Infected_Buic: Rawcode<"buff">;
 

@@ -274,20 +274,26 @@ export interface SyntheticUnit {
   race?: string;
   /** Its `Name=` line's value; no line when undefined. */
   name?: string;
+  /** The Game Data Version it came with: 0 Reign of Chaos, 1 The Frozen Throne, 2 Forsaken Kingdom; no cell when undefined. */
+  version?: number;
 }
 
-/** A synthetic `UnitData.slk`: columns unitID, sort, race. */
+/** A synthetic `UnitData.slk`: columns unitID, sort, race, version. */
 export function unitDataSlk(units: readonly SyntheticUnit[]): string {
   const lines = [
     "ID;PWXL;N;E",
-    `B;X3;Y${String(units.length + 1)};D0`,
+    `B;X4;Y${String(units.length + 1)};D0`,
     'C;X1;Y1;K"unitID"',
     'C;X2;K"sort"',
     'C;X3;K"race"',
+    'C;X4;K"version"',
   ];
   units.forEach((unit, i) => {
     lines.push(`C;X1;Y${String(i + 2)};K"${unit.id}"`, 'C;X2;K"z1"');
     if (unit.race !== undefined) lines.push(`C;X3;K"${unit.race}"`);
+    if (unit.version !== undefined) {
+      lines.push(`C;X4;K${String(unit.version)}`);
+    }
   });
   lines.push("E");
   return lines.join("\r\n") + "\r\n";

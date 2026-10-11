@@ -81,6 +81,36 @@
       "size": 9796
     },
     {
+      "path": "War3.w3mod:_Balance/Custom_V0.w3mod:Units/AbilityBuffData.slk",
+      "contentKey": "2e305104b26fd76ae531e7f63089f242",
+      "sha256": "3217dcff134e7500da3f836ced19a8a02d970a347586d220e7d67909010487a1",
+      "size": 30865
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V0.w3mod:Units/AbilityData.slk",
+      "contentKey": "326fc82a4f0554627ad53c0d50922bb6",
+      "sha256": "0c4889eb012d6af66201be86ae8b01a73f034676ffe55ed87c399adb8e496688",
+      "size": 860113
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V0.w3mod:Units/ItemData.slk",
+      "contentKey": "7fccf3e1089f3ab2014c1bf10f490b8f",
+      "sha256": "aa18d128a1b1b92f5928cc2ffa25bb417026488b85a24a5f6b6553ca5dfe7e6d",
+      "size": 84373
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V0.w3mod:Units/UnitData.slk",
+      "contentKey": "20e44f3dbc89af1d7f02cfa7e7418dd4",
+      "sha256": "9d507f568f7ae28ed0e2fbd7c269321a1d4029fb25b06c35668dd7e84da4957e",
+      "size": 310675
+    },
+    {
+      "path": "War3.w3mod:_Balance/Custom_V0.w3mod:Units/UpgradeData.slk",
+      "contentKey": "beac24826a23551265f3d98b1ec3d4b8",
+      "sha256": "169794f21ab846856b7716f81bf32f99725d78235cdbe5ef9154105eab25f9f3",
+      "size": 23993
+    },
+    {
       "path": "War3.w3mod:_Balance/Custom_V1.w3mod:Units/AbilityBuffData.slk",
       "contentKey": "589a64993c583ff5870cffa388451d21",
       "sha256": "39ebbe352109eccb16361ad1d123aad596f9868b258c2207898b42b6c692056a",

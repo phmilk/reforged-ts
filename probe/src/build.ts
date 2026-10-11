@@ -9,6 +9,7 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { compileBundle } from "./compile.js";
+import { AuthorError } from "./errors.js";
 import { composeMapScript } from "./compose.js";
 import {
   PROBE_FOLDERS,
@@ -17,6 +18,7 @@ import {
   WORKSPACE_FOLDER,
   type ProbeFolders,
 } from "./folders.js";
+import { gameDataMessage, writeGameData, type GameData } from "./game-data.js";
 import { gameVersion, readPatch } from "./manifest.js";
 import { probeFile } from "./probes.js";
 import {
@@ -42,6 +44,9 @@ export const PLACEHOLDERS = {
   patch: '"$PROBE_PATCH$"',
 } as const;
 
+/** The map's info file, which declares its Game data. */
+const MAP_INFO = "war3map.w3i";
+
 /** A runId: letters, digits and hyphens, inside the Result file's safe alphabet. */
 const RUN_ID_PATTERN = /^[A-Za-z0-9-]+$/;
 
@@ -55,30 +60,46 @@ export interface BuildResult {
   stagingFolder: string;
   /** The bundle, as baked and composed. */
   bundleFile: string;
+  /** The Game data the staged `war3map.w3i` was given; empty when it keeps the map's own. */
+  gameData: GameData;
 }
 
-/** The line a command prints for a build: the Probe, its runId and where it was staged. */
+/** What a build may be given; each has a default. */
+export interface BuildOptions {
+  /** The runId to bake: a fresh one by default. */
+  runId?: string;
+  /** The Build of the game client `probe:run` runs the Probe on, kept in the state file. */
+  client?: string;
+  /** The Game data the staged map declares: the map folder's by default. */
+  gameData?: GameData;
+}
+
+/** The line a command prints for a build: the Probe, the Game data it set, its runId and where it was staged. */
 export function builtMessage(result: BuildResult): string {
-  return `Built Probe ${result.probe}, run ${result.runId}: ${result.stagingFolder}`;
+  return `Built Probe ${result.probe}${gameDataMessage(result.gameData)}, run ${result.runId}: ${result.stagingFolder}`;
 }
 
 /**
  * Builds the Probe `probe` of `folders.probes` into
  * `<folders.output>/<probe>/`, emptied first: the bundle, then the staged
  * map folder whose `war3map.lua` is the editor script, one newline and the
- * bundle. The runner writes the Patch of `folders.manifest` in the run's
- * `BEGIN` line, so the run names the Typings it was built against. Stores
- * the runId, with `client`, the Build of the game client `probe:run` runs
- * it on, in the Probe's state file last, so a failed build leaves the
- * previous one's. A bad name, a missing Probe, a manifest without a Patch
- * or a compile error is an AuthorError of one line.
+ * bundle, and whose `war3map.w3i` declares the Game Data Set, the Game
+ * Data Version and the melee map flag `gameData` sets, the map folder's
+ * where it sets none (#575). The runner writes the Patch of
+ * `folders.manifest` in the run's `BEGIN` line, so the run names the
+ * Typings it was built against. Stores the runId, with `client`, the Build
+ * of the game client `probe:run` runs it on, and the Game data it set, in
+ * the Probe's state file last, so a failed build leaves the previous
+ * one's. A bad name, a missing Probe, a manifest without a Patch, Game data
+ * for a map folder without `war3map.w3i` or a compile error is an
+ * AuthorError of one line.
  */
 export function buildProbe(
   probe: string,
   folders: ProbeFolders = PROBE_FOLDERS,
-  runId: string = randomUUID(),
-  client?: string,
+  options: BuildOptions = {},
 ): BuildResult {
+  const { runId = randomUUID(), client, gameData = {} } = options;
   const source = probeFile(folders.probes, probe);
   if (!RUN_ID_PATTERN.test(runId)) {
     throw new Error(`Not a runId: ${JSON.stringify(runId)}`);
@@ -91,6 +112,16 @@ export function buildProbe(
   cleanOutputFolder(outputFolder);
   const stagingFolder = stagingFolderFor(outputFolder, folders.map);
   stageMapFolder(folders.map, stagingFolder);
+  const setsGameData = Object.keys(gameData).length > 0;
+  if (setsGameData) {
+    const w3i = path.join(stagingFolder, MAP_INFO);
+    if (!fs.statSync(w3i, { throwIfNoEntry: false })?.isFile()) {
+      throw new AuthorError(
+        `${path.basename(folders.map)} has no ${MAP_INFO}, where the Game data is set: save the map folder with the World Editor of 3.0.`,
+      );
+    }
+    fs.writeFileSync(w3i, writeGameData(fs.readFileSync(w3i), gameData));
+  }
 
   const bundle = compileBundle({
     tsconfig: PROBES_TSCONFIG,
@@ -115,8 +146,16 @@ export function buildProbe(
     probe,
     runId,
     ...(client !== undefined && { client }),
+    ...(setsGameData && { gameData }),
   });
-  return { probe, runId, patch, stagingFolder, bundleFile: bundle.file };
+  return {
+    probe,
+    runId,
+    patch,
+    stagingFolder,
+    bundleFile: bundle.file,
+    gameData,
+  };
 }
 
 /** The deepest folder holding both folders. */
