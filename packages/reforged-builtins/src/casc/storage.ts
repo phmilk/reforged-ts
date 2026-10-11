@@ -127,6 +127,18 @@ export function parseBuildInfo(text: string, file: string): BuildInfo {
   return { build, buildConfigKey };
 }
 
+/**
+ * The Build a build config names, `3.0.0.24268` of
+ * `build-name = 3.0.0.24268-retail`; undefined when it names none. The
+ * Probe runner's `readClientBuild` (`probe/src/game.ts`) mirrors it, and
+ * `test/probe-parity.test.ts` runs both on the same inputs.
+ */
+export function buildConfigName(text: string): string | undefined {
+  return /^\d+\.\d+\.\d+\.\d+/.exec(
+    parseConfig(text).get("build-name")?.[0] ?? "",
+  )?.[0];
+}
+
 /** Opens the storage of the install at `installDir`. */
 export async function openStorage(installDir: string): Promise<CascStorage> {
   const buildInfoFile = join(installDir, BUILD_INFO_FILE);
@@ -144,10 +156,9 @@ export async function openStorage(installDir: string): Promise<CascStorage> {
       `${configFile} does not match its key ${info.buildConfigKey}.`,
     );
   }
-  const config = parseConfig(new TextDecoder().decode(configBytes));
-  const buildName = /^\d+\.\d+\.\d+\.\d+/.exec(
-    config.get("build-name")?.[0] ?? "",
-  )?.[0];
+  const configText = new TextDecoder().decode(configBytes);
+  const config = parseConfig(configText);
+  const buildName = buildConfigName(configText);
   const encodingKeys = configValue(config, "encoding", configFile);
   const [encodingContentKey, encodingKey] = encodingKeys;
   if (

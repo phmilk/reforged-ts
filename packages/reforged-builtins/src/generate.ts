@@ -56,7 +56,7 @@ interface LayeredGameDataSet extends GameDataSet {
  * The Game data sets the index lists, by stable id, as the World Editor of
  * 3.0 offers them in its map options (Default, Custom, Melee), each with the
  * layer #509 gives it. Which layer a map reads for each Game Data Version
- * is not yet settled in game (#564).
+ * is not yet settled in game (#575).
  */
 export const GAME_DATA_SETS: readonly LayeredGameDataSet[] = [
   { id: "default", label: "Default", layer: BASE_LAYER },
@@ -77,7 +77,10 @@ export const GAME_DATA_SETS: readonly LayeredGameDataSet[] = [
 /**
  * The editor strings the data's `WESTRING_` names resolve through, keys
  * matched without regard to case: the destructables' and doodads' names are
- * mostly in the second file.
+ * mostly in the second file. A key both files set keeps the second's value
+ * (`WESTRING_DOOD_YOIG` is "Iron Gate", then "Iron Gate (A)"): the World
+ * Editor reads these files, not the game, so the Probe that settled the
+ * names files' rule (#564) cannot settle this one.
  */
 export const EDITOR_STRINGS: readonly string[] = [
   `${ENUS_LAYER}UI/WorldEditGameStrings.txt`,
@@ -309,7 +312,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
   let editorStrings: Profile | undefined;
   const worldEditStrings = async (): Promise<Profile> => {
     if (editorStrings === undefined) {
-      editorStrings = new Profile();
+      editorStrings = new Profile("last");
       for (const path of EDITOR_STRINGS) {
         editorStrings.add(await read(path), path);
       }
@@ -356,7 +359,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
     });
 
     const rawcodes = new Set<string>();
-    /** The profile field that gave each object its name. */
+    /** The profile field that gave each object its name, by lower-cased Rawcode. */
     const namedBy = new Map<string, NameField>();
     for (const [rawcode, { row, sets }] of held) {
       const other = kindOf.get(rawcode);
@@ -402,7 +405,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
         }
         name = text === undefined ? "" : displayName(text);
         if (name !== "") {
-          if (field.inProfile) namedBy.set(rawcode, field);
+          if (field.inProfile) namedBy.set(rawcode.toLowerCase(), field);
           break;
         }
       }
@@ -427,7 +430,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
     }
     counts[source.kind] = rawcodes.size;
     for (const override of profile.overrides) {
-      const field = namedBy.get(override.section);
+      const field = namedBy.get(override.section.toLowerCase());
       if (field?.field.toLowerCase() !== override.key.toLowerCase()) continue;
       const [previous, value] = field.perLevel
         ? [override.previousFirst, override.valueFirst]
@@ -435,7 +438,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
       if (previous === value) continue;
       diagnostics.push({
         severity: "warning",
-        message: `The ${source.kind} ${override.section} is named ${JSON.stringify(previous)}, then ${JSON.stringify(value)} in ${override.file}: the last name wins.`,
+        message: `The ${source.kind} ${override.section} is named ${JSON.stringify(previous)}, then ${JSON.stringify(value)} in ${override.file}: the first name wins.`,
       });
     }
   }
@@ -566,17 +569,19 @@ async function namesProfile(
 }
 
 /**
- * The order the names files are read in, the later one's name winning
+ * The order the names files are read in, the first one's name winning
  * (`Profile`): the code-point order of their root paths, so
  * `CampaignUnitStrings.txt` comes before `HumanUnitStrings.txt`.
  *
- * Unverified: the game's own load order of these files, and whether a later
- * value or the first one wins, are assumed here, not settled in the World
- * Editor. In 3.0.0.24268 they decide 14 names: `Ubtr`'s, named twice within
- * `CampaignUnitStrings.txt` ("Noble" then "Death Knight"), and 13 abilities'
- * and buffs' that `ItemAbilityStrings.txt` names again (`Almf`, "Death Coil"
- * before it, "Item Lesser Mark of the Forsaken" in it). Every name set twice
- * is reported as a warning, the cue to settle the rule (#564).
+ * Settled in game by the Probe `builtins-names` on 3.0.0.24268 (run
+ * 3adad009-fea9-452b-badd-38261defcde5, `docs/research/builtins-names.md`,
+ * #564): of 14 names set twice, the game gives the first. `Ubtr` is
+ * "Noble", the first of two names in `CampaignUnitStrings.txt`, and `Almf`
+ * is "Death Coil", from `CampaignAbilityStrings.txt`, not "Item Lesser Mark
+ * of the Forsaken", from `ItemAbilityStrings.txt`, which comes after it. The
+ * run saw only that pair of files disagree, so the order of other pairs is
+ * the same rule, not measured. Every name set twice is still reported as a
+ * warning, for the record of a new Patch.
  */
 export function nameFileOrder(paths: readonly string[]): string[] {
   return [...paths].sort(byCodePoint);

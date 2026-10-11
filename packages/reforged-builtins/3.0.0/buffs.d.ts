@@ -717,9 +717,9 @@ export declare const Buffs: {
   readonly WateryMinion_BNwm: Rawcode<"buff">;
 
   /**
-   * `BOac`, unnamed, a Built-in buff of Patch 3.0.0, race orc.
+   * Command Aura (`BOac`), a Built-in buff of Patch 3.0.0, race orc.
    */
-  readonly Unnamed_BOac: Rawcode<"buff">;
+  readonly CommandAura_BOac: Rawcode<"buff">;
 
   /**
    * Endurance Aura (`BOae`), a Built-in buff of Patch 3.0.0, race orc.
@@ -1085,9 +1085,9 @@ export declare const Buffs: {
   readonly ArmorReduction_Bder: Rawcode<"buff">;
 
   /**
-   * Dust of Appearance (`Bdet`), a Built-in buff of Patch 3.0.0, race other.
+   * Detected (`Bdet`), a Built-in buff of Patch 3.0.0, race other.
    */
-  readonly DustOfAppearance_Bdet: Rawcode<"buff">;
+  readonly Detected_Bdet: Rawcode<"buff">;
 
   /**
    * Devour (Caster) (`Bdig`), a Built-in buff of Patch 3.0.0, race orc.
@@ -1689,9 +1689,9 @@ export declare const Buffs: {
   readonly HeroDissipateEffect_Xdis: Rawcode<"buff">;
 
   /**
-   * `Xesn`, unnamed, a Built-in buff of Patch 3.0.0, race nightelf.
+   * Sentinel (Effect) (`Xesn`), a Built-in buff of Patch 3.0.0, race nightelf.
    */
-  readonly Unnamed_Xesn: Rawcode<"buff">;
+  readonly SentinelEffect_Xesn: Rawcode<"buff">;
 
   /**
    * Building Damage - Human Large (`Xfhl`), a Built-in buff of Patch 3.0.0, race human.

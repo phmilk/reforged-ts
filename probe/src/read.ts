@@ -69,8 +69,8 @@ export interface ProbeRun {
   patch?: string;
   /**
    * The Build of the game client the run's build was run on, as `probe:run`
-   * read it from `.build.info`; undefined unless the run is the expected
-   * one, and for a build `probe:build` made alone.
+   * read it from the install's build config; undefined unless the run is
+   * the expected one, and for a build `probe:build` made alone.
    */
   client?: string;
   /** The Probe's own records, in order; empty unless the run is the expected one. */

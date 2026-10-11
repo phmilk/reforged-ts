@@ -529,11 +529,11 @@ export declare const Units: {
   readonly DeathKnight_Ubru: Rawcode<"unit">;
 
   /**
-   * Death Knight (`Ubtr`), a Built-in unit of Patch 3.0.0, race undead.
+   * Noble (`Ubtr`), a Built-in unit of Patch 3.0.0, race undead.
    *
    * In the Default Game data set. Not in the Custom and Melee Game data sets.
    */
-  readonly DeathKnight_Ubtr: Rawcode<"unit">;
+  readonly Noble_Ubtr: Rawcode<"unit">;
 
   /**
    * Lich (`Uclc`), a Built-in unit of Patch 3.0.0, race undead.

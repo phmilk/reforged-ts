@@ -102,7 +102,7 @@ return {
     DeathKnight_Uarf = 1432449638,
     Dreadlord_Ubal = 1432510828,
     DeathKnight_Ubru = 1432515189,
-    DeathKnight_Ubtr = 1432515698,
+    Noble_Ubtr = 1432515698,
     Lich_Uclc = 1432579171,
     CryptLord_Ucrl = 1432580716,
     FallenCaptain_Uctl = 1432581228,

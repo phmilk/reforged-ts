@@ -14,7 +14,7 @@ export interface ProbeState {
   runId: string;
   /**
    * The Build of the game client the last build was run on, from its
-   * `.build.info`; undefined for a build `probe:build` made alone.
+   * build config; undefined for a build `probe:build` made alone.
    */
   client?: string;
 }

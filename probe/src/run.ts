@@ -108,8 +108,9 @@ export function captureFile(
  * Runs `probe` end to end, as the module's comment says, and gives the
  * run as `probe:read` reads it once the game is gone. Off native Windows,
  * with `Warcraft III.exe` already running (the reader looks the game up by
- * image name), with no game found, a client whose `.build.info` names
- * another Build than the Patch of the Typings, or a build that fails, it
+ * image name), with no game found, a client whose build config (or
+ * `.build.info`, without one) names another Build than the Patch of the
+ * Typings, or a build that fails, it
  * starts nothing and raises an AuthorError. The build keeps the client's
  * Build in the Probe's state file, for the report. Once the game has
  * started, every way out ends it, the command's own failure included.
@@ -133,6 +134,11 @@ export async function runProbe(
   }
   const executable = resolveGameExecutable(options, context.root, machine);
   const client = readClientBuild(executable, machine);
+  if (client.build !== client.buildInfoVersion) {
+    progress(
+      `${client.buildInfoFile} gives the Version ${client.buildInfoVersion}, but its build config ${client.file} names ${client.build}: the install's content is ${client.build}, which the run takes. The Battle.net app writes a wrong Version there at times; the client needs no update.`,
+    );
+  }
   const patch = readPatch(folders.manifest);
   if (client.build !== patch) {
     throw new AuthorError(
