@@ -12,6 +12,7 @@ import {
   wellKnownExecutables,
 } from "../src/game.js";
 import type { Machine } from "../src/machine.js";
+import { readGameData } from "../src/game-data.js";
 import { readPatch } from "../src/manifest.js";
 import { readProbeRun, resultFile } from "../src/read.js";
 import { HUMAN_WAIT_SECONDS, LAUNCH_ARGS, captureFile } from "../src/run.js";
@@ -368,6 +369,28 @@ describe("probe:run", () => {
       "greeting word=hi",
       "",
     ]);
+  });
+
+  it("stages the Game data of --game-data-set and --game-data-version, naming it in the build's line", async () => {
+    const { code, stdout, context } = await run({
+      args: ["hello", "--game-data-set", "melee", "--game-data-version", "roc"],
+      script: game(12),
+    });
+
+    expect(code).toBe(0);
+    expect(stdout).toMatch(
+      /^Built Probe hello under the Game Data Set Melee and the Game Data Version Reign of Chaos, run /,
+    );
+    const staged = readFileSync(
+      path.join(
+        context.folders.output,
+        "hello",
+        "staging",
+        "probe.w3m",
+        "war3map.w3i",
+      ),
+    );
+    expect(readGameData(staged)).toEqual({ set: "melee", version: "roc" });
   });
 
   it("records the client's Build in the run, beside the Typings' Patch, for the reader", async () => {
@@ -776,6 +799,7 @@ describe("probe:run", () => {
     [["hello", "--begin-timeout"]],
     [["hello", "--begin-timeout", "0"]],
     [["hello", "--stall-timeout", "soon"]],
+    [["hello", "--game-data-set"]],
   ])("prints the usage for the arguments %j, exit code 4", async (args) => {
     const { code, stdout, stderr, events } = await run({ args });
 

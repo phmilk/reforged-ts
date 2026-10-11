@@ -17,6 +17,7 @@ import {
   PROBE_FOLDERS,
   type ProbeFolders,
 } from "../src/folders.js";
+import { readGameData } from "../src/game-data.js";
 import { stateFile } from "../src/state.js";
 
 /** The fixture Probes folders this file made, removed after its tests. */
@@ -100,6 +101,30 @@ describe("buildProbe", () => {
     }
   });
 
+  it("stages the Game data it is given in war3map.w3i, and leaves the map folder's", async () => {
+    const folders = await tempFolders();
+    const before = await readFile(join(folders.map, "war3map.w3i"));
+    const result = buildProbe("hello", folders, {
+      gameData: { set: "custom", version: "roc" },
+    });
+
+    expect(
+      readGameData(await readFile(join(result.stagingFolder, "war3map.w3i"))),
+    ).toEqual({ set: "custom", version: "roc" });
+    expect(await readFile(join(folders.map, "war3map.w3i"))).toEqual(before);
+  });
+
+  it("keeps the map's Game data when it is given none", async () => {
+    const folders = await tempFolders();
+    const result = buildProbe("hello", folders, {
+      gameData: { version: "tft" },
+    });
+
+    expect(
+      readGameData(await readFile(join(result.stagingFolder, "war3map.w3i"))),
+    ).toEqual({ set: "melee", version: "tft" });
+  });
+
   it("bakes the runId into the bundle and stores it in the Probe's state file", async () => {
     const folders = await tempFolders();
     const result = buildProbe("hello", folders);
@@ -142,7 +167,7 @@ describe("buildProbe", () => {
 
   it("bakes the runId it is given", async () => {
     const folders = await tempFolders();
-    const result = buildProbe("hello", folders, "given-run");
+    const result = buildProbe("hello", folders, { runId: "given-run" });
 
     expect(result.runId).toBe("given-run");
     expect(await readFile(result.bundleFile, "utf8")).toContain(`"given-run"`);
@@ -249,6 +274,41 @@ describe("probe:build", () => {
     ) as { runId: string };
     expect(output.stdout).toBe(
       `Built Probe hello, run ${runId}: ${join(folders.output, "hello", "staging", "probe.w3m")}\n`,
+    );
+  });
+
+  it("stages the Game data of --game-data-set and --game-data-version, naming it in its line", async () => {
+    const folders = await tempFolders();
+    const { output, streams } = captureOutput();
+
+    expect(
+      main(
+        ["hello", "--game-data-set", "custom", "--game-data-version", "fk"],
+        streams,
+        { folders },
+      ),
+    ).toBe(0);
+    expect(output.stdout).toMatch(
+      /^Built Probe hello under the Game Data Set Custom and the Game Data Version Forsaken Kingdom, run \S+: .+\n$/,
+    );
+    expect(
+      readGameData(
+        await readFile(
+          join(folders.output, "hello", "staging", "probe.w3m", "war3map.w3i"),
+        ),
+      ),
+    ).toEqual({ set: "custom", version: "fk" });
+  });
+
+  it("refuses an unknown Game Data Version on one line, with exit code 1", async () => {
+    const folders = await tempFolders();
+    const { output, streams } = captureOutput();
+
+    expect(
+      main(["hello", "--game-data-version", "v2"], streams, { folders }),
+    ).toBe(1);
+    expect(output.stderr).toBe(
+      'probe:build failed: --game-data-version is "v2": it takes one of roc, tft, fk.\n',
     );
   });
 

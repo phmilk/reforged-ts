@@ -2,7 +2,7 @@
 
 The Built-in objects of each Warcraft III Reforged Patch, reduced to the identifiers code needs to name them: Rawcode, Object kind, race, enUS name and the Game data sets that hold the object ([ADR 0013](https://github.com/phmilk/reforged-ts/blob/master/docs/adr/0013-built-in-objects-ship-as-derived-identifiers-in-their-own-package.md)). It never holds tooltip text, numbers or icons.
 
-It holds the Built-in objects of Patch 3.0.0.24268, in the seven Object kinds and the three Game data sets: their JSON index, their `FourCC` overloads and their constants.
+It holds the Built-in objects of Patch 3.0.0.24268, in the seven Object kinds and the six Game data sets: their JSON index, their `FourCC` overloads and their constants.
 
 **For AI agents:** the documentation of this version as Markdown: [llms.txt](https://phmilk.github.io/reforged-ts/docs/next/llms.txt) links each page, and [llms-full.txt](https://phmilk.github.io/reforged-ts/docs/next/llms-full.txt) holds them all in one file.
 
@@ -51,7 +51,7 @@ So the Footman is `Units.Footman_hfoo`, the Paladin `Units.Paladin_Hpal`, Claws 
 
 ## Game data sets
 
-The constants cover the union of the three Game data sets the World Editor offers in its map options: Default, Custom and Melee. An object's TSDoc names the sets that hold it when not every one does ("In the Default Game data set. Not in the Custom and Melee Game data sets."), and says nothing otherwise. A constant of an object the map's set does not hold still compiles, and the Native it is passed to finds no such object in game: check its hover before using it in a Melee or Custom map.
+A map's objects follow two of its options in the World Editor: its Game Data Set (Default, Custom or Melee) and its Game Data Version (Reign of Chaos, The Frozen Throne or Forsaken Kingdom, which a new map gets). The package has a Game data set per pair the game tells apart, `custom-fk` to `melee-roc`, as Probe runs settled them ([#575](https://github.com/phmilk/reforged-ts/issues/575)): Default reads Custom on a map that is not a melee map, so it has no set of its own, and both sets of Forsaken Kingdom hold every object. The constants cover their union. An object's TSDoc names the sets that hold it when not every one does (the Scarlet Crusade's Footman, `Units.Footman_sfoo`: "In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets."), and says nothing otherwise. A constant of an object the map's sets do not hold still compiles, and the Native it is passed to finds no such object in game: check its hover before using it in a map of The Frozen Throne or Reign of Chaos.
 
 ## What it never holds
 
@@ -90,16 +90,26 @@ The package follows semver on its constants and overloads. Adding objects is a m
   "build": "3.0.0.24268",
   "gameVersion": "3.0.0",
   "gameDataSets": [
-    { "id": "default", "label": "Default" },
-    { "id": "custom", "label": "Custom" },
-    { "id": "melee", "label": "Melee" }
+    { "id": "custom-fk", "label": "Custom (Forsaken Kingdom)" },
+    { "id": "melee-fk", "label": "Melee (Forsaken Kingdom)" },
+    { "id": "custom-tft", "label": "Custom (The Frozen Throne)" },
+    { "id": "melee-tft", "label": "Melee (The Frozen Throne)" },
+    { "id": "custom-roc", "label": "Custom (Reign of Chaos)" },
+    { "id": "melee-roc", "label": "Melee (Reign of Chaos)" }
   ],
   "objects": {
     "hfoo": {
       "kind": "unit",
       "name": "Footman",
       "race": "human",
-      "sets": ["default", "custom", "melee"],
+      "sets": [
+        "custom-fk",
+        "melee-fk",
+        "custom-tft",
+        "melee-tft",
+        "custom-roc",
+        "melee-roc"
+      ],
       "constant": "Footman_hfoo"
     }
   }
@@ -107,7 +117,7 @@ The package follows semver on its constants and overloads. Adding objects is a m
 ```
 
 - `format` is the shape's version, 1 today: a tool reads an index whose `format` it knows, and a new `format` comes only with an incompatible shape, in a major of the package.
-- `objects` is keyed by Rawcode, in code-point order. `name` is the enUS name, colour codes and line breaks removed; it is absent when the game gives none. `race` is lower-case, as the game writes it, and absent for a kind without one. `sets` lists the ids of the Game data sets that hold the object; the constants cover their union, and an object's TSDoc names the sets that hold it and those that do not, unless every one does ("In the Default Game data set. Not in the Custom and Melee Game data sets."). `constant` is its constant's name: the enUS name in PascalCase, then `_` and the Rawcode (`Unnamed_<rawcode>` without a name).
+- `objects` is keyed by Rawcode, in code-point order. `name` is the enUS name, colour codes and line breaks removed; it is absent when the game gives none. `race` is lower-case, as the game writes it, and absent for a kind without one. `sets` lists the ids of the Game data sets that hold the object; the constants cover their union, and an object's TSDoc names the sets that hold it and those that do not, unless every one does. `constant` is its constant's name: the enUS name in PascalCase, then `_` and the Rawcode (`Unnamed_<rawcode>` without a name).
 
 The file is written one object per line, byte-stably: a regeneration from unchanged inputs writes the same bytes.
 
@@ -121,9 +131,9 @@ Each Game version's index is emitted three ways, every file with a banner that s
 
 `pnpm builtins:generate [--install <folder>] [--out <folder>]`, from the repository root, on a machine with the game. It finds the install as the Probe runner finds the game: `--install` (the install folder, or any file in it), else the folder above the executable `WC3_EXECUTABLE` names, else `Warcraft III` under `Program Files (x86)` then `Program Files` (drive C under WSL). It refuses an install whose Build is not `reforged-types`' `reforged.patch`, naming both. The Build is the one the build config names (`build-name`), which describes the content: the Battle.net app has been seen to give `.build.info` another Version for the same build config (3.0.0.24248 for the build config of 3.0.0.24268), which is then a warning.
 
-It reads the install's CASC storage with a small TypeScript reader (`src/casc/`: no native code, no dependency, read-only). The Game data sets are the three the World Editor of 3.0 offers in its map options: Default, which reads the base layer `War3.w3mod:`; Custom, which reads `_Balance/Custom_V1.w3mod:`; and Melee, which reads `_Balance/Melee_V0.w3mod:`. Each layer's file of a kind replaces the base layer's whole, and a set whose layer has none reads the base layer's: no layer has destructables or doodads. Which layer a map reads for each of the editor's Game Data Versions (Reign of Chaos, The Frozen Throne, Forsaken Kingdom), the last having no layer of its own, is not yet settled in game ([#575](https://github.com/phmilk/reforged-ts/issues/575)).
+It reads the install's CASC storage with a small TypeScript reader (`src/casc/`: no native code, no dependency, read-only). The Game data sets read the layers the game reads, measured by Probe runs on 3.0.0.24268 under each Game Data Set and Game Data Version ([`docs/research/builtins-layers.md`](../../docs/research/builtins-layers.md), [#575](https://github.com/phmilk/reforged-ts/issues/575)). A set of a Game Data Set and a Game Data Version reads `_Balance/<Set>_V<version>.w3mod:`, where the version is 0 for Reign of Chaos, 1 for The Frozen Throne and 2 for Forsaken Kingdom, and leaves out every unit, item and ability whose `version` cell is greater, an object of a later expansion; a destructable of a later version is still created, as measured, and buffs, doodads and upgrades, which no run could measure, keep every row. The install has `Custom_V0`, `Custom_V1` and `Melee_V0` only, and a set whose layer has no file of a kind reads the base layer's, `War3.w3mod:`: Melee of The Frozen Throne reads the base layer without Forsaken Kingdom's objects, and both sets of Forsaken Kingdom read it whole. Each layer's file of a kind replaces the base layer's whole: no layer has destructables or doodads. Default reads Custom on a map that is not a melee map (the runs, on the Template's map); on a melee map it reads Melee, the editor's label says, which no run has checked. The runs created units, items, abilities and destructables.
 
-No layer holds a names, metadata or locale file: names come from the enUS profile files, where a set's own value is qualified (`Name:custom,V1=`, `Name:melee,V0=`; `Name:hd=` is the HD graphics', never read). An object is named by the first set that holds it, in the order above: its qualified value there, else the unqualified one. In 3.0.0.24268 that names `Asa2`, held by Custom alone, "Pillage".
+No layer holds a names, metadata or locale file: names come from the enUS profile files, where a set's own value is qualified (`Name:custom,V1=`, `Name:melee,V0=`, a set's `<set>,V<version>`; `Name:hd=` is the HD graphics', never read). An object is named by the first set that holds it, in the order above: its qualified value there, else the unqualified one. In 3.0.0.24268 that names `Asa2`, held by Custom of The Frozen Throne alone, "Pillage".
 
 Per Object kind and Game data set, the data file gives the Rawcodes and, where it has the column, the race (an object's row from the first set that holds it, in the order above): `Units/UnitData.slk`, `Units/ItemData.slk`, `Units/AbilityData.slk`, `Units/AbilityBuffData.slk`, `Units/DestructableData.slk`, `Doodads/Doodads.slk` and `Units/UpgradeData.slk`; heroes are units, and a row with no Rawcode cell is skipped with a warning. The kind's `*MetaData.slk` locates the field the Object Editor shows as the name:
 

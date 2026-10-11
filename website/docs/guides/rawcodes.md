@@ -368,7 +368,7 @@ Literals and constants are the same integers, and the overloads check both. Keep
 
 ### Game data sets
 
-A map plays with one Game data set, set in the World Editor's map options: Default, Custom or Melee. Each set holds its own objects, so an object of one set may be missing from another. The constants cover all three. An object's hover says which sets hold it when not every one does: the Scarlet Crusade's Footman, `Units.Footman_sfoo`, reads "In the Default Game data set. Not in the Custom and Melee Game data sets." Such a constant still compiles in a Melee map, and the Native it is passed to finds nothing in game: read the hover before using an object outside Default.
+A map's objects follow two of its options in the World Editor: its Game Data Set (Default, Custom or Melee) and its Game Data Version (Reign of Chaos, The Frozen Throne or Forsaken Kingdom). Each pair the game tells apart is a Game data set of the package, so an object of one may be missing from another. A new map is of Forsaken Kingdom, whose sets hold every object; on a map that is not a melee map, Default reads Custom. The constants cover all the sets. An object's hover says which sets hold it when not every one does: the Scarlet Crusade's Footman, `Units.Footman_sfoo`, reads "In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets." Such a constant still compiles in a map of The Frozen Throne, and the Native it is passed to finds nothing in game: read the hover before using an object in a map of an earlier Game Data Version.
 
 ### What it does not hold
 

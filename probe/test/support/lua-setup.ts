@@ -85,7 +85,9 @@ function compile(): string {
       ),
     ];
     for (const [probe, probeFolders] of probes) {
-      const { bundleFile } = buildProbe(probe, probeFolders, BRIDGE_RUN_ID);
+      const { bundleFile } = buildProbe(probe, probeFolders, {
+        runId: BRIDGE_RUN_ID,
+      });
       copyFileSync(bundleFile, join(outDir, `${probe}_bundle.lua`));
     }
   } catch (error) {

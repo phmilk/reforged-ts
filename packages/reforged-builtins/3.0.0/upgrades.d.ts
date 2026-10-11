@@ -26,21 +26,21 @@ export declare const Upgrades: {
   /**
    * Mark of the Claw (`Reeb`), a Built-in upgrade of Patch 3.0.0, race nightelf.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MarkOfTheClaw_Reeb: Rawcode<"upgrade">;
 
   /**
    * Mark of the Talon (`Reec`), a Built-in upgrade of Patch 3.0.0, race nightelf.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MarkOfTheTalon_Reec: Rawcode<"upgrade">;
 
   /**
    * Hardened Skin (`Rehs`), a Built-in upgrade of Patch 3.0.0, race nightelf.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HardenedSkin_Rehs: Rawcode<"upgrade">;
 
@@ -82,7 +82,7 @@ export declare const Upgrades: {
   /**
    * Backpack (`Repm`), a Built-in upgrade of Patch 3.0.0, race nightelf.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Backpack_Repm: Rawcode<"upgrade">;
 
@@ -94,7 +94,7 @@ export declare const Upgrades: {
   /**
    * Resistant Skin (`Rers`), a Built-in upgrade of Patch 3.0.0, race nightelf.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ResistantSkin_Rers: Rawcode<"upgrade">;
 
@@ -126,21 +126,21 @@ export declare const Upgrades: {
   /**
    * Well Spring (`Rews`), a Built-in upgrade of Patch 3.0.0, race nightelf.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WellSpring_Rews: Rawcode<"upgrade">;
 
   /**
    * Glyph of Fortification (`Rgfo`), a Built-in upgrade of Patch 3.0.0, race unknown.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GlyphOfFortification_Rgfo: Rawcode<"upgrade">;
 
   /**
    * Glyph of Ultravision (`Rguv`), a Built-in upgrade of Patch 3.0.0, race unknown.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GlyphOfUltravision_Rguv: Rawcode<"upgrade">;
 
@@ -162,7 +162,7 @@ export declare const Upgrades: {
   /**
    * Cloud (`Rhcd`), a Built-in upgrade of Patch 3.0.0, race human.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Cloud_Rhcd: Rawcode<"upgrade">;
 
@@ -174,7 +174,7 @@ export declare const Upgrades: {
   /**
    * Flak Cannons (`Rhfc`), a Built-in upgrade of Patch 3.0.0, race human.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FlakCannons_Rhfc: Rawcode<"upgrade">;
 
@@ -186,7 +186,7 @@ export declare const Upgrades: {
   /**
    * Fragmentation Shards (`Rhfs`), a Built-in upgrade of Patch 3.0.0, race human.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FragmentationShards_Rhfs: Rawcode<"upgrade">;
 
@@ -218,7 +218,7 @@ export declare const Upgrades: {
   /**
    * Backpack (`Rhpm`), a Built-in upgrade of Patch 3.0.0, race human.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Backpack_Rhpm: Rawcode<"upgrade">;
 
@@ -240,14 +240,14 @@ export declare const Upgrades: {
   /**
    * Barrage (`Rhrt`), a Built-in upgrade of Patch 3.0.0, race human.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Barrage_Rhrt: Rawcode<"upgrade">;
 
   /**
    * Sundering Blades (`Rhsb`), a Built-in upgrade of Patch 3.0.0, race human.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SunderingBlades_Rhsb: Rawcode<"upgrade">;
 
@@ -259,7 +259,7 @@ export declare const Upgrades: {
   /**
    * Control Magic (`Rhss`), a Built-in upgrade of Patch 3.0.0, race human.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ControlMagic_Rhss: Rawcode<"upgrade">;
 
@@ -271,42 +271,42 @@ export declare const Upgrades: {
   /**
    * Coral Scales (`Rnam`), a Built-in upgrade of Patch 3.0.0, race naga.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CoralScales_Rnam: Rawcode<"upgrade">;
 
   /**
    * Coral Blades (`Rnat`), a Built-in upgrade of Patch 3.0.0, race naga.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CoralBlades_Rnat: Rawcode<"upgrade">;
 
   /**
    * Ensnare (`Rnen`), a Built-in upgrade of Patch 3.0.0, race naga.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Ensnare_Rnen: Rawcode<"upgrade">;
 
   /**
    * Submerge (`Rnsb`), a Built-in upgrade of Patch 3.0.0, race naga.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Submerge_Rnsb: Rawcode<"upgrade">;
 
   /**
    * Abolish Magic (`Rnsi`), a Built-in upgrade of Patch 3.0.0, race naga.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AbolishMagic_Rnsi: Rawcode<"upgrade">;
 
   /**
    * Naga Siren Adept Training (`Rnsw`), a Built-in upgrade of Patch 3.0.0, race naga.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly NagaSirenAdeptTraining_Rnsw: Rawcode<"upgrade">;
 
@@ -318,14 +318,14 @@ export declare const Upgrades: {
   /**
    * Burning Oil (`Robf`), a Built-in upgrade of Patch 3.0.0, race orc.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BurningOil_Robf: Rawcode<"upgrade">;
 
   /**
    * Berserker Upgrade (`Robk`), a Built-in upgrade of Patch 3.0.0, race orc.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BerserkerUpgrade_Robk: Rawcode<"upgrade">;
 
@@ -347,7 +347,7 @@ export declare const Upgrades: {
   /**
    * Liquid Fire (`Rolf`), a Built-in upgrade of Patch 3.0.0, race orc.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LiquidFire_Rolf: Rawcode<"upgrade">;
 
@@ -364,7 +364,7 @@ export declare const Upgrades: {
   /**
    * Backpack (`Ropm`), a Built-in upgrade of Patch 3.0.0, race orc.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Backpack_Ropm: Rawcode<"upgrade">;
 
@@ -376,7 +376,7 @@ export declare const Upgrades: {
   /**
    * Reinforced Defenses (`Rorb`), a Built-in upgrade of Patch 3.0.0, race orc.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ReinforcedDefenses_Rorb: Rawcode<"upgrade">;
 
@@ -413,7 +413,7 @@ export declare const Upgrades: {
   /**
    * Spirit Walker Adept Training (`Rowt`), a Built-in upgrade of Patch 3.0.0, race orc.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpiritWalkerAdeptTraining_Rowt: Rawcode<"upgrade">;
 
@@ -435,7 +435,7 @@ export declare const Upgrades: {
   /**
    * Burrow (`Rubu`), a Built-in upgrade of Patch 3.0.0, race undead.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Burrow_Rubu: Rawcode<"upgrade">;
 
@@ -447,7 +447,7 @@ export declare const Upgrades: {
   /**
    * Exhume Corpses (`Ruex`), a Built-in upgrade of Patch 3.0.0, race undead.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ExhumeCorpses_Ruex: Rawcode<"upgrade">;
 
@@ -479,7 +479,7 @@ export declare const Upgrades: {
   /**
    * Backpack (`Rupm`), a Built-in upgrade of Patch 3.0.0, race undead.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Backpack_Rupm: Rawcode<"upgrade">;
 
@@ -501,14 +501,14 @@ export declare const Upgrades: {
   /**
    * Skeletal Mastery (`Rusm`), a Built-in upgrade of Patch 3.0.0, race undead.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SkeletalMastery_Rusm: Rawcode<"upgrade">;
 
   /**
    * Destroyer Form (`Rusp`), a Built-in upgrade of Patch 3.0.0, race undead.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DestroyerForm_Rusp: Rawcode<"upgrade">;
 

@@ -157,7 +157,7 @@ describe("builtins:check", () => {
     const objects = index.objects as Record<string, unknown>;
     objects.hfoo = { ...index.objects.hfoo, kind: "hero", sets: ["campaign"] };
     objects.Hpal = { ...index.objects.Hpal, constant: "Footman_hfoo" };
-    objects["h-1"] = { kind: "unit", sets: ["default"], constant: "X_h-1" };
+    objects["h-1"] = { kind: "unit", sets: ["custom-fk"], constant: "X_h-1" };
     await writeFile(
       path,
       JSON.stringify({ ...index, format: 2, gameVersion: "3.0.1" }),

@@ -1,6 +1,7 @@
 /**
  * `probe:run <probe> [--game-executable <file>] [--begin-timeout <seconds>]
- * [--stall-timeout <seconds>]`: run by the agent, native Windows only. Runs
+ * [--stall-timeout <seconds>] [--game-data-set <set>] [--game-data-version
+ * <version>]`: run by the agent, native Windows only. Runs
  * the Probe in the game end to end and blocks until the run ends, printing
  * one progress line per event, then exactly what `probe:read` prints for the
  * run. Exit codes are `probe:read`'s: 0 `finished`, 1 `failed`, 2 `crashed`
@@ -13,6 +14,13 @@
 import { parseArgs } from "node:util";
 import { PROBE_FOLDERS, WORKSPACE_FOLDER } from "../folders.js";
 import { OPTION_FLAGS } from "../game.js";
+import {
+  GAME_DATA_ARGS,
+  GAME_DATA_OPTIONS,
+  GAME_DATA_SETS,
+  GAME_DATA_VERSIONS,
+  gameDataOf,
+} from "../game-data.js";
 import { systemMachine } from "../machine.js";
 import { EXIT_CODES, formatProbeRun } from "../read.js";
 import { DEFAULT_TIMEOUTS, runProbe, type RunContext } from "../run.js";
@@ -24,7 +32,7 @@ import {
   type Output,
 } from "./common.js";
 
-const USAGE = `Usage: probe:run <probe> [${OPTION_FLAGS.gameExecutable} <file>] [--begin-timeout <seconds>] [--stall-timeout <seconds>]\n`;
+const USAGE = `Usage: probe:run <probe> [${OPTION_FLAGS.gameExecutable} <file>] [--begin-timeout <seconds>] [--stall-timeout <seconds>] [--${GAME_DATA_OPTIONS.set} ${GAME_DATA_SETS.join("|")}] [--${GAME_DATA_OPTIONS.version} ${GAME_DATA_VERSIONS.join("|")}]\n`;
 
 /** Where the command builds, the machine it runs the game on, and the workspace its paths are relative to. */
 export type Context = Omit<RunContext, "progress">;
@@ -46,7 +54,10 @@ export async function main(
   try {
     const run = await runProbe(
       parsed.probe,
-      { gameExecutable: parsed.gameExecutable },
+      {
+        gameExecutable: parsed.gameExecutable,
+        gameData: gameDataOf(parsed.values),
+      },
       { begin: parsed.beginTimeout, stall: parsed.stallTimeout },
       {
         ...context,
@@ -68,6 +79,8 @@ interface CommandLine {
   gameExecutable?: string;
   beginTimeout: number;
   stallTimeout: number;
+  /** Every option as `parseArgs` read it, for the Game data. */
+  values: Readonly<Record<string, unknown>>;
 }
 
 /** A timeout in seconds: a positive number; undefined for anything else. */
@@ -89,6 +102,7 @@ function parseCommandLine(args: readonly string[]): CommandLine | undefined {
         "game-executable": { type: "string" },
         "begin-timeout": { type: "string" },
         "stall-timeout": { type: "string" },
+        ...GAME_DATA_ARGS,
       },
       strict: true,
       allowPositionals: true,
@@ -113,6 +127,7 @@ function parseCommandLine(args: readonly string[]): CommandLine | undefined {
     }),
     beginTimeout,
     stallTimeout,
+    values,
   };
 }
 

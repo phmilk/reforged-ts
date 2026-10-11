@@ -125,16 +125,19 @@ describe("builtins:generate", () => {
   "build": "3.0.0.24268",
   "gameVersion": "3.0.0",
   "gameDataSets": [
-    {"id":"default","label":"Default"},
-    {"id":"custom","label":"Custom"},
-    {"id":"melee","label":"Melee"}
+    {"id":"custom-fk","label":"Custom (Forsaken Kingdom)"},
+    {"id":"melee-fk","label":"Melee (Forsaken Kingdom)"},
+    {"id":"custom-tft","label":"Custom (The Frozen Throne)"},
+    {"id":"melee-tft","label":"Melee (The Frozen Throne)"},
+    {"id":"custom-roc","label":"Custom (Reign of Chaos)"},
+    {"id":"melee-roc","label":"Melee (Reign of Chaos)"}
   ],
   "objects": {
-    "Hpal": {"kind":"unit","name":"Paladin","race":"human","sets":["default","custom","melee"],"constant":"Paladin_Hpal"},
-    "hfoo": {"kind":"unit","name":"Footman","race":"human","sets":["default","custom","melee"],"constant":"Footman_hfoo"},
-    "hkni": {"kind":"unit","name":"Knight","race":"human","sets":["default","custom","melee"],"constant":"Knight_hkni"},
-    "nmrl": {"kind":"unit","name":"Mur'gul Slave","race":"naga","sets":["default","custom","melee"],"constant":"MurgulSlave_nmrl"},
-    "sfoo": {"kind":"unit","name":"Footman","race":"human","sets":["default","custom","melee"],"constant":"Footman_sfoo"}
+    "Hpal": {"kind":"unit","name":"Paladin","race":"human","sets":["custom-fk","melee-fk","custom-tft","melee-tft","custom-roc","melee-roc"],"constant":"Paladin_Hpal"},
+    "hfoo": {"kind":"unit","name":"Footman","race":"human","sets":["custom-fk","melee-fk","custom-tft","melee-tft","custom-roc","melee-roc"],"constant":"Footman_hfoo"},
+    "hkni": {"kind":"unit","name":"Knight","race":"human","sets":["custom-fk","melee-fk","custom-tft","melee-tft","custom-roc","melee-roc"],"constant":"Knight_hkni"},
+    "nmrl": {"kind":"unit","name":"Mur'gul Slave","race":"naga","sets":["custom-fk","melee-fk","custom-tft","melee-tft","custom-roc","melee-roc"],"constant":"MurgulSlave_nmrl"},
+    "sfoo": {"kind":"unit","name":"Footman","race":"human","sets":["custom-fk","melee-fk","custom-tft","melee-tft","custom-roc","melee-roc"],"constant":"Footman_sfoo"}
   }
 }
 `,
@@ -375,7 +378,7 @@ return {
     expect(
       await readFile(join(outDir, "3.0.0", "index.json"), "utf8"),
     ).toContain(
-      '"Ubtr": {"kind":"unit","name":"Noble","race":"undead","sets":["default","custom","melee"],"constant":"Noble_Ubtr"}',
+      '"Ubtr": {"kind":"unit","name":"Noble","race":"undead","sets":["custom-fk","melee-fk","custom-tft","melee-tft","custom-roc","melee-roc"],"constant":"Noble_Ubtr"}',
     );
   });
 
@@ -933,31 +936,58 @@ describe("builtins:generate on every Object kind", () => {
 });
 
 describe("builtins:generate on every Game data set", () => {
-  const MELEE = "War3.w3mod:_Balance/Melee_V0.w3mod:";
-  const CUSTOM = "War3.w3mod:_Balance/Custom_V1.w3mod:";
+  const MELEE_V0 = "War3.w3mod:_Balance/Melee_V0.w3mod:";
+  const CUSTOM_V0 = "War3.w3mod:_Balance/Custom_V0.w3mod:";
+  const CUSTOM_V1 = "War3.w3mod:_Balance/Custom_V1.w3mod:";
 
   async function layered() {
     const storage = await writeStorage(
       allKinds({
-        // The base's units add a Knight no layer has.
+        // The base's units add a Forsaken Kingdom hero and a Knight no
+        // layer has.
         [UNIT_DATA]: unitDataSlk([
-          { id: "hfoo", race: "human" },
-          { id: "Hpal", race: "human" },
-          { id: "hkni", race: "human" },
+          { id: "hfoo", race: "human", version: 0 },
+          { id: "Hpal", race: "human", version: 0 },
+          { id: "hkni", race: "human", version: 0 },
+          { id: "Hfkh", race: "human", version: 2 },
+          { id: "htft", race: "human", version: 1 },
         ]),
-        // Melee's units have no Paladin.
-        [`${MELEE}Units/UnitData.slk`]: unitDataSlk([
-          { id: "hfoo", race: "human" },
+        // Melee's units of Reign of Chaos have no Paladin.
+        [`${MELEE_V0}Units/UnitData.slk`]: unitDataSlk([
+          { id: "hfoo", race: "human", version: 0 },
         ]),
-        // Custom's units add a unit of their own.
-        [`${CUSTOM}Units/UnitData.slk`]: unitDataSlk([
-          { id: "hfoo", race: "human" },
-          { id: "Hpal", race: "human" },
-          { id: "hcus", race: "human" },
+        // Custom's of Reign of Chaos hold a unit of The Frozen Throne,
+        // which a map of Reign of Chaos leaves out.
+        [`${CUSTOM_V0}Units/UnitData.slk`]: unitDataSlk([
+          { id: "hfoo", race: "human", version: 0 },
+          { id: "Hpal", race: "human", version: 0 },
+          { id: "htft", race: "human", version: 1 },
         ]),
+        // Custom's of The Frozen Throne add a unit of their own.
+        [`${CUSTOM_V1}Units/UnitData.slk`]: unitDataSlk([
+          { id: "hfoo", race: "human", version: 0 },
+          { id: "Hpal", race: "human", version: 0 },
+          { id: "hcus", race: "human", version: 1 },
+          { id: "htft", race: "human", version: 1 },
+        ]),
+        // An ability of Forsaken Kingdom, and one whose version is no number.
+        [base("Units/AbilityData.slk")]: slkTable(
+          ["alias", "code", "race", "version"],
+          [
+            ["AHbz", "AHbz", "human", "0"],
+            ["Aitb", "Aitb", "other", "2"],
+            ["Asoo", "Asoo", "other", "soon"],
+          ],
+        ),
+        // A destructable of The Frozen Throne, which a map of Reign of
+        // Chaos still creates: the version leaves out no destructable.
+        [base("Units/DestructableData.slk")]: slkTable(
+          ["DestructableID", "Name", "version"],
+          [["LTlt", "WESTRING_DEST_SUMMER_TREE_WALL", "1"]],
+        ),
         [strings("HumanUnitStrings.txt")]: profile({
-          // A name of the Melee set, or of the HD graphics, is not the name
-          // of an object the Default set holds.
+          // A name of a layer's set, or of the HD graphics, is not the name
+          // of an object a set of Forsaken Kingdom holds.
           hfoo: {
             Name: "Footman",
             "Name:melee,V0": "Melee Footman",
@@ -965,6 +995,8 @@ describe("builtins:generate on every Game data set", () => {
           },
           Hpal: { Name: "Paladin" },
           hkni: { Name: "Knight" },
+          Hfkh: { Name: "Hero" },
+          htft: { Name: "Rifleman" },
           // Named for the Custom set alone, as its layer holds it alone.
           hcus: { "Name:custom,V1": "Custom Footman" },
         }),
@@ -975,35 +1007,95 @@ describe("builtins:generate on every Game data set", () => {
     return { ...result, outDir };
   }
 
-  it("takes a set's objects from its layer's file of the kind, else from the base layer's, and names one by the first set that holds it", async () => {
+  it("lists a set per Game Data Set and Game Data Version, Forsaken Kingdom first", async () => {
     const { status, stderr, outDir } = await layered();
 
     expect(stderr).toBe("");
     expect(status).toBe(0);
     const index = JSON.parse(
       await readFile(join(outDir, "3.0.0", "index.json"), "utf8"),
-    ) as {
-      gameDataSets: unknown;
-      objects: Record<string, { sets: string[]; name?: string }>;
-    };
+    ) as { gameDataSets: unknown };
     expect(index.gameDataSets).toEqual([
-      { id: "default", label: "Default" },
-      { id: "custom", label: "Custom" },
-      { id: "melee", label: "Melee" },
+      { id: "custom-fk", label: "Custom (Forsaken Kingdom)" },
+      { id: "melee-fk", label: "Melee (Forsaken Kingdom)" },
+      { id: "custom-tft", label: "Custom (The Frozen Throne)" },
+      { id: "melee-tft", label: "Melee (The Frozen Throne)" },
+      { id: "custom-roc", label: "Custom (Reign of Chaos)" },
+      { id: "melee-roc", label: "Melee (Reign of Chaos)" },
     ]);
+  });
+
+  it("takes a set's objects from the layer of its set and version, else from the base layer, leaving out those of a later version, and names one by the first set that holds it", async () => {
+    const { outDir } = await layered();
+
+    const index = JSON.parse(
+      await readFile(join(outDir, "3.0.0", "index.json"), "utf8"),
+    ) as { objects: Record<string, { sets: string[]; name?: string }> };
     const sets = Object.fromEntries(
       Object.entries(index.objects).map(([id, entry]) => [id, entry.sets]),
     );
     expect(sets).toMatchObject({
-      hfoo: ["default", "custom", "melee"],
-      Hpal: ["default", "custom"],
-      hcus: ["custom"],
-      hkni: ["default"],
-      // No layer has a file of items: every set reads the base layer's.
-      ratf: ["default", "custom", "melee"],
+      hfoo: [
+        "custom-fk",
+        "melee-fk",
+        "custom-tft",
+        "melee-tft",
+        "custom-roc",
+        "melee-roc",
+      ],
+      // Melee of The Frozen Throne has no layer: it reads the base's.
+      Hpal: ["custom-fk", "melee-fk", "custom-tft", "melee-tft", "custom-roc"],
+      hkni: ["custom-fk", "melee-fk", "melee-tft"],
+      Hfkh: ["custom-fk", "melee-fk"],
+      htft: ["custom-fk", "melee-fk", "custom-tft", "melee-tft"],
+      hcus: ["custom-tft"],
+      Aitb: ["custom-fk", "melee-fk"],
+      AHbz: [
+        "custom-fk",
+        "melee-fk",
+        "custom-tft",
+        "melee-tft",
+        "custom-roc",
+        "melee-roc",
+      ],
+      // A version that is no number leaves nothing out, with a warning.
+      Asoo: [
+        "custom-fk",
+        "melee-fk",
+        "custom-tft",
+        "melee-tft",
+        "custom-roc",
+        "melee-roc",
+      ],
+      LTlt: [
+        "custom-fk",
+        "melee-fk",
+        "custom-tft",
+        "melee-tft",
+        "custom-roc",
+        "melee-roc",
+      ],
+      // No layer has a file of items: every set reads the base layer's,
+      // and an object with no version is in every set.
+      ratf: [
+        "custom-fk",
+        "melee-fk",
+        "custom-tft",
+        "melee-tft",
+        "custom-roc",
+        "melee-roc",
+      ],
     });
     expect(index.objects.hcus.name).toBe("Custom Footman");
     expect(index.objects.hfoo.name).toBe("Footman");
+  });
+
+  it("warns of a version that is no number", async () => {
+    const { stdout } = await layered();
+
+    expect(stdout).toContain(
+      `- warning: War3.w3mod:Units/AbilityData.slk: the ability Asoo's version is "soon", not a number: every set holds it.\n`,
+    );
   });
 
   it("says in the TSDoc which sets hold an object, and nothing when every one does", async () => {
@@ -1014,11 +1106,8 @@ describe("builtins:generate on every Game data set", () => {
       const end = units.indexOf(`  readonly ${constant}:`);
       return units.slice(units.lastIndexOf("/**", end), end);
     };
-    expect(docOf("Paladin_Hpal")).toContain(
-      "In the Default and Custom Game data sets. Not in the Melee Game data set.",
-    );
-    expect(docOf("CustomFootman_hcus")).toContain(
-      "In the Custom Game data set. Not in the Default and Melee Game data sets.",
+    expect(docOf("Hero_Hfkh")).toContain(
+      "In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.",
     );
     expect(docOf("Footman_hfoo")).not.toContain("Game data set");
   });

@@ -11,308 +11,308 @@ export declare const Abilities: {
   /**
    * Item Hero Stat Bonus (`AA12`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AA12: Rawcode<"ability">;
 
   /**
    * Item Armor Corrupt 5 (`AACe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorCorrupt5_AACe: Rawcode<"ability">;
 
   /**
    * Item Armor Corrupt 2 (`AACq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorCorrupt2_AACq: Rawcode<"ability">;
 
   /**
    * Item Armor Corrupt 3 (`AACw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorCorrupt3_AACw: Rawcode<"ability">;
 
   /**
    * Item Spell Damage 8 (`AADe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellDamage8_AADe: Rawcode<"ability">;
 
   /**
    * Item Spell Damage 7 (`AADi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellDamage7_AADi: Rawcode<"ability">;
 
   /**
    * Item Spell Damage 2 (`AADo`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellDamage2_AADo: Rawcode<"ability">;
 
   /**
    * Item Spell Damage 3 (`AADq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellDamage3_AADq: Rawcode<"ability">;
 
   /**
    * Item Spell Damage 4 (`AADr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellDamage4_AADr: Rawcode<"ability">;
 
   /**
    * Item Spell Damage 10 (`AADt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellDamage10_AADt: Rawcode<"ability">;
 
   /**
    * Item Spell Damage 6 (`AADu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellDamage6_AADu: Rawcode<"ability">;
 
   /**
    * Item Spell Damage 5 (`AADw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellDamage5_AADw: Rawcode<"ability">;
 
   /**
    * Item Spell Damage 12 (`AADy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellDamage12_AADy: Rawcode<"ability">;
 
   /**
    * Item Spell Amp 20 (`AAPa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp20_AAPa: Rawcode<"ability">;
 
   /**
    * Item Spell Amp 3 (`AAPe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp3_AAPe: Rawcode<"ability">;
 
   /**
    * Item Spell Amp 4 (`AAPi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp4_AAPi: Rawcode<"ability">;
 
   /**
    * Item Spell Amp 6 (`AAPo`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp6_AAPo: Rawcode<"ability">;
 
   /**
    * Item Spell Amp 15 (`AAPp`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp15_AAPp: Rawcode<"ability">;
 
   /**
    * Item Spell Amp 12 (`AAPq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp12_AAPq: Rawcode<"ability">;
 
   /**
    * Item Spell Amp 8 (`AAPr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp8_AAPr: Rawcode<"ability">;
 
   /**
    * Item Spell Amp 10 (`AAPs`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp10_AAPs: Rawcode<"ability">;
 
   /**
    * Item Spell Amp 13 (`AAPt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp13_AAPt: Rawcode<"ability">;
 
   /**
    * Item Spell Amp 18 (`AAPu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp18_AAPu: Rawcode<"ability">;
 
   /**
    * Item Spell Amp 5 (`AAPw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp5_AAPw: Rawcode<"ability">;
 
   /**
    * Item Spell Amp 26 (`AAPx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp26_AAPx: Rawcode<"ability">;
 
   /**
    * Item Spell Amp 7 (`AAPy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp7_AAPy: Rawcode<"ability">;
 
   /**
    * Item Health Regen Aura 3 (`AARe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealthRegenAura3_AARe: Rawcode<"ability">;
 
   /**
    * Item Health Regen Aura 1 (`AARq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealthRegenAura1_AARq: Rawcode<"ability">;
 
   /**
    * Item Health Regen Aura 2 (`AARw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealthRegenAura2_AARw: Rawcode<"ability">;
 
   /**
    * Item Attack Speed -10 (`AASa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeed10_AASa: Rawcode<"ability">;
 
   /**
    * Item Attack Speed 4 (`AASd`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeed4_AASd: Rawcode<"ability">;
 
   /**
    * Item Attack Speed Bonus 8 (`AASe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeedBonus8_AASe: Rawcode<"ability">;
 
   /**
    * Item Attack Speed 24 (`AASf`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeed24_AASf: Rawcode<"ability">;
 
   /**
    * Item Attack Speed 30 (`AASg`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeed30_AASg: Rawcode<"ability">;
 
   /**
    * Item Attack Speed -20 (`AASh`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeed20_AASh: Rawcode<"ability">;
 
   /**
    * Item Attack Speed 12 (`AASi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeed12_AASi: Rawcode<"ability">;
 
   /**
    * Item Attack Speed 25 (`AASo`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeed25_AASo: Rawcode<"ability">;
 
   /**
    * Item Attack Speed 20 (`AASp`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeed20_AASp: Rawcode<"ability">;
 
   /**
    * Item Attack Speed Bonus 15 (`AASq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeedBonus15_AASq: Rawcode<"ability">;
 
   /**
    * Item Attack Speed Bonus 10 (`AASr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeedBonus10_AASr: Rawcode<"ability">;
 
   /**
    * Item Attack Speed 3 (`AASs`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeed3_AASs: Rawcode<"ability">;
 
   /**
    * Item Attack Speed 16 (`AASu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeed16_AASu: Rawcode<"ability">;
 
   /**
    * Item Attack Speed Bonus 9 (`AASw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeedBonus9_AASw: Rawcode<"ability">;
 
   /**
    * Item Attack Speed 6 (`AASy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeed6_AASy: Rawcode<"ability">;
 
@@ -324,266 +324,266 @@ export declare const Abilities: {
   /**
    * Item Ability Speed 25 (`ACDa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAbilitySpeed25_ACDa: Rawcode<"ability">;
 
   /**
    * Item Ability Speed 15 (`ACDd`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAbilitySpeed15_ACDd: Rawcode<"ability">;
 
   /**
    * Item Ability Speed 20 (`ACDf`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAbilitySpeed20_ACDf: Rawcode<"ability">;
 
   /**
    * Item Ability Speed 8 (`ACDi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAbilitySpeed8_ACDi: Rawcode<"ability">;
 
   /**
    * Item Ability Speed 10 (`ACDo`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAbilitySpeed10_ACDo: Rawcode<"ability">;
 
   /**
    * Item Ability Speed 2 (`ACDp`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAbilitySpeed2_ACDp: Rawcode<"ability">;
 
   /**
    * Item Ability Speed 12 (`ACDq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAbilitySpeed12_ACDq: Rawcode<"ability">;
 
   /**
    * Item Ability Speed 5 (`ACDt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAbilitySpeed5_ACDt: Rawcode<"ability">;
 
   /**
    * Item Ability Speed 6 (`ACDu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAbilitySpeed6_ACDu: Rawcode<"ability">;
 
   /**
    * Item Ability Speed 3 (`ACDw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAbilitySpeed3_ACDw: Rawcode<"ability">;
 
   /**
    * Item Ability Speed 4 (`ACDy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAbilitySpeed4_ACDy: Rawcode<"ability">;
 
   /**
    * Item Chronomaster's Gloves Ally (`ACGa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemChronomastersGlovesAlly_ACGa: Rawcode<"ability">;
 
   /**
    * Item Chronomaster's Gloves Enemy (`ACGe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemChronomastersGlovesEnemy_ACGe: Rawcode<"ability">;
 
   /**
    * Item Cleave 30 (`ACLw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCleave30_ACLw: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 20 (`ACSb`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance20_ACSb: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 12 (`ACSc`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance12_ACSc: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 7 (`ACSd`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance7_ACSd: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 3 (`ACSe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance3_ACSe: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 30 (`ACSg`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance30_ACSg: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 6 (`ACSj`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance6_ACSj: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 16 (`ACSn`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance16_ACSn: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 8 (`ACSo`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance8_ACSo: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 10 (`ACSq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance10_ACSq: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 2 (`ACSr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance2_ACSr: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 4 (`ACSu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance4_ACSu: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 18 (`ACSv`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance18_ACSv: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 15 (`ACSx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance15_ACSx: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 5 (`ACSy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance5_ACSy: Rawcode<"ability">;
 
   /**
    * Item Critical Chance 25 (`ACSz`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalChance25_ACSz: Rawcode<"ability">;
 
   /**
    * Item Critical Damage 10 (`ACXe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalDamage10_ACXe: Rawcode<"ability">;
 
   /**
    * Item Critical Damage 20 (`ACXi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalDamage20_ACXi: Rawcode<"ability">;
 
   /**
    * Item Critical Damage 12 (`ACXo`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalDamage12_ACXo: Rawcode<"ability">;
 
   /**
    * Item Critical Damage 5 (`ACXq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalDamage5_ACXq: Rawcode<"ability">;
 
   /**
    * Item Critical Damage 13 (`ACXr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalDamage13_ACXr: Rawcode<"ability">;
 
   /**
    * Item Critical Damage 30 (`ACXt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalDamage30_ACXt: Rawcode<"ability">;
 
   /**
    * Item Critical Damage 25 (`ACXu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalDamage25_ACXu: Rawcode<"ability">;
 
   /**
    * Item Critical Damage 15 (`ACXw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalDamage15_ACXw: Rawcode<"ability">;
 
   /**
    * Item Critical Damage 40 (`ACXy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalDamage40_ACXy: Rawcode<"ability">;
 
@@ -629,11 +629,15 @@ export declare const Abilities: {
 
   /**
    * Breath of Fire (`ACbc`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BreathOfFire_ACbc: Rawcode<"ability">;
 
   /**
    * Breath of Frost (`ACbf`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BreathOfFrost_ACbf: Rawcode<"ability">;
 
@@ -644,6 +648,8 @@ export declare const Abilities: {
 
   /**
    * Black Arrow (`ACbk`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BlackArrow_ACbk: Rawcode<"ability">;
 
@@ -654,6 +660,8 @@ export declare const Abilities: {
 
   /**
    * Banish (`ACbn`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Banish_ACbn: Rawcode<"ability">;
 
@@ -664,11 +672,15 @@ export declare const Abilities: {
 
   /**
    * Crushing Wave (`ACc2`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CrushingWave_ACc2: Rawcode<"ability">;
 
   /**
    * Crushing Wave (`ACc3`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CrushingWave_ACc3: Rawcode<"ability">;
 
@@ -679,16 +691,22 @@ export declare const Abilities: {
 
   /**
    * Frost Bolt (`ACcb`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FrostBolt_ACcb: Rawcode<"ability">;
 
   /**
    * Cleaving Attack (`ACce`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CleavingAttack_ACce: Rawcode<"ability">;
 
   /**
    * Charm (`ACch`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Charm_ACch: Rawcode<"ability">;
 
@@ -719,6 +737,8 @@ export declare const Abilities: {
 
   /**
    * Crushing Wave (`ACcv`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CrushingWave_ACcv: Rawcode<"ability">;
 
@@ -744,6 +764,8 @@ export declare const Abilities: {
 
   /**
    * Devour Magic (`ACde`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DevourMagic_ACde: Rawcode<"ability">;
 
@@ -754,6 +776,8 @@ export declare const Abilities: {
 
   /**
    * Life Drain (`ACdr`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LifeDrain_ACdr: Rawcode<"ability">;
 
@@ -814,6 +838,8 @@ export declare const Abilities: {
 
   /**
    * Forked Lightning (`ACfl`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ForkedLightning_ACfl: Rawcode<"ability">;
 
@@ -829,16 +855,22 @@ export declare const Abilities: {
 
   /**
    * Flame Strike (`ACfs`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FlameStrike_ACfs: Rawcode<"ability">;
 
   /**
    * Frost Armor (`ACfu`), a Built-in ability of Patch 3.0.0, race naga.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FrostArmor_ACfu: Rawcode<"ability">;
 
   /**
    * Healing Wave (`AChv`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HealingWave_AChv: Rawcode<"ability">;
 
@@ -849,6 +881,8 @@ export declare const Abilities: {
 
   /**
    * Hex (`AChx`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Hex_AChx: Rawcode<"ability">;
 
@@ -879,6 +913,8 @@ export declare const Abilities: {
 
   /**
    * Mana Shield (`ACmf`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ManaShield_ACmf: Rawcode<"ability">;
 
@@ -889,11 +925,15 @@ export declare const Abilities: {
 
   /**
    * Monsoon (`ACmo`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Monsoon_ACmo: Rawcode<"ability">;
 
   /**
    * Impale (`ACmp`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Impale_ACmp: Rawcode<"ability">;
 
@@ -904,6 +944,8 @@ export declare const Abilities: {
 
   /**
    * Parasite (`ACpa`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Parasite_ACpa: Rawcode<"ability">;
 
@@ -919,6 +961,8 @@ export declare const Abilities: {
 
   /**
    * Pulverize (`ACpv`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Pulverize_ACpv: Rawcode<"ability">;
 
@@ -929,6 +973,8 @@ export declare const Abilities: {
 
   /**
    * Roar (`ACr1`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Roar_ACr1: Rawcode<"ability">;
 
@@ -959,6 +1005,8 @@ export declare const Abilities: {
 
   /**
    * Resistant Skin (`ACrk`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ResistantSkin_ACrk: Rawcode<"ability">;
 
@@ -1004,11 +1052,15 @@ export declare const Abilities: {
 
   /**
    * Silence (`ACsi`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Silence_ACsi: Rawcode<"ability">;
 
   /**
    * Resistant Skin (`ACsk`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ResistantSkin_ACsk: Rawcode<"ability">;
 
@@ -1019,6 +1071,8 @@ export declare const Abilities: {
 
   /**
    * Siphon Mana (`ACsm`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SiphonMana_ACsm: Rawcode<"ability">;
 
@@ -1029,6 +1083,8 @@ export declare const Abilities: {
 
   /**
    * `ACss`, unnamed, a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_ACss: Rawcode<"ability">;
 
@@ -1059,6 +1115,8 @@ export declare const Abilities: {
 
   /**
    * Spawn Tentacle (`ACtn`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpawnTentacle_ACtn: Rawcode<"ability">;
 
@@ -1089,104 +1147,106 @@ export declare const Abilities: {
 
   /**
    * Summon Sea Elemental (`ACwe`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SummonSeaElemental_ACwe: Rawcode<"ability">;
 
   /**
    * Item Damage Bonus +18 (`AD18`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageBonus18_AD18: Rawcode<"ability">;
 
   /**
    * Item Damage 20 (`AD20`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamage20_AD20: Rawcode<"ability">;
 
   /**
    * Item Damage Bonus +24 (`AD24`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageBonus24_AD24: Rawcode<"ability">;
 
   /**
    * Item Damage Bonus +45 (`AD45`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageBonus45_AD45: Rawcode<"ability">;
 
   /**
    * Item Daybreaker Attack (`ADBa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDaybreakerAttack_ADBa: Rawcode<"ability">;
 
   /**
    * Item Daybreaker FS (`ADBf`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDaybreakerFS_ADBf: Rawcode<"ability">;
 
   /**
    * Item Dark Commander's Aura (`ADCa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDarkCommandersAura_ADCa: Rawcode<"ability">;
 
   /**
    * Item Disease Cloud 1 (`ADCq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDiseaseCloud1_ADCq: Rawcode<"ability">;
 
   /**
    * Item Dark Mistress' Aura (`ADMa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDarkMistressAura_ADMa: Rawcode<"ability">;
 
   /**
    * Item Damage Bonus -5 (`ADN5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageBonus5_ADN5: Rawcode<"ability">;
 
   /**
    * Item Damage Reflect 15% (`ADRq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageReflect15_ADRq: Rawcode<"ability">;
 
   /**
    * Item Damage Reflect 20% (`ADRw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageReflect20_ADRw: Rawcode<"ability">;
 
   /**
    * Life Regeneration Aura (`ADhr`), a Built-in ability of Patch 3.0.0, race creeps.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LifeRegenerationAura_ADhr: Rawcode<"ability">;
 
   /**
    * Mana Regeneration Aura (`ADmr`), a Built-in ability of Patch 3.0.0, race creeps.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ManaRegenerationAura_ADmr: Rawcode<"ability">;
 
@@ -1207,6 +1267,8 @@ export declare const Abilities: {
 
   /**
    * Blink (`AEbl`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Blink_AEbl: Rawcode<"ability">;
 
@@ -1227,6 +1289,8 @@ export declare const Abilities: {
 
   /**
    * Fan of Knives (`AEfk`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FanOfKnives_AEfk: Rawcode<"ability">;
 
@@ -1238,7 +1302,7 @@ export declare const Abilities: {
   /**
    * Purifier Blade Holy Light (`AEhl`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PurifierBladeHolyLight_AEhl: Rawcode<"ability">;
 
@@ -1265,14 +1329,14 @@ export declare const Abilities: {
   /**
    * Purifier Blade Orb (`AEpb`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PurifierBladeOrb_AEpb: Rawcode<"ability">;
 
   /**
    * Equipment Slots (`AEqu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly EquipmentSlots_AEqu: Rawcode<"ability">;
 
@@ -1288,6 +1352,8 @@ export declare const Abilities: {
 
   /**
    * Shadow Strike (`AEsh`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ShadowStrike_AEsh: Rawcode<"ability">;
 
@@ -1298,6 +1364,8 @@ export declare const Abilities: {
 
   /**
    * Vengeance (`AEsv`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Vengeance_AEsv: Rawcode<"ability">;
 
@@ -1308,76 +1376,78 @@ export declare const Abilities: {
 
   /**
    * Metamorphosis (`AEvi`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Metamorphosis_AEvi: Rawcode<"ability">;
 
   /**
    * Item Feedback 4 (`AFBq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemFeedback4_AFBq: Rawcode<"ability">;
 
   /**
    * Item Finger of Death 8 (`AFDe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemFingerOfDeath8_AFDe: Rawcode<"ability">;
 
   /**
    * Item Finger of Death 12 (`AFDq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemFingerOfDeath12_AFDq: Rawcode<"ability">;
 
   /**
    * Item Finger of Death 15 (`AFDw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemFingerOfDeath15_AFDw: Rawcode<"ability">;
 
   /**
    * Item Summon Banshee (`AFRq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSummonBanshee_AFRq: Rawcode<"ability">;
 
   /**
    * Item Summon Banshee (`AFRw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSummonBanshee_AFRw: Rawcode<"ability">;
 
   /**
    * Item Dark Ranger's Bracers Attack (`AFRx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDarkRangersBracersAttack_AFRx: Rawcode<"ability">;
 
   /**
    * Item Dark Ranger's Hood Spellcast (`AFRy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDarkRangersHoodSpellcast_AFRy: Rawcode<"ability">;
 
   /**
    * Item Gnomish Zapper Attack (`AGZa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGnomishZapperAttack_AGZa: Rawcode<"ability">;
 
   /**
    * Item Forked Lightning (`AGZf`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemForkedLightning_AGZf: Rawcode<"ability">;
 
@@ -1389,189 +1459,189 @@ export declare const Abilities: {
   /**
    * Warcry Cleave (`AGca`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WarcryCleave_AGca: Rawcode<"ability">;
 
   /**
    * Warcry Lifesteal (`AGls`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WarcryLifesteal_AGls: Rawcode<"ability">;
 
   /**
    * Warcry Ability Vamp (`AGsv`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WarcryAbilityVamp_AGsv: Rawcode<"ability">;
 
   /**
    * Item Hero Damage x1.25 (`AHDq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroDamageX125_AHDq: Rawcode<"ability">;
 
   /**
    * Item Hero Damage x1.15 (`AHDw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroDamageX115_AHDw: Rawcode<"ability">;
 
   /**
    * Item Health Regeneration 5 (`AHRa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealthRegeneration5_AHRa: Rawcode<"ability">;
 
   /**
    * Item Health Regeneration 10 (`AHRd`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealthRegeneration10_AHRd: Rawcode<"ability">;
 
   /**
    * Item Health Regeneration 15 (`AHRf`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealthRegeneration15_AHRf: Rawcode<"ability">;
 
   /**
    * Item Health Regeneration 8 (`AHRo`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealthRegeneration8_AHRo: Rawcode<"ability">;
 
   /**
    * Item Health Regeneration -3 (`AHRq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealthRegeneration3_AHRq: Rawcode<"ability">;
 
   /**
    * Item Health Regeneration 7 (`AHRs`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealthRegeneration7_AHRs: Rawcode<"ability">;
 
   /**
    * Item Health Regeneration -5 (`AHRt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealthRegeneration5_AHRt: Rawcode<"ability">;
 
   /**
    * Item Health Regeneration 6 (`AHRu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealthRegeneration6_AHRu: Rawcode<"ability">;
 
   /**
    * Item Health Regeneration 3 (`AHRw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealthRegeneration3_AHRw: Rawcode<"ability">;
 
   /**
    * Item Health Regeneration 4 (`AHRy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealthRegeneration4_AHRy: Rawcode<"ability">;
 
   /**
    * Item Hardened Skin 100 7 MT RT (`AHSe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHardenedSkin1007MTRT_AHSe: Rawcode<"ability">;
 
   /**
    * Item Hardened Skin 100 2 MT RT (`AHSq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHardenedSkin1002MTRT_AHSq: Rawcode<"ability">;
 
   /**
    * Item High Templar's Flame Incinerate (`AHTf`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHighTemplarsFlameIncinerate_AHTf: Rawcode<"ability">;
 
   /**
    * Item High Templar's Conqueror Heal (`AHTh`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHighTemplarsConquerorHeal_AHTh: Rawcode<"ability">;
 
   /**
    * Item High Templar's Visage IF (`AHTi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHighTemplarsVisageIF_AHTi: Rawcode<"ability">;
 
   /**
    * Item High Templar's Judgment Attack (`AHTj`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHighTemplarsJudgmentAttack_AHTj: Rawcode<"ability">;
 
   /**
    * Item High Templar's Conqueror Attack (`AHTq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHighTemplarsConquerorAttack_AHTq: Rawcode<"ability">;
 
   /**
    * Item High Templar's Judgment Shockwave (`AHTs`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHighTemplarsJudgmentShockwave_AHTs: Rawcode<"ability">;
 
   /**
    * Item High Templar's Visage Attack (`AHTv`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHighTemplarsVisageAttack_AHTv: Rawcode<"ability">;
 
   /**
    * Sacred Aura (`AHa1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SacredAura_AHa1: Rawcode<"ability">;
 
   /**
    * Sacred Aura (`AHa2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SacredAura_AHa2: Rawcode<"ability">;
 
   /**
    * Sacred Aura (`AHa3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SacredAura_AHa3: Rawcode<"ability">;
 
@@ -1588,21 +1658,21 @@ export declare const Abilities: {
   /**
    * Avatar Of Light (`AHal`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AvatarOfLight_AHal: Rawcode<"ability">;
 
   /**
    * Apprehend (`AHap`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Apprehend_AHap: Rawcode<"ability">;
 
   /**
    * Sacred Aura (`AHas`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SacredAura_AHas: Rawcode<"ability">;
 
@@ -1614,28 +1684,28 @@ export declare const Abilities: {
   /**
    * Unyielding Guard (`AHb1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnyieldingGuard_AHb1: Rawcode<"ability">;
 
   /**
    * Unyielding Guard (`AHb2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnyieldingGuard_AHb2: Rawcode<"ability">;
 
   /**
    * Unyielding Guard (`AHb3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnyieldingGuard_AHb3: Rawcode<"ability">;
 
   /**
    * Unyielding Guard (`AHbd`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnyieldingGuard_AHbd: Rawcode<"ability">;
 
@@ -1646,6 +1716,8 @@ export declare const Abilities: {
 
   /**
    * Banish (`AHbn`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Banish_AHbn: Rawcode<"ability">;
 
@@ -1662,21 +1734,21 @@ export declare const Abilities: {
   /**
    * Valiant Charge (`AHc1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ValiantCharge_AHc1: Rawcode<"ability">;
 
   /**
    * Valiant Charge (`AHc2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ValiantCharge_AHc2: Rawcode<"ability">;
 
   /**
    * Valiant Charge (`AHc3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ValiantCharge_AHc3: Rawcode<"ability">;
 
@@ -1688,33 +1760,35 @@ export declare const Abilities: {
   /**
    * Valiant Charge (`AHch`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ValiantCharge_AHch: Rawcode<"ability">;
 
   /**
    * Cleansing Fire (`AHcl`), a Built-in ability of Patch 3.0.0, race creeps.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CleansingFire_AHcl: Rawcode<"ability">;
 
   /**
    * Consecration (`AHcr`), a Built-in ability of Patch 3.0.0, race creeps.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Consecration_AHcr: Rawcode<"ability">;
 
   /**
    * Raise the Banner (`AHct`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RaiseTheBanner_AHct: Rawcode<"ability">;
 
   /**
    * Siphon Mana (`AHdr`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SiphonMana_AHdr: Rawcode<"ability">;
 
@@ -1726,21 +1800,21 @@ export declare const Abilities: {
   /**
    * Apprehend (`AHe2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Apprehend_AHe2: Rawcode<"ability">;
 
   /**
    * Apprehend (`AHe3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Apprehend_AHe3: Rawcode<"ability">;
 
   /**
    * Apprehend (`AHen`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Apprehend_AHen: Rawcode<"ability">;
 
@@ -1752,7 +1826,7 @@ export declare const Abilities: {
   /**
    * Evasion (`AHes`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Evasion_AHes: Rawcode<"ability">;
 
@@ -1763,62 +1837,64 @@ export declare const Abilities: {
 
   /**
    * Flame Strike (`AHfs`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FlameStrike_AHfs: Rawcode<"ability">;
 
   /**
    * Grit (`AHg1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Grit_AHg1: Rawcode<"ability">;
 
   /**
    * Grit (`AHg2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Grit_AHg2: Rawcode<"ability">;
 
   /**
    * Grit (`AHg3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Grit_AHg3: Rawcode<"ability">;
 
   /**
    * Guiding Hand (`AHgh`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GuidingHand_AHgh: Rawcode<"ability">;
 
   /**
    * Grit (`AHgr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Grit_AHgr: Rawcode<"ability">;
 
   /**
    * Headsplitter (`AHh1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Headsplitter_AHh1: Rawcode<"ability">;
 
   /**
    * Headsplitter (`AHh2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Headsplitter_AHh2: Rawcode<"ability">;
 
   /**
    * Headsplitter (`AHh3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Headsplitter_AHh3: Rawcode<"ability">;
 
@@ -1830,98 +1906,98 @@ export declare const Abilities: {
   /**
    * Provoke (`AHhc`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Provoke_AHhc: Rawcode<"ability">;
 
   /**
    * Headsplitter (`AHhr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Headsplitter_AHhr: Rawcode<"ability">;
 
   /**
    * Heroic Slash (`AHhs`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HeroicSlash_AHhs: Rawcode<"ability">;
 
   /**
    * Inspire Courage (`AHi1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly InspireCourage_AHi1: Rawcode<"ability">;
 
   /**
    * Inspire Courage (`AHi2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly InspireCourage_AHi2: Rawcode<"ability">;
 
   /**
    * Inspire Courage (`AHi3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly InspireCourage_AHi3: Rawcode<"ability">;
 
   /**
    * Inspire Courage (`AHic`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly InspireCourage_AHic: Rawcode<"ability">;
 
   /**
    * Surge of Light (`AHl1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SurgeOfLight_AHl1: Rawcode<"ability">;
 
   /**
    * Surge of Light (`AHl2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SurgeOfLight_AHl2: Rawcode<"ability">;
 
   /**
    * Surge of Light (`AHl3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SurgeOfLight_AHl3: Rawcode<"ability">;
 
   /**
    * Light's Mercy (`AHm1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LightsMercy_AHm1: Rawcode<"ability">;
 
   /**
    * Light's Mercy (`AHm2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LightsMercy_AHm2: Rawcode<"ability">;
 
   /**
    * Light's Mercy (`AHm3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LightsMercy_AHm3: Rawcode<"ability">;
 
   /**
    * Mind Control (`AHmc`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MindControl_AHmc: Rawcode<"ability">;
 
@@ -1933,47 +2009,49 @@ export declare const Abilities: {
   /**
    * Challenging Call (`AHnt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ChallengingCall_AHnt: Rawcode<"ability">;
 
   /**
    * Sacred Aura (`AHpa`), a Built-in ability of Patch 3.0.0, race creeps.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SacredAura_AHpa: Rawcode<"ability">;
 
   /**
    * Holy Wrath (`AHpb`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HolyWrath_AHpb: Rawcode<"ability">;
 
   /**
    * Phoenix (`AHpx`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Phoenix_AHpx: Rawcode<"ability">;
 
   /**
    * Guiding Hand (`AHq1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GuidingHand_AHq1: Rawcode<"ability">;
 
   /**
    * Guiding Hand (`AHq2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GuidingHand_AHq2: Rawcode<"ability">;
 
   /**
    * Guiding Hand (`AHq3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GuidingHand_AHq3: Rawcode<"ability">;
 
@@ -1985,49 +2063,49 @@ export declare const Abilities: {
   /**
    * Sweeping Strike (`AHs1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SweepingStrike_AHs1: Rawcode<"ability">;
 
   /**
    * Sweeping Strike (`AHs2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SweepingStrike_AHs2: Rawcode<"ability">;
 
   /**
    * Sweeping Strike (`AHs3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SweepingStrike_AHs3: Rawcode<"ability">;
 
   /**
    * Light's Mercy (`AHsf`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LightsMercy_AHsf: Rawcode<"ability">;
 
   /**
    * Surge of Light (`AHsl`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SurgeOfLight_AHsl: Rawcode<"ability">;
 
   /**
    * Hardened Skin (`AHss`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HardenedSkin_AHss: Rawcode<"ability">;
 
   /**
    * Sweeping Strike (`AHsw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SweepingStrike_AHsw: Rawcode<"ability">;
 
@@ -2049,112 +2127,112 @@ export declare const Abilities: {
   /**
    * Provoke (`AHu1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Provoke_AHu1: Rawcode<"ability">;
 
   /**
    * Provoke (`AHu2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Provoke_AHu2: Rawcode<"ability">;
 
   /**
    * Provoke (`AHu3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Provoke_AHu3: Rawcode<"ability">;
 
   /**
    * Heroic Slash (`AHv1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HeroicSlash_AHv1: Rawcode<"ability">;
 
   /**
    * Heroic Slash (`AHv2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HeroicSlash_AHv2: Rawcode<"ability">;
 
   /**
    * Heroic Slash (`AHv3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HeroicSlash_AHv3: Rawcode<"ability">;
 
   /**
    * Warcry (`AHw1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Warcry_AHw1: Rawcode<"ability">;
 
   /**
    * Warcry (`AHw2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Warcry_AHw2: Rawcode<"ability">;
 
   /**
    * Warcry (`AHw3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Warcry_AHw3: Rawcode<"ability">;
 
   /**
    * `AHw4`, unnamed, a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_AHw4: Rawcode<"ability">;
 
   /**
    * `AHw5`, unnamed, a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_AHw5: Rawcode<"ability">;
 
   /**
    * `AHw6`, unnamed, a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_AHw6: Rawcode<"ability">;
 
   /**
    * `AHw7`, unnamed, a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_AHw7: Rawcode<"ability">;
 
   /**
    * `AHw8`, unnamed, a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_AHw8: Rawcode<"ability">;
 
   /**
    * `AHw9`, unnamed, a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_AHw9: Rawcode<"ability">;
 
   /**
    * Warcry (`AHwc`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Warcry_AHwc: Rawcode<"ability">;
 
@@ -2166,222 +2244,224 @@ export declare const Abilities: {
   /**
    * Mind Control (`AHz1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MindControl_AHz1: Rawcode<"ability">;
 
   /**
    * Mind Control (`AHz2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MindControl_AHz2: Rawcode<"ability">;
 
   /**
    * Mind Control (`AHz3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MindControl_AHz3: Rawcode<"ability">;
 
   /**
    * Item Hero Stat Bonus (`AI10`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AI10: Rawcode<"ability">;
 
   /**
    * Item Hero Stat Bonus (`AI11`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AI11: Rawcode<"ability">;
 
   /**
    * Item Hero Stat Bonus (`AI12`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AI12: Rawcode<"ability">;
 
   /**
    * Item Mana Bonus (200) (`AI2m`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaBonus200_AI2m: Rawcode<"ability">;
 
   /**
    * Item Armor Bonus -1 (`AIAq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorBonus1_AIAq: Rawcode<"ability">;
 
   /**
    * Item Armor Bonus -2 (`AIAw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorBonus2_AIAw: Rawcode<"ability">;
 
   /**
    * Item Bash (15, 25, 1) (`AIBq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBash15251_AIBq: Rawcode<"ability">;
 
   /**
    * Item Bash (10, 25, 2) (`AIBw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBash10252_AIBw: Rawcode<"ability">;
 
   /**
    * Item Evasion 12 (`AIEi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEvasion12_AIEi: Rawcode<"ability">;
 
   /**
    * Item Evasion 2 (`AIEq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEvasion2_AIEq: Rawcode<"ability">;
 
   /**
    * Item Evasion 5 (`AIEr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEvasion5_AIEr: Rawcode<"ability">;
 
   /**
    * Item Evasion 7 (`AIEt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEvasion7_AIEt: Rawcode<"ability">;
 
   /**
    * Item Evasion 10 (`AIEu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEvasion10_AIEu: Rawcode<"ability">;
 
   /**
    * Item Evasion 4 (`AIEw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEvasion4_AIEw: Rawcode<"ability">;
 
   /**
    * Item Evasion 8 (`AIEy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEvasion8_AIEy: Rawcode<"ability">;
 
   /**
    * Item Life Bonus 250 (`AILa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifeBonus250_AILa: Rawcode<"ability">;
 
   /**
    * Item Life Bonus 280 (`AILe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifeBonus280_AILe: Rawcode<"ability">;
 
   /**
    * Item Life Bonus 40 (`AILi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifeBonus40_AILi: Rawcode<"ability">;
 
   /**
    * Item Life Bonus 60 (`AILr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifeBonus60_AILr: Rawcode<"ability">;
 
   /**
    * Item Life Bonus 200 (`AILt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifeBonus200_AILt: Rawcode<"ability">;
 
   /**
    * Item Life Bonus 50 (`AILw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifeBonus50_AILw: Rawcode<"ability">;
 
   /**
    * Item Life Bonus 20 (`AILy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifeBonus20_AILy: Rawcode<"ability">;
 
   /**
    * Item Resolve 5 (`AIR5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemResolve5_AIR5: Rawcode<"ability">;
 
   /**
    * Item Resolve 20 (`AIRo`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemResolve20_AIRo: Rawcode<"ability">;
 
   /**
    * Item Resolve 12 (`AIRp`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemResolve12_AIRp: Rawcode<"ability">;
 
   /**
    * Item Resolve 10 (`AIRq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemResolve10_AIRq: Rawcode<"ability">;
 
   /**
    * Item Resolve 16 (`AIRu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemResolve16_AIRu: Rawcode<"ability">;
 
   /**
    * Item Resolve 8 (`AIRw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemResolve8_AIRw: Rawcode<"ability">;
 
   /**
    * Item Resolve 6 (`AIRy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemResolve6_AIRy: Rawcode<"ability">;
 
@@ -2393,7 +2473,7 @@ export declare const Abilities: {
   /**
    * `AIa2`, unnamed, a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_AIa2: Rawcode<"ability">;
 
@@ -2410,7 +2490,7 @@ export declare const Abilities: {
   /**
    * Item Hero Stat Bonus (`AIa5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AIa5: Rawcode<"ability">;
 
@@ -2422,14 +2502,14 @@ export declare const Abilities: {
   /**
    * Item Hero Stat Bonus (`AIa7`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AIa7: Rawcode<"ability">;
 
   /**
    * Item Hero Stat Bonus (`AIa8`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AIa8: Rawcode<"ability">;
 
@@ -2461,7 +2541,7 @@ export declare const Abilities: {
   /**
    * Item Spell Amp (`AIap`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellAmp_AIap: Rawcode<"ability">;
 
@@ -2487,6 +2567,8 @@ export declare const Abilities: {
 
   /**
    * Item Hero Stat Bonus (`AIaz`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AIaz: Rawcode<"ability">;
 
@@ -2497,6 +2579,8 @@ export declare const Abilities: {
 
   /**
    * Build Tiny Blacksmith (`AIbb`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BuildTinyBlacksmith_AIbb: Rawcode<"ability">;
 
@@ -2507,26 +2591,36 @@ export declare const Abilities: {
 
   /**
    * Build Tiny Farm (`AIbf`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BuildTinyFarm_AIbf: Rawcode<"ability">;
 
   /**
    * Build Tiny Great Hall (`AIbg`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BuildTinyGreatHall_AIbg: Rawcode<"ability">;
 
   /**
    * Build Tiny Altar of Kings (`AIbh`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BuildTinyAltarOfKings_AIbh: Rawcode<"ability">;
 
   /**
    * Blink (Item Version) (`AIbk`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BlinkItemVersion_AIbk: Rawcode<"ability">;
 
   /**
    * Build Tiny Castle (`AIbl`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BuildTinyCastle_AIbl: Rawcode<"ability">;
 
@@ -2537,26 +2631,36 @@ export declare const Abilities: {
 
   /**
    * Build Tiny Lumber Mill (`AIbr`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BuildTinyLumberMill_AIbr: Rawcode<"ability">;
 
   /**
    * Build Tiny Barracks (`AIbs`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BuildTinyBarracks_AIbs: Rawcode<"ability">;
 
   /**
    * Build Tiny Scout Tower (`AIbt`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BuildTinyScoutTower_AIbt: Rawcode<"ability">;
 
   /**
    * Bash (`AIbx`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Bash_AIbx: Rawcode<"ability">;
 
   /**
    * Item Attack Corruption Bonus (`AIcb`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackCorruptionBonus_AIcb: Rawcode<"ability">;
 
@@ -2572,11 +2676,15 @@ export declare const Abilities: {
 
   /**
    * Chain Lightning (`AIcl`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ChainLightning_AIcl: Rawcode<"ability">;
 
   /**
    * Control Magic (`AIcm`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ControlMagic_AIcm: Rawcode<"ability">;
 
@@ -2588,24 +2696,28 @@ export declare const Abilities: {
   /**
    * Item Aura Command 8 (`AIcq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAuraCommand8_AIcq: Rawcode<"ability">;
 
   /**
    * Item Cooldown Reduction (`AIcr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCooldownReduction_AIcr: Rawcode<"ability">;
 
   /**
    * Critical Strike (`AIcs`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CriticalStrike_AIcs: Rawcode<"ability">;
 
   /**
    * Change Time of Day (`AIct`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ChangeTimeOfDay_AIct: Rawcode<"ability">;
 
@@ -2616,6 +2728,8 @@ export declare const Abilities: {
 
   /**
    * Item Armor Bonus (`AId0`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorBonus_AId0: Rawcode<"ability">;
 
@@ -2647,17 +2761,21 @@ export declare const Abilities: {
   /**
    * Item Armor Bonus (`AId6`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorBonus_AId6: Rawcode<"ability">;
 
   /**
    * Item Armor Bonus (`AId7`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorBonus_AId7: Rawcode<"ability">;
 
   /**
    * Item Armor Bonus (`AId8`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorBonus_AId8: Rawcode<"ability">;
 
@@ -2673,11 +2791,15 @@ export declare const Abilities: {
 
   /**
    * Item Chain Dispel (`AIdc`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemChainDispel_AIdc: Rawcode<"ability">;
 
   /**
    * Defend, Passive Defense (`AIdd`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DefendPassiveDefense_AIdd: Rawcode<"ability">;
 
@@ -2688,6 +2810,8 @@ export declare const Abilities: {
 
   /**
    * Ritual Dagger (`AIdg`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RitualDagger_AIdg: Rawcode<"ability">;
 
@@ -2703,11 +2827,15 @@ export declare const Abilities: {
 
   /**
    * Shadow Orb Ability (`AIdn`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ShadowOrbAbility_AIdn: Rawcode<"ability">;
 
   /**
    * Death Pact (`AIdp`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DeathPact_AIdp: Rawcode<"ability">;
 
@@ -2718,6 +2846,8 @@ export declare const Abilities: {
 
   /**
    * Item Divine Shield (`AIdv`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDivineShield_AIdv: Rawcode<"ability">;
 
@@ -2729,7 +2859,7 @@ export declare const Abilities: {
   /**
    * Forsaken Gaze (`AIee`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ForsakenGaze_AIee: Rawcode<"ability">;
 
@@ -2750,11 +2880,15 @@ export declare const Abilities: {
 
   /**
    * Item Attack Heal Reduction Bonus (`AIf2`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackHealReductionBonus_AIf2: Rawcode<"ability">;
 
   /**
    * Flare Gun (`AIfa`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FlareGun_AIfa: Rawcode<"ability">;
 
@@ -2780,6 +2914,8 @@ export declare const Abilities: {
 
   /**
    * Cloud of Fog (`AIfg`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CloudOfFog_AIfg: Rawcode<"ability">;
 
@@ -2820,6 +2956,8 @@ export declare const Abilities: {
 
   /**
    * Melee Cold Damage Bonus (`AIft`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MeleeColdDamageBonus_AIft: Rawcode<"ability">;
 
@@ -2830,31 +2968,43 @@ export declare const Abilities: {
 
   /**
    * Melee Fire Damage Bonus (`AIfw`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MeleeFireDamageBonus_AIfw: Rawcode<"ability">;
 
   /**
    * Item Orcish Battle Standard (`AIfx`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemOrcishBattleStandard_AIfx: Rawcode<"ability">;
 
   /**
    * Finger of Death (`AIfz`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FingerOfDeath_AIfz: Rawcode<"ability">;
 
   /**
    * Ritual Dagger (`AIg2`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RitualDagger_AIg2: Rawcode<"ability">;
 
   /**
    * Item Attack Fire Bonus (`AIgd`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackFireBonus_AIgd: Rawcode<"ability">;
 
   /**
    * Glyph of Fortification (`AIgf`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GlyphOfFortification_AIgf: Rawcode<"ability">;
 
@@ -2865,16 +3015,22 @@ export declare const Abilities: {
 
   /**
    * Chest of Gold (`AIgo`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ChestOfGold_AIgo: Rawcode<"ability">;
 
   /**
    * Glyph of Fortification (`AIgu`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GlyphOfFortification_AIgu: Rawcode<"ability">;
 
   /**
    * Regeneration Aura (`AIgx`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RegenerationAura_AIgx: Rawcode<"ability">;
 
@@ -2890,20 +3046,22 @@ export declare const Abilities: {
 
   /**
    * Least Healing (`AIh3`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LeastHealing_AIh3: Rawcode<"ability">;
 
   /**
    * Item Healing (`AIh4`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealing_AIh4: Rawcode<"ability">;
 
   /**
    * Item Healing (`AIh5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealing_AIh5: Rawcode<"ability">;
 
@@ -2919,6 +3077,8 @@ export declare const Abilities: {
 
   /**
    * Holy Light (`AIhl`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HolyLight_AIhl: Rawcode<"ability">;
 
@@ -2930,7 +3090,7 @@ export declare const Abilities: {
   /**
    * Item Hardened Skin (`AIhs`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHardenedSkin_AIhs: Rawcode<"ability">;
 
@@ -2941,6 +3101,8 @@ export declare const Abilities: {
 
   /**
    * Item Healing (`AIhx`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHealing_AIhx: Rawcode<"ability">;
 
@@ -2952,7 +3114,7 @@ export declare const Abilities: {
   /**
    * `AIi2`, unnamed, a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_AIi2: Rawcode<"ability">;
 
@@ -2969,7 +3131,7 @@ export declare const Abilities: {
   /**
    * Item Hero Stat Bonus (`AIi5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AIi5: Rawcode<"ability">;
 
@@ -2981,7 +3143,7 @@ export declare const Abilities: {
   /**
    * Item Hero Stat Bonus (`AIi8`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AIi8: Rawcode<"ability">;
 
@@ -3008,7 +3170,7 @@ export declare const Abilities: {
   /**
    * Item Kris Incinerate (`AIki`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemKrisIncinerate_AIki: Rawcode<"ability">;
 
@@ -3025,7 +3187,7 @@ export declare const Abilities: {
   /**
    * Item Life Bonus 25 (`AIl3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifeBonus25_AIl3: Rawcode<"ability">;
 
@@ -3052,7 +3214,7 @@ export declare const Abilities: {
   /**
    * Item Lich Orb (`AIlo`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLichOrb_AIlo: Rawcode<"ability">;
 
@@ -3064,7 +3226,7 @@ export declare const Abilities: {
   /**
    * Item Life Bonus 100 (`AIlq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifeBonus100_AIlq: Rawcode<"ability">;
 
@@ -3075,23 +3237,29 @@ export declare const Abilities: {
 
   /**
    * Bundle of Lumber (`AIlu`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BundleOfLumber_AIlu: Rawcode<"ability">;
 
   /**
    * Item Resolve 30 (`AIlv`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemResolve30_AIlv: Rawcode<"ability">;
 
   /**
    * Melee Lightning Damage Bonus (`AIlx`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MeleeLightningDamageBonus_AIlx: Rawcode<"ability">;
 
   /**
    * Item Life Bonus (`AIlz`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifeBonus_AIlz: Rawcode<"ability">;
 
@@ -3108,7 +3276,7 @@ export declare const Abilities: {
   /**
    * Item Mana Regain (`AIm4`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaRegain_AIm4: Rawcode<"ability">;
 
@@ -3120,7 +3288,7 @@ export declare const Abilities: {
   /**
    * Item Mana Efficiency (`AIme`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaEfficiency_AIme: Rawcode<"ability">;
 
@@ -3131,13 +3299,15 @@ export declare const Abilities: {
 
   /**
    * Monster Lure (`AImo`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MonsterLure_AImo: Rawcode<"ability">;
 
   /**
    * Item Mana Efficiency 2 (`AImq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaEfficiency2_AImq: Rawcode<"ability">;
 
@@ -3153,18 +3323,22 @@ export declare const Abilities: {
 
   /**
    * Staff of Teleportation (`AImt`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly StaffOfTeleportation_AImt: Rawcode<"ability">;
 
   /**
    * Item Mana Bonus (75) (`AImv`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaBonus75_AImv: Rawcode<"ability">;
 
   /**
    * Item Mana Efficiency 5 (`AImw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaEfficiency5_AImw: Rawcode<"ability">;
 
@@ -3175,18 +3349,22 @@ export declare const Abilities: {
 
   /**
    * Item Mana Bonus (100) (`AImz`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaBonus100_AImz: Rawcode<"ability">;
 
   /**
    * Reanimation (`AInd`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Reanimation_AInd: Rawcode<"ability">;
 
   /**
    * Expanded Inventory (`AIni`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ExpandedInventory_AIni: Rawcode<"ability">;
 
@@ -3198,14 +3376,14 @@ export declare const Abilities: {
   /**
    * Slow (Orb of Slow New) (`AIno`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default and Custom Game data sets. Not in the Melee Game data set.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SlowOrbOfSlowNew_AIno: Rawcode<"ability">;
 
   /**
    * Item Necromancer's Plaguegreaves (`AInp`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemNecromancersPlaguegreaves_AInp: Rawcode<"ability">;
 
@@ -3217,7 +3395,7 @@ export declare const Abilities: {
   /**
    * Equipment Inventory (`AInx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly EquipmentInventory_AInx: Rawcode<"ability">;
 
@@ -3234,42 +3412,56 @@ export declare const Abilities: {
   /**
    * Item Ogre Warclub Stats (`AIow`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemOgreWarclubStats_AIow: Rawcode<"ability">;
 
   /**
    * Generic Item-Rejuv Effect (`AIp1`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GenericItemRejuvEffect_AIp1: Rawcode<"ability">;
 
   /**
    * Generic Item-Rejuv Effect (`AIp2`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GenericItemRejuvEffect_AIp2: Rawcode<"ability">;
 
   /**
    * Generic Item-Rejuv Effect (`AIp3`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GenericItemRejuvEffect_AIp3: Rawcode<"ability">;
 
   /**
    * Generic Item-Rejuv Effect (`AIp4`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GenericItemRejuvEffect_AIp4: Rawcode<"ability">;
 
   /**
    * Generic Item-Rejuv Effect (`AIp5`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GenericItemRejuvEffect_AIp5: Rawcode<"ability">;
 
   /**
    * Generic Item-Rejuv Effect (`AIp6`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GenericItemRejuvEffect_AIp6: Rawcode<"ability">;
 
   /**
    * Item Attack Poison Bonus (`AIpb`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackPoisonBonus_AIpb: Rawcode<"ability">;
 
@@ -3280,6 +3472,8 @@ export declare const Abilities: {
 
   /**
    * Lesser Clarity Potion (`AIpl`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LesserClarityPotion_AIpl: Rawcode<"ability">;
 
@@ -3290,6 +3484,8 @@ export declare const Abilities: {
 
   /**
    * Clarity Potion (`AIpr`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ClarityPotion_AIpr: Rawcode<"ability">;
 
@@ -3300,23 +3496,29 @@ export declare const Abilities: {
 
   /**
    * Vampiric Potion (`AIpv`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly VampiricPotion_AIpv: Rawcode<"ability">;
 
   /**
    * Item Purge (`AIpw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemPurge_AIpw: Rawcode<"ability">;
 
   /**
    * Item Permanent Life Gain (`AIpx`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemPermanentLifeGain_AIpx: Rawcode<"ability">;
 
   /**
    * Penguin Squeek (`AIpz`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PenguinSqueek_AIpz: Rawcode<"ability">;
 
@@ -3327,6 +3529,8 @@ export declare const Abilities: {
 
   /**
    * Rebirth (`AIrb`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Rebirth_AIrb: Rawcode<"ability">;
 
@@ -3337,6 +3541,8 @@ export declare const Abilities: {
 
   /**
    * Raise Dead (Item) (`AIrd`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RaiseDeadItem_AIrd: Rawcode<"ability">;
 
@@ -3347,11 +3553,15 @@ export declare const Abilities: {
 
   /**
    * Random Item (`AIri`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RandomItem_AIri: Rawcode<"ability">;
 
   /**
    * Healing Salve (`AIrl`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HealingSalve_AIrl: Rawcode<"ability">;
 
@@ -3382,11 +3592,15 @@ export declare const Abilities: {
 
   /**
    * Item Reveal Entire Map (`AIrv`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemRevealEntireMap_AIrv: Rawcode<"ability">;
 
   /**
    * Item Resurrection (`AIrx`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemResurrection_AIrx: Rawcode<"ability">;
 
@@ -3397,6 +3611,8 @@ export declare const Abilities: {
 
   /**
    * `AIs2`, unnamed, a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_AIs2: Rawcode<"ability">;
 
@@ -3413,7 +3629,7 @@ export declare const Abilities: {
   /**
    * Item Hero Stat Bonus (`AIs5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AIs5: Rawcode<"ability">;
 
@@ -3425,14 +3641,14 @@ export declare const Abilities: {
   /**
    * Item Hero Stat Bonus (`AIs7`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AIs7: Rawcode<"ability">;
 
   /**
    * Item Hero Stat Bonus (`AIs8`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AIs8: Rawcode<"ability">;
 
@@ -3443,30 +3659,36 @@ export declare const Abilities: {
 
   /**
    * Item Attack Slow Bonus (`AIsb`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSlowBonus_AIsb: Rawcode<"ability">;
 
   /**
    * Item Spell Crit (`AIsc`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellCrit_AIsc: Rawcode<"ability">;
 
   /**
    * Item Signet of Decay (`AIsd`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSignetOfDecay_AIsd: Rawcode<"ability">;
 
   /**
    * Item Silence (`AIse`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSilence_AIse: Rawcode<"ability">;
 
   /**
    * Summon Headhunter (`AIsh`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SummonHeadhunter_AIsh: Rawcode<"ability">;
 
@@ -3477,6 +3699,8 @@ export declare const Abilities: {
 
   /**
    * Scroll of Regeneration (`AIsl`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ScrollOfRegeneration_AIsl: Rawcode<"ability">;
 
@@ -3498,26 +3722,28 @@ export declare const Abilities: {
   /**
    * Item Attack Speed Bonus 5 (`AIsq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeedBonus5_AIsq: Rawcode<"ability">;
 
   /**
    * Spell Damage Reduction (`AIsr`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpellDamageReduction_AIsr: Rawcode<"ability">;
 
   /**
    * Spell Damage Reduction Stacking (`AIss`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpellDamageReductionStacking_AIss: Rawcode<"ability">;
 
   /**
    * Item Spell Vamp (`AIsv`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellVamp_AIsv: Rawcode<"ability">;
 
@@ -3533,6 +3759,8 @@ export declare const Abilities: {
 
   /**
    * Slow Poison (`AIsz`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SlowPoison_AIsz: Rawcode<"ability">;
 
@@ -3553,6 +3781,8 @@ export declare const Abilities: {
 
   /**
    * Dust of Appearance (`AItb`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DustOfAppearance_AItb: Rawcode<"ability">;
 
@@ -3568,31 +3798,43 @@ export declare const Abilities: {
 
   /**
    * Item Damage Bonus (`AItg`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageBonus_AItg: Rawcode<"ability">;
 
   /**
    * Item Damage Bonus (`AIth`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageBonus_AIth: Rawcode<"ability">;
 
   /**
    * Item Damage Bonus (`AIti`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageBonus_AIti: Rawcode<"ability">;
 
   /**
    * Item Damage Bonus (`AItj`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageBonus_AItj: Rawcode<"ability">;
 
   /**
    * Item Damage Bonus (`AItk`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageBonus_AItk: Rawcode<"ability">;
 
   /**
    * Item Damage Bonus (`AItl`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageBonus_AItl: Rawcode<"ability">;
 
@@ -3603,6 +3845,8 @@ export declare const Abilities: {
 
   /**
    * Item Damage Bonus (`AItn`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageBonus_AItn: Rawcode<"ability">;
 
@@ -3613,16 +3857,22 @@ export declare const Abilities: {
 
   /**
    * Item Transmute (`AIts`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemTransmute_AIts: Rawcode<"ability">;
 
   /**
    * Item Damage Bonus (`AItx`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDamageBonus_AItx: Rawcode<"ability">;
 
   /**
    * Unholy Frenzy (`AIuf`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnholyFrenzy_AIuf: Rawcode<"ability">;
 
@@ -3669,7 +3919,7 @@ export declare const Abilities: {
   /**
    * `AIvm`, unnamed, a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_AIvm: Rawcode<"ability">;
 
@@ -3681,12 +3931,14 @@ export declare const Abilities: {
   /**
    * Item Life Steal Stacking (`AIvx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifeStealStacking_AIvx: Rawcode<"ability">;
 
   /**
    * Item Web (`AIwb`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemWeb_AIwb: Rawcode<"ability">;
 
@@ -3697,6 +3949,8 @@ export declare const Abilities: {
 
   /**
    * Watery Minion (`AIwm`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WateryMinion_AIwm: Rawcode<"ability">;
 
@@ -3712,11 +3966,15 @@ export declare const Abilities: {
 
   /**
    * Item Hero Stat Bonus (`AIx3`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AIx3: Rawcode<"ability">;
 
   /**
    * Item Hero Stat Bonus (`AIx4`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AIx4: Rawcode<"ability">;
 
@@ -3728,19 +3986,21 @@ export declare const Abilities: {
   /**
    * Item Hero Stat Bonus (`AIx6`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AIx6: Rawcode<"ability">;
 
   /**
    * Item Hero Stat Bonus (`AIx7`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AIx7: Rawcode<"ability">;
 
   /**
    * Berserk (`AIxk`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Berserk_AIxk: Rawcode<"ability">;
 
@@ -3752,7 +4012,7 @@ export declare const Abilities: {
   /**
    * Item Critical Strike System (`AIxr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCriticalStrikeSystem_AIxr: Rawcode<"ability">;
 
@@ -3769,246 +4029,252 @@ export declare const Abilities: {
   /**
    * Item Lifesteal 10 (`AL10`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifesteal10_AL10: Rawcode<"ability">;
 
   /**
    * Item Lance of the Dawn Attack (`ALDa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLanceOfTheDawnAttack_ALDa: Rawcode<"ability">;
 
   /**
    * Slow (`ALmt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Slow_ALmt: Rawcode<"ability">;
 
   /**
    * Item Life Steal 1 (`ALs1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifeSteal1_ALs1: Rawcode<"ability">;
 
   /**
    * Item Lifesteal 3 (`ALs3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifesteal3_ALs3: Rawcode<"ability">;
 
   /**
    * Item Lifesteal 4 (`ALs4`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifesteal4_ALs4: Rawcode<"ability">;
 
   /**
    * Item Lifesteal 5 (`ALs5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifesteal5_ALs5: Rawcode<"ability">;
 
   /**
    * Item Lifesteal 8 (`ALs8`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLifesteal8_ALs8: Rawcode<"ability">;
 
   /**
    * Item Mana Efficiency 12 (`AMEi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaEfficiency12_AMEi: Rawcode<"ability">;
 
   /**
    * Item Mana Efficiency 7 (`AMEq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaEfficiency7_AMEq: Rawcode<"ability">;
 
   /**
    * Item Mana Efficiency 4 (`AMEr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaEfficiency4_AMEr: Rawcode<"ability">;
 
   /**
    * Item Mana Efficiency 8 (`AMEt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaEfficiency8_AMEt: Rawcode<"ability">;
 
   /**
    * Item Mana Efficiency 15 (`AMEu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaEfficiency15_AMEu: Rawcode<"ability">;
 
   /**
    * Item Mana Efficiency 6 (`AMEw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaEfficiency6_AMEw: Rawcode<"ability">;
 
   /**
    * Item Mana Efficiency 10 (`AMEy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaEfficiency10_AMEy: Rawcode<"ability">;
 
   /**
    * Item Mana Refund 5 (`AMFq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaRefund5_AMFq: Rawcode<"ability">;
 
   /**
    * Item Mana Bonus 120 (`AMMe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaBonus120_AMMe: Rawcode<"ability">;
 
   /**
    * Item Mana Bonus 25 (`AMMq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaBonus25_AMMq: Rawcode<"ability">;
 
   /**
    * Item Mana Bonus 150 (`AMMw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaBonus150_AMMw: Rawcode<"ability">;
 
   /**
    * Item Mana Regeneration 70 (`AMRe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaRegeneration70_AMRe: Rawcode<"ability">;
 
   /**
    * Item Mana Regeneration 75 (`AMRi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaRegeneration75_AMRi: Rawcode<"ability">;
 
   /**
    * Item Mana Regeneration 65 (`AMRo`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaRegeneration65_AMRo: Rawcode<"ability">;
 
   /**
    * Item Mana Regeneration 40 (`AMRp`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaRegeneration40_AMRp: Rawcode<"ability">;
 
   /**
    * Item Mana Regeneration 100 (`AMRq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaRegeneration100_AMRq: Rawcode<"ability">;
 
   /**
    * Item Mana Regeneration 35 (`AMRt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaRegeneration35_AMRt: Rawcode<"ability">;
 
   /**
    * Item Mana Regeneration 30 (`AMRu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaRegeneration30_AMRu: Rawcode<"ability">;
 
   /**
    * Item Mana Regeneration -50 (`AMRw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaRegeneration50_AMRw: Rawcode<"ability">;
 
   /**
    * Item Mana Regeneration 25 (`AMRy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaRegeneration25_AMRy: Rawcode<"ability">;
 
   /**
    * Item Move Speed 20 (`AMSe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemMoveSpeed20_AMSe: Rawcode<"ability">;
 
   /**
    * Item Move Speed Bonus 10 (`AMSq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemMoveSpeedBonus10_AMSq: Rawcode<"ability">;
 
   /**
    * Item Move Speed Bonus 30 (`AMSr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemMoveSpeedBonus30_AMSr: Rawcode<"ability">;
 
   /**
    * Item Move Speed Bonus 40 (`AMSt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemMoveSpeedBonus40_AMSt: Rawcode<"ability">;
 
   /**
    * Item Movement Speed -15 (`AMSw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemMovementSpeed15_AMSw: Rawcode<"ability">;
 
   /**
    * Acid Bomb (`ANab`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AcidBomb_ANab: Rawcode<"ability">;
 
   /**
    * Quill Spray (`ANak`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly QuillSpray_ANak: Rawcode<"ability">;
 
   /**
    * Avatar (`ANav`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Avatar_ANav: Rawcode<"ability">;
 
@@ -4019,11 +4285,15 @@ export declare const Abilities: {
 
   /**
    * Black Arrow (`ANba`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BlackArrow_ANba: Rawcode<"ability">;
 
   /**
    * Breath of Fire (`ANbf`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BreathOfFire_ANbf: Rawcode<"ability">;
 
@@ -4034,16 +4304,22 @@ export declare const Abilities: {
 
   /**
    * Blink (`ANbl`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Blink_ANbl: Rawcode<"ability">;
 
   /**
    * Battle Roar (`ANbr`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BattleRoar_ANbr: Rawcode<"ability">;
 
   /**
    * Item Black Arrow (`ANbs`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBlackArrow_ANbs: Rawcode<"ability">;
 
@@ -4054,31 +4330,43 @@ export declare const Abilities: {
 
   /**
    * Cluster Rockets (`ANc1`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ClusterRockets_ANc1: Rawcode<"ability">;
 
   /**
    * Cluster Rockets (`ANc2`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ClusterRockets_ANc2: Rawcode<"ability">;
 
   /**
    * Cluster Rockets (`ANc3`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ClusterRockets_ANc3: Rawcode<"ability">;
 
   /**
    * Cleaving Attack (`ANca`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CleavingAttack_ANca: Rawcode<"ability">;
 
   /**
    * Breath of Fire (`ANcf`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BreathOfFire_ANcf: Rawcode<"ability">;
 
   /**
    * Charm (`ANch`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Charm_ANch: Rawcode<"ability">;
 
@@ -4090,37 +4378,49 @@ export declare const Abilities: {
   /**
    * Righteous Fury (`ANcp`), a Built-in ability of Patch 3.0.0, race creeps.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RighteousFury_ANcp: Rawcode<"ability">;
 
   /**
    * Chemical Rage (`ANcr`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ChemicalRage_ANcr: Rawcode<"ability">;
 
   /**
    * Cluster Rockets (`ANcs`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ClusterRockets_ANcs: Rawcode<"ability">;
 
   /**
    * Demolish (`ANd1`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Demolish_ANd1: Rawcode<"ability">;
 
   /**
    * Demolish (`ANd2`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Demolish_ANd2: Rawcode<"ability">;
 
   /**
    * Demolish (`ANd3`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Demolish_ANd3: Rawcode<"ability">;
 
   /**
    * Drunken Brawler (`ANdb`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DrunkenBrawler_ANdb: Rawcode<"ability">;
 
@@ -4131,16 +4431,22 @@ export declare const Abilities: {
 
   /**
    * Demolish (`ANde`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Demolish_ANde: Rawcode<"ability">;
 
   /**
    * Drunken Haze (`ANdh`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DrunkenHaze_ANdh: Rawcode<"ability">;
 
   /**
    * Doom (`ANdo`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Doom_ANdo: Rawcode<"ability">;
 
@@ -4151,16 +4457,22 @@ export declare const Abilities: {
 
   /**
    * Life Drain (`ANdr`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LifeDrain_ANdr: Rawcode<"ability">;
 
   /**
    * Storm, Earth, And Fire (`ANef`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly StormEarthAndFire_ANef: Rawcode<"ability">;
 
   /**
    * Engineering Upgrade (`ANeg`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly EngineeringUpgrade_ANeg: Rawcode<"ability">;
 
@@ -4171,6 +4483,8 @@ export declare const Abilities: {
 
   /**
    * Frost Arrows (`ANfa`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FrostArrows_ANfa: Rawcode<"ability">;
 
@@ -4186,31 +4500,43 @@ export declare const Abilities: {
 
   /**
    * Forked Lightning (`ANfl`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ForkedLightning_ANfl: Rawcode<"ability">;
 
   /**
    * Flame Strike (`ANfs`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FlameStrike_ANfs: Rawcode<"ability">;
 
   /**
    * Factory (`ANfy`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Factory_ANfy: Rawcode<"ability">;
 
   /**
    * Robo-Goblin (`ANg1`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RoboGoblin_ANg1: Rawcode<"ability">;
 
   /**
    * Robo-Goblin (`ANg2`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RoboGoblin_ANg2: Rawcode<"ability">;
 
   /**
    * Robo-Goblin (`ANg3`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RoboGoblin_ANg3: Rawcode<"ability">;
 
@@ -4221,31 +4547,43 @@ export declare const Abilities: {
 
   /**
    * Healing Spray (`ANhs`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HealingSpray_ANhs: Rawcode<"ability">;
 
   /**
    * Howl of Terror (`ANht`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HowlOfTerror_ANht: Rawcode<"ability">;
 
   /**
    * Healing Wave (`ANhw`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HealingWave_ANhw: Rawcode<"ability">;
 
   /**
    * Hex (`ANhx`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Hex_ANhx: Rawcode<"ability">;
 
   /**
    * Incinerate (`ANia`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Incinerate_ANia: Rawcode<"ability">;
 
   /**
    * Incinerate (`ANic`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Incinerate_ANic: Rawcode<"ability">;
 
@@ -4256,26 +4594,36 @@ export declare const Abilities: {
 
   /**
    * Summon Lava Spawn (`ANlm`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SummonLavaSpawn_ANlm: Rawcode<"ability">;
 
   /**
    * Monsoon (`ANmo`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Monsoon_ANmo: Rawcode<"ability">;
 
   /**
    * Mind Rot (`ANmr`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MindRot_ANmr: Rawcode<"ability">;
 
   /**
    * Mana Shield (`ANms`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ManaShield_ANms: Rawcode<"ability">;
 
   /**
    * Parasite (`ANpa`), a Built-in ability of Patch 3.0.0, race naga.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Parasite_ANpa: Rawcode<"ability">;
 
@@ -4286,6 +4634,8 @@ export declare const Abilities: {
 
   /**
    * Staff of Preservation (`ANpr`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly StaffOfPreservation_ANpr: Rawcode<"ability">;
 
@@ -4316,6 +4666,8 @@ export declare const Abilities: {
 
   /**
    * Robo-Goblin (`ANrg`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RoboGoblin_ANrg: Rawcode<"ability">;
 
@@ -4326,46 +4678,64 @@ export declare const Abilities: {
 
   /**
    * Pocket Factory (`ANs1`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PocketFactory_ANs1: Rawcode<"ability">;
 
   /**
    * Pocket Factory (`ANs2`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PocketFactory_ANs2: Rawcode<"ability">;
 
   /**
    * Pocket Factory (`ANs3`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PocketFactory_ANs3: Rawcode<"ability">;
 
   /**
    * Staff of Sanctuary (`ANsa`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly StaffOfSanctuary_ANsa: Rawcode<"ability">;
 
   /**
    * Storm Bolt (`ANsb`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly StormBolt_ANsb: Rawcode<"ability">;
 
   /**
    * Spell Shield (`ANse`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpellShield_ANse: Rawcode<"ability">;
 
   /**
    * Summon Bear (`ANsg`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SummonBear_ANsg: Rawcode<"ability">;
 
   /**
    * Shockwave (`ANsh`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Shockwave_ANsh: Rawcode<"ability">;
 
   /**
    * Silence (`ANsi`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Silence_ANsi: Rawcode<"ability">;
 
@@ -4376,56 +4746,78 @@ export declare const Abilities: {
 
   /**
    * Soul Burn (`ANso`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SoulBurn_ANso: Rawcode<"ability">;
 
   /**
    * Summon Quilbeast (`ANsq`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SummonQuilbeast_ANsq: Rawcode<"ability">;
 
   /**
    * Spell Shield (`ANss`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpellShield_ANss: Rawcode<"ability">;
 
   /**
    * Stampede (`ANst`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Stampede_ANst: Rawcode<"ability">;
 
   /**
    * Summon Hawk (`ANsw`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SummonHawk_ANsw: Rawcode<"ability">;
 
   /**
    * Pocket Factory (`ANsy`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PocketFactory_ANsy: Rawcode<"ability">;
 
   /**
    * Spiked Shell (`ANt2`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpikedShell_ANt2: Rawcode<"ability">;
 
   /**
    * Taunt (`ANta`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Taunt_ANta: Rawcode<"ability">;
 
   /**
    * Spiked Shell (`ANth`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpikedShell_ANth: Rawcode<"ability">;
 
   /**
    * Transmute (`ANtm`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Transmute_ANtm: Rawcode<"ability">;
 
   /**
    * Tornado (`ANto`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Tornado_ANto: Rawcode<"ability">;
 
@@ -4436,16 +4828,22 @@ export declare const Abilities: {
 
   /**
    * Volcano (`ANvc`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Volcano_ANvc: Rawcode<"ability">;
 
   /**
    * Wind Walk (`ANwk`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WindWalk_ANwk: Rawcode<"ability">;
 
   /**
    * Watery Minion (`ANwm`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WateryMinion_ANwm: Rawcode<"ability">;
 
@@ -4481,16 +4879,22 @@ export declare const Abilities: {
 
   /**
    * Healing Wave (`AOhw`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HealingWave_AOhw: Rawcode<"ability">;
 
   /**
    * Hex (`AOhx`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Hex_AOhx: Rawcode<"ability">;
 
   /**
    * Voodoo Spirits (`AOls`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly VoodooSpirits_AOls: Rawcode<"ability">;
 
@@ -4531,11 +4935,15 @@ export declare const Abilities: {
 
   /**
    * Serpent Ward (`AOsw`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SerpentWard_AOsw: Rawcode<"ability">;
 
   /**
    * Big Bad Voodoo (`AOvd`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BigBadVoodoo_AOvd: Rawcode<"ability">;
 
@@ -4601,11 +5009,15 @@ export declare const Abilities: {
 
   /**
    * Lesser Rune Resurrection (`APrl`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LesserRuneResurrection_APrl: Rawcode<"ability">;
 
   /**
    * Greater Rune Resurrection (`APrr`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GreaterRuneResurrection_APrr: Rawcode<"ability">;
 
@@ -4616,6 +5028,8 @@ export declare const Abilities: {
 
   /**
    * Rune of the Watcher (`APwt`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RuneOfTheWatcher_APwt: Rawcode<"ability">;
 
@@ -4627,462 +5041,462 @@ export declare const Abilities: {
   /**
    * Item Hero Stat Bonus (`AS10`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AS10: Rawcode<"ability">;
 
   /**
    * Item Hero Stat Bonus (`AS12`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AS12: Rawcode<"ability">;
 
   /**
    * Item Hero Stat Bonus (`AS20`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AS20: Rawcode<"ability">;
 
   /**
    * Item Spell Crit Chance 8 (`ASC8`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellCritChance8_ASC8: Rawcode<"ability">;
 
   /**
    * Item Spell Crit Chance 12 (`ASCe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellCritChance12_ASCe: Rawcode<"ability">;
 
   /**
    * Item Spell Crit Chance 15 (`ASCq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellCritChance15_ASCq: Rawcode<"ability">;
 
   /**
    * Item Spell Crit Chance 18 (`ASCr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellCritChance18_ASCr: Rawcode<"ability">;
 
   /**
    * Item Spell Crit Chance 5 (`ASCs`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellCritChance5_ASCs: Rawcode<"ability">;
 
   /**
    * Item Spell Crit Chance 6 (`ASCt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellCritChance6_ASCt: Rawcode<"ability">;
 
   /**
    * Item Spell Crit Chance 4 (`ASCu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellCritChance4_ASCu: Rawcode<"ability">;
 
   /**
    * Item Spell Crit Chance 10 (`ASCw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellCritChance10_ASCw: Rawcode<"ability">;
 
   /**
    * Item Spell Crit Chance 30 (`ASCy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellCritChance30_ASCy: Rawcode<"ability">;
 
   /**
    * Item Splash Damage 4 (`ASD4`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSplashDamage4_ASD4: Rawcode<"ability">;
 
   /**
    * Item Spell Crit Damage 20 (`ASDq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellCritDamage20_ASDq: Rawcode<"ability">;
 
   /**
    * Item Spell Crit Damage 15 (`ASDw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellCritDamage15_ASDw: Rawcode<"ability">;
 
   /**
    * Item Spell Resistance 5 (`ASRe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellResistance5_ASRe: Rawcode<"ability">;
 
   /**
    * Item Spell Resistance 10 (`ASRi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellResistance10_ASRi: Rawcode<"ability">;
 
   /**
    * Item Spell Resistance 25 (`ASRo`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellResistance25_ASRo: Rawcode<"ability">;
 
   /**
    * Item Spell Resistance 33 (`ASRp`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellResistance33_ASRp: Rawcode<"ability">;
 
   /**
    * Item Spell Resistance 7 (`ASRq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellResistance7_ASRq: Rawcode<"ability">;
 
   /**
    * Item Spell Resistance 14 (`ASRt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellResistance14_ASRt: Rawcode<"ability">;
 
   /**
    * Item Spell Resistance 4 (`ASRu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellResistance4_ASRu: Rawcode<"ability">;
 
   /**
    * Item Spell Resistance 3 (`ASRw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellResistance3_ASRw: Rawcode<"ability">;
 
   /**
    * Item Spell Resistance 8 (`ASRy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellResistance8_ASRy: Rawcode<"ability">;
 
   /**
    * Item Spell Vamp 7 (`ASVe`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellVamp7_ASVe: Rawcode<"ability">;
 
   /**
    * Item Spell Vamp 8 (`ASVi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellVamp8_ASVi: Rawcode<"ability">;
 
   /**
    * Item Spell Vamp 5 (`ASVq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellVamp5_ASVq: Rawcode<"ability">;
 
   /**
    * Item Spell Vamp 3 (`ASVr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellVamp3_ASVr: Rawcode<"ability">;
 
   /**
    * Item Spell Vamp 4 (`ASVt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellVamp4_ASVt: Rawcode<"ability">;
 
   /**
    * Item Spell Vamp 6 (`ASVu`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellVamp6_ASVu: Rawcode<"ability">;
 
   /**
    * Item Spell Vamp 2 (`ASVw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellVamp2_ASVw: Rawcode<"ability">;
 
   /**
    * Item Spell Vamp 10 (`ASVy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellVamp10_ASVy: Rawcode<"ability">;
 
   /**
    * Stat Details (`ASde`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly StatDetails_ASde: Rawcode<"ability">;
 
   /**
    * `ASpc`, unnamed, a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_ASpc: Rawcode<"ability">;
 
   /**
    * Rain of Arrows (`AT1a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RainOfArrows_AT1a: Rawcode<"ability">;
 
   /**
    * Deathmark (`AT1b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Deathmark_AT1b: Rawcode<"ability">;
 
   /**
    * Deadeye (`AT1c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Deadeye_AT1c: Rawcode<"ability">;
 
   /**
    * Spirit Leech (`AT2a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpiritLeech_AT2a: Rawcode<"ability">;
 
   /**
    * Wraithguard (`AT2b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Wraithguard_AT2b: Rawcode<"ability">;
 
   /**
    * Guiding Light (`AT2c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GuidingLight_AT2c: Rawcode<"ability">;
 
   /**
    * Death Sentence (`AT3a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DeathSentence_AT3a: Rawcode<"ability">;
 
   /**
    * Flow State (`AT3b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FlowState_AT3b: Rawcode<"ability">;
 
   /**
    * Umbral Rupture (`AT3c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UmbralRupture_AT3c: Rawcode<"ability">;
 
   /**
    * Soul Harvest (`AT4a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SoulHarvest_AT4a: Rawcode<"ability">;
 
   /**
    * Curse of the Darkfallen (`AT4b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CurseOfTheDarkfallen_AT4b: Rawcode<"ability">;
 
   /**
    * Howling Tempest (`AT4c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HowlingTempest_AT4c: Rawcode<"ability">;
 
   /**
    * Marksmanship (`AT5a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Marksmanship_AT5a: Rawcode<"ability">;
 
   /**
    * Arcane Archer (`AT5b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ArcaneArcher_AT5b: Rawcode<"ability">;
 
   /**
    * Poison-tipped Arrows (`AT5c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PoisonTippedArrows_AT5c: Rawcode<"ability">;
 
   /**
    * Ranger's Dexterity (`AT6a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RangersDexterity_AT6a: Rawcode<"ability">;
 
   /**
    * Heightened Reflexes (`AT6b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HeightenedReflexes_AT6b: Rawcode<"ability">;
 
   /**
    * Blackened Soul (`AT6c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BlackenedSoul_AT6c: Rawcode<"ability">;
 
   /**
    * Talents (`ATal`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Talents_ATal: Rawcode<"ability">;
 
   /**
    * Grant Talent Point (`ATap`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GrantTalentPoint_ATap: Rawcode<"ability">;
 
   /**
    * Strength Training (`ATce`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly StrengthTraining_ATce: Rawcode<"ability">;
 
   /**
    * Endurance Training (`ATcr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly EnduranceTraining_ATcr: Rawcode<"ability">;
 
   /**
    * Talents (`AThg`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Talents_AThg: Rawcode<"ability">;
 
   /**
    * Talents (`AThi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Talents_AThi: Rawcode<"ability">;
 
   /**
    * Talents (`AThl`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Talents_AThl: Rawcode<"ability">;
 
   /**
    * Stamina Training (`ATme`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly StaminaTraining_ATme: Rawcode<"ability">;
 
   /**
    * Talents (`ATua`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Talents_ATua: Rawcode<"ability">;
 
   /**
    * Talents (`ATug`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Talents_ATug: Rawcode<"ability">;
 
   /**
    * Talents (`ATul`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Talents_ATul: Rawcode<"ability">;
 
   /**
    * Item Unit Damage x1.25 (`AUDq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemUnitDamageX125_AUDq: Rawcode<"ability">;
 
   /**
    * Item Unit Damage x1.15 (`AUDw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemUnitDamageX115_AUDw: Rawcode<"ability">;
 
   /**
    * Animate Dead (`AUa2`), a Built-in ability of Patch 3.0.0, race undead.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AnimateDead_AUa2: Rawcode<"ability">;
 
@@ -5104,35 +5518,35 @@ export declare const Abilities: {
   /**
    * Undying Defiance (`AUb1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UndyingDefiance_AUb1: Rawcode<"ability">;
 
   /**
    * Undying Defiance (`AUb2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UndyingDefiance_AUb2: Rawcode<"ability">;
 
   /**
    * Undying Defiance (`AUb3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UndyingDefiance_AUb3: Rawcode<"ability">;
 
   /**
    * Undying Defiance (`AUbd`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UndyingDefiance_AUbd: Rawcode<"ability">;
 
   /**
    * Battering Ram (`AUbr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BatteringRam_AUbr: Rawcode<"ability">;
 
@@ -5143,6 +5557,8 @@ export declare const Abilities: {
 
   /**
    * Carrion Beetles (`AUcb`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CarrionBeetles_AUcb: Rawcode<"ability">;
 
@@ -5154,28 +5570,28 @@ export declare const Abilities: {
   /**
    * Deathseeker Arrows (`AUd1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DeathseekerArrows_AUd1: Rawcode<"ability">;
 
   /**
    * Deathseeker Arrows (`AUd2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DeathseekerArrows_AUd2: Rawcode<"ability">;
 
   /**
    * Deathseeker Arrows (`AUd3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DeathseekerArrows_AUd3: Rawcode<"ability">;
 
   /**
    * Deathseeker Arrows (`AUdb`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DeathseekerArrows_AUdb: Rawcode<"ability">;
 
@@ -5222,26 +5638,28 @@ export declare const Abilities: {
   /**
    * Banshee's Wail (`AUi1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BansheesWail_AUi1: Rawcode<"ability">;
 
   /**
    * Banshee's Wail (`AUi2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BansheesWail_AUi2: Rawcode<"ability">;
 
   /**
    * Banshee's Wail (`AUi3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BansheesWail_AUi3: Rawcode<"ability">;
 
   /**
    * Impale (`AUim`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Impale_AUim: Rawcode<"ability">;
 
@@ -5253,75 +5671,77 @@ export declare const Abilities: {
   /**
    * Soul Lantern (`AUl1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SoulLantern_AUl1: Rawcode<"ability">;
 
   /**
    * Soul Lantern (`AUl2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SoulLantern_AUl2: Rawcode<"ability">;
 
   /**
    * Soul Lantern (`AUl3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SoulLantern_AUl3: Rawcode<"ability">;
 
   /**
    * Soul Lantern (`AUla`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SoulLantern_AUla: Rawcode<"ability">;
 
   /**
    * Locust Swarm (`AUls`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LocustSwarm_AUls: Rawcode<"ability">;
 
   /**
    * Battering Ram (`AUr1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BatteringRam_AUr1: Rawcode<"ability">;
 
   /**
    * Battering Ram (`AUr2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BatteringRam_AUr2: Rawcode<"ability">;
 
   /**
    * Battering Ram (`AUr3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BatteringRam_AUr3: Rawcode<"ability">;
 
   /**
    * Relentless Cleave (`AUs1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RelentlessCleave_AUs1: Rawcode<"ability">;
 
   /**
    * Relentless Cleave (`AUs2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RelentlessCleave_AUs2: Rawcode<"ability">;
 
   /**
    * Relentless Cleave (`AUs3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RelentlessCleave_AUs3: Rawcode<"ability">;
 
@@ -5333,110 +5753,112 @@ export declare const Abilities: {
   /**
    * Thorn Shield (`AUss`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ThornShield_AUss: Rawcode<"ability">;
 
   /**
    * Relentless Cleave (`AUsw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RelentlessCleave_AUsw: Rawcode<"ability">;
 
   /**
    * Spiked Carapace (`AUts`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpikedCarapace_AUts: Rawcode<"ability">;
 
   /**
    * Grim Conviction (`AUv1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GrimConviction_AUv1: Rawcode<"ability">;
 
   /**
    * Grim Conviction (`AUv2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GrimConviction_AUv2: Rawcode<"ability">;
 
   /**
    * Grim Conviction (`AUv3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GrimConviction_AUv3: Rawcode<"ability">;
 
   /**
    * Grim Conviction (`AUvg`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly GrimConviction_AUvg: Rawcode<"ability">;
 
   /**
    * Withering Fire (`AUw1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WitheringFire_AUw1: Rawcode<"ability">;
 
   /**
    * Withering Fire (`AUw2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WitheringFire_AUw2: Rawcode<"ability">;
 
   /**
    * Withering Fire (`AUw3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WitheringFire_AUw3: Rawcode<"ability">;
 
   /**
    * Banshee's Wail (`AUwc`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BansheesWail_AUwc: Rawcode<"ability">;
 
   /**
    * Withering Fire (`AUwf`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WitheringFire_AUwf: Rawcode<"ability">;
 
   /**
    * Item Vampiric Aura 4 (`AVAq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemVampiricAura4_AVAq: Rawcode<"ability">;
 
   /**
    * Fire Hands (`AViq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FireHands_AViq: Rawcode<"ability">;
 
   /**
    * Shop Indicator (`AVsb`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ShopIndicator_AVsb: Rawcode<"ability">;
 
   /**
    * Item Hero Stat Bonus (`AX10`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeroStatBonus_AX10: Rawcode<"ability">;
 
@@ -5447,48 +5869,50 @@ export declare const Abilities: {
 
   /**
    * Absorb Mana (`Aabs`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AbsorbMana_Aabs: Rawcode<"ability">;
 
   /**
    * Item Armor SC Heal (`Aac1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorSCHeal_Aac1: Rawcode<"ability">;
 
   /**
    * Item Armor SC Attack (`Aac2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorSCAttack_Aac2: Rawcode<"ability">;
 
   /**
    * Item Chill Attack 3 (`Aac3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemChillAttack3_Aac3: Rawcode<"ability">;
 
   /**
    * Item Chill Attack 5 (`Aac5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemChillAttack5_Aac5: Rawcode<"ability">;
 
   /**
    * Raise the Banner (`Aaca`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RaiseTheBanner_Aaca: Rawcode<"ability">;
 
   /**
    * Curse (`Aacr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Curse_Aacr: Rawcode<"ability">;
 
@@ -5500,35 +5924,35 @@ export declare const Abilities: {
   /**
    * Item Aura of Darkness (`Aadx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAuraOfDarkness_Aadx: Rawcode<"ability">;
 
   /**
    * Item Agitating Totem (`Aagt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAgitatingTotem_Aagt: Rawcode<"ability">;
 
   /**
    * Item Armor Corrupt Attack 2 (`Aah2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorCorruptAttack2_Aah2: Rawcode<"ability">;
 
   /**
    * Item Armor Corrupt Attack 3 (`Aah3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorCorruptAttack3_Aah3: Rawcode<"ability">;
 
   /**
    * Item Armor Corrupt Attack 5 (`Aah5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorCorruptAttack5_Aah5: Rawcode<"ability">;
 
@@ -5544,6 +5968,8 @@ export declare const Abilities: {
 
   /**
    * Shop Sharing, Allied Bldg. (`Aall`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ShopSharingAlliedBldg_Aall: Rawcode<"ability">;
 
@@ -5555,7 +5981,7 @@ export declare const Abilities: {
   /**
    * On Basic Attack, Cast Spell (`Aals`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly OnBasicAttackCastSpell_Aals: Rawcode<"ability">;
 
@@ -5566,13 +5992,15 @@ export declare const Abilities: {
 
   /**
    * Attribute Bonus (`Aamk`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AttributeBonus_Aamk: Rawcode<"ability">;
 
   /**
    * Attribute Bonus (`Aaml`), a Built-in ability of Patch 3.0.0, race creeps.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AttributeBonus_Aaml: Rawcode<"ability">;
 
@@ -5604,87 +6032,91 @@ export declare const Abilities: {
   /**
    * Disease Cloud (`Aap5`), a Built-in ability of Patch 3.0.0, race undead.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DiseaseCloud_Aap5: Rawcode<"ability">;
 
   /**
    * Item Armor of Reanimation Summon (`Aar1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorOfReanimationSummon_Aar1: Rawcode<"ability">;
 
   /**
    * Item Armor of Reanimation Attack (`Aar2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorOfReanimationAttack_Aar2: Rawcode<"ability">;
 
   /**
    * Item Armor Corrupt Spell 2 (`Aas2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorCorruptSpell2_Aas2: Rawcode<"ability">;
 
   /**
    * Item Armor Corrupt Spell 3 (`Aas3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorCorruptSpell3_Aas3: Rawcode<"ability">;
 
   /**
    * Item Armor Corrupt Spell 5 (`Aas5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArmorCorruptSpell5_Aas5: Rawcode<"ability">;
 
   /**
    * Item Arcane Spellblade (`Aasb`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemArcaneSpellblade_Aasb: Rawcode<"ability">;
 
   /**
    * Raise the Banner Spell Crit (`Aasc`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RaiseTheBannerSpellCrit_Aasc: Rawcode<"ability">;
 
   /**
    * Slow Aura (`Aasl`), a Built-in ability of Patch 3.0.0, race naga.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SlowAura_Aasl: Rawcode<"ability">;
 
   /**
    * Ancestral Spirit (`Aast`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AncestralSpirit_Aast: Rawcode<"ability">;
 
   /**
    * Item Aviana's Talons Mana (`Aat1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAvianasTalonsMana_Aat1: Rawcode<"ability">;
 
   /**
    * Item Aviana's Talons Attack 1 (`Aat2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAvianasTalonsAttack1_Aat2: Rawcode<"ability">;
 
   /**
    * Item Aviana's Talons Attack 2 (`Aat3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAvianasTalonsAttack2_Aat3: Rawcode<"ability">;
 
@@ -5700,6 +6132,8 @@ export declare const Abilities: {
 
   /**
    * Destroyer Form (`Aave`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DestroyerForm_Aave: Rawcode<"ability">;
 
@@ -5711,35 +6145,35 @@ export declare const Abilities: {
   /**
    * Raise the Banner Crit (`Aaxr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RaiseTheBannerCrit_Aaxr: Rawcode<"ability">;
 
   /**
    * Item Butchers Aura 1 (`Aba1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemButchersAura1_Aba1: Rawcode<"ability">;
 
   /**
    * Item Butchers Aura 2 (`Aba2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemButchersAura2_Aba2: Rawcode<"ability">;
 
   /**
    * Item Aura of Twisted Bones (`Abcs`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAuraOfTwistedBones_Abcs: Rawcode<"ability">;
 
   /**
    * Breath of Frost (`Abdf`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BreathOfFrost_Abdf: Rawcode<"ability">;
 
@@ -5755,20 +6189,22 @@ export declare const Abilities: {
 
   /**
    * Burrow Detection (`Abdt`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BurrowDetection_Abdt: Rawcode<"ability">;
 
   /**
    * Item Blade of Frozen Hunger Attack (`Abfa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBladeOfFrozenHungerAttack_Abfa: Rawcode<"ability">;
 
   /**
    * Item Blade of Frozen Hunger Heal (`Abfh`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBladeOfFrozenHungerHeal_Abfh: Rawcode<"ability">;
 
@@ -5790,28 +6226,28 @@ export declare const Abilities: {
   /**
    * Item Bindings of Helya CW (`Abh1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBindingsOfHelyaCW_Abh1: Rawcode<"ability">;
 
   /**
    * Item Bindings of Helya Attack (`Abh2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBindingsOfHelyaAttack_Abh2: Rawcode<"ability">;
 
   /**
    * Item Boots of the Icewalker BoF (`Abi1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBootsOfTheIcewalkerBoF_Abi1: Rawcode<"ability">;
 
   /**
    * Item Boots of the Icewalker Attack (`Abi2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBootsOfTheIcewalkerAttack_Abi2: Rawcode<"ability">;
 
@@ -5822,39 +6258,43 @@ export declare const Abilities: {
 
   /**
    * Blight Placement (`Ablp`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BlightPlacement_Ablp: Rawcode<"ability">;
 
   /**
    * Banshee (`Abns`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Banshee_Abns: Rawcode<"ability">;
 
   /**
    * Burning Oil (`Abof`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BurningOil_Abof: Rawcode<"ability">;
 
   /**
    * Item Bottled Storm (`Abos`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBottledStorm_Abos: Rawcode<"ability">;
 
   /**
    * Item Brimstone Spell 1 (`Abr1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBrimstoneSpell1_Abr1: Rawcode<"ability">;
 
   /**
    * Item Brimstone Spell 2 (`Abr2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBrimstoneSpell2_Abr2: Rawcode<"ability">;
 
@@ -5866,26 +6306,28 @@ export declare const Abilities: {
   /**
    * Item Bottled Storm CL (`Abs1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBottledStormCL_Abs1: Rawcode<"ability">;
 
   /**
    * Item Bottled Storm Attack (`Abs2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBottledStormAttack_Abs2: Rawcode<"ability">;
 
   /**
    * Curse Orb (`Absc`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CurseOrb_Absc: Rawcode<"ability">;
 
   /**
    * Berserk (`Absk`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Berserk_Absk: Rawcode<"ability">;
 
@@ -5896,16 +6338,22 @@ export declare const Abilities: {
 
   /**
    * Burrow (`Abu2`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Burrow_Abu2: Rawcode<"ability">;
 
   /**
    * Burrow (`Abu3`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Burrow_Abu3: Rawcode<"ability">;
 
   /**
    * Burrow (`Abu5`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Burrow_Abu5: Rawcode<"ability">;
 
@@ -5916,27 +6364,29 @@ export declare const Abilities: {
 
   /**
    * Burrow (`Abur`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Burrow_Abur: Rawcode<"ability">;
 
   /**
    * Item Borelgore Attack (`Abx1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBorelgoreAttack_Abx1: Rawcode<"ability">;
 
   /**
    * Item Brimstone Attack 1 (`Abz1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBrimstoneAttack1_Abz1: Rawcode<"ability">;
 
   /**
    * Item Brimstone Attack 2 (`Abz2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBrimstoneAttack2_Abz2: Rawcode<"ability">;
 
@@ -5948,113 +6398,119 @@ export declare const Abilities: {
   /**
    * Item Consecrated Mixture (`Accm`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemConsecratedMixture_Accm: Rawcode<"ability">;
 
   /**
    * Drunken Brawler (`Acdb`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DrunkenBrawler_Acdb: Rawcode<"ability">;
 
   /**
    * Drunken Haze (`Acdh`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DrunkenHaze_Acdh: Rawcode<"ability">;
 
   /**
    * Item Helm Cenarion Heal (`Ace1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHelmCenarionHeal_Ace1: Rawcode<"ability">;
 
   /**
    * Item Helm Cenarion Attack (`Ace2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHelmCenarionAttack_Ace2: Rawcode<"ability">;
 
   /**
    * Item Helm Cenarion Spellcast (`Ace3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHelmCenarionSpellcast_Ace3: Rawcode<"ability">;
 
   /**
    * Item Elixir of Cunnning (`Acec`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemElixirOfCunnning_Acec: Rawcode<"ability">;
 
   /**
    * Storm, Earth, And Fire (`Acef`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly StormEarthAndFire_Acef: Rawcode<"ability">;
 
   /**
    * Item Elixir of the Monster Hunter (`Acem`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemElixirOfTheMonsterHunter_Acem: Rawcode<"ability">;
 
   /**
    * Item Elixir of Greater Intelligence (`Acgi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemElixirOfGreaterIntelligence_Acgi: Rawcode<"ability">;
 
   /**
    * Item Cursed Golden Ring Crit (`Acgr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCursedGoldenRingCrit_Acgr: Rawcode<"ability">;
 
   /**
    * Item Staff CH TC (`Ach1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemStaffCHTC_Ach1: Rawcode<"ability">;
 
   /**
    * Item Staff CH Spellcast (`Ach2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemStaffCHSpellcast_Ach2: Rawcode<"ability">;
 
   /**
    * Item Blade CH Damage (`Ach3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBladeCHDamage_Ach3: Rawcode<"ability">;
 
   /**
    * Item Blade CH Heal (`Ach4`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBladeCHHeal_Ach4: Rawcode<"ability">;
 
   /**
    * Item Blade Attack 1 (`Ach5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBladeAttack1_Ach5: Rawcode<"ability">;
 
   /**
    * Item Blade Attack 2 (`Ach6`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBladeAttack2_Ach6: Rawcode<"ability">;
 
@@ -6065,6 +6521,8 @@ export declare const Abilities: {
 
   /**
    * Ray of Disruption (`Ache`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RayOfDisruption_Ache: Rawcode<"ability">;
 
@@ -6075,30 +6533,36 @@ export declare const Abilities: {
 
   /**
    * Howl of Terror (`Acht`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HowlOfTerror_Acht: Rawcode<"ability">;
 
   /**
    * Cloud (`Aclf`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Cloud_Aclf: Rawcode<"ability">;
 
   /**
    * Item Elixir of Lesser Intelligence (`Acli`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemElixirOfLesserIntelligence_Acli: Rawcode<"ability">;
 
   /**
    * Item Cleave 15 (`Aclq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCleave15_Aclq: Rawcode<"ability">;
 
   /**
    * Control Magic (`Acmg`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ControlMagic_Acmg: Rawcode<"ability">;
 
@@ -6139,6 +6603,8 @@ export declare const Abilities: {
 
   /**
    * Corporeal Form (`Acpf`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CorporealForm_Acpf: Rawcode<"ability">;
 
@@ -6155,14 +6621,14 @@ export declare const Abilities: {
   /**
    * Item Coldbringer's Reach Attack (`Acrx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemColdbringersReachAttack_Acrx: Rawcode<"ability">;
 
   /**
    * Item Coldbringer's Reach Frost Nova (`Acrz`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemColdbringersReachFrostNova_Acrz: Rawcode<"ability">;
 
@@ -6174,38 +6640,42 @@ export declare const Abilities: {
   /**
    * Item Deathbringer's Boots Parasite (`Adb1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDeathbringersBootsParasite_Adb1: Rawcode<"ability">;
 
   /**
    * Item Deathbringer's Boots Attack (`Adb2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDeathbringersBootsAttack_Adb2: Rawcode<"ability">;
 
   /**
    * Item Deathbloom Leaves (`Adbl`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDeathbloomLeaves_Adbl: Rawcode<"ability">;
 
   /**
    * Item Deepsea Bag CW (`Adbw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDeepseaBagCW_Adbw: Rawcode<"ability">;
 
   /**
    * Disenchant (`Adch`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Disenchant_Adch: Rawcode<"ability">;
 
   /**
    * Disenchant (`Adcn`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Disenchant_Adcn: Rawcode<"ability">;
 
@@ -6216,6 +6686,8 @@ export declare const Abilities: {
 
   /**
    * Dismount (`Adec`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Dismount_Adec: Rawcode<"ability">;
 
@@ -6276,6 +6748,8 @@ export declare const Abilities: {
 
   /**
    * Devour Magic (`Advm`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DevourMagic_Advm: Rawcode<"ability">;
 
@@ -6287,7 +6761,7 @@ export declare const Abilities: {
   /**
    * Item Endless Flask of Restoration (`Aefr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEndlessFlaskOfRestoration_Aefr: Rawcode<"ability">;
 
@@ -6298,6 +6772,8 @@ export declare const Abilities: {
 
   /**
    * Elune's Grace (`Aegr`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ElunesGrace_Aegr: Rawcode<"ability">;
 
@@ -6333,76 +6809,78 @@ export declare const Abilities: {
 
   /**
    * Entangling Roots (`Aenw`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly EntanglingRoots_Aenw: Rawcode<"ability">;
 
   /**
    * Item Essencium Main Summon (`Aes1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEssenciumMainSummon_Aes1: Rawcode<"ability">;
 
   /**
    * Item Essencium Blizzard (`Aes2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEssenciumBlizzard_Aes2: Rawcode<"ability">;
 
   /**
    * Item Essencium Rain of Fire (`Aes3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEssenciumRainOfFire_Aes3: Rawcode<"ability">;
 
   /**
    * Item Essencium Chain Lightning (`Aes4`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEssenciumChainLightning_Aes4: Rawcode<"ability">;
 
   /**
    * Item Essencium Crushing Wave (`Aes5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEssenciumCrushingWave_Aes5: Rawcode<"ability">;
 
   /**
    * Item Essencium Attack 1 (`Aes6`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEssenciumAttack1_Aes6: Rawcode<"ability">;
 
   /**
    * Item Essencium Attack 2 (`Aes7`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEssenciumAttack2_Aes7: Rawcode<"ability">;
 
   /**
    * Item Essencium Attack 3 (`Aes8`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEssenciumAttack3_Aes8: Rawcode<"ability">;
 
   /**
    * Item Essencium Attack 4 (`Aes9`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEssenciumAttack4_Aes9: Rawcode<"ability">;
 
   /**
    * Item Earthen Signet Attack (`Aesa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEarthenSignetAttack_Aesa: Rawcode<"ability">;
 
@@ -6414,7 +6892,7 @@ export declare const Abilities: {
   /**
    * Essence of the Spider Queen (`Aesq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly EssenceOfTheSpiderQueen_Aesq: Rawcode<"ability">;
 
@@ -6426,12 +6904,14 @@ export declare const Abilities: {
   /**
    * Item Earthen Signet WS (`Aesw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemEarthenSignetWS_Aesw: Rawcode<"ability">;
 
   /**
    * Ethereal Form (`Aetf`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly EtherealForm_Aetf: Rawcode<"ability">;
 
@@ -6442,6 +6922,8 @@ export declare const Abilities: {
 
   /**
    * Ethereal (`Aetl`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Ethereal_Aetl: Rawcode<"ability">;
 
@@ -6452,6 +6934,8 @@ export declare const Abilities: {
 
   /**
    * Exhume Corpses (`Aexh`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ExhumeCorpses_Aexh: Rawcode<"ability">;
 
@@ -6462,13 +6946,15 @@ export declare const Abilities: {
 
   /**
    * Faerie Fire (`Afa2`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FaerieFire_Afa2: Rawcode<"ability">;
 
   /**
    * Acid Bomb (`Afab`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AcidBomb_Afab: Rawcode<"ability">;
 
@@ -6479,35 +6965,43 @@ export declare const Abilities: {
 
   /**
    * Orb of Annihilation (`Afak`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly OrbOfAnnihilation_Afak: Rawcode<"ability">;
 
   /**
    * Feedback (`Afbb`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Feedback_Afbb: Rawcode<"ability">;
 
   /**
    * Feedback (`Afbk`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Feedback_Afbk: Rawcode<"ability">;
 
   /**
    * Feedback (`Afbt`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Feedback_Afbt: Rawcode<"ability">;
 
   /**
    * Item Forgotten Frost Lotus (`Affl`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemForgottenFrostLotus_Affl: Rawcode<"ability">;
 
   /**
    * Healing Spray (`Afhs`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HealingSpray_Afhs: Rawcode<"ability">;
 
@@ -6543,27 +7037,29 @@ export declare const Abilities: {
 
   /**
    * Flak Cannons (`Aflk`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FlakCannons_Aflk: Rawcode<"ability">;
 
   /**
    * Item Gloves of the Flamewalker Swarm (`Afm1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGlovesOfTheFlamewalkerSwarm_Afm1: Rawcode<"ability">;
 
   /**
    * Item Gloves of the Flamewalker Attack (`Afm2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGlovesOfTheFlamewalkerAttack_Afm2: Rawcode<"ability">;
 
   /**
    * Item Flame of Al'ar (`Afoa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemFlameOfAlar_Afoa: Rawcode<"ability">;
 
@@ -6574,11 +7070,15 @@ export declare const Abilities: {
 
   /**
    * Frost Attack (`Afr2`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FrostAttack_Afr2: Rawcode<"ability">;
 
   /**
    * Frost Attack (`Afra`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FrostAttack_Afra: Rawcode<"ability">;
 
@@ -6599,53 +7099,57 @@ export declare const Abilities: {
 
   /**
    * Fragmentation Shards (`Afsh`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FragmentationShards_Afsh: Rawcode<"ability">;
 
   /**
    * Chemical Frenzy (`Afuf`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ChemicalFrenzy_Afuf: Rawcode<"ability">;
 
   /**
    * Frenzy (`Afzy`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Frenzy_Afzy: Rawcode<"ability">;
 
   /**
    * Item Gift of Wrath Attack (`Agga`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGiftOfWrathAttack_Agga: Rawcode<"ability">;
 
   /**
    * Item Gift of Greed Pillage (`Aggp`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGiftOfGreedPillage_Aggp: Rawcode<"ability">;
 
   /**
    * Item Gift of Sloth Slow (`Aggs`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGiftOfSlothSlow_Aggs: Rawcode<"ability">;
 
   /**
    * Item Gift of Wrath Bloodlust (`Aggw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGiftOfWrathBloodlust_Aggw: Rawcode<"ability">;
 
   /**
    * Item Curse of Pride (`Aggx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemCurseOfPride_Aggx: Rawcode<"ability">;
 
@@ -6662,96 +7166,98 @@ export declare const Abilities: {
   /**
    * Item Glix's Bomb (`Aglx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGlixsBomb_Aglx: Rawcode<"ability">;
 
   /**
    * Item Gloves of Necromancy Summon (`Agn1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGlovesOfNecromancySummon_Agn1: Rawcode<"ability">;
 
   /**
    * Item Gloves of Necromancy Attack (`Agn2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGlovesOfNecromancyAttack_Agn2: Rawcode<"ability">;
 
   /**
    * Item Golden Necklace Heal (`Agnh`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGoldenNecklaceHeal_Agnh: Rawcode<"ability">;
 
   /**
    * Item Golden Necklace Spellcast (`Agns`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGoldenNecklaceSpellcast_Agns: Rawcode<"ability">;
 
   /**
    * Item Gloves of the Phoenix Spellcast (`Agpa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGlovesOfThePhoenixSpellcast_Agpa: Rawcode<"ability">;
 
   /**
    * Item Gloves of the Phoenix Damage (`Agpd`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGlovesOfThePhoenixDamage_Agpd: Rawcode<"ability">;
 
   /**
    * Item Gravelight DoT (`Agr1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGravelightDoT_Agr1: Rawcode<"ability">;
 
   /**
    * Item Gravelight Main Swarm (`Agr2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGravelightMainSwarm_Agr2: Rawcode<"ability">;
 
   /**
    * Item Gravelight Side Swarm (`Agr3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGravelightSideSwarm_Agr3: Rawcode<"ability">;
 
   /**
    * Item Gravelight Attack Main (`Agr4`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGravelightAttackMain_Agr4: Rawcode<"ability">;
 
   /**
    * Item Gravelight Attack Side (`Agr5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGravelightAttackSide_Agr5: Rawcode<"ability">;
 
   /**
    * War Club (`Agra`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WarClub_Agra: Rawcode<"ability">;
 
   /**
    * Item Glacial Shard (`Agsh`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemGlacialShard_Agsh: Rawcode<"ability">;
 
@@ -6788,47 +7294,49 @@ export declare const Abilities: {
   /**
    * Healing modifier (`Ahem`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HealingModifier_Ahem: Rawcode<"ability">;
 
   /**
    * Item Huge Flail WS (`Ahf1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHugeFlailWS_Ahf1: Rawcode<"ability">;
 
   /**
    * Item Huge Flail Attack (`Ahf2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHugeFlailAttack_Ahf2: Rawcode<"ability">;
 
   /**
    * Item Heart of the Firebender BoF (`Ahfb`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeartOfTheFirebenderBoF_Ahfb: Rawcode<"ability">;
 
   /**
    * Item Heart of the Firebender Orb (`Ahfo`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeartOfTheFirebenderOrb_Ahfo: Rawcode<"ability">;
 
   /**
    * Item Headpiece of the High Inquisitor (`Ahhi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHeadpieceOfTheHighInquisitor_Ahhi: Rawcode<"ability">;
 
   /**
    * Shadow Meld (`Ahid`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ShadowMeld_Ahid: Rawcode<"ability">;
 
@@ -6839,6 +7347,8 @@ export declare const Abilities: {
 
   /**
    * Summoning Ritual (`Ahnl`), a Built-in ability of Patch 3.0.0, race naga.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SummoningRitual_Ahnl: Rawcode<"ability">;
 
@@ -6875,40 +7385,42 @@ export declare const Abilities: {
   /**
    * Item Helm of the Rimelord Spellcast (`Ahrx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHelmOfTheRimelordSpellcast_Ahrx: Rawcode<"ability">;
 
   /**
    * Item Helm of the Rimelord TC (`Ahrz`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHelmOfTheRimelordTC_Ahrz: Rawcode<"ability">;
 
   /**
    * Item Hammer of the Silver Hand Attack (`Ahsa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHammerOfTheSilverHandAttack_Ahsa: Rawcode<"ability">;
 
   /**
    * Sundering Blades (`Ahsb`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SunderingBlades_Ahsb: Rawcode<"ability">;
 
   /**
    * Item Hammer of the Silver Hand Heal (`Ahsh`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHammerOfTheSilverHandHeal_Ahsh: Rawcode<"ability">;
 
   /**
    * Item Handful of Throwing Knives (`Ahtk`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemHandfulOfThrowingKnives_Ahtk: Rawcode<"ability">;
 
@@ -6920,24 +7432,28 @@ export declare const Abilities: {
   /**
    * Item Icecrown Ring Frost Nova (`Aic1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemIcecrownRingFrostNova_Aic1: Rawcode<"ability">;
 
   /**
    * Item Icecrown Ring Attack (`Aic2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemIcecrownRingAttack_Aic2: Rawcode<"ability">;
 
   /**
    * Unit Inventory (`Aien`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnitInventory_Aien: Rawcode<"ability">;
 
   /**
    * Unit Inventory (`Aihn`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnitInventory_Aihn: Rawcode<"ability">;
 
@@ -6949,14 +7465,14 @@ export declare const Abilities: {
   /**
    * Item Blade of Inferno Rain of Fire (`Ain1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBladeOfInfernoRainOfFire_Ain1: Rawcode<"ability">;
 
   /**
    * Item Blade of Inferno Attack (`Ain2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBladeOfInfernoAttack_Ain2: Rawcode<"ability">;
 
@@ -6967,18 +7483,22 @@ export declare const Abilities: {
 
   /**
    * Unit Inventory (`Aion`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnitInventory_Aion: Rawcode<"ability">;
 
   /**
    * Item Attack Speed Bonus (`Aisy`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemAttackSpeedBonus_Aisy: Rawcode<"ability">;
 
   /**
    * Unit Inventory (`Aiun`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnitInventory_Aiun: Rawcode<"ability">;
 
@@ -6990,14 +7510,14 @@ export declare const Abilities: {
   /**
    * Item Kaldorei Moonglaive Attack (`Akma`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemKaldoreiMoonglaiveAttack_Akma: Rawcode<"ability">;
 
   /**
    * Item Kaldorei Moonglaive Summon (`Akms`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemKaldoreiMoonglaiveSummon_Akms: Rawcode<"ability">;
 
@@ -7009,26 +7529,28 @@ export declare const Abilities: {
   /**
    * Item Lance of the Frozen Phoenix (`Alfp`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLanceOfTheFrozenPhoenix_Alfp: Rawcode<"ability">;
 
   /**
    * Item Summon Forsaken Rangers (`Alfq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSummonForsakenRangers_Alfq: Rawcode<"ability">;
 
   /**
    * Item Lionskin Helmet of Precision (`Alhp`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLionskinHelmetOfPrecision_Alhp: Rawcode<"ability">;
 
   /**
    * Liquid Fire (`Aliq`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LiquidFire_Aliq: Rawcode<"ability">;
 
@@ -7040,7 +7562,7 @@ export declare const Abilities: {
   /**
    * Death Coil (`Almf`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DeathCoil_Almf: Rawcode<"ability">;
 
@@ -7057,14 +7579,14 @@ export declare const Abilities: {
   /**
    * Item Portable Lightning Rod Attack (`Alra`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemPortableLightningRodAttack_Alra: Rawcode<"ability">;
 
   /**
    * Item Portable Lightning Rod CL (`Alrc`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemPortableLightningRodCL_Alrc: Rawcode<"ability">;
 
@@ -7075,6 +7597,8 @@ export declare const Abilities: {
 
   /**
    * Replenish Mana (`Amb2`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ReplenishMana_Amb2: Rawcode<"ability">;
 
@@ -7096,24 +7620,28 @@ export declare const Abilities: {
   /**
    * Item Mordo's Club (`Amcx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemMordosClub_Amcx: Rawcode<"ability">;
 
   /**
    * Banshee's Wail (`Amda`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BansheesWail_Amda: Rawcode<"ability">;
 
   /**
    * Magic Defense (`Amdf`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MagicDefense_Amdf: Rawcode<"ability">;
 
   /**
    * Mechanical Critter (`Amec`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MechanicalCritter_Amec: Rawcode<"ability">;
 
@@ -7129,20 +7657,22 @@ export declare const Abilities: {
 
   /**
    * Mana Flare (`Amfl`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ManaFlare_Amfl: Rawcode<"ability">;
 
   /**
    * Item Summon Deathguards (`Amfs`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSummonDeathguards_Amfs: Rawcode<"ability">;
 
   /**
    * Bouncing Missile Filter (`Amgi`), a Built-in ability of Patch 3.0.0, race nightelf.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BouncingMissileFilter_Amgi: Rawcode<"ability">;
 
@@ -7178,20 +7708,22 @@ export declare const Abilities: {
 
   /**
    * Aerial Shackles (`Amls`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AerialShackles_Amls: Rawcode<"ability">;
 
   /**
    * Item Monastery Mace Heal (`Amm1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemMonasteryMaceHeal_Amm1: Rawcode<"ability">;
 
   /**
    * Item Monastery Mace Attack (`Amm2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemMonasteryMaceAttack_Amm2: Rawcode<"ability">;
 
@@ -7218,7 +7750,7 @@ export declare const Abilities: {
   /**
    * Item Mark of the Phoenix BoF (`Ampb`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemMarkOfThePhoenixBoF_Ampb: Rawcode<"ability">;
 
@@ -7230,14 +7762,14 @@ export declare const Abilities: {
   /**
    * Item Malachite Sword Curse (`Amsc`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemMalachiteSwordCurse_Amsc: Rawcode<"ability">;
 
   /**
    * Item Malachite Sword Orb (`Amso`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemMalachiteSwordOrb_Amso: Rawcode<"ability">;
 
@@ -7279,12 +7811,14 @@ export declare const Abilities: {
   /**
    * Item Nevermelting Ice (`Anmi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemNevermeltingIce_Anmi: Rawcode<"ability">;
 
   /**
    * Hardened Skin (`Ansk`), a Built-in ability of Patch 3.0.0, race naga.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HardenedSkin_Ansk: Rawcode<"ability">;
 
@@ -7311,63 +7845,63 @@ export declare const Abilities: {
   /**
    * Item Orb Chill 3s (`Aoc3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemOrbChill3s_Aoc3: Rawcode<"ability">;
 
   /**
    * On Hit Lightning Attack (`Aohl`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly OnHitLightningAttack_Aohl: Rawcode<"ability">;
 
   /**
    * Item Totem Ogre Magi Attack (`Aoma`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemTotemOgreMagiAttack_Aoma: Rawcode<"ability">;
 
   /**
    * Item Totem Ogre Magi Bloodlust (`Aomb`), a Built-in ability of Patch 3.0.0, race creeps.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemTotemOgreMagiBloodlust_Aomb: Rawcode<"ability">;
 
   /**
    * Item Bracers Ogre Magi CL (`Aomc`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBracersOgreMagiCL_Aomc: Rawcode<"ability">;
 
   /**
    * Item Bracers Ogre Magi HW (`Aomh`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBracersOgreMagiHW_Aomh: Rawcode<"ability">;
 
   /**
    * Item Totem Ogre Magi Summon (`Aoms`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemTotemOgreMagiSummon_Aoms: Rawcode<"ability">;
 
   /**
    * Item Bracers Ogre Magi Attack 2 (`Aomx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBracersOgreMagiAttack2_Aomx: Rawcode<"ability">;
 
   /**
    * Item Bracers Ogre Magi Attack 1 (`Aomz`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBracersOgreMagiAttack1_Aomz: Rawcode<"ability">;
 
@@ -7393,20 +7927,22 @@ export declare const Abilities: {
 
   /**
    * Pack Mule (`Apak`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PackMule_Apak: Rawcode<"ability">;
 
   /**
    * Item Plaguebearer Shortsword (`Apbs`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemPlaguebearerShortsword_Apbs: Rawcode<"ability">;
 
   /**
    * Disease Cloud (`Apbw`), a Built-in ability of Patch 3.0.0, race undead.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DiseaseCloud_Apbw: Rawcode<"ability">;
 
@@ -7417,11 +7953,15 @@ export declare const Abilities: {
 
   /**
    * Phoenix Morphing (Egg Related) (`Aphx`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PhoenixMorphingEggRelated_Aphx: Rawcode<"ability">;
 
   /**
    * Permanent Immolation (`Apig`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PermanentImmolation_Apig: Rawcode<"ability">;
 
@@ -7438,14 +7978,14 @@ export declare const Abilities: {
   /**
    * Item Plaguegreaves Spell (`Apl1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemPlaguegreavesSpell_Apl1: Rawcode<"ability">;
 
   /**
    * Item Plaguegreaves Attack (`Apl2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemPlaguegreavesAttack_Apl2: Rawcode<"ability">;
 
@@ -7456,32 +7996,36 @@ export declare const Abilities: {
 
   /**
    * Phoenix Fire (`Apmf`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PhoenixFire_Apmf: Rawcode<"ability">;
 
   /**
    * Item Poison Nettle Attack (`Apna`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemPoisonNettleAttack_Apna: Rawcode<"ability">;
 
   /**
    * Item Poison Nettle ER (`Apne`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemPoisonNettleER_Apne: Rawcode<"ability">;
 
   /**
    * Poison Sting (`Apo2`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PoisonSting_Apo2: Rawcode<"ability">;
 
   /**
    * Drunken Haze (`Apoa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DrunkenHaze_Apoa: Rawcode<"ability">;
 
@@ -7507,27 +8051,29 @@ export declare const Abilities: {
 
   /**
    * Phase Shift (`Apsh`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PhaseShift_Apsh: Rawcode<"ability">;
 
   /**
    * Item Phalanx Shield Aura (`Apsq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemPhalanxShieldAura_Apsq: Rawcode<"ability">;
 
   /**
    * Item Protector SH Stun (`Apsx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemProtectorSHStun_Apsx: Rawcode<"ability">;
 
   /**
    * Item Protector SH Attack (`Apsz`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemProtectorSHAttack_Apsz: Rawcode<"ability">;
 
@@ -7539,31 +8085,35 @@ export declare const Abilities: {
   /**
    * Item Plaguewrought Attack (`Apwa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemPlaguewroughtAttack_Apwa: Rawcode<"ability">;
 
   /**
    * Item Plaguewrought Poison (`Apwp`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemPlaguewroughtPoison_Apwp: Rawcode<"ability">;
 
   /**
    * Item Plaguewrought CS (`Apws`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemPlaguewroughtCS_Apws: Rawcode<"ability">;
 
   /**
    * Phoenix Fire (`Apxf`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PhoenixFire_Apxf: Rawcode<"ability">;
 
   /**
    * Roar (`Ara2`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Roar_Ara2: Rawcode<"ability">;
 
@@ -7580,19 +8130,21 @@ export declare const Abilities: {
   /**
    * Item Restorative Balm (`Arba`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemRestorativeBalm_Arba: Rawcode<"ability">;
 
   /**
    * Reinforced Burrows Upgrade (`Arbr`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ReinforcedBurrowsUpgrade_Arbr: Rawcode<"ability">;
 
   /**
    * Item Diamond Ring CDR (`Ardr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemDiamondRingCDR_Ardr: Rawcode<"ability">;
 
@@ -7618,6 +8170,8 @@ export declare const Abilities: {
 
   /**
    * Tome of Retraining (`Aret`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly TomeOfRetraining_Aret: Rawcode<"ability">;
 
@@ -7629,35 +8183,35 @@ export declare const Abilities: {
   /**
    * Item Ring of Holy Fire Immo (`Arf1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemRingOfHolyFireImmo_Arf1: Rawcode<"ability">;
 
   /**
    * Item Ring of Holy Fire FL (`Arf2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemRingOfHolyFireFL_Arf2: Rawcode<"ability">;
 
   /**
    * Item Ring of Holy Fire Attack (`Arf3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemRingOfHolyFireAttack_Arf3: Rawcode<"ability">;
 
   /**
    * Item Ring of the Firelands Attack (`Arfa`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemRingOfTheFirelandsAttack_Arfa: Rawcode<"ability">;
 
   /**
    * Item Ring of the Firelands CR (`Arfc`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemRingOfTheFirelandsCR_Arfc: Rawcode<"ability">;
 
@@ -7674,28 +8228,28 @@ export declare const Abilities: {
   /**
    * Item Razorice Attack 1 (`Ari1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemRazoriceAttack1_Ari1: Rawcode<"ability">;
 
   /**
    * Item Razorice Attack 2 (`Ari2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemRazoriceAttack2_Ari2: Rawcode<"ability">;
 
   /**
    * Item Razorice BoF (`Ari3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemRazoriceBoF_Ari3: Rawcode<"ability">;
 
   /**
    * Item Razorice Attack 4 (`Ari4`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemRazoriceAttack4_Ari4: Rawcode<"ability">;
 
@@ -7731,55 +8285,71 @@ export declare const Abilities: {
 
   /**
    * Barrage (`Aroc`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Barrage_Aroc: Rawcode<"ability">;
 
   /**
    * Item Rune of Fire (`Arof`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemRuneOfFire_Arof: Rawcode<"ability">;
 
   /**
    * Replenish (`Arpb`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Replenish_Arpb: Rawcode<"ability">;
 
   /**
    * Essence of Blight (`Arpl`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly EssenceOfBlight_Arpl: Rawcode<"ability">;
 
   /**
    * Spirit Touch (`Arpm`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpiritTouch_Arpm: Rawcode<"ability">;
 
   /**
    * Item Robes of Revenge Attack (`Arr1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemRobesOfRevengeAttack_Arr1: Rawcode<"ability">;
 
   /**
    * Summon Misha (`Arsg`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SummonMisha_Arsg: Rawcode<"ability">;
 
   /**
    * Resistant Skin (`Arsk`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ResistantSkin_Arsk: Rawcode<"ability">;
 
   /**
    * Stampede (`Arsp`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Stampede_Arsp: Rawcode<"ability">;
 
   /**
    * Summon Quilbeast (`Arsq`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SummonQuilbeast_Arsq: Rawcode<"ability">;
 
@@ -7790,13 +8360,15 @@ export declare const Abilities: {
 
   /**
    * Serpent Ward (`Arsw`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SerpentWard_Arsw: Rawcode<"ability">;
 
   /**
    * Pillage (`Asa2`), a Built-in ability of Patch 3.0.0, race orc.
    *
-   * In the Custom Game data set. Not in the Default and Melee Game data sets.
+   * In the Custom (The Frozen Throne) Game data set. Not in the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Pillage_Asa2: Rawcode<"ability">;
 
@@ -7813,71 +8385,77 @@ export declare const Abilities: {
   /**
    * On Magic Attack, Cast Spell (`Asas`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly OnMagicAttackCastSpell_Asas: Rawcode<"ability">;
 
   /**
    * Submerge (`Asb1`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Submerge_Asb1: Rawcode<"ability">;
 
   /**
    * Submerge (`Asb2`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Submerge_Asb2: Rawcode<"ability">;
 
   /**
    * Submerge (`Asb3`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Submerge_Asb3: Rawcode<"ability">;
 
   /**
    * Item Sanctified Chestplate Heal (`Asc1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSanctifiedChestplateHeal_Asc1: Rawcode<"ability">;
 
   /**
    * Item Sanctified Chestplate Spellcast (`Asc2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSanctifiedChestplateSpellcast_Asc2: Rawcode<"ability">;
 
   /**
    * Item Chill Nova 3 (`Asc3`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemChillNova3_Asc3: Rawcode<"ability">;
 
   /**
    * Item Chill Nova 5 (`Asc5`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemChillNova5_Asc5: Rawcode<"ability">;
 
   /**
    * Item Shield of the Scarlet Crusade Attack (`Asca`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemShieldOfTheScarletCrusadeAttack_Asca: Rawcode<"ability">;
 
   /**
    * Item Shield of the Scarlet Crusade Heal (`Asch`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemShieldOfTheScarletCrusadeHeal_Asch: Rawcode<"ability">;
 
   /**
    * Item Sanctified Chestplate Immo (`Asci`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSanctifiedChestplateImmo_Asci: Rawcode<"ability">;
 
@@ -7894,7 +8472,7 @@ export declare const Abilities: {
   /**
    * Item Scepter of Darkness Summon (`Asdd`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemScepterOfDarknessSummon_Asdd: Rawcode<"ability">;
 
@@ -7906,7 +8484,7 @@ export declare const Abilities: {
   /**
    * Dispel Magic (`Asdi`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DispelMagic_Asdi: Rawcode<"ability">;
 
@@ -7918,56 +8496,56 @@ export declare const Abilities: {
   /**
    * Item Scepter of Darkness Spellcast (`Asdx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemScepterOfDarknessSpellcast_Asdx: Rawcode<"ability">;
 
   /**
    * Heal (`Asea`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Heal_Asea: Rawcode<"ability">;
 
   /**
    * Flame Strike (`Asfs`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FlameStrike_Asfs: Rawcode<"ability">;
 
   /**
    * Item Sanctified Gauntlets Impale (`Asg1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSanctifiedGauntletsImpale_Asg1: Rawcode<"ability">;
 
   /**
    * Item Sanctified Gauntlets Attack (`Asg2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSanctifiedGauntletsAttack_Asg2: Rawcode<"ability">;
 
   /**
    * Item Sword of the Ghostlands Attack (`Asga`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSwordOfTheGhostlandsAttack_Asga: Rawcode<"ability">;
 
   /**
    * Item Sword of the Ghostlands HoT (`Asgh`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSwordOfTheGhostlandsHoT_Asgh: Rawcode<"ability">;
 
   /**
    * Item Shepherd's Curse (`Ashc`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemShepherdsCurse_Ashc: Rawcode<"ability">;
 
@@ -7978,13 +8556,15 @@ export declare const Abilities: {
 
   /**
    * Wand of Shadowsight (`Ashs`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WandOfShadowsight_Ashs: Rawcode<"ability">;
 
   /**
    * Summon Infectious Ghoul (`Asic`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SummonInfectiousGhoul_Asic: Rawcode<"ability">;
 
@@ -7996,35 +8576,35 @@ export declare const Abilities: {
   /**
    * Inner Fire (`Asif`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly InnerFire_Asif: Rawcode<"ability">;
 
   /**
    * Item Vestments Storm King MS (`Ask1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemVestmentsStormKingMS_Ask1: Rawcode<"ability">;
 
   /**
    * Item Vestments Storm King Spellcast (`Ask2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemVestmentsStormKingSpellcast_Ask2: Rawcode<"ability">;
 
   /**
    * Item Tome of the Spiderkind Attack (`Aska`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemTomeOfTheSpiderkindAttack_Aska: Rawcode<"ability">;
 
   /**
    * Item Tome of the Spiderkind Summon (`Asks`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemTomeOfTheSpiderkindSummon_Asks: Rawcode<"ability">;
 
@@ -8040,20 +8620,22 @@ export declare const Abilities: {
 
   /**
    * Summon Prawns (`Aslp`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SummonPrawns_Aslp: Rawcode<"ability">;
 
   /**
    * Item Band of the Skeletal Mage Frost Nova (`Asmn`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBandOfTheSkeletalMageFrostNova_Asmn: Rawcode<"ability">;
 
   /**
    * Item Band of the Skeletal Mage Orb (`Asmo`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBandOfTheSkeletalMageOrb_Asmo: Rawcode<"ability">;
 
@@ -8065,7 +8647,7 @@ export declare const Abilities: {
   /**
    * Item Scythe of Frost Aura (`Asof`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemScytheOfFrostAura_Asof: Rawcode<"ability">;
 
@@ -8076,31 +8658,43 @@ export declare const Abilities: {
 
   /**
    * Sphere (`Asp1`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Sphere_Asp1: Rawcode<"ability">;
 
   /**
    * Sphere (`Asp2`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Sphere_Asp2: Rawcode<"ability">;
 
   /**
    * Sphere (`Asp3`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Sphere_Asp3: Rawcode<"ability">;
 
   /**
    * Sphere (`Asp4`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Sphere_Asp4: Rawcode<"ability">;
 
   /**
    * Sphere (`Asp5`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Sphere_Asp5: Rawcode<"ability">;
 
   /**
    * Sphere (`Asp6`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Sphere_Asp6: Rawcode<"ability">;
 
@@ -8111,6 +8705,8 @@ export declare const Abilities: {
 
   /**
    * Spell Book (`Aspb`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpellBook_Aspb: Rawcode<"ability">;
 
@@ -8121,6 +8717,8 @@ export declare const Abilities: {
 
   /**
    * Sphere (`Asph`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Sphere_Asph: Rawcode<"ability">;
 
@@ -8131,6 +8729,8 @@ export declare const Abilities: {
 
   /**
    * Spirit Link (`Aspl`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpiritLink_Aspl: Rawcode<"ability">;
 
@@ -8141,61 +8741,71 @@ export declare const Abilities: {
 
   /**
    * Spirit Link (`Aspp`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpiritLink_Aspp: Rawcode<"ability">;
 
   /**
    * Spell Steal (`Asps`), a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpellSteal_Asps: Rawcode<"ability">;
 
   /**
    * Spawn Hydra Hatchling (`Aspt`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpawnHydraHatchling_Aspt: Rawcode<"ability">;
 
   /**
    * Spawn Hydra (`Aspy`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpawnHydra_Aspy: Rawcode<"ability">;
 
   /**
    * Item Soulstealer Mana (`Asr1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSoulstealerMana_Asr1: Rawcode<"ability">;
 
   /**
    * Item Soulstealer Attack (`Asr2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSoulstealerAttack_Asr2: Rawcode<"ability">;
 
   /**
    * Item Selene Starfall (`Ass1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSeleneStarfall_Ass1: Rawcode<"ability">;
 
   /**
    * Item Selene Spellcast (`Ass2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSeleneSpellcast_Ass2: Rawcode<"ability">;
 
   /**
    * Soul Burn (`Assb`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SoulBurn_Assb: Rawcode<"ability">;
 
   /**
    * Hardened Skin (`Assk`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HardenedSkin_Assk: Rawcode<"ability">;
 
@@ -8207,14 +8817,14 @@ export declare const Abilities: {
   /**
    * Item Spell Shield 15 (`Assq`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellShield15_Assq: Rawcode<"ability">;
 
   /**
    * Item Spell Shield 12 (`Assw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemSpellShield12_Assw: Rawcode<"ability">;
 
@@ -8230,6 +8840,8 @@ export declare const Abilities: {
 
   /**
    * Steal (`Aste`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Steal_Aste: Rawcode<"ability">;
 
@@ -8251,38 +8863,42 @@ export declare const Abilities: {
   /**
    * Item Stormwalkers TC (`Asw1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemStormwalkersTC_Asw1: Rawcode<"ability">;
 
   /**
    * Item Stormwalkers Spellcast (`Asw2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemStormwalkersSpellcast_Asw2: Rawcode<"ability">;
 
   /**
    * Item Wildhammer Breastplate CL (`Asx1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemWildhammerBreastplateCL_Asx1: Rawcode<"ability">;
 
   /**
    * Taunt (`Atau`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Taunt_Atau: Rawcode<"ability">;
 
   /**
    * Throw Dust (`Atbd`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ThrowDust_Atbd: Rawcode<"ability">;
 
   /**
    * Building Damage Aura (`Atdg`), a Built-in ability of Patch 3.0.0, race naga.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BuildingDamageAura_Atdg: Rawcode<"ability">;
 
@@ -8294,21 +8910,21 @@ export declare const Abilities: {
   /**
    * Cannibalize (`Atff`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Cannibalize_Atff: Rawcode<"ability">;
 
   /**
    * Knight's Javelin (`Atkj`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly KnightsJavelin_Atkj: Rawcode<"ability">;
 
   /**
    * Item Tiara of the Kirin'Tor (`Atkt`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemTiaraOfTheKirinTor_Atkt: Rawcode<"ability">;
 
@@ -8320,21 +8936,21 @@ export declare const Abilities: {
   /**
    * Item Mana Bauble (`Atmb`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemManaBauble_Atmb: Rawcode<"ability">;
 
   /**
    * Item Talisman of Nightmares Orb (`Atno`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemTalismanOfNightmaresOrb_Atno: Rawcode<"ability">;
 
   /**
    * Item Talisman of Nightmares Curse (`Atns`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemTalismanOfNightmaresCurse_Atns: Rawcode<"ability">;
 
@@ -8346,14 +8962,14 @@ export declare const Abilities: {
   /**
    * Item Thornguard Rapier Attack (`Atra`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemThornguardRapierAttack_Atra: Rawcode<"ability">;
 
   /**
    * Item Thornguard Rapier Rejuvenation (`Atrr`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemThornguardRapierRejuvenation_Atrr: Rawcode<"ability">;
 
@@ -8365,19 +8981,21 @@ export declare const Abilities: {
   /**
    * Item The Screecher HoT (`Ats1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemTheScreecherHoT_Ats1: Rawcode<"ability">;
 
   /**
    * Item The Screecher Attack (`Ats2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemTheScreecherAttack_Ats2: Rawcode<"ability">;
 
   /**
    * Tornado Spin (`Atsp`), a Built-in ability of Patch 3.0.0, race naga.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly TornadoSpin_Atsp: Rawcode<"ability">;
 
@@ -8388,11 +9006,15 @@ export declare const Abilities: {
 
   /**
    * Tornado Wander (`Atwa`), a Built-in ability of Patch 3.0.0, race naga.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly TornadoWander_Atwa: Rawcode<"ability">;
 
   /**
    * Unstable Concoction (`Auco`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnstableConcoction_Auco: Rawcode<"ability">;
 
@@ -8414,7 +9036,7 @@ export declare const Abilities: {
   /**
    * Infectious Claws (`Auic`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly InfectiousClaws_Auic: Rawcode<"ability">;
 
@@ -8435,20 +9057,22 @@ export declare const Abilities: {
 
   /**
    * Incite Unholy Frenzy (`Auuf`), a Built-in ability of Patch 3.0.0, race undead.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly InciteUnholyFrenzy_Auuf: Rawcode<"ability">;
 
   /**
    * Item Lost Spirits Heal (`Avb1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLostSpiritsHeal_Avb1: Rawcode<"ability">;
 
   /**
    * Item Lost Spirits Spellcast (`Avb2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemLostSpiritsSpellcast_Avb2: Rawcode<"ability">;
 
@@ -8460,33 +9084,35 @@ export declare const Abilities: {
   /**
    * Item Vestments Wave Heal (`Avm1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemVestmentsWaveHeal_Avm1: Rawcode<"ability">;
 
   /**
    * Item Vestments Wave Spellcast (`Avm2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemVestmentsWaveSpellcast_Avm2: Rawcode<"ability">;
 
   /**
    * Spirit of Vengeance (`Avng`), a Built-in ability of Patch 3.0.0, race nightelf.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpiritOfVengeance_Avng: Rawcode<"ability">;
 
   /**
    * Item Bloodstone Heal (`Avs1`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBloodstoneHeal_Avs1: Rawcode<"ability">;
 
   /**
    * Item Bloodstone Attack (`Avs2`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemBloodstoneAttack_Avs2: Rawcode<"ability">;
 
@@ -8527,11 +9153,15 @@ export declare const Abilities: {
 
   /**
    * War Stomp (`Awrg`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WarStomp_Awrg: Rawcode<"ability">;
 
   /**
    * War Stomp (`Awrh`), a Built-in ability of Patch 3.0.0, race creeps.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WarStomp_Awrh: Rawcode<"ability">;
 
@@ -8548,399 +9178,399 @@ export declare const Abilities: {
   /**
    * Item Zandalari Giantcrusher WS (`Azgw`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemZandalariGiantcrusherWS_Azgw: Rawcode<"ability">;
 
   /**
    * Item Zandalari Giantcrusher Attack (`Azgx`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ItemZandalariGiantcrusherAttack_Azgx: Rawcode<"ability">;
 
   /**
    * Battle Fury (`BT1a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BattleFury_BT1a: Rawcode<"ability">;
 
   /**
    * Staggering Impact (`BT1b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly StaggeringImpact_BT1b: Rawcode<"ability">;
 
   /**
    * Meteor Strike (`BT1c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MeteorStrike_BT1c: Rawcode<"ability">;
 
   /**
    * Reckless Abandon (`BT2a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RecklessAbandon_BT2a: Rawcode<"ability">;
 
   /**
    * Eye for Eye (`BT2b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly EyeForEye_BT2b: Rawcode<"ability">;
 
   /**
    * Indomitable (`BT2c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Indomitable_BT2c: Rawcode<"ability">;
 
   /**
    * Retribution (`BT3a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Retribution_BT3a: Rawcode<"ability">;
 
   /**
    * Unbreakable Spirit (`BT3b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnbreakableSpirit_BT3b: Rawcode<"ability">;
 
   /**
    * Tenacity (`BT3c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Tenacity_BT3c: Rawcode<"ability">;
 
   /**
    * Last Stand (`BT4a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LastStand_BT4a: Rawcode<"ability">;
 
   /**
    * Martial Mastery (`BT4b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MartialMastery_BT4b: Rawcode<"ability">;
 
   /**
    * Hand of Justice (`BT4c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HandOfJustice_BT4c: Rawcode<"ability">;
 
   /**
    * Iron Will (`BT5a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly IronWill_BT5a: Rawcode<"ability">;
 
   /**
    * Veteran's Resilience (`BT5b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly VeteransResilience_BT5b: Rawcode<"ability">;
 
   /**
    * Undead Vitality (`BT5c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UndeadVitality_BT5c: Rawcode<"ability">;
 
   /**
    * Juggernaut (`BT6a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Juggernaut_BT6a: Rawcode<"ability">;
 
   /**
    * Thick Skin (`BT6b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ThickSkin_BT6b: Rawcode<"ability">;
 
   /**
    * Discipline (`BT6c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Discipline_BT6c: Rawcode<"ability">;
 
   /**
    * Crippling Blow (`GT1a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CripplingBlow_GT1a: Rawcode<"ability">;
 
   /**
    * Rend Armor (`GT1b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RendArmor_GT1b: Rawcode<"ability">;
 
   /**
    * Storm of Steel (`GT1c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly StormOfSteel_GT1c: Rawcode<"ability">;
 
   /**
    * Retaliation (`GT2a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Retaliation_GT2a: Rawcode<"ability">;
 
   /**
    * Riposte (`GT2b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Riposte_GT2b: Rawcode<"ability">;
 
   /**
    * Blade Mastery (`GT2c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BladeMastery_GT2c: Rawcode<"ability">;
 
   /**
    * Into the Fray! (`GT3a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly IntoTheFray_GT3a: Rawcode<"ability">;
 
   /**
    * Shoulder Bash (`GT3b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ShoulderBash_GT3b: Rawcode<"ability">;
 
   /**
    * Stamina Training (`GT3c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly StaminaTraining_GT3c: Rawcode<"ability">;
 
   /**
    * Unbreakable (`GT4a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unbreakable_GT4a: Rawcode<"ability">;
 
   /**
    * Combat Tempo (`GT4b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CombatTempo_GT4b: Rawcode<"ability">;
 
   /**
    * Unstoppable Might (`GT4c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnstoppableMight_GT4c: Rawcode<"ability">;
 
   /**
    * Purifying Flame (`IT1a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PurifyingFlame_IT1a: Rawcode<"ability">;
 
   /**
    * Holy Nova (`IT1b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HolyNova_IT1b: Rawcode<"ability">;
 
   /**
    * Radiant Embrace (`IT1c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RadiantEmbrace_IT1c: Rawcode<"ability">;
 
   /**
    * Unwilling Bomb (`IT2a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnwillingBomb_IT2a: Rawcode<"ability">;
 
   /**
    * Mindbreaker (`IT2b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Mindbreaker_IT2b: Rawcode<"ability">;
 
   /**
    * Voice of Authority (`IT2c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly VoiceOfAuthority_IT2c: Rawcode<"ability">;
 
   /**
    * Sacred Rebuke (`IT3a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SacredRebuke_IT3a: Rawcode<"ability">;
 
   /**
    * Clarity of Mind (`IT3b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ClarityOfMind_IT3b: Rawcode<"ability">;
 
   /**
    * Spiritual Renewal (`IT3c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SpiritualRenewal_IT3c: Rawcode<"ability">;
 
   /**
    * Divine Reservoir (`IT4a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly DivineReservoir_IT4a: Rawcode<"ability">;
 
   /**
    * Light's Grace (`IT4b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly LightsGrace_IT4b: Rawcode<"ability">;
 
   /**
    * Holy Light (`IT4c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly HolyLight_IT4c: Rawcode<"ability">;
 
   /**
    * `IT6c`, unnamed, a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_IT6c: Rawcode<"ability">;
 
   /**
    * Valor's Reward (`LT1a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ValorsReward_LT1a: Rawcode<"ability">;
 
   /**
    * Judgement (`LT1b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Judgement_LT1b: Rawcode<"ability">;
 
   /**
    * Press the Attack (`LT1c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly PressTheAttack_LT1c: Rawcode<"ability">;
 
   /**
    * Mass Arrest (`LT2a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MassArrest_LT2a: Rawcode<"ability">;
 
   /**
    * Weighted Net (`LT2b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WeightedNet_LT2b: Rawcode<"ability">;
 
   /**
    * Exposed Defenses (`LT2c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ExposedDefenses_LT2c: Rawcode<"ability">;
 
   /**
    * Rally (`LT3a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Rally_LT3a: Rawcode<"ability">;
 
   /**
    * Second Wind (`LT3b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly SecondWind_LT3b: Rawcode<"ability">;
 
   /**
    * Born Leader (`LT3c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BornLeader_LT3c: Rawcode<"ability">;
 
   /**
    * Perseverance (`LT4a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Perseverance_LT4a: Rawcode<"ability">;
 
   /**
    * Against All Odds (`LT4b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AgainstAllOdds_LT4b: Rawcode<"ability">;
 
   /**
    * Renewed Vigor (`LT4c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly RenewedVigor_LT4c: Rawcode<"ability">;
 
@@ -8981,6 +9611,8 @@ export declare const Abilities: {
 
   /**
    * Berserker Upgrade (`Sbsk`), a Built-in ability of Patch 3.0.0, race orc.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly BerserkerUpgrade_Sbsk: Rawcode<"ability">;
 
@@ -9056,6 +9688,8 @@ export declare const Abilities: {
 
   /**
    * Load (`Slo3`), a Built-in ability of Patch 3.0.0, race other.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Load_Slo3: Rawcode<"ability">;
 
@@ -9066,6 +9700,8 @@ export declare const Abilities: {
 
   /**
    * `Srtt`, unnamed, a Built-in ability of Patch 3.0.0, race human.
+   *
+   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Unnamed_Srtt: Rawcode<"ability">;
 
@@ -9082,126 +9718,126 @@ export declare const Abilities: {
   /**
    * Forsaken Might (`UT1a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ForsakenMight_UT1a: Rawcode<"ability">;
 
   /**
    * Bloodthirst (`UT1b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Bloodthirst_UT1b: Rawcode<"ability">;
 
   /**
    * Bladestorm (`UT1c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Bladestorm_UT1c: Rawcode<"ability">;
 
   /**
    * Counter Attack (`UT2a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly CounterAttack_UT2a: Rawcode<"ability">;
 
   /**
    * Parry (`UT2b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Parry_UT2b: Rawcode<"ability">;
 
   /**
    * The Best Defense... (`UT2c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly TheBestDefense_UT2c: Rawcode<"ability">;
 
   /**
    * Endurance (`UT3a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Endurance_UT3a: Rawcode<"ability">;
 
   /**
    * Thirst For Battle (`UT3b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ThirstForBattle_UT3b: Rawcode<"ability">;
 
   /**
    * Furious Charge (`UT3c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly FuriousCharge_UT3c: Rawcode<"ability">;
 
   /**
    * Inner Fire (`UT4a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly InnerFire_UT4a: Rawcode<"ability">;
 
   /**
    * Soulthirst (`UT4b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Soulthirst_UT4b: Rawcode<"ability">;
 
   /**
    * Unending Fury (`UT4c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly UnendingFury_UT4c: Rawcode<"ability">;
 
   /**
    * Improved Armor (`UT5a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly ImprovedArmor_UT5a: Rawcode<"ability">;
 
   /**
    * Swordsmanship (`UT5b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly Swordsmanship_UT5b: Rawcode<"ability">;
 
   /**
    * All Brawn (`UT5c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly AllBrawn_UT5c: Rawcode<"ability">;
 
   /**
    * Mighty Swing (`UT6a`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly MightySwing_UT6a: Rawcode<"ability">;
 
   /**
    * Quick Recovery (`UT6b`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly QuickRecovery_UT6b: Rawcode<"ability">;
 
   /**
    * Warrior's Focus (`UT6c`), a Built-in ability of Patch 3.0.0, race other.
    *
-   * In the Default Game data set. Not in the Custom and Melee Game data sets.
+   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
    */
   readonly WarriorsFocus_UT6c: Rawcode<"ability">;
 };

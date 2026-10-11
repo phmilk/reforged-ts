@@ -35,44 +35,73 @@ import { constantName, displayName, duplicateConstants } from "./names.js";
 import { Profile } from "./profile.js";
 import { parseSlk } from "./slk.js";
 
-/** The base layer: the Default Game data set's object data. */
+/** The column of the Game Data Version an object came with, in the data of the versioned kinds. */
+const VERSION_COLUMN = "version";
+
+/** A row's Game Data Version: 0 without a cell, and, for a cell that is no number, none a set leaves out. */
+function versionOf(row: ReadonlyMap<string, string>): number {
+  const version = Number(row.get(VERSION_COLUMN) ?? 0);
+  return Number.isNaN(version) ? -1 : version;
+}
+
+/** The base layer: the object data of the sets of Forsaken Kingdom. */
 export const BASE_LAYER = "War3.w3mod:";
 /** The enUS locale layer, which holds the names. */
 export const ENUS_LAYER = "War3.w3mod:_Locales/enUS.w3mod:";
 
 /** A Game data set and the layer its object data comes from. */
 interface LayeredGameDataSet extends GameDataSet {
-  /** The layer whose file of a kind replaces the base layer's, when it has one. */
+  /**
+   * The layer whose file of a kind replaces the base layer's, when it has
+   * one: `_Balance/<Set>_V<version>`, which the install has for Custom of
+   * Reign of Chaos and The Frozen Throne and Melee of Reign of Chaos only.
+   */
   layer: string;
   /**
-   * The qualifier of its own values in the profile files, which no layer
-   * replaces: `Name:custom,V1=` names an object in the Custom set, over
-   * `Name=`.
+   * The Game Data Version: an object whose `version` cell is greater, one
+   * of a later expansion, is not in the set.
    */
-  qualifier?: string;
+  version: number;
+  /**
+   * The qualifier of its own values in the profile files, which no layer
+   * replaces: `Name:custom,V1=` names an object in the Custom set of The
+   * Frozen Throne, over `Name=`.
+   */
+  qualifier: string;
 }
 
+/** A map's Game Data Sets, as the World Editor of 3.0 offers them, but Default. */
+const SETS = [
+  { id: "custom", label: "Custom", layer: "Custom" },
+  { id: "melee", label: "Melee", layer: "Melee" },
+] as const;
+
+/** The Game Data Versions, by the value of the `version` cells, latest first. */
+const VERSIONS = [
+  { id: "fk", label: "Forsaken Kingdom", version: 2 },
+  { id: "tft", label: "The Frozen Throne", version: 1 },
+  { id: "roc", label: "Reign of Chaos", version: 0 },
+] as const;
+
 /**
- * The Game data sets the index lists, by stable id, as the World Editor of
- * 3.0 offers them in its map options (Default, Custom, Melee), each with the
- * layer #509 gives it. Which layer a map reads for each Game Data Version
- * is not yet settled in game (#575).
+ * The Game data sets the index lists: one per Game Data Set and Game Data
+ * Version of a map, latest version first, as Probe runs on 3.0.0.24268
+ * settled them (#575, docs/research/builtins-layers.md). A map reads the
+ * layer `_Balance/<Set>_V<version>` where the install has it, else the
+ * base layer, and leaves out every object of a later version: all the sets
+ * of Forsaken Kingdom read the base layer whole. A map's Default set reads
+ * Custom when the map is not a melee map, so it has no set of its own.
  */
-export const GAME_DATA_SETS: readonly LayeredGameDataSet[] = [
-  { id: "default", label: "Default", layer: BASE_LAYER },
-  {
-    id: "custom",
-    label: "Custom",
-    layer: `${BASE_LAYER}_Balance/Custom_V1.w3mod:`,
-    qualifier: "custom,V1",
-  },
-  {
-    id: "melee",
-    label: "Melee",
-    layer: `${BASE_LAYER}_Balance/Melee_V0.w3mod:`,
-    qualifier: "melee,V0",
-  },
-];
+export const GAME_DATA_SETS: readonly LayeredGameDataSet[] = VERSIONS.flatMap(
+  (version) =>
+    SETS.map((set) => ({
+      id: `${set.id}-${version.id}`,
+      label: `${set.label} (${version.label})`,
+      layer: `${BASE_LAYER}_Balance/${set.layer}_V${String(version.version)}.w3mod:`,
+      version: version.version,
+      qualifier: `${set.id},V${String(version.version)}`,
+    })),
+);
 
 /**
  * The editor strings the data's `WESTRING_` names resolve through, keys
@@ -100,6 +129,15 @@ interface KindSource {
   idColumn: string;
   /** The data file's column of the race, for a kind that has one. */
   raceColumn?: string;
+  /**
+   * Whether a set leaves out an object of a later Game Data Version than its
+   * own, by the data's `version` column: units, items and abilities, as the
+   * Probe runs of #575 measured. A map of Reign of Chaos still creates a
+   * destructable of The Frozen Throne; buffs, doodads and upgrades, which no
+   * Native creates where a Probe can see, are not measured, and every set
+   * holds them as its layer lists them.
+   */
+  versioned?: boolean;
   /** The metadata file, in the base layer, that locates the name. */
   metaData: string;
   /**
@@ -130,6 +168,7 @@ const ABILITY_STRINGS: NamesFiles = {
 const KINDS: readonly KindSource[] = [
   {
     kind: "unit",
+    versioned: true,
     data: "Units/UnitData.slk",
     table: "UnitData",
     idColumn: "unitID",
@@ -143,6 +182,7 @@ const KINDS: readonly KindSource[] = [
   },
   {
     kind: "item",
+    versioned: true,
     data: "Units/ItemData.slk",
     table: "ItemData",
     idColumn: "itemID",
@@ -155,6 +195,7 @@ const KINDS: readonly KindSource[] = [
   },
   {
     kind: "ability",
+    versioned: true,
     data: "Units/AbilityData.slk",
     table: "AbilityData",
     idColumn: "alias",
@@ -352,6 +393,7 @@ async function extract(storage: CascStorage): Promise<GenerateResult> {
     >();
     GAME_DATA_SETS.forEach((set, i) => {
       for (const [rawcode, row] of rowsByFile.get(setFiles[i]) ?? []) {
+        if (source.versioned === true && versionOf(row) > set.version) continue;
         const entry = held.get(rawcode);
         if (entry === undefined) held.set(rawcode, { row, sets: [set.id] });
         else entry.sets.push(set.id);
@@ -512,6 +554,17 @@ async function kindRows(
       });
     } else {
       rows.set(rawcode, row);
+      const version = row.get(VERSION_COLUMN);
+      if (
+        source.versioned === true &&
+        version !== undefined &&
+        Number.isNaN(Number(version))
+      ) {
+        diagnostics.push({
+          severity: "warning",
+          message: `${path}: the ${source.kind} ${rawcode}'s version is ${JSON.stringify(version)}, not a number: every set holds it.`,
+        });
+      }
     }
   }
   if (keyless > 0) {
