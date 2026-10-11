@@ -1,0 +1,41 @@
+[
+  { "name": "Footman", "rawcode": "hfoo", "constant": "Footman_hfoo" },
+  {
+    "name": "|cffffcc00Paladin|r",
+    "rawcode": "Hpal",
+    "constant": "Paladin_Hpal"
+  },
+  {
+    "name": "Claws of Attack +15",
+    "rawcode": "ratf",
+    "constant": "ClawsOfAttack15_ratf"
+  },
+  { "name": "Blizzard", "rawcode": "AHbz", "constant": "Blizzard_AHbz" },
+  { "name": "Inner Fire", "rawcode": "Binf", "constant": "InnerFire_Binf" },
+  {
+    "name": "Summer Tree Wall",
+    "rawcode": "LTlt",
+    "constant": "SummerTreeWall_LTlt"
+  },
+  { "name": "Brazier", "rawcode": "LObr", "constant": "Brazier_LObr" },
+  {
+    "name": "Iron Forged Swords",
+    "rawcode": "Rhme",
+    "constant": "IronForgedSwords_Rhme"
+  },
+  {
+    "name": "Défenseur Élite",
+    "rawcode": "hacc",
+    "constant": "DefenseurElite_hacc"
+  },
+  { "name": "1st Legion", "rawcode": "h001", "constant": "_1stLegion_h001" },
+  { "name": "", "rawcode": "hemp", "constant": "Unnamed_hemp" },
+  { "name": null, "rawcode": "hnon", "constant": "Unnamed_hnon" },
+  {
+    "name": "Mur'gul Slave",
+    "rawcode": "nmrl",
+    "constant": "MurgulSlave_nmrl"
+  },
+  { "name": "Kel’Thuzad", "rawcode": "Uktl", "constant": "KelThuzad_Uktl" },
+  { "name": "Royal|nGuard", "rawcode": "h002", "constant": "RoyalGuard_h002" }
+]

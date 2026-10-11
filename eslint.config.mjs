@@ -229,6 +229,17 @@ export default defineConfig(
       },
     },
   },
+  {
+    files: ["packages/reforged-map/test/fixtures/objects-map-project/**/*.ts"],
+    settings: {
+      "import-x/resolver": {
+        typescript: {
+          project:
+            "packages/reforged-map/test/fixtures/objects-map-project/tsconfig.json",
+        },
+      },
+    },
+  },
   // reforged-builtins' Map project fixtures import `reforged-ts` and the
   // package's own entry points as a Map project does, through the same kind
   // of mapping.

@@ -1,0 +1,22 @@
+{
+  // The Map project fixtures of the objects entry point, as the editor and
+  // the lint see them. The test (../../objects-typecheck.test.ts) copies
+  // them into a temporary Map project, where the files generateObjects
+  // writes replace map-objects.d.ts and custom-units.ts (the test asserts
+  // they are the same), with the workspace's reforged-ts and reforged-types
+  // installed; this file is not copied. Here `reforged-ts` resolves to the
+  // sources, since its declarations exist only once `pnpm build` has
+  // emitted them. The negative fixtures' type errors are what the test
+  // asserts, so this program is never built.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["reforged-types/3.0.0", "@typescript-to-lua/language-extensions"],
+    "strict": true,
+    "noEmit": true,
+    "paths": { "reforged-ts": ["../../../../reforged-ts/src/index.ts"] }
+  },
+  "include": ["."]
+}

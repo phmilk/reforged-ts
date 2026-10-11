@@ -22,7 +22,7 @@
 // The trigger elements after it are never parsed, so no TriggerData.txt is
 // needed. Little-endian integers, UTF-8 null-terminated strings.
 
-import type { EditorGlobal, EditorGlobalsModel } from "./model.js";
+import type { EditorGlobal, MapFolderModel } from "./model.js";
 
 /** The triggers file of a map folder: the Variable Editor's variables and the triggers. */
 export const WTG_FILE = "war3map.wtg";
@@ -110,7 +110,7 @@ export function readWtgVariables(bytes: Uint8Array): WtgVariable[] {
  */
 export function readWar3mapWtg(
   bytes: Uint8Array | undefined,
-  model: EditorGlobalsModel,
+  model: MapFolderModel,
 ): void {
   const variablesByName = new Map<string, EditorGlobal>();
   for (const global of model.globals) {

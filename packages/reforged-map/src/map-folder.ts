@@ -21,13 +21,18 @@ export class MapFolderError extends Error {
   override name = "MapFolderError";
 }
 
-/** war3map.lua's text, its byte order mark removed. Throws a `MapFolderError`. */
-export function readMapScript(mapFolder: string): string {
+/** Throws a `MapFolderError` when the map folder is missing. */
+export function checkMapFolder(mapFolder: string): void {
   if (!fs.statSync(mapFolder, { throwIfNoEntry: false })?.isDirectory()) {
     throw new MapFolderError(
       `Map folder not found: ${mapFolder}. Save the map as a folder from the World Editor (File > Save Map As, "Folder").`,
     );
   }
+}
+
+/** war3map.lua's text, its byte order mark removed. Throws a `MapFolderError`. */
+export function readMapScript(mapFolder: string): string {
+  checkMapFolder(mapFolder);
   const file = path.join(mapFolder, MAP_SCRIPT);
   if (!fs.statSync(file, { throwIfNoEntry: false })?.isFile()) {
     throw new MapFolderError(

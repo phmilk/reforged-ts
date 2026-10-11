@@ -1,0 +1,5 @@
+---
+"reforged-map": minor
+---
+
+A second entry point, `generateObjects`, generates the code of a map folder's objects ([#583](https://github.com/phmilk/reforged-ts/issues/583)). For each Custom unit of `war3map.w3u` and `war3mapSkin.w3u` (format version 3, the 3.0 World Editor's), named through `war3map.wts`, it writes a `FourCC` overload into `map-objects.d.ts`, so `FourCC("h000")` is a `Rawcode<"unit">` whose hover reads "Captain (`h000`), a Custom unit of this map, derived from Footman (`hfoo`)". It also writes a constant into `custom-units.ts`, `CustomUnits.Captain_h000`, which compiles to the integer `FourCC` returns. The seven constants modules, `custom-units.ts` to `custom-upgrades.ts`, are always written, so an import never breaks; the other six kinds are empty until they are read. Constants are named by `reforged-builtins`' rules. A Custom unit that keeps its base's name is named after its base, from the index of `reforged-builtins`, a new optional peer resolved from the Map project; without it, it is named `Unnamed`, with a warning.

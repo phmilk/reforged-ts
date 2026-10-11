@@ -230,9 +230,12 @@ describe("changeset version", { timeout: 60_000 }, () => {
 
     await changeset(root, "version");
 
+    // reforged-map peers on reforged-builtins since #583: the new version
+    // leaves its range, which gives it a patch, a prerelease in pre mode.
     expect(await versions(root)).toEqual({
       ...before,
       "reforged-builtins": "1.0.0-alpha.0",
+      "reforged-map": "1.0.0-alpha.1",
     });
   });
 

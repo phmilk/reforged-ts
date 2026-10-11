@@ -2,13 +2,24 @@
 // generated from it. Node only, run at build time; it only reads the map
 // folder (ADR 0006, ADR 0014).
 
-import { readMapFile, readMapScript } from "./map-folder.js";
-import { createModel } from "./model.js";
+import { loadBuiltins } from "./builtins.js";
+import { checkMapFolder, readMapFile, readMapScript } from "./map-folder.js";
+import { OBJECT_KINDS, createModel, type ObjectKind } from "./model.js";
+import { readObjectData } from "./object-data.js";
+import {
+  KIND_CONSTANTS,
+  constantWarnings,
+  customObjects,
+  renderConstants,
+  renderOverloads,
+} from "./objects.js";
 import { renderDeclarations, renderLuaStub } from "./render.js";
 import { readWar3mapLua } from "./war3map-lua.js";
+import { readWar3mapWts } from "./war3map-wts.js";
 import { WTG_FILE, readWar3mapWtg } from "./war3map-wtg.js";
 
 export { MapFolderError } from "./map-folder.js";
+export type { ObjectKind } from "./model.js";
 
 /** The name of the generated TypeScript declarations of the Editor globals. */
 export const DECLARATIONS_FILE = "editor-globals.d.ts";
@@ -64,5 +75,85 @@ export function generateEditorGlobals(mapFolder: string): EditorGlobalsOutput {
       { name: LUA_STUB_FILE, contents: renderLuaStub(model) },
     ],
     warnings: [...model.warnings],
+  };
+}
+
+/** The name of the generated declarations of the map's objects: their `FourCC` overloads. */
+export const OBJECTS_DECLARATIONS_FILE = "map-objects.d.ts";
+
+/**
+ * The name of each Object kind's generated constants module, which exports
+ * its `Custom<Kind>s` object (`custom-units.ts` exports `CustomUnits`).
+ */
+export const CONSTANTS_FILES: Readonly<Record<ObjectKind, string>> =
+  Object.fromEntries(
+    OBJECT_KINDS.map((kind) => [kind, KIND_CONSTANTS[kind].file]),
+  ) as Record<ObjectKind, string>;
+
+/** What {@link generateObjects} returns. */
+export interface ObjectsOutput {
+  /** The declarations ({@link OBJECTS_DECLARATIONS_FILE}), then the constants modules ({@link CONSTANTS_FILES}) in its order. */
+  files: GeneratedFile[];
+  /** Author-facing warnings, each one line: never errors, the build goes on. */
+  warnings: string[];
+}
+
+/** The options of {@link generateObjects}. */
+export interface ObjectsOptions {
+  /**
+   * A folder of the Map project, from which `reforged-builtins` is
+   * resolved as Node resolves a package. The map folder when left out.
+   */
+  projectRoot?: string;
+}
+
+/**
+ * Generates the code of a map folder's objects: a `FourCC` overload per
+ * Custom object, typed by its Object kind, and per Object kind a constants
+ * module of its Custom objects (`CustomUnits.Captain_h000`), always
+ * written, empty when the map has none of that kind.
+ *
+ * @remarks
+ * The Custom units are read so far, from `war3map.w3u` and
+ * `war3mapSkin.w3u` in format version 3, their names through
+ * `war3map.wts`. The Object kind of an object is its file's. A constant is
+ * named by the rules of `reforged-builtins`, from the object's name, else
+ * its base's enUS name from the index of `reforged-builtins`, an optional
+ * peer resolved from the Map project, else `Unnamed`, with a warning. A file
+ * the reader cannot read is left out with a warning; a missing one holds no
+ * object.
+ *
+ * @param mapFolder - The path of the map folder, saved as a folder by the
+ *   World Editor. It need not hold `war3map.lua`.
+ * @param options - Where `reforged-builtins` is resolved from.
+ * @returns The generated files and the warnings.
+ * @throws {@link MapFolderError} When the map folder is missing.
+ */
+export function generateObjects(
+  mapFolder: string,
+  options: ObjectsOptions = {},
+): ObjectsOutput {
+  checkMapFolder(mapFolder);
+  const model = createModel();
+  readObjectData(mapFolder, ["unit"], model);
+  readWar3mapWts(mapFolder, model);
+  const builtins = loadBuiltins(options.projectRoot ?? mapFolder);
+  const { objects, keptBaseName } = customObjects(model, {
+    builtins: "index" in builtins ? builtins.index : undefined,
+  });
+  if (keptBaseName && "missing" in builtins) {
+    model.warnings.push(
+      `reforged-builtins ${builtins.missing}: a Custom object that keeps its base's name is named Unnamed. Install reforged-builtins to name it after its base.`,
+    );
+  }
+  return {
+    files: [
+      { name: OBJECTS_DECLARATIONS_FILE, contents: renderOverloads(objects) },
+      ...OBJECT_KINDS.map((kind) => ({
+        name: CONSTANTS_FILES[kind],
+        contents: renderConstants(kind, objects),
+      })),
+    ],
+    warnings: [...model.warnings, ...constantWarnings(objects)],
   };
 }
