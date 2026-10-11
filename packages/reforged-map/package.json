@@ -46,15 +46,23 @@
     "prepare": "pnpm run build"
   },
   "peerDependencies": {
+    "reforged-builtins": "workspace:^1.0.0-alpha.0",
     "reforged-types": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "reforged-builtins": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/node": "catalog:",
     "@typescript-to-lua/language-extensions": "catalog:",
+    "reforged-builtins": "workspace:^",
     "reforged-test": "workspace:^",
     "reforged-ts": "workspace:^",
     "reforged-types": "workspace:^",
     "typescript": "catalog:",
+    "typescript-to-lua": "catalog:",
     "vitest": "catalog:"
   }
 }
