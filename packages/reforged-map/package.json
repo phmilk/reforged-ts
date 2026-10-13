@@ -43,7 +43,8 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p test/tsconfig.json",
     "test": "vitest run --root ../.. --project reforged-map",
-    "prepare": "pnpm run build"
+    "prepare": "pnpm run build",
+    "map:measure": "tsc -p tsconfig.measure.json && node build/test/measure/cli.js"
   },
   "peerDependencies": {
     "reforged-builtins": "workspace:^",

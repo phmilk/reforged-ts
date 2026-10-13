@@ -6,12 +6,21 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-/** The package's root folder. */
-export const PACKAGE_ROOT = path.resolve(
+/**
+ * The package's root folder: the nearest one above that holds a
+ * package.json, from test/support or from its copy the measurement compiles
+ * to build/test/support.
+ */
+export const PACKAGE_ROOT = packageRoot(
   path.dirname(fileURLToPath(import.meta.url)),
-  "..",
-  "..",
 );
+
+function packageRoot(dir: string): string {
+  if (fs.existsSync(path.join(dir, "package.json"))) return dir;
+  const parent = path.dirname(dir);
+  if (parent === dir) throw new Error("reforged-map has no package.json");
+  return packageRoot(parent);
+}
 
 /** A committed fixture map folder, under test/fixtures. */
 export const fixtureMap = (name: string): string =>

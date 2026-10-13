@@ -159,3 +159,6 @@ packages/eslint-plugin-reforged/test/fixture-project/.cost/
 
 # reforged-builtins generator build output (the index it writes is committed)
 packages/reforged-builtins/build/
+
+# reforged-map's check-time measurement build output (map:measure)
+packages/reforged-map/build/
