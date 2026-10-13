@@ -32,6 +32,15 @@ const LINKED_PACKAGES = [
   "@typescript-to-lua/language-extensions",
 ];
 
+/** The `types` entry of reforged-builtins' overloads, which a Map project turns on by adding it. */
+const BUILTINS_TYPES = "reforged-builtins/3.0.0";
+
+/** How the Map project is set up beyond its fixtures. */
+export interface MapProjectOptions {
+  /** Whether it installs reforged-builtins and turns its overloads on. */
+  builtins?: boolean;
+}
+
 /** The fixture files the Map project does not get: the editor's tsconfig, and the declarations the generated ones replace. */
 export const FIXTURE_DECLARATIONS = "editor-globals.d.ts";
 const NOT_COPIED = new Set(["tsconfig.json", FIXTURE_DECLARATIONS]);
@@ -47,15 +56,21 @@ export function readFixture(
 /**
  * A Map project in a new temporary directory, removed by `removeTemporary`:
  * the fixtures of the `fixtures` folder and `generated` in src/, a
- * tsconfig.json in the shape of the Template's. Returns the tsconfig's path.
+ * tsconfig.json in the shape of the Template's. With `builtins`, it also
+ * installs reforged-builtins and adds its overloads' entry to `types`.
+ * Returns the tsconfig's path.
  */
 export function createMapProject(
   generated: readonly GeneratedFile[],
   fixtures: string = MAP_PROJECT_FIXTURES,
+  { builtins = false }: MapProjectOptions = {},
 ): string {
   const dir = makeTempDir();
   const require = createRequire(path.join(PACKAGE_ROOT, "package.json"));
-  for (const name of LINKED_PACKAGES) {
+  for (const name of [
+    ...LINKED_PACKAGES,
+    ...(builtins ? ["reforged-builtins"] : []),
+  ]) {
     const target = path.dirname(require.resolve(`${name}/package.json`));
     const link = path.join(dir, "node_modules", ...name.split("/"));
     fs.mkdirSync(path.dirname(link), { recursive: true });
@@ -96,7 +111,7 @@ export function createMapProject(
       strict: true,
       rootDir: "src",
       outDir: "dist",
-      types: MAP_PROJECT_TYPES,
+      types: [...MAP_PROJECT_TYPES, ...(builtins ? [BUILTINS_TYPES] : [])],
     },
     include: ["src"],
   };

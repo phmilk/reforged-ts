@@ -660,3 +660,239 @@ describe("the other six Object kinds", () => {
     ]);
   });
 });
+
+describe("modified Built-in objects and Rawcodes two kinds share (#586)", () => {
+  /** A Built-in unit `original` the map modifies, renamed `name` or with another field changed. */
+  const modifiedUnit = (original: string, name?: string): TestObject => ({
+    original,
+    modifications:
+      name === undefined
+        ? [{ field: "umvs", value: 300 }]
+        : [{ field: "unam", value: name }],
+  });
+
+  it("writes an overload with both names for a renamed Built-in object, and no Custom constant", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3u": buildObjectData({
+          original: [modifiedUnit("hfoo", "Militia")],
+        }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(output.warnings).toEqual([]);
+    expect(overloads(output)).toBe(
+      [
+        "/** @noSelfInFile */",
+        ...BANNER,
+        "",
+        "/**",
+        " * Footman (`hfoo`), a Built-in unit of Patch 3.0.0, named Militia in this map.",
+        " *",
+        " * Its constant is `Units.Footman_hfoo`, from `reforged-builtins/units`.",
+        " */",
+        'declare function FourCC(id: "hfoo"): Rawcode<"unit">;',
+        "",
+      ].join("\n"),
+    );
+    expect(constantsOf(customUnits(output))).toEqual([]);
+  });
+
+  it("says the map modifies a Built-in object it does not rename, or renames to the game's name", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3u": buildObjectData({
+          original: [modifiedUnit("hkni"), modifiedUnit("hfoo", "Footman")],
+        }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(output.warnings).toEqual([]);
+    expect(overloads(output)).toContain(
+      [
+        "/**",
+        " * Footman (`hfoo`), a Built-in unit of Patch 3.0.0, which this map modifies.",
+        " *",
+        " * Its constant is `Units.Footman_hfoo`, from `reforged-builtins/units`.",
+        " */",
+        'declare function FourCC(id: "hfoo"): Rawcode<"unit">;',
+        "",
+        "/**",
+        " * Knight (`hkni`), a Built-in unit of Patch 3.0.0, which this map modifies.",
+      ].join("\n"),
+    );
+    expect(constantsOf(customUnits(output))).toEqual([]);
+  });
+
+  it("gives a modified Built-in object its Rawcode alone without reforged-builtins, with no warning", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3u": buildObjectData({
+          original: [modifiedUnit("hfoo", "Militia"), modifiedUnit("hkni")],
+        }),
+      }),
+      withoutBuiltins(),
+    );
+
+    expect(output.warnings).toEqual([]);
+    expect(overloads(output)).toContain(
+      [
+        "/**",
+        " * `hfoo`, a Built-in unit, named Militia in this map.",
+        " */",
+        'declare function FourCC(id: "hfoo"): Rawcode<"unit">;',
+        "",
+        "/**",
+        " * `hkni`, a Built-in unit, which this map modifies.",
+        " */",
+      ].join("\n"),
+    );
+  });
+
+  it("merges a modified Built-in object's base and Skin entries, and ignores a Skin entry with no modification", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3u": buildObjectData({
+          original: [modifiedUnit("hfoo", "Base Name")],
+        }),
+        "war3mapSkin.w3u": buildObjectData({
+          original: [
+            modifiedUnit("hfoo", "Militia"),
+            { original: "hkni", modifications: [] },
+          ],
+        }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(overloadedOf(overloads(output))).toEqual(["hfoo"]);
+    expect(overloads(output)).toContain("named Militia in this map.");
+  });
+
+  it("writes the overloads of a kind's modified Built-in and Custom objects in Rawcode order", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3u": buildObjectData({
+          original: [modifiedUnit("hkni", "Paladin")],
+          custom: [customUnit("h000", "hfoo", "Captain")],
+        }),
+        "war3map.w3a": buildObjectData({
+          levels: true,
+          original: [
+            {
+              original: "AHbz",
+              modifications: [{ field: "anam", value: "Ice Storm" }],
+            },
+          ],
+        }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(overloadedOf(overloads(output))).toEqual(["h000", "hkni", "AHbz"]);
+    expect(overloads(output)).toContain(
+      " * Blizzard (`AHbz`), a Built-in ability of Patch 3.0.0, named Ice Storm in this map.\n *\n * Its constant is `Abilities.Blizzard_AHbz`, from `reforged-builtins/abilities`.",
+    );
+    expect(constantsOf(customUnits(output))).toEqual(["Captain_h000"]);
+  });
+
+  it("gives a Rawcode a Custom buff and a Custom destructable share no overload, two constants of their exact kinds, and no warning", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3h": buildObjectData({
+          custom: [
+            {
+              original: "Binf",
+              custom: "B000",
+              modifications: [{ field: "fnam", value: "Holy Fire" }],
+            },
+          ],
+        }),
+        "war3map.w3b": buildObjectData({
+          custom: [
+            {
+              original: "LTlt",
+              custom: "B000",
+              modifications: [{ field: "bnam", value: "Gate" }],
+            },
+          ],
+        }),
+        "war3map.w3u": buildObjectData({
+          custom: [customUnit("h000", "hfoo", "Captain")],
+        }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(output.warnings).toEqual([]);
+    expect(overloadedOf(overloads(output))).toEqual(["h000"]);
+    expect(file(output, CONSTANTS_FILES.buff)).toContain(
+      '  HolyFire_B000: 1110454320 as Rawcode<"buff">,',
+    );
+    expect(file(output, CONSTANTS_FILES.destructable)).toContain(
+      '  Gate_B000: 1110454320 as Rawcode<"destructable">,',
+    );
+  });
+
+  it("gives a modified Built-in object no overload when another kind uses its Rawcode", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3u": buildObjectData({
+          original: [modifiedUnit("hfoo", "Militia")],
+        }),
+        "war3map.w3t": buildObjectData({
+          custom: [
+            {
+              original: "ratf",
+              custom: "hfoo",
+              modifications: [{ field: "unam", value: "Blade" }],
+            },
+          ],
+        }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(overloadedOf(overloads(output))).toEqual([]);
+    expect(constantsOf(file(output, CONSTANTS_FILES.item))).toEqual([
+      "Blade_hfoo",
+    ]);
+  });
+
+  it("reads a Custom Rawcode equal to a Built-in Rawcode as the map's Custom object, with a warning naming it", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3u": buildObjectData({
+          custom: [customUnit("hkni", "hfoo", "Captain")],
+        }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(output.warnings).toEqual([
+      "war3map.w3u adds the Custom unit hkni, whose Rawcode is the Built-in unit Knight's (hkni) in Patch 3.0.0: hkni is read as this map's Custom unit.",
+    ]);
+    expect(overloads(output)).toContain(
+      " * Captain (`hkni`), a Custom unit of this map, derived from Footman (`hfoo`).",
+    );
+    expect(constantsOf(customUnits(output))).toEqual(["Captain_hkni"]);
+  });
+
+  it("keeps the Custom object over a modified Built-in object of the same Rawcode and kind", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3u": buildObjectData({
+          original: [modifiedUnit("hkni", "Paladin")],
+          custom: [customUnit("hkni", "hfoo", "Captain")],
+        }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(overloadedOf(overloads(output))).toEqual(["hkni"]);
+    expect(overloads(output)).toContain("a Custom unit of this map");
+    expect(overloads(output)).not.toContain("Paladin");
+  });
+});
