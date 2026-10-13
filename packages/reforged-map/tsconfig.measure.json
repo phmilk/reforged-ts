@@ -1,0 +1,13 @@
+{
+  // The check-time measurement (test/measure, #584): compiled by tsc to
+  // build/ with the test support and the sources it imports, and run by
+  // map:measure; never published. Its files are type-checked and linted with
+  // the tests' tsconfig.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "build",
+    "declaration": false
+  },
+  "include": ["test/measure"]
+}
