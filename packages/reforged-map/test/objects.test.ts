@@ -855,10 +855,52 @@ describe("modified Built-in objects and Rawcodes two kinds share (#586)", () => 
       WITH_BUILTINS,
     );
 
+    expect(output.warnings).toEqual([
+      "war3map.w3t adds the Custom item hfoo, whose Rawcode is the Built-in unit Footman's (hfoo) in Patch 3.0.0: hfoo is read as this map's Custom item.",
+    ]);
     expect(overloadedOf(overloads(output))).toEqual([]);
     expect(constantsOf(file(output, CONSTANTS_FILES.item))).toEqual([
       "Blade_hfoo",
     ]);
+  });
+
+  it("keeps the first of a Built-in object a file modifies twice, with a warning", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3u": buildObjectData({
+          original: [
+            modifiedUnit("hfoo", "Militia"),
+            modifiedUnit("hfoo", "Guard"),
+          ],
+        }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(output.warnings).toEqual([
+      "war3map.w3u modifies the Built-in unit hfoo twice: the first modification is kept.",
+    ]);
+    expect(overloads(output)).toContain("named Militia in this map.");
+  });
+
+  it("gives a modified Built-in object the index lacks its Rawcode alone", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3u": buildObjectData({
+          original: [modifiedUnit("hzzz", "Militia")],
+        }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(overloads(output)).toContain(
+      [
+        "/**",
+        " * `hzzz`, a Built-in unit, named Militia in this map.",
+        " */",
+        'declare function FourCC(id: "hzzz"): Rawcode<"unit">;',
+      ].join("\n"),
+    );
   });
 
   it("reads a Custom Rawcode equal to a Built-in Rawcode as the map's Custom object, with a warning naming it", () => {

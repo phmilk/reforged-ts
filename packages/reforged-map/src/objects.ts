@@ -108,7 +108,7 @@ export interface ModifiedObject {
   readonly rawcode: string;
   /** The map's name for it, when the map renames it: undefined when it sets none or the game's. */
   readonly name: string | undefined;
-  /** What reforged-builtins' index holds of it, when installed: undefined when not. */
+  /** What reforged-builtins' index holds of it: undefined when it is not installed or its index lacks the Rawcode. */
   readonly builtin:
     | {
         readonly gameVersion: string;
@@ -120,14 +120,14 @@ export interface ModifiedObject {
   readonly shared: boolean;
 }
 
-/** One object of the map: a Custom object, or a Built-in object it modifies. */
-export type MapObject = CustomObject | ModifiedObject;
+/** One object of the map folder: a Custom object, or a Built-in object the map modifies. */
+export type MapFolderObject = CustomObject | ModifiedObject;
 
 /** An object before the kinds that share its Rawcode are known. */
 type Unshared = Omit<CustomObject, "shared"> | Omit<ModifiedObject, "shared">;
 
-/** What `mapObjects` needs of reforged-builtins: its index, or nothing. */
-export interface MapObjectsOptions {
+/** What `mapFolderObjects` needs of reforged-builtins: its index, or nothing. */
+export interface MapFolderObjectsOptions {
   readonly builtins: BuiltinsIndex | undefined;
 }
 
@@ -139,8 +139,8 @@ interface ReadModification {
 
 /** One object's entries of a table, base and Skin file merged. */
 interface MergedEntry {
-  /** The Custom object's base, or the Built-in object itself. */
-  readonly original: string;
+  /** The Custom object's base; in the table of modified Built-in objects, the object's own Rawcode, unread. */
+  readonly base: string;
   /** The first file that holds it with a modification. */
   readonly file: string;
   readonly fields: Map<string, ReadModification>;
@@ -154,10 +154,10 @@ interface MergedEntry {
  * set; a Skin entry with no modification is ignored. Warnings go to the
  * model.
  */
-export function mapObjects(
+export function mapFolderObjects(
   model: MapFolderModel,
-  { builtins }: MapObjectsOptions,
-): { objects: MapObject[]; keptBaseName: boolean } {
+  { builtins }: MapFolderObjectsOptions,
+): { objects: MapFolderObject[]; keptBaseName: boolean } {
   const objects: Unshared[] = [];
   let keptBaseName = false;
   for (const kind of OBJECT_KINDS) {
@@ -167,7 +167,7 @@ export function mapObjects(
     for (const rawcode of custom.keys()) modified.delete(rawcode);
 
     const kindObjects: Unshared[] = [];
-    for (const [rawcode, { original: base, file, fields }] of custom) {
+    for (const [rawcode, { base, file, fields }] of custom) {
       const builtin = builtins?.objects[rawcode];
       if (builtins !== undefined && builtin !== undefined) {
         const builtinName =
@@ -201,12 +201,12 @@ export function mapObjects(
         rawcode,
         name: name === builtin?.name ? undefined : name,
         builtin:
-          builtins === undefined
+          builtins === undefined || builtin === undefined
             ? undefined
             : {
                 gameVersion: builtins.gameVersion,
-                name: builtin?.name,
-                constant: builtin?.constant,
+                name: builtin.name,
+                constant: builtin.constant,
               },
       });
     }
@@ -259,7 +259,7 @@ function mergeTable(
       let object = merged.get(rawcode);
       if (object === undefined) {
         object = {
-          original: entry.original,
+          base: entry.original,
           file: file.name,
           fields: new Map(),
         };
@@ -328,7 +328,7 @@ const BANNER = [
  * The declarations of the FourCC overloads: one per Custom object and per
  * Built-in object the map modifies, except a Rawcode two kinds share.
  */
-export function renderOverloads(objects: readonly MapObject[]): string {
+export function renderOverloads(objects: readonly MapFolderObject[]): string {
   const body = objects
     .filter((object) => !object.shared)
     .flatMap((object) => [
@@ -340,7 +340,7 @@ export function renderOverloads(objects: readonly MapObject[]): string {
 }
 
 /** An overload's TSDoc: the object, then where its constant comes from. */
-function overloadDoc(object: MapObject): string[] {
+function overloadDoc(object: MapFolderObject): string[] {
   const kindConstants = KIND_CONSTANTS[object.kind];
   if (object.origin === "custom") {
     return object.constant === undefined
@@ -372,7 +372,7 @@ function overloadDoc(object: MapObject): string[] {
 /** The constants module of one kind: its Custom objects that have a constant. */
 export function renderConstants(
   kind: ObjectKind,
-  objects: readonly MapObject[],
+  objects: readonly MapFolderObject[],
 ): string {
   const { object: constants, plural } = KIND_CONSTANTS[kind];
   const members = customOnly(objects)
@@ -397,7 +397,9 @@ export function renderConstants(
 }
 
 /** One warning per Custom object without a constant. */
-export function constantWarnings(objects: readonly MapObject[]): string[] {
+export function constantWarnings(
+  objects: readonly MapFolderObject[],
+): string[] {
   return customOnly(objects)
     .filter((object) => object.constant === undefined)
     .map((object) => {
@@ -406,7 +408,8 @@ export function constantWarnings(objects: readonly MapObject[]): string[] {
     });
 }
 
-function customOnly(objects: readonly MapObject[]): CustomObject[] {
+/** The Custom objects among `objects`. */
+function customOnly(objects: readonly MapFolderObject[]): CustomObject[] {
   return objects.filter(
     (object): object is CustomObject => object.origin === "custom",
   );

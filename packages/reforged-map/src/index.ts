@@ -9,7 +9,7 @@ import { readObjectData } from "./object-data.js";
 import {
   KIND_CONSTANTS,
   constantWarnings,
-  mapObjects,
+  mapFolderObjects,
   renderConstants,
   renderOverloads,
 } from "./objects.js";
@@ -150,7 +150,7 @@ export function generateObjects(
   readObjectData(mapFolder, OBJECT_KINDS, model);
   readWar3mapWts(mapFolder, model);
   const builtins = loadBuiltins(options.projectRoot ?? mapFolder);
-  const { objects, keptBaseName } = mapObjects(model, {
+  const { objects, keptBaseName } = mapFolderObjects(model, {
     builtins: "index" in builtins ? builtins.index : undefined,
   });
   if (keptBaseName && "missing" in builtins) {
