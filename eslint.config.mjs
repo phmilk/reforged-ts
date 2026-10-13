@@ -121,6 +121,7 @@ export default defineConfig(
     "**/dist/**",
     "packages/reforged-types/build/**",
     "packages/reforged-builtins/build/**",
+    "packages/reforged-map/build/**",
     "release/build/**",
     "website/build/**",
     "website/.docusaurus/**",

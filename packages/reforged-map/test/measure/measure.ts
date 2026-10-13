@@ -47,9 +47,11 @@ const BASE_36 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 /** The Rawcode of the map's `index`th Custom unit, as the World Editor numbers a human unit's: `h000`, `h001`, … `h00Z`, `h010`. */
 export function customUnitRawcode(index: number): string {
+  if (index >= 36 ** 3)
+    throw new Error(`No Rawcode h??? for ${String(index)}.`);
   let digits = "";
-  for (let rest = index, i = 0; i < 3; i++, rest = Math.floor(rest / 36)) {
-    digits = BASE_36[rest % 36] + digits;
+  for (let n = index, i = 0; i < 3; i++, n = Math.floor(n / 36)) {
+    digits = BASE_36[n % 36] + digits;
   }
   return `h${digits}`;
 }
@@ -72,7 +74,7 @@ export function mapProjectSource(
   return `${lines.join("\n")}\nexport {};\n`;
 }
 
-/** The generated files of a map folder of `objects` Custom units, each a named Footman. */
+/** The generated files of a map folder of these Custom units, each a named Footman. */
 function generatedFiles(rawcodes: readonly string[]) {
   const folder = mapFolder({
     "war3map.w3u": buildObjectData({

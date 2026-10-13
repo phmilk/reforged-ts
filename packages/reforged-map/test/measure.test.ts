@@ -3,6 +3,7 @@
 // with `map:measure`.
 
 import { afterAll, describe, expect, it } from "vitest";
+import { main } from "./measure/cli.js";
 import {
   customUnitRawcode,
   formatMeasurement,
@@ -39,5 +40,23 @@ describe("the check-time measurement of the map's overloads", () => {
     expect(formatMeasurement(result)).toMatch(
       /^Check time of a Map project, median, with the FourCC overloads of 3 Custom units and without:\n- 4 calls: /,
     );
+  }, 60_000);
+
+  it("prints the measurement of the command, and exits 2 on a bad argument", () => {
+    const out: string[] = [];
+    const err: string[] = [];
+    const output = {
+      stdout: (text: string) => out.push(text),
+      stderr: (text: string) => err.push(text),
+    };
+
+    expect(main(["--runs", "0"], output)).toBe(2);
+    expect(main(["--rounds", "3"], output)).toBe(2);
+    expect(err).toEqual([
+      "Usage: map:measure [--runs <n>]\n",
+      "Usage: map:measure [--runs <n>]\n",
+    ]);
+    expect(main(["--", "--runs", "1"], output, 2, [2])).toBe(0);
+    expect(out.join("")).toMatch(/Custom units and without:\n- 2 calls: /);
   }, 60_000);
 });
