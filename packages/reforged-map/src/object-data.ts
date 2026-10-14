@@ -29,6 +29,7 @@
 
 import { readMapFile } from "./map-folder.js";
 import {
+  OBJECT_KINDS,
   VALUE_TYPES,
   type MapFolderModel,
   type Modification,
@@ -65,12 +66,15 @@ class ObjectDataError extends Error {
   override name = "ObjectDataError";
 }
 
-/** The file names of each kind's Object data, base file then Skin file: `war3map.w3u`, `war3mapSkin.w3u`. */
-export function objectDataFileNames(kinds: readonly ObjectKind[]): string[] {
-  return kinds.flatMap((kind) =>
-    [false, true].map(
-      (skin) => `war3map${skin ? "Skin" : ""}.${EXTENSIONS[kind]}`,
-    ),
+/** Names the Object data file of a kind: `war3map.w3u`, or `war3mapSkin.w3u` for its Skin file. */
+function objectDataFileName(kind: ObjectKind, skin: boolean): string {
+  return `war3map${skin ? "Skin" : ""}.${EXTENSIONS[kind]}`;
+}
+
+/** Lists the Object data files of every Object kind, each kind's base file then its Skin file. */
+export function objectDataFileNames(): string[] {
+  return OBJECT_KINDS.flatMap((kind) =>
+    [false, true].map((skin) => objectDataFileName(kind, skin)),
   );
 }
 
@@ -86,7 +90,7 @@ export function readObjectData(
 ): void {
   for (const kind of kinds) {
     for (const skin of [false, true]) {
-      const name = `war3map${skin ? "Skin" : ""}.${EXTENSIONS[kind]}`;
+      const name = objectDataFileName(kind, skin);
       const bytes = readMapFile(mapFolder, name);
       if (bytes === undefined) continue;
       try {

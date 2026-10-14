@@ -22,6 +22,9 @@ import { buildObjectData, buildWts } from "./support/object-data.js";
 import { buildW3i, type TestW3i } from "./support/w3i.js";
 
 afterAll(removeTemporary);
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 const ALL_SETS = [
   { id: "custom-fk", label: "Custom (Forsaken Kingdom)" },
@@ -514,10 +517,6 @@ describe("openRawcodeLookup, the map's Game data set", () => {
 });
 
 describe("openRawcodeLookup, freshness", () => {
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   /** A lookup over the sample map, its clock at 0, with an interval of one second. */
   function openAtZero() {
     vi.useFakeTimers({ toFake: ["Date"], now: 0 });
@@ -531,13 +530,14 @@ describe("openRawcodeLookup, freshness", () => {
     return { folder, lookup };
   }
 
+  /** The minutes past 2030 of the last modification time `write` set. */
+  let minutes = 0;
   /** Writes a file of the map folder, its modification time a minute later than any the test wrote before. */
-  let stamp = 0;
   function write(folder: string, name: string, bytes: Uint8Array): void {
     const file = path.join(folder, name);
     fs.writeFileSync(file, bytes);
-    stamp += 60;
-    const time = new Date(Date.UTC(2030, 0, 1) + stamp * 1000);
+    minutes += 1;
+    const time = new Date(Date.UTC(2030, 0, 1) + minutes * 60_000);
     fs.utimesSync(file, time, time);
   }
 
@@ -603,6 +603,16 @@ describe("openRawcodeLookup, freshness", () => {
 
     expect(lookup.lookup("Npal").status).toBe("not-in-game-data-set");
     expect(lookup.warnings()).toEqual([]);
+  });
+
+  it("checks the files when the clock is set back", () => {
+    const { folder, lookup } = openAtZero();
+    vi.setSystemTime(5000);
+    expect(lookup.lookup("hfoo").status).toBe("known");
+    write(folder, "war3map.w3t", captainOfItems);
+
+    vi.setSystemTime(4000);
+    expect(lookup.lookup("I000").status).toBe("known");
   });
 
   it("checks no file again within the interval of its last check", () => {

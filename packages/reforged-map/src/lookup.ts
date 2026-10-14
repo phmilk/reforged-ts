@@ -252,7 +252,8 @@ export interface RawcodeLookup {
  * one changed, appeared or disappeared: an object saved in the World Editor
  * is known without a build. A map folder it cannot read, or a missing
  * `reforged-builtins`, makes every lookup but a malformed one unavailable,
- * with the reason, until a check finds a change that reads. The objects and their names
+ * with the reason, until a later check finds the files changed; after a read
+ * that fails, each later check reads them again. The objects and their names
  * are the ones `generateObjects` writes. The map's Game data set is read
  * from `war3map.w3i`; when it cannot be, a warning says so and no Rawcode is
  * reported as outside it. Loaded by `require` from a
@@ -270,19 +271,26 @@ export function openRawcodeLookup(
   let loaded: Loaded | UnavailableLookup | undefined;
   /** When the files were last checked, by `Date.now()`. */
   let checkedAt = 0;
-  /** What the last check found; undefined when it could not stat them. */
-  let seen: string | undefined;
+  /** The fingerprint of the files at the last check; undefined when the last read failed, so that the next check reads again. */
+  let fingerprint: string | undefined;
   const load = (): Loaded | UnavailableLookup => {
     const now = Date.now();
-    if (loaded !== undefined && now - checkedAt < minInterval) return loaded;
+    // A clock set back counts as the interval passed.
+    if (
+      loaded !== undefined &&
+      now >= checkedAt &&
+      now - checkedAt < minInterval
+    ) {
+      return loaded;
+    }
     checkedAt = now;
     try {
-      const current = stamps(mapFolder, projectRoot);
-      if (loaded !== undefined && current === seen) return loaded;
-      seen = current;
+      const current = filesFingerprint(mapFolder, projectRoot);
+      if (loaded !== undefined && current === fingerprint) return loaded;
+      fingerprint = current;
       loaded = loadLookup(mapFolder, projectRoot);
     } catch (error) {
-      seen = undefined;
+      fingerprint = undefined;
       loaded = unavailable(error);
     }
     return loaded;
@@ -337,13 +345,14 @@ function isMalformed(rawcode: string): boolean {
 }
 
 /**
- * The state of every file the lookup reads, in one string: whether the map
- * folder exists, then each file's modification time, change time (which
- * a change of permissions moves) and size, or `-` when it is missing.
+ * Fingerprints every file the lookup reads, in one string that changes when
+ * one of them does: whether the map folder exists, then each file's
+ * modification time, change time (which a change of permissions moves) and
+ * size, or `-` when it is missing.
  */
-function stamps(mapFolder: string, projectRoot: string): string {
-  const files = [...objectDataFileNames(OBJECT_KINDS), WTS_FILE, W3I_FILE].map(
-    (name) => path.join(mapFolder, name),
+function filesFingerprint(mapFolder: string, projectRoot: string): string {
+  const files = [...objectDataFileNames(), WTS_FILE, W3I_FILE].map((name) =>
+    path.join(mapFolder, name),
   );
   const builtins = builtinsFiles(projectRoot);
   if (builtins !== undefined) files.push(builtins.manifest);

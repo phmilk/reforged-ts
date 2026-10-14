@@ -45,7 +45,9 @@ const KIND_ENTRY = "./units";
 
 /** The files of reforged-builtins the index is read from: its package.json, and the index when it names one. */
 export interface BuiltinsFiles {
+  /** The path of its package.json. */
   readonly manifest: string;
+  /** The path of the index of the Game version its kind entry points resolve to. */
   readonly index?: string;
   /** Why its package.json could not be read, when it could not. */
   readonly error?: string;
@@ -55,8 +57,8 @@ export interface BuiltinsFiles {
  * Resolves reforged-builtins from `projectRoot` (a folder of the Map
  * project, whose `node_modules` or an ancestor's holds it): its package.json,
  * and the index of the Game version its kind entry points resolve to.
- * Undefined when it is not installed; without `index` when its package.json
- * cannot be read, with the `error`, or names no Game version.
+ * Undefined when it is not installed. Without `index` when its package.json
+ * names no Game version, or cannot be read: `error` then says why.
  */
 export function builtinsFiles(projectRoot: string): BuiltinsFiles | undefined {
   const manifestPath = findManifest(projectRoot);
