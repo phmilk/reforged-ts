@@ -86,7 +86,7 @@ export interface ObjectDataFile {
   readonly custom: readonly ObjectEntry[];
 }
 
-/** A map folder's Editor globals, Object data and strings, and the author-facing warnings of reading them. */
+/** A map folder's Editor globals, Object data, strings and Game data set, and the author-facing warnings of reading them. */
 export interface MapFolderModel {
   /** In the order of war3map.lua's header, one per name. */
   readonly globals: EditorGlobal[];
@@ -94,10 +94,18 @@ export interface MapFolderModel {
   readonly objectData: ObjectDataFile[];
   /** The strings of war3map.wts, by their number. */
   readonly strings: Map<number, string>;
+  /** The Game data set of war3map.w3i, as the id of reforged-builtins' index (`melee-fk`); undefined when unknown. */
+  gameDataSet: string | undefined;
   /** Author-facing, never errors: the build goes on. */
   readonly warnings: string[];
 }
 
 export function createModel(): MapFolderModel {
-  return { globals: [], objectData: [], strings: new Map(), warnings: [] };
+  return {
+    globals: [],
+    objectData: [],
+    strings: new Map(),
+    gameDataSet: undefined,
+    warnings: [],
+  };
 }

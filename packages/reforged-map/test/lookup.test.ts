@@ -13,11 +13,13 @@ import {
 } from "../src/index.js";
 import {
   PACKAGE_ROOT,
+  fixtureMap,
   makeTempDir,
   mapFolder,
   removeTemporary,
 } from "./support/map-folder.js";
 import { buildObjectData, buildWts } from "./support/object-data.js";
+import { buildW3i, type TestW3i } from "./support/w3i.js";
 
 afterAll(removeTemporary);
 
@@ -361,6 +363,152 @@ describe("openRawcodeLookup", () => {
       status: "known",
       name: "Captain",
     });
+  });
+});
+
+/** The warning of a war3map.w3i the lookup cannot read, after its reason. */
+const UNKNOWN_SET =
+  "the map's Game data set is unknown, so no Built-in object is reported as outside it.";
+
+/**
+ * A lookup over a map folder holding this war3map.w3i, Paladin (`Hpal`)
+ * modified, and the Guard Lieutenant (`Hct1`) of Forsaken Kingdom modified.
+ */
+const openWith = (w3i: TestW3i | Uint8Array) =>
+  openRawcodeLookup({
+    mapFolder: mapFolder({
+      "war3map.w3i": w3i instanceof Uint8Array ? w3i : buildW3i(w3i),
+      "war3map.w3u": buildObjectData({
+        original: [
+          { original: "Hpal", modifications: [{ field: "umvs", value: 300 }] },
+          { original: "Hct1", modifications: [{ field: "umvs", value: 300 }] },
+        ],
+      }),
+    }),
+    projectRoot: PACKAGE_ROOT,
+  });
+
+describe("openRawcodeLookup, the map's Game data set", () => {
+  // The Forsaken Paladin (`Npal`) is in Melee (The Frozen Throne) and not
+  // in Custom (The Frozen Throne); the Warden (`Ewar`) is in no set of
+  // Reign of Chaos.
+  it.each([
+    ["Custom", { set: 1, version: 1 }, "custom-tft"],
+    ["Melee", { set: 2, version: 1 }, "melee-tft"],
+    [
+      "Default, on a map without the melee flag",
+      { set: 0, version: 1 },
+      "custom-tft",
+    ],
+    [
+      "Default, on a melee map",
+      { set: 0, version: 1, melee: true },
+      "melee-tft",
+    ],
+  ])("reads %s from a version 39 header", (_, w3i, id) => {
+    const lookup = openWith(w3i);
+
+    expect(lookup.warnings()).toEqual([]);
+    expect(lookup.lookup("Npal").status).toBe(
+      id === "melee-tft" ? "known" : "not-in-game-data-set",
+    );
+    expect(lookup.lookup("Hpal").status).toBe("known");
+  });
+
+  it("returns a Built-in object outside the map's Game data set with the fields of a known one and the set", () => {
+    expect(openWith({ set: 1, version: 0 }).lookup("Ewar")).toEqual({
+      status: "not-in-game-data-set",
+      rawcode: "Ewar",
+      objects: [
+        {
+          origin: "builtin",
+          rawcode: "Ewar",
+          kind: "unit",
+          name: "Warden",
+          race: "nightelf",
+          gameDataSets: ALL_SETS.slice(0, 4),
+          constant: {
+            object: "Units",
+            member: "Warden_Ewar",
+            module: "reforged-builtins/units",
+            generated: false,
+          },
+        },
+      ],
+      gameDataSet: { id: "custom-roc", label: "Custom (Reign of Chaos)" },
+    } satisfies RawcodeLookupResult);
+  });
+
+  it("returns a modified Built-in object outside the map's Game data set as outside it", () => {
+    expect(openWith({ set: 2, version: 1 }).lookup("Hct1")).toMatchObject({
+      status: "not-in-game-data-set",
+      objects: [{ origin: "modified", rawcode: "Hct1" }],
+      gameDataSet: { id: "melee-tft" },
+    });
+  });
+
+  it.each([25, 28])(
+    "reads the Game Data Set of a version %i header, as The Frozen Throne",
+    (format) => {
+      const lookup = openWith({ format, set: 2 });
+
+      expect(lookup.warnings()).toEqual([]);
+      expect(lookup.lookup("Npal").status).toBe("known");
+      expect(lookup.lookup("Hct1")).toMatchObject({
+        status: "not-in-game-data-set",
+        gameDataSet: { id: "melee-tft" },
+      });
+    },
+  );
+
+  it("reads the map folder the 3.0 World Editor saved: Melee, Forsaken Kingdom", () => {
+    const lookup = openRawcodeLookup({
+      mapFolder: fixtureMap("editor-variables.w3m"),
+      projectRoot: PACKAGE_ROOT,
+    });
+
+    expect(lookup.warnings()).toEqual([]);
+    expect(lookup.lookup("Hct1").status).toBe("known");
+  });
+
+  it.each([
+    ["missing", undefined, `war3map.w3i not found: ${UNKNOWN_SET}`],
+    [
+      "truncated",
+      buildW3i({ set: 2, version: 1 }).slice(0, 120),
+      `war3map.w3i not read (it ends before its Game data set): ${UNKNOWN_SET}`,
+    ],
+    [
+      "of an unknown version",
+      buildW3i({ format: 30, set: 2, version: 1 }),
+      `war3map.w3i not read (format 30, which reforged-map does not read; it reads formats 18, 25, 28, 31, 32, 33, 39): ${UNKNOWN_SET}`,
+    ],
+    [
+      "declaring an unknown Game Data Version",
+      buildW3i({ set: 2, version: 3 }),
+      `war3map.w3i not read (it declares the Game Data Version 3, which reforged-map does not know): ${UNKNOWN_SET}`,
+    ],
+  ])("warns of a war3map.w3i %s, and skips the check", (_, w3i, warning) => {
+    const lookup =
+      w3i === undefined
+        ? openRawcodeLookup({
+            mapFolder: sampleMap(),
+            projectRoot: PACKAGE_ROOT,
+          })
+        : openWith(w3i);
+
+    expect(lookup.lookup("Ewar").status).toBe("known");
+    expect(lookup.lookup("Npal").status).toBe("known");
+    expect(lookup.warnings()).toEqual([warning]);
+  });
+
+  it("has no warnings when it is unavailable", () => {
+    const lookup = openRawcodeLookup({
+      mapFolder: sampleMap(),
+      projectRoot: makeTempDir(),
+    });
+
+    expect(lookup.warnings()).toEqual([]);
   });
 });
 
