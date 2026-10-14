@@ -14,6 +14,7 @@ import {
 } from "../src/index.js";
 import {
   PACKAGE_ROOT,
+  fixtureMap,
   makeTempDir,
   mapFolder,
   removeTemporary,
@@ -354,6 +355,98 @@ describe("the name of a Custom unit", () => {
       'declare function FourCC(id: "A000"): Rawcode<"unit">;',
     );
     expect(constantsOf(customUnits(output))).toEqual(["Captain_A000"]);
+  });
+});
+
+describe("every map the World Editor saves (#587)", () => {
+  it.each([1, 2, 3])(
+    "names the Custom units of a file of format version %i",
+    (version) => {
+      const output = generateObjects(
+        mapFolder({
+          "war3map.w3u": buildObjectData({
+            version,
+            custom: [customUnit("h000", "hfoo", "Captain")],
+          }),
+        }),
+        withoutBuiltins(),
+      );
+
+      expect(output.warnings).toEqual([]);
+      expect(constantsOf(customUnits(output))).toEqual(["Captain_h000"]);
+    },
+  );
+
+  it("names the Custom unit of wc3libs' base and Skin files, named in the Skin file through a TRIGSTR", () => {
+    const wc3libs = (name: string) =>
+      fs.readFileSync(path.join(fixtureMap("wc3libs"), name));
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3u": wc3libs("war3map_v3_lumber_bounty.w3u"),
+        "war3mapSkin.w3u": wc3libs("war3mapSkin_v3_lumber_bounty.w3u"),
+        "war3map.wts": buildWts({ 3: "Lumberjack" }),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(output.warnings).toEqual([]);
+    expect(constantsOf(customUnits(output))).toEqual(["Lumberjack_h000"]);
+    expect(overloadedOf(overloads(output))).toEqual(["h000", "hfoo"]);
+    expect(overloads(output)).toContain(
+      "Footman (`hfoo`), a Built-in unit of Patch",
+    );
+  });
+
+  it("names the Custom abilities of wc3libs' abilities file of format version 3 after their bases", () => {
+    const output = generateObjects(
+      mapFolder({
+        "war3map.w3a": fs.readFileSync(
+          path.join(fixtureMap("wc3libs"), "war3map_format3.w3a"),
+        ),
+      }),
+      WITH_BUILTINS,
+    );
+
+    expect(output.warnings).toEqual([]);
+    const constants = constantsOf(file(output, CONSTANTS_FILES.ability));
+    expect(constants).toHaveLength(45);
+    expect(constants).not.toContainEqual(expect.stringMatching(/^Unnamed_/));
+  });
+
+  it.each([
+    [
+      "a coloured accented name",
+      "|cffffcc00Bûcheron|r d’élite",
+      "BucheronDelite_h000",
+    ],
+    [
+      "a name in another script among Latin words",
+      "Garde 步兵 Royale",
+      "GardeRoyale_h000",
+    ],
+    ["a name in another script alone", "|cff00ff00步兵|r", "Unnamed_h000"],
+  ])("gives %s a clean constant", (_, name, constant) => {
+    const output = generateObjects(
+      unitsMap(
+        [customUnit("h000", "hfoo", "TRIGSTR_001")],
+        buildWts({ 1: name }),
+      ),
+      withoutBuiltins(),
+    );
+
+    expect(output.warnings).toEqual([]);
+    expect(constantsOf(customUnits(output))).toEqual([constant]);
+  });
+
+  it("keeps a non-ASCII name as written in the TSDoc", () => {
+    const output = generateObjects(
+      unitsMap([customUnit("h000", "hfoo", "|cff00ff00步兵|r")]),
+      withoutBuiltins(),
+    );
+
+    expect(overloads(output)).toContain(
+      " * 步兵 (`h000`), a Custom unit of this map",
+    );
   });
 });
 

@@ -16,7 +16,7 @@ export interface TestObject {
   original: string;
   custom?: string;
   modifications?: TestModification[];
-  /** The sets of format version 3; one set of flag 0 holding `modifications` when left out. */
+  /** The sets of format version 3; one set of flag 0 holding `modifications` when left out. Versions 1 and 2 write the first set's modifications alone. */
   sets?: { flag: number; modifications: TestModification[] }[];
 }
 
@@ -48,14 +48,14 @@ export function buildObjectData(data: TestObjectData): Uint8Array {
         writer.uint32(set.modifications.length);
         for (const modification of set.modifications) {
           writer.rawcode(modification.field);
-          if (data.levels === true) {
-            writer.uint32(modification.level ?? 0);
-            writer.uint32(modification.dataPointer ?? 0);
-          }
           const type =
             modification.type ??
             (typeof modification.value === "string" ? 3 : 0);
           writer.uint32(type);
+          if (data.levels === true) {
+            writer.uint32(modification.level ?? 0);
+            writer.uint32(modification.dataPointer ?? 0);
+          }
           if (typeof modification.value === "string") {
             writer.cString(modification.value);
           } else if (type === 0) {
