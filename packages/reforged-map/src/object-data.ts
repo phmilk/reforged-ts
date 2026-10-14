@@ -1,25 +1,31 @@
 // The reader of the Object data files: war3map.w3u and its siblings, and
-// their war3mapSkin counterparts. Only format version 3 is read, which the
-// 3.0 World Editor writes, laid out as HiveWE's object data reader reads it
-// (src/base/object_data/*.ixx) and wc3libs' notes give it:
+// their war3mapSkin counterparts, in format versions 1, 2 and 3, laid out as
+// HiveWE reads them (src/utilities/modification_tables.ixx,
+// load_modification_table, at stijnherfst/HiveWE commit cd6d61a) and as
+// wc3libs reads and writes them (ObjMod.java, Obj.read_0x1, read_0x2 and
+// read_0x3, at inwc3/wc3libs commit 0542c41):
 //
-//   int32    format version, 3
+//   int32    format version: 1, 2 or 3
 //   twice (the Built-in objects modified, then the Custom objects added):
 //     int32    object count, then per object:
 //       char[4]  original Rawcode (a Custom object's base)
 //       char[4]  Custom Rawcode, or four NUL bytes
-//       int32    set count, then per set:
-//         int32    set flag
-//         int32    modification count, then per modification:
-//           char[4]  field id
-//           int32    level (a doodad's variation)   } abilities, doodads
-//           int32    data pointer                   } and upgrades only
-//           int32    value type: 0 int, 1 real, 2 unreal, 3 string
-//           int32, float32, float32 or a NUL-terminated UTF-8 string
-//           char[4]  end marker
+//       version 3 only:
+//         int32    set count, then per set:
+//           int32    set flag
+//           (the modifications below)
+//       versions 1 and 2: the modifications alone, once
+//       int32    modification count, then per modification:
+//         char[4]  field id
+//         int32    value type: 0 int, 1 real, 2 unreal, 3 string
+//         int32    level (a doodad's variation)   } abilities, doodads
+//         int32    data pointer                   } and upgrades only
+//         int32, float32, float32 or a NUL-terminated UTF-8 string
+//         char[4]  end marker
 //
-// Every modification is kept as read, for the writer of ADR 0015. Little-
-// endian integers and reals.
+// Versions 1 and 2 share one layout in both readers. Every modification is
+// kept as read, for the writer of ADR 0015. Little-endian integers and
+// reals.
 
 import { readMapFile } from "./map-folder.js";
 import {
@@ -50,7 +56,8 @@ const LEVELLED: ReadonlySet<ObjectKind> = new Set([
   "upgrade",
 ]);
 
-const FORMAT_VERSION = 3;
+/** The format versions the reader reads; version 3 adds the sets. */
+const FORMAT_VERSIONS: ReadonlySet<number> = new Set([1, 2, 3]);
 const UTF8 = new TextDecoder("utf-8", { fatal: false });
 
 /** An Object data file the reader cannot read; its message says why, in a few words. */
@@ -93,18 +100,20 @@ function readObjectDataFile(
 ): ObjectDataFile {
   const reader = new ByteReader(bytes);
   const version = reader.uint32();
-  if (version !== FORMAT_VERSION) {
+  if (!FORMAT_VERSIONS.has(version)) {
     throw new ObjectDataError(`unknown format version ${String(version)}`);
   }
   const levelled = LEVELLED.has(kind);
-  const original = readTable(reader, levelled, false);
-  const custom = readTable(reader, levelled, true);
+  const withSets = version >= 3;
+  const original = readTable(reader, levelled, withSets, false);
+  const custom = readTable(reader, levelled, withSets, true);
   return { name, kind, skin, version, original, custom };
 }
 
 function readTable(
   reader: ByteReader,
   levelled: boolean,
+  withSets: boolean,
   custom: boolean,
 ): ObjectEntry[] {
   const count = reader.uint32();
@@ -112,24 +121,35 @@ function readTable(
   for (let index = 0; index < count; index++) {
     const original = reader.rawcode();
     const customRawcode = reader.rawcode();
-    const setCount = reader.uint32();
-    if (setCount > 1) {
-      throw new ObjectDataError(
-        `${custom ? customRawcode : original} has ${String(setCount)} sets, whose layout is not settled, #460`,
-      );
-    }
-    const sets: ModificationSet[] = [];
-    for (let set = 0; set < setCount; set++) {
-      const flag = reader.uint32();
-      sets.push({ flag, modifications: readModifications(reader, levelled) });
-    }
     entries.push({
       original,
       ...(custom && { custom: customRawcode }),
-      sets,
+      sets: withSets
+        ? readSets(reader, levelled, custom ? customRawcode : original)
+        : [{ modifications: readModifications(reader, levelled) }],
     });
   }
   return entries;
+}
+
+/** The sets of an object of format version 3; more than one is not read (#460). */
+function readSets(
+  reader: ByteReader,
+  levelled: boolean,
+  rawcode: string,
+): ModificationSet[] {
+  const setCount = reader.uint32();
+  if (setCount > 1) {
+    throw new ObjectDataError(
+      `${rawcode} has ${String(setCount)} sets, whose layout is not settled, #460`,
+    );
+  }
+  const sets: ModificationSet[] = [];
+  for (let set = 0; set < setCount; set++) {
+    const flag = reader.uint32();
+    sets.push({ flag, modifications: readModifications(reader, levelled) });
+  }
+  return sets;
 }
 
 function readModifications(
@@ -140,8 +160,6 @@ function readModifications(
   const modifications: Modification[] = [];
   for (let index = 0; index < count; index++) {
     const field = reader.rawcode();
-    const level = levelled ? reader.uint32() : undefined;
-    const dataPointer = levelled ? reader.uint32() : undefined;
     const typeIndex = reader.uint32();
     const type = VALUE_TYPES.at(typeIndex);
     if (type === undefined) {
@@ -149,6 +167,8 @@ function readModifications(
         `the field ${field} has the unknown value type ${String(typeIndex)}`,
       );
     }
+    const level = levelled ? reader.uint32() : undefined;
+    const dataPointer = levelled ? reader.uint32() : undefined;
     const value =
       type === "int"
         ? reader.int32()

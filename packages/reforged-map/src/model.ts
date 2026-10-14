@@ -53,9 +53,14 @@ export interface Modification {
   readonly end: string;
 }
 
-/** One set of an object's modifications, in format version 3. */
+/**
+ * One set of an object's modifications. Format version 3 stores a count of
+ * sets and a flag per set; versions 1 and 2 store the modifications alone,
+ * read as the one set of an object, without a flag.
+ */
 export interface ModificationSet {
-  readonly flag: number;
+  /** The set's flag, as read; absent in format versions 1 and 2. */
+  readonly flag?: number;
   readonly modifications: readonly Modification[];
 }
 

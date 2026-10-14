@@ -127,7 +127,7 @@ export interface ObjectsOptions {
  *
  * The objects of the seven Object kinds are read from
  * `war3map.w3u`, `.w3t`, `.w3a`, `.w3h`, `.w3b`, `.w3d` and `.w3q` and
- * their `war3mapSkin` counterparts, in format version 3, their names
+ * their `war3mapSkin` counterparts, in format versions 1, 2 and 3, their names
  * through `war3map.wts`. The Object kind of an object is its file's. A constant is
  * named by the rules of `reforged-builtins`, from the object's name, else
  * its base's enUS name from the index of `reforged-builtins`, an optional
