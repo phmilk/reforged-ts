@@ -121,32 +121,35 @@ function readTable(
   for (let index = 0; index < count; index++) {
     const original = reader.rawcode();
     const customRawcode = reader.rawcode();
-    if (!withSets) {
-      entries.push({
-        original,
-        ...(custom && { custom: customRawcode }),
-        sets: [{ modifications: readModifications(reader, levelled) }],
-      });
-      continue;
-    }
-    const setCount = reader.uint32();
-    if (setCount > 1) {
-      throw new ObjectDataError(
-        `${custom ? customRawcode : original} has ${String(setCount)} sets, whose layout is not settled, #460`,
-      );
-    }
-    const sets: ModificationSet[] = [];
-    for (let set = 0; set < setCount; set++) {
-      const flag = reader.uint32();
-      sets.push({ flag, modifications: readModifications(reader, levelled) });
-    }
     entries.push({
       original,
       ...(custom && { custom: customRawcode }),
-      sets,
+      sets: withSets
+        ? readSets(reader, levelled, custom ? customRawcode : original)
+        : [{ modifications: readModifications(reader, levelled) }],
     });
   }
   return entries;
+}
+
+/** The sets of an object of format version 3; more than one is not read (#460). */
+function readSets(
+  reader: ByteReader,
+  levelled: boolean,
+  rawcode: string,
+): ModificationSet[] {
+  const setCount = reader.uint32();
+  if (setCount > 1) {
+    throw new ObjectDataError(
+      `${rawcode} has ${String(setCount)} sets, whose layout is not settled, #460`,
+    );
+  }
+  const sets: ModificationSet[] = [];
+  for (let set = 0; set < setCount; set++) {
+    const flag = reader.uint32();
+    sets.push({ flag, modifications: readModifications(reader, levelled) });
+  }
+  return sets;
 }
 
 function readModifications(

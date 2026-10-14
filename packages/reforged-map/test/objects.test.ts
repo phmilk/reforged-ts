@@ -483,19 +483,24 @@ describe("the warnings", () => {
     expect(constantsOf(customUnits(output))).toEqual(["Captain_h001"]);
   });
 
-  it("warns of a truncated file, and drops its objects", () => {
+  it("warns of a truncated file, drops its objects, and reads the others", () => {
     const bytes = buildObjectData({
       custom: [customUnit("h000", "hfoo", "Captain")],
     });
     const output = generateObjects(
-      mapFolder({ "war3map.w3u": bytes.subarray(0, bytes.length - 3) }),
+      mapFolder({
+        "war3map.w3u": bytes.subarray(0, bytes.length - 3),
+        "war3mapSkin.w3u": buildObjectData({
+          custom: [customUnit("h001", "hfoo", "Guard")],
+        }),
+      }),
       withoutBuiltins(),
     );
 
     expect(output.warnings).toEqual([
       "war3map.w3u not read (truncated): its objects are left out. Save the map with the World Editor of 3.0.",
     ]);
-    expect(constantsOf(customUnits(output))).toEqual([]);
+    expect(constantsOf(customUnits(output))).toEqual(["Guard_h001"]);
   });
 
   it("skips a file with an object of more than one set, with a warning", () => {
