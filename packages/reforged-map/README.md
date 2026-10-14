@@ -47,6 +47,33 @@ An array is a `Record<number, T>` of the same type. These are every type of the 
 
 The package only reads the map folder (ADR 0006). The generated files are git-ignored and read-only in a Map project: a global is added or renamed in the World Editor, never in them.
 
+## The Rawcode lookup
+
+`openRawcodeLookup({ mapFolder, projectRoot })` opens a lookup from a Rawcode to the object or objects it names, for a tool that reads the map (a lint rule, a hover) without parsing it. `projectRoot` is a folder of the Map project, from which the optional peer `reforged-builtins` is resolved; the package never reads `reforged.config.ts`. `minInterval` (milliseconds, `DEFAULT_MIN_INTERVAL`, one second, when left out) is the minimum interval between two checks of the map folder's modification times.
+
+```ts
+import { openRawcodeLookup } from "reforged-map";
+
+const rawcodes = openRawcodeLookup({
+  mapFolder: "maps/my-map.w3m",
+  projectRoot: ".",
+});
+const result = rawcodes.lookup("h000");
+if (result.status === "known") console.log(result.objects[0].name);
+console.log(rawcodes.gameVersion()); // "3.0.0"
+```
+
+`lookup(rawcode)` is synchronous, never throws, and returns one result, told apart by its `status`:
+
+| `status`      | When                                                                   | What it carries                                                                                                                                                                                                                                                                                                                           |
+| ------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `known`       | the Rawcode names an object                                            | `objects`: one, or two for a Rawcode two kinds share (`B000`), each with its Rawcode, Object kind, name, race, and `origin`: `builtin` (with its Game data sets), `modified` (the game's name `builtinName` and the map's `mapName`, with its Game data sets) or `custom` (its `base`); and its `constant`, its object, member and module |
+| `unknown`     | it names no Built-in object and no object of the map                   | `suggestions`: up to three Rawcodes one edit away (a change of case first), each with its name and Object kind                                                                                                                                                                                                                            |
+| `malformed`   | the literal is not four characters of one byte each                    | the literal; returned whatever the lookup's state                                                                                                                                                                                                                                                                                         |
+| `unavailable` | the map folder cannot be read, or `reforged-builtins` is not installed | `reason`, a sentence a tool shows once                                                                                                                                                                                                                                                                                                    |
+
+`gameVersion()` gives the Game version of the `reforged-builtins` index the lookup read, undefined when it is unavailable. Nothing is read until the first lookup, and what it reads is kept: the objects and their names are the ones `generateObjects` writes. The package has no top-level await, so a CommonJS host such as tsserver loads it with `require`.
+
 ## Errors and warnings
 
 A missing map folder, or a map folder without `war3map.lua` (a map saved with JASS as its script language), throws a `MapFolderError` whose message says what to do in the World Editor. Everything else is a warning, and the build goes on:

@@ -12,6 +12,10 @@ const INDEX_FORMAT = 1;
 export interface BuiltinObject {
   readonly kind: string;
   readonly name?: string;
+  /** Its race (`human`), when it has one. */
+  readonly race?: string;
+  /** The ids of the Game data sets that hold it (`melee-tft`). */
+  readonly sets?: readonly string[];
   /** Its constant's name in its kind's module (`Footman_hfoo`). */
   readonly constant?: string;
 }
