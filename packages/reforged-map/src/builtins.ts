@@ -12,6 +12,8 @@ const INDEX_FORMAT = 1;
 export interface BuiltinObject {
   readonly kind: string;
   readonly name?: string;
+  /** Its constant's name in its kind's module (`Footman_hfoo`). */
+  readonly constant?: string;
 }
 
 /** What this package reads of reforged-builtins' index. */

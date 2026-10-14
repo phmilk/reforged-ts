@@ -1,0 +1,28 @@
+{
+  // The Map project fixtures of the modified Built-in objects and the shared
+  // Rawcode (#586), as the editor and the lint see them, with
+  // reforged-builtins' overloads turned on. The test
+  // (../../objects-typecheck.test.ts) copies them into a temporary Map
+  // project that installs reforged-builtins, where the files generateObjects
+  // writes replace map-objects.d.ts, custom-buffs.ts and
+  // custom-destructables.ts (the test asserts they are the same); this file
+  // is not copied. Here `reforged-ts` resolves to the sources, since its
+  // declarations exist only once `pnpm build` has emitted them. The negative
+  // fixture's type error is what the test asserts, so this program is never
+  // built.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [
+      "reforged-types/3.0.0",
+      "@typescript-to-lua/language-extensions",
+      "reforged-builtins/3.0.0"
+    ],
+    "strict": true,
+    "noEmit": true,
+    "paths": { "reforged-ts": ["../../../../reforged-ts/src/index.ts"] }
+  },
+  "include": ["."]
+}

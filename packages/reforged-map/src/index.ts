@@ -9,7 +9,7 @@ import { readObjectData } from "./object-data.js";
 import {
   KIND_CONSTANTS,
   constantWarnings,
-  customObjects,
+  mapFolderObjects,
   renderConstants,
   renderOverloads,
 } from "./objects.js";
@@ -109,12 +109,23 @@ export interface ObjectsOptions {
 
 /**
  * Generates the code of a map folder's objects: a `FourCC` overload per
- * Custom object, typed by its Object kind, and per Object kind a constants
- * module of its Custom objects (`CustomUnits.Captain_h000`), always
- * written, empty when the map has none of that kind.
+ * Custom object and per Built-in object the map modifies, typed by its
+ * Object kind, and per Object kind a constants module of its Custom objects
+ * (`CustomUnits.Captain_h000`), always written, empty when the map has none
+ * of that kind.
  *
  * @remarks
- * The Custom objects of the seven Object kinds are read from
+ * The overload of a modified Built-in object gives the game's name and the
+ * map's ("Footman (`hfoo`), a Built-in unit of Patch 3.0.0, named Militia in
+ * this map") and names its constant in `reforged-builtins`; it gets no
+ * Custom constant. Its declarations file sits under the Map project's
+ * `src/`, so its overload precedes the one `reforged-builtins` declares. A
+ * Rawcode two kinds share, such as a Custom buff and a Custom destructable
+ * at `B000`, gets no overload and no warning, and each kind keeps its
+ * constant. A Custom Rawcode equal to a Built-in object's is read as the
+ * Custom object, with a warning.
+ *
+ * The objects of the seven Object kinds are read from
  * `war3map.w3u`, `.w3t`, `.w3a`, `.w3h`, `.w3b`, `.w3d` and `.w3q` and
  * their `war3mapSkin` counterparts, in format version 3, their names
  * through `war3map.wts`. The Object kind of an object is its file's. A constant is
@@ -139,7 +150,7 @@ export function generateObjects(
   readObjectData(mapFolder, OBJECT_KINDS, model);
   readWar3mapWts(mapFolder, model);
   const builtins = loadBuiltins(options.projectRoot ?? mapFolder);
-  const { objects, keptBaseName } = customObjects(model, {
+  const { objects, keptBaseName } = mapFolderObjects(model, {
     builtins: "index" in builtins ? builtins.index : undefined,
   });
   if (keptBaseName && "missing" in builtins) {

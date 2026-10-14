@@ -7,6 +7,7 @@ import fs from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { runLuaTestFiles } from "reforged-test";
+import * as ts from "typescript";
 import * as tstl from "typescript-to-lua";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
@@ -166,3 +167,146 @@ describe("the generated objects in a Map project", () => {
     ]);
   }, 60_000);
 });
+
+const MODIFIED_FIXTURES = "modified-map-project";
+
+/** The map folder of the modified fixtures: the Footman renamed Militia, and B000 both a Custom buff, Holy Fire, and a Custom destructable, Gate. */
+function generateModified(): ObjectsOutput {
+  return generateObjects(
+    mapFolder({
+      "war3map.w3u": buildObjectData({
+        original: [
+          {
+            original: "hfoo",
+            modifications: [{ field: "unam", value: "Militia" }],
+          },
+        ],
+      }),
+      "war3map.w3h": buildObjectData({
+        custom: [
+          {
+            original: "Binf",
+            custom: "B000",
+            modifications: [{ field: "fnam", value: "Holy Fire" }],
+          },
+        ],
+      }),
+      "war3map.w3b": buildObjectData({
+        custom: [
+          {
+            original: "LTlt",
+            custom: "B000",
+            modifications: [{ field: "bnam", value: "Gate" }],
+          },
+        ],
+      }),
+    }),
+    { projectRoot: PACKAGE_ROOT },
+  );
+}
+
+describe("a modified Built-in object and a shared Rawcode in a Map project with reforged-builtins' overloads turned on (#586)", () => {
+  let output: ObjectsOutput;
+  let tsconfig: string;
+
+  beforeAll(() => {
+    output = generateModified();
+    tsconfig = createMapProject(output.files, MODIFIED_FIXTURES, {
+      builtins: true,
+    });
+  }, 60_000);
+
+  it("are the files the fixtures stand in for", () => {
+    expect(output.warnings).toEqual([]);
+    for (const name of [
+      OBJECTS_DECLARATIONS_FILE,
+      CONSTANTS_FILES.buff,
+      CONSTANTS_FILES.destructable,
+    ]) {
+      expect(output.files.find((f) => f.name === name)?.contents, name).toBe(
+        readFixture(name, MODIFIED_FIXTURES),
+      );
+    }
+  });
+
+  it("resolve the modified Footman's FourCC literal to the map's overload, which precedes reforged-builtins'", () => {
+    const { program, checker } = checkedProgram(tsconfig);
+    const source = program
+      .getSourceFiles()
+      .find((f) => f.fileName.endsWith("/src/modified-footman.ts"));
+    if (source === undefined) throw new Error("no modified-footman.ts");
+    const call = findCall(source, "FourCC");
+    // reforged-builtins' overloads are in the program, its hfoo among them.
+    expect(
+      program
+        .getSourceFiles()
+        .find((f) => f.fileName.endsWith("/reforged-builtins/3.0.0.d.ts"))
+        ?.text,
+    ).toContain('declare function FourCC(id: "hfoo"): Rawcode<"unit">;');
+
+    const declaration = checker.getResolvedSignature(call)?.declaration;
+
+    expect(
+      path.relative(
+        path.dirname(tsconfig),
+        path.resolve(declaration?.getSourceFile().fileName ?? ""),
+      ),
+    ).toBe(path.join("src", OBJECTS_DECLARATIONS_FILE));
+    expect(
+      ts.displayPartsToString(
+        checker.getResolvedSignature(call)?.getDocumentationComment(checker),
+      ),
+    ).toContain("named Militia in this map");
+  });
+
+  it("type-check each constant of B000 where its kind is expected and its literal anywhere, and report the buff's constant where a destructable's is expected", () => {
+    expect(typecheck(tsconfig)).toEqual([
+      "src/buff-into-destructable.ts:5 TS2345",
+    ]);
+  });
+});
+
+/** The program of a Map project's tsconfig.json, and its checker. */
+function checkedProgram(tsconfigPath: string): {
+  program: ts.Program;
+  checker: ts.TypeChecker;
+} {
+  const config = ts.getParsedCommandLineOfConfigFile(
+    tsconfigPath,
+    { noEmit: true },
+    {
+      ...ts.sys,
+      onUnRecoverableConfigFileDiagnostic: (diagnostic) => {
+        throw new Error(
+          ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"),
+        );
+      },
+    },
+  );
+  if (config === undefined)
+    throw new Error(`${tsconfigPath} could not be read`);
+  const program = ts.createProgram({
+    rootNames: config.fileNames,
+    options: config.options,
+  });
+  return { program, checker: program.getTypeChecker() };
+}
+
+/** The first call of `name` in `source`. */
+function findCall(source: ts.SourceFile, name: string): ts.CallExpression {
+  let found: ts.CallExpression | undefined;
+  const visit = (node: ts.Node): void => {
+    if (
+      found === undefined &&
+      ts.isCallExpression(node) &&
+      ts.isIdentifier(node.expression) &&
+      node.expression.text === name
+    ) {
+      found = node;
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(source);
+  if (found === undefined) throw new Error(`no call of ${name}`);
+  return found;
+}
