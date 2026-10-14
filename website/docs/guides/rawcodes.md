@@ -372,7 +372,7 @@ A map's objects follow two of its options in the World Editor: its Game Data Set
 
 ### What it does not hold
 
-- **The map's own objects.** Custom objects, and a map's changes to Built-in ones, are in the map folder: `reforged-map` reads it at build time, as for the [GUI variables](#gui-variables-of-an-object-type), and [names them](#custom-objects-of-the-map).
+- **The map's own objects.** Custom objects, and a map's changes to Built-in ones, are in the map folder: [`reforged-map`](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-map) reads it at build time, as for the [GUI variables](#gui-variables-of-an-object-type), and [names them](#custom-objects-of-the-map).
 - **Tooltips, numbers and icons.** The package holds identifiers only. Tooltips and icons are the hover tool's.
 
 ### Check-time cost
@@ -391,7 +391,7 @@ A Custom object is one the map adds in the World Editor's Object Editor: a unit 
 The Template writes them once its build calls `reforged-map` for the map's objects ([phmilk/reforged-ts-template#87](https://github.com/phmilk/reforged-ts-template/issues/87)). A Map project generated before that turns them on as [Turning them on in a Map project generated earlier](#turning-them-on-in-a-map-project-generated-earlier) says.
 :::
 
-### The constants
+### Custom constants
 
 Each Object kind has a generated module of its Custom objects: `custom-units.ts` exports `CustomUnits`, `custom-items.ts` `CustomItems`, and so on for `CustomAbilities`, `CustomBuffs`, `CustomDestructables`, `CustomDoodads` and `CustomUpgrades`. A module is written even when the map has no object of its kind, so an import never breaks when the last one goes. For the map above, two of them read:
 
@@ -535,9 +535,9 @@ Warning: war3map.w3u not read (unknown format version 4): its objects are left o
 
 The [package's README](https://github.com/phmilk/reforged-ts/tree/master/packages/reforged-map#the-maps-objects) lists every warning, and what it reads in which format.
 
-### Check-time cost
+### Check-time cost of the map's overloads
 
-The overloads cost type-check time for each literal `FourCC` call, and nothing at run time. Measured with `pnpm --filter reforged-map map:measure` on a Map project of 500 Custom units, 1,000 literal calls cost 0.45 to 2.3 ms each, depending on the machine: about a sixth of what the 4,651 overloads of `reforged-builtins` cost on the same machine. A map holds tens to hundreds of objects, so its overloads are on in every Map project that generates them. A constant costs no overload resolution.
+The overloads cost type-check time for each literal `FourCC` call, and nothing at run time. Measured with `pnpm --filter reforged-map map:measure` on a Map project of 500 Custom units, 1,000 literal calls cost 0.45 to 2.3 ms each, depending on the machine's load: about a sixth of what the 4,651 overloads of `reforged-builtins` cost on the same machine. A map holds tens to hundreds of objects, so its overloads are on in every Map project that generates them. A constant costs no overload resolution.
 
 ### Turning them on in a Map project generated earlier
 
