@@ -12,13 +12,25 @@ const INDEX_FORMAT = 1;
 export interface BuiltinObject {
   readonly kind: string;
   readonly name?: string;
+  /** Its race (`human`), when it has one. */
+  readonly race?: string;
+  /** The ids of the Game data sets that hold it (`melee-tft`). */
+  readonly sets?: readonly string[];
   /** Its constant's name in its kind's module (`Footman_hfoo`). */
   readonly constant?: string;
+}
+
+/** A Game data set of the index: its id (`melee-tft`) and its name (`Melee (The Frozen Throne)`). */
+export interface GameDataSet {
+  readonly id: string;
+  readonly label: string;
 }
 
 /** What this package reads of reforged-builtins' index. */
 export interface BuiltinsIndex {
   readonly gameVersion: string;
+  /** The Game data sets of the Game version, each with the name the World Editor gives it. */
+  readonly gameDataSets?: readonly GameDataSet[];
   readonly objects: Readonly<Record<string, BuiltinObject>>;
 }
 

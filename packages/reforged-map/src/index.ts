@@ -169,3 +169,21 @@ export function generateObjects(
     warnings: [...model.warnings, ...constantWarnings(objects)],
   };
 }
+
+export {
+  DEFAULT_MIN_INTERVAL,
+  openRawcodeLookup,
+  type BuiltinRawcodeObject,
+  type CustomRawcodeObject,
+  type KnownRawcode,
+  type MalformedRawcode,
+  type ModifiedRawcodeObject,
+  type RawcodeConstant,
+  type RawcodeLookup,
+  type RawcodeLookupOptions,
+  type RawcodeLookupResult,
+  type RawcodeObject,
+  type RawcodeSuggestion,
+  type UnavailableLookup,
+  type UnknownRawcode,
+} from "./lookup.js";
