@@ -3,7 +3,12 @@
 // reads the map folder through the same model and derivation as
 // generateObjects, so the generated code and the lookup agree.
 
-import { loadBuiltins, type BuiltinObject } from "./builtins.js";
+import {
+  loadBuiltins,
+  type BuiltinObject,
+  type BuiltinsIndex,
+  type GameDataSet,
+} from "./builtins.js";
 import { MapFolderError, checkMapFolder } from "./map-folder.js";
 import { OBJECT_KINDS, createModel, type ObjectKind } from "./model.js";
 import { readObjectData } from "./object-data.js";
@@ -29,7 +34,8 @@ export interface RawcodeLookupOptions {
   /**
    * The minimum interval between two checks of the map folder's
    * modification times, in milliseconds; {@link DEFAULT_MIN_INTERVAL} when
-   * left out.
+   * left out. Kept for the reload of a changed map folder (#590): until
+   * then, the lookup reads the map folder once and never checks again.
    */
   minInterval?: number;
 }
@@ -48,7 +54,9 @@ export interface RawcodeConstant {
    * The module that exports it: a package specifier
    * (`reforged-builtins/units`), or, when {@link RawcodeConstant.generated}
    * is true, the bare file name of the generated constants module
-   * (`custom-units.ts`, one of `CONSTANTS_FILES`).
+   * (`custom-units.ts`, one of `CONSTANTS_FILES`). The lookup never reads
+   * the Map project's configuration, so the caller resolves that file in
+   * the folder its build writes the generated code to.
    */
   readonly module: string;
   /** Whether the module is one the Map project generates from its map folder. */
@@ -67,8 +75,8 @@ export interface BuiltinRawcodeObject {
   readonly name: string | undefined;
   /** Its race (`human`), undefined when it has none. */
   readonly race: string | undefined;
-  /** The ids of the Game data sets that hold it (`melee-tft`), as the index names them. */
-  readonly gameDataSets: readonly string[];
+  /** The Game data sets that hold it, each with its id and the name the World Editor gives it, in the index's order. */
+  readonly gameDataSets: readonly GameDataSet[];
   /** Its constant in `reforged-builtins`, undefined when the index gives it none. */
   readonly constant: RawcodeConstant | undefined;
 }
@@ -87,10 +95,10 @@ export interface ModifiedRawcodeObject {
   readonly builtinName: string | undefined;
   /** The map's name for it, undefined when the map keeps the game's. */
   readonly mapName: string | undefined;
-  /** The game's race (`human`), undefined when it has none. */
+  /** The game's race (`human`), undefined when it has none: a race the map sets on the object is not read. */
   readonly race: string | undefined;
-  /** The ids of the Game data sets that hold it (`melee-tft`), as the index names them. */
-  readonly gameDataSets: readonly string[];
+  /** The Game data sets that hold it, each with its id and the name the World Editor gives it, in the index's order. */
+  readonly gameDataSets: readonly GameDataSet[];
   /** Its constant in `reforged-builtins`, undefined when the index gives it none. */
   readonly constant: RawcodeConstant | undefined;
 }
@@ -105,7 +113,7 @@ export interface CustomRawcodeObject {
   readonly kind: ObjectKind;
   /** Its name, else its base's enUS name; undefined when neither is known. */
   readonly name: string | undefined;
-  /** Its base's race (`human`), undefined when the base has none. */
+  /** Its base's race (`human`), undefined when the base has none: a race the map sets on the object is not read. */
   readonly race: string | undefined;
   /** The Built-in object it derives from: its Rawcode, and its enUS name when the index holds it. */
   readonly base: {
@@ -146,11 +154,11 @@ export interface UnknownRawcode {
   readonly status: "unknown";
   /** The Rawcode looked up. */
   readonly rawcode: string;
-  /** Up to three Rawcodes one edit away, a change of case first; empty when none is. */
+  /** Up to three Rawcodes one edit away, each once, a change of case first; empty when none is. */
   readonly suggestions: readonly RawcodeSuggestion[];
 }
 
-/** The literal can never be a Rawcode: it is not four characters of one byte each. */
+/** The literal can never be a Rawcode: it is not four printable ASCII characters (U+0020 to U+007E). */
 export interface MalformedRawcode {
   /** `"malformed"`. */
   readonly status: "malformed";
@@ -176,7 +184,7 @@ export interface RawcodeLookup {
   readonly mapFolder: string;
   /** The Map project folder it resolves `reforged-builtins` from. */
   readonly projectRoot: string;
-  /** The minimum interval between two checks of modification times, in milliseconds. */
+  /** The minimum interval between two checks of modification times, in milliseconds; not used until the reload of #590. */
   readonly minInterval: number;
   /**
    * Looks a Rawcode literal up. Synchronous, and never throws.
@@ -261,7 +269,7 @@ interface Loaded {
 const MAX_SUGGESTIONS = 3;
 
 function isMalformed(rawcode: string): boolean {
-  return rawcode.length !== 4 || /[^\0-\xff]/.test(rawcode);
+  return !/^[\x20-\x7e]{4}$/.test(rawcode);
 }
 
 function loadLookup(
@@ -290,13 +298,13 @@ function loadLookup(
     else list.push(object);
   };
   for (const object of mapObjects) {
-    add(fromMapObject(object, index.objects));
+    add(fromMapObject(object, index));
   }
   for (const [rawcode, builtin] of Object.entries(index.objects)) {
     const kind = objectKind(builtin.kind);
     if (kind === undefined) continue;
-    // A map object of the same kind (a modified one, or a Custom one at a
-    // Built-in Rawcode) stands for it.
+    // An object of the map's Object data of the same kind (a modified one,
+    // or a Custom one at a Built-in Rawcode) stands for it.
     if (objects.get(rawcode)?.some((object) => object.kind === kind)) continue;
     add({
       origin: "builtin",
@@ -304,7 +312,7 @@ function loadLookup(
       kind,
       name: builtin.name,
       race: builtin.race,
-      gameDataSets: builtin.sets ?? [],
+      gameDataSets: gameDataSets(index, builtin),
       constant: builtinConstant(kind, builtin),
     });
   }
@@ -318,9 +326,10 @@ function loadLookup(
 
 function fromMapObject(
   object: MapFolderObject,
-  builtins: Readonly<Record<string, BuiltinObject>>,
+  index: BuiltinsIndex,
 ): RawcodeObject {
   const { kind, rawcode } = object;
+  const builtins = index.objects;
   if (object.origin === "custom") {
     return {
       origin: "custom",
@@ -349,7 +358,7 @@ function fromMapObject(
     builtinName: builtin?.name,
     mapName: object.name,
     race: builtin?.race,
-    gameDataSets: builtin?.sets ?? [],
+    gameDataSets: builtin === undefined ? [] : gameDataSets(index, builtin),
     constant:
       builtin === undefined ? undefined : builtinConstant(kind, builtin),
   };
@@ -362,42 +371,48 @@ function lookUp(state: Loaded, rawcode: string): RawcodeLookupResult {
 }
 
 /**
- * Up to three Rawcodes one edit away from `rawcode`: a substitution, an
- * insertion or a deletion, a change of case counting as one edit, and a
- * Rawcode equal but for case too. A change of case comes first, then the
- * Rawcodes in code point order, the objects of each in Object kind order.
+ * Up to three Rawcodes one edit away from `rawcode`, a four-character
+ * literal: one character changed, a change of case counting as one edit.
+ * Insertion and deletion would change its length, which every Rawcode has.
+ * A change of case comes first, then the Rawcodes in code point order; a
+ * Rawcode two kinds share is suggested once, by its first object in Object
+ * kind order.
  */
 function suggest(state: Loaded, rawcode: string): RawcodeSuggestion[] {
   const lower = rawcode.toLowerCase();
-  const near = [...state.objects.keys()]
-    .filter(
-      (other) => other.toLowerCase() === lower || oneEditAway(rawcode, other),
-    )
+  return [...state.objects.keys()]
+    .filter((other) => oneEditAway(rawcode, other))
     .sort((a, b) => {
       const aCase = a.toLowerCase() === lower ? 0 : 1;
       const bCase = b.toLowerCase() === lower ? 0 : 1;
       return aCase - bCase || (a < b ? -1 : a > b ? 1 : 0);
+    })
+    .slice(0, MAX_SUGGESTIONS)
+    .map((other) => {
+      const [{ name, kind }] = state.objects.get(other) ?? [];
+      return { rawcode: other, name, kind };
     });
-  return near
-    .flatMap((other) =>
-      (state.objects.get(other) ?? []).map(({ name, kind }) => ({
-        rawcode: other,
-        name,
-        kind,
-      })),
-    )
-    .slice(0, MAX_SUGGESTIONS);
 }
 
-/** Whether `b` is one substitution, insertion or deletion away from `a`. */
+/** Whether `b`, of the same length as `a`, differs from it in exactly one character. */
 function oneEditAway(a: string, b: string): boolean {
-  if (a === b || Math.abs(a.length - b.length) > 1) return false;
-  const [short, long] = a.length <= b.length ? [a, b] : [b, a];
-  let index = 0;
-  while (index < short.length && short[index] === long[index]) index++;
-  return short.length === long.length
-    ? short.slice(index + 1) === long.slice(index + 1)
-    : short.slice(index) === long.slice(index + 1);
+  if (a.length !== b.length) return false;
+  let differences = 0;
+  for (let index = 0; index < a.length; index++) {
+    if (a[index] !== b[index]) differences++;
+  }
+  return differences === 1;
+}
+
+/** The Game data sets that hold a Built-in object, with their names. */
+function gameDataSets(
+  index: BuiltinsIndex,
+  builtin: BuiltinObject,
+): GameDataSet[] {
+  return (builtin.sets ?? []).map((id) => ({
+    id,
+    label: index.gameDataSets?.find((set) => set.id === id)?.label ?? id,
+  }));
 }
 
 function builtinConstant(

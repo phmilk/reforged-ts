@@ -20,9 +20,17 @@ export interface BuiltinObject {
   readonly constant?: string;
 }
 
+/** A Game data set of the index: its id (`melee-tft`) and its name (`Melee (The Frozen Throne)`). */
+export interface GameDataSet {
+  readonly id: string;
+  readonly label: string;
+}
+
 /** What this package reads of reforged-builtins' index. */
 export interface BuiltinsIndex {
   readonly gameVersion: string;
+  /** The Game data sets of the Game version, each with the name the World Editor gives it. */
+  readonly gameDataSets?: readonly GameDataSet[];
   readonly objects: Readonly<Record<string, BuiltinObject>>;
 }
 

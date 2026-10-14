@@ -22,12 +22,12 @@ import { buildObjectData, buildWts } from "./support/object-data.js";
 afterAll(removeTemporary);
 
 const ALL_SETS = [
-  "custom-fk",
-  "melee-fk",
-  "custom-tft",
-  "melee-tft",
-  "custom-roc",
-  "melee-roc",
+  { id: "custom-fk", label: "Custom (Forsaken Kingdom)" },
+  { id: "melee-fk", label: "Melee (Forsaken Kingdom)" },
+  { id: "custom-tft", label: "Custom (The Frozen Throne)" },
+  { id: "melee-tft", label: "Melee (The Frozen Throne)" },
+  { id: "custom-roc", label: "Custom (Reign of Chaos)" },
+  { id: "melee-roc", label: "Melee (Reign of Chaos)" },
 ];
 
 /**
@@ -234,6 +234,25 @@ describe("openRawcodeLookup", () => {
     } satisfies RawcodeLookupResult);
   });
 
+  it("counts each change of case as one edit", () => {
+    const { suggestions } = unknown(openSample().lookup("HPAL"));
+
+    expect(suggestions.map((s) => s.rawcode)).not.toContain("Hpal");
+  });
+
+  it("suggests a Rawcode two kinds share once, by its first object", () => {
+    const { suggestions } = unknown(openSample().lookup("B00\u007e"));
+    const rawcodes = suggestions.map((s) => s.rawcode);
+
+    expect(rawcodes.filter((r) => r === "B000")).toHaveLength(1);
+    expect(new Set(rawcodes).size).toBe(rawcodes.length);
+    expect(suggestions.find((s) => s.rawcode === "B000")).toEqual({
+      rawcode: "B000",
+      name: "Holy Fire",
+      kind: "buff",
+    });
+  });
+
   it("suggests nothing for a Rawcode with no Rawcode one edit away", () => {
     expect(openSample().lookup("zzzz")).toEqual({
       status: "unknown",
@@ -242,10 +261,10 @@ describe("openRawcodeLookup", () => {
     });
   });
 
-  it("returns a literal that is not four one-byte characters as malformed", () => {
+  it("returns a literal that is not four printable ASCII characters as malformed", () => {
     const lookup = openSample();
 
-    for (const literal of ["hfo", "hfooo", "", "hfoĀ"]) {
+    for (const literal of ["hfo", "hfooo", "", "hfoĀ", "hé01", "h\u0001oo"]) {
       expect(lookup.lookup(literal)).toEqual({
         status: "malformed",
         rawcode: literal,
@@ -344,3 +363,11 @@ describe("openRawcodeLookup", () => {
     });
   });
 });
+
+/** The unknown result, or a failed expectation. */
+function unknown(result: RawcodeLookupResult) {
+  if (result.status !== "unknown") {
+    throw new Error(`expected unknown, got ${result.status}`);
+  }
+  return result;
+}
