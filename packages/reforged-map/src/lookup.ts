@@ -1,9 +1,14 @@
 // The Rawcode lookup: from a Rawcode literal to the object or objects it
 // names, for the tools that read the map (the lint rule, the hover). It
 // reads the map folder through the same model and derivation as
-// generateObjects, so the generated code and the lookup agree.
+// generateObjects, so the generated code and the lookup agree. It reads
+// the map folder again when one of the files it read changes, checked at
+// most once per interval.
 
+import fs from "node:fs";
+import path from "node:path";
 import {
+  builtinsFiles,
   loadBuiltins,
   type BuiltinObject,
   type BuiltinsIndex,
@@ -11,14 +16,14 @@ import {
 } from "./builtins.js";
 import { MapFolderError, checkMapFolder } from "./map-folder.js";
 import { OBJECT_KINDS, createModel, type ObjectKind } from "./model.js";
-import { readObjectData } from "./object-data.js";
+import { objectDataFileNames, readObjectData } from "./object-data.js";
 import {
   KIND_CONSTANTS,
   mapFolderObjects,
   type MapFolderObject,
 } from "./objects.js";
-import { readWar3mapW3i } from "./war3map-w3i.js";
-import { readWar3mapWts } from "./war3map-wts.js";
+import { W3I_FILE, readWar3mapW3i } from "./war3map-w3i.js";
+import { WTS_FILE, readWar3mapWts } from "./war3map-wts.js";
 
 /** The default of {@link RawcodeLookupOptions.minInterval}, in milliseconds: one second. */
 export const DEFAULT_MIN_INTERVAL = 1000;
@@ -33,10 +38,9 @@ export interface RawcodeLookupOptions {
    */
   projectRoot: string;
   /**
-   * The minimum interval between two checks of the map folder's
-   * modification times, in milliseconds; {@link DEFAULT_MIN_INTERVAL} when
-   * left out. Kept for the reload of a changed map folder (#590): until
-   * then, the lookup reads the map folder once and never checks again.
+   * The minimum interval between two checks of the modification times of
+   * the files the lookup reads, in milliseconds; {@link DEFAULT_MIN_INTERVAL}
+   * when left out.
    */
   minInterval?: number;
 }
@@ -204,7 +208,7 @@ export interface RawcodeLookup {
   readonly mapFolder: string;
   /** The Map project folder it resolves `reforged-builtins` from. */
   readonly projectRoot: string;
-  /** The minimum interval between two checks of modification times, in milliseconds; not used until the reload of #590. */
+  /** The minimum interval between two checks of modification times, in milliseconds. */
   readonly minInterval: number;
   /**
    * Looks a Rawcode literal up. Synchronous, and never throws.
@@ -241,9 +245,15 @@ export interface RawcodeLookup {
  * @remarks
  * Nothing is read until the first lookup, which reads the map folder and the
  * index of `reforged-builtins` (an optional peer, resolved from
- * `projectRoot`) and keeps what it read for the next ones. A map folder it
- * cannot read, or a missing `reforged-builtins`, makes every lookup but a
- * malformed one unavailable, with the reason. The objects and their names
+ * `projectRoot`) and keeps what it read for the next ones. A later lookup,
+ * once `minInterval` has passed since the last check, compares the
+ * modification times of the Object data files, their Skin files,
+ * `war3map.wts`, `war3map.w3i` and the index, and reads them all again when
+ * one changed, appeared or disappeared: an object saved in the World Editor
+ * is known without a build. A map folder it cannot read, or a missing
+ * `reforged-builtins`, makes every lookup but a malformed one unavailable,
+ * with the reason, until a later check finds the files changed; after a read
+ * that fails, each later check reads them again. The objects and their names
  * are the ones `generateObjects` writes. The map's Game data set is read
  * from `war3map.w3i`; when it cannot be, a warning says so and no Rawcode is
  * reported as outside it. Loaded by `require` from a
@@ -257,11 +267,30 @@ export function openRawcodeLookup(
   options: RawcodeLookupOptions,
 ): RawcodeLookup {
   const { mapFolder, projectRoot } = options;
+  const minInterval = options.minInterval ?? DEFAULT_MIN_INTERVAL;
   let loaded: Loaded | UnavailableLookup | undefined;
+  /** When the files were last checked, by `Date.now()`. */
+  let checkedAt = 0;
+  /** The fingerprint of the files at the last check; undefined when the last read failed, so that the next check reads again. */
+  let fingerprint: string | undefined;
   const load = (): Loaded | UnavailableLookup => {
+    const now = Date.now();
+    // A clock set back counts as the interval passed.
+    if (
+      loaded !== undefined &&
+      now >= checkedAt &&
+      now - checkedAt < minInterval
+    ) {
+      return loaded;
+    }
+    checkedAt = now;
     try {
-      loaded ??= loadLookup(mapFolder, projectRoot);
+      const current = filesFingerprint(mapFolder, projectRoot);
+      if (loaded !== undefined && current === fingerprint) return loaded;
+      fingerprint = current;
+      loaded = loadLookup(mapFolder, projectRoot);
     } catch (error) {
+      fingerprint = undefined;
       loaded = unavailable(error);
     }
     return loaded;
@@ -269,7 +298,7 @@ export function openRawcodeLookup(
   return {
     mapFolder,
     projectRoot,
-    minInterval: options.minInterval ?? DEFAULT_MIN_INTERVAL,
+    minInterval,
     lookup(rawcode) {
       if (isMalformed(rawcode)) return { status: "malformed", rawcode };
       try {
@@ -313,6 +342,31 @@ const MAX_SUGGESTIONS = 3;
 
 function isMalformed(rawcode: string): boolean {
   return !/^[\x20-\x7e]{4}$/.test(rawcode);
+}
+
+/**
+ * Fingerprints every file the lookup reads, in one string that changes when
+ * one of them does: whether the map folder exists, then each file's
+ * modification time, change time (which a change of permissions moves) and
+ * size, or `-` when it is missing.
+ */
+function filesFingerprint(mapFolder: string, projectRoot: string): string {
+  const files = [...objectDataFileNames(), WTS_FILE, W3I_FILE].map((name) =>
+    path.join(mapFolder, name),
+  );
+  const builtins = builtinsFiles(projectRoot);
+  if (builtins !== undefined) files.push(builtins.manifest);
+  if (builtins?.index !== undefined) files.push(builtins.index);
+  const folder = fs.statSync(mapFolder, { throwIfNoEntry: false });
+  return [
+    String(folder?.isDirectory() === true),
+    ...files.map((file) => {
+      const stat = fs.statSync(file, { throwIfNoEntry: false });
+      return stat === undefined
+        ? `${file} -`
+        : `${file} ${String(stat.mtimeMs)} ${String(stat.ctimeMs)} ${String(stat.size)}`;
+    }),
+  ].join("\n");
 }
 
 function loadLookup(

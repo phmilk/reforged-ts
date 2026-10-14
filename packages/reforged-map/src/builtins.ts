@@ -43,33 +43,67 @@ export type BuiltinsResult =
 /** The kind entry point whose target names the newest Game version. */
 const KIND_ENTRY = "./units";
 
+/** The files of reforged-builtins the index is read from: its package.json, and the index when it names one. */
+export interface BuiltinsFiles {
+  /** The path of its package.json. */
+  readonly manifest: string;
+  /** The path of the index of the Game version its kind entry points resolve to. */
+  readonly index?: string;
+  /** Why its package.json could not be read, when it could not. */
+  readonly error?: string;
+}
+
 /**
  * Resolves reforged-builtins from `projectRoot` (a folder of the Map
- * project, whose `node_modules` or an ancestor's holds it) and reads the
- * index of the Game version its kind entry points resolve to.
+ * project, whose `node_modules` or an ancestor's holds it): its package.json,
+ * and the index of the Game version its kind entry points resolve to.
+ * Undefined when it is not installed. Without `index` when its package.json
+ * names no Game version, or cannot be read: `error` then says why.
+ */
+export function builtinsFiles(projectRoot: string): BuiltinsFiles | undefined {
+  const manifestPath = findManifest(projectRoot);
+  if (manifestPath === undefined) return undefined;
+  let manifest: { exports?: Record<string, { types?: string } | string> };
+  try {
+    manifest = JSON.parse(
+      fs.readFileSync(manifestPath, "utf8"),
+    ) as typeof manifest;
+  } catch (error) {
+    return { manifest: manifestPath, error: (error as Error).message };
+  }
+  const entry = manifest.exports?.[KIND_ENTRY];
+  const target = typeof entry === "string" ? entry : entry?.types;
+  const version =
+    target === undefined ? undefined : /^\.\/([^/]+)\//.exec(target)?.[1];
+  return {
+    manifest: manifestPath,
+    ...(version !== undefined && {
+      index: path.join(path.dirname(manifestPath), version, "index.json"),
+    }),
+  };
+}
+
+/**
+ * Resolves reforged-builtins from `projectRoot`, as {@link builtinsFiles},
+ * and reads the index of the Game version its kind entry points resolve to.
  */
 export function loadBuiltins(projectRoot: string): BuiltinsResult {
-  const manifestPath = findManifest(projectRoot);
-  if (manifestPath === undefined) return { missing: "is not installed" };
   try {
-    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as {
-      exports?: Record<string, { types?: string } | string>;
-    };
-    const entry = manifest.exports?.[KIND_ENTRY];
-    const target = typeof entry === "string" ? entry : entry?.types;
-    const version =
-      target === undefined ? undefined : /^\.\/([^/]+)\//.exec(target)?.[1];
-    if (version === undefined) {
+    const files = builtinsFiles(projectRoot);
+    if (files === undefined) return { missing: "is not installed" };
+    if (files.error !== undefined) {
+      return { missing: `could not be read (${files.error})` };
+    }
+    if (files.index === undefined) {
       return {
         missing: `names no Game version in its ${KIND_ENTRY} entry point`,
       };
     }
     const index = JSON.parse(
-      fs.readFileSync(
-        path.join(path.dirname(manifestPath), version, "index.json"),
-        "utf8",
-      ),
-    ) as BuiltinsIndex & { format?: number };
+      fs.readFileSync(files.index, "utf8"),
+    ) as BuiltinsIndex & {
+      format?: number;
+    };
     if (index.format !== INDEX_FORMAT) {
       return {
         missing: `has an index of format ${String(index.format)}, which reforged-map does not read (it reads format ${String(INDEX_FORMAT)})`,
