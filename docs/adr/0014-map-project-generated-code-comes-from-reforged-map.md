@@ -65,3 +65,11 @@ HiveWE is not a target for now. No HiveWE release reads a 3.0.0 map: 0.10, the l
 The readers still accept both layouts: a name in the Skin file or in the base file, a `TRIGSTR_nnn` or literal text. The World Editor itself loads a literal name from either file (#475), so the tolerance costs nothing and keeps maps from other tools readable. Whether HiveWE becomes a target again is decided once a HiveWE release reads 3.0 maps.
 
 Amendment record: https://github.com/phmilk/reforged-ts/issues/485
+
+## Fourth amendment (2026-10-10)
+
+The Template installs `reforged-builtins` without turning its overloads on. This revises the consequence "adds `reforged-map` and `reforged-builtins`, with the overloads turned on": the Template lists the package as a dev dependency for its constants and for the index the Rawcode lookup reads, and `reforged-builtins/3.0.0` stays out of its `types`. Each literal `FourCC` call costs 6.6 to 7.0 ms of check time with the 4,651 overloads of 3.0.0 (#515, #568), more than three times what #462 estimated, so the package stays opt-in, as it shipped (#509). A Map project turns them on by adding the entry to `types`, and pays that cost per call; its constants cost no overload resolution.
+
+The map's own overloads are not affected: they come from `src/generated/`, so they are on in every Map project that generates them. At 500 Custom objects they cost 0.45 to 2.3 ms per literal call depending on the machine, about a sixth of what the Built-in objects' cost, and they ship on (#584).
+
+Amendment record: https://github.com/phmilk/reforged-ts/issues/457

@@ -1,7 +1,7 @@
 {
   "name": "reforged-map",
   "version": "1.0.0-alpha.0",
-  "description": "Reads a Warcraft III Reforged map folder and writes the TypeScript declarations and the Lua stub of its Editor globals for a reforged-ts Map project.",
+  "description": "Reads a Warcraft III Reforged map folder and writes, for a reforged-ts Map project, the declarations and the Lua stub of its Editor globals and the FourCC overloads and constants of its objects, with a Rawcode lookup for tools.",
   "license": "MIT",
   "type": "module",
   "keywords": [
