@@ -5,7 +5,7 @@
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import {
   DEFAULT_MIN_INTERVAL,
   openRawcodeLookup,
@@ -317,7 +317,8 @@ describe("openRawcodeLookup", () => {
     expect(openSample().gameVersion()).toBe("3.0.0");
   });
 
-  it("builds its model on the first lookup and keeps it", () => {
+  it("builds its model on the first lookup and keeps it within the interval", () => {
+    vi.useFakeTimers({ toFake: ["Date"], now: 0 });
     const folder = sampleMap();
     const lookup = openRawcodeLookup({
       mapFolder: folder,
@@ -510,6 +511,150 @@ describe("openRawcodeLookup, the map's Game data set", () => {
 
     expect(lookup.warnings()).toEqual([]);
   });
+});
+
+describe("openRawcodeLookup, freshness", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  /** A lookup over the sample map, its clock at 0, with an interval of one second. */
+  function openAtZero() {
+    vi.useFakeTimers({ toFake: ["Date"], now: 0 });
+    const folder = sampleMap();
+    const lookup = openRawcodeLookup({
+      mapFolder: folder,
+      projectRoot: PACKAGE_ROOT,
+      minInterval: 1000,
+    });
+    expect(lookup.lookup("h000").status).toBe("known");
+    return { folder, lookup };
+  }
+
+  /** Writes a file of the map folder, its modification time a minute later than any the test wrote before. */
+  let stamp = 0;
+  function write(folder: string, name: string, bytes: Uint8Array): void {
+    const file = path.join(folder, name);
+    fs.writeFileSync(file, bytes);
+    stamp += 60;
+    const time = new Date(Date.UTC(2030, 0, 1) + stamp * 1000);
+    fs.utimesSync(file, time, time);
+  }
+
+  const captainOfItems = buildObjectData({
+    custom: [
+      {
+        original: "ratc",
+        custom: "I000",
+        modifications: [{ field: "unam", value: "Captain's Claws" }],
+      },
+    ],
+  });
+
+  it("sees a file written after the first lookup once the interval has passed, and not before", () => {
+    const { folder, lookup } = openAtZero();
+    write(
+      folder,
+      "war3map.w3u",
+      buildObjectData({
+        custom: [
+          {
+            original: "hfoo",
+            custom: "h001",
+            modifications: [{ field: "unam", value: "Sergeant" }],
+          },
+        ],
+      }),
+    );
+
+    vi.setSystemTime(999);
+    expect(lookup.lookup("h001").status).toBe("unknown");
+
+    vi.setSystemTime(1000);
+    expect(lookup.lookup("h001")).toMatchObject({
+      status: "known",
+      objects: [{ origin: "custom", name: "Sergeant" }],
+    });
+  });
+
+  it("counts a file removed, and a file added, as changes", () => {
+    const { folder, lookup } = openAtZero();
+    fs.rmSync(path.join(folder, "war3map.w3h"));
+
+    vi.setSystemTime(1000);
+    expect(lookup.lookup("B000")).toMatchObject({
+      objects: [{ kind: "destructable" }],
+    });
+
+    write(folder, "war3map.w3t", captainOfItems);
+    vi.setSystemTime(2000);
+    expect(lookup.lookup("I000")).toMatchObject({
+      status: "known",
+      objects: [{ kind: "item", name: "Captain's Claws" }],
+    });
+  });
+
+  it("sees war3map.w3i change", () => {
+    const { folder, lookup } = openAtZero();
+    expect(lookup.lookup("Npal").status).toBe("known");
+
+    write(folder, "war3map.w3i", buildW3i({ set: 1, version: 1 }));
+    vi.setSystemTime(1000);
+
+    expect(lookup.lookup("Npal").status).toBe("not-in-game-data-set");
+    expect(lookup.warnings()).toEqual([]);
+  });
+
+  it("checks no file again within the interval of its last check", () => {
+    const { folder, lookup } = openAtZero();
+    vi.setSystemTime(1500);
+    expect(lookup.lookup("hfoo").status).toBe("known");
+    write(folder, "war3map.w3t", captainOfItems);
+
+    vi.setSystemTime(2499);
+    expect(lookup.lookup("I000").status).toBe("unknown");
+
+    vi.setSystemTime(2500);
+    expect(lookup.lookup("I000").status).toBe("known");
+  });
+
+  it("becomes available once a missing map folder is saved", () => {
+    vi.useFakeTimers({ toFake: ["Date"], now: 0 });
+    const folder = path.join(makeTempDir(), "later.w3m");
+    const lookup = openRawcodeLookup({
+      mapFolder: folder,
+      projectRoot: PACKAGE_ROOT,
+    });
+    expect(lookup.lookup("hfoo").status).toBe("unavailable");
+
+    fs.mkdirSync(folder);
+    vi.setSystemTime(1000);
+
+    expect(lookup.lookup("hfoo").status).toBe("known");
+  });
+
+  // Windows has no mode that denies the owner a read, and root reads
+  // whatever the mode.
+  it.skipIf(process.platform === "win32" || process.getuid?.() === 0)(
+    "is unavailable while a file is unreadable, then recovers once it is readable",
+    () => {
+      const { folder, lookup } = openAtZero();
+      const file = path.join(folder, "war3map.w3u");
+      fs.chmodSync(file, 0o000);
+
+      vi.setSystemTime(1000);
+      const result = lookup.lookup("h000");
+      expect(result).toMatchObject({ status: "unavailable" });
+      expect(result.status === "unavailable" && result.reason).toMatch(
+        /^The map folder could not be read: EACCES/,
+      );
+      expect(lookup.lookup("hfo").status).toBe("malformed");
+
+      fs.chmodSync(file, 0o644);
+      vi.setSystemTime(2000);
+      expect(lookup.lookup("h000").status).toBe("known");
+    },
+  );
 });
 
 /** The unknown result, or a failed expectation. */

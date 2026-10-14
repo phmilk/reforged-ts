@@ -65,6 +65,15 @@ class ObjectDataError extends Error {
   override name = "ObjectDataError";
 }
 
+/** The file names of each kind's Object data, base file then Skin file: `war3map.w3u`, `war3mapSkin.w3u`. */
+export function objectDataFileNames(kinds: readonly ObjectKind[]): string[] {
+  return kinds.flatMap((kind) =>
+    [false, true].map(
+      (skin) => `war3map${skin ? "Skin" : ""}.${EXTENSIONS[kind]}`,
+    ),
+  );
+}
+
 /**
  * Reads the Object data files of `kinds` into the model: for each kind, its
  * base file, then its Skin file. A missing file holds no object, with no
