@@ -142,6 +142,9 @@ export default defineConfig(
     // The Built-in objects' artefacts, emitted from each Game version's index.
     "packages/reforged-builtins/[0-9]*/**",
     "packages/reforged-builtins/[0-9]*.d.ts",
+    // The declarations reforged-map generates, which its Map project
+    // fixtures hold as the generator writes them.
+    "packages/reforged-map/test/fixtures/*-map-project/map-objects.d.ts",
     // Lua is not linted.
     "**/*.lua",
     // Agent worktrees and local state.
