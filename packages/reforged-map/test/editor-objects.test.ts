@@ -4,7 +4,8 @@
 // Object kinds, a modified Built-in object of each, a non-ASCII name, a
 // multi-level ability, and a Custom buff and a Custom destructable both at
 // `B000`. Read through the entry point and the lookup, as the Template and
-// the tools run them.
+// the tools run them; the ability's levels, which nothing generated carries,
+// through the Object data reader.
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
@@ -39,16 +40,25 @@ const OBJECTS: readonly {
   kind: ObjectKind;
   origin: "custom" | "modified";
   name: string;
+  /** A modified Built-in object's enUS name in the game. */
+  builtinName?: string;
 }[] = [
   { rawcode: "h000", kind: "unit", origin: "custom", name: "Captain" },
   { rawcode: "h001", kind: "unit", origin: "custom", name: "Chevalier Élu" },
-  { rawcode: "hfoo", kind: "unit", origin: "modified", name: "Militia" },
+  {
+    rawcode: "hfoo",
+    kind: "unit",
+    origin: "modified",
+    name: "Militia",
+    builtinName: "Footman",
+  },
   { rawcode: "I000", kind: "item", origin: "custom", name: "Captain's Claws" },
   {
     rawcode: "ratc",
     kind: "item",
     origin: "modified",
     name: "Claws of Attack +12",
+    builtinName: "Claws of Attack +12",
   },
   {
     rawcode: "A000",
@@ -56,13 +66,26 @@ const OBJECTS: readonly {
     origin: "custom",
     name: "Arctic Blizzard",
   },
-  { rawcode: "AHhb", kind: "ability", origin: "modified", name: "Holy Light" },
-  { rawcode: "Binf", kind: "buff", origin: "modified", name: "Burning Fire" },
+  {
+    rawcode: "AHhb",
+    kind: "ability",
+    origin: "modified",
+    name: "Holy Light",
+    builtinName: "Holy Light",
+  },
+  {
+    rawcode: "Binf",
+    kind: "buff",
+    origin: "modified",
+    name: "Burning Fire",
+    builtinName: "Inner Fire",
+  },
   {
     rawcode: "LTlt",
     kind: "destructable",
     origin: "modified",
     name: "Summer Tree Wall",
+    builtinName: "Summer Tree Wall",
   },
   {
     rawcode: "D000",
@@ -75,6 +98,7 @@ const OBJECTS: readonly {
     kind: "doodad",
     origin: "modified",
     name: "Skull Brazier",
+    builtinName: "Brazier Skull",
   },
   {
     rawcode: "R000",
@@ -87,6 +111,7 @@ const OBJECTS: readonly {
     kind: "upgrade",
     origin: "modified",
     name: "Iron Plating",
+    builtinName: "Iron Plating",
   },
 ];
 
@@ -100,8 +125,11 @@ describe("the Object data saved by the 3.0 World Editor", () => {
   }, 60_000);
 
   /** The generated file of that name. */
-  const contents = (name: string): string =>
-    output.files.find((file) => file.name === name)?.contents ?? "";
+  function contents(name: string): string {
+    const file = output.files.find((candidate) => candidate.name === name);
+    if (file === undefined) throw new Error(`no ${name} generated`);
+    return file.contents;
+  }
 
   it("reads it with no warning", () => {
     expect(output.warnings).toEqual([]);
@@ -146,12 +174,10 @@ describe("the Object data saved by the 3.0 World Editor", () => {
   it("reads the multi-level ability's three levels", () => {
     const model = createModel();
     readObjectData(FOLDER, ["ability"], model);
+    // A000's entry in war3map.w3a: its Skin entry holds only its name.
     const ability = model.objectData
-      .flatMap((file) => file.custom)
-      .find(
-        (entry) =>
-          entry.custom === "A000" && entry.sets[0]?.modifications.length,
-      );
+      .find((file) => file.name === "war3map.w3a")
+      ?.custom.find((entry) => entry.custom === "A000");
 
     expect(
       ability?.sets[0]?.modifications
@@ -179,10 +205,12 @@ describe("the Object data saved by the 3.0 World Editor", () => {
       projectRoot: PACKAGE_ROOT,
     });
 
-    for (const { rawcode, kind, origin, name } of OBJECTS) {
+    for (const { rawcode, kind, origin, name, builtinName } of OBJECTS) {
       expect(lookup.lookup(rawcode), rawcode).toMatchObject({
         status: "known",
-        objects: [{ rawcode, kind, origin, name }],
+        objects: [
+          { rawcode, kind, origin, name, ...(builtinName && { builtinName }) },
+        ],
       });
     }
     expect(lookup.lookup("B000")).toMatchObject({

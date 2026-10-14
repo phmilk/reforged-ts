@@ -23,6 +23,8 @@ The objects were **seeded into the Object data files by a script, then loaded an
    | `war3map.w3d` | `AObr`, `dnam` Skull Brazier | `D000` from `AOks`, `dnam` Statue of the Captain                                              |
    | `war3map.w3q` | `Rhar`, `gglb` 200           | `R000` from `Rhme`, `gnam` Sharper Swords                                                     |
 
+   Three modified Built-in objects are renamed: the Footman as Militia, Inner Fire's tooltip as Burning Fire, and the Brazier Skull as Skull Brazier. The four others change another field.
+
 3. The editor was started with `World Editor.exe -launch -loadfile "<scratch>\maps\reforged-ts-template.w3m"`. It loaded the map with no dialog.
 4. File > Save Map (`WM_COMMAND` 4 to the main window) saved the map with no dialog. A second save with no edit rewrote 31 files, every one byte-identical: the output is the editor's own fixed point. The editor was then closed with `WM_CLOSE` on the unmodified map.
 
@@ -31,7 +33,7 @@ The saved folder was copied here, minus `conversation.json` (byte-identical to t
 ## What the editor wrote
 
 - **Both files of every kind.** Each of the seven kinds has a base file and a Skin file, in format version 3. Every object of a kind has an entry in both, with one set of flag 0; an entry whose fields all went to the other file holds no modification.
-- **Names in the Skin file, as `TRIGSTR_nnn`.** The editor moved every name into the Skin file and into `war3map.wts` (strings 7 to 17, each with a `// <Kind>: <Rawcode> (<name>), Name (Name)` comment line), the Template's six strings kept. The doodads are the exception: their `dnam` stays in `war3map.w3d`, as a `TRIGSTR_nnn`, and their Skin entries hold no modification. The other fields stay in the base file.
+- **Names in the Skin file, as `TRIGSTR_nnn`.** The editor moved every name into the Skin file and into `war3map.wts` (strings 7 to 17, each with a comment line naming the object and the field, `// Units: h000 (Captain), Name (Name)`, or for a buff's tooltip `// Buffs/Effects: B000 (), Bufftip (Tooltip)`), the Template's six strings kept. The doodads are the exception: their `dnam` stays in `war3map.w3d`, as a `TRIGSTR_nnn`, and their Skin entries hold no modification. The other fields stay in the base file.
 - **`alev` was dropped.** The Custom ability `A000` keeps its mana cost at levels 1, 2 and 3 (`amcs`, level and data pointer `0`), but the editor wrote no `alev`: the seeded field is not one the 3.0 editor keeps for it. The ability has three levels, as its base, Blizzard, has.
 - **The non-ASCII name** is UTF-8 in `war3map.wts`, `Chevalier Élu`.
 - **`war3map.w3i`** changed in one bit: the flags go from `0x9C10` to `0xDC10` (`0x4000` set). The Game Data Set and Game Data Version are the Template's, Melee and Forsaken Kingdom.
