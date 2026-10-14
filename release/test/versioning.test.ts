@@ -223,6 +223,8 @@ describe("changeset version", { timeout: 60_000 }, () => {
     // Pinned, not read: the release that publishes reforged-builtins has
     // already versioned the repository's manifest past 0.0.0.
     await setVersion(root, "reforged-builtins", "0.0.0");
+    // reforged-map pinned too: the release that versions it moves it on.
+    await setVersion(root, "reforged-map", "1.0.0-alpha.0");
     const before = await versions(root);
     await addChangeset(root, "reforged-builtins", {
       "reforged-builtins": "major",
