@@ -19,6 +19,7 @@ import { readWar3mapWts } from "./war3map-wts.js";
 import { WTG_FILE, readWar3mapWtg } from "./war3map-wtg.js";
 
 export { MapFolderError } from "./map-folder.js";
+export type { GameDataSet } from "./builtins.js";
 export type { ObjectKind } from "./model.js";
 
 /** The name of the generated TypeScript declarations of the Editor globals. */
@@ -178,6 +179,7 @@ export {
   type KnownRawcode,
   type MalformedRawcode,
   type ModifiedRawcodeObject,
+  type NotInGameDataSetRawcode,
   type RawcodeConstant,
   type RawcodeLookup,
   type RawcodeLookupOptions,

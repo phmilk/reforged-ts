@@ -17,6 +17,7 @@ import {
   mapFolderObjects,
   type MapFolderObject,
 } from "./objects.js";
+import { readWar3mapW3i } from "./war3map-w3i.js";
 import { readWar3mapWts } from "./war3map-wts.js";
 
 /** The default of {@link RawcodeLookupOptions.minInterval}, in milliseconds: one second. */
@@ -148,6 +149,21 @@ export interface KnownRawcode {
   readonly objects: readonly RawcodeObject[];
 }
 
+/**
+ * The Rawcode names Built-in objects of the Patch only, and the map's Game
+ * data set holds none of them: the game finds no such object in this map.
+ */
+export interface NotInGameDataSetRawcode {
+  /** `"not-in-game-data-set"`. */
+  readonly status: "not-in-game-data-set";
+  /** The Rawcode looked up. */
+  readonly rawcode: string;
+  /** The objects it names, with the fields of a known one, in Object kind order. */
+  readonly objects: readonly (BuiltinRawcodeObject | ModifiedRawcodeObject)[];
+  /** The map's Game data set, with its id and the name the World Editor gives it. */
+  readonly gameDataSet: GameDataSet;
+}
+
 /** The Rawcode names no Built-in object and no object of the map. */
 export interface UnknownRawcode {
   /** `"unknown"`. */
@@ -176,7 +192,11 @@ export interface UnavailableLookup {
 
 /** What {@link RawcodeLookup.lookup} returns, told apart by its `status`. */
 export type RawcodeLookupResult =
-  KnownRawcode | UnknownRawcode | MalformedRawcode | UnavailableLookup;
+  | KnownRawcode
+  | NotInGameDataSetRawcode
+  | UnknownRawcode
+  | MalformedRawcode
+  | UnavailableLookup;
 
 /** A lookup over one map folder, which {@link openRawcodeLookup} returns. */
 export interface RawcodeLookup {
@@ -190,9 +210,10 @@ export interface RawcodeLookup {
    * Looks a Rawcode literal up. Synchronous, and never throws.
    *
    * @param rawcode - The literal's text (`"hfoo"`).
-   * @returns What it names, unknown with its suggestions, malformed, or
-   *   unavailable with the reason. A malformed literal is malformed even
-   *   when the lookup is unavailable.
+   * @returns What it names; not in the map's Game data set when it names
+   *   only Built-in objects that set does not hold; unknown with its
+   *   suggestions, malformed, or unavailable with the reason. A malformed
+   *   literal is malformed even when the lookup is unavailable.
    */
   lookup(rawcode: string): RawcodeLookupResult;
   /**
@@ -202,6 +223,15 @@ export interface RawcodeLookup {
    * @returns The Game version, or undefined when the lookup is unavailable.
    */
   gameVersion(): string | undefined;
+  /**
+   * The author-facing warnings of reading the map folder, each one line,
+   * such as a `war3map.w3i` the lookup cannot read, which turns its Game
+   * data set check off. Synchronous, and never throws.
+   *
+   * @returns The warnings, empty when there are none or the lookup is
+   *   unavailable.
+   */
+  warnings(): readonly string[];
 }
 
 /**
@@ -214,7 +244,9 @@ export interface RawcodeLookup {
  * `projectRoot`) and keeps what it read for the next ones. A map folder it
  * cannot read, or a missing `reforged-builtins`, makes every lookup but a
  * malformed one unavailable, with the reason. The objects and their names
- * are the ones `generateObjects` writes. Loaded by `require` from a
+ * are the ones `generateObjects` writes. The map's Game data set is read
+ * from `war3map.w3i`; when it cannot be, a warning says so and no Rawcode is
+ * reported as outside it. Loaded by `require` from a
  * CommonJS host such as tsserver: the package has no top-level await.
  *
  * @param options - The map folder, the Map project folder, and the minimum
@@ -255,6 +287,14 @@ export function openRawcodeLookup(
         return undefined;
       }
     },
+    warnings() {
+      try {
+        const state = load();
+        return "status" in state ? [] : state.warnings;
+      } catch {
+        return [];
+      }
+    },
   };
 }
 
@@ -263,6 +303,9 @@ interface Loaded {
   readonly gameVersion: string;
   /** The objects of every Rawcode, Built-in and of the map, in Object kind order. */
   readonly objects: ReadonlyMap<string, readonly RawcodeObject[]>;
+  /** The map's Game data set; undefined when unknown, which turns its check off. */
+  readonly gameDataSet: GameDataSet | undefined;
+  readonly warnings: readonly string[];
 }
 
 /** The most suggestions an unknown Rawcode gets. */
@@ -289,6 +332,7 @@ function loadLookup(
   const model = createModel();
   readObjectData(mapFolder, OBJECT_KINDS, model);
   readWar3mapWts(mapFolder, model);
+  readWar3mapW3i(mapFolder, model);
   const { objects: mapObjects } = mapFolderObjects(model, { builtins: index });
 
   const objects = new Map<string, RawcodeObject[]>();
@@ -321,7 +365,28 @@ function loadLookup(
       (a, b) => OBJECT_KINDS.indexOf(a.kind) - OBJECT_KINDS.indexOf(b.kind),
     );
   }
-  return { gameVersion: index.gameVersion, objects };
+  return {
+    gameVersion: index.gameVersion,
+    objects,
+    gameDataSet: mapGameDataSet(model.gameDataSet, index, model.warnings),
+    warnings: model.warnings,
+  };
+}
+
+/** The map's Game data set with its name, when the index has it; a warning otherwise. */
+function mapGameDataSet(
+  id: string | undefined,
+  index: BuiltinsIndex,
+  warnings: string[],
+): GameDataSet | undefined {
+  if (id === undefined) return undefined;
+  const set = index.gameDataSets?.find((other) => other.id === id);
+  if (set === undefined) {
+    warnings.push(
+      `reforged-builtins ${index.gameVersion} has no Game data set ${id}, the map's: no Built-in object is reported as outside it.`,
+    );
+  }
+  return set;
 }
 
 function fromMapObject(
@@ -366,8 +431,37 @@ function fromMapObject(
 
 function lookUp(state: Loaded, rawcode: string): RawcodeLookupResult {
   const objects = state.objects.get(rawcode);
-  if (objects !== undefined) return { status: "known", rawcode, objects };
-  return { status: "unknown", rawcode, suggestions: suggest(state, rawcode) };
+  if (objects === undefined) {
+    return { status: "unknown", rawcode, suggestions: suggest(state, rawcode) };
+  }
+  const { gameDataSet } = state;
+  if (gameDataSet !== undefined) {
+    const outside = objects.filter((object) => isOutside(object, gameDataSet));
+    if (outside.length === objects.length) {
+      return {
+        status: "not-in-game-data-set",
+        rawcode,
+        objects: outside,
+        gameDataSet,
+      };
+    }
+  }
+  return { status: "known", rawcode, objects };
+}
+
+/**
+ * Whether a Built-in object, modified or not, is outside the map's Game data
+ * set: the index names the sets that hold it, and none is the map's.
+ */
+function isOutside(
+  object: RawcodeObject,
+  gameDataSet: GameDataSet,
+): object is BuiltinRawcodeObject | ModifiedRawcodeObject {
+  return (
+    object.origin !== "custom" &&
+    object.gameDataSets.length > 0 &&
+    !object.gameDataSets.some((set) => set.id === gameDataSet.id)
+  );
 }
 
 /**

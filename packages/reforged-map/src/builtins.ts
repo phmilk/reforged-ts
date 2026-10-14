@@ -22,7 +22,9 @@ export interface BuiltinObject {
 
 /** A Game data set of the index: its id (`melee-tft`) and its name (`Melee (The Frozen Throne)`). */
 export interface GameDataSet {
+  /** Its id in reforged-builtins' index (`melee-tft`). */
   readonly id: string;
+  /** The name the World Editor gives it (`Melee (The Frozen Throne)`). */
   readonly label: string;
 }
 
