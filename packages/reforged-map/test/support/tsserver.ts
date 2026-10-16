@@ -271,7 +271,9 @@ export class TsServer {
   #read(): void {
     for (;;) {
       const text = this.#buffer.toString("latin1");
-      const header = /^Content-Length: (\d+)\r\n\r\n/.exec(text);
+      // tsserver counts one byte of newline after each message, but writes
+      // its host's: on Windows, "\r\n" leaves a "\n" before the next header.
+      const header = /^\s*Content-Length: (\d+)\r\n\r\n/.exec(text);
       if (header === null) return;
       const start = header[0].length;
       const length = Number(header[1]);
