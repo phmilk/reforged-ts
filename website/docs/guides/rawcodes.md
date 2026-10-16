@@ -1,7 +1,7 @@
 ---
 title: Rawcodes
 sidebar_position: 14
-description: How the Typings and the library type a Rawcode by its Object kind, with Rawcode<K>, what FourCC returns, the as cast for a computed number, widening to number, GUI variables of an object type, the Built-in objects, the Custom objects of the map, and the codes that are not Rawcodes.
+description: How the Typings and the library type a Rawcode by its Object kind, with Rawcode<K>, what FourCC returns, the as cast for a computed number, widening to number, GUI variables of an object type, the Built-in objects, the Custom objects of the map, hover and go to definition on a Rawcode literal, and the codes that are not Rawcodes.
 ---
 
 # Rawcodes
@@ -565,6 +565,65 @@ A Map project generated before the Template wrote the map's objects turns them o
    ```
 
 3. Run `pnpm install`: the constants and the overloads are written into `src/generated/`, which the Template's `.gitignore` already leaves out.
+
+## Hover and go to definition on a Rawcode literal
+
+The overloads document an object on the hover of `FourCC`, the identifier. The literal itself says what it names through the TypeScript plugin of `reforged-map`, `reforged-map/typescript-plugin`: hovering `"h000"` shows the object, and go to definition on it goes to its constant. It reads the map folder through the same lookup as the lint rule and the generated code, so all three agree, and it follows a World Editor save without `pnpm dev` or a build: an object saved in the Object Editor shows on the first hover a second after the save.
+
+:::note[In the Template]
+The Template enables it ([phmilk/reforged-ts-template#88](https://github.com/phmilk/reforged-ts-template/issues/88)). A Map project generated earlier adds the one entry below to the `compilerOptions` of its tsconfig, with `reforged-map` and `reforged-builtins` installed as [Turning them on in a Map project generated earlier](#turning-them-on-in-a-map-project-generated-earlier) says:
+
+```json
+"plugins": [{ "name": "reforged-map/typescript-plugin" }]
+```
+
+:::
+
+### What it reads
+
+The literals the lint rule reads, at the position hovered:
+
+- the single argument of the global `FourCC`, a string or a template literal without substitutions: `FourCC("hfoo")`, ``FourCC(`hfoo`)``;
+- a number literal, decimal or hex, cast to a Rawcode type with `as` or an angle-bracket assertion: `1751543663 as Rawcode<"unit">`, `<Rawcode>0x68666f6f`.
+
+A computed argument, `FourCC(name)` or ``FourCC(`h00${i}`)``, a function of the Map project named `FourCC`, a cast to `number` and `0` are left to TypeScript, and so is the hover of `FourCC`, the identifier.
+
+### What the hover shows
+
+| The literal names                           | The hover                                                                                                                                                                              |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| a Built-in object                           | "**Footman** (`hfoo`), a Built-in unit of Patch 3.0.0.", its race, the Game data sets that hold it, and its constant, `Units.Footman_hfoo`, from `reforged-builtins/units`             |
+| a Built-in object the map modifies          | the same, with the map's name: "named Militia in this map", or "which this map modifies"                                                                                               |
+| a Custom object                             | "**Captain** (`h000`), a Custom unit of this map, derived from Footman (`hfoo`).", its base's race, and its constant, `CustomUnits.Captain_h000`, from the generated `custom-units.ts` |
+| two objects, a Rawcode two kinds share      | "`B000` names a Custom buff and a Custom destructable, so `FourCC` gives no single kind.", then both objects                                                                           |
+| a Built-in object outside the Game data set | the object, then "`Asa2` (Pillage) is a Built-in ability of Patch 3.0.0 but not of this map's Game data set (Melee (Forsaken Kingdom))."                                               |
+| nothing                                     | "`h00A` is neither a Built-in object of Patch 3.0.0 nor an object of this map.", then up to three Rawcodes one edit away, each with its name and kind, a change of case first          |
+| nothing, the literal is not four characters | "`hfo` is not a Rawcode: a Rawcode is exactly four ASCII characters."                                                                                                                  |
+
+A cast number first shows the Rawcode it decodes to, "`1751543663` is the Rawcode `hfoo`.", or the bytes that are not one.
+
+Go to definition goes to the declaration of each object's constant: in `reforged-builtins` for a Built-in object, modified or not, in the generated module for a Custom one, both for `B000`. An object whose constant cannot be found goes to its `FourCC` overload. An unknown or malformed literal gets TypeScript's own result.
+
+### The map folder
+
+Without an option, the plugin reads the one map folder under the project's `maps/`, a folder whose name ends in `.w3x` or `.w3m`, as the lint rule does: the Template keeps its map there. A map folder elsewhere is named by `mapFolder` in the plugin's entry, absolute or relative to the project root, the folder of the Map project's `package.json`, so `tests/lua/tsconfig.json`, which extends the same entry, reads the same folder:
+
+```json
+"plugins": [{ "name": "reforged-map/typescript-plugin", "mapFolder": "maps/my-map.w3x" }]
+```
+
+With no map folder or several under `maps/`, with the map folder missing or unreadable, the hover of a Rawcode literal is one line, "Rawcode details are unavailable:", then the reason. The hover resumes on its own once the cause is fixed, with no restart.
+
+### The editor's TypeScript
+
+The plugin runs inside tsserver, and tsserver loads a project's plugins only when it is the Map project's own TypeScript, from its `node_modules`. Every editor that runs it shows the hover:
+
+- **VS Code**: "TypeScript: Select TypeScript Version", then "Use Workspace Version". The Template's `.vscode/settings.json` asks for it on the first open.
+- **Neovim**: `ts_ls` (typescript-language-server) and `vtsls` start the workspace's TypeScript when `node_modules/typescript` exists; for `vtsls`, set `vtsls.autoUseWorkspaceTsdk` to `true`.
+- **Zed**: its TypeScript support runs `vtsls`; set `autoUseWorkspaceTsdk` to `true` in the `vtsls` settings of the project's `.zed/settings.json`.
+- **WebStorm**: Settings > Languages & Frameworks > TypeScript, with the TypeScript field set to the project's `node_modules/typescript`.
+
+VS Code's TypeScript 7 extension runs no tsserver plugin: under it, the plugin does not load, and the generated overloads and constants still document each object. The plugin writes to the tsserver log, each line starting with `reforged-map/typescript-plugin:`: that it loaded, with the project root and the map folder it read, and each reason Rawcode details are off, once. In VS Code, "TypeScript: Open TS Server log" opens it. Without `reforged-builtins` installed, the log says so and the plugin stays off.
 
 ## Codes that are not Rawcodes
 

@@ -34,7 +34,10 @@
   "types": "./dist/index.d.ts",
   "files": [
     "/dist/**/*.js",
+    "/dist/**/*.cjs",
     "/dist/**/*.d.ts",
+    "/dist/**/*.d.cts",
+    "/typescript-plugin/package.json",
     "/LICENSE",
     "/README.md"
   ],

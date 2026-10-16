@@ -1,0 +1,4 @@
+{
+  "main": "../dist/typescript-plugin.cjs",
+  "types": "../dist/typescript-plugin.d.cts"
+}

@@ -1,0 +1,45 @@
+{
+  "description": "How a tool finds the map folder without an option: the folders directly under <project root>/maps/ whose names end in .w3x or .w3m, ignoring case. One is the map folder; none or several is no map folder. `maps` lists the entries of maps/, a folder ending in a slash, a file otherwise, or is null when maps/ is absent. `found` is the map folder's name, or null with `reason`, `none` or `several`. Shared by the tests of reforged-map/typescript-plugin and of the lint rule no-unknown-rawcodes (#595, #582).",
+  "cases": [
+    {
+      "name": "one .w3m folder",
+      "maps": ["my-map.w3m/"],
+      "found": "my-map.w3m"
+    },
+    {
+      "name": "one .w3x folder",
+      "maps": ["my-map.w3x/"],
+      "found": "my-map.w3x"
+    },
+    {
+      "name": "an upper-case extension",
+      "maps": ["My Map.W3X/"],
+      "found": "My Map.W3X"
+    },
+    {
+      "name": "one map folder beside a folder and a file that are not",
+      "maps": ["backup/", "notes.txt", "packed.w3x", "my-map.w3m/"],
+      "found": "my-map.w3m"
+    },
+    {
+      "name": "a map folder nested one level down",
+      "maps": ["old/", "old/my-map.w3m/"],
+      "found": null,
+      "reason": "none"
+    },
+    {
+      "name": "a packed map, a file",
+      "maps": ["my-map.w3x"],
+      "found": null,
+      "reason": "none"
+    },
+    { "name": "an empty maps/", "maps": [], "found": null, "reason": "none" },
+    { "name": "no maps/", "maps": null, "found": null, "reason": "none" },
+    {
+      "name": "two map folders",
+      "maps": ["a.w3m/", "b.w3x/"],
+      "found": null,
+      "reason": "several"
+    }
+  ]
+}
