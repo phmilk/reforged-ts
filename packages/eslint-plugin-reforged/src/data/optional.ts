@@ -9,8 +9,8 @@ import path from "node:path";
 
 import { readDataFile } from "./load.js";
 
-/** The optional peer packages whose data files the rules read. */
-export type OptionalPackage = "reforged-ts" | "reforged-types";
+/** The optional peer packages whose data files or modules the rules read. */
+export type OptionalPackage = "reforged-map" | "reforged-ts" | "reforged-types";
 
 /** A data file published by an optional package. */
 export interface OptionalDataFile<T> {

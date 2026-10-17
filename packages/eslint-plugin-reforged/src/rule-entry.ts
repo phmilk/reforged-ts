@@ -23,6 +23,17 @@ export interface RuleEntry {
    * (it reports nothing), so a config that names it still loads.
    */
   readonly requires?: readonly OptionalPackage[];
+  /**
+   * The optional packages without which the rule runs reduced, and the
+   * check that is then off. When the linted project lacks one, the plugin
+   * warns once and registers the rule enabled; its factory reads the
+   * package's absence in the plugin data.
+   */
+  readonly reduced?: {
+    readonly without: readonly OptionalPackage[];
+    /** What is off without them, in the warning's words (`the check that a Rawcode names an object`). */
+    readonly off: string;
+  };
   /** Builds the rule from the loaded data files. */
   readonly create: (data: PluginData) => AnyRuleModule;
 }

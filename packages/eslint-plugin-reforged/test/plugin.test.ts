@@ -1,6 +1,13 @@
 // The plugin's export: the rule table of #16 (as amended by spec #50), the
 // recommended config, every rule's metadata and its docs page.
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -26,6 +33,7 @@ const decidedTable: Readonly<Record<string, "error" | "warn">> = {
   "prefer-handle-map": "warn",
   "no-self-recursion": "warn",
   "no-event-response-outside-event": "warn",
+  "no-unknown-rawcodes": "warn",
 };
 
 /** The one rule allowed to fix code (spec #50: rule 6, one-to-one renames). */
@@ -40,6 +48,11 @@ const docsSections = [
   "## Suggestions and fixes",
   "## When not to use it",
 ];
+
+/** The rules that run reduced without an optional package, by the package. */
+const reducedRules = {
+  "reforged-map": "no-unknown-rawcodes",
+} as const;
 
 /** The rules that read another package's data file, by the package they need. */
 const optionalRules = {
@@ -78,6 +91,8 @@ function onTick(): void {
   onTick();
 }
 TimerStart(ticker, 1, true, onTick);
+export const nobody = FourCC("h00A");
+export const malformed = FourCC("hfo");
 `;
 
 /** The package's manifest: its name, version and docs version label. */
@@ -98,18 +113,18 @@ describe("the plugin object", () => {
   });
 
   it("exports every rule of the decided table, and only those", () => {
-    expect(Object.keys(decidedTable)).toHaveLength(14);
+    expect(Object.keys(decidedTable)).toHaveLength(15);
     expect([...ruleNames].sort()).toEqual(Object.keys(decidedTable).sort());
   });
 
-  it("decides seven errors and seven warnings", () => {
+  it("decides seven errors and eight warnings", () => {
     const severities = Object.values(decidedTable);
     expect(severities.filter((each) => each === "error")).toHaveLength(7);
-    expect(severities.filter((each) => each === "warn")).toHaveLength(7);
+    expect(severities.filter((each) => each === "warn")).toHaveLength(8);
   });
 });
 
-describe("loading in a project with neither optional package", () => {
+describe("loading in a project with no optional package", () => {
   const root = mkdtempSync(path.join(tmpdir(), "eslint-plugin-reforged-"));
   afterAll(() => {
     rmSync(root, { recursive: true, force: true });
@@ -120,13 +135,17 @@ describe("loading in a project with neither optional package", () => {
   const warnings = warn.mock.calls.map((call) => String(call[0]));
   warn.mockRestore();
 
-  it("warns once per missing package, naming the rule it disables", () => {
-    expect([...warnings].sort()).toEqual(
-      Object.entries(optionalRules).map(
+  it("warns once per missing package, naming the rule it disables or reduces", () => {
+    expect([...warnings].sort()).toEqual([
+      ...Object.entries(reducedRules).map(
+        ([each, rule]) =>
+          `eslint-plugin-reforged: ${each} is not installed in ${root} (resolved from the project root); off: reforged/${rule} (the check that a Rawcode names an object; the four-character check still runs).`,
+      ),
+      ...Object.entries(optionalRules).map(
         ([each, rule]) =>
           `eslint-plugin-reforged: ${each} is not installed in ${root} (resolved from the project root); disabled: reforged/${rule}.`,
       ),
-    );
+    ]);
   });
 
   it("keeps every rule registered, at its decided severity", () => {
@@ -139,8 +158,9 @@ describe("loading in a project with neither optional package", () => {
   });
 
   it("disables exactly rules 6 and 9", () => {
-    // Every rule reports this module on the fixture project; with neither
-    // package installed, only rules 6 and 9 fall silent.
+    // Every rule reports this module on the fixture project; with no
+    // optional package installed, only rules 6 and 9 fall silent, and
+    // no-unknown-rawcodes still reports the malformed literal.
     const reported = (each: typeof plugin) =>
       new Set(lintWithRecommended(everyRuleReports, each).map((m) => m.ruleId));
     expect([...reported(plugin)].sort()).toEqual(
@@ -154,6 +174,49 @@ describe("loading in a project with neither optional package", () => {
         .map((rule) => `reforged/${rule}`)
         .sort(),
     );
+  });
+});
+
+describe("loading with a reforged-map that predates the lookup", () => {
+  const root = mkdtempSync(path.join(tmpdir(), "eslint-plugin-reforged-"));
+  afterAll(() => {
+    rmSync(root, { recursive: true, force: true });
+  });
+  const directory = path.join(root, "node_modules", "reforged-map");
+  mkdirSync(directory, { recursive: true });
+  writeFileSync(
+    path.join(directory, "package.json"),
+    JSON.stringify({
+      name: "reforged-map",
+      version: "1.0.0-alpha.0",
+      main: "index.cjs",
+    }),
+  );
+  writeFileSync(
+    path.join(directory, "index.cjs"),
+    "exports.generateEditorGlobals = () => undefined;\n",
+  );
+
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+  const old = createPlugin({ projectRoot: root });
+  const warnings = warn.mock.calls.map((call) => String(call[0]));
+  warn.mockRestore();
+
+  it("warns with its version that it does not export the lookup", () => {
+    expect(warnings).toContain(
+      `eslint-plugin-reforged: reforged-map@1.0.0-alpha.0 in ${directory} does not export openRawcodeLookup, the Rawcode lookup: update it; off: reforged/no-unknown-rawcodes (the check that a Rawcode names an object; the four-character check still runs).`,
+    );
+  });
+
+  it("keeps no-unknown-rawcodes enabled for malformed literals", () => {
+    expect(
+      lintWithRecommended(
+        'const u = FourCC("h00A");\nconst v = FourCC("hfo");',
+        old,
+      )
+        .filter((each) => each.ruleId === "reforged/no-unknown-rawcodes")
+        .map((each) => each.messageId),
+    ).toEqual(["malformedRawcode"]);
   });
 });
 

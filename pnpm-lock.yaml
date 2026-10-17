@@ -370,6 +370,12 @@ importers:
       lua-types:
         specifier: 'catalog:'
         version: 2.14.1
+      reforged-builtins:
+        specifier: workspace:^
+        version: link:../reforged-builtins
+      reforged-map:
+        specifier: workspace:^
+        version: link:../reforged-map
       reforged-ts:
         specifier: workspace:^
         version: link:../reforged-ts

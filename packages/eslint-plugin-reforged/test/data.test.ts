@@ -489,9 +489,24 @@ describe("the Crashing cases (data/crashing-arguments.json)", () => {
 });
 
 /** A project root with the given files, relative to it; a fresh directory each call. */
+/**
+ * A reforged-map installation that exports the Rawcode lookup, in every
+ * project below: the warnings these tests count are those of the package
+ * under test, not of no-unknown-rawcodes running reduced.
+ */
+const mapStub: Record<string, string> = {
+  "node_modules/reforged-map/package.json": JSON.stringify({
+    name: "reforged-map",
+    version: "1.0.0",
+    main: "index.cjs",
+  }),
+  "node_modules/reforged-map/index.cjs":
+    "exports.openRawcodeLookup = () => ({ lookup: () => ({ status: 'unavailable', reason: 'a stub.' }), gameVersion: () => undefined, warnings: () => [] });\n",
+};
+
 function project(files: Record<string, string>): string {
   const root = mkdtempSync(path.join(scratch, "project-"));
-  for (const [relative, content] of Object.entries(files)) {
+  for (const [relative, content] of Object.entries({ ...mapStub, ...files })) {
     const file = path.join(root, relative);
     mkdirSync(path.dirname(file), { recursive: true });
     writeFileSync(file, content);

@@ -18,8 +18,8 @@ export interface PluginOptions {
   /** Where each data file is read from; defaults to the installed ones. */
   readonly files?: DataFiles;
   /**
-   * The Map project's root, where the optional packages (reforged-ts,
-   * reforged-types) are looked up; defaults to the working directory, the
+   * The Map project's root, where the optional packages (reforged-map,
+   * reforged-ts, reforged-types) and the map folder are looked up; defaults to the working directory, the
    * directory ESLint runs in.
    */
   readonly projectRoot?: string;
@@ -47,12 +47,14 @@ function disabled(rule: AnyRuleModule): AnyRuleModule {
 /**
  * Builds the plugin. Throws a DataFileError when a data file has an
  * unexpected shape. When an optional package is missing from the project,
- * the rules that require it are registered disabled, with one console
+ * the rules that require it are registered disabled, and the rules that run
+ * reduced without it lose the check their entry names, with one console
  * warning per package naming them. The default export is `createPlugin()`.
  */
 export function createPlugin(options: PluginOptions = {}): ReforgedPlugin {
   const data = loadPluginData(options.files, options.projectRoot);
   const disabledBy = new Map<OptionalPackage, string[]>();
+  const reducedBy = new Map<OptionalPackage, string[]>();
   const rules: Record<string, AnyRuleModule> = {};
   const severities: Record<string, Severity> = {};
   for (const entry of ruleEntries) {
@@ -61,6 +63,14 @@ export function createPlugin(options: PluginOptions = {}): ReforgedPlugin {
     );
     for (const each of missing) {
       disabledBy.set(each, [...(disabledBy.get(each) ?? []), entry.name]);
+    }
+    for (const each of entry.reduced?.without ?? []) {
+      if (data.unavailable.has(each) && missing.length === 0) {
+        reducedBy.set(each, [
+          ...(reducedBy.get(each) ?? []),
+          `${pluginPrefix}/${entry.name} (${entry.reduced?.off ?? "one check"})`,
+        ]);
+      }
     }
     const rule = entry.create(data);
     rules[entry.name] = missing.length === 0 ? rule : disabled(rule);
@@ -71,6 +81,10 @@ export function createPlugin(options: PluginOptions = {}): ReforgedPlugin {
     console.warn(
       `${pluginMeta.name}: ${reason}; disabled: ${names.map((name) => `${pluginPrefix}/${name}`).join(", ")}.`,
     );
+  }
+  for (const [each, names] of reducedBy) {
+    const reason = data.unavailable.get(each)?.reason ?? each;
+    console.warn(`${pluginMeta.name}: ${reason}; off: ${names.join(", ")}.`);
   }
   const recommended: TSESLint.FlatConfig.ConfigArray = [];
   const plugin: ReforgedPlugin = {
