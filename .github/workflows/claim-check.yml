@@ -67,7 +67,7 @@ jobs:
           persist-credentials: false
       # Node alone, at the .node-version of the checkout: the script runs
       # with no install and no build, and no cache is restored.
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .node-version
           package-manager-cache: false
@@ -123,6 +123,6 @@ jobs:
     if: ${{ !cancelled() && contains(fromJSON('["phmilk/reforged-ts-template"]'), github.repository) && needs.check.outputs.assigned != '' }}
     permissions:
       contents: read
-    uses: phmilk/reforged-ts/.github/workflows/board-dispatch.yml@master
+    uses: phmilk/reforged-ts/.github/workflows/board-dispatch.yml@361e59414524859e607371a1f50a6d18d212c150 # master
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
