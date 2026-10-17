@@ -30,15 +30,20 @@ const typeInformation: Linter.Config[] = [
 /**
  * The messages ESLint reports for `code` linted as the fixture's file.ts,
  * with the recommended config of `plugin` (by default, the one created for
- * the fixture project).
+ * the fixture project) and the shared `settings`, when given.
  */
 export function lintWithRecommended(
   code: string,
   plugin: ReforgedPlugin = fixturePlugin,
+  settings?: Record<string, unknown>,
 ): Linter.LintMessage[] {
   return linter.verify(
     code,
-    [...typeInformation, ...(plugin.configs.recommended as Linter.Config[])],
+    [
+      ...typeInformation,
+      ...(plugin.configs.recommended as Linter.Config[]),
+      ...(settings === undefined ? [] : [{ settings }]),
+    ],
     fixtureFile("file.ts"),
   );
 }

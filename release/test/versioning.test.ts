@@ -202,13 +202,19 @@ describe("changeset version", { timeout: 60_000 }, () => {
     // Pinned, not read: the release that publishes reforged-map has already
     // versioned the repository's manifest past 0.0.0.
     await setVersion(root, "reforged-map", "0.0.0");
+    // eslint-plugin-reforged pinned too: the release that versions it moves it on.
+    await setVersion(root, "eslint-plugin-reforged", "1.0.0-alpha.5");
     const before = await versions(root);
     await addChangeset(root, "reforged-map", { "reforged-map": "major" });
 
     await changeset(root, "version");
 
+    // eslint-plugin-reforged peers on reforged-map since #582: the new
+    // version leaves its range, which gives it a patch, a prerelease in pre
+    // mode.
     expect(await versions(root)).toEqual({
       ...before,
+      "eslint-plugin-reforged": "1.0.0-alpha.6",
       "reforged-map": "1.0.0-alpha.0",
     });
   });

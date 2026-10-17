@@ -84,6 +84,8 @@ The tests run from source. They do not need `build`.
 
 A file another package publishes is read from the linted project's installation of that package, found from the project root (`src/data/optional.ts`), never from this plugin's dependencies. Declare it as an `OptionalDataFile` next to its parser, read it in `loadPluginData` with its empty value, and list the package in the rule entry's `requires`: when the package is missing, the plugin warns once and registers the rule disabled.
 
+A rule that keeps a check without the package lists it in the entry's `reduced` instead, with the check that is then off: the plugin warns once and registers the rule enabled, and the rule reads the absence in `PluginData`. `no-unknown-rawcodes` loads reforged-map's Rawcode lookup this way, as an optional module (`src/data/rawcode-lookup.ts`), which `DataFiles.rawcodeLookup` replaces in the tests.
+
 A data file grows by pull request, and every line carries its reason. A review can then challenge one entry. A file with an unexpected shape throws a `DataFileError` at plugin load, naming the file and the field. Changing the shape of a file the plugin reads from another package is a major of this plugin.
 
 ## Definition of done

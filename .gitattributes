@@ -16,3 +16,7 @@ probe/probe.w3m/** -text -diff
 # byte for byte (CRLF line ends included). The Map project fixtures are text.
 packages/reforged-map/test/fixtures/*.w3m/** -text -diff
 packages/reforged-map/test/fixtures/wc3libs/** -text -diff
+
+# eslint-plugin-reforged's fixture map folder is a copy of reforged-map's
+# editor-saved one (its PROVENANCE.md): git stores it byte for byte.
+packages/eslint-plugin-reforged/test/fixture-project/maps/*.w3m/** -text -diff

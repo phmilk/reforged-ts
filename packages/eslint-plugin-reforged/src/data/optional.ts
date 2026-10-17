@@ -9,8 +9,8 @@ import path from "node:path";
 
 import { readDataFile } from "./load.js";
 
-/** The optional peer packages whose data files the rules read. */
-export type OptionalPackage = "reforged-ts" | "reforged-types";
+/** The optional peer packages whose data files or modules the rules read. */
+export type OptionalPackage = "reforged-map" | "reforged-ts" | "reforged-types";
 
 /** A data file published by an optional package. */
 export interface OptionalDataFile<T> {
@@ -57,7 +57,8 @@ export function findPackageDirectory(
   }
 }
 
-function versionOf(packageDirectory: string): string {
+/** `@<version>` of the package in a directory, or empty when its package.json names none. */
+export function versionOf(packageDirectory: string): string {
   try {
     const { version } = JSON.parse(
       readFileSync(path.join(packageDirectory, "package.json"), "utf8"),

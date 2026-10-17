@@ -1,7 +1,7 @@
 ---
 title: Rawcodes
 sidebar_position: 14
-description: How the Typings and the library type a Rawcode by its Object kind, with Rawcode<K>, what FourCC returns, the as cast for a computed number, widening to number, GUI variables of an object type, the Built-in objects, the Custom objects of the map, hover and go to definition on a Rawcode literal, and the codes that are not Rawcodes.
+description: How the Typings and the library type a Rawcode by its Object kind, with Rawcode<K>, what FourCC returns, the as cast for a computed number, widening to number, GUI variables of an object type, the Built-in objects, the Custom objects of the map, hover and go to definition on a Rawcode literal, the lint rule on unknown Rawcodes, and the codes that are not Rawcodes.
 ---
 
 # Rawcodes
@@ -568,7 +568,7 @@ A Map project generated before the Template wrote the map's objects turns them o
 
 ## Hover and go to definition on a Rawcode literal
 
-The overloads document an object on the hover of `FourCC`, the identifier. The literal itself says what it names through the TypeScript plugin of `reforged-map`, `reforged-map/typescript-plugin`: hovering `"h000"` shows the object, and go to definition on it goes to its constant. It reads the map folder through the same lookup as the lint rule and the generated code, so all three agree, and it follows a World Editor save without `pnpm dev` or a build: an object saved in the Object Editor shows on the first hover a second after the save.
+The overloads document an object on the hover of `FourCC`, the identifier. The literal itself says what it names through the TypeScript plugin of `reforged-map`, `reforged-map/typescript-plugin`: hovering `"h000"` shows the object, and go to definition on it goes to its constant. It reads the map folder through the same lookup as [the lint rule](#unknown-rawcodes-the-lint-rule) and the generated code, so all three agree, and it follows a World Editor save without `pnpm dev` or a build: an object saved in the Object Editor shows on the first hover a second after the save.
 
 :::note[In the Template]
 The Template enables it ([phmilk/reforged-ts-template#88](https://github.com/phmilk/reforged-ts-template/issues/88)). A Map project generated earlier adds the one entry below to the `compilerOptions` of its tsconfig, with `reforged-map` and `reforged-builtins` installed as [Turning them on in a Map project generated earlier](#turning-them-on-in-a-map-project-generated-earlier) says:
@@ -624,6 +624,35 @@ The plugin runs inside tsserver, and tsserver loads a project's plugins only whe
 - **WebStorm**: Settings > Languages & Frameworks > TypeScript, with the TypeScript field set to the project's `node_modules/typescript`.
 
 VS Code's TypeScript 7 extension runs no tsserver plugin: under it, the plugin does not load, and the generated overloads and constants still document each object. The plugin writes to the tsserver log, each line starting with `reforged-map/typescript-plugin:`: that it loaded, with the project root and the map folder it read, and each reason Rawcode details are off, once. In VS Code, "TypeScript: Open TS Server log" opens it. Without `reforged-builtins` installed, the log says so and the plugin stays off.
+
+## Unknown Rawcodes: the lint rule
+
+A literal no overload knows still compiles: `FourCC("h00A")` returns an `UnknownRawcode`, and every Rawcode parameter takes it, so a typo, or a Custom object the map does not have, fails only in game, where the creator returns nothing. The lint rule [`no-unknown-rawcodes`](lint-rules/no-unknown-rawcodes.md) of `eslint-plugin-reforged` reports it as a warning, in the editor and in `pnpm lint`:
+
+| The literal                                 | The warning                                                                                                                                         |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| names nothing                               | "`h00A` is neither a Built-in object of Patch 3.0.0 nor an object of this map", with up to three suggestions: "Replace with `h000` (Captain, unit)" |
+| a Built-in object outside the Game data set | "`Asa2` (Pillage) is a Built-in ability of Patch 3.0.0 but not of this map's Game data set (Melee (Forsaken Kingdom))"                              |
+| is not four characters                      | "`hfo` is not a Rawcode: a Rawcode is exactly four ASCII characters"                                                                                |
+
+It reads the literals the hover reads, through the same lookup, so the rule, the hover and the generated code agree, and its suggestions are the Rawcodes the hover lists one edit away. It follows a World Editor save without a build, and writes nothing. A Rawcode of the wrong Object kind is the type checker's, and a Rawcode two kinds share passes.
+
+:::note[In the Template]
+The Template has `reforged-map` and `reforged-builtins` ([phmilk/reforged-ts-template#68](https://github.com/phmilk/reforged-ts-template/issues/68), [phmilk/reforged-ts-template#87](https://github.com/phmilk/reforged-ts-template/issues/87)) and keeps its map folder under `maps/`, where the rule finds it: nothing to set. A Map project generated earlier installs both as [Turning them on in a Map project generated earlier](#turning-them-on-in-a-map-project-generated-earlier) says. A map folder elsewhere is named by `settings.reforged.mapFolder` in `eslint.config.mjs`, absolute or relative to the project root:
+
+```js
+{
+  settings: {
+    reforged: {
+      mapFolder: "maps/my-map.w3x";
+    }
+  }
+}
+```
+
+:::
+
+Without `reforged-map` or `reforged-builtins`, without a map folder it can find, or while the map's objects cannot be read, the rule says why once and keeps only the four-character check. It is a warning, not an error, because it cannot see a campaign's Object data (`war3campaign.w3u`): a line that uses such a Rawcode is silenced with `// eslint-disable-next-line reforged/no-unknown-rawcodes -- <reason>`.
 
 ## Codes that are not Rawcodes
 

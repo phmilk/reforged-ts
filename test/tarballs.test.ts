@@ -131,8 +131,13 @@ const PACKAGES: readonly Expected[] = [
     ],
     sideEffectsFree: false,
     // Optional: the plugin warns and disables the rules that need a missing
-    // package (#50).
-    workspacePeers: { "reforged-ts": true, "reforged-types": true },
+    // package (#50), or runs no-unknown-rawcodes reduced without reforged-map
+    // (#582).
+    workspacePeers: {
+      "reforged-map": true,
+      "reforged-ts": true,
+      "reforged-types": true,
+    },
   },
   {
     dir: "reforged-map",
