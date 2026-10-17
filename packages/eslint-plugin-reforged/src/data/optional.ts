@@ -57,7 +57,8 @@ export function findPackageDirectory(
   }
 }
 
-function versionOf(packageDirectory: string): string {
+/** `@<version>` of the package in a directory, or empty when its package.json names none. */
+export function versionOf(packageDirectory: string): string {
   try {
     const { version } = JSON.parse(
       readFileSync(path.join(packageDirectory, "package.json"), "utf8"),

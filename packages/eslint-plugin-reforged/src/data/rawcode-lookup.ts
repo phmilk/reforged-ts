@@ -9,11 +9,14 @@
 //
 // The types below are the part of reforged-map's lookup the rules read,
 // declared here so that the plugin's own declarations need no reforged-map.
-import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 
-import { findPackageDirectory, type Unavailable } from "./optional.js";
+import {
+  findPackageDirectory,
+  type Unavailable,
+  versionOf,
+} from "./optional.js";
 
 /** An object a Rawcode names, as far as the rules read it. */
 export interface RawcodeObject {
@@ -72,17 +75,6 @@ const PACKAGE = "reforged-map";
 export type OptionalModuleResult<T> =
   | { readonly available: true; readonly value: T }
   | { readonly available: false; readonly unavailable: Unavailable };
-
-function versionOf(directory: string): string {
-  try {
-    const { version } = JSON.parse(
-      readFileSync(path.join(directory, "package.json"), "utf8"),
-    ) as { version?: unknown };
-    return typeof version === "string" ? `@${version}` : "";
-  } catch {
-    return "";
-  }
-}
 
 function unavailable(reason: string): OptionalModuleResult<never> {
   return { available: false, unavailable: { package: PACKAGE, reason } };
