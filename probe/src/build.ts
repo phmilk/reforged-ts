@@ -36,12 +36,16 @@ export const CURRENT_PROBE = "@probe/current";
 /**
  * The string literals of the in-game module (game/runner.ts) that a build
  * replaces in the bundle, quotes included, with the Probe's name, the
- * build's runId and the Patch of the Typings.
+ * build's runId, the Patch of the Typings and the Game data it staged (the
+ * empty string for a field it left to the map's own).
  */
 export const PLACEHOLDERS = {
   probe: '"$PROBE_NAME$"',
   runId: '"$PROBE_RUN_ID$"',
   patch: '"$PROBE_PATCH$"',
+  gameDataSet: '"$PROBE_GAME_DATA_SET$"',
+  gameDataVersion: '"$PROBE_GAME_DATA_VERSION$"',
+  meleeMap: '"$PROBE_MELEE_MAP$"',
 } as const;
 
 /** The map's info file, which declares its Game data. */
@@ -87,7 +91,7 @@ export function builtMessage(result: BuildResult): string {
  * Data Version and the melee map flag `gameData` sets, the map folder's
  * where it sets none (#575). The runner writes the Patch of
  * `folders.manifest` in the run's `BEGIN` line, so the run names the
- * Typings it was built against. Stores the runId, with `client`, the Build
+ * Typings it was built against, and the Game data it set (#619). Stores the runId, with `client`, the Build
  * of the game client `probe:run` runs it on, and the Game data it set, in
  * the Probe's state file last, so a failed build leaves the previous
  * one's. A bad name, a missing Probe, a manifest without a Patch, Game data
@@ -135,6 +139,11 @@ export function buildProbe(
     [PLACEHOLDERS.probe]: JSON.stringify(probe),
     [PLACEHOLDERS.runId]: JSON.stringify(runId),
     [PLACEHOLDERS.patch]: JSON.stringify(patch),
+    [PLACEHOLDERS.gameDataSet]: JSON.stringify(gameData.set ?? ""),
+    [PLACEHOLDERS.gameDataVersion]: JSON.stringify(gameData.version ?? ""),
+    [PLACEHOLDERS.meleeMap]: JSON.stringify(
+      gameData.melee === true ? "true" : "",
+    ),
   });
   fs.writeFileSync(bundle.file, baked);
   fs.writeFileSync(

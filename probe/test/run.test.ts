@@ -394,6 +394,9 @@ describe("probe:run", () => {
       set: "melee",
       version: "roc",
     });
+    expect(stdout).toContain(
+      "\nGame data: Game Data Set Melee, Game Data Version Reign of Chaos; the rest the map's own\n",
+    );
   });
 
   it("records the client's Build in the run, beside the Typings' Patch, for the reader", async () => {
