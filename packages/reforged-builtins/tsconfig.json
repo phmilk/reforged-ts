@@ -1,7 +1,8 @@
 {
   // The generator: ESM compiled by tsc to build/, run by builtins:generate on
   // the maintainer's machine and never published (the package ships its
-  // output alone). The tests (test/) have their own tsconfig.
+  // output alone). The tests (test/) have their own tsconfig. The JSON
+  // modules are copied to build/ with it.
   "compilerOptions": {
     "target": "ES2023",
     "lib": ["ES2023"],
@@ -10,6 +11,7 @@
     "rootDir": "src",
     "outDir": "build",
     "types": ["node"],
+    "resolveJsonModule": true,
     "strict": true,
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,

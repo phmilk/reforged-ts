@@ -3,7 +3,9 @@
   // programs emitted to build/ and run by the root probe:* scripts. The
   // in-game side (game/) and the Probes (probes/) compile with
   // typescript-to-lua through probes/tsconfig.json; the tests (test/) have
-  // their own tsconfig.
+  // their own tsconfig. The Game Data Versions are reforged-builtins' JSON
+  // module, read from its source (src/game-data.ts): outside rootDir, so not
+  // copied, and at the same depth from build/ as from src/.
   "compilerOptions": {
     "target": "ES2023",
     "lib": ["ES2023"],
@@ -12,6 +14,7 @@
     "rootDir": "src",
     "outDir": "build",
     "types": ["node"],
+    "resolveJsonModule": true,
     "strict": true,
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,

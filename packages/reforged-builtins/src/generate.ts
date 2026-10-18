@@ -31,6 +31,7 @@ import {
   type ProvenanceInput,
 } from "./model.js";
 import { emit, KIND_CONSTANTS, withArticle } from "./emit.js";
+import GAME_DATA_VERSIONS from "./game-data-versions.json" with { type: "json" };
 import { constantName, displayName, duplicateConstants } from "./names.js";
 import { Profile } from "./profile.js";
 import { parseSlk } from "./slk.js";
@@ -81,12 +82,13 @@ const SETS = [
   { id: "melee", label: "Melee", layer: "Melee" },
 ] as const;
 
-/** The Game Data Versions, by the value of the `version` cells, latest first. */
-const VERSIONS = [
-  { id: "fk", label: "Forsaken Kingdom", version: 2 },
-  { id: "tft", label: "The Frozen Throne", version: 1 },
-  { id: "roc", label: "Reign of Chaos", version: 0 },
-] as const;
+/**
+ * The Game Data Versions, by the value of the `version` cells, latest first.
+ * `game-data-versions.json` lists them by that value, the index a map's
+ * `war3map.w3i` stores: the workspace's one list of them, which the Probe
+ * runner reads too (#620).
+ */
+const VERSIONS = GAME_DATA_VERSIONS.toSorted((a, b) => b.version - a.version);
 
 /**
  * The Game data sets the index lists: one per Game Data Set and Game Data
@@ -105,7 +107,7 @@ export const GAME_DATA_SETS: readonly LayeredGameDataSet[] = VERSIONS.flatMap(
       label: `${set.label} (${version.label})`,
       layer: `${BASE_LAYER}_Balance/${set.layer}_V${String(version.version)}.w3mod:`,
       version: version.version,
-      ...(version.id !== "fk" && {
+      ...(version !== VERSIONS[0] && {
         qualifier: `${set.id},V${String(version.version)}`,
       }),
     })),
