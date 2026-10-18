@@ -67,6 +67,14 @@
       matchDepNames: ["actionlint"],
       enabled: false,
     },
+    // A workflow here that calls one of this repository's reusable
+    // workflows calls it at @master, the ref the tests of claim-check.yml
+    // and the App's key check expect: never pinned to a digest.
+    {
+      matchManagers: ["github-actions"],
+      matchPackageNames: ["phmilk/reforged-ts"],
+      enabled: false,
+    },
     // Catalog entries a publishable package declares as a dependency or a
     // peer: pnpm writes the catalog's range into the package at publish, so
     // a new range (a major, or any out-of-range update of a 0.x) changes what
