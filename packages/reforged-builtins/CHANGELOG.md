@@ -1,5 +1,13 @@
 # reforged-builtins
 
+## 1.0.0-alpha.2
+
+### Patch Changes
+
+- [#626](https://github.com/phmilk/reforged-ts/pull/626) [`31d9d4f`](https://github.com/phmilk/reforged-ts/commit/31d9d4ff13d4671837e80277d8ba95badd71e3d1) Thanks [@wyller](https://github.com/wyller)! - An object's TSDoc says by Game Data Version which Game data sets hold it, in one short line ("Forsaken Kingdom only.", "Not in Reign of Chaos.", "Melee only in The Frozen Throne."), instead of listing up to six sets.
+
+- [#623](https://github.com/phmilk/reforged-ts/pull/623) [`4ec629b`](https://github.com/phmilk/reforged-ts/commit/4ec629bb074818017e5cee75e83969c9c55b675b) Thanks [@wyller](https://github.com/wyller)! - The README's record of a Patch: a Game data set the index no longer lists, by its id, is a major; a set it adds, or a new label on a set it keeps, is a minor.
+
 ## 1.0.0-alpha.1
 
 ### Major Changes
