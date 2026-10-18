@@ -114,6 +114,23 @@ describe("buildProbe", () => {
     expect(await readFile(join(folders.map, "war3map.w3i"))).toEqual(before);
   });
 
+  it("bakes the Game data it staged into the bundle, for the BEGIN line, and the empty string for each field it did not set", async () => {
+    const folders = await tempFolders();
+    const staged = buildProbe("hello", folders, {
+      gameData: { version: "roc", melee: true },
+    });
+    const kept = buildProbe("held", folders);
+
+    const bundle = await readFile(staged.bundleFile, "latin1");
+    expect(bundle).toContain('{"gameDataSet", ""}');
+    expect(bundle).toContain('{"gameDataVersion", "roc"}');
+    expect(bundle).toContain('{"meleeMap", "true"}');
+    const plain = await readFile(kept.bundleFile, "latin1");
+    for (const key of ["gameDataSet", "gameDataVersion", "meleeMap"]) {
+      expect(plain).toContain(`{"${key}", ""}`);
+    }
+  });
+
   it("keeps the Game data it staged in the Probe's state file", async () => {
     const folders = await tempFolders();
     buildProbe("hello", folders, {

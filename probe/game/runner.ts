@@ -19,11 +19,18 @@ import type { FieldValue, ProbeContext } from "./probe";
 const runProbe: (p: ProbeContext) => void = run;
 
 // Replaced in the bundle by probe:build (src/build.ts, PLACEHOLDERS) with the
-// Probe's name, the build's runId and the Patch of the Typings the Probe was
-// built against. Each literal must appear here once.
+// Probe's name, the build's runId, the Patch of the Typings the Probe was
+// built against and the Game data the build staged, "" for a field it left
+// to the map's own. Each literal must appear here once.
 const PROBE = "$PROBE_NAME$";
 const RUN_ID = "$PROBE_RUN_ID$";
 const PATCH = "$PROBE_PATCH$";
+/** The BEGIN line's key of each field of the Game data (src/game-data.ts, BEGIN_KEYS), and its value. */
+const GAME_DATA: readonly (readonly [key: string, value: string])[] = [
+  ["gameDataSet", "$PROBE_GAME_DATA_SET$"],
+  ["gameDataVersion", "$PROBE_GAME_DATA_VERSION$"],
+  ["meleeMap", "$PROBE_MELEE_MAP$"],
+];
 
 /** The Result file, under CustomMapData. */
 const RESULT_FILE = `reforged-ts\\probes\\${PROBE}.txt`;
@@ -203,6 +210,23 @@ function start(): void {
   }
 }
 
+/**
+ * The fields of the BEGIN line: the Patch, the Probe and the runId, then
+ * each field of the Game data the build set, none when it kept the map's
+ * own. `recordLine` sorts them.
+ */
+function beginFields(): Record<string, FieldValue> {
+  const fields: Record<string, FieldValue> = {
+    patch: PATCH,
+    probe: PROBE,
+    run: RUN_ID,
+  };
+  for (const [key, value] of GAME_DATA) {
+    if (value !== "") fields[key] = value;
+  }
+  return fields;
+}
+
 // The editor's script defines `main` before the bundle runs; Natives wait for
 // it. The timer fires once the map is initialised.
 const globals = _G as unknown as {
@@ -220,7 +244,7 @@ globals.main = () => {
   // BEGIN reaches the disk here, during loading, before "Press any key to
   // continue": probe:run waits for it to post the key that passes that
   // screen, so no key is ever sent to the Battle.net login (#360).
-  addLine("BEGIN", { patch: PATCH, probe: PROBE, run: RUN_ID });
+  addLine("BEGIN", beginFields());
   writeResultFile(nextLineParts("CHECKPOINT", {}));
   editorMain?.();
   const timer = CreateTimer();

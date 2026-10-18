@@ -7,6 +7,12 @@
  * and on Windows the process list, and writes or stops nothing.
  */
 import { AuthorError } from "./errors.js";
+import {
+  BEGIN_KEYS,
+  gameDataFrom,
+  gameDataLine,
+  type GameData,
+} from "./game-data.js";
 import { GAME_IMAGE_NAME } from "./game.js";
 import type { Machine } from "./machine.js";
 import { checkProbeName } from "./probes.js";
@@ -73,6 +79,13 @@ export interface ProbeRun {
    * the expected one, and for a build `probe:build` made alone.
    */
   client?: string;
+  /**
+   * The Game data the run's build staged, from its `BEGIN` line, or from the
+   * state file for the line of a runner that did not write it; undefined
+   * when the build kept the map's own, and unless the run is the expected
+   * one.
+   */
+  gameData?: GameData;
   /** The Probe's own records, in order; empty unless the run is the expected one. */
   records: readonly ResultLine[];
   /**
@@ -133,11 +146,14 @@ export function readProbeRun(probe: string, context: ReadContext): ProbeRun {
     return { ...run, runId, state: "not-started", records: [] };
   }
   const patch = field(begin, "patch");
+  const written = gameDataFrom((name) => field(begin, BEGIN_KEYS[name]));
+  const gameData = Object.keys(written).length > 0 ? written : state.gameData;
   const expected = {
     ...run,
     runId,
     ...(patch !== undefined && { patch }),
     ...(state.client !== undefined && { client: state.client }),
+    ...(gameData !== undefined && { gameData }),
   };
   const lines = [begin, ...texts.slice(1).map(parseResultLine)];
   const records = lines.filter((line) => !RESERVED_KINDS.includes(line.kind));
@@ -457,9 +473,17 @@ export function formatLine(line: ResultLine): string {
   ].join(" ");
 }
 
-/** What `probe:read` prints: the status line, then one line per record. */
+/**
+ * What `probe:read` prints: the status line, the Game data the run's build
+ * staged when it set any, then one line per record.
+ */
 export function formatProbeRun(run: ProbeRun): string {
-  return [statusLine(run), ...run.records.map(formatLine)]
+  const gameData = run.gameData && gameDataLine(run.gameData);
+  return [
+    statusLine(run),
+    ...(gameData === undefined ? [] : [gameData]),
+    ...run.records.map(formatLine),
+  ]
     .map((line) => `${line}\n`)
     .join("");
 }

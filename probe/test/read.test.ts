@@ -142,6 +142,55 @@ describe("probe:read", () => {
     expect(readProbeRun(BRIDGE_PROBE, context).patch).toBe("3.0.0.12345");
   });
 
+  it("prints the Game data of the BEGIN line on its own line, before the records", async () => {
+    const { context, resultFile } = await setup();
+    const [begin = "", ...rest] = bridgeLines();
+    await writeResult(
+      resultFile,
+      preloadFile([
+        begin.replace(" patch=", " gameDataVersion=roc meleeMap=true patch="),
+        ...rest,
+      ]),
+    );
+
+    const { code, stdout } = read([BRIDGE_PROBE], context);
+    expect(code).toBe(0);
+    expect(stdout.split("\n").slice(0, 3)).toEqual([
+      "finished: Probe hello, run bridge, 2 records",
+      "Game data: Game Data Version Reign of Chaos, melee map flag set; the rest the map's own",
+      "greeting count=1 word=hello",
+    ]);
+    expect(readProbeRun(BRIDGE_PROBE, context).gameData).toEqual({
+      version: "roc",
+      melee: true,
+    });
+  });
+
+  it("prints no Game data line for a run whose build kept the map's own", async () => {
+    const { context, resultFile } = await setup();
+    await writeResult(resultFile, preloadFile(bridgeLines()));
+
+    expect(read([BRIDGE_PROBE], context).stdout).not.toContain("Game data");
+    expect(readProbeRun(BRIDGE_PROBE, context)).not.toHaveProperty("gameData");
+  });
+
+  it("takes the Game data from the state file for a BEGIN line without it, an older runner's", async () => {
+    const { context, resultFile } = await setup();
+    await writeFile(
+      stateFile(context.stateFolder, BRIDGE_PROBE),
+      JSON.stringify({
+        probe: BRIDGE_PROBE,
+        runId: BRIDGE_RUN_ID,
+        gameData: { set: "custom", version: "tft" },
+      }),
+    );
+    await writeResult(resultFile, preloadFile(bridgeLines()));
+
+    expect(read([BRIDGE_PROBE], context).stdout.split("\n")[1]).toBe(
+      "Game data: Game Data Set Custom, Game Data Version The Frozen Throne; the rest the map's own",
+    );
+  });
+
   it("joins a value of exactly 200 bytes once encoded from its continuation line", async () => {
     const { context, resultFile } = await setup();
     const value = `${"é".repeat(33)}ab`;

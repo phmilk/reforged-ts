@@ -146,6 +146,55 @@ export function gameDataMessage(gameData: GameData): string {
   return parts.length === 0 ? "" : ` under ${parts.join(" and ")}`;
 }
 
+/**
+ * The key of each field of the Game data in a Result file's `BEGIN` line,
+ * which the runner writes only for a field the build set (#619).
+ */
+export const BEGIN_KEYS = {
+  set: "gameDataSet",
+  version: "gameDataVersion",
+  melee: "meleeMap",
+} as const;
+
+/**
+ * The Game data `value` holds: a `BEGIN` line's fields by `BEGIN_KEYS`, or
+ * the `gameData` of a state file by field. A field it lacks, or whose value
+ * the runner does not know, is left out, so the line of an older runner,
+ * or an older state file, gives none.
+ */
+export function gameDataFrom(
+  value: (field: keyof GameData) => unknown,
+): GameData {
+  const set = value("set");
+  const version = value("version");
+  const melee = value("melee");
+  return {
+    ...((GAME_DATA_SETS as readonly unknown[]).includes(set) && {
+      set: set as GameDataSet,
+    }),
+    ...((GAME_DATA_VERSIONS as readonly unknown[]).includes(version) && {
+      version: version as GameDataVersion,
+    }),
+    ...((melee === true || melee === "true") && { melee: true }),
+  };
+}
+
+/**
+ * The line `probe:read` prints for the Game data a run's build staged, with
+ * the World Editor's labels; undefined when the build kept the map's own.
+ */
+export function gameDataLine(gameData: GameData): string | undefined {
+  const parts = [
+    gameData.set !== undefined && `Game Data Set ${LABELS[gameData.set]}`,
+    gameData.version !== undefined &&
+      `Game Data Version ${LABELS[gameData.version]}`,
+    gameData.melee === true && "melee map flag set",
+  ].filter((part) => part !== false);
+  return parts.length === 0
+    ? undefined
+    : `Game data: ${parts.join(", ")}; the rest the map's own`;
+}
+
 function oneOf<T extends string>(
   ids: readonly T[],
   value: string,

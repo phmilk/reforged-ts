@@ -1,7 +1,8 @@
 // The global setup of the probe vitest project: compiles the Lua tests
 // (../lua) with typescript-to-lua, builds the hello, failing, held,
 // failing-later and calibration Probes and the Probes of the Lua tests
-// (../lua/probes) with the bridge fixtures' runId and Patch, and puts their bundles
+// (../lua/probes) with the bridge fixtures' runId and Patch, hello once
+// more with Game data (`hello_game_data_bundle`), and puts their bundles
 // and the fixtures' lines next to the tests as Lua modules: `<probe>_bundle`,
 // `bridge_fixture`
 // (hello's, the table `{ finished = {...}, checkpoint = {...} }`) and
@@ -18,6 +19,7 @@ import type { TestProject } from "vitest/node";
 import { buildProbe } from "../../src/build.js";
 import { AuthorError } from "../../src/errors.js";
 import { PROBE_FOLDERS } from "../../src/folders.js";
+import type { GameData } from "../../src/game-data.js";
 import {
   BRIDGE_MANIFEST,
   BRIDGE_PROBE,
@@ -41,6 +43,13 @@ const BUNDLED_PROBES = [
  * each loaded as the module `<probe>_bundle`.
  */
 const TEST_PROBES = ["nullability-cases", "nullability-call-cases"];
+
+/** The Game data of the hello bundle built with some, `hello_game_data_bundle`. */
+const GAME_DATA_BUILD: GameData = {
+  set: "custom",
+  version: "roc",
+  melee: true,
+};
 
 /** The folder of the Lua tests' own Probes. */
 const testProbesFolder = fileURLToPath(
@@ -90,6 +99,15 @@ function compile(): string {
       });
       copyFileSync(bundleFile, join(outDir, `${probe}_bundle.lua`));
     }
+    // hello again, built with Game data: `hello_game_data_bundle`.
+    const { bundleFile } = buildProbe(BRIDGE_PROBE, folders, {
+      runId: BRIDGE_RUN_ID,
+      gameData: GAME_DATA_BUILD,
+    });
+    copyFileSync(
+      bundleFile,
+      join(outDir, `${BRIDGE_PROBE}_game_data_bundle.lua`),
+    );
   } catch (error) {
     if (error instanceof AuthorError) return error.message;
     throw error;
