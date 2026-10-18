@@ -6,7 +6,10 @@
  * - an added object is additive: a minor;
  * - a removed object, a renamed constant (the same Rawcode, a new name) and
  *   an object whose kind changed break code that names them: a major;
- * - a change of the Game data sets that hold an object is additive.
+ * - a change of the Game data sets that hold an object is additive;
+ * - a Game data set the index no longer lists breaks code that names its id
+ *   (`reforged-map` matches a map's Game data set against the ids): a
+ *   major; a set it adds, or a new label on a set it keeps, is additive.
  */
 import { KIND_CONSTANTS, list, withArticle } from "./emit.js";
 import {
@@ -40,6 +43,19 @@ export interface RecordSets {
   to: string[];
 }
 
+/** A Game data set of the index: its id and its label. */
+export interface RecordSet {
+  id: string;
+  label: string;
+}
+
+/** A Game data set that keeps its id under a new label. */
+export interface RecordRelabel {
+  id: string;
+  from: string;
+  to: string;
+}
+
 export interface PatchRecord {
   /** The previous model; undefined when there is none. */
   previous: Pick<BuiltinsIndex, "gameVersion" | "build"> | undefined;
@@ -52,6 +68,12 @@ export interface PatchRecord {
   renamed: RecordMove[];
   kindChanged: RecordMove[];
   setsChanged: RecordSets[];
+  /** The Game data sets the new index lists and the previous one does not, in the new index's order. */
+  setsAdded: RecordSet[];
+  /** The Game data sets the previous index lists and the new one does not, in the previous index's order. */
+  setsRemoved: RecordSet[];
+  /** The Game data sets both list under different labels, in the new index's order. */
+  setsRelabelled: RecordRelabel[];
   verdict: Verdict;
 }
 
@@ -97,6 +119,7 @@ export function recordOf(
     renamed: [],
     kindChanged: [],
     setsChanged: [],
+    ...setChangesOf(previous, next),
     verdict: "none",
   };
   for (const rawcode of rawcodes) {
@@ -131,13 +154,50 @@ export function recordOf(
     }
   }
   record.verdict =
-    record.removed.length + record.renamed.length + record.kindChanged.length >
+    record.removed.length +
+      record.renamed.length +
+      record.kindChanged.length +
+      record.setsRemoved.length >
     0
       ? "major"
-      : record.added.length + record.setsChanged.length > 0
+      : record.added.length +
+            record.setsChanged.length +
+            record.setsAdded.length +
+            record.setsRelabelled.length >
+          0
         ? "minor"
         : "none";
   return record;
+}
+
+/**
+ * The Game data sets `next` adds, removes and relabels against `previous`,
+ * by id: a renamed id is one removed set and one added set. None against
+ * no previous model.
+ */
+function setChangesOf(
+  previous: BuiltinsIndex | undefined,
+  next: BuiltinsIndex,
+): Pick<PatchRecord, "setsAdded" | "setsRemoved" | "setsRelabelled"> {
+  if (previous === undefined) {
+    return { setsAdded: [], setsRemoved: [], setsRelabelled: [] };
+  }
+  const before = new Map(previous.gameDataSets.map((set) => [set.id, set]));
+  const after = new Set(next.gameDataSets.map((set) => set.id));
+  return {
+    setsAdded: next.gameDataSets
+      .filter((set) => !before.has(set.id))
+      .map(({ id, label }) => ({ id, label })),
+    setsRemoved: previous.gameDataSets
+      .filter((set) => !after.has(set.id))
+      .map(({ id, label }) => ({ id, label })),
+    setsRelabelled: next.gameDataSets.flatMap((set) => {
+      const old = before.get(set.id);
+      return old === undefined || old.label === set.label
+        ? []
+        : [{ id: set.id, from: old.label, to: set.label }];
+    }),
+  };
 }
 
 /** The record as text, one line per change with its verdict. */
@@ -152,6 +212,17 @@ export function formatRecord(record: PatchRecord): string {
     list(ids.map((id) => record.labels.get(id) ?? id));
   return [
     `The record against ${against}: ${verdict}.`,
+    ...record.setsAdded.map(
+      (set) => `- Game data set added (minor): ${set.label} (${set.id})`,
+    ),
+    ...record.setsRemoved.map(
+      (set) =>
+        `- Game data set removed (major): ${set.label} (${set.id}), with no rename entry: say on the migration page which set a map of it reads now`,
+    ),
+    ...record.setsRelabelled.map(
+      (set) =>
+        `- Game data set relabelled (minor): ${set.id}, from ${set.from} to ${set.to}`,
+    ),
     ...record.added.map((o) => `- added (minor): ${o.symbol} (${o.rawcode})`),
     ...record.removed.map(
       (o) => `- removed (major): ${o.symbol} (${o.rawcode})`,
