@@ -133,6 +133,83 @@ describe("the record of a Patch", () => {
   });
 });
 
+describe("the Game data sets in the record", () => {
+  const withSets = (
+    gameDataSets: BuiltinsIndex["gameDataSets"],
+  ): BuiltinsIndex => ({ ...PREVIOUS, gameDataSets });
+
+  it("is a major when a set id is gone, though no object changes", () => {
+    const record = recordOf(PREVIOUS, withSets(SETS.slice(0, 2)));
+
+    expect(record.setsRemoved).toEqual([{ id: "melee", label: "Melee" }]);
+    expect(record.verdict).toBe("major");
+    expect(formatRecord(record)).toBe(
+      "The record against Game version 3.0.0 (Build 3.0.0.24268): a major.\n" +
+        "- Game data set removed (major): Melee (melee), with no rename entry: say on the migration page which set a map of it reads now\n",
+    );
+  });
+
+  it("is a minor for an added set, and for a new label on a set it keeps", () => {
+    const added = recordOf(
+      PREVIOUS,
+      withSets([...SETS, { id: "melee-roc", label: "Melee (Reign of Chaos)" }]),
+    );
+    const relabelled = recordOf(
+      PREVIOUS,
+      withSets([SETS[0], { id: "custom", label: "Custom Game" }, SETS[2]]),
+    );
+
+    expect(added.setsAdded).toEqual([
+      { id: "melee-roc", label: "Melee (Reign of Chaos)" },
+    ]);
+    expect(added.verdict).toBe("minor");
+    expect(formatRecord(added)).toContain(
+      "- Game data set added (minor): Melee (Reign of Chaos) (melee-roc)\n",
+    );
+    expect(relabelled.setsRelabelled).toEqual([
+      { id: "custom", from: "Custom", to: "Custom Game" },
+    ]);
+    expect(relabelled.verdict).toBe("minor");
+    expect(formatRecord(relabelled)).toContain(
+      "- Game data set relabelled (minor): custom, from Custom to Custom Game\n",
+    );
+  });
+
+  it("reports a renamed id as a removed set and an added one, a major (#596)", () => {
+    const next: BuiltinsIndex = {
+      ...PREVIOUS,
+      gameDataSets: [
+        { id: "custom-fk", label: "Custom (Forsaken Kingdom)" },
+        ...SETS.slice(1),
+      ],
+      objects: Object.fromEntries(
+        Object.entries(PREVIOUS.objects).map(([rawcode, entry]) => [
+          rawcode,
+          {
+            ...entry,
+            sets: entry.sets.map((id) => (id === "default" ? "custom-fk" : id)),
+          },
+        ]),
+      ),
+    };
+    const record = recordOf(PREVIOUS, next);
+
+    expect(record.setsRemoved).toEqual([{ id: "default", label: "Default" }]);
+    expect(record.setsAdded).toEqual([
+      { id: "custom-fk", label: "Custom (Forsaken Kingdom)" },
+    ]);
+    expect(record.verdict).toBe("major");
+  });
+
+  it("are no change against no previous model", () => {
+    const record = recordOf(undefined, PREVIOUS);
+
+    expect(record.setsAdded).toEqual([]);
+    expect(record.setsRemoved).toEqual([]);
+    expect(record.setsRelabelled).toEqual([]);
+  });
+});
+
 describe("the rename entries of a record", () => {
   it("map a renamed constant to its new name, a moved one to its new kind's, and a removed one to nothing", () => {
     const versions = {
