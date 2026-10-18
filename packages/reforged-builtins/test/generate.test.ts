@@ -1106,9 +1106,7 @@ describe("builtins:generate on every Game data set", () => {
       const end = units.indexOf(`  readonly ${constant}:`);
       return units.slice(units.lastIndexOf("/**", end), end);
     };
-    expect(docOf("Hero_Hfkh")).toContain(
-      "In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.",
-    );
+    expect(docOf("Hero_Hfkh")).toContain("   * Forsaken Kingdom only.\n");
     expect(docOf("Footman_hfoo")).not.toContain("Game data set");
   });
 });

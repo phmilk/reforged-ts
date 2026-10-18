@@ -26,14 +26,14 @@ export declare const Units: {
   /**
    * Demon Hunter (`Eevi`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DemonHunter_Eevi: Rawcode<"unit">;
 
   /**
    * Demon Hunter (`Eevm`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DemonHunter_Eevm: Rawcode<"unit">;
 
@@ -70,14 +70,14 @@ export declare const Units: {
   /**
    * Keeper of the Grove (`Emfr`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly KeeperOfTheGrove_Emfr: Rawcode<"unit">;
 
   /**
    * Keeper of the Grove (`Emns`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly KeeperOfTheGrove_Emns: Rawcode<"unit">;
 
@@ -94,21 +94,21 @@ export declare const Units: {
   /**
    * Warden (`Ewar`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Warden_Ewar: Rawcode<"unit">;
 
   /**
    * Warden (`Ewrd`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Warden_Ewrd: Rawcode<"unit">;
 
   /**
    * High Elf Archmage (`Haah`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly HighElfArchmage_Haah: Rawcode<"unit">;
 
@@ -125,7 +125,7 @@ export declare const Units: {
   /**
    * Paladin (`Hapm`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Paladin_Hapm: Rawcode<"unit">;
 
@@ -142,56 +142,56 @@ export declare const Units: {
   /**
    * Blood Mage (`Hblm`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BloodMage_Hblm: Rawcode<"unit">;
 
   /**
    * Guard Lieutenant (`Hct1`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GuardLieutenant_Hct1: Rawcode<"unit">;
 
   /**
    * Guard Captain (`Hctl`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GuardCaptain_Hctl: Rawcode<"unit">;
 
   /**
    * Guard Lieutenant (`Hctr`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GuardLieutenant_Hctr: Rawcode<"unit">;
 
   /**
    * Master Swordsman (`Hddt`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MasterSwordsman_Hddt: Rawcode<"unit">;
 
   /**
    * Paladin (`Hdgo`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Paladin_Hdgo: Rawcode<"unit">;
 
   /**
    * Ghostly Archmage (`Hgam`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GhostlyArchmage_Hgam: Rawcode<"unit">;
 
   /**
    * Paladin (`Hhkl`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Paladin_Hhkl: Rawcode<"unit">;
 
@@ -203,35 +203,35 @@ export declare const Units: {
   /**
    * Ranger (`Hjnd`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Ranger_Hjnd: Rawcode<"unit">;
 
   /**
    * Cleric (`Hjsm`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Cleric_Hjsm: Rawcode<"unit">;
 
   /**
    * Blood Mage (`Hkal`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BloodMage_Hkal: Rawcode<"unit">;
 
   /**
    * Warrior (`Hleo`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Warrior_Hleo: Rawcode<"unit">;
 
   /**
    * Dark Knight (`Hlgr`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DarkKnight_Hlgr: Rawcode<"unit">;
 
@@ -243,7 +243,7 @@ export declare const Units: {
   /**
    * Paladin (`Hmgd`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Paladin_Hmgd: Rawcode<"unit">;
 
@@ -270,14 +270,14 @@ export declare const Units: {
   /**
    * High King (`Hssa`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly HighKing_Hssa: Rawcode<"unit">;
 
   /**
    * Paladin (`Htmx`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Paladin_Htmx: Rawcode<"unit">;
 
@@ -289,7 +289,7 @@ export declare const Units: {
   /**
    * Sea Witch (`Hvsh`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SeaWitch_Hvsh: Rawcode<"unit">;
 
@@ -301,35 +301,35 @@ export declare const Units: {
   /**
    * Elder Sage (`Naka`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ElderSage_Naka: Rawcode<"unit">;
 
   /**
    * Alchemist (`Nal2`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Alchemist_Nal2: Rawcode<"unit">;
 
   /**
    * Alchemist (`Nal3`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Alchemist_Nal3: Rawcode<"unit">;
 
   /**
    * Alchemist (`Nalc`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Alchemist_Nalc: Rawcode<"unit">;
 
   /**
    * Alchemist (`Nalm`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Alchemist_Nalm: Rawcode<"unit">;
 
@@ -341,49 +341,49 @@ export declare const Units: {
   /**
    * Dark Ranger (`Nbrn`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DarkRanger_Nbrn: Rawcode<"unit">;
 
   /**
    * Beastmaster (`Nbst`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Beastmaster_Nbst: Rawcode<"unit">;
 
   /**
    * Firelord (`Nfir`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Firelord_Nfir: Rawcode<"unit">;
 
   /**
    * Merchant (`Nglx`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Merchant_Nglx: Rawcode<"unit">;
 
   /**
    * Warlock (`Nkjx`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Warlock_Nkjx: Rawcode<"unit">;
 
   /**
    * Warlock (`Nklj`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Warlock_Nklj: Rawcode<"unit">;
 
   /**
    * Pit Lord (`Nmag`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PitLord_Nmag: Rawcode<"unit">;
 
@@ -395,28 +395,28 @@ export declare const Units: {
   /**
    * Murloc Sorcerer (`Nmsr`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MurlocSorcerer_Nmsr: Rawcode<"unit">;
 
   /**
    * Sea Witch (`Nngs`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SeaWitch_Nngs: Rawcode<"unit">;
 
   /**
    * Forsaken Paladin (`Npal`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom) and Melee (The Frozen Throne) Game data sets. Not in the Custom (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Melee only in The Frozen Throne. Not in Reign of Chaos.
    */
   readonly ForsakenPaladin_Npal: Rawcode<"unit">;
 
   /**
    * Brewmaster (`Npbm`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Brewmaster_Npbm: Rawcode<"unit">;
 
@@ -428,35 +428,35 @@ export declare const Units: {
   /**
    * Pit Lord (`Nplh`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PitLord_Nplh: Rawcode<"unit">;
 
   /**
    * Tinker (`Nrob`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Tinker_Nrob: Rawcode<"unit">;
 
   /**
    * Brewmaster (`Nsjs`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Brewmaster_Nsjs: Rawcode<"unit">;
 
   /**
    * Sea Witch (`Nswt`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SeaWitch_Nswt: Rawcode<"unit">;
 
   /**
    * Tinker (`Ntin`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Tinker_Ntin: Rawcode<"unit">;
 
@@ -468,7 +468,7 @@ export declare const Units: {
   /**
    * Tauren Chieftain (`Ocb2`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TaurenChieftain_Ocb2: Rawcode<"unit">;
 
@@ -480,7 +480,7 @@ export declare const Units: {
   /**
    * Far Seer (`Odrt`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FarSeer_Odrt: Rawcode<"unit">;
 
@@ -492,7 +492,7 @@ export declare const Units: {
   /**
    * Warlock (`Ogld`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Warlock_Ogld: Rawcode<"unit">;
 
@@ -509,28 +509,28 @@ export declare const Units: {
   /**
    * Beastmaster (`Orex`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Beastmaster_Orex: Rawcode<"unit">;
 
   /**
    * Shadow Hunter (`Orkn`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShadowHunter_Orkn: Rawcode<"unit">;
 
   /**
    * Blademaster (`Osam`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Blademaster_Osam: Rawcode<"unit">;
 
   /**
    * Shadow Hunter (`Oshd`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShadowHunter_Oshd: Rawcode<"unit">;
 
@@ -557,63 +557,63 @@ export declare const Units: {
   /**
    * Scarlet Captain (`Scth`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ScarletCaptain_Scth: Rawcode<"unit">;
 
   /**
    * Scarlet Commander (`Srmg`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ScarletCommander_Srmg: Rawcode<"unit">;
 
   /**
    * High Inquisitor (`Sswm`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HighInquisitor_Sswm: Rawcode<"unit">;
 
   /**
    * Crypt Lord (`Uanb`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly CryptLord_Uanb: Rawcode<"unit">;
 
   /**
    * Dark Ranger (`Uany`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DarkRanger_Uany: Rawcode<"unit">;
 
   /**
    * Death Knight (`Uarf`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DeathKnight_Uarf: Rawcode<"unit">;
 
   /**
    * Dreadlord (`Ubal`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Dreadlord_Ubal: Rawcode<"unit">;
 
   /**
    * Death Knight (`Ubru`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DeathKnight_Ubru: Rawcode<"unit">;
 
   /**
    * Noble (`Ubtr`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Noble_Ubtr: Rawcode<"unit">;
 
@@ -625,14 +625,14 @@ export declare const Units: {
   /**
    * Crypt Lord (`Ucrl`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly CryptLord_Ucrl: Rawcode<"unit">;
 
   /**
    * Fallen Captain (`Uctl`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly FallenCaptain_Uctl: Rawcode<"unit">;
 
@@ -649,7 +649,7 @@ export declare const Units: {
   /**
    * Dreadlord (`Udth`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Dreadlord_Udth: Rawcode<"unit">;
 
@@ -661,28 +661,28 @@ export declare const Units: {
   /**
    * Forsaken (`Ugr2`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Forsaken_Ugr2: Rawcode<"unit">;
 
   /**
    * Forsaken (`Ugr3`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Forsaken_Ugr3: Rawcode<"unit">;
 
   /**
    * Forsaken (`Ugrk`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Forsaken_Ugrk: Rawcode<"unit">;
 
   /**
    * Shadow Priest (`Ujsm`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ShadowPriest_Ujsm: Rawcode<"unit">;
 
@@ -704,35 +704,35 @@ export declare const Units: {
   /**
    * Grand Apothecary (`Uput`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GrandApothecary_Uput: Rawcode<"unit">;
 
   /**
    * Hedge Mage (`Urff`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HedgeMage_Urff: Rawcode<"unit">;
 
   /**
    * Hedge Mage (`Urfm`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HedgeMage_Urfm: Rawcode<"unit">;
 
   /**
    * Lich (`Urfu`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Lich_Urfu: Rawcode<"unit">;
 
   /**
    * Dark Ranger (`Usyl`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DarkRanger_Usyl: Rawcode<"unit">;
 
@@ -744,14 +744,14 @@ export declare const Units: {
   /**
    * Dreadlord (`Uvar`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Dreadlord_Uvar: Rawcode<"unit">;
 
   /**
    * Dreadlord (`Uvng`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Dreadlord_Uvng: Rawcode<"unit">;
 
@@ -763,21 +763,21 @@ export declare const Units: {
   /**
    * Death Knight (`Uzkf`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DeathKnight_Uzkf: Rawcode<"unit">;
 
   /**
    * Death Knight (`Uzkm`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DeathKnight_Uzkm: Rawcode<"unit">;
 
   /**
    * Deathcharger (`Uzrm`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Deathcharger_Uzrm: Rawcode<"unit">;
 
@@ -814,7 +814,7 @@ export declare const Units: {
   /**
    * Night Elf Battleship (`ebsh`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NightElfBattleship_ebsh: Rawcode<"unit">;
 
@@ -831,14 +831,14 @@ export declare const Units: {
   /**
    * Ancient of Wonders (`eden`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly AncientOfWonders_eden: Rawcode<"unit">;
 
   /**
    * Night Elf Frigate (`edes`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NightElfFrigate_edes: Rawcode<"unit">;
 
@@ -875,7 +875,7 @@ export declare const Units: {
   /**
    * Faerie Dragon (`efdr`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FaerieDragon_efdr: Rawcode<"unit">;
 
@@ -902,7 +902,7 @@ export declare const Units: {
   /**
    * Prison Wagon (`eilw`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PrisonWagon_eilw: Rawcode<"unit">;
 
@@ -914,21 +914,21 @@ export declare const Units: {
   /**
    * Mountain Giant (`emtg`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MountainGiant_emtg: Rawcode<"unit">;
 
   /**
    * Night Elf Runner (`enec`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NightElfRunner_enec: Rawcode<"unit">;
 
   /**
    * Naisha (`ensh`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Naisha_ensh: Rawcode<"unit">;
 
@@ -945,14 +945,14 @@ export declare const Units: {
   /**
    * Night Elf Shipyard (`eshy`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NightElfShipyard_eshy: Rawcode<"unit">;
 
   /**
    * Avatar of Vengeance (`espv`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly AvatarOfVengeance_espv: Rawcode<"unit">;
 
@@ -979,14 +979,14 @@ export declare const Units: {
   /**
    * Night Elf Transport Ship (`etrs`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NightElfTransportShip_etrs: Rawcode<"unit">;
 
   /**
    * Spirit of Vengeance (`even`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SpiritOfVengeance_even: Rawcode<"unit">;
 
@@ -998,49 +998,49 @@ export declare const Units: {
   /**
    * Apothecary (`fapo`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Apothecary_fapo: Rawcode<"unit">;
 
   /**
    * Bernd (`fber`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Bernd_fber: Rawcode<"unit">;
 
   /**
    * Forsaken Ranger (`fdkr`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ForsakenRanger_fdkr: Rawcode<"unit">;
 
   /**
    * Deathguard (`fdtg`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Deathguard_fdtg: Rawcode<"unit">;
 
   /**
    * Laborer (`flab`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Laborer_flab: Rawcode<"unit">;
 
   /**
    * Forsaken Villager (`fvil`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ForsakenVillager_fvil: Rawcode<"unit">;
 
   /**
    * Forsaken Villager (`fvlw`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ForsakenVillager_fvlw: Rawcode<"unit">;
 
@@ -1057,7 +1057,7 @@ export declare const Units: {
   /**
    * Arcane Observatory (`haro`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ArcaneObservatory_haro: Rawcode<"unit">;
 
@@ -1069,7 +1069,7 @@ export declare const Units: {
   /**
    * Arcane Tower (`hatw`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ArcaneTower_hatw: Rawcode<"unit">;
 
@@ -1081,7 +1081,7 @@ export declare const Units: {
   /**
    * Wagon (`hbew`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Wagon_hbew: Rawcode<"unit">;
 
@@ -1093,14 +1093,14 @@ export declare const Units: {
   /**
    * Human Transport Ship (`hbot`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly HumanTransportShip_hbot: Rawcode<"unit">;
 
   /**
    * Human Battleship (`hbsh`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly HumanBattleship_hbsh: Rawcode<"unit">;
 
@@ -1112,14 +1112,14 @@ export declare const Units: {
   /**
    * Lordaeron Banner (`hcta`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LordaeronBanner_hcta: Rawcode<"unit">;
 
   /**
    * City Guard (`hctg`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly CityGuard_hctg: Rawcode<"unit">;
 
@@ -1136,14 +1136,14 @@ export declare const Units: {
   /**
    * Human Frigate (`hdes`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly HumanFrigate_hdes: Rawcode<"unit">;
 
   /**
    * Dragonhawk Rider (`hdhw`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DragonhawkRider_hdhw: Rawcode<"unit">;
 
@@ -1230,28 +1230,28 @@ export declare const Units: {
   /**
    * Phoenix (`hphx`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Phoenix_hphx: Rawcode<"unit">;
 
   /**
    * Portal (`hprt`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Portal_hprt: Rawcode<"unit">;
 
   /**
    * Phoenix Egg (`hpxe`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PhoenixEgg_hpxe: Rawcode<"unit">;
 
   /**
    * Pack Horse (`hrdh`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PackHorse_hrdh: Rawcode<"unit">;
 
@@ -1263,21 +1263,21 @@ export declare const Units: {
   /**
    * Runner (`hrrh`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Runner_hrrh: Rawcode<"unit">;
 
   /**
    * Siege Engine (`hrtt`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SiegeEngine_hrtt: Rawcode<"unit">;
 
   /**
    * Human Shipyard (`hshy`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly HumanShipyard_hshy: Rawcode<"unit">;
 
@@ -1289,7 +1289,7 @@ export declare const Units: {
   /**
    * Spellbreaker (`hspt`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Spellbreaker_hspt: Rawcode<"unit">;
 
@@ -1301,7 +1301,7 @@ export declare const Units: {
   /**
    * Arcane Vault (`hvlt`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ArcaneVault_hvlt: Rawcode<"unit">;
 
@@ -1328,7 +1328,7 @@ export declare const Units: {
   /**
    * Totem of Battle (`iomw`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TotemOfBattle_iomw: Rawcode<"unit">;
 
@@ -1350,56 +1350,56 @@ export declare const Units: {
   /**
    * Ancient Hydra (`nahy`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly AncientHydra_nahy: Rawcode<"unit">;
 
   /**
    * Albatross (`nalb`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Albatross_nalb: Rawcode<"unit">;
 
   /**
    * Barbed Arachnathid (`nanb`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BarbedArachnathid_nanb: Rawcode<"unit">;
 
   /**
    * Crystal Arachnathid (`nanc`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly CrystalArachnathid_nanc: Rawcode<"unit">;
 
   /**
    * Arachnathid Earth-borer (`nane`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ArachnathidEarthBorer_nane: Rawcode<"unit">;
 
   /**
    * Barbed Arachnathid (`nanm`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BarbedArachnathid_nanm: Rawcode<"unit">;
 
   /**
    * Overlord Arachnathid (`nano`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly OverlordArachnathid_nano: Rawcode<"unit">;
 
   /**
    * Warrior Arachnathid (`nanw`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly WarriorArachnathid_nanw: Rawcode<"unit">;
 
@@ -1431,7 +1431,7 @@ export declare const Units: {
   /**
    * Blue Dragonspawn Apprentice (`nbda`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BlueDragonspawnApprentice_nbda: Rawcode<"unit">;
 
@@ -1443,14 +1443,14 @@ export declare const Units: {
   /**
    * Blue Dragonspawn Meddler (`nbdm`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BlueDragonspawnMeddler_nbdm: Rawcode<"unit">;
 
   /**
    * Blue Dragonspawn Overseer (`nbdo`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BlueDragonspawnOverseer_nbdo: Rawcode<"unit">;
 
@@ -1462,28 +1462,28 @@ export declare const Units: {
   /**
    * Blue Dragonspawn Sorcerer (`nbds`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BlueDragonspawnSorcerer_nbds: Rawcode<"unit">;
 
   /**
    * Blue Dragonspawn Warrior (`nbdw`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BlueDragonspawnWarrior_nbdw: Rawcode<"unit">;
 
   /**
    * Blood Elf Engineer (`nbee`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BloodElfEngineer_nbee: Rawcode<"unit">;
 
   /**
    * Blood Elf Lieutenant (`nbel`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BloodElfLieutenant_nbel: Rawcode<"unit">;
 
@@ -1500,14 +1500,14 @@ export declare const Units: {
   /**
    * Burrowed Barbed Arachnathid (`nbnb`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BurrowedBarbedArachnathid_nbnb: Rawcode<"unit">;
 
   /**
    * Transport Ship (`nbot`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TransportShip_nbot: Rawcode<"unit">;
 
@@ -1519,7 +1519,7 @@ export declare const Units: {
   /**
    * Resurrection Stone (`nbse`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ResurrectionStone_nbse: Rawcode<"unit">;
 
@@ -1536,21 +1536,21 @@ export declare const Units: {
   /**
    * Resurrection Stone (`nbsw`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ResurrectionStone_nbsw: Rawcode<"unit">;
 
   /**
    * Boulder Tower (`nbt1`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BoulderTower_nbt1: Rawcode<"unit">;
 
   /**
    * Advanced Boulder Tower (`nbt2`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly AdvancedBoulderTower_nbt2: Rawcode<"unit">;
 
@@ -1587,7 +1587,7 @@ export declare const Units: {
   /**
    * Draenei Demolisher (`ncat`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiDemolisher_ncat: Rawcode<"unit">;
 
@@ -1679,28 +1679,28 @@ export declare const Units: {
   /**
    * Diablo Cart (`nccd`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DiabloCart_nccd: Rawcode<"unit">;
 
   /**
    * Orc Cart (`ncco`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly OrcCart_ncco: Rawcode<"unit">;
 
   /**
    * Dwarf Cart (`nccr`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DwarfCart_nccr: Rawcode<"unit">;
 
   /**
    * Undead Cart (`nccu`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly UndeadCart_nccu: Rawcode<"unit">;
 
@@ -1722,35 +1722,35 @@ export declare const Units: {
   /**
    * Watery Minion (`ncfs`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly WateryMinion_ncfs: Rawcode<"unit">;
 
   /**
    * Clockwerk Goblin (`ncg1`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ClockwerkGoblin_ncg1: Rawcode<"unit">;
 
   /**
    * Clockwerk Goblin (`ncg2`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ClockwerkGoblin_ncg2: Rawcode<"unit">;
 
   /**
    * Clockwerk Goblin (`ncg3`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ClockwerkGoblin_ncg3: Rawcode<"unit">;
 
   /**
    * Clockwerk Goblin (`ncgb`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ClockwerkGoblin_ncgb: Rawcode<"unit">;
 
@@ -1762,7 +1762,7 @@ export declare const Units: {
   /**
    * Chaplain (`nchp`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Chaplain_nchp: Rawcode<"unit">;
 
@@ -1829,7 +1829,7 @@ export declare const Units: {
   /**
    * Crab (`ncrb`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Crab_ncrb: Rawcode<"unit">;
 
@@ -1861,7 +1861,7 @@ export declare const Units: {
   /**
    * Draenei Chieftain's Hut (`ndch`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiChieftainsHut_ndch: Rawcode<"unit">;
 
@@ -1883,49 +1883,49 @@ export declare const Units: {
   /**
    * Draenei Hut (`ndh0`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiHut_ndh0: Rawcode<"unit">;
 
   /**
    * Draenei Hut (`ndh1`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiHut_ndh1: Rawcode<"unit">;
 
   /**
    * Draenei Haven (`ndh2`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiHaven_ndh2: Rawcode<"unit">;
 
   /**
    * Draenei Barracks (`ndh3`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiBarracks_ndh3: Rawcode<"unit">;
 
   /**
    * Seer's Den (`ndh4`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SeersDen_ndh4: Rawcode<"unit">;
 
   /**
    * Dimensional Gate (`ndke`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DimensionalGate_ndke: Rawcode<"unit">;
 
   /**
    * Dimensional Gate (`ndkw`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DimensionalGate_ndkw: Rawcode<"unit">;
 
@@ -1937,7 +1937,7 @@ export declare const Units: {
   /**
    * Dalaran Mutant (`ndmu`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DalaranMutant_ndmu: Rawcode<"unit">;
 
@@ -1949,56 +1949,56 @@ export declare const Units: {
   /**
    * Succubus (`ndqn`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Succubus_ndqn: Rawcode<"unit">;
 
   /**
    * Maiden of Pain (`ndqp`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MaidenOfPain_ndqp: Rawcode<"unit">;
 
   /**
    * Queen of Suffering (`ndqs`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly QueenOfSuffering_ndqs: Rawcode<"unit">;
 
   /**
    * Vile Temptress (`ndqt`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly VileTemptress_ndqt: Rawcode<"unit">;
 
   /**
    * Vile Tormentor (`ndqv`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly VileTormentor_ndqv: Rawcode<"unit">;
 
   /**
    * Lesser Dark Minion (`ndr1`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly LesserDarkMinion_ndr1: Rawcode<"unit">;
 
   /**
    * Dark Minion (`ndr2`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DarkMinion_ndr2: Rawcode<"unit">;
 
   /**
    * Greater Dark Minion (`ndr3`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GreaterDarkMinion_ndr3: Rawcode<"unit">;
 
@@ -2010,14 +2010,14 @@ export declare const Units: {
   /**
    * Draenei Darkslayer (`ndrd`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiDarkslayer_ndrd: Rawcode<"unit">;
 
   /**
    * Draenei Guardian (`ndrf`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiGuardian_ndrf: Rawcode<"unit">;
 
@@ -2029,14 +2029,14 @@ export declare const Units: {
   /**
    * Draenei Harbinger (`ndrh`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiHarbinger_ndrh: Rawcode<"unit">;
 
   /**
    * Dalaran Reject (`ndrj`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DalaranReject_ndrj: Rawcode<"unit">;
 
@@ -2048,35 +2048,35 @@ export declare const Units: {
   /**
    * Draenei Laborer (`ndrl`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiLaborer_ndrl: Rawcode<"unit">;
 
   /**
    * Draenei Disciple (`ndrm`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiDisciple_ndrm: Rawcode<"unit">;
 
   /**
    * Draenei Vindicator (`ndrn`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiVindicator_ndrn: Rawcode<"unit">;
 
   /**
    * Nether Dragon Roost (`ndro`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NetherDragonRoost_ndro: Rawcode<"unit">;
 
   /**
    * Draenei Protector (`ndrp`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiProtector_ndrp: Rawcode<"unit">;
 
@@ -2088,14 +2088,14 @@ export declare const Units: {
   /**
    * Draenei Seer (`ndrs`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiSeer_ndrs: Rawcode<"unit">;
 
   /**
    * Draenei Stalker (`ndrt`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiStalker_ndrt: Rawcode<"unit">;
 
@@ -2107,14 +2107,14 @@ export declare const Units: {
   /**
    * Revenant of the Depths (`ndrv`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RevenantOfTheDepths_ndrv: Rawcode<"unit">;
 
   /**
    * Draenei Watcher (`ndrw`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DraeneiWatcher_ndrw: Rawcode<"unit">;
 
@@ -2126,21 +2126,21 @@ export declare const Units: {
   /**
    * Salamander (`ndsa`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Salamander_ndsa: Rawcode<"unit">;
 
   /**
    * Cold Tower (`ndt1`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ColdTower_ndt1: Rawcode<"unit">;
 
   /**
    * Advanced Cold Tower (`ndt2`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly AdvancedColdTower_ndt2: Rawcode<"unit">;
 
@@ -2177,28 +2177,28 @@ export declare const Units: {
   /**
    * Dummy (`ndum`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Dummy_ndum: Rawcode<"unit">;
 
   /**
    * Dune Worm (`ndwm`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DuneWorm_ndwm: Rawcode<"unit">;
 
   /**
    * Chicken (`nech`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Chicken_nech: Rawcode<"unit">;
 
   /**
    * Rabbit (`necr`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Rabbit_necr: Rawcode<"unit">;
 
@@ -2265,14 +2265,14 @@ export declare const Units: {
   /**
    * Engineer Gazlowe (`negz`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly EngineerGazlowe_negz: Rawcode<"unit">;
 
   /**
    * Elder Hydra (`nehy`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ElderHydra_nehy: Rawcode<"unit">;
 
@@ -2314,63 +2314,63 @@ export declare const Units: {
   /**
    * Eredar Diabolist (`nerd`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly EredarDiabolist_nerd: Rawcode<"unit">;
 
   /**
    * Eredar Sorcerer (`ners`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly EredarSorcerer_ners: Rawcode<"unit">;
 
   /**
    * Eredar Warlock (`nerw`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly EredarWarlock_nerw: Rawcode<"unit">;
 
   /**
    * Energy Tower (`net1`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly EnergyTower_net1: Rawcode<"unit">;
 
   /**
    * Advanced Energy Tower (`net2`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly AdvancedEnergyTower_net2: Rawcode<"unit">;
 
   /**
    * Pocket Factory (`nfa1`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PocketFactory_nfa1: Rawcode<"unit">;
 
   /**
    * Pocket Factory (`nfa2`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PocketFactory_nfa2: Rawcode<"unit">;
 
   /**
    * Pocket Factory (`nfac`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PocketFactory_nfac: Rawcode<"unit">;
 
   /**
    * Fel Boar (`nfbr`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FelBoar_nfbr: Rawcode<"unit">;
 
@@ -2382,35 +2382,35 @@ export declare const Units: {
   /**
    * Bloodfiend (`nfgb`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Bloodfiend_nfgb: Rawcode<"unit">;
 
   /**
    * Flesh Golem (`nfgl`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FleshGolem_nfgl: Rawcode<"unit">;
 
   /**
    * Forgotten One (`nfgo`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ForgottenOne_nfgo: Rawcode<"unit">;
 
   /**
    * Tentacle (`nfgt`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Tentacle_nfgt: Rawcode<"unit">;
 
   /**
    * Felguard (`nfgu`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Felguard_nfgu: Rawcode<"unit">;
 
@@ -2427,14 +2427,14 @@ export declare const Units: {
   /**
    * Fountain of Power (`nfnp`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FountainOfPower_nfnp: Rawcode<"unit">;
 
   /**
    * Faceless One Deathbringer (`nfod`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FacelessOneDeathbringer_nfod: Rawcode<"unit">;
 
@@ -2446,63 +2446,63 @@ export declare const Units: {
   /**
    * Faceless One Trickster (`nfor`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FacelessOneTrickster_nfor: Rawcode<"unit">;
 
   /**
    * Faceless One Terror (`nfot`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FacelessOneTerror_nfot: Rawcode<"unit">;
 
   /**
    * Overlord (`nfov`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Overlord_nfov: Rawcode<"unit">;
 
   /**
    * Polar Furbolg Champion (`nfpc`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PolarFurbolgChampion_nfpc: Rawcode<"unit">;
 
   /**
    * Polar Furbolg Elder Shaman (`nfpe`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PolarFurbolgElderShaman_nfpe: Rawcode<"unit">;
 
   /**
    * Polar Furbolg (`nfpl`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PolarFurbolg_nfpl: Rawcode<"unit">;
 
   /**
    * Polar Furbolg Shaman (`nfps`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PolarFurbolgShaman_nfps: Rawcode<"unit">;
 
   /**
    * Polar Furbolg Tracker (`nfpt`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PolarFurbolgTracker_nfpt: Rawcode<"unit">;
 
   /**
    * Polar Furbolg Ursa Warrior (`nfpu`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PolarFurbolgUrsaWarrior_nfpu: Rawcode<"unit">;
 
@@ -2549,7 +2549,7 @@ export declare const Units: {
   /**
    * Frog (`nfro`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Frog_nfro: Rawcode<"unit">;
 
@@ -2566,7 +2566,7 @@ export declare const Units: {
   /**
    * Fruit Stand (`nfrt`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FruitStand_nfrt: Rawcode<"unit">;
 
@@ -2583,14 +2583,14 @@ export declare const Units: {
   /**
    * Flame Tower (`nft1`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FlameTower_nft1: Rawcode<"unit">;
 
   /**
    * Advanced Flame Tower (`nft2`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly AdvancedFlameTower_nft2: Rawcode<"unit">;
 
@@ -2617,35 +2617,35 @@ export declare const Units: {
   /**
    * Night Elf Fishing Village (`nfv0`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NightElfFishingVillage_nfv0: Rawcode<"unit">;
 
   /**
    * Night Elf Fishing Village (`nfv1`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NightElfFishingVillage_nfv1: Rawcode<"unit">;
 
   /**
    * Night Elf Fishing Village (`nfv2`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NightElfFishingVillage_nfv2: Rawcode<"unit">;
 
   /**
    * Night Elf Fishing Village (`nfv3`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NightElfFishingVillage_nfv3: Rawcode<"unit">;
 
   /**
    * Night Elf Fishing Village (`nfv4`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NightElfFishingVillage_nfv4: Rawcode<"unit">;
 
@@ -2657,7 +2657,7 @@ export declare const Units: {
   /**
    * Goblin Blaster (`ngbl`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GoblinBlaster_ngbl: Rawcode<"unit">;
 
@@ -2669,21 +2669,21 @@ export declare const Units: {
   /**
    * Defender Golem (`nggd`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DefenderGolem_nggd: Rawcode<"unit">;
 
   /**
    * Guardian Golem (`nggg`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GuardianGolem_nggg: Rawcode<"unit">;
 
   /**
    * Moss Covered Granite Golem (`nggm`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MossCoveredGraniteGolem_nggm: Rawcode<"unit">;
 
@@ -2765,7 +2765,7 @@ export declare const Units: {
   /**
    * Guard Dog (`ngog`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GuardDog_ngog: Rawcode<"unit">;
 
@@ -2777,14 +2777,14 @@ export declare const Units: {
   /**
    * Snarlmane the Bloodgorger (`ngos`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SnarlmaneTheBloodgorger_ngos: Rawcode<"unit">;
 
   /**
    * Gnoll Warlord (`ngow`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GnollWarlord_ngow: Rawcode<"unit">;
 
@@ -2826,49 +2826,49 @@ export declare const Units: {
   /**
    * Bear (`ngz1`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Bear_ngz1: Rawcode<"unit">;
 
   /**
    * Raging Bear (`ngz2`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RagingBear_ngz2: Rawcode<"unit">;
 
   /**
    * Spirit Bear (`ngz3`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SpiritBear_ngz3: Rawcode<"unit">;
 
   /**
    * Misha (`ngz4`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Misha_ngz4: Rawcode<"unit">;
 
   /**
    * Misha (`ngza`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Misha_ngza: Rawcode<"unit">;
 
   /**
    * Misha (`ngzc`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Misha_ngzc: Rawcode<"unit">;
 
   /**
    * Misha (`ngzd`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Misha_ngzd: Rawcode<"unit">;
 
@@ -2910,7 +2910,7 @@ export declare const Units: {
   /**
    * Worker (`nhew`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Worker_nhew: Rawcode<"unit">;
 
@@ -2927,14 +2927,14 @@ export declare const Units: {
   /**
    * Hermit Crab (`nhmc`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly HermitCrab_nhmc: Rawcode<"unit">;
 
   /**
    * Harpy Nest (`nhn2`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly HarpyNest_nhn2: Rawcode<"unit">;
 
@@ -2966,49 +2966,49 @@ export declare const Units: {
   /**
    * Dragon Turtle (`nhyc`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DragonTurtle_nhyc: Rawcode<"unit">;
 
   /**
    * Hydra (`nhyd`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Hydra_nhyd: Rawcode<"unit">;
 
   /**
    * Hydra Hatchling (`nhyh`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly HydraHatchling_nhyh: Rawcode<"unit">;
 
   /**
    * Hydromancer (`nhym`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Hydromancer_nhym: Rawcode<"unit">;
 
   /**
    * Icecrown Obelisk (`nico`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly IcecrownObelisk_nico: Rawcode<"unit">;
 
   /**
    * Infernal Juggernaut (`nina`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly InfernalJuggernaut_nina: Rawcode<"unit">;
 
   /**
    * Infernal Contraption (`ninc`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly InfernalContraption_ninc: Rawcode<"unit">;
 
@@ -3020,14 +3020,14 @@ export declare const Units: {
   /**
    * Infernal Machine (`ninm`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly InfernalMachine_ninm: Rawcode<"unit">;
 
   /**
    * Icy Treasure Box (`nitb`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly IcyTreasureBox_nitb: Rawcode<"unit">;
 
@@ -3064,28 +3064,28 @@ export declare const Units: {
   /**
    * Jungle Stalker (`njg1`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly JungleStalker_njg1: Rawcode<"unit">;
 
   /**
    * Elder Jungle Stalker (`njga`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ElderJungleStalker_njga: Rawcode<"unit">;
 
   /**
    * Enraged Jungle Stalker (`njgb`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly EnragedJungleStalker_njgb: Rawcode<"unit">;
 
   /**
    * Jailor Kassan (`njks`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly JailorKassan_njks: Rawcode<"unit">;
 
@@ -3112,56 +3112,56 @@ export declare const Units: {
   /**
    * Makrura Deepseer (`nlds`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MakruraDeepseer_nlds: Rawcode<"unit">;
 
   /**
    * Makrura Tidal Lord (`nlkl`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MakruraTidalLord_nlkl: Rawcode<"unit">;
 
   /**
    * Makrura Pooldweller (`nlpd`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MakruraPooldweller_nlpd: Rawcode<"unit">;
 
   /**
    * Makrura Prawn (`nlpr`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MakruraPrawn_nlpr: Rawcode<"unit">;
 
   /**
    * Summoned Prawn (`nlps`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SummonedPrawn_nlps: Rawcode<"unit">;
 
   /**
    * Deeplord Revenant (`nlrv`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DeeplordRevenant_nlrv: Rawcode<"unit">;
 
   /**
    * Makrura Snapper (`nlsn`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MakruraSnapper_nlsn: Rawcode<"unit">;
 
   /**
    * Makrura Tidecaller (`nltc`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MakruraTidecaller_nltc: Rawcode<"unit">;
 
@@ -3173,49 +3173,49 @@ export declare const Units: {
   /**
    * Monster Lure (`nlur`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MonsterLure_nlur: Rawcode<"unit">;
 
   /**
    * Lava Spawn (`nlv1`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly LavaSpawn_nlv1: Rawcode<"unit">;
 
   /**
    * Lava Spawn (`nlv2`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly LavaSpawn_nlv2: Rawcode<"unit">;
 
   /**
    * Lava Spawn (`nlv3`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly LavaSpawn_nlv3: Rawcode<"unit">;
 
   /**
    * Mammoth (`nmam`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Mammoth_nmam: Rawcode<"unit">;
 
   /**
    * Mur'gul Blood-Gill (`nmbg`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MurgulBloodGill_nmbg: Rawcode<"unit">;
 
   /**
    * Mur'gul Cliffrunner (`nmcf`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MurgulCliffrunner_nmcf: Rawcode<"unit">;
 
@@ -3227,7 +3227,7 @@ export declare const Units: {
   /**
    * Dire Mammoth (`nmdr`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DireMammoth_nmdr: Rawcode<"unit">;
 
@@ -3249,35 +3249,35 @@ export declare const Units: {
   /**
    * Mur'gul Hut (`nmg0`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MurgulHut_nmg0: Rawcode<"unit">;
 
   /**
    * Mur'gul Hut (`nmg1`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MurgulHut_nmg1: Rawcode<"unit">;
 
   /**
    * Murloc Hut (`nmg2`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MurlocHut_nmg2: Rawcode<"unit">;
 
   /**
    * Magnataur Destroyer (`nmgd`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MagnataurDestroyer_nmgd: Rawcode<"unit">;
 
   /**
    * Magnataur Reaver (`nmgr`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MagnataurReaver_nmgr: Rawcode<"unit">;
 
@@ -3289,7 +3289,7 @@ export declare const Units: {
   /**
    * Magnataur Warrior (`nmgw`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MagnataurWarrior_nmgw: Rawcode<"unit">;
 
@@ -3306,7 +3306,7 @@ export declare const Units: {
   /**
    * Icetusk Mammoth (`nmit`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly IcetuskMammoth_nmit: Rawcode<"unit">;
 
@@ -3323,7 +3323,7 @@ export declare const Units: {
   /**
    * Mur'gul Slave (`nmpe`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MurgulSlave_nmpe: Rawcode<"unit">;
 
@@ -3390,35 +3390,35 @@ export declare const Units: {
   /**
    * Mercenary Camp (`nmrc`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MercenaryCamp_nmrc: Rawcode<"unit">;
 
   /**
    * Mercenary Camp (`nmrd`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MercenaryCamp_nmrd: Rawcode<"unit">;
 
   /**
    * Mercenary Camp (`nmre`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MercenaryCamp_nmre: Rawcode<"unit">;
 
   /**
    * Mercenary Camp (`nmrf`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MercenaryCamp_nmrf: Rawcode<"unit">;
 
   /**
    * Marketplace (`nmrk`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Marketplace_nmrk: Rawcode<"unit">;
 
@@ -3440,147 +3440,147 @@ export declare const Units: {
   /**
    * Mur'gul Marauder (`nmrv`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MurgulMarauder_nmrv: Rawcode<"unit">;
 
   /**
    * Mur'gul Shadowcaster (`nmsc`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MurgulShadowcaster_nmsc: Rawcode<"unit">;
 
   /**
    * Misha (`nmsh`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Misha_nmsh: Rawcode<"unit">;
 
   /**
    * Mur'gul Snarecaster (`nmsn`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MurgulSnarecaster_nmsn: Rawcode<"unit">;
 
   /**
    * Mur'gul Tidewarrior (`nmtw`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MurgulTidewarrior_nmtw: Rawcode<"unit">;
 
   /**
    * Naga Myrmidon (`nmyr`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NagaMyrmidon_nmyr: Rawcode<"unit">;
 
   /**
    * Submerged Naga Myrmidon (`nmys`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SubmergedNagaMyrmidon_nmys: Rawcode<"unit">;
 
   /**
    * Altar of the Depths (`nnad`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly AltarOfTheDepths_nnad: Rawcode<"unit">;
 
   /**
    * Nether Drake (`nndk`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NetherDrake_nndk: Rawcode<"unit">;
 
   /**
    * Nether Dragon (`nndr`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NetherDragon_nndr: Rawcode<"unit">;
 
   /**
    * Coral Bed (`nnfm`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly CoralBed_nnfm: Rawcode<"unit">;
 
   /**
    * Nether Dragon Hatchling (`nnht`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NetherDragonHatchling_nnht: Rawcode<"unit">;
 
   /**
    * Mur'gul Reaver (`nnmg`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MurgulReaver_nnmg: Rawcode<"unit">;
 
   /**
    * Naga Royal Guard (`nnrg`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NagaRoyalGuard_nnrg: Rawcode<"unit">;
 
   /**
    * Submerged Naga Royal Guard (`nnrs`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SubmergedNagaRoyalGuard_nnrs: Rawcode<"unit">;
 
   /**
    * Shrine of Azshara (`nnsa`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShrineOfAzshara_nnsa: Rawcode<"unit">;
 
   /**
    * Spawning Grounds (`nnsg`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SpawningGrounds_nnsg: Rawcode<"unit">;
 
   /**
    * Summoner (`nnsu`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Summoner_nnsu: Rawcode<"unit">;
 
   /**
    * Naga Siren (`nnsw`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NagaSiren_nnsw: Rawcode<"unit">;
 
   /**
    * Tidal Guardian (`nntg`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TidalGuardian_nntg: Rawcode<"unit">;
 
   /**
    * Temple of Tides (`nntt`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TempleOfTides_nntt: Rawcode<"unit">;
 
@@ -3617,7 +3617,7 @@ export declare const Units: {
   /**
    * Stonemaul Warchief (`noga`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly StonemaulWarchief_noga: Rawcode<"unit">;
 
@@ -3634,14 +3634,14 @@ export declare const Units: {
   /**
    * Stonemaul Magi (`nogn`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly StonemaulMagi_nogn: Rawcode<"unit">;
 
   /**
    * Stonemaul Ogre (`nogo`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly StonemaulOgre_nogo: Rawcode<"unit">;
 
@@ -3688,14 +3688,14 @@ export declare const Units: {
   /**
    * Fel Beast (`npfl`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FelBeast_npfl: Rawcode<"unit">;
 
   /**
    * Fel Ravager (`npfm`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FelRavager_npfm: Rawcode<"unit">;
 
@@ -3707,7 +3707,7 @@ export declare const Units: {
   /**
    * Power Generator (`npgr`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PowerGenerator_npgr: Rawcode<"unit">;
 
@@ -3719,98 +3719,98 @@ export declare const Units: {
   /**
    * Polar Bear (`nplb`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PolarBear_nplb: Rawcode<"unit">;
 
   /**
    * Giant Polar Bear (`nplg`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GiantPolarBear_nplg: Rawcode<"unit">;
 
   /**
    * Fire (`npn1`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Fire_npn1: Rawcode<"unit">;
 
   /**
    * Storm (`npn2`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Storm_npn2: Rawcode<"unit">;
 
   /**
    * Earth (`npn3`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Earth_npn3: Rawcode<"unit">;
 
   /**
    * Fire (`npn4`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Fire_npn4: Rawcode<"unit">;
 
   /**
    * Storm (`npn5`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Storm_npn5: Rawcode<"unit">;
 
   /**
    * Earth (`npn6`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Earth_npn6: Rawcode<"unit">;
 
   /**
    * Penguin (`npng`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Penguin_npng: Rawcode<"unit">;
 
   /**
    * Penguin (`npnw`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Penguin_npnw: Rawcode<"unit">;
 
   /**
    * Quilbeast (`nqb1`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Quilbeast_nqb1: Rawcode<"unit">;
 
   /**
    * Dire Quilbeast (`nqb2`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DireQuilbeast_nqb2: Rawcode<"unit">;
 
   /**
    * Raging Quilbeast (`nqb3`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RagingQuilbeast_nqb3: Rawcode<"unit">;
 
   /**
    * Berserk Quilbeast (`nqb4`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BerserkQuilbeast_nqb4: Rawcode<"unit">;
 
@@ -3822,7 +3822,7 @@ export declare const Units: {
   /**
    * Raccoon (`nrac`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Raccoon_nrac: Rawcode<"unit">;
 
@@ -3844,7 +3844,7 @@ export declare const Units: {
   /**
    * Reef Elemental (`nrel`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ReefElemental_nrel: Rawcode<"unit">;
 
@@ -3921,21 +3921,21 @@ export declare const Units: {
   /**
    * Submerged Snap Dragon (`nsbs`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SubmergedSnapDragon_nsbs: Rawcode<"unit">;
 
   /**
    * Spider Crab Limbripper (`nsc2`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SpiderCrabLimbripper_nsc2: Rawcode<"unit">;
 
   /**
    * Spider Crab Behemoth (`nsc3`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SpiderCrabBehemoth_nsc3: Rawcode<"unit">;
 
@@ -3947,7 +3947,7 @@ export declare const Units: {
   /**
    * Spider Crab Shorecrawler (`nscb`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SpiderCrabShorecrawler_nscb: Rawcode<"unit">;
 
@@ -3964,7 +3964,7 @@ export declare const Units: {
   /**
    * Sea Elemental (`nsel`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SeaElemental_nsel: Rawcode<"unit">;
 
@@ -3976,7 +3976,7 @@ export declare const Units: {
   /**
    * Sea Giant Behemoth (`nsgb`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SeaGiantBehemoth_nsgb: Rawcode<"unit">;
 
@@ -3988,14 +3988,14 @@ export declare const Units: {
   /**
    * Sea Giant Hunter (`nsgh`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SeaGiantHunter_nsgh: Rawcode<"unit">;
 
   /**
    * Sea Giant (`nsgn`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SeaGiant_nsgn: Rawcode<"unit">;
 
@@ -4007,7 +4007,7 @@ export declare const Units: {
   /**
    * Sheep (`nsha`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Sheep_nsha: Rawcode<"unit">;
 
@@ -4024,7 +4024,7 @@ export declare const Units: {
   /**
    * Goblin Shipyard (`nshp`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GoblinShipyard_nshp: Rawcode<"unit">;
 
@@ -4036,7 +4036,7 @@ export declare const Units: {
   /**
    * Sheep (`nshw`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Sheep_nshw: Rawcode<"unit">;
 
@@ -4063,7 +4063,7 @@ export declare const Units: {
   /**
    * Skink (`nskk`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Skink_nskk: Rawcode<"unit">;
 
@@ -4075,7 +4075,7 @@ export declare const Units: {
   /**
    * Skeletal Orc (`nsko`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SkeletalOrc_nsko: Rawcode<"unit">;
 
@@ -4117,35 +4117,35 @@ export declare const Units: {
   /**
    * Snowy Owl (`nsno`), a Built-in unit of Patch 3.0.0, race critters.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SnowyOwl_nsno: Rawcode<"unit">;
 
   /**
    * Snap Dragon (`nsnp`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SnapDragon_nsnp: Rawcode<"unit">;
 
   /**
    * Watery Minion (`nsns`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly WateryMinion_nsns: Rawcode<"unit">;
 
   /**
    * Skeletal Orc Champion (`nsoc`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SkeletalOrcChampion_nsoc: Rawcode<"unit">;
 
   /**
    * Skeletal Orc Grunt (`nsog`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SkeletalOrcGrunt_nsog: Rawcode<"unit">;
 
@@ -4157,7 +4157,7 @@ export declare const Units: {
   /**
    * Support Column (`nspc`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SupportColumn_nspc: Rawcode<"unit">;
 
@@ -4204,35 +4204,35 @@ export declare const Units: {
   /**
    * Stormreaver Apprentice (`nsra`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly StormreaverApprentice_nsra: Rawcode<"unit">;
 
   /**
    * Stormreaver Hermit (`nsrh`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly StormreaverHermit_nsrh: Rawcode<"unit">;
 
   /**
    * Stormreaver Necrolyte (`nsrn`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly StormreaverNecrolyte_nsrn: Rawcode<"unit">;
 
   /**
    * Revenant of the Seas (`nsrv`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RevenantOfTheSeas_nsrv: Rawcode<"unit">;
 
   /**
    * Stormreaver Warlock (`nsrw`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly StormreaverWarlock_nsrw: Rawcode<"unit">;
 
@@ -4274,28 +4274,28 @@ export declare const Units: {
   /**
    * Lesser Spirit Beast (`nsw1`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly LesserSpiritBeast_nsw1: Rawcode<"unit">;
 
   /**
    * Spirit Beast (`nsw2`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SpiritBeast_nsw2: Rawcode<"unit">;
 
   /**
    * Greater Spirit Beast (`nsw3`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GreaterSpiritBeast_nsw3: Rawcode<"unit">;
 
   /**
    * Tavern (`ntav`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Tavern_ntav: Rawcode<"unit">;
 
@@ -4327,49 +4327,49 @@ export declare const Units: {
   /**
    * Tuskarr Spearman (`ntka`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TuskarrSpearman_ntka: Rawcode<"unit">;
 
   /**
    * Tuskarr Chieftain (`ntkc`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TuskarrChieftain_ntkc: Rawcode<"unit">;
 
   /**
    * Tuskarr Fighter (`ntkf`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TuskarrFighter_ntkf: Rawcode<"unit">;
 
   /**
    * Tuskarr Healer (`ntkh`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TuskarrHealer_ntkh: Rawcode<"unit">;
 
   /**
    * Tuskarr Sorcerer (`ntks`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TuskarrSorcerer_ntks: Rawcode<"unit">;
 
   /**
    * Tuskarr Trapper (`ntkt`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TuskarrTrapper_ntkt: Rawcode<"unit">;
 
   /**
    * Tuskarr Warrior (`ntkw`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TuskarrWarrior_ntkw: Rawcode<"unit">;
 
@@ -4381,7 +4381,7 @@ export declare const Units: {
   /**
    * Tent (`ntn3`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Tent_ntn3: Rawcode<"unit">;
 
@@ -4393,56 +4393,56 @@ export declare const Units: {
   /**
    * Tornado (`ntor`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Tornado_ntor: Rawcode<"unit">;
 
   /**
    * Dragon Turtle (`ntrd`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DragonTurtle_ntrd: Rawcode<"unit">;
 
   /**
    * Gargantuan Sea Turtle (`ntrg`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GargantuanSeaTurtle_ntrg: Rawcode<"unit">;
 
   /**
    * Sea Turtle Hatchling (`ntrh`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SeaTurtleHatchling_ntrh: Rawcode<"unit">;
 
   /**
    * Sea Turtle (`ntrs`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SeaTurtle_ntrs: Rawcode<"unit">;
 
   /**
    * Giant Sea Turtle (`ntrt`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GiantSeaTurtle_ntrt: Rawcode<"unit">;
 
   /**
    * Revenant of the Tides (`ntrv`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RevenantOfTheTides_ntrv: Rawcode<"unit">;
 
   /**
    * Death Tower (`ntt1`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DeathTower_ntt1: Rawcode<"unit">;
 
@@ -4454,63 +4454,63 @@ export declare const Units: {
   /**
    * Watery Minion (`ntws`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly WateryMinion_ntws: Rawcode<"unit">;
 
   /**
    * Advanced Death Tower (`ntx2`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly AdvancedDeathTower_ntx2: Rawcode<"unit">;
 
   /**
    * Unbroken Darkhunter (`nubk`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly UnbrokenDarkhunter_nubk: Rawcode<"unit">;
 
   /**
    * Unbroken Rager (`nubr`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly UnbrokenRager_nubr: Rawcode<"unit">;
 
   /**
    * Unbroken Darkweaver (`nubw`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly UnbrokenDarkweaver_nubw: Rawcode<"unit">;
 
   /**
    * Elder Voidwalker (`nvde`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ElderVoidwalker_nvde: Rawcode<"unit">;
 
   /**
    * Greater Voidwalker (`nvdg`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GreaterVoidwalker_nvdg: Rawcode<"unit">;
 
   /**
    * Lesser Voidwalker (`nvdl`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly LesserVoidwalker_nvdl: Rawcode<"unit">;
 
   /**
    * Voidwalker (`nvdw`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Voidwalker_nvdw: Rawcode<"unit">;
 
@@ -4542,21 +4542,21 @@ export declare const Units: {
   /**
    * Night Elf Fishing Village (`nvr0`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NightElfFishingVillage_nvr0: Rawcode<"unit">;
 
   /**
    * Night Elf Fishing Village (`nvr1`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NightElfFishingVillage_nvr1: Rawcode<"unit">;
 
   /**
    * Night Elf Fishing Village (`nvr2`), a Built-in unit of Patch 3.0.0, race nightelf.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NightElfFishingVillage_nvr2: Rawcode<"unit">;
 
@@ -4573,14 +4573,14 @@ export declare const Units: {
   /**
    * Watcher Ward (`nwad`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly WatcherWard_nwad: Rawcode<"unit">;
 
   /**
    * War Wagon (`nwar`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly WarWagon_nwar: Rawcode<"unit">;
 
@@ -4602,35 +4602,35 @@ export declare const Units: {
   /**
    * Wind Rider Cage (`nwc3`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly WindRiderCage_nwc3: Rawcode<"unit">;
 
   /**
    * Wind Rider Cage (`nwc4`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly WindRiderCage_nwc4: Rawcode<"unit">;
 
   /**
    * Hawk (`nwe1`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Hawk_nwe1: Rawcode<"unit">;
 
   /**
    * Thunder Hawk (`nwe2`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ThunderHawk_nwe2: Rawcode<"unit">;
 
   /**
    * Spirit Hawk (`nwe3`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SpiritHawk_nwe3: Rawcode<"unit">;
 
@@ -4642,7 +4642,7 @@ export declare const Units: {
   /**
    * Couatl (`nwgs`), a Built-in unit of Patch 3.0.0, race naga.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Couatl_nwgs: Rawcode<"unit">;
 
@@ -4729,7 +4729,7 @@ export declare const Units: {
   /**
    * Blood Wizard (`nwzw`), a Built-in unit of Patch 3.0.0, race creeps.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BloodWizard_nwzw: Rawcode<"unit">;
 
@@ -4741,21 +4741,21 @@ export declare const Units: {
   /**
    * Zone Indicator (`nzin`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ZoneIndicator_nzin: Rawcode<"unit">;
 
   /**
    * Lich King (`nzlc`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly LichKing_nzlc: Rawcode<"unit">;
 
   /**
    * Zombie (`nzof`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne), Melee (The Frozen Throne) and Custom (Reign of Chaos) Game data sets. Not in the Melee (Reign of Chaos) Game data set.
+   * Custom only in Reign of Chaos.
    */
   readonly Zombie_nzof: Rawcode<"unit">;
 
@@ -4772,7 +4772,7 @@ export declare const Units: {
   /**
    * Baine (`obai`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Baine_obai: Rawcode<"unit">;
 
@@ -4789,7 +4789,7 @@ export declare const Units: {
   /**
    * Orc Transport Ship (`obot`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly OrcTransportShip_obot: Rawcode<"unit">;
 
@@ -4806,14 +4806,14 @@ export declare const Units: {
   /**
    * Orc Frigate (`odes`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly OrcFrigate_odes: Rawcode<"unit">;
 
   /**
    * Drak'thul (`odkt`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Drakthul_odkt: Rawcode<"unit">;
 
@@ -4845,7 +4845,7 @@ export declare const Units: {
   /**
    * Gar'thok (`ogrk`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Garthok_ogrk: Rawcode<"unit">;
 
@@ -4867,105 +4867,105 @@ export declare const Units: {
   /**
    * Forsaken Banshee (`oidb`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ForsakenBanshee_oidb: Rawcode<"unit">;
 
   /**
    * Deathguard (`oidg`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Deathguard_oidg: Rawcode<"unit">;
 
   /**
    * Item Essencium Blizzard (`oie1`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ItemEssenciumBlizzard_oie1: Rawcode<"unit">;
 
   /**
    * Item Essencium Rain of Fire (`oie2`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ItemEssenciumRainOfFire_oie2: Rawcode<"unit">;
 
   /**
    * Item Essencium Chain Lightning (`oie3`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ItemEssenciumChainLightning_oie3: Rawcode<"unit">;
 
   /**
    * Item Essencium Crushing Wave (`oie4`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ItemEssenciumCrushingWave_oie4: Rawcode<"unit">;
 
   /**
    * Forsaken Ranger (`oifr`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ForsakenRanger_oifr: Rawcode<"unit">;
 
   /**
    * Gravelight Soul (`oigs`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GravelightSoul_oigs: Rawcode<"unit">;
 
   /**
    * Item Moonglaive Dummy (`oimd`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ItemMoonglaiveDummy_oimd: Rawcode<"unit">;
 
   /**
    * Roaming Fireball (`oirf`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RoamingFireball_oirf: Rawcode<"unit">;
 
   /**
    * Giant Skeleton Warrior (`oisg`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GiantSkeletonWarrior_oisg: Rawcode<"unit">;
 
   /**
    * Skeleton Warrior (`oisk`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SkeletonWarrior_oisk: Rawcode<"unit">;
 
   /**
    * Skeletal Marksman (`oism`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SkeletalMarksman_oism: Rawcode<"unit">;
 
   /**
    * Spitting Spider (`oisp`), a Built-in unit of Patch 3.0.0, race other.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SpittingSpider_oisp: Rawcode<"unit">;
 
   /**
    * Orc Juggernaught (`ojgn`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly OrcJuggernaught_ojgn: Rawcode<"unit">;
 
@@ -4977,14 +4977,14 @@ export declare const Units: {
   /**
    * Mathog (`omtg`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Mathog_omtg: Rawcode<"unit">;
 
   /**
    * Nazgrel (`onzg`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Nazgrel_onzg: Rawcode<"unit">;
 
@@ -5011,7 +5011,7 @@ export declare const Units: {
   /**
    * Orc Shipyard (`oshy`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly OrcShipyard_oshy: Rawcode<"unit">;
 
@@ -5023,42 +5023,42 @@ export declare const Units: {
   /**
    * Serpent Ward (`osp1`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SerpentWard_osp1: Rawcode<"unit">;
 
   /**
    * Serpent Ward (`osp2`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SerpentWard_osp2: Rawcode<"unit">;
 
   /**
    * Serpent Ward (`osp3`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SerpentWard_osp3: Rawcode<"unit">;
 
   /**
    * Serpent Ward (`osp4`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SerpentWard_osp4: Rawcode<"unit">;
 
   /**
    * Spirit Walker (`ospm`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SpiritWalker_ospm: Rawcode<"unit">;
 
   /**
    * Spirit Walker (`ospw`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SpiritWalker_ospw: Rawcode<"unit">;
 
@@ -5085,7 +5085,7 @@ export declare const Units: {
   /**
    * Spirit Wind Rider (`oswy`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SpiritWindRider_oswy: Rawcode<"unit">;
 
@@ -5097,14 +5097,14 @@ export declare const Units: {
   /**
    * Berserker (`otbk`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Berserker_otbk: Rawcode<"unit">;
 
   /**
    * Batrider (`otbr`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Batrider_otbr: Rawcode<"unit">;
 
@@ -5126,21 +5126,21 @@ export declare const Units: {
   /**
    * Vol'jin (`ovlj`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Voljin_ovlj: Rawcode<"unit">;
 
   /**
    * Voodoo Lounge (`ovln`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly VoodooLounge_ovln: Rawcode<"unit">;
 
   /**
    * Slave Master (`owad`), a Built-in unit of Patch 3.0.0, race orc.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SlaveMaster_owad: Rawcode<"unit">;
 
@@ -5167,35 +5167,35 @@ export declare const Units: {
   /**
    * Marksman (`sarc`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Marksman_sarc: Rawcode<"unit">;
 
   /**
    * Cleric (`scle`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Cleric_scle: Rawcode<"unit">;
 
   /**
    * Crusader (`scru`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Crusader_scru: Rawcode<"unit">;
 
   /**
    * Footman (`sfoo`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Footman_sfoo: Rawcode<"unit">;
 
   /**
    * Inquisitor (`sinq`), a Built-in unit of Patch 3.0.0, race human.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Inquisitor_sinq: Rawcode<"unit">;
 
@@ -5222,14 +5222,14 @@ export declare const Units: {
   /**
    * Sky Barge (`uarb`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SkyBarge_uarb: Rawcode<"unit">;
 
   /**
    * Assassin (`uass`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Assassin_uass: Rawcode<"unit">;
 
@@ -5241,21 +5241,21 @@ export declare const Units: {
   /**
    * Sapphiron (`ubdd`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Sapphiron_ubdd: Rawcode<"unit">;
 
   /**
    * Sapphiron (`ubdr`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Sapphiron_ubdr: Rawcode<"unit">;
 
   /**
    * Blightweaver (`ublw`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Blightweaver_ublw: Rawcode<"unit">;
 
@@ -5267,21 +5267,21 @@ export declare const Units: {
   /**
    * Undead Transport Ship (`ubot`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly UndeadTransportShip_ubot: Rawcode<"unit">;
 
   /**
    * Destroyer (`ubsp`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Destroyer_ubsp: Rawcode<"unit">;
 
   /**
    * Burrowed Crypt Fiend (`ucrm`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BurrowedCryptFiend_ucrm: Rawcode<"unit">;
 
@@ -5293,63 +5293,63 @@ export declare const Units: {
   /**
    * Carrion Beetle (`ucs1`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly CarrionBeetle_ucs1: Rawcode<"unit">;
 
   /**
    * Carrion Beetle (`ucs2`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly CarrionBeetle_ucs2: Rawcode<"unit">;
 
   /**
    * Carrion Beetle (`ucs3`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly CarrionBeetle_ucs3: Rawcode<"unit">;
 
   /**
    * Burrowed Carrion Beetle (`ucsB`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BurrowedCarrionBeetle_ucsB: Rawcode<"unit">;
 
   /**
    * Burrowed Carrion Beetle (`ucsC`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BurrowedCarrionBeetle_ucsC: Rawcode<"unit">;
 
   /**
    * Brute (`ucze`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Brute_ucze: Rawcode<"unit">;
 
   /**
    * Undead Frigate (`udes`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly UndeadFrigate_udes: Rawcode<"unit">;
 
   /**
    * Banshee (`ufr2`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Banshee_ufr2: Rawcode<"unit">;
 
   /**
    * Banshee (`ufrb`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Banshee_ufrb: Rawcode<"unit">;
 
@@ -5366,7 +5366,7 @@ export declare const Units: {
   /**
    * Garithos Abomination (`ugbo`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GarithosAbomination_ugbo: Rawcode<"unit">;
 
@@ -5393,7 +5393,7 @@ export declare const Units: {
   /**
    * Infectious Ghoul (`uigh`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly InfectiousGhoul_uigh: Rawcode<"unit">;
 
@@ -5410,7 +5410,7 @@ export declare const Units: {
   /**
    * Locust (`uloc`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Locust_uloc: Rawcode<"unit">;
 
@@ -5442,7 +5442,7 @@ export declare const Units: {
   /**
    * Obsidian Statue (`uobs`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ObsidianStatue_uobs: Rawcode<"unit">;
 
@@ -5469,7 +5469,7 @@ export declare const Units: {
   /**
    * Undead Shipyard (`ushp`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly UndeadShipyard_ushp: Rawcode<"unit">;
 
@@ -5481,7 +5481,7 @@ export declare const Units: {
   /**
    * Skeletal Mage (`uskm`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SkeletalMage_uskm: Rawcode<"unit">;
 
@@ -5503,14 +5503,14 @@ export declare const Units: {
   /**
    * Tomb of Relics (`utom`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TombOfRelics_utom: Rawcode<"unit">;
 
   /**
    * Undead Battleship (`uubs`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly UndeadBattleship_uubs: Rawcode<"unit">;
 
@@ -5522,7 +5522,7 @@ export declare const Units: {
   /**
    * Nerubian Tower (`uzg2`), a Built-in unit of Patch 3.0.0, race undead.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NerubianTower_uzg2: Rawcode<"unit">;
 
