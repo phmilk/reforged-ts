@@ -216,7 +216,9 @@ finish() {
 # publisher, the package's publishing access, the token's 2FA setting and
 # its revocation) it asks the maintainer to confirm. It is safe to re-run: a
 # package npm already holds with `next` at 1.0.0-alpha.0 is not published
-# again. It never stores or prints the token: the token goes into the user
+# again, and its local tag is pushed when origin lacks it. A version npm
+# does not show five minutes after a successful publish is waited for again
+# while the maintainer asks to. It never stores or prints the token: the token goes into the user
 # npm config for the run and is removed from it when the wizard exits.
 #
 # The dry run still runs the read-only checks (git, the pre mode state, the
@@ -361,6 +363,27 @@ npm_next() {
   fi
 }
 
+# npm_next_within PACKAGE polls npm_next for about five minutes, until it
+# prints VERSION, and prints what it last printed.
+npm_next_within() {
+  local next="" attempt
+  for ((attempt = 1; attempt <= 30; attempt++)); do
+    next=$(npm_next "$1") || return 1
+    [[ "$next" == "$VERSION" || $attempt -eq 30 ]] && break
+    sleep 10
+  done
+  printf '%s' "$next"
+}
+
+# origin_has_tag TAG: whether origin holds the tag TAG. Stops the wizard when
+# origin cannot be asked.
+origin_has_tag() {
+  local out
+  out=$(git ls-remote --tags origin "refs/tags/$1" 2>"$ERR_FILE") ||
+    fail "git ls-remote origin failed:" "$(cat "$ERR_FILE")" "Check your network and your access to $REPO_OWNER/$REPO_NAME."
+  [[ -n "$out" ]]
+}
+
 # npm_has_version PACKAGE: whether npm holds VERSION of PACKAGE.
 npm_has_version() {
   [[ -n "$(npm view "$1@$VERSION" version 2>/dev/null)" ]]
@@ -427,7 +450,8 @@ manifest_field() {
 # ──────────────────────────────────────────────────────────────────────────
 
 TOTAL_STAGES=$((4 + ${#PACKAGES[@]}))
-PENDING=() # the packages npm does not hold with next at VERSION yet
+PENDING=()      # the packages npm does not hold with next at VERSION yet
+PUBLISHED=false # changeset publish ran and exited 0
 
 TITLE="First publish of $VERSION"
 [[ -z "$ONE_PACKAGE" ]] || TITLE="First publish of $ONE_PACKAGE@$VERSION"
@@ -575,7 +599,6 @@ stage "Build, pack and publish"
 
 if ((${#PENDING[@]} == 0)); then
   ok "$WHAT on npm with $DIST_TAG at $VERSION: nothing to publish."
-  pause "Press Enter to continue"
 else
   say "To publish: ${PENDING[*]}"
   say "The same steps as the release workflow's pack and publish jobs ($GUIDE)."
@@ -643,20 +666,25 @@ else
     note "npm may ask for a one-time password from your authenticator."
     run pnpm changeset publish --from-pack-dir "$PACK_DIR" ||
       fail "changeset publish failed." "Read the error above. A package it did publish is skipped on the re-run."
+    PUBLISHED=true
   fi
 
   say ""
-  say "Checking npm (a new version can take a minute to show):"
+  say "Checking npm (a new package can take minutes to show):"
   for pkg in "${PENDING[@]}"; do
     if $DRY_RUN; then
       run npm view "$pkg" "dist-tags.$DIST_TAG"
       continue
     fi
-    next=""
-    for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
-      next=$(npm_next "$pkg") || exit 1
-      [[ "$next" == "$VERSION" || $attempt -eq 12 ]] && break
-      sleep 10
+    next=$(npm_next_within "$pkg") || exit 1
+    # changeset publish exited 0: the version may still be propagating.
+    while $PUBLISHED && [[ "$next" != "$VERSION" ]] && ! npm_has_version "$pkg"; do
+      warn "$pkg@$VERSION is not on npm yet, though changeset publish succeeded: it may still be propagating."
+      confirm "Keep waiting for $pkg@$VERSION?" ||
+        fail "$pkg@$VERSION is not on npm yet." \
+          "changeset publish succeeded, so the version may still be propagating." \
+          "Re-run once npm view $pkg dist-tags shows it: the re-run publishes nothing again and goes on from here."
+      next=$(npm_next_within "$pkg") || exit 1
     done
     if [[ "$next" == "$VERSION" ]]; then
       ok "$pkg: $DIST_TAG is $VERSION"
@@ -672,22 +700,30 @@ else
     fi
   done
 
-  # changeset publish tags each published package locally, as the release
-  # workflow does; the workflow also pushes them.
-  TAGS=()
-  for pkg in "${PENDING[@]}"; do
-    if $DRY_RUN || [[ -n "$(git tag --list "$pkg@$VERSION")" ]]; then TAGS+=("$pkg@$VERSION"); fi
-  done
-  if ((${#TAGS[@]})); then
-    say ""
-    if confirm "Push the tags ${TAGS[*]} to origin?"; then
-      run git push origin "${TAGS[@]/#/refs/tags/}" || fail "git push failed." "Push them later: git push origin ${TAGS[*]}"
-    else
-      note "Not pushed. Later: git push origin ${TAGS[*]}"
-    fi
-  fi
-  pause "Press Enter to continue"
 fi
+
+# changeset publish tags each published package locally, as the release
+# workflow does; the workflow also pushes them. Every package is checked, not
+# only the ones published now: a re-run pushes the tag an earlier run made.
+TAGS=()
+for pkg in "${PACKAGES[@]}"; do
+  tag="$pkg@$VERSION"
+  if $DRY_RUN; then
+    run git ls-remote --tags origin "refs/tags/$tag"
+    [[ " ${PENDING[*]} " != *" $pkg "* ]] || TAGS+=("$tag")
+  elif [[ -n "$(git tag --list "$tag")" ]] && ! origin_has_tag "$tag"; then
+    TAGS+=("$tag")
+  fi
+done
+if ((${#TAGS[@]})); then
+  say ""
+  if confirm "Push the tags ${TAGS[*]} to origin?"; then
+    run git push origin "${TAGS[@]/#/refs/tags/}" || fail "git push failed." "Push them later: git push origin ${TAGS[*]}"
+  else
+    note "Not pushed. Later: git push origin ${TAGS[*]}"
+  fi
+fi
+pause "Press Enter to continue"
 
 # ── 4 on. Each package: trusted publisher, then no tokens ─────────────────
 for pkg in "${PACKAGES[@]}"; do
