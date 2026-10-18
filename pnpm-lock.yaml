@@ -534,6 +534,9 @@ importers:
       prettier:
         specifier: 'catalog:'
         version: 3.9.10
+      reforged-builtins:
+        specifier: workspace:^
+        version: link:../packages/reforged-builtins
       reforged-types:
         specifier: workspace:^
         version: link:../packages/reforged-types

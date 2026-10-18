@@ -8,24 +8,30 @@
  * and the Template's: a field another format adds or drops before them
  * would move them.
  */
+import VERSIONS from "../../packages/reforged-builtins/src/game-data-versions.json" with { type: "json" };
 import { AuthorError } from "./errors.js";
 
 /** The Game Data Sets, by the index the file stores, as the World Editor of 3.0 lists them in its map options. */
 export const GAME_DATA_SETS = ["default", "custom", "melee"] as const;
 export type GameDataSet = (typeof GAME_DATA_SETS)[number];
 
-/** The Game Data Versions, by the index the file stores: Reign of Chaos, The Frozen Throne, Forsaken Kingdom. */
-export const GAME_DATA_VERSIONS = ["roc", "tft", "fk"] as const;
-export type GameDataVersion = (typeof GAME_DATA_VERSIONS)[number];
+/**
+ * The Game Data Versions, by the index the file stores, which is their
+ * value: Reign of Chaos, The Frozen Throne, Forsaken Kingdom. The list is
+ * reforged-builtins' (#620), whose generator reads it too.
+ */
+export const GAME_DATA_VERSIONS: readonly string[] = VERSIONS.toSorted(
+  (a, b) => a.version - b.version,
+).map((version) => version.id);
+/** A Game Data Version's id: one of `GAME_DATA_VERSIONS`. */
+export type GameDataVersion = string;
 
 /** The World Editor's label of each Game Data Set and Game Data Version. */
-const LABELS: Readonly<Record<GameDataSet | GameDataVersion, string>> = {
+const LABELS: Readonly<Record<string, string>> = {
   default: "Default",
   custom: "Custom",
   melee: "Melee",
-  roc: "Reign of Chaos",
-  tft: "The Frozen Throne",
-  fk: "Forsaken Kingdom",
+  ...Object.fromEntries(VERSIONS.map(({ id, label }) => [id, label])),
 };
 
 /** What a build sets in the staged map; a field left out keeps the map's own. */

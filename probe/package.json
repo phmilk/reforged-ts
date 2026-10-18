@@ -22,6 +22,7 @@
     "@typescript-to-lua/language-extensions": "catalog:",
     "lua-types": "catalog:",
     "prettier": "catalog:",
+    "reforged-builtins": "workspace:^",
     "reforged-types": "workspace:^",
     "typescript": "catalog:",
     "typescript-to-lua": "catalog:"

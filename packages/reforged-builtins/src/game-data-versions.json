@@ -1,0 +1,5 @@
+[
+  { "id": "roc", "label": "Reign of Chaos", "version": 0 },
+  { "id": "tft", "label": "The Frozen Throne", "version": 1 },
+  { "id": "fk", "label": "Forsaken Kingdom", "version": 2 }
+]
