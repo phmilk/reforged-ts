@@ -318,3 +318,78 @@ describe("the artefacts of an index", () => {
     );
   });
 });
+
+describe("the artefacts of an index whose Game data sets are read by version (#621)", () => {
+  const SETS = ["fk", "tft", "roc"].flatMap((version) =>
+    ["custom", "melee"].map((set) => `${set}-${version}`),
+  );
+  const LABELS: Record<string, string> = {
+    fk: "Forsaken Kingdom",
+    tft: "The Frozen Throne",
+    roc: "Reign of Chaos",
+  };
+  const unit = (rawcode: string, sets: string[]) => ({
+    kind: "unit" as const,
+    name: "Footman",
+    sets,
+    constant: `Footman_${rawcode}`,
+  });
+  const index: BuiltinsIndex = {
+    format: 1,
+    build: "3.0.0.24268",
+    gameVersion: "3.0.0",
+    gameDataSets: SETS.map((id) => {
+      const [set, version] = id.split("-");
+      return {
+        id,
+        label: `${set === "custom" ? "Custom" : "Melee"} (${LABELS[version]})`,
+      };
+    }),
+    objects: {
+      hall: unit("hall", SETS),
+      hfkk: unit("hfkk", ["custom-fk", "melee-fk"]),
+      htft: unit("htft", SETS.slice(0, 4)),
+      hmel: unit("hmel", ["custom-fk", "melee-fk", "melee-tft"]),
+      hcus: unit("hcus", ["custom-tft"]),
+      hroc: unit("hroc", SETS.slice(0, 5)),
+      hmix: unit("hmix", ["custom-fk", "melee-tft"]),
+    },
+  };
+  const constants = emit(index).get("3.0.0/units.d.ts") ?? "";
+  const sentenceOf = (rawcode: string) => {
+    const head = `   * Footman (\`${rawcode}\`), a Built-in unit of Patch 3.0.0.\n`;
+    const start = constants.indexOf(head);
+    expect(start).toBeGreaterThan(-1);
+    const rest = constants.slice(start + head.length);
+    return rest.startsWith("   */") ? undefined : rest.split("\n")[1];
+  };
+
+  it("say nothing of an object in all six sets", () => {
+    expect(sentenceOf("hall")).toBeUndefined();
+  });
+
+  it("name the one version that holds an object in both its sets", () => {
+    expect(sentenceOf("hfkk")).toBe("   * Forsaken Kingdom only.");
+  });
+
+  it("name the versions that hold an object in neither set", () => {
+    expect(sentenceOf("htft")).toBe("   * Not in Reign of Chaos.");
+  });
+
+  it("spell out a version that holds an object in one set only", () => {
+    expect(sentenceOf("hmel")).toBe(
+      "   * Melee only in The Frozen Throne. Not in Reign of Chaos.",
+    );
+    expect(sentenceOf("hroc")).toBe("   * Custom only in Reign of Chaos.");
+  });
+
+  it("name the one set that alone holds an object", () => {
+    expect(sentenceOf("hcus")).toBe("   * Custom (The Frozen Throne) only.");
+  });
+
+  it("combine the sentences, latest version first", () => {
+    expect(sentenceOf("hmix")).toBe(
+      "   * Custom only in Forsaken Kingdom. Melee only in The Frozen Throne. Not in Reign of Chaos.",
+    );
+  });
+});

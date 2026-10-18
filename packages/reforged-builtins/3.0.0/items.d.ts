@@ -36,28 +36,28 @@ export declare const Items: {
   /**
    * Arcane Scroll (`arsc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ArcaneScroll_arsc: Rawcode<"item">;
 
   /**
    * Arcanite Shield (`arsh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ArcaniteShield_arsh: Rawcode<"item">;
 
   /**
    * Assassin's Blade (`asbl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly AssassinsBlade_asbl: Rawcode<"item">;
 
   /**
    * Ancestral Staff (`axas`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly AncestralStaff_axas: Rawcode<"item">;
 
@@ -74,7 +74,7 @@ export declare const Items: {
   /**
    * Bloodfeather's Heart (`bfhr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BloodfeathersHeart_bfhr: Rawcode<"item">;
 
@@ -86,14 +86,14 @@ export declare const Items: {
   /**
    * Bladebane Armor (`blba`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BladebaneArmor_blba: Rawcode<"item">;
 
   /**
    * Runed Bracers (`brac`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RunedBracers_brac: Rawcode<"item">;
 
@@ -105,7 +105,7 @@ export declare const Items: {
   /**
    * Rusty Plated Boots (`brpb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RustyPlatedBoots_brpb: Rawcode<"item">;
 
@@ -117,7 +117,7 @@ export declare const Items: {
   /**
    * Battle Standard (`btst`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BattleStandard_btst: Rawcode<"item">;
 
@@ -134,49 +134,49 @@ export declare const Items: {
   /**
    * Bandit Lord's Limbs (`cabl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BanditLordsLimbs_cabl: Rawcode<"item">;
 
   /**
    * Garithos's Head (`cagh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GarithossHead_cagh: Rawcode<"item">;
 
   /**
    * Broodmother Venom (`cbmv`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BroodmotherVenom_cbmv: Rawcode<"item">;
 
   /**
    * Captured Ghoul (`cccg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly CapturedGhoul_cccg: Rawcode<"item">;
 
   /**
    * Consecrated Mixture (`cccm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ConsecratedMixture_cccm: Rawcode<"item">;
 
   /**
    * Elixir of Cunning (`ccec`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ElixirOfCunning_ccec: Rawcode<"item">;
 
   /**
    * Elixir of the Monster Hunter (`ccem`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ElixirOfTheMonsterHunter_ccem: Rawcode<"item">;
 
@@ -188,42 +188,42 @@ export declare const Items: {
   /**
    * Valve Wheel (`ccvw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ValveWheel_ccvw: Rawcode<"item">;
 
   /**
    * Darkhound Blood (`cdhb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DarkhoundBlood_cdhb: Rawcode<"item">;
 
   /**
    * Elixir of Greater Intelligence (`cegi`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ElixirOfGreaterIntelligence_cegi: Rawcode<"item">;
 
   /**
    * Elixir of Lesser Intelligence (`celi`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ElixirOfLesserIntelligence_celi: Rawcode<"item">;
 
   /**
    * Experimental Serum (`cese`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ExperimentalSerum_cese: Rawcode<"item">;
 
   /**
    * Explosive Barrel (`cexp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ExplosiveBarrel_cexp: Rawcode<"item">;
 
@@ -240,14 +240,14 @@ export declare const Items: {
   /**
    * Key to the Chamber of Mysteries (`ckcm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly KeyToTheChamberOfMysteries_ckcm: Rawcode<"item">;
 
   /**
    * Dungeon Key (`ckdk`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DungeonKey_ckdk: Rawcode<"item">;
 
@@ -264,7 +264,7 @@ export declare const Items: {
   /**
    * Lump of Meat (`clom`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LumpOfMeat_clom: Rawcode<"item">;
 
@@ -276,7 +276,7 @@ export declare const Items: {
   /**
    * Magical Key (`cmag`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MagicalKey_cmag: Rawcode<"item">;
 
@@ -293,35 +293,35 @@ export declare const Items: {
   /**
    * Celestial Orb of Souls (`cosl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly CelestialOrbOfSouls_cosl: Rawcode<"item">;
 
   /**
    * Portal Orb (`cpor`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PortalOrb_cpor: Rawcode<"item">;
 
   /**
    * Prison Key (`cprk`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PrisonKey_cprk: Rawcode<"item">;
 
   /**
    * Paladin's Torso (`cptz`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PaladinsTorso_cptz: Rawcode<"item">;
 
   /**
    * Crown of the Deathlord (`crdt`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly CrownOfTheDeathlord_crdt: Rawcode<"item">;
 
@@ -333,77 +333,77 @@ export declare const Items: {
   /**
    * The Artifact (`ctat`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TheArtifact_ctat: Rawcode<"item">;
 
   /**
    * Tome of Agility (`ctoa`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TomeOfAgility_ctoa: Rawcode<"item">;
 
   /**
    * Tome of Intelligence (`ctoi`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TomeOfIntelligence_ctoi: Rawcode<"item">;
 
   /**
    * Tome of Strength (`ctos`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TomeOfStrength_ctos: Rawcode<"item">;
 
   /**
    * Very Very Deep Thoughts (`cvdt`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly VeryVeryDeepThoughts_cvdt: Rawcode<"item">;
 
   /**
    * Vile Fin Scale (`cvfs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly VileFinScale_cvfs: Rawcode<"item">;
 
   /**
    * Vial of Plague Essence (`cvpe`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly VialOfPlagueEssence_cvpe: Rawcode<"item">;
 
   /**
    * Vial of Vampire Bat Blood (`cvvb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly VialOfVampireBatBlood_cvvb: Rawcode<"item">;
 
   /**
    * Kelen's Dagger of Escape (`desc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly KelensDaggerOfEscape_desc: Rawcode<"item">;
 
   /**
    * Keg of Thunderwater (`dkfw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly KegOfThunderwater_dkfw: Rawcode<"item">;
 
   /**
    * Thunder Phoenix Egg (`dphe`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ThunderPhoenixEgg_dphe: Rawcode<"item">;
 
@@ -415,1309 +415,1309 @@ export declare const Items: {
   /**
    * Diamond of Summoning (`dsum`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DiamondOfSummoning_dsum: Rawcode<"item">;
 
   /**
    * Thunderbloom Bulb (`dthb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ThunderbloomBulb_dthb: Rawcode<"item">;
 
   /**
    * Drek'thar's Spellbook (`dtsb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DrektharsSpellbook_dtsb: Rawcode<"item">;
 
   /**
    * Dust of Appearance (`dust`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly DustOfAppearance_dust: Rawcode<"item">;
 
   /**
    * Farstrider's Amulet (`eaaa`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly FarstridersAmulet_eaaa: Rawcode<"item">;
 
   /**
    * Blacksmith's Apron (`eaba`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BlacksmithsApron_eaba: Rawcode<"item">;
 
   /**
    * Ancient Bronze Helmet (`eabh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly AncientBronzeHelmet_eabh: Rawcode<"item">;
 
   /**
    * Agitating Totem (`eagt`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly AgitatingTotem_eagt: Rawcode<"item">;
 
   /**
    * Amulet of Minor Endurance (`eame`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly AmuletOfMinorEndurance_eame: Rawcode<"item">;
 
   /**
    * Armor of Reanimation (`eaor`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ArmorOfReanimation_eaor: Rawcode<"item">;
 
   /**
    * Robes of Revenge (`earr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RobesOfRevenge_earr: Rawcode<"item">;
 
   /**
    * Arcane Spellblade (`easb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ArcaneSpellblade_easb: Rawcode<"item">;
 
   /**
    * Armor of the Scarlet Crusade (`easc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ArmorOfTheScarletCrusade_easc: Rawcode<"item">;
 
   /**
    * Agus's Shambling Hand (`eash`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly AgussShamblingHand_eash: Rawcode<"item">;
 
   /**
    * Untakable Candle (`eauc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly UntakableCandle_eauc: Rawcode<"item">;
 
   /**
    * Vampiric Robes (`eavr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly VampiricRobes_eavr: Rawcode<"item">;
 
   /**
    * Backpack (`ebac`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Backpack_ebac: Rawcode<"item">;
 
   /**
    * Bone Cage Breastplate (`ebcb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BoneCageBreastplate_ebcb: Rawcode<"item">;
 
   /**
    * Bone Commander's Skull (`ebcs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BoneCommandersSkull_ebcs: Rawcode<"item">;
 
   /**
    * Blue Dragon Figurine (`ebdf`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BlueDragonFigurine_ebdf: Rawcode<"item">;
 
   /**
    * Blade Dancer's Greaves (`ebdg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BladeDancersGreaves_ebdg: Rawcode<"item">;
 
   /**
    * Deathwalkers (`ebdw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Deathwalkers_ebdw: Rawcode<"item">;
 
   /**
    * Blade of Frozen Hunger (`ebfh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BladeOfFrozenHunger_ebfh: Rawcode<"item">;
 
   /**
    * Heavyduty Boots (`ebhb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HeavydutyBoots_ebhb: Rawcode<"item">;
 
   /**
    * Garek's Backpack (`ebhg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GareksBackpack_ebhg: Rawcode<"item">;
 
   /**
    * Ilastar's Backpack (`ebhi`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly IlastarsBackpack_ebhi: Rawcode<"item">;
 
   /**
    * Landen's Backpack (`ebhl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LandensBackpack_ebhl: Rawcode<"item">;
 
   /**
    * Necromancer's Plaguegreaves (`ebnp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly NecromancersPlaguegreaves_ebnp: Rawcode<"item">;
 
   /**
    * Blade of Corruption (`eboc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BladeOfCorruption_eboc: Rawcode<"item">;
 
   /**
    * Boots of the Forsaken (`ebof`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BootsOfTheForsaken_ebof: Rawcode<"item">;
 
   /**
    * Bindings of Helya (`eboh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BindingsOfHelya_eboh: Rawcode<"item">;
 
   /**
    * Boots of the Icewalker (`eboi`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BootsOfTheIcewalker_eboi: Rawcode<"item">;
 
   /**
    * Bracers of the Ogre Magi (`ebom`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BracersOfTheOgreMagi_ebom: Rawcode<"item">;
 
   /**
    * Overlord's Sabatons (`ebos`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly OverlordsSabatons_ebos: Rawcode<"item">;
 
   /**
    * Blackrock Chain Helm (`ebr1`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BlackrockChainHelm_ebr1: Rawcode<"item">;
 
   /**
    * Blademaster's Greatsword (`ebr2`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BlademastersGreatsword_ebr2: Rawcode<"item">;
 
   /**
    * Blackrock Steel Plate (`ebrp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BlackrockSteelPlate_ebrp: Rawcode<"item">;
 
   /**
    * Boots of the Scarlet Crusade (`ebsc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BootsOfTheScarletCrusade_ebsc: Rawcode<"item">;
 
   /**
    * Band of the Sin'dorei (`ebsd`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BandOfTheSindorei_ebsd: Rawcode<"item">;
 
   /**
    * Broken Skinning Knife (`ebsk`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BrokenSkinningKnife_ebsk: Rawcode<"item">;
 
   /**
    * Band of the Skeletal Mage (`ebsm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BandOfTheSkeletalMage_ebsm: Rawcode<"item">;
 
   /**
    * Breastplate of the Scarlet Paladin (`ebsp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BreastplateOfTheScarletPaladin_ebsp: Rawcode<"item">;
 
   /**
    * Stormwalkers (`ebsw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Stormwalkers_ebsw: Rawcode<"item">;
 
   /**
    * Tactician's Boots (`ebtb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TacticiansBoots_ebtb: Rawcode<"item">;
 
   /**
    * Alicia's Favor (`ebtf`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly AliciasFavor_ebtf: Rawcode<"item">;
 
   /**
    * Bramblethorn Vestments (`ebtv`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BramblethornVestments_ebtv: Rawcode<"item">;
 
   /**
    * Anya's Backpack (`ebua`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly AnyasBackpack_ebua: Rawcode<"item">;
 
   /**
    * Garek's Backpack (`ebug`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GareksBackpack_ebug: Rawcode<"item">;
 
   /**
    * Leonid's Backpack (`ebul`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LeonidsBackpack_ebul: Rawcode<"item">;
 
   /**
    * Butcher's Cleaver (`ebut`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ButchersCleaver_ebut: Rawcode<"item">;
 
   /**
    * Blightweaver Boots (`ebwb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BlightweaverBoots_ebwb: Rawcode<"item">;
 
   /**
    * Wayfarer Greaves (`ebwg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly WayfarerGreaves_ebwg: Rawcode<"item">;
 
   /**
    * Boots of the Warm Hearth (`ebwh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BootsOfTheWarmHearth_ebwh: Rawcode<"item">;
 
   /**
    * Worn Sandals (`ebws`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly WornSandals_ebws: Rawcode<"item">;
 
   /**
    * Citrine Adorned Boots (`ecab`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly CitrineAdornedBoots_ecab: Rawcode<"item">;
 
   /**
    * Shoddy Cap (`ecap`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ShoddyCap_ecap: Rawcode<"item">;
 
   /**
    * Amulet of Vitality (`ecav`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly AmuletOfVitality_ecav: Rawcode<"item">;
 
   /**
    * Colossal Battleaxe (`ecba`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ColossalBattleaxe_ecba: Rawcode<"item">;
 
   /**
    * Coldbringer's Reach (`ecbr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ColdbringersReach_ecbr: Rawcode<"item">;
 
   /**
    * Chipped Circlet of Clarity (`eccc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ChippedCircletOfClarity_eccc: Rawcode<"item">;
 
   /**
    * Dreaded Chestplate (`ecdc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DreadedChestplate_ecdc: Rawcode<"item">;
 
   /**
    * Druidic Leafguard (`ecdl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DruidicLeafguard_ecdl: Rawcode<"item">;
 
   /**
    * Guardsman Boots (`ecgb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GuardsmanBoots_ecgb: Rawcode<"item">;
 
   /**
    * Guardsman Chestplate (`ecgc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GuardsmanChestplate_ecgc: Rawcode<"item">;
 
   /**
    * Guardsman Helmet (`ecgh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GuardsmanHelmet_ecgh: Rawcode<"item">;
 
   /**
    * Cursed Golden Ring (`ecgr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly CursedGoldenRing_ecgr: Rawcode<"item">;
 
   /**
    * Staff of the Crimson Heart (`ech1`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly StaffOfTheCrimsonHeart_ech1: Rawcode<"item">;
 
   /**
    * Blade of the Crimson Heart (`ech2`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BladeOfTheCrimsonHeart_ech2: Rawcode<"item">;
 
   /**
    * Guardian of the Crimson Heart (`ech3`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GuardianOfTheCrimsonHeart_ech3: Rawcode<"item">;
 
   /**
    * Immortal Guardian's Chestplate (`ecig`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ImmortalGuardiansChestplate_ecig: Rawcode<"item">;
 
   /**
    * Chestpiece of Lesser Cunning (`eclc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ChestpieceOfLesserCunning_eclc: Rawcode<"item">;
 
   /**
    * Deerskin Gloves (`eclg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DeerskinGloves_eclg: Rawcode<"item">;
 
   /**
    * Chronomaster's Gloves (`ecmg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ChronomastersGloves_ecmg: Rawcode<"item">;
 
   /**
    * Novice Rags (`ecnr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly NoviceRags_ecnr: Rawcode<"item">;
 
   /**
    * Convergence of Fates (`ecof`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ConvergenceOfFates_ecof: Rawcode<"item">;
 
   /**
    * Crown of the Resolute Monarch (`ecrm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly CrownOfTheResoluteMonarch_ecrm: Rawcode<"item">;
 
   /**
    * Cardinal Ruby of the Necrolyte (`ecrn`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly CardinalRubyOfTheNecrolyte_ecrn: Rawcode<"item">;
 
   /**
    * Ring of Regeneration (`ecrr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfRegeneration_ecrr: Rawcode<"item">;
 
   /**
    * Steel Sword (`ecss`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SteelSword_ecss: Rawcode<"item">;
 
   /**
    * Diamond Adorned Chestplate (`edac`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DiamondAdornedChestplate_edac: Rawcode<"item">;
 
   /**
    * Deathbringer's Boots (`edbb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DeathbringersBoots_edbb: Rawcode<"item">;
 
   /**
    * Deathbloom Leaves (`edbl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DeathbloomLeaves_edbl: Rawcode<"item">;
 
   /**
    * Drained Bloodstone (`edbs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DrainedBloodstone_edbs: Rawcode<"item">;
 
   /**
    * Deepsea Bag (`edbw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DeepseaBag_edbw: Rawcode<"item">;
 
   /**
    * Diamond Staff of Dalaran (`edds`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DiamondStaffOfDalaran_edds: Rawcode<"item">;
 
   /**
    * Dark Iron Breastplate (`edib`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DarkIronBreastplate_edib: Rawcode<"item">;
 
   /**
    * Dark Iron Greaves (`edif`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DarkIronGreaves_edif: Rawcode<"item">;
 
   /**
    * Dark Iron Gauntlets (`edig`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DarkIronGauntlets_edig: Rawcode<"item">;
 
   /**
    * Dark Iron Helm (`edih`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DarkIronHelm_edih: Rawcode<"item">;
 
   /**
    * Dark Iron Shield (`edis`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DarkIronShield_edis: Rawcode<"item">;
 
   /**
    * Dark Ranger's Bracers (`edrb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DarkRangersBracers_edrb: Rawcode<"item">;
 
   /**
    * Dark Ranger's Chestguard (`edrc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DarkRangersChestguard_edrc: Rawcode<"item">;
 
   /**
    * Dark Ranger's Hood (`edrh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DarkRangersHood_edrh: Rawcode<"item">;
 
   /**
    * Dark Ranger's Insignia (`edri`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DarkRangersInsignia_edri: Rawcode<"item">;
 
   /**
    * Dark Ranger's Shadows (`edrs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DarkRangersShadows_edrs: Rawcode<"item">;
 
   /**
    * Damaged Spellbreaker Helmet (`edsh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DamagedSpellbreakerHelmet_edsh: Rawcode<"item">;
 
   /**
    * Decrepit Sorcerer's Mantle (`edsm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DecrepitSorcerersMantle_edsm: Rawcode<"item">;
 
   /**
    * Dalaran Sapphire Robes (`edsr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DalaranSapphireRobes_edsr: Rawcode<"item">;
 
   /**
    * Desecrated Tower Shield (`edts`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DesecratedTowerShield_edts: Rawcode<"item">;
 
   /**
    * Demonic Warglaives (`edwg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DemonicWarglaives_edwg: Rawcode<"item">;
 
   /**
    * Endless Flask of Restoration (`eefr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly EndlessFlaskOfRestoration_eefr: Rawcode<"item">;
 
   /**
    * Essencium, the Gathering of Elements (`eege`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly EssenciumTheGatheringOfElements_eege: Rawcode<"item">;
 
   /**
    * Lesser Engineering Goggles (`eeh1`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LesserEngineeringGoggles_eeh1: Rawcode<"item">;
 
   /**
    * Greater Engineering Goggles (`eeh2`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GreaterEngineeringGoggles_eeh2: Rawcode<"item">;
 
   /**
    * Master Engineering Goggles (`eeh3`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MasterEngineeringGoggles_eeh3: Rawcode<"item">;
 
   /**
    * Enchanted Inscription Tools (`eeit`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly EnchantedInscriptionTools_eeit: Rawcode<"item">;
 
   /**
    * Edge of the Ruined City (`eerc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly EdgeOfTheRuinedCity_eerc: Rawcode<"item">;
 
   /**
    * Essence of the Spider Queen (`eesq`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly EssenceOfTheSpiderQueen_eesq: Rawcode<"item">;
 
   /**
    * Forsaken Champion's Helm (`efch`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ForsakenChampionsHelm_efch: Rawcode<"item">;
 
   /**
    * Forgotten Frost Lotus (`effl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ForgottenFrostLotus_effl: Rawcode<"item">;
 
   /**
    * Frenzied Ghoul Claws (`efgc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly FrenziedGhoulClaws_efgc: Rawcode<"item">;
 
   /**
    * Flesh Golem Ribcage (`efgh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly FleshGolemRibcage_efgh: Rawcode<"item">;
 
   /**
    * Frayed Headwear of the Magehunter (`efhm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly FrayedHeadwearOfTheMagehunter_efhm: Rawcode<"item">;
 
   /**
    * Frail Leather Armor (`efla`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly FrailLeatherArmor_efla: Rawcode<"item">;
 
   /**
    * Flame of Al'ar (`efoa`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly FlameOfAlar_efoa: Rawcode<"item">;
 
   /**
    * Forsaken Plaguebow (`efpb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ForsakenPlaguebow_efpb: Rawcode<"item">;
 
   /**
    * Forest Ranger's Gloves (`efrg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ForestRangersGloves_efrg: Rawcode<"item">;
 
   /**
    * Frayed Sorcerer's Handwraps (`efsh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly FrayedSorcerersHandwraps_efsh: Rawcode<"item">;
 
   /**
    * Aviana's Talons (`egat`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly AvianasTalons_egat: Rawcode<"item">;
 
   /**
    * Crusader's Gauntlets (`egcg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly CrusadersGauntlets_egcg: Rawcode<"item">;
 
   /**
    * Gloves of the Deathbringer (`egdb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GlovesOfTheDeathbringer_egdb: Rawcode<"item">;
 
   /**
    * Gravelight, the Echoing Flames (`egef`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GravelightTheEchoingFlames_egef: Rawcode<"item">;
 
   /**
    * Forsaken Gauntlets (`egfg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ForsakenGauntlets_egfg: Rawcode<"item">;
 
   /**
    * Gloves of the Flamewalker (`egfw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GlovesOfTheFlamewalker_egfw: Rawcode<"item">;
 
   /**
    * Gloves of Necromancy (`eggn`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GlovesOfNecromancy_eggn: Rawcode<"item">;
 
   /**
    * Gloves of the Phoenix (`eggp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GlovesOfThePhoenix_eggp: Rawcode<"item">;
 
   /**
    * Gloves of Lesser Cunning (`eglc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GlovesOfLesserCunning_eglc: Rawcode<"item">;
 
   /**
    * Golden Necklace of Serenity (`egns`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GoldenNecklaceOfSerenity_egns: Rawcode<"item">;
 
   /**
    * Gloves of the Battlemage (`egob`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GlovesOfTheBattlemage_egob: Rawcode<"item">;
 
   /**
    * Gloves of Perfection (`egop`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GlovesOfPerfection_egop: Rawcode<"item">;
 
   /**
    * Magister's Handguards (`egos`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MagistersHandguards_egos: Rawcode<"item">;
 
   /**
    * Gift of the Wilds (`egow`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GiftOfTheWilds_egow: Rawcode<"item">;
 
   /**
    * Giant Skeleton Bone (`egsb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GiantSkeletonBone_egsb: Rawcode<"item">;
 
   /**
    * Gloves of the Scarlet Crusade (`egsc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GlovesOfTheScarletCrusade_egsc: Rawcode<"item">;
 
   /**
    * Selene, Grand Scepter of Elune (`egse`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SeleneGrandScepterOfElune_egse: Rawcode<"item">;
 
   /**
    * Sage's Gloves (`egsg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SagesGloves_egsg: Rawcode<"item">;
 
   /**
    * Glacial Shard (`egsh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GlacialShard_egsh: Rawcode<"item">;
 
   /**
    * Gloves of Ultimate Vampirism (`eguv`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GlovesOfUltimateVampirism_eguv: Rawcode<"item">;
 
   /**
    * Gnoll Warlord Hide (`egwh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GnollWarlordHide_egwh: Rawcode<"item">;
 
   /**
    * Gnomish Zapper X-4000 (`egzx`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GnomishZapperX4000_egzx: Rawcode<"item">;
 
   /**
    * Bandit Mask (`ehbm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BanditMask_ehbm: Rawcode<"item">;
 
   /**
    * Helm of the Cenarion Circle (`ehcc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HelmOfTheCenarionCircle_ehcc: Rawcode<"item">;
 
   /**
    * Huge Citrine of the Fierce (`ehcf`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HugeCitrineOfTheFierce_ehcf: Rawcode<"item">;
 
   /**
    * Crimson Helm of Opportunity (`ehco`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly CrimsonHelmOfOpportunity_ehco: Rawcode<"item">;
 
   /**
    * Helm of the Dark Rider (`ehdr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HelmOfTheDarkRider_ehdr: Rawcode<"item">;
 
   /**
    * Diamond Tiara (`ehdt`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DiamondTiara_ehdt: Rawcode<"item">;
 
   /**
    * Ring of Holy Fire (`ehfi`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfHolyFire_ehfi: Rawcode<"item">;
 
   /**
    * Gilnean Headpiece (`ehgh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GilneanHeadpiece_ehgh: Rawcode<"item">;
 
   /**
    * Headpiece of the High Inquisitor (`ehhi`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HeadpieceOfTheHighInquisitor_ehhi: Rawcode<"item">;
 
   /**
    * Helm of the Iron Guardian (`ehig`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HelmOfTheIronGuardian_ehig: Rawcode<"item">;
 
   /**
    * Horn of the Lost Spirits (`ehls`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HornOfTheLostSpirits_ehls: Rawcode<"item">;
 
   /**
    * Moonstone Circlet (`ehmc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MoonstoneCirclet_ehmc: Rawcode<"item">;
 
   /**
    * Heart of the Lake (`ehol`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HeartOfTheLake_ehol: Rawcode<"item">;
 
   /**
    * Pirate Hat (`ehph`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PirateHat_ehph: Rawcode<"item">;
 
   /**
    * Helm of the Rimelord (`ehrl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HelmOfTheRimelord_ehrl: Rawcode<"item">;
 
   /**
    * Helm of the Scarlet Captain (`ehsc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HelmOfTheScarletCaptain_ehsc: Rawcode<"item">;
 
   /**
    * Hammer of the Silver Hand (`ehsh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HammerOfTheSilverHand_ehsh: Rawcode<"item">;
 
   /**
    * High Templar's Conqueror (`ehtc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HighTemplarsConqueror_ehtc: Rawcode<"item">;
 
   /**
    * High Templar's Flame (`ehtf`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HighTemplarsFlame_ehtf: Rawcode<"item">;
 
   /**
    * High Templar's Judgment (`ehtj`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HighTemplarsJudgment_ehtj: Rawcode<"item">;
 
   /**
    * Handful of Throwing Knives (`ehtk`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HandfulOfThrowingKnives_ehtk: Rawcode<"item">;
 
   /**
    * High Templar's March (`ehtm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HighTemplarsMarch_ehtm: Rawcode<"item">;
 
   /**
    * High Templar's Visage (`ehtv`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HighTemplarsVisage_ehtv: Rawcode<"item">;
 
   /**
    * Icecrown Ring (`eicc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly IcecrownRing_eicc: Rawcode<"item">;
 
   /**
    * Ice Cold Diamond (`eicd`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly IceColdDiamond_eicd: Rawcode<"item">;
 
   /**
    * Intricate Emerald Pendant (`eiep`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly IntricateEmeraldPendant_eiep: Rawcode<"item">;
 
   /**
    * Infectious Ghoul Charm (`eigc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly InfectiousGhoulCharm_eigc: Rawcode<"item">;
 
   /**
    * Iron Grip Gauntlets (`eigg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly IronGripGauntlets_eigg: Rawcode<"item">;
 
   /**
    * Blade of Inferno (`einf`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BladeOfInferno_einf: Rawcode<"item">;
 
   /**
    * Jagged Jade Ring (`ejjr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly JaggedJadeRing_ejjr: Rawcode<"item">;
 
   /**
    * Kaldorei Moonglaive (`ekmg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly KaldoreiMoonglaive_ekmg: Rawcode<"item">;
 
   /**
    * Kobold Mining Helm (`ekmh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly KoboldMiningHelm_ekmh: Rawcode<"item">;
 
   /**
    * Aegis (`elae`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Aegis_elae: Rawcode<"item">;
 
   /**
    * Lesser Blade of the Cultist (`elbc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LesserBladeOfTheCultist_elbc: Rawcode<"item">;
 
   /**
    * Lesser Band of the Paladin (`elbp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LesserBandOfThePaladin_elbp: Rawcode<"item">;
 
   /**
    * Lance of the Frozen Phoenix (`elfp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LanceOfTheFrozenPhoenix_elfp: Rawcode<"item">;
 
   /**
    * Lost Forsaken Quiver (`elfq`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LostForsakenQuiver_elfq: Rawcode<"item">;
 
   /**
    * Tigerskin Helmet of Precision (`elhp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TigerskinHelmetOfPrecision_elhp: Rawcode<"item">;
 
   /**
    * Lesser Mark of the Forsaken (`elmf`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LesserMarkOfTheForsaken_elmf: Rawcode<"item">;
 
   /**
    * Lesser Mark of Time (`elmt`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LesserMarkOfTime_elmt: Rawcode<"item">;
 
   /**
    * Lance of the Dawn (`elod`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LanceOfTheDawn_elod: Rawcode<"item">;
 
   /**
    * Captain's Helmet of Bravery (`elvl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly CaptainsHelmetOfBravery_elvl: Rawcode<"item">;
 
   /**
    * Murloc Costume Gloves (`emcg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MurlocCostumeGloves_emcg: Rawcode<"item">;
 
   /**
    * Manuscript of the Forsaken (`emof`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ManuscriptOfTheForsaken_emof: Rawcode<"item">;
 
   /**
    * Mantle of the Highborne (`emoh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MantleOfTheHighborne_emoh: Rawcode<"item">;
 
   /**
    * Mutated Rat's Whiptail (`emrw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MutatedRatsWhiptail_emrw: Rawcode<"item">;
 
   /**
    * Mysterious Twilight Opal (`emto`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MysteriousTwilightOpal_emto: Rawcode<"item">;
 
@@ -1734,931 +1734,931 @@ export declare const Items: {
   /**
    * Nevermelting Ice (`enmi`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly NevermeltingIce_enmi: Rawcode<"item">;
 
   /**
    * Enchanted Vial (`envl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly EnchantedVial_envl: Rawcode<"item">;
 
   /**
    * Bone Buckler (`eobb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BoneBuckler_eobb: Rawcode<"item">;
 
   /**
    * Chipped Shield (`eocs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ChippedShield_eocs: Rawcode<"item">;
 
   /**
    * Overlord's Dreadplate (`eodp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly OverlordsDreadplate_eodp: Rawcode<"item">;
 
   /**
    * Fractured Skull (`eofs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly FracturedSkull_eofs: Rawcode<"item">;
 
   /**
    * Grieving Blade (`eogb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GrievingBlade_eogb: Rawcode<"item">;
 
   /**
    * Ironforge Defender (`eoid`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly IronforgeDefender_eoid: Rawcode<"item">;
 
   /**
    * Malachite Shortsword (`eoms`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MalachiteShortsword_eoms: Rawcode<"item">;
 
   /**
    * Phalanx Shield (`eops`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PhalanxShield_eops: Rawcode<"item">;
 
   /**
    * Shield of the Scarlet Crusade (`eosc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ShieldOfTheScarletCrusade_eosc: Rawcode<"item">;
 
   /**
    * Arcane Cleaver (`epac`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ArcaneCleaver_epac: Rawcode<"item">;
 
   /**
    * Abomination's Hook (`epah`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly AbominationsHook_epah: Rawcode<"item">;
 
   /**
    * Plaguebearer Cuirass (`epbc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PlaguebearerCuirass_epbc: Rawcode<"item">;
 
   /**
    * Plaguebearer Shortsword (`epbs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PlaguebearerShortsword_epbs: Rawcode<"item">;
 
   /**
    * Corrupted Greatsword (`epcg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly CorruptedGreatsword_epcg: Rawcode<"item">;
 
   /**
    * Crystal Sword (`epcs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly CrystalSword_epcs: Rawcode<"item">;
 
   /**
    * Daybreaker (`epdb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Daybreaker_epdb: Rawcode<"item">;
 
   /**
    * Deathwhisper (`epdw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Deathwhisper_epdw: Rawcode<"item">;
 
   /**
    * Ghoulish Claw (`epfc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GhoulishClaw_epfc: Rawcode<"item">;
 
   /**
    * Gilnean Battleaxe (`epgb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GilneanBattleaxe_epgb: Rawcode<"item">;
 
   /**
    * Guardsman Dagger (`epgd`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GuardsmanDagger_epgd: Rawcode<"item">;
 
   /**
    * Guardsman Longsword (`epgl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GuardsmanLongsword_epgl: Rawcode<"item">;
 
   /**
    * Huge Flail (`ephf`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HugeFlail_ephf: Rawcode<"item">;
 
   /**
    * Portable Lightning Rod (`eplr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PortableLightningRod_eplr: Rawcode<"item">;
 
   /**
    * Mograine's Might (`epmb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MograinesMight_epmb: Rawcode<"item">;
 
   /**
    * Monastery Mace (`epmm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MonasteryMace_epmm: Rawcode<"item">;
 
   /**
    * Mundane Wand (`epmw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MundaneWand_epmw: Rawcode<"item">;
 
   /**
    * Nightfall (`epnf`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Nightfall_epnf: Rawcode<"item">;
 
   /**
    * Suspicious Concoction (`epoa`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SuspiciousConcoction_epoa: Rawcode<"item">;
 
   /**
    * Ogre Warclub (`epow`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly OgreWarclub_epow: Rawcode<"item">;
 
   /**
    * Quarry Pickaxe (`epqp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly QuarryPickaxe_epqp: Rawcode<"item">;
 
   /**
    * Primal Ring of Magic (`eprm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PrimalRingOfMagic_eprm: Rawcode<"item">;
 
   /**
    * Skeletal Bow (`epsb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SkeletalBow_epsb: Rawcode<"item">;
 
   /**
    * Sharpened Cleaver (`epsc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SharpenedCleaver_epsc: Rawcode<"item">;
 
   /**
    * Sword of the Ghostlands (`epsg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SwordOfTheGhostlands_epsg: Rawcode<"item">;
 
   /**
    * Protector of the Silver Hand (`epsh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ProtectorOfTheSilverHand_epsh: Rawcode<"item">;
 
   /**
    * Staff of Jordan (`epsj`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly StaffOfJordan_epsj: Rawcode<"item">;
 
   /**
    * Soulstealer (`epss`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly Soulstealer_epss: Rawcode<"item">;
 
   /**
    * The Kingbreaker (`eptk`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TheKingbreaker_eptk: Rawcode<"item">;
 
   /**
    * Thornguard Rapier (`eptr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ThornguardRapier_eptr: Rawcode<"item">;
 
   /**
    * Plaguewrought, Blight Incarnate (`epwb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PlaguewroughtBlightIncarnate_epwb: Rawcode<"item">;
 
   /**
    * Painted Wooden Sword (`epws`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PaintedWoodenSword_epws: Rawcode<"item">;
 
   /**
    * Ring of the Archdruid (`erad`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfTheArchdruid_erad: Rawcode<"item">;
 
   /**
    * Ring of Agitated Fervor (`eraf`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfAgitatedFervor_eraf: Rawcode<"item">;
 
   /**
    * Rusty Bronze Gauntlets (`erbg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RustyBronzeGauntlets_erbg: Rawcode<"item">;
 
   /**
    * Robes of the Battlemage (`erbm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RobesOfTheBattlemage_erbm: Rawcode<"item">;
 
   /**
    * Caged Soul (`ercs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly CagedSoul_ercs: Rawcode<"item">;
 
   /**
    * Diamond Ring (`erdr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DiamondRing_erdr: Rawcode<"item">;
 
   /**
    * Energy Band (`ereb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly EnergyBand_ereb: Rawcode<"item">;
 
   /**
    * Echoes of the Fallen (`eref`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly EchoesOfTheFallen_eref: Rawcode<"item">;
 
   /**
    * Earthen Signet (`eres`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly EarthenSignet_eres: Rawcode<"item">;
 
   /**
    * Ring of the Fortunate Adventurer (`erfa`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfTheFortunateAdventurer_erfa: Rawcode<"item">;
 
   /**
    * Ring of the Firelands (`erfl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfTheFirelands_erfl: Rawcode<"item">;
 
   /**
    * Gift of Greed (`ergg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GiftOfGreed_ergg: Rawcode<"item">;
 
   /**
    * Ring of Greater Mana Efficiency (`ergm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfGreaterManaEfficiency_ergm: Rawcode<"item">;
 
   /**
    * Gift of Pride (`ergp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GiftOfPride_ergp: Rawcode<"item">;
 
   /**
    * Gift of Sloth (`ergs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GiftOfSloth_ergs: Rawcode<"item">;
 
   /**
    * Gift of Wrath (`ergw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GiftOfWrath_ergw: Rawcode<"item">;
 
   /**
    * Honed Edge (`erhe`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HonedEdge_erhe: Rawcode<"item">;
 
   /**
    * Heart of the Firelord (`erhf`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly HeartOfTheFirelord_erhf: Rawcode<"item">;
 
   /**
    * Ravage, Herald of Obliteration (`erho`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RavageHeraldOfObliteration_erho: Rawcode<"item">;
 
   /**
    * Razorice, Harbinger of Winter (`erhw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RazoriceHarbingerOfWinter_erhw: Rawcode<"item">;
 
   /**
    * Robes of the Kirin Tor (`erkt`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RobesOfTheKirinTor_erkt: Rawcode<"item">;
 
   /**
    * Ring of Lesser Restoration (`erlr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfLesserRestoration_erlr: Rawcode<"item">;
 
   /**
    * Nerubian Necklace (`ernn`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly NerubianNecklace_ernn: Rawcode<"item">;
 
   /**
    * Ruby Necklace of Power (`ernp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RubyNecklaceOfPower_ernp: Rawcode<"item">;
 
   /**
    * Ring of Assassination (`eroa`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfAssassination_eroa: Rawcode<"item">;
 
   /**
    * Ring of Evasion (`eroe`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfEvasion_eroe: Rawcode<"item">;
 
   /**
    * Rune of Fire (`erof`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RuneOfFire_erof: Rawcode<"item">;
 
   /**
    * Ogre Gauntlets (`erog`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly OgreGauntlets_erog: Rawcode<"item">;
 
   /**
    * Purifier Blade (`erpb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PurifierBlade_erpb: Rawcode<"item">;
 
   /**
    * Ring of the Runeweaver (`errw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfTheRuneweaver_errw: Rawcode<"item">;
 
   /**
    * Signet of Blood (`ersb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SignetOfBlood_ersb: Rawcode<"item">;
 
   /**
    * Signet of Decay (`ersd`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SignetOfDecay_ersd: Rawcode<"item">;
 
   /**
    * Star of Elune (`erse`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly StarOfElune_erse: Rawcode<"item">;
 
   /**
    * Ring of Stone Fortitude (`ersf`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfStoneFortitude_ersf: Rawcode<"item">;
 
   /**
    * Ring of the Sacred Grove (`ersg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfTheSacredGrove_ersg: Rawcode<"item">;
 
   /**
    * Tome of Azjol-Nerub (`ersk`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TomeOfAzjolNerub_ersk: Rawcode<"item">;
 
   /**
    * Ring of Sacred Magic (`ersm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfSacredMagic_ersm: Rawcode<"item">;
 
   /**
    * Spellbreaker's Necklace (`ersn`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SpellbreakersNecklace_ersn: Rawcode<"item">;
 
   /**
    * Ursoc's Gift (`erug`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly UrsocsGift_erug: Rawcode<"item">;
 
   /**
    * Sanctified Chestplate (`esa1`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SanctifiedChestplate_esa1: Rawcode<"item">;
 
   /**
    * Sanctified Gauntlets (`esa2`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SanctifiedGauntlets_esa2: Rawcode<"item">;
 
   /**
    * Staff of Arcane Hunger (`esah`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly StaffOfArcaneHunger_esah: Rawcode<"item">;
 
   /**
    * Essence of Aszune (`esaz`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly EssenceOfAszune_esaz: Rawcode<"item">;
 
   /**
    * Bone Staff (`esbs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BoneStaff_esbs: Rawcode<"item">;
 
   /**
    * Spellbreaker Circlet (`esbt`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SpellbreakerCirclet_esbt: Rawcode<"item">;
 
   /**
    * Signet of the Crypt Lord (`escl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SignetOfTheCryptLord_escl: Rawcode<"item">;
 
   /**
    * The Screecher (`escr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TheScreecher_escr: Rawcode<"item">;
 
   /**
    * Cork Shooter (`escs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly CorkShooter_escs: Rawcode<"item">;
 
   /**
    * Silverpine Forest Shiv (`esfs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SilverpineForestShiv_esfs: Rawcode<"item">;
 
   /**
    * Shepherd's Curse (`eshc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ShepherdsCurse_eshc: Rawcode<"item">;
 
   /**
    * Wildhammer Breastplate (`esib`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly WildhammerBreastplate_esib: Rawcode<"item">;
 
   /**
    * Kris, the Everburning (`eske`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly KrisTheEverburning_eske: Rawcode<"item">;
 
   /**
    * Shredder's Left Arm (`esla`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ShreddersLeftArm_esla: Rawcode<"item">;
 
   /**
    * Shattered Scourgelord's Crown (`eslc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ShatteredScourgelordsCrown_eslc: Rawcode<"item">;
 
   /**
    * Lich Orb (`eslo`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LichOrb_eslo: Rawcode<"item">;
 
   /**
    * Lordaeron Shield (`esls`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LordaeronShield_esls: Rawcode<"item">;
 
   /**
    * Necrolyte's March (`esnm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly NecrolytesMarch_esnm: Rawcode<"item">;
 
   /**
    * Nexus Shiv (`esns`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly NexusShiv_esns: Rawcode<"item">;
 
   /**
    * Scepter of Darkness (`esod`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ScepterOfDarkness_esod: Rawcode<"item">;
 
   /**
    * Scythe of Frost (`esof`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ScytheOfFrost_esof: Rawcode<"item">;
 
   /**
    * Seal of Sylvanas (`esos`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SealOfSylvanas_esos: Rawcode<"item">;
 
   /**
    * Shield of the Titans (`esot`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ShieldOfTheTitans_esot: Rawcode<"item">;
 
   /**
    * Spell Parrying Buckler (`espb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SpellParryingBuckler_espb: Rawcode<"item">;
 
   /**
    * Sucker Punch Gauntlets (`espg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SuckerPunchGauntlets_espg: Rawcode<"item">;
 
   /**
    * Poison Nettle (`espn`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PoisonNettle_espn: Rawcode<"item">;
 
   /**
    * Seal of the Red Court (`esrc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SealOfTheRedCourt_esrc: Rawcode<"item">;
 
   /**
    * Blade of the Scarlet Crusade (`essc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BladeOfTheScarletCrusade_essc: Rawcode<"item">;
 
   /**
    * Staff of the Scarlet Inquisitor (`essi`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly StaffOfTheScarletInquisitor_essi: Rawcode<"item">;
 
   /**
    * Sticky Slime Ring (`essr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly StickySlimeRing_essr: Rawcode<"item">;
 
   /**
    * Bag of Dust (`etbd`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BagOfDust_etbd: Rawcode<"item">;
 
   /**
    * Shamanistic Headwear (`etbh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ShamanisticHeadwear_etbh: Rawcode<"item">;
 
   /**
    * Bottled Storm (`etbs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BottledStorm_etbs: Rawcode<"item">;
 
   /**
    * Edric's Eye (`etee`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly EdricsEye_etee: Rawcode<"item">;
 
   /**
    * Forsaken Fangs (`etff`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ForsakenFangs_etff: Rawcode<"item">;
 
   /**
    * The Impenetrable Fortress (`etif`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TheImpenetrableFortress_etif: Rawcode<"item">;
 
   /**
    * Knight's Javelin (`etkj`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly KnightsJavelin_etkj: Rawcode<"item">;
 
   /**
    * Tiara of the Kirin Tor (`etkt`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TiaraOfTheKirinTor_etkt: Rawcode<"item">;
 
   /**
    * Mana Bauble (`etmb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ManaBauble_etmb: Rawcode<"item">;
 
   /**
    * Talisman of Minor Insight (`etmi`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TalismanOfMinorInsight_etmi: Rawcode<"item">;
 
   /**
    * Mark of the Phoenix (`etmp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MarkOfThePhoenix_etmp: Rawcode<"item">;
 
   /**
    * Talisman of the Northern Winds (`etnw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TalismanOfTheNorthernWinds_etnw: Rawcode<"item">;
 
   /**
    * Totem of the Ogre Magi (`etom`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TotemOfTheOgreMagi_etom: Rawcode<"item">;
 
   /**
    * Talisman of Nightmares (`eton`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TalismanOfNightmares_eton: Rawcode<"item">;
 
   /**
    * Twilight Opal Orb (`etoo`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TwilightOpalOrb_etoo: Rawcode<"item">;
 
   /**
    * Talisman of Willpower (`etow`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TalismanOfWillpower_etow: Rawcode<"item">;
 
   /**
    * Restorative Balm (`etrb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RestorativeBalm_etrb: Rawcode<"item">;
 
   /**
    * Undercity Chain Robes (`eucr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly UndercityChainRobes_eucr: Rawcode<"item">;
 
   /**
    * Vampiric Gargoyle Mask (`evgm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly VampiricGargoyleMask_evgm: Rawcode<"item">;
 
   /**
    * Vestments of the Wavespeaker (`evow`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly VestmentsOfTheWavespeaker_evow: Rawcode<"item">;
 
   /**
    * Vestments of the Storm King (`evsk`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly VestmentsOfTheStormKing_evsk: Rawcode<"item">;
 
@@ -2670,77 +2670,77 @@ export declare const Items: {
   /**
    * Worn Adventurer's Outfit (`ewao`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly WornAdventurersOutfit_ewao: Rawcode<"item">;
 
   /**
    * Mordo's Club (`ewbl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly MordosClub_ewbl: Rawcode<"item">;
 
   /**
    * Wicked Fang Blade (`ewfb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly WickedFangBlade_ewfb: Rawcode<"item">;
 
   /**
    * Wand of the Apprentice (`ewoa`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly WandOfTheApprentice_ewoa: Rawcode<"item">;
 
   /**
    * Wand of the Battlemage (`ewob`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly WandOfTheBattlemage_ewob: Rawcode<"item">;
 
   /**
    * Worn Steel Plate (`ews1`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly WornSteelPlate_ews1: Rawcode<"item">;
 
   /**
    * Worn Thief's Boots (`ewtb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly WornThiefsBoots_ewtb: Rawcode<"item">;
 
   /**
    * Webweaver's Gloves (`ewwg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly WebweaversGloves_ewwg: Rawcode<"item">;
 
   /**
    * Borelgore, the Corpulent One (`eymo`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BorelgoreTheCorpulentOne_eymo: Rawcode<"item">;
 
   /**
    * Zombie Arm (`ezba`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ZombieArm_ezba: Rawcode<"item">;
 
   /**
    * Zandalari Giantcrusher (`ezgc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly ZandalariGiantcrusher_ezgc: Rawcode<"item">;
 
@@ -2777,7 +2777,7 @@ export declare const Items: {
   /**
    * Flare Gun (`fgun`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FlareGun_fgun: Rawcode<"item">;
 
@@ -2789,21 +2789,21 @@ export declare const Items: {
   /**
    * Frostguard (`frgd`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Frostguard_frgd: Rawcode<"item">;
 
   /**
    * Firehand Gauntlets (`frhg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FirehandGauntlets_frhg: Rawcode<"item">;
 
   /**
    * Frost Wyrm Skull Shield (`fwss`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly FrostWyrmSkullShield_fwss: Rawcode<"item">;
 
@@ -2820,14 +2820,14 @@ export declare const Items: {
   /**
    * Glyph of Fortification (`gfor`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GlyphOfFortification_gfor: Rawcode<"item">;
 
   /**
    * Orb of Kil'jaeden (`gldo`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly OrbOfKiljaeden_gldo: Rawcode<"item">;
 
@@ -2839,14 +2839,14 @@ export declare const Items: {
   /**
    * Glix's Special (`glxb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly GlixsSpecial_glxb: Rawcode<"item">;
 
   /**
    * Gem Fragment (`gmfr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GemFragment_gmfr: Rawcode<"item">;
 
@@ -2858,14 +2858,14 @@ export declare const Items: {
   /**
    * Gold Coins (`gold`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GoldCoins_gold: Rawcode<"item">;
 
   /**
    * Glyph of Omniscience (`gomn`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GlyphOfOmniscience_gomn: Rawcode<"item">;
 
@@ -2877,7 +2877,7 @@ export declare const Items: {
   /**
    * Grimoire of Souls (`grsl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GrimoireOfSouls_grsl: Rawcode<"item">;
 
@@ -2889,21 +2889,21 @@ export declare const Items: {
   /**
    * Glyph of Ultravision (`guvi`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GlyphOfUltravision_guvi: Rawcode<"item">;
 
   /**
    * Gloves of Spell Mastery (`gvsm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GlovesOfSpellMastery_gvsm: Rawcode<"item">;
 
   /**
    * Helm of Battlethirst (`hbth`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly HelmOfBattlethirst_hbth: Rawcode<"item">;
 
@@ -2920,21 +2920,21 @@ export declare const Items: {
   /**
    * Sacred Relic (`horl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SacredRelic_horl: Rawcode<"item">;
 
   /**
    * Healing Salve (`hslv`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly HealingSalve_hslv: Rawcode<"item">;
 
   /**
    * Skeletal Mage Mask (`hsmm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly SkeletalMageMask_hsmm: Rawcode<"item">;
 
@@ -2966,7 +2966,7 @@ export declare const Items: {
   /**
    * Note to Jaina Proudmoore (`jpnt`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly NoteToJainaProudmoore_jpnt: Rawcode<"item">;
 
@@ -2988,14 +2988,14 @@ export declare const Items: {
   /**
    * Keg of Ale (`kgal`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly KegOfAle_kgal: Rawcode<"item">;
 
   /**
    * Killmaim (`klmm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Killmaim_klmm: Rawcode<"item">;
 
@@ -3047,7 +3047,7 @@ export declare const Items: {
   /**
    * Bundle of Lumber (`lmbr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly BundleOfLumber_lmbr: Rawcode<"item">;
 
@@ -3059,7 +3059,7 @@ export declare const Items: {
   /**
    * Monster Lure (`lure`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MonsterLure_lure: Rawcode<"item">;
 
@@ -3076,14 +3076,14 @@ export declare const Items: {
   /**
    * Mechanical Critter (`mcri`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MechanicalCritter_mcri: Rawcode<"item">;
 
   /**
    * Magic Key Chain (`mgtk`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MagicKeyChain_mgtk: Rawcode<"item">;
 
@@ -3095,7 +3095,7 @@ export declare const Items: {
   /**
    * Mindstaff (`mnsf`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Mindstaff_mnsf: Rawcode<"item">;
 
@@ -3112,14 +3112,14 @@ export declare const Items: {
   /**
    * Moonstone (`moon`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Moonstone_moon: Rawcode<"item">;
 
   /**
    * Mogrin's Report (`mort`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MogrinsReport_mort: Rawcode<"item">;
 
@@ -3136,14 +3136,14 @@ export declare const Items: {
   /**
    * Orb of Corruption (`ocor`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly OrbOfCorruption_ocor: Rawcode<"item">;
 
   /**
    * Orb of Darkness (`odef`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly OrbOfDarkness_odef: Rawcode<"item">;
 
@@ -3160,7 +3160,7 @@ export declare const Items: {
   /**
    * Orb of Fire (`ofr2`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly OrbOfFire_ofr2: Rawcode<"item">;
 
@@ -3172,7 +3172,7 @@ export declare const Items: {
   /**
    * Orb of Lightning (`oli2`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly OrbOfLightning_oli2: Rawcode<"item">;
 
@@ -3184,14 +3184,14 @@ export declare const Items: {
   /**
    * Orb of Slow (`oslo`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly OrbOfSlow_oslo: Rawcode<"item">;
 
   /**
    * Orb of Venom (`oven`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly OrbOfVenom_oven: Rawcode<"item">;
 
@@ -3203,21 +3203,21 @@ export declare const Items: {
   /**
    * Clarity Potion (`pclr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ClarityPotion_pclr: Rawcode<"item">;
 
   /**
    * Potion of Divinity (`pdi2`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PotionOfDivinity_pdi2: Rawcode<"item">;
 
   /**
    * Potion of Divinity (`pdiv`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PotionOfDivinity_pdiv: Rawcode<"item">;
 
@@ -3229,7 +3229,7 @@ export declare const Items: {
   /**
    * Essence of Undeath (`peou`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly EssenceOfUndeath_peou: Rawcode<"item">;
 
@@ -3266,7 +3266,7 @@ export declare const Items: {
   /**
    * Lesser Clarity Potion (`plcl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly LesserClarityPotion_plcl: Rawcode<"item">;
 
@@ -3283,7 +3283,7 @@ export declare const Items: {
   /**
    * Potion of Lesser Invulnerability (`pnvl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PotionOfLesserInvulnerability_pnvl: Rawcode<"item">;
 
@@ -3295,7 +3295,7 @@ export declare const Items: {
   /**
    * Potion of Omniscience (`pomn`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly PotionOfOmniscience_pomn: Rawcode<"item">;
 
@@ -3317,14 +3317,14 @@ export declare const Items: {
   /**
    * Potion of Ultimate Healing (`puhe`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PotionOfUltimateHealing_puhe: Rawcode<"item">;
 
   /**
    * Potion of Ultimate Mana (`puma`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly PotionOfUltimateMana_puma: Rawcode<"item">;
 
@@ -3336,28 +3336,28 @@ export declare const Items: {
   /**
    * Ring of the Archmagi (`ram1`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RingOfTheArchmagi_ram1: Rawcode<"item">;
 
   /**
    * Ring of the Archmagi (`ram2`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RingOfTheArchmagi_ram2: Rawcode<"item">;
 
   /**
    * Ring of the Archmagi (`ram3`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RingOfTheArchmagi_ram3: Rawcode<"item">;
 
   /**
    * Ring of the Archmagi (`ram4`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RingOfTheArchmagi_ram4: Rawcode<"item">;
 
@@ -3389,7 +3389,7 @@ export declare const Items: {
   /**
    * Boots of Haste (`rcdr`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly BootsOfHaste_rcdr: Rawcode<"item">;
 
@@ -3421,70 +3421,70 @@ export declare const Items: {
   /**
    * Rune of Dispel Magic (`rdis`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfDispelMagic_rdis: Rawcode<"item">;
 
   /**
    * Minor Replenishment Potion (`rej1`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly MinorReplenishmentPotion_rej1: Rawcode<"item">;
 
   /**
    * Lesser Replenishment Potion (`rej2`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly LesserReplenishmentPotion_rej2: Rawcode<"item">;
 
   /**
    * Replenishment Potion (`rej3`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ReplenishmentPotion_rej3: Rawcode<"item">;
 
   /**
    * Greater Replenishment Potion (`rej4`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GreaterReplenishmentPotion_rej4: Rawcode<"item">;
 
   /**
    * Lesser Scroll of Replenishment (`rej5`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly LesserScrollOfReplenishment_rej5: Rawcode<"item">;
 
   /**
    * Greater Scroll of Replenishment (`rej6`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly GreaterScrollOfReplenishment_rej6: Rawcode<"item">;
 
   /**
    * Rune of Lesser Healing (`rhe1`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfLesserHealing_rhe1: Rawcode<"item">;
 
   /**
    * Rune of Healing (`rhe2`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfHealing_rhe2: Rawcode<"item">;
 
   /**
    * Rune of Greater Healing (`rhe3`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfGreaterHealing_rhe3: Rawcode<"item">;
 
@@ -3501,7 +3501,7 @@ export declare const Items: {
   /**
    * Ritual Dagger (`ritd`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RitualDagger_ritd: Rawcode<"item">;
 
@@ -3513,28 +3513,28 @@ export declare const Items: {
   /**
    * Rune of Greater Mana (`rma2`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfGreaterMana_rma2: Rawcode<"item">;
 
   /**
    * Rune of Mana (`rman`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfMana_rman: Rawcode<"item">;
 
   /**
    * Ring of Mana Efficiency (`rmef`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfManaEfficiency_rmef: Rawcode<"item">;
 
   /**
    * Rod of Necromancy (`rnec`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RodOfNecromancy_rnec: Rawcode<"item">;
 
@@ -3546,77 +3546,77 @@ export declare const Items: {
   /**
    * Scepter of the Sea (`rots`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ScepterOfTheSea_rots: Rawcode<"item">;
 
   /**
    * Rune of Lesser Resurrection (`rre1`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfLesserResurrection_rre1: Rawcode<"item">;
 
   /**
    * Rune of Greater Resurrection (`rre2`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfGreaterResurrection_rre2: Rawcode<"item">;
 
   /**
    * Rune of Rebirth (`rreb`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfRebirth_rreb: Rawcode<"item">;
 
   /**
    * Rune of Restoration (`rres`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfRestoration_rres: Rawcode<"item">;
 
   /**
    * Lion's Heart (`rrsl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly LionsHeart_rrsl: Rawcode<"item">;
 
   /**
    * Dalaran Signet Ring (`rspa`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly DalaranSignetRing_rspa: Rawcode<"item">;
 
   /**
    * Rune of Speed (`rspd`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfSpeed_rspd: Rawcode<"item">;
 
   /**
    * Rune of Spirit Link (`rspl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfSpiritLink_rspl: Rawcode<"item">;
 
   /**
    * Rune of Shielding (`rsps`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfShielding_rsps: Rawcode<"item">;
 
   /**
    * Ring of Leeching (`rspv`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly RingOfLeeching_rspv: Rawcode<"item">;
 
@@ -3628,21 +3628,21 @@ export declare const Items: {
   /**
    * Runed Gauntlets (`rugt`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RunedGauntlets_rugt: Rawcode<"item">;
 
   /**
    * Rusty Mining Pick (`rump`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RustyMiningPick_rump: Rawcode<"item">;
 
   /**
    * Rune of the Watcher (`rwat`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly RuneOfTheWatcher_rwat: Rawcode<"item">;
 
@@ -3664,7 +3664,7 @@ export declare const Items: {
   /**
    * Spell Book (`sbok`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SpellBook_sbok: Rawcode<"item">;
 
@@ -3676,21 +3676,21 @@ export declare const Items: {
   /**
    * Scepter of Healing (`schl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ScepterOfHealing_schl: Rawcode<"item">;
 
   /**
    * Secret Level Powerup (`sclp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SecretLevelPowerup_sclp: Rawcode<"item">;
 
   /**
    * Scroll of the Unholy Legion (`scul`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ScrollOfTheUnholyLegion_scul: Rawcode<"item">;
 
@@ -3702,35 +3702,35 @@ export declare const Items: {
   /**
    * Horn of the Clouds (`sfog`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly HornOfTheClouds_sfog: Rawcode<"item">;
 
   /**
    * Ice Shard (`shar`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly IceShard_shar: Rawcode<"item">;
 
   /**
    * Scroll of Speed (`shas`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ScrollOfSpeed_shas: Rawcode<"item">;
 
   /**
    * Shaman Claws (`shcw`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShamanClaws_shcw: Rawcode<"item">;
 
   /**
    * Shield of the Deathlord (`shdt`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShieldOfTheDeathlord_shdt: Rawcode<"item">;
 
@@ -3742,49 +3742,49 @@ export declare const Items: {
   /**
    * Enchanted Shield (`shen`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly EnchantedShield_shen: Rawcode<"item">;
 
   /**
    * Shield of Honor (`shhn`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShieldOfHonor_shhn: Rawcode<"item">;
 
   /**
    * Shimmerglaze Roast (`shrs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShimmerglazeRoast_shrs: Rawcode<"item">;
 
   /**
    * Shamanic Totem (`shtm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShamanicTotem_shtm: Rawcode<"item">;
 
   /**
    * Shimmerweed (`shwd`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Shimmerweed_shwd: Rawcode<"item">;
 
   /**
    * Spider Silk Broach (`silk`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SpiderSilkBroach_silk: Rawcode<"item">;
 
   /**
    * Skeletal Artifact (`skrt`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SkeletalArtifact_skrt: Rawcode<"item">;
 
@@ -3796,7 +3796,7 @@ export declare const Items: {
   /**
    * Sacrificial Skull (`skul`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SacrificialSkull_skul: Rawcode<"item">;
 
@@ -3808,84 +3808,84 @@ export declare const Items: {
   /**
    * Staff of Negation (`sneg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly StaffOfNegation_sneg: Rawcode<"item">;
 
   /**
    * Shadow Orb +1 (`sor1`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShadowOrb1_sor1: Rawcode<"item">;
 
   /**
    * Shadow Orb +2 (`sor2`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShadowOrb2_sor2: Rawcode<"item">;
 
   /**
    * Shadow Orb +3 (`sor3`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShadowOrb3_sor3: Rawcode<"item">;
 
   /**
    * Shadow Orb +4 (`sor4`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShadowOrb4_sor4: Rawcode<"item">;
 
   /**
    * Shadow Orb +5 (`sor5`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShadowOrb5_sor5: Rawcode<"item">;
 
   /**
    * Shadow Orb +6 (`sor6`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShadowOrb6_sor6: Rawcode<"item">;
 
   /**
    * Shadow Orb +7 (`sor7`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShadowOrb7_sor7: Rawcode<"item">;
 
   /**
    * Shadow Orb +8 (`sor8`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShadowOrb8_sor8: Rawcode<"item">;
 
   /**
    * Shadow Orb +9 (`sor9`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShadowOrb9_sor9: Rawcode<"item">;
 
   /**
    * Shadow Orb +10 (`sora`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShadowOrb10_sora: Rawcode<"item">;
 
   /**
    * Shadow Orb Fragment (`sorf`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ShadowOrbFragment_sorf: Rawcode<"item">;
 
@@ -3897,7 +3897,7 @@ export declare const Items: {
   /**
    * Staff of Preservation (`spre`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly StaffOfPreservation_spre: Rawcode<"item">;
 
@@ -3914,21 +3914,21 @@ export declare const Items: {
   /**
    * Amulet of Spell Shield (`spsh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly AmuletOfSpellShield_spsh: Rawcode<"item">;
 
   /**
    * Searing Blade (`srbd`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SearingBlade_srbd: Rawcode<"item">;
 
   /**
    * Scroll of Regeneration (`sreg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ScrollOfRegeneration_sreg: Rawcode<"item">;
 
@@ -3950,49 +3950,49 @@ export declare const Items: {
   /**
    * Serathil (`srtl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly Serathil_srtl: Rawcode<"item">;
 
   /**
    * Staff of Sanctuary (`ssan`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly StaffOfSanctuary_ssan: Rawcode<"item">;
 
   /**
    * Staff of Silence (`ssil`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly StaffOfSilence_ssil: Rawcode<"item">;
 
   /**
    * Staff of Teleportation (`stel`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly StaffOfTeleportation_stel: Rawcode<"item">;
 
   /**
    * Clockwork Penguin (`stpg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ClockworkPenguin_stpg: Rawcode<"item">;
 
   /**
    * Staff of Reanimation (`stre`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly StaffOfReanimation_stre: Rawcode<"item">;
 
   /**
    * Sturdy War Axe (`stwa`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SturdyWarAxe_stwa: Rawcode<"item">;
 
@@ -4004,35 +4004,35 @@ export declare const Items: {
   /**
    * Seed of Expulsion (`sxpl`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly SeedOfExpulsion_sxpl: Rawcode<"item">;
 
   /**
    * Tiny Altar of Kings (`tbak`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TinyAltarOfKings_tbak: Rawcode<"item">;
 
   /**
    * Tiny Barracks (`tbar`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TinyBarracks_tbar: Rawcode<"item">;
 
   /**
    * Tiny Blacksmith (`tbsm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TinyBlacksmith_tbsm: Rawcode<"item">;
 
   /**
    * Tiny Castle (`tcas`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TinyCastle_tcas: Rawcode<"item">;
 
@@ -4059,14 +4059,14 @@ export declare const Items: {
   /**
    * Tiny Farm (`tfar`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TinyFarm_tfar: Rawcode<"item">;
 
   /**
    * Tiny Great Hall (`tgrh`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TinyGreatHall_tgrh: Rawcode<"item">;
 
@@ -4078,14 +4078,14 @@ export declare const Items: {
   /**
    * Thunderlizard Diamond (`thdm`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ThunderlizardDiamond_thdm: Rawcode<"item">;
 
   /**
    * Thunder Lizard Egg (`thle`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly ThunderLizardEgg_thle: Rawcode<"item">;
 
@@ -4107,7 +4107,7 @@ export declare const Items: {
   /**
    * Tiny Lumber Mill (`tlum`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TinyLumberMill_tlum: Rawcode<"item">;
 
@@ -4119,7 +4119,7 @@ export declare const Items: {
   /**
    * Tome of Sacrifices (`tmsc`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TomeOfSacrifices_tmsc: Rawcode<"item">;
 
@@ -4136,14 +4136,14 @@ export declare const Items: {
   /**
    * Tome of Retraining (`tret`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly TomeOfRetraining_tret: Rawcode<"item">;
 
   /**
    * Ivory Tower (`tsct`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly IvoryTower_tsct: Rawcode<"item">;
 
@@ -4160,7 +4160,7 @@ export declare const Items: {
   /**
    * Tome of Talent (`ttal`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Forsaken Kingdom only.
    */
   readonly TomeOfTalent_ttal: Rawcode<"item">;
 
@@ -4172,7 +4172,7 @@ export declare const Items: {
   /**
    * Vampiric Potion (`vamp`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly VampiricPotion_vamp: Rawcode<"item">;
 
@@ -4184,7 +4184,7 @@ export declare const Items: {
   /**
    * Vine of Purification (`vpur`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly VineOfPurification_vpur: Rawcode<"item">;
 
@@ -4211,7 +4211,7 @@ export declare const Items: {
   /**
    * Amulet of the Wild (`wild`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly AmuletOfTheWild_wild: Rawcode<"item">;
 
@@ -4233,28 +4233,28 @@ export declare const Items: {
   /**
    * Wand of Neutralization (`wneu`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly WandOfNeutralization_wneu: Rawcode<"item">;
 
   /**
    * Wirt's Other Leg (`wolg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly WirtsOtherLeg_wolg: Rawcode<"item">;
 
   /**
    * Wand of Mana Stealing (`woms`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly WandOfManaStealing_woms: Rawcode<"item">;
 
   /**
    * Wand of Shadowsight (`wshs`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly WandOfShadowsight_wshs: Rawcode<"item">;
 
@@ -4266,7 +4266,7 @@ export declare const Items: {
   /**
    * Wirt's Leg (`wtlg`), a Built-in item of Patch 3.0.0.
    *
-   * In the Custom (Forsaken Kingdom), Melee (Forsaken Kingdom), Custom (The Frozen Throne) and Melee (The Frozen Throne) Game data sets. Not in the Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.
+   * Not in Reign of Chaos.
    */
   readonly WirtsLeg_wtlg: Rawcode<"item">;
 };

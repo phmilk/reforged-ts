@@ -86,7 +86,9 @@ describe("the 3.0.0 index", () => {
       sets: ["custom-fk", "melee-fk"],
     });
     expect(await read("3.0.0/units.d.ts")).toContain(
-      "In the Custom (Forsaken Kingdom) and Melee (Forsaken Kingdom) Game data sets. Not in the Custom (The Frozen Throne), Melee (The Frozen Throne), Custom (Reign of Chaos) and Melee (Reign of Chaos) Game data sets.",
+      "   * Footman (`sfoo`), a Built-in unit of Patch 3.0.0, race human.\n" +
+        "   *\n" +
+        "   * Forsaken Kingdom only.\n",
     );
   });
 

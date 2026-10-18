@@ -4,6 +4,7 @@
  * declarations and their Lua module. Nothing here reads the game: the check
  * emits them again from the committed index and compares.
  */
+import GAME_DATA_VERSIONS from "./game-data-versions.json" with { type: "json" };
 import {
   byCodePoint,
   type BuiltinsIndex,
@@ -172,10 +173,81 @@ export function rawcodeValue(rawcode: string): number {
   return Buffer.from(rawcode, "latin1").readUInt32BE(0);
 }
 
+/** A Game data set read as a Game Data Set of a Game Data Version. */
+interface VersionedSet {
+  id: string;
+  /** The full label: `Custom (The Frozen Throne)`. */
+  label: string;
+  /** The Game Data Set's own label: `Custom`. */
+  set: string;
+  /** The Game Data Version's label: `The Frozen Throne`. */
+  version: string;
+}
+
+/**
+ * The index's Game data sets by Game Data Version, latest first: undefined
+ * when one is not `<set>-<version>` of a known version labelled
+ * `<Set> (<Version>)`, as the hand-made indexes of the tests are.
+ */
+function byVersion(index: BuiltinsIndex): VersionedSet[][] | undefined {
+  const versions = GAME_DATA_VERSIONS.toSorted((a, b) => b.version - a.version);
+  const sets: VersionedSet[] = [];
+  for (const { id, label } of index.gameDataSets) {
+    const version = versions.find(
+      (v) => id.endsWith(`-${v.id}`) && label.endsWith(` (${v.label})`),
+    );
+    if (version === undefined) return undefined;
+    sets.push({
+      id,
+      label,
+      set: label.slice(0, -` (${version.label})`.length),
+      version: version.label,
+    });
+  }
+  return versions
+    .map((v) => sets.filter((set) => set.version === v.label))
+    .filter((group) => group.length > 0);
+}
+
+/**
+ * The sentence on the Game data sets of an object some set lacks, by Game
+ * Data Version (#621): `Forsaken Kingdom only.`, `Not in Reign of Chaos.`,
+ * `Melee only in The Frozen Throne.`.
+ */
+function versionSentence(groups: VersionedSet[][], entry: IndexEntry): string {
+  const full: string[] = [];
+  const partial: VersionedSet[] = [];
+  const none: string[] = [];
+  for (const group of groups) {
+    const holding = group.filter((set) => entry.sets.includes(set.id));
+    const version = group[0].version;
+    if (holding.length === group.length) full.push(version);
+    else if (holding.length === 0) none.push(version);
+    else partial.push(...holding);
+  }
+  if (full.length === 1 && partial.length === 0) return `${full[0]} only.`;
+  if (full.length === 0 && partial.length === 1) {
+    return `${partial[0].label} only.`;
+  }
+  const or = (items: string[]) =>
+    items.length < 2
+      ? items.join("")
+      : `${items.slice(0, -1).join(", ")} or ${items.at(-1) ?? ""}`;
+  const versions = [...new Set(partial.map((set) => set.version))];
+  return [
+    ...versions.map(
+      (version) =>
+        `${list(partial.filter((set) => set.version === version).map((set) => set.set))} only in ${version}.`,
+    ),
+    ...(none.length > 0 ? [`Not in ${or(none)}.`] : []),
+  ].join(" ");
+}
+
 /**
  * The TSDoc an object's overload and its constant share: its name and
  * Rawcode, the kind and Game version, the race, and the Game data sets when
- * not every one holds it. Never tooltip text.
+ * not every one holds it, by Game Data Version where the index's sets are
+ * read by version. Never tooltip text.
  */
 function describeObject(
   index: BuiltinsIndex,
@@ -196,7 +268,10 @@ function describeObject(
   const missing = index.gameDataSets.filter(
     (set) => !entry.sets.includes(set.id),
   );
-  if (missing.length > 0) {
+  const groups = byVersion(index);
+  if (missing.length > 0 && groups !== undefined) {
+    lines.push("", versionSentence(groups, entry));
+  } else if (missing.length > 0) {
     const sets = (labels: string[]) =>
       `the ${list(labels)} Game data set${labels.length === 1 ? "" : "s"}`;
     lines.push(
