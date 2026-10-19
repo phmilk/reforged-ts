@@ -6,7 +6,7 @@ Which name the game gives a Built-in object when its enUS names files set it twi
 
 - **A name set twice: the first one wins** (Observed), within one section (`Ubtr` is "Noble", not "Death Knight") and across files (`Almf` is "Death Coil" from `CampaignAbilityStrings.txt`, not "Item Lesser Mark of the Forsaken" from `ItemAbilityStrings.txt`). The generator assumed the last one.
 - **Sections match their Rawcode regardless of case** (Observed): `Ansp` is "Spy" from `[ANsp]`, `Aisy` and `AEqu` are named from `[AIsy]` and `[Aequ]`. The generator matched exactly, so they were `Unnamed_`.
-- **Buffs: no Native the run tried gives their name** (Observed), so the rules apply to them by inference: they share the abilities' names files and the profile reader (Inferred). The check on screen is [#581](https://github.com/phmilk/reforged-ts/issues/581), for a human.
+- **Buffs follow the same rules** (Observed on screen, [#581](https://github.com/phmilk/reforged-ts/issues/581)): `Bdet`'s tooltip title is "Detected", its first name, not "Dust of Appearance", and `BOac`'s is "Command Aura", from `[Boac]`. No Native the run tried gives a buff's name, so a human checked the titles on the buff bar. `Xesn`, named by `EditorName` only, follows by inference.
 - The generator now follows the game: 19 constants change name.
 
 ## The run
@@ -16,7 +16,7 @@ Which name the game gives a Built-in object when its enUS names files set it twi
 - Build 3.0.0.24268 (Patch of the Typings and of the client, from the install's build config; its `.build.info` gives 3.0.0.24248, see [#564](https://github.com/phmilk/reforged-ts/issues/564)).
 - Locale: enUS. The controls named once read as their enUS names (`hfoo` "Footman", `AHhb` "Holy Light"), although the Battle.net app is set to ptBR and the install holds ptBR text too.
 
-The Natives: `GetObjectName` for every object, `GetUnitName` of a unit created for each unit, `BlzGetAbilityTooltip` at level 0 for each ability and buff. For buffs also `BlzGetAbilityExtendedTooltip` at level 0; the buff's Rawcode added to a unit with `UnitAddAbility`, then read with `BlzGetUnitAbility`, and, had it found one, `BlzGetAbilityStringField` (`ABILITY_SF_NAME`) and `BlzGetAbilityStringLevelField` (`ABILITY_SLF_TOOLTIP_NORMAL`, level 0); and the buff of an aura (`BOac` of `AOac`, `BHab` of `AHab`), its `GetUnitAbilityLevel` and the same reading, 3 seconds after the aura was added to a unit.
+The Natives: `GetObjectName` for every object, `GetUnitName` of a unit created for each unit, `BlzGetAbilityTooltip` at level 0 for each ability and buff. For buffs also `BlzGetAbilityExtendedTooltip` at level 0; the buff's Rawcode added to a unit with `UnitAddAbility`, then read with `BlzGetUnitAbility`, and, had it found one, `BlzGetAbilityStringField` (`ABILITY_SF_NAME`) and `BlzGetAbilityStringLevelField` (`ABILITY_SLF_TOOLTIP_NORMAL`, level 0); and the buff of an aura (`BOac` of `AOac`, `BHab` of `AHab`), its `GetUnitAbilityLevel` and the same reading, 3 seconds after the aura was added to a unit. `AOac` is no ability: Command Aura is `ACac` (see [The check on screen](#the-check-on-screen)).
 
 ## Names set twice
 
@@ -55,9 +55,23 @@ The first two columns are the enUS names files, read in the code-point order of 
 
 ## Buffs
 
-**Observed:** for every buff, the controls `BHbd` and `BHab` included, `GetObjectName` gives "Default string", `BlzGetAbilityTooltip` "Tool tip missing!" and `BlzGetAbilityExtendedTooltip` an empty string; `UnitAddAbility` of a buff's Rawcode returns `false`, and `BlzGetUnitAbility` then finds nothing. The aura step settles nothing: the aura's buff never reached its bearer (`GetUnitAbilityLevel` 0 for `BOac` and for the control `BHab` alike), so reading the name of a buff a unit actually has is still untried. No Native the run tried reads a buff's name, so the buffs `Bdet`, `BOac` and `Xesn` are not measured. A buff's tooltip title shows on screen only: the check for a human is [#581](https://github.com/phmilk/reforged-ts/issues/581).
+**Observed:** for every buff, the controls `BHbd` and `BHab` included, `GetObjectName` gives "Default string", `BlzGetAbilityTooltip` "Tool tip missing!" and `BlzGetAbilityExtendedTooltip` an empty string; `UnitAddAbility` of a buff's Rawcode returns `false`, and `BlzGetUnitAbility` then finds nothing. The aura step settles nothing: the aura's buff never reached its bearer (`GetUnitAbilityLevel` 0 for `BOac` and for the control `BHab` alike), so reading the name of a buff a unit actually has is still untried. For `BOac` the step added `AOac`, which is no ability (below). No Native the run tried reads a buff's name. A buff's tooltip title shows on screen only: [The check on screen](#the-check-on-screen) settles `Bdet` and `BOac`.
 
-**Inferred:** buffs are named in the same `Units/*AbilityStrings.txt` files as abilities, the same sections of them (`[Boac]` sits in `NeutralAbilityStrings.txt` beside `[ANsp]`), so the profile reader that gives the abilities their names gives the buffs theirs. The generator applies the same two rules to them.
+**Observed on screen:** the two rules hold for buffs: `Bdet` takes its first name, `BOac` the name of a section cased unlike it.
+
+**Inferred:** buffs are named in the same `Units/*AbilityStrings.txt` files as abilities, the same sections of them (`[Boac]` sits in `NeutralAbilityStrings.txt` beside `[ANsp]`), so the profile reader that gives the abilities their names gives the buffs theirs. The generator applies the same two rules to them. `Xesn` is named by `EditorName` only, which the game never shows: its name follows by this inference, and its check is the Object Editor's Buffs tab, out of scope here.
+
+### The check on screen
+
+[#581](https://github.com/phmilk/reforged-ts/issues/581), a check made by looking at the screen, 2026-10-11, on 3.0.0.24268 in an enUS client. A throwaway Probe set the scene and held the run open (run `7f1f814f-4720-4fd2-812c-183a19f695b1`, not committed); a human read each buff's tooltip title on the selected unit's buff bar.
+
+| Buff   | How it came to a unit                                                                | Title on screen   |
+| ------ | ------------------------------------------------------------------------------------ | ----------------- |
+| `Bdet` | a Paladin used Dust of Appearance (`dust`) on two Shades (`ushd`) of Neutral Hostile | "Detected"        |
+| `BOac` | Command Aura (`ACac`) added with `UnitAddAbility` to a Blademaster, beside Grunts    | "Command Aura"    |
+| `BHab` | the control: Brilliance Aura (`AHab`) added with `UnitAddAbility` to an Archmage     | "Brilliance Aura" |
+
+**Observed** in the same run: `UnitAddAbility` of `AOac`, the Rawcode #581 and the aura step above name, returns `false`; the index has no ability `AOac`. Command Aura is `ACac`, and its buff is `BOac`: 3 seconds after `ACac` was added, `GetUnitAbilityLevel` gives `BOac` 1 on the Blademaster and on a Grunt, 0 on the Archmage, who has `BHab` 1.
 
 ## What the generator does now
 
