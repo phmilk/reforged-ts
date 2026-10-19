@@ -261,8 +261,8 @@ export function createNoUnknownRawcodes(
         replaceRawcode: "Replace with `{{rawcode}}` ({{object}})",
       },
       schema: [],
+      defaultOptions: [],
     },
-    defaultOptions: [],
     create(context) {
       const services = ESLintUtils.getParserServices(context);
       const checker = services.program.getTypeChecker();
