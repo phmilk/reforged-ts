@@ -28,8 +28,8 @@ const entryProbe = createProbe<[{ extraVisual?: string[] }], "entry">({
         additionalProperties: false,
       },
     ],
+    defaultOptions: [{}],
   },
-  defaultOptions: [{}],
   create(context, [{ extraVisual = [] }]) {
     const services = ESLintUtils.getParserServices(context);
     const allowlist = createAllowlist(localSafe, extraVisual);
@@ -50,8 +50,8 @@ const sinkProbe = createProbe<[], "sink">({
     docs: { description: "Reports the text sink each string literal reaches" },
     messages: { sink: "{{name}}" },
     schema: [],
+    defaultOptions: [],
   },
-  defaultOptions: [],
   create(context) {
     const allowlist = createAllowlist(localSafe);
     return {
