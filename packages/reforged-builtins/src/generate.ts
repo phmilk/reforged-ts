@@ -143,9 +143,11 @@ interface KindSource {
    * Whether a set leaves out an object of a later Game Data Version than its
    * own, by the data's `version` column: units, items and abilities, as the
    * Probe runs of #575 measured. A map of Reign of Chaos still creates a
-   * destructable of The Frozen Throne; buffs, doodads and upgrades, which no
-   * Native creates where a Probe can see, are not measured, and every set
-   * holds them as its layer lists them.
+   * destructable of The Frozen Throne and gives a unit its buffs, and a map
+   * of The Frozen Throne a buff of Forsaken Kingdom (#622), so every set
+   * holds them as its layer lists them. So it holds upgrades, of which no
+   * layer has one of a later version than its sets', and doodads, which no
+   * Native creates.
    */
   versioned?: boolean;
   /** The metadata file, in the base layer, that locates the name. */

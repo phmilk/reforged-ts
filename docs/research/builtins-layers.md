@@ -6,7 +6,9 @@ Which layer of the install's object data the game reads for a map's Game Data Se
 
 - **A map reads `_Balance/<Set>_V<version>`, else the base layer** (Observed), the version being 0 for Reign of Chaos, 1 for The Frozen Throne and 2 for Forsaken Kingdom. The install has `Custom_V0`, `Custom_V1` and `Melee_V0` only, so Melee of The Frozen Throne and both sets of Forsaken Kingdom read the base layer, `War3.w3mod:`.
 - **A unit, an item or an ability whose `version` cell is above the map's Game Data Version is left out** (Observed): under The Frozen Throne the base layer's Forsaken Kingdom hero `Hct1`, item `ecss` and ability `AIhs` (version 2) do not exist; under Reign of Chaos, the item `spur` and the ability `AHfs` (version 1) do not either.
-- **A destructable is not** (Observed): the base layer's `LTbr`, of version 1, is created under Reign of Chaos. Buffs, doodads and upgrades are not measured: no Native creates one where a Probe can see it.
+- **A destructable is not** (Observed): the base layer's `LTbr`, of version 1, is created under Reign of Chaos.
+- **Nor is a buff** (Observed, [#622](https://github.com/phmilk/reforged-ts/issues/622)): Rain of Fire gives its target `BNrf` and `BNrd`, of version 1, under Reign of Chaos, and Sacred Aura gives its bearer `BHas`, of version 2, under Melee of The Frozen Throne.
+- **Upgrades follow their layer** (Observed): `GetPlayerTechMaxAllowed` of `Rhpm`, of version 1, gives 1 where the set's layer has it and 2147483647, as for `Rzzz`, which is no upgrade, under Reign of Chaos, whose layers lack it. No layer has an upgrade of a later version than the sets that read it, so the rule would leave none out. Doodads are not measured: no Native creates one.
 - **Forsaken Kingdom, which a new map gets, holds every object of the base layer, whatever the set** (Observed). So the Template's map, Melee of Forsaken Kingdom, plays with the base layer whole.
 - **Default reads Custom on a map that is not a melee map, and Melee on a melee map** (Observed): its three runs on the Template's map match Custom's, and its runs with the "Melee Map" flag set (`--melee-map`) match Melee's.
 - The generator now follows the game: one Game data set per Game Data Set and Game Data Version, `custom-fk` to `melee-roc`, the version rule on units, items and abilities only, and the item `spur`, which no set holds, leaves the index.
@@ -104,6 +106,48 @@ Default's three runs gave exactly Custom's, so they are one row.
 - Forsaken Kingdom is the base layer whole, `Hct1` included, under every set: there is no layer of version 2.
 - The `earc` HP the game gives under `Custom_V0` and `Melee_V0` is 260, the file's `HP` column, not its `realHP` (250).
 
+## Buffs and upgrades
+
+Measured for [#622](https://github.com/phmilk/reforged-ts/issues/622). The install's data has a `version` column for buffs, doodads and upgrades too, so a set could list some of a later version than its own:
+
+| Kind    | Base layer: rows by `version` | `Custom_V0` and `Melee_V0` | `Custom_V1`   |
+| ------- | ----------------------------- | -------------------------- | ------------- |
+| buff    | 144, 97, 77                   | 144, 94, none              | 144, 96, none |
+| upgrade | 58, 32, none                  | 58, none, none             | 58, 32, none  |
+| doodad  | 376, 192, 203                 | no file                    | no file       |
+
+So the rule would leave out buffs from the sets of Reign of Chaos (94 rows) and from Melee of The Frozen Throne (77), and no upgrade from any set: the layers of Reign of Chaos hold none of version 1, and no layer holds one of version 2.
+
+- Probe: `probe/probes/builtins-version-rule.ts`, run as `builtins-layers`. No Native creates a buff, so it looks for one on a unit with `GetUnitAbilityLevel` of the buff's Rawcode, as [#581](https://github.com/phmilk/reforged-ts/issues/581) read `BOac`. The data has two pairs of an ability a set holds and a buff of a later version than that set's: Sacred Aura `AHpa` (version 1) and its `BHas` (version 2), in the base layer only, and Rain of Fire `ANrf` (version 0) and its `BNrf` and `BNrd` (version 1), in every layer. Command Aura `ACac` and its `BOac`, both of version 0, are the control. An upgrade is researched with `SetPlayerTechResearched` for Player 0, then read with `GetPlayerTechCount` and `GetPlayerTechMaxAllowed`.
+- 2026-10-19, Build 3.0.0.24268, each `finished` with 14 records:
+
+| Game Data Set | Game Data Version | Run                                    |
+| ------------- | ----------------- | -------------------------------------- |
+| Custom        | Reign of Chaos    | `2efb9adb-03eb-4339-a284-6be4ebad21b5` |
+| Custom        | The Frozen Throne | `22336bad-f4b8-437a-a43d-9cba168c567c` |
+| Custom        | Forsaken Kingdom  | `57ae746b-8a2f-423f-9e6f-8aad77c19a51` |
+| Melee         | Reign of Chaos    | `3c91fab5-68dc-48f8-b996-5c4323bec5b2` |
+| Melee         | The Frozen Throne | `4c5f36ff-5431-4ee7-be73-4f08cc61bb98` |
+| Melee         | Forsaken Kingdom  | `c2578f7e-704f-48ab-acc0-704a39b4bfad` |
+
+Default is Custom's, as the runs of #575 measured, and is not run again.
+
+| Record                          | Custom RoC    | Melee RoC     | Custom TFT    | Melee TFT     | any set FK    |
+| ------------------------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+| `AHpa` added                    | no            | no            | no            | yes           | yes           |
+| `BHas` on its bearer            | 0             | 0             | 0             | 1             | 1             |
+| `BOac` on its bearer            | 1             | 1             | 1             | 1             | 1             |
+| `BNrf` on Rain of Fire's target | 1             | 1             | 1             | 1             | 1             |
+| `BNrd` on Rain of Fire's target | 1             | 1             | 1             | 1             | 1             |
+| `Rhme`: count, max              | 1, 3          | 1, 3          | 1, 3          | 1, 3          | 1, 3          |
+| `Rhpm`: count, max              | 1, 2147483647 | 1, 2147483647 | 1, 1          | 1, 1          | 1, 1          |
+| `Rzzz`: count, max              | 1, 2147483647 | 1, 2147483647 | 1, 2147483647 | 1, 2147483647 | 1, 2147483647 |
+
+- **Buffs** (Observed): `BNrf` and `BNrd`, of version 1, reach Rain of Fire's target under both sets of Reign of Chaos, and `BHas`, of version 2, reaches Sacred Aura's bearer under Melee of The Frozen Throne. A buff of a later version is not left out, as a destructable is not. Under the other sets `AHpa` is not added, their layers lacking it, so they settle nothing about `BHas`. The caster never has Rain of Fire's buffs, under any set.
+- **Upgrades** (Observed): `GetPlayerTechCount` gives back the level set whatever the Rawcode, `Rzzz` included, so it tells nothing apart. `GetPlayerTechMaxAllowed` does: 2147483647 for an upgrade the map's data does not hold, its maximum level for one it does. `Rhpm` is held where its set's layer lists it and not under Reign of Chaos, whose layers do not. So the layer decides, and no version rule is needed.
+- **Doodads** (not measured): no Native creates a doodad. `BlzGetNumDoodads` and `BlzGetDoodadId` read only the doodads a map places, and the Probe map places none; measuring them would mean staging a `war3map.doo` with doodads of a later version. They keep every row.
+- One run of Melee of The Frozen Throne and one of Melee of Reign of Chaos, of the Probe before its last checkpoint was added, stalled with the game's clock at 00:00:00 and the 2-second timer never run (`167ca11c-6420-4d8a-b98f-743127a14217`, `1d952a54-c708-4ad6-ad62-73c758d3287a`); the same runs again finished, as the table gives.
+
 ## What the index holds now
 
-`reforged-builtins` lists six Game data sets, `custom-fk`, `melee-fk`, `custom-tft`, `melee-tft`, `custom-roc`, `melee-roc`, each reading the layer above, and leaving out the units, items and abilities of a later version. Destructables keep every row, as measured. Buffs, doodads and upgrades are not measured and keep every row their set's layer lists; their data has the same `version` column, so a set of an earlier version may list some it does not hold (Inferred). The units each set holds: 928, 928, 864, 865, 470 and 469. The item `spur` is in no set, so its constant `Items.Unnamed_spur` is removed.
+`reforged-builtins` lists six Game data sets, `custom-fk`, `melee-fk`, `custom-tft`, `melee-tft`, `custom-roc`, `melee-roc`, each reading the layer above, and leaving out the units, items and abilities of a later version. Destructables and buffs keep every row, as measured; so do upgrades, of which no layer holds one of a later version. Doodads are not measured and keep every row their set's layer lists (see [Buffs and upgrades](#buffs-and-upgrades)). The units each set holds: 928, 928, 864, 865, 470 and 469. The item `spur` is in no set, so its constant `Items.Unnamed_spur` is removed.
