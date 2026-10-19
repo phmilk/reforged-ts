@@ -1,5 +1,11 @@
 # reforged-builtins
 
+## 1.0.0-alpha.3
+
+### Patch Changes
+
+- [#629](https://github.com/phmilk/reforged-ts/pull/629) [`653e843`](https://github.com/phmilk/reforged-ts/commit/653e8433f82035047d7d0b6bb0378f369e9d127c) Thanks [@wyller](https://github.com/wyller)! - The README says how the Game data sets treat buffs, upgrades and doodads, now measured in game ([#622](https://github.com/phmilk/reforged-ts/issues/622)). A map still gives a unit a buff of a later Game Data Version, so every set keeps its buffs. Upgrades follow their layer, which holds none of a later version. Doodads, which no Native creates, stay unmeasured. The objects and their sets do not change.
+
 ## 1.0.0-alpha.2
 
 ### Patch Changes
