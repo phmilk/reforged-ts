@@ -13,7 +13,9 @@
  * table does not know the field and no value type was given;
  * `"field-held-twice"`, a file holds the field twice for the object;
  * `"invalid-value"`, the value, its type, the level or the data pointer is
- * not one the file can hold.
+ * not one the file can hold; `"rawcode-taken"`, a Custom object added has
+ * a Rawcode its kind holds or a Built-in object has; `"unknown-base"`, a
+ * Custom object added has a base no Built-in object of its kind has.
  */
 export type ObjectDataWriterErrorReason =
   | "builtins-missing"
@@ -22,6 +24,8 @@ export type ObjectDataWriterErrorReason =
   | "file-not-read"
   | "invalid-value"
   | "modified-in-world-editor"
+  | "rawcode-taken"
+  | "unknown-base"
   | "unknown-field"
   | "unknown-object"
   | "world-editor-check-failed";

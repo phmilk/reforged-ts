@@ -13,7 +13,9 @@ import {
   type BuiltinsIndex,
 } from "./builtins.js";
 import {
+  addObject,
   removeField,
+  removeObject,
   setField,
   type EditTables,
   type StringSources,
@@ -132,6 +134,20 @@ export interface ObjectDataField {
   readonly dataPointer?: number;
 }
 
+/** The object an object edit addresses: its Object kind and Rawcode. */
+export interface ObjectDataObjectAddress {
+  /** The Object kind of the object. */
+  readonly kind: ObjectKind;
+  /** The object's Rawcode: a Custom object of the map (`h000`), or a Built-in object (`hfoo`). */
+  readonly rawcode: string;
+}
+
+/** A Custom object to add: its Object kind, its Rawcode and its base. */
+export interface ObjectDataNewObject extends ObjectDataObjectAddress {
+  /** Its base, the Rawcode of the Built-in object of its kind it derives from (`hfoo`). */
+  readonly base: string;
+}
+
 /** The options of {@link ObjectDataEditor.setField}. */
 export interface ObjectDataSetFieldOptions {
   /**
@@ -231,6 +247,58 @@ export interface ObjectDataEditor {
    *   {@link ObjectDataEditor.setField} does. Nothing is changed.
    */
   removeField(field: ObjectDataField): void;
+  /**
+   * Adds a Custom object, to be written in the Editor form on the next
+   * save.
+   *
+   * @remarks
+   * The object is appended to the Custom table of both files of its kind,
+   * the base and the Skin file, with one set of flag 0 (none in format
+   * versions 1 and 2) and no modification: its fields are set with
+   * {@link ObjectDataEditor.setField}, each in the file the World Editor
+   * keeps it in, so that a file that holds none of its fields lists it with
+   * no modification, as the World Editor does. A file the kind did not have
+   * is created in format version 3. Its Rawcode must be one no object of
+   * its kind holds, Custom or modified Built-in, and no Built-in object of
+   * `reforged-builtins`' index has, of any kind; a Custom object of another
+   * kind may hold it, as the World Editor makes a Custom buff and a Custom
+   * destructable `B000`. Its base must be a Built-in object of its kind in
+   * the index. Nothing is written until {@link ObjectDataEditor.save}.
+   *
+   * @param object - The Custom object to add: its Object kind, its Rawcode
+   *   and its base's Rawcode.
+   * @throws {@link ObjectDataWriterError} With the reason
+   *   `"builtins-missing"` or `"file-not-read"`, as
+   *   {@link ObjectDataEditor.setField} does; `"rawcode-taken"`, when an
+   *   object of its kind or a Built-in object of the index has its Rawcode;
+   *   `"unknown-base"`, when no Built-in object of its kind in the index has
+   *   the base's Rawcode; `"invalid-value"`, when the Rawcode or the base is
+   *   not four characters. Nothing is changed.
+   */
+  addObject(object: ObjectDataNewObject): void;
+  /**
+   * Removes a Custom object, or every modification of a Built-in object,
+   * from both files of its kind, on the next save.
+   *
+   * @remarks
+   * Every entry of the object goes: a Custom object's, so that the map no
+   * longer has it, or a modified Built-in object's, so that it goes back to
+   * the game's. Every other object stays as read. A `STRING n` of
+   * `war3map.wts` one of its modifications referenced is removed when no
+   * other modification of the Object data and no other file of the map
+   * folder references it. A Built-in object the map does not modify is no
+   * change. The placements of a removed Custom object on the terrain, and
+   * the code that names it, stay: they are the caller's
+   * ([#482](https://github.com/phmilk/reforged-ts/issues/482)). Nothing is
+   * written until {@link ObjectDataEditor.save}.
+   *
+   * @param object - The object to remove: its Object kind and Rawcode.
+   * @throws {@link ObjectDataWriterError} With the reason
+   *   `"builtins-missing"`, `"file-not-read"`, `"unknown-object"` or
+   *   `"invalid-value"`, as {@link ObjectDataEditor.setField} does. Nothing
+   *   is changed.
+   */
+  removeObject(object: ObjectDataObjectAddress): void;
   /**
    * Saves the Object data to the map folder it opened, or to another
    * folder.
@@ -356,6 +424,14 @@ class Editor implements ObjectDataEditor {
 
   removeField(field: ObjectDataField): void {
     removeField(this.#model, this.#tables, this.#strings, field);
+  }
+
+  addObject(object: ObjectDataNewObject): void {
+    addObject(this.#model, this.#tables, object);
+  }
+
+  removeObject(object: ObjectDataObjectAddress): void {
+    removeObject(this.#model, this.#tables, this.#strings, object);
   }
 
   objects(kind?: ObjectKind): ObjectDataObject[] {
