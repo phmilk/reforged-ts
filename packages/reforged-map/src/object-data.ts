@@ -44,7 +44,7 @@ import {
 } from "./model.js";
 
 /** The extension of each Object kind's file: `war3map.w3u`, `war3mapSkin.w3u`. */
-const EXTENSIONS: Readonly<Record<ObjectKind, string>> = {
+export const EXTENSIONS: Readonly<Record<ObjectKind, string>> = {
   unit: "w3u",
   item: "w3t",
   ability: "w3a",
@@ -70,7 +70,7 @@ const UTF8 = new TextDecoder("utf-8", { fatal: false });
 const ENCODER = new TextEncoder();
 
 /** An Object data file the reader cannot read; its message says why, in a few words. */
-class ObjectDataError extends Error {
+export class ObjectDataError extends Error {
   override name = "ObjectDataError";
 }
 
@@ -115,7 +115,8 @@ export function readObjectData(
   }
 }
 
-function readObjectDataFile(
+/** Reads the bytes of one Object data file; throws an `ObjectDataError` when it cannot. */
+export function readObjectDataFile(
   bytes: Uint8Array,
   name: string,
   kind: ObjectKind,

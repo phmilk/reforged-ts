@@ -39,6 +39,7 @@ export {
   ObjectDataWriterError,
   type ObjectDataWriterErrorReason,
 } from "./writer-error.js";
+export { objectDataText } from "./object-data-text.js";
 export type { GameDataSet } from "./builtins.js";
 export type { ObjectKind } from "./model.js";
 

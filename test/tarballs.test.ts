@@ -151,6 +151,7 @@ const PACKAGES: readonly Expected[] = [
     required: [
       "dist/index.js",
       "dist/index.d.ts",
+      "dist/cli.js",
       "dist/typescript-plugin.cjs",
       "dist/tsserver/plugin.js",
       "typescript-plugin/package.json",
